@@ -11,10 +11,6 @@ exit
 D:
 cd D:/Users/Alex/Desktop/Banana
 
-pause
-rem forfiles /s /c "cmd /q /c if @fsize GTR 52428800 echo @relpath" >> .gitignore
-pause
-
 git add *.*
 git add kernel
 git add firmware
