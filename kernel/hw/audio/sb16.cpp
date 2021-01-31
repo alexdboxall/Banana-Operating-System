@@ -48,7 +48,7 @@ void sb16Demo(void* s)
 {
 	SoundBlaster16* dev = (SoundBlaster16*) s;
 
-	SoundChannel* c = new SoundChannel(25000, 8, 90);
+	SoundChannel* c = new SoundChannel(22050, 8, 90);
 
 	File* f = new File("C:/ybr.wav", kernelProcess);
 	f->open(FileOpenMode::Read);
@@ -185,7 +185,7 @@ int SoundBlaster16::open(int, int, void*)
 	sign = true;
 	stereo = false;
 
-	hertz = 25000;// sampleRate;
+	hertz = 22050;// sampleRate;
 	bits = 8;// _bits;
 
 	bool readonly = false;
