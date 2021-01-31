@@ -131,10 +131,11 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 	ide->write(channel, ATA_REG_LBA2, lbaIO[2]);
 
 	//determine which command to send
-	if		(write  && lbaMode == MODE_LBA48) command = ATA_CMD_WRITE_PIO_EXT;
-	else if (write  && lbaMode != MODE_LBA48) command = ATA_CMD_WRITE_PIO;
+	if (write && lbaMode == MODE_LBA48) command = ATA_CMD_WRITE_PIO_EXT;
+	else if (write && lbaMode != MODE_LBA48) command = ATA_CMD_WRITE_PIO;
 	else if (!write && lbaMode == MODE_LBA48) command = ATA_CMD_READ_PIO_EXT;
 	else if (!write && lbaMode != MODE_LBA48) command = ATA_CMD_READ_PIO;
+	else return 1;
 
 	//send the command
 	ide->write(channel, ATA_REG_COMMAND, command);

@@ -31,10 +31,7 @@ call build
 cd ..
 
 cd kernel
-make clean || pause
-make -j4 TUNING=i486 kernel486NoACPI ACPI=-DNOACPI || pause
-make clean || pause
-make -j4 TUNING=pentium kernel586NoACPI ACPI=-DNOACPI || pause
+
 make clean || pause
 make -j4 TUNING=i386 kernel386 || pause
 make clean || pause
@@ -65,9 +62,6 @@ make clean || pause
 make -j4 TUNING=skylake kernelSkylake || pause
 make clean || pause
 make -j4 TUNING=cannonlake kernelCannonlake || pause
-make clean || pause
-make clean || pause
-make -j4 TUNING=i386 kernel386NoACPI ACPI=-DNOACPI || pause
 
 D:
 cd D:/Users/Alex/Desktop/Banana/kernel
