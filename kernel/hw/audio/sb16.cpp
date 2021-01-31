@@ -53,7 +53,10 @@ void sb16Demo(void* s)
 
 	File* f = new File("C:/ybr.wav", kernelProcess);
 	f->open(FileOpenMode::Read);
-	f->read(22000 * 8, buf, &bytesRead);
+	for (int i = 0; i < 22000 * 8 / 4096; ++i) {
+		int yyk;
+		f->read(4096, buf, &yyk);
+	}
 
 	bool playedYet = false;
 
