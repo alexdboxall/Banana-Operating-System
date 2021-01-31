@@ -1,0 +1,162 @@
+#include "fs/example/vfslink.hpp"
+#include "core/main.hpp"
+#include "core/kheap.hpp"
+#include "hal/logidisk.hpp"
+
+extern "C" {
+	#include "libk/string.h"
+}
+#pragma GCC optimize ("Os")
+
+// return disks[vfsDisk]->read(sector, count, (void*) buff);
+// return disks[vfsDisk]->write(sector, count, (void*) buff);
+
+
+char* ExampleFilesystem::getName() 
+{
+	return (char*) "Dummy Filesystem";
+}
+
+FileStatus ExampleFilesystem::format(LogicalDisk* disk, int disknum, const char* type, int allocationUnit)
+{
+	return FileStatus::FormatNotSupported;
+}
+
+ExampleFilesystem::ExampleFilesystem() : Filesystem()
+{
+
+}
+
+ExampleFilesystem::~ExampleFilesystem()
+{
+
+}
+
+bool ExampleFilesystem::tryMount(LogicalDisk* disk, int diskNum)
+{
+	return false;
+}
+
+
+FileStatus ExampleFilesystem::open(const char* __fn, void** ptr, FileOpenMode mode)
+{
+	if (__fn == nullptr || ptr == nullptr) return FileStatus::InvalidArgument;
+	
+	return FileStatus::Failure;
+}
+
+FileStatus ExampleFilesystem::openDir(const char* __fn, void** ptr)
+{
+	if (__fn == nullptr || ptr == nullptr) return FileStatus::InvalidArgument;
+	
+	return FileStatus::Failure;
+}
+
+FileStatus ExampleFilesystem::readDir(void* ptr, size_t bytes, void* where, int* bytesRead)
+{
+	if (ptr == nullptr || bytesRead == nullptr) return FileStatus::InvalidArgument;
+
+	return FileStatus::Failure;
+}
+
+FileStatus ExampleFilesystem::read(void* ptr, size_t bytes, void* where, int* bytesRead)
+{
+	if (ptr == nullptr || bytesRead == nullptr) return FileStatus::InvalidArgument;
+
+	*bytesRead = 0;
+
+	return FileStatus::Failure;
+}
+
+FileStatus ExampleFilesystem::write(void* ptr, size_t bytes, void* where, int* bytesWritten)
+{
+	if (ptr == nullptr || bytesWritten == nullptr) return FileStatus::InvalidArgument;
+
+	*bytesWritten = 0;
+
+	return FileStatus::Failure;
+}
+
+FileStatus ExampleFilesystem::close(void* ptr)
+{
+	if (ptr == nullptr) return FileStatus::InvalidArgument;
+
+	return FileStatus::Failure;
+}
+
+
+FileStatus ExampleFilesystem::closeDir(void* ptr)
+{
+	if (ptr == nullptr) return FileStatus::InvalidArgument;
+
+	return FileStatus::Failure;
+}
+
+FileStatus ExampleFilesystem::seek(void* ptr, uint64_t offset)
+{
+	if (ptr == nullptr) return FileStatus::InvalidArgument;
+
+	return FileStatus::Failure;
+}
+
+FileStatus ExampleFilesystem::tell(void* ptr, uint64_t* offset)
+{
+	if (ptr == nullptr) return FileStatus::InvalidArgument;
+	if (offset == nullptr) return FileStatus::InvalidArgument;
+
+	*offset = 0;
+
+	return FileStatus::Failure;
+}
+
+FileStatus ExampleFilesystem::stat(void* ptr, uint64_t* size)
+{
+	if (ptr == nullptr) return FileStatus::InvalidArgument;
+	if (size == nullptr) return FileStatus::InvalidArgument;
+
+	*size = 0;
+
+	return FileStatus::Failure;
+}
+
+FileStatus ExampleFilesystem::stat(const char* path, uint64_t* size, bool* directory)
+{
+	if (path == nullptr) return FileStatus::InvalidArgument;
+	if (size == nullptr) return FileStatus::InvalidArgument;
+	if (directory == nullptr) return FileStatus::InvalidArgument;
+
+	*directory = 0;
+	*size = 0;
+
+	return FileStatus::Failure;
+}
+
+FileStatus ExampleFilesystem::unlink(const char* file)
+{
+	if (file == nullptr) {
+		return FileStatus::InvalidArgument;
+	}
+
+	return FileStatus::Failure;
+}
+
+FileStatus ExampleFilesystem::rename(const char* old, const char* _new)
+{	
+	//REMEMBER TO MODIFY THE DRIVE USED FROM e.g. C: to A:
+
+	return FileStatus::Failure;
+}
+
+FileStatus ExampleFilesystem::mkdir(const char* file)
+{
+	if (file == nullptr) {
+		return FileStatus::InvalidArgument;
+	}
+
+	return FileStatus::Failure;
+}
+
+bool ExampleFilesystem::exists(const char* file)
+{
+	return false;
+}

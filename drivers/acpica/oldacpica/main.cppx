@@ -1,0 +1,531 @@
+void begin(void* a);
+void start(void* a)
+{
+	begin(a);
+}
+char _STR7941_0MAI[] = "TODO: acpiGlobalEventHandler\n";
+char _STRB7AF_1MAI[] = " ";
+char _STRA43F_2MAI[] = "_BCL";
+char _STRB57F_3MAI[] = "_BCL";
+char _STRC425_4MAI[] = "BRIGHTNESS LEVELS: ";
+char _STR9335_5MAI[] = ", ";
+char _STR4BEB_6MAI[] = "ACPI TOO MANY SCREENS!";
+char _STR8350_7MAI[] = "Getting current resources...\n";
+char _STR299A_8MAI[] = "Found resources...\n";
+char _STR7FA5_9MAI[] = "RSC (Type 0x%X, len = 0x%X)\n";
+char _STR3903_AMAI[] = "End tag.\n";
+char _STR86CF_BMAI[] = "IO PORT RANGE FOR %s\n";
+char _STRBCE5_CMAI[] = "0x%X -> 0x%X. Align 0x%X, length 0x%X\n";
+char _STRE2BF_DMAI[] = "FIXED IO PORT RANGE FOR %s\n";
+char _STRE31F_EMAI[] = "0x%X. len 0x%X\n";
+char _STRBC3E_FMAI[] = "mem32\n";
+char _STR3B97_10MAI[] = "fixed mem32\n";
+char _STR61A9_11MAI[] = "mem24\n";
+char _STR6002_12MAI[] = "addr16\n";
+char _STR83E5_13MAI[] = "addr32\n";
+char _STR2A8A_14MAI[] = "addr64\n";
+char _STRA52E_15MAI[] = "ext. addr64\n";
+char _STRA7D5_16MAI[] = "DMA!\n";
+char _STRA893_17MAI[] = "FIXED DMA!\n";
+char _STR6DB8_18MAI[] = "Failure: %d\n";
+char _STR7300_19MAI[] = "[acpiWalkCallback] AcpiGetObjectInfo ";
+char _STRE49E_1AMAI[] = "\n";
+char _STRC736_1BMAI[] = "[acpiWalkCallback] AcpiGetObjectInfo";
+char _STRB8AC_1CMAI[] = "[acpiWalkCallback] AcpiGetIrqRoutingTable ";
+char _STR52E1_1DMAI[] = "\n";
+char _STR22D0_1EMAI[] = "[acpiWalkCallback] AcpiGetIrqRoutingTable";
+char _STRD552_1FMAI[] = "Got PCI routing table!\n";
+char _STR6FAA_20MAI[] = "[acpiWalkCallback] AcpiGetHandle";
+char _STREDDA_21MAI[] = "_CRS";
+char _STR5726_22MAI[] = "[acpiWalkCallback] AcpiWalkResources";
+char _STREB8A_23MAI[] = "_BCM";
+char _STRC471_24MAI[] = "STRCMP %c: 0x%X 0x%X\n";
+char _STRD387_25MAI[] = "TODO: Check ACPI version.";
+char _STRA187_26MAI[] = "%s\n";
+char _STR2A61_27MAI[] = "%s\n";
+char _STRBC39_28MAI[] = "%s\n";
+char _STR1896_29MAI[] = "%s\n";
+char _STR5791_2AMAI[] = "Name is at 0x%X. %s\n";
+char _STR66BA_2BMAI[] = "we got to %d\n";
+char _STR472_2CMAI[] = "we got to %d\n";
+char _STR94CB_2DMAI[] = "FAILURE AcpiInitializeTables";
+char _STR6B54_2EMAI[] = "we got to %d\n";
+char _STR2B40_2FMAI[] = "FAILURE AcpiInstallAddressSpaceHandler ACPI_ADR_SPACE_SYSTEM_MEMORY";
+char _STRD1FF_30MAI[] = "we got to %d\n";
+char _STR7029_31MAI[] = "FAILURE AcpiInstallAddressSpaceHandler ACPI_ADR_SPACE_SYSTEM_IO";
+char _STR1432_32MAI[] = "we got to %d\n";
+char _STR4609_33MAI[] = "FAILURE AcpiInstallAddressSpaceHandler ACPI_ADR_SPACE_PCI_CONFIG";
+char _STR1CD0_34MAI[] = "we got to %d\n";
+char _STR7AFD_35MAI[] = "FAILURE AcpiLoadTables";
+char _STR7F7A_36MAI[] = "we got to %d\n";
+char _STR8F74_37MAI[] = "FAILURE AcpiEnableSubsystem";
+char _STRC42A_38MAI[] = "we got to %d\n";
+char _STR5F58_39MAI[] = "FAILURE AcpiInitializeObjects";
+char _STRE164_3AMAI[] = "we got to %d\n";
+char _STR3753_3BMAI[] = "we got to %d\n";
+char _STRB53C_3CMAI[] = "\\_PIC";
+char _STRC985_3DMAI[] = "status = 0x%X\n";
+char _STR2378_3EMAI[] = "ACPI failure AcpiEvaluateObject(_PIC)";
+char _STR37BA_3FMAI[] = "FAILURE AcpiInstallGlobalEventHandler";
+char _STR373F_40MAI[] = "NAMESPACE COULD NOT BE WALKED FOR PCI DEVICES";
+
+#include <stdint.h>
+
+#include "main.hpp"
+
+#include "core/common.hpp"
+#include "core/virtmgr.hpp"
+#include "core/physmgr.hpp"
+#include "hw/acpi.hpp"
+#include "hw/cpu.hpp"
+#include "hw/ports.hpp"
+#include "hw/bus/pci.hpp"
+
+//MAIN SCRIPT
+
+void acpiGlobalEventHandler(uint32_t type, ACPI_HANDLE device, uint32_t number, void* context)
+{
+	kprintf(_STR7941_0MAI);
+
+	if (type == ACPI_EVENT_TYPE_FIXED && number == ACPI_EVENT_POWER_BUTTON) {
+		computer->close(0, 0, nullptr);
+		//handleShutdownButton();
+	}
+	if (type == ACPI_EVENT_TYPE_FIXED && number == ACPI_EVENT_SLEEP_BUTTON) {
+		//handleSleepButton();
+	}
+}
+
+char currentACPIWalkPath[256];
+
+int wait = 0;
+UINT32 acpiWalkDescendingCallback(ACPI_HANDLE object, UINT32 nestingLevel, void* context, void** returnValue)
+{
+	ACPI* acpi = (ACPI*) context;
+
+	ACPI_OBJECT_TYPE type;
+	AcpiGetType(object, &type);
+	if (type == ACPI_TYPE_METHOD) {
+		char name[7];
+		memset(name, 0, 7);
+		ACPI_BUFFER nameBuffer;
+		nameBuffer.Length = ACPI_ALLOCATE_BUFFER;
+		nameBuffer.Pointer = nullptr;
+
+		kputs(_STRB7AF_1MAI);
+
+		AcpiGetName(object, ACPI_SINGLE_NAME, &nameBuffer);
+
+		kputs((const char*) nameBuffer.Pointer);
+
+		strcpy(name, (const char*) nameBuffer.Pointer);
+
+		if (!strcmp(name, _STRA43F_2MAI)) {
+			ACPI_HANDLE parent;
+			AcpiGetParent(object, &parent);
+			ACPI_OBJECT_TYPE ptype;
+			AcpiGetType(parent, &ptype);
+
+			if (ptype == ACPI_TYPE_DEVICE) {
+				ACPI_OBJECT_LIST params;
+				ACPI_STATUS status;
+				ACPI_BUFFER retVal;
+				retVal.Length = ACPI_ALLOCATE_BUFFER;
+				retVal.Pointer = nullptr;
+
+				params.Count = 0;
+				params.Pointer = nullptr;
+
+				status = AcpiEvaluateObject(parent, (ACPI_STRING) _STRA43F_2MAI, &params, &retVal);
+				if (ACPI_SUCCESS(status)) {
+
+					acpi->screenControlInfo[acpi->nextScreenControl].valid = true;
+					acpi->screenControlInfo[acpi->nextScreenControl].hasBrightnessControl = true;
+					acpi->screenControlInfo[acpi->nextScreenControl].numBrightnessLevels = 0;
+					acpi->screenControlInfo[acpi->nextScreenControl].handle = parent;
+
+					kputs(_STRC425_4MAI);
+					for (int i = 0; i < retVal.Length / (acpi->acpi2 ? 8 : 4); ++i) {
+						uint64_t val = acpi->acpi2 ? *(((uint64_t*) retVal.Pointer) + i) : *(((uint32_t*) retVal.Pointer) + i);
+						if (val >= 5 && val <= 100) {
+							acpi->screenControlInfo[acpi->nextScreenControl].brightnessLevels[acpi->screenControlInfo[acpi->nextScreenControl].numBrightnessLevels++] = val;
+							kputx(val);
+							kputs(_STR9335_5MAI);
+						}
+					}
+
+					acpi->screenControlInfo[acpi->nextScreenControl].mainsBrightnessLevel = acpi->screenControlInfo[acpi->nextScreenControl].brightnessLevels[0];
+					acpi->screenControlInfo[acpi->nextScreenControl].currentBrightnessLevel = acpi->screenControlInfo[acpi->nextScreenControl].mainsBrightnessLevel;
+					acpi->screenControlInfo[acpi->nextScreenControl].batteryBrightnessLevel = acpi->screenControlInfo[acpi->nextScreenControl].brightnessLevels[1];
+
+					ACPI_STATUS st = acpi->setScreenBrightnessLevel(parent, acpi->screenControlInfo[acpi->nextScreenControl].mainsBrightnessLevel);
+					acpi->nextScreenControl++;
+					if (acpi->nextScreenControl == 8) {
+						panic(_STR4BEB_6MAI);
+					}
+				}
+
+				return AE_OK;
+			}
+		}
+		return AE_OK;
+
+	} else if (type != ACPI_TYPE_DEVICE) {
+		return AE_OK;
+
+	}
+
+	ACPI_BUFFER nameBuffer;
+	nameBuffer.Length = ACPI_ALLOCATE_BUFFER;
+	nameBuffer.Pointer = nullptr;
+	AcpiGetName(object, ACPI_FULL_PATHNAME, &nameBuffer);
+	memset(currentACPIWalkPath, 0, 256);
+	memcpy(currentACPIWalkPath, (const void*) nameBuffer.Pointer, nameBuffer.Length);
+
+	ACPI_DEVICE_INFO* deviceInfo;
+	ACPI_STATUS status = AcpiGetObjectInfo(object, &deviceInfo);
+
+	if (ACPI_FAILURE(status)) {
+		return status;
+	}
+
+	//ACPI_PNP_DEVICE_ID hwId = deviceInfo->HardwareId;
+
+	if (1) {
+		kprintf(_STR8350_7MAI);
+		ACPI_BUFFER buffer;
+		buffer.Length = ACPI_ALLOCATE_BUFFER;
+		buffer.Pointer = nullptr;
+		status = AcpiGetCurrentResources(object, &buffer);
+		if (ACPI_SUCCESS(status)) {
+			kprintf(_STR299A_8MAI);
+			ACPI_RESOURCE* resources = (ACPI_RESOURCE*) buffer.Pointer;
+			for (;; resources = (ACPI_RESOURCE*) (((uint8_t*) resources) + resources->Length)) {
+				kprintf(_STR7FA5_9MAI, resources->Type, resources->Length);
+				if (resources->Type == ACPI_RESOURCE_TYPE_END_TAG) {
+					kprintf(_STR3903_AMAI);
+					break;
+
+				} else if (resources->Type == ACPI_RESOURCE_TYPE_IO) {
+					ACPI_RESOURCE_IO* io = (ACPI_RESOURCE_IO*) &resources->Data.Io;
+					kprintf(_STR86CF_BMAI, currentACPIWalkPath);
+					kprintf(_STRBCE5_CMAI, io->Minimum, io->Maximum, io->Alignment, io->AddressLength);
+
+				} else if (resources->Type == ACPI_RESOURCE_TYPE_FIXED_IO) {
+					ACPI_RESOURCE_FIXED_IO* io = (ACPI_RESOURCE_FIXED_IO*) &resources->Data.FixedIo;
+					kprintf(_STRE2BF_DMAI, currentACPIWalkPath);
+					kprintf(_STRE31F_EMAI, io->Address, io->AddressLength);
+
+				} else if (resources->Type == ACPI_RESOURCE_TYPE_MEMORY32) {
+					kprintf(_STRBC3E_FMAI);
+
+				} else if (resources->Type == ACPI_RESOURCE_TYPE_FIXED_MEMORY32) {
+					kprintf(_STR3B97_10MAI);
+
+				} else if (resources->Type == ACPI_RESOURCE_TYPE_MEMORY24) {
+					kprintf(_STR61A9_11MAI);
+
+				} else if (resources->Type == ACPI_RESOURCE_TYPE_ADDRESS16) {
+					kprintf(_STR6002_12MAI);
+
+				} else if (resources->Type == ACPI_RESOURCE_TYPE_ADDRESS32) {
+					kprintf(_STR83E5_13MAI);
+
+				} else if (resources->Type == ACPI_RESOURCE_TYPE_ADDRESS64) {
+					kprintf(_STR2A8A_14MAI);
+
+				} else if (resources->Type == ACPI_RESOURCE_TYPE_EXTENDED_ADDRESS64) {
+					kprintf(_STRA52E_15MAI);
+
+				} else if (resources->Type == ACPI_RESOURCE_TYPE_DMA) {
+					kprintf(_STRA7D5_16MAI);
+
+				} else if (resources->Type == ACPI_RESOURCE_TYPE_FIXED_DMA) {
+					kprintf(_STRA893_17MAI);
+
+				}
+			}
+		} else {
+			kprintf(_STR6DB8_18MAI, status);
+
+		}
+	}
+
+	return AE_OK;
+}
+
+UINT32 acpiWalkAscendingCallback(ACPI_HANDLE object, UINT32 nestingLevel, void* context, void** returnValue)
+{
+	return AE_OK;
+}
+
+struct ACPIDynamicIRQCallbackContext
+{
+	ACPI* acpi;
+	ACPI_HANDLE pciRootBus;
+	ACPI_PCI_ROUTING_TABLE* table;
+};
+
+UINT32 acpiDynamicIrqCallback(ACPI_RESOURCE* resource, void* context)
+{
+	ACPIDynamicIRQCallbackContext* ctxt = (ACPIDynamicIRQCallbackContext*) context;
+
+	ACPI* acpi = ctxt->acpi;
+	ACPI_HANDLE pciRootBus = ctxt->pciRootBus;
+	ACPI_PCI_ROUTING_TABLE* table = ctxt->table;
+
+	if (resource->Type == ACPI_RESOURCE_TYPE_IRQ) {
+		ACPI_RESOURCE_IRQ* irq = &resource->Data.Irq;
+		acpi->registerPCIIRQAssignment(pciRootBus, table->Address >> 16, table->Pin, irq->Interrupts[table->SourceIndex]);
+
+	} else if (resource->Type == ACPI_RESOURCE_TYPE_EXTENDED_IRQ) {
+		ACPI_RESOURCE_EXTENDED_IRQ* xirq = &resource->Data.ExtendedIrq;
+		acpi->registerPCIIRQAssignment(pciRootBus, table->Address >> 16, table->Pin, xirq->Interrupts[table->SourceIndex]);
+	}
+
+	return AE_OK;
+}
+
+//http://cinnabar.sosdg.org/~qiyong/qxr/minix3/source/minix/drivers/power/acpi/pci.c#L147
+
+UINT32 acpiWalkCallback(ACPI_HANDLE object, UINT32 nestingLevel, void* context, void** returnValue)
+{
+	ACPI* acpi = (ACPI*) context;
+
+	ACPI_DEVICE_INFO* info;
+	ACPI_STATUS status = AcpiGetObjectInfo(object, &info);
+
+	if (ACPI_FAILURE(status)) {
+		kputs(_STR7300_19MAI);
+		kputx(status);
+		kputs(_STRE49E_1AMAI);
+		return AE_OK;
+
+		panic(_STRC736_1BMAI);
+	}
+
+	char name[5];
+	memcpy((void*) name, &info->Name, 4);
+	name[4] = 0;
+
+	if ((info->Flags & ACPI_PCI_ROOT_BRIDGE) && name[0] == 'P') {
+		acpi->pciDetected = true;
+
+		ACPI_BUFFER prtbuf;
+		prtbuf.Length = ACPI_ALLOCATE_BUFFER;
+		prtbuf.Pointer = nullptr;
+
+		status = AcpiGetIrqRoutingTable(object, &prtbuf);
+
+		if (ACPI_FAILURE(status)) {
+			kputs(_STRB8AC_1CMAI);
+			kputx(status);
+			kputs(_STRE49E_1AMAI);
+
+			while (1);
+			return AE_OK;
+
+			panic(_STR22D0_1EMAI);
+		}
+
+		kprintf(_STRD552_1FMAI);
+
+		ACPI_PCI_ROUTING_TABLE* table = (ACPI_PCI_ROUTING_TABLE*) prtbuf.Pointer;
+		for (; table->Length; table = (ACPI_PCI_ROUTING_TABLE*) (((uint8_t*) table) + table->Length)) {
+
+			if (table->Source[0] == 0) {
+				acpi->registerPCIIRQAssignment(object, table->Address >> 16, table->Pin + 1, table->SourceIndex);
+
+			} else {
+				ACPI_HANDLE link;
+				status = AcpiGetHandle(object, table->Source, &link);
+				if (ACPI_FAILURE(status)) {
+					panic(_STR6FAA_20MAI);
+				}
+
+				ACPIDynamicIRQCallbackContext ctxt;
+				ctxt.acpi = acpi;
+				ctxt.pciRootBus = object;
+				ctxt.table = table;
+
+				status = AcpiWalkResources(link, (char*) _STREDDA_21MAI, acpiDynamicIrqCallback, (void*) &ctxt);
+				if (ACPI_FAILURE(status)) {
+					panic(_STR5726_22MAI);
+				}
+			}
+		}
+	}
+
+	return AE_OK;
+}
+
+ACPI_STATUS acpicaSetBrightness(ACPI_HANDLE screenObj, int level)
+{
+
+	ACPI_STATUS status;
+	ACPI_OBJECT_LIST params;
+	ACPI_OBJECT arg[1];
+
+	params.Count = 1;
+	params.Pointer = arg;
+
+	arg[0].Type = ACPI_TYPE_INTEGER;
+	arg[0].Integer.Value = level;
+
+	status = AcpiEvaluateObject(screenObj, (ACPI_STRING) _STREB8A_23MAI, &params, NULL);
+
+	return status;
+}
+
+void acpicaSleep()
+{
+	//go to sleep
+	AcpiEnterSleepStatePrep(1);
+	AcpiEnterSleepState(1);
+
+	//the computer sleeps here
+
+	//the user does something in here to wake it up
+
+	//restore from sleep
+	AcpiLeaveSleepStatePrep(1);
+	AcpiLeaveSleepState(1);
+}
+
+void acpicaShutdown()
+{
+	ACPI_STATUS a = AcpiEnterSleepStatePrep(5);
+	if (a != AE_OK) {
+		return;
+	}
+	asm volatile ("cli");
+	a = AcpiEnterSleepState(5);
+}
+
+void acpicaReset()
+{
+	AcpiReset();
+}
+
+void installHandlers()
+{
+	acpicaFuncTable.setBrightness = acpicaSetBrightness;
+	acpicaFuncTable.sleep = acpicaSleep;
+	acpicaFuncTable.reset = acpicaReset;
+	acpicaFuncTable.shutdown = acpicaShutdown;
+}
+
+extern "C" void strcmpDebug(void* a, void* b, int c)
+{
+	kprintf(_STRC471_24MAI, c + 'A', a, b);
+}
+
+extern const ACPI_PREDEFINED_NAMES AcpiGbl_PreDefinedNames[];
+/*=
+{
+	{"_GPE",    ACPI_TYPE_LOCAL_SCOPE,      NULL},
+	{"_PR_",    ACPI_TYPE_LOCAL_SCOPE,      NULL},
+	{"_SB_",    ACPI_TYPE_DEVICE,           NULL},
+	{"_SI_",    ACPI_TYPE_LOCAL_SCOPE,      NULL},
+	{"_TZ_",    ACPI_TYPE_DEVICE,           NULL},
+	{"_REV",    ACPI_TYPE_INTEGER,          ACPI_CAST_PTR(char, 2)},
+	{"_OS_",    ACPI_TYPE_STRING,           ACPI_OS_NAME},
+	{"_GL_",    ACPI_TYPE_MUTEX,            ACPI_CAST_PTR(char, 1)},
+	{"_OSI",    ACPI_TYPE_METHOD,           ACPI_CAST_PTR(char, 1)},
+	{NULL,      ACPI_TYPE_ANY,              NULL}
+};*/
+
+char testA[] = "Test A";			//GOOD
+char* testB = "Test B";			//BAD
+const char testC[] = "Test C";		//BAD
+const char* testD = "Test D";		//BAD
+
+void begin(void* __acpi__)
+{
+	ACPI* acpi = (ACPI*) __acpi__;
+
+	kprintf(_STRD387_25MAI);
+
+	/*kprintf(_STRA187_26MAI, testC);
+	kprintf(_STRA187_26MAI, testA);
+	kprintf(_STRA187_26MAI, testD);
+	kprintf(_STRA187_26MAI, testB);
+
+	kprintf(_STR5791_2AMAI, AcpiGbl_PreDefinedNames[0].Name, AcpiGbl_PreDefinedNames[0].Name);
+	*/
+	acpi->acpi2 = true;
+	kprintf(_STR66BA_2BMAI, __LINE__ +353 - 418);
+
+	ACPI_STATUS a = AcpiInitializeSubsystem();
+	kprintf(_STR66BA_2BMAI, __LINE__ +353 - 418);
+
+	a = AcpiInitializeTables(nullptr, 16, true);
+	if (ACPI_FAILURE(a)) panic(_STR94CB_2DMAI);
+	kprintf(_STR66BA_2BMAI, __LINE__ +353 - 418);
+
+	a = AcpiInstallAddressSpaceHandler(ACPI_ROOT_OBJECT,
+										ACPI_ADR_SPACE_SYSTEM_MEMORY, ACPI_DEFAULT_HANDLER, NULL, NULL);
+	if (ACPI_FAILURE(a)) panic(_STR2B40_2FMAI);
+	kprintf(_STR66BA_2BMAI, __LINE__ +353 - 418);
+
+	a = AcpiInstallAddressSpaceHandler(ACPI_ROOT_OBJECT,
+										ACPI_ADR_SPACE_SYSTEM_IO, ACPI_DEFAULT_HANDLER, NULL, NULL);
+	if (ACPI_FAILURE(a)) panic(_STR7029_31MAI);
+	kprintf(_STR66BA_2BMAI, __LINE__ +353 - 418);
+
+	a = AcpiInstallAddressSpaceHandler(ACPI_ROOT_OBJECT,
+										ACPI_ADR_SPACE_PCI_CONFIG, ACPI_DEFAULT_HANDLER, NULL, NULL);
+	if (ACPI_FAILURE(a)) panic(_STR4609_33MAI);
+	kprintf(_STR66BA_2BMAI, __LINE__ +353 - 418);
+
+	a = AcpiLoadTables();
+	if (ACPI_FAILURE(a)) panic(_STR7AFD_35MAI);
+	kprintf(_STR66BA_2BMAI, __LINE__ +353 - 418);
+
+	a = AcpiEnableSubsystem(ACPI_FULL_INITIALIZATION);
+	if (ACPI_FAILURE(a)) panic(_STR8F74_37MAI);
+	kprintf(_STR66BA_2BMAI, __LINE__ +353 - 418);
+
+	a = AcpiInitializeObjects(ACPI_FULL_INITIALIZATION);
+	if (ACPI_FAILURE(a)) panic(_STR5F58_39MAI);
+	kprintf(_STR66BA_2BMAI, __LINE__ +353 - 418);
+
+	installHandlers();
+	kprintf(_STR66BA_2BMAI, __LINE__ +353 - 418);
+
+	ACPI_STATUS status;
+	if (computer->features.hasAPIC) {
+		ACPI_OBJECT_LIST params;
+		ACPI_OBJECT arg[1];
+
+		params.Count = 1;
+		params.Pointer = arg;
+
+		arg[0].Type = ACPI_TYPE_INTEGER;
+		arg[0].Integer.Value = thisCPU()->intCtrl->getName()[0] == 'A';
+
+		status = AcpiEvaluateObject(NULL, (ACPI_STRING) _STRB53C_3CMAI, &params, NULL);
+		if (ACPI_FAILURE(status) && status != AE_NOT_FOUND) {
+			kprintf(_STRC985_3DMAI, status);
+			panic(_STR2378_3EMAI);
+		}
+	}
+
+
+	AcpiWriteBitRegister(ACPI_BITREG_SCI_ENABLE, 1);
+
+	a = AcpiInstallGlobalEventHandler(acpiGlobalEventHandler, nullptr);
+	if (a != AE_OK) panic(_STR37BA_3FMAI);
+
+	a = AcpiEnableEvent(ACPI_EVENT_SLEEP_BUTTON, 0);
+	a = AcpiEnableEvent(ACPI_EVENT_POWER_BUTTON, 0);
+
+	void* ret;
+	status = AcpiGetDevices(nullptr, (ACPI_WALK_CALLBACK) acpiWalkCallback, (void*) acpi, &ret);
+	if (ACPI_FAILURE(status)) {
+		panic(_STR373F_40MAI);
+	}
+
+	void* retVal;
+	status = AcpiWalkNamespace(ACPI_TYPE_ANY, ACPI_ROOT_OBJECT, 8, (ACPI_WALK_CALLBACK) acpiWalkDescendingCallback, (ACPI_WALK_CALLBACK) acpiWalkAscendingCallback, (void*) acpi, &retVal);
+}
