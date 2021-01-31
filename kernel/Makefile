@@ -62,9 +62,9 @@ kernelSkylake: common32 $(TARGET32_Skylake)
 TARGET32_Cannonlake = Banana32_Cannonlake
 kernelCannonlake: common32 $(TARGET32_Cannonlake)
 
-OPTIMISATIONS = -fauto-inc-dec -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-stack-protector -fomit-frame-pointer -ftoplevel-reorder -freorder-functions -fdelete-null-pointer-checks -fcompare-elim -fcprop-registers -fdce -fif-conversion -fif-conversion2 -fmerge-constants      -fno-align-functions  -fno-align-jumps  -fno-align-loops -fno-align-labels  -fno-reorder-blocks  -fno-reorder-blocks-and-partition -fno-prefetch-loop-arrays
+OPTIMISATIONS = -falign-functions=1 -falign-loops=1 -falign-labels=1 -falign-jumps=1 -fpeephole2 -fauto-inc-dec -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-stack-protector -fomit-frame-pointer -ftoplevel-reorder -freorder-functions -fdelete-null-pointer-checks -fcompare-elim -fcprop-registers -fdce -fif-conversion -fif-conversion2 -fmerge-constants -fno-reorder-blocks  -fno-reorder-blocks-and-partition -fno-prefetch-loop-arrays
 			  
-#-falign-functions=4 -falign-loops=4 -falign-labels=4 -falign-jumps=2
+#
 CFLAGSCOMMON = $(WARNINGS) $(ACPI) $(OPTIMISATIONS) -march=$(TUNING) -mtune=$(TUNING) -mcld -ffreestanding -fmax-errors=5 -I $(INCPATH) -I $(LIBKPATH) -DKERNEL_CODE -D_libk
 CFLAGS32 = -c -m32 -DTHIRTYTWOBIT $(CFLAGSCOMMON) -fvisibility=hidden
 #C code has visibility hidden so that all of the ACPICA stuff doesn't clog it up
