@@ -48,8 +48,7 @@ void sb16Demo(void* s)
 {
 	SoundBlaster16* dev = (SoundBlaster16*) s;
 
-	SoundChannel* c = new SoundChannel(12000, 8, 90);
-	SoundChannel* c2 = new SoundChannel(12000, 8, 270);
+	SoundChannel* c = new SoundChannel(25000, 8, 90);
 
 	File* f = new File("C:/ybr.wav", kernelProcess);
 	f->open(FileOpenMode::Read);
@@ -146,7 +145,7 @@ void sb16Handler(regs* r, void* context)
 	reinterpret_cast<SoundBlaster16*>(context)->handleIRQ();
 }
 
-#define DMA_SIZE 8192
+#define DMA_SIZE (8192 * 2)
 
 int SoundBlaster16::getNumHwChannels()
 {
@@ -186,7 +185,7 @@ int SoundBlaster16::open(int, int, void*)
 	sign = true;
 	stereo = false;
 
-	hertz = 12000;// sampleRate;
+	hertz = 25000;// sampleRate;
 	bits = 8;// _bits;
 
 	bool readonly = false;
