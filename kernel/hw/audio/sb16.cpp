@@ -51,7 +51,7 @@ void sb16Demo(void* s)
 	SoundChannel* c = new SoundChannel(8000, 8, 90);
 	SoundChannel* c2 = new SoundChannel(8000, 8, 270);
 
-	File* f = new File("C:/flopside.wav", kernelProcess);
+	File* f = new File("C:/ybr.wav", kernelProcess);
 	f->open(FileOpenMode::Read);
 
 	bool playedYet = false;
@@ -182,7 +182,7 @@ int SoundBlaster16::open(int, int, void*)
 	sign = true;
 	stereo = false;
 
-	hertz = 8000;// sampleRate;
+	hertz = 22000;// sampleRate;
 	bits = 8;// _bits;
 
 	bool readonly = false;
