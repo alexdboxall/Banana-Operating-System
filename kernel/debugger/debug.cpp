@@ -83,7 +83,7 @@ namespace Debug
 		asm volatile ("mov %%cr2, %0" : "=r"(cr2));
 		size_t cr3;
 		asm volatile ("mov %%cr3, %0" : "=r"(cr3));
-		kernelProcess->terminal->puts("\n isr ", VgaColour::White, VgaColour::Teal);
+		kernelProcess->terminal->puts("REGISTER DUMP\n\n isr: ", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx(r->int_no);
 		kernelProcess->terminal->puts(" (");
 		kernelProcess->terminal->puts(debugExceptionNames[r->int_no]);
