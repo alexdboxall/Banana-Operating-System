@@ -8,6 +8,7 @@
 namespace Debug
 {
 	bool exceptionInDebugger = false;
+	bool exceptionWhileDumping = false;
 
 	char debugExceptionNames[][32] = {
 	"Division by zero error",
@@ -79,6 +80,8 @@ namespace Debug
 
 	void dumpRegisters(regs* r)
 	{
+		exceptionWhileDumping = true;
+
 		size_t cr2;
 		asm volatile ("mov %%cr2, %0" : "=r"(cr2));
 		size_t cr3;
@@ -129,11 +132,24 @@ namespace Debug
 		kernelProcess->terminal->puts("gs", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx(r->gs);
 		
-		
+		kernelProcess->terminal->puts("\n call 0: ", VgaColour::White, VgaColour::Teal);
+		kernelProcess->terminal->putx(__builtin_return_address(0));
+		kernelProcess->terminal->puts("\n call 1: ", VgaColour::White, VgaColour::Teal);
+		kernelProcess->terminal->putx(__builtin_return_address(1));
+		kernelProcess->terminal->puts("\n call 2: ", VgaColour::White, VgaColour::Teal);
+		kernelProcess->terminal->putx(__builtin_return_address(2));
+		kernelProcess->terminal->puts("\n call 3: ", VgaColour::White, VgaColour::Teal);
+		kernelProcess->terminal->putx(__builtin_return_address(3));
+
+		exceptionWhileDumping = false;
 	}
 
 	void handleFault(regs* r)
 	{
+		if (exceptionWhileDumping) {
+			return;
+		}
+
 		setActiveTerminal(kernelProcess->terminal);
 
 		kernelProcess->terminal->puts("Exception ", VgaColour::White, VgaColour::Teal);
