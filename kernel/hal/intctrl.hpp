@@ -49,6 +49,8 @@ public:
 	int convertLegacyIRQNumber(int num);
 };
 
+void displayFunctionCallers();
+
 InterruptController* setupInterruptController();
 
 #endif
