@@ -15,7 +15,6 @@ git add *.*
 git add kernel
 git add firmware
 git add bochs
-
 git commit -a --allow-empty-message -m ""
 git remote add origin https://github.com/A22347/Banana.git
 git push -u origin main

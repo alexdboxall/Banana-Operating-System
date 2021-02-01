@@ -14,6 +14,6 @@
 #include "core/terminal.hpp"
 #include "core/computer.hpp"
 #include "libk/string.h"
-#include "debug/debug.hpp"
+#include "debugger/debug.hpp"
 
 #endif
