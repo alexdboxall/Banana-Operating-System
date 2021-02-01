@@ -17,8 +17,6 @@ ATAPI::ATAPI() : PhysicalDisk("ATAPI Disk", 2048)
 
 int ATAPI::sendPacket(uint8_t* packet, int maxTransferSize, bool write, uint16_t* data, int count)
 {
-	kprintf("Sending ATAPI packet.\n");
-
 	//enable IRQs
 	ide->enableIRQs(channel, true);
 	ide->prepareInterrupt(channel);
@@ -65,8 +63,6 @@ int ATAPI::sendPacket(uint8_t* packet, int maxTransferSize, bool write, uint16_t
 		uint16_t high = ide->read(channel, ATA_REG_LBA2);
 
 		int words = (low | (high << 8)) / 2;
-
-		kprintf("H %d.\n", words);
 
 		if (write) {
 			for (int i = 0; i < words; ++i) {
@@ -154,51 +150,38 @@ void ATAPI::diskRemoved()
 
 void ATAPI::diskInserted()
 {
+	kprintf("ATAPI: Disk inserted.\n");
 	diskIn = true;
 }
 
 void ATAPI::detectMedia()
 {
-	kprintf("ATAPI detect media.\n");
 	//create a TEST UNIT READY packet
 	uint8_t packet[12];
 	memset(packet, 0, 12);
-	kprintf("created TEST UNIT READY\n");
 
 	//send it
 	sendPacket(packet, 0, false, nullptr, 0);
-	kprintf("sent TEST UNIT READY\n");
 
 	//create a REQUEST SENSE packet
 	memset(packet, 0, 12);
 	packet[0] = ATAPI_CMD_REQUEST_SENSE;
 	packet[4] = 18;
-	kprintf("created REQUEST SENSE\n");
 
 	//send it
 	uint8_t senseData[18];
 	sendPacket(packet, 18, false, (uint16_t*) senseData, 1);
-	kprintf("sent REQUEST SENSE\n");
 
 	//check there is actually error data
 	if ((senseData[0] & 0x7F) != 0x70) {
-		kprintf("RQ: A\n");
-
 		if (!diskIn) {
-			kprintf("RQ: B\n");
 			diskInserted();
-			kprintf("RQ: C\n");
 		}
-
-		kprintf("RQ: D\n");
 	}
-
-	kprintf("RQ: E\n");
 
 	//parse the response
 	uint8_t senseKey = senseData[2] & 0xF;
 	uint8_t additionalSenseCode = senseData[12];
-	kprintf("RQ: F\n");
 
 	//check for NO MEDIA
 	if (senseKey == 0x02 && additionalSenseCode == 0x3A) {
@@ -220,8 +203,6 @@ void ATAPI::detectMedia()
 		}
 		kprintf("RQ: N\n");
 	}
-
-	kprintf("RQ: O\n");
 }
 
 int ATAPI::read(uint64_t lba, int count, void* buffer)
@@ -233,6 +214,8 @@ int ATAPI::read(uint64_t lba, int count, void* buffer)
 			return (int) DiskError::NotReady;
 		}
 	}
+
+	kprintf("sending an ATAPI read command.\n");
 
 	//create the packet
 	uint8_t packet[12] = { ATAPI_CMD_READ, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };

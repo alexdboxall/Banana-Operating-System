@@ -550,14 +550,12 @@ extern "C" void mapVASFirstTime()
 	//12KB kernel (interrupt handler) stack
 	for (int i = 0; i < 3; ++i) {
 		vas->mapRange(PhysMem::allocatePage(), VIRT_APP_STACK_KRNL_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL, 1, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_WRITABLE | PAGE_SUPERVISOR);
-		kprintf("Mapping a stack here: 0x%X\n", VIRT_APP_STACK_KRNL_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL);
 	}
 
 	//OLD: 8KB user (or kernel mode task) stack
 	//NEW: 128KB user stack
 	for (int i = 0; i < 32; ++i) {
 		vas->mapRange(PhysMem::allocatePage(), VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL, 1, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_WRITABLE | (vas->supervisorVAS ? PAGE_SUPERVISOR : PAGE_USER));
-		kprintf("Mapping a stack here: 0x%X\n", VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL);
 	}
 
 	thisCPU()->writeCR3(thisCPU()->readCR3());
