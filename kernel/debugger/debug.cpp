@@ -78,6 +78,31 @@ namespace Debug
 		return;
 	}
 
+	char lookupReturnBuffer[64];
+
+	char* lookupFunction(uint32_t addr)
+	{
+
+		if (addr < 0xC0000000) {
+			strcpy(lookupReturnBuffer, "< below kernel >");
+			return lookupReturnBuffer;
+		}
+		
+		if (addr > 0xF0000000) {
+			strcpy(lookupReturnBuffer, "< driver? >");
+			return lookupReturnBuffer;
+		}
+
+		if (addr > 0xC8000000) {
+			strcpy(lookupReturnBuffer, "< above kernel >");
+			return lookupReturnBuffer;
+		}
+
+		strcpy(lookupReturnBuffer, "< unknown kernel function >");
+
+		return lookupReturnBuffer;
+	}
+
 	void dumpRegisters(regs* r)
 	{
 		exceptionWhileDumping = true;
@@ -134,12 +159,24 @@ namespace Debug
 		
 		kernelProcess->terminal->puts("\n call 0: ", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx((uint32_t) __builtin_return_address(0));
+		kernelProcess->terminal->puts(" ");
+		kernelProcess->terminal->puts(lookupFunction((uint32_t) __builtin_return_address(0)));
+
 		kernelProcess->terminal->puts("\n call 1: ", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx((uint32_t) __builtin_return_address(1));
+		kernelProcess->terminal->puts(" ");
+		kernelProcess->terminal->puts(lookupFunction((uint32_t) __builtin_return_address(1)));
+
 		kernelProcess->terminal->puts("\n call 2: ", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx((uint32_t) __builtin_return_address(2));
+		kernelProcess->terminal->puts(" ");
+		kernelProcess->terminal->puts(lookupFunction((uint32_t) __builtin_return_address(2)));
+
 		kernelProcess->terminal->puts("\n call 3: ", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx((uint32_t) __builtin_return_address(3));
+		kernelProcess->terminal->puts(" ");
+		kernelProcess->terminal->puts(lookupFunction((uint32_t) __builtin_return_address(3)));
+		kernelProcess->terminal->puts("\n");
 
 		exceptionWhileDumping = false;
 	}
