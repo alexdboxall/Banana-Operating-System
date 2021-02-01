@@ -224,7 +224,7 @@ void ATAPI::detectMedia()
 int ATAPI::read(uint64_t lba, int count, void* buffer)
 {
 	kprintf("ATAPI::read.\n");
-	Debug::displayFunctionCallers(0);
+	Debug::displayFunctionCallers(3);
 
 	//check that there is a disk and it hasn't changed
 	if (!diskIn) {
