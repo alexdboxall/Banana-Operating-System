@@ -213,13 +213,6 @@ InterruptController::~InterruptController()
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wframe-address"
 
-void displayFunctionCallers()
-{
-	kprintf("call1: 0x%X\n", (uint32_t) __builtin_return_address(1));
-	kprintf("call2: 0x%X\n", (uint32_t) __builtin_return_address(2));
-	kprintf("call3: 0x%X\n", (uint32_t) __builtin_return_address(3));
-}
-
 void displayDebugInfo(regs* r)
 {
 	size_t cr2;

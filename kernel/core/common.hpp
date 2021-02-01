@@ -14,7 +14,6 @@
 #include "core/terminal.hpp"
 #include "core/computer.hpp"
 #include "libk/string.h"
-
-void displayFunctionCallers();
+#include "debug/debug.hpp"
 
 #endif
