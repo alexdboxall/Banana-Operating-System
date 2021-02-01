@@ -53,6 +53,7 @@ rm T:\Banana\Packages\wallpaper.cab
 robocopy D:/Users/Alex/Desktop/Banana/packages/system/32/0001 T:/Banana/System /E
 robocopy D:/Users/Alex/Desktop/Banana/packages/system/32/0002 T:/Banana/Drivers /E
 cd kernel
+copy "D:/Users/Alex/Desktop/Banana/kernel/kernel32.map" "T:/Banana/Debug/kernel32.map" || pause
 copy "D:/Users/Alex/Desktop/Banana/kernel/BANANABT" "T:/Banana/BANANABT" || pause
 copy "D:/Users/Alex/Desktop/Banana/kernel/FIRMWARE.LIB" "T:/Banana/FIRMWARE.LIB" || pause
 rem copy "D:/Users/Alex/Desktop/Banana/kernel/KERNEL.EXE"   "T:/BANANA/System/KERNEL64.EXE" || pause
