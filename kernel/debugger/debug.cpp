@@ -1,12 +1,13 @@
 #include "debugger/debug.hpp"
 #include "core/prcssthr.hpp"
+#include "hw/ports.hpp"
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wframe-address"
 
 namespace Debug
 {
-	bool exceptionInDebugger;
+	bool exceptionInDebugger = false;
 
 	char debugExceptionNames[][32] = {
 	"Division by zero error",
