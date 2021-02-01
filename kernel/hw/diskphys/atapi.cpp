@@ -154,6 +154,9 @@ void ATAPI::diskInserted()
 {
 	kprintf("ATAPI: Disk inserted.\n");
 	diskIn = true;
+
+	startCache();
+	createPartitionsForDisk(this);
 }
 
 void ATAPI::detectMedia()
