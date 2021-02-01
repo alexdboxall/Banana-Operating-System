@@ -78,9 +78,10 @@ int ATAPI::sendPacket(uint8_t* packet, int maxTransferSize, bool write, uint16_t
 		} else {
 			kprintf("G.\n");
 			for (int i = 0; i < words; ++i) {
+				kprintf(".");
 				*data++ = inw(ide->getBase(channel));
 			}
-			kprintf("H.\n");
+			kprintf("\nH.\n");
 		}
 
 		kprintf("I.\n");
@@ -230,7 +231,8 @@ int ATAPI::read(uint64_t lba, int count, void* buffer)
 		}
 	}
 
-	kprintf("sending an ATAPI read command.\n");
+	kprintf("sending an ATAPI read command.\nlba = %d, count = %d, buffer = 0x%X\n", \
+			(int) lba, count, buffer);
 
 	//create the packet
 	uint8_t packet[12] = { ATAPI_CMD_READ, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
