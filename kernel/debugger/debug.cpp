@@ -36,8 +36,6 @@ namespace Debug
 
 	bool askIfWantDump()
 	{
-		return true;
-
 		bool resp = false;
 
 		while (1) {
