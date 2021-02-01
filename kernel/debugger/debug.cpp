@@ -51,16 +51,17 @@ namespace Debug
 
 	gotResp:
 
-		/*while (1) {
+		while (1) {
 			char c = inb(0x60);
-			if (!c) break;
-		}*/
+			if (c != 0x17 && c != 0x43 && c != 0x20 && c != 0x23) break;
+		}
 
 		return resp;
 	}
 
 	void pauseForEnter()
 	{
+		kernelProcess->terminal->puts("Press ENTER.\n", VgaColour::White, VgaColour::Maroon);
 		while (1) {
 			char c = inb(0x60);
 			if (c == 0x1C || c == 0x5A) {
@@ -70,7 +71,7 @@ namespace Debug
 
 		while (1) {
 			char c = inb(0x60);
-			if (!c) break;
+			if (c != 0x1C && c != 0x5A) break;
 		}
 
 		return;
@@ -82,11 +83,11 @@ namespace Debug
 		asm volatile ("mov %%cr2, %0" : "=r"(cr2));
 		size_t cr3;
 		asm volatile ("mov %%cr3, %0" : "=r"(cr3));
-		kernelProcess->terminal->puts(" interrupt ", VgaColour::White, VgaColour::Teal);
+		kernelProcess->terminal->puts("\n isr ", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx(r->int_no);
-		kernelProcess->terminal->puts(" (", VgaColour::White, VgaColour::Teal);
-		kernelProcess->terminal->puts(debugExceptionNames[r->int_no], VgaColour::White, VgaColour::Teal);
-		kernelProcess->terminal->puts(") ", VgaColour::White, VgaColour::Teal);
+		kernelProcess->terminal->puts(" (");
+		kernelProcess->terminal->puts(debugExceptionNames[r->int_no]);
+		kernelProcess->terminal->puts(") ");
 		kernelProcess->terminal->puts("\n eax: ", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx(r->eax);
 		kernelProcess->terminal->puts("\n ebx: ", VgaColour::White, VgaColour::Teal);
@@ -101,33 +102,34 @@ namespace Debug
 		kernelProcess->terminal->putx(r->edi);
 		kernelProcess->terminal->puts("\n esp: ", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx(r->esp);
-		kernelProcess->terminal->puts("\n  *u: ", VgaColour::White, VgaColour::Teal);
+		kernelProcess->terminal->puts("\n    * ", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx(r->useresp);
 		kernelProcess->terminal->puts("\n ebp: ", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx(r->ebp);
 		kernelProcess->terminal->puts("\n eip: ", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx(r->eip);
+		kernelProcess->terminal->puts("\n efl: ", VgaColour::White, VgaColour::Teal);
+		kernelProcess->terminal->putx(r->eflags);
 		kernelProcess->terminal->puts("\n cr2: ", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx(cr2);
 		kernelProcess->terminal->puts("\n cr3: ", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx(cr3);
 		kernelProcess->terminal->puts("\n err: ", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx(r->err_code);
-		kernelProcess->terminal->puts("\n cs: ", VgaColour::White, VgaColour::Teal);
+		kernelProcess->terminal->puts("\n cs", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx(r->cs);
-		kernelProcess->terminal->puts("  ds: ", VgaColour::White, VgaColour::Teal);
+		kernelProcess->terminal->puts("ds", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx(r->ds);
-		kernelProcess->terminal->puts("  es: ", VgaColour::White, VgaColour::Teal);
+		kernelProcess->terminal->puts("es", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx(r->es);
-		kernelProcess->terminal->puts("  ss: ", VgaColour::White, VgaColour::Teal);
+		kernelProcess->terminal->puts("ss", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx(r->ss);
-		kernelProcess->terminal->puts("\n  fs: ", VgaColour::White, VgaColour::Teal);
+		kernelProcess->terminal->puts("\n fs", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx(r->fs);
-		kernelProcess->terminal->puts("  gs: ", VgaColour::White, VgaColour::Teal);
+		kernelProcess->terminal->puts("gs", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx(r->gs);
 		
-		kernelProcess->terminal->puts("\n  eflags: ", VgaColour::White, VgaColour::Teal);
-		kernelProcess->terminal->putx(r->eflags);
+		
 	}
 
 	void handleFault(regs* r)
