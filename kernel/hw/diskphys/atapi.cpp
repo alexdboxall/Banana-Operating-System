@@ -156,47 +156,69 @@ void ATAPI::diskInserted()
 
 void ATAPI::detectMedia()
 {
-	return;
-
+	kprintf("ATAPI detect media.\n");
 	//create a TEST UNIT READY packet
 	uint8_t packet[12];
 	memset(packet, 0, 12);
+	kprintf("created TEST UNIT READY\n");
 
 	//send it
 	sendPacket(packet, 0, false, nullptr, 0);
+	kprintf("sent TEST UNIT READY\n");
 
 	//create a REQUEST SENSE packet
 	memset(packet, 0, 12);
 	packet[0] = ATAPI_CMD_REQUEST_SENSE;
 	packet[4] = 18;
+	kprintf("created REQUEST SENSE\n");
 
 	//send it
 	uint8_t senseData[18];
 	sendPacket(packet, 18, false, (uint16_t*) senseData, 1);
+	kprintf("sent REQUEST SENSE\n");
 
 	//check there is actually error data
 	if ((senseData[0] & 0x7F) != 0x70) {
+		kprintf("RQ: A\n");
+
 		if (!diskIn) {
+			kprintf("RQ: B\n");
 			diskInserted();
+			kprintf("RQ: C\n");
 		}
+
+		kprintf("RQ: D\n");
 	}
+
+	kprintf("RQ: E\n");
 
 	//parse the response
 	uint8_t senseKey = senseData[2] & 0xF;
 	uint8_t additionalSenseCode = senseData[12];
+	kprintf("RQ: F\n");
 
 	//check for NO MEDIA
 	if (senseKey == 0x02 && additionalSenseCode == 0x3A) {
+		kprintf("RQ: G\n");
 		if (diskIn) {
+			kprintf("RQ: H\n");
 			diskRemoved();
+			kprintf("RQ: I\n");
 		}
+		kprintf("RQ: J\n");
 
 	//check for success (meaning there is a disk)
 	} else if (senseKey == 0x00) {
+		kprintf("RQ: K\n");
 		if (!diskIn) {
+			kprintf("RQ: L\n");
 			diskInserted();
+			kprintf("RQ: M\n");
 		}
+		kprintf("RQ: N\n");
 	}
+
+	kprintf("RQ: O\n");
 }
 
 int ATAPI::read(uint64_t lba, int count, void* buffer)
