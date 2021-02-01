@@ -53,10 +53,10 @@ namespace Debug
 
 	gotResp:
 
-		while (1) {
+		/*while (1) {
 			char c = inb(0x60);
 			if (!c) break;
-		}
+		}*/
 
 		return resp;
 	}
@@ -121,12 +121,13 @@ namespace Debug
 		kernelProcess->terminal->putx(r->ds);
 		kernelProcess->terminal->puts("  es: ", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx(r->es);
-		kernelProcess->terminal->puts("  fs: ", VgaColour::White, VgaColour::Teal);
+		kernelProcess->terminal->puts("  ss: ", VgaColour::White, VgaColour::Teal);
+		kernelProcess->terminal->putx(r->ss);
+		kernelProcess->terminal->puts("\n  fs: ", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx(r->fs);
 		kernelProcess->terminal->puts("  gs: ", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx(r->gs);
-		kernelProcess->terminal->puts("  ss: ", VgaColour::White, VgaColour::Teal);
-		kernelProcess->terminal->putx(r->ss);
+		
 		kernelProcess->terminal->puts("\n  eflags: ", VgaColour::White, VgaColour::Teal);
 		kernelProcess->terminal->putx(r->eflags);
 	}
