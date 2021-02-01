@@ -28,8 +28,6 @@ int ATAPI::sendPacket(uint8_t* packet, int maxTransferSize, bool write, uint16_t
 		return 1;
 	}
 
-	kprintf("A.\n");
-
 	//select the drive
 	ide->write(channel, ATA_REG_HDDEVSEL, drive << 4);
 
@@ -42,7 +40,6 @@ int ATAPI::sendPacket(uint8_t* packet, int maxTransferSize, bool write, uint16_t
 
 	//send the command
 	ide->write(channel, ATA_REG_COMMAND, ATA_CMD_PACKET);
-	kprintf("B.\n");
 
 	//poll
 	uint8_t err = ide->polling(channel, 1);
@@ -50,57 +47,38 @@ int ATAPI::sendPacket(uint8_t* packet, int maxTransferSize, bool write, uint16_t
 		ide->printError(channel, drive, err);
 		return err;
 	}
-	kprintf("C.\n");
 
 	//send the packet
 	outsw(ide->getBase(channel), (uint16_t*) packet, 6);
-	kprintf("D.\n");
 
 	while (count--) {
-		kprintf("E.\n");
-
 		//wait for the interrupt
 		bool gotIRQ = ide->waitInterrupt(channel);
 		if (!gotIRQ) {
 			return 1;
 		}
 
-		kprintf("F.\n");
-
 		ide->prepareInterrupt(channel);
-
-		kprintf("G.\n");
 
 		//get actual transfer size
 		uint16_t low = ide->read(channel, ATA_REG_LBA1);
-		uint16_t high = ide->read(channel, ATA_REG_LBA1);
+		uint16_t high = ide->read(channel, ATA_REG_LBA2);
 
 		int words = (low | (high << 8)) / 2;
 
 		kprintf("H %d.\n", words);
 
 		if (write) {
-			kprintf("I.\n");
-
 			for (int i = 0; i < words; ++i) {
-				kprintf("J.\n");
 				outw(ide->getBase(channel), *data++);
 			}
-			kprintf("K.\n");
 
 		} else {
-			kprintf("L.\n");
-
 			for (int i = 0; i < words; ++i) {
-				kprintf("M.\n");
 				*data++ = inw(ide->getBase(channel));
-				kprintf("N.\n");
 			}
-			kprintf("O.\n");
 		}
 	}
-
-	kprintf("P.\n");
 
 	//wait for the interrupt
 	bool gotIRQ = ide->waitInterrupt(channel);
@@ -108,7 +86,6 @@ int ATAPI::sendPacket(uint8_t* packet, int maxTransferSize, bool write, uint16_t
 		return 1;
 	}
 	ide->prepareInterrupt(channel);
-	kprintf("Q.\n");
 
 	//wait for BSY and DRQ to clear
 	uint8_t status;
@@ -119,7 +96,6 @@ int ATAPI::sendPacket(uint8_t* packet, int maxTransferSize, bool write, uint16_t
 			return 2;
 		}
 	}
-	kprintf("R.\n");
 
 	return 0;
 }
