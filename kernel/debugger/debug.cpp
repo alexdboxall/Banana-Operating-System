@@ -151,10 +151,14 @@ namespace Debug
 		exceptionInDebugger = true;
 
 		kprintf("DBG: Callers to the function:\n");
-		for (int i = 0; i < levels; ++i) {
-			kprintf("        %d: 0x%X\n", i, (uint32_t) __builtin_return_address(i));
-		}
-
+		
+		if (levels >= 1) kprintf("        0: 0x%X\n", (uint32_t) __builtin_return_address(0));
+		if (levels >= 2) kprintf("        1: 0x%X\n", (uint32_t) __builtin_return_address(1));
+		if (levels >= 3) kprintf("        2: 0x%X\n", (uint32_t) __builtin_return_address(2));
+		if (levels >= 4) kprintf("        3: 0x%X\n", (uint32_t) __builtin_return_address(3));
+		if (levels >= 5) kprintf("        4: 0x%X\n", (uint32_t) __builtin_return_address(4));
+		if (levels >= 6) kprintf("        5: 0x%X\n", (uint32_t) __builtin_return_address(5));
+		
 		exceptionInDebugger = false;
 		unlockScheduler();
 	}
