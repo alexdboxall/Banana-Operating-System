@@ -15,4 +15,6 @@
 #include "core/computer.hpp"
 #include "libk/string.h"
 
+void displayFunctionCallers();
+
 #endif
