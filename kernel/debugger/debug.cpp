@@ -133,13 +133,13 @@ namespace Debug
 		kernelProcess->terminal->putx(r->gs);
 		
 		kernelProcess->terminal->puts("\n call 0: ", VgaColour::White, VgaColour::Teal);
-		kernelProcess->terminal->putx(__builtin_return_address(0));
+		kernelProcess->terminal->putx((uint32_t) __builtin_return_address(0));
 		kernelProcess->terminal->puts("\n call 1: ", VgaColour::White, VgaColour::Teal);
-		kernelProcess->terminal->putx(__builtin_return_address(1));
+		kernelProcess->terminal->putx((uint32_t) __builtin_return_address(1));
 		kernelProcess->terminal->puts("\n call 2: ", VgaColour::White, VgaColour::Teal);
-		kernelProcess->terminal->putx(__builtin_return_address(2));
+		kernelProcess->terminal->putx((uint32_t) __builtin_return_address(2));
 		kernelProcess->terminal->puts("\n call 3: ", VgaColour::White, VgaColour::Teal);
-		kernelProcess->terminal->putx(__builtin_return_address(3));
+		kernelProcess->terminal->putx((uint32_t) __builtin_return_address(3));
 
 		exceptionWhileDumping = false;
 	}
