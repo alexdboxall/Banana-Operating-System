@@ -215,9 +215,9 @@ InterruptController::~InterruptController()
 
 void displayFunctionCallers()
 {
-	kprintf((uint32_t) __builtin_return_address(1));
-	kprintf((uint32_t) __builtin_return_address(2));
-	kprintf((uint32_t) __builtin_return_address(3));
+	kprintf("call1: 0x%X\n", (uint32_t) __builtin_return_address(1));
+	kprintf("call2: 0x%X\n", (uint32_t) __builtin_return_address(2));
+	kprintf("call3: 0x%X\n", (uint32_t) __builtin_return_address(3));
 }
 
 void displayDebugInfo(regs* r)
