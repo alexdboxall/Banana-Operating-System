@@ -5,6 +5,7 @@
 #include "core/physmgr.hpp"
 #include "libk/string.h"
 #include "core/malloc.h"
+#include "core/cpu.hpp"
 
 #define USE_MY_ALLOC
 
