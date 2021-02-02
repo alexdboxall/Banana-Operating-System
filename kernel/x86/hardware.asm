@@ -716,3 +716,15 @@ offAForkJumpThingy:
     add esp, 8     ; Cleans up the pushed error code and pushed ISR number
 
     iret           ; pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP!
+
+
+
+global ebcdicToASCII
+db ""
+ebcdicToASCII:
+    mov eax, [esp + 4]
+    push ebx
+    mov ebx, ebcdicToASCII
+    pop ebx
+    xlat
+    ret
