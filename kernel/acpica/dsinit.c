@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: dsinit - Object initialization namespace walk
+ * */
+#pragma GCC optimize ("Os")
+/* dsinit - Object initialization namespace walk
  *
  *****************************************************************************/
 

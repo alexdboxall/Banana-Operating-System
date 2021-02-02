@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: nsparse - namespace interface to AML parser
+ * */
+#pragma GCC optimize ("Os")
+/* nsparse - namespace interface to AML parser
  *
  *****************************************************************************/
 

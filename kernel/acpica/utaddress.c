@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: utaddress - OpRegion address range check
+ * */
+#pragma GCC optimize ("Os")
+/* utaddress - OpRegion address range check
  *
  *****************************************************************************/
 

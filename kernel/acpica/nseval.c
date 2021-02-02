@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: nseval - Object evaluation, includes control method execution
+ * */
+#pragma GCC optimize ("Os")
+/* nseval - Object evaluation, includes control method execution
  *
  ******************************************************************************/
 

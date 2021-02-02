@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: utids - support for device IDs - HID, UID, CID, SUB, CLS
+ * */
+#pragma GCC optimize ("Os")
+/* utids - support for device IDs - HID, UID, CID, SUB, CLS
  *
  *****************************************************************************/
 

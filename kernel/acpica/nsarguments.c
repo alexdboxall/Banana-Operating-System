@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: nsarguments - Validation of args for ACPI predefined methods
+ * */
+#pragma GCC optimize ("Os")
+/* nsarguments - Validation of args for ACPI predefined methods
  *
  *****************************************************************************/
 

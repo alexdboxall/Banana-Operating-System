@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: dswload - Dispatcher first pass namespace load callbacks
+ * */
+#pragma GCC optimize ("Os")
+/* dswload - Dispatcher first pass namespace load callbacks
  *
  *****************************************************************************/
 

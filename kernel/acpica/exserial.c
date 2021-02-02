@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: exserial - FieldUnit support for serial address spaces
+ * */
+#pragma GCC optimize ("Os")
+/* exserial - FieldUnit support for serial address spaces
  *
  *****************************************************************************/
 

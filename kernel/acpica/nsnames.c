@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: nsnames - Name manipulation and search
+ * */
+#pragma GCC optimize ("Os")
+/* nsnames - Name manipulation and search
  *
  ******************************************************************************/
 

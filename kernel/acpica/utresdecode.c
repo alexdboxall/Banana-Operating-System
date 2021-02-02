@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: utresdecode - Resource descriptor keyword strings
+ * */
+#pragma GCC optimize ("Os")
+/* utresdecode - Resource descriptor keyword strings
  *
  ******************************************************************************/
 

@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: exregion - ACPI default OpRegion (address space) handlers
+ * */
+#pragma GCC optimize ("Os")
+/* exregion - ACPI default OpRegion (address space) handlers
  *
  *****************************************************************************/
 

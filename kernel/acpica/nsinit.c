@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: nsinit - namespace initialization
+ * */
+#pragma GCC optimize ("Os")
+/* nsinit - namespace initialization
  *
  *****************************************************************************/
 

@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: uttrack - Memory allocation tracking routines (debug only)
+ * */
+#pragma GCC optimize ("Os")
+/* uttrack - Memory allocation tracking routines (debug only)
  *
  *****************************************************************************/
 

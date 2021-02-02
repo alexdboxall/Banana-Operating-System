@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: evsci - System Control Interrupt configuration and
+ * */
+#pragma GCC optimize ("Os")
+/* evsci - System Control Interrupt configuration and
  *                      legacy to ACPI mode state transition functions
  *
  ******************************************************************************/

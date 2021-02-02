@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: utownerid - Support for Table/Method Owner IDs
+ * */
+#pragma GCC optimize ("Os")
+/* utownerid - Support for Table/Method Owner IDs
  *
  ******************************************************************************/
 

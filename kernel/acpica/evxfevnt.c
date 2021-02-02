@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: evxfevnt - External Interfaces, ACPI event disable/enable
+ * */
+#pragma GCC optimize ("Os")
+/* evxfevnt - External Interfaces, ACPI event disable/enable
  *
  *****************************************************************************/
 

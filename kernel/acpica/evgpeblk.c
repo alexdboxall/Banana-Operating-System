@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: evgpeblk - GPE block creation and initialization.
+ * */
+#pragma GCC optimize ("Os")
+/* evgpeblk - GPE block creation and initialization.
  *
  *****************************************************************************/
 

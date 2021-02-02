@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: dsopcode - Dispatcher support for regions and fields
+ * */
+#pragma GCC optimize ("Os")
+/* dsopcode - Dispatcher support for regions and fields
  *
  *****************************************************************************/
 

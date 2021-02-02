@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: tbinstal - ACPI table installation and removal
+ * */
+#pragma GCC optimize ("Os")
+/* tbinstal - ACPI table installation and removal
  *
  *****************************************************************************/
 

@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: exmutex - ASL Mutex Acquire/Release functions
+ * */
+#pragma GCC optimize ("Os")
+/* exmutex - ASL Mutex Acquire/Release functions
  *
  *****************************************************************************/
 

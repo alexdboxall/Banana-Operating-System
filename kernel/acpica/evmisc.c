@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: evmisc - Miscellaneous event manager support functions
+ * */
+#pragma GCC optimize ("Os")
+/* evmisc - Miscellaneous event manager support functions
  *
  *****************************************************************************/
 

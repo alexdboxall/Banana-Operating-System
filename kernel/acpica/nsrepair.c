@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: nsrepair - Repair for objects returned by predefined methods
+ * */
+#pragma GCC optimize ("Os")
+/* nsrepair - Repair for objects returned by predefined methods
  *
  *****************************************************************************/
 

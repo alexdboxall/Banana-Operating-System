@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: hwregs - Read/write access functions for the various ACPI
+ * */
+#pragma GCC optimize ("Os")
+/* hwregs - Read/write access functions for the various ACPI
  *                       control and status registers.
  *
  ******************************************************************************/

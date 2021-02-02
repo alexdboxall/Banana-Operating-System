@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: pstree - Parser op tree manipulation/traversal/search
+ * */
+#pragma GCC optimize ("Os")
+/* pstree - Parser op tree manipulation/traversal/search
  *
  *****************************************************************************/
 

@@ -1074,6 +1074,9 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 
 		fprintf(out, "Volume label of %c: is %s\nVolume serial number is %04X-%04X\n", drive, labelbuf, serial >> 16, serial & 0xFFFF);
 
+	} else if (!strcasecmp(argv[0], "unpack")) {
+		unpackmain(argc, argv);
+
 	} else if (!strcasecmp(argv[0], "help") || !strcasecmp(argv[0], "?")) {
 		FILE* f = fopen("C:/Banana/Help/cmdhelp.txt", "r");
 		if (!f) {

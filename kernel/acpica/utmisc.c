@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: utmisc - common utility procedures
+ * */
+#pragma GCC optimize ("Os")
+/* utmisc - common utility procedures
  *
  ******************************************************************************/
 

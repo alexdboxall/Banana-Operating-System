@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init
+ * */
+#pragma GCC optimize ("Os")
+/* evrgnini- ACPI AddressSpace (OpRegion) init
  *
  *****************************************************************************/
 

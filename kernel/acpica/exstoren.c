@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: exstoren - AML Interpreter object store support,
+ * */
+#pragma GCC optimize ("Os")
+/* exstoren - AML Interpreter object store support,
  *                        Store to Node (namespace object)
  *
  *****************************************************************************/

@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: exfield - AML execution - FieldUnit read/write
+ * */
+#pragma GCC optimize ("Os")
+/* exfield - AML execution - FieldUnit read/write
  *
  *****************************************************************************/
 

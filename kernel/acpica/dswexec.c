@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: dswexec - Dispatcher method execution callbacks;
+ * */
+#pragma GCC optimize ("Os")
+/* dswexec - Dispatcher method execution callbacks;
  *                        dispatch to interpreter.
  *
  *****************************************************************************/

@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: utosi - Support for the _OSI predefined control method
+ * */
+#pragma GCC optimize ("Os")
+/* utosi - Support for the _OSI predefined control method
  *
  *****************************************************************************/
 

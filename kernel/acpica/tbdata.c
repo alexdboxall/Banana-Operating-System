@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: tbdata - Table manager data structure functions
+ * */
+#pragma GCC optimize ("Os")
+/* tbdata - Table manager data structure functions
  *
  *****************************************************************************/
 

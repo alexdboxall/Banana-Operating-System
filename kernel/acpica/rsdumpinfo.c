@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: rsdumpinfo - Tables used to display resource descriptors.
+ * */
+#pragma GCC optimize ("Os")
+/* rsdumpinfo - Tables used to display resource descriptors.
  *
  ******************************************************************************/
 

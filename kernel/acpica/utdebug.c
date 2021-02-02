@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: utdebug - Debug print/trace routines
+ * */
+#pragma GCC optimize ("Os")
+/* utdebug - Debug print/trace routines
  *
  *****************************************************************************/
 

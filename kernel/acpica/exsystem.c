@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: exsystem - Interface to OS services
+ * */
+#pragma GCC optimize ("Os")
+/* exsystem - Interface to OS services
  *
  *****************************************************************************/
 

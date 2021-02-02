@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: exstorob - AML object store support, store to object
+ * */
+#pragma GCC optimize ("Os")
+/* exstorob - AML object store support, store to object
  *
  *****************************************************************************/
 

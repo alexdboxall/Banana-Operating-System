@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: evxface - External interfaces for ACPI events
+ * */
+#pragma GCC optimize ("Os")
+/* evxface - External interfaces for ACPI events
  *
  *****************************************************************************/
 

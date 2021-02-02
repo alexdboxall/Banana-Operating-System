@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: nsxfobj - Public interfaces to the ACPI subsystem
+ * */
+#pragma GCC optimize ("Os")
+/* nsxfobj - Public interfaces to the ACPI subsystem
  *                         ACPI Object oriented interfaces
  *
  ******************************************************************************/

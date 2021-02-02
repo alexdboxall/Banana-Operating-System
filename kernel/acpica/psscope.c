@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: psscope - Parser scope stack management routines
+ * */
+#pragma GCC optimize ("Os")
+/* psscope - Parser scope stack management routines
  *
  *****************************************************************************/
 

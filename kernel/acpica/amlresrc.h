@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: amlresrc.h - AML resource descriptors
+ * */
+#pragma GCC optimize ("Os")
+/* amlresrc.h - AML resource descriptors
  *
  *****************************************************************************/
 

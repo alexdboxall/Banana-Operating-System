@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: tbxfload - Table load/unload external interfaces
+ * */
+#pragma GCC optimize ("Os")
+/* tbxfload - Table load/unload external interfaces
  *
  *****************************************************************************/
 

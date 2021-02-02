@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: nspredef - Validation of ACPI predefined methods and objects
+ * */
+#pragma GCC optimize ("Os")
+/* nspredef - Validation of ACPI predefined methods and objects
  *
  *****************************************************************************/
 

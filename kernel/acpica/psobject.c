@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: psobject - Support for parse objects
+ * */
+#pragma GCC optimize ("Os")
+/* psobject - Support for parse objects
  *
  *****************************************************************************/
 

@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: utglobal - Global variables for the ACPI subsystem
+ * */
+#pragma GCC optimize ("Os")
+/* utglobal - Global variables for the ACPI subsystem
  *
  *****************************************************************************/
 

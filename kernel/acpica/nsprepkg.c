@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: nsprepkg - Validation of package objects for predefined names
+ * */
+#pragma GCC optimize ("Os")
+/* nsprepkg - Validation of package objects for predefined names
  *
  *****************************************************************************/
 

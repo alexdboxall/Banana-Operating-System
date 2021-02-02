@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: actbinfo - Table disassembly info for non-AML tables
+ * */
+#pragma GCC optimize ("Os")
+/* actbinfo - Table disassembly info for non-AML tables
  *
  *****************************************************************************/
 

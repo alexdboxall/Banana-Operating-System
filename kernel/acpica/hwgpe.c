@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: hwgpe - Low level GPE enable/disable/clear functions
+ * */
+#pragma GCC optimize ("Os")
+/* hwgpe - Low level GPE enable/disable/clear functions
  *
  *****************************************************************************/
 

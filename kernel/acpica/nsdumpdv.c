@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: nsdump - table dumping routines for debug
+ * */
+#pragma GCC optimize ("Os")
+/* nsdump - table dumping routines for debug
  *
  *****************************************************************************/
 

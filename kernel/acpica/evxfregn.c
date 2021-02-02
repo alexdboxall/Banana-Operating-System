@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: evxfregn - External Interfaces, ACPI Operation Regions and
+ * */
+#pragma GCC optimize ("Os")
+/* evxfregn - External Interfaces, ACPI Operation Regions and
  *                         Address Spaces.
  *
  *****************************************************************************/

@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: dswload2 - Dispatcher second pass namespace load callbacks
+ * */
+#pragma GCC optimize ("Os")
+/* dswload2 - Dispatcher second pass namespace load callbacks
  *
  *****************************************************************************/
 

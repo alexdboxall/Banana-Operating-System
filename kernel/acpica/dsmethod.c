@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: dsmethod - Parser/Interpreter interface - control method parsing
+ * */
+#pragma GCC optimize ("Os")
+/* dsmethod - Parser/Interpreter interface - control method parsing
  *
  *****************************************************************************/
 

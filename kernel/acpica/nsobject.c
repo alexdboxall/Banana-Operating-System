@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: nsobject - Utilities for objects attached to namespace
+ * */
+#pragma GCC optimize ("Os")
+/* nsobject - Utilities for objects attached to namespace
  *                         table entries
  *
  ******************************************************************************/

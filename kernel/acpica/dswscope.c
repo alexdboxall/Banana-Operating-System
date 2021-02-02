@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: dswscope - Scope stack manipulation
+ * */
+#pragma GCC optimize ("Os")
+/* dswscope - Scope stack manipulation
  *
  *****************************************************************************/
 

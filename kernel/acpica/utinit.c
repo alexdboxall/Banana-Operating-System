@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: utinit - Common ACPI subsystem initialization
+ * */
+#pragma GCC optimize ("Os")
+/* utinit - Common ACPI subsystem initialization
  *
  *****************************************************************************/
 

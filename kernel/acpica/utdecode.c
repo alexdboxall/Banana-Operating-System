@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: utdecode - Utility decoding routines (value-to-string)
+ * */
+#pragma GCC optimize ("Os")
+/* utdecode - Utility decoding routines (value-to-string)
  *
  *****************************************************************************/
 

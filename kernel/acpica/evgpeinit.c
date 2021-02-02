@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: evgpeinit - System GPE initialization and update
+ * */
+#pragma GCC optimize ("Os")
+/* evgpeinit - System GPE initialization and update
  *
  *****************************************************************************/
 

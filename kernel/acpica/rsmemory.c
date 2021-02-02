@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: rsmem24 - Memory resource descriptors
+ * */
+#pragma GCC optimize ("Os")
+/* rsmem24 - Memory resource descriptors
  *
  ******************************************************************************/
 

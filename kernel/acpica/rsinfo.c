@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: rsinfo - Dispatch and Info tables
+ * */
+#pragma GCC optimize ("Os")
+/* rsinfo - Dispatch and Info tables
  *
  ******************************************************************************/
 

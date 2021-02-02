@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: rsmisc - Miscellaneous resource descriptors
+ * */
+#pragma GCC optimize ("Os")
+/* rsmisc - Miscellaneous resource descriptors
  *
  ******************************************************************************/
 

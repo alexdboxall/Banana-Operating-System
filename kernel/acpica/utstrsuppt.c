@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: utstrsuppt - Support functions for string-to-integer conversion
+ * */
+#pragma GCC optimize ("Os")
+/* utstrsuppt - Support functions for string-to-integer conversion
  *
  ******************************************************************************/
 

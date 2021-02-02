@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: exprep - ACPI AML field prep utilities
+ * */
+#pragma GCC optimize ("Os")
+/* exprep - ACPI AML field prep utilities
  *
  *****************************************************************************/
 

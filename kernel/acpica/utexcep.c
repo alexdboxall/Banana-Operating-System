@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: utexcep - Exception code support
+ * */
+#pragma GCC optimize ("Os")
+/* utexcep - Exception code support
  *
  ******************************************************************************/
 

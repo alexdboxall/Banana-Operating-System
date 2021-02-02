@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: exoparg3 - AML execution - opcodes with 3 arguments
+ * */
+#pragma GCC optimize ("Os")
+/* exoparg3 - AML execution - opcodes with 3 arguments
  *
  *****************************************************************************/
 

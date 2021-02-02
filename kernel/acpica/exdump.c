@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: exdump - Interpreter debug output routines
+ * */
+#pragma GCC optimize ("Os")
+/* exdump - Interpreter debug output routines
  *
  *****************************************************************************/
 

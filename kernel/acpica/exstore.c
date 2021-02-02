@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: exstore - AML Interpreter object store support
+ * */
+#pragma GCC optimize ("Os")
+/* exstore - AML Interpreter object store support
  *
  *****************************************************************************/
 

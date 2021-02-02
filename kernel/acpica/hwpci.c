@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: hwpci - Obtain PCI bus, device, and function numbers
+ * */
+#pragma GCC optimize ("Os")
+/* hwpci - Obtain PCI bus, device, and function numbers
  *
  ******************************************************************************/
 

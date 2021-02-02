@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: uthex -- Hex/ASCII support functions
+ * */
+#pragma GCC optimize ("Os")
+/* uthex -- Hex/ASCII support functions
  *
  *****************************************************************************/
 

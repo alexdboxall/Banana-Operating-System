@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: utcopy - Internal to external object translation utilities
+ * */
+#pragma GCC optimize ("Os")
+/* utcopy - Internal to external object translation utilities
  *
  *****************************************************************************/
 

@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: psopcode - Parser/Interpreter opcode information table
+ * */
+#pragma GCC optimize ("Os")
+/* psopcode - Parser/Interpreter opcode information table
  *
  *****************************************************************************/
 

@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: exutils - interpreter/scanner utilities
+ * */
+#pragma GCC optimize ("Os")
+/* exutils - interpreter/scanner utilities
  *
  *****************************************************************************/
 

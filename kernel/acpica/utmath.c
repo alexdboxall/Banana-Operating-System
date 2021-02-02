@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: utmath - Integer math support routines
+ * */
+#pragma GCC optimize ("Os")
+/* utmath - Integer math support routines
  *
  ******************************************************************************/
 

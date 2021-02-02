@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: utxfmutex - external AML mutex access functions
+ * */
+#pragma GCC optimize ("Os")
+/* utxfmutex - external AML mutex access functions
  *
  ******************************************************************************/
 

@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: utprint - Formatted printing routines
+ * */
+#pragma GCC optimize ("Os")
+/* utprint - Formatted printing routines
  *
  *****************************************************************************/
 

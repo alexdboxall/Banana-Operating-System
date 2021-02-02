@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: nsload - namespace loading/expanding/contracting procedures
+ * */
+#pragma GCC optimize ("Os")
+/* nsload - namespace loading/expanding/contracting procedures
  *
  *****************************************************************************/
 

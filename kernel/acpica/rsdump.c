@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: rsdump - AML debugger support for resource structures.
+ * */
+#pragma GCC optimize ("Os")
+/* rsdump - AML debugger support for resource structures.
  *
  ******************************************************************************/
 

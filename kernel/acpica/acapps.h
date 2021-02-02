@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: acapps - common include for ACPI applications/tools
+ * */
+#pragma GCC optimize ("Os")
+/* acapps - common include for ACPI applications/tools
  *
  *****************************************************************************/
 

@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: utalloc - local memory allocation routines
+ * */
+#pragma GCC optimize ("Os")
+/* utalloc - local memory allocation routines
  *
  *****************************************************************************/
 

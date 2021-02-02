@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: exmisc - ACPI AML (p-code) execution - specific opcodes
+ * */
+#pragma GCC optimize ("Os")
+/* exmisc - ACPI AML (p-code) execution - specific opcodes
  *
  *****************************************************************************/
 

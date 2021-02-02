@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: evregion - Operation Region support
+ * */
+#pragma GCC optimize ("Os")
+/* evregion - Operation Region support
  *
  *****************************************************************************/
 

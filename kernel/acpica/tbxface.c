@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: tbxface - ACPI table-oriented external interfaces
+ * */
+#pragma GCC optimize ("Os")
+/* tbxface - ACPI table-oriented external interfaces
  *
  *****************************************************************************/
 

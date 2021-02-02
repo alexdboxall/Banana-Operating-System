@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: nsxfeval - Public interfaces to the ACPI subsystem
+ * */
+#pragma GCC optimize ("Os")
+/* nsxfeval - Public interfaces to the ACPI subsystem
  *                         ACPI Object evaluation interfaces
  *
  ******************************************************************************/

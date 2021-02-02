@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: utobject - ACPI object create/delete/size/cache routines
+ * */
+#pragma GCC optimize ("Os")
+/* utobject - ACPI object create/delete/size/cache routines
  *
  *****************************************************************************/
 

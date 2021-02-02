@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)
+ * */
+#pragma GCC optimize ("Os")
+/* exconfig - Namespace reconfiguration (Load/Unload opcodes)
  *
  *****************************************************************************/
 

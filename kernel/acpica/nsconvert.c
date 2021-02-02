@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: nsconvert - Object conversions for objects returned by
+ * */
+#pragma GCC optimize ("Os")
+/* nsconvert - Object conversions for objects returned by
  *                          predefined methods
  *
  *****************************************************************************/

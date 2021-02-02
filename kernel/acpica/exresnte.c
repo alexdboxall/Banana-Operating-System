@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: exresnte - AML Interpreter object resolution
+ * */
+#pragma GCC optimize ("Os")
+/* exresnte - AML Interpreter object resolution
  *
  *****************************************************************************/
 

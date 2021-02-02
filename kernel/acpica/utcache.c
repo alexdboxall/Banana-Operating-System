@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: utcache - local cache allocation routines
+ * */
+#pragma GCC optimize ("Os")
+/* utcache - local cache allocation routines
  *
  *****************************************************************************/
 

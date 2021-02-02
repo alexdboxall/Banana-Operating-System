@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: nsaccess - Top-level functions for accessing ACPI namespace
+ * */
+#pragma GCC optimize ("Os")
+/* nsaccess - Top-level functions for accessing ACPI namespace
  *
  ******************************************************************************/
 

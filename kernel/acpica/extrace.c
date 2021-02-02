@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: extrace - Support for interpreter execution tracing
+ * */
+#pragma GCC optimize ("Os")
+/* extrace - Support for interpreter execution tracing
  *
  *****************************************************************************/
 

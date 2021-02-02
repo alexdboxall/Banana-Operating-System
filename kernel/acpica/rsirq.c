@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: rsirq - IRQ resource descriptors
+ * */
+#pragma GCC optimize ("Os")
+/* rsirq - IRQ resource descriptors
  *
  ******************************************************************************/
 

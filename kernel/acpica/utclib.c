@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: utclib - ACPICA implementations of C library functions
+ * */
+#pragma GCC optimize ("Os")
+/* utclib - ACPICA implementations of C library functions
  *
  *****************************************************************************/
 

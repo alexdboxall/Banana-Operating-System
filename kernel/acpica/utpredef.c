@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: utpredef - support functions for predefined names
+ * */
+#pragma GCC optimize ("Os")
+/* utpredef - support functions for predefined names
  *
  *****************************************************************************/
 

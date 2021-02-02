@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: rsxface - Public interfaces to the resource manager
+ * */
+#pragma GCC optimize ("Os")
+/* rsxface - Public interfaces to the resource manager
  *
  ******************************************************************************/
 

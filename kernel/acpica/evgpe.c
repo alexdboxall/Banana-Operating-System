@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: evgpe - General Purpose Event handling and dispatch
+ * */
+#pragma GCC optimize ("Os")
+/* evgpe - General Purpose Event handling and dispatch
  *
  *****************************************************************************/
 

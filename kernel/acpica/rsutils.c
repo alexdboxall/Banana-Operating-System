@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: rsutils - Utilities for the resource manager
+ * */
+#pragma GCC optimize ("Os")
+/* rsutils - Utilities for the resource manager
  *
  ******************************************************************************/
 

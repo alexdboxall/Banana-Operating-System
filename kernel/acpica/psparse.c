@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: psparse - Parser top level AML parse routines
+ * */
+#pragma GCC optimize ("Os")
+/* psparse - Parser top level AML parse routines
  *
  *****************************************************************************/
 

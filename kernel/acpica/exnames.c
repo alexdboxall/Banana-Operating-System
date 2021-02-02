@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: exnames - interpreter/scanner name load/execute
+ * */
+#pragma GCC optimize ("Os")
+/* exnames - interpreter/scanner name load/execute
  *
  *****************************************************************************/
 

@@ -44,11 +44,13 @@ cd D:/Users/Alex/Desktop/Banana
 robocopy D:/Users/Alex/Desktop/Banana/sysroot/ T:/ /E
 
 
-cp D:/Users/Alex/Desktop/Banana/packages/*.cab T:/Banana/Packages
-rm T:\Banana\Packages\devel.cab
-rm T:\Banana\Packages\system.cab
-rm T:\Banana\Packages\pci.cab
-rm T:\Banana\Packages\wallpaper.cab
+cp D:/Users/Alex/Desktop/Banana/packages/banana.cab T:/Banana/Packages
+
+rem cp D:/Users/Alex/Desktop/Banana/packages/*.cab T:/Banana/Packages
+rem rm T:\Banana\Packages\devel.cab
+rem rm T:\Banana\Packages\system.cab
+rem rm T:\Banana\Packages\pci.cab
+rem rm T:\Banana\Packages\wallpaper.cab
 
 robocopy D:/Users/Alex/Desktop/Banana/packages/system/32/0001 T:/Banana/System /E
 robocopy D:/Users/Alex/Desktop/Banana/packages/system/32/0002 T:/Banana/Drivers /E
@@ -65,7 +67,9 @@ rmdir T:\Banana\Dev64 /s /q
 mkdir T:\Banana\Dev64
 
 copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" T:\dummy.txt
+copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" T:\dummy2.txt
 rm T:\dummy.txt
+rm T:\dummy2.txt
 
 cd D:/Users/Alex/Desktop/
 attrib +h +r "T:/Banana/BANANABT" 

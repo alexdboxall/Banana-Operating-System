@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: exresolv - AML Interpreter object resolution
+ * */
+#pragma GCC optimize ("Os")
+/* exresolv - AML Interpreter object resolution
  *
  *****************************************************************************/
 

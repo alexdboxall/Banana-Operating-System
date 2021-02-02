@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: excreate - Named object creation
+ * */
+#pragma GCC optimize ("Os")
+/* excreate - Named object creation
  *
  *****************************************************************************/
 

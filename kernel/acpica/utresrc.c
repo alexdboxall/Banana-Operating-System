@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: utresrc - Resource management utilities
+ * */
+#pragma GCC optimize ("Os")
+/* utresrc - Resource management utilities
  *
  ******************************************************************************/
 

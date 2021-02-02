@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: exresop - AML Interpreter operand/object resolution
+ * */
+#pragma GCC optimize ("Os")
+/* exresop - AML Interpreter operand/object resolution
  *
  *****************************************************************************/
 

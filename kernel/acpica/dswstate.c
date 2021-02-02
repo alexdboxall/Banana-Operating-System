@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: dswstate - Dispatcher parse tree walk management routines
+ * */
+#pragma GCC optimize ("Os")
+/* dswstate - Dispatcher parse tree walk management routines
  *
  *****************************************************************************/
 

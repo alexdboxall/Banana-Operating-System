@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: nswalk - Functions for walking the ACPI namespace
+ * */
+#pragma GCC optimize ("Os")
+/* nswalk - Functions for walking the ACPI namespace
  *
  *****************************************************************************/
 

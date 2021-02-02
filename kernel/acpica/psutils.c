@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: psutils - Parser miscellaneous utilities (Parser only)
+ * */
+#pragma GCC optimize ("Os")
+/* psutils - Parser miscellaneous utilities (Parser only)
  *
  *****************************************************************************/
 

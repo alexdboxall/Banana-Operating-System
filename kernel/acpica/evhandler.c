@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: evhandler - Support for Address Space handlers
+ * */
+#pragma GCC optimize ("Os")
+/* evhandler - Support for Address Space handlers
  *
  *****************************************************************************/
 

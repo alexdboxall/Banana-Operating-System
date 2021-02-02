@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: acparser.h - AML Parser subcomponent prototypes and defines
+ * */
+#pragma GCC optimize ("Os")
+/* acparser.h - AML Parser subcomponent prototypes and defines
  *
  *****************************************************************************/
 

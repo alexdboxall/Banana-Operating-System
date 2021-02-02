@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: evxfgpe - External Interfaces for General Purpose Events (GPEs)
+ * */
+#pragma GCC optimize ("Os")
+/* evxfgpe - External Interfaces for General Purpose Events (GPEs)
  *
  *****************************************************************************/
 

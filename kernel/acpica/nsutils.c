@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing
+ * */
+#pragma GCC optimize ("Os")
+/* nsutils - Utilities for accessing ACPI namespace, accessing
  *                        parents and siblings and Scope manipulation
  *
  *****************************************************************************/

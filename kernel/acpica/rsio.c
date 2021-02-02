@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: rsio - IO and DMA resource descriptors
+ * */
+#pragma GCC optimize ("Os")
+/* rsio - IO and DMA resource descriptors
  *
  ******************************************************************************/
 

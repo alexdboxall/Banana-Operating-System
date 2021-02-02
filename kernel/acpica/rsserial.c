@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: rsserial - GPIO/SerialBus resource descriptors
+ * */
+#pragma GCC optimize ("Os")
+/* rsserial - GPIO/SerialBus resource descriptors
  *
  ******************************************************************************/
 

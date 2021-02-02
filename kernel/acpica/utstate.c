@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: utstate - state object support procedures
+ * */
+#pragma GCC optimize ("Os")
+/* utstate - state object support procedures
  *
  ******************************************************************************/
 

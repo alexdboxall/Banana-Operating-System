@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: evevent - Fixed Event handling and dispatch
+ * */
+#pragma GCC optimize ("Os")
+/* evevent - Fixed Event handling and dispatch
  *
  *****************************************************************************/
 

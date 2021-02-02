@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: utascii - Utility ascii functions
+ * */
+#pragma GCC optimize ("Os")
+/* utascii - Utility ascii functions
  *
  *****************************************************************************/
 

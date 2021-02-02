@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: utstrtoul64 - String-to-integer conversion support for both
+ * */
+#pragma GCC optimize ("Os")
+/* utstrtoul64 - String-to-integer conversion support for both
  *                            64-bit and 32-bit integers
  *
  ******************************************************************************/

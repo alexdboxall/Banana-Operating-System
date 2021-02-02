@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: utnonansi - Non-ansi C library functions
+ * */
+#pragma GCC optimize ("Os")
+/* utnonansi - Non-ansi C library functions
  *
  ******************************************************************************/
 

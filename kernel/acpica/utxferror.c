@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: utxferror - Various error/warning output functions
+ * */
+#pragma GCC optimize ("Os")
+/* utxferror - Various error/warning output functions
  *
  ******************************************************************************/
 

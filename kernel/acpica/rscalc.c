@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: rscalc - Calculate stream and list lengths
+ * */
+#pragma GCC optimize ("Os")
+/* rscalc - Calculate stream and list lengths
  *
  ******************************************************************************/
 

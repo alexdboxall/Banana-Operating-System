@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: rscreate - Create resource lists/tables
+ * */
+#pragma GCC optimize ("Os")
+/* rscreate - Create resource lists/tables
  *
  ******************************************************************************/
 

@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: utxfinit - External interfaces for ACPICA initialization
+ * */
+#pragma GCC optimize ("Os")
+/* utxfinit - External interfaces for ACPICA initialization
  *
  *****************************************************************************/
 

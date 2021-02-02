@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: nsalloc - Namespace allocation and deletion utilities
+ * */
+#pragma GCC optimize ("Os")
+/* nsalloc - Namespace allocation and deletion utilities
  *
  ******************************************************************************/
 

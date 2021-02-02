@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: hwxface - Public ACPICA hardware interfaces
+ * */
+#pragma GCC optimize ("Os")
+/* hwxface - Public ACPICA hardware interfaces
  *
  *****************************************************************************/
 

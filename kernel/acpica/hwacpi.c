@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: hwacpi - ACPI Hardware Initialization/Mode Interface
+ * */
+#pragma GCC optimize ("Os")
+/* hwacpi - ACPI Hardware Initialization/Mode Interface
  *
  *****************************************************************************/
 

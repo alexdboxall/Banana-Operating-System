@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: dsobject - Dispatcher object management routines
+ * */
+#pragma GCC optimize ("Os")
+/* dsobject - Dispatcher object management routines
  *
  *****************************************************************************/
 

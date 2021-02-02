@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: dsdebug - Parser/Interpreter interface - debugging
+ * */
+#pragma GCC optimize ("Os")
+/* dsdebug - Parser/Interpreter interface - debugging
  *
  *****************************************************************************/
 

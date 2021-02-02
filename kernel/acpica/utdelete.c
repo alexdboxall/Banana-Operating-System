@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: utdelete - object deletion and reference count utilities
+ * */
+#pragma GCC optimize ("Os")
+/* utdelete - object deletion and reference count utilities
  *
  ******************************************************************************/
 

@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: tbxfroot - Find the root ACPI table (RSDT)
+ * */
+#pragma GCC optimize ("Os")
+/* tbxfroot - Find the root ACPI table (RSDT)
  *
  *****************************************************************************/
 

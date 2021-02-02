@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: exconcat - Concatenate-type AML operators
+ * */
+#pragma GCC optimize ("Os")
+/* exconcat - Concatenate-type AML operators
  *
  *****************************************************************************/
 

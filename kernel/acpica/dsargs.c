@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: dsargs - Support for execution of dynamic arguments for static
+ * */
+#pragma GCC optimize ("Os")
+/* dsargs - Support for execution of dynamic arguments for static
  *                       objects (regions, fields, buffer fields, etc.)
  *
  *****************************************************************************/

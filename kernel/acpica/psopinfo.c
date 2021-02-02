@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: psopinfo - AML opcode information functions and dispatch tables
+ * */
+#pragma GCC optimize ("Os")
+/* psopinfo - AML opcode information functions and dispatch tables
  *
  *****************************************************************************/
 

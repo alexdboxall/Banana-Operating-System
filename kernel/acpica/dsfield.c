@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: dsfield - Dispatcher field routines
+ * */
+#pragma GCC optimize ("Os")
+/* dsfield - Dispatcher field routines
  *
  *****************************************************************************/
 

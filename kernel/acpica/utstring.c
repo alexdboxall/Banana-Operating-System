@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: utstring - Common functions for strings and characters
+ * */
+#pragma GCC optimize ("Os")
+/* utstring - Common functions for strings and characters
  *
  ******************************************************************************/
 

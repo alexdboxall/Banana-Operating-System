@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: utxface - External interfaces, miscellaneous utility functions
+ * */
+#pragma GCC optimize ("Os")
+/* utxface - External interfaces, miscellaneous utility functions
  *
  *****************************************************************************/
 

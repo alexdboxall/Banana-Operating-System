@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: psargs - Parse AML opcode arguments
+ * */
+#pragma GCC optimize ("Os")
+/* psargs - Parse AML opcode arguments
  *
  *****************************************************************************/
 

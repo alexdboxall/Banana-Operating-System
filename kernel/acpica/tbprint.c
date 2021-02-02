@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: tbprint - Table output utilities
+ * */
+#pragma GCC optimize ("Os")
+/* tbprint - Table output utilities
  *
  *****************************************************************************/
 

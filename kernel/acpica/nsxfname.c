@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: nsxfname - Public interfaces to the ACPI subsystem
+ * */
+#pragma GCC optimize ("Os")
+/* nsxfname - Public interfaces to the ACPI subsystem
  *                         ACPI Namespace oriented interfaces
  *
  *****************************************************************************/

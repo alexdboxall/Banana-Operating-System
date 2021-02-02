@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: rsaddr - Address resource descriptors (16/32/64)
+ * */
+#pragma GCC optimize ("Os")
+/* rsaddr - Address resource descriptors (16/32/64)
  *
  ******************************************************************************/
 

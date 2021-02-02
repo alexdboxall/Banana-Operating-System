@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: dsmthdat - control method arguments and local variables
+ * */
+#pragma GCC optimize ("Os")
+/* dsmthdat - control method arguments and local variables
  *
  ******************************************************************************/
 

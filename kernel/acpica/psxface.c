@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: psxface - Parser external interfaces
+ * */
+#pragma GCC optimize ("Os")
+/* psxface - Parser external interfaces
  *
  *****************************************************************************/
 

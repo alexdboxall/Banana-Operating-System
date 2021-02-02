@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: dscontrol - Support for execution control opcodes -
+ * */
+#pragma GCC optimize ("Os")
+/* dscontrol - Support for execution control opcodes -
  *                          if/else/while/return
  *
  *****************************************************************************/

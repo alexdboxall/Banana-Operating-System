@@ -1,6 +1,8 @@
 /*******************************************************************************
  *
- * Module Name: uterror - Various internal error/warning output functions
+ * */
+#pragma GCC optimize ("Os")
+/* uterror - Various internal error/warning output functions
  *
  ******************************************************************************/
 

@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: utlock - Reader/Writer lock interfaces
+ * */
+#pragma GCC optimize ("Os")
+/* utlock - Reader/Writer lock interfaces
  *
  *****************************************************************************/
 

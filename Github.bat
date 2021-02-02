@@ -15,7 +15,7 @@ git add installer/*.bat
 git add installer/*.s
 git add installer/*.py
 
-git commit -m "Initial commit" -a --allow-empty-message -m ""
+git commit -a --allow-empty-message -m ""
 git remote add origin https://github.com/A22347/Banana.git
 git push -u origin main
 

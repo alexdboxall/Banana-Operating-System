@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: exconvrt - Object conversion routines
+ * */
+#pragma GCC optimize ("Os")
+/* exconvrt - Object conversion routines
  *
  *****************************************************************************/
 

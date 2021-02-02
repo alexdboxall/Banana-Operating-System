@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: dspkginit - Completion of deferred package initialization
+ * */
+#pragma GCC optimize ("Os")
+/* dspkginit - Completion of deferred package initialization
  *
  *****************************************************************************/
 

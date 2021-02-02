@@ -1,6 +1,8 @@
 /******************************************************************************
  *
- * Module Name: pswalk - Parser routines to walk parsed op tree(s)
+ * */
+#pragma GCC optimize ("Os")
+/* pswalk - Parser routines to walk parsed op tree(s)
  *
  *****************************************************************************/
 
