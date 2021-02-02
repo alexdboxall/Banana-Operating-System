@@ -440,7 +440,6 @@ void CPU::detectFeatures()
 
 	memset(vendorIDString, 0, 13);
 
-#ifndef JUMPER32
 	if (computer->features.hasCPUID) {
 		features.hasTSC = cpuidCheckEDX(CPUID_FEAT_EDX_TSC);
 		features.hasPAE = cpuidCheckEDX(CPUID_FEAT_EDX_PAE);
@@ -649,7 +648,6 @@ void CPU::detectFeatures()
 			}
 		}
 	}
-#endif
 
 	opcodeDetectionMode = false;
 }

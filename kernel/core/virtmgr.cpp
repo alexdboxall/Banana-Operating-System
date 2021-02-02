@@ -194,7 +194,6 @@ namespace VirtMem
 		return firstVAS;
 	}
 
-
 	void setupPageSwapping(int megs)
 	{
 		File* f = new File("C:/Banana/SWAPFILE.SYS", kernelProcess);
@@ -229,12 +228,24 @@ namespace VirtMem
 
 size_t VAS::allocatePages(int count, int flags)
 {
+	bool invlpg = thisCPU()->features.hasINVLPG;
+
 	if (supervisorVAS) {
 		size_t virt = VirtMem::allocateKernelVirtualPages(count);
 		for (int i = 0; i < count; ++i) {
 			size_t phys = PhysMem::allocatePage();
 			mapPage(phys, virt + i * 4096, flags | PAGE_ALLOCATED);
+
+			if (invlpg) {
+				kprintf("invlpg 2\n");
+				asm volatile ("invlpg (%0)" : : "b"((void*) (virt + i * 4096)) : "memory");
+			}
 		}
+
+		if (!invlpg) {
+			computer->writeCR3(computer->readCR3());
+		}
+
 		return virt;
 
 	} else {
@@ -248,6 +259,15 @@ size_t VAS::allocatePages(int count, int flags)
 		for (int i = 0; i < count; ++i) {
 			size_t phys = PhysMem::allocatePage();
 			mapPage(phys, virt + i * 4096, flags | PAGE_ALLOCATED);
+
+			if (invlpg) {
+				kprintf("invlpg 3\n");
+				asm volatile ("invlpg (%0)" : : "b"((void*) (virt + i * 4096)) : "memory");
+			}
+		}
+
+		if (!invlpg) {
+			computer->writeCR3(computer->readCR3());
 		}
 
 		return virt;
@@ -431,8 +451,19 @@ VAS::VAS(bool kernel) {
 
 size_t VAS::mapRange(size_t physicalAddr, size_t virtualAddr, int pages, int flags)
 {
+	bool invlpg = thisCPU()->features.hasINVLPG;
+
 	for (int i = 0; i < pages; ++i) {
 		mapPage(physicalAddr + i * 4096, virtualAddr + i * 4096, flags);
+
+		if (invlpg) {
+			kprintf("invlpg\n");
+			asm volatile ("invlpg (%0)" : : "b"((void*) (virtualAddr + i * 4096)) : "memory");
+		}
+	}
+
+	if (!invlpg) {
+		computer->writeCR3(computer->readCR3());
 	}
 
 	return virtualAddr;

@@ -271,11 +271,6 @@ void gpFault(regs* r, void* context)
 
 	kprintf("General Protection Fault!\n");
 
-	if (Debug::exceptionInDebugger) {
-		Debug::handleFault(r);
-		return;
-	}
-
 	displayDebugInfo(r);
 	displayProgramFault("General protection fault");
 
@@ -293,11 +288,6 @@ void pgFault(regs* r, void* context)
 {
 	kprintf("Page Fault!\n");
 
-	if (Debug::exceptionInDebugger) {
-		Debug::handleFault(r);
-		return;
-	}
-
 	displayDebugInfo(r);
 	displayProgramFault("Page fault");
 
@@ -312,11 +302,6 @@ void nmiHandler(regs* r, void* context)
 void otherISRHandler(regs* r, void* context)
 {
 	kprintf("UNHANDLED EXCEPTION 0x%X/%d\n", r->int_no, r->int_no);
-
-	if (Debug::exceptionInDebugger) {
-		Debug::handleFault(r);
-		return;
-	}
 
 	displayDebugInfo(r);
 	displayProgramFault("Unhandled exception - CHECK KERNEL LOGS");
@@ -335,11 +320,6 @@ void opcodeFault(regs* r, void* context)
 	kprintf("Invalid Opcode!\n");
 	kprintf("OPCODE: 0x%X (then 0x%X %X %X)\n", *((uint8_t*)(0 + r->eip + r->cs * 16)), *((uint8_t*) (1 + r->eip + r->cs * 16)), *((uint8_t*) (2 + r->eip + r->cs * 16)), *((uint8_t*) (3 + r->eip + r->cs * 16)));
 	
-	if (Debug::exceptionInDebugger) {
-		Debug::handleFault(r);
-		return;
-	}
-
 	displayDebugInfo(r);
 	displayProgramFault("Opcode fault");
 
