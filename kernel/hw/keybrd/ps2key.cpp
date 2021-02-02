@@ -293,7 +293,7 @@ void PS2Keyboard::handler()
 			sendKey(KeyboardSpecialKeys::KeypadMultiply, nextIsARelease);
 
 		} else {
-			__asm__ __volatile__("movb %1, %%al; movw %2, %%bx; xlat; movb %%al, %0\n\t"
+			__asm__ __volatile__("movb %1, %%al; movd %2, %%ebx; xlat; movb %%al, %0\n\t"
 				: "=g" (c)
 				: "g" (c), "g" (caps && capslk ? internalMapCapUpperBad :
 							caps && !capslk ? internalMapperUpperBad :
