@@ -22,12 +22,25 @@ extern "C" void* sbrk(ptrdiff_t increment)
 		return (void*) -1;
 
 	} else {
+		bool invlpg = thisCPU()->features.hasINVLPG;
+		
 		size_t oldbrk = brk;
 		int pages = (increment + 4095) / 4096;
 		for (int i = 0; i < pages; ++i) {
 			VirtMem::getAKernelVAS()->mapPage(PhysMem::allocatePage(), brk, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_SUPERVISOR);
+			
+			if (invlpg) {
+				asm volatile ("invlpg (%0)" : : "b"((void*) (brk)) : "memory");
+			}
+			
 			brk += 4096;
+
 		}
+		
+		if (!invlpg) {
+			thisCPU()->writeCR3(thisCPU()->readCR3());
+		}
+		
 		return (void*) oldbrk;
 	}
 }

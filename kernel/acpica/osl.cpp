@@ -327,11 +327,21 @@ extern "C" {
 
 	void* AcpiOsMapMemory(ACPI_PHYSICAL_ADDRESS PhysicalAddress, ACPI_SIZE Length)
 	{
+		bool invlpg = thisCPU()->features.hasINVLPG;
+		
 		int pages = (Length + 4096) / 4096;
 		size_t virt = VirtMem::allocateKernelVirtualPages(pages);
 
 		for (int i = 0; i < pages; ++i) {
 			VirtMem::getAKernelVAS()->mapPage((PhysicalAddress & ~0xFFF) + i * 4096, virt + i * 4096, PAGE_PRESENT | PAGE_SUPERVISOR);
+			
+			if (invlpg) {
+				asm volatile ("invlpg (%0)" : : "b"((void*) (virt + i * 4096)) : "memory");
+			}
+		}
+		
+		if (!invlpg) {
+			thisCPU()->writeCR3(thisCPU()->readCR3());
 		}
 
 		return (void*) (virt | (PhysicalAddress & 0xFFF));

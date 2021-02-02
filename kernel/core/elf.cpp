@@ -18,6 +18,9 @@ bool allocateMemoryForTask(Process* prcss, File* file, size_t size, size_t virtu
 
 	We do not save the mappings in the current VAS, and there is only a single 4KB spot where
 	we map them in and do the copying (virtMappingSpot)
+	
+	We do not need to INVLPG or reload CR3 here, because this is only called on program load
+	and CR3 will be set when this task is switched in for the first time.
 	*/
 
 	if ((virtualAddr & 0xFFF) && additionalNullBytes && !size) {
