@@ -11,6 +11,8 @@ extern "C" {
 #include "libk/string.h"
 }
 
+constexpr uint8_t PS2Keyboard::set1TranslationTable[1024];
+/*
 constexpr uint8_t PS2Keyboard::internalMapperLower[256];
 constexpr uint8_t PS2Keyboard::internalMapperUpper[256];
 constexpr uint8_t PS2Keyboard::internalMapCapLower[256];
@@ -19,7 +21,7 @@ constexpr uint8_t PS2Keyboard::internalMapCapUpper[256];
 constexpr uint8_t PS2Keyboard::internalMapperLowerBad[256];
 constexpr uint8_t PS2Keyboard::internalMapperUpperBad[256];
 constexpr uint8_t PS2Keyboard::internalMapCapLowerBad[256];
-constexpr uint8_t PS2Keyboard::internalMapCapUpperBad[256];
+constexpr uint8_t PS2Keyboard::internalMapCapUpperBad[256];*/
 
 PS2Keyboard::PS2Keyboard(): Keyboard("PS/2 Keyboard")
 {
@@ -293,10 +295,14 @@ void PS2Keyboard::handler()
 			sendKey(KeyboardSpecialKeys::KeypadMultiply, nextIsARelease);
 
 		} else {
-			sendKey(caps && capslk ? internalMapCapUpperBad[c] :
-					caps && !capslk ? internalMapperUpperBad[c] :
-					!caps && capslk ? internalMapCapLowerBad[c] :
-					internalMapperLowerBad[c], nextIsARelease);
+			uint8_t x = 0;
+			asm("int3; hlt");
+			x = caps && capslk ? internalMapCapUpperBad[c] :
+				caps && !capslk ? internalMapperUpperBad[c] :
+				!caps && capslk ? internalMapCapLowerBad[c] :
+				internalMapperLowerBad[c];
+			asm("cmc");
+			sendKey(x, nextIsARelease);
 		}
 
 	} else {
