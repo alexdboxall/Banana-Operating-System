@@ -296,7 +296,7 @@ void PS2Keyboard::handler()
 		} else {
 			__asm__ __volatile__("movb %1, %%al; movl %2, %%ebx; xlat; movb %%al, %0\n\t"
 				: "=g" (c)
-				: "g" (c), "g" (internalMapperLowerBad + caps * 128 + capslk * 256)
+				: "g" (c), "g" (internalMapperLowerBad + (caps * 128) + (capslk * 256))
 				: "%al", "%bx");
 
 			sendKey(c, nextIsARelease);
