@@ -33,6 +33,9 @@ rem cp crti.322 crti.32
 rem cp crtn.322 crtn.32
 rem make -j1 TUNING=i386 kernel386NoACPI ACPI=-DJUMPER32 || pause
 
+rm disasm.txt
+objdump -drwC -Mintel kernel/KERNEL32.EXE >> disasm.txt
+
 cd D:/Users/Alex/Desktop/Banana
 call Run
 pause
