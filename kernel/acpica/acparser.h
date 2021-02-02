@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * */
-#pragma GCC optimize ("O1")
+#pragma GCC optimize ("O0")
 /* acparser.h - AML Parser subcomponent prototypes and defines
  *
  *****************************************************************************/

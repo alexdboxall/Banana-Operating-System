@@ -1,7 +1,7 @@
 /*******************************************************************************
  *
  * */
-#pragma GCC optimize ("O1")
+#pragma GCC optimize ("O0")
 /* hwregs - Read/write access functions for the various ACPI
  *                       control and status registers.
  *

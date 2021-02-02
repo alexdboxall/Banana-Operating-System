@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * */
-#pragma GCC optimize ("O1")
+#pragma GCC optimize ("O0")
 /* evxfregn - External Interfaces, ACPI Operation Regions and
  *                         Address Spaces.
  *
