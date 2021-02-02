@@ -17,7 +17,7 @@ constexpr uint8_t PS2Keyboard::internalMapperUpper[256];
 constexpr uint8_t PS2Keyboard::internalMapCapLower[256];
 constexpr uint8_t PS2Keyboard::internalMapCapUpper[256];
 
-constexpr uint8_t PS2Keyboard::internalMapperLowerBad[512];
+constexpr uint8_t PS2Keyboard::internalMapperLowerBad[555];
 /*constexpr uint8_t PS2Keyboard::internalMapperUpperBad[256];
 constexpr uint8_t PS2Keyboard::internalMapCapLowerBad[256];
 constexpr uint8_t PS2Keyboard::internalMapCapUpperBad[256];*/
