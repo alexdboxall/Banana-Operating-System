@@ -12,12 +12,13 @@ extern "C" {
 }
 
 constexpr uint8_t PS2Keyboard::set1TranslationTable[1024];
-/*
+
 constexpr uint8_t PS2Keyboard::internalMapperLower[256];
 constexpr uint8_t PS2Keyboard::internalMapperUpper[256];
 constexpr uint8_t PS2Keyboard::internalMapCapLower[256];
 constexpr uint8_t PS2Keyboard::internalMapCapUpper[256];
 
+/*
 constexpr uint8_t PS2Keyboard::internalMapperLowerBad[256];
 constexpr uint8_t PS2Keyboard::internalMapperUpperBad[256];
 constexpr uint8_t PS2Keyboard::internalMapCapLowerBad[256];
