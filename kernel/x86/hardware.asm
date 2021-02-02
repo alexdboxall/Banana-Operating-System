@@ -31,7 +31,7 @@ hasLegacyFPU:
 	JNE .nofpu                              ; jump if the FPU hasn't written anything (i.e. it's not there)
 	JMP .hasfpu
  .nofpu:
-	mov eax, 0
+	xor eax, eax
 	ret
 .hasfpu:
 	mov eax, 1
@@ -45,7 +45,7 @@ is486:
 	mov eax, 1
 	ret
 	times 90 db 0x90
-	mov eax, 0
+	xor eax, eax
 	ret
 
 global goToVM86
@@ -218,8 +218,8 @@ commonThreadSwitch:
 
 .cameOffAFork:
 	;heavy wizardry
-	mov eax, 0
-	mov edx, 0
+	xor eax, eax
+	xor edx, edx
 	mov esp, [esi + 0x1C]
 
 	jmp offAForkJumpThingy
@@ -717,14 +717,3 @@ offAForkJumpThingy:
 
     iret           ; pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP!
 
-
-
-global ebcdicToASCII
-db ""
-ebcdicToASCII:
-    mov eax, [esp + 4]
-    push ebx
-    mov ebx, ebcdicToASCII
-    pop ebx
-    xlat
-    ret

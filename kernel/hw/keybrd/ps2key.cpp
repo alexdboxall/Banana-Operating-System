@@ -293,10 +293,15 @@ void PS2Keyboard::handler()
 			sendKey(KeyboardSpecialKeys::KeypadMultiply, nextIsARelease);
 
 		} else {
-			sendKey(caps && capslk ? internalMapCapUpperBad[c] :
-					caps && !capslk ? internalMapperUpperBad[c] :
-					!caps && capslk ? internalMapCapLowerBad[c] :
-					internalMapperLowerBad[c], nextIsARelease);
+			__asm__ __volatile__("mov %0, %%al; xlat; mov %%al, %1\n\t"
+				: "=a" (c)
+				: "a" (c), "b" (caps && capslk ? internalMapCapUpperBad :
+							caps && !capslk ? internalMapperUpperBad :
+							!caps && capslk ? internalMapCapLowerBad :
+							internalMapperLowerBad)
+				: "%al", "%bx");
+
+			sendKey(c, nextIsARelease);
 		}
 
 	} else {
