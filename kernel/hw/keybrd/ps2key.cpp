@@ -297,10 +297,10 @@ void PS2Keyboard::handler()
 		} else {
 			uint8_t x = 0;
 			asm("int3; hlt");
-			x = caps && capslk ? internalMapCapUpperBad[c] :
+			/*x = caps && capslk ? internalMapCapUpperBad[c] :
 				caps && !capslk ? internalMapperUpperBad[c] :
 				!caps && capslk ? internalMapCapLowerBad[c] :
-				internalMapperLowerBad[c];
+				internalMapperLowerBad[c];*/
 			asm("cmc");
 			sendKey(x, nextIsARelease);
 		}
