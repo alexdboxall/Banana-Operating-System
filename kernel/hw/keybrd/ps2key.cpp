@@ -17,10 +17,10 @@ constexpr uint8_t PS2Keyboard::internalMapperUpper[256];
 constexpr uint8_t PS2Keyboard::internalMapCapLower[256];
 constexpr uint8_t PS2Keyboard::internalMapCapUpper[256];
 
-constexpr uint8_t PS2Keyboard::internalMapperLowerBad[256];
-constexpr uint8_t PS2Keyboard::internalMapperUpperBad[256];
+constexpr uint8_t PS2Keyboard::internalMapperLowerBad[512];
+/*constexpr uint8_t PS2Keyboard::internalMapperUpperBad[256];
 constexpr uint8_t PS2Keyboard::internalMapCapLowerBad[256];
-constexpr uint8_t PS2Keyboard::internalMapCapUpperBad[256];
+constexpr uint8_t PS2Keyboard::internalMapCapUpperBad[256];*/
 
 PS2Keyboard::PS2Keyboard(): Keyboard("PS/2 Keyboard")
 {
@@ -296,7 +296,7 @@ void PS2Keyboard::handler()
 		} else {
 			__asm__ __volatile__("movb %1, %%al; movl %2, %%ebx; xlat; movb %%al, %0\n\t"
 				: "=g" (c)
-				: "g" (c), "g" (internalMapperLowerBad + caps * 256 + capslk * 512)
+				: "g" (c), "g" (internalMapperLowerBad + caps * 128 + capslk * 256)
 				: "%al", "%bx");
 
 			sendKey(c, nextIsARelease);
