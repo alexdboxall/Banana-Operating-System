@@ -1,7 +1,7 @@
 /*******************************************************************************
  *
  * */
-#pragma GCC optimize ("Os")
+#pragma GCC optimize ("O1")
 /* nsaccess - Top-level functions for accessing ACPI namespace
  *
  ******************************************************************************/

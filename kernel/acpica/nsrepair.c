@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * */
-#pragma GCC optimize ("Os")
+#pragma GCC optimize ("O1")
 /* nsrepair - Repair for objects returned by predefined methods
  *
  *****************************************************************************/

@@ -1,7 +1,7 @@
 /*******************************************************************************
  *
  * */
-#pragma GCC optimize ("Os")
+#pragma GCC optimize ("O1")
 /* nsxfobj - Public interfaces to the ACPI subsystem
  *                         ACPI Object oriented interfaces
  *

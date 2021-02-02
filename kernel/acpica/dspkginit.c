@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * */
-#pragma GCC optimize ("Os")
+#pragma GCC optimize ("O1")
 /* dspkginit - Completion of deferred package initialization
  *
  *****************************************************************************/

@@ -1,7 +1,7 @@
 /*******************************************************************************
  *
  * */
-#pragma GCC optimize ("Os")
+#pragma GCC optimize ("O1")
 /* evsci - System Control Interrupt configuration and
  *                      legacy to ACPI mode state transition functions
  *

@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * */
-#pragma GCC optimize ("Os")
+#pragma GCC optimize ("O1")
 /* dswload2 - Dispatcher second pass namespace load callbacks
  *
  *****************************************************************************/

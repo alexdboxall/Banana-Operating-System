@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * */
-#pragma GCC optimize ("Os")
+#pragma GCC optimize ("O1")
 /* utcopy - Internal to external object translation utilities
  *
  *****************************************************************************/

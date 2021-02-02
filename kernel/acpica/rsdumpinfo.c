@@ -1,7 +1,7 @@
 /*******************************************************************************
  *
  * */
-#pragma GCC optimize ("Os")
+#pragma GCC optimize ("O1")
 /* rsdumpinfo - Tables used to display resource descriptors.
  *
  ******************************************************************************/

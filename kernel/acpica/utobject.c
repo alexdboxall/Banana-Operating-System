@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * */
-#pragma GCC optimize ("Os")
+#pragma GCC optimize ("O1")
 /* utobject - ACPI object create/delete/size/cache routines
  *
  *****************************************************************************/

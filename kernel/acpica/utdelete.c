@@ -1,7 +1,7 @@
 /*******************************************************************************
  *
  * */
-#pragma GCC optimize ("Os")
+#pragma GCC optimize ("O1")
 /* utdelete - object deletion and reference count utilities
  *
  ******************************************************************************/

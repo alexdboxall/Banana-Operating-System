@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * */
-#pragma GCC optimize ("Os")
+#pragma GCC optimize ("O1")
 /* nsarguments - Validation of args for ACPI predefined methods
  *
  *****************************************************************************/

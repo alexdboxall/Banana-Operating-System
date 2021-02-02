@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * */
-#pragma GCC optimize ("Os")
+#pragma GCC optimize ("O1")
 /* exconfig - Namespace reconfiguration (Load/Unload opcodes)
  *
  *****************************************************************************/

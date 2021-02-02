@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * */
-#pragma GCC optimize ("Os")
+#pragma GCC optimize ("O1")
 /* dswstate - Dispatcher parse tree walk management routines
  *
  *****************************************************************************/
