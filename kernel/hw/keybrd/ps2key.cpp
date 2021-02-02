@@ -18,9 +18,6 @@ constexpr uint8_t PS2Keyboard::internalMapCapLower[256];
 constexpr uint8_t PS2Keyboard::internalMapCapUpper[256];
 
 constexpr uint8_t PS2Keyboard::internalMapperLowerBad[513];
-/*constexpr uint8_t PS2Keyboard::internalMapperUpperBad[256];
-constexpr uint8_t PS2Keyboard::internalMapCapLowerBad[256];
-constexpr uint8_t PS2Keyboard::internalMapCapUpperBad[256];*/
 
 PS2Keyboard::PS2Keyboard(): Keyboard("PS/2 Keyboard")
 {
