@@ -201,30 +201,21 @@ void ATAPI::detectMedia()
 
 	//check for NO MEDIA
 	if (senseKey == 0x02 && additionalSenseCode == 0x3A) {
-		kprintf("RQ: G\n");
 		if (diskIn) {
-			kprintf("RQ: H\n");
 			diskRemoved();
-			kprintf("RQ: I\n");
 		}
-		kprintf("RQ: J\n");
 
 	//check for success (meaning there is a disk)
 	} else if (senseKey == 0x00) {
-		kprintf("RQ: K\n");
 		if (!diskIn) {
-			kprintf("RQ: L\n");
 			diskInserted();
-			kprintf("RQ: M\n");
 		}
-		kprintf("RQ: N\n");
 	}
 }
 
 int ATAPI::read(uint64_t lba, int count, void* buffer)
 {
 	kprintf("ATAPI::read.\n");
-	Debug::displayFunctionCallers(3);
 
 	//check that there is a disk and it hasn't changed
 	if (!diskIn) {
@@ -234,8 +225,7 @@ int ATAPI::read(uint64_t lba, int count, void* buffer)
 		}
 	}
 
-	kprintf("sending an ATAPI read command.\nlba = %d, count = %d, buffer = 0x%X\n", \
-			(int) lba, count, buffer);
+	kprintf("sending an ATAPI read command.\nlba = %d, count = %d, buffer = 0x%X\n", (int) lba, count, buffer);
 
 	//create the packet
 	uint8_t packet[12] = { ATAPI_CMD_READ, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };

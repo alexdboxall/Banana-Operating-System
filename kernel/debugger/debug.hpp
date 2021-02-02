@@ -6,11 +6,7 @@
 
 namespace Debug
 {
-	extern bool exceptionInDebugger;
-
-	void displayFunctionCallers(int levels = 2);
-	void handleFault(regs* r);
-
+	
 }
 
 #endif

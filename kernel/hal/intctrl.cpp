@@ -8,37 +8,31 @@
 #include "hw/acpi.hpp"
 #include "hw/ports.hpp"
 #include "hw/cpu.hpp"
+
 #pragma GCC optimize ("O0")
 
-/*
-
-Warning: 'Magic' is used a few times in here...
-		 *cough* *cough* line 62 *cough*
-
-*/
-
-char exceptionNames[][5] = {
-	"DIV0",
-	"DBG",
-	"NMI",
-	"BRK",
-	"OVER",
-	"BNDS",
-	"I.OP",
-	"N.AV",
-	"2FLT",
-	"C.SO",
-	"TSS",
-	"SEG",
-	"STCK",
-	"GP",
-	"PAGE",
-	"RESV",
-	"FPU",
-	"ALGN",
-	"MCHN",
-	"SIMD",
-	"VIRT",
+char exceptionNames[][32] = {
+	"Division by zero error",
+	"Debug",
+	"Non-maskable interrupt",
+	"Breakpoint",
+	"Overflow",
+	"Bound range exceeded",
+	"Invalid opcode",
+	"Device not available",
+	"Dobule fault",
+	"Coprocessor segment",
+	"Invalid TSS",
+	"Segment not present",
+	"Stack segment fault",
+	"General protection fault",
+	"Page fault",
+	"Reserved",
+	"Floating point exception",
+	"Alignment check",
+	"Machine check",
+	"SIMD floating-point exception",
+	"Virtualisation exception",
 };
 
 #define ISR_DIV_BY_ZERO 0x00
