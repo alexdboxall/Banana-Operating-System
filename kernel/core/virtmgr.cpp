@@ -243,7 +243,7 @@ size_t VAS::allocatePages(int count, int flags)
 		}
 
 		if (!invlpg) {
-			computer->writeCR3(computer->readCR3());
+			thisCPU()->writeCR3(thisCPU()->readCR3());
 		}
 
 		return virt;
@@ -267,7 +267,7 @@ size_t VAS::allocatePages(int count, int flags)
 		}
 
 		if (!invlpg) {
-			computer->writeCR3(computer->readCR3());
+			thisCPU()->writeCR3(thisCPU()->readCR3());
 		}
 
 		return virt;
@@ -463,7 +463,7 @@ size_t VAS::mapRange(size_t physicalAddr, size_t virtualAddr, int pages, int fla
 	}
 
 	if (!invlpg) {
-		computer->writeCR3(computer->readCR3());
+		thisCPU()->writeCR3(thisCPU()->readCR3());
 	}
 
 	return virtualAddr;
