@@ -11,6 +11,7 @@ extern "C" {
 #include "libk/string.h"
 }
 
+//MUST KEEP THESE IN ORDER
 constexpr uint8_t PS2Keyboard::internalMapperLower[256];
 constexpr uint8_t PS2Keyboard::internalMapperUpper[256];
 constexpr uint8_t PS2Keyboard::internalMapCapLower[256];
@@ -295,10 +296,10 @@ void PS2Keyboard::handler()
 		} else {
 			__asm__ __volatile__("movb %1, %%al; movl %2, %%ebx; xlat; movb %%al, %0\n\t"
 				: "=g" (c)
-				: "g" (c), "g" (caps && capslk ? internalMapCapUpperBad :
+				: "g" (c), "g" (internalMapperLowerBad + caps * 256 + capslk * 512 /*caps && capslk ? internalMapCapUpperBad :
 							caps && !capslk ? internalMapperUpperBad :
 							!caps && capslk ? internalMapCapLowerBad :
-							internalMapperLowerBad)
+							internalMapperLowerBad*/)
 				: "%al", "%bx");
 
 			sendKey(c, nextIsARelease);

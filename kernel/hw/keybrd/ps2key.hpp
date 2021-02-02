@@ -141,6 +141,7 @@ public:
 
 	bool badTranslation = false;
 
+	//MUST KEEP THESE IN ORDER
 	static constexpr uint8_t internalMapperLower[256]	 = "              `      q1   zsaw2  cxde43   vftr5  nbhgy6   mju78  ,kio09  ./l;p-   ' [=     ] \\           1 47   0.2568   +3-*9             -";
 	static constexpr uint8_t internalMapperUpper[256]	 = "              ~      Q!   ZSAW@  CXDE$#   VFTR%  NBHGY^   MJU&*  <KIO)(  >?L:P_   \" {+     } |           1 47   0.2568   +3-*9              ";
 	static constexpr uint8_t internalMapCapLower[256]	 = "              `      Q1   ZSAW2  CXDE43   VFTR5  NBHGY6   MJU78  ,KIO09  ./L;P-   ' [=     ] \\           1 47   0.2568   +3-*9             -";
