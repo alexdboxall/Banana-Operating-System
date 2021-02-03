@@ -36,19 +36,19 @@ inline __attribute__((always_inline)) void insb(uint16_t port, void* addr, size_
 	asm volatile ("rep insb" : "+D" (addr), "+c" (cnt) : "d" (port) : "memory");
 }
 
-inline void insw(uint16_t port, void* addr, size_t cnt)
+inline __attribute__((always_inline)) void insw(uint16_t port, void* addr, size_t cnt)
 {
-	asm __attribute__((always_inline)) volatile ("rep insw" : "+D" (addr), "+c" (cnt) : "d" (port) : "memory");
+	asm volatile ("rep insw" : "+D" (addr), "+c" (cnt) : "d" (port) : "memory");
 }
 
-inline void insl(uint16_t port, void* addr, size_t cnt)
+inline __attribute__((always_inline)) void insl(uint16_t port, void* addr, size_t cnt)
 {
-	asm __attribute__((always_inline)) volatile ("rep insl" : "+D" (addr), "+c" (cnt) : "d" (port) : "memory");
+	asm volatile ("rep insl" : "+D" (addr), "+c" (cnt) : "d" (port) : "memory");
 }
 
-inline void outb(uint16_t port, uint8_t  val)
+inline __attribute__((always_inline)) void outb(uint16_t port, uint8_t  val)
 {
-	asm __attribute__((always_inline)) volatile ("outb %0, %1" : : "a"(val), "Nd"(port));
+	asm volatile ("outb %0, %1" : : "a"(val), "Nd"(port));
 }
 
 inline __attribute__((always_inline)) void outw(uint16_t port, uint16_t val)
