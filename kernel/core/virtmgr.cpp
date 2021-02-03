@@ -7,8 +7,8 @@
 #include "core/elf.hpp"
 
 VAS* firstVAS = nullptr;
-#pragma GCC optimize ("O1")
-#pragma GCC optimize ("-fpeephole2")
+#pragma GCC optimize ("O2")
+//#pragma GCC optimize ("-fpeephole2")
 
 namespace VirtMem
 {
