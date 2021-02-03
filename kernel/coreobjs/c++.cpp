@@ -1,5 +1,5 @@
 #include "core/common.hpp"
-#pragma GCC optimize ("O2")
+#pragma GCC optimize ("Os")
 
 #if UINT32_MAX == UINTPTR_MAX
 #define STACK_CHK_GUARD 0xe2dee396
