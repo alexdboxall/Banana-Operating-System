@@ -199,7 +199,6 @@ clean:
 
 common32:
 	nasm -O0 -f bin $(SOURCEDIR)/vm86/VGASET.S -o $(SYSROOTDIR)/Banana/System/VGASET.COM   -w+orphan-labels
-
 	nasm $(SOURCEDIR)/x86/boot.asm     -felf32 -O0 -o $(SOURCEDIR)/boot.32
 	nasm $(SOURCEDIR)/x86/hardware.asm -felf32 -O0 -o $(SOURCEDIR)/morenasm.32
 	nasm -O0 -f bin $(SOURCEDIR)/boot/TRAMP.S -o $(SOURCEDIR)/TRAMP.EXE   -w+orphan-labels
