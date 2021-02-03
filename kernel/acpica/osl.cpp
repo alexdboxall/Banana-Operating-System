@@ -11,7 +11,7 @@
 #include "hal/intctrl.hpp"
 #include <stdarg.h>
 
-#pragma GCC optimize ("O1")
+#pragma GCC optimize ("O2")
 
 extern "C" {
 #include "acpi.h"
