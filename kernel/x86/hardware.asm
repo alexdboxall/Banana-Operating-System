@@ -377,9 +377,8 @@ global irq23
 
 isr0:
     cli
-    ;push 0
-    ;push 0
-    db 0x6A, 0x00, 0x6A, 0x00
+    push 0
+    push 0
     jmp int_common_stub
 
 isr1:
@@ -390,123 +389,122 @@ isr1:
 
 isr2:
     cli
-    push 0
-    push 2
-
+    push byte 0
+    push byte 2
     jmp int_common_stub
 
 isr3:
     cli
-    push 0
-    push 3
+    push byte 0
+    push byte 3
     jmp int_common_stub
 
 isr4:
     cli
-    push 0
-    push 4
+    push byte 0
+    push byte 4
     jmp int_common_stub
 
 isr5:
     cli
-    push 0
-    push 5
+    push byte 0
+    push byte 5
     jmp int_common_stub
 
 isr6:
 	cli
-    push 0
-    push 6
+    push byte 0
+    push byte 6
     jmp int_common_stub
 
 isr7:
     cli
-    push 0
-    push 7
+    push byte 0
+    push byte 7
     jmp int_common_stub
 
 isr8:
     cli
-    push 8
+    push byte 8
     jmp int_common_stub
 
 isr9:
     cli
-    push 0
-    push 9
+    push byte 0
+    push byte 9
     jmp int_common_stub
 
 isr10:
 	cli
-    push 10
+    push byte 10
     jmp int_common_stub
 
 isr11:
     cli
-    push 11
+    push byte 11
     jmp int_common_stub
 
 isr12:
     cli
-    push 12
+    push byte 12
     jmp int_common_stub
 
 isr13:
     cli
-    push 13
+    push byte 13
     jmp int_common_stub
 
 isr14:
     cli
-    push 14
+    push byte 14
     jmp int_common_stub
 
 isr15:
     cli
-    push 0
-    push 15
+    push byte 0
+    push byte 15
     jmp int_common_stub
 
 isr16:
     cli
-    push 0
-    push 16
+    push byte 0
+    push byte 16
     jmp int_common_stub
 
 isr17:
     cli
-    push 0
-    push 17
+    push byte 0
+    push byte 17
     jmp int_common_stub
 
 isr18:
     cli
-    push 0
-    push 18
+    push byte 0
+    push byte 18
     jmp int_common_stub
 
 isr96:
     cli
-    push 0
-    push 96
+    push byte 0
+    push byte 96
     jmp syscall_common_stub
 
 irq0:
     cli
-    push 0
-    push 32
+    push byte 0
+    push byte 32
     jmp int_common_stub
 
 irq1:
     cli
-    push 0
-    push 33
+    push byte 0
+    push byte 33
     jmp int_common_stub
 
 irq2:
     cli
-    push 0
-    push 34
+    push byte 0
+    push byte 34
     jmp int_common_stub
 
 irq3:
