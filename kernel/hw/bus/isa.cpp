@@ -41,23 +41,17 @@ void ISA::doSpeaker()
 
 void ISA::doSoundblaster()
 {
-	return;
-
 	outb(0x226, 1);
 	nanoSleep(1000 * 1000 * 3);
 	outb(0x226, 0);
 
 	if (inb(0x22A) == 0xAA) {
-		kprintf("Added soundblaster!\n");
 		SoundBlaster16* sb = new SoundBlaster16();
 		addChild(sb);
 		sb->open(0, 0, nullptr);
 
-		kprintf("About to blast!\n");
 		extern void sb16Demo(void*);
 		kernelProcess->createThread(sb16Demo, (void*) sb, 111);
-		//sb16Demo((void*) sb);
-		kprintf("Blasted.\n");
 	}
 }
 

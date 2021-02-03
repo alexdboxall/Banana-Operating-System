@@ -13,7 +13,7 @@
 #include "config.h"
 #include "float_cast.h"
 #include "common.h"
-#pragma GCC optimize ("Os")
+#pragma GCC optimize ("O2")
 
 #define	SINC_MAGIC_MARKER	MAKE_MAGIC (' ', 's', 'i', 'n', 'c', ' ')
 
