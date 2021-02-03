@@ -33,6 +33,7 @@ extern void installVgaTextImplementation();
 
 #define VGA_TEXT_MODE_ADDRESS 0xC20B8000
 
+#pragma GCC optimize ("O2")
 
 void hwTextMode_loadInData(VgaText* terminal)
 {
