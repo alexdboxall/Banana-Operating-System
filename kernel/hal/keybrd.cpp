@@ -4,7 +4,7 @@
 #include "core/terminal.hpp"
 #include "libk/string.h"
 #include "core/prcssthr.hpp"
-#pragma GCC optimize ("O0")
+#pragma GCC optimize ("O2")
 
 bool keystates[0x400];
 
