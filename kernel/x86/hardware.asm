@@ -27,14 +27,12 @@ hasLegacyFPU:
 	MOV CR0, EDX                            ; store control word
 	FNINIT                                  ; load defaults to FPU
 	FNSTSW [testword]                      ; store status word
+    xor eax, eax
 	CMP word [testword], 0                 ; compare the written status with the expected FPU state
 	JNE .nofpu                              ; jump if the FPU hasn't written anything (i.e. it's not there)
-	JMP .hasfpu
- .nofpu:
-	xor eax, eax
-	ret
 .hasfpu:
-	mov eax, 1
+    inc eax
+ .nofpu:
 	ret
 
 testword: DW 0x55AA                    ; store garbage to be able to detect a change
@@ -42,7 +40,8 @@ testword: DW 0x55AA                    ; store garbage to be able to detect a ch
 
 is486:
 	wbinvd
-	mov eax, 1
+	xor eax, eax
+    inc eax
 	ret
 	times 90 db 0x90
 	xor eax, eax
@@ -67,7 +66,7 @@ goToVM86:
 	
 	push edx
 	push ecx
-	push dword 0x20202
+	push 0x20202
 	push ebx
 	push eax
 	iretd
@@ -88,7 +87,7 @@ goToUsermode:
 	mov eax, esp			;user mode uses the same stack (this is only called on the first 0->3 switch, in all the others IRET takes care of moving the kernel stack to the user stack)
 	push 0x23
 	push eax
-	push dword 0x202
+	push 0x202
 	push 0x1B
 	push ebx
 	iretd
@@ -142,7 +141,7 @@ commonThreadSwitch:
 	mov cr3, eax					;change it if needed
 .doneVAS:
 
-	cmp edx, 0
+	test edx, edx
 	je .notFirstTime
 
 		cli
@@ -378,261 +377,261 @@ global irq23
 
 isr0:
     cli
-    push dword 0
-    push dword 0
+    push 0
+    push 0
     jmp int_common_stub
 
 isr1:
     cli
-    push dword 0
-    push dword 1
+    push 0
+    push 1
     jmp int_common_stub
 
 isr2:
     cli
-    push dword 0
-    push dword 2
+    push 0
+    push 2
 
     jmp int_common_stub
 
 isr3:
     cli
-    push dword 0
-    push dword 3
+    push 0
+    push 3
     jmp int_common_stub
 
 isr4:
     cli
-    push dword 0
-    push dword 4
+    push 0
+    push 4
     jmp int_common_stub
 
 isr5:
     cli
-    push dword 0
-    push dword 5
+    push 0
+    push 5
     jmp int_common_stub
 
 isr6:
 	cli
-    push dword 0
-    push dword 6
+    push 0
+    push 6
     jmp int_common_stub
 
 isr7:
     cli
-    push dword 0
-    push dword 7
+    push 0
+    push 7
     jmp int_common_stub
 
 isr8:
     cli
-    push dword 8
+    push 8
     jmp int_common_stub
 
 isr9:
     cli
-    push dword 0
-    push dword 9
+    push 0
+    push 9
     jmp int_common_stub
 
 isr10:
 	cli
-    push dword 10
+    push 10
     jmp int_common_stub
 
 isr11:
     cli
-    push dword 11
+    push 11
     jmp int_common_stub
 
 isr12:
     cli
-    push dword 12
+    push 12
     jmp int_common_stub
 
 isr13:
     cli
-    push dword 13
+    push 13
     jmp int_common_stub
 
 isr14:
     cli
-    push dword 14
+    push 14
     jmp int_common_stub
 
 isr15:
     cli
-    push dword 0
-    push dword 15
+    push 0
+    push 15
     jmp int_common_stub
 
 isr16:
     cli
-    push dword 0
-    push dword 16
+    push 0
+    push 16
     jmp int_common_stub
 
 isr17:
     cli
-    push dword 0
-    push dword 17
+    push 0
+    push 17
     jmp int_common_stub
 
 isr18:
     cli
-    push dword 0
-    push dword 18
+    push 0
+    push 18
     jmp int_common_stub
 
 isr96:
     cli
-    push dword 0
-    push dword 96
+    push 0
+    push 96
     jmp syscall_common_stub
 
 irq0:
     cli
-    push dword 0
-    push dword 32
+    push 0
+    push 32
     jmp int_common_stub
 
 irq1:
     cli
-    push dword 0
-    push dword 33
+    push 0
+    push 33
     jmp int_common_stub
 
 irq2:
     cli
-    push dword 0
-    push dword 34
+    push 0
+    push 34
     jmp int_common_stub
 
 irq3:
     cli
-    push dword 0
-    push dword 35
+    push 0
+    push 35
     jmp int_common_stub
 
 irq4:
     cli
-    push dword 0
-    push dword 36
+    push 0
+    push 36
     jmp int_common_stub
 
 irq5:
     cli
-    push dword 0
-    push dword 37
+    push 0
+    push 37
     jmp int_common_stub
 
 irq6:
     cli
-    push dword 0
-    push dword 38
+    push 0
+    push 38
     jmp int_common_stub
 
 irq7:
     cli
-    push dword 0
-    push dword 39
+    push 0
+    push 39
     jmp int_common_stub
 
 irq8:
     cli
-    push dword 0
-    push dword 40
+    push 0
+    push 40
     jmp int_common_stub
 
 irq9:
     cli
-    push dword 0
-    push dword 41
+    push 0
+    push 41
     jmp int_common_stub
 
 irq10:
     cli
-    push dword 0
-    push dword 42
+    push 0
+    push 42
     jmp int_common_stub
 
 irq11:
     cli
-    push dword 0
-    push dword 43
+    push 0
+    push 43
     jmp int_common_stub
 
 irq12:
     cli
-    push dword 0
-    push dword 44
+    push 0
+    push 44
     jmp int_common_stub
 
 irq13:
     cli
-    push dword 0
-    push dword 45
+    push 0
+    push 45
     jmp int_common_stub
 
 irq14:
     cli
-    push dword 0
-    push dword 46
+    push 0
+    push 46
     jmp int_common_stub
 
 irq15:
     cli
-    push dword 0
-    push dword 47
+    push 0
+    push 47
     jmp int_common_stub
 
 irq16:
     cli
-    push dword 0
-    push dword 48
+    push 0
+    push 48
     jmp int_common_stub
 
 irq17:
     cli
-    push dword 0
-    push dword 49
+    push 0
+    push 49
     jmp int_common_stub
 
 irq18:
     cli
-    push dword 0
-    push dword 50
+    push 0
+    push 50
     jmp int_common_stub
 
 irq19:
     cli
-    push dword 0
-    push dword 51
+    push 0
+    push 51
     jmp int_common_stub
 
 irq20:
     cli
-    push dword 0
-    push dword 52
+    push 0
+    push 52
     jmp int_common_stub
 
 irq21:
     cli
-    push dword 0
-    push dword 53
+    push 0
+    push 53
     jmp int_common_stub
 
 irq22:
     cli
-    push dword 0
-    push dword 54
+    push 0
+    push 54
     jmp int_common_stub
 
 irq23:
     cli
-    push dword 0
-    push dword 55
+    push 0
+    push 55
     jmp int_common_stub
 
 global int_common_stub
