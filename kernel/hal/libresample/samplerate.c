@@ -15,7 +15,7 @@
 #include	"samplerate.h"
 #include	"float_cast.h"
 #include	"common.h"
-#pragma GCC optimize ("O2")
+#pragma GCC optimize ("O0")
 
 static int psrc_set_converter (SRC_PRIVATE	*psrc, int converter_type) ;
 
