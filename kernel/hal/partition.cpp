@@ -1,6 +1,7 @@
 #include "core/main.hpp"
 #include "hal/partition.hpp"
 #include "libk/string.h"
+#pragma GCC optimize ("Os")
 
 void makePartition(PhysicalDisk* parent, uint64_t start, uint64_t length)
 {
