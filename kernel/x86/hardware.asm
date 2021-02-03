@@ -66,7 +66,7 @@ goToVM86:
 	
 	push edx
 	push ecx
-	push byte 0x20202
+	push dword 0x20202
 	push ebx
 	push eax
 	iretd
@@ -87,7 +87,7 @@ goToUsermode:
 	mov eax, esp			;user mode uses the same stack (this is only called on the first 0->3 switch, in all the others IRET takes care of moving the kernel stack to the user stack)
 	push 0x23
 	push eax
-	push byte 0x202
+	push dword 0x202
 	push 0x1B
 	push ebx
 	iretd
