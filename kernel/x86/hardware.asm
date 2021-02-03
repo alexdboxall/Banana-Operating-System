@@ -377,8 +377,9 @@ global irq23
 
 isr0:
     cli
-    push 0
-    push 0
+    ;push 0
+    ;push 0
+    db 0x6A, 0x00, 0x6A, 0x00
     jmp int_common_stub
 
 isr1:
