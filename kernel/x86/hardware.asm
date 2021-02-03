@@ -384,8 +384,8 @@ isr0:
 
 isr1:
     cli
-    push 0
-    push 1
+    push byte 0
+    push byte 1
     jmp int_common_stub
 
 isr2:
