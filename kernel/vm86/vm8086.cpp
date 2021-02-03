@@ -4,6 +4,7 @@
 #include "core/prcssthr.hpp"
 #include "hal/intctrl.hpp"
 #include "hw/cpu.hpp"
+#pragma GCC optimize ("Os")
 
 extern "C" {
 	#include "libk/string.h"
