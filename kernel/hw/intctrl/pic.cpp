@@ -2,7 +2,7 @@
 #include "hw/ports.hpp"
 #include "core/main.hpp"
 #include "hal/intctrl.hpp"
-#pragma GCC optimize ("Os")
+#pragma GCC optimize ("O2")
 
 #define PIC1			0x20		/* IO base address for master PIC */
 #define PIC2			0xA0		/* IO base address for slave PIC */
