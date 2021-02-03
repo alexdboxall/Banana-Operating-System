@@ -14,7 +14,7 @@
 #include "fs/vfs.hpp"
 #include "hw/cpu.hpp"
 
-#pragma GCC optimize ("O0")
+#pragma GCC optimize ("O2")
 
 uint64_t (*systemCallHandlers[128])(regs* r);
 
