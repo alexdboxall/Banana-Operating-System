@@ -66,7 +66,7 @@ goToVM86:
 	
 	push edx
 	push ecx
-	push 0x20202
+	push byte 0x20202
 	push ebx
 	push eax
 	iretd
@@ -87,7 +87,7 @@ goToUsermode:
 	mov eax, esp			;user mode uses the same stack (this is only called on the first 0->3 switch, in all the others IRET takes care of moving the kernel stack to the user stack)
 	push 0x23
 	push eax
-	push 0x202
+	push byte 0x202
 	push 0x1B
 	push ebx
 	iretd
@@ -510,128 +510,128 @@ irq2:
 
 irq3:
     cli
-    push 0
-    push 35
+    push byte 0
+    push byte 35
     jmp int_common_stub
 
 irq4:
     cli
-    push 0
-    push 36
+    push byte 0
+    push byte 36
     jmp int_common_stub
 
 irq5:
     cli
-    push 0
-    push 37
+    push byte 0
+    push byte 37
     jmp int_common_stub
 
 irq6:
     cli
-    push 0
-    push 38
+    push byte 0
+    push byte 38
     jmp int_common_stub
 
 irq7:
     cli
-    push 0
-    push 39
+    push byte 0
+    push byte 39
     jmp int_common_stub
 
 irq8:
     cli
-    push 0
-    push 40
+    push byte 0
+    push byte 40
     jmp int_common_stub
 
 irq9:
     cli
-    push 0
-    push 41
+    push byte 0
+    push byte 41
     jmp int_common_stub
 
 irq10:
     cli
-    push 0
-    push 42
+    push byte 0
+    push byte 42
     jmp int_common_stub
 
 irq11:
     cli
-    push 0
-    push 43
+    push byte 0
+    push byte 43
     jmp int_common_stub
 
 irq12:
     cli
-    push 0
-    push 44
+    push byte 0
+    push byte 44
     jmp int_common_stub
 
 irq13:
     cli
-    push 0
-    push 45
+    push byte 0
+    push byte 45
     jmp int_common_stub
 
 irq14:
     cli
-    push 0
-    push 46
+    push byte 0
+    push byte 46
     jmp int_common_stub
 
 irq15:
     cli
-    push 0
-    push 47
+    push byte 0
+    push byte 47
     jmp int_common_stub
 
 irq16:
     cli
-    push 0
-    push 48
+    push byte 0
+    push byte 48
     jmp int_common_stub
 
 irq17:
     cli
-    push 0
-    push 49
+    push byte 0
+    push byte 49
     jmp int_common_stub
 
 irq18:
     cli
-    push 0
-    push 50
+    push byte 0
+    push byte 50
     jmp int_common_stub
 
 irq19:
     cli
-    push 0
-    push 51
+    push byte 0
+    push byte 51
     jmp int_common_stub
 
 irq20:
     cli
-    push 0
-    push 52
+    push byte 0
+    push byte 52
     jmp int_common_stub
 
 irq21:
     cli
-    push 0
-    push 53
+    push byte 0
+    push byte 53
     jmp int_common_stub
 
 irq22:
     cli
-    push 0
-    push 54
+    push byte 0
+    push byte 54
     jmp int_common_stub
 
 irq23:
     cli
-    push 0
-    push 55
+    push byte 0
+    push byte 55
     jmp int_common_stub
 
 global int_common_stub
