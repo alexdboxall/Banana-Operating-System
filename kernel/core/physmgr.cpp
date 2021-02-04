@@ -74,9 +74,12 @@ namespace PhysMem
 
 		}
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Warray-bounds"
 		for (int i = 0; i < blocks; ++i) {
 			dmaUsage[addr + i] = 0;
 		}
+#pragma GCC diagnostic pop
 	}
 
 
