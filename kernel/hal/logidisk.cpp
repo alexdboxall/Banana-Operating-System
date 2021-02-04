@@ -2,7 +2,7 @@
 #include "hal/logidisk.hpp"
 #include "hal/diskphys.hpp"
 #include "hal/vcache.hpp"
-#pragma GCC optimize ("Os")
+//#pragma GCC optimize ("Os")
 
 LogicalDisk* disks[MAX_DISK_COUNT];
 

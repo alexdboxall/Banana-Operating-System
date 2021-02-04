@@ -5,7 +5,7 @@
 #include "core/kconsole.hpp"
 #include "core/computer.hpp"
 #include "hw/ports.hpp"
-#pragma GCC optimize ("O0")
+//#pragma GCC optimize ("O0")
 
 /*
 
@@ -33,7 +33,7 @@ extern void installVgaTextImplementation();
 
 #define VGA_TEXT_MODE_ADDRESS 0xC20B8000
 
-#pragma GCC optimize ("O2")
+//#pragma GCC optimize ("O2")
 
 void hwTextMode_loadInData(VgaText* terminal)
 {

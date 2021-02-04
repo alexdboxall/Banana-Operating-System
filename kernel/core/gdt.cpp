@@ -1,6 +1,6 @@
 #include "core/gdt.hpp"
 #include "core/main.hpp"
-#pragma GCC optimize ("Os")
+//#pragma GCC optimize ("Os")
 
 void GDTEntry::setBase(uint32_t base)
 {

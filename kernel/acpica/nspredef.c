@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * */
-#pragma GCC optimize ("O0")
+//#pragma GCC optimize ("O0")
 /* nspredef - Validation of ACPI predefined methods and objects
  *
  *****************************************************************************/

@@ -7,7 +7,7 @@
 #include "core/physmgr.hpp"
 #include "core/elf.hpp"
 
-#pragma GCC optimize ("O2")
+//#pragma GCC optimize ("O2")
 
 #define STACK_LEEWAY 32
 

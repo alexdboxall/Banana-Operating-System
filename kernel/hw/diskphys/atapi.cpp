@@ -8,7 +8,7 @@
 #include "hal/logidisk.hpp"
 #include "hal/partition.hpp"
 
-#pragma GCC optimize ("Os")
+//#pragma GCC optimize ("Os")
 
 ATAPI::ATAPI() : PhysicalDisk("ATAPI Disk", 2048)
 {

@@ -3,7 +3,7 @@
 #include "core/kheap.hpp"
 #include "hal/device.hpp"
 #include "core/prcssthr.hpp"
-#pragma GCC optimize ("Os")
+//#pragma GCC optimize ("Os")
 
 extern "C" {
 	#include "libk/string.h"

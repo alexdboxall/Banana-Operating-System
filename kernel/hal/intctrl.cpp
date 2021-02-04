@@ -9,7 +9,7 @@
 #include "hw/ports.hpp"
 #include "hw/cpu.hpp"
 
-#pragma GCC optimize ("O2")
+//#pragma GCC optimize ("O2")
 
 char exceptionNames[][32] = {
 	"Division by zero error",

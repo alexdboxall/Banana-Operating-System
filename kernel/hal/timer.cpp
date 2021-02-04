@@ -6,7 +6,7 @@
 #include "hw/timer/pit.hpp"
 #include "hw/intctrl/apic.hpp"
 #include "hw/timer/apictimer.hpp"
-#pragma GCC optimize ("Os")
+//#pragma GCC optimize ("Os")
 
 uint64_t nanoSinceBoot = 0;
 

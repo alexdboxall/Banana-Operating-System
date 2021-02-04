@@ -4,7 +4,7 @@
 #include "hw/bus/pci.hpp"
 #include "hw/diskctrl/ide.hpp"
 #include <stdint.h>
-#pragma GCC optimize ("Os")
+//#pragma GCC optimize ("Os")
 
 #ifndef JUMPER32
 PCI::PCI() : Bus("PCI Bus")

@@ -1,5 +1,5 @@
 #include "hal/clock.hpp"
-#pragma GCC optimize ("Os")
+//#pragma GCC optimize ("Os")
 
 int timezoneHourOffset = 0;
 bool timezoneHalfHourOffset = false;

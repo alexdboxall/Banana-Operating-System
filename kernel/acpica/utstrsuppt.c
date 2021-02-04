@@ -1,7 +1,7 @@
 /*******************************************************************************
  *
  * */
-#pragma GCC optimize ("O0")
+//#pragma GCC optimize ("O0")
 /* utstrsuppt - Support functions for string-to-integer conversion
  *
  ******************************************************************************/

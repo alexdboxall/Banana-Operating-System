@@ -3,7 +3,7 @@
 #include "core/prcssthr.hpp"
 #include "hw/cpu.hpp"
 #include "hw/ports.hpp"
-#pragma GCC optimize ("O2")
+//#pragma GCC optimize ("O2")
 
 bool kernelInPanic = false;
 

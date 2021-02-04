@@ -2,7 +2,7 @@
 #include "hw/ports.hpp"
 #include "hw/buzzer/pcspk.hpp"
 #include <stdint.h>
-#pragma GCC optimize ("Os")
+////#pragma GCC optimize ("Os")
 
 Beep::Beep() : Buzzer("PC Speaker")
 {

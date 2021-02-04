@@ -10,7 +10,7 @@
 #define USE_MY_ALLOC
 
 #undef DEBUG 
-#pragma GCC optimize ("O1")
+//#pragma GCC optimize ("O1")
 
 extern "C" void* sbrk(ptrdiff_t increment)
 {

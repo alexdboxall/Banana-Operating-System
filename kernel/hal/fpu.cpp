@@ -6,7 +6,7 @@
 #include "hw/fpu/sse.hpp"
 #include "hw/fpu/avx.hpp"
 #include "hw/fpu/mmx.hpp"
-#pragma GCC optimize ("Os")
+//#pragma GCC optimize ("Os")
 
 FPU::FPU(const char* name) : Device(name)
 {

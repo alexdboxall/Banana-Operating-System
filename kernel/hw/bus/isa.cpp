@@ -11,7 +11,7 @@
 #include "hw/audio/sb16.hpp"
 #include "hw/dma/isadma.hpp"
 
-#pragma GCC optimize ("Os")
+//#pragma GCC optimize ("Os")
 
 ISA::ISA(): Bus("ISA Bus")
 {

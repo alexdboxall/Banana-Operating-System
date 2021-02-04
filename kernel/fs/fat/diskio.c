@@ -9,7 +9,7 @@
 
 #include "ff.h"			/* Obtains integer types */
 #include "diskio.h"		/* Declarations of disk functions */
-#pragma GCC optimize ("Os")
+//#pragma GCC optimize ("Os")
 
 /*-----------------------------------------------------------------------*/
 /* Get Drive Status                                                      */

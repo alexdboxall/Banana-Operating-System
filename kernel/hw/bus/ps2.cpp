@@ -6,7 +6,7 @@
 #include "registry/registry.hpp"
 #include "hw/bus/ps2port.hpp"
 
-#pragma GCC optimize ("Os")
+//#pragma GCC optimize ("Os")
 
 PS2::PS2() : Bus("PS/2 Controller")
 {

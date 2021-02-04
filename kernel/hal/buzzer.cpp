@@ -3,7 +3,7 @@
 #include "hal/buzzer.hpp"
 #include "core/prcssthr.hpp"
 
-#pragma GCC optimize ("Os")
+//#pragma GCC optimize ("Os")
 
 Buzzer* systemBuzzer = nullptr;
 

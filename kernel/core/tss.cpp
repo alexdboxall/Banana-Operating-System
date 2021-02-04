@@ -2,7 +2,7 @@
 #include "core/gdt.hpp"
 #include "core/common.hpp"
 #include "hw/cpu.hpp"
-#pragma GCC optimize ("O0")
+//#pragma GCC optimize ("O0")
 
 TSS::TSS()
 {

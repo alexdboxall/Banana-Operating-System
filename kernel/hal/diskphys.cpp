@@ -2,7 +2,7 @@
 #include "hal/device.hpp"
 #include "hal/diskphys.hpp"
 #include "hal/vcache.hpp"
-#pragma GCC optimize ("Os")
+//#pragma GCC optimize ("Os")
 
 PhysicalDisk::PhysicalDisk(const char* name, int _sectorSize) : Device(name)
 {

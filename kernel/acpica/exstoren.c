@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * */
-#pragma GCC optimize ("O0")
+//#pragma GCC optimize ("O0")
 /* exstoren - AML Interpreter object store support,
  *                        Store to Node (namespace object)
  *
