@@ -168,16 +168,22 @@ extern "C" void kernel_main()
 	}
 
 	sysBootSettings = da;
-
+	kprintf("A.\n");
 	{
 		VAS v;
 		firstVAS = &v;
+		kprintf("B.\n");
 
 		//needs memory to be set up before calling
 		callGlobalConstructors();
+		kprintf("C.\n");
 
 		computer = new Computer();
+		kprintf("D.\n");
+
 		computer->open(0, 0, nullptr);
+		kprintf("E.\n");
+
 	}
 
 	panic("SCOPE ENDED IN KERNEL MAIN");
