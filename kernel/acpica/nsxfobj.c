@@ -1,11 +1,11 @@
 /*******************************************************************************
  *
  * */
-#pragma GCC optimize ("O0")
+//#pragma GCC optimize ("O0")
 
-#pragma GCC optimize ("-fpeephole2")
-#pragma GCC optimize ("-fomit-frame-pointer")
-#pragma GCC optimize ("-fdelete-null-pointer-checks")
+//#pragma GCC optimize ("-fpeephole2")
+//#pragma GCC optimize ("-fomit-frame-pointer")
+//#pragma GCC optimize ("-fdelete-null-pointer-checks")
 /* nsxfobj - Public interfaces to the ACPI subsystem
  *                         ACPI Object oriented interfaces
  *

@@ -1,11 +1,11 @@
 /*******************************************************************************
  *
  * */
-#pragma GCC optimize ("O0")
+//#pragma GCC optimize ("O0")
 
-#pragma GCC optimize ("-fpeephole2")
-#pragma GCC optimize ("-fomit-frame-pointer")
-#pragma GCC optimize ("-fdelete-null-pointer-checks")
+//#pragma GCC optimize ("-fpeephole2")
+//#pragma GCC optimize ("-fomit-frame-pointer")
+//#pragma GCC optimize ("-fdelete-null-pointer-checks")
 /* hwregs - Read/write access functions for the various ACPI
  *                       control and status registers.
  *

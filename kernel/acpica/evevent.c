@@ -1,11 +1,11 @@
 /******************************************************************************
  *
  * */
-#pragma GCC optimize ("O0")
+//#pragma GCC optimize ("O0")
 
-#pragma GCC optimize ("-fpeephole2")
-#pragma GCC optimize ("-fomit-frame-pointer")
-#pragma GCC optimize ("-fdelete-null-pointer-checks")
+//#pragma GCC optimize ("-fpeephole2")
+//#pragma GCC optimize ("-fomit-frame-pointer")
+//#pragma GCC optimize ("-fdelete-null-pointer-checks")
 /* evevent - Fixed Event handling and dispatch
  *
  *****************************************************************************/

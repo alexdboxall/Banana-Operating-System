@@ -11,8 +11,8 @@
 #include "hal/intctrl.hpp"
 #include <stdarg.h>
 
-#pragma GCC optimize ("O2")
-#pragma GCC optimize ("-fno-strict-aliasing")
+//#pragma GCC optimize ("O2")
+//#pragma GCC optimize ("-fno-strict-aliasing")
 
 extern "C" {
 #include "acpi.h"
