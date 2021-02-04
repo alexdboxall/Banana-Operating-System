@@ -8,6 +8,7 @@
 #include "core/elf.hpp"
 
 #pragma GCC optimize ("O2")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 #define STACK_LEEWAY 32
 

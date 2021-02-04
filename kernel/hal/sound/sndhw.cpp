@@ -7,6 +7,7 @@ extern "C" {
 #include "libk/math.h"
 }
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 SoundDevice::SoundDevice(const char* name) : Device(name)
 {

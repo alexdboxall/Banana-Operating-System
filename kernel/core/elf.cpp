@@ -8,6 +8,7 @@
 #include "hw/cpu.hpp"
 
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 bool allocateMemoryForTask(Process* prcss, File* file, size_t size, size_t virtualAddr, size_t additionalNullBytes)
 {

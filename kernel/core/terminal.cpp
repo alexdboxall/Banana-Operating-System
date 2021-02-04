@@ -18,6 +18,7 @@ Something not working? Check:
 #include "fs/vfs.hpp"
 #include "libk/string.h"
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 VgaColour ansiToVGAMappings[16] = {
 	VgaColour::Black,

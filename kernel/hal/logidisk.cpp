@@ -3,6 +3,7 @@
 #include "hal/diskphys.hpp"
 #include "hal/vcache.hpp"
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 LogicalDisk* disks[MAX_DISK_COUNT];
 

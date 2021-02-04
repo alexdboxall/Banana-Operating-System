@@ -4,6 +4,7 @@
 #include "hal/bus.hpp"
 #include "hal/diskphys.hpp"
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 VCache::VCache(PhysicalDisk* d)
 {

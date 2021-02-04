@@ -2,6 +2,7 @@
 #include "hal/partition.hpp"
 #include "libk/string.h"
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 void makePartition(PhysicalDisk* parent, uint64_t start, uint64_t length)
 {

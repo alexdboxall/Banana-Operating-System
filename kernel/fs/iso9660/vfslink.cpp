@@ -7,6 +7,7 @@ extern "C" {
 	#include "libk/string.h"
 }
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 // return disks[vfsDisk]->read(sector, count, (void*) buff);
 // return disks[vfsDisk]->write(sector, count, (void*) buff);

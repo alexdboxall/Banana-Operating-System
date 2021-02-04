@@ -3,6 +3,7 @@
 #include "hw/buzzer/pcspk.hpp"
 #include <stdint.h>
 //#pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 Beep::Beep() : Buzzer("PC Speaker")
 {

@@ -16,6 +16,7 @@
 #include	"float_cast.h"
 #include	"common.h"
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 static int psrc_set_converter (SRC_PRIVATE	*psrc, int converter_type) ;
 

@@ -3,6 +3,7 @@
 #include "core/prcssthr.hpp"
 
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 Pipe::Pipe(int bufferSize) : UnixFile()
 {

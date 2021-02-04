@@ -4,6 +4,7 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic warning "-Wunused-function"
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 void* sbrk(ptrdiff_t increment);
 void* mmap(void* addr, size_t length, int prot, int flags, int fd, size_t offset);

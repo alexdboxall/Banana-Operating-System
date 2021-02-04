@@ -3,6 +3,7 @@
 #include "core/terminal.hpp"
 #include "hal/vcache.hpp"		//cache purging
 #pragma GCC optimize ("O2")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 #define STATE_FREE false
 #define STATE_ALLOCATED true

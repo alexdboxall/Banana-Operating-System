@@ -9,6 +9,7 @@
 #include "hal/partition.hpp"
 
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 ATAPI::ATAPI() : PhysicalDisk("ATAPI Disk", 2048)
 {

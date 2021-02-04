@@ -7,6 +7,7 @@
 #include "hw/bus/ps2port.hpp"
 
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 PS2::PS2() : Bus("PS/2 Controller")
 {

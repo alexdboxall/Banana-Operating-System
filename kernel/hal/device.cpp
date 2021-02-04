@@ -5,6 +5,7 @@
 #include "hw/cpu.hpp"
 #include "core/prcssthr.hpp"
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 Device::Device(const char* name)
 {

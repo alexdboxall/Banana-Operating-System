@@ -10,6 +10,7 @@
 #include "hw/cpu.hpp"
 
 #pragma GCC optimize ("O2")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 char exceptionNames[][32] = {
 	"Division by zero error",

@@ -12,6 +12,7 @@
 #include "hw/dma/isadma.hpp"
 
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 ISA::ISA(): Bus("ISA Bus")
 {

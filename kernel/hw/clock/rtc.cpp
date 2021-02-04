@@ -5,6 +5,7 @@
 
 #define CURRENT_YEAR 2020
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 int RTC::open(int, int, void*)
 {

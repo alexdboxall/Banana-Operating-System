@@ -15,6 +15,7 @@
 #include "hw/cpu.hpp"
 
 #pragma GCC optimize ("O2")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 uint64_t (*systemCallHandlers[128])(regs* r);
 
@@ -673,6 +674,7 @@ uint64_t sysGetUnixTime(regs* r)
 
 
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 void setupSystemCalls()
 {

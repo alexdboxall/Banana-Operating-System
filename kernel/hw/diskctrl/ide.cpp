@@ -7,6 +7,7 @@
 #include "hw/acpi.hpp"
 #include "hal/device.hpp"
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 #ifndef JUMPER32
 

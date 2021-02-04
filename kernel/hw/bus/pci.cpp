@@ -5,6 +5,7 @@
 #include "hw/diskctrl/ide.hpp"
 #include <stdint.h>
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 #ifndef JUMPER32
 PCI::PCI() : Bus("PCI Bus")

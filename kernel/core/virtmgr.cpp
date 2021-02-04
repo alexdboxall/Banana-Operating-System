@@ -8,6 +8,7 @@
 
 VAS* firstVAS = nullptr;
 #pragma GCC optimize ("O2")
+#pragma GCC optimize ("-fno-strict-aliasing")
 //#pragma GCC optimize ("-fpeephole2")
 
 namespace VirtMem

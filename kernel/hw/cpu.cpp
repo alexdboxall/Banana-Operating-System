@@ -2,6 +2,7 @@
 #include "hw/ports.hpp"
 #include "core/physmgr.hpp"
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 int lastCode = -1;
 size_t lastA = 0;

@@ -3,6 +3,7 @@
 #include "hal/intctrl.hpp"
 
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 /// <summary>
 /// Terminates the currently running thread. If this is the last running thread, the entire process will be terminated.

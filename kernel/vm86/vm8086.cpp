@@ -7,6 +7,7 @@
 //
 //
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 extern "C" {
 	#include "libk/string.h"

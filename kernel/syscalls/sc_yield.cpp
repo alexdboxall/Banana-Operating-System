@@ -3,6 +3,7 @@
 #include "hal/intctrl.hpp"
 
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 /// <summary>
 /// Yields the currently running thread's timeslice.

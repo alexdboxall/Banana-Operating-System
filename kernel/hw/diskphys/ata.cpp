@@ -12,6 +12,7 @@ int ataSectorsRead = 0;
 int ataSectorsWritten = 0;
 
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 ATA::ATA() : PhysicalDisk("ATA Hard Drive", 512)
 {

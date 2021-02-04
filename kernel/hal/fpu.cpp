@@ -7,6 +7,7 @@
 #include "hw/fpu/avx.hpp"
 #include "hw/fpu/mmx.hpp"
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 FPU::FPU(const char* name) : Device(name)
 {

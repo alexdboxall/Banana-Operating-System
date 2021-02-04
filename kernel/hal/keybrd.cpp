@@ -5,6 +5,7 @@
 #include "libk/string.h"
 #include "core/prcssthr.hpp"
 #pragma GCC optimize ("O2")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 bool keystates[0x400];
 

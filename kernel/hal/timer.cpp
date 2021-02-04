@@ -7,6 +7,7 @@
 #include "hw/intctrl/apic.hpp"
 #include "hw/timer/apictimer.hpp"
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 uint64_t nanoSinceBoot = 0;
 

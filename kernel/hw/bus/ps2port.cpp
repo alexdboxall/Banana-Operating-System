@@ -9,6 +9,7 @@
 #include "hw/keybrd/ps2key.hpp"
 
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 PS2Port::PS2Port(): Bus("PS/2 Port")
 {

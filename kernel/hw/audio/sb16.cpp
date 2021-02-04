@@ -41,6 +41,7 @@
 #include "hw/ports.hpp"
 #include "fs/vfs.hpp"
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 uint8_t buf[4096];
 uint8_t buf2[4096];

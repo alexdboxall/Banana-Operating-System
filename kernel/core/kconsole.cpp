@@ -4,6 +4,7 @@
 #include "hw/cpu.hpp"
 #include "hw/ports.hpp"
 #pragma GCC optimize ("O2")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 bool kernelInPanic = false;
 

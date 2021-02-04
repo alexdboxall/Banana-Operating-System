@@ -3,6 +3,7 @@
 #include "core/computer.hpp"
 #include "hw/cpu.hpp"
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 inline void idleCommon()
 {

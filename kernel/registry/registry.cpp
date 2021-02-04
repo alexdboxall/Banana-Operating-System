@@ -8,6 +8,7 @@ extern "C" {
 }
 
 #pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 namespace Registry
 {
