@@ -1,6 +1,10 @@
 #include "core/common.hpp"
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
+#pragma GCC optimize ("-fno-align-labels")
+#pragma GCC optimize ("-fno-align-jumps")
+#pragma GCC optimize ("-fno-align-loops")
+#pragma GCC optimize ("-fno-align-functions")
 
 #if UINT32_MAX == UINTPTR_MAX
 #define STACK_CHK_GUARD 0xe2dee396

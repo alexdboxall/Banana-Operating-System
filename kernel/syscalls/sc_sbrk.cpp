@@ -5,6 +5,10 @@
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
+#pragma GCC optimize ("-fno-align-labels")
+#pragma GCC optimize ("-fno-align-jumps")
+#pragma GCC optimize ("-fno-align-loops")
+#pragma GCC optimize ("-fno-align-functions")
 
 /// <summary>
 /// Changes and/or returns the location of the process' system break by a certain number of bytes, allocating new memory if needed.

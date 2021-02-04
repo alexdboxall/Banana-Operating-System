@@ -1,11 +1,16 @@
 /*******************************************************************************
  *
  * */
-//#pragma GCC optimize ("O0")
+////#pragma GCC optimize ("O0")
+//#pragma GCC optimize ("-fno-strict-aliasing")
+//#pragma GCC optimize ("-fno-align-labels")
+//#pragma GCC optimize ("-fno-align-jumps")
+//#pragma GCC optimize ("-fno-align-loops")
+//#pragma GCC optimize ("-fno-align-functions")
 
-//#pragma GCC optimize ("-fpeephole2")
-//#pragma GCC optimize ("-fomit-frame-pointer")
-//#pragma GCC optimize ("-fdelete-null-pointer-checks")
+////#pragma GCC optimize ("-fpeephole2")
+////#pragma GCC optimize ("-fomit-frame-pointer")
+////#pragma GCC optimize ("-fdelete-null-pointer-checks")
 /* uterror - Various internal error/warning output functions
  *
  ******************************************************************************/
