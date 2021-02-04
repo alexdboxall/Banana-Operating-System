@@ -2,6 +2,10 @@
  *
  * */
 #pragma GCC optimize ("O0")
+
+#pragma GCC optimize ("-fpeephole2")
+#pragma GCC optimize ("-fomit-frame-pointer")
+#pragma GCC optimize ("-fdelete-null-pointer-checks")
 /* nspredef - Validation of ACPI predefined methods and objects
  *
  *****************************************************************************/

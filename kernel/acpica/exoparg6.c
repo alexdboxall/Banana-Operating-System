@@ -2,6 +2,10 @@
  *
  * */
 #pragma GCC optimize ("O0")
+
+#pragma GCC optimize ("-fpeephole2")
+#pragma GCC optimize ("-fomit-frame-pointer")
+#pragma GCC optimize ("-fdelete-null-pointer-checks")
 /* exoparg6 - AML execution - opcodes with 6 arguments
  *
  *****************************************************************************/
