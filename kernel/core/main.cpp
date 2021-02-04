@@ -170,7 +170,10 @@ extern "C" void kernel_main()
 	sysBootSettings = da;
 	kprintf("A.\n");
 	{
+		kprintf("A2");
+
 		VAS v;
+		kprintf("!");
 		firstVAS = &v;
 		kprintf("B.\n");
 

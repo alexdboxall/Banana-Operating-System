@@ -295,11 +295,13 @@ void VAS::freeAllocatedPages(size_t virt) {
 
 VAS::VAS()
 {
+	kprintf("B2");
 	firstVAS = this;
 
 	supervisorVAS = true;
 	specialFirstVAS = true;
 	pageDirectoryBase = (size_t*) VIRT_KRNL_PAGE_DIRCTORY;
+	kprintf("B3");
 }
 
 VAS::~VAS()
