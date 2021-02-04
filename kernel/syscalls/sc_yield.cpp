@@ -2,7 +2,7 @@
 #include "core/syscalls.hpp"
 #include "hal/intctrl.hpp"
 
-//#pragma GCC optimize ("Os")
+#pragma GCC optimize ("Os")
 
 /// <summary>
 /// Yields the currently running thread's timeslice.

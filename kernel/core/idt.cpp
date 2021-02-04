@@ -1,6 +1,6 @@
 #include "core/idt.hpp"
 #include "core/main.hpp"
-//#pragma GCC optimize ("Os")
+#pragma GCC optimize ("Os")
 
 IDTEntry::IDTEntry(bool userspaceAllowed)
 {

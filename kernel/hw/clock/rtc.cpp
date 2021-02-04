@@ -4,7 +4,7 @@
 #include "core/common.hpp"
 
 #define CURRENT_YEAR 2020
-//#pragma GCC optimize ("Os")
+#pragma GCC optimize ("Os")
 
 int RTC::open(int, int, void*)
 {

@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * */
-//#pragma GCC optimize ("O0")
+#pragma GCC optimize ("O0")
 /* dsargs - Support for execution of dynamic arguments for static
  *                       objects (regions, fields, buffer fields, etc.)
  *

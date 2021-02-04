@@ -6,7 +6,7 @@ extern "C" {
 #include "libk/string.h"
 #include "libk/math.h"
 }
-//#pragma GCC optimize ("Os")
+#pragma GCC optimize ("Os")
 
 SoundDevice::SoundDevice(const char* name) : Device(name)
 {

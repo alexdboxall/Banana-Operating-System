@@ -17,7 +17,7 @@ Something not working? Check:
 #include "hw/ports.hpp"
 #include "fs/vfs.hpp"
 #include "libk/string.h"
-//#pragma GCC optimize ("Os")
+#pragma GCC optimize ("Os")
 
 VgaColour ansiToVGAMappings[16] = {
 	VgaColour::Black,

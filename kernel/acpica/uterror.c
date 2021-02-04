@@ -1,7 +1,7 @@
 /*******************************************************************************
  *
  * */
-//#pragma GCC optimize ("O0")
+#pragma GCC optimize ("O0")
 /* uterror - Various internal error/warning output functions
  *
  ******************************************************************************/

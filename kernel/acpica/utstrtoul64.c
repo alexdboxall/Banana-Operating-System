@@ -1,7 +1,7 @@
 /*******************************************************************************
  *
  * */
-//#pragma GCC optimize ("O0")
+#pragma GCC optimize ("O0")
 /* utstrtoul64 - String-to-integer conversion support for both
  *                            64-bit and 32-bit integers
  *

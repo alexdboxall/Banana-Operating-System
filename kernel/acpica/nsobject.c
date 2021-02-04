@@ -1,7 +1,7 @@
 /*******************************************************************************
  *
  * */
-//#pragma GCC optimize ("O0")
+#pragma GCC optimize ("O0")
 /* nsobject - Utilities for objects attached to namespace
  *                         table entries
  *

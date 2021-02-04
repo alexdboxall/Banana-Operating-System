@@ -11,7 +11,7 @@
 int ataSectorsRead = 0;
 int ataSectorsWritten = 0;
 
-//#pragma GCC optimize ("Os")
+#pragma GCC optimize ("Os")
 
 ATA::ATA() : PhysicalDisk("ATA Hard Drive", 512)
 {

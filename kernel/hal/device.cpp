@@ -4,7 +4,7 @@
 #include "hal/intctrl.hpp"
 #include "hw/cpu.hpp"
 #include "core/prcssthr.hpp"
-//#pragma GCC optimize ("Os")
+#pragma GCC optimize ("Os")
 
 Device::Device(const char* name)
 {

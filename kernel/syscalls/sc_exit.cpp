@@ -2,7 +2,7 @@
 #include "core/syscalls.hpp"
 #include "hal/intctrl.hpp"
 
-//#pragma GCC optimize ("Os")
+#pragma GCC optimize ("Os")
 
 /// <summary>
 /// Terminates the currently running thread. If this is the last running thread, the entire process will be terminated.

@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * */
-//#pragma GCC optimize ("O0")
+#pragma GCC optimize ("O0")
 /* dscontrol - Support for execution control opcodes -
  *                          if/else/while/return
  *

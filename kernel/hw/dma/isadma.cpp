@@ -6,7 +6,7 @@
 #include "core/prcssthr.hpp"
 #include <stdint.h>
 
-//#pragma GCC optimize ("Os")
+#pragma GCC optimize ("Os")
 
 #define DMA0_ADDR			0x00
 #define DMA0_COUNT			0x01

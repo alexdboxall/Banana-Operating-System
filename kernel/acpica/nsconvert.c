@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * */
-//#pragma GCC optimize ("O0")
+#pragma GCC optimize ("O0")
 /* nsconvert - Object conversions for objects returned by
  *                          predefined methods
  *

@@ -7,7 +7,7 @@
 extern "C" {
 #include "libk/string.h"
 }
-//#pragma GCC optimize ("Os")
+#pragma GCC optimize ("Os")
 
 int UnixFile::nextFd = 3;// FIRST_AVAILABLE_FD;
 

@@ -14,7 +14,7 @@
 #include "fs/vfs.hpp"
 #include "vm86/vm8086.hpp"
 
-//#pragma GCC optimize ("O2")
+#pragma GCC optimize ("O2")
 
 #define PORT_SYSTEM_CONTROL_A	0x92
 #define PORT_SYSTEM_CONTROL_B	0x61

@@ -8,7 +8,7 @@
 
 #include "hw/keybrd/ps2key.hpp"
 
-//#pragma GCC optimize ("Os")
+#pragma GCC optimize ("Os")
 
 PS2Port::PS2Port(): Bus("PS/2 Port")
 {

@@ -3,7 +3,7 @@
 #include "core/virtmgr.hpp"
 #include "hal/intctrl.hpp"
 
-//#pragma GCC optimize ("Os")
+#pragma GCC optimize ("Os")
 
 /// <summary>
 /// Changes and/or returns the location of the process' system break by a certain number of bytes, allocating new memory if needed.

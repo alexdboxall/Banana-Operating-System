@@ -6,7 +6,7 @@
 #include "hw/ports.hpp"
 #include "hw/acpi.hpp"
 #include "hal/device.hpp"
-//#pragma GCC optimize ("Os")
+#pragma GCC optimize ("Os")
 
 #ifndef JUMPER32
 

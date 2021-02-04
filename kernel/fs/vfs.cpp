@@ -6,7 +6,7 @@
 
 #include "fs/fat/vfslink.hpp" 
 #include "fs/iso9660/vfslink.hpp" 
-//#pragma GCC optimize ("Os")
+#pragma GCC optimize ("Os")
 
 Filesystem* installedFilesystems = nullptr;
 

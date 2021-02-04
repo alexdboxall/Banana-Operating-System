@@ -7,7 +7,7 @@
 #include "hw/bus/ps2port.hpp"
 #include "hw/keybrd/ps2key.hpp"
 
-//#pragma GCC optimize ("Os")
+#pragma GCC optimize ("Os")
 
 extern "C" {
 #include "libk/string.h"

@@ -2,7 +2,7 @@
 #include "core/prcssthr.hpp"
 #include "core/computer.hpp"
 #include "hw/cpu.hpp"
-//#pragma GCC optimize ("Os")
+#pragma GCC optimize ("Os")
 
 inline void idleCommon()
 {

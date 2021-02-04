@@ -7,7 +7,7 @@ extern "C" {
 	#include "libk/string.h"
 }
 
-//#pragma GCC optimize ("Os")
+#pragma GCC optimize ("Os")
 
 namespace Registry
 {
