@@ -189,8 +189,6 @@ namespace VirtMem
 				setPageState(i, VirtPageState::Unusable);
 			}
 		}
-
-		kprintf("virtual mem done.\n");
 	}
 
 	VAS* getAKernelVAS()
@@ -241,7 +239,6 @@ size_t VAS::allocatePages(int count, int flags)
 			mapPage(phys, virt + i * 4096, flags | PAGE_ALLOCATED);
 
 			if (invlpg) {
-				kprintf("invlpg 2\n");
 				asm volatile ("invlpg (%0)" : : "b"((void*) (virt + i * 4096)) : "memory");
 			}
 		}
@@ -265,7 +262,6 @@ size_t VAS::allocatePages(int count, int flags)
 			mapPage(phys, virt + i * 4096, flags | PAGE_ALLOCATED);
 
 			if (invlpg) {
-				kprintf("invlpg 3\n");
 				asm volatile ("invlpg (%0)" : : "b"((void*) (virt + i * 4096)) : "memory");
 			}
 		}
@@ -296,13 +292,11 @@ void VAS::freeAllocatedPages(size_t virt) {
 
 VAS::VAS()
 {
-	kprintf("B2");
 	firstVAS = this;
 
 	supervisorVAS = true;
 	specialFirstVAS = true;
 	pageDirectoryBase = (size_t*) VIRT_KRNL_PAGE_DIRCTORY;
-	kprintf("B3");
 }
 
 VAS::~VAS()
@@ -463,7 +457,6 @@ size_t VAS::mapRange(size_t physicalAddr, size_t virtualAddr, int pages, int fla
 		mapPage(physicalAddr + i * 4096, virtualAddr + i * 4096, flags);
 
 		if (invlpg) {
-			kprintf("invlpg\n");
 			asm volatile ("invlpg (%0)" : : "b"((void*) (virtualAddr + i * 4096)) : "memory");
 		}
 	}
