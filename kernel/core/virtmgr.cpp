@@ -188,6 +188,8 @@ namespace VirtMem
 				setPageState(i, VirtPageState::Unusable);
 			}
 		}
+
+		kprintf("virtual mem done.\n");
 	}
 
 	VAS* getAKernelVAS()
