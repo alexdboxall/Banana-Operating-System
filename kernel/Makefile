@@ -1,7 +1,7 @@
 #these may be changed to suit your needs
 
 WARNINGS = -Werror -Wall -Wextra -Wcast-align -Wchar-subscripts -W -Wuninitialized -Wpointer-arith  -Wno-error=unused-variable -Wno-error=unused-parameter \
-	   -Wcast-align -Wno-error=unused-const-variable -Wno-error=sign-compare 
+	   -Wcast-align -Wno-error=unused-const-variable -Wno-error=sign-compare -Wno-unused-parameter
 
 SOURCEDIR = D:/Users/Alex/Desktop/Banana/kernel
 FIRMWAREDIR = D:/Users/Alex/Desktop/Banana/firmware
