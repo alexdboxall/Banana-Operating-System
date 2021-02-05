@@ -522,9 +522,9 @@ void VAS::mapForeignPage(bool secondSlot, VAS* other, size_t physicalAddr, size_
 		size_t addr = PhysMem::allocatePage();
 
 		//clear it
-		/*void* virtaddr = (void*) VirtMem::getAKernelVAS()->mapRange(addr, VirtMem::allocateKernelVirtualPages(1), 1, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
+		void* virtaddr = (void*) VirtMem::getAKernelVAS()->mapRange(addr, VirtMem::allocateKernelVirtualPages(1), 1, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
 		memset(virtaddr, 0, 4096);
-		VirtMem::freeKernelVirtualPages((size_t) virtaddr);*/
+		VirtMem::freeKernelVirtualPages((size_t) virtaddr);
 
 		other->pageDirectoryBase[pageTableNumber] = addr | PAGE_PRESENT | PAGE_WRITABLE | PAGE_USER | PAGE_ALLOCATED;
 	}
@@ -555,9 +555,9 @@ void VAS::mapPage(size_t physicalAddr, size_t virtualAddr, int flags) {
 		size_t addr = PhysMem::allocatePage();
 
 		//clear the page
-		/*void* virtaddr = (void*) VirtMem::getAKernelVAS()->mapRange(addr, VirtMem::allocateKernelVirtualPages(1), 1, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
+		void* virtaddr = (void*) VirtMem::getAKernelVAS()->mapRange(addr, VirtMem::allocateKernelVirtualPages(1), 1, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
 		memset(virtaddr, 0, 4096);
-		VirtMem::freeKernelVirtualPages((size_t) virtaddr);*/
+		VirtMem::freeKernelVirtualPages((size_t) virtaddr);
 
 		pageDirectoryBase[pageTableNumber] = addr | PAGE_PRESENT | PAGE_WRITABLE | PAGE_USER | PAGE_ALLOCATED;
 	}
