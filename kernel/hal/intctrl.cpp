@@ -228,6 +228,11 @@ void displayDebugInfo(regs* r)
 	kernelProcess->terminal->putx((uint32_t) cr2);
 	kernelProcess->terminal->puts("\n CR3: ");
 	kernelProcess->terminal->putx((uint32_t) cr3);
+	kernelProcess->terminal->puts("\n ERR: ");
+	kernelProcess->terminal->putx((uint32_t) r->err_code);
+	asm("cli;hlt;");
+	while (1);
+
 	kernelProcess->terminal->puts("\n 1: ");
 	kernelProcess->terminal->putx((uint32_t) __builtin_return_address(1));
 	kernelProcess->terminal->puts("\n 2: ");
