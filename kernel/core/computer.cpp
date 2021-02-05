@@ -32,7 +32,6 @@ bool preemptionOn = false;
 Computer* computer;
 
 
-
 Computer::Computer(): Device("Computer")
 {
 	deviceType = DeviceType::Bus;
