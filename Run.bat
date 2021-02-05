@@ -70,7 +70,12 @@ copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" T:\dummy.txt
 copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" T:\dummy2.txt
 rm T:\dummy.txt
 rm T:\dummy2.txt
-
+copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" T:\dummy.txt
+copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" T:\dummy2.txt
+copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" T:\dummy3.txt
+rm T:\dummy.txt
+rm T:\dummy2.txt
+rm T:\dummy3.txt
 cd D:/Users/Alex/Desktop/
 attrib +h +r "T:/Banana/BANANABT" 
 attrib +h +r "T:/Banana/FIRMWARE.LIB" 
