@@ -582,7 +582,7 @@ extern "C" void mapVASFirstTime()
 	VAS* vas = currentTaskTCB->processRelatedTo->vas;
 
 	//12KB kernel (interrupt handler) stack
-	for (int i = 0; i < 1; ++i) {
+	for (int i = 0; i < 2; ++i) {
 		vas->mapRange(PhysMem::allocatePage(), VIRT_APP_STACK_KRNL_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL, 1, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_WRITABLE | PAGE_SUPERVISOR);
 	}
 
