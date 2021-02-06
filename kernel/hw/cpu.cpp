@@ -393,6 +393,8 @@ int CPU::open(int num, int b, void* ptr)
 
 	displayFeatures();
 
+	asm volatile ("int $8");
+
 	return 0;
 }
 
