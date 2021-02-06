@@ -1,6 +1,7 @@
 #include "core/idt.hpp"
 #include "core/main.hpp"
 #include "core/tss.hpp"
+#include "core/virtmgr.hpp"
 #include "hw/cpu.hpp"
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -151,13 +152,19 @@ void IDT::setup()
 	addEntry(54, irq22, false);
 	addEntry(55, irq23, false);
 
+	//creat a double fault TSS
+	size_t pages = getAKernelVAS()->allocatePages(4, PAGE_PRESENT | PAGE_SUPERVISOR | PAGE_WRITABLE) + 4096 * 3;
+
+	TSS* dfTSS = new TSS();
+	uint16_t selector = dfTSS->setup(esp, irq8);
+
 	//set double fault as a task gate
 	IDTEntry doubleFault(true);
 	doubleFault.type = 0x5;
 	doubleFault.storageSegment = 1;
 	doubleFault.offsetHigh = 0;
 	doubleFault.offsetLow = 0;
-	doubleFault.selector = thisCPU()->doubleFaultSelector;
+	doubleFault.selector = selector;
 	entries[8] = doubleFault.val;
 
 	flush();

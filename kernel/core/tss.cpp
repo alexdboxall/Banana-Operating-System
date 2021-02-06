@@ -18,43 +18,44 @@ TSS::TSS()
 
 void TSS::setESP(size_t esp)
 {
-	size_t* memoryLocation = (size_t*) (size_t) (ptr + 4 / 2);
-	*memoryLocation = esp;
+	entry->esp0 = esp;
 }
 
-int TSS::setup(size_t esp, bool load)
+void TSS::flush()
 {
-	ptr = (uint16_t*) malloc(1024);
-	memset(ptr, 0, 1024);
+	uint16_t gdtOffset = gdtEntry | 3;
+	asm volatile ("mov %0, %%ax; ltrw %%ax" :: "r"(gdtOffset) : "%ax");
+}
 
-	//write the size
-	*(ptr + 0x66 / 2) = 0x68;
+int TSS::setup(size_t esp, size_t eip)
+{
+	entry = malloc(sizeof(TSSEntry));
+	memset(entry, 0, sizeof(TSSEntry));
 
-	//write SS if needed
-	if (sizeof(size_t) == 4) {
-		*(ptr + 0x8 / 2) = 0x10;			//kernel SS
-	}
+	entry->iopb = sizeof(TSSEntry);
+	entry->ss0 = 0x10;
+	entry->esp0 = esp;
 
-	setESP(esp);
+	entry->cs = 0x08;
+	entry->ds = 0x10;
+	entry->es = 0x10;
+	entry->ss = 0x10;
 
-	kprintf("TSS setup 0x%X\n", esp);
+	entry->eip = eip;
+	entry->esp = esp;
+	entry->eflags = 0x2;
+
+	entry->cr3 = thisCPU()->readCR3();
 
 	GDTEntry tssEnt;
-	tssEnt.setBase((size_t) ptr);
-	tssEnt.setLimit(0x68);
+	tssEnt.setBase((size_t) entry);
+	tssEnt.setLimit(sizeof(TSSEntry));
 	tssEnt.access = 0b10001001;
 	tssEnt.flags = 0;
 	tssEnt.size = PLATFORM_ID == 64 ? 0 : 1;
 
-	int gdtEntry = thisCPU()->gdt.addEntry(tssEnt);
+	gdtEntry = thisCPU()->gdt.addEntry(tssEnt);
 	thisCPU()->gdt.flush();
 
-	uint16_t gdtOffset = gdtEntry | 3;
-	if (load) {
-		asm volatile ("mov %0, %%ax; ltrw %%ax" :: "r"(gdtOffset) : "%ax");
-	} else {
-		uint32_t* p2 = (uint32_t*) (((uint8_t*) ptr) + 0x1C);
-		*p2 = thisCPU()->readCR3();
-	}
 	return gdtEntry;
 }
