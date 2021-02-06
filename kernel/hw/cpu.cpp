@@ -382,7 +382,8 @@ int CPU::open(int num, int b, void* ptr)
 
 	tss.setup(0xDEADBEEF);
 	TSS* dfTss = new TSS();
-	doubleFaultSelector = dfTss->setup((((size_t) malloc(4096 * 2)) + 4095) & ~0xFFF);
+	doubleFaultSelector = dfTss->setup((((size_t) malloc(4096 * 3)) & ~0xFFF) + 4096 * 2);
+	kprintf("doubleFaultSelector = %d\n", doubleFaultSelector);
 
 	idt.setup();
 	
