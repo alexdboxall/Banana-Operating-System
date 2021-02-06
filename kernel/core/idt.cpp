@@ -145,7 +145,6 @@ void IDT::setup()
 	addEntry(48, irq16, false);
 	addEntry(49, irq17, false);
 	addEntry(50, irq18, false);
-
 	addEntry(51, irq19, false);
 	addEntry(52, irq20, false);
 	addEntry(53, irq21, false);
@@ -161,7 +160,7 @@ void IDT::setup()
 	//set double fault as a task gate
 	IDTEntry doubleFault(false);
 	doubleFault.type = 0x5;
-	doubleFault.storageSegment = 0;
+	doubleFault.storageSegment = 1;
 	doubleFault.offsetHigh = 0;
 	doubleFault.offsetLow = 0;
 	doubleFault.selector = selector;
