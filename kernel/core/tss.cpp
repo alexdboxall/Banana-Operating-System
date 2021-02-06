@@ -52,6 +52,9 @@ int TSS::setup(size_t esp, bool load)
 	uint16_t gdtOffset = gdtEntry | 3;
 	if (load) {
 		asm volatile ("mov %0, %%ax; ltrw %%ax" :: "r"(gdtOffset) : "%ax");
+	} else {
+		uint32_t* p2 = (uint32_t*) (((uint8_t*) ptr) + 0x1C);
+		*p2 = thisCPU()->readCR3();
 	}
 	return gdtEntry;
 }
