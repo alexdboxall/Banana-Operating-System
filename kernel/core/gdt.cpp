@@ -28,7 +28,7 @@ GDT::GDT()
 
 int GDT::addEntry(GDTEntry entry)
 {
-	kprintf("Adding GDT entry!\n");
+	kprintf("Adding GDT entry %d, 0x%X!\n", entryCount, entryCount * 8);
 	entries[entryCount] = entry.val;
 	return (entryCount++) * 8;
 }
