@@ -91,7 +91,7 @@ void recursion(int b)
 {
 	int a = 5 * b;
 	kprintf("recursing! %d %d\n", a, b);
-	recursion(a ^ b + 6);
+	recursion((a ^ b) + 6);
 }
 
 void Computer::start()
