@@ -124,6 +124,7 @@ public:
 	GDT gdt;
 	IDT idt;
 	TSS tss;
+	uint16_t doubleFaultSelector;
 
 	InterruptController* intCtrl;
 	Timer* timer;

@@ -1,5 +1,7 @@
 #include "core/idt.hpp"
 #include "core/main.hpp"
+#include "core/tss.hpp"
+#include "core/cpu.hpp"
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
@@ -148,6 +150,10 @@ void IDT::setup()
 	addEntry(53, irq21, false);
 	addEntry(54, irq22, false);
 	addEntry(55, irq23, false);
+
+	entries[8].type = 0x5;		//task gate
+	entries[8].offset = 0;
+	entries[8].selector = thisCPU()->doubleFaultSelector;
 
 	flush();
 }

@@ -9,6 +9,8 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
+uint16_t doubleFaultSelector;
+
 TSS::TSS()
 {
 
@@ -20,7 +22,7 @@ void TSS::setESP(size_t esp)
 	*memoryLocation = esp;
 }
 
-void TSS::setup(size_t esp)
+int TSS::setup(size_t esp)
 {
 	ptr = (uint16_t*) malloc(1024);
 	memset(ptr, 0, 1024);
@@ -48,4 +50,5 @@ void TSS::setup(size_t esp)
 	uint16_t gdtOffset = gdtEntry | 3;
 
 	asm volatile ("mov %0, %%ax; ltrw %%ax" :: "r"(gdtOffset) : "%ax");
+	return gdtEntry;
 }

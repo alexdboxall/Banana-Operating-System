@@ -379,8 +379,12 @@ int CPU::open(int num, int b, void* ptr)
 	cpuNum = num;
 
 	gdt.setup();
-	idt.setup();
+
 	tss.setup(0xDEADBEEF);
+	TSS* dfTss = new TSS();
+	doubleFaultSelector = dfTss->setup((size_t) malloc(4096));
+
+	idt.setup();
 	
 	//here so APIC can be disabled on dodgy K5 CPUs
 	detectFeatures();
