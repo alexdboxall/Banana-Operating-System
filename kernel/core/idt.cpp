@@ -152,7 +152,8 @@ void IDT::setup()
 	addEntry(54, irq22, false);
 	addEntry(55, irq23, false);
 
-	//creat a double fault TSS
+	/*
+	//create a double fault TSS
 	size_t esp = VirtMem::getAKernelVAS()->allocatePages(4, PAGE_PRESENT | PAGE_SUPERVISOR | PAGE_WRITABLE) + 4096 * 3;
 
 	TSS* dfTSS = new TSS();
@@ -165,7 +166,7 @@ void IDT::setup()
 	doubleFault.offsetHigh = 0;
 	doubleFault.offsetLow = 0;
 	doubleFault.selector = selector;
-	entries[8] = doubleFault.val;
+	entries[8] = doubleFault.val;*/
 
 	flush();
 }
