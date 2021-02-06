@@ -160,7 +160,7 @@ void IDT::setup()
 	//set double fault as a task gate
 	IDTEntry doubleFault(false);
 	doubleFault.type = 0x5;
-	doubleFault.storageSegment = 1;
+	doubleFault.storageSegment = 0;
 	doubleFault.offsetHigh = 0;
 	doubleFault.offsetLow = 0;
 	doubleFault.selector = selector;
