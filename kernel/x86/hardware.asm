@@ -425,6 +425,7 @@ isr7:
 
 isr8:
     cli
+    push byte 0
     push byte 8
     jmp int_common_stub
 
