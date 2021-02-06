@@ -87,17 +87,6 @@ int Computer::open(int a, int b, void* c)
 	return -1;
 }
 
-int recursion(int b)
-{
-	int a = 5 * b;
-	kprintf("recursing! %d %d\n", a, b);
-	int c = recursion((a ^ b) + 6);
-	if (c == 3) {
-		kprintf("Hello, World!\n");
-	}
-	return a + b + c;
-}
-
 void Computer::start()
 {
 	lockScheduler();
@@ -118,14 +107,6 @@ void Computer::start()
 	setupSystemCalls();
 	loadClockSettings();
 	loadDriversForAll();
-
-	datetime_t dt = computer->clock->timeInDatetimeUTC();
-	kprintf("RTC UTC  : %d/%d/%d %d:%d:%d\n", dt.day, dt.month, dt.year, dt.hour, dt.minute, dt.second);
-
-	dt = computer->clock->timeInDatetimeLocal();
-	kprintf("RTC LOCAL: %d/%d/%d %d:%d:%d\n", dt.day, dt.month, dt.year, dt.hour, dt.minute, dt.second);
-
-	recursion(3);
 
 	//loadVM8086FileAsThread(kernelProcess, "C:/Banana/System/vm86/VGASET.COM", 0x0000, 0x90, 0x12, 0x12);
 
