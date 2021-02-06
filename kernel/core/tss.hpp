@@ -16,7 +16,7 @@ protected:
 public:
 	TSS();
 	void setESP(size_t esp);
-	int setup(size_t esp);
+	int setup(size_t esp, bool load = true);
 };
 
 #endif

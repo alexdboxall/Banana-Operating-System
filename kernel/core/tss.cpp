@@ -22,7 +22,7 @@ void TSS::setESP(size_t esp)
 	*memoryLocation = esp;
 }
 
-int TSS::setup(size_t esp)
+int TSS::setup(size_t esp, bool load)
 {
 	ptr = (uint16_t*) malloc(1024);
 	memset(ptr, 0, 1024);
@@ -48,7 +48,8 @@ int TSS::setup(size_t esp)
 	thisCPU()->gdt.flush();
 
 	uint16_t gdtOffset = gdtEntry | 3;
-
-	asm volatile ("mov %0, %%ax; ltrw %%ax" :: "r"(gdtOffset) : "%ax");
+	if (load) {
+		asm volatile ("mov %0, %%ax; ltrw %%ax" :: "r"(gdtOffset) : "%ax");
+	}
 	return gdtEntry;
 }
