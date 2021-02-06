@@ -37,6 +37,8 @@ int TSS::setup(size_t esp, bool load)
 
 	setESP(esp);
 
+	kprintf("TSS setup 0x%X\n", esp);
+
 	GDTEntry tssEnt;
 	tssEnt.setBase((size_t) ptr);
 	tssEnt.setLimit(0x68);
