@@ -114,6 +114,8 @@ void Computer::start()
 	dt = computer->clock->timeInDatetimeLocal();
 	kprintf("RTC LOCAL: %d/%d/%d %d:%d:%d\n", dt.day, dt.month, dt.year, dt.hour, dt.minute, dt.second);
 
+	asm volatile ("int $8");
+
 	//loadVM8086FileAsThread(kernelProcess, "C:/Banana/System/vm86/VGASET.COM", 0x0000, 0x90, 0x12, 0x12);
 
 	//for each cpu
