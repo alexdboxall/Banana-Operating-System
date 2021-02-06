@@ -1,5 +1,6 @@
 #include "core/gdt.hpp"
 #include "core/main.hpp"
+#include "core/common.hpp"
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
@@ -27,6 +28,7 @@ GDT::GDT()
 
 int GDT::addEntry(GDTEntry entry)
 {
+	kprintf("Adding GDT entry!\n");
 	entries[entryCount] = entry.val;
 	return (entryCount++) * 8;
 }

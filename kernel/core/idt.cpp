@@ -160,7 +160,7 @@ void IDT::setup()
 	uint16_t selector = dfTSS->setup(esp, (size_t) irq8);
 
 	//set double fault as a task gate
-	IDTEntry doubleFault(true);
+	IDTEntry doubleFault(false);
 	doubleFault.type = 0x5;
 	doubleFault.storageSegment = 1;
 	doubleFault.offsetHigh = 0;
