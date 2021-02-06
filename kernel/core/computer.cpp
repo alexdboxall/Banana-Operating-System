@@ -95,6 +95,7 @@ int recursion(int b)
 	if (c == 3) {
 		kprintf("Hello, World!\n");
 	}
+	return a + b + c;
 }
 
 void Computer::start()
