@@ -156,7 +156,7 @@ void IDT::setup()
 	size_t esp = VirtMem::getAKernelVAS()->allocatePages(4, PAGE_PRESENT | PAGE_SUPERVISOR | PAGE_WRITABLE) + 4096 * 3;
 
 	TSS* dfTSS = new TSS();
-	uint16_t selector = dfTSS->setup(esp, (size_t) irq8);
+	uint16_t selector = dfTSS->setup(esp, (size_t) isr8);
 
 	//set double fault as a task gate
 	IDTEntry doubleFault(false);
