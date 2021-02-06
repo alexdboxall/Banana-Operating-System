@@ -153,7 +153,7 @@ void IDT::setup()
 	addEntry(55, irq23, false);
 
 	//creat a double fault TSS
-	size_t pages = getAKernelVAS()->allocatePages(4, PAGE_PRESENT | PAGE_SUPERVISOR | PAGE_WRITABLE) + 4096 * 3;
+	size_t esp = VirtMem::getAKernelVAS()->allocatePages(4, PAGE_PRESENT | PAGE_SUPERVISOR | PAGE_WRITABLE) + 4096 * 3;
 
 	TSS* dfTSS = new TSS();
 	uint16_t selector = dfTSS->setup(esp, irq8);
