@@ -87,11 +87,14 @@ int Computer::open(int a, int b, void* c)
 	return -1;
 }
 
-void recursion(int b)
+int recursion(int b)
 {
 	int a = 5 * b;
 	kprintf("recursing! %d %d\n", a, b);
-	recursion((a ^ b) + 6);
+	int c = recursion((a ^ b) + 6);
+	if (c == 3) {
+		kprintf("Hello, World!\n");
+	}
 }
 
 void Computer::start()
