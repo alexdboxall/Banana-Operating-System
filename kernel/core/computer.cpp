@@ -87,6 +87,11 @@ int Computer::open(int a, int b, void* c)
 	return -1;
 }
 
+void recursion()
+{
+	recursion();
+}
+
 void Computer::start()
 {
 	lockScheduler();
@@ -113,6 +118,8 @@ void Computer::start()
 
 	dt = computer->clock->timeInDatetimeLocal();
 	kprintf("RTC LOCAL: %d/%d/%d %d:%d:%d\n", dt.day, dt.month, dt.year, dt.hour, dt.minute, dt.second);
+
+	recursion();
 
 	//loadVM8086FileAsThread(kernelProcess, "C:/Banana/System/vm86/VGASET.COM", 0x0000, 0x90, 0x12, 0x12);
 
