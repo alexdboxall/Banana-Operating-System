@@ -152,8 +152,9 @@ void IDT::setup()
 	addEntry(55, irq23, false);
 
 	//set double fault as task gate
-	IDTEntry doubleFault(false);
+	IDTEntry doubleFault(true);
 	doubleFault.type = 0x5;
+	doubleFault.storageSegment = 1;
 	doubleFault.offsetHigh = 0;
 	doubleFault.offsetLow = 0;
 	doubleFault.selector = thisCPU()->doubleFaultSelector;
