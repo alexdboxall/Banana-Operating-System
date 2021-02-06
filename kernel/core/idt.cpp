@@ -1,7 +1,7 @@
 #include "core/idt.hpp"
 #include "core/main.hpp"
 #include "core/tss.hpp"
-#include "core/cpu.hpp"
+#include "hw/cpu.hpp"
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
