@@ -87,9 +87,11 @@ int Computer::open(int a, int b, void* c)
 	return -1;
 }
 
-void recursion()
+void recursion(int b)
 {
-	recursion();
+	int a = 5 * b;
+	kprintf("recursing! %d %d\n", a, b);
+	recursion(a ^ b + 6);
 }
 
 void Computer::start()
@@ -119,7 +121,7 @@ void Computer::start()
 	dt = computer->clock->timeInDatetimeLocal();
 	kprintf("RTC LOCAL: %d/%d/%d %d:%d:%d\n", dt.day, dt.month, dt.year, dt.hour, dt.minute, dt.second);
 
-	recursion();
+	recursion(3);
 
 	//loadVM8086FileAsThread(kernelProcess, "C:/Banana/System/vm86/VGASET.COM", 0x0000, 0x90, 0x12, 0x12);
 
