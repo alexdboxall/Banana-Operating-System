@@ -214,22 +214,43 @@ InterruptController::~InterruptController()
 
 void displayDebugInfo(regs* r)
 {
+	size_t cr0;
+	asm volatile ("mov %%cr2, %0" : "=r"(cr0)); 
 	size_t cr2;
 	asm volatile ("mov %%cr2, %0" : "=r"(cr2));
 	size_t cr3;
 	asm volatile ("mov %%cr3, %0" : "=r"(cr3));
+	size_t cr4;
+	asm volatile ("mov %%cr4, %0" : "=r"(cr4));
 
 	setActiveTerminal(kernelProcess->terminal);
 
 	kernelProcess->terminal->puts(exceptionNames[r->int_no]);
 	kernelProcess->terminal->puts("\n EIP: ");
 	kernelProcess->terminal->putx(r->eip);
+	kernelProcess->terminal->puts("\n CR0: ");
+	kernelProcess->terminal->putx((uint32_t) cr0);
+	kernelProcess->terminal->puts("\n CR1: ");
+	kernelProcess->terminal->putx((uint32_t) cr1);
 	kernelProcess->terminal->puts("\n CR2: ");
 	kernelProcess->terminal->putx((uint32_t) cr2);
 	kernelProcess->terminal->puts("\n CR3: ");
 	kernelProcess->terminal->putx((uint32_t) cr3);
 	kernelProcess->terminal->puts("\n ERR: ");
 	kernelProcess->terminal->putx((uint32_t) r->err_code);
+
+	kernelProcess->terminal->puts("\n DR0: ");
+	kernelProcess->terminal->putx((uint32_t) thisCPU()->readDR0());
+	kernelProcess->terminal->puts("\n DR1: ");
+	kernelProcess->terminal->putx((uint32_t) thisCPU()->readDR1());
+	kernelProcess->terminal->puts("\n DR2: ");
+	kernelProcess->terminal->putx((uint32_t) thisCPU()->readDR2());
+	kernelProcess->terminal->puts("\n DR3: ");
+	kernelProcess->terminal->putx((uint32_t) thisCPU()->readDR3());
+	kernelProcess->terminal->puts("\n DR6: ");
+	kernelProcess->terminal->putx((uint32_t) thisCPU()->readDR6());
+	kernelProcess->terminal->puts("\n DR7: ");
+	kernelProcess->terminal->putx((uint32_t) thisCPU()->readDR7());
 	asm("cli;hlt;");
 	while (1);
 

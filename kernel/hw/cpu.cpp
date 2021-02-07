@@ -735,7 +735,6 @@ size_t CPU::readDR7()
 	return val;
 }
 
-
 void CPU::writeDR0(size_t val)
 {
 	asm volatile ("mov %0, %%dr0" :: "r"(val));
