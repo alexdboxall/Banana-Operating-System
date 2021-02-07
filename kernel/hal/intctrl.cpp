@@ -236,6 +236,8 @@ void displayDebugInfo(regs* r)
 	kernelProcess->terminal->putx(r->cs);
 	kernelProcess->terminal->puts("\n ERR: ");
 	kernelProcess->terminal->putx((uint32_t) r->err_code);
+	kernelProcess->terminal->puts("\n EFL: ");
+	kernelProcess->terminal->putx((uint32_t) r->eflags);
 	kernelProcess->terminal->puts("\n\n CR0: ");
 	kernelProcess->terminal->putx((uint32_t) cr0);
 	kernelProcess->terminal->puts("\n CR2: ");
