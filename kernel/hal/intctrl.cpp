@@ -229,8 +229,12 @@ void displayDebugInfo(regs* r)
 	kernelProcess->terminal->puts("\n EIP: ");
 	kernelProcess->terminal->putx(r->eip);
 	kernelProcess->terminal->puts("\n ESP: ");
+	kernelProcess->terminal->putx(r->esp);
+	kernelProcess->terminal->puts("\nUESP: ");
 	kernelProcess->terminal->putx(r->useresp);
-	kernelProcess->terminal->puts("\n CR0: ");
+	kernelProcess->terminal->puts("\n ERR: ");
+	kernelProcess->terminal->putx((uint32_t) r->err_code);
+	kernelProcess->terminal->puts("\n\n CR0: ");
 	kernelProcess->terminal->putx((uint32_t) cr0);
 	kernelProcess->terminal->puts("\n CR2: ");
 	kernelProcess->terminal->putx((uint32_t) cr2);
@@ -238,10 +242,9 @@ void displayDebugInfo(regs* r)
 	kernelProcess->terminal->putx((uint32_t) cr3);
 	kernelProcess->terminal->puts("\n CR4: ");
 	kernelProcess->terminal->putx((uint32_t) cr4);
-	kernelProcess->terminal->puts("\n ERR: ");
-	kernelProcess->terminal->putx((uint32_t) r->err_code);
 
-	kernelProcess->terminal->puts("\n DR0: ");
+
+	kernelProcess->terminal->puts("\n\n DR0: ");
 	kernelProcess->terminal->putx((uint32_t) thisCPU()->readDR0());
 	kernelProcess->terminal->puts("\n DR1: ");
 	kernelProcess->terminal->putx((uint32_t) thisCPU()->readDR1());
