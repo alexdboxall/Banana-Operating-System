@@ -162,28 +162,28 @@ public:
 
 	bool opcodeDetectionMode = false;
 
-	inline size_t readCR0()
+	static inline size_t readCR0()
 	{
 		size_t val;
 		asm volatile ("mov %%cr0, %0" : "=r"(val));
 		return val;
 	}
 
-	inline size_t readCR2()
+	static inline size_t readCR2()
 	{
 		size_t val;
 		asm volatile ("mov %%cr2, %0" : "=r"(val));
 		return val;
 	}
 
-	inline size_t readCR3()
+	static inline size_t readCR3()
 	{
 		size_t val;
 		asm volatile ("mov %%cr3, %0" : "=r"(val));
 		return val;
 	}
 
-	inline size_t readCR4()
+	static inline size_t readCR4()
 	{
 		size_t val;
 		asm volatile ("mov %%cr4, %0" : "=r"(val));
