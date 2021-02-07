@@ -691,6 +691,81 @@ size_t CPU::readCR4()
 	return val;
 }
 
+
+
+size_t CPU::readDR0()
+{
+	size_t val;
+	asm volatile ("mov %%dr0, %0" : "=r"(val));
+	return val;
+}
+
+size_t CPU::readDR1()
+{
+	size_t val;
+	asm volatile ("mov %%dr1, %0" : "=r"(val));
+	return val;
+}
+
+size_t CPU::readDR2()
+{
+	size_t val;
+	asm volatile ("mov %%dr2, %0" : "=r"(val));
+	return val;
+}
+
+size_t CPU::readDR3()
+{
+	size_t val;
+	asm volatile ("mov %%dr3, %0" : "=r"(val));
+	return val;
+}
+
+size_t CPU::readDR6()
+{
+	size_t val;
+	asm volatile ("mov %%dr6, %0" : "=r"(val));
+	return val;
+}
+
+size_t CPU::readDR7()
+{
+	size_t val;
+	asm volatile ("mov %%dr7, %0" : "=r"(val));
+	return val;
+}
+
+
+void CPU::writeDR0(size_t val)
+{
+	asm volatile ("mov %0, %%dr0" :: "r"(val));
+}
+
+void CPU::writeDR1(size_t val)
+{
+	asm volatile ("mov %0, %%dr1 :: "r"(val));
+}
+
+void CPU::writeDR2(size_t val)
+{
+	asm volatile ("mov %0, %%dr2" :: "r"(val));
+}
+
+void CPU::writeDR3(size_t val)
+{
+	asm volatile ("mov %0, %%dr3" :: "r"(val));
+}
+
+void CPU::writeDR6(size_t val)
+{
+	asm volatile ("mov %0, %%dr6" :: "r"(val));
+}
+
+void CPU::writeDR7(size_t val)
+{
+	asm volatile ("mov %0, %%dr7" :: "r"(val));
+}
+
 void CPU::writeCR0(size_t val)
 {
 	asm volatile ("mov %0, %%cr0" :: "r"(val));

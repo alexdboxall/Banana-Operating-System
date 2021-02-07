@@ -167,9 +167,23 @@ public:
 	size_t readCR3();
 	size_t readCR4();
 
+	size_t readDR0();
+	size_t readDR1();
+	size_t readDR2();
+	size_t readDR3();
+	size_t readDR6();
+	size_t readDR7();
+
 	void writeCR0(size_t val);
 	void writeCR3(size_t val);
 	void writeCR4(size_t val);
+
+	void writeDR0(size_t val);
+	void writeDR1(size_t val);
+	void writeDR2(size_t val);
+	void writeDR3(size_t val);
+	void writeDR6(size_t val);
+	void writeDR7(size_t val);
 
 	void setupSMEP();
 	void setupSMAP();
