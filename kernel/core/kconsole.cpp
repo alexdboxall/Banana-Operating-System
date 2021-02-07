@@ -59,13 +59,13 @@ void panic(const char* message)
 
 	kernelProcess->terminal->puts("      Technical information:\n        ");
 	kernelProcess->terminal->puts("    CR0: ");
-	kernelProcess->terminal->putx(thisCPU()->readCR0());
+	kernelProcess->terminal->putx(CPU::readCR0());
 	kernelProcess->terminal->puts("    CR2: ");
-	kernelProcess->terminal->putx(thisCPU()->readCR2());
+	kernelProcess->terminal->putx(CPU::readCR2());
 	kernelProcess->terminal->puts("\n            CR3: ");
-	kernelProcess->terminal->putx(thisCPU()->readCR3());
+	kernelProcess->terminal->putx(CPU::readCR3());
 	kernelProcess->terminal->puts("    CR4: ");
-	kernelProcess->terminal->putx(thisCPU()->readCR4());
+	kernelProcess->terminal->putx(CPU::readCR4());
 	kernelProcess->terminal->puts("\n            Callers: ");
 	kernelProcess->terminal->putx((size_t) __builtin_return_address(0));
 	kernelProcess->terminal->puts(", ");

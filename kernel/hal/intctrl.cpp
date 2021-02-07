@@ -248,17 +248,17 @@ void displayDebugInfo(regs* r)
 	kernelProcess->terminal->putx((uint32_t) cr4);
 
 	kernelProcess->terminal->puts("\n\n DR0: ");
-	kernelProcess->terminal->putx((uint32_t) thisCPU()->readDR0());
+	kernelProcess->terminal->putx((uint32_t) CPU::readDR0());
 	kernelProcess->terminal->puts("\n DR1: ");
-	kernelProcess->terminal->putx((uint32_t) thisCPU()->readDR1());
+	kernelProcess->terminal->putx((uint32_t) CPU::readDR1());
 	kernelProcess->terminal->puts("\n DR2: ");
-	kernelProcess->terminal->putx((uint32_t) thisCPU()->readDR2());
+	kernelProcess->terminal->putx((uint32_t) CPU::readDR2());
 	kernelProcess->terminal->puts("\n DR3: ");
-	kernelProcess->terminal->putx((uint32_t) thisCPU()->readDR3());
+	kernelProcess->terminal->putx((uint32_t) CPU::readDR3());
 	kernelProcess->terminal->puts("\n DR6: ");
-	kernelProcess->terminal->putx((uint32_t) thisCPU()->readDR6());
+	kernelProcess->terminal->putx((uint32_t) CPU::readDR6());
 	kernelProcess->terminal->puts("\n DR7: ");
-	kernelProcess->terminal->putx((uint32_t) thisCPU()->readDR7());
+	kernelProcess->terminal->putx((uint32_t) CPU::readDR7());
 	asm("cli;hlt;");
 	while (1);
 

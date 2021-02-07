@@ -248,7 +248,7 @@ size_t VAS::allocatePages(int count, int flags)
 		}
 
 		if (!invlpg) {
-			thisCPU()->writeCR3(thisCPU()->readCR3());
+			CPU::writeCR3(CPU::readCR3());
 		}
 
 		return virt;
@@ -271,7 +271,7 @@ size_t VAS::allocatePages(int count, int flags)
 		}
 
 		if (!invlpg) {
-			thisCPU()->writeCR3(thisCPU()->readCR3());
+			CPU::writeCR3(CPU::readCR3());
 		}
 
 		return virt;
@@ -466,7 +466,7 @@ size_t VAS::mapRange(size_t physicalAddr, size_t virtualAddr, int pages, int fla
 	}
 
 	if (!invlpg) {
-		thisCPU()->writeCR3(thisCPU()->readCR3());
+		CPU::writeCR3(CPU::readCR3());
 	}
 
 	return virtualAddr;
@@ -506,7 +506,7 @@ void VAS::mapOtherVASIn(bool secondSlot, VAS* other)
 	pageDirectoryBase[(secondSlot ? VIRT_RECURSIVE_SPOT_2 : VIRT_RECURSIVE_SPOT_1) / 0x400000] = other->pageDirectoryBasePhysical | PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR;
 
 	//flush TLB
-	thisCPU()->writeCR3(thisCPU()->readCR3());
+	CPU::writeCR3(CPU::readCR3());
 }
 
 void VAS::mapForeignPage(bool secondSlot, VAS* other, size_t physicalAddr, size_t virtualAddr, int flags)
@@ -592,5 +592,5 @@ extern "C" void mapVASFirstTime()
 		vas->mapRange(PhysMem::allocatePage(), VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL, 1, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_WRITABLE | (vas->supervisorVAS ? PAGE_SUPERVISOR : PAGE_USER));
 	}
 
-	thisCPU()->writeCR3(thisCPU()->readCR3());
+	CPU::writeCR3(CPU::readCR3());
 }

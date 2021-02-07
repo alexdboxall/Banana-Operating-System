@@ -45,7 +45,7 @@ int TSS::setup(size_t esp, size_t eip)
 	entry->esp = esp;
 	entry->eflags = 0x2;
 
-	entry->cr3 = thisCPU()->readCR3();
+	entry->cr3 = CPU::readCR3();
 
 	GDTEntry tssEnt;
 	tssEnt.setBase((size_t) entry);

@@ -348,7 +348,7 @@ extern "C" {
 		}
 		
 		if (!invlpg) {
-			thisCPU()->writeCR3(thisCPU()->readCR3());
+			CPU::writeCR3(CPU::readCR3());
 		}
 
 		return (void*) (virt | (PhysicalAddress & 0xFFF));
