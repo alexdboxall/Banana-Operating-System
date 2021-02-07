@@ -228,6 +228,8 @@ void displayDebugInfo(regs* r)
 	kernelProcess->terminal->puts(exceptionNames[r->int_no]);
 	kernelProcess->terminal->puts("\n EIP: ");
 	kernelProcess->terminal->putx(r->eip);
+	kernelProcess->terminal->puts("\n ESP: ");
+	kernelProcess->terminal->putx(r->useresp);
 	kernelProcess->terminal->puts("\n CR0: ");
 	kernelProcess->terminal->putx((uint32_t) cr0);
 	kernelProcess->terminal->puts("\n CR2: ");

@@ -117,6 +117,8 @@ void Computer::start()
 	extern void sb16Demo(void*);
 	//kernelProcess->createThread(sb16Demo, nullptr, 254);
 
+	asm volatile ("int $1");
+
 	executeDLL(loadDLL("C:/Banana/System/system.dll"), computer);
 
 	kprintf("DONE.\n");
