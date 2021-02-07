@@ -183,7 +183,10 @@ commonThreadSwitch:
 		pop ecx
 		pop ebx
 		pop eax
-		popf
+		add esp, 4          ;DON'T POP FLAGS
+        
+        push byte 0x2
+        popf                ;get a safe set of flags
 
 		;and we're off!
 		push edx					;start point
