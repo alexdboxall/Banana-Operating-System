@@ -743,7 +743,7 @@ void CPU::writeDR0(size_t val)
 
 void CPU::writeDR1(size_t val)
 {
-	asm volatile ("mov %0, %%dr1 :: "r"(val));
+	asm volatile ("mov %0, %%dr1" :: "r"(val));
 }
 
 void CPU::writeDR2(size_t val)
