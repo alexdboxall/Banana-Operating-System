@@ -7,13 +7,15 @@ extern kernel_main
 
 start:
     cli
+    cld
+
     mov	ax, 0x10		; set data segments to data selector (0x10)
     mov	ds, ax
     mov	ss, ax
     mov	es, ax
     mov	esp, 0xC2010000
 
-	cld
+    jmp $
 	call kernel_main
 
 
