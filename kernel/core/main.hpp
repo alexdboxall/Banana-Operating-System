@@ -35,7 +35,7 @@ constexpr size_t PHYS_KRNL_PAGE_DIRECTORY		= 0x1000;
 
 constexpr size_t VIRT_KERNEL_BASE				= 0xC0000000U;
 constexpr size_t VIRT_LOW_MEGS					= 0x2000000 + VIRT_KERNEL_BASE;
-#define			 VIRT_CPU_SPECIFIC				= ((size_t)(0x2400000 + VIRT_KERNEL_BASE));
+constexpr size_t VIRT_CPU_SPECIFIC				= 0x2400000 + VIRT_KERNEL_BASE;
 constexpr size_t VIRT_RECURSIVE_SPOT_1			= 0x2800000 + VIRT_KERNEL_BASE;
 constexpr size_t VIRT_RECURSIVE_SPOT_2			= 0x2C00000 + VIRT_KERNEL_BASE;
 

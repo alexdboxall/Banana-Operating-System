@@ -127,7 +127,7 @@ public:
 	char vendorIDString[13];
 
 	CPUSpecificData* cpuSpecificPhysAddr = nullptr;
-	static constexpr CPUSpecificData* cpuSpecificData = VIRT_CPU_SPECIFIC;
+	CPUSpecificData* cpuSpecificData;
 
 	int cpuNum;
 	GDT gdt;

@@ -383,6 +383,8 @@ int CPU::open(int num, int b, void* vas_)
 	tss.flush();
 	idt.setup();
 
+	cpuSpecificData = (CPUSpecificData*) VIRT_CPU_SPECIFIC;
+
 	cpuSpecificPhysAddr = (CPUSpecificData*) PhysMem::allocatePage();
 	cpuSpecificPhysAddr->cpuNumber = num;
 	cpuSpecificPhysAddr->cpuPointer = this;
