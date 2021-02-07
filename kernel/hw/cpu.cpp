@@ -374,7 +374,7 @@ CPU::CPU(): Device("CPU")
 	deviceType = DeviceType::CPU;
 }
 
-int CPU::open(int num, int b, void* ptr)
+int CPU::open(int num, int b, void* vas_)
 {
 	cpuNum = num;
 
@@ -382,6 +382,13 @@ int CPU::open(int num, int b, void* ptr)
 	tss.setup(0xDEADBEEF);
 	tss.flush();
 	idt.setup();
+
+	cpuSpecificPhysAddr = (CPUSpecificData*) PhysMem::allocatePage();
+	cpuSpecificPhysAddr->cpuNumber = num;
+	cpuSpecificPhysAddr->cpuPointer = this;
+
+	VAS* vas = (VAS*) vas_;
+	vas->setCPUSpecificData(cpuSpecificPhysAddr);
 	
 	//here so APIC can be disabled on dodgy K5 CPUs
 	detectFeatures();

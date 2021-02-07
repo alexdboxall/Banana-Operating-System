@@ -32,9 +32,10 @@ constexpr size_t PHYS_DMA_MEMORY_2				= 0x60000;
 constexpr size_t PHYS_ALLOCED_VIRT_PAGES		= 0x100000;
 constexpr size_t PHYS_KRNL_PAGE_DIRECTORY		= 0x1000;
 
-constexpr size_t VIRT_KERNEL_BASE				= 0xC0000000U;
-constexpr size_t VIRT_LOW_MEGS					= 0x2000000		+ VIRT_KERNEL_BASE;
 
+constexpr size_t VIRT_KERNEL_BASE				= 0xC0000000U;
+constexpr size_t VIRT_LOW_MEGS					= 0x2000000 + VIRT_KERNEL_BASE;
+constexpr size_t VIRT_CPU_SPECIFIC				= 0x2400000 + VIRT_KERNEL_BASE;
 constexpr size_t VIRT_RECURSIVE_SPOT_1			= 0x2800000 + VIRT_KERNEL_BASE;
 constexpr size_t VIRT_RECURSIVE_SPOT_2			= 0x2C00000 + VIRT_KERNEL_BASE;
 
@@ -43,7 +44,7 @@ constexpr size_t SIZE_DMA_MEMORY_1				= 0x10000;
 constexpr size_t VIRT_DMA_MEMORY_2				= VIRT_LOW_MEGS + PHYS_DMA_MEMORY_2;
 constexpr size_t SIZE_DMA_MEMORY_2				= 0x20000;
 
-constexpr size_t VIRT_KRNL_PAGE_DIRCTORY		= VIRT_LOW_MEGS + PHYS_KRNL_PAGE_DIRECTORY;
+constexpr size_t VIRT_KRNL_PAGE_DIRECTORY		= VIRT_LOW_MEGS + PHYS_KRNL_PAGE_DIRECTORY;
 
 constexpr size_t VIRT_PHYS_PAGE_BITMAP			= VIRT_LOW_MEGS + PHYS_PHYS_PAGE_BITMAP;
 constexpr size_t SIZE_PHYS_PAGE_BITMAP			= 128 * 1024;

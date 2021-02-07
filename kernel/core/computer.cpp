@@ -60,7 +60,7 @@ void Computer::setBootMessage(const char* message)
 	
 }
 
-int Computer::open(int a, int b, void* c)
+int Computer::open(int a, int b, void* vas)
 {
 	VgaText::hiddenOut = false;
 
@@ -77,7 +77,7 @@ int Computer::open(int a, int b, void* c)
 
 	cpu[0] = new CPU();
 	addChild(cpu[0]);
-	cpu[0]->open(0, 0, nullptr);		//FIRST ARG IS CPU NUMBER
+	cpu[0]->open(0, 0, vas);		//FIRST ARG IS CPU NUMBER
 	
 	fpu = setupFPU();
 	addChild(fpu);

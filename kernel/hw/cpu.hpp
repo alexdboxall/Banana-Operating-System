@@ -10,6 +10,12 @@
 #include "hal/intctrl.hpp"
 #include "hal/timer.hpp"
 
+struct CPUSpecificData
+{
+	int cpuNumber;
+	CPU* cpuPointer;
+};
+
 enum class CPUVendor
 {
 	Unknown,
@@ -120,6 +126,9 @@ public:
 
 	char vendorIDString[13];
 
+	CPUSpecificData* cpuSpecificPhysAddr = nullptr;
+	static CPUSpecificData* cpuSpecificData = (CPUSpecificData*) VIRT_CPU_SPECIFIC;
+
 	int cpuNum;
 	GDT gdt;
 	IDT idt;
@@ -130,7 +139,7 @@ public:
 	Timer* timer;
 
 	CPU();
-	int open(int num, int b, void* c);
+	int open(int num, int b, void* vas);
 	int close(int, int, void*);
 
 	void displayFeatures();

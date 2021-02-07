@@ -48,6 +48,7 @@ public:
 	VAS(VAS* vas);
     VAS(bool kernel);
     ~VAS();
+	void setCPUSpecific();
 
 	size_t* getForeignPageTableEntry(bool secondSlot, size_t virt);
 	size_t* getPageTableEntry(size_t virt);

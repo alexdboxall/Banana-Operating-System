@@ -303,7 +303,7 @@ VAS::VAS()
 
 	supervisorVAS = true;
 	specialFirstVAS = true;
-	pageDirectoryBase = (size_t*) VIRT_KRNL_PAGE_DIRCTORY;
+	pageDirectoryBase = (size_t*) VIRT_KRNL_PAGE_DIRECTORY;
 }
 
 VAS::~VAS()
@@ -343,6 +343,12 @@ VAS::~VAS()
 	kprintf("Freed %d KB from VAS deletion.\n", fp * 4);
 	
 	unlockScheduler();
+}
+
+void VAS::setCPUSpecific(size_t physAddr)
+{
+	//map the CPU specific data in (kernel mode can write to readable pages)
+	mapPage(physAddr, VIRT_CPU_SPECIFIC, PAGE_PRESENT | PAGE_READONLY | PAGE_USER);
 }
 
 VAS::VAS(VAS* old)
@@ -441,10 +447,8 @@ VAS::VAS(bool kernel) {
 
 	pageDirectoryBase[0xC20 / 4] = 0x4003 | (thisCPU()->features.hasGlobalPages ? PAGE_GLOBAL : 0);
 
-	/*
-	//map the CPU specific data in (kernel mode can write to readable pages)
-	mapPage(CPU_SPECIFIC_DATA_BASE + 0x1000 * getCPUNumber(), 0xC000, PAGE_PRESENT | PAGE_READONLY | PAGE_USER);
-	*((uint8_t*) (size_t) VIRTUAL_ADDR_CPU_NUM) = getCPUNumber();*/
+	//the first VAS on each CPU gets called with a different constructor
+	setCPUSpecific((size_t) thisCPU()->cpuSpecificPhysAddr);
 
 	//set up recursive mapping (wizardry!)
 	pageDirectoryBase[1023] = (size_t) pageDirectoryBasePhysical | PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR | (thisCPU()->features.hasGlobalPages ? PAGE_GLOBAL : 0);
