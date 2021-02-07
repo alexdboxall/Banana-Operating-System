@@ -15,8 +15,8 @@ start:
     mov	esp, 0xC2010000
 
     ;set the flags to a known state
-    push dword 0x2
-    popfd
+    push byte 2
+    popf
 
 	call kernel_main
 
