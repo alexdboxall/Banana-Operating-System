@@ -474,6 +474,8 @@ size_t VAS::mapRange(size_t physicalAddr, size_t virtualAddr, int pages, int fla
 
 	if (!invlpg) {
 		CPU::writeCR3(CPU::readCR3());
+	} else {
+		//TODO: @@@ invalidate the recursive thingy
 	}
 
 	return virtualAddr;

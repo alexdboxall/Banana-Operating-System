@@ -1,5 +1,6 @@
 #include "hw/cpu.hpp"
 #include "hw/ports.hpp"
+#include "core/virtmgr.hpp"
 #include "core/physmgr.hpp"
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
