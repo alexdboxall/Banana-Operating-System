@@ -391,7 +391,7 @@ int CPU::open(int num, int b, void* vas_)
 	cpuSpecificPhysAddr->cpuPointer = this;
 
 	VAS* vas = (VAS*) vas_;
-	vas->setCPUSpecific(cpuSpecificPhysAddr);
+	vas->setCPUSpecific((size_t) cpuSpecificPhysAddr);
 	
 	//here so APIC can be disabled on dodgy K5 CPUs
 	detectFeatures();
