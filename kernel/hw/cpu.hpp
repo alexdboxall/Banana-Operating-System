@@ -162,28 +162,122 @@ public:
 
 	bool opcodeDetectionMode = false;
 
-	size_t readCR0();
-	size_t readCR2();
-	size_t readCR3();
-	size_t readCR4();
+	inline size_t readCR0()
+	{
+		size_t val;
+		asm volatile ("mov %%cr0, %0" : "=r"(val));
+		return val;
+	}
 
-	size_t readDR0();
-	size_t readDR1();
-	size_t readDR2();
-	size_t readDR3();
-	size_t readDR6();
-	size_t readDR7();
+	inline size_t readCR2()
+	{
+		size_t val;
+		asm volatile ("mov %%cr2, %0" : "=r"(val));
+		return val;
+	}
 
-	void writeCR0(size_t val);
-	void writeCR3(size_t val);
-	void writeCR4(size_t val);
+	inline size_t readCR3()
+	{
+		size_t val;
+		asm volatile ("mov %%cr3, %0" : "=r"(val));
+		return val;
+	}
 
-	void writeDR0(size_t val);
-	void writeDR1(size_t val);
-	void writeDR2(size_t val);
-	void writeDR3(size_t val);
-	void writeDR6(size_t val);
-	void writeDR7(size_t val);
+	inline size_t readCR4()
+	{
+		size_t val;
+		asm volatile ("mov %%cr4, %0" : "=r"(val));
+		return val;
+	}
+
+
+
+	inline size_t readDR0()
+	{
+		size_t val;
+		asm volatile ("mov %%dr0, %0" : "=r"(val));
+		return val;
+	}
+
+	inline size_t readDR1()
+	{
+		size_t val;
+		asm volatile ("mov %%dr1, %0" : "=r"(val));
+		return val;
+	}
+
+	inline size_t readDR2()
+	{
+		size_t val;
+		asm volatile ("mov %%dr2, %0" : "=r"(val));
+		return val;
+	}
+
+	inline size_t readDR3()
+	{
+		size_t val;
+		asm volatile ("mov %%dr3, %0" : "=r"(val));
+		return val;
+	}
+
+	inline size_t readDR6()
+	{
+		size_t val;
+		asm volatile ("mov %%dr6, %0" : "=r"(val));
+		return val;
+	}
+
+	inline size_t readDR7()
+	{
+		size_t val;
+		asm volatile ("mov %%dr7, %0" : "=r"(val));
+		return val;
+	}
+
+	inline void writeDR0(size_t val)
+	{
+		asm volatile ("mov %0, %%dr0" :: "r"(val));
+	}
+
+	inline void writeDR1(size_t val)
+	{
+		asm volatile ("mov %0, %%dr1" :: "r"(val));
+	}
+
+	inline void writeDR2(size_t val)
+	{
+		asm volatile ("mov %0, %%dr2" :: "r"(val));
+	}
+
+	inline void writeDR3(size_t val)
+	{
+		asm volatile ("mov %0, %%dr3" :: "r"(val));
+	}
+
+	inline void writeDR6(size_t val)
+	{
+		asm volatile ("mov %0, %%dr6" :: "r"(val));
+	}
+
+	inline void writeDR7(size_t val)
+	{
+		asm volatile ("mov %0, %%dr7" :: "r"(val));
+	}
+
+	inline void writeCR0(size_t val)
+	{
+		asm volatile ("mov %0, %%cr0" :: "r"(val));
+	}
+
+	inline void writeCR3(size_t val)
+	{
+		asm volatile ("mov %0, %%cr3" :: "r"(val));
+	}
+
+	inline void writeCR4(size_t val)
+	{
+		asm volatile ("mov %0, %%cr4" :: "r"(val));
+	}
 
 	void setupSMEP();
 	void setupSMAP();
