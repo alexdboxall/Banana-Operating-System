@@ -215,7 +215,7 @@ InterruptController::~InterruptController()
 void displayDebugInfo(regs* r)
 {
 	size_t cr0;
-	asm volatile ("mov %%cr2, %0" : "=r"(cr0)); 
+	asm volatile ("mov %%cr0, %0" : "=r"(cr0)); 
 	size_t cr2;
 	asm volatile ("mov %%cr2, %0" : "=r"(cr2));
 	size_t cr3;
@@ -230,12 +230,12 @@ void displayDebugInfo(regs* r)
 	kernelProcess->terminal->putx(r->eip);
 	kernelProcess->terminal->puts("\n CR0: ");
 	kernelProcess->terminal->putx((uint32_t) cr0);
-	kernelProcess->terminal->puts("\n CR1: ");
-	kernelProcess->terminal->putx((uint32_t) cr1);
 	kernelProcess->terminal->puts("\n CR2: ");
 	kernelProcess->terminal->putx((uint32_t) cr2);
 	kernelProcess->terminal->puts("\n CR3: ");
 	kernelProcess->terminal->putx((uint32_t) cr3);
+	kernelProcess->terminal->puts("\n CR4: ");
+	kernelProcess->terminal->putx((uint32_t) cr4);
 	kernelProcess->terminal->puts("\n ERR: ");
 	kernelProcess->terminal->putx((uint32_t) r->err_code);
 
