@@ -42,8 +42,8 @@ extern "C" void* sbrk(ptrdiff_t increment)
 			CPU::writeCR3(CPU::readCR3());
 		} else {
 			//invalidate the recursive structure
-			size_t invaddrLow = (0xFFC00000 + ((virtualAddr / 0x400) & ~0xFFF));
-			size_t invaddrHigh = (0xFFC00000 + (((virtualAddr + pages * 4096) / 0x400) & ~0xFFF));
+			size_t invaddrLow = (0xFFC00000 + ((oldbrk / 0x400) & ~0xFFF));
+			size_t invaddrHigh = (0xFFC00000 + (((oldbrk + pages * 4096) / 0x400) & ~0xFFF));
 
 			while (invaddrLow <= invaddrHigh) {
 				asm volatile ("invlpg (%0)" : : "b"((void*) invaddrLow) : "memory");
