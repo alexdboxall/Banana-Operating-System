@@ -190,91 +190,89 @@ public:
 		return val;
 	}
 
-
-
-	inline size_t readDR0()
+	static inline size_t readDR0()
 	{
 		size_t val;
 		asm volatile ("mov %%dr0, %0" : "=r"(val));
 		return val;
 	}
 
-	inline size_t readDR1()
+	static inline size_t readDR1()
 	{
 		size_t val;
 		asm volatile ("mov %%dr1, %0" : "=r"(val));
 		return val;
 	}
 
-	inline size_t readDR2()
+	static inline size_t readDR2()
 	{
 		size_t val;
 		asm volatile ("mov %%dr2, %0" : "=r"(val));
 		return val;
 	}
 
-	inline size_t readDR3()
+	static inline size_t readDR3()
 	{
 		size_t val;
 		asm volatile ("mov %%dr3, %0" : "=r"(val));
 		return val;
 	}
 
-	inline size_t readDR6()
+	static inline size_t readDR6()
 	{
 		size_t val;
 		asm volatile ("mov %%dr6, %0" : "=r"(val));
 		return val;
 	}
 
-	inline size_t readDR7()
+	static inline size_t readDR7()
 	{
 		size_t val;
 		asm volatile ("mov %%dr7, %0" : "=r"(val));
 		return val;
 	}
 
-	inline void writeDR0(size_t val)
+	static inline void writeDR0(size_t val)
 	{
 		asm volatile ("mov %0, %%dr0" :: "r"(val));
 	}
 
-	inline void writeDR1(size_t val)
+	static inline void writeDR1(size_t val)
 	{
 		asm volatile ("mov %0, %%dr1" :: "r"(val));
 	}
 
-	inline void writeDR2(size_t val)
+	static inline void writeDR2(size_t val)
 	{
 		asm volatile ("mov %0, %%dr2" :: "r"(val));
 	}
 
-	inline void writeDR3(size_t val)
+	static inline void writeDR3(size_t val)
 	{
 		asm volatile ("mov %0, %%dr3" :: "r"(val));
 	}
 
-	inline void writeDR6(size_t val)
+	static inline void writeDR6(size_t val)
 	{
 		asm volatile ("mov %0, %%dr6" :: "r"(val));
 	}
 
-	inline void writeDR7(size_t val)
+	static inline void writeDR7(size_t val)
 	{
 		asm volatile ("mov %0, %%dr7" :: "r"(val));
 	}
 
-	inline void writeCR0(size_t val)
+	static inline void writeCR0(size_t val)
 	{
 		asm volatile ("mov %0, %%cr0" :: "r"(val));
 	}
 
-	inline void writeCR3(size_t val)
+	static inline void writeCR3(size_t val)
 	{
 		asm volatile ("mov %0, %%cr3" :: "r"(val));
 	}
 
-	inline void writeCR4(size_t val)
+	static inline void writeCR4(size_t val)
 	{
 		asm volatile ("mov %0, %%cr4" :: "r"(val));
 	}
