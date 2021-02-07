@@ -238,6 +238,9 @@ size_t VAS::allocatePages(int count, int flags)
 
 	if (supervisorVAS) {
 		size_t virt = VirtMem::allocateKernelVirtualPages(count);
+		if (virt >= VIRT_KERNEL_BASE && thisCPU()->features.hasGlobalPages) {
+			flags |= PAGE_GLOBAL;
+		}
 		for (int i = 0; i < count; ++i) {
 			size_t phys = PhysMem::allocatePage();
 			mapPage(phys, virt + i * 4096, flags | PAGE_ALLOCATED);
