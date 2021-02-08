@@ -8,8 +8,7 @@ CC32=i386-banana-gcc
 CC64=x86_64-banana-gcc
 
 ASFLAGS=
-CCFLAGS=-std=c11 -s -Wl,-Map=app32.map -Os 
-LDFLAGS=-s --strip-all
+CCFLAGS=-std=c11 -s -Wl,-Map=app32.map -Os
 
 all: build
 

@@ -865,3 +865,16 @@ int main(int argc, char* argv[])
 
 	return 0;
 }
+
+
+bool __atomic_compare_exchange_4(uint32_t* ptr, uint32_t* expected, uint32_t desired, bool weak, int success_memorder, int failure_memorder)
+{
+	if (*ptr == *expected) {
+		*ptr = desired;
+		return true;
+
+	} else {
+		*expected = *ptr;
+	}
+	return false;
+}

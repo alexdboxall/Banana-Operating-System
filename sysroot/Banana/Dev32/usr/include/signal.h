@@ -1,35 +1,41 @@
-#ifndef _SIGNAL_H_
-#define _SIGNAL_H_
+#ifndef _SIGNAL_H
+#define _SIGNAL_H
 
-#include "_ansi.h"
-#include <sys/cdefs.h>
-#include <sys/signal.h>
+#include <abi-bits/signal.h>
+#include <bits/feature.h>
 
-_BEGIN_STD_C
-
-typedef int	sig_atomic_t;		/* Atomic entity type (ANSI) */
-#if __BSD_VISIBLE
-typedef _sig_func_ptr sig_t;		/* BSD naming */
-#endif
-#if __GNU_VISIBLE
-typedef _sig_func_ptr sighandler_t;	/* glibc naming */
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-#define SIG_DFL ((_sig_func_ptr)0)	/* Default action */
-#define SIG_IGN ((_sig_func_ptr)1)	/* Ignore action */
-#define SIG_ERR ((_sig_func_ptr)-1)	/* Error return */
+// [7.14] Signal handling basics
 
-struct _reent;
+typedef int sig_atomic_t;
 
-_sig_func_ptr _signal_r (struct _reent *, int, _sig_func_ptr);
-int	_raise_r (struct _reent *, int);
+// Argument for signal()
+typedef void (*__sighandler) (int);
 
-#ifndef _REENT_ONLY
-_sig_func_ptr signal (int, _sig_func_ptr);
-int	raise (int);
-void	psignal (int, const char *);
+#define CLD_EXITED 1
+#define CLD_KILLED 2
+#define CLD_DUMPED 3
+#define CLD_TRAPPED 4
+#define CLD_STOPPED 5
+#define CLD_CONTINUED 6
+
+// [7.14.1] signal() function
+
+__sighandler signal(int sig, __sighandler handler);
+
+// [7.14.2] raise() function
+
+int raise(int sig);
+
+#ifdef __cplusplus
+}
 #endif
 
-_END_STD_C
+#if __MLIBC_POSIX_OPTION
+#	include <bits/posix/posix_signal.h>
+#endif
 
-#endif /* _SIGNAL_H_ */
+#endif // _SIGNAL_H
