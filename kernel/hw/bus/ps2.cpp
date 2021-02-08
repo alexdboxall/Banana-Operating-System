@@ -115,7 +115,8 @@ bool PS2::controllerWrite(uint8_t command, uint8_t argument)
 		uint8_t status = inb(PS2_STATUS);
 
 		//check for any errors
-		if ((status & PS2_STATUS_BIT_TIMEOUT) || (status & PS2_STATUS_BIT_PARITY)) {
+		if ((status & PS2_STATUS_BIT_TIMEOUT) || (status & PS2_STATUS_BIT_PARITY)) 
+			outb(PS2_DATA, argument);
 			return false;
 		}
 
@@ -126,6 +127,7 @@ bool PS2::controllerWrite(uint8_t command, uint8_t argument)
 
 		//return failure on a timeout
 		if (timeout++ == 800) {
+			outb(PS2_DATA, argument);
 			return false;
 		}
 	}
@@ -155,8 +157,8 @@ uint8_t PS2::controllerRead()
 		}
 		
 		//return failure on a timeout
-		if (timeout++ == 800) {
-			return false;
+		if (timeout++ == 1600) {
+			return inb(PS2_DATA);
 		}
 	}
 

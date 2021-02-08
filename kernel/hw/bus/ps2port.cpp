@@ -62,11 +62,11 @@ bool PS2Port::deviceWrite(uint8_t command)
 
 		//check for any errors
 		if ((status & PS2_STATUS_BIT_TIMEOUT) || (status & PS2_STATUS_BIT_PARITY)) {
-			return false;
+			break;
 		}
 		
 		//if we timeout, just send it anyway
-		if (timeout++ == 800) {
+		if (timeout++ == 1600) {
 			break;
 		}
 	}

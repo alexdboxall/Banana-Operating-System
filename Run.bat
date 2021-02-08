@@ -66,20 +66,22 @@ copy "D:/Users/Alex/Desktop/Banana/kernel/KERNEL32.EXE" "T:/BANANA/System/KERNEL
 copy "D:/Users/Alex/Desktop/Banana/kernel/TRAMP.EXE" "T:/Banana/System/tramp.exe" || pause
 rem python ../genCoreFileBackups.py || pause
 
-copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" T:\dummy.txt
-copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" T:\dummy2.txt
+cd ../tools
+copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummy.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummy2.txt"
 rm T:\dummy.txt
 rm T:\dummy2.txt
-copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" T:\dummy.txt
-copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" T:\dummy2.txt
-copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" T:\dummy3.txt
-copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" T:\dummy4.txt
-copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" T:\dummy5.txt
+copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummy.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummy2.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummy3.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummy4.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummy5.txt"
 rm T:\dummy.txt
 rm T:\dummy2.txt
 rm T:\dummy3.txt
 rm T:\dummy4.txt
 rm T:\dummy5.txt
+
 cd D:/Users/Alex/Desktop/
 attrib +h +r "T:/Banana/BANANABT" 
 attrib +h +r "T:/Banana/FIRMWARE.LIB" 
