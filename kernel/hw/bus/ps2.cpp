@@ -115,7 +115,7 @@ bool PS2::controllerWrite(uint8_t command, uint8_t argument)
 		uint8_t status = inb(PS2_STATUS);
 
 		//check for any errors
-		if ((status & PS2_STATUS_BIT_TIMEOUT) || (status & PS2_STATUS_BIT_PARITY)) 
+		if ((status & PS2_STATUS_BIT_TIMEOUT) || (status & PS2_STATUS_BIT_PARITY)) {
 			outb(PS2_DATA, argument);
 			return false;
 		}
