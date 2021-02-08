@@ -34,8 +34,8 @@ int PS2::open(int a, int b, void* c)
 	int numPorts = PS2_UNKNOWN_PORTS;
 
 	//disable devices to start
-	//controllerWrite(PS2_CMD_DISABLE_PORT_1);
-	//controllerWrite(PS2_CMD_DISABLE_PORT_2);
+	controllerWrite(PS2_CMD_DISABLE_PORT_1);
+	controllerWrite(PS2_CMD_DISABLE_PORT_2);
 
 	//flush the output buffer
 	inb(PS2_DATA);

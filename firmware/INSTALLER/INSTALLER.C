@@ -170,9 +170,6 @@ void drawScreen()
 			for (int j = 0; j < __strlen(windows[i]->title); ++j) {
 				writeCharacter(windows[i]->x + 16 + g + j, windows[i]->y + 1, windows[i]->title[j], TCWhite, TCBlue);
 			}
-			for (int j = __strlen(windows[i]->title); j < __strlen(windows[i]->title) + 6; ++j) {
-				writeCharacter(windows[i]->x + 17 + j, windows[i]->y + 1, ' ', TCBlue, TCBlue);
-			}
 
 			if (windows[i]->repaint) {
 				windows[i]->repaint(windows[i]);
@@ -1044,8 +1041,7 @@ void realInstall()
 	windows[MAIN_LAYER] = &wx;
 
 	installPhase = PHASE_FORMATTING;
-
-	__memcpy(wx.title, "      Formatting Partition    ", __strlen("      Formatting Partition    "));
+	__memcpy(wx.title, "Formatting\0\0\0\0\0\0\0\0", __strlen("Formatting        "));
 	percent = 1;
 	drawScreen();
 
