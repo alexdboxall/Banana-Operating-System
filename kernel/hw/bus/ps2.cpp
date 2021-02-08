@@ -104,9 +104,7 @@ int PS2::open(int a, int b, void* c)
 	}
 
 	kernelProcess->terminal->puts("PS/2: Z DONE");
-
-	while (1);
-
+	sleep(3);
 	return 0;
 }
 
