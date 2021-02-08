@@ -36,11 +36,19 @@ int PS2Port::close(int, int, void*)
 
 void PS2Port::detect()
 {
+	kernelProcess->terminal->puts("PS/2 Port: A");
+
 	if (portNum == PS2_PORT1) {
+		kernelProcess->terminal->puts("PS/2 Port: B");
+
 		PS2Keyboard* kbd = new PS2Keyboard();
 		addChild(kbd);
 		kbd->open(0, 0, controller);
+
+		kernelProcess->terminal->puts("PS/2 Port: C");
 	}
+
+	kernelProcess->terminal->puts("PS/2 Port: D");
 }
 
 bool PS2Port::deviceWrite(uint8_t command)

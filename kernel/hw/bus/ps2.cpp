@@ -39,15 +39,20 @@ int PS2::open(int a, int b, void* c)
 
 	//flush the output buffer
 	inb(PS2_DATA);
+	inb(PS2_DATA);
 
 	//perform self test
 	controllerWrite(PS2_CMD_TEST_CONTROLLER);
 
 	//check for bad response byte
-	if (controllerRead() != 0x55) {
+	uint8_t respByte = controllerRead();
+	if (respByte != 0x55) {
 		//panic("PS/2 NOT 0x55");
 		//return 1;
 	}
+	kernelProcess->terminal->puts("Controller resp byte: ");
+	kernelProcess->terminal->putx(respByte);
+	kernelProcess->terminal->puts("\n");
 
 	//disable devices again, as the self test may have reset it
 	//controllerWrite(PS2_CMD_DISABLE_PORT_1);
@@ -59,10 +64,17 @@ int PS2::open(int a, int b, void* c)
 	//get the config byte
 	controllerWrite(PS2_CMD_READ_RAM);
 	uint8_t cfg = controllerRead();
+	kernelProcess->terminal->puts("Old config byte: ");
+	kernelProcess->terminal->putx(respByte);
+	kernelProcess->terminal->puts("\n");
 
 	//enable IRQs
 	cfg |= PS2_CONFIG_BIT_PORT_1_IRQ_ENABLE;
 	cfg |= PS2_CONFIG_BIT_PORT_2_IRQ_ENABLE;
+
+	kernelProcess->terminal->puts("New config byte: ");
+	kernelProcess->terminal->putx(respByte);
+	kernelProcess->terminal->puts("\n");
 
 	//write back the configuration byte
 	controllerWrite(PS2_CMD_WRITE_RAM, cfg);
@@ -71,17 +83,29 @@ int PS2::open(int a, int b, void* c)
 	controllerWrite(PS2_CMD_ENABLE_PORT_1);
 	controllerWrite(PS2_CMD_ENABLE_PORT_2);
 
+	kernelProcess->terminal->puts("PS/2: A");
+
 	//add the first port
 	devicePorts[PS2_PORT1] = new PS2Port();
 	addChild(devicePorts[PS2_PORT1]);
 	devicePorts[PS2_PORT1]->open(0, 0, nullptr);
 
+	kernelProcess->terminal->puts("PS/2: B");
+
 	//add the second port if it exists
 	if (numPorts == PS2_TWO_PORTS) {
+		kernelProcess->terminal->puts("PS/2: C");
+
 		devicePorts[PS2_PORT2] = new PS2Port();
 		addChild(devicePorts[PS2_PORT2]);
 		devicePorts[PS2_PORT2]->open(PS2_PORT2, 0, nullptr);
+
+		kernelProcess->terminal->puts("PS/2: D");
 	}
+
+	kernelProcess->terminal->puts("PS/2: Z DONE");
+
+	while (1);
 
 	return 0;
 }
