@@ -18,7 +18,7 @@ extern "C" {
 #include "libk/string.h"
 }
 
-/*
+
 //MUST KEEP THESE IN ORDER
 constexpr uint8_t PS2Keyboard::internalMapperLower[256];
 constexpr uint8_t PS2Keyboard::internalMapperUpper[256];
@@ -521,4 +521,3 @@ int PS2Keyboard::close(int a, int b, void* c)
 {
 	return -1;
 }
-*/

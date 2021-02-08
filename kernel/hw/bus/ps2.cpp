@@ -6,8 +6,6 @@
 #include "registry/registry.hpp"
 #include "hw/bus/ps2port.hpp"
 
-/*
-
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
@@ -167,4 +165,3 @@ uint8_t PS2::controllerRead()
 	return inb(PS2_DATA);
 }
 
-*/
