@@ -122,6 +122,28 @@ void PS2::detect()
 
 bool PS2::controllerWrite(uint8_t command)
 {
+	//wait for input full to clear
+	int timeout = 0;
+	while (1) {
+		//read the status
+		uint8_t status = inb(PS2_STATUS);
+
+		//check for any errors
+		if ((status & PS2_STATUS_BIT_TIMEOUT) || (status & PS2_STATUS_BIT_PARITY)) {
+			break;
+		}
+
+		//check if it is ready
+		if (!(status & PS2_STATUS_BIT_IN_FULL)) {
+			break;
+		}
+
+		//return failure on a timeout
+		if (timeout++ == 800) {
+			break;
+		}
+	}
+
 	//write the command to the controller
 	outb(PS2_COMMAND, command);
 
@@ -130,8 +152,7 @@ bool PS2::controllerWrite(uint8_t command)
 
 bool PS2::controllerWrite(uint8_t command, uint8_t argument)
 {
-	//write the command to the controller
-	outb(PS2_COMMAND, command);
+	controllerWrite(command);
 
 	int timeout = 0;
 	while (1) {
