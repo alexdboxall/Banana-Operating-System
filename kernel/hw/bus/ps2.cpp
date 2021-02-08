@@ -45,6 +45,7 @@ int PS2::open(int a, int b, void* c)
 
 	//check for bad response byte
 	if (controllerRead() != 0x55) {
+		panic("PS/2 NOT 0x55");
 		return 1;
 	}
 
