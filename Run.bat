@@ -76,11 +76,17 @@ copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummy2.txt"
 copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummy3.txt"
 copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummy4.txt"
 copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummy5.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummy6.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummy7.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummy8.txt"
 rm T:\dummy.txt
 rm T:\dummy2.txt
 rm T:\dummy3.txt
 rm T:\dummy4.txt
 rm T:\dummy5.txt
+rm T:\dummy6.txt
+rm T:\dummy7.txt
+rm T:\dummy8.txt
 
 cd D:/Users/Alex/Desktop/
 attrib +h +r "T:/Banana/BANANABT" 

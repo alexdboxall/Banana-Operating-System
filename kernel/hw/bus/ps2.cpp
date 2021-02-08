@@ -65,7 +65,7 @@ int PS2::open(int a, int b, void* c)
 	controllerWrite(PS2_CMD_READ_RAM);
 	uint8_t cfg = controllerRead();
 	kernelProcess->terminal->puts("Old config byte: ");
-	kernelProcess->terminal->putx(respByte);
+	kernelProcess->terminal->putx(cfg);
 	kernelProcess->terminal->puts("\n");
 
 	//enable IRQs
@@ -73,7 +73,7 @@ int PS2::open(int a, int b, void* c)
 	cfg |= PS2_CONFIG_BIT_PORT_2_IRQ_ENABLE;
 
 	kernelProcess->terminal->puts("New config byte: ");
-	kernelProcess->terminal->putx(respByte);
+	kernelProcess->terminal->putx(cfg);
 	kernelProcess->terminal->puts("\n");
 
 	//write back the configuration byte

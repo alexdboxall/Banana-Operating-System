@@ -92,7 +92,7 @@ void drawScreen()
 	writeString("  Banana Setup");
 
 	for (int y = 0; y < 25; ++y) {
-		for (int x = 0; x < 17; ++x) {
+		for (int x = 0; x < 16; ++x) {
 			writeCharacter(x, y, ' ', TCBlack, TCBlack);
 		}
 	}
@@ -166,9 +166,12 @@ void drawScreen()
 			}
 
 			int g = (windows[i]->w - __strlen(windows[i]->title)) / 2 - 1;
-
+			
 			for (int j = 0; j < __strlen(windows[i]->title); ++j) {
 				writeCharacter(windows[i]->x + 16 + g + j, windows[i]->y + 1, windows[i]->title[j], TCWhite, TCBlue);
+			}
+			for (int j = __strlen(windows[i]->title); j < __strlen(windows[i]->title) + 6; ++j) {
+				writeCharacter(windows[i]->x + 17 + j, windows[i]->y + 1, ' ', TCBlue, TCBlue);
 			}
 
 			if (windows[i]->repaint) {
@@ -1042,7 +1045,7 @@ void realInstall()
 
 	installPhase = PHASE_FORMATTING;
 
-	__memcpy(wx.title, "      Formatting Partition   ", __strlen("      Formatting Partition   "));
+	__memcpy(wx.title, "      Formatting Partition    ", __strlen("      Formatting Partition    "));
 	percent = 1;
 	drawScreen();
 
@@ -1174,6 +1177,9 @@ void realInstall()
 
 	installPhase = PHASE_DONE;
 
+	beep(440);
+	millisleep(500);
+	beep(0);
 
 	wx.repaint = setupCompleteRepaint;
 	percent = 1;
