@@ -31,6 +31,8 @@ PS2::PS2() : Bus("PS/2 Controller")
 
 int PS2::open(int a, int b, void* c)
 {
+	lockScheduler();
+
 	int numPorts = PS2_UNKNOWN_PORTS;
 
 	//disable devices to start
@@ -40,6 +42,8 @@ int PS2::open(int a, int b, void* c)
 	//flush the output buffer
 	inb(PS2_DATA);
 	inb(PS2_DATA);
+	inb(PS2_DATA);
+	inb(PS2_DATA);
 
 	//perform self test
 	controllerWrite(PS2_CMD_TEST_CONTROLLER);
@@ -47,6 +51,15 @@ int PS2::open(int a, int b, void* c)
 	//check for bad response byte
 	uint8_t respByte = controllerRead();
 	if (respByte != 0x55) {
+		respByte = controllerRead();
+		if (respByte != 0x55) {
+			controllerWrite(PS2_CMD_TEST_CONTROLLER);
+			controllerWrite(PS2_CMD_TEST_CONTROLLER);
+			respByte = controllerRead();
+			if (respByte != 0x55) {
+				respByte = controllerRead();
+			}
+		}
 		//panic("PS/2 NOT 0x55");
 		//return 1;
 	}
@@ -82,6 +95,8 @@ int PS2::open(int a, int b, void* c)
 	//re-enable devices
 	controllerWrite(PS2_CMD_ENABLE_PORT_1);
 	controllerWrite(PS2_CMD_ENABLE_PORT_2);
+
+	unlockScheduler();
 
 	kernelProcess->terminal->puts("PS/2: A");
 
