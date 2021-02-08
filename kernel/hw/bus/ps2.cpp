@@ -45,8 +45,8 @@ int PS2::open(int a, int b, void* c)
 
 	//check for bad response byte
 	if (controllerRead() != 0x55) {
-		panic("PS/2 NOT 0x55");
-		return 1;
+		//panic("PS/2 NOT 0x55");
+		//return 1;
 	}
 
 	//disable devices again, as the self test may have reset it
