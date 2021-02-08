@@ -63,9 +63,12 @@ int PS2::open(int a, int b, void* c)
 	cfg |= PS2_CONFIG_BIT_PORT_1_IRQ_ENABLE;
 	cfg |= PS2_CONFIG_BIT_PORT_2_IRQ_ENABLE;
 
+	//write back the configuration byte
+	controllerWrite(PS2_CMD_WRITE_RAM, cfg);
+
 	//re-enable devices
-	//controllerWrite(PS2_CMD_ENABLE_PORT_1);
-	//controllerWrite(PS2_CMD_ENABLE_PORT_1);
+	controllerWrite(PS2_CMD_ENABLE_PORT_1);
+	controllerWrite(PS2_CMD_ENABLE_PORT_2);
 
 	//add the first port
 	devicePorts[PS2_PORT1] = new PS2Port();

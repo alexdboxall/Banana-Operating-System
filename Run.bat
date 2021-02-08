@@ -42,6 +42,10 @@ imdisk -a -f newimage.img -s 64M -m T: -p "/fs:fat32 /y /a:512" || pause
 
 cd D:/Users/Alex/Desktop/Banana
 robocopy D:/Users/Alex/Desktop/Banana/sysroot/ T:/ /E
+rmdir T:\Banana\Dev32 /s /q
+mkdir T:\Banana\Dev32
+rmdir T:\Banana\Dev64 /s /q
+mkdir T:\Banana\Dev64
 
 
 cp D:/Users/Alex/Desktop/Banana/packages/banana.cab T:/Banana/Packages
@@ -61,10 +65,6 @@ rem copy "D:/Users/Alex/Desktop/Banana/kernel/KERNEL.EXE"   "T:/BANANA/System/KE
 copy "D:/Users/Alex/Desktop/Banana/kernel/KERNEL32.EXE" "T:/BANANA/System/KERNEL32.EXE" || pause
 copy "D:/Users/Alex/Desktop/Banana/kernel/TRAMP.EXE" "T:/Banana/System/tramp.exe" || pause
 rem python ../genCoreFileBackups.py || pause
-rmdir T:\Banana\Dev32 /s /q
-mkdir T:\Banana\Dev32
-rmdir T:\Banana\Dev64 /s /q
-mkdir T:\Banana\Dev64
 
 copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" T:\dummy.txt
 copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" T:\dummy2.txt
