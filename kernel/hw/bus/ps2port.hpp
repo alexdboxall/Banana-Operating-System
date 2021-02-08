@@ -6,6 +6,7 @@
 #include "hal/bus.hpp"
 #include "hw/bus/ps2.hpp"
 
+/*
 class PS2Port: public Bus
 {
 private:
@@ -25,5 +26,6 @@ public:
 	bool deviceWrite(uint8_t command);
 	uint8_t deviceRead();
 };
+*/
 
 #endif

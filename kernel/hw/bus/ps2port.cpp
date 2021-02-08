@@ -15,6 +15,7 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
+/*
 PS2Port::PS2Port(): Bus("PS/2 Port")
 {
 	
@@ -81,3 +82,4 @@ uint8_t PS2Port::deviceRead()
 {
 	return controller->controllerRead();
 }
+*/

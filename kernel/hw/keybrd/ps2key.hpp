@@ -118,7 +118,7 @@
 #define PS2_STUPID_pageup 0x49
 #define PS2_STUPID_pagedown 0x51
 
-
+/*
 class PS2Keyboard: public Keyboard
 {
 private:
@@ -166,6 +166,6 @@ public:
 	void updateKeyboardLEDs();
 	void handler();
 };
-
+*/
 
 #endif

@@ -92,10 +92,11 @@ void ISA::doATA()
 
 void ISA::doPS2()
 {
-	PS2* ps2 = new PS2();
-	addChild(ps2);
-	ps2->open(0, 0, nullptr);
+	executeDLL(loadDLL("C:/Banana/Drivers/ps2.sys"), this);
 
+	/*PS2* ps2 = new PS2();
+	addChild(ps2);
+	ps2->open(0, 0, nullptr);*/
 }
 
 void ISA::doRTC()

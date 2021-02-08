@@ -54,6 +54,7 @@
 #define PS2_PORT1	0
 #define PS2_PORT2	1
 
+/*
 class PS2Port;
 
 class PS2: public Bus
@@ -76,5 +77,6 @@ public:
 	bool controllerWrite(uint8_t command, uint8_t argument);
 	uint8_t controllerRead();
 };
+*/
 
 #endif
