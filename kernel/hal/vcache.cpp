@@ -35,6 +35,7 @@ VCache::~VCache()
 	if (writeCacheValid) {
 		writeWriteBuffer();
 	}
+	free(writeCacheBuffer);
 }
 
 /*
@@ -47,6 +48,7 @@ bool writeCacheValid = false;
 void VCache::writeWriteBuffer()
 {
 	disk->write(writeCacheLBA, writeCacheSectors, writeCacheBuffer);
+	kprintf("vcache writing %d sectors\n", writeCacheSectors);
 
 	writeCacheLBA = 0;
 	writeCacheValid = false;
@@ -57,10 +59,13 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 {
 	mutex->acquire();
 
-	if (writeCacheValid && lba == writeCacheLBA + ((uint64_t) writeCacheSectors)) {
+	if (writeCacheValid && lba == writeCacheLBA + ((uint64_t) writeCacheSectors) && count == 1) {
 		//add to cache
+		kprintf("Adding to VCACHE WRITE. lba = %d, count = %d\n", (int) lba, count);
 		memcpy(writeCacheBuffer + writeCacheSectors * disk->sectorSize, ptr, disk->sectorSize);
 		++writeCacheSectors;
+
+		kprintf("%d sectors cached.\n", writeCacheSectors);
 
 		//write if limit reached
 		if (writeCacheSectors == WRITE_BUFFER_MAX_SECTORS) {
