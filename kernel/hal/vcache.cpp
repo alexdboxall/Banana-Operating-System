@@ -10,11 +10,10 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-#define WRITE_BUFFER_MAX_SECTORS	16
+#define WRITE_BUFFER_MAX_SECTORS	32
 
 VCache::VCache(PhysicalDisk* d)
 {
-	kprintf("VCACHE INIT.\n");
 	mutex = new Mutex();
 	disk = d;
 
@@ -28,9 +27,6 @@ VCache::VCache(PhysicalDisk* d)
 
 	writeCacheValid = false;
 	writeCacheBuffer = (uint8_t*) malloc(d->sectorSize * WRITE_BUFFER_MAX_SECTORS);
-
-	kprintf("VCACHE INITED.\n");
-
 }
 
 VCache::~VCache()
@@ -51,9 +47,8 @@ bool writeCacheValid = false;
 
 void VCache::writeWriteBuffer()
 {
-	kprintf("about to writeWriteBuffer()\n");
 	disk->write(writeCacheLBA, writeCacheSectors, writeCacheBuffer);
-	kprintf("vcache writing %d sectors\n", writeCacheSectors);
+	kprintf("VCACHE: WRITING CACHED %d sectors\n", writeCacheSectors);
 
 	writeCacheLBA = 0;
 	writeCacheValid = false;
@@ -62,17 +57,14 @@ void VCache::writeWriteBuffer()
 
 int VCache::write(uint64_t lba, int count, void* ptr)
 {
-	kprintf("VCACHE WRITE.\n");
-
 	mutex->acquire();
 
 	if (writeCacheValid && lba == writeCacheLBA + ((uint64_t) writeCacheSectors) && count == 1) {
 		//add to cache
-		kprintf("Adding to VCACHE WRITE. lba = %d, count = %d\n", (int) lba, count);
 		memcpy(writeCacheBuffer + writeCacheSectors * disk->sectorSize, ptr, disk->sectorSize);
 		++writeCacheSectors;
 
-		kprintf("%d sectors cached.\n", writeCacheSectors);
+		kprintf("VCACHE: %d sectors cached. A\n", writeCacheSectors);
 
 		//write if limit reached
 		if (writeCacheSectors == WRITE_BUFFER_MAX_SECTORS) {
@@ -90,14 +82,13 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 			writeCacheLBA = lba;
 			writeCacheSectors = count;
 			writeCacheValid = true;
-			kprintf("Adding to VCACHE WRITE (2). lba = %d, count = %d\n", (int) lba, count);
 			memcpy(writeCacheBuffer, ptr, disk->sectorSize);
 
-			kprintf("%d sectors cached.\n", writeCacheSectors);
+			kprintf("VCACHE: %d sectors cached. B\n", writeCacheSectors);
 
 		//otherwise, just write it
 		} else {
-			kprintf("DIRECT WRITE TO LBA %d, count = %d\n", (int) lba, count);
+			kprintf("VCACHE: non caching\n");
 			disk->write(lba, count, ptr);
 		}
 	}
@@ -110,7 +101,6 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 {
 	mutex->acquire();
 
-	kprintf("VCACHE READ.\n");
 	//NOTE: this is very inefficient, we should check if it is in the cache
 	//		and if it is, just memcpy the data
 	if (writeCacheValid) {
