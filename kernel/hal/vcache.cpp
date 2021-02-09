@@ -10,7 +10,7 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-#define WRITE_BUFFER_MAX_SECTORS	96
+#define WRITE_BUFFER_MAX_SECTORS	64
 
 VCache::VCache(PhysicalDisk* d)
 {
@@ -31,7 +31,6 @@ VCache::VCache(PhysicalDisk* d)
 
 VCache::~VCache()
 {
-	kprintf("VCACHE CLOSE!\n");
 	if (writeCacheValid) {
 		writeWriteBuffer();
 	}
@@ -48,7 +47,6 @@ bool writeCacheValid = false;
 void VCache::writeWriteBuffer()
 {
 	disk->write(writeCacheLBA, writeCacheSectors, writeCacheBuffer);
-	kprintf("VCACHE: WRITING CACHED %d sectors\n", writeCacheSectors);
 
 	writeCacheLBA = 0;
 	writeCacheValid = false;
@@ -63,8 +61,6 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 		//add to cache
 		memcpy(writeCacheBuffer + writeCacheSectors * disk->sectorSize, ptr, disk->sectorSize);
 		++writeCacheSectors;
-
-		kprintf("VCACHE: %d sectors cached. A\n", writeCacheSectors);
 
 		//write if limit reached
 		if (writeCacheSectors == WRITE_BUFFER_MAX_SECTORS) {
@@ -84,11 +80,8 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 			writeCacheValid = true;
 			memcpy(writeCacheBuffer, ptr, disk->sectorSize);
 
-			kprintf("VCACHE: %d sectors cached. B\n", writeCacheSectors);
-
 		//otherwise, just write it
 		} else {
-			kprintf("VCACHE: non caching\n");
 			disk->write(lba, count, ptr);
 		}
 	}
