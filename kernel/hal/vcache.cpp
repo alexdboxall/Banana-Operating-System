@@ -10,7 +10,7 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-#define WRITE_BUFFER_MAX_SECTORS	32
+#define WRITE_BUFFER_MAX_SECTORS	96
 
 VCache::VCache(PhysicalDisk* d)
 {
