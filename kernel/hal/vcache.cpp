@@ -14,6 +14,7 @@
 
 VCache::VCache(PhysicalDisk* d)
 {
+	kprintf("VCACHE INIT.\n");
 	mutex = new Mutex();
 	disk = d;
 
@@ -27,6 +28,9 @@ VCache::VCache(PhysicalDisk* d)
 
 	writeCacheValid = false;
 	writeCacheBuffer = (uint8_t*) malloc(d->sectorSize * WRITE_BUFFER_MAX_SECTORS);
+
+	kprintf("VCACHE INITED.\n");
+
 }
 
 VCache::~VCache()
@@ -47,6 +51,7 @@ bool writeCacheValid = false;
 
 void VCache::writeWriteBuffer()
 {
+	kprintf("about to writeWriteBuffer()\n");
 	disk->write(writeCacheLBA, writeCacheSectors, writeCacheBuffer);
 	kprintf("vcache writing %d sectors\n", writeCacheSectors);
 
@@ -57,6 +62,8 @@ void VCache::writeWriteBuffer()
 
 int VCache::write(uint64_t lba, int count, void* ptr)
 {
+	kprintf("VCACHE WRITE.\n");
+
 	mutex->acquire();
 
 	if (writeCacheValid && lba == writeCacheLBA + ((uint64_t) writeCacheSectors) && count == 1) {
@@ -83,9 +90,9 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 			writeCacheLBA = lba;
 			writeCacheSectors = count;
 			writeCacheValid = true;
+			kprintf("Adding to VCACHE WRITE (2). lba = %d, count = %d\n", (int) lba, count);
 			memcpy(writeCacheBuffer, ptr, disk->sectorSize);
 
-			kprintf("Adding to VCACHE WRITE (2). lba = %d, count = %d\n", (int) lba, count);
 			kprintf("%d sectors cached.\n", writeCacheSectors);
 
 		//otherwise, just write it
