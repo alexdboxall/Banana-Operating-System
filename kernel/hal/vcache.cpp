@@ -65,9 +65,8 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 	kprintf("VCACHE WRITE.\n");
 
 	mutex->acquire();
-	disk->write(lba, count, ptr);
 
-	/*if (writeCacheValid && lba == writeCacheLBA + ((uint64_t) writeCacheSectors) && count == 1) {
+	if (writeCacheValid && lba == writeCacheLBA + ((uint64_t) writeCacheSectors) && count == 1) {
 		//add to cache
 		kprintf("Adding to VCACHE WRITE. lba = %d, count = %d\n", (int) lba, count);
 		memcpy(writeCacheBuffer + writeCacheSectors * disk->sectorSize, ptr, disk->sectorSize);
@@ -101,7 +100,7 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 			kprintf("DIRECT WRITE TO LBA %d, count = %d\n", (int) lba, count);
 			disk->write(lba, count, ptr);
 		}
-	}*/
+	}
 
 	mutex->release();
 	return 0;
@@ -115,7 +114,7 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 	//NOTE: this is very inefficient, we should check if it is in the cache
 	//		and if it is, just memcpy the data
 	if (writeCacheValid) {
-		//writeWriteBuffer();
+		writeWriteBuffer();
 	}
 
 	disk->read(lba, count, ptr);
