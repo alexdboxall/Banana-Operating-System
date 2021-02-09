@@ -98,24 +98,16 @@ int PS2::open(int a, int b, void* c)
 
 	unlockScheduler();
 
-	kernelProcess->terminal->puts("PS/2: A");
-
 	//add the first port
 	devicePorts[PS2_PORT1] = new PS2Port();
 	addChild(devicePorts[PS2_PORT1]);
 	devicePorts[PS2_PORT1]->open(0, 0, nullptr);
 
-	kernelProcess->terminal->puts("PS/2: B");
-
 	//add the second port if it exists
 	if (numPorts == PS2_TWO_PORTS) {
-		kernelProcess->terminal->puts("PS/2: C");
-
 		devicePorts[PS2_PORT2] = new PS2Port();
 		addChild(devicePorts[PS2_PORT2]);
 		devicePorts[PS2_PORT2]->open(PS2_PORT2, 0, nullptr);
-
-		kernelProcess->terminal->puts("PS/2: D");
 	}
 
 	kernelProcess->terminal->puts("PS/2: Z DONE");

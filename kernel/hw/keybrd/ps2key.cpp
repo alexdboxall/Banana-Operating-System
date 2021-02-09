@@ -79,8 +79,8 @@ void PS2Keyboard::sendKey(KeyboardSpecialKeys halScancode, bool release)
 void PS2Keyboard::updateKeyboardLEDs()
 {
 	uint8_t v = capslk << 2;
-	v |= scrollLock << 1;
-	v |= numberLock;
+	v |= numberLock << 1;
+	v |= scrollLock;
 
 	port->deviceWrite(0xED);
 	port->deviceRead();			//ACK
@@ -503,21 +503,16 @@ void PS2Keyboard::handler()
 
 int PS2Keyboard::open(int, int, void* ctrl)
 {
-	kernelProcess->terminal->puts("PS/2 key: A");
-
 	//store parents
 	port = (PS2Port*) parent;
 	controller = (PS2*) ctrl;
-	kernelProcess->terminal->puts("PS/2 key: B");
 
 	//install interrupt handler
 	interrupt = addIRQHandler(1, ps2KeyboardHandler, true, (void*) this);
-	kernelProcess->terminal->puts("PS/2 key: C");
 
 	//set the translation
 	extern uint32_t sysBootSettings;
 	badTranslation = (sysBootSettings & 4) ? false : true;
-	kernelProcess->terminal->puts("PS/2 key: D");
 
 	return 0;
 }
