@@ -110,6 +110,7 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 {
 	mutex->acquire();
 
+	kprintf("VCACHE READ.\n");
 	//NOTE: this is very inefficient, we should check if it is in the cache
 	//		and if it is, just memcpy the data
 	if (writeCacheValid) {
