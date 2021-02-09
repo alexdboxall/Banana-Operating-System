@@ -26,11 +26,12 @@ VCache::VCache(PhysicalDisk* d)
 	diskSizeKBs = d->sizeInKBs;
 
 	writeCacheValid = false;
-	writeCacheSectors = malloc(d->sectorSize * WRITE_BUFFER_MAX_SECTORS);
+	writeCacheBuffer = (uint8_t*) malloc(d->sectorSize * WRITE_BUFFER_MAX_SECTORS);
 }
 
 VCache::~VCache()
 {
+	kprintf("VCACHE CLOSE!\n");
 	if (writeCacheValid) {
 		writeWriteBuffer();
 	}
