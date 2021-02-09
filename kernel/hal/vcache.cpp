@@ -85,8 +85,12 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 			writeCacheValid = true;
 			memcpy(writeCacheBuffer, ptr, disk->sectorSize);
 
+			kprintf("Adding to VCACHE WRITE (2). lba = %d, count = %d\n", (int) lba, count);
+			kprintf("%d sectors cached.\n", writeCacheSectors);
+
 		//otherwise, just write it
 		} else {
+			kprintf("DIRECT WRITE TO LBA %d, count = %d\n", (int) lba, count);
 			disk->write(lba, count, ptr);
 		}
 	}
