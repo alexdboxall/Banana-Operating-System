@@ -39,7 +39,7 @@ void VGA::setPlane(int pl)
 
 void VGA::putpixel(int x, int y, uint32_t colour)
 {
-	uint8_t* vram = VIRT_LOW_MEGS + 0xA0000;
+	uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + 0xA0000);
 	
 	int addr = y * width + x;
 
