@@ -7,7 +7,7 @@
 #include "hal/intctrl.hpp"
 #include "hw/cpu.hpp"
 
-VGAVideo::VGAVideo() : Video("VGA Compatible Display")
+VGAVideo::VGAVideo() : Video("VGA Display")
 {
 
 }
