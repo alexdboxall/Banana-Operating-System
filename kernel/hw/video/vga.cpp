@@ -14,13 +14,13 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-/*
-VGAVideo::VGAVideo() : Video("VGA Display")
+
+VGAVideo::VGAVideo()// : Video("VGA Display")
 {
 
 }
 
-int VGAVideo::open(int a, int b, void* c)
+/*int VGAVideo::open(int a, int b, void* c)
 {
 	loadVM8086FileAsThread(kernelProcess, "C:/Banana/System/VGASET.COM", 0x0000, 0x90, 0x12, 0x12);
 
