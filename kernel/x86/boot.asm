@@ -20,8 +20,6 @@ start:
     push byte 2
     popf
 
-    call _init
-
 	call kernel_main
 
 
@@ -31,6 +29,7 @@ extern start_ctors                      ; beginning and end
 extern end_ctors                        ; of the respective
 
 callGlobalConstructors:
+    call _init
     ret
 	mov ebx, start_ctors + 4            ; call the constructors, skipping the first one (crtbegin.o)
     jmp .ctors_until_end
