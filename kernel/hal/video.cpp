@@ -53,7 +53,7 @@ void Video::blit(uint32_t* buffer, int x, int y, int _width, int _height)
 }
 
 //this will be even SLOWER! 
-//any video driver writer that doesn't implement this should be ashamed of themselves
+//any video driver writer that doesn't implement this should not be writing drivers
 void Video::clearScreen(uint32_t colour)
 {
 	for (int y = 0; y < height; ++y) {
