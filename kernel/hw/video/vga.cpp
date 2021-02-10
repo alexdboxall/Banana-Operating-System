@@ -20,6 +20,15 @@ VGAVideo::VGAVideo() : Video("VGA Display")
 
 }
 
+void VGAVideo::setPlane(int pl)
+{
+	outb(0x3CE, 4);
+	outb(0x3CF, pl & 3);
+
+	outb(0x3C4, 2);
+	outb(0x3C5, 1 << (pl & 3));
+}
+
 /*int VGAVideo::open(int a, int b, void* c)
 {
 	loadVM8086FileAsThread(kernelProcess, "C:/Banana/System/VGASET.COM", 0x0000, 0x90, 0x12, 0x12);
@@ -37,14 +46,7 @@ int VGAVideo::close(int a, int b, void* c)
 	return 0;
 }
 
-void VGAVideo::setPlane(int pl)
-{
-	outb(0x3CE, 4);
-	outb(0x3CF, pl & 3);
 
-	outb(0x3C4, 2);
-	outb(0x3C5, 1 << (pl & 3));
-}
 
 void VGAVideo::putpixel(int x, int y, uint32_t colour)
 {
