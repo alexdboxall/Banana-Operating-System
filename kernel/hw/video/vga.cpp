@@ -46,16 +46,10 @@ int VGAVideo::open(int a, int b, void* c)
 	return 0;
 }
 
-/*
-
-
-
-
-
 void VGAVideo::putpixel(int x, int y, uint32_t colour)
 {
 	uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + 0xA0000);
-	
+
 	int addr = y * width + x;
 
 	int bit = 7 - (addr & 7);
@@ -74,4 +68,12 @@ void VGAVideo::putpixel(int x, int y, uint32_t colour)
 		px >>= 1;
 	}
 }
+
+/*
+
+
+
+
+
+
 */
