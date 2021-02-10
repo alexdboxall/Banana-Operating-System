@@ -50,8 +50,6 @@ int VGAVideo::open(int a, int b, void* c)
 
 void VGAVideo::putpixel(int x, int y, uint32_t colour)
 {
-	kprintf("VGA PUTPIXEL.\n");
-
 	uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + 0xA0000);
 
 	int addr = y * width + x;
@@ -59,7 +57,7 @@ void VGAVideo::putpixel(int x, int y, uint32_t colour)
 	int bit = 7 - (addr & 7);
 	addr >>= 3;
 
-	int px = 0xF;	// (x + y) & 1 ? 9 : 1;
+	int px = (x + y) & 1 ? 9 : 1;
 
 	int w = ~(1 << bit);
 	for (int i = 0; i < 4; ++i) {
