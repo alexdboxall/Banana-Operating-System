@@ -48,6 +48,33 @@ int VGAVideo::open(int a, int b, void* c)
 	return 0;
 }
 
+uint8_t colLookup[4][4][4] = {
+	{
+		{0, 0, 1, 1},
+		{2, 3, 3, 1},
+		{2, 2, 3, 9},
+		{10, 10, 11, 11},
+	},
+	{
+		{4, 5, 5, 1},
+		{6, 8, 8, 9},
+		{2, 2, 3, 9},
+		{10, 10, 11, 11},
+	},
+	{
+		{4, 4, 5, 5},
+		{6, 6, 13, 13},
+		{6, 7, 7, 13},
+		{10, 10, 14, 15},
+	},
+	{
+		{12, 12, 13, 13},
+		{12, 12, 13, 13},
+		{12, 12, 13, 13},
+		{14, 14, 15, 15},
+	},
+};
+
 void VGAVideo::putpixel(int x, int y, uint32_t colour)
 {
 	uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + 0xA0000);
@@ -57,7 +84,11 @@ void VGAVideo::putpixel(int x, int y, uint32_t colour)
 	int bit = 7 - (addr & 7);
 	addr >>= 3;
 
-	int px = (x + y) & 1 ? 9 : 1;
+	uint8_t red = (colour >> 22) & 3;
+	uint8_t green = (colour >> 14) & 3;
+	uint8_t blue = (colour >> 6) & 3;
+
+	int px = colLookup[red][green][blue];
 
 	int w = ~(1 << bit);
 	for (int i = 0; i < 4; ++i) {
