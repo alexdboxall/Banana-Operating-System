@@ -12,6 +12,7 @@ private:
 protected:
 	int width;
 	int height;
+	bool mono;
 
 public:
 	Video(const char* name);
@@ -19,6 +20,7 @@ public:
 
 	int getWidth();
 	int getHeight();
+	bool isMonochrome();
 
 	virtual void putpixel(int x, int y, uint32_t colour) = 0;
 

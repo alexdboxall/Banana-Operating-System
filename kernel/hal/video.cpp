@@ -19,6 +19,11 @@ Video::~Video()
 
 }
 
+bool Video::isMonochrome()
+{
+	return mono;
+}
+
 int Video::getWidth()
 {
 	return width;

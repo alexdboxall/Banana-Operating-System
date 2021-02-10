@@ -18,6 +18,8 @@ int VGA::open(int a, int b, void* c)
 	width = 640;
 	height = 480;
 
+	mono = false;
+
 	return 0;
 }
 
