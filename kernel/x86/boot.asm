@@ -5,6 +5,8 @@ _START_OF_KERNEL:
 jmp start
 extern kernel_main
 
+extern _init
+
 start:
     cli
 
@@ -17,6 +19,8 @@ start:
     ;set the flags to a known state
     push byte 2
     popf
+
+    call _init
 
 	call kernel_main
 
