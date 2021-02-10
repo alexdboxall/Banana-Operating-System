@@ -1,18 +1,18 @@
 
-#ifndef _VGA_HPP_
-#define _VGA_HPP_
+#ifndef _VGAVGAVideo_HPP_
+#define _VGAVGAVideo_HPP_
 
 #include <stdint.h>
 #include "hal/video.hpp"
 
-class VGA: public Video
+class VGAVideo: public Video
 {
 private:
 
 protected:
 
 public:
-	VGA();
+	VGAVideo();
 
 	void setPlane(int pl);
 

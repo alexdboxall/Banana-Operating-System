@@ -7,12 +7,12 @@
 #include "hal/intctrl.hpp"
 #include "hw/cpu.hpp"
 
-VGA::VGA() : Video("VGA Compatible Display")
+VGAVideo::VGAVideo() : Video("VGA Compatible Display")
 {
 
 }
 
-int VGA::open(int a, int b, void* c)
+int VGAVideo::open(int a, int b, void* c)
 {
 	loadVM8086FileAsThread(kernelProcess, "C:/Banana/System/VGASET.COM", 0x0000, 0x90, 0x12, 0x12);
 
@@ -24,12 +24,12 @@ int VGA::open(int a, int b, void* c)
 	return 0;
 }
 
-int VGA::close(int a, int b, void* c)
+int VGAVideo::close(int a, int b, void* c)
 {
 	return 0;
 }
 
-void VGA::setPlane(int pl)
+void VGAVideo::setPlane(int pl)
 {
 	outb(0x3CE, 4);
 	outb(0x3CF, pl & 3);
@@ -38,7 +38,7 @@ void VGA::setPlane(int pl)
 	outb(0x3C5, 1 << (pl & 3));
 }
 
-void VGA::putpixel(int x, int y, uint32_t colour)
+void VGAVideo::putpixel(int x, int y, uint32_t colour)
 {
 	uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + 0xA0000);
 	
