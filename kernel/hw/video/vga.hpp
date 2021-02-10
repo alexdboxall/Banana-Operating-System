@@ -17,10 +17,10 @@ public:
 
 	void setPlane(int pl);
 
+	int open(int, int, void*);
 	int close(int, int, void*);
 
-	/*int open(int, int, void*);
-
+	/*
 	virtual void putpixel(int x, int y, uint32_t colour) override;*/
 };
 

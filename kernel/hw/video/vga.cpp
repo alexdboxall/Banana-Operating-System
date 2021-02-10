@@ -34,7 +34,7 @@ int VGAVideo::close(int a, int b, void* c)
 	return 0;
 }
 
-/*int VGAVideo::open(int a, int b, void* c)
+int VGAVideo::open(int a, int b, void* c)
 {
 	loadVM8086FileAsThread(kernelProcess, "C:/Banana/System/VGASET.COM", 0x0000, 0x90, 0x12, 0x12);
 
@@ -45,6 +45,8 @@ int VGAVideo::close(int a, int b, void* c)
 
 	return 0;
 }
+
+/*
 
 
 
