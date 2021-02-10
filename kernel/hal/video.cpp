@@ -36,7 +36,7 @@ int Video::getHeight()
 
 void Video::putpixel(int x, int y, uint32_t col)
 {
-
+	kprintf("Bad putpixel.\n");
 }
 
 //please, please, override this when you write a video driver
