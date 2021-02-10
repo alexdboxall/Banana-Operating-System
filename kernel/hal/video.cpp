@@ -1,6 +1,6 @@
 #include "core/main.hpp"
 #include "hal/device.hpp"
-#include "hal/vdeio.hpp"
+#include "hal/video.hpp"
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -43,6 +43,16 @@ void Video::blit(uint32_t* buffer, int x, int y, int _width, int _height)
 			} else {
 				putpixel(x, y, *buffer++);
 			}
+		}
+	}
+}
+
+//this will be even SLOWER! Please override it!!
+void Video::clearScreen(uint32_t colour)
+{
+	for (int y = 0; y < height; ++y) {
+		for (int x = 0; x < width; ++x) {
+			putpixel(x, y, colour);
 		}
 	}
 }

@@ -42,6 +42,8 @@ void VGA::putpixel(int x, int y, uint32_t colour)
 	int bit = 7 - (addr & 7);
 	addr >>= 3;
 
+	int px = (x + y) & 1 ? 9 : 1;
+
 	int x = ~(1 << bit);
 	for (int i = 0; i < bitspp; ++i) {
 		if (mono && i != 0) {
