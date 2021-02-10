@@ -21,13 +21,13 @@ extern "C" void goToVM86(size_t ip, size_t cs, size_t sp, size_t ss);
 
 uint8_t inbv(uint16_t port)
 {
-	kprintf("VM8086 INB 0x%X\n", port);
+	//kprintf("VM8086 INB 0x%X\n", port);
 	return inb(port);
 }
 
 void outbv(uint16_t port, uint8_t val)
 {
-	kprintf("VM8086 OUTB 0x%X, 0x%X\n", port, val);
+	//kprintf("VM8086 OUTB 0x%X, 0x%X\n", port, val);
 	outb(port, val);
 }
 
