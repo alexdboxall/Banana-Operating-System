@@ -29,6 +29,11 @@ void VGAVideo::setPlane(int pl)
 	outb(0x3C5, 1 << (pl & 3));
 }
 
+int VGAVideo::close(int a, int b, void* c)
+{
+	return 0;
+}
+
 /*int VGAVideo::open(int a, int b, void* c)
 {
 	loadVM8086FileAsThread(kernelProcess, "C:/Banana/System/VGASET.COM", 0x0000, 0x90, 0x12, 0x12);
@@ -41,10 +46,7 @@ void VGAVideo::setPlane(int pl)
 	return 0;
 }
 
-int VGAVideo::close(int a, int b, void* c)
-{
-	return 0;
-}
+
 
 
 
