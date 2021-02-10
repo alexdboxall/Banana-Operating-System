@@ -37,6 +37,7 @@ int VGAVideo::close(int a, int b, void* c)
 int VGAVideo::open(int a, int b, void* c)
 {
 	loadVM8086FileAsThread(kernelProcess, "C:/Banana/System/VGASET.COM", 0x0000, 0x90, 0x12, 0x12);
+	kprintf("loaded vm86 file.\n");
 
 	width = 640;
 	height = 480;
@@ -48,6 +49,8 @@ int VGAVideo::open(int a, int b, void* c)
 
 void VGAVideo::putpixel(int x, int y, uint32_t colour)
 {
+	kprintf("VGA PUTPIXEL.\n");
+
 	uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + 0xA0000);
 
 	int addr = y * width + x;
@@ -55,7 +58,7 @@ void VGAVideo::putpixel(int x, int y, uint32_t colour)
 	int bit = 7 - (addr & 7);
 	addr >>= 3;
 
-	int px = (x + y) & 1 ? 9 : 1;
+	int px = 0xF;	// (x + y) & 1 ? 9 : 1;
 
 	int w = ~(1 << bit);
 	for (int i = 0; i < 4; ++i) {
