@@ -176,7 +176,8 @@ void ISA::detect()
 		}
 	}	
 
-	/*VGA* vga = new VGA();
+	VGA* vga = new VGA();
 	addChild(vga);
-	vga->open(0, 0, nullptr);*/
+	vga->open(0, 0, nullptr);
+	vga->clearScreen(0x0);
 }
