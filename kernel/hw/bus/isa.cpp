@@ -117,6 +117,7 @@ void ISA::doRTC()
 #define ISA_DEVICE_DISABLE		-2
 
 DMA* isaDMAController = nullptr;
+Video* screen;
 
 void ISA::detect()
 {
@@ -180,4 +181,6 @@ void ISA::detect()
 	addChild(vga);
 	vga->open(0, 0, nullptr);
 	vga->clearScreen(0x008080);
+	screen = vga;
+	executeDLL(loadDLL("C:/Banana/System/wsbe.sys"), this);
 }
