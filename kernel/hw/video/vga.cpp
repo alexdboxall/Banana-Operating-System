@@ -37,6 +37,7 @@ int VGAVideo::close(int a, int b, void* c)
 int VGAVideo::open(int a, int b, void* c)
 {
 	loadVM8086FileAsThread(kernelProcess, "C:/Banana/System/VGASET.COM", 0x0000, 0x90, 0x12, 0x12);
+	sleep(2);
 	kprintf("loaded vm86 file.\n");
 
 	width = 640;
