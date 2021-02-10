@@ -14,6 +14,7 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
+/*
 VGAVideo::VGAVideo() : Video("VGA Display")
 {
 
@@ -67,3 +68,4 @@ void VGAVideo::putpixel(int x, int y, uint32_t colour)
 		px >>= 1;
 	}
 }
+*/

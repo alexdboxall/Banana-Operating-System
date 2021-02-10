@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include "hal/video.hpp"
 
+/*
 class VGAVideo: public Video
 {
 private:
@@ -19,7 +20,8 @@ public:
 	int open(int, int, void*);
 	int close(int, int, void*);
 
-	void putpixel(int x, int y, uint32_t colour);
+	virtual void putpixel(int x, int y, uint32_t colour) override;
 };
+*/
 
 #endif
