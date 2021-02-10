@@ -46,7 +46,7 @@ int VGAVideo::open(int a, int b, void* c)
 	return 0;
 }
 
-void VGAVideo::putpixel(int x, int y, uint32_t colour)
+void VGAVideo::putpixel2(int x, int y, uint32_t colour)
 {
 	uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + 0xA0000);
 
@@ -68,12 +68,3 @@ void VGAVideo::putpixel(int x, int y, uint32_t colour)
 		px >>= 1;
 	}
 }
-
-/*
-
-
-
-
-
-
-*/

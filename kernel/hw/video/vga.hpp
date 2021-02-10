@@ -20,7 +20,7 @@ public:
 	int open(int, int, void*);
 	int close(int, int, void*);
 
-	virtual void putpixel(int x, int y, uint32_t colour) override;
+	virtual void putpixel2(int x, int y, uint32_t colour) override;
 };
 
 
