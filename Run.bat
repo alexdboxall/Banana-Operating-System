@@ -79,8 +79,13 @@ copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummy5.txt"
 copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummy6.txt"
 copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummy7.txt"
 copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummy8.txt"
-copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummyA.txt"
 copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummy9.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummyA.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummyB.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummyC.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummyD.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummyE.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummyF.txt"
 rm T:\dummy.txt
 rm T:\dummy2.txt
 rm T:\dummy3.txt
@@ -91,6 +96,11 @@ rm T:\dummy7.txt
 rm T:\dummy8.txt
 rm T:\dummy9.txt
 rm T:\dummyA.txt
+rm T:\dummyB.txt
+rm T:\dummyC.txt
+rm T:\dummyD.txt
+rm T:\dummyE.txt
+rm T:\dummyF.txt
 
 cd D:/Users/Alex/Desktop/
 attrib +h +r "T:/Banana/BANANABT" 
