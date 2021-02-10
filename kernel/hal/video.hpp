@@ -22,7 +22,7 @@ public:
 	int getHeight();
 	bool isMonochrome();
 
-	virtual void putpixel(int x, int y, uint32_t colour) = 0;
+	virtual void putpixel(int x, int y, uint32_t colour);
 
 	virtual void blit(uint32_t* buffer, int x, int y, int width, int height);
 	virtual void clearScreen(uint32_t colour);

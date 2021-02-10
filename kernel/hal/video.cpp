@@ -34,6 +34,11 @@ int Video::getHeight()
 	return height;
 }
 
+void Video::putpixel(int x, int y, uint32_t col)
+{
+
+}
+
 //please, please, override this when you write a video driver
 //this is a last resort function that should never be called
 void Video::blit(uint32_t* buffer, int x, int y, int _width, int _height)
