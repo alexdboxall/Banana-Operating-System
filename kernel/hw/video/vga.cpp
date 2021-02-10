@@ -15,7 +15,7 @@
 #pragma GCC optimize ("-fno-align-functions")
 
 
-VGAVideo::VGAVideo()// : Video("VGA Display")
+VGAVideo::VGAVideo() : Video("VGA Display")
 {
 
 }

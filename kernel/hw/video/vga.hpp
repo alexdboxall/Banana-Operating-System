@@ -6,7 +6,7 @@
 #include "hal/video.hpp"
 
 
-class VGAVideo //: public Video
+class VGAVideo : public Video
 {
 private:
 
