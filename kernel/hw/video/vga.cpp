@@ -1,3 +1,4 @@
+/*
 #include "hw/video/vga.hpp"
 #include "vm86/vm8086.hpp"
 #include "fs/vfs.hpp"
@@ -59,3 +60,4 @@ void VGA::putpixel(int x, int y, uint32_t colour)
 		px >>= 1;
 	}
 }
+*/

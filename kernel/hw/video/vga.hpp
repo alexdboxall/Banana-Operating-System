@@ -1,4 +1,4 @@
-
+/*
 #ifndef _VGA_HPP_
 #define _VGA_HPP_
 
@@ -23,3 +23,4 @@ public:
 };
 
 #endif
+*/

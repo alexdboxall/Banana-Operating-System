@@ -166,11 +166,8 @@ extern "C" void kernel_main()
 	size_t highestFreeAddr = *((uint32_t*) 0x524);
 	highestFreeAddr = (highestFreeAddr + 4095) & ~0xFFF;
 
-	kprintf("Here...?\n");
 	PhysMem::physicalMemorySetup(highestFreeAddr);
-	kprintf("There...?\n");
 	VirtMem::virtualMemorySetup();
-	kprintf("Where...?\n");
 
 	uint32_t* dp = (uint32_t*) 0x500;
 	uint32_t da = *dp++;
@@ -179,23 +176,18 @@ extern "C" void kernel_main()
 	if (da != db || (da & 0x348) != 0x300) {
 		panic("");
 	}
-	kprintf("Bear...?\n");
 
 	sysBootSettings = da;
 	{
 		VAS v;
 		firstVAS = &v;
-		kprintf("Care...?\n");
 
 		//needs memory to be set up before calling
 		callGlobalConstructors();
-		kprintf("Do you care...?\n");
 
 		computer = new Computer();
 		computer->open(0, 0, nullptr);
-		kprintf("About me...?\n");
 	}
-	kprintf("Nope...?\n");
 
 	panic("SCOPE ENDED IN KERNEL MAIN");
 }

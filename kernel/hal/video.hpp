@@ -1,3 +1,5 @@
+/*
+
 #ifndef _VIDEO_HPP_
 #define _VIDEO_HPP_
 
@@ -27,5 +29,6 @@ public:
 	virtual void blit(uint32_t* buffer, int x, int y, int width, int height);
 	virtual void clearScreen(uint32_t colour);
 };
+*/
 
 #endif

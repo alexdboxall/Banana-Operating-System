@@ -1,3 +1,4 @@
+/*
 #include "core/main.hpp"
 #include "hal/device.hpp"
 #include "hal/video.hpp"
@@ -62,3 +63,4 @@ void Video::clearScreen(uint32_t colour)
 		}
 	}
 }
+*/
