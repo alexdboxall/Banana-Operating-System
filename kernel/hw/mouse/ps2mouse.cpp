@@ -1,4 +1,4 @@
-#include "hw/bus/ps2bus.hpp"
+#include "hw/bus/ps2.hpp"
 #include "hw/bus/ps2port.hpp"
 #include "hw/mouse/ps2mouse.hpp"
 #include "hw/ports.hpp"
