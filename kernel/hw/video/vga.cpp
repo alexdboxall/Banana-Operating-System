@@ -592,6 +592,7 @@ uint8_t dither16Data[512][2] = {
 
 int pixelLookup(int source, int addr, int pitch)
 {
+	addr = 0;
 	return dither16Data[((source & 0xE00000) >> 21) | ((source & 0xE000) >> 10) | ((source & 0xE0) << 1)][(addr + (addr / pitch)) & 1];
 }
 
