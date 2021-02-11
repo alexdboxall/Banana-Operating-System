@@ -61,6 +61,12 @@ int PS2Mouse::open(int a, int, void* ctrl)
 	port = (PS2Port*) parent;
 	controller = (PS2*) ctrl;
 
+	port->deviceWrite(0xF6);
+	port->deviceRead();
+
+	port->deviceWrite(PS2_DEVICE_ENABLE_SCANNING);
+	port->deviceRead();
+
 	cycle = 0;
 	mouseMode = 0;
 	addIRQHandler(12, ps2MouseHandler, true, (void*) this);
