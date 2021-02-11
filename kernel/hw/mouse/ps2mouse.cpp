@@ -35,6 +35,7 @@ void PS2Mouse::handler()
 
 	if ((mouseMode == 0 && cycle >= 3) || ((mouseMode == 3 || mouseMode == 4) && cycle >= 4)) {
 		cycle = 0;
+		kprintf("0x%X, 0x%X, 0x%X\n", mouse_bytes[0], mouse_bytes[1], mouse_bytes[2]);
 
 		if ((mouse_bytes[0] & 0x80) || (mouse_bytes[0] & 0x40)) {
 			cycle = 0;
@@ -46,8 +47,8 @@ void PS2Mouse::handler()
 		}
 
 		//???
-		int xmove = mouse_bytes[1] - ((mouse_bytes[0] << 4) & 0x100);
-		int ymove = 0 - (mouse_bytes[2] - ((mouse_bytes[0] << 3) & 0x100));
+		int xmove = mouse_bytes[0] & 0x10 ? -mouse_bytes[1] : mouse_bytes[1];
+		int ymove = mouse_bytes[0] & 0x20 ? -mouse_bytes[2] : mouse_bytes[2];
 		kprintf("MOUSE X: %d\nMOUSE Y: %d\n", xmove, ymove);
 	}
 }
