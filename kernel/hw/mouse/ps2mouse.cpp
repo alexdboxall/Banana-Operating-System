@@ -64,7 +64,7 @@ int PS2Mouse::open(int a, int, void* ctrl)
 	port->deviceWrite(0xF6);
 	port->deviceRead();
 
-	port->deviceWrite(PS2_DEVICE_ENABLE_SCANNING);
+	port->deviceWrite(PS2_DEV_CMD_ENABLE_SCANNING);
 	port->deviceRead();
 
 	cycle = 0;
