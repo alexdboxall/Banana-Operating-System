@@ -90,9 +90,7 @@ void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 	uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + 0xA0000);
 
 	for (; y < maxY; ++y) {
-		x = originalX;
-		w = originalW;
-		while (w) {
+		for (; x < originalX + w; ++x) {
 			if (0 && !(x & 7) && w >= 8) {
 				int addr = (y * width + x) >> 3;
 				setPlane(0);
@@ -107,8 +105,7 @@ void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 				w -= 8;
 
 			} else {
-				putpixel(x++, y, colour);
-				--w;
+				putpixel(x, y, colour);
 			}
 		}
 	}
