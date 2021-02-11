@@ -601,9 +601,6 @@ void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 	uint8_t green = (colour >> 14) & 3;
 	uint8_t blue = (colour >> 6) & 3;
 
-	int px1 = pixelLookup(colour, y * width + x, width); //colLookup[red][green][blue];
-	int px2 = pixelLookup(colour, y * width + x + 1, width); //colLookup[red][green][blue];
-
 	int originalX = x;
 	int maxY = y + h;
 	int originalW = w;
@@ -612,8 +609,10 @@ void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 
 	for (; y < maxY; ++y) {
 		for (; x < originalX + w; ++x) {
-			if (0 && !(x & 7) && ((x + 8) < (originalX + w))) {
-				//this works, but it messes up the dithering
+			if (!(x & 7) && ((x + 8) < (originalX + w))) {
+				int px1 = pixelLookup(colour, y * width + x + 1, width);	//colLookup[red][green][blue];
+				int px2 = pixelLookup(colour, y * width + x + 0, width);	//colLookup[red][green][blue];
+
 				int addr = (y * width + x) >> 3;
 				setPlane(0);
 				vram[addr] = (((px1 >> 0) & 1) ? 0x55 : 0) | (((px2 >> 0) & 1) ? 0xAA : 0);
