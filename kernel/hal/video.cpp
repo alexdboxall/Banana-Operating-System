@@ -39,6 +39,19 @@ void Video::putpixel(int x, int y, uint32_t col)
 	kprintf("Bad putpixel.\n");
 }
 
+//seriously, override this. This is slower than slow.
+void Video::putrect(int x, int y, int w, int h, uint32_t colour)
+{
+	int maxX = x + w;
+	int maxY = y + h;
+
+	for (; y < maxY; ++y) {
+		for (; x < maxX; ++x) {
+			putpixel(x, y, colour);
+		}
+	}
+}
+
 //please, please, override this when you write a video driver
 //this is a last resort function that should never be called
 void Video::blit(uint32_t* buffer, int x, int y, int _width, int _height)
