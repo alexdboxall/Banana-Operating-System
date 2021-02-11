@@ -12,11 +12,6 @@ PS2Mouse::PS2Mouse() : Mouse("PS/2 Mouse")
 
 }
 
-void PS2Mouse::configure()
-{
-	
-}
-
 void ps2MouseHandler(regs* r, void* context)
 {
 	((PS2Mouse*) context)->handler();
@@ -51,7 +46,7 @@ void PS2Mouse::handler()
 
 		//???
 		int xmove = mouse_bytes[1] - ((mouse_bytes[0] << 4) & 0x100);
-		int ymove = 0 - (mouse_bytes[2] - ((mouse_bytes[0] << 3) & 0x100)));
+		int ymove = 0 - (mouse_bytes[2] - ((mouse_bytes[0] << 3) & 0x100));
 		kprintf("MOUSE X: %d\nMOUSE Y: %d\n", xmove, ymove);
 	}
 }
@@ -68,21 +63,6 @@ int PS2Mouse::open(int a, int, void* ctrl)
 	return 0;
 }
 
-int PS2Mouse::read(int a, int b, void* c)
-{
-	return 0;
-}
-
-int PS2Mouse::write(int command, int b, void* c)
-{
-	return 0;
-}
-
-int PS2Mouse::ioctl(int a, int b, void* c)
-{
-	return 0;
-}
-
 int PS2Mouse::close(int a, int b, void* c)
 {
 	return 0;
@@ -91,24 +71,4 @@ int PS2Mouse::close(int a, int b, void* c)
 void PS2Mouse::detect()
 {
 	return;
-}
-
-void PS2Mouse::hibernate()
-{
-
-}
-
-void PS2Mouse::wake()
-{
-
-}
-
-void PS2Mouse::disableLegacy()
-{
-
-}
-
-void PS2Mouse::powerSaving(int level)
-{
-
 }

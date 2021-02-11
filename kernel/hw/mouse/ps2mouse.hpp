@@ -22,6 +22,8 @@ public:
 
 	PS2Mouse();
 
+	void detect();
+
 	int open(int, int, void*);
 	int close(int, int, void*);
 };
