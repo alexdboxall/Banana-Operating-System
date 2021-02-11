@@ -42,8 +42,8 @@ void Video::putpixel(int x, int y, uint32_t col)
 //seriously, override this. This is slower than slow.
 void Video::putrect(int x, int y, int w, int h, uint32_t colour)
 {
-	int maxX = x + w;
-	int maxY = y + h;
+	//int maxX = x + w;
+	//int maxY = y + h;
 
 	for (; y < maxY; ++y) {
 		for (; x < maxX; ++x) {
