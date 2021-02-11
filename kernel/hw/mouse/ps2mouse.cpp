@@ -20,9 +20,10 @@ void ps2MouseHandler(regs* r, void* context)
 //this code was written long ago, and is quite bad
 void PS2Mouse::handler()
 {
-	uint8_t status = inb(0x64);
-	if ((status & 1) == 0) return;		//no data
-	if ((status & 0x20) == 0) return;	//keyboard data
+	kprintf("Mouse handler.\n");
+	//uint8_t status = inb(0x64);
+	//if ((status & 1) == 0) return;		//no data
+	//if ((status & 0x20) == 0) return;	//keyboard data
 
 	mouse_bytes[cycle++] = inb(0x60);
 
@@ -53,11 +54,14 @@ void PS2Mouse::handler()
 
 int PS2Mouse::open(int a, int, void* ctrl)
 {
+	kprintf("PS2Mouse::open.\n");
+
 	//store parents
 	port = (PS2Port*) parent;
 	controller = (PS2*) ctrl;
 
 	cycle = 0;
+	mouseMode = 0;
 	addIRQHandler(12, ps2MouseHandler, true, (void*) this);
 
 	return 0;

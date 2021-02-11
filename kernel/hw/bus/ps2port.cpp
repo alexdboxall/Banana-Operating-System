@@ -45,7 +45,7 @@ void PS2Port::detect()
 	} else if (portNum == PS2_PORT2) {
 		PS2Mouse* mse = new PS2Mouse();
 		addChild(mse);
-		mse->open(0, 0, controller);
+		mse->open(1, 0, controller);
 	}
 }
 
