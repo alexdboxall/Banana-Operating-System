@@ -75,11 +75,11 @@ uint8_t colLookup[4][4][4] = {
 	},
 };
 
-#include "hw/video/vgachrlk.h"
+#include "hw/video/blittran.h"
 
 int pixelLookup(int source, int addr, int pitch)
 {
-	dither16Data[((source & 0xE00000) >> 21) | ((source & 0xE000) >> 10) | ((source & 0xE0) << 1)][(addr + (addr / pitch)) & 1];
+	return blitTransl[((source & 0xE00000) >> 21) | ((source & 0xE000) >> 10) | ((source & 0xE0) << 1)][(addr + (addr / pitch)) & 1];
 }
 
 void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
