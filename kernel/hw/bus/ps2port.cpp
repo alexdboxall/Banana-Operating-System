@@ -6,6 +6,7 @@
 #include "hw/bus/ps2port.hpp"
 #include "registry/registry.hpp"
 
+#include "hw/mouse/ps2mouse.hpp"
 #include "hw/keybrd/ps2key.hpp"
 
 #pragma GCC optimize ("O0")
@@ -40,6 +41,11 @@ void PS2Port::detect()
 		PS2Keyboard* kbd = new PS2Keyboard();
 		addChild(kbd);
 		kbd->open(0, 0, controller);
+
+	} else if (portNum == PS2_PORT2) {
+		PS2Mouse* mse = new PS2Mouse();
+		addChild(mse);
+		mse->open(0, 0, controller);
 	}
 }
 
