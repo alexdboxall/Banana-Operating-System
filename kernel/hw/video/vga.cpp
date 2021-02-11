@@ -592,7 +592,6 @@ uint8_t dither16Data[512][2] = {
 
 int pixelLookup(int source, int addr, int pitch)
 {
-	addr = 0;
 	return dither16Data[((source & 0xE00000) >> 21) | ((source & 0xE000) >> 10) | ((source & 0xE0) << 1)][(addr + (addr / pitch)) & 1];
 }
 
@@ -602,7 +601,7 @@ void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 	uint8_t green = (colour >> 14) & 3;
 	uint8_t blue = (colour >> 6) & 3;
 
-	int px = pixelLookup(colour, x + y * width, width); //colLookup[red][green][blue];
+	int px = pixelLookup(colour, x, width); //colLookup[red][green][blue];
 
 	int originalX = x;
 	int maxY = y + h;
@@ -645,7 +644,7 @@ void VGAVideo::putpixel(int x, int y, uint32_t colour)
 	uint8_t green = (colour >> 14) & 3;
 	uint8_t blue = (colour >> 6) & 3;
 
-	int px = pixelLookup(colour, x + y * width, width); //colLookup[red][green][blue];
+	int px = pixelLookup(colour, x, width); //colLookup[red][green][blue];
 
 	int w = ~(1 << bit);
 	for (int i = 0; i < 4; ++i) {
