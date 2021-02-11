@@ -45,8 +45,6 @@ int VGAVideo::open(int a, int b, void* c)
 
 	mono = false;
 
-	uint16_t c = 0;
-
 	while (1) {
 		for (int y = 0; y < 256; ++y) {
 			for (int x = 0; x < 512; ++x) {
