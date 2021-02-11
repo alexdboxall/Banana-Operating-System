@@ -45,8 +45,8 @@ void Video::putrect(int x, int y, int w, int h, uint32_t colour)
 	//int maxX = x + w;
 	//int maxY = y + h;
 
-	for (; y < maxY; ++y) {
-		for (; x < maxX; ++x) {
+	for (; y < h; ++y) {
+		for (; x < w; ++x) {
 			putpixel(x, y, colour);
 		}
 	}
