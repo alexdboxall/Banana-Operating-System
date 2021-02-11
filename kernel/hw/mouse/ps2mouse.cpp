@@ -6,6 +6,7 @@
 #include "core/main.hpp"
 #include <stdint.h>
 
+void (*guiMouseHandler) (int xdelta, int ydelta, int buttons, int z) = nullptr;
 
 PS2Mouse::PS2Mouse() : Mouse("PS/2 Mouse")
 {
@@ -50,6 +51,10 @@ void PS2Mouse::handler()
 		int xmove = mouse_bytes[0] & 0x10 ? -mouse_bytes[1] : mouse_bytes[1];
 		int ymove = mouse_bytes[0] & 0x20 ? -mouse_bytes[2] : mouse_bytes[2];
 		kprintf("MOUSE X: %d\nMOUSE Y: %d\n", xmove, ymove);
+
+		if (guiMouseHandler) {
+			guiMouseHandler(xmove, ymove, mouse_bytes[0] & 1);
+		}
 	}
 }
 
