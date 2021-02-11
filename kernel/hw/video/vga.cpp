@@ -48,13 +48,15 @@ int VGAVideo::open(int a, int b, void* c)
 	uint16_t c = 0;
 
 	while (1) {
-		for (int y = 0; y < 480; ++y) {
+		for (int y = 0; y < 256; ++y) {
 			for (int x = 0; x < 512; ++x) {
-				int r = (x >> 0) & 7;
-				int g = (x >> 3) & 7;
-				int b = (x >> 6) & 7;
-				int c = (b * 36) | ((g * 36) << 8) | ((r * 36) << 16);
-				putpixel(x, y, c);
+				int w = (x >> 2) | (y >> 6) * 128;
+
+				int r = (w >> 0) & 7;
+				int g = (w >> 3) & 7;
+				int b = (w >> 6) & 7;
+				int zz = (b * 36) | ((g * 36) << 8) | ((r * 36) << 16);
+				putpixel(x, y, zz);
 			}
 		}
 	}
