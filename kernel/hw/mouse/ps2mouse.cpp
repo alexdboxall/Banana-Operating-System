@@ -47,8 +47,11 @@ void PS2Mouse::handler()
 			return;
 		}
 
-		int xmove = mouse_bytes[0] & 0x10 ? -((int)mouse_bytes[1]) : mouse_bytes[1];
-		int ymove = mouse_bytes[0] & 0x20 ? mouse_bytes[2] : -((int) mouse_bytes[2]);
+		//int xmove = mouse_bytes[0] & 0x10 ? -((int)mouse_bytes[1]) : mouse_bytes[1];
+		//int ymove = mouse_bytes[0] & 0x20 ? mouse_bytes[2] : -((int) mouse_bytes[2]);
+
+		int xmove = mouse_bytes[1] - ((mouse_bytes[0] << 4) & 0x100);
+		int ymove = 0 - (mouse_bytes[2] - ((mouse_bytes[0] << 3) & 0x100));
 
 		if (guiMouseHandler) {
 			guiMouseHandler(xmove, ymove, mouse_bytes[0] & 1, 0);
