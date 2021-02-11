@@ -84,16 +84,16 @@ void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 	int px = colLookup[red][green][blue];
 
 	int originalX = x;
-	int originalY = y;
+	int maxY = y + h;
 	int originalW = w;
 
 	uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + 0xA0000);
 
-	for (; y < originalY + h; ++y) {
+	for (; y < maxY; ++y) {
 		x = originalX;
 		w = originalW;
 		while (w) {
-			if (!(x & 7) && w >= 8) {
+			if (0 && !(x & 7) && w >= 8) {
 				int addr = (y * width + x) >> 3;
 				setPlane(0);
 				vram[addr] = ((px >> 0) & 1) ? 0xFF : 0;
