@@ -53,7 +53,7 @@ void PS2Mouse::handler()
 		kprintf("MOUSE X: %d\nMOUSE Y: %d\n", xmove, ymove);
 
 		if (guiMouseHandler) {
-			guiMouseHandler(xmove, ymove, mouse_bytes[0] & 1);
+			guiMouseHandler(xmove, ymove, mouse_bytes[0] & 1, 0);
 		}
 	}
 }
