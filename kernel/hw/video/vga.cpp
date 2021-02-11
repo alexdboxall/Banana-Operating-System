@@ -93,13 +93,13 @@ void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 		for (; x < originalX + w; ++x) {
 			if (!(x & 7) && ((x + 8) < (originalX + w))) {
 				int addr = (y * width + x) >> 3;
-				setPlane(3);
+				setPlane(0);
 				vram[addr] = ((px >> 0) & 1) ? 0xFF : 0;
 				setPlane(1);
 				vram[addr] = ((px >> 1) & 1) ? 0xFF : 0;
 				setPlane(2);
 				vram[addr] = ((px >> 2) & 1) ? 0xFF : 0;
-				setPlane(0);
+				setPlane(3);
 				vram[addr] = ((px >> 3) & 1) ? 0xFF : 0;
 				x += 7;
 
