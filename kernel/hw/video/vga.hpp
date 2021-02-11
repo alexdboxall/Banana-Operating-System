@@ -21,6 +21,7 @@ public:
 	int close(int, int, void*);
 
 	virtual void putpixel(int x, int y, uint32_t colour) override;
+	virtual void putrect(int x, int y, int w, int h, uint32_t colour) override;
 };
 
 

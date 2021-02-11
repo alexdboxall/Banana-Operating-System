@@ -75,6 +75,46 @@ uint8_t colLookup[4][4][4] = {
 	},
 };
 
+void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
+{
+	uint8_t red = (colour >> 22) & 3;
+	uint8_t green = (colour >> 14) & 3;
+	uint8_t blue = (colour >> 6) & 3;
+
+	int px = colLookup[red][green][blue];
+
+	int originalX = x;
+	int originalY = y;
+	int originalW = w;
+
+	uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + 0xA0000);
+
+	for (; y < originalY + h; ++y) {
+		x = originalX;
+		w = originalW;
+		while (w) {
+			if (!(x & 7) && w >= 8) {
+				int addr = (y * width + x) >> 3;
+				setPlane(0);
+				vram[addr] = ((px >> 0) & 1) ? 0xFF : 0;
+				setPlane(1);
+				vram[addr] = ((px >> 1) & 1) ? 0xFF : 0;
+				setPlane(2);
+				vram[addr] = ((px >> 2) & 1) ? 0xFF : 0;
+				setPlane(3);
+				vram[addr] = ((px >> 3) & 1) ? 0xFF : 0;
+				x += 8;
+				w -= 8;
+
+			} else {
+				putpixel(x++, y, colour);
+				--w;
+			}
+		}
+	}
+	
+}
+
 void VGAVideo::putpixel(int x, int y, uint32_t colour)
 {
 	uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + 0xA0000);
