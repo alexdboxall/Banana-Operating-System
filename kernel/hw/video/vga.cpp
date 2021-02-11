@@ -295,16 +295,16 @@ uint8_t dither16Data[512][2] = {
 {0, 3},
 {0, 11},
 {3, 6},
-{0, 15},
-{0, 15},
+{ 7,8 },// { 0, 15 },
+{ 7,8 },// { 0, 15 },
 {6, 7},
 {4, 15},
 {12, 12},
 {2, 3},
 {0, 11},
 {3, 6},
-{0, 15},
-{0, 15},
+{ 7,8 },// { 0, 15 },
+{ 7,8 },// { 0, 15 },
 {6, 7},
 {4, 15},
 {12, 14},
@@ -359,16 +359,16 @@ uint8_t dither16Data[512][2] = {
 {1, 3},
 {0, 11},
 {1, 7},
-{0, 15},
-{0, 15},
+{ 7,8 },// { 0, 15 },
+{ 7,8 },// { 0, 15 },
 {5, 7},
 {4, 15},
 {12, 13},
 {3, 3},
 {0, 11},
 {3, 7},
-{0, 15},
-{0, 15},
+{ 7,8 },// { 0, 15 },
+{ 7,8 },// { 0, 15 },
 {7, 7},
 {4, 15},
 {12, 15},
@@ -590,7 +590,7 @@ uint8_t dither16Data[512][2] = {
 {15, 15},
 };
 
-int pixelLookup(int source, int addr, int pitch)
+int pixelLookup(int source, int addr)
 {
 	return dither16Data[((source & 0xE00000) >> 21) | ((source & 0xE000) >> 10) | ((source & 0xE0) << 1)][addr & 1];
 }
@@ -610,8 +610,8 @@ void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 	for (; y < maxY; ++y) {
 		for (; x < originalX + w; ++x) {
 			if (!(x & 7) && ((x + 8) < (originalX + w))) {
-				int px1 = pixelLookup(colour, y + x + 1, width);	//colLookup[red][green][blue];
-				int px2 = pixelLookup(colour, y + x + 0, width);	//colLookup[red][green][blue];
+				int px1 = pixelLookup(colour, y + x + 1);	//colLookup[red][green][blue];
+				int px2 = pixelLookup(colour, y + x + 0);	//colLookup[red][green][blue];
 
 				int addr = (y * width + x) >> 3;
 				setPlane(0);
@@ -645,7 +645,7 @@ void VGAVideo::putpixel(int x, int y, uint32_t colour)
 	uint8_t green = (colour >> 14) & 3;
 	uint8_t blue = (colour >> 6) & 3;
 
-	int px = pixelLookup(colour, y + x, width); //colLookup[red][green][blue];
+	int px = pixelLookup(colour, y + x); //colLookup[red][green][blue];
 
 	int w = ~(1 << bit);
 	for (int i = 0; i < 4; ++i) {
