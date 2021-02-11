@@ -88,7 +88,7 @@ void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 	uint8_t green = (colour >> 14) & 3;
 	uint8_t blue = (colour >> 6) & 3;
 
-	int px = pixelLookup(colour, x + y * width, x); //colLookup[red][green][blue];
+	int px = pixelLookup(colour, x + y * width, width); //colLookup[red][green][blue];
 
 	int originalX = x;
 	int maxY = y + h;
