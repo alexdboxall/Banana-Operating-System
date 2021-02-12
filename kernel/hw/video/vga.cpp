@@ -627,6 +627,8 @@ void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 					setPlane(3);
 					for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 3) & 1) ? 0x55 : 0) | (((px2 >> 3) & 1) ? 0xAA : 0);
 
+					x += cnt * 8 - 1;
+
 				} else {
 					setPlane(0);
 					vram[addr] = (((px1 >> 0) & 1) ? 0x55 : 0) | (((px2 >> 0) & 1) ? 0xAA : 0);
@@ -641,7 +643,26 @@ void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 				
 
 			} else {
-				putpixel(x, y, colour);
+				int addr = y * width + x;
+
+				int bit = 7 - (addr & 7);
+				addr >>= 3;
+
+				int px = pixelLookup(colour, y + x);
+
+				int w = ~(1 << bit);
+
+				setPlane(0);
+				vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
+				px >>= 1;
+				setPlane(1);
+				vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
+				px >>= 1;
+				setPlane(2);
+				vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
+				px >>= 1;
+				setPlane(3);
+				vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
 			}
 		}
 	}
@@ -657,18 +678,10 @@ void VGAVideo::putpixel(int x, int y, uint32_t colour)
 	int bit = 7 - (addr & 7);
 	addr >>= 3;
 
-	uint8_t red = (colour >> 22) & 3;
-	uint8_t green = (colour >> 14) & 3;
-	uint8_t blue = (colour >> 6) & 3;
-
-	int px = pixelLookup(colour, y + x); //colLookup[red][green][blue];
+	int px = pixelLookup(colour, y + x);
 
 	int w = ~(1 << bit);
 	for (int i = 0; i < 4; ++i) {
-		if (mono && i != 0) {
-			px >>= 1;
-			continue;
-		}
 		setPlane(i);
 		vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
 		px >>= 1;
