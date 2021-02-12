@@ -614,15 +614,31 @@ void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 				int px2 = pixelLookup(colour, y + x + 0);	//colLookup[red][green][blue];
 
 				int addr = (y * width + x) >> 3;
-				setPlane(0);
-				vram[addr] = (((px1 >> 0) & 1) ? 0x55 : 0) | (((px2 >> 0) & 1) ? 0xAA : 0);
-				setPlane(1);
-				vram[addr] = (((px1 >> 1) & 1) ? 0x55 : 0) | (((px2 >> 1) & 1) ? 0xAA : 0);
-				setPlane(2);
-				vram[addr] = (((px1 >> 2) & 1) ? 0x55 : 0) | (((px2 >> 2) & 1) ? 0xAA : 0);
-				setPlane(3);
-				vram[addr] = (((px1 >> 3) & 1) ? 0x55 : 0) | (((px2 >> 3) & 1) ? 0xAA : 0);
-				x += 7;
+
+				if ((x + 16) < (originalX + w)) {
+					int cnt = ((originalX + w) - x) >> 3;
+
+					setPlane(0);
+					for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 0) & 1) ? 0x55 : 0) | (((px2 >> 0) & 1) ? 0xAA : 0);
+					setPlane(1);
+					for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 1) & 1) ? 0x55 : 0) | (((px2 >> 1) & 1) ? 0xAA : 0);
+					setPlane(2);
+					for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 2) & 1) ? 0x55 : 0) | (((px2 >> 2) & 1) ? 0xAA : 0);
+					setPlane(3);
+					for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 3) & 1) ? 0x55 : 0) | (((px2 >> 3) & 1) ? 0xAA : 0);
+
+				} else {
+					setPlane(0);
+					vram[addr] = (((px1 >> 0) & 1) ? 0x55 : 0) | (((px2 >> 0) & 1) ? 0xAA : 0);
+					setPlane(1);
+					vram[addr] = (((px1 >> 1) & 1) ? 0x55 : 0) | (((px2 >> 1) & 1) ? 0xAA : 0);
+					setPlane(2);
+					vram[addr] = (((px1 >> 2) & 1) ? 0x55 : 0) | (((px2 >> 2) & 1) ? 0xAA : 0);
+					setPlane(3);
+					vram[addr] = (((px1 >> 3) & 1) ? 0x55 : 0) | (((px2 >> 3) & 1) ? 0xAA : 0);
+					x += 7;
+				}
+				
 
 			} else {
 				putpixel(x, y, colour);
