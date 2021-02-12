@@ -590,7 +590,7 @@ uint8_t dither16Data[512][2] = {
 {15, 15},
 };
 
-int pixelLookup(int source, int addr)
+inline int pixelLookup(int source, int addr)
 {
 	return dither16Data[((source & 0xE00000) >> 21) | ((source & 0xE000) >> 10) | ((source & 0xE0) << 1)][addr & 1];
 }
@@ -607,13 +607,15 @@ void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 
 	uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + 0xA0000);
 
+	int baseaddr = (y - 1) * width;
 	for (; y < maxY; ++y) {
+		baseaddr += width;
 		for (x = originalX; x < originalX + w; ++x) {
 			if (!(x & 7) && ((x + 8) < (originalX + w))) {
-				int px1 = pixelLookup(colour, y + x + 1);	//colLookup[red][green][blue];
-				int px2 = pixelLookup(colour, y + x + 0);	//colLookup[red][green][blue];
+				int px1 = pixelLookup(colour, y + x + 1);
+				int px2 = pixelLookup(colour, y + x + 0);
 
-				int addr = (y * width + x) >> 3;
+				int addr = (baseaddr + x) >> 3;
 
 				if ((x + 16) < (originalX + w)) {
 					int cnt = ((originalX + w) - x) >> 3;
@@ -643,7 +645,7 @@ void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 				
 
 			} else {
-				int addr = y * width + x;
+				int addr = baseaddr + x;
 
 				int bit = 7 - (addr & 7);
 				addr >>= 3;
