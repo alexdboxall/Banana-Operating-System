@@ -7,15 +7,12 @@
 #include "hal/intctrl.hpp"
 #include "hw/cpu.hpp"
 
-#pragma GCC optimize ("O1")
+#pragma GCC optimize ("Ofast")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
 #pragma GCC optimize ("-fno-align-jumps")
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
-#pragma GCC optimize ("-fno-reorder-blocks")
-#pragma GCC optimize ("-fno-reorder-blocks")
-#pragma GCC optimize ("-fno-reorder-blocks-and-partition")
 
 //#define FAST_PLANE_SWITCH(pl) outb(0x3CE, 4);outb(0x3CF, pl & 3);outb(0x3C4, 2);outb(0x3C5, 1 << (pl & 3));
 #define FAST_PLANE_SWITCH(pl) setPlane(pl);
