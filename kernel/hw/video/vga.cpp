@@ -7,12 +7,14 @@
 #include "hal/intctrl.hpp"
 #include "hw/cpu.hpp"
 
-#pragma GCC optimize ("O3")
+#pragma GCC optimize ("Ofast")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
 #pragma GCC optimize ("-fno-align-jumps")
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
+
+#define FAST_PLANE_SWITCH(pl) outb(0x3CE, 4);outb(0x3CF, pl & 3);outb(0x3C4, 2);outb(0x3C5, 1 << (pl & 3));
 
 
 VGAVideo::VGAVideo() : Video("VGA Display")
@@ -605,31 +607,15 @@ void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 
 				int addr = (baseaddr + x) >> 3;
 
-				if (cnt > 1) {
-
-					setPlane(0);
-					for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 0) & 1) ? 0x55 : 0) | (((px2 >> 0) & 1) ? 0xAA : 0);
-					setPlane(1);
-					for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 1) & 1) ? 0x55 : 0) | (((px2 >> 1) & 1) ? 0xAA : 0);
-					setPlane(2);
-					for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 2) & 1) ? 0x55 : 0) | (((px2 >> 2) & 1) ? 0xAA : 0);
-					setPlane(3);
-					for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 3) & 1) ? 0x55 : 0) | (((px2 >> 3) & 1) ? 0xAA : 0);
-
-					x += cnt * 8 - 1;
-
-				} else {
-					setPlane(0);
-					vram[addr] = (((px1 >> 0) & 1) ? 0x55 : 0) | (((px2 >> 0) & 1) ? 0xAA : 0);
-					setPlane(1);
-					vram[addr] = (((px1 >> 1) & 1) ? 0x55 : 0) | (((px2 >> 1) & 1) ? 0xAA : 0);
-					setPlane(2);
-					vram[addr] = (((px1 >> 2) & 1) ? 0x55 : 0) | (((px2 >> 2) & 1) ? 0xAA : 0);
-					setPlane(3);
-					vram[addr] = (((px1 >> 3) & 1) ? 0x55 : 0) | (((px2 >> 3) & 1) ? 0xAA : 0);
-					x += 7;
-				}
-				
+				FAST_PLANE_SWITCH(0);
+				for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 0) & 1) ? 0x55 : 0) | (((px2 >> 0) & 1) ? 0xAA : 0);
+				FAST_PLANE_SWITCH(1);
+				for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 1) & 1) ? 0x55 : 0) | (((px2 >> 1) & 1) ? 0xAA : 0);
+				FAST_PLANE_SWITCH(2);
+				for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 2) & 1) ? 0x55 : 0) | (((px2 >> 2) & 1) ? 0xAA : 0);
+				FAST_PLANE_SWITCH(3);
+				for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 3) & 1) ? 0x55 : 0) | (((px2 >> 3) & 1) ? 0xAA : 0);
+				x += cnt * 8 - 1;
 
 			} else {
 				int addr = baseaddr + x;
