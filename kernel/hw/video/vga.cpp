@@ -608,7 +608,7 @@ void VGAVideo::putrect(int __x, int __y, int w, int h, uint32_t colour)
 				int val2 = (((col2 >> i) & 1) ? 0x55 : 0) | (((col1 >> i) & 1) ? 0xAA : 0);
 
 				for (int y = __y; y < __y + h; ++y) {
-					vram[addr] = (x + y) & 1 ? val1 : val2;
+					vram[addr] = (x + y) & 1 ? val2 : val1;
 					addr += width >> 3;
 				}
 			}
