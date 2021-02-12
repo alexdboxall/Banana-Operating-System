@@ -7,7 +7,7 @@
 #include "hal/intctrl.hpp"
 #include "hw/cpu.hpp"
 
-#pragma GCC optimize ("O0")
+#pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
 #pragma GCC optimize ("-fno-align-jumps")
@@ -597,10 +597,6 @@ inline int pixelLookup(int source, int addr)
 
 void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 {
-	uint8_t red = (colour >> 22) & 3;
-	uint8_t green = (colour >> 14) & 3;
-	uint8_t blue = (colour >> 6) & 3;
-
 	int originalX = x;
 	int maxY = y + h;
 	int originalW = w;
