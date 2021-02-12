@@ -607,14 +607,14 @@ void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 	for (; y < maxY; ++y) {
 		baseaddr += width;
 		for (x = originalX; x < originalX + w; ++x) {
-			if (!(x & 7) && ((x + 8) < (originalX + w))) {
+			int cnt = ((originalX + w) - x) >> 3;
+			if (!(x & 7) && cnt) {
 				int px1 = pixelLookup(colour, y + x + 1);
 				int px2 = pixelLookup(colour, y + x + 0);
 
 				int addr = (baseaddr + x) >> 3;
 
-				if ((x + 16) < (originalX + w)) {
-					int cnt = ((originalX + w) - x) >> 3;
+				if (cnt > 1) {
 
 					setPlane(0);
 					for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 0) & 1) ? 0x55 : 0) | (((px2 >> 0) & 1) ? 0xAA : 0);
