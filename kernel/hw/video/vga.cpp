@@ -7,12 +7,13 @@
 #include "hal/intctrl.hpp"
 #include "hw/cpu.hpp"
 
-#pragma GCC optimize ("O1")
+#pragma GCC optimize ("O3")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
 #pragma GCC optimize ("-fno-align-jumps")
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
+#pragma GCC optimize ("-fno-reorder-blocks")
 
 #define FAST_PLANE_SWITCH(pl) outb(0x3CE, 4);outb(0x3CF, pl & 3);outb(0x3C4, 2);outb(0x3C5, 1 << (pl & 3));
 
@@ -608,13 +609,13 @@ void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 
 				//TODO: a lookup table could help instead of that weird bitshift and conditional stuff...
 
-				setPlane(0);
+				FAST_PLANE_SWITCH(0);
 				for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 0) & 1) ? 0x55 : 0) | (((px2 >> 0) & 1) ? 0xAA : 0);
-				setPlane(1);
+				FAST_PLANE_SWITCH(1);
 				for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 1) & 1) ? 0x55 : 0) | (((px2 >> 1) & 1) ? 0xAA : 0);
-				setPlane(2);
+				FAST_PLANE_SWITCH(2);
 				for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 2) & 1) ? 0x55 : 0) | (((px2 >> 2) & 1) ? 0xAA : 0);
-				setPlane(3);
+				FAST_PLANE_SWITCH(3);
 				for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 3) & 1) ? 0x55 : 0) | (((px2 >> 3) & 1) ? 0xAA : 0);
 				x += cnt * 8 - 1;
 
@@ -628,16 +629,16 @@ void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 
 				int w = ~(1 << bit);
 
-				setPlane(0);
+				FAST_PLANE_SWITCH(0);
 				vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
 				px >>= 1;
-				setPlane(1);
+				FAST_PLANE_SWITCH(1);
 				vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
 				px >>= 1;
-				setPlane(2);
+				FAST_PLANE_SWITCH(2);
 				vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
 				px >>= 1;
-				setPlane(3);
+				FAST_PLANE_SWITCH(3);
 				vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
 			}
 		}
