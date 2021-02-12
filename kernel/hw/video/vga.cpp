@@ -20,15 +20,6 @@ VGAVideo::VGAVideo() : Video("VGA Display")
 
 }
 
-void VGAVideo::setPlane(int pl)
-{
-	outb(0x3CE, 4);
-	outb(0x3CF, pl & 3);
-
-	outb(0x3C4, 2);
-	outb(0x3C5, 1 << (pl & 3));
-}
-
 int VGAVideo::close(int a, int b, void* c)
 {
 	return 0;
