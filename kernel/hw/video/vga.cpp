@@ -627,16 +627,16 @@ void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 
 				int w = ~(1 << bit);
 
-				setPlane(0);
+				FAST_PLANE_SWITCH(0);
 				vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
 				px >>= 1;
-				setPlane(1);
+				FAST_PLANE_SWITCH(1);
 				vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
 				px >>= 1;
-				setPlane(2);
+				FAST_PLANE_SWITCH(2);
 				vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
 				px >>= 1;
-				setPlane(3);
+				FAST_PLANE_SWITCH(3);
 				vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
 			}
 		}
@@ -657,7 +657,7 @@ void VGAVideo::putpixel(int x, int y, uint32_t colour)
 
 	int w = ~(1 << bit);
 	for (int i = 0; i < 4; ++i) {
-		setPlane(i);
+		FAST_PLANE_SWITCH(i);
 		vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
 		px >>= 1;
 	}
