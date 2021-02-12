@@ -608,7 +608,7 @@ void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 	uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + 0xA0000);
 
 	for (; y < maxY; ++y) {
-		for (; x < originalX + w; ++x) {
+		for (x = originalX; x < originalX + w; ++x) {
 			if (!(x & 7) && ((x + 8) < (originalX + w))) {
 				int px1 = pixelLookup(colour, y + x + 1);	//colLookup[red][green][blue];
 				int px2 = pixelLookup(colour, y + x + 0);	//colLookup[red][green][blue];
