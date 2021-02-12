@@ -588,6 +588,41 @@ inline int pixelLookup(int source, int addr)
 	return dither16Data[((source & 0xE00000) >> 21) | ((source & 0xE000) >> 10) | ((source & 0xE0) << 1)][addr & 1];
 }
 
+void VGAVideo::putrect(int __x, int __y, int w, int h, uint32_t colour)
+{
+	uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + 0xA0000);
+	int col1 = pixelLookup(colour, 0);
+	int col2 = pixelLookup(colour, 1);
+
+	for (int x = __x; x < __x + w; ++x) {
+		int blocks = (__x + w - x) >> 3;
+
+		if (blocks) {
+			int baseaddr = (__y * width + x) >> 3;
+			int addr;
+			for (int i = 0; i < 4; ++i) {
+				addr = baseaddr;
+				FAST_PLANE_SWITCH(i);
+				for (int y = __y; y < __y + h; ++y) {
+					int px1 = (x + y) & 1 ? col2 : col1;
+					int px2 = (x + y) & 1 ? col1 : col2;
+
+					vram[addr] = (((px1 >> 0) & 1) ? 0x55 : 0) | (((px2 >> 0) & 1) ? 0xAA : 0);
+					addr += width >> 3;
+				}
+			}
+
+			x += 7;
+
+		} else {
+			for (int y = __y; y < __y + h; ++y) {
+				putpixel(x, y, colour);
+			}
+		}
+
+	}
+
+/*
 void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 {
 	int originalX = x;
@@ -642,8 +677,8 @@ void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 			}
 		}
 	}
-	
 }
+*/
 
 void VGAVideo::putpixel(int x, int y, uint32_t colour)
 {
