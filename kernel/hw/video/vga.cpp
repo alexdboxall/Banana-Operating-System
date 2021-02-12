@@ -41,33 +41,6 @@ int VGAVideo::open(int a, int b, void* c)
 	return 0;
 }
 
-uint8_t colLookup[4][4][4] = {
-	{
-		{0, 0, 1, 1},
-		{2, 3, 3, 1},
-		{2, 2, 3, 9},
-		{10, 10, 11, 11},
-	},
-	{
-		{4, 5, 5, 1},
-		{6, 8, 8, 9},
-		{2, 2, 3, 9},
-		{10, 10, 11, 11},
-	},
-	{
-		{4, 4, 5, 5},
-		{6, 6, 13, 13},
-		{6, 7, 7, 13},
-		{10, 10, 14, 15},
-	},
-	{
-		{12, 12, 13, 13},
-		{12, 12, 13, 13},
-		{12, 12, 13, 13},
-		{14, 14, 15, 15},
-	},
-};
-
 uint8_t dither16Data[512][2] = {
 {0, 0},
 {0, 0},
@@ -588,36 +561,72 @@ inline int pixelLookup(int source, int addr)
 	return dither16Data[((source & 0xE00000) >> 21) | ((source & 0xE000) >> 10) | ((source & 0xE0) << 1)][addr & 1];
 }
 
-void VGAVideo::putrect(int __x, int __y, int w, int h, uint32_t colour)
+void VGAVideo::putrect(int __x, int __y, int maxx, int maxy, uint32_t colour)
 {
 	uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + 0xA0000);
 	int col1 = pixelLookup(colour, 0);
 	int col2 = pixelLookup(colour, 1);
 
-	for (int x = __x; x < __x + w; ++x) {
-		int blocks = (__x + w - x) >> 3;
+	//actually passed in as width and height
+	maxx += __x;
+	maxy += __y;
 
-		if (blocks) {
+	for (int x = __x; x < maxx; ++x) {
+		int blocks = (maxx - x) >> 3;
+
+		if (blocks && !(x & 7)) {
 			int baseaddr = (__y * width + x) >> 3;
 			int addr;
 			for (int i = 0; i < 4; ++i) {
-				addr = baseaddr;
 				FAST_PLANE_SWITCH(i);
 
 				int val1 = (((col1 >> i) & 1) ? 0x55 : 0) | (((col2 >> i) & 1) ? 0xAA : 0);
 				int val2 = (((col2 >> i) & 1) ? 0x55 : 0) | (((col1 >> i) & 1) ? 0xAA : 0);
 
-				for (int y = __y; y < __y + h; ++y) {
-					vram[addr] = (x + y) & 1 ? val2 : val1;
-					addr += width >> 3;
+				for (int b = 0; b < blocks; ++b) {
+					addr = baseaddr + b;
+					for (int y = __y; y < maxy; ++y) {
+						vram[addr] = (x + y) & 1 ? val1 : val2;
+						addr += width >> 3;
+					}
 				}
 			}
 
-			x += 7;
+			x += (blocks << 3) - 1;
 
 		} else {
-			for (int y = __y; y < __y + h; ++y) {
-				putpixel(x, y, colour);
+			int baseaddr = (__y * width + x) >> 3;
+			int bit = 7 - (x & 7);
+			int ww = ~(1 << bit);
+
+			int px1 = (x + __y) & 1 ? col2 : col1;
+			int px2 = (x + __y) & 1 ? col1 : col2;
+
+			for (int i = 0; i < 4; ++i) {
+				FAST_PLANE_SWITCH(i);
+				int addr = baseaddr;
+
+				if (col1 == col2) {
+					int shift = (((col1 >> i) & 1) << bit);
+					for (int y = __y; y < maxy; ++y) {
+						vram[addr] = (vram[addr] & ww) | shift;
+						addr += width >> 3;
+					}
+
+				} else {
+					int shift = (((px1 >> i) & 1) << bit);
+					for (int y = __y; y < maxy; y += 2) {
+						vram[addr] = (vram[addr] & ww) | shift;
+						addr += width >> 2;
+					}
+
+					addr = baseaddr + (width >> 3);
+					shift = (((px2 >> i) & 1) << bit);
+					for (int y = __y + 1; y < maxy; y += 2) {
+						vram[addr] = (vram[addr] & ww) | shift;
+						addr += width >> 2;
+					}
+				}
 			}
 		}
 
@@ -645,13 +654,13 @@ void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 
 				//TODO: a lookup table could help instead of that weird bitshift and conditional stuff...
 
-				FAST_PLANE_SWITCH(0);
+				setPlane(0);
 				for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 0) & 1) ? 0x55 : 0) | (((px2 >> 0) & 1) ? 0xAA : 0);
-				FAST_PLANE_SWITCH(1);
+				setPlane(1);
 				for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 1) & 1) ? 0x55 : 0) | (((px2 >> 1) & 1) ? 0xAA : 0);
-				FAST_PLANE_SWITCH(2);
+				setPlane(2);
 				for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 2) & 1) ? 0x55 : 0) | (((px2 >> 2) & 1) ? 0xAA : 0);
-				FAST_PLANE_SWITCH(3);
+				setPlane(3);
 				for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 3) & 1) ? 0x55 : 0) | (((px2 >> 3) & 1) ? 0xAA : 0);
 				x += cnt * 8 - 1;
 
@@ -665,16 +674,16 @@ void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
 
 				int w = ~(1 << bit);
 
-				FAST_PLANE_SWITCH(0);
+				setPlane(0);
 				vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
 				px >>= 1;
-				FAST_PLANE_SWITCH(1);
+				setPlane(1);
 				vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
 				px >>= 1;
-				FAST_PLANE_SWITCH(2);
+				setPlane(2);
 				vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
 				px >>= 1;
-				FAST_PLANE_SWITCH(3);
+				setPlane(3);
 				vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
 			}
 		}
@@ -686,16 +695,14 @@ void VGAVideo::putpixel(int x, int y, uint32_t colour)
 {
 	uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + 0xA0000);
 
-	int addr = y * width + x;
-
-	int bit = 7 - (addr & 7);
-	addr >>= 3;
+	int addr = (y * width + x) >> 3;
+	int bit = 7 - (x & 7);
 
 	int px = pixelLookup(colour, y + x);
 
 	int w = ~(1 << bit);
 	for (int i = 0; i < 4; ++i) {
-		setPlane(i);
+		FAST_PLANE_SWITCH(i);
 		vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
 		px >>= 1;
 	}
