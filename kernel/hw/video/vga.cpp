@@ -603,11 +603,12 @@ void VGAVideo::putrect(int __x, int __y, int w, int h, uint32_t colour)
 			for (int i = 0; i < 4; ++i) {
 				addr = baseaddr;
 				FAST_PLANE_SWITCH(i);
-				for (int y = __y; y < __y + h; ++y) {
-					int px1 = (x + y) & 1 ? col2 : col1;
-					int px2 = (x + y) & 1 ? col1 : col2;
 
-					vram[addr] = (((px1 >> 0) & 1) ? 0x55 : 0) | (((px2 >> 0) & 1) ? 0xAA : 0);
+				int val1 = (((col1 >> i) & 1) ? 0x55 : 0) | (((col2 >> i) & 1) ? 0xAA : 0);
+				int val2 = (((col2 >> i) & 1) ? 0x55 : 0) | (((col1 >> i) & 1) ? 0xAA : 0);
+
+				for (int y = __y; y < __y + h; ++y) {
+					vram[addr] = (x + y) & 1 ? val1 : val2;
 					addr += width >> 3;
 				}
 			}
@@ -621,6 +622,7 @@ void VGAVideo::putrect(int __x, int __y, int w, int h, uint32_t colour)
 		}
 
 	}
+}
 
 /*
 void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
