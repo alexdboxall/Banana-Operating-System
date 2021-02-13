@@ -21,6 +21,8 @@ VCache::VCache(PhysicalDisk* d)
 	//this MUST be a power of 2, and it should not be 1 (as write buffering may not work correctly)
 	blockSizeInSectors = 2;
 
+	kprintf("Setting up VCACHE with sector size %d\n", d->sectorSize);
+
 	//per disk settings, should NOT be changed afterwards
 	diskSectorSize = d->sectorSize;
 	diskSizeKBs = d->sizeInKBs;
@@ -100,6 +102,7 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 		writeWriteBuffer();
 	}
 
+	kprintf("Disk read from VCache.\n");
 	disk->read(lba, count, ptr);
 	mutex->release();
 	return 0;
