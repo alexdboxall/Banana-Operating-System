@@ -184,29 +184,28 @@ FileStatus ISO9660::read(void* ptr, size_t bytes, void* bf, int* bytesRead)
 		return FileStatus::Failure;
 	}
 
-	int64_t ulength = (int64_t) bytes;							//4096
-	uint64_t intendedSeekMark = file->seekMark + ulength;		//4096
+	int64_t ulength = (int64_t) bytes;							//1024
+	uint64_t intendedSeekMark = file->seekMark + ulength;		//1024
 
-	if (intendedSeekMark > file->fileLength) {					//4096 > 72
-		uint64_t subtract = (intendedSeekMark - file->fileLength);
-		intendedSeekMark -= subtract;
-		ulength -= subtract;
+	if (intendedSeekMark > file->fileLength) {					//1024 > 72
+		uint64_t subtract = (intendedSeekMark - file->fileLength);	//952
+		intendedSeekMark -= subtract;							//72
+		ulength -= subtract;									//72
 	}
 
-	uint64_t bytesToRead = ulength;
-
-	file->seekMark = intendedSeekMark;
+	uint64_t bytesToRead = ulength;								//72
 	
 	//
-	// we now have how many bytes we need 'ulength'
+	// we now have how many bytes we need in 'ulength'
 	//
 
+	//33314 * 2048 + 0
+	//
 	uint64_t startPoint = file->fileStartLba * 2048 + file->seekMark;
 	
 	//read from the partial first sector (could be the entire sector though)
 	uint8_t sectorBuffer[2048];
 	readSectorFromCDROM(startPoint / 2048, sectorBuffer, file->driveLetter);
-	//kprintf("CD-ROM read sector %d\n", startPoint / 2048);
 
 	//work out how many bytes to read
 	int count = 2048 - file->seekMark % 2048;
@@ -220,7 +219,6 @@ FileStatus ISO9660::read(void* ptr, size_t bytes, void* bf, int* bytesRead)
 
 	//read them
 	memcpy(buffer, sectorBuffer + file->seekMark % 2048, count);
-	//kprintf("copied to buffer starting at 0x%X into sector, count = %d\n", file->seekMark % 2048, count);
 	buffer += count;
 	startPoint += count;
 	ulength -= count;
@@ -243,6 +241,7 @@ FileStatus ISO9660::read(void* ptr, size_t bytes, void* bf, int* bytesRead)
 	}
 	
 	*bytesRead = bytesToRead;
+	file->seekMark = intendedSeekMark;
 
 	return FileStatus::Success;
 }
