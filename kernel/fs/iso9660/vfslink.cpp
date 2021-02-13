@@ -72,7 +72,7 @@ bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 			break;
 		}
 		if (filename[i] == '.') {
-			i = 7;					//8.3 filename, but i gets incremented in a moment, so set to 7
+			i = 8;
 			continue;
 		}
 		firstPart[i] = filename[i];
