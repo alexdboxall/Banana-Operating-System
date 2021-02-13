@@ -123,8 +123,6 @@ bool getFileData(char* filename, uint32_t* lbaOut, uint32_t* lenOut, char drivel
 	*lbaOut = -1;
 	*lenOut = -1;
 	readRoot(&lba, &len, driveletter);
-	*dirout = 1;		//the root is a dir, and if we only want the root
-						//readRecursively should? leave this unchanged...?
 	return readRecursively(filename, lba, len, lbaOut, lenOut, driveletter, dirout);
 }
 
@@ -325,6 +323,9 @@ FileStatus ISO9660::stat(const char* path, uint64_t* size, bool* directory)
 	if (res) {
 		*size = lenO;
 		*directory = dir;
+		if (dir) {
+			size = 0;
+		}
 		return FileStatus::Success;
 	}
 
@@ -403,6 +404,12 @@ FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead
 	memset(name, 0, 40);
 	for (int i = 0; sectorBuffer[file->seekMark % 2048 + i + 33] != ';'; ++i) {
 		name[i] = sectorBuffer[file->seekMark % 2048 + i + 33];
+	}
+
+	if (sectorBuffer[file->seekMark % 2048 + 33] == 0) {
+		strcpy(name, ".");
+	} else if (sectorBuffer[file->seekMark % 2048 + 33] == 1) {
+		strcpy(name, "..");
 	}
 	struct dirent dent;
 	dent.d_ino = 0;
