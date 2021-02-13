@@ -113,9 +113,10 @@ void sendKeyboardToken(KeyboardToken kt)
 		if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::PageDown) scrollTerminalScrollLock(24);*/
 	}
 
-	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::Home) {
-		
-		kernelProcess->createKernelThread(startGUI, nullptr, 1);
+	static bool guiStated = false;
+	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::Home && !guiStated) {
+		kernelProcess->createThread(startGUI, nullptr, 1);
+		guiStated = true;
 	}
 
 	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::KeypadEnter) kt.halScancode = (uint16_t) KeyboardSpecialKeys::Enter;
