@@ -123,6 +123,14 @@ bool getFileData(char* filename, uint32_t* lbaOut, uint32_t* lenOut, char drivel
 	*lbaOut = -1;
 	*lenOut = -1;
 	readRoot(&lba, &len, driveletter);
+
+	if (strlen(filename) <= 3) {
+		*lbaOut = lba;
+		*lenOut = len;
+		*dirout = 1;
+		return true;
+	}
+
 	return readRecursively(filename, lba, len, lbaOut, lenOut, driveletter, dirout);
 }
 
@@ -324,7 +332,7 @@ FileStatus ISO9660::stat(const char* path, uint64_t* size, bool* directory)
 		*size = lenO;
 		*directory = dir;
 		if (dir) {
-			size = 0;
+			*size = 0;
 		}
 		return FileStatus::Success;
 	}
@@ -345,7 +353,6 @@ FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 {
 	if (__fn == nullptr || ptr == nullptr) return FileStatus::InvalidArgument;
 
-	kprintf("Opening directory.\n");
 	*ptr = malloc(sizeof(isoFile_t));
 	isoFile_t* file = (isoFile_t*) *ptr;
 
@@ -373,7 +380,6 @@ FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead
 {
 	if (ptr == nullptr || bytesRead == nullptr) return FileStatus::InvalidArgument;
 
-	kprintf("readdir called.\n");
 	isoFile_t* file = (isoFile_t*) ptr;
 	if (file->fileLength == 0) {
 		return FileStatus::DirectoryEOF;
@@ -406,17 +412,24 @@ FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead
 		name[i] = sectorBuffer[file->seekMark % 2048 + i + 33];
 	}
 
-	if (sectorBuffer[file->seekMark % 2048 + 33] == 0) {
-		strcpy(name, ".");
-	} else if (sectorBuffer[file->seekMark % 2048 + 33] == 1) {
-		strcpy(name, "..");
-	}
 	struct dirent dent;
 	dent.d_ino = 0;
 	dent.d_namlen = strlen(name);
 	dent.d_type = sectorBuffer[file->seekMark % 2048 + 25] & 2 ? DT_DIR : DT_REG;
 	strcpy(dent.d_name, name);
-
+	if (dent.d_name[0] == 0) {
+		dent.d_name[0] = '.';
+		dent.d_name[1] = 0;
+		dent.d_namlen = 1;
+		dent.d_type = DT_DIR;
+	}
+	if (dent.d_name[0] == 1) {
+		dent.d_name[0] = '.';
+		dent.d_name[1] = '.';
+		dent.d_name[2] = 0;
+		dent.d_namlen = 2;
+		dent.d_type = DT_DIR;
+	}
 	memcpy(where, &dent, bytes);
 	*bytesRead = sizeof(dent);
 
