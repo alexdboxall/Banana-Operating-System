@@ -56,6 +56,7 @@ bool readRoot(uint32_t* lbaOut, uint32_t* lenOut, char driveletter)
 bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 					 uint32_t* lbaOut, uint32_t* lenOut, char driveletter)
 {
+	kprintf("Read recursively...\n");
 	if (filename[1] == ':') {
 		filename += 2;
 	}
@@ -76,6 +77,7 @@ bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 			firstPart[i] += 'A';
 		}
 	}
+	kprintf("First part = %s\n", firstPart);
 
 	uint32_t newLba, newLen;
 	uint8_t* data = (uint8_t*) malloc(startLen);
@@ -93,6 +95,7 @@ bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 	newLba = o[2] | (o[3] << 8) | (o[4] << 16) | (o[5] << 24);
 	newLen = o[10] | (o[11] << 8) | (o[12] << 16) | (o[13] << 24);
 
+	kprintf("Found extent %s, lba = %d, len = %d, dir = %d\n", firstPart, newLba, newLen, dir);
 	if (dir) {
 		free(data);
 		return readRecursively(filename, newLba, newLen, lbaOut, lenOut, driveletter);
@@ -132,8 +135,6 @@ FileStatus ISO9660::format(LogicalDisk* disk, int disknum, const char* type, int
 
 bool ISO9660::tryMount(LogicalDisk* disk, int diskNum)
 {
-	kprintf("IS09660 try mount...\n");
-
 	char bf[2048];
 	readSectorFromCDROM(16, (uint8_t*) bf, diskNum + 'A');
 	if (bf[1] != 'C') return false;
@@ -142,8 +143,6 @@ bool ISO9660::tryMount(LogicalDisk* disk, int diskNum)
 	if (bf[4] != '0') return false;
 	if (bf[5] != '1') return false;
 	
-	kprintf("IS09660 tried mount...\n");
-
 	return true;
 }
 
@@ -176,7 +175,6 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 
 FileStatus ISO9660::read(void* ptr, size_t bytes, void* bf, int* bytesRead)
 {
-	kprintf("IS09660::read. (%d bytes)\n", bytes);
 	uint8_t* buffer = (uint8_t*) bf;
 
 	isoFile_t* file = (isoFile_t*) ptr;
@@ -304,10 +302,6 @@ FileStatus ISO9660::close(void* ptr)
 
 	return FileStatus::Failure;
 }
-
-
-
-
 
 FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 {
