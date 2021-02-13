@@ -130,8 +130,6 @@ void LogicalDisk::unassignDriveLetter()
 
 int LogicalDisk::read(uint64_t lba, int count, void* ptr)
 {
-	kprintf("LogicalDisk::read.\n");
-
 	if (lba > 0xFFFFFFFFFFFFFFFU) {
 		return (int) DiskError::BadLBA;
 	}
