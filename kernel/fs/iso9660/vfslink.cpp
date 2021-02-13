@@ -5,6 +5,7 @@
 
 /*
 This ISO 9660 driver is 'sketchy as hell'
+It is based on code I wrote at an athletics carnival (!) a few years ago.
 
 A badly formatted disk will cause array indices to exceed boundaries,
 overwriting random data on the stack and (hopefully) crashing the OS,
@@ -391,6 +392,7 @@ FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead
 
 	uint8_t len = sectorBuffer[file->seekMark % 2048 + 0];
 	if (len == 0) {
+		kprintf("LEN = 0\n");
 		int add = ((file->seekMark + 2047) % 2048) - file->seekMark;
 		file->seekMark += add;
 		if (file->fileLength <= add) {
@@ -405,7 +407,7 @@ FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead
 		readSectorFromCDROM(startPoint / 2048, sectorBuffer, file->driveLetter);
 		len = sectorBuffer[file->seekMark % 2048 + 0];
 	}
-
+	kprintf("seek mark = %d\n", file->seekMark);
 	char name[40];
 	memset(name, 0, 40);
 	for (int i = 0; sectorBuffer[file->seekMark % 2048 + i + 33] != ';'; ++i) {

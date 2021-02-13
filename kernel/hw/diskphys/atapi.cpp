@@ -136,7 +136,6 @@ int ATAPI::open(int __a, int _ideDeviceNum, void* _ide)
 	diskIn = false;
 	detectMedia();
 
-	kprintf("ATAPI::open done.\n\n");
 	return 0;
 }
 
@@ -210,8 +209,6 @@ void ATAPI::detectMedia()
 
 int ATAPI::read(uint64_t lba, int count, void* buffer)
 {
-	kprintf("ATAPI::read.\n");
-
 	//check that there is a disk and it hasn't changed
 	if (!diskIn) {
 		detectMedia();
@@ -219,8 +216,6 @@ int ATAPI::read(uint64_t lba, int count, void* buffer)
 			return (int) DiskError::NotReady;
 		}
 	}
-
-	kprintf("sending an ATAPI read command.\nlba = %d, count = %d, buffer = 0x%X\n", (int) lba, count, buffer);
 
 	//create the packet
 	uint8_t packet[12] = { ATAPI_CMD_READ, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
