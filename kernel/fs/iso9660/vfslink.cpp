@@ -97,17 +97,18 @@ bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 		free(data);
 		return false;
 	}
+	bool isDir = o[25] & 2 ? 1 : 0;
 	o -= 33;                    //33 = filename start, 2 = lba start, 31 = difference
 	newLba = o[2] | (o[3] << 8) | (o[4] << 16) | (o[5] << 24);
 	newLen = o[10] | (o[11] << 8) | (o[12] << 16) | (o[13] << 24);
 
-	if (dir && filename[0]) {
+	if (filename[0]) {
 		free(data);
 		return readRecursively(filename, newLba, newLen, lbaOut, lenOut, driveletter, dirout);
 	} else {
 		*lbaOut = newLba;      //data
 		*lenOut = newLen;      //data
-		*dirout = dir;
+		*dirout = isDir;
 		free(data);
 		return true;
 	}
@@ -402,7 +403,7 @@ FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead
 	struct dirent dent;
 	dent.d_ino = 0;
 	dent.d_namlen = strlen(name);
-	dent.d_type = sectorBuffer[file->seekMark % 2048 + 25] & 1 ? DT_DIR : DT_REG;
+	dent.d_type = sectorBuffer[file->seekMark % 2048 + 25] & 2 ? DT_DIR : DT_REG;
 	strcpy(dent.d_name, name);
 
 	memcpy(where, &dent, bytes);
