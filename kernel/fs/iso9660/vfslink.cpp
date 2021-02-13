@@ -54,7 +54,7 @@ bool readRoot(uint32_t* lbaOut, uint32_t* lenOut, char driveletter)
 }
 
 bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
-					 uint32_t* lbaOut, uint32_t* lenOut, char driveletter)
+					 uint32_t* lbaOut, uint32_t* lenOut, char driveletter, int* dirout)
 {
 	if (filename[1] == ':') {
 		filename += 2;
@@ -93,12 +93,13 @@ bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 	newLba = o[2] | (o[3] << 8) | (o[4] << 16) | (o[5] << 24);
 	newLen = o[10] | (o[11] << 8) | (o[12] << 16) | (o[13] << 24);
 
-	if (dir) {
+	if (dir && filename[0]) {
 		free(data);
-		return readRecursively(filename, newLba, newLen, lbaOut, lenOut, driveletter);
+		return readRecursively(filename, newLba, newLen, lbaOut, lenOut, driveletter, dirout);
 	} else {
 		*lbaOut = newLba;      //data
 		*lenOut = newLen;      //data
+		*dirout = dir;
 		free(data);
 		return true;
 	}
@@ -106,13 +107,13 @@ bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 	return false;
 }
 
-bool getFileData(char* filename, uint32_t* lbaOut, uint32_t* lenOut, char driveletter)
+bool getFileData(char* filename, uint32_t* lbaOut, uint32_t* lenOut, char driveletter, int* dirout)
 {
 	uint32_t lba = 0, len = 0;
 	*lbaOut = -1;
 	*lenOut = -1;
 	readRoot(&lba, &len, driveletter);
-	return readRecursively(filename, lba, len, lbaOut, lenOut, driveletter);
+	return readRecursively(filename, lba, len, lbaOut, lenOut, driveletter, dirout);
 }
 
 ISO9660::ISO9660() : Filesystem()
@@ -155,8 +156,9 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 	uint32_t lbaO;
 	uint32_t lenO;
 
-	bool res = getFileData((char*) __fn, &lbaO, &lenO, __fn[0]);
-	if (!res) {
+	int dir;
+	bool res = getFileData((char*) __fn, &lbaO, &lenO, __fn[0], &dir);
+	if (!res || dir) {
 		file->error = true;
 		return FileStatus::Failure;
 	}
@@ -248,12 +250,22 @@ FileStatus ISO9660::read(void* ptr, size_t bytes, void* bf, int* bytesRead)
 
 bool ISO9660::exists(const char* file)
 {
-	return false;
+	uint32_t lbaO;
+	uint32_t lenO;
+	int dir;
+	bool res = getFileData((char*) file, &lbaO, &lenO, file[0], &dir);
+	return res;
 }
 
 FileStatus ISO9660::seek(void* ptr, uint64_t offset)
 {
 	if (ptr == nullptr) return FileStatus::InvalidArgument;
+
+	isoFile_t* file = (isoFile_t*) ptr;
+	if (offset < file->fileLength) {
+		file->seekMark = offset;
+		return FileStatus::Success;
+	}
 
 	return FileStatus::Failure;
 }
@@ -263,9 +275,10 @@ FileStatus ISO9660::tell(void* ptr, uint64_t* offset)
 	if (ptr == nullptr) return FileStatus::InvalidArgument;
 	if (offset == nullptr) return FileStatus::InvalidArgument;
 
-	*offset = 0;
+	isoFile_t* file = (isoFile_t*) ptr;
+	*offset = file->seekMark;
 
-	return FileStatus::Failure;
+	return FileStatus::Success;
 }
 
 char* ISO9660::getName()
@@ -278,9 +291,10 @@ FileStatus ISO9660::stat(void* ptr, uint64_t* size)
 	if (ptr == nullptr) return FileStatus::InvalidArgument;
 	if (size == nullptr) return FileStatus::InvalidArgument;
 
-	*size = 0;
+	isoFile_t* file = (isoFile_t*) ptr;
+	*size = file->fileLength;
 
-	return FileStatus::Failure;
+	return FileStatus::Success;
 }
 
 FileStatus ISO9660::stat(const char* path, uint64_t* size, bool* directory)
@@ -292,12 +306,24 @@ FileStatus ISO9660::stat(const char* path, uint64_t* size, bool* directory)
 	*directory = 0;
 	*size = 0;
 
+	uint32_t lbaO;
+	uint32_t lenO;
+	int dir;
+	bool res = getFileData((char*) file, &lbaO, &lenO, file[0], &dir);
+	if (res) {
+		*size = lenO;
+		*directory = dir;
+		return FileStatus::Success;
+	}
+
 	return FileStatus::Failure;
 }
 
 FileStatus ISO9660::close(void* ptr)
 {
 	if (ptr == nullptr) return FileStatus::InvalidArgument;
+
+	free(ptr);
 
 	return FileStatus::Failure;
 }
