@@ -3,6 +3,11 @@
 #include "core/kheap.hpp"
 #include "hal/logidisk.hpp"
 
+/*
+This ISO 9660 driver is 'sketchy as hell'
+
+*/
+
 extern "C" {
 	#include "libk/string.h"
 }
@@ -392,7 +397,7 @@ FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead
 	struct dirent dent;
 	dent.d_ino = 0;
 	dent.d_namlen = strlen(name);
-	dent.d_type = sectorBuffer[file->seekMark % 2048 + i + 25] & 1 ? DT_DIR : DT_REG;
+	dent.d_type = sectorBuffer[file->seekMark % 2048 + 25] & 1 ? DT_DIR : DT_REG;
 	strcpy(dent.d_name, name);
 
 	memcpy(where, &dent, bytes);
