@@ -309,7 +309,7 @@ FileStatus ISO9660::stat(const char* path, uint64_t* size, bool* directory)
 	uint32_t lbaO;
 	uint32_t lenO;
 	int dir;
-	bool res = getFileData((char*) file, &lbaO, &lenO, file[0], &dir);
+	bool res = getFileData((char*) path, &lbaO, &lenO, path[0], &dir);
 	if (res) {
 		*size = lenO;
 		*directory = dir;
