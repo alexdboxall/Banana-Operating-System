@@ -6,6 +6,9 @@
 /*
 This ISO 9660 driver is 'sketchy as hell'
 
+A badly formatted disk will cause array indices to exceed boundaries,
+overwriting random data on the stack and (hopefully) crashing the OS,
+or if we are not lucky, will silently corrupt memory and cause random bugs.
 */
 
 extern "C" {
@@ -337,6 +340,7 @@ FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 {
 	if (__fn == nullptr || ptr == nullptr) return FileStatus::InvalidArgument;
 
+	kprintf("Opening directory.\n");
 	*ptr = malloc(sizeof(isoFile_t));
 	isoFile_t* file = (isoFile_t*) *ptr;
 
@@ -346,6 +350,7 @@ FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 	int dir;
 	bool res = getFileData((char*) __fn, &lbaO, &lenO, __fn[0], &dir);
 	if (!res || !dir) {
+		kprintf("Error. res = %d, dir = %d\n", res, dir);
 		file->error = true;
 		return FileStatus::Failure;
 	}
