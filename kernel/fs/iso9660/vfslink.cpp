@@ -102,7 +102,7 @@ bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 	newLba = o[2] | (o[3] << 8) | (o[4] << 16) | (o[5] << 24);
 	newLen = o[10] | (o[11] << 8) | (o[12] << 16) | (o[13] << 24);
 
-	if (filename[0]) {
+	if (dir) {
 		free(data);
 		return readRecursively(filename, newLba, newLen, lbaOut, lenOut, driveletter, dirout);
 	} else {
