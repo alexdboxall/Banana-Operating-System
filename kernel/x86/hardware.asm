@@ -701,6 +701,7 @@ syscall_common_stub:
 
     mov  ecx, esp		; Push us the stack
     push ecx
+    sti
     mov  ecx, int_handler
     call ecx			; A special call, preserves the 'eip' register
     pop  ecx				;leave the return value 
