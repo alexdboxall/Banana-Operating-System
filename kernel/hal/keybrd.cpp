@@ -104,13 +104,18 @@ void sendKeyboardToken(KeyboardToken kt)
 	}
 
 	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::Home) {
-		kprintf("F12!\n");
-		extern Video* screen;
-		VGAVideo* vga = new VGAVideo();
-		computer->addChild(vga);
-		vga->open(0, 0, nullptr);
-		screen = vga;
-		executeDLL(loadDLL("C:/Banana/System/wsbe.sys"), computer);
+		
+		size_t cr3;
+		asm volatile ("mov %%cr3, %0" : "=r"(cr3));
+		if (cr3 == (size_t) VirtMem::getAKernelVAS()->pageDirectoryBasePhysical) {
+			extern Video* screen;
+			VGAVideo* vga = new VGAVideo();
+			computer->addChild(vga);
+			vga->open(0, 0, nullptr);
+			screen = vga;
+			executeDLL(loadDLL("C:/Banana/System/wsbe.sys"), computer);
+		}
+		
 	}
 
 	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::KeypadEnter) kt.halScancode = (uint16_t) KeyboardSpecialKeys::Enter;
