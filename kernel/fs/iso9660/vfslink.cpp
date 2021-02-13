@@ -410,15 +410,21 @@ FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead
 	kprintf("seek mark = %d\n", file->seekMark);
 	char name[40];
 	memset(name, 0, 40);
+	kprintf("Here... A\n");
 	for (int i = 0; sectorBuffer[file->seekMark % 2048 + i + 33] != ';'; ++i) {
 		name[i] = sectorBuffer[file->seekMark % 2048 + i + 33];
 	}
+	kprintf("Here... B\n");
 
 	struct dirent dent;
 	dent.d_ino = 0;
 	dent.d_namlen = strlen(name);
 	dent.d_type = sectorBuffer[file->seekMark % 2048 + 25] & 2 ? DT_DIR : DT_REG;
+	kprintf("Here... C\n");
+
 	strcpy(dent.d_name, name);
+	kprintf("Here... D\n");
+
 	if (dent.d_name[0] == 0) {
 		dent.d_name[0] = '.';
 		dent.d_name[1] = 0;
@@ -431,9 +437,14 @@ FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead
 		dent.d_name[2] = 0;
 		dent.d_namlen = 2;
 		dent.d_type = DT_DIR;
-	}
+	}	
+	kprintf("Here... E\n");
+
 	memcpy(where, &dent, bytes);
+	kprintf("Here... F\n");
+
 	*bytesRead = sizeof(dent);
+	kprintf("Here... G\n");
 
 	file->seekMark += len;
 	if (file->fileLength <= len) {
