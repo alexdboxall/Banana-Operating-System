@@ -147,6 +147,7 @@ int ATAPI::open(int __a, int _ideDeviceNum, void* _ide)
 	diskIn = false;
 	detectMedia();
 
+	kprintf("ATAPI::open done.\n\n");
 	return 0;
 }
 
