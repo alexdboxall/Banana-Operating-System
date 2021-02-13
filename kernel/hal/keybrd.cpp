@@ -103,7 +103,7 @@ void sendKeyboardToken(KeyboardToken kt)
 		if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::PageDown) scrollTerminalScrollLock(24);*/
 	}
 
-	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::F12) {
+	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::Home) {
 		kprintf("F12!\n");
 		extern Video* screen;
 		VGAVideo* vga = new VGAVideo();
