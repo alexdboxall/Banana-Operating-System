@@ -97,7 +97,8 @@ bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 		free(data);
 		return false;
 	}
-	o -= 33;                    //33 = filename start, 2 = lba start, 31 = difference
+	o -= 33;            //we searched by filename using memmem, which starts at 33
+						//so subtract 33 to get the actual start of the directory entry
 	newLba = o[2] | (o[3] << 8) | (o[4] << 16) | (o[5] << 24);
 	newLen = o[10] | (o[11] << 8) | (o[12] << 16) | (o[13] << 24);
 	bool isDir = (o[25] & 2) ? 1 : 0;
@@ -122,6 +123,8 @@ bool getFileData(char* filename, uint32_t* lbaOut, uint32_t* lenOut, char drivel
 	*lbaOut = -1;
 	*lenOut = -1;
 	readRoot(&lba, &len, driveletter);
+	*dirout = 1;		//the root is a dir, and if we only want the root
+						//readRecursively should? leave this unchanged...?
 	return readRecursively(filename, lba, len, lbaOut, lenOut, driveletter, dirout);
 }
 
