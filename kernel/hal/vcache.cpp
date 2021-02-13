@@ -102,7 +102,7 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 		writeWriteBuffer();
 	}
 
-	kprintf("Disk read from VCache.\n");
+	kprintf("Disk read from VCache. ptr = 0x%X\n", ptr);
 	disk->read(lba, count, ptr);
 	mutex->release();
 	return 0;
