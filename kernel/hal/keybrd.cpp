@@ -47,7 +47,9 @@ void sendKeyToTerminal(uint8_t code)
 }
 
 #include "hw/video/vga.hpp"
+#include "hal/video.hpp"
 #include "core/prcssthr.hpp"
+#include "core/elf.hpp"
 
 void sendKeyboardToken(KeyboardToken kt)
 {
@@ -102,6 +104,7 @@ void sendKeyboardToken(KeyboardToken kt)
 	}
 
 	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::F12) {
+		extern Video* screen;
 		VGAVideo* vga = new VGAVideo();
 		addChild(vga);
 		vga->open(0, 0, nullptr);
