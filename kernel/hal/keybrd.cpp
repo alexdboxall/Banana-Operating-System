@@ -51,6 +51,16 @@ void sendKeyToTerminal(uint8_t code)
 #include "core/prcssthr.hpp"
 #include "core/elf.hpp"
 
+void startGUI(void* a)
+{
+	extern Video* screen;
+	VGAVideo* vga = new VGAVideo();
+	computer->addChild(vga);
+	vga->open(0, 0, nullptr);
+	screen = vga;
+	executeDLL(loadDLL("C:/Banana/System/wsbe.sys"), computer);
+}
+
 void sendKeyboardToken(KeyboardToken kt)
 {
 	keystates[kt.halScancode] = !kt.release;
@@ -105,17 +115,7 @@ void sendKeyboardToken(KeyboardToken kt)
 
 	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::Home) {
 		
-		size_t cr3;
-		asm volatile ("mov %%cr3, %0" : "=r"(cr3));
-		if (cr3 == (size_t) VirtMem::getAKernelVAS()->pageDirectoryBasePhysical) {
-			extern Video* screen;
-			VGAVideo* vga = new VGAVideo();
-			computer->addChild(vga);
-			vga->open(0, 0, nullptr);
-			screen = vga;
-			executeDLL(loadDLL("C:/Banana/System/wsbe.sys"), computer);
-		}
-		
+		kernelProcess->createKernelThread(startGUI, nullptr, 1);
 	}
 
 	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::KeypadEnter) kt.halScancode = (uint16_t) KeyboardSpecialKeys::Enter;
