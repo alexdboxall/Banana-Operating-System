@@ -45,6 +45,8 @@ public:
 	FileStatus stat(const char* filename, uint64_t* size, bool* directory);
 	FileStatus mkdir(const char* file);
 
+	FileStatus chfatattr(const char* path, uint8_t andMask, uint8_t orFlags);
+
 	FileStatus openDir(const char* filename, void** ptr);
 	FileStatus readDir(void* ptr, size_t bytes, void* where, int* bytesRead);
 	FileStatus format(LogicalDisk* disk, int disknum, const char* type, int allocationUnit);

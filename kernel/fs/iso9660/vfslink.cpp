@@ -323,6 +323,10 @@ FileStatus ISO9660::closeDir(void* ptr)
 	return FileStatus::Failure;
 }
 
+FileStatus ISO9660::chfatattr(const char* path, uint8_t andMask, uint8_t orFlags)
+{
+	return FileStatus::Failure;
+}
 
 
 
