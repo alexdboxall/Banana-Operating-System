@@ -104,6 +104,7 @@ void sendKeyboardToken(KeyboardToken kt)
 	}
 
 	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::F12) {
+		kprintf("F12!\n");
 		extern Video* screen;
 		VGAVideo* vga = new VGAVideo();
 		computer->addChild(vga);
