@@ -62,7 +62,8 @@ bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 	while (filename[0] == '/') filename++;
 
 	char firstPart[256];
-	memset(firstPart, 0, 256);
+	__memset(firstPart, 0, 256);
+	__memset(firstPart, ' ', 11);
 	bool dir = false;
 	for (int i = 0; filename[i]; ++i) {
 		if (filename[i] == '/') {
@@ -70,7 +71,15 @@ bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 			dir = true;
 			break;
 		}
+		if (filename[i] == '.') {
+			i = 7;
+			continue;
+		}
 		firstPart[i] = filename[i];
+		if (firstPart[i] >= 'a' && firstPart[i] <= 'z') {
+			firstPart[i] -= 'a';
+			firstPart[i] += 'A';
+		}
 	}
 
 	uint32_t newLba, newLen;

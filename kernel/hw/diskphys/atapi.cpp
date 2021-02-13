@@ -54,8 +54,6 @@ int ATAPI::sendPacket(uint8_t* packet, int maxTransferSize, bool write, uint16_t
 	//send the packet
 	outsw(ide->getBase(channel), (uint16_t*) packet, 6);
 
-	kprintf("A.\n");
-
 	while (count--) {
 		//wait for the interrupt
 		bool gotIRQ = ide->waitInterrupt(channel);
@@ -64,33 +62,23 @@ int ATAPI::sendPacket(uint8_t* packet, int maxTransferSize, bool write, uint16_t
 		}
 
 		ide->prepareInterrupt(channel);
-		kprintf("B.\n");
 
 		//get actual transfer size
 		uint16_t low = ide->read(channel, ATA_REG_LBA1);
 		uint16_t high = ide->read(channel, ATA_REG_LBA2);
 
 		int words = (low | (high << 8)) / 2;
-		kprintf("C %d.\n", words);
 
 		if (write) {
-			kprintf("E.\n");
 			for (int i = 0; i < words; ++i) {
 				outw(ide->getBase(channel), *data++);
 			}
-			kprintf("F.\n");
 
 		} else {
-			kprintf("G.\n");
 			for (int i = 0; i < words; ++i) {
-				kprintf(".");
 				*data++ = inw(ide->getBase(channel));
-				kprintf("0x%X ", *(data - 1));
 			}
-			kprintf("\nH.\n");
 		}
-
-		kprintf("I.\n");
 	}
 
 	//wait for the interrupt
