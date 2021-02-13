@@ -10,8 +10,6 @@ It is based on code I wrote at an athletics carnival (!) a few years ago.
 A badly formatted disk will cause array indices to exceed boundaries,
 overwriting random data on the stack and (hopefully) crashing the OS,
 or if we are not lucky, will silently corrupt memory and cause random bugs.
-
-Directory reads are also very slow, because it rereads the sector every time
 */
 
 extern "C" {
@@ -46,9 +44,20 @@ uint8_t* __memmem(uint8_t* big, int bigLen, uint8_t* small, int smallLen)
 	return 0;
 }
 
+uint8_t recentBuffer[2048];
+uint32_t recentSector = 0;
+char recentDriveletter = '0';
+
 void readSectorFromCDROM(uint32_t sector, uint8_t* data, char driveletter)
 {
-	disks[driveletter - 'A']->read(sector, 1, data);
+	//keep a 1 sector cache (good for directory entry reading)
+	if (sector != recentSector || recentDriveletter != driveletter) {
+		recentSector = sector;
+		recentDriveletter = driveletter;
+		disks[driveletter - 'A']->read(sector, 1, recentBuffer);
+	}
+
+	memcpy(data, recentBuffer, 2048);
 }
 
 bool readRoot(uint32_t* lbaOut, uint32_t* lenOut, char driveletter)
@@ -413,6 +422,7 @@ FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead
 	char name[40];
 	memset(name, 0, 40);
 	kprintf("Here... A\n");
+	//whoa... all of those conditions are here in an attempt to stop a page fault
 	for (int i = 0; sectorBuffer[file->seekMark % 2048 + i + 33] != ';' && sectorBuffer[file->seekMark % 2048 + i + 33] != 0 && i < 40 && (file->seekMark % 2048 + i + 33) < 2048; ++i) {
 		name[i] = sectorBuffer[file->seekMark % 2048 + i + 33];
 	}
