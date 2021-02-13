@@ -97,11 +97,10 @@ bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 		free(data);
 		return false;
 	}
-	bool isDir = (o[25] & 2) ? 1 : 0;
-	kprintf("File flags = 0x%X\n", o[25]);
 	o -= 33;                    //33 = filename start, 2 = lba start, 31 = difference
 	newLba = o[2] | (o[3] << 8) | (o[4] << 16) | (o[5] << 24);
 	newLen = o[10] | (o[11] << 8) | (o[12] << 16) | (o[13] << 24);
+	bool isDir = (o[25] & 2) ? 1 : 0;
 
 	if (dir) {
 		free(data);
@@ -370,6 +369,7 @@ FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead
 {
 	if (ptr == nullptr || bytesRead == nullptr) return FileStatus::InvalidArgument;
 
+	kprintf("readdir called.\n");
 	isoFile_t* file = (isoFile_t*) ptr;
 	if (file->fileLength == 0) {
 		return FileStatus::DirectoryEOF;
