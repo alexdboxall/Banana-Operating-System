@@ -46,6 +46,9 @@ void sendKeyToTerminal(uint8_t code)
 	}
 }
 
+#include "hw/video/vga.hpp"
+#include "core/prcssthr.hpp"
+
 void sendKeyboardToken(KeyboardToken kt)
 {
 	keystates[kt.halScancode] = !kt.release;
@@ -96,6 +99,14 @@ void sendKeyboardToken(KeyboardToken kt)
 		if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::Down) scrollTerminalScrollLock(1);
 		if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::PageUp) scrollTerminalScrollLock(-24);
 		if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::PageDown) scrollTerminalScrollLock(24);*/
+	}
+
+	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::F12) {
+		VGAVideo* vga = new VGAVideo();
+		addChild(vga);
+		vga->open(0, 0, nullptr);
+		screen = vga;
+		executeDLL(loadDLL("C:/Banana/System/wsbe.sys"), this);
 	}
 
 	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::KeypadEnter) kt.halScancode = (uint16_t) KeyboardSpecialKeys::Enter;

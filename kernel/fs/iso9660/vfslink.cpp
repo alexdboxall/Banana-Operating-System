@@ -78,14 +78,13 @@ bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 	}
 
 	uint32_t newLba, newLen;
-	uint8_t* data = (uint8_t*) malloc(startLen + 4096);
-	memset(data, 0, startLen + 4096);
+	uint8_t* data = (uint8_t*) malloc(startLen);
 
-	for (int i = 0; (uint32_t) i < (startLen + 2047 + 2048) / 2048; ++i) {
+	for (int i = 0; (uint32_t) i < (startLen + 2047) / 2048; ++i) {
 		readSectorFromCDROM(startSec + i, data + i * 2048, driveletter);
 	}
 
-	uint8_t* o = __memmem(data, startLen + 4096, (uint8_t*) firstPart, strlen(firstPart));
+	uint8_t* o = __memmem(data, startLen, (uint8_t*) firstPart, strlen(firstPart));
 	if (o == 0) {
 		free(data);
 		return false;
