@@ -147,6 +147,8 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 {
 	if (__fn == nullptr || ptr == nullptr) return FileStatus::InvalidArgument;
 
+	kprintf("Opening an ISO9660 file: '%s'\n", __fn);
+
 	*ptr = malloc(sizeof(isoFile_t));
 	isoFile_t* file = (isoFile_t*) *ptr;
 

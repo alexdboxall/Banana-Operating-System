@@ -17,13 +17,9 @@ void makePartition(PhysicalDisk* parent, uint64_t start, uint64_t length)
 	extern int getIRQNestingLevel();
 
 	LogicalDisk* ld = new LogicalDisk(name, parent, start, length);
-	kprintf("About to assign drive letter.\n");
 	char letter = ld->assignDriveLetter();
-	kprintf("Drive letter = %c\n", letter);
 	bool couldMount = ld->mount();
-	kprintf("Could mount? %c\n", couldMount ? 'Y' : 'N');
 	parent->addChild(ld);
-	kprintf("Added child.\n");
 }
 
 void createPartitionsForDisk(PhysicalDisk* parent)
@@ -92,5 +88,4 @@ void createPartitionsForDisk(PhysicalDisk* parent)
 			}
 		}
 	}
-	
 }

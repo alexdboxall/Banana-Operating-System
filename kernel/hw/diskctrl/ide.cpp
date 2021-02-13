@@ -27,11 +27,6 @@ void IDE::prepareInterrupt(uint8_t channel)
 
 bool IDE::waitInterrupt(uint8_t channel)
 {
-	if (getIRQNestingLevel()) {
-		kprintf("IRQ nesting level.\n");
-		//panic("IDE waitInterrupt CALLED WITH INTERRUPTS OFF!");
-	}
-
 	int timeout = 0;
 	while (!irqInvoked[channel]) {
 		uint8_t status = read(channel, ATA_REG_ALTSTATUS);
