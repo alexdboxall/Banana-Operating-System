@@ -167,13 +167,14 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 	file->fileLength = lenO;
 	file->driveLetter = __fn[0];
 
-	kprintf("File LBA = %d\n, file SIZE = %d\n", lbaO, lenO);
+	kprintf("File LBA = %d, file SIZE = %d\n", lbaO, lenO);
 	
 	return FileStatus::Success;
 }
 
 FileStatus ISO9660::read(void* ptr, size_t bytes, void* bf, int* bytesRead)
 {
+	kprintf("Reading %d bytes.\n", bytes);
 	uint8_t* buffer = (uint8_t*) bf;
 
 	isoFile_t* file = (isoFile_t*) ptr;
@@ -183,10 +184,10 @@ FileStatus ISO9660::read(void* ptr, size_t bytes, void* bf, int* bytesRead)
 		return FileStatus::Failure;
 	}
 
-	int64_t ulength = (int64_t) bytes;
-	uint64_t intendedSeekMark = file->seekMark + ulength;
+	int64_t ulength = (int64_t) bytes;							//4096
+	uint64_t intendedSeekMark = file->seekMark + ulength;		//4096
 
-	if (intendedSeekMark > file->fileLength) {
+	if (intendedSeekMark > file->fileLength) {					//4096 > 72
 		uint64_t subtract = (intendedSeekMark - file->fileLength);
 		intendedSeekMark -= subtract;
 		ulength -= subtract;
