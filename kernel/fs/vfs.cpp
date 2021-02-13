@@ -30,7 +30,7 @@ void initVFS()
 {
 	//just so the constructors can be called, so it gets added to the filesystem list
 	FAT* f = new FAT();
-	//ISO9660* i = new ISO9660();
+	ISO9660* i = new ISO9660();
 }
 
 void standardiseFiles(char* outBuffer, const char* filename, const char* cwd)
