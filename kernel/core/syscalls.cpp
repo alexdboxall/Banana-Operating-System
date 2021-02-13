@@ -49,6 +49,8 @@ uint64_t sysCallWrite (regs* r)
 
 uint64_t sysCallRead(regs* r)
 {
+	kprintf("Read syscall IRQ level: %d\n", getIRQNestingLevel());
+
 	UnixFile* file = nullptr;
 	
 	if (r->ebx <= 2) {
