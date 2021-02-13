@@ -332,21 +332,89 @@ FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 {
 	if (__fn == nullptr || ptr == nullptr) return FileStatus::InvalidArgument;
 
-	return FileStatus::Failure;
+	*ptr = malloc(sizeof(isoFile_t));
+	isoFile_t* file = (isoFile_t*) *ptr;
+
+	uint32_t lbaO;
+	uint32_t lenO;
+
+	int dir;
+	bool res = getFileData((char*) __fn, &lbaO, &lenO, __fn[0], &dir);
+	if (!res || !dir) {
+		file->error = true;
+		return FileStatus::Failure;
+	}
+
+	file->error = false;
+	file->seekMark = 0;
+	file->fileStartLba = lbaO;
+	file->fileLength = lenO;
+	file->driveLetter = __fn[0];
+
+	return FileStatus::Success;
 }
 
 FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead)
 {
 	if (ptr == nullptr || bytesRead == nullptr) return FileStatus::InvalidArgument;
 
-	return FileStatus::Failure;
+	isoFile_t* file = (isoFile_t*) ptr;
+	if (file->fileLength == 0) {
+		return FileStatus::DirectoryEOF;
+	}
+
+	uint32_t startPoint = file->fileStartLba * 2048 + file->seekMark;
+	uint8_t sectorBuffer[2048];
+	readSectorFromCDROM(startPoint / 2048, sectorBuffer, file->driveLetter);
+
+	uint8_t len = sectorBuffer[file->seekMark % 2048 + 0];
+	if (len == 0) {
+		int add = ((file->seekMark + 2047) % 2048) - file->seekMark;
+		file->seekMark += add;
+		if (file->fileLength <= add) {
+			file->fileLength = 0;
+		} else {
+			file->fileLength -= add;
+		}
+		if (file->fileLength == 0) {
+			return FileStatus::DirectoryEOF;
+		}
+		startPoint = file->fileStartLba * 2048 + file->seekMark;
+		readSectorFromCDROM(startPoint / 2048, sectorBuffer, file->driveLetter);
+		len = sectorBuffer[file->seekMark % 2048 + 0];
+	}
+
+	char name[40];
+	memset(name, 0, 40);
+	for (int i = 0; sectorBuffer[file->seekMark % 2048 + i + 33] != ';'; ++i) {
+		name[i] = sectorBuffer[file->seekMark % 2048 + i + 33];
+	}
+	struct dirent dent;
+	dent.d_ino = 0;
+	dent.d_namlen = strlen(name);
+	dent.d_type = sectorBuffer[file->seekMark % 2048 + i + 25] & 1 ? DT_DIR : DT_REG;
+	strcpy(dent.d_name, name);
+
+	memcpy(where, &dent, bytes);
+	*bytesRead = sizeof(dent);
+
+	file->seekMark += len;
+	if (file->fileLength <= len) {
+		file->fileLength = 0;
+	} else {
+		file->fileLength -= len;
+	}
+
+	return FileStatus::Success;
 }
 
 FileStatus ISO9660::closeDir(void* ptr)
 {
 	if (ptr == nullptr) return FileStatus::InvalidArgument;
 
-	return FileStatus::Failure;
+	free(ptr);
+
+	return FileStatus::Success;
 }
 
 FileStatus ISO9660::chfatattr(const char* path, uint8_t andMask, uint8_t orFlags)
