@@ -181,6 +181,9 @@ bool FAT::tryMount(LogicalDisk* disk, int diskNum)
 		panic("TOO MUCH FAT!");
 		return false;
 	}
+	if (disk->physDisk->sectorSize != 512) {
+		return false;
+	}
 
 	bool mountable = false;
 
