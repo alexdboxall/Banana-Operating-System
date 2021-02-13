@@ -63,7 +63,6 @@ bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 
 	char firstPart[256];
 	memset(firstPart, 0, 256);
-	memset(firstPart, ' ', 11);
 	bool dir = false;
 	for (int i = 0; filename[i]; ++i) {
 		if (filename[i] == '/') {
