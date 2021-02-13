@@ -177,9 +177,9 @@ void ISA::detect()
 		}
 	}	
 
-	VGAVideo* vga = new VGAVideo();
+	/*VGAVideo* vga = new VGAVideo();
 	addChild(vga);
 	vga->open(0, 0, nullptr);
 	screen = vga;
-	executeDLL(loadDLL("C:/Banana/System/wsbe.sys"), this);
+	executeDLL(loadDLL("C:/Banana/System/wsbe.sys"), this);*/
 }

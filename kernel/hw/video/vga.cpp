@@ -633,64 +633,6 @@ void VGAVideo::putrect(int __x, int __y, int maxx, int maxy, uint32_t colour)
 	}
 }
 
-/*
-void VGAVideo::putrect(int x, int y, int w, int h, uint32_t colour)
-{
-	int originalX = x;
-	int maxY = y + h;
-
-	uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + 0xA0000);
-
-	int baseaddr = (y - 1) * width;
-	for (; y < maxY; ++y) {
-		baseaddr += width;
-		for (x = originalX; x < originalX + w; ++x) {
-			int cnt = ((originalX + w) - x) >> 3;
-			if (!(x & 7) && cnt) {
-				int px1 = pixelLookup(colour, y + x + 1);
-				int px2 = pixelLookup(colour, y + x + 0);
-
-				int addr = (baseaddr + x) >> 3;
-
-				//TODO: a lookup table could help instead of that weird bitshift and conditional stuff...
-
-				setPlane(0);
-				for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 0) & 1) ? 0x55 : 0) | (((px2 >> 0) & 1) ? 0xAA : 0);
-				setPlane(1);
-				for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 1) & 1) ? 0x55 : 0) | (((px2 >> 1) & 1) ? 0xAA : 0);
-				setPlane(2);
-				for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 2) & 1) ? 0x55 : 0) | (((px2 >> 2) & 1) ? 0xAA : 0);
-				setPlane(3);
-				for (int i = 0; i < cnt; ++i) vram[addr + i] = (((px1 >> 3) & 1) ? 0x55 : 0) | (((px2 >> 3) & 1) ? 0xAA : 0);
-				x += cnt * 8 - 1;
-
-			} else {
-				int addr = baseaddr + x;
-
-				int bit = 7 - (addr & 7);
-				addr >>= 3;
-
-				int px = pixelLookup(colour, y + x);
-
-				int w = ~(1 << bit);
-
-				setPlane(0);
-				vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
-				px >>= 1;
-				setPlane(1);
-				vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
-				px >>= 1;
-				setPlane(2);
-				vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
-				px >>= 1;
-				setPlane(3);
-				vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
-			}
-		}
-	}
-}
-*/
-
 void VGAVideo::putpixel(int x, int y, uint32_t colour)
 {
 	uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + 0xA0000);
