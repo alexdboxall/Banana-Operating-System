@@ -85,6 +85,7 @@ int ATAPI::sendPacket(uint8_t* packet, int maxTransferSize, bool write, uint16_t
 			for (int i = 0; i < words; ++i) {
 				kprintf(".");
 				*data++ = inw(ide->getBase(channel));
+				kprintf("0x%X ", *(data - 1));
 			}
 			kprintf("\nH.\n");
 		}

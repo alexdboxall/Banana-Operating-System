@@ -172,6 +172,7 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 
 FileStatus ISO9660::read(void* ptr, size_t bytes, void* bf, int* bytesRead)
 {
+	kprintf("IS09660::read. (%d bytes)\n", bytes);
 	uint8_t* buffer = (uint8_t*) bf;
 
 	isoFile_t* file = (isoFile_t*) ptr;
