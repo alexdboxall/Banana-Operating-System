@@ -56,7 +56,6 @@ bool readRoot(uint32_t* lbaOut, uint32_t* lenOut, char driveletter)
 bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 					 uint32_t* lbaOut, uint32_t* lenOut, char driveletter)
 {
-	kprintf("Read recursively...\n");
 	if (filename[1] == ':') {
 		filename += 2;
 	}
@@ -77,7 +76,6 @@ bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 			firstPart[i] += 'A';
 		}
 	}
-	kprintf("First part = %s\n", firstPart);
 
 	uint32_t newLba, newLen;
 	uint8_t* data = (uint8_t*) malloc(startLen);
@@ -95,7 +93,6 @@ bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 	newLba = o[2] | (o[3] << 8) | (o[4] << 16) | (o[5] << 24);
 	newLen = o[10] | (o[11] << 8) | (o[12] << 16) | (o[13] << 24);
 
-	kprintf("Found extent %s, lba = %d, len = %d, dir = %d\n", firstPart, newLba, newLen, dir);
 	if (dir) {
 		free(data);
 		return readRecursively(filename, newLba, newLen, lbaOut, lenOut, driveletter);
@@ -169,6 +166,8 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 	file->fileStartLba = lbaO;
 	file->fileLength = lenO;
 	file->driveLetter = __fn[0];
+
+	kprintf("File LBA = %d\n, file SIZE = %d\n", lbaO, lenO);
 	
 	return FileStatus::Success;
 }
