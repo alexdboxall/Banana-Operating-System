@@ -10,6 +10,8 @@ It is based on code I wrote at an athletics carnival (!) a few years ago.
 A badly formatted disk will cause array indices to exceed boundaries,
 overwriting random data on the stack and (hopefully) crashing the OS,
 or if we are not lucky, will silently corrupt memory and cause random bugs.
+
+Directory reads are also very slow, because it rereads the sector every time
 */
 
 extern "C" {
@@ -411,7 +413,7 @@ FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead
 	char name[40];
 	memset(name, 0, 40);
 	kprintf("Here... A\n");
-	for (int i = 0; sectorBuffer[file->seekMark % 2048 + i + 33] != ';'; ++i) {
+	for (int i = 0; sectorBuffer[file->seekMark % 2048 + i + 33] != ';' && sectorBuffer[file->seekMark % 2048 + i + 33] != 0 && i < 40 && (file->seekMark % 2048 + i + 33) < 2048; ++i) {
 		name[i] = sectorBuffer[file->seekMark % 2048 + i + 33];
 	}
 	kprintf("Here... B\n");
