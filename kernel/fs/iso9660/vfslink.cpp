@@ -71,10 +71,6 @@ bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 			dir = true;
 			break;
 		}
-		if (filename[i] == '.') {
-			i = 8;
-			continue;
-		}
 		firstPart[i] = filename[i];
 		if (firstPart[i] >= 'a' && firstPart[i] <= 'z') {
 			firstPart[i] -= 'a';
