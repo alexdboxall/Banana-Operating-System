@@ -109,7 +109,7 @@ void sendKeyboardToken(KeyboardToken kt)
 		computer->addChild(vga);
 		vga->open(0, 0, nullptr);
 		screen = vga;
-		executeDLL(loadDLL("C:/Banana/System/wsbe.sys"), this);
+		executeDLL(loadDLL("C:/Banana/System/wsbe.sys"), computer);
 	}
 
 	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::KeypadEnter) kt.halScancode = (uint16_t) KeyboardSpecialKeys::Enter;
