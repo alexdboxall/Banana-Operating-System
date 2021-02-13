@@ -106,7 +106,7 @@ void sendKeyboardToken(KeyboardToken kt)
 	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::F12) {
 		extern Video* screen;
 		VGAVideo* vga = new VGAVideo();
-		addChild(vga);
+		computer->addChild(vga);
 		vga->open(0, 0, nullptr);
 		screen = vga;
 		executeDLL(loadDLL("C:/Banana/System/wsbe.sys"), this);
