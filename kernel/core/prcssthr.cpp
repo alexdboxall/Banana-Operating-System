@@ -650,10 +650,10 @@ void sleep(uint64_t seconds)
 
 extern "C" void taskReturned()
 {
+	unlockScheduler();
+
 	kprintf("A task returned. Name = %s\n", currentTaskTCB->processRelatedTo->taskname);
 	
-	kprintf("IRQ NESTING = %d\n", getIRQNestingLevel());
-
 	//panic("TASK RETURNED. ENSURE IT LOOPS AT END.\n");
 	while (1) {
 		blockTask(TaskState::Paused);
