@@ -170,14 +170,11 @@ int main(int argc, const char* argv[])
     spawn_calculator(nullptr, 0, 0);
 
     while (1) {  
-        kprintf(wsbeinit);
-
         if (canDoMouse) {
             Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
             canDoMouse = false;
         }
     }
-
 
     return 0;
 }
