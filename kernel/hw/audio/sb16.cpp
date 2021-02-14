@@ -52,6 +52,8 @@ uint8_t buf2[4096];
 
 void sb16Demo(void* s)
 {
+	unlockScheduler();
+
 	SoundBlaster16* dev = (SoundBlaster16*) s;
 
 	SoundChannel* c = new SoundChannel(22050, 8, 90);

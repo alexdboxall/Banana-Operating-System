@@ -24,6 +24,8 @@ Buzzer::~Buzzer()
 
 void beepThread(void* v)
 {
+	unlockScheduler();
+	
 	Buzzer* buzzer = (Buzzer*) v;
 	nanoSleep(1000ULL * 1000ULL * (uint64_t) buzzer->timeToSleepInThread);
 	buzzer->stop();

@@ -34,6 +34,7 @@ void outbv(uint16_t port, uint8_t val)
 void vm8086EntryPoint(void* v)
 {
 	unlockScheduler();
+	asm("sti");
 	goToVM86(currentTaskTCB->vm86IP, currentTaskTCB->vm86CS, currentTaskTCB->vm86SP, currentTaskTCB->vm86SS);
 }
 
