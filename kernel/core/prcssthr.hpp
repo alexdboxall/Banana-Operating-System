@@ -11,10 +11,6 @@
 
 struct Process;
 
-void disableIRQs();
-void enableIRQs();
-int getIRQNestingLevel();
-
 enum class TaskState: size_t
 {
 	ReadyToRun = 0,
@@ -158,6 +154,9 @@ void updateTimeUsed();
 void cleanerTaskFunction(void* context);
 int waitTask(int pid, int* wstatus, int options);
 int execveProcess(const char* pathname, char* const argv[], char* const envp[]);
+void disableIRQs();
+void enableIRQs();
+int getIRQNestingLevel();
 
 extern Process* kernelProcess;
 extern ThreadControlBlock* cleanerThread;

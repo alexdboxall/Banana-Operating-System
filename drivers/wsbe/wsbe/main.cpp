@@ -137,6 +137,8 @@ extern "C" void handleMouse(int xdelta, int ydelta, int btns, int z)
 
 
 char nw[] = "New Window";
+char wsbeinit[] = "INITING... WSBE INIT.\n";
+
 int main(int argc, const char* argv[])
 {
     guiMouseHandler = handleMouse;
@@ -167,7 +169,9 @@ int main(int argc, const char* argv[])
 
     spawn_calculator(nullptr, 0, 0);
 
-    while (1) {    
+    while (1) {  
+        kprintf(wsbeinit);
+
         if (canDoMouse) {
             Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
             canDoMouse = false;

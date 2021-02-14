@@ -176,4 +176,6 @@ void ISA::detect()
 			}
 		}
 	}	
+
+	kprintf("ISA: nesting level = %d\n", getIRQNestingLevel());
 }

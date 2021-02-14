@@ -55,6 +55,8 @@ void startGUI(void* a)
 {
 	unlockScheduler();
 
+	kprintf("SGUI: nesting level = %d\n", getIRQNestingLevel());
+
 	extern Video* screen;
 	VGAVideo* vga = new VGAVideo();
 	computer->addChild(vga);
