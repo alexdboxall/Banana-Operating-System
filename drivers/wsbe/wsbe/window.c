@@ -97,6 +97,7 @@ void Window_draw_border(Window* window) {
     int screen_x = Window_screen_x(window);
     int screen_y = Window_screen_y(window);
 
+    /*
     //Draw a 3px border around the window 
     Context_draw_rect(window->context, screen_x, screen_y,
                       window->width, window->height, WIN_BORDERCOLOR);
@@ -111,7 +112,20 @@ void Window_draw_border(Window* window) {
     Context_horizontal_line(window->context, screen_x + 3, screen_y + 29,
                             window->width - 6, WIN_BORDERCOLOR);
     Context_horizontal_line(window->context, screen_x + 3, screen_y + 30,
-                            window->width - 6, WIN_BORDERCOLOR);
+                            window->width - 6, WIN_BORDERCOLOR);*/
+
+    //draw top
+    Context_horizontal_line(window->context, screen_x + 1, screen_y + 1, window->width - 2, 0xFFFFFF);
+    Context_horizontal_line(window->context, screen_x, screen_y, window->width, 0xAAAAAA);
+    
+    //draw bottom
+    Context_horizontal_line(window->context, screen_x + 1, screen_y + window->height - 1, window->width - 2, 0x555555);
+    Context_horizontal_line(window->context, screen_x, screen_y + window->height, window->width, 0x000000);
+
+    //draw left side
+    Context_vertical_line(window->context, screen_x, screen_y, window->height - 1, 0xAAAAAA);
+    Context_vertical_line(window->context, screen_x + 1, screen_y + 1, window->height - 3, 0xFFFFFF);
+
 
     //Fill in the titlebar background
     Context_fill_rect(window->context, screen_x + 3, screen_y + 3,
