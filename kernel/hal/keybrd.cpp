@@ -53,6 +53,8 @@ void sendKeyToTerminal(uint8_t code)
 
 void startGUI(void* a)
 {
+	unlockScheduler();
+
 	extern Video* screen;
 	VGAVideo* vga = new VGAVideo();
 	computer->addChild(vga);

@@ -22,9 +22,6 @@ extern "C" {
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-// return disks[vfsDisk]->read(sector, count, (void*) buff);
-// return disks[vfsDisk]->write(sector, count, (void*) buff);
-
 uint8_t* __memmem(uint8_t* big, int bigLen, uint8_t* small, int smallLen)
 {
 	//may have an 'off by one' error, but this won't matter, as all
@@ -177,8 +174,6 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 {
 	if (__fn == nullptr || ptr == nullptr) return FileStatus::InvalidArgument;
 
-	kprintf("Opening an ISO9660 file: '%s'\n", __fn);
-
 	*ptr = malloc(sizeof(isoFile_t));
 	isoFile_t* file = (isoFile_t*) *ptr;
 
@@ -197,8 +192,6 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 	file->fileStartLba = lbaO;
 	file->fileLength = lenO;
 	file->driveLetter = __fn[0];
-
-	kprintf("File LBA = %d, file SIZE = %d\n", lbaO, lenO);
 	
 	return FileStatus::Success;
 }
@@ -357,7 +350,7 @@ FileStatus ISO9660::close(void* ptr)
 
 	free(ptr);
 
-	return FileStatus::Failure;
+	return FileStatus::Success;
 }
 
 FileStatus ISO9660::openDir(const char* __fn, void** ptr)
@@ -402,7 +395,6 @@ FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead
 
 	uint8_t len = sectorBuffer[file->seekMark % 2048 + 0];
 	if (len == 0) {
-		kprintf("LEN = 0\n");
 		int add = ((file->seekMark + 2047) % 2048) - file->seekMark;
 		file->seekMark += add;
 		if (file->fileLength <= add) {
@@ -417,24 +409,21 @@ FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead
 		readSectorFromCDROM(startPoint / 2048, sectorBuffer, file->driveLetter);
 		len = sectorBuffer[file->seekMark % 2048 + 0];
 	}
-	kprintf("seek mark = %d\n", file->seekMark);
+
 	char name[40];
 	memset(name, 0, 40);
-	kprintf("Here... A\n");
+
 	//whoa... all of those conditions are here in an attempt to stop a page fault
 	for (int i = 0; sectorBuffer[file->seekMark % 2048 + i + 33] != ';' && sectorBuffer[file->seekMark % 2048 + i + 33] != 0 && i < 40 && (file->seekMark % 2048 + i + 33) < 2048; ++i) {
 		name[i] = sectorBuffer[file->seekMark % 2048 + i + 33];
 	}
-	kprintf("Here... B\n");
 
 	struct dirent dent;
 	dent.d_ino = 0;
 	dent.d_namlen = strlen(name);
 	dent.d_type = sectorBuffer[file->seekMark % 2048 + 25] & 2 ? DT_DIR : DT_REG;
-	kprintf("Here... C\n");
 
 	strcpy(dent.d_name, name);
-	kprintf("Here... D\n");
 
 	if (dent.d_name[0] == 0) {
 		dent.d_name[0] = '.';
@@ -449,13 +438,10 @@ FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead
 		dent.d_namlen = 2;
 		dent.d_type = DT_DIR;
 	}	
-	kprintf("Here... E\n");
 
 	memcpy(where, &dent, bytes);
-	kprintf("Here... F\n");
 
 	*bytesRead = sizeof(dent);
-	kprintf("Here... G\n");
 
 	file->seekMark += len;
 	if (file->fileLength <= len) {
@@ -481,54 +467,22 @@ FileStatus ISO9660::chfatattr(const char* path, uint8_t andMask, uint8_t orFlags
 	return FileStatus::Failure;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 FileStatus ISO9660::unlink(const char* file)
 {
-	if (file == nullptr) {
-		return FileStatus::InvalidArgument;
-	}
-
 	return FileStatus::Failure;
 }
 
 FileStatus ISO9660::write(void* ptr, size_t bytes, void* where, int* bytesWritten)
 {
-	if (ptr == nullptr || bytesWritten == nullptr) return FileStatus::InvalidArgument;
-
-	*bytesWritten = 0;
-
 	return FileStatus::Failure;
 }
 
 FileStatus ISO9660::rename(const char* old, const char* _new)
 {	
-	//REMEMBER TO MODIFY THE DRIVE USED FROM e.g. C: to A:
-
-	kprintf("FAT RENAME NOT SUPPORTED!\n");
-
 	return FileStatus::Failure;
 }
 
 FileStatus ISO9660::mkdir(const char* file)
 {
-	if (file == nullptr) {
-		return FileStatus::InvalidArgument;
-	}
-
 	return FileStatus::Failure;
 }

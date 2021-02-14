@@ -4,13 +4,6 @@
 #include "rect.h"
 
 
-//================| Desktop Class Implementation |================//
-
-//Mouse image data
-#define CA 0xFF000000 //Black
-#define CB 0xFFFFFFFF //White
-#define CD 0x00000000 //Clear
-
 uint8_t mouse_data[MOUSE_WIDTH * MOUSE_HEIGHT / 8 * 2] = {
 	0x01, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00, 0x0F, 0x00, 0x00, 0x00,
 	0x1F, 0x00, 0x00, 0x00, 0x3F, 0x00, 0x00, 0x00, 0x7F, 0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00,
@@ -29,20 +22,14 @@ uint8_t mouse_data[MOUSE_WIDTH * MOUSE_HEIGHT / 8 * 2] = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
+char couldNotAllocate[] = "WSBE NO MEMORY";
+
 Desktop* Desktop_new(Context* context)
 {
-
-	//Malloc or fail 
-	Desktop* desktop;
-	if (!(desktop = (Desktop*) malloc(sizeof(Desktop))))
-		return desktop;
+	Desktop* desktop = (Desktop*) malloc(sizeof(Desktop));
 
 	//Initialize the Window bits of our desktop
-	if (!Window_init((Window*) desktop, 0, 0, context->width, context->height, WIN_NODECORATION, context)) {
-
-		free(desktop);
-		return (Desktop*) 0;
-	}
+	Window_init((Window*) desktop, 0, 0, context->width, context->height, WIN_NODECORATION, context);
 
 	//Override our paint function
 	desktop->window.paint_function = Desktop_paint_handler;
@@ -60,14 +47,13 @@ Desktop* Desktop_new(Context* context)
 //Paint the desktop 
 void Desktop_paint_handler(Window* desktop_window)
 {
-	Context_fill_rect(desktop_window->context, 0, 0, desktop_window->context->width, desktop_window->context->height, 0x2A2AD4 /*0x337FFF*/);
+	Context_fill_rect(desktop_window->context, 0, 0, desktop_window->context->width, desktop_window->context->height, 0x2A2AD4);
 }
 
 //Our overload of the Window_process_mouse function used to capture the screen mouse position 
 void Desktop_process_mouse(Desktop* desktop, uint16_t mouse_x,
 						   uint16_t mouse_y, uint8_t mouse_buttons)
 {
-
 	int i, x, y;
 	Window* child;
 	List* dirty_list;
@@ -142,10 +128,8 @@ void Desktop_process_mouse(Desktop* desktop, uint16_t mouse_x,
 
 			if (blk & 1) {
 				screenputpixel(x + mouse_x, y + mouse_y, 0);
-				//desktop->window.context->buffer[(y + mouse_y) * desktop->window.context->width + (x + mouse_x)] = 0;
 			} else if (wte & 1) {
 				screenputpixel(x + mouse_x, y + mouse_y, 0xFFFFFF);
-				//desktop->window.context->buffer[(y + mouse_y) * desktop->window.context->width + (x + mouse_x)] = 0xFFFFFF;
 			}
 
 			blk >>= 1;
