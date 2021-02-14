@@ -21,10 +21,9 @@ void ps2MouseHandler(regs* r, void* context)
 //this code was written long ago, and is quite bad
 void PS2Mouse::handler()
 {
-	kprintf("Mouse handler.\n");
-	//uint8_t status = inb(0x64);
-	//if ((status & 1) == 0) return;		//no data
-	//if ((status & 0x20) == 0) return;	//keyboard data
+	uint8_t status = inb(0x64);
+	if ((status & 1) == 0)		return;		//no data
+	if ((status & 0x20) == 0)	return;		//keyboard data
 
 	mouse_bytes[cycle++] = inb(0x60);
 
@@ -36,7 +35,6 @@ void PS2Mouse::handler()
 
 	if ((mouseMode == 0 && cycle >= 3) || ((mouseMode == 3 || mouseMode == 4) && cycle >= 4)) {
 		cycle = 0;
-		kprintf("0x%X, 0x%X, 0x%X\n", mouse_bytes[0], mouse_bytes[1], mouse_bytes[2]);
 
 		if ((mouse_bytes[0] & 0x80) || (mouse_bytes[0] & 0x40)) {
 			cycle = 0;

@@ -111,14 +111,11 @@ void spawn_calculator(Button* button, int x, int y)
     Window_move((Window*)temp_calc, 0, 0);*/
 }
 
-char hmouse[] = "handling mouse\n";
 bool canDoMouse = false;
 
 extern "C" void (*guiMouseHandler) (int xdelta, int ydelta, int btns, int z);
 extern "C" void handleMouse(int xdelta, int ydelta, int btns, int z)
 {
-    kprintf(hmouse);
-
     mouse_x += xdelta;
     mouse_y += ydelta;
 
@@ -164,7 +161,6 @@ int main(int argc, const char* argv[])
     //Install our handler of mouse events
     //fake_os_installMouseCallback(main_mouse_callback);
 
-    Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
     Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
 
     spawn_calculator(nullptr, 0, 0);

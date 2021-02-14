@@ -650,7 +650,7 @@ void sleep(uint64_t seconds)
 
 extern "C" void taskReturned()
 {
-	unlockScheduler();
+	unlockScheduler();		//not sure why this is needed
 
 	kprintf("A task returned. Name = %s\n", currentTaskTCB->processRelatedTo->taskname);
 	
