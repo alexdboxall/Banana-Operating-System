@@ -2,15 +2,6 @@
 #include <stdlib.h>
 #include "window.h"
 
-//================| Window Class Implementation |================//
-
-//Here's a quick, crappy pseudo-RNG since you probably don't have one
-uint8_t pseudo_rand_8() {
-
-    static uint16_t seed = 0;
-    return (uint8_t)(seed = (12657 * seed + 12345) % 256);
-}
-
 Window* active_window;
 
 //Window constructor
@@ -114,17 +105,30 @@ void Window_draw_border(Window* window) {
     Context_horizontal_line(window->context, screen_x + 3, screen_y + 30,
                             window->width - 6, WIN_BORDERCOLOR);*/
 
+    //draw line under titlebar
+    Context_horizontal_line(window->context, screen_x, screen_y + 28, window->width, 0xAAAAAA);
+    Context_horizontal_line(window->context, screen_x, screen_y + 29, window->width, 0xAAAAAA);
+    Context_horizontal_line(window->context, screen_x, screen_y + 30, window->width, 0xAAAAAA);
+
     //draw top
-    Context_horizontal_line(window->context, screen_x + 1, screen_y + 1, window->width - 2, 0xFFFFFF);
     Context_horizontal_line(window->context, screen_x, screen_y, window->width, 0xAAAAAA);
-    
+    Context_horizontal_line(window->context, screen_x + 1, screen_y + 1, window->width - 2, 0xFFFFFF);
+    Context_horizontal_line(window->context, screen_x + 2, screen_y + 2, window->width - 4, 0xAAAAAA);
+
     //draw bottom
-    Context_horizontal_line(window->context, screen_x + 1, screen_y + window->height - 1, window->width - 2, 0x555555);
-    Context_horizontal_line(window->context, screen_x, screen_y + window->height, window->width, 0x000000);
+    Context_horizontal_line(window->context, screen_x + 2, screen_y + window->height - 3, window->width - 4, 0xAAAAAA);
+    Context_horizontal_line(window->context, screen_x + 1, screen_y + window->height - 2, window->width - 2, 0x555555);
+    Context_horizontal_line(window->context, screen_x, screen_y + window->height - 1, window->width, 0x000000);
 
     //draw left side
     Context_vertical_line(window->context, screen_x, screen_y, window->height - 1, 0xAAAAAA);
     Context_vertical_line(window->context, screen_x + 1, screen_y + 1, window->height - 3, 0xFFFFFF);
+    Context_vertical_line(window->context, screen_x + 2, screen_y + 2, window->height - 5, 0xAAAAAA);
+
+    //draw right side
+    Context_vertical_line(window->context, screen_x + window->width - 1, screen_y, window->height, 0);
+    Context_vertical_line(window->context, screen_x + window->width - 2, screen_y + 1, window->height - 2, 0x555555);
+    Context_vertical_line(window->context, screen_x + window->width - 3, screen_y + 2, window->height - 4, 0xAAAAAA);
 
 
     //Fill in the titlebar background

@@ -188,8 +188,8 @@ uint8_t dither16Data[512][2] = {
 {12, 12},
 {0, 3},
 {0, 8},
-{0, 7},
-{0, 7},
+{8, 8},
+{8, 8},
 {4, 7},
 {4, 7},
 {6, 12},
@@ -252,7 +252,7 @@ uint8_t dither16Data[512][2] = {
 {12, 12},
 {0, 3},
 {0, 9},
-{0, 7},
+{8, 8},
 {6, 9},
 {6, 9},
 {4, 7},
@@ -558,6 +558,10 @@ uint8_t dither16Data[512][2] = {
 
 inline int pixelLookup(int source, int addr)
 {
+	//80
+	//10
+	//2
+
 	return dither16Data[((source & 0xE00000) >> 21) | ((source & 0xE000) >> 10) | ((source & 0xE0) << 1)][addr & 1];
 }
 
