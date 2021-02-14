@@ -34,10 +34,6 @@ void outbv(uint16_t port, uint8_t val)
 void vm8086EntryPoint(void* v)
 {
 	unlockScheduler();
-
-	kprintf("vm8086 entry point");
-
-	asm("sti");
 	goToVM86(currentTaskTCB->vm86IP, currentTaskTCB->vm86CS, currentTaskTCB->vm86SP, currentTaskTCB->vm86SS);
 }
 
@@ -59,58 +55,45 @@ uint16_t getOffset(uint32_t linear)
 bool loadVM8086FileAsThread(Process* p, const char* filename, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss)
 {
 	lockScheduler();
-	kprintf("A...\n");
 	ThreadControlBlock* thread = p->createThread(vm8086EntryPoint, nullptr, 128);
 	thread->vm86IP = ip;
 	thread->vm86CS = cs;
 	thread->vm86SP = sp;
 	thread->vm86SS = ss;
 	thread->vm86Task = true;
-	kprintf("B...\n");
 
 	File* f = new File(filename, p);
-	kprintf("C...\n");
 	if (!f) {
 		panic("VM8086 FILE FAILED!");
 		unlockScheduler();
 		return false;
 	}
-	kprintf("D...\n");
 
 	uint64_t siz;
 	bool dir;
 	f->stat(&siz, &dir);
-	kprintf("E...\n");
 
 	if (dir) {
 		panic("VM8086 FILE STAT FAILED!");
 		unlockScheduler();
 		return false;
 	}
-	kprintf("F...\n");
 
 	FileStatus st = f->open(FileOpenMode::Read);
-	kprintf("G...\n");
 
 	if (st != FileStatus::Success) {
 		panic("VM8086 FILE OPEN FAILED!");
 		unlockScheduler();
 		return false;
 	}
-	kprintf("H...\n");
-	kprintf("SIZ = %d, realToLinear = %d\n", (int) siz, realToLinear(cs, ip));
 
 	p->vas->mapRange(0x0, 0x0, 256, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
 
 	int br;
 	f->read(siz, (uint8_t*) (size_t) realToLinear(cs, ip), &br);
-	kprintf("I...\n");
 	f->close();
-	kprintf("J...\n");
 
 	unlockScheduler();
-
-	kprintf("LOADED VM8086 TASK.\n");
 
 	return true;
 }
@@ -175,8 +158,6 @@ void writeDwordFromReal(uint16_t seg, uint16_t off, uint32_t byte)
 
 bool vm8086FaultHandler(regs* r)
 {
-	kprintf("VM8086 fault handler");
-
 	//YOU NEED TO VALIDATE CS, EIP, SS AND ESP HERE
 
 	uint8_t* ip = (uint8_t*) (size_t) realToLinear(r->cs, r->eip);
