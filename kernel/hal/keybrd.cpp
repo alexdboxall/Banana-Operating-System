@@ -54,6 +54,7 @@ void sendKeyToTerminal(uint8_t code)
 void startGUI(void* a)
 {
 	unlockScheduler();
+	unlockScheduler();
 
 	kprintf("SGUI: nesting level = %d\n", getIRQNestingLevel());
 
