@@ -50,7 +50,6 @@ char recentDriveletter = '0';
 
 void readSectorFromCDROM(uint32_t sector, uint8_t* data, char driveletter)
 {
-	//keep a 1 sector cache (good for directory entry reading)
 	if (sector != recentSector || recentDriveletter != driveletter) {
 		recentSector = sector;
 		recentDriveletter = driveletter;
