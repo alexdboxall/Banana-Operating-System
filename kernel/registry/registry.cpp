@@ -230,10 +230,24 @@ namespace Registry
 			negative = true;
 		}
 		
+		int base = 10;
+		if (line[i] == '0' && line[i + 1] == 'x') {
+			i += 2;
+			base = 16;
+		} else if (line[i] == '0' && line[i + 1] == 'b') {
+			i += 2;
+			base = 2;
+		}
 		//parse the line
 		for (; line[i] && line[i] != '\r'; ++i) {
-			value *= 10;
-			value += line[i] - '0';
+			value *= base;
+			if (base == 16 && line[i] >= 'A' && line[i] <= 'F') {
+				value += line[i] - 'A' + 10;
+			} else if (base == 16 && line[i] >= 'a' && line[i] <= 'f') {
+				value += line[i] - 'a' + 10;
+			} else {
+				value += line[i] - '0';
+			}
 		}
 
 		//account for signs

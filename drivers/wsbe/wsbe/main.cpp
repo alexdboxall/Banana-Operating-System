@@ -51,12 +51,17 @@ char cursorNRML[] = "NRML";
 char cursorWAIT[] = "WAIT";
 char cursorTEXT[] = "TEXT";
 char cursorTLDR[] = "TLDR";
+char cursorBad1[] = "CURSOR LOAD: BAD 1\n";
+char cursorBad2[] = "CURSOR LOAD: BAD 2\n";
+char cursorBad3[] = "CURSOR LOAD: BAD 3\n";
+char cursorNumStr[] = "CURSORS: %d\n";
 
 void loadCursors()
 {
     File* f = new File(cursorFilename, kernelProcess);
     FileStatus status = f->open(FileOpenMode::Read);
     if (status != FileStatus::Success) {
+        kprintf(cursorBad1);
         return;
     }
 
@@ -67,26 +72,32 @@ void loadCursors()
     uint8_t* curdata = (uint8_t*) malloc(size);
     f->read(size, curdata, &read);
     if (read != (int) size) {
+        kprintf(cursorBad2);
         return;
     }
 
     int numCursors = size / 260;
+    kprintf(cursorNumStr, numCursors);
+    kprintf((char*) curdata);
     for (int i = 0; i < numCursors; ++i) {
         int offset;
-        if (!strcmp((char*) curdata + i * 4, cursorNRML)) {
+        if (!memcmp(curdata + i * 4, cursorNRML, 4)) {
             offset = MOUSE_OFFSET_NORMAL;
-        } else if (!strcmp((char*) curdata + i * 4, cursorWAIT)) {
+        } else if (!memcmp((char*) curdata + i * 4, cursorWAIT, 4)) {
             offset = MOUSE_OFFSET_WAIT;
-        } else if (!strcmp((char*) curdata + i * 4, cursorTLDR)) {
+        } else if (!memcmp((char*) curdata + i * 4, cursorTLDR, 4)) {
             offset = MOUSE_OFFSET_TLDR;
-        } else if (!strcmp((char*) curdata + i * 4, cursorTEXT)) {
+        } else if (!memcmp((char*) curdata + i * 4, cursorTEXT, 4)) {
             offset = MOUSE_OFFSET_TEXT;
         }  else {
+            kprintf(cursorBad3);
             break;
         }
 
-        memcpy(mouse_data + offset, curdata + numCursors * 4 + i * CURSOR_DATA_SIZE, CURSOR_DATA_SIZE);
+        memcpy(___mouse_data + offset, curdata + numCursors * 4 + i * CURSOR_DATA_SIZE, CURSOR_DATA_SIZE);
     }
+
+    free(curdata);
 }
 
 
@@ -175,13 +186,18 @@ extern "C" void handleMouse(int xdelta, int ydelta, int btns, int z)
     canDoMouse = true;
 }
 
-
 char nw[] = "New Window";
 char wsbeinit[] = "INITING... WSBE INIT.\n";
+char registryFilename[] = "wsbe";
+char registryMouseInvertKey[] = "invertmouse";
+char registryMouseDesktopCol[] = "desktopcolour";
 
 int main(int argc, const char* argv[])
 {
     loadCursors();
+
+    desktopColour = Registry::readIntWithDefault((char*) registryFilename, (char*) registryMouseDesktopCol, 0x2A2AD4);
+    invertMouse = Registry::readIntWithDefault((char*) registryFilename, (char*) registryMouseInvertKey, 0);
 
     guiMouseHandler = handleMouse;
 

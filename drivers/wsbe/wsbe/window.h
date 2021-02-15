@@ -45,6 +45,7 @@ typedef struct Window_struct {
     uint16_t height;
     uint16_t flags;
     Context* context;
+    struct Window_struct* desktop;
     struct Window_struct* drag_child;
     struct Window_struct* active_child;
     List* children;
@@ -62,6 +63,8 @@ typedef struct Window_struct {
     WindowResizeHandler resize_function;
     WindowMoveHandler move_function;
     char* title;
+
+    uint8_t* savedMouse;
     
 } Window;
 

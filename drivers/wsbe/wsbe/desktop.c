@@ -4,7 +4,7 @@
 #include "rect.h"
 
 
-uint8_t mouse_data[CURSOR_DATA_SIZE * MAX_CURSOR_TYPES] = {
+uint8_t ___mouse_data[CURSOR_DATA_SIZE * MAX_CURSOR_TYPES] = {
 	0x01, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00, 0x0F, 0x00, 0x00, 0x00,
 	0x1F, 0x00, 0x00, 0x00, 0x3F, 0x00, 0x00, 0x00, 0x7F, 0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00,
 	0xFF, 0x01, 0x00, 0x00, 0xFF, 0x03, 0x00, 0x00, 0xFF, 0x07, 0x00, 0x00, 0x7F, 0x00, 0x00, 0x00,
@@ -21,10 +21,17 @@ uint8_t mouse_data[CURSOR_DATA_SIZE * MAX_CURSOR_TYPES] = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-
 };
 
 char couldNotAllocate[] = "WSBE NO MEMORY";
+
+bool invertMouse = true;
+uint32_t desktopColour = 0x2A2AD4;
+
+void Desktop_set_mouse(Desktop* d, int offset)
+{
+	d->cursor_data = ___mouse_data + offset;
+}
 
 Desktop* Desktop_new(Context* context)
 {
@@ -32,6 +39,8 @@ Desktop* Desktop_new(Context* context)
 
 	//Initialize the Window bits of our desktop
 	Window_init((Window*) desktop, 0, 0, context->width, context->height, WIN_NODECORATION, context);
+
+	desktop->window.desktop = (Window*) desktop;
 
 	//Override our paint function
 	desktop->window.paint_function = Desktop_paint_handler;
@@ -43,13 +52,15 @@ Desktop* Desktop_new(Context* context)
 	desktop->mouse_x = desktop->window.context->width / 2;
 	desktop->mouse_y = desktop->window.context->height / 2;
 
+	Desktop_set_mouse(desktop, MOUSE_OFFSET_NORMAL);
+
 	return desktop;
 }
 
 //Paint the desktop 
 void Desktop_paint_handler(Window* desktop_window)
 {
-	Context_fill_rect(desktop_window->context, 0, 0, desktop_window->context->width, desktop_window->context->height, 0x2A2AD4);
+	Context_fill_rect(desktop_window->context, 0, 0, desktop_window->context->width, desktop_window->context->height, desktopColour);
 }
 
 //Our overload of the Window_process_mouse function used to capture the screen mouse position 
@@ -119,8 +130,9 @@ void Desktop_process_mouse(Desktop* desktop, uint16_t mouse_x,
 			break;
 		}
 
-		uint32_t wte = *(((uint32_t*) mouse_data) + y + 0);
-		uint32_t blk = *(((uint32_t*) mouse_data) + y + 32);
+		uint32_t wte = *(((uint32_t*) desktop->cursor_data) + y + 0);
+		uint32_t blk = *(((uint32_t*) desktop->cursor_data) + y + 32);
+
 		for (x = 0; x < 24; x++) {
 
 			//Make sure we don't draw off the right side of the screen
@@ -129,9 +141,9 @@ void Desktop_process_mouse(Desktop* desktop, uint16_t mouse_x,
 			}
 
 			if (blk & 1) {
-				screenputpixel(x + mouse_x, y + mouse_y, 0);
+				screenputpixel(x + mouse_x, y + mouse_y, invertMouse ? 0xFFFFFF : 0);
 			} else if (wte & 1) {
-				screenputpixel(x + mouse_x, y + mouse_y, 0xFFFFFF);
+				screenputpixel(x + mouse_x, y + mouse_y, invertMouse ? 0 : 0xFFFFFF);
 			}
 
 			blk >>= 1;

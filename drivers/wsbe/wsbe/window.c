@@ -1,6 +1,7 @@
 #include <inttypes.h>
 #include <stdlib.h>
 #include "window.h"
+#include "desktop.h"
 
 Window* active_window;
 
@@ -60,6 +61,11 @@ int Window_init(Window* window, int16_t x, int16_t y, uint16_t width,
     
     if (flags & WIN_TOPLEVELWIN) {
         active_window = window;
+        if (window->parent) {
+            window->desktop = window->parent->desktop;
+        } else {
+            window->desktop = 0;
+        }
     }
   
     return 1;
@@ -725,7 +731,9 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
                 window->drag_off_y = mouse_y - child->y;
                 window->drag_child = child;
                 window->dragType = DRAG_TYPE_MOVE;
-                
+
+                window->savedMouse = ((Desktop*)window->desktop)->cursor_data;
+
                 //We break without setting target_child if we're doing a drag since
                 //that shouldn't trigger a mouse event in the child 
                 break;
@@ -742,6 +750,9 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
                 window->drag_child = child;
                 window->dragType = DRAG_TYPE_RESIZE_ALL;
 
+                window->savedMouse = ((Desktop*) window->desktop)->cursor_data;
+                Desktop_set_mouse((Desktop*) window->desktop, MOUSE_OFFSET_TLDR);
+
                 //We break without setting target_child if we're doing a drag since
                 //that shouldn't trigger a mouse event in the child
                 break;
@@ -755,8 +766,13 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
 
     //Moving this outside of the mouse-in-child detection since it doesn't really
     //have anything to do with it
-    if(!mouse_buttons)
-        window->drag_child = (Window*)0;
+    if (!mouse_buttons) {
+        if (window->drag_child) {
+            ((Desktop*) window->desktop)->cursor_data = window->savedMouse;
+        }
+
+        window->drag_child = (Window*) 0;
+    }
 
     //Update drag window to match the mouse if we have an active drag window
     if(window->drag_child) {
