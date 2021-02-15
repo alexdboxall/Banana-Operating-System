@@ -18,8 +18,8 @@ public:
 	static inline void setPlane(int pl)
 	{
 		//set the read plane
-		//outb(0x3CE, 4);
-		//outb(0x3CF, pl & 3);
+		outb(0x3CE, 4);
+		outb(0x3CF, pl & 3);
 
 		//set the write plane
 		outb(0x3C4, 2);
