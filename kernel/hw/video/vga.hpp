@@ -26,12 +26,6 @@ public:
 		outb(0x3C5, 1 << (pl & 3));
 	}
 
-	static inline void setMultiplePlanes(int pl)
-	{
-		outb(0x3C4, 2);
-		outb(0x3C5, pl & 0xF);
-	}
-
 	int open(int, int, void*);
 	int close(int, int, void*);
 

@@ -356,7 +356,8 @@ void Window_paint(Window* window, List* dirty_regions, uint8_t paint_children) {
     window->context->translate_x = screen_x;
     window->context->translate_y = screen_y;
 
-    window->paint_function(window);
+
+    //window->paint_function(window);
 
     //Now that we're done drawing this window, we can clear the changes we made to the context
     Context_clear_clip_rects(window->context);
