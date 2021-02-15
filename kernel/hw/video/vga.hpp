@@ -17,11 +17,19 @@ public:
 
 	static inline void setPlane(int pl)
 	{
-		outb(0x3CE, 4);
-		outb(0x3CF, pl & 3);
+		//set the read plane
+		//outb(0x3CE, 4);
+		//outb(0x3CF, pl & 3);
 
+		//set the write plane
 		outb(0x3C4, 2);
 		outb(0x3C5, 1 << (pl & 3));
+	}
+
+	static inline void setMultiplePlanes(int pl)
+	{
+		outb(0x3C4, 2);
+		outb(0x3C5, pl & 0xF);
 	}
 
 	int open(int, int, void*);
