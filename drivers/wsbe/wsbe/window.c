@@ -356,8 +356,7 @@ void Window_paint(Window* window, List* dirty_regions, uint8_t paint_children) {
     window->context->translate_x = screen_x;
     window->context->translate_y = screen_y;
 
-
-    //window->paint_function(window);
+    window->paint_function(window);
 
     //Now that we're done drawing this window, we can clear the changes we made to the context
     Context_clear_clip_rects(window->context);
@@ -669,8 +668,9 @@ void Window_move(Window* window, int new_x, int new_y) {
 
     //And we'll repaint all of them using the dirty rects
     //(removing them from the list as we go for convenience)
-    while(dirty_windows->count)
-        Window_paint((Window*)List_remove_at(dirty_windows, 0), dirty_list, 1);
+    while (dirty_windows->count) {
+        Window_paint((Window*) List_remove_at(dirty_windows, 0), dirty_list, 1);
+    }
 
     //The one thing that might still be dirty is the parent we're inside of
     Window_paint(window->parent, dirty_list, 0);

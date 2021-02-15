@@ -46,6 +46,49 @@ extern "C" void screenputpixel(int x, int y, uint32_t color)
     screen->putpixel(x, y, color);
 }
 
+char cursorFilename[] = "C:/Banana/Cursors/STANDARD.CUR";
+char cursorNRML[] = "NRML";
+char cursorWAIT[] = "WAIT";
+char cursorTEXT[] = "TEXT";
+char cursorTLDR[] = "TLDR";
+
+void loadCursors()
+{
+    File* f = new File(cursorFilename, kernelProcess);
+    FileStatus status = f->open(FileOpenMode::Read);
+    if (status != FileStatus::Success) {
+        return;
+    }
+
+    uint64_t size;
+    bool dir;
+    f->stat(&size, &dir);
+    int read;
+    uint8_t* curdata = (uint8_t*) malloc(size);
+    f->read(size, curdata, &read);
+    if (read != (int) size) {
+        return;
+    }
+
+    int numCursors = size / 260;
+    for (int i = 0; i < numCursors; ++i) {
+        int offset;
+        if (!strcmp((char*) curdata + i * 4, cursorNRML)) {
+            offset = MOUSE_OFFSET_NORMAL;
+        } else if (!strcmp((char*) curdata + i * 4, cursorWAIT)) {
+            offset = MOUSE_OFFSET_WAIT;
+        } else if (!strcmp((char*) curdata + i * 4, cursorTLDR)) {
+            offset = MOUSE_OFFSET_TLDR;
+        } else if (!strcmp((char*) curdata + i * 4, cursorTEXT)) {
+            offset = MOUSE_OFFSET_TEXT;
+        }  else {
+            break;
+        }
+
+        memcpy(mouse_data + offset, curdata + numCursors * 4 + i * CURSOR_DATA_SIZE, CURSOR_DATA_SIZE);
+    }
+}
+
 
 char szstring[64];
 WindowPaintHandler oldHandler;
@@ -138,13 +181,15 @@ char wsbeinit[] = "INITING... WSBE INIT.\n";
 
 int main(int argc, const char* argv[])
 {
+    loadCursors();
+
     guiMouseHandler = handleMouse;
 
     //Fill this in with the info particular to your project
     Context* context = Context_new(0, 0, 0);
     context->buffer = nullptr;
-    context->width = 800;
-    context->height = 600;
+    context->width = 640;
+    context->height = 480;
 
     //Create the desktop
     desktop = Desktop_new(context);
