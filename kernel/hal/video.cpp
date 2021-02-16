@@ -61,9 +61,9 @@ void Video::drawCursor(int mouse_x, int mouse_y, uint8_t* data, int invertMouse)
 			}
 
 			if (blk & 1) {
-				screenputpixel(x + mouse_x, y + mouse_y, invertMouse ? 0xFFFFFF : 0);
+				putpixel(x + mouse_x, y + mouse_y, invertMouse ? 0xFFFFFF : 0);
 			} else if (wte & 1) {
-				screenputpixel(x + mouse_x, y + mouse_y, invertMouse ? 0 : 0xFFFFFF);
+				putpixel(x + mouse_x, y + mouse_y, invertMouse ? 0 : 0xFFFFFF);
 			}
 
 			blk >>= 1;
