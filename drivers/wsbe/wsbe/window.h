@@ -41,28 +41,29 @@ typedef struct Window_struct {
     struct Window_struct* parent;
     int16_t x;
     int16_t y;
-    uint16_t width;
-    uint16_t height;
+    int16_t width;
+    int16_t height;
     uint16_t flags;
     Context* context;
     struct Window_struct* desktop;
     struct Window_struct* drag_child;
     struct Window_struct* active_child;
     List* children;
-    uint16_t drag_off_x;
-    uint16_t drag_off_y;
+    int16_t drag_off_x;
+    int16_t drag_off_y;
     int dragType;
     uint8_t last_button_state;
     WindowPaintHandler paint_function;
     WindowMouseDownHandler mousedown_function;
     WindowMouseDragHandler mousemove_function;
     WindowMouseMoveHandler mousedrag_function;
-
     WindowMouseUpHandler mouseup_function;
     WindowDoubleClickHandler doubleclick_function;
     WindowResizeHandler resize_function;
     WindowMoveHandler move_function;
     char* title;
+
+    uint64_t nanoLastClicked;
 
     uint8_t* savedMouse;
     

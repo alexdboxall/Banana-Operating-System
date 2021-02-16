@@ -54,7 +54,8 @@ int Window_init(Window* window, int16_t x, int16_t y, uint16_t width,
     window->doubleclick_function = Window_mousedown_handler;
     window->resize_function = Window_resize_handler;
     window->move_function = Window_move_handler;
-    
+    window->nanoLastClicked = 0;
+
     window->active_child = (Window*)0;
     window->title = (char*)0;
     window->dragType = DRAG_TYPE_NONE;
@@ -790,6 +791,16 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
         
     } else if (window->mouseup_function && !mouse_buttons && window->last_button_state) {
         window->mouseup_function(window, mouse_x, mouse_y);
+
+        if (getNanoSinceBoot() < window->nanoLastClicked + 1000 * 1000 * 1000) {
+            desktopColour = 0xFF8000;
+            //window->doubleclick_function(window, mouse_x, mouse_y);
+            window->nanoLastClicked = getNanoSinceBoot() + 1000 * 1000 * 1000;
+
+        } else {
+            window->nanoLastClicked = getNanoSinceBoot();
+
+        }
 
     } else if (window->mousedrag_function && mouse_buttons) {
         window->mousedrag_function(window, mouse_x, mouse_y);

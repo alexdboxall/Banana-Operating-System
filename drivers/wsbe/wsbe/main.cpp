@@ -10,6 +10,7 @@
 #include "hw/acpi.hpp"
 #include "hw/video/vga.hpp"
 #include "core/prcssthr.hpp"
+#include "hal/timer.hpp"
 #include "registry/registry.hpp"
 #include "fs/vfs.hpp"
 
@@ -48,11 +49,15 @@ extern "C" void screenputrect(int x, int y, int max_x, int max_y, uint32_t color
     screen->putrect(x, y, max_x - x, max_y - y, color);
 }
 
-
 extern "C" void screenputpixel(int x, int y, uint32_t color)
 {
     extern Video* screen;
     screen->putpixel(x, y, color);
+}
+
+extern "C" uint64_t getNanoSinceBoot()
+{
+    return nanoSinceBoot;
 }
 
 char cursorFilename[] = "C:/Banana/Cursors/STANDARD.CUR";
