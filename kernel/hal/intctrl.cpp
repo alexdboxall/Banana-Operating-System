@@ -223,6 +223,21 @@ void displayDebugInfo(regs* r)
 	size_t cr4;
 	asm volatile ("mov %%cr4, %0" : "=r"(cr4));
 
+	kprintf("EAX: 0x%X\n", r->eax);
+	kprintf("EBX: 0x%X\n", r->ebx);
+	kprintf("ECX: 0x%X\n", r->ecx);
+	kprintf("EDX: 0x%X\n", r->edx);
+	kprintf("ESI: 0x%X\n", r->esi);
+	kprintf("EDI: 0x%X\n", r->edi);
+	kprintf("ESP: 0x%X\n", r->esp);
+	kprintf("EBP: 0x%X\n", r->ebp);
+	kprintf("USERESP: 0x%X\n", r->useresp);
+	kprintf("EIP: 0x%X\n", r->eip);
+	kprintf("ERR: 0x%X\n", r->err_code);
+
+	kprintf("CR2: 0x%X\n", (uint32_t) cr2);
+	kprintf("CR3: 0x%X\n", cr3);
+
 	setActiveTerminal(kernelProcess->terminal);
 
 	kernelProcess->terminal->puts(exceptionNames[r->int_no]);
@@ -268,21 +283,6 @@ void displayDebugInfo(regs* r)
 	kernelProcess->terminal->putx((uint32_t) __builtin_return_address(2));
 	kernelProcess->terminal->puts("\n 3: ");
 	kernelProcess->terminal->putx((uint32_t) __builtin_return_address(3));
-
-	kprintf("EAX: 0x%X\n", r->eax);
-	kprintf("EBX: 0x%X\n", r->ebx);
-	kprintf("ECX: 0x%X\n", r->ecx);
-	kprintf("EDX: 0x%X\n", r->edx);
-	kprintf("ESI: 0x%X\n", r->esi);
-	kprintf("EDI: 0x%X\n", r->edi);
-	kprintf("ESP: 0x%X\n", r->esp);
-	kprintf("EBP: 0x%X\n", r->ebp);
-	kprintf("USERESP: 0x%X\n", r->useresp);
-	kprintf("EIP: 0x%X\n", r->eip);
-	kprintf("ERR: 0x%X\n", r->err_code);
-
-	kprintf("CR2: 0x%X\n", (uint32_t) cr2);
-	kprintf("CR3: 0x%X\n", cr3);
 
 	kprintf("'0x%X'\n", __builtin_return_address(1));
 	kprintf("'0x%X'\n", __builtin_return_address(2));

@@ -183,7 +183,9 @@ extern "C" void handleMouse(int xdelta, int ydelta, int btns, int z)
         buttons = 1;
     }
 
-    canDoMouse = true;
+    //canDoMouse = true;
+
+    Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
 }
 
 char nw[] = "New Window";
@@ -194,6 +196,7 @@ char registryMouseDesktopCol[] = "desktopcolour";
 
 int main(int argc, const char* argv[])
 {
+    canDoMouse = false;
     loadCursors();
 
     desktopColour = Registry::readIntWithDefault((char*) registryFilename, (char*) registryMouseDesktopCol, 0x2A2AD4);
@@ -228,9 +231,10 @@ int main(int argc, const char* argv[])
 
     while (1) {  
         if (canDoMouse) {
-            Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
-            canDoMouse = false;
+            //Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
+            //canDoMouse = false;
         }
+        canDoMouse = true;
     }
 
     return 0;
