@@ -41,6 +41,8 @@ void Video::putpixel(int x, int y, uint32_t col)
 
 void Video::drawCursor(int mouse_x, int mouse_y, uint8_t* data, int invertMouse)
 {
+	return;
+
 	//No more hacky mouse, instead we're going to rather inefficiently 
 	//copy the pixels from our mouse image into the framebuffer
 	for (int y = 0; y < 32; y++) {
