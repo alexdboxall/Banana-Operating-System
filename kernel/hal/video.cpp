@@ -43,7 +43,7 @@ void Video::drawCursor(int mouse_x, int mouse_y, uint8_t* data, int invertMouse)
 {
 	//No more hacky mouse, instead we're going to rather inefficiently 
 	//copy the pixels from our mouse image into the framebuffer
-	for (int y = 0; y < + 24; y++) {
+	for (int y = 0; y < 32; y++) {
 
 		//Make sure we don't draw off the bottom of the screen
 		if (y + mouse_y >= getHeight()) {
@@ -53,7 +53,7 @@ void Video::drawCursor(int mouse_x, int mouse_y, uint8_t* data, int invertMouse)
 		uint32_t wte = *(((uint32_t*) data) + y + 0);
 		uint32_t blk = *(((uint32_t*) data) + y + 32);
 
-		for (x = 0; x < 24; x++) {
+		for (int x = 0; x < 32; x++) {
 
 			//Make sure we don't draw off the right side of the screen
 			if (x + mouse_x >= getWidth()) {
