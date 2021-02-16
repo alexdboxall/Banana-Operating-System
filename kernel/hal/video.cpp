@@ -43,7 +43,7 @@ void Video::drawCursor(int mouse_x, int mouse_y, uint8_t* data, int invertMouse)
 {
 	for (int y = 0; y < 4; ++y) {
 		for (int x = 0; x < 4; ++x) {
-			putpixel(x, y, 0);
+			putpixel(x + mouse_x, y + mouse_y, 0);
 		}
 	}
 	return;
