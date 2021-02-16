@@ -63,6 +63,7 @@ void Desktop_paint_handler(Window* desktop_window)
 	Context_fill_rect(desktop_window->context, 0, 0, desktop_window->context->width, desktop_window->context->height, desktopColour);
 }
 
+int oldMouse;
 //Our overload of the Window_process_mouse function used to capture the screen mouse position 
 void Desktop_process_mouse(Desktop* desktop, uint16_t mouse_x,
 						   uint16_t mouse_y, uint8_t mouse_buttons)
@@ -74,7 +75,6 @@ void Desktop_process_mouse(Desktop* desktop, uint16_t mouse_x,
 
 	extern Window* active_window;
 	Window* old_active = active_window;
-	static int oldMouse;
 	int changedWin = 0;
 	if (mouse_buttons && !oldMouse) {
 		active_window = 0;
@@ -120,34 +120,6 @@ void Desktop_process_mouse(Desktop* desktop, uint16_t mouse_x,
 	//Update mouse position
 	desktop->mouse_x = mouse_x;
 	desktop->mouse_y = mouse_y;
-
-	//No more hacky mouse, instead we're going to rather inefficiently 
-	//copy the pixels from our mouse image into the framebuffer
-	for (y = 0; y < 24; y++) {
-
-		//Make sure we don't draw off the bottom of the screen
-		if ((y + mouse_y) >= desktop->window.context->height) {
-			break;
-		}
-
-		uint32_t wte = *(((uint32_t*) desktop->cursor_data) + y + 0);
-		uint32_t blk = *(((uint32_t*) desktop->cursor_data) + y + 32);
-
-		for (x = 0; x < 24; x++) {
-
-			//Make sure we don't draw off the right side of the screen
-			if ((x + mouse_x) >= desktop->window.context->width) {
-				break;
-			}
-
-			if (blk & 1) {
-				screenputpixel(x + mouse_x, y + mouse_y, invertMouse ? 0xFFFFFF : 0);
-			} else if (wte & 1) {
-				screenputpixel(x + mouse_x, y + mouse_y, invertMouse ? 0 : 0xFFFFFF);
-			}
-
-			blk >>= 1;
-			wte >>= 1;
-		}
-	}
+	
+	screendrawcursor(mouse_x, mouse_y, desktop->cursor_data);
 }

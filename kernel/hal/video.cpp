@@ -39,6 +39,39 @@ void Video::putpixel(int x, int y, uint32_t col)
 	kprintf("Bad putpixel.\n");
 }
 
+void Video::drawCursor(int mouse_x, int mouse_y, uint8_t* data, int invertMouse)
+{
+	//No more hacky mouse, instead we're going to rather inefficiently 
+	//copy the pixels from our mouse image into the framebuffer
+	for (int y = 0; y < + 24; y++) {
+
+		//Make sure we don't draw off the bottom of the screen
+		if (y + mouse_y >= getHeight()) {
+			break;
+		}
+
+		uint32_t wte = *(((uint32_t*) data) + y + 0);
+		uint32_t blk = *(((uint32_t*) data) + y + 32);
+
+		for (x = 0; x < 24; x++) {
+
+			//Make sure we don't draw off the right side of the screen
+			if (x + mouse_x >= getWidth()) {
+				break;
+			}
+
+			if (blk & 1) {
+				screenputpixel(x + mouse_x, y + mouse_y, invertMouse ? 0xFFFFFF : 0);
+			} else if (wte & 1) {
+				screenputpixel(x + mouse_x, y + mouse_y, invertMouse ? 0 : 0xFFFFFF);
+			}
+
+			blk >>= 1;
+			wte >>= 1;
+		}
+	}
+}
+
 //seriously, override this. This is slower than slow.
 void Video::putrect(int x, int y, int w, int h, uint32_t colour)
 {

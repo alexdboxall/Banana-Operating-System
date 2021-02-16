@@ -34,11 +34,20 @@ int mouse_y = 10;
 int buttons = 0;
 Desktop* desktop = nullptr;
 
+extern "C" bool invertMouse;
+
+extern "C" void screendrawcursor(int x, int y, uint8_t* data)
+{
+    extern Video* screen;
+    screen->drawCursor(x, y, data, invertMouse);
+}
+
 extern "C" void screenputrect(int x, int y, int max_x, int max_y, uint32_t color)
 {
     extern Video* screen;
     screen->putrect(x, y, max_x - x, max_y - y, color);
 }
+
 
 extern "C" void screenputpixel(int x, int y, uint32_t color)
 {
@@ -143,7 +152,7 @@ char tw[] = "Test Window";
 //And, finally, the handler that causes that button to make a new calculator
 void spawn_calculator(Button* button, int x, int y)
 {
-    strcpy(szstring, "Please resize this window!");
+    //strcpy(szstring, "Please resize this window!");
 
     Window* w = (Window*) malloc(sizeof(Window));
     Window_init(w, 50, 50, 300, 200, WIN_TOPLEVELWIN, 0);
@@ -193,6 +202,11 @@ char wsbeinit[] = "INITING... WSBE INIT.\n";
 char registryFilename[] = "wsbe";
 char registryMouseInvertKey[] = "invertmouse";
 char registryMouseDesktopCol[] = "desktopcolour";
+
+extern "C" void debugwrite(char* t)
+{
+    kprintf(t);
+}
 
 int main(int argc, const char* argv[])
 {

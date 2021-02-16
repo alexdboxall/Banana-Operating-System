@@ -6,6 +6,7 @@
 
 void screenputpixel(int x, int y, uint32_t color);
 void screenputrect(int x, int y, int max_x, int max_y, uint32_t color);
+void screendrawcursor(int x, int y, uint8_t * data);
 
 //================| List Class Declaration |================//
 
