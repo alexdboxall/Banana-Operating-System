@@ -793,9 +793,12 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
         window->mouseup_function(window, mouse_x, mouse_y);
 
         if (getNanoSinceBoot() < window->nanoLastClicked + 1000 * 1000 * 1000) {
-            desktopColour = 0xFF8000;
-            //window->doubleclick_function(window, mouse_x, mouse_y);
+            desktopColour ^= 0xFF8000;
             window->nanoLastClicked = getNanoSinceBoot() + 1000 * 1000 * 1000;
+
+            if (window->doubleclick_function) {
+                window->doubleclick_function(window, mouse_x, mouse_y);
+            }
 
         } else {
             window->nanoLastClicked = getNanoSinceBoot();
