@@ -42,6 +42,9 @@ void Video::putpixel(int x, int y, uint32_t col)
 void Video::drawCursor(int mouse_x, int mouse_y, uint8_t* data, int invertMouse)
 {
 	putpixel(mouse_x, mouse_y, 0);
+	putpixel(mouse_x + 1, mouse_y, 0);
+	putpixel(mouse_x + 1, mouse_y + 1, 0);
+	putpixel(mouse_x, mouse_y + 1, 0);
 	return;
 
 	//No more hacky mouse, instead we're going to rather inefficiently 
