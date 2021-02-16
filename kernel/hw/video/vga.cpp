@@ -565,13 +565,6 @@ inline int pixelLookup(int source, int addr)
 	return dither16Data[((source & 0xE00000) >> 21) | ((source & 0xE000) >> 10) | ((source & 0xE0) << 1)][addr & 1];
 }
 
-void VGAVideo::drawCursor(int mouse_x, int mouse_y, uint8_t* data, int invertMouse)
-{
-	//I'll do this later...
-
-	((Video*) this)->drawCursor(mouse_x, mouse_y, data, invertMouse);
-}
-
 void VGAVideo::putrect(int __x, int __y, int maxx, int maxy, uint32_t colour)
 {
 	uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + 0xA0000);
