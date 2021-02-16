@@ -800,6 +800,21 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
                 window->doubleclick_function(window, mouse_x, mouse_y);
             }
 
+            if (window->fullscreen) {
+                Window_move(window, window->restoreX, window->restoreY);
+                Window_resize(window, window->restoreWidth, window->restoreHeight);
+ 
+            } else {
+                window->restoreWidth = window->width;
+                window->restoreHeight = window->height;
+                window->restoreX = window->x;
+                window->restoreY = window->y;
+                Window_move(window, 0, 0);
+                Window_resize(window, window->desktop->width, window->desktop->height);
+            }
+            window->fullscreen ^= 1;
+            
+
         } else {
             window->nanoLastClicked = getNanoSinceBoot();
 

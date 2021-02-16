@@ -3,6 +3,7 @@
 
 #include "context.h"
 #include <inttypes.h>
+#include <stdbool.h>
 
 //================| Window Class Declaration |================//
 
@@ -62,6 +63,12 @@ typedef struct Window_struct {
     WindowResizeHandler resize_function;
     WindowMoveHandler move_function;
     char* title;
+
+    int16_t restoreWidth;
+    int16_t restoreHeight;
+    int16_t restoreX;
+    int16_t restoreY;
+    bool fullscreen;
 
     uint64_t nanoLastClicked;
 
