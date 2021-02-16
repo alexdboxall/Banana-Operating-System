@@ -23,8 +23,6 @@ uint8_t ___mouse_data[CURSOR_DATA_SIZE * MAX_CURSOR_TYPES] = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-char couldNotAllocate[] = "WSBE NO MEMORY";
-
 bool invertMouse = true;
 uint32_t desktopColour = 0x2A2AD4;
 
@@ -84,8 +82,6 @@ void Desktop_process_mouse(Desktop* desktop, uint16_t mouse_x,
 
 	//Do the old generic mouse handling
 	Window_process_mouse((Window*) desktop, mouse_x, mouse_y, mouse_buttons);
-
-	//Window painting now happens inside of the window raise and move operations
 
 	//Build a dirty rect list for the mouse area
 	if (!(dirty_list = List_new()))

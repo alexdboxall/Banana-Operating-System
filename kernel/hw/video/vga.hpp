@@ -29,6 +29,7 @@ public:
 	int open(int, int, void*);
 	int close(int, int, void*);
 
+	virtual void drawCursor(int mouse_x, int mouse_y, uint8_t* data, int invertMouse) override;
 	virtual void putpixel(int x, int y, uint32_t colour) override;
 	virtual void putrect(int x, int y, int w, int h, uint32_t colour) override;
 };
