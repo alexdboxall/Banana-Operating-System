@@ -41,8 +41,16 @@ void Video::putpixel(int x, int y, uint32_t col)
 
 void Video::drawCursor(int mouse_x, int mouse_y, uint8_t* data, int invertMouse)
 {
-	for (int y = 0; y < 4; ++y) {
-		for (int x = 0; x < 4; ++x) {
+	for (int y = 0; y < 32; ++y) {
+		if (y + mouse_y >= getHeight()) {
+			break;
+		}
+
+		for (int x = 0; x < 32; ++x) {
+			if (x + mouse_x >= getWidth()) {
+				break;
+			}
+
 			putpixel(x + mouse_x, y + mouse_y, 0);
 		}
 	}

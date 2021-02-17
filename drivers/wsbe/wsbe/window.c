@@ -55,6 +55,7 @@ int Window_init(Window* window, int16_t x, int16_t y, uint16_t width,
     window->resize_function = Window_resize_handler;
     window->move_function = Window_move_handler;
     window->nanoLastClicked = 0;
+    window->fullscreen = 0;
 
     window->active_child = (Window*)0;
     window->title = (char*)0;
@@ -793,7 +794,6 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
         window->mouseup_function(window, mouse_x, mouse_y);
 
         if (getNanoSinceBoot() < window->nanoLastClicked + 1000 * 1000 * 200) {
-            desktopColour ^= 0xFFFFFF;
             window->nanoLastClicked = getNanoSinceBoot() + 1000 * 1000 * 200;
 
             if (window->doubleclick_function) {
@@ -801,16 +801,17 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
             }
 
             if (window->fullscreen) {
-                Window_move(window, window->restoreX, window->restoreY);
-                Window_resize(window, window->restoreWidth, window->restoreHeight);
+                //Window_move(window, window->restoreX, window->restoreY);
+                //Window_resize(window, window->restoreWidth, window->restoreHeight);
  
             } else {
                 window->restoreWidth = window->width;
                 window->restoreHeight = window->height;
                 window->restoreX = window->x;
                 window->restoreY = window->y;
-                Window_move(window, 0, 0);
-                Window_resize(window, window->desktop->width, window->desktop->height);
+
+                //Window_move(window, 0, 0);
+                //Window_resize(window, window->desktop->width, window->desktop->height);
             }
             window->fullscreen ^= 1;
             

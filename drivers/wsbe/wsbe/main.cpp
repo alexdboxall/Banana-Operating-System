@@ -197,9 +197,8 @@ extern "C" void handleMouse(int xdelta, int ydelta, int btns, int z)
         buttons = 1;
     }
 
-    //canDoMouse = true;
-
-    Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
+    canDoMouse = true;
+    //Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
 }
 
 char nw[] = "New Window";
@@ -250,10 +249,9 @@ int main(int argc, const char* argv[])
 
     while (1) {  
         if (canDoMouse) {
-            //Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
-            //canDoMouse = false;
+            Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
+            canDoMouse = false;
         }
-        canDoMouse = true;
     }
 
     return 0;
