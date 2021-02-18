@@ -23,51 +23,13 @@
 
 uint64_t (*systemCallHandlers[128])(regs* r);
 
-extern uint64_t sysCallYield(regs* r);
-extern uint64_t sysCallExit(regs* r);
-extern uint64_t sysCallSbrk(regs* r);
-
-uint64_t sysCallWrite (regs* r)
-{	
-	UnixFile* file = nullptr;
-
-	if (r->ebx <= 2) {
-		file = currentTaskTCB->processRelatedTo->terminal;
-	} else {
-		file = getFromFileDescriptor(r->ebx);
-	}
-
-	if (file == nullptr) {
-		return -1;
-	}
-
-	int br = 0;
-	FileStatus status = file->write(r->ecx, (void*) r->edx, &br);
-
-	return br;
-}
-
-uint64_t sysCallRead(regs* r)
+namespace Sys
 {
-	kprintf("Read syscall IRQ level: %d\n", getIRQNestingLevel());
-
-	UnixFile* file = nullptr;
-	
-	if (r->ebx <= 2) {
-		file = currentTaskTCB->processRelatedTo->terminal;
-		
-	} else {
-		file = getFromFileDescriptor(r->ebx);	
-	}
-
-	if (file == nullptr) {
-		return -1;
-	}
-
-	int br = 0;
-	FileStatus status = file->read(r->ecx, (void*) r->edx, &br);
-
-	return br;
+	uint64_t yield(regs* r);
+	uint64_t exit(regs* r);
+	uint64_t sbrk(regs* r);
+	uint64_t write(regs* r);
+	uint64_t read(regs* r);
 }
 
 uint64_t sysCallGetPID(regs* r)
@@ -691,8 +653,8 @@ void setupSystemCalls()
 	systemCallHandlers[(int) SystemCallNumber::Yield] = Sys::yield;
 	systemCallHandlers[(int) SystemCallNumber::Exit] = Sys::exit;
 	systemCallHandlers[(int) SystemCallNumber::Sbrk] = Sys::sbrk;
-	systemCallHandlers[(int) SystemCallNumber::Write] = sysCallWrite;
-	systemCallHandlers[(int) SystemCallNumber::Read] = sysCallRead;
+	systemCallHandlers[(int) SystemCallNumber::Write] = Sys::write;
+	systemCallHandlers[(int) SystemCallNumber::Read] = Sys::read;
 	systemCallHandlers[(int) SystemCallNumber::GetPID] = sysCallGetPID;
 	systemCallHandlers[(int) SystemCallNumber::GetCwd] = sysCallGetCwd;
 	systemCallHandlers[(int) SystemCallNumber::SetCwd] = sysCallSetCwd;
