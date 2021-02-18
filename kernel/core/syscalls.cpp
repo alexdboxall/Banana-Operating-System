@@ -688,9 +688,9 @@ uint64_t sysGetUnixTime(regs* r)
 
 void setupSystemCalls()
 {
-	systemCallHandlers[(int) SystemCallNumber::Yield] = sysCallYield;
-	systemCallHandlers[(int) SystemCallNumber::Exit] = sysCallExit;
-	systemCallHandlers[(int) SystemCallNumber::Sbrk] = sysCallSbrk;
+	systemCallHandlers[(int) SystemCallNumber::Yield] = Sys::yield;
+	systemCallHandlers[(int) SystemCallNumber::Exit] = Sys::exit;
+	systemCallHandlers[(int) SystemCallNumber::Sbrk] = Sys::sbrk;
 	systemCallHandlers[(int) SystemCallNumber::Write] = sysCallWrite;
 	systemCallHandlers[(int) SystemCallNumber::Read] = sysCallRead;
 	systemCallHandlers[(int) SystemCallNumber::GetPID] = sysCallGetPID;

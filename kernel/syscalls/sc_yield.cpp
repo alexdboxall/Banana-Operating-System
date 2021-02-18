@@ -9,17 +9,21 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-/// <summary>
-/// Yields the currently running thread's timeslice.
-/// </summary>
-/// <returns>Always returns zero.</returns>
-/// 
-uint64_t sysCallYield(regs* r)
+namespace Sys
 {
-	lockScheduler();
-	schedule();
-	unlockScheduler();
+	/// <summary>
+	/// Yields the currently running thread's timeslice.
+	/// </summary>
+	/// <returns>Always returns zero.</returns>
+	/// 
+	uint64_t yield(regs* r)
+	{
+		lockScheduler();
+		schedule();
+		unlockScheduler();
 
-	return 0;
+		return 0;
+	}
 }
+
 
