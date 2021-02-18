@@ -14,7 +14,7 @@ extern "C" {
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-namespace Registry
+namespace Reg
 {
 	bool findLineFromLoadedData(char* data, char* key, char* output)
 	{

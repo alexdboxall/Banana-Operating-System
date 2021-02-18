@@ -15,7 +15,7 @@ VAS* firstVAS = nullptr;
 #pragma GCC optimize ("-fno-align-functions")
 //#pragma GCC optimize ("-fpeephole2")
 
-namespace VirtMem
+namespace Virt
 {
 	enum class VirtPageState: uint8_t
 	{

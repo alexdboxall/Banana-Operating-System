@@ -155,24 +155,24 @@ void ISA::detect()
 	}
 	detectDone = true;
 
-	bool needsSafeCheck = Registry::readBoolWithDefault((char*) "isa", (char*) "@isa:doneSafeCheck", true);
+	bool needsSafeCheck = Reg::readBoolWithDefault((char*) "isa", (char*) "@isa:doneSafeCheck", true);
 
 	for (int i = 0; i < sizeof(isaTable) / sizeof(ISATableEntry); ++i) {
 		char key[32];
 		strcpy(key, "@devices:");
 		strcat(key, isaTable[i].detectKey);
 
-		int val = Registry::readIntWithDefault((char*) "isa", (char*) key, ISA_DEVICE_AUTO_DETECT);
+		int val = Reg::readIntWithDefault((char*) "isa", (char*) key, ISA_DEVICE_AUTO_DETECT);
 		if (val != ISA_DEVICE_DISABLE) {
 			if (needsSafeCheck) {
 				//TODO:
-				// Registry::writeInt((char*) "isa", (char*) key, ISA_DEVICE_DISABLE);
+				// Reg::writeInt((char*) "isa", (char*) key, ISA_DEVICE_DISABLE);
 			}
 			
 			(this->*(isaTable[i].setupFunction))();
 
 			if (needsSafeCheck) {
-				// Registry::writeInt((char*) "isa", (char*) key, val);
+				// Reg::writeInt((char*) "isa", (char*) key, val);
 			}
 		}
 	}	

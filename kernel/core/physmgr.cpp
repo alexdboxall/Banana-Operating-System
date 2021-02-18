@@ -12,7 +12,7 @@
 #define STATE_FREE false
 #define STATE_ALLOCATED true
 
-namespace PhysMem
+namespace Phys
 {
 	//SHOULD BE A MULTIPLE OF 4096
 #define DMA_BLOCK_SIZE 4096

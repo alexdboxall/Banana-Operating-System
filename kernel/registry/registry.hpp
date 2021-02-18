@@ -7,7 +7,7 @@
 #define REGISTRY_TYPE_SYSTEM	0
 #define REGISTRY_TYPE_USER		1
 
-namespace Registry
+namespace Reg
 {
 	bool readBool(char* path, char* key, bool* out);												//WARNING: TRASHES INPUT ARRAYS!!
 	bool readInt(char* path, char* key, int* out);													//WARNING: TRASHES INPUT ARRAYS!!
