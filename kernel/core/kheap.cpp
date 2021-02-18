@@ -28,7 +28,7 @@ extern "C" void* sbrk(ptrdiff_t increment)
 		size_t oldbrk = brk;
 		int pages = (increment + 4095) / 4096;
 		for (int i = 0; i < pages; ++i) {
-			VirtMem::getAKernelVAS()->mapPage(PhysMem::allocatePage(), brk, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_SUPERVISOR);
+			Virt::getAKernelVAS()->mapPage(Phys::allocatePage(), brk, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_SUPERVISOR);
 			
 			if (invlpg) {
 				asm volatile ("invlpg (%0)" : : "b"((void*) (brk)) : "memory");
@@ -81,13 +81,13 @@ int liballoc_unlock()
 
 size_t liballoc_alloc(int pages)
 {
-	size_t addr = VirtMem::getAKernelVAS()->allocatePages(pages, PAGE_PRESENT | PAGE_SUPERVISOR);
+	size_t addr = Virt::getAKernelVAS()->allocatePages(pages, PAGE_PRESENT | PAGE_SUPERVISOR);
 	return addr;
 }
 
 int liballoc_free(void* ptr, int pages)
 {
-	VirtMem::getAKernelVAS()->freeAllocatedPages((size_t) ptr);
+	Virt::getAKernelVAS()->freeAllocatedPages((size_t) ptr);
 	return 0;
 }
 
@@ -409,7 +409,7 @@ extern "C" void* malloc(size_t size)
 	liballoc_lock();
 
 	if (l_initialized == 0) {
-		if (PhysMem::usablePages < 4096) {
+		if (Phys::usablePages < 4096) {
 			l_pageCount = 1;
 		} else {
 			l_pageCount = 4;

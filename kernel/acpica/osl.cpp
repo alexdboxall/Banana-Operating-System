@@ -337,10 +337,10 @@ extern "C" {
 		bool invlpg = thisCPU()->features.hasINVLPG;
 		
 		int pages = (Length + 4096) / 4096;
-		size_t virt = VirtMem::allocateKernelVirtualPages(pages);
+		size_t virt = Virt::allocateKernelVirtualPages(pages);
 
 		for (int i = 0; i < pages; ++i) {
-			VirtMem::getAKernelVAS()->mapPage((PhysicalAddress & ~0xFFF) + i * 4096, virt + i * 4096, PAGE_PRESENT | PAGE_SUPERVISOR);
+			Virt::getAKernelVAS()->mapPage((PhysicalAddress & ~0xFFF) + i * 4096, virt + i * 4096, PAGE_PRESENT | PAGE_SUPERVISOR);
 			
 			if (invlpg) {
 				asm volatile ("invlpg (%0)" : : "b"((void*) (virt + i * 4096)) : "memory");
@@ -365,12 +365,12 @@ extern "C" {
 
 	void AcpiOsUnmapMemory(void* where, ACPI_SIZE length)
 	{
-		//VirtMem::getCurrent()->freeAllocatedPages(((size_t) where) & ~0xFFF);
+		//Virt::getCurrent()->freeAllocatedPages(((size_t) where) & ~0xFFF);
 	}
 
 	ACPI_STATUS AcpiOsGetPhysicalAddress(void* LogicalAddress, ACPI_PHYSICAL_ADDRESS* PhysicalAddress)
 	{
-		*PhysicalAddress = VirtMem::getAKernelVAS()->virtualToPhysical((size_t) LogicalAddress);
+		*PhysicalAddress = Virt::getAKernelVAS()->virtualToPhysical((size_t) LogicalAddress);
 		return AE_OK;
 	}
 

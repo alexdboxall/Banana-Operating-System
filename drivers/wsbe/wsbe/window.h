@@ -37,6 +37,8 @@ typedef void (*WindowMoveHandler)(struct Window_struct*, int, int);
 #define DRAG_TYPE_NONE          0
 #define DRAG_TYPE_MOVE          1
 #define DRAG_TYPE_RESIZE_ALL    2
+#define DRAG_TYPE_RESIZE_HZ     3
+#define DRAG_TYPE_RESIZE_VT     4
 
 typedef struct Window_struct {  
     struct Window_struct* parent;
@@ -72,7 +74,8 @@ typedef struct Window_struct {
 
     uint64_t nanoLastClicked;
 
-    uint8_t* savedMouse;
+    int savedMouse;
+    int currentMouse;
     
 } Window;
 

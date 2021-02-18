@@ -27,6 +27,22 @@ Minimum System Requirements:
 	If the computer was made in the 80s, it'll be more intersting
 */
 
+/*
+
+Kernel Subsystems
+
+Krnl	Core Kernel
+Phys	Physical Memory Manager
+Virt	Virtual Memory Manager
+Sys		System Calls
+Thr		Processes and Threads
+Hal		Hardware Abstraction Library
+Dev		Device Subsystem
+Dbg		Debugging
+Fs		Filesystem
+Reg		Registry
+*/
+
 extern "C" {
 	#include "libk/string.h"
 }
@@ -166,8 +182,8 @@ extern "C" void kernel_main()
 	size_t highestFreeAddr = *((uint32_t*) 0x524);
 	highestFreeAddr = (highestFreeAddr + 4095) & ~0xFFF;
 
-	PhysMem::physicalMemorySetup(highestFreeAddr);
-	VirtMem::virtualMemorySetup();
+	Phys::physicalMemorySetup(highestFreeAddr);
+	Virt::virtualMemorySetup();
 
 	uint32_t* dp = (uint32_t*) 0x500;
 	uint32_t da = *dp++;

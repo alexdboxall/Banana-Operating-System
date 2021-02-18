@@ -100,7 +100,7 @@ uint8_t* findRSDP()
 		return 0;
 	}
 
-	if (PhysMem::usablePages < 2048) {
+	if (Phys::usablePages < 2048) {
 		computer->features.hasACPI = false;
 		return 0;
 	}
@@ -148,7 +148,7 @@ void loadACPITables(uint8_t* ptr)
 	for (int i = 0; i < nextACPITable; ++i) {
 		uint32_t* location = (uint32_t*) acpiTables[i].location;
 		uint32_t* originalLocation = location;
-		location = (uint32_t*) ((((size_t) location) & 0xFFF) | VirtMem::getAKernelVAS()->mapRange(((size_t) originalLocation) & ~0xFFF, VirtMem::allocateKernelVirtualPages(1), 1, PAGE_PRESENT | PAGE_SUPERVISOR));		
+		location = (uint32_t*) ((((size_t) location) & 0xFFF) | Virt::getAKernelVAS()->mapRange(((size_t) originalLocation) & ~0xFFF, Virt::allocateKernelVirtualPages(1), 1, PAGE_PRESENT | PAGE_SUPERVISOR));		
 
 		memcpy((void*) acpiTables[i].signature, (const void*) location, 4);
 
@@ -156,9 +156,9 @@ void loadACPITables(uint8_t* ptr)
 
 		int pages = (len + 4096) / 4096;
 		uint32_t* oldLocation = location;
-		location = (uint32_t*) ((((size_t) location) & 0xFFF) | VirtMem::getAKernelVAS()->mapRange(((size_t) originalLocation) & ~0xFFF, VirtMem::allocateKernelVirtualPages(pages), pages, PAGE_PRESENT | PAGE_SUPERVISOR));
+		location = (uint32_t*) ((((size_t) location) & 0xFFF) | Virt::getAKernelVAS()->mapRange(((size_t) originalLocation) & ~0xFFF, Virt::allocateKernelVirtualPages(pages), pages, PAGE_PRESENT | PAGE_SUPERVISOR));
 
-		VirtMem::freeKernelVirtualPages((size_t) oldLocation);
+		Virt::freeKernelVirtualPages((size_t) oldLocation);
 
 		acpiTables[i].location = location;
 	}
@@ -179,8 +179,8 @@ uint8_t* findRSDT(uint8_t* ptr)
 	struct XSDT* xsdt = (struct XSDT*) a.XsdtAddress;
 	struct RSDT* rsdt = (struct RSDT*) a.firstPart.RsdtAddress;
 
-	xsdt = (struct XSDT*) ((((size_t) xsdt) & 0xFFF) | VirtMem::getAKernelVAS()->mapRange(((size_t) xsdt) & ~0xFFF, VirtMem::allocateKernelVirtualPages(2), 2, PAGE_PRESENT | PAGE_SUPERVISOR));
-	rsdt = (struct RSDT*) ((((size_t) rsdt) & 0xFFF) | VirtMem::getAKernelVAS()->mapRange(((size_t) rsdt) & ~0xFFF, VirtMem::allocateKernelVirtualPages(2), 2, PAGE_PRESENT | PAGE_SUPERVISOR));
+	xsdt = (struct XSDT*) ((((size_t) xsdt) & 0xFFF) | Virt::getAKernelVAS()->mapRange(((size_t) xsdt) & ~0xFFF, Virt::allocateKernelVirtualPages(2), 2, PAGE_PRESENT | PAGE_SUPERVISOR));
+	rsdt = (struct RSDT*) ((((size_t) rsdt) & 0xFFF) | Virt::getAKernelVAS()->mapRange(((size_t) rsdt) & ~0xFFF, Virt::allocateKernelVirtualPages(2), 2, PAGE_PRESENT | PAGE_SUPERVISOR));
 
 	if (rev == 0) {
 		usingXSDT = 0;

@@ -56,6 +56,7 @@ int Window_init(Window* window, int16_t x, int16_t y, uint16_t width,
     window->move_function = Window_move_handler;
     window->nanoLastClicked = 0;
     window->fullscreen = 0;
+    window->currentMouse = MOUSE_OFFSET_NORMAL;
 
     window->active_child = (Window*)0;
     window->title = (char*)0;
@@ -721,11 +722,37 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
             //child, to be more consistent with most other GUIs
             Window_raise(child, 1);
 
+            if (!(child->flags & WIN_NODECORATION) &&
+                mouse_y >= child->y && mouse_y < (child->y + 28)) {
+                if (getNanoSinceBoot() < child->nanoLastClicked + 1000 * 1000 * 200) {
+                    child->nanoLastClicked = 0;
+
+                    if (child->fullscreen) {
+                        Window_move(child, child->restoreX, child->restoreY);
+                        Window_resize(child, child->restoreWidth, child->restoreHeight);
+
+                    } else {
+                        child->restoreWidth = child->width;
+                        child->restoreHeight = child->height;
+                        child->restoreX = child->x;
+                        child->restoreY = child->y;
+                        Window_move(child, 0, 0);
+                        Window_resize(child, window->desktop->width, window->desktop->height);
+                    }
+                    child->fullscreen ^= 1;
+                    break;
+
+                } else {
+                    child->nanoLastClicked = getNanoSinceBoot();
+
+                }
+            }
+
             //See if the mouse position lies within the bounds of the current
             //window's 31 px tall titlebar
             //We check the decoration flag since we can't drag a window without a titlebar
-            if(!(child->flags & WIN_NODECORATION) && 
-                mouse_y >= child->y && mouse_y < (child->y + 31)) {
+            if (!(child->flags & WIN_NODECORATION) &&
+                mouse_y >= child->y && mouse_y < (child->y + 28) && !child->fullscreen) {
 
                 //We'll also set this window as the window being dragged
                 //until such a time as the mouse is released
@@ -734,16 +761,16 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
                 window->drag_child = child;
                 window->dragType = DRAG_TYPE_MOVE;
 
-                window->savedMouse = ((Desktop*)window->desktop)->cursor_data;
+                window->savedMouse = window->currentMouse;
 
                 //We break without setting target_child if we're doing a drag since
                 //that shouldn't trigger a mouse event in the child 
                 break;
             }
             
-            if(!(child->flags & WIN_NODECORATION) &&
-                mouse_x >= child->x + child->width - 12 && mouse_x < child->x + child->width &&
-                mouse_y >= child->y + child->height - 12 && mouse_y < child->y + child->height) {
+            if(!(child->flags & WIN_NODECORATION) && !child->fullscreen &&
+                mouse_x >= child->x + child->width - 15 && mouse_x < child->x + child->width &&
+                mouse_y >= child->y + child->height - 15 && mouse_y < child->y + child->height) {
 
                 //We'll also set this window as the window being dragged
                 //until such a time as the mouse is released
@@ -752,11 +779,40 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
                 window->drag_child = child;
                 window->dragType = DRAG_TYPE_RESIZE_ALL;
 
-                window->savedMouse = ((Desktop*) window->desktop)->cursor_data;
-                Desktop_set_mouse((Desktop*) window->desktop, MOUSE_OFFSET_TLDR);
+                window->savedMouse = window->currentMouse;
+                window->currentMouse = MOUSE_OFFSET_TLDR;
+                break;
+            }
 
-                //We break without setting target_child if we're doing a drag since
-                //that shouldn't trigger a mouse event in the child
+            if (!(child->flags & WIN_NODECORATION) && !child->fullscreen &&
+                mouse_x >= child->x + child->width - 12 && mouse_x < child->x + child->width &&
+                mouse_y >= child->y && mouse_y < child->y + child->height) {
+
+                //We'll also set this window as the window being dragged
+                //until such a time as the mouse is released
+                window->drag_off_x = mouse_x - child->width;
+                window->drag_off_y = mouse_y - child->height;
+                window->drag_child = child;
+                window->dragType = DRAG_TYPE_RESIZE_HZ;
+
+                window->savedMouse = window->currentMouse;
+                window->currentMouse = MOUSE_OFFSET_TLDR;
+                break;
+            }
+
+            if (!(child->flags & WIN_NODECORATION) && !child->fullscreen &&
+                mouse_x >= child->x && mouse_x < child->x + child->width &&
+                mouse_y >= child->y + child->height - 12 && mouse_y < child->y + child->height) {
+
+                //We'll also set this window as the window being dragged
+                //until such a time as the mouse is released
+                window->drag_off_x = mouse_x - child->width;
+                window->drag_off_y = mouse_y - child->height;
+                window->drag_child = child;
+                window->dragType = DRAG_TYPE_RESIZE_VT;
+
+                window->savedMouse = window->currentMouse;
+                window->currentMouse = MOUSE_OFFSET_TLDR;
                 break;
             }
         }
@@ -766,13 +822,11 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
         break;
     }
 
+    Desktop_set_mouse((Desktop*) window->desktop, MOUSE_OFFSET_NORMAL);
+
     //Moving this outside of the mouse-in-child detection since it doesn't really
     //have anything to do with it
     if (!mouse_buttons) {
-        if (window->drag_child) {
-            ((Desktop*) window->desktop)->cursor_data = window->savedMouse;
-        }
-
         window->drag_child = (Window*) 0;
     }
 
@@ -783,6 +837,10 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
             Window_move(window->drag_child, mouse_x - window->drag_off_x, mouse_y - window->drag_off_y);
         } else if (window->dragType == DRAG_TYPE_RESIZE_ALL) {
             Window_resize(window->drag_child, mouse_x - window->drag_off_x, mouse_y - window->drag_off_y);
+        } else if (window->dragType == DRAG_TYPE_RESIZE_HZ) {
+            Window_resize(window->drag_child, mouse_x - window->drag_off_x, window->drag_child->height);
+        } else if (window->dragType == DRAG_TYPE_RESIZE_VT) {
+            Window_resize(window->drag_child, window->drag_child->width, mouse_y - window->drag_off_y);
         }
     }
 
@@ -792,34 +850,6 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
         
     } else if (window->mouseup_function && !mouse_buttons && window->last_button_state) {
         window->mouseup_function(window, mouse_x, mouse_y);
-
-        if (getNanoSinceBoot() < window->nanoLastClicked + 1000 * 1000 * 200) {
-            window->nanoLastClicked = getNanoSinceBoot() + 1000 * 1000 * 200;
-
-            if (window->doubleclick_function) {
-                window->doubleclick_function(window, mouse_x, mouse_y);
-            }
-
-            if (window->fullscreen) {
-                //Window_move(window, window->restoreX, window->restoreY);
-                //Window_resize(window, window->restoreWidth, window->restoreHeight);
- 
-            } else {
-                window->restoreWidth = window->width;
-                window->restoreHeight = window->height;
-                window->restoreX = window->x;
-                window->restoreY = window->y;
-
-                //Window_move(window, 0, 0);
-                //Window_resize(window, window->desktop->width, window->desktop->height);
-            }
-            window->fullscreen ^= 1;
-            
-
-        } else {
-            window->nanoLastClicked = getNanoSinceBoot();
-
-        }
 
     } else if (window->mousedrag_function && mouse_buttons) {
         window->mousedrag_function(window, mouse_x, mouse_y);

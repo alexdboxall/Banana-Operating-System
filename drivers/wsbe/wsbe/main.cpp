@@ -30,8 +30,8 @@ extern "C" {
     #include "button.h"
 }
 
-int mouse_x = 10;
-int mouse_y = 10;
+int mouse_x;
+int mouse_y;
 int buttons = 0;
 Desktop* desktop = nullptr;
 
@@ -114,45 +114,6 @@ void loadCursors()
     free(curdata);
 }
 
-
-char szstring[64];
-WindowPaintHandler oldHandler;
-
-void resizehandler(struct Window_struct* win, int w, int h)
-{
-    //sprintf(szstring, "W: %d, H: %d", w, h);
-}
-
-void newPaint(struct Window_struct* win)
-{
-    oldHandler(win);
-    Context_draw_text(win->context, szstring, 50, 50, 0);
-}
-
-void mdown(struct Window_struct* win, int x, int y)
-{
-    strcpy(szstring, "Mouse down.");
-    Window_paint(win, 0, 1);
-}
-
-void mup(struct Window_struct* win, int x, int y)
-{
-    strcpy(szstring, "Mouse up.");
-    Window_paint(win, 0, 1);
-}
-
-void mmove(struct Window_struct* win, int x, int y)
-{
-    strcpy(szstring, "Mouse move.");
-    Window_paint(win, 0, 1);
-}
-
-void mdrag(struct Window_struct* win, int x, int y)
-{
-    strcpy(szstring, "Mouse drag.");
-    Window_paint(win, 0, 1);
-}
-
 char tw[] = "Test Window";
 //And, finally, the handler that causes that button to make a new calculator
 void spawn_calculator(Button* button, int x, int y)
@@ -169,8 +130,8 @@ void spawn_calculator(Button* button, int x, int y)
     //w->mousedrag_function = mdrag;
     //w->mousemove_function = mmove;
 
-    oldHandler = w->paint_function;
-    w->paint_function = newPaint;
+    //oldHandler = w->paint_function;
+    //w->paint_function = newPaint;
     Window_paint((Window*) desktop, (List*) 0, 1);
 
     /*//Create and install a calculator
@@ -189,16 +150,16 @@ extern "C" void handleMouse(int xdelta, int ydelta, int btns, int z)
 
     if (mouse_x < 1) mouse_x = 1;
     if (mouse_y < 1) mouse_y = 1;
-    if (mouse_x > 639) mouse_x = 639;
-    if (mouse_y > 479) mouse_y = 479;
+    if (mouse_x > desktop->window.width - 2) mouse_x = desktop->window.width - 2;
+    if (mouse_y > desktop->window.height - 2) mouse_y = desktop->window.height - 2;
 
     buttons = 0;
     if (btns & 1) {
         buttons = 1;
     }
 
-    canDoMouse = true;
-    //Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
+    //canDoMouse = true;
+    Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
 }
 
 char nw[] = "New Window";
@@ -228,6 +189,9 @@ int main(int argc, const char* argv[])
     context->width = 640;
     context->height = 480;
 
+    mouse_x = context->width / 2;
+    mouse_y = context->height / 2;
+
     //Create the desktop
     desktop = Desktop_new(context);
 
@@ -243,12 +207,13 @@ int main(int argc, const char* argv[])
     //Install our handler of mouse events
     //fake_os_installMouseCallback(main_mouse_callback);
 
-    Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
-
     spawn_calculator(nullptr, 0, 0);
 
+    Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
+    Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
+
     while (1) {  
-        if (canDoMouse) {
+        if (0 && canDoMouse) {
             Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
             canDoMouse = false;
         }

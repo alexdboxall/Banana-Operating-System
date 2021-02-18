@@ -6,7 +6,7 @@
 #include <stddef.h>
 #include "core/main.hpp"
 
-namespace PhysMem
+namespace Phys
 {
 	extern int usablePages;
 	extern int usedPages;

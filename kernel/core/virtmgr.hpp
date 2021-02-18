@@ -16,7 +16,7 @@
 
 class VAS;
 
-namespace VirtMem
+namespace Virt
 {
 	void freeKernelVirtualPages(size_t address);
 	size_t allocateKernelVirtualPages(int pages);

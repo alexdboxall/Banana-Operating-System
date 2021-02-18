@@ -137,7 +137,7 @@ namespace VirtMem
 
 			size_t* entry = getAKernelVAS()->getPageTableEntry(page * 4096);
 			if (*entry & PAGE_ALLOCATED) {
-				PhysMem::freePage(*entry & ~0xFFF);
+				Phys::freePage(*entry & ~0xFFF);
 			}
 
 			if (state == VirtPageState::StartAndEnd) {
@@ -237,12 +237,12 @@ size_t VAS::allocatePages(int count, int flags)
 	bool invlpg = thisCPU()->features.hasINVLPG;
 
 	if (supervisorVAS) {
-		size_t virt = VirtMem::allocateKernelVirtualPages(count);
+		size_t virt = Virt::allocateKernelVirtualPages(count);
 		if (virt >= VIRT_KERNEL_BASE && thisCPU()->features.hasGlobalPages) {
 			flags |= PAGE_GLOBAL;
 		}
 		for (int i = 0; i < count; ++i) {
-			size_t phys = PhysMem::allocatePage();
+			size_t phys = Phys::allocatePage();
 			mapPage(phys, virt + i * 4096, flags | PAGE_ALLOCATED);
 
 			if (invlpg) {
@@ -274,7 +274,7 @@ size_t VAS::allocatePages(int count, int flags)
 		sbrk += count * 4096;
 
 		for (int i = 0; i < count; ++i) {
-			size_t phys = PhysMem::allocatePage();
+			size_t phys = Phys::allocatePage();
 			mapPage(phys, virt + i * 4096, flags | PAGE_ALLOCATED);
 
 			if (invlpg) {
@@ -308,7 +308,7 @@ size_t VAS::virtualToPhysical(size_t virt)
 
 void VAS::freeAllocatedPages(size_t virt) {
 	if (supervisorVAS) {
-		VirtMem::freeKernelVirtualPages(virt);
+		Virt::freeKernelVirtualPages(virt);
 
 	} else {
 		kprintf("@@@ VAS::freeAllocatedPages TODO!");
@@ -342,20 +342,20 @@ VAS::~VAS()
 				size_t oldPageEntry = *oldPageEntryPtr;
 
 				if ((oldPageEntry & PAGE_ALLOCATED) && (oldPageEntry & PAGE_PRESENT)) {
-					PhysMem::freePage(oldPageEntry & ~0xFFF);
+					Phys::freePage(oldPageEntry & ~0xFFF);
 					++fp;
 				}
 			}
 
 			if (oldEntry & PAGE_ALLOCATED) {
-				PhysMem::freePage(oldEntry & ~0xFFF);
+				Phys::freePage(oldEntry & ~0xFFF);
 				++fp;
 			}
 		}
 	}
 
-	VirtMem::freeKernelVirtualPages((size_t) pageDirectoryBase);
-	PhysMem::freePage(pageDirectoryBasePhysical);
+	Virt::freeKernelVirtualPages((size_t) pageDirectoryBase);
+	Phys::freePage(pageDirectoryBasePhysical);
 	++fp;
 
 	kprintf("Freed %d KB from VAS deletion.\n", fp * 4);
@@ -377,15 +377,15 @@ VAS::VAS(VAS* old)
 	sbrk = old->sbrk;
 	supervisorVAS = old->supervisorVAS;
 
-	pageDirectoryBasePhysical = PhysMem::allocatePage();
+	pageDirectoryBasePhysical = Phys::allocatePage();
 
 	//DO NOT mark as allocated, as we shouldn't be able to swap out a page table
-	pageDirectoryBase = (size_t*) VirtMem::getAKernelVAS()->mapRange(pageDirectoryBasePhysical, VirtMem::allocateKernelVirtualPages(1), 1, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
+	pageDirectoryBase = (size_t*) Virt::getAKernelVAS()->mapRange(pageDirectoryBasePhysical, Virt::allocateKernelVirtualPages(1), 1, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
 
 	mapOtherVASIn(true, this);
 
-	size_t mappingSpotOld = VirtMem::allocateKernelVirtualPages(1);
-	size_t mappingSpotNew = VirtMem::allocateKernelVirtualPages(1);
+	size_t mappingSpotOld = Virt::allocateKernelVirtualPages(1);
+	size_t mappingSpotNew = Virt::allocateKernelVirtualPages(1);
 
 	for (int i = 0; i < 1024; ++i) {
 		size_t oldEntry = currentTaskTCB->processRelatedTo->vas->pageDirectoryBase[i];
@@ -395,7 +395,7 @@ VAS::VAS(VAS* old)
 		if ((oldEntry & PAGE_ALLOCATED) && (oldEntry & PAGE_PRESENT)) {
 			kprintf("Tricky allocation...\n");
 
-			size_t addr = PhysMem::allocatePage();
+			size_t addr = Phys::allocatePage();
 			kprintf("New addr 0x%X\n", addr);
 
 			pageDirectoryBase[i] = addr | (oldEntry & 0xFFF);
@@ -411,12 +411,12 @@ VAS::VAS(VAS* old)
 				if ((oldPageEntry & PAGE_ALLOCATED) && (oldPageEntry & PAGE_PRESENT)) {
 					kprintf("    New copy.\n");
 					
-					size_t newPage = PhysMem::allocatePage();
+					size_t newPage = Phys::allocatePage();
 					kprintf("    newPage = 0x%X\n", newPage);
 					kprintf("    oldPage = 0x%X\n", oldPageEntry & ~0xFFF);
 
-					VirtMem::getAKernelVAS()->mapRange(newPage, mappingSpotNew, 1, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
-					VirtMem::getAKernelVAS()->mapRange(oldPageEntry & ~0xFFF, mappingSpotOld, 1, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
+					Virt::getAKernelVAS()->mapRange(newPage, mappingSpotNew, 1, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
+					Virt::getAKernelVAS()->mapRange(oldPageEntry & ~0xFFF, mappingSpotOld, 1, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
 
 					memcpy((void*) mappingSpotNew, (const void*) mappingSpotOld, 4096);
 
@@ -435,8 +435,8 @@ VAS::VAS(VAS* old)
 		}
 	}
 
-	VirtMem::freeKernelVirtualPages(mappingSpotNew);
-	VirtMem::freeKernelVirtualPages(mappingSpotOld);
+	Virt::freeKernelVirtualPages(mappingSpotNew);
+	Virt::freeKernelVirtualPages(mappingSpotOld);
 
 	unlockStuff();
 }
@@ -444,10 +444,10 @@ VAS::VAS(VAS* old)
 VAS::VAS(bool kernel) {
 	supervisorVAS = kernel;
 
-	pageDirectoryBasePhysical = PhysMem::allocatePage();
+	pageDirectoryBasePhysical = Phys::allocatePage();
 
 	//DO NOT mark as allocated, as we shouldn't be able to swap out a page table
-	pageDirectoryBase = (size_t*) VirtMem::getAKernelVAS()->mapRange(pageDirectoryBasePhysical, VirtMem::allocateKernelVirtualPages(1), 1, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
+	pageDirectoryBase = (size_t*) Virt::getAKernelVAS()->mapRange(pageDirectoryBasePhysical, Virt::allocateKernelVirtualPages(1), 1, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
 
 	//make everything non-present to start with
 	for (int i = 0; i < 1024; ++i) {
@@ -553,12 +553,12 @@ void VAS::mapForeignPage(bool secondSlot, VAS* other, size_t physicalAddr, size_
 
 	if (!(other->pageDirectoryBase[pageTableNumber] & PAGE_PRESENT)) {
 		//create the page table first
-		size_t addr = PhysMem::allocatePage();
+		size_t addr = Phys::allocatePage();
 
 		//clear it
-		void* virtaddr = (void*) VirtMem::getAKernelVAS()->mapRange(addr, VirtMem::allocateKernelVirtualPages(1), 1, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
+		void* virtaddr = (void*) Virt::getAKernelVAS()->mapRange(addr, Virt::allocateKernelVirtualPages(1), 1, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
 		memset(virtaddr, 0, 4096);
-		VirtMem::freeKernelVirtualPages((size_t) virtaddr);
+		Virt::freeKernelVirtualPages((size_t) virtaddr);
 
 		other->pageDirectoryBase[pageTableNumber] = addr | PAGE_PRESENT | PAGE_WRITABLE | PAGE_USER | PAGE_ALLOCATED;
 	}
@@ -587,12 +587,12 @@ void VAS::mapPage(size_t physicalAddr, size_t virtualAddr, int flags) {
 
 	if (!(pageDirectoryBase[pageTableNumber] & PAGE_PRESENT)) {		
 		//create the page table first
-		size_t addr = PhysMem::allocatePage();
+		size_t addr = Phys::allocatePage();
 
 		//clear the page
-		void* virtaddr = (void*) VirtMem::getAKernelVAS()->mapRange(addr, VirtMem::allocateKernelVirtualPages(1), 1, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
+		void* virtaddr = (void*) Virt::getAKernelVAS()->mapRange(addr, Virt::allocateKernelVirtualPages(1), 1, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
 		memset(virtaddr, 0, 4096);
-		VirtMem::freeKernelVirtualPages((size_t) virtaddr);
+		Virt::freeKernelVirtualPages((size_t) virtaddr);
 
 		pageDirectoryBase[pageTableNumber] = addr | PAGE_PRESENT | PAGE_WRITABLE | PAGE_USER | PAGE_ALLOCATED;
 	}
@@ -618,13 +618,13 @@ extern "C" void mapVASFirstTime()
 
 	//12KB kernel (interrupt handler) stack
 	for (int i = 0; i < 3; ++i) {
-		vas->mapRange(PhysMem::allocatePage(), VIRT_APP_STACK_KRNL_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL, 1, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_WRITABLE | PAGE_SUPERVISOR);
+		vas->mapRange(Phys::allocatePage(), VIRT_APP_STACK_KRNL_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL, 1, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_WRITABLE | PAGE_SUPERVISOR);
 	}
 
 	//OLD: 8KB user (or kernel mode task) stack
 	//NEW: 128KB user stack
 	for (int i = 0; i < 32; ++i) {
-		vas->mapRange(PhysMem::allocatePage(), VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL, 1, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_WRITABLE | (vas->supervisorVAS ? PAGE_SUPERVISOR : PAGE_USER));
+		vas->mapRange(Phys::allocatePage(), VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL, 1, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_WRITABLE | (vas->supervisorVAS ? PAGE_SUPERVISOR : PAGE_USER));
 	}
 
 	CPU::writeCR3(CPU::readCR3());

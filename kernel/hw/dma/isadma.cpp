@@ -79,7 +79,7 @@ DMAChannel::~DMAChannel()
 {
 	//free the DMA pointer if needed
 	if (dmaPointerToFree) {
-		PhysMem::freeDMA(dmaPointerToFree, dmaPointerSize);
+		Phys::freeDMA(dmaPointerToFree, dmaPointerSize);
 	}
 }
 
@@ -111,7 +111,7 @@ void DMAChannel::setAddress(uint32_t a)
 void DMAChannel::allocateAddressAndSet(uint16_t len)
 {
 	//allocate the address
-	dmaPointerToFree = PhysMem::allocateDMA(len);
+	dmaPointerToFree = Phys::allocateDMA(len);
 
 	//and store things
 	addr = dmaPointerToFree;

@@ -245,7 +245,7 @@ void AMD_K6_read_msr(uint32_t msr, REGS* regs);
 void AMD_K6_writeback(int family, int model, int stepping)
 {
 	/* mem_end == top of memory in bytes */
-	int mem = (PhysMem::highestMem >> 20) / 4; /* turn into 4mb aligned pages */
+	int mem = (Phys::highestMem >> 20) / 4; /* turn into 4mb aligned pages */
 	int c;
 	REGS regs;
 
@@ -388,7 +388,7 @@ int CPU::open(int num, int b, void* vas_)
 
 	cpuSpecificData = (CPUSpecificData*) VIRT_CPU_SPECIFIC;
 
-	cpuSpecificPhysAddr = (CPUSpecificData*) PhysMem::allocatePage();
+	cpuSpecificPhysAddr = (CPUSpecificData*) Phys::allocatePage();
 	cpuSpecificPhysAddr->cpuNumber = num;
 	cpuSpecificPhysAddr->cpuPointer = this;
 

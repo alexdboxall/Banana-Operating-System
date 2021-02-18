@@ -36,7 +36,7 @@ bool allocateMemoryForTask(Process* prcss, File* file, size_t size, size_t virtu
 
 	size_t pagesReq = (size + 4095) / 4096;
 	size_t nullPagesReq = (additionalNullBytes + 4095) / 4096;
-	size_t virtMappingSpot = VirtMem::allocateKernelVirtualPages(1);
+	size_t virtMappingSpot = Virt::allocateKernelVirtualPages(1);
 
 	int actual;
 
@@ -48,12 +48,12 @@ bool allocateMemoryForTask(Process* prcss, File* file, size_t size, size_t virtu
 			FileStatus res = file->read(size > 4096 ? 4096 : size, (void*) buffer, &actual);
 			if (res != FileStatus::Success) {
 				kprintf("allocate memory for task failed (A)! 0x%X\n", (int) res);
-				VirtMem::freeKernelVirtualPages(virtMappingSpot);
+				Virt::freeKernelVirtualPages(virtMappingSpot);
 				return false;
 			}
 
 			lockScheduler();
-			size_t addr = PhysMem::allocatePage();
+			size_t addr = Phys::allocatePage();
 			currentTaskTCB->processRelatedTo->vas->mapPage(addr, virtMappingSpot, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
 
 			//TODO: you can move mapOtherVASIn outside of the loop, but if someone else maps a VAS into the same slot the system will crash
@@ -75,7 +75,7 @@ bool allocateMemoryForTask(Process* prcss, File* file, size_t size, size_t virtu
 		currentTaskTCB->processRelatedTo->vas->mapOtherVASIn(false, prcss->vas);
 
 		for (size_t i = 0; i < nullPagesReq; ++i) {
-			size_t addr = PhysMem::allocatePage();
+			size_t addr = Phys::allocatePage();
 			currentTaskTCB->processRelatedTo->vas->mapPage(addr, virtMappingSpot, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
 			currentTaskTCB->processRelatedTo->vas->mapForeignPage(false, prcss->vas, addr, virtualAddr, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_USER | PAGE_WRITABLE);
 			memset((void*) virtMappingSpot, 0, 4096);
@@ -85,7 +85,7 @@ bool allocateMemoryForTask(Process* prcss, File* file, size_t size, size_t virtu
 		unlockScheduler();
 	}
 
-	VirtMem::freeKernelVirtualPages(virtMappingSpot);
+	Virt::freeKernelVirtualPages(virtMappingSpot);
 
 	return true;
 }
@@ -455,7 +455,7 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 			kprintf("VirtAddr = 0x%X, size = 0x%X, totalsize = 0x%X, pages = %d, 1st page bytes = 0x%X\n", virtualAddr, size, totalSize, pages, firstPageBytes);
 
 			for (int i = 0; i < pages; ++i) {
-				size_t physicalAddr = PhysMem::allocatePage();
+				size_t physicalAddr = Phys::allocatePage();
 				kernelProcess->vas->mapPage(physicalAddr, virtualAddr & ~0xFFF, PAGE_PRESENT | PAGE_SUPERVISOR);
 				memset((void*) (virtualAddr & ~0xFFF), 0, 4096);
 				kprintf("memsetting virtual address = 0x%X\n", virtualAddr & ~0xFFF);
@@ -644,7 +644,7 @@ size_t loadDLL(const char* name)
 	}
 	delete f;
 
-	//size_t addr = VirtMem::allocateKernelVirtualPages((siz + 4095) / 4096);
+	//size_t addr = Virt::allocateKernelVirtualPages((siz + 4095) / 4096);
 	size_t addr = (size_t) malloc(siz);
 
 	kprintf("Loaded driver to address 0x%X\n", addr);
