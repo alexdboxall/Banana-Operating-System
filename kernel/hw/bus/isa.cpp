@@ -1,6 +1,7 @@
 #include "core/common.hpp"
 #include "core/elf.hpp"
 #include "hw/ports.hpp"
+#include "hal/video.hpp"
 #include "hw/acpi.hpp"
 #include "hw/bus/isa.hpp"
 #include "registry/registry.hpp"
