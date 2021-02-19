@@ -461,7 +461,9 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 		int actual;
 		f->read(31, namebuffer, &actual);
 		
-		if (!strncmp(namebuffer, ".rel.text", 9)) {
+		kprintf("SECTION: '%s'\n", namebuffer);
+
+		if (!memcmp(namebuffer, ".rel.text", 9)) {
 			relTextOffsets[nextRelSection] = fileOffset;
 			relTextLengths[nextRelSection++] = (sectHeaders + i)->sh_size;
 		}
