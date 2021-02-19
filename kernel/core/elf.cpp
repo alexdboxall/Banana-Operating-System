@@ -435,12 +435,17 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 		}
 	}
 
-	size_t relTextOffset = 0;			//offset into file of .rel.text
-	size_t relTextLength = 0;			//length of .rel.text
+	size_t relTextOffsets[128];			//offset into file of .rel.text
+	size_t relTextLengths[128];			//length of .rel.text
+	memset(relTextOffsets, 0, sizeof(relTextOffsets));
+	memset(relTextLengths, 0, sizeof(relTextLengths));
+
 	size_t symTabOffset = 0;			//offset into file of .symtab
 	size_t symTabLength = 0;			//length of .symtab
 	size_t strTabLength = 0;			//length of .symtab
 	size_t strTabOffset = 0;			//length of .symtab
+
+	int nextRelSection = 0;
 
 	//LOOK AT SECTIONS
 	for (uint16_t i = 0; i < elf->shNum; ++i) {
@@ -456,9 +461,9 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 		int actual;
 		f->read(31, namebuffer, &actual);
 		
-		if (!strcmp(namebuffer, ".rel.text")) {
-			relTextOffset = fileOffset;
-			relTextLength = (sectHeaders + i)->sh_size;
+		if (!strncmp(namebuffer, ".rel.text", 9)) {
+			relTextOffsets[nextRelSection] = fileOffset;
+			relTextLengths[nextRelSection++] = (sectHeaders + i)->sh_size;
 		}
 		if (!strcmp(namebuffer, ".symtab")) {
 			symTabOffset = fileOffset;
@@ -485,18 +490,18 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 	f->seek(strTabOffset);
 	f->read(strTabLength, (void*) stringTab, &actual);
 
-	if (relTextOffset) {
-		int entries = relTextLength / (sizeof(size_t) * 2) + 1;
+	for (int seg = 0; seg < nextRelSection; ++seg) {
+		int entries = relTextLengths[seg] / (sizeof(size_t) * 2);
 		kprintf("%d relocation entries.\n", entries);
 
-		f->seek(relTextOffset);
+		f->seek(relTextOffsets[seg]);
 
-		size_t* ptr = (size_t*) malloc(relTextLength);
+		size_t* ptr = (size_t*) malloc(relTextLengths[seg]);
 		size_t* optr = ptr;
 
 		int act;
-		f->read(relTextLength, ptr, &act);
-		kprintf("relTextLength = %d, actually read in %d bytes\n", relTextLength, act);
+		f->read(relTextLengths[seg], ptr, &act);
+		kprintf("relTextLength = %d, actually read in %d bytes\n", relTextLengths[seg], act);
 
 		for (int i = 0; i < entries; ++i) {
 			uint32_t pos = *ptr++;
