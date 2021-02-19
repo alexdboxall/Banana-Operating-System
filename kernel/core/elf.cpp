@@ -432,51 +432,6 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 			int actu;
 			f->read(size, (void*) (addr - entryPoint + relocationPoint), &actu);
 			memset((void*) (addr - entryPoint + relocationPoint + size), 0, (progHeaders + i)->p_memsz - (progHeaders + i)->p_filsz);
-
-			/*
-			status = f->seek(fileOffset);
-			if (status != FileStatus::Success) {
-				kprintf("OOPS 7\n");
-				return false;
-			}
-
-			kprintf("Loading segment to 0x%X\n", addr - entryPoint + relocationPoint);
-
-			size_t virtualAddr = addr - entryPoint + relocationPoint;
-			size_t totalSize = size + (progHeaders + i)->p_memsz - (progHeaders + i)->p_filsz;
-
-			int pages = (totalSize + 4095 + (virtualAddr & 0xFFF)) / 4096;
-
-			int firstPageBytes = 4096 - (virtualAddr & 0xFFF);
-			if (size < firstPageBytes) {
-				firstPageBytes = size;
-			}
-
-			kprintf("VirtAddr = 0x%X, size = 0x%X, totalsize = 0x%X, pages = %d, 1st page bytes = 0x%X\n", virtualAddr, size, totalSize, pages, firstPageBytes);
-
-			for (int i = 0; i < pages; ++i) {
-				size_t physicalAddr = Phys::allocatePage();
-				kernelProcess->vas->mapPage(physicalAddr, virtualAddr & ~0xFFF, PAGE_PRESENT | PAGE_SUPERVISOR);
-				memset((void*) (virtualAddr & ~0xFFF), 0, 4096);
-				kprintf("memsetting virtual address = 0x%X\n", virtualAddr & ~0xFFF);
-				
-				int actu;
-				if (size) {
-					if (i == 0) {
-						f->read(firstPageBytes, (void*) virtualAddr, &actu);
-						size -= firstPageBytes;
-						virtualAddr += firstPageBytes;
-
-					} else {						
-						f->read(size < 4096 ? size : 4096, (void*) virtualAddr, &actu);
-						virtualAddr += 4096;
-						size -= (size < 4096 ? size : 4096);
-					}
-
-				} else {
-					virtualAddr += 4096;
-				}
-			}*/
 		}
 	}
 
@@ -584,8 +539,8 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 				} else {
 					x = addr - entryPoint + relocationPoint + *entry;
 				}
-				//kprintf("R_386_32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
-				//kprintf("addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
+				kprintf("R_386_32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
+				kprintf("addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
 				*entry = x;
 
 			} else if (type == 2 && sizeof(size_t) == 4) {			//R_386_PC32
@@ -597,8 +552,8 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 				} else {
 					x = addr - pos + *entry;
 				}
-				//kprintf("R_386_PC32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
-				//kprintf("addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
+				kprintf("R_386_PC32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
+				kprintf("addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
 				*entry = x;
 
 			} else {
