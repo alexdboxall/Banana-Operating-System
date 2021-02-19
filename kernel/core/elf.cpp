@@ -486,7 +486,7 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 	f->read(strTabLength, (void*) stringTab, &actual);
 
 	if (relTextOffset) {
-		int entries = relTextLength / (sizeof(size_t) * 2);
+		int entries = relTextLength / (sizeof(size_t) * 2) + 1;
 		kprintf("%d relocation entries.\n", entries);
 
 		f->seek(relTextOffset);
