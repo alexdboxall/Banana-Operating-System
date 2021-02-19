@@ -114,7 +114,7 @@ void loadCursors()
     free(curdata);
 }
 
-char tw[] = "Test Window";
+char tw[] = "The quick brown fox jumps";
 //And, finally, the handler that causes that button to make a new calculator
 void spawn_calculator(Button* button, int x, int y)
 {
@@ -173,13 +173,16 @@ extern "C" void debugwrite(char* t)
     kprintf(t);
 }
 
+extern "C" void loadbuiltinfonts();
+
 int main(int argc, const char* argv[])
 {
     canDoMouse = false;
     loadCursors();
+    loadbuiltinfonts();
 
-    desktopColour = Registry::readIntWithDefault((char*) registryFilename, (char*) registryMouseDesktopCol, 0x2A2AD4);
-    invertMouse = Registry::readIntWithDefault((char*) registryFilename, (char*) registryMouseInvertKey, 0);
+    desktopColour = Reg::readIntWithDefault((char*) registryFilename, (char*) registryMouseDesktopCol, 0x2A2AD4);
+    invertMouse = Reg::readIntWithDefault((char*) registryFilename, (char*) registryMouseInvertKey, 0);
 
     guiMouseHandler = handleMouse;
 
@@ -200,12 +203,7 @@ int main(int argc, const char* argv[])
     Window_set_title((Window*) launch_button, (char*) nw);
     launch_button->onmousedown = spawn_calculator;
     Window_insert_child((Window*) desktop, (Window*) launch_button);
-
-    //Initial draw
     Window_paint((Window*) desktop, (List*) 0, 1);
-
-    //Install our handler of mouse events
-    //fake_os_installMouseCallback(main_mouse_callback);
 
     spawn_calculator(nullptr, 0, 0);
 
@@ -213,10 +211,7 @@ int main(int argc, const char* argv[])
     Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
 
     while (1) {  
-        if (0 && canDoMouse) {
-            Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
-            canDoMouse = false;
-        }
+        sleep(2);
     }
 
     return 0;

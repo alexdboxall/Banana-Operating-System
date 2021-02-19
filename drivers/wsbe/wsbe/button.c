@@ -21,9 +21,6 @@ Button* Button_new(int x, int y, int w, int h) {
     //Init the new button mousedown handler
     button->onmousedown = (ButtonMousedownHandler)0;
 
-    //And clear the toggle value
-    button->color_toggle = 0;
-
     return button;
 }
 
@@ -32,11 +29,7 @@ void Button_paint(Window* button_window) {
     int title_len;
     Button* button = (Button*)button_window;
 
-    uint32_t border_color;
-    if(button->color_toggle)
-        border_color = WIN_TITLECOLOR;
-    else
-        border_color = WIN_BGCOLOR - 0x101010;
+    uint32_t border_color = WIN_BGCOLOR - 0x101010;
 
     Context_fill_rect(button_window->context, 1, 1, button_window->width - 1,
                       button_window->height - 1, WIN_BGCOLOR);
@@ -58,15 +51,13 @@ void Button_paint(Window* button_window) {
         Context_draw_text(button_window->context, button_window->title,
                           (button_window->width / 2) - (title_len / 2),
                           (button_window->height / 2) - 6,
-                          0);                                    
+                          0, 0);                                    
 }
 
 //This just sets and resets the toggle
 void Button_mousedown_handler(Window* button_window, int x, int y) {
 
     Button* button = (Button*)button_window;
-
-    button->color_toggle = !button->color_toggle;
 
     //Since the button has visibly changed state, we need to invalidate the
     //area that needs updating

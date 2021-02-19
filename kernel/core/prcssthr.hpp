@@ -137,10 +137,12 @@ public:
 //JUST FOR NOW	- NEEDS TO BE UPDATED IN hardware.asm IF THIS IS CHANGED
 #define currentTaskTCB (*((ThreadControlBlock**) 0xC2002000))		
 
+extern "C" size_t taskStartupFunction();
+extern "C" void taskReturned();
+
 void switchToThread(ThreadControlBlock* nextThreadToRun);
 void setupMultitasking(void (*where)());
 void schedule();
-extern "C" size_t taskStartupFunction();
 void lockScheduler(void);
 void unlockScheduler(void);
 void blockTask(enum TaskState reason);
@@ -163,6 +165,6 @@ extern ThreadControlBlock* cleanerThread;
 extern LinkedList<volatile ThreadControlBlock> sleepingTaskList;
 
 extern void terminateTask(int returnCode = 0);
-extern "C" void taskReturned();
+
 
 #endif

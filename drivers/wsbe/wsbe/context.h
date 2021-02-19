@@ -18,6 +18,8 @@ typedef struct Context_struct {
     uint8_t clipping_on;
 } Context;
 
+#define TEXT_FLAG_BOLD      1
+
 //Methods
 Context* Context_new(uint16_t width, uint16_t height, uint32_t* buffer);
 void Context_fill_rect(Context* context, int x, int y,  
@@ -32,6 +34,6 @@ void Context_intersect_clip_rect(Context* context, Rect* rect);
 void Context_subtract_clip_rect(Context* context, Rect* subtracted_rect);                       
 void Context_add_clip_rect(Context* context, Rect* rect);
 void Context_clear_clip_rects(Context* context);
-void Context_draw_text(Context* context, char* string, int x, int y, uint32_t color);
+void Context_draw_text(Context* context, char* string, int x, int y, uint32_t color, int flags);
 
 #endif //CONTEXT_H

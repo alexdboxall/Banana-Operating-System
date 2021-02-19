@@ -46,7 +46,6 @@ void sendKeyToTerminal(uint8_t code)
 	}
 }
 
-#include "hw/video/vga.hpp"
 #include "hal/video.hpp"
 #include "core/prcssthr.hpp"
 #include "core/elf.hpp"
@@ -58,11 +57,13 @@ void startGUI(void* a)
 
 	kprintf("SGUI: nesting level = %d\n", getIRQNestingLevel());
 
-	extern Video* screen;
+	/*extern Video* screen;
 	VGAVideo* vga = new VGAVideo();
 	computer->addChild(vga);
 	vga->open(0, 0, nullptr);
-	screen = vga;
+	screen = vga;*/
+
+	executeDLL(loadDLL("C:/Banana/Drivers/vga.sys"), computer);
 	executeDLL(loadDLL("C:/Banana/System/wsbe.sys"), computer);
 }
 

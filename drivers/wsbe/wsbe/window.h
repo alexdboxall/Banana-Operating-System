@@ -8,13 +8,13 @@
 //================| Window Class Declaration |================//
 
 //Feel free to play with this 'theme'
-#define WIN_BGCOLOR             0xBBBBBB //A generic grey
+#define WIN_BGCOLOR             0xAAAAAA //A generic grey
 #define WIN_TITLECOLOR          0x000080 //A nice subtle blue
-#define WIN_TITLECOLOR_INACTIVE 0x808080 //A darker shade
+#define WIN_TITLECOLOR_INACTIVE 0x555555 //A darker shade
 #define WIN_TEXTCOLOR           0xFFFFFF
-#define WIN_TEXTCOLOR_INACTIVE  0xFFFFFF
+#define WIN_TEXTCOLOR_INACTIVE  0xAAAAAA
 #define WIN_BORDERCOLOR         0x0
-#define WIN_TITLEHEIGHT         31
+#define WIN_TITLEHEIGHT         26
 #define WIN_BORDERWIDTH         3
 
 //Some flags to define our window behavior
@@ -48,7 +48,6 @@ typedef struct Window_struct {
     int16_t height;
     uint16_t flags;
     Context* context;
-    struct Window_struct* desktop;
     struct Window_struct* drag_child;
     struct Window_struct* active_child;
     List* children;
@@ -103,7 +102,6 @@ Window* Window_create_window(Window* window, int16_t x, int16_t y,
 void Window_insert_child(Window* window, Window* child);   
 void Window_invalidate(Window* window, int top, int left, int bottom, int right); 
 void Window_set_title(Window* window, char* new_title);                       
-void Window_append_title(Window* window, char* additional_chars);
 void Window_update_title(Window* window);
 
 #endif //WINDOW_H

@@ -38,8 +38,6 @@ Desktop* Desktop_new(Context* context)
 	//Initialize the Window bits of our desktop
 	Window_init((Window*) desktop, 0, 0, context->width, context->height, WIN_NODECORATION, context);
 
-	desktop->window.desktop = (Window*) desktop;
-
 	//Override our paint function
 	desktop->window.paint_function = Desktop_paint_handler;
 

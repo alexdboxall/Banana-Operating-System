@@ -34,6 +34,7 @@ typedef struct Desktop_struct {
 extern uint8_t ___mouse_data[CURSOR_DATA_SIZE * MAX_CURSOR_TYPES];
 extern bool invertMouse;
 extern uint32_t desktopColour;
+extern Desktop* desktop;
 
 //Methods
 void Desktop_set_mouse(Desktop* d, int offset);
