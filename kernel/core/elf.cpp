@@ -513,7 +513,7 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 
 			size_t addr = symbolTab[symbolNum].st_value;
 
-			kprintf("Symbol: %s, addr = 0x%X\n", ((char*) stringTab) + symbolTab[symbolNum].st_name, addr);
+			kprintf("Symbol: %s, addr = 0x%X, pos = 0x%X, info = 0x%X\n", ((char*) stringTab) + symbolTab[symbolNum].st_name, addr, pos, info);
 
 			bool dynamic = false;
 			if (addr == 0) {
