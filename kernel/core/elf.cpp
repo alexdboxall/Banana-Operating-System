@@ -549,9 +549,12 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 				} else {
 					if (info == 0x101) {
 						x = *entry - entryPoint + relocationPoint;
+
 					} else if (info == 0x401) {
+						kprintf("Processing a '0x401' relocation.\nentry = 0x%X, *entry = 0x%X, entryPoint = 0x%X, relocationPoint = 0x%X, addr = 0x%X, pos = 0x%X\n", entry, *entry, entryPoint, relocationPoint, addr, pos);
 						//x = addr - entryPoint + relocationPoint + *entry;
 						x = *entry - entryPoint + relocationPoint;
+
 					} else {
 						x = addr - entryPoint + relocationPoint + *entry;
 					}
