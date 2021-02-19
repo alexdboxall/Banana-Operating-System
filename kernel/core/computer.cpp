@@ -119,7 +119,6 @@ void Computer::start()
 
 	executeDLL(loadDLL("C:/Banana/System/system.dll"), computer);
 
-	executeDLL(loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
 
 	kprintf("DONE.\n");
 
