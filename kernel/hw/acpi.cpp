@@ -738,7 +738,7 @@ int ACPI::open(int mode, int, void*)
 	addChild(isa);
 	isa->open(0, 0, nullptr);*/
 
-	executeDLL(loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
+	//executeDLL(loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
 
 	SimpleBootFlagTable* sbf = (SimpleBootFlagTable*) findDataTable(RSDTpointer, (char*) "BOOT");
 	if (sbf) {
