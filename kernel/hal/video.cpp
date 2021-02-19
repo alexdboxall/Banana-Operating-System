@@ -9,6 +9,8 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
+Video* screen;
+
 Video::Video(const char* name) : Device(name)
 {
 	deviceType = DeviceType::Screen;
