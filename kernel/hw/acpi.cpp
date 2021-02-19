@@ -738,6 +738,7 @@ int ACPI::open(int mode, int, void*)
 	addChild(isa);
 	isa->open(0, 0, nullptr);*/
 
+
 	SimpleBootFlagTable* sbf = (SimpleBootFlagTable*) findDataTable(RSDTpointer, (char*) "BOOT");
 	if (sbf) {
 		writeSimpleBootFlag(sbf);
