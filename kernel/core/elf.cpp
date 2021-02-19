@@ -461,7 +461,7 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 		int actual;
 		f->read(31, namebuffer, &actual);
 
-		kprintf("segment: %s\n", namebuffer);
+		//kprintf("segment: %s\n", namebuffer);
 
 		if (!memcmp(namebuffer, ".rel.text", 9)) {
 			relTextOffsets[nextRelSection] = fileOffset;
@@ -517,7 +517,7 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 
 			size_t addr = symbolTab[symbolNum].st_value;
 
-			kprintf("Symbol: %s, addr = 0x%X, pos = 0x%X, info = 0x%X\n", ((char*) stringTab) + symbolTab[symbolNum].st_name, addr, pos, info);
+			//kprintf("Symbol: %s, addr = 0x%X, pos = 0x%X, info = 0x%X\n", ((char*) stringTab) + symbolTab[symbolNum].st_name, addr, pos, info);
 
 			bool dynamic = false;
 			if (addr == 0) {
@@ -550,13 +550,11 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 				uint32_t x;
 				if (dynamic) {
 					x = addr + *entry;
+					if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum) {
+						panic("RELOCATION UNHANDLED CASE 1");
+					}
 				} else {
-					if (info == 0x101) {
-
-						x = *entry - entryPoint + relocationPoint;
-
-					} else if (info == 0x401 || (info >> 8) < elf->shNum) {
-						kprintf("Processing a '0x401' relocation.\nentry = 0x%X, *entry = 0x%X, entryPoint = 0x%X, relocationPoint = 0x%X, addr = 0x%X, pos = 0x%X\n", entry, *entry, entryPoint, relocationPoint, addr, pos);
+					if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum) {
 						x = *entry - entryPoint + relocationPoint;
 
 					} else {
@@ -570,6 +568,10 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 			} else if (type == 2 && sizeof(size_t) == 4) {			//R_386_PC32
 				uint32_t* entry = (uint32_t*) (pos - entryPoint + relocationPoint);
 				uint32_t x;
+
+				if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum) {
+					panic("RELOCATION UNHANDLED CASE 2");
+				}
 
 				if (dynamic) {
 					x = addr - pos + *entry + entryPoint - relocationPoint;
