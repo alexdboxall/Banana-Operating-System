@@ -497,6 +497,8 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 		f->read(relTextLength, ptr, &act);
 
 		for (int i = 0; i < entries; ++i) {
+			kprintf("RELTEXT ENTRY.\n");
+
 			uint32_t pos = *ptr++;
 			uint32_t info = *ptr++;
 
