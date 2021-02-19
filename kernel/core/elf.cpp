@@ -398,10 +398,9 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 #if PLATFORM_ID == 86
 	ELFSectionHeader32* sectHeaders = (ELFSectionHeader32*) malloc(elf->shNum * elf->shSize);
 	f->read(elf->shNum * elf->shSize, (void*) sectHeaders, &actual);
-	kprintf("sh: expected to read %d bytes to 0x%X, got %d\n", elf->shNum * elf->shSize, sectHeaders, actual);
 #else
 	ELFSectionHeader64* sectHeaders = (ELFSectionHeader64*) malloc(elf->shNum * elf->shSize);
-	f->read(elf->shNum * elf->shSize * sizeof(ELFSectionHeader64), (void*) sectHeaders, &actual);
+	f->read(elf->shNum * elf->shSize, (void*) sectHeaders, &actual);
 #endif
 
 	//LOAD PROGRAM HEADERS
@@ -418,13 +417,12 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 	}
 
 #if PLATFORM_ID == 86
-	ELFProgramHeader32* progHeaders = (ELFProgramHeader32*) malloc(elf->phNum * elf->phSize * sizeof(ELFProgramHeader32));
-	f->read(elf->phNum * elf->phSize * sizeof(ELFProgramHeader32), (void*) progHeaders, &actual);
-	kprintf("ph: expected to read %d bytes to 0x%X, got %d. %d, %d, %d\n", elf->phNum * elf->phSize * sizeof(ELFProgramHeader32), progHeaders, actual, elf->phNum, elf->phSize, sizeof(ELFProgramHeader32));
+	ELFProgramHeader32* progHeaders = (ELFProgramHeader32*) malloc(elf->phNum * elf->phSize);
+	f->read(elf->phNum * elf->phSize, (void*) progHeaders, &actual);
 
 #else
-	ELFProgramHeader64* progHeaders = (ELFProgramHeader64*) malloc(elf->phNum * elf->phSize * sizeof(ELFProgramHeader64));
-	f->read(elf->phNum * elf->phSize * sizeof(ELFProgramHeader64), (void*) progHeaders, &actual);
+	ELFProgramHeader64* progHeaders = (ELFProgramHeader64*) malloc(elf->phNum * elf->phSize);
+	f->read(elf->phNum * elf->phSize, (void*) progHeaders, &actual);
 
 #endif
 
