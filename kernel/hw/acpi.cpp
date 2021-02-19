@@ -335,13 +335,7 @@ ACPI_STATUS ACPI::setScreenBrightnessLevel(ACPI_HANDLE screenObj, int level)
 
 int ACPI::open(int mode, int, void*)
 {
-	if (!pciDetected) {
-		pciDetected = true;
-		/*outl(0xCF8, 0x80000000U);
-		if (inl(0xCF8) == 0x80000000U) {
-			pciDetected = true;
-		}*/
-	}
+	pciDetected = true;
 
 	if (pciDetected) {
 		PCI* pci = new PCI();
@@ -354,14 +348,13 @@ int ACPI::open(int mode, int, void*)
 
 	executeDLL(loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
 
-
 	if (computer->features.hasACPI) {
 		executeDLL(loadDLL("C:/Banana/Drivers/acpica.sys"), computer);
-	}
 
-	SimpleBootFlagTable* sbf = (SimpleBootFlagTable*) findDataTable(RSDTpointer, (char*) "BOOT");
-	if (sbf) {
-		writeSimpleBootFlag(sbf);
+		SimpleBootFlagTable* sbf = (SimpleBootFlagTable*) findDataTable(RSDTpointer, (char*) "BOOT");
+		if (sbf) {
+			writeSimpleBootFlag(sbf);
+		}
 	}
 
 	return 0;
