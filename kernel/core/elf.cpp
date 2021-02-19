@@ -354,11 +354,13 @@ extern "C" long __moddi3(long, long);
 
 bool loadDriverIntoMemory(const char* filename, size_t address)
 {
+	kprintf("loading driver...\n");
 	Process* p = kernelProcess;
 
 	File* f = new File(filename, p);
 	FileStatus status = f->open(FileOpenMode::Read);
 	if (status != FileStatus::Success) {
+		kprintf("fail 1...\n");
 		return false;
 	}
 
@@ -367,21 +369,25 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 
 	status = f->read(sizeof(ELFHeader), (void*) elf, &actual);
 	if (status != FileStatus::Success) {
+		kprintf("fail 2...\n");
 		return false;
 	}
 
 	if (elf->identify[0] == 0x7F && elf->identify[1] == 'E' && elf->identify[2] == 'L' && elf->identify[3] == 'F') {
 	} else {
+		kprintf("fail 3...\n");
 		return false;
 	}
 
 	//LOAD SECTION HEADERS
 	if (elf->shOffset == 0) {
+		kprintf("fail 4...\n");
 		return false;
 	}
 
 	status = f->seek(elf->shOffset);
 	if (status != FileStatus::Success) {
+		kprintf("fail 5...\n");
 		return false;
 	}
 
@@ -398,11 +404,13 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 
 	//LOAD PROGRAM HEADERS
 	if (!elf->phOffset) {
+		kprintf("fail 6...\n");
 		return false;
 	}
 
 	status = f->seek(elf->phOffset);
 	if (status != FileStatus::Success) {
+		kprintf("fail 7...\n");
 		return false;
 	}
 
@@ -419,6 +427,8 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 	//LOOK AT PROG SEGMENTS
 
 	for (uint16_t i = 0; i < elf->phNum; ++i) {
+		kprintf("Program segment %d\n", i);
+
 		size_t addr = (progHeaders + i)->p_vaddr;
 		size_t fileOffset = (progHeaders + i)->p_offset;
 		size_t size = (progHeaders + i)->p_filsz;
@@ -444,6 +454,8 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 
 	//LOOK AT SECTIONS
 	for (uint16_t i = 0; i < elf->shNum; ++i) {
+		kprintf("Section segment %d\n", i);
+
 		size_t fileOffset = (sectHeaders + i)->sh_offset;
 		size_t addr = (sectHeaders + elf->strtabIndex)->sh_offset + (sectHeaders + i)->sh_name;
 
@@ -455,6 +467,8 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 
 		int actual;
 		f->read(31, namebuffer, &actual);
+		
+		kprintf("Got name '%s'\n", namebuffer);
 
 		if (!strcmp(namebuffer, ".rel.text")) {
 			relTextOffset = fileOffset;
@@ -486,6 +500,8 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 	f->read(strTabLength, (void*) stringTab, &actual);
 
 	if (relTextOffset) {
+		kprintf("reltext offset\n");
+
 		int entries = relTextLength / (sizeof(size_t) * 2);
 
 		f->seek(relTextOffset);
