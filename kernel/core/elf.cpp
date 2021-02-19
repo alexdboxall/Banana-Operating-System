@@ -354,13 +354,11 @@ extern "C" long __moddi3(long, long);
 
 bool loadDriverIntoMemory(const char* filename, size_t address)
 {
-	kprintf("loading driver...\n");
 	Process* p = kernelProcess;
 
 	File* f = new File(filename, p);
 	FileStatus status = f->open(FileOpenMode::Read);
 	if (status != FileStatus::Success) {
-		kprintf("fail 1...\n");
 		return false;
 	}
 
@@ -369,26 +367,21 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 
 	status = f->read(sizeof(ELFHeader), (void*) elf, &actual);
 	if (status != FileStatus::Success) {
-		kprintf("fail 2...\n");
 		return false;
 	}
 
 	if (elf->identify[0] == 0x7F && elf->identify[1] == 'E' && elf->identify[2] == 'L' && elf->identify[3] == 'F') {
 	} else {
-		kprintf("fail 3...\n");
 		return false;
 	}
 
 	//LOAD SECTION HEADERS
 	if (elf->shOffset == 0) {
-		kprintf("fail 4...\n");
 		return false;
 	}
 
-	kprintf("sh seek to 0x%X\n", elf->shOffset);
 	status = f->seek(elf->shOffset);
 	if (status != FileStatus::Success) {
-		kprintf("fail 5...\n");
 		return false;
 	}
 
@@ -405,14 +398,11 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 
 	//LOAD PROGRAM HEADERS
 	if (!elf->phOffset) {
-		kprintf("fail 6...\n");
 		return false;
 	}
 
-	kprintf("ph seek to 0x%X\n", elf->phOffset);
 	status = f->seek(elf->phOffset);
 	if (status != FileStatus::Success) {
-		kprintf("fail 7...\n");
 		return false;
 	}
 
@@ -429,13 +419,9 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 	//LOOK AT PROG SEGMENTS
 
 	for (uint16_t i = 0; i < elf->phNum; ++i) {
-		kprintf("Program segment %d\n", i);
-
 		size_t addr = (progHeaders + i)->p_vaddr;
 		size_t fileOffset = (progHeaders + i)->p_offset;
 		size_t size = (progHeaders + i)->p_filsz;
-
-		kprintf("addr 0x%X, fileoffset 0x%X, size 0x%X\n", addr, fileOffset, size);
 
 		if ((progHeaders + i)->type == PT_LOAD) {
 			status = f->seek(fileOffset);
@@ -458,12 +444,8 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 
 	//LOOK AT SECTIONS
 	for (uint16_t i = 0; i < elf->shNum; ++i) {
-		kprintf("Section segment %d\n", i);
-
 		size_t fileOffset = (sectHeaders + i)->sh_offset;
 		size_t addr = (sectHeaders + elf->strtabIndex)->sh_offset + (sectHeaders + i)->sh_name;
-
-		kprintf("file offset = 0x%X, addr = 0x%X\n", fileOffset, addr);
 
 		//vfs_seek(file, addr);
 		f->seek(addr);
@@ -474,8 +456,6 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 		int actual;
 		f->read(31, namebuffer, &actual);
 		
-		kprintf("Got name '%s'\n", namebuffer);
-
 		if (!strcmp(namebuffer, ".rel.text")) {
 			relTextOffset = fileOffset;
 			relTextLength = (sectHeaders + i)->sh_size;
@@ -506,8 +486,6 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 	f->read(strTabLength, (void*) stringTab, &actual);
 
 	if (relTextOffset) {
-		kprintf("reltext offset\n");
-
 		int entries = relTextLength / (sizeof(size_t) * 2);
 
 		f->seek(relTextOffset);
@@ -519,8 +497,6 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 		f->read(relTextLength, ptr, &act);
 
 		for (int i = 0; i < entries; ++i) {
-			kprintf("RELTEXT ENTRY.\n");
-
 			uint32_t pos = *ptr++;
 			uint32_t info = *ptr++;
 
@@ -563,8 +539,8 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 				} else {
 					x = addr - entryPoint + relocationPoint + *entry;
 				}
-				kprintf("R_386_32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
-				kprintf("addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
+				//kprintf("R_386_32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
+				//kprintf("addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
 				*entry = x;
 
 			} else if (type == 2 && sizeof(size_t) == 4) {			//R_386_PC32
@@ -576,8 +552,8 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 				} else {
 					x = addr - pos + *entry;
 				}
-				kprintf("R_386_PC32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
-				kprintf("addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
+				//kprintf("R_386_PC32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
+				//kprintf("addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
 				*entry = x;
 
 			} else {
@@ -595,8 +571,6 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 	free(sectHeaders);
 	free(elf);
 	free(progHeaders);
-
-	kprintf("Driver loaded.\n");
 
 	return true;
 }
@@ -625,16 +599,11 @@ size_t loadDLL(const char* name)
 	}
 	delete f;
 
-	//size_t addr = Virt::allocateKernelVirtualPages((siz + 4095) / 4096);
 	size_t addr = (size_t) malloc(siz);
 
 	kprintf("Loaded driver to address 0x%X\n", addr);
 
 	loadDriverIntoMemory(name, addr);
-
-	//loadKernelSymbolTable(name);
-	//kprintf("Loaded driver symbol table...\n");
-
 	return addr;
 }
 
