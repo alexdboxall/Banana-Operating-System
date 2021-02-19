@@ -445,8 +445,6 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 	size_t strTabLength = 0;			//length of .symtab
 	size_t strTabOffset = 0;			//length of .symtab
 
-	int textSection = 0;
-	int dataSection = 0;
 	int nextRelSection = 0;
 
 	//LOOK AT SECTIONS
@@ -464,13 +462,6 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 		f->read(31, namebuffer, &actual);
 
 		kprintf("segment: %s\n", namebuffer);
-
-		if (!strcmp(namebuffer, ".text")) {
-			textSection = i;
-		}
-		if (!strcmp(namebuffer, ".data")) {
-			dataSection = i;
-		}
 
 		if (!memcmp(namebuffer, ".rel.text", 9)) {
 			relTextOffsets[nextRelSection] = fileOffset;
