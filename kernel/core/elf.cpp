@@ -460,12 +460,10 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 
 		int actual;
 		f->read(31, namebuffer, &actual);
-		
+
+		kprintf("segment: %s\n", namebuffer);
+
 		if (!memcmp(namebuffer, ".rel.text", 9)) {
-			relTextOffsets[nextRelSection] = fileOffset;
-			relTextLengths[nextRelSection++] = (sectHeaders + i)->sh_size;
-		}
-		if (!memcmp(namebuffer, ".text", 5)) {
 			relTextOffsets[nextRelSection] = fileOffset;
 			relTextLengths[nextRelSection++] = (sectHeaders + i)->sh_size;
 		}
@@ -506,6 +504,7 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 		f->read(relTextLengths[seg], ptr, &act);
 
 		for (int i = 0; i < entries; ++i) {
+
 			uint32_t pos = *ptr++;
 			uint32_t info = *ptr++;
 
@@ -513,6 +512,8 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 			uint32_t symbolNum = info >> 8;
 
 			size_t addr = symbolTab[symbolNum].st_value;
+
+			kprintf("Symbol: %s, addr = 0x%X\n", ((char*) stringTab) + symbolTab[symbolNum].st_name, addr);
 
 			bool dynamic = false;
 			if (addr == 0) {
@@ -535,7 +536,7 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 						strcpy(msg, "UNDEFINED DLL SYMBOL '");
 						strcat(msg, ((char*) stringTab) + symbolTab[symbolNum].st_name);
 						strcat(msg, "'");
-						//panic(msg);
+						panic(msg);
 					}
 				}
 			}
