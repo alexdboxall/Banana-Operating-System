@@ -644,6 +644,26 @@ ACPI_STATUS ACPI::setScreenBrightnessLevel(ACPI_HANDLE screenObj, int level)
 
 int ACPI::open(int mode, int, void*)
 {
+	if (!pciDetected) {
+		pciDetected = true;
+		/*outl(0xCF8, 0x80000000U);
+		if (inl(0xCF8) == 0x80000000U) {
+			pciDetected = true;
+		}*/
+	}
+
+	if (pciDetected) {
+		PCI* pci = new PCI();
+		addChild(pci);
+		pci->open(0, 0, nullptr);
+		kprintf("PCI DONE.\n");
+	}
+
+	loadKernelSymbolTable("C:/Banana/System/KERNEL32.EXE");
+
+	executeDLL(loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
+
+
 	if (computer->features.hasACPI) {
 		kprintf("ACPICA init.\n");
 		systemSleepFunction = acpicaSleep;
@@ -715,25 +735,6 @@ int ACPI::open(int mode, int, void*)
 		void* retVal;
 		status = AcpiWalkNamespace(ACPI_TYPE_ANY, ACPI_ROOT_OBJECT, 8, (ACPI_WALK_CALLBACK) acpiWalkDescendingCallback, (ACPI_WALK_CALLBACK) acpiWalkAscendingCallback, (void*) this, &retVal);
 	}
-
-	if (!pciDetected) {
-		pciDetected = true;
-		/*outl(0xCF8, 0x80000000U);
-		if (inl(0xCF8) == 0x80000000U) {
-			pciDetected = true;
-		}*/
-	}
-
-	if (pciDetected) {
-		PCI* pci = new PCI();
-		addChild(pci);
-		pci->open(0, 0, nullptr);
-		kprintf("PCI DONE.\n");
-	}
-
-	loadKernelSymbolTable("C:/Banana/System/KERNEL32.EXE");
-
-	executeDLL(loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
 
 	SimpleBootFlagTable* sbf = (SimpleBootFlagTable*) findDataTable(RSDTpointer, (char*) "BOOT");
 	if (sbf) {
