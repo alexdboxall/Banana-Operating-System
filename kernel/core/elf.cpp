@@ -445,6 +445,8 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 	size_t strTabLength = 0;			//length of .symtab
 	size_t strTabOffset = 0;			//length of .symtab
 
+	int textSection = 0;
+	int dataSection = 0;
 	int nextRelSection = 0;
 
 	//LOOK AT SECTIONS
@@ -463,7 +465,18 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 
 		kprintf("segment: %s\n", namebuffer);
 
+		if (!strcmp(namebuffer, ".text")) {
+			textSection = i;
+		}
+		if (!strcmp(namebuffer, ".data")) {
+			dataSection = i;
+		}
+
 		if (!memcmp(namebuffer, ".rel.text", 9)) {
+			relTextOffsets[nextRelSection] = fileOffset;
+			relTextLengths[nextRelSection++] = (sectHeaders + i)->sh_size;
+		}
+		if (!memcmp(namebuffer, ".rel.data", 9)) {
 			relTextOffsets[nextRelSection] = fileOffset;
 			relTextLengths[nextRelSection++] = (sectHeaders + i)->sh_size;
 		}
@@ -547,12 +560,11 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 				if (dynamic) {
 					x = addr + *entry;
 				} else {
-					if (info == 0x101) {
+					if (info == 0x1 | (textSection << 8)) {
 						x = *entry - entryPoint + relocationPoint;
 
-					} else if (info == 0x401) {
-						kprintf("Processing a '0x401' relocation.\nentry = 0x%X, *entry = 0x%X, entryPoint = 0x%X, relocationPoint = 0x%X, addr = 0x%X, pos = 0x%X\n", entry, *entry, entryPoint, relocationPoint, addr, pos);
-
+					} else if (info == 0x1 | (dataSection << 8)) {
+						//kprintf("Processing a '0x401' relocation.\nentry = 0x%X, *entry = 0x%X, entryPoint = 0x%X, relocationPoint = 0x%X, addr = 0x%X, pos = 0x%X\n", entry, *entry, entryPoint, relocationPoint, addr, pos);
 						x = *entry - entryPoint + relocationPoint;
 
 					} else {
