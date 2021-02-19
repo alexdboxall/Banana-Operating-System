@@ -459,6 +459,8 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 		size_t fileOffset = (sectHeaders + i)->sh_offset;
 		size_t addr = (sectHeaders + elf->strtabIndex)->sh_offset + (sectHeaders + i)->sh_name;
 
+		kprintf("file offset = 0x%X, addr = 0x%X\n", fileOffset, addr);
+
 		//vfs_seek(file, addr);
 		f->seek(addr);
 
