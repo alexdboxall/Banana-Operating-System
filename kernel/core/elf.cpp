@@ -560,11 +560,12 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 				if (dynamic) {
 					x = addr + *entry;
 				} else {
-					if (info == (0x1 | (textSection << 8))) {
+					if (info == 0x101) {
+
 						x = *entry - entryPoint + relocationPoint;
 
-					} else if (info == (0x1 | (dataSection << 8))) {
-						//kprintf("Processing a '0x401' relocation.\nentry = 0x%X, *entry = 0x%X, entryPoint = 0x%X, relocationPoint = 0x%X, addr = 0x%X, pos = 0x%X\n", entry, *entry, entryPoint, relocationPoint, addr, pos);
+					} else if (info == 0x401 || (info >> 8) < elf->shNum) {
+						kprintf("Processing a '0x401' relocation.\nentry = 0x%X, *entry = 0x%X, entryPoint = 0x%X, relocationPoint = 0x%X, addr = 0x%X, pos = 0x%X\n", entry, *entry, entryPoint, relocationPoint, addr, pos);
 						x = *entry - entryPoint + relocationPoint;
 
 					} else {
