@@ -385,6 +385,7 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 		return false;
 	}
 
+	kprintf("sh seek to 0x%X\n", elf->shOffset);
 	status = f->seek(elf->shOffset);
 	if (status != FileStatus::Success) {
 		kprintf("fail 5...\n");
@@ -410,6 +411,7 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 		return false;
 	}
 
+	kprintf("ph seek to 0x%X\n", elf->phOffset);
 	status = f->seek(elf->phOffset);
 	if (status != FileStatus::Success) {
 		kprintf("fail 7...\n");
@@ -434,6 +436,8 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 		size_t addr = (progHeaders + i)->p_vaddr;
 		size_t fileOffset = (progHeaders + i)->p_offset;
 		size_t size = (progHeaders + i)->p_filsz;
+
+		kprintf("addr 0x%X, fileoffset 0x%X, size 0x%X\n", addr, fileOffset, size);
 
 		if ((progHeaders + i)->type == PT_LOAD) {
 			status = f->seek(fileOffset);
