@@ -8,6 +8,8 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
+void (*guiMouseHandler) (int xdelta, int ydelta, int buttons, int z) = nullptr;
+
 Mouse::Mouse(const char* name) : Device(name)
 {
 	deviceType = DeviceType::Mouse;
