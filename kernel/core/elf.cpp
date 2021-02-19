@@ -398,7 +398,7 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 #if PLATFORM_ID == 86
 	ELFSectionHeader32* sectHeaders = (ELFSectionHeader32*) malloc(elf->shNum * elf->shSize * sizeof(ELFSectionHeader32));
 	f->read(elf->shNum * elf->shSize * sizeof(ELFSectionHeader32), (void*) sectHeaders, &actual);
-
+	kprintf("shNum = %d, shSize = %d, sizeof() = %d\n", elf->shNum, elf->shSize, sizeof(ELFSectionHeader32));
 	kprintf("expected to read %d bytes to 0x%X, got %d\n", elf->shNum * elf->shSize * sizeof(ELFSectionHeader32), sectHeaders, actual);
 #else
 	ELFSectionHeader64* sectHeaders = (ELFSectionHeader64*) malloc(elf->shNum * elf->shSize * sizeof(ELFSectionHeader64));
