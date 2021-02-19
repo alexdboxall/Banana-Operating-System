@@ -117,9 +117,9 @@ void Computer::start()
 	extern void sb16Demo(void*);
 	//kernelProcess->createThread(sb16Demo, nullptr, 254);
 
-	executeDLL(loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
-
 	executeDLL(loadDLL("C:/Banana/System/system.dll"), computer);
+
+	executeDLL(loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
 
 	kprintf("DONE.\n");
 
