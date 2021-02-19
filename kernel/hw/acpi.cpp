@@ -325,7 +325,8 @@ void ACPI::registerPCIIRQAssignment(ACPI_HANDLE handle, uint16_t slot, uint8_t p
 
 ACPI_STATUS ACPI::setScreenBrightnessLevel(ACPI_HANDLE screenObj, int level)
 {
-	return acpicaSetBrightness(screenObj, level);
+	return 0;
+	//return acpicaSetBrightness(screenObj, level);
 }
 
 
