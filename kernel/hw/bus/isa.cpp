@@ -3,7 +3,6 @@
 #include "hw/ports.hpp"
 #include "hw/acpi.hpp"
 #include "hw/bus/isa.hpp"
-#include "hw/video/vga.hpp"
 #include "registry/registry.hpp"
 
 #include "hw/buzzer/pcspk.hpp"
