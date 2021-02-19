@@ -644,7 +644,6 @@ ACPI_STATUS ACPI::setScreenBrightnessLevel(ACPI_HANDLE screenObj, int level)
 
 int ACPI::open(int mode, int, void*)
 {
-#ifndef JUMPER32
 	if (computer->features.hasACPI) {
 		kprintf("ACPICA init.\n");
 		systemSleepFunction = acpicaSleep;
@@ -740,13 +739,12 @@ int ACPI::open(int mode, int, void*)
 
 	executeDLL(loadDLL("C:/Banana/Drivers/vga.sys"), computer);
 	executeDLL(loadDLL("C:/Banana/System/wsbe.sys"), computer);
-	//executeDLL(loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
+	executeDLL(loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
 
 	SimpleBootFlagTable* sbf = (SimpleBootFlagTable*) findDataTable(RSDTpointer, (char*) "BOOT");
 	if (sbf) {
 		writeSimpleBootFlag(sbf);
 	}
-#endif
 
 	return 0;
 }
