@@ -530,12 +530,12 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 					}
 
 					if (addr == 0) {
-						kprintf("SYMBOL: %s\n", ((char*) stringTab) + symbolTab[symbolNum].st_name);
+						kprintf("UNDEFINED DLL SYMBOL: %s\n", ((char*) stringTab) + symbolTab[symbolNum].st_name);
 						char msg[256];
 						strcpy(msg, "UNDEFINED DLL SYMBOL '");
 						strcat(msg, ((char*) stringTab) + symbolTab[symbolNum].st_name);
 						strcat(msg, "'");
-						panic(msg);
+						//panic(msg);
 					}
 				}
 			}
