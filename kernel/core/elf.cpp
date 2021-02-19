@@ -556,9 +556,7 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 						x = *entry - entryPoint + relocationPoint;
 
 					} else {
-						x = *entry - entryPoint + relocationPoint;
-
-						//x = addr - entryPoint + relocationPoint + *entry;
+						x = addr - entryPoint + relocationPoint + *entry;
 					}
 				}
 				//kprintf("R_386_32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
