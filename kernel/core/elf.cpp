@@ -127,11 +127,11 @@ bool loadProgramIntoMemory(Process* p, const char* filename)
 	size_t relocationPoint = 0x10000000;
 
 #if PLATFORM_ID == 86
-	ELFSectionHeader32* sectHeaders = (ELFSectionHeader32*) malloc(elf->shNum * elf->shSize * sizeof(ELFSectionHeader32));
-	f->read(elf->shNum * elf->shSize * sizeof(ELFSectionHeader32), (void*) sectHeaders, &actual);
+	ELFSectionHeader32* sectHeaders = (ELFSectionHeader32*) malloc(elf->shNum * elf->shSize);
+	f->read(elf->shNum * elf->shSize, (void*) sectHeaders, &actual);
 #else
-	ELFSectionHeader64* sectHeaders = (ELFSectionHeader64*) malloc(elf->shNum * elf->shSize * sizeof(ELFSectionHeader64));
-	f->read(elf->shNum * elf->shSize * sizeof(ELFSectionHeader64), (void*) sectHeaders, &actual);
+	ELFSectionHeader64* sectHeaders = (ELFSectionHeader64*) malloc(elf->shNum * elf->shSize);
+	f->read(elf->shNum * elf->shSize, (void*) sectHeaders, &actual);
 #endif
 
 
@@ -148,12 +148,12 @@ bool loadProgramIntoMemory(Process* p, const char* filename)
 	size_t highest = 0;
 
 #if PLATFORM_ID == 86
-	ELFProgramHeader32* progHeaders = (ELFProgramHeader32*) malloc(elf->phNum * elf->phSize * sizeof(ELFProgramHeader32));
-	f->read(elf->phNum * elf->phSize * sizeof(ELFProgramHeader32), (void*) progHeaders, &actual);
+	ELFProgramHeader32* progHeaders = (ELFProgramHeader32*) malloc(elf->phNum * elf->phSize);
+	f->read(elf->phNum * elf->phSize, (void*) progHeaders, &actual);
 
 #else
-	ELFProgramHeader64* progHeaders = (ELFProgramHeader64*) malloc(elf->phNum * elf->phSize * sizeof(ELFProgramHeader64));
-	f->read(elf->phNum * elf->phSize * sizeof(ELFProgramHeader64), (void*) progHeaders, &actual);
+	ELFProgramHeader64* progHeaders = (ELFProgramHeader64*) malloc(elf->phNum * elf->phSize);
+	f->read(elf->phNum * elf->phSize, (void*) progHeaders, &actual);
 
 #endif
 
@@ -275,11 +275,11 @@ bool loadKernelSymbolTable(const char* filename)
 	}
 
 #if PLATFORM_ID == 86
-	ELFSectionHeader32* sectHeaders = (ELFSectionHeader32*) malloc(elf->shNum * elf->shSize * sizeof(ELFSectionHeader32));
-	f->read(elf->shNum * elf->shSize * sizeof(ELFSectionHeader32), (void*) sectHeaders, &actual);
+	ELFSectionHeader32* sectHeaders = (ELFSectionHeader32*) malloc(elf->shNum * elf->shSize);
+	f->read(elf->shNum * elf->shSize, (void*) sectHeaders, &actual);
 #else
-	ELFSectionHeader64* sectHeaders = (ELFSectionHeader64*) malloc(elf->shNum * elf->shSize * sizeof(ELFSectionHeader64));
-	f->read(elf->shNum * elf->shSize * sizeof(ELFSectionHeader64), (void*) sectHeaders, &actual);
+	ELFSectionHeader64* sectHeaders = (ELFSectionHeader64*) malloc(elf->shNum * elf->shSize);
+	f->read(elf->shNum * elf->shSize, (void*) sectHeaders, &actual);
 #endif
 
 	size_t symTabOffset = 0;			//offset into file of .symtab
@@ -595,6 +595,8 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 	free(sectHeaders);
 	free(elf);
 	free(progHeaders);
+
+	kprintf("Driver loaded.\n");
 
 	return true;
 }
