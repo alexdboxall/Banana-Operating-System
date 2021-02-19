@@ -539,8 +539,9 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 				} else {
 					x = addr - entryPoint + relocationPoint + *entry;
 				}
-				//kprintf("R_386_32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
-				//kprintf("addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
+				kprintf("R_386_32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
+				kprintf("addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
+				kprintf("dynamic: %d\n", dynamic);
 				*entry = x;
 
 			} else if (type == 2 && sizeof(size_t) == 4) {			//R_386_PC32
