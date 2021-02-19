@@ -103,12 +103,12 @@ rm T:\dummyE.txt
 rm T:\dummyF.txt
 
 cd D:/Users/Alex/Desktop/
-attrib +h +r "T:/Banana/BANANABT" 
-attrib +h +r "T:/Banana/FIRMWARE.LIB" 
-attrib +h +r "T:/JUMPER32.SYS" 
-attrib +h +r "T:/BANANA/SYSTEM/KERNEL64.EXE" 
-attrib +h +r "T:/BANANA/SYSTEM/KERNEL32.EXE" 
-attrib +r "T:/BANANA/SYSTEM/TRAMP.EXE" 
+attrib +r "T:/Banana/BANANABT" 
+attrib +r "T:/Banana/FIRMWARE.LIB" 
+rem attrib +h +r "T:/JUMPER32.SYS" 
+attrib +r "T:/BANANA/SYSTEM/KERNEL64.EXE" 
+attrib +r "T:/BANANA/SYSTEM/KERNEL32.EXE" 
+attrib "T:/BANANA/SYSTEM/TRAMP.EXE" 
 imdisk -D -m T:
 
 python Banana/join.py || pause

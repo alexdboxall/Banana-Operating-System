@@ -465,6 +465,10 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 			relTextOffsets[nextRelSection] = fileOffset;
 			relTextLengths[nextRelSection++] = (sectHeaders + i)->sh_size;
 		}
+		if (!memcmp(namebuffer, ".text", 5)) {
+			relTextOffsets[nextRelSection] = fileOffset;
+			relTextLengths[nextRelSection++] = (sectHeaders + i)->sh_size;
+		}
 		if (!strcmp(namebuffer, ".symtab")) {
 			symTabOffset = fileOffset;
 			symTabLength = (sectHeaders + i)->sh_size;

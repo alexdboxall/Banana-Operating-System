@@ -761,8 +761,8 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
 			}
 
 			if (!(child->flags & WIN_NODECORATION) && !child->fullscreen &&
-				mouse_x >= child->x + child->width - 15 && mouse_x < child->x + child->width &&
-				mouse_y >= child->y + child->height - 15 && mouse_y < child->y + child->height) {
+				mouse_x >= child->x + child->width - 18 && mouse_x < child->x + child->width &&
+				mouse_y >= child->y + child->height - 18 && mouse_y < child->y + child->height) {
 
 				//We'll also set this window as the window being dragged
 				//until such a time as the mouse is released
