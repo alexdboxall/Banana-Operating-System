@@ -487,6 +487,7 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 
 	if (relTextOffset) {
 		int entries = relTextLength / (sizeof(size_t) * 2);
+		kprintf("%d relocation entries.\n", entries);
 
 		f->seek(relTextOffset);
 
@@ -495,6 +496,7 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 
 		int act;
 		f->read(relTextLength, ptr, &act);
+		kprinttf("relTextLength = %d, actually read in %d bytes\n", relTextLength, act);
 
 		for (int i = 0; i < entries; ++i) {
 			uint32_t pos = *ptr++;
