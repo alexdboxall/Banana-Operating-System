@@ -435,8 +435,8 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 		}
 	}
 
-	size_t relTextOffsets[128];			//offset into file of .rel.text
-	size_t relTextLengths[128];			//length of .rel.text
+	size_t relTextOffsets[64];			//offset into file of .rel.text
+	size_t relTextLengths[64];			//length of .rel.text
 	memset(relTextOffsets, 0, sizeof(relTextOffsets));
 	memset(relTextLengths, 0, sizeof(relTextLengths));
 

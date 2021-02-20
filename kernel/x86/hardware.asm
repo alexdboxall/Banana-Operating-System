@@ -43,7 +43,7 @@ is486:
 	xor eax, eax
     inc eax
 	ret
-	times 90 db 0x90
+	times 45 db 0x90
 	xor eax, eax
 	ret
 
