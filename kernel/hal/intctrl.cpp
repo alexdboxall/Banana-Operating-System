@@ -352,7 +352,7 @@ void opcodeFault(regs* r, void* context)
 {
 	if (thisCPU()->opcodeDetectionMode) {
 		kprintf("Opcode detection: invalid opcode.\n");
-		r->eip += 32;
+		r->eip += 25;
 		return;
 	}
 
