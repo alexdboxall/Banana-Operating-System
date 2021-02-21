@@ -1,3 +1,4 @@
+#if 0
 /*
 ** Copyright (c) 2002-2016, Erik de Castro Lopo <erikd@mega-nerd.com>
 ** All rights reserved.
@@ -2487,3 +2488,5 @@ static const struct fastest_coeffs_s
  0.0	/* Need a final zero coefficient */
 }
 } ; /* fastest_coeffs */
+
+#endif

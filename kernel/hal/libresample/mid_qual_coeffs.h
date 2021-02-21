@@ -1,3 +1,4 @@
+#if 0
 /*
 ** Copyright (c) 2007-2016, Erik de Castro Lopo <erikd@mega-nerd.com>
 ** All rights reserved.
@@ -22462,3 +22463,5 @@ static const struct slow_mid_qual_coeffs_s
 }
 } ; /* mid_qual_coeffs */
 
+
+#endif
