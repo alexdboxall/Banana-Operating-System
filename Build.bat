@@ -35,7 +35,13 @@ rem make -j1 TUNING=i386 kernel386NoACPI ACPI=-DJUMPER32 || pause
 
 cd D:/Users/Alex/Desktop/Banana
 rm disasm.txt
+rm disacpica.txt
+rm dislegacy.txt
+rm diswsbe.txt
 objdump -drwC -Mintel kernel/KERNEL32.EXE >> disasm.txt
+objdump -drwC -Mintel packages/system/32/0002/acpica.sys >> disacpica.txt
+objdump -drwC -Mintel packages/system/32/0002/legacy.sys >> dislegacy.txt
+objdump -drwC -Mintel packages/system/32/0001/wsbe.sys >> diswsbe.txt
 
 call Run
 pause
