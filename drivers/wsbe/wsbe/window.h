@@ -75,6 +75,7 @@ typedef struct Window_struct {
 
     int savedMouse;
     int currentMouse;
+    bool mouseTypeOverride;
     
 } Window;
 

@@ -8,7 +8,7 @@
 #include "hal/intctrl.hpp"
 #include "hw/ports.hpp"
 #include "hw/acpi.hpp"
-#include "hw/video/vga.hpp"
+#include "hal/video.hpp"
 #include "core/prcssthr.hpp"
 #include "hal/timer.hpp"
 #include "registry/registry.hpp"
