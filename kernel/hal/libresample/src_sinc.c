@@ -189,7 +189,7 @@ sinc_set_converter (SRC_PRIVATE *psrc, int src_enum)
 	psrc->reset = sinc_reset ;
 
 	switch (src_enum)
-	{	case SRC_SINC_FASTEST :
+	{	/*case SRC_SINC_FASTEST :
 				temp_filter.coeffs = fastest_coeffs.coeffs ;
 				temp_filter.coeff_half_len = ARRAY_LEN (fastest_coeffs.coeffs) - 2 ;
 				temp_filter.index_inc = fastest_coeffs.increment ;
@@ -199,7 +199,7 @@ sinc_set_converter (SRC_PRIVATE *psrc, int src_enum)
 				temp_filter.coeffs = slow_mid_qual_coeffs.coeffs ;
 				temp_filter.coeff_half_len = ARRAY_LEN (slow_mid_qual_coeffs.coeffs) - 2 ;
 				temp_filter.index_inc = slow_mid_qual_coeffs.increment ;
-				break;
+				break;*/
 
 		default :
 				return SRC_ERR_BAD_CONVERTER ;
