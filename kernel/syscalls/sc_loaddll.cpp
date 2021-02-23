@@ -13,7 +13,7 @@
 namespace Sys
 {
 	/// <summary>
-	/// Loads a kernel-mode dynamic link library in a new kernel thread.
+	/// Loads a kernel-mode dynamic link library.
 	/// </summary>
 	/// <remark>
 	/// <param name="ebx">The filename to load.</param>
