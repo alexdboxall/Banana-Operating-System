@@ -166,4 +166,8 @@ size_t getAddressOfKernelSymbol(const char* name);
 size_t loadDLL(const char* name);
 void executeDLL(size_t startAddr, void* parentDevice);
 
+char* getDriverNameFromAddress(size_t addr);
+size_t getDriverOffsetFromAddress(size_t addr);
+size_t getDriverBaseFromAddress(size_t addr);
+
 #endif

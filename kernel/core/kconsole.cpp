@@ -1,6 +1,7 @@
 ﻿#include "core/kconsole.hpp"
 #include "core/common.hpp"
 #include "core/prcssthr.hpp"
+#include "core/elf.hpp"
 #include "hw/cpu.hpp"
 #include "hw/ports.hpp"
 #pragma GCC optimize ("O2")
@@ -45,6 +46,7 @@ void panic(const char* message)
 	kernelProcess->terminal->puts("      The currently executing task was:\n\n");
 	kernelProcess->terminal->puts("          ");
 	kernelProcess->terminal->puts(currentTaskTCB->processRelatedTo->taskname);
+
 	kernelProcess->terminal->puts("\n\n\n");
 	kernelProcess->terminal->puts("      Please restart your computer or press RETURN. If this\n");
 	kernelProcess->terminal->puts("      screen appears again, hold the 7 key on startup and disable\n");

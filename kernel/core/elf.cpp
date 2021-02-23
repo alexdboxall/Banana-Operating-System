@@ -601,6 +601,43 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 	return true;
 }
 
+char* driverNameLookup[128];
+size_t driverLookupAddr[128];
+size_t driverLookupLen[128];
+int driverLookupNext = 0;
+
+size_t getDriverBaseFromAddress(size_t addr)
+{
+	for (int i = 0; i < driverLookupNext; ++i) {
+		if (addr >= driverLookupAddr[i] && addr < driverLookupAddr[i] + driverLookupLen[i]) {
+			return driverLookupAddr[i];
+		}
+	}
+
+	return 0;
+}
+
+char* getDriverNameFromAddress(size_t addr)
+{
+	for (int i = 0; i < driverLookupNext; ++i) {
+		if (addr >= driverLookupAddr[i] && addr < driverLookupAddr[i] + driverLookupLen[i]) {
+			return driverNameLookup[i];
+		}
+	}
+
+	return nullptr;
+}
+
+size_t getDriverOffsetFromAddress(size_t addr)
+{
+	size_t base = getDriverBaseFromAddress(addr);
+	if (base) {
+		return addr - base;
+	} else {
+		return 0;
+	}
+}
+
 size_t loadDLL(const char* name)
 {
 	kprintf("loading dll: %s\n", name);
@@ -626,6 +663,12 @@ size_t loadDLL(const char* name)
 	delete f;
 
 	size_t addr = (size_t) malloc(siz);
+
+
+	driverNameLookup[driverLookupNext] = malloc(strlen(name) + 1);
+	strcpy(driverNameLookup[driverLookupNext], name);
+	driverLookupAddr[driverLookupNext] = addr;
+	driverLookupLen[driverLookupNext++] = siz;
 
 	kprintf("Loaded driver to address 0x%X\n", addr);
 

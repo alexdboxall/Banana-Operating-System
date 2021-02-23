@@ -115,6 +115,30 @@ void loadCursors()
     free(curdata);
 }
 
+WindowPaintHandler oldHandler;
+char szstring[64];
+void newpaint(struct Window_struct* win)
+{
+    oldHandler(win);
+    Context_draw_text(win->context, szstring, 50, 50, 0, 0);
+}
+
+void mdown(struct Window_struct* win, int x, int y)
+{
+    strcpy(szstring, "Mouse down.");
+}
+
+void mup(struct Window_struct* win, int x, int y)
+{
+    strcpy(szstring, "Mouse up.");
+}
+
+void resizehandler(struct Window_struct* win, int x, int y)
+{
+    strcpy(szstring, "Resizing...");
+}
+
+
 char tw[] = "The quick brown fox jumps";
 //And, finally, the handler that causes that button to make a new calculator
 void spawn_calculator(Button* button, int x, int y)
@@ -123,6 +147,13 @@ void spawn_calculator(Button* button, int x, int y)
     Window_init(w, 50, 50, 300, 200, WIN_TOPLEVELWIN, 0);
     Window_set_title(w, (char*) tw);
     Window_insert_child((Window*) desktop, w);
+
+    w->resize_function = resizehandler;
+    w->mousedown_function = mdown;
+    w->mouseup_function = mup;
+
+    oldHandler = w->paint_function;
+    w->paint_function = newpaint;
 
     Window_paint((Window*) desktop, (List*) 0, 1);
 }
@@ -198,7 +229,7 @@ int main(int argc, const char* argv[])
     Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
 
     while (1) {  
-        sleep(2);
+        sleep(3);
     }
 
     return 0;
