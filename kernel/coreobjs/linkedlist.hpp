@@ -34,45 +34,11 @@ public:
 	}
 
 	/*
-	
 	NOTICE: VERY BAD STUFF HAPPENS IF YOU TRY TO ADD AN ITEM WHICH IS ALREADY IN THE LIST, AS THE ->next POINTER WILL BE THE SAME!!!!
-	
 	*/
-
 
 	void addElement(T* element)
 	{
-		extern void panic(const char* p);
-		//lock.lock();
-
-		//kprintf("Adding element 0x%X to list 0x%X\n", element, this);
-
-#ifdef KERNEL_DEBUG
-		//SHOULD ONLY BE USED FOR DEBUGGING, AS IT ITERATES OVER THE LIST
-		if (1) {
-			T* f = getFirstElement();
-			while (f) {
-				//kprintf("Existing element: 0x%X\n", f);
-				if (f == element) {
-					kprintf("ERROR: ALREADY ON LIST");
-					//return;
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wframe-address"
-					/*kprintf("A '0x%X'\n", __builtin_return_address(0));
-					kprintf("B '0x%X'\n", __builtin_return_address(1));
-					kprintf("C '0x%X'\n", __builtin_return_address(2));
-					kprintf("D '0x%X'\n", __builtin_return_address(3));*/
-
-#pragma GCC diagnostic pop
-
-					panic("ELEMENT ALREADY ON LIST");
-				}
-				f = getNext(f);
-			}
-		}
-#endif
-
 		if (element == nullptr) {
 			panic("Null element added to linked list");
 		}
@@ -96,18 +62,10 @@ public:
 		}
 
 		++debugLength;
-
-		//lock.unlock();
 	}
 
 	void removeFirst()
 	{
-		extern void panic(const char* p);
-
-		//lock.lock();
-
-		extern void panic(const char* p);
-
 		if (first == nullptr) {
 			panic("ERROR: removing from empty list...\n");
 			return;
@@ -128,8 +86,6 @@ public:
 		}
 
 		--debugLength;
-
-		//lock.unlock();
 	}
 
 	bool isEmpty()
