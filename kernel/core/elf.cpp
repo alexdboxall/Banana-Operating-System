@@ -665,7 +665,7 @@ size_t loadDLL(const char* name)
 	size_t addr = (size_t) malloc(siz);
 
 
-	driverNameLookup[driverLookupNext] = malloc(strlen(name) + 1);
+	driverNameLookup[driverLookupNext] = (char*) malloc(strlen(name) + 1);
 	strcpy(driverNameLookup[driverLookupNext], name);
 	driverLookupAddr[driverLookupNext] = addr;
 	driverLookupLen[driverLookupNext++] = siz;
