@@ -159,11 +159,11 @@ typedef struct ELFDynanicSection64
 
 bool allocateMemoryForTask(Process* prcss, File* file, size_t size, size_t virtualAddr, size_t additionalNullBytes);
 bool loadProgramIntoMemory(Process* p, const char* filename);
-bool loadDriverIntoMemory(const char* filename, size_t address);
+bool loadDriverIntoMemory(const char* filename, size_t address, bool critical = true);
 bool loadKernelSymbolTable(const char* filename);
 size_t getAddressOfKernelSymbol(const char* name);
 
-size_t loadDLL(const char* name);
+size_t loadDLL(const char* name, bool critical = true);
 void executeDLL(size_t startAddr, void* parentDevice);
 
 char* getDriverNameFromAddress(size_t addr);

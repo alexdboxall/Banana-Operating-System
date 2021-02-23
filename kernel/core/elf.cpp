@@ -352,7 +352,7 @@ extern "C" long __divdi3(long, long);
 extern "C" unsigned long __umoddi3(unsigned long, unsigned long);
 extern "C" long __moddi3(long, long);
 
-bool loadDriverIntoMemory(const char* filename, size_t address)
+bool loadDriverIntoMemory(const char* filename, size_t address, bool critical)
 {
 	Process* p = kernelProcess;
 
@@ -540,7 +540,21 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 						strcpy(msg, "UNDEFINED DLL SYMBOL '");
 						strcat(msg, ((char*) stringTab) + symbolTab[symbolNum].st_name);
 						strcat(msg, "'");
-						panic(msg);
+						
+						if (critical) {
+							panic(msg);
+						} else {
+							f->close();
+							delete f;
+
+							free(optr);
+
+							free(sectHeaders);
+							free(elf);
+							free(progHeaders);
+
+							return false;
+						}
 					}
 				}
 			}
@@ -551,7 +565,20 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 				if (dynamic) {
 					x = addr + *entry;
 					if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum) {
-						panic("RELOCATION UNHANDLED CASE 1");
+						if (critical) {
+							panic("RELOCATION UNHANDLED CASE 1");
+						} else {
+							f->close();
+							delete f;
+
+							free(optr);
+
+							free(sectHeaders);
+							free(elf);
+							free(progHeaders);
+
+							return false;
+						}
 					}
 				} else {
 					if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum) {
@@ -570,7 +597,20 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 				uint32_t x;
 
 				if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum) {
-					panic("RELOCATION UNHANDLED CASE 2");
+					if (critical) {
+						panic("RELOCATION UNHANDLED CASE 2");
+					} else {
+						f->close();
+						delete f;
+
+						free(optr);
+
+						free(sectHeaders);
+						free(elf);
+						free(progHeaders);
+
+						return false;
+					}
 				}
 
 				if (dynamic) {
@@ -584,8 +624,20 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 
 			} else {
 				kprintf("TYPE 0x%X\n", type);
-				panic("UNKNOWN RELOCATION TYPE");
+				if (critical) {
+					panic("UNKNOWN RELOCATION TYPE");
+				} else {
+					f->close();
+					delete f;
 
+					free(optr);
+
+					free(sectHeaders);
+					free(elf);
+					free(progHeaders);
+
+					return false;
+				}
 			}
 		}
 
@@ -593,6 +645,7 @@ bool loadDriverIntoMemory(const char* filename, size_t address)
 	}
 
 	f->close();
+	delete f;
 
 	free(sectHeaders);
 	free(elf);
@@ -638,7 +691,7 @@ size_t getDriverOffsetFromAddress(size_t addr)
 	}
 }
 
-size_t loadDLL(const char* name)
+size_t loadDLL(const char* name, bool critical)
 {
 	kprintf("loading dll: %s\n", name);
 	uint64_t siz;
@@ -646,6 +699,8 @@ size_t loadDLL(const char* name)
 
 	File* f = new File(name, kernelProcess);
 	if (!f) {
+		if (!critical) return 0;
+
 		char msg[256];
 		strcpy(msg, "COULD NOT LOAD DLL '");
 		strcat(msg, name);
@@ -653,17 +708,17 @@ size_t loadDLL(const char* name)
 		panic(msg);
 	}
 	FileStatus status = f->stat(&siz, &dir);
+	delete f;
 	if (dir || !siz) {
+		if (!critical) return 0;
 		char msg[256];
 		strcpy(msg, "COULD NOT LOAD DLL '");
 		strcat(msg, name);
 		strcat(msg, "'");
 		panic(msg);
 	}
-	delete f;
 
 	size_t addr = (size_t) malloc(siz);
-
 
 	driverNameLookup[driverLookupNext] = (char*) malloc(strlen(name) + 1);
 	strcpy(driverNameLookup[driverLookupNext], name);
@@ -672,11 +727,17 @@ size_t loadDLL(const char* name)
 
 	kprintf("Loaded driver to address 0x%X\n", addr);
 
-	loadDriverIntoMemory(name, addr);
-	return addr;
+	bool couldLoad = loadDriverIntoMemory(name, addr);
+	if (!couldLoad && critical) {
+		panic("COULD NOT LOAD CRITICAL DRIVER");
+	}
+	return couldLoad ? addr : 0;
 }
 
 void executeDLL(size_t startAddr, void* parentDevice)
 {
+	if (!startAddr) {
+		panic("ATTEMPTING TO START DRIVER LOCATED AT 0x0");
+	}
 	reinterpret_cast<int(*)(void*)>(startAddr)(parentDevice);
 }

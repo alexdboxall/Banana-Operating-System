@@ -30,6 +30,8 @@ namespace Sys
 	uint64_t sbrk(regs* r);
 	uint64_t write(regs* r);
 	uint64_t read(regs* r);
+
+	uint16_t loadDLL(regs* r);
 }
 
 uint64_t sysCallGetPID(regs* r)
@@ -693,6 +695,7 @@ void setupSystemCalls()
 	systemCallHandlers[(int) SystemCallNumber::Shutdown] = sysShutdown;
 	systemCallHandlers[(int) SystemCallNumber::Pipe] = sysPipe;
 	systemCallHandlers[(int) SystemCallNumber::GetUnixTime] = sysGetUnixTime;
+	systemCallHandlers[(int) SystemCallNumber::LoadDLL] = Sys::loadDLL;
 }
 
 uint64_t systemCall(regs* r, void* context)

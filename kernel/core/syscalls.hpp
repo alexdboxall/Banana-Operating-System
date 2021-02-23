@@ -88,6 +88,7 @@ SystemCallNumber
 	Shutdown,
 	Pipe,
 	GetUnixTime,
+	LoadDLL,
 };
 
 
