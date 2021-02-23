@@ -1,4 +1,5 @@
 #include "core/prcssthr.hpp"
+#include "core/computer.hpp"
 #include "core/syscalls.hpp"
 #include "core/elf.hpp"
 #include "hal/intctrl.hpp"
