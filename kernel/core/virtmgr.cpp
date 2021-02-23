@@ -3,8 +3,8 @@
 #include "core/virtmgr.hpp"
 #include "core/physmgr.hpp"
 #include "fs/vfs.hpp"
-#include "core/prcssthr.hpp"
-#include "core/elf.hpp"
+#include "thr/prcssthr.hpp"
+#include "thr/elf.hpp"
 
 VAS* firstVAS = nullptr;
 #pragma GCC optimize ("O2")

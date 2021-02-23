@@ -1,6 +1,6 @@
 #include "core/common.hpp"
 #include "core/kheap.hpp"
-#include "core/prcssthr.hpp"
+#include "thr/prcssthr.hpp"
 #include "core/virtmgr.hpp"
 #include "core/physmgr.hpp"
 #include "libk/string.h"

@@ -9,7 +9,7 @@
 #include "hw/ports.hpp"
 #include "hw/acpi.hpp"
 #include "hal/video.hpp"
-#include "core/prcssthr.hpp"
+#include "thr/prcssthr.hpp"
 #include "hal/timer.hpp"
 #include "registry/registry.hpp"
 #include "fs/vfs.hpp"

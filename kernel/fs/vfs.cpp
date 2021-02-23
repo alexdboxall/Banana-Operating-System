@@ -1,5 +1,5 @@
 #include "core/main.hpp"
-#include "core/prcssthr.hpp"
+#include "thr/prcssthr.hpp"
 #include "fs/vfs.hpp" 
 #include "hal/logidisk.hpp"
 #include "libk/string.h"

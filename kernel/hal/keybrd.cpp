@@ -3,7 +3,7 @@
 #include "hal/device.hpp"
 #include "core/terminal.hpp"
 #include "libk/string.h"
-#include "core/prcssthr.hpp"
+#include "thr/prcssthr.hpp"
 #pragma GCC optimize ("O0")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
@@ -47,8 +47,8 @@ void sendKeyToTerminal(uint8_t code)
 }
 
 #include "hal/video.hpp"
-#include "core/prcssthr.hpp"
-#include "core/elf.hpp"
+#include "thr/prcssthr.hpp"
+#include "thr/elf.hpp"
 
 void startGUI(void* a)
 {

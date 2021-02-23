@@ -2,7 +2,7 @@
 #include "hw/ports.hpp"
 #include "hw/acpi.hpp"
 #include "hal/intctrl.hpp"
-#include "core/prcssthr.hpp"
+#include "thr/prcssthr.hpp"
 
 #include "ps2.hpp"
 #include "ps2port.hpp"

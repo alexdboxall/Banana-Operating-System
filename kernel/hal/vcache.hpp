@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include "hal/device.hpp"
-#include "core/prcssthr.hpp"
+#include "thr/prcssthr.hpp"
 #include "coreobjs/linkedlist.hpp"
 
 class PhysicalDisk;

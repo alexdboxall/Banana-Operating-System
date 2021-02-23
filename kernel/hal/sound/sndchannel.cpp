@@ -2,7 +2,7 @@
 #include "core/common.hpp"
 #include "core/kheap.hpp"
 #include "hal/device.hpp"
-#include "core/prcssthr.hpp"
+#include "thr/prcssthr.hpp"
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")

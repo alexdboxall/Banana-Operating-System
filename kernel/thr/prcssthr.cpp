@@ -1,11 +1,11 @@
-#include "core/prcssthr.hpp"
+#include "thr/prcssthr.hpp"
 #include "core/common.hpp"
 #include "core/terminal.hpp"
 #include "libk/string.h"
 #include "hw/cpu.hpp"
 #include "core/kheap.hpp"
 #include "core/physmgr.hpp"
-#include "core/elf.hpp"
+#include "thr/elf.hpp"
 
 #pragma GCC optimize ("O2")
 #pragma GCC optimize ("-fno-strict-aliasing")

@@ -1,5 +1,5 @@
 #include "core/common.hpp"
-#include "core/elf.hpp"
+#include "thr/elf.hpp"
 #include "hw/ports.hpp"
 #include "hw/acpi.hpp"
 #include "registry/registry.hpp"

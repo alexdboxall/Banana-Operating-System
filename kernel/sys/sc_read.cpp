@@ -1,5 +1,5 @@
-#include "core/prcssthr.hpp"
-#include "core/syscalls.hpp"
+#include "thr/prcssthr.hpp"
+#include "sys/syscalls.hpp"
 #include "hal/intctrl.hpp"
 
 #pragma GCC optimize ("Os")
@@ -12,20 +12,21 @@
 namespace Sys
 {
 	/// <summary>
-	/// Writes data to a file.
+	/// Reads data from a file.
 	/// </summary>
 	/// <param name="ebx">File number</param>
-	/// <param name="ecx">Maximum number of bytes to write</param>
-	/// <param name="edx">Pointer to write data to</param>
+	/// <param name="ecx">Maximum number of bytes to read</param>
+	/// <param name="edx">Pointer to store read data</param>
 
 	/// <returns>The number of bytes read, or -1 on failure.</returns>
 	/// 
-	uint64_t write(regs* r)
+	uint64_t read(regs* r)
 	{
 		UnixFile* file = nullptr;
 
 		if (r->ebx <= 2) {
 			file = currentTaskTCB->processRelatedTo->terminal;
+
 		} else {
 			file = getFromFileDescriptor(r->ebx);
 		}
@@ -35,7 +36,7 @@ namespace Sys
 		}
 
 		int br = 0;
-		FileStatus status = file->write(r->ecx, (void*) r->edx, &br);
+		FileStatus status = file->read(r->ecx, (void*) r->edx, &br);
 
 		return br;
 	}

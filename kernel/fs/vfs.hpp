@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "core/main.hpp"
-#include "core/prcssthr.hpp"
+#include "thr/prcssthr.hpp"
 #include "core/unixfile.hpp"
 #include "hal/logidisk.hpp"
 

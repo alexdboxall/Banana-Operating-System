@@ -1,5 +1,5 @@
 #include "core/idle.hpp"
-#include "core/prcssthr.hpp"
+#include "thr/prcssthr.hpp"
 #include "core/computer.hpp"
 #include "hw/cpu.hpp"
 #pragma GCC optimize ("Os")

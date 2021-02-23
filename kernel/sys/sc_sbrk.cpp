@@ -1,5 +1,5 @@
-#include "core/prcssthr.hpp"
-#include "core/syscalls.hpp"
+#include "thr/prcssthr.hpp"
+#include "sys/syscalls.hpp"
 #include "core/virtmgr.hpp"
 #include "hal/intctrl.hpp"
 

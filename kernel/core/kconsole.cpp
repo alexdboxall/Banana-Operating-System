@@ -1,7 +1,7 @@
 ﻿#include "core/kconsole.hpp"
 #include "core/common.hpp"
-#include "core/prcssthr.hpp"
-#include "core/elf.hpp"
+#include "thr/prcssthr.hpp"
+#include "thr/elf.hpp"
 #include "hw/cpu.hpp"
 #include "hw/ports.hpp"
 #pragma GCC optimize ("O2")

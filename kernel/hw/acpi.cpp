@@ -67,7 +67,7 @@ Parts of this are based on Minux:
 
 #include "core/common.hpp"
 #include "core/virtmgr.hpp"
-#include "core/elf.hpp"
+#include "thr/elf.hpp"
 #include "core/physmgr.hpp"
 #include "hw/acpi.hpp"
 #include "hw/cpu.hpp"

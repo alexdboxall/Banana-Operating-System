@@ -1,6 +1,6 @@
 #include "core/common.hpp"
-#include "core/syscalls.hpp"
-#include "core/prcssthr.hpp"
+#include "sys/syscalls.hpp"
+#include "thr/prcssthr.hpp"
 #include "hal/intctrl.hpp"
 #include "hw/intctrl/pic.hpp"
 #include "hw/intctrl/apic.hpp"

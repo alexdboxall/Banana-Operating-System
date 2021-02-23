@@ -1,7 +1,7 @@
 #include "vm86/vm8086.hpp"
 #include "fs/vfs.hpp"
 #include "hw/ports.hpp"
-#include "core/prcssthr.hpp"
+#include "thr/prcssthr.hpp"
 #include "hal/intctrl.hpp"
 #include "hw/cpu.hpp"
 //

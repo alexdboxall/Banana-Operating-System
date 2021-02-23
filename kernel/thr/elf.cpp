@@ -1,5 +1,5 @@
-#include "core/elf.hpp"
-#include "core/prcssthr.hpp"
+#include "thr/elf.hpp"
+#include "thr/prcssthr.hpp"
 #include "core/physmgr.hpp"
 #include "core/virtmgr.hpp"
 #include "core/kheap.hpp"

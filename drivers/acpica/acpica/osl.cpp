@@ -7,7 +7,7 @@
 #include "hw/acpi.hpp"
 #include "hal/timer.hpp"
 #include "core/main.hpp"
-#include "core/prcssthr.hpp"
+#include "thr/prcssthr.hpp"
 #include "hal/intctrl.hpp"
 #include <stdarg.h>
 

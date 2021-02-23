@@ -41,7 +41,7 @@
 #include "sb16.hpp"
 #include "main.hpp"
 
-#include "core/prcssthr.hpp"
+#include "thr/prcssthr.hpp"
 #include "core/physmgr.hpp"
 #include "hw/ports.hpp"
 #include "fs/vfs.hpp"

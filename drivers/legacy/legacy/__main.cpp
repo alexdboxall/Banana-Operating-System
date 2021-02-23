@@ -13,7 +13,7 @@ void start(void* _parent)
 #include "ps2.hpp"
 
 #include "core/common.hpp"
-#include "core/elf.hpp"
+#include "thr/elf.hpp"
 #include "hw/ports.hpp"
 #include "hal/video.hpp"
 #include "hw/acpi.hpp"

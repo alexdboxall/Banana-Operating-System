@@ -2,7 +2,7 @@
 #include "core/main.hpp"
 #include "core/kheap.hpp"
 #include "coreobjs/linkedlist.hpp"
-#include "core/prcssthr.hpp"
+#include "thr/prcssthr.hpp"
 #include "core/kconsole.hpp"
 extern "C" {
 #include "libk/string.h"

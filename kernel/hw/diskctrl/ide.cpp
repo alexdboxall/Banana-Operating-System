@@ -1,5 +1,5 @@
 #include "core/common.hpp"
-#include "core/prcssthr.hpp"
+#include "thr/prcssthr.hpp"
 #include "hw/diskctrl/ide.hpp"
 #include "hw/diskphys/ata.hpp"
 #include "hw/diskphys/atapi.hpp"

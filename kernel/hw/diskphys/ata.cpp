@@ -3,7 +3,7 @@
 #include "hw/ports.hpp"
 #include "hw/acpi.hpp"
 #include "core/common.hpp"
-#include "core/prcssthr.hpp"
+#include "thr/prcssthr.hpp"
 #include "hal/vcache.hpp"
 #include "hal/logidisk.hpp"
 #include "hw/cpu.hpp"

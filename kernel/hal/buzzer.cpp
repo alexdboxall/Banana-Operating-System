@@ -1,7 +1,7 @@
 #include "core/main.hpp"
 #include "hal/device.hpp"
 #include "hal/buzzer.hpp"
-#include "core/prcssthr.hpp"
+#include "thr/prcssthr.hpp"
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")

@@ -4,7 +4,7 @@
 
 #include "core/main.hpp"
 #include "core/physmgr.hpp"
-#include "core/prcssthr.hpp"
+#include "thr/prcssthr.hpp"
 #include "hal/intctrl.hpp"
 #include "hw/cpu.hpp"
 #include "hw/ports.hpp"

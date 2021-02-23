@@ -1,5 +1,5 @@
 #include "core/common.hpp"
-#include "core/prcssthr.hpp"
+#include "thr/prcssthr.hpp"
 #include "hw/cpu.hpp"
 #include "hal/timer.hpp"
 #include "hal/device.hpp"

@@ -8,7 +8,7 @@
 #include "hw/ports.hpp"
 #include "core/physmgr.hpp"
 #include "core/common.hpp"
-#include "core/prcssthr.hpp"
+#include "thr/prcssthr.hpp"
 
 
 #pragma GCC optimize ("Os")

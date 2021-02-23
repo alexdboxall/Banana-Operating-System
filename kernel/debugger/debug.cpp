@@ -1,5 +1,5 @@
 #include "debugger/debug.hpp"
-#include "core/prcssthr.hpp"
+#include "thr/prcssthr.hpp"
 #include "hw/ports.hpp"
 
 #pragma GCC diagnostic push

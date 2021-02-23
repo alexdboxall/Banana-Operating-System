@@ -1,5 +1,5 @@
-#include "core/prcssthr.hpp"
-#include "core/syscalls.hpp"
+#include "thr/prcssthr.hpp"
+#include "sys/syscalls.hpp"
 #include "hal/intctrl.hpp"
 
 #pragma GCC optimize ("Os")

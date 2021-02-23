@@ -3,7 +3,7 @@
 #include "core/computer.hpp"
 #include "hal/intctrl.hpp"
 #include "hw/cpu.hpp"
-#include "core/prcssthr.hpp"
+#include "thr/prcssthr.hpp"
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
