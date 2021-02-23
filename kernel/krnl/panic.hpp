@@ -9,4 +9,6 @@ namespace Krnl
 	extern void panic(const char* message);
 }
 
+using Krnl::panic;
+
 #endif

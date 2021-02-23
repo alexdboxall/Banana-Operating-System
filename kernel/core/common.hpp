@@ -9,11 +9,13 @@
 #include <stdbool.h>
 
 #include "core/main.hpp"
-#include "dbg/kconsole.hpp"
 #include "core/kheap.hpp"
 #include "core/terminal.hpp"
 #include "core/computer.hpp"
-#include "libk/string.h"
 #include "debugger/debug.hpp"
+
+extern "C" {
+	#include "libk/string.h"
+}
 
 #endif
