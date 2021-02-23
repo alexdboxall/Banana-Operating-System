@@ -715,20 +715,23 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
 			mouse_x >= child->x + child->width - 18 && mouse_x < child->x + child->width &&
 			mouse_y >= child->y + child->height - 18 && mouse_y < child->y + child->height;
 
-		bool onRightEdge = ;
-		bool onBottomEdge = ;
+		bool onRightEdge = !(child->flags & WIN_NODECORATION) && !child->fullscreen &&
+			mouse_x >= child->x + child->width - 12 && mouse_x < child->x + child->width &&
+			mouse_y >= child->y && mouse_y < child->y + child->height;
+
+		bool onBottomEdge = !(child->flags & WIN_NODECORATION) && !child->fullscreen &&
+			mouse_x >= child->x && mouse_x < child->x + child->width &&
+			mouse_y >= child->y + child->height - 12 && mouse_y < child->y + child->height;
 
 		bool onTitleBar = !(child->flags & WIN_NODECORATION) &&
 			mouse_y >= child->y && mouse_y < (child->y + 28) && !child->fullscreen;
 		
 		if (onBottomCorner) {
 			overridenMouse = MOUSE_OFFSET_TLDR;
-		}
-		if (onRightEdge) {
-			overridenMouse = MOUSE_OFFSET_TLDR;
-		}
-		if (onBottomEdge) {
-			overridenMouse = MOUSE_OFFSET_TLDR;
+		} else if (onRightEdge) {
+			overridenMouse = MOUSE_OFFSET_HORZ;
+		} else if (onBottomEdge) {
+			overridenMouse = MOUSE_OFFSET_VERT;
 		}
 
 		//Now we'll check to see if we're dragging a titlebar

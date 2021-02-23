@@ -10,7 +10,6 @@ void start(void* _parent)
 #include "main.hpp"
 #include "isadma.hpp"
 #include "sb16.hpp"
-#include "pcspk.hpp"
 #include "ps2.hpp"
 
 #include "core/common.hpp"
@@ -61,12 +60,7 @@ int ISA::close(int a, int b, void* c)
 
 void ISA::doSpeaker()
 {
-	if (systemBuzzer == nullptr) {
-		systemBuzzer = new Beep();
-		systemBuzzer->detectionType = DetectionType::ISAProbe;
-		addChild(systemBuzzer);
-		systemBuzzer->open(0, 0, nullptr);
-	}
+
 }
 
 void ISA::doSoundblaster()

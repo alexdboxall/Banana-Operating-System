@@ -60,11 +60,6 @@ extern "C" uint64_t getNanoSinceBoot()
     return nanoSinceBoot;
 }
 
-char cursorFilename[] = "C:/Banana/Cursors/STANDARD.CUR";
-char cursorNRML[] = "NRML";
-char cursorWAIT[] = "WAIT";
-char cursorTEXT[] = "TEXT";
-char cursorTLDR[] = "TLDR";
 char cursorBad1[] = "CURSOR LOAD: BAD 1\n";
 char cursorBad2[] = "CURSOR LOAD: BAD 2\n";
 char cursorBad3[] = "CURSOR LOAD: BAD 3\n";
@@ -72,7 +67,7 @@ char cursorNumStr[] = "CURSORS: %d\n";
 
 void loadCursors()
 {
-    File* f = new File(cursorFilename, kernelProcess);
+    File* f = new File("C:/Banana/Cursors/STANDARD.CUR", kernelProcess);
     FileStatus status = f->open(FileOpenMode::Read);
     if (status != FileStatus::Success) {
         kprintf(cursorBad1);
@@ -95,14 +90,20 @@ void loadCursors()
     kprintf((char*) curdata);
     for (int i = 0; i < numCursors; ++i) {
         int offset;
-        if (!memcmp(curdata + i * 4, cursorNRML, 4)) {
+        if (!memcmp(curdata + i * 4, "NRML", 4)) {
             offset = MOUSE_OFFSET_NORMAL;
-        } else if (!memcmp((char*) curdata + i * 4, cursorWAIT, 4)) {
+        } else if (!memcmp((char*) curdata + i * 4, "WAIT", 4)) {
             offset = MOUSE_OFFSET_WAIT;
-        } else if (!memcmp((char*) curdata + i * 4, cursorTLDR, 4)) {
+        } else if (!memcmp((char*) curdata + i * 4, "TLDR", 4)) {
             offset = MOUSE_OFFSET_TLDR;
-        } else if (!memcmp((char*) curdata + i * 4, cursorTEXT, 4)) {
+        } else if (!memcmp((char*) curdata + i * 4, "TEXT", 4)) {
             offset = MOUSE_OFFSET_TEXT;
+        } else if (!memcmp((char*) curdata + i * 4, "VERT", 4)) {
+            offset = MOUSE_OFFSET_VERT;
+        } else if (!memcmp((char*) curdata + i * 4, "HORZ", 4)) {
+            offset = MOUSE_OFFSET_HORZ;
+        } else if (!memcmp((char*) curdata + i * 4, "HAND", 4)) {
+            offset = MOUSE_OFFSET_HAND;
         }  else {
             kprintf(cursorBad3);
             break;
@@ -118,26 +119,12 @@ char tw[] = "The quick brown fox jumps";
 //And, finally, the handler that causes that button to make a new calculator
 void spawn_calculator(Button* button, int x, int y)
 {
-    //strcpy(szstring, "Please resize this window!");
-
     Window* w = (Window*) malloc(sizeof(Window));
     Window_init(w, 50, 50, 300, 200, WIN_TOPLEVELWIN, 0);
     Window_set_title(w, (char*) tw);
     Window_insert_child((Window*) desktop, w);
-    //w->resize_function = resizehandler;
-    //w->mousedown_function = mdown;
-    //w->mouseup_function = mup;
-    //w->mousedrag_function = mdrag;
-    //w->mousemove_function = mmove;
 
-    //oldHandler = w->paint_function;
-    //w->paint_function = newPaint;
     Window_paint((Window*) desktop, (List*) 0, 1);
-
-    /*//Create and install a calculator
-    Calculator* temp_calc = Calculator_new();
-    Window_insert_child((Window*)desktop, (Window*)temp_calc);
-    Window_move((Window*)temp_calc, 0, 0);*/
 }
 
 bool canDoMouse = false;

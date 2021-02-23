@@ -22,6 +22,9 @@
 #define MOUSE_OFFSET_TEXT	(CURSOR_DATA_SIZE * 1)
 #define MOUSE_OFFSET_WAIT	(CURSOR_DATA_SIZE * 2)
 #define MOUSE_OFFSET_TLDR	(CURSOR_DATA_SIZE * 3)
+#define MOUSE_OFFSET_VERT	(CURSOR_DATA_SIZE * 4)
+#define MOUSE_OFFSET_HORZ	(CURSOR_DATA_SIZE * 5)
+#define MOUSE_OFFSET_HAND	(CURSOR_DATA_SIZE * 6)
 
 typedef struct Desktop_struct {
     Window window; //Inherits window class
