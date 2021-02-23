@@ -1,5 +1,6 @@
 #include "core/prcssthr.hpp"
 #include "core/syscalls.hpp"
+#include "core/elf.hpp"
 #include "hal/intctrl.hpp"
 #include "fs/vfs.hpp"
 
@@ -13,9 +14,11 @@
 namespace Sys
 {
 	/// <summary>
-	/// Loads a kernel-mode dynamic link library.
+	/// Loads a kernel-mode dynamic link library or driver.
 	/// </summary>
 	/// <remark>
+	/// Loading dynamic link libraries or drivers which have already been loaded could cause system instability.
+	/// </remark>
 	/// <param name="ebx">The filename to load.</param>
 	/// <returns>Returns zero on success, or non-zero on failure.</returns>
 	/// 
