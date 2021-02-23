@@ -8,6 +8,7 @@
 #include "hw/acpi.hpp"
 #include "hw/ports.hpp"
 #include "hw/cpu.hpp"
+#include "vm86/vm8086.hpp"
 
 #pragma GCC optimize ("O2")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -299,8 +300,7 @@ void displayProgramFault(const char* text)
 bool (*gpFaultIntercept)(regs* r) = nullptr;
 void gpFault(regs* r, void* context)
 {
-	extern bool vm8086FaultHandler(regs * r);
-	gpFaultIntercept = vm8086FaultHandler;
+	gpFaultIntercept = Vm::faultHandler;
 	if (gpFaultIntercept) {
 		bool handled = gpFaultIntercept(r);
 		if (handled) {

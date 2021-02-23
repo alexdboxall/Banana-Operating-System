@@ -108,7 +108,7 @@ void Computer::start()
 	loadClockSettings();
 	loadDriversForAll();
 
-	//loadVM8086FileAsThread(kernelProcess, "C:/Banana/System/vm86/VGASET.COM", 0x0000, 0x90, 0x12, 0x12);
+	//Vm::loadFileAsThread(kernelProcess, "C:/Banana/System/vm86/VGASET.COM", 0x0000, 0x90, 0x12, 0x12);
 
 	//for each cpu
 		//start it

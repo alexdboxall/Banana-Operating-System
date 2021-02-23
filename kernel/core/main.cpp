@@ -41,6 +41,7 @@ Dev		Device Subsystem
 Dbg		Debugging
 Fs		Filesystem
 Reg		Registry
+Vm		Virtual 8086
 */
 
 extern "C" {
