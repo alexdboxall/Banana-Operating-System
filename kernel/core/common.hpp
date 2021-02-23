@@ -12,10 +12,11 @@
 #include "core/kheap.hpp"
 #include "core/terminal.hpp"
 #include "core/computer.hpp"
-#include "debugger/debug.hpp"
+#include "dbg/kconsole.hpp"
 
 extern "C" {
-	#include "libk/string.h"
+#include "libk/string.h"
+
 }
 
 #endif
