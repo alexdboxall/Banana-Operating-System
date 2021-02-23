@@ -4,7 +4,7 @@
 #include "core/physmgr.hpp"
 #include "thr/elf.hpp"
 #include "core/idle.hpp"
-#include "registry/registry.hpp"
+#include "reg/registry.hpp"
 #include "hw/acpi.hpp"
 #include "hal/fpu.hpp"
 #include "hal/clock.hpp"

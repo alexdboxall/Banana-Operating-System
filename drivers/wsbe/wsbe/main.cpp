@@ -11,7 +11,7 @@
 #include "hal/video.hpp"
 #include "thr/prcssthr.hpp"
 #include "hal/timer.hpp"
-#include "registry/registry.hpp"
+#include "reg/registry.hpp"
 #include "fs/vfs.hpp"
 
 extern "C" {

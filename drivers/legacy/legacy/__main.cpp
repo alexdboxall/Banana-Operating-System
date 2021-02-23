@@ -17,7 +17,7 @@ void start(void* _parent)
 #include "hw/ports.hpp"
 #include "hal/video.hpp"
 #include "hw/acpi.hpp"
-#include "registry/registry.hpp"
+#include "reg/registry.hpp"
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")

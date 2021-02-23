@@ -2,7 +2,7 @@
 #include "thr/elf.hpp"
 #include "hw/ports.hpp"
 #include "hw/acpi.hpp"
-#include "registry/registry.hpp"
+#include "reg/registry.hpp"
 
 #include "ps2port.hpp"
 #include "ps2.hpp"

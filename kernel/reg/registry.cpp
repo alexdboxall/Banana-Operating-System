@@ -1,4 +1,4 @@
-#include "registry/registry.hpp"
+#include "reg/registry.hpp"
 #include "core/main.hpp"
 #include "fs/vfs.hpp"
 #include "core/kheap.hpp"

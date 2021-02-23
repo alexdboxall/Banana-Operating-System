@@ -9,7 +9,7 @@
 #include "hw/ports.hpp"
 #include "hw/acpi.hpp"
 #include "thr/prcssthr.hpp"
-#include "registry/registry.hpp"
+#include "reg/registry.hpp"
 #include "fs/vfs.hpp"
 #include "core/common.hpp"
 #include "core/virtmgr.hpp"
