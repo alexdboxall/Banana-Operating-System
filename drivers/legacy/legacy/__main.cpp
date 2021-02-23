@@ -19,8 +19,6 @@ void start(void* _parent)
 #include "hw/acpi.hpp"
 #include "registry/registry.hpp"
 
-#include "hw/clock/rtc.hpp"
-
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
@@ -134,16 +132,7 @@ void ISA::doPS2()
 
 void ISA::doRTC()
 {
-	computer->clock = nullptr;
-
-	if (computer->clock == nullptr) {
-		RTC* rtc = new RTC();
-		rtc->detectionType = DetectionType::ISAProbe;
-		addChild(rtc);
-		rtc->open(0, 0, nullptr);
-
-		computer->clock = rtc;
-	}
+	
 }
 
 #define ISA_DEVICE_ENABLE		 0
