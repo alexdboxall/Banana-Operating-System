@@ -2,9 +2,7 @@
 #define __LINKED_LIST_HPP__
 
 #include <stdint.h>
-
-extern void kputs(const char* c);
-extern void kprintf(const char* c, ...);
+#include "dbg/kconsole.hpp"
 
 template <class T>
 class LinkedList
