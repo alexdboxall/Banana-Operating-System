@@ -14,206 +14,206 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-bool allocateMemoryForTask(Process* prcss, File* file, size_t size, size_t virtualAddr, size_t additionalNullBytes)
-{
-	/*
-	Basically, we get a physical page and map into the CURRENT VIRTUAL ADDRESS SPACE.
-	We use that mapping to write the correct data to the page. Then, we map the same
-	physical page to the new VAS using mapForeignPage.
-
-	We do not save the mappings in the current VAS, and there is only a single 4KB spot where
-	we map them in and do the copying (virtMappingSpot)
-
-	We do not need to INVLPG or reload CR3 here, because this is only called on program load
-	and CR3 will be set when this task is switched in for the first time.
-	*/
-
-	if ((virtualAddr & 0xFFF) && additionalNullBytes && !size) {
-		virtualAddr += 0x1000;
-		size -= 0x1000 - (virtualAddr & 0xFFF);
-		virtualAddr &= ~0xFFF;
-	}
-
-	size_t pagesReq = (size + 4095) / 4096;
-	size_t nullPagesReq = (additionalNullBytes + 4095) / 4096;
-	size_t virtMappingSpot = Virt::allocateKernelVirtualPages(1);
-
-	int actual;
-
-	if (pagesReq) {
-
-		for (size_t i = 0; i < pagesReq; ++i) {
-			uint8_t buffer[4096];
-
-			FileStatus res = file->read(size > 4096 ? 4096 : size, (void*) buffer, &actual);
-			if (res != FileStatus::Success) {
-				kprintf("allocate memory for task failed (A)! 0x%X\n", (int) res);
-				Virt::freeKernelVirtualPages(virtMappingSpot);
-				return false;
-			}
-
-			lockScheduler();
-			size_t addr = Phys::allocatePage();
-			currentTaskTCB->processRelatedTo->vas->mapPage(addr, virtMappingSpot, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
-
-			//TODO: you can move mapOtherVASIn outside of the loop, but if someone else maps a VAS into the same slot the system will crash
-			//		(add locking to mapOtherVASIn?, e.g. releaseOtherVAS(bool slot) )
-			currentTaskTCB->processRelatedTo->vas->mapOtherVASIn(false, prcss->vas);
-			currentTaskTCB->processRelatedTo->vas->mapForeignPage(false, prcss->vas, addr, virtualAddr, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_USER | PAGE_WRITABLE);
-
-			memcpy((void*) virtMappingSpot, (const void*) buffer, 4096);
-
-			unlockScheduler();
-
-			size -= 4096;
-			virtualAddr += 4096;
-		}
-	}
-
-	if (nullPagesReq) {
-		lockScheduler();
-		currentTaskTCB->processRelatedTo->vas->mapOtherVASIn(false, prcss->vas);
-
-		for (size_t i = 0; i < nullPagesReq; ++i) {
-			size_t addr = Phys::allocatePage();
-			currentTaskTCB->processRelatedTo->vas->mapPage(addr, virtMappingSpot, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
-			currentTaskTCB->processRelatedTo->vas->mapForeignPage(false, prcss->vas, addr, virtualAddr, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_USER | PAGE_WRITABLE);
-			memset((void*) virtMappingSpot, 0, 4096);
-			virtualAddr += 4096;
-		}
-
-		unlockScheduler();
-	}
-
-	Virt::freeKernelVirtualPages(virtMappingSpot);
-
-	return true;
-}
-
-
-bool loadProgramIntoMemory(Process* p, const char* filename)
-{
-	File* f = new File(filename, p);
-	FileStatus status = f->open(FileOpenMode::Read);
-	if (status != FileStatus::Success) {
-		return false;
-	}
-
-	int actual = 0;
-	ELFHeader* elf = (ELFHeader*) malloc(sizeof(ELFHeader));
-
-	status = f->read(sizeof(ELFHeader), (void*) elf, &actual);
-	if (status != FileStatus::Success) {
-		return false;
-	}
-
-	if (elf->identify[0] == 0x7F && elf->identify[1] == 'E' && elf->identify[2] == 'L' && elf->identify[3] == 'F') {
-	} else {
-		return false;
-	}
-
-	//LOAD SECTION HEADERS
-	if (elf->shOffset == 0) {
-		return false;
-	}
-
-	status = f->seek(elf->shOffset);
-	if (status != FileStatus::Success) {
-		return false;
-	}
-
-
-	size_t entryPoint = elf->entry;
-	size_t relocationPoint = 0x10000000;
-
-#if PLATFORM_ID == 86
-	ELFSectionHeader32* sectHeaders = (ELFSectionHeader32*) malloc(elf->shNum * elf->shSize);
-	f->read(elf->shNum * elf->shSize, (void*) sectHeaders, &actual);
-#else
-	ELFSectionHeader64* sectHeaders = (ELFSectionHeader64*) malloc(elf->shNum * elf->shSize);
-	f->read(elf->shNum * elf->shSize, (void*) sectHeaders, &actual);
-#endif
-
-
-	//LOAD PROGRAM HEADERS
-	if (!elf->phOffset) {
-		return false;
-	}
-
-	status = f->seek(elf->phOffset);
-	if (status != FileStatus::Success) {
-		return false;
-	}
-
-	size_t highest = 0;
-
-#if PLATFORM_ID == 86
-	ELFProgramHeader32* progHeaders = (ELFProgramHeader32*) malloc(elf->phNum * elf->phSize);
-	f->read(elf->phNum * elf->phSize, (void*) progHeaders, &actual);
-
-#else
-	ELFProgramHeader64* progHeaders = (ELFProgramHeader64*) malloc(elf->phNum * elf->phSize);
-	f->read(elf->phNum * elf->phSize, (void*) progHeaders, &actual);
-
-#endif
-
-	//LOOK AT PROG SEGMENTS
-
-	//this whole thing isn't loading the file from the disk right. the code is sound, it's just the vfs
-	//however! the vfs_file_t might be in bad form before it gets here...
-
-	for (uint16_t i = 0; i < elf->phNum; ++i) {
-		size_t addr = (progHeaders + i)->p_vaddr;
-		size_t fileOffset = (progHeaders + i)->p_offset;
-		size_t size = (progHeaders + i)->p_filsz;
-
-		if ((progHeaders + i)->type == PT_LOAD) {
-			//seek to correct part then load into paging structures
-			status = f->seek(fileOffset);
-			if (status != FileStatus::Success) {
-				kprintf("OOPS 7\n");
-				return false;
-			}
-
-			//kprintf("allocateMemoryForTask 0x%X 0x%X 0x%X\n", size, addr, (progHeaders + i)->p_memsz - (progHeaders + i)->p_filsz);
-			if (size >= 65536) {
-				//size = 64000;
-			}
-
-			allocateMemoryForTask(p, f, size, addr, (progHeaders + i)->p_memsz - (progHeaders + i)->p_filsz);
-
-			if (addr + size > highest) {
-				highest = addr + size;
-			}
-		}
-	}
-
-	highest /= 4096;
-	highest += 1;
-	highest *= 4096;
-
-	p->usermodeEntryPoint = entryPoint;
-
-	p->vas->sbrk = highest;	//for future heap allocations
-
-	free(sectHeaders);
-	free(elf);
-	free(progHeaders);
-
-	f->close();
-
-	return true;
-}
-
-void runtimeReferenceHelper()
-{
-	kprintf("Runtime reference helper called!\n");
-	asm("cli");
-	while (1);
-}
-
 namespace Thr
 {
+	bool allocateMemoryForTask(Process* prcss, File* file, size_t size, size_t virtualAddr, size_t additionalNullBytes)
+	{
+		/*
+		Basically, we get a physical page and map into the CURRENT VIRTUAL ADDRESS SPACE.
+		We use that mapping to write the correct data to the page. Then, we map the same
+		physical page to the new VAS using mapForeignPage.
+
+		We do not save the mappings in the current VAS, and there is only a single 4KB spot where
+		we map them in and do the copying (virtMappingSpot)
+
+		We do not need to INVLPG or reload CR3 here, because this is only called on program load
+		and CR3 will be set when this task is switched in for the first time.
+		*/
+
+		if ((virtualAddr & 0xFFF) && additionalNullBytes && !size) {
+			virtualAddr += 0x1000;
+			size -= 0x1000 - (virtualAddr & 0xFFF);
+			virtualAddr &= ~0xFFF;
+		}
+
+		size_t pagesReq = (size + 4095) / 4096;
+		size_t nullPagesReq = (additionalNullBytes + 4095) / 4096;
+		size_t virtMappingSpot = Virt::allocateKernelVirtualPages(1);
+
+		int actual;
+
+		if (pagesReq) {
+
+			for (size_t i = 0; i < pagesReq; ++i) {
+				uint8_t buffer[4096];
+
+				FileStatus res = file->read(size > 4096 ? 4096 : size, (void*) buffer, &actual);
+				if (res != FileStatus::Success) {
+					kprintf("allocate memory for task failed (A)! 0x%X\n", (int) res);
+					Virt::freeKernelVirtualPages(virtMappingSpot);
+					return false;
+				}
+
+				lockScheduler();
+				size_t addr = Phys::allocatePage();
+				currentTaskTCB->processRelatedTo->vas->mapPage(addr, virtMappingSpot, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
+
+				//TODO: you can move mapOtherVASIn outside of the loop, but if someone else maps a VAS into the same slot the system will crash
+				//		(add locking to mapOtherVASIn?, e.g. releaseOtherVAS(bool slot) )
+				currentTaskTCB->processRelatedTo->vas->mapOtherVASIn(false, prcss->vas);
+				currentTaskTCB->processRelatedTo->vas->mapForeignPage(false, prcss->vas, addr, virtualAddr, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_USER | PAGE_WRITABLE);
+
+				memcpy((void*) virtMappingSpot, (const void*) buffer, 4096);
+
+				unlockScheduler();
+
+				size -= 4096;
+				virtualAddr += 4096;
+			}
+		}
+
+		if (nullPagesReq) {
+			lockScheduler();
+			currentTaskTCB->processRelatedTo->vas->mapOtherVASIn(false, prcss->vas);
+
+			for (size_t i = 0; i < nullPagesReq; ++i) {
+				size_t addr = Phys::allocatePage();
+				currentTaskTCB->processRelatedTo->vas->mapPage(addr, virtMappingSpot, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
+				currentTaskTCB->processRelatedTo->vas->mapForeignPage(false, prcss->vas, addr, virtualAddr, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_USER | PAGE_WRITABLE);
+				memset((void*) virtMappingSpot, 0, 4096);
+				virtualAddr += 4096;
+			}
+
+			unlockScheduler();
+		}
+
+		Virt::freeKernelVirtualPages(virtMappingSpot);
+
+		return true;
+	}
+
+
+	bool loadProgramIntoMemory(Process* p, const char* filename)
+	{
+		File* f = new File(filename, p);
+		FileStatus status = f->open(FileOpenMode::Read);
+		if (status != FileStatus::Success) {
+			return false;
+		}
+
+		int actual = 0;
+		ELFHeader* elf = (ELFHeader*) malloc(sizeof(ELFHeader));
+
+		status = f->read(sizeof(ELFHeader), (void*) elf, &actual);
+		if (status != FileStatus::Success) {
+			return false;
+		}
+
+		if (elf->identify[0] == 0x7F && elf->identify[1] == 'E' && elf->identify[2] == 'L' && elf->identify[3] == 'F') {
+		} else {
+			return false;
+		}
+
+		//LOAD SECTION HEADERS
+		if (elf->shOffset == 0) {
+			return false;
+		}
+
+		status = f->seek(elf->shOffset);
+		if (status != FileStatus::Success) {
+			return false;
+		}
+
+
+		size_t entryPoint = elf->entry;
+		size_t relocationPoint = 0x10000000;
+
+#if PLATFORM_ID == 86
+		ELFSectionHeader32* sectHeaders = (ELFSectionHeader32*) malloc(elf->shNum * elf->shSize);
+		f->read(elf->shNum * elf->shSize, (void*) sectHeaders, &actual);
+#else
+		ELFSectionHeader64* sectHeaders = (ELFSectionHeader64*) malloc(elf->shNum * elf->shSize);
+		f->read(elf->shNum * elf->shSize, (void*) sectHeaders, &actual);
+#endif
+
+
+		//LOAD PROGRAM HEADERS
+		if (!elf->phOffset) {
+			return false;
+		}
+
+		status = f->seek(elf->phOffset);
+		if (status != FileStatus::Success) {
+			return false;
+		}
+
+		size_t highest = 0;
+
+#if PLATFORM_ID == 86
+		ELFProgramHeader32* progHeaders = (ELFProgramHeader32*) malloc(elf->phNum * elf->phSize);
+		f->read(elf->phNum * elf->phSize, (void*) progHeaders, &actual);
+
+#else
+		ELFProgramHeader64* progHeaders = (ELFProgramHeader64*) malloc(elf->phNum * elf->phSize);
+		f->read(elf->phNum * elf->phSize, (void*) progHeaders, &actual);
+
+#endif
+
+		//LOOK AT PROG SEGMENTS
+
+		//this whole thing isn't loading the file from the disk right. the code is sound, it's just the vfs
+		//however! the vfs_file_t might be in bad form before it gets here...
+
+		for (uint16_t i = 0; i < elf->phNum; ++i) {
+			size_t addr = (progHeaders + i)->p_vaddr;
+			size_t fileOffset = (progHeaders + i)->p_offset;
+			size_t size = (progHeaders + i)->p_filsz;
+
+			if ((progHeaders + i)->type == PT_LOAD) {
+				//seek to correct part then load into paging structures
+				status = f->seek(fileOffset);
+				if (status != FileStatus::Success) {
+					kprintf("OOPS 7\n");
+					return false;
+				}
+
+				//kprintf("allocateMemoryForTask 0x%X 0x%X 0x%X\n", size, addr, (progHeaders + i)->p_memsz - (progHeaders + i)->p_filsz);
+				if (size >= 65536) {
+					//size = 64000;
+				}
+
+				allocateMemoryForTask(p, f, size, addr, (progHeaders + i)->p_memsz - (progHeaders + i)->p_filsz);
+
+				if (addr + size > highest) {
+					highest = addr + size;
+				}
+			}
+		}
+
+		highest /= 4096;
+		highest += 1;
+		highest *= 4096;
+
+		p->usermodeEntryPoint = entryPoint;
+
+		p->vas->sbrk = highest;	//for future heap allocations
+
+		free(sectHeaders);
+		free(elf);
+		free(progHeaders);
+
+		f->close();
+
+		return true;
+	}
+
+	void runtimeReferenceHelper()
+	{
+		kprintf("Runtime reference helper called!\n");
+		asm("cli");
+		while (1);
+	}
+
 	int nextDLLSymbolIndex = 0;
 
 	//this means 32 drivers can have their symbols loaded into the kernel table

@@ -171,7 +171,7 @@ Process::Process(const char* _filepath, Process* _parent, char** _argv)
 	strcpy(taskname, _filepath);
 	addArgs(_argv);
 
-	bool f = loadProgramIntoMemory(this, _filepath);
+	bool f = Thr::loadProgramIntoMemory(this, _filepath);
 	failedToLoadProgram = !f;
 	kprintf("LOAD PROGRAM INTO MEMORY RETURNED %d\n", f);
 }
