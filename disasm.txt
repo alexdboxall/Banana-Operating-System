@@ -23952,7 +23952,7 @@ c0011301:	83 ec 14             	sub    esp,0x14
 c0011304:	c7 05 c8 2f 02 c0 01 86 01 c0 	mov    DWORD PTR ds:0xc0022fc8,0xc0018601
 c001130e:	8b 5c 24 1c          	mov    ebx,DWORD PTR [esp+0x1c]
 c0011312:	53                   	push   ebx
-c0011313:	e8 e9 72 00 00       	call   c0018601 <vm8086FaultHandler(regs*)>
+c0011313:	e8 e9 72 00 00       	call   c0018601 <Vm::faultHandler(regs*)>
 c0011318:	83 c4 10             	add    esp,0x10
 c001131b:	84 c0                	test   al,al
 c001131d:	74 05                	je     c0011324 <gpFault(regs*, void*)+0x24>
@@ -33284,7 +33284,7 @@ c0018375:	83 c4 10             	add    esp,0x10
 c0018378:	83 c4 0c             	add    esp,0xc
 c001837b:	c3                   	ret    
 
-c001837c <vm8086EntryPoint(void*)>:
+c001837c <Vm::vm8086EntryPoint(void*)>:
 c001837c:	83 ec 0c             	sub    esp,0xc
 c001837f:	e8 86 f2 ff ff       	call   c001760a <unlockScheduler()>
 c0018384:	fb                   	sti    
@@ -33301,34 +33301,34 @@ c001839e:	e8 12 7e fe ff       	call   c00001b5 <goToVM86>
 c00183a3:	83 c4 1c             	add    esp,0x1c
 c00183a6:	c3                   	ret    
 
-c00183a7 <inbv(unsigned short)>:
+c00183a7 <Vm::inbv(unsigned short)>:
 c00183a7:	8b 54 24 04          	mov    edx,DWORD PTR [esp+0x4]
 c00183ab:	ec                   	in     al,dx
 c00183ac:	c3                   	ret    
 
-c00183ad <outbv(unsigned short, unsigned char)>:
+c00183ad <Vm::outbv(unsigned short, unsigned char)>:
 c00183ad:	8b 54 24 04          	mov    edx,DWORD PTR [esp+0x4]
 c00183b1:	8b 44 24 08          	mov    eax,DWORD PTR [esp+0x8]
 c00183b5:	ee                   	out    dx,al
 c00183b6:	c3                   	ret    
 
-c00183b7 <realToLinear(unsigned short, unsigned short)>:
+c00183b7 <Vm::realToLinear(unsigned short, unsigned short)>:
 c00183b7:	0f b7 44 24 04       	movzx  eax,WORD PTR [esp+0x4]
 c00183bc:	0f b7 54 24 08       	movzx  edx,WORD PTR [esp+0x8]
 c00183c1:	c1 e0 04             	shl    eax,0x4
 c00183c4:	01 d0                	add    eax,edx
 c00183c6:	c3                   	ret    
 
-c00183c7 <getSegment(unsigned int)>:
+c00183c7 <Vm::getSegment(unsigned int)>:
 c00183c7:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
 c00183cb:	c1 e8 10             	shr    eax,0x10
 c00183ce:	c3                   	ret    
 
-c00183cf <getOffset(unsigned int)>:
+c00183cf <Vm::getOffset(unsigned int)>:
 c00183cf:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
 c00183d3:	c3                   	ret    
 
-c00183d4 <loadVM8086FileAsThread(Process*, char const*, unsigned short, unsigned short, unsigned short, unsigned short)>:
+c00183d4 <Vm::loadFileAsThread(Process*, char const*, unsigned short, unsigned short, unsigned short, unsigned short)>:
 c00183d4:	55                   	push   ebp
 c00183d5:	57                   	push   edi
 c00183d6:	56                   	push   esi
@@ -33370,14 +33370,14 @@ c001844c:	e8 f5 74 ff ff       	call   c000f946 <File::stat(unsigned long long*,
 c0018451:	8a 54 24 23          	mov    dl,BYTE PTR [esp+0x23]
 c0018455:	83 c4 10             	add    esp,0x10
 c0018458:	84 d2                	test   dl,dl
-c001845a:	74 1c                	je     c0018478 <loadVM8086FileAsThread(Process*, char const*, unsigned short, unsigned short, unsigned short, unsigned short)+0xa4>
+c001845a:	74 1c                	je     c0018478 <Vm::loadFileAsThread(Process*, char const*, unsigned short, unsigned short, unsigned short, unsigned short)+0xa4>
 c001845c:	83 ec 0c             	sub    esp,0xc
 c001845f:	68 2c 19 02 c0       	push   0xc002192c
 c0018464:	e8 eb 37 ff ff       	call   c000bc54 <panic(char const*)>
 c0018469:	e8 9c f1 ff ff       	call   c001760a <unlockScheduler()>
 c001846e:	83 c4 10             	add    esp,0x10
 c0018471:	31 d2                	xor    edx,edx
-c0018473:	e9 81 00 00 00       	jmp    c00184f9 <loadVM8086FileAsThread(Process*, char const*, unsigned short, unsigned short, unsigned short, unsigned short)+0x125>
+c0018473:	e9 81 00 00 00       	jmp    c00184f9 <Vm::loadFileAsThread(Process*, char const*, unsigned short, unsigned short, unsigned short, unsigned short)+0x125>
 c0018478:	88 54 24 0c          	mov    BYTE PTR [esp+0xc],dl
 c001847c:	51                   	push   ecx
 c001847d:	51                   	push   ecx
@@ -33386,14 +33386,14 @@ c0018480:	53                   	push   ebx
 c0018481:	e8 14 72 ff ff       	call   c000f69a <File::open(FileOpenMode)>
 c0018486:	83 c4 10             	add    esp,0x10
 c0018489:	85 c0                	test   eax,eax
-c001848b:	74 1b                	je     c00184a8 <loadVM8086FileAsThread(Process*, char const*, unsigned short, unsigned short, unsigned short, unsigned short)+0xd4>
+c001848b:	74 1b                	je     c00184a8 <Vm::loadFileAsThread(Process*, char const*, unsigned short, unsigned short, unsigned short, unsigned short)+0xd4>
 c001848d:	83 ec 0c             	sub    esp,0xc
 c0018490:	68 45 19 02 c0       	push   0xc0021945
 c0018495:	e8 ba 37 ff ff       	call   c000bc54 <panic(char const*)>
 c001849a:	e8 6b f1 ff ff       	call   c001760a <unlockScheduler()>
 c001849f:	83 c4 10             	add    esp,0x10
 c00184a2:	8a 54 24 0c          	mov    dl,BYTE PTR [esp+0xc]
-c00184a6:	eb 51                	jmp    c00184f9 <loadVM8086FileAsThread(Process*, char const*, unsigned short, unsigned short, unsigned short, unsigned short)+0x125>
+c00184a6:	eb 51                	jmp    c00184f9 <Vm::loadFileAsThread(Process*, char const*, unsigned short, unsigned short, unsigned short, unsigned short)+0x125>
 c00184a8:	83 ec 0c             	sub    esp,0xc
 c00184ab:	0f b7 ff             	movzx  edi,di
 c00184ae:	6a 07                	push   0x7
@@ -33406,7 +33406,7 @@ c00184c2:	e8 d3 64 ff ff       	call   c000e99a <VAS::mapRange(unsigned long, un
 c00184c7:	83 c4 18             	add    esp,0x18
 c00184ca:	57                   	push   edi
 c00184cb:	56                   	push   esi
-c00184cc:	e8 e6 fe ff ff       	call   c00183b7 <realToLinear(unsigned short, unsigned short)>
+c00184cc:	e8 e6 fe ff ff       	call   c00183b7 <Vm::realToLinear(unsigned short, unsigned short)>
 c00184d1:	5a                   	pop    edx
 c00184d2:	8b 13                	mov    edx,DWORD PTR [ebx]
 c00184d4:	8d 4c 24 20          	lea    ecx,[esp+0x20]
@@ -33430,7 +33430,7 @@ c0018500:	5f                   	pop    edi
 c0018501:	5d                   	pop    ebp
 c0018502:	c3                   	ret    
 
-c0018503 <vm8086DoISR(regs*, int, unsigned char*, unsigned short, unsigned short)>:
+c0018503 <Vm::doISR(regs*, int, unsigned char*, unsigned short, unsigned short)>:
 c0018503:	57                   	push   edi
 c0018504:	56                   	push   esi
 c0018505:	53                   	push   ebx
@@ -33442,7 +33442,7 @@ c0018515:	0f b7 c0             	movzx  eax,ax
 c0018518:	50                   	push   eax
 c0018519:	0f b7 44 24 20       	movzx  eax,WORD PTR [esp+0x20]
 c001851e:	50                   	push   eax
-c001851f:	e8 93 fe ff ff       	call   c00183b7 <realToLinear(unsigned short, unsigned short)>
+c001851f:	e8 93 fe ff ff       	call   c00183b7 <Vm::realToLinear(unsigned short, unsigned short)>
 c0018524:	5a                   	pop    edx
 c0018525:	5e                   	pop    esi
 c0018526:	8b 71 44             	mov    esi,DWORD PTR [ecx+0x44]
@@ -33460,7 +33460,7 @@ c001854c:	89 d6                	mov    esi,edx
 c001854e:	8b 3d 00 20 00 c2    	mov    edi,DWORD PTR ds:0xc2002000
 c0018554:	66 81 e6 ff fd       	and    si,0xfdff
 c0018559:	80 7f 61 00          	cmp    BYTE PTR [edi+0x61],0x0
-c001855d:	74 07                	je     c0018566 <vm8086DoISR(regs*, int, unsigned char*, unsigned short, unsigned short)+0x63>
+c001855d:	74 07                	je     c0018566 <Vm::doISR(regs*, int, unsigned char*, unsigned short, unsigned short)+0x63>
 c001855f:	89 d6                	mov    esi,edx
 c0018561:	66 81 ce 00 02       	or     si,0x200
 c0018566:	66 89 70 04          	mov    WORD PTR [eax+0x4],si
@@ -33475,28 +33475,28 @@ c001858a:	5e                   	pop    esi
 c001858b:	5f                   	pop    edi
 c001858c:	c3                   	ret    
 
-c001858d <readByteFromReal(unsigned short, unsigned short)>:
+c001858d <Vm::readByteFromReal(unsigned short, unsigned short)>:
 c001858d:	0f b7 44 24 04       	movzx  eax,WORD PTR [esp+0x4]
 c0018592:	0f b7 54 24 08       	movzx  edx,WORD PTR [esp+0x8]
 c0018597:	c1 e0 04             	shl    eax,0x4
 c001859a:	8a 04 10             	mov    al,BYTE PTR [eax+edx*1]
 c001859d:	c3                   	ret    
 
-c001859e <readWordFromReal(unsigned short, unsigned short)>:
+c001859e <Vm::readWordFromReal(unsigned short, unsigned short)>:
 c001859e:	0f b7 44 24 04       	movzx  eax,WORD PTR [esp+0x4]
 c00185a3:	0f b7 54 24 08       	movzx  edx,WORD PTR [esp+0x8]
 c00185a8:	c1 e0 04             	shl    eax,0x4
 c00185ab:	66 8b 04 10          	mov    ax,WORD PTR [eax+edx*1]
 c00185af:	c3                   	ret    
 
-c00185b0 <readDwordFromReal(unsigned short, unsigned short)>:
+c00185b0 <Vm::readDwordFromReal(unsigned short, unsigned short)>:
 c00185b0:	0f b7 44 24 04       	movzx  eax,WORD PTR [esp+0x4]
 c00185b5:	0f b7 54 24 08       	movzx  edx,WORD PTR [esp+0x8]
 c00185ba:	c1 e0 04             	shl    eax,0x4
 c00185bd:	8b 04 10             	mov    eax,DWORD PTR [eax+edx*1]
 c00185c0:	c3                   	ret    
 
-c00185c1 <writeByteFromReal(unsigned short, unsigned short, unsigned char)>:
+c00185c1 <Vm::writeByteFromReal(unsigned short, unsigned short, unsigned char)>:
 c00185c1:	0f b7 44 24 04       	movzx  eax,WORD PTR [esp+0x4]
 c00185c6:	0f b7 54 24 08       	movzx  edx,WORD PTR [esp+0x8]
 c00185cb:	c1 e0 04             	shl    eax,0x4
@@ -33504,7 +33504,7 @@ c00185ce:	8b 4c 24 0c          	mov    ecx,DWORD PTR [esp+0xc]
 c00185d2:	88 0c 10             	mov    BYTE PTR [eax+edx*1],cl
 c00185d5:	c3                   	ret    
 
-c00185d6 <writeWordFromReal(unsigned short, unsigned short, unsigned short)>:
+c00185d6 <Vm::writeWordFromReal(unsigned short, unsigned short, unsigned short)>:
 c00185d6:	0f b7 44 24 04       	movzx  eax,WORD PTR [esp+0x4]
 c00185db:	0f b7 54 24 08       	movzx  edx,WORD PTR [esp+0x8]
 c00185e0:	c1 e0 04             	shl    eax,0x4
@@ -33512,7 +33512,7 @@ c00185e3:	8b 4c 24 0c          	mov    ecx,DWORD PTR [esp+0xc]
 c00185e7:	66 89 0c 10          	mov    WORD PTR [eax+edx*1],cx
 c00185eb:	c3                   	ret    
 
-c00185ec <writeDwordFromReal(unsigned short, unsigned short, unsigned int)>:
+c00185ec <Vm::writeDwordFromReal(unsigned short, unsigned short, unsigned int)>:
 c00185ec:	0f b7 44 24 04       	movzx  eax,WORD PTR [esp+0x4]
 c00185f1:	0f b7 54 24 08       	movzx  edx,WORD PTR [esp+0x8]
 c00185f6:	c1 e0 04             	shl    eax,0x4
@@ -33520,7 +33520,7 @@ c00185f9:	8b 4c 24 0c          	mov    ecx,DWORD PTR [esp+0xc]
 c00185fd:	89 0c 10             	mov    DWORD PTR [eax+edx*1],ecx
 c0018600:	c3                   	ret    
 
-c0018601 <vm8086FaultHandler(regs*)>:
+c0018601 <Vm::faultHandler(regs*)>:
 c0018601:	55                   	push   ebp
 c0018602:	57                   	push   edi
 c0018603:	56                   	push   esi
@@ -33533,7 +33533,7 @@ c0018613:	0f b7 f0             	movzx  esi,ax
 c0018616:	52                   	push   edx
 c0018617:	0f b7 c0             	movzx  eax,ax
 c001861a:	50                   	push   eax
-c001861b:	e8 97 fd ff ff       	call   c00183b7 <realToLinear(unsigned short, unsigned short)>
+c001861b:	e8 97 fd ff ff       	call   c00183b7 <Vm::realToLinear(unsigned short, unsigned short)>
 c0018620:	5a                   	pop    edx
 c0018621:	8b 6b 48             	mov    ebp,DWORD PTR [ebx+0x48]
 c0018624:	59                   	pop    ecx
@@ -33546,7 +33546,7 @@ c0018637:	0f b7 c5             	movzx  eax,bp
 c001863a:	89 44 24 0c          	mov    DWORD PTR [esp+0xc],eax
 c001863e:	ff 74 24 08          	push   DWORD PTR [esp+0x8]
 c0018642:	ff 74 24 10          	push   DWORD PTR [esp+0x10]
-c0018646:	e8 6c fd ff ff       	call   c00183b7 <realToLinear(unsigned short, unsigned short)>
+c0018646:	e8 6c fd ff ff       	call   c00183b7 <Vm::realToLinear(unsigned short, unsigned short)>
 c001864b:	5a                   	pop    edx
 c001864c:	59                   	pop    ecx
 c001864d:	b1 06                	mov    cl,0x6
@@ -33554,54 +33554,54 @@ c001864f:	c6 44 24 03 00       	mov    BYTE PTR [esp+0x3],0x0
 c0018654:	c6 44 24 02 00       	mov    BYTE PTR [esp+0x2],0x0
 c0018659:	0f b6 17             	movzx  edx,BYTE PTR [edi]
 c001865c:	80 fa 9d             	cmp    dl,0x9d
-c001865f:	0f 84 1d 02 00 00    	je     c0018882 <vm8086FaultHandler(regs*)+0x281>
-c0018665:	0f 87 8e 00 00 00    	ja     c00186f9 <vm8086FaultHandler(regs*)+0xf8>
+c001865f:	0f 84 1d 02 00 00    	je     c0018882 <Vm::faultHandler(regs*)+0x281>
+c0018665:	0f 87 8e 00 00 00    	ja     c00186f9 <Vm::faultHandler(regs*)+0xf8>
 c001866b:	80 fa 66             	cmp    dl,0x66
-c001866e:	0f 84 89 01 00 00    	je     c00187fd <vm8086FaultHandler(regs*)+0x1fc>
-c0018674:	77 44                	ja     c00186ba <vm8086FaultHandler(regs*)+0xb9>
+c001866e:	0f 84 89 01 00 00    	je     c00187fd <Vm::faultHandler(regs*)+0x1fc>
+c0018674:	77 44                	ja     c00186ba <Vm::faultHandler(regs*)+0xb9>
 c0018676:	80 fa 36             	cmp    dl,0x36
-c0018679:	0f 84 74 01 00 00    	je     c00187f3 <vm8086FaultHandler(regs*)+0x1f2>
-c001867f:	77 1a                	ja     c001869b <vm8086FaultHandler(regs*)+0x9a>
+c0018679:	0f 84 74 01 00 00    	je     c00187f3 <Vm::faultHandler(regs*)+0x1f2>
+c001867f:	77 1a                	ja     c001869b <Vm::faultHandler(regs*)+0x9a>
 c0018681:	80 fa 26             	cmp    dl,0x26
-c0018684:	0f 84 4b 01 00 00    	je     c00187d5 <vm8086FaultHandler(regs*)+0x1d4>
+c0018684:	0f 84 4b 01 00 00    	je     c00187d5 <Vm::faultHandler(regs*)+0x1d4>
 c001868a:	80 fa 2e             	cmp    dl,0x2e
-c001868d:	0f 85 4a 05 00 00    	jne    c0018bdd <vm8086FaultHandler(regs*)+0x5dc>
+c001868d:	0f 85 4a 05 00 00    	jne    c0018bdd <Vm::faultHandler(regs*)+0x5dc>
 c0018693:	ff 43 38             	inc    DWORD PTR [ebx+0x38]
 c0018696:	31 c9                	xor    ecx,ecx
 c0018698:	47                   	inc    edi
-c0018699:	eb be                	jmp    c0018659 <vm8086FaultHandler(regs*)+0x58>
+c0018699:	eb be                	jmp    c0018659 <Vm::faultHandler(regs*)+0x58>
 c001869b:	80 fa 64             	cmp    dl,0x64
-c001869e:	0f 84 3b 01 00 00    	je     c00187df <vm8086FaultHandler(regs*)+0x1de>
-c00186a4:	0f 87 3f 01 00 00    	ja     c00187e9 <vm8086FaultHandler(regs*)+0x1e8>
+c001869e:	0f 84 3b 01 00 00    	je     c00187df <Vm::faultHandler(regs*)+0x1de>
+c00186a4:	0f 87 3f 01 00 00    	ja     c00187e9 <Vm::faultHandler(regs*)+0x1e8>
 c00186aa:	80 fa 3e             	cmp    dl,0x3e
-c00186ad:	0f 85 2a 05 00 00    	jne    c0018bdd <vm8086FaultHandler(regs*)+0x5dc>
+c00186ad:	0f 85 2a 05 00 00    	jne    c0018bdd <Vm::faultHandler(regs*)+0x5dc>
 c00186b3:	ff 43 38             	inc    DWORD PTR [ebx+0x38]
 c00186b6:	b1 01                	mov    cl,0x1
-c00186b8:	eb de                	jmp    c0018698 <vm8086FaultHandler(regs*)+0x97>
+c00186b8:	eb de                	jmp    c0018698 <Vm::faultHandler(regs*)+0x97>
 c00186ba:	80 fa 6d             	cmp    dl,0x6d
-c00186bd:	0f 84 bf 02 00 00    	je     c0018982 <vm8086FaultHandler(regs*)+0x381>
-c00186c3:	77 17                	ja     c00186dc <vm8086FaultHandler(regs*)+0xdb>
+c00186bd:	0f 84 bf 02 00 00    	je     c0018982 <Vm::faultHandler(regs*)+0x381>
+c00186c3:	77 17                	ja     c00186dc <Vm::faultHandler(regs*)+0xdb>
 c00186c5:	80 fa 67             	cmp    dl,0x67
-c00186c8:	0f 84 3c 01 00 00    	je     c001880a <vm8086FaultHandler(regs*)+0x209>
+c00186c8:	0f 84 3c 01 00 00    	je     c001880a <Vm::faultHandler(regs*)+0x209>
 c00186ce:	80 fa 6c             	cmp    dl,0x6c
-c00186d1:	0f 84 5d 02 00 00    	je     c0018934 <vm8086FaultHandler(regs*)+0x333>
-c00186d7:	e9 01 05 00 00       	jmp    c0018bdd <vm8086FaultHandler(regs*)+0x5dc>
+c00186d1:	0f 84 5d 02 00 00    	je     c0018934 <Vm::faultHandler(regs*)+0x333>
+c00186d7:	e9 01 05 00 00       	jmp    c0018bdd <Vm::faultHandler(regs*)+0x5dc>
 c00186dc:	80 fa 6f             	cmp    dl,0x6f
-c00186df:	0f 84 8b 03 00 00    	je     c0018a70 <vm8086FaultHandler(regs*)+0x46f>
-c00186e5:	0f 82 0f 03 00 00    	jb     c00189fa <vm8086FaultHandler(regs*)+0x3f9>
+c00186df:	0f 84 8b 03 00 00    	je     c0018a70 <Vm::faultHandler(regs*)+0x46f>
+c00186e5:	0f 82 0f 03 00 00    	jb     c00189fa <Vm::faultHandler(regs*)+0x3f9>
 c00186eb:	80 fa 9c             	cmp    dl,0x9c
-c00186ee:	0f 84 23 01 00 00    	je     c0018817 <vm8086FaultHandler(regs*)+0x216>
-c00186f4:	e9 e4 04 00 00       	jmp    c0018bdd <vm8086FaultHandler(regs*)+0x5dc>
+c00186ee:	0f 84 23 01 00 00    	je     c0018817 <Vm::faultHandler(regs*)+0x216>
+c00186f4:	e9 e4 04 00 00       	jmp    c0018bdd <Vm::faultHandler(regs*)+0x5dc>
 c00186f9:	80 fa ec             	cmp    dl,0xec
-c00186fc:	0f 84 7f 04 00 00    	je     c0018b81 <vm8086FaultHandler(regs*)+0x580>
-c0018702:	77 7b                	ja     c001877f <vm8086FaultHandler(regs*)+0x17e>
+c00186fc:	0f 84 7f 04 00 00    	je     c0018b81 <Vm::faultHandler(regs*)+0x580>
+c0018702:	77 7b                	ja     c001877f <Vm::faultHandler(regs*)+0x17e>
 c0018704:	80 fa e4             	cmp    dl,0xe4
-c0018707:	0f 84 fe 03 00 00    	je     c0018b0b <vm8086FaultHandler(regs*)+0x50a>
-c001870d:	77 53                	ja     c0018762 <vm8086FaultHandler(regs*)+0x161>
+c0018707:	0f 84 fe 03 00 00    	je     c0018b0b <Vm::faultHandler(regs*)+0x50a>
+c001870d:	77 53                	ja     c0018762 <Vm::faultHandler(regs*)+0x161>
 c001870f:	80 fa cd             	cmp    dl,0xcd
-c0018712:	0f 84 cd 01 00 00    	je     c00188e5 <vm8086FaultHandler(regs*)+0x2e4>
+c0018712:	0f 84 cd 01 00 00    	je     c00188e5 <Vm::faultHandler(regs*)+0x2e4>
 c0018718:	80 fa cf             	cmp    dl,0xcf
-c001871b:	0f 85 bc 04 00 00    	jne    c0018bdd <vm8086FaultHandler(regs*)+0x5dc>
+c001871b:	0f 85 bc 04 00 00    	jne    c0018bdd <Vm::faultHandler(regs*)+0x5dc>
 c0018721:	0f b7 10             	movzx  edx,WORD PTR [eax]
 c0018724:	89 53 38             	mov    DWORD PTR [ebx+0x38],edx
 c0018727:	0f b7 50 02          	movzx  edx,WORD PTR [eax+0x2]
@@ -33618,58 +33618,58 @@ c001874f:	8b 43 44             	mov    eax,DWORD PTR [ebx+0x44]
 c0018752:	83 c0 06             	add    eax,0x6
 c0018755:	25 ff ff 00 00       	and    eax,0xffff
 c001875a:	89 43 44             	mov    DWORD PTR [ebx+0x44],eax
-c001875d:	e9 77 04 00 00       	jmp    c0018bd9 <vm8086FaultHandler(regs*)+0x5d8>
+c001875d:	e9 77 04 00 00       	jmp    c0018bd9 <Vm::faultHandler(regs*)+0x5d8>
 c0018762:	80 fa e6             	cmp    dl,0xe6
-c0018765:	0f 84 ea 03 00 00    	je     c0018b55 <vm8086FaultHandler(regs*)+0x554>
-c001876b:	0f 82 b6 03 00 00    	jb     c0018b27 <vm8086FaultHandler(regs*)+0x526>
+c0018765:	0f 84 ea 03 00 00    	je     c0018b55 <Vm::faultHandler(regs*)+0x554>
+c001876b:	0f 82 b6 03 00 00    	jb     c0018b27 <Vm::faultHandler(regs*)+0x526>
 c0018771:	80 fa e7             	cmp    dl,0xe7
-c0018774:	0f 84 f2 03 00 00    	je     c0018b6c <vm8086FaultHandler(regs*)+0x56b>
-c001877a:	e9 5e 04 00 00       	jmp    c0018bdd <vm8086FaultHandler(regs*)+0x5dc>
+c0018774:	0f 84 f2 03 00 00    	je     c0018b6c <Vm::faultHandler(regs*)+0x56b>
+c001877a:	e9 5e 04 00 00       	jmp    c0018bdd <Vm::faultHandler(regs*)+0x5dc>
 c001877f:	80 fa ef             	cmp    dl,0xef
-c0018782:	0f 84 3c 04 00 00    	je     c0018bc4 <vm8086FaultHandler(regs*)+0x5c3>
-c0018788:	77 28                	ja     c00187b2 <vm8086FaultHandler(regs*)+0x1b1>
+c0018782:	0f 84 3c 04 00 00    	je     c0018bc4 <Vm::faultHandler(regs*)+0x5c3>
+c0018788:	77 28                	ja     c00187b2 <Vm::faultHandler(regs*)+0x1b1>
 c001878a:	80 fa ed             	cmp    dl,0xed
-c001878d:	0f 84 0a 04 00 00    	je     c0018b9d <vm8086FaultHandler(regs*)+0x59c>
+c001878d:	0f 84 0a 04 00 00    	je     c0018b9d <Vm::faultHandler(regs*)+0x59c>
 c0018793:	80 fa ee             	cmp    dl,0xee
-c0018796:	0f 85 41 04 00 00    	jne    c0018bdd <vm8086FaultHandler(regs*)+0x5dc>
+c0018796:	0f 85 41 04 00 00    	jne    c0018bdd <Vm::faultHandler(regs*)+0x5dc>
 c001879c:	50                   	push   eax
 c001879d:	50                   	push   eax
 c001879e:	0f b6 43 2c          	movzx  eax,BYTE PTR [ebx+0x2c]
 c00187a2:	50                   	push   eax
 c00187a3:	0f b7 43 24          	movzx  eax,WORD PTR [ebx+0x24]
 c00187a7:	50                   	push   eax
-c00187a8:	e8 00 fc ff ff       	call   c00183ad <outbv(unsigned short, unsigned char)>
-c00187ad:	e9 0a 04 00 00       	jmp    c0018bbc <vm8086FaultHandler(regs*)+0x5bb>
+c00187a8:	e8 00 fc ff ff       	call   c00183ad <Vm::outbv(unsigned short, unsigned char)>
+c00187ad:	e9 0a 04 00 00       	jmp    c0018bbc <Vm::faultHandler(regs*)+0x5bb>
 c00187b2:	80 fa fa             	cmp    dl,0xfa
-c00187b5:	0f 84 5d 01 00 00    	je     c0018918 <vm8086FaultHandler(regs*)+0x317>
+c00187b5:	0f 84 5d 01 00 00    	je     c0018918 <Vm::faultHandler(regs*)+0x317>
 c00187bb:	80 fa fb             	cmp    dl,0xfb
-c00187be:	0f 84 62 01 00 00    	je     c0018926 <vm8086FaultHandler(regs*)+0x325>
+c00187be:	0f 84 62 01 00 00    	je     c0018926 <Vm::faultHandler(regs*)+0x325>
 c00187c4:	80 fa f3             	cmp    dl,0xf3
-c00187c7:	0f 85 10 04 00 00    	jne    c0018bdd <vm8086FaultHandler(regs*)+0x5dc>
+c00187c7:	0f 85 10 04 00 00    	jne    c0018bdd <Vm::faultHandler(regs*)+0x5dc>
 c00187cd:	ff 43 38             	inc    DWORD PTR [ebx+0x38]
-c00187d0:	e9 c3 fe ff ff       	jmp    c0018698 <vm8086FaultHandler(regs*)+0x97>
+c00187d0:	e9 c3 fe ff ff       	jmp    c0018698 <Vm::faultHandler(regs*)+0x97>
 c00187d5:	ff 43 38             	inc    DWORD PTR [ebx+0x38]
 c00187d8:	b1 02                	mov    cl,0x2
-c00187da:	e9 b9 fe ff ff       	jmp    c0018698 <vm8086FaultHandler(regs*)+0x97>
+c00187da:	e9 b9 fe ff ff       	jmp    c0018698 <Vm::faultHandler(regs*)+0x97>
 c00187df:	ff 43 38             	inc    DWORD PTR [ebx+0x38]
 c00187e2:	b1 03                	mov    cl,0x3
-c00187e4:	e9 af fe ff ff       	jmp    c0018698 <vm8086FaultHandler(regs*)+0x97>
+c00187e4:	e9 af fe ff ff       	jmp    c0018698 <Vm::faultHandler(regs*)+0x97>
 c00187e9:	ff 43 38             	inc    DWORD PTR [ebx+0x38]
 c00187ec:	b1 04                	mov    cl,0x4
-c00187ee:	e9 a5 fe ff ff       	jmp    c0018698 <vm8086FaultHandler(regs*)+0x97>
+c00187ee:	e9 a5 fe ff ff       	jmp    c0018698 <Vm::faultHandler(regs*)+0x97>
 c00187f3:	ff 43 38             	inc    DWORD PTR [ebx+0x38]
 c00187f6:	b1 05                	mov    cl,0x5
-c00187f8:	e9 9b fe ff ff       	jmp    c0018698 <vm8086FaultHandler(regs*)+0x97>
+c00187f8:	e9 9b fe ff ff       	jmp    c0018698 <Vm::faultHandler(regs*)+0x97>
 c00187fd:	ff 43 38             	inc    DWORD PTR [ebx+0x38]
 c0018800:	c6 44 24 02 01       	mov    BYTE PTR [esp+0x2],0x1
-c0018805:	e9 8e fe ff ff       	jmp    c0018698 <vm8086FaultHandler(regs*)+0x97>
+c0018805:	e9 8e fe ff ff       	jmp    c0018698 <Vm::faultHandler(regs*)+0x97>
 c001880a:	ff 43 38             	inc    DWORD PTR [ebx+0x38]
 c001880d:	c6 44 24 03 01       	mov    BYTE PTR [esp+0x3],0x1
-c0018812:	e9 81 fe ff ff       	jmp    c0018698 <vm8086FaultHandler(regs*)+0x97>
+c0018812:	e9 81 fe ff ff       	jmp    c0018698 <Vm::faultHandler(regs*)+0x97>
 c0018817:	8b 53 40             	mov    edx,DWORD PTR [ebx+0x40]
 c001881a:	8b 4c 24 04          	mov    ecx,DWORD PTR [esp+0x4]
 c001881e:	80 7c 24 02 00       	cmp    BYTE PTR [esp+0x2],0x0
-c0018823:	74 30                	je     c0018855 <vm8086FaultHandler(regs*)+0x254>
+c0018823:	74 30                	je     c0018855 <Vm::faultHandler(regs*)+0x254>
 c0018825:	83 e9 04             	sub    ecx,0x4
 c0018828:	81 e2 ff 0d 00 00    	and    edx,0xdff
 c001882e:	81 e1 ff ff 00 00    	and    ecx,0xffff
@@ -33677,24 +33677,24 @@ c0018834:	89 4b 44             	mov    DWORD PTR [ebx+0x44],ecx
 c0018837:	89 50 fc             	mov    DWORD PTR [eax-0x4],edx
 c001883a:	8b 0d 00 20 00 c2    	mov    ecx,DWORD PTR ds:0xc2002000
 c0018840:	80 79 61 00          	cmp    BYTE PTR [ecx+0x61],0x0
-c0018844:	0f 84 8c 03 00 00    	je     c0018bd6 <vm8086FaultHandler(regs*)+0x5d5>
+c0018844:	0f 84 8c 03 00 00    	je     c0018bd6 <Vm::faultHandler(regs*)+0x5d5>
 c001884a:	80 ce 02             	or     dh,0x2
 c001884d:	89 50 fc             	mov    DWORD PTR [eax-0x4],edx
-c0018850:	e9 81 03 00 00       	jmp    c0018bd6 <vm8086FaultHandler(regs*)+0x5d5>
+c0018850:	e9 81 03 00 00       	jmp    c0018bd6 <Vm::faultHandler(regs*)+0x5d5>
 c0018855:	83 e9 02             	sub    ecx,0x2
 c0018858:	81 e1 ff ff 00 00    	and    ecx,0xffff
 c001885e:	89 4b 44             	mov    DWORD PTR [ebx+0x44],ecx
 c0018861:	66 89 50 fe          	mov    WORD PTR [eax-0x2],dx
 c0018865:	8b 0d 00 20 00 c2    	mov    ecx,DWORD PTR ds:0xc2002000
 c001886b:	80 79 61 00          	cmp    BYTE PTR [ecx+0x61],0x0
-c001886f:	74 05                	je     c0018876 <vm8086FaultHandler(regs*)+0x275>
+c001886f:	74 05                	je     c0018876 <Vm::faultHandler(regs*)+0x275>
 c0018871:	80 ce 02             	or     dh,0x2
-c0018874:	eb 03                	jmp    c0018879 <vm8086FaultHandler(regs*)+0x278>
+c0018874:	eb 03                	jmp    c0018879 <Vm::faultHandler(regs*)+0x278>
 c0018876:	80 e6 fd             	and    dh,0xfd
 c0018879:	66 89 50 fe          	mov    WORD PTR [eax-0x2],dx
-c001887d:	e9 54 03 00 00       	jmp    c0018bd6 <vm8086FaultHandler(regs*)+0x5d5>
+c001887d:	e9 54 03 00 00       	jmp    c0018bd6 <Vm::faultHandler(regs*)+0x5d5>
 c0018882:	80 7c 24 02 00       	cmp    BYTE PTR [esp+0x2],0x0
-c0018887:	74 2a                	je     c00188b3 <vm8086FaultHandler(regs*)+0x2b2>
+c0018887:	74 2a                	je     c00188b3 <Vm::faultHandler(regs*)+0x2b2>
 c0018889:	8b 10                	mov    edx,DWORD PTR [eax]
 c001888b:	81 e2 ff 0d 00 00    	and    edx,0xdff
 c0018891:	81 ca 00 02 02 00    	or     edx,0x20200
@@ -33706,7 +33706,7 @@ c00188a5:	83 e0 01             	and    eax,0x1
 c00188a8:	88 42 61             	mov    BYTE PTR [edx+0x61],al
 c00188ab:	8b 43 44             	mov    eax,DWORD PTR [ebx+0x44]
 c00188ae:	83 c0 04             	add    eax,0x4
-c00188b1:	eb 25                	jmp    c00188d8 <vm8086FaultHandler(regs*)+0x2d7>
+c00188b1:	eb 25                	jmp    c00188d8 <Vm::faultHandler(regs*)+0x2d7>
 c00188b3:	0f b7 10             	movzx  edx,WORD PTR [eax]
 c00188b6:	81 ca 00 02 02 00    	or     edx,0x20200
 c00188bc:	89 53 40             	mov    DWORD PTR [ebx+0x40],edx
@@ -33719,38 +33719,38 @@ c00188d2:	8b 43 44             	mov    eax,DWORD PTR [ebx+0x44]
 c00188d5:	83 c0 02             	add    eax,0x2
 c00188d8:	25 ff ff 00 00       	and    eax,0xffff
 c00188dd:	89 43 44             	mov    DWORD PTR [ebx+0x44],eax
-c00188e0:	e9 f1 02 00 00       	jmp    c0018bd6 <vm8086FaultHandler(regs*)+0x5d5>
+c00188e0:	e9 f1 02 00 00       	jmp    c0018bd6 <Vm::faultHandler(regs*)+0x5d5>
 c00188e5:	0f b6 47 01          	movzx  eax,BYTE PTR [edi+0x1]
 c00188e9:	3c ff                	cmp    al,0xff
-c00188eb:	75 10                	jne    c00188fd <vm8086FaultHandler(regs*)+0x2fc>
+c00188eb:	75 10                	jne    c00188fd <Vm::faultHandler(regs*)+0x2fc>
 c00188ed:	83 ec 0c             	sub    esp,0xc
 c00188f0:	ff 73 2c             	push   DWORD PTR [ebx+0x2c]
 c00188f3:	e8 10 f9 ff ff       	call   c0018208 <terminateTask(int)>
-c00188f8:	e9 c2 02 00 00       	jmp    c0018bbf <vm8086FaultHandler(regs*)+0x5be>
+c00188f8:	e9 c2 02 00 00       	jmp    c0018bbf <Vm::faultHandler(regs*)+0x5be>
 c00188fd:	83 ec 0c             	sub    esp,0xc
 c0018900:	ff 74 24 14          	push   DWORD PTR [esp+0x14]
 c0018904:	ff 74 24 1c          	push   DWORD PTR [esp+0x1c]
 c0018908:	57                   	push   edi
 c0018909:	50                   	push   eax
 c001890a:	53                   	push   ebx
-c001890b:	e8 f3 fb ff ff       	call   c0018503 <vm8086DoISR(regs*, int, unsigned char*, unsigned short, unsigned short)>
+c001890b:	e8 f3 fb ff ff       	call   c0018503 <Vm::doISR(regs*, int, unsigned char*, unsigned short, unsigned short)>
 c0018910:	83 c4 20             	add    esp,0x20
-c0018913:	e9 c1 02 00 00       	jmp    c0018bd9 <vm8086FaultHandler(regs*)+0x5d8>
+c0018913:	e9 c1 02 00 00       	jmp    c0018bd9 <Vm::faultHandler(regs*)+0x5d8>
 c0018918:	a1 00 20 00 c2       	mov    eax,ds:0xc2002000
 c001891d:	c6 40 61 00          	mov    BYTE PTR [eax+0x61],0x0
-c0018921:	e9 b0 02 00 00       	jmp    c0018bd6 <vm8086FaultHandler(regs*)+0x5d5>
+c0018921:	e9 b0 02 00 00       	jmp    c0018bd6 <Vm::faultHandler(regs*)+0x5d5>
 c0018926:	a1 00 20 00 c2       	mov    eax,ds:0xc2002000
 c001892b:	c6 40 61 01          	mov    BYTE PTR [eax+0x61],0x1
-c001892f:	e9 a2 02 00 00       	jmp    c0018bd6 <vm8086FaultHandler(regs*)+0x5d5>
+c001892f:	e9 a2 02 00 00       	jmp    c0018bd6 <Vm::faultHandler(regs*)+0x5d5>
 c0018934:	80 7c 24 03 00       	cmp    BYTE PTR [esp+0x3],0x0
-c0018939:	74 0d                	je     c0018948 <vm8086FaultHandler(regs*)+0x347>
+c0018939:	74 0d                	je     c0018948 <Vm::faultHandler(regs*)+0x347>
 c001893b:	81 7b 10 ff ff 00 00 	cmp    DWORD PTR [ebx+0x10],0xffff
-c0018942:	0f 87 e9 02 00 00    	ja     c0018c31 <vm8086FaultHandler(regs*)+0x630>
+c0018942:	0f 87 e9 02 00 00    	ja     c0018c31 <Vm::faultHandler(regs*)+0x630>
 c0018948:	83 ec 0c             	sub    esp,0xc
 c001894b:	8b 4b 08             	mov    ecx,DWORD PTR [ebx+0x8]
 c001894e:	0f b7 43 24          	movzx  eax,WORD PTR [ebx+0x24]
 c0018952:	50                   	push   eax
-c0018953:	e8 4f fa ff ff       	call   c00183a7 <inbv(unsigned short)>
+c0018953:	e8 4f fa ff ff       	call   c00183a7 <Vm::inbv(unsigned short)>
 c0018958:	83 c4 0c             	add    esp,0xc
 c001895b:	0f b6 c0             	movzx  eax,al
 c001895e:	0f b7 c9             	movzx  ecx,cx
@@ -33758,169 +33758,169 @@ c0018961:	50                   	push   eax
 c0018962:	0f b7 43 10          	movzx  eax,WORD PTR [ebx+0x10]
 c0018966:	50                   	push   eax
 c0018967:	51                   	push   ecx
-c0018968:	e8 54 fc ff ff       	call   c00185c1 <writeByteFromReal(unsigned short, unsigned short, unsigned char)>
+c0018968:	e8 54 fc ff ff       	call   c00185c1 <Vm::writeByteFromReal(unsigned short, unsigned short, unsigned char)>
 c001896d:	83 c4 10             	add    esp,0x10
 c0018970:	8b 43 10             	mov    eax,DWORD PTR [ebx+0x10]
 c0018973:	f6 43 41 04          	test   BYTE PTR [ebx+0x41],0x4
-c0018977:	74 03                	je     c001897c <vm8086FaultHandler(regs*)+0x37b>
+c0018977:	74 03                	je     c001897c <Vm::faultHandler(regs*)+0x37b>
 c0018979:	48                   	dec    eax
-c001897a:	eb 01                	jmp    c001897d <vm8086FaultHandler(regs*)+0x37c>
+c001897a:	eb 01                	jmp    c001897d <Vm::faultHandler(regs*)+0x37c>
 c001897c:	40                   	inc    eax
 c001897d:	0f b7 c0             	movzx  eax,ax
-c0018980:	eb 70                	jmp    c00189f2 <vm8086FaultHandler(regs*)+0x3f1>
+c0018980:	eb 70                	jmp    c00189f2 <Vm::faultHandler(regs*)+0x3f1>
 c0018982:	8b 73 08             	mov    esi,DWORD PTR [ebx+0x8]
 c0018985:	8b 4b 10             	mov    ecx,DWORD PTR [ebx+0x10]
 c0018988:	80 7c 24 03 00       	cmp    BYTE PTR [esp+0x3],0x0
-c001898d:	74 0c                	je     c001899b <vm8086FaultHandler(regs*)+0x39a>
+c001898d:	74 0c                	je     c001899b <Vm::faultHandler(regs*)+0x39a>
 c001898f:	81 f9 ff ff 00 00    	cmp    ecx,0xffff
-c0018995:	0f 87 96 02 00 00    	ja     c0018c31 <vm8086FaultHandler(regs*)+0x630>
+c0018995:	0f 87 96 02 00 00    	ja     c0018c31 <Vm::faultHandler(regs*)+0x630>
 c001899b:	0f b7 c9             	movzx  ecx,cx
 c001899e:	0f b7 f6             	movzx  esi,si
 c00189a1:	8b 53 24             	mov    edx,DWORD PTR [ebx+0x24]
 c00189a4:	80 7c 24 02 00       	cmp    BYTE PTR [esp+0x2],0x0
-c00189a9:	74 20                	je     c00189cb <vm8086FaultHandler(regs*)+0x3ca>
+c00189a9:	74 20                	je     c00189cb <Vm::faultHandler(regs*)+0x3ca>
 c00189ab:	ed                   	in     eax,dx
 c00189ac:	55                   	push   ebp
 c00189ad:	50                   	push   eax
 c00189ae:	51                   	push   ecx
 c00189af:	56                   	push   esi
-c00189b0:	e8 37 fc ff ff       	call   c00185ec <writeDwordFromReal(unsigned short, unsigned short, unsigned int)>
+c00189b0:	e8 37 fc ff ff       	call   c00185ec <Vm::writeDwordFromReal(unsigned short, unsigned short, unsigned int)>
 c00189b5:	83 c4 10             	add    esp,0x10
 c00189b8:	8b 43 10             	mov    eax,DWORD PTR [ebx+0x10]
 c00189bb:	f6 43 41 04          	test   BYTE PTR [ebx+0x41],0x4
-c00189bf:	74 05                	je     c00189c6 <vm8086FaultHandler(regs*)+0x3c5>
+c00189bf:	74 05                	je     c00189c6 <Vm::faultHandler(regs*)+0x3c5>
 c00189c1:	83 e8 04             	sub    eax,0x4
-c00189c4:	eb 27                	jmp    c00189ed <vm8086FaultHandler(regs*)+0x3ec>
+c00189c4:	eb 27                	jmp    c00189ed <Vm::faultHandler(regs*)+0x3ec>
 c00189c6:	83 c0 04             	add    eax,0x4
-c00189c9:	eb 22                	jmp    c00189ed <vm8086FaultHandler(regs*)+0x3ec>
+c00189c9:	eb 22                	jmp    c00189ed <Vm::faultHandler(regs*)+0x3ec>
 c00189cb:	66 ed                	in     ax,dx
 c00189cd:	0f b7 c0             	movzx  eax,ax
 c00189d0:	57                   	push   edi
 c00189d1:	50                   	push   eax
 c00189d2:	51                   	push   ecx
 c00189d3:	56                   	push   esi
-c00189d4:	e8 fd fb ff ff       	call   c00185d6 <writeWordFromReal(unsigned short, unsigned short, unsigned short)>
+c00189d4:	e8 fd fb ff ff       	call   c00185d6 <Vm::writeWordFromReal(unsigned short, unsigned short, unsigned short)>
 c00189d9:	83 c4 10             	add    esp,0x10
 c00189dc:	8b 43 10             	mov    eax,DWORD PTR [ebx+0x10]
 c00189df:	f6 43 41 04          	test   BYTE PTR [ebx+0x41],0x4
-c00189e3:	74 05                	je     c00189ea <vm8086FaultHandler(regs*)+0x3e9>
+c00189e3:	74 05                	je     c00189ea <Vm::faultHandler(regs*)+0x3e9>
 c00189e5:	83 e8 02             	sub    eax,0x2
-c00189e8:	eb 03                	jmp    c00189ed <vm8086FaultHandler(regs*)+0x3ec>
+c00189e8:	eb 03                	jmp    c00189ed <Vm::faultHandler(regs*)+0x3ec>
 c00189ea:	83 c0 02             	add    eax,0x2
 c00189ed:	25 ff ff 00 00       	and    eax,0xffff
 c00189f2:	89 43 10             	mov    DWORD PTR [ebx+0x10],eax
-c00189f5:	e9 dc 01 00 00       	jmp    c0018bd6 <vm8086FaultHandler(regs*)+0x5d5>
+c00189f5:	e9 dc 01 00 00       	jmp    c0018bd6 <Vm::faultHandler(regs*)+0x5d5>
 c00189fa:	49                   	dec    ecx
 c00189fb:	80 f9 05             	cmp    cl,0x5
-c00189fe:	77 24                	ja     c0018a24 <vm8086FaultHandler(regs*)+0x423>
+c00189fe:	77 24                	ja     c0018a24 <Vm::faultHandler(regs*)+0x423>
 c0018a00:	0f b6 c9             	movzx  ecx,cl
 c0018a03:	ff 24 8d 8c 19 02 c0 	jmp    DWORD PTR [ecx*4-0x3ffde674]
 c0018a0a:	0f b7 f5             	movzx  esi,bp
-c0018a0d:	eb 15                	jmp    c0018a24 <vm8086FaultHandler(regs*)+0x423>
+c0018a0d:	eb 15                	jmp    c0018a24 <Vm::faultHandler(regs*)+0x423>
 c0018a0f:	0f b7 73 0c          	movzx  esi,WORD PTR [ebx+0xc]
-c0018a13:	eb 0f                	jmp    c0018a24 <vm8086FaultHandler(regs*)+0x423>
+c0018a13:	eb 0f                	jmp    c0018a24 <Vm::faultHandler(regs*)+0x423>
 c0018a15:	0f b7 73 08          	movzx  esi,WORD PTR [ebx+0x8]
-c0018a19:	eb 09                	jmp    c0018a24 <vm8086FaultHandler(regs*)+0x423>
+c0018a19:	eb 09                	jmp    c0018a24 <Vm::faultHandler(regs*)+0x423>
 c0018a1b:	0f b7 73 04          	movzx  esi,WORD PTR [ebx+0x4]
-c0018a1f:	eb 03                	jmp    c0018a24 <vm8086FaultHandler(regs*)+0x423>
+c0018a1f:	eb 03                	jmp    c0018a24 <Vm::faultHandler(regs*)+0x423>
 c0018a21:	0f b7 33             	movzx  esi,WORD PTR [ebx]
 c0018a24:	8b 43 14             	mov    eax,DWORD PTR [ebx+0x14]
 c0018a27:	80 7c 24 03 00       	cmp    BYTE PTR [esp+0x3],0x0
-c0018a2c:	74 0b                	je     c0018a39 <vm8086FaultHandler(regs*)+0x438>
+c0018a2c:	74 0b                	je     c0018a39 <Vm::faultHandler(regs*)+0x438>
 c0018a2e:	3d ff ff 00 00       	cmp    eax,0xffff
-c0018a33:	0f 87 f8 01 00 00    	ja     c0018c31 <vm8086FaultHandler(regs*)+0x630>
+c0018a33:	0f 87 f8 01 00 00    	ja     c0018c31 <Vm::faultHandler(regs*)+0x630>
 c0018a39:	0f b7 c0             	movzx  eax,ax
 c0018a3c:	52                   	push   edx
 c0018a3d:	52                   	push   edx
 c0018a3e:	50                   	push   eax
 c0018a3f:	56                   	push   esi
-c0018a40:	e8 48 fb ff ff       	call   c001858d <readByteFromReal(unsigned short, unsigned short)>
+c0018a40:	e8 48 fb ff ff       	call   c001858d <Vm::readByteFromReal(unsigned short, unsigned short)>
 c0018a45:	59                   	pop    ecx
 c0018a46:	0f b6 c0             	movzx  eax,al
 c0018a49:	5e                   	pop    esi
 c0018a4a:	50                   	push   eax
 c0018a4b:	0f b7 43 24          	movzx  eax,WORD PTR [ebx+0x24]
 c0018a4f:	50                   	push   eax
-c0018a50:	e8 58 f9 ff ff       	call   c00183ad <outbv(unsigned short, unsigned char)>
+c0018a50:	e8 58 f9 ff ff       	call   c00183ad <Vm::outbv(unsigned short, unsigned char)>
 c0018a55:	83 c4 10             	add    esp,0x10
 c0018a58:	8b 43 14             	mov    eax,DWORD PTR [ebx+0x14]
 c0018a5b:	f6 43 41 04          	test   BYTE PTR [ebx+0x41],0x4
-c0018a5f:	74 03                	je     c0018a64 <vm8086FaultHandler(regs*)+0x463>
+c0018a5f:	74 03                	je     c0018a64 <Vm::faultHandler(regs*)+0x463>
 c0018a61:	48                   	dec    eax
-c0018a62:	eb 01                	jmp    c0018a65 <vm8086FaultHandler(regs*)+0x464>
+c0018a62:	eb 01                	jmp    c0018a65 <Vm::faultHandler(regs*)+0x464>
 c0018a64:	40                   	inc    eax
 c0018a65:	0f b7 c0             	movzx  eax,ax
 c0018a68:	89 43 14             	mov    DWORD PTR [ebx+0x14],eax
-c0018a6b:	e9 66 01 00 00       	jmp    c0018bd6 <vm8086FaultHandler(regs*)+0x5d5>
+c0018a6b:	e9 66 01 00 00       	jmp    c0018bd6 <Vm::faultHandler(regs*)+0x5d5>
 c0018a70:	49                   	dec    ecx
 c0018a71:	80 f9 05             	cmp    cl,0x5
-c0018a74:	77 1f                	ja     c0018a95 <vm8086FaultHandler(regs*)+0x494>
+c0018a74:	77 1f                	ja     c0018a95 <Vm::faultHandler(regs*)+0x494>
 c0018a76:	0f b6 c9             	movzx  ecx,cl
 c0018a79:	ff 24 8d a4 19 02 c0 	jmp    DWORD PTR [ecx*4-0x3ffde65c]
 c0018a80:	89 ee                	mov    esi,ebp
-c0018a82:	eb 11                	jmp    c0018a95 <vm8086FaultHandler(regs*)+0x494>
+c0018a82:	eb 11                	jmp    c0018a95 <Vm::faultHandler(regs*)+0x494>
 c0018a84:	8b 73 0c             	mov    esi,DWORD PTR [ebx+0xc]
-c0018a87:	eb 0c                	jmp    c0018a95 <vm8086FaultHandler(regs*)+0x494>
+c0018a87:	eb 0c                	jmp    c0018a95 <Vm::faultHandler(regs*)+0x494>
 c0018a89:	8b 73 08             	mov    esi,DWORD PTR [ebx+0x8]
-c0018a8c:	eb 07                	jmp    c0018a95 <vm8086FaultHandler(regs*)+0x494>
+c0018a8c:	eb 07                	jmp    c0018a95 <Vm::faultHandler(regs*)+0x494>
 c0018a8e:	8b 73 04             	mov    esi,DWORD PTR [ebx+0x4]
-c0018a91:	eb 02                	jmp    c0018a95 <vm8086FaultHandler(regs*)+0x494>
+c0018a91:	eb 02                	jmp    c0018a95 <Vm::faultHandler(regs*)+0x494>
 c0018a93:	8b 33                	mov    esi,DWORD PTR [ebx]
 c0018a95:	8b 4b 14             	mov    ecx,DWORD PTR [ebx+0x14]
 c0018a98:	80 7c 24 03 00       	cmp    BYTE PTR [esp+0x3],0x0
-c0018a9d:	74 0c                	je     c0018aab <vm8086FaultHandler(regs*)+0x4aa>
+c0018a9d:	74 0c                	je     c0018aab <Vm::faultHandler(regs*)+0x4aa>
 c0018a9f:	81 f9 ff ff 00 00    	cmp    ecx,0xffff
-c0018aa5:	0f 87 86 01 00 00    	ja     c0018c31 <vm8086FaultHandler(regs*)+0x630>
+c0018aa5:	0f 87 86 01 00 00    	ja     c0018c31 <Vm::faultHandler(regs*)+0x630>
 c0018aab:	0f b7 d6             	movzx  edx,si
 c0018aae:	8b 7b 40             	mov    edi,DWORD PTR [ebx+0x40]
 c0018ab1:	0f b7 c1             	movzx  eax,cx
 c0018ab4:	81 e7 00 04 00 00    	and    edi,0x400
 c0018aba:	8b 73 24             	mov    esi,DWORD PTR [ebx+0x24]
 c0018abd:	80 7c 24 02 00       	cmp    BYTE PTR [esp+0x2],0x0
-c0018ac2:	74 1d                	je     c0018ae1 <vm8086FaultHandler(regs*)+0x4e0>
+c0018ac2:	74 1d                	je     c0018ae1 <Vm::faultHandler(regs*)+0x4e0>
 c0018ac4:	55                   	push   ebp
 c0018ac5:	55                   	push   ebp
 c0018ac6:	50                   	push   eax
 c0018ac7:	52                   	push   edx
-c0018ac8:	e8 e3 fa ff ff       	call   c00185b0 <readDwordFromReal(unsigned short, unsigned short)>
+c0018ac8:	e8 e3 fa ff ff       	call   c00185b0 <Vm::readDwordFromReal(unsigned short, unsigned short)>
 c0018acd:	83 c4 10             	add    esp,0x10
 c0018ad0:	89 f2                	mov    edx,esi
 c0018ad2:	ef                   	out    dx,eax
 c0018ad3:	85 ff                	test   edi,edi
-c0018ad5:	74 05                	je     c0018adc <vm8086FaultHandler(regs*)+0x4db>
+c0018ad5:	74 05                	je     c0018adc <Vm::faultHandler(regs*)+0x4db>
 c0018ad7:	83 e9 04             	sub    ecx,0x4
-c0018ada:	eb 21                	jmp    c0018afd <vm8086FaultHandler(regs*)+0x4fc>
+c0018ada:	eb 21                	jmp    c0018afd <Vm::faultHandler(regs*)+0x4fc>
 c0018adc:	83 c1 04             	add    ecx,0x4
-c0018adf:	eb 1c                	jmp    c0018afd <vm8086FaultHandler(regs*)+0x4fc>
+c0018adf:	eb 1c                	jmp    c0018afd <Vm::faultHandler(regs*)+0x4fc>
 c0018ae1:	55                   	push   ebp
 c0018ae2:	55                   	push   ebp
 c0018ae3:	50                   	push   eax
 c0018ae4:	52                   	push   edx
-c0018ae5:	e8 b4 fa ff ff       	call   c001859e <readWordFromReal(unsigned short, unsigned short)>
+c0018ae5:	e8 b4 fa ff ff       	call   c001859e <Vm::readWordFromReal(unsigned short, unsigned short)>
 c0018aea:	83 c4 10             	add    esp,0x10
 c0018aed:	89 f2                	mov    edx,esi
 c0018aef:	66 ef                	out    dx,ax
 c0018af1:	85 ff                	test   edi,edi
-c0018af3:	74 05                	je     c0018afa <vm8086FaultHandler(regs*)+0x4f9>
+c0018af3:	74 05                	je     c0018afa <Vm::faultHandler(regs*)+0x4f9>
 c0018af5:	83 e9 02             	sub    ecx,0x2
-c0018af8:	eb 03                	jmp    c0018afd <vm8086FaultHandler(regs*)+0x4fc>
+c0018af8:	eb 03                	jmp    c0018afd <Vm::faultHandler(regs*)+0x4fc>
 c0018afa:	83 c1 02             	add    ecx,0x2
 c0018afd:	81 e1 ff ff 00 00    	and    ecx,0xffff
 c0018b03:	89 4b 14             	mov    DWORD PTR [ebx+0x14],ecx
-c0018b06:	e9 cb 00 00 00       	jmp    c0018bd6 <vm8086FaultHandler(regs*)+0x5d5>
+c0018b06:	e9 cb 00 00 00       	jmp    c0018bd6 <Vm::faultHandler(regs*)+0x5d5>
 c0018b0b:	81 63 2c 00 ff ff ff 	and    DWORD PTR [ebx+0x2c],0xffffff00
 c0018b12:	83 ec 0c             	sub    esp,0xc
 c0018b15:	0f b6 47 01          	movzx  eax,BYTE PTR [edi+0x1]
 c0018b19:	50                   	push   eax
-c0018b1a:	e8 88 f8 ff ff       	call   c00183a7 <inbv(unsigned short)>
+c0018b1a:	e8 88 f8 ff ff       	call   c00183a7 <Vm::inbv(unsigned short)>
 c0018b1f:	0f b6 c0             	movzx  eax,al
 c0018b22:	09 43 2c             	or     DWORD PTR [ebx+0x2c],eax
-c0018b25:	eb 3f                	jmp    c0018b66 <vm8086FaultHandler(regs*)+0x565>
+c0018b25:	eb 3f                	jmp    c0018b66 <Vm::faultHandler(regs*)+0x565>
 c0018b27:	80 7c 24 02 00       	cmp    BYTE PTR [esp+0x2],0x0
-c0018b2c:	74 07                	je     c0018b35 <vm8086FaultHandler(regs*)+0x534>
+c0018b2c:	74 07                	je     c0018b35 <Vm::faultHandler(regs*)+0x534>
 c0018b2e:	0f b6 57 01          	movzx  edx,BYTE PTR [edi+0x1]
 c0018b32:	ed                   	in     eax,dx
-c0018b33:	eb 14                	jmp    c0018b49 <vm8086FaultHandler(regs*)+0x548>
+c0018b33:	eb 14                	jmp    c0018b49 <Vm::faultHandler(regs*)+0x548>
 c0018b35:	8b 4b 2c             	mov    ecx,DWORD PTR [ebx+0x2c]
 c0018b38:	66 31 c9             	xor    cx,cx
 c0018b3b:	89 4b 2c             	mov    DWORD PTR [ebx+0x2c],ecx
@@ -33930,57 +33930,57 @@ c0018b44:	0f b7 c0             	movzx  eax,ax
 c0018b47:	09 c8                	or     eax,ecx
 c0018b49:	89 43 2c             	mov    DWORD PTR [ebx+0x2c],eax
 c0018b4c:	83 43 38 02          	add    DWORD PTR [ebx+0x38],0x2
-c0018b50:	e9 84 00 00 00       	jmp    c0018bd9 <vm8086FaultHandler(regs*)+0x5d8>
+c0018b50:	e9 84 00 00 00       	jmp    c0018bd9 <Vm::faultHandler(regs*)+0x5d8>
 c0018b55:	52                   	push   edx
 c0018b56:	52                   	push   edx
 c0018b57:	0f b6 43 2c          	movzx  eax,BYTE PTR [ebx+0x2c]
 c0018b5b:	50                   	push   eax
 c0018b5c:	0f b6 47 01          	movzx  eax,BYTE PTR [edi+0x1]
 c0018b60:	50                   	push   eax
-c0018b61:	e8 47 f8 ff ff       	call   c00183ad <outbv(unsigned short, unsigned char)>
+c0018b61:	e8 47 f8 ff ff       	call   c00183ad <Vm::outbv(unsigned short, unsigned char)>
 c0018b66:	83 43 38 02          	add    DWORD PTR [ebx+0x38],0x2
-c0018b6a:	eb 53                	jmp    c0018bbf <vm8086FaultHandler(regs*)+0x5be>
+c0018b6a:	eb 53                	jmp    c0018bbf <Vm::faultHandler(regs*)+0x5be>
 c0018b6c:	8b 43 2c             	mov    eax,DWORD PTR [ebx+0x2c]
 c0018b6f:	0f b6 57 01          	movzx  edx,BYTE PTR [edi+0x1]
 c0018b73:	80 7c 24 02 00       	cmp    BYTE PTR [esp+0x2],0x0
-c0018b78:	74 03                	je     c0018b7d <vm8086FaultHandler(regs*)+0x57c>
+c0018b78:	74 03                	je     c0018b7d <Vm::faultHandler(regs*)+0x57c>
 c0018b7a:	ef                   	out    dx,eax
-c0018b7b:	eb cf                	jmp    c0018b4c <vm8086FaultHandler(regs*)+0x54b>
+c0018b7b:	eb cf                	jmp    c0018b4c <Vm::faultHandler(regs*)+0x54b>
 c0018b7d:	66 ef                	out    dx,ax
-c0018b7f:	eb cb                	jmp    c0018b4c <vm8086FaultHandler(regs*)+0x54b>
+c0018b7f:	eb cb                	jmp    c0018b4c <Vm::faultHandler(regs*)+0x54b>
 c0018b81:	81 63 2c 00 ff ff ff 	and    DWORD PTR [ebx+0x2c],0xffffff00
 c0018b88:	83 ec 0c             	sub    esp,0xc
 c0018b8b:	0f b7 43 24          	movzx  eax,WORD PTR [ebx+0x24]
 c0018b8f:	50                   	push   eax
-c0018b90:	e8 12 f8 ff ff       	call   c00183a7 <inbv(unsigned short)>
+c0018b90:	e8 12 f8 ff ff       	call   c00183a7 <Vm::inbv(unsigned short)>
 c0018b95:	0f b6 c0             	movzx  eax,al
 c0018b98:	09 43 2c             	or     DWORD PTR [ebx+0x2c],eax
-c0018b9b:	eb 1f                	jmp    c0018bbc <vm8086FaultHandler(regs*)+0x5bb>
+c0018b9b:	eb 1f                	jmp    c0018bbc <Vm::faultHandler(regs*)+0x5bb>
 c0018b9d:	8b 53 24             	mov    edx,DWORD PTR [ebx+0x24]
 c0018ba0:	80 7c 24 02 00       	cmp    BYTE PTR [esp+0x2],0x0
-c0018ba5:	74 03                	je     c0018baa <vm8086FaultHandler(regs*)+0x5a9>
+c0018ba5:	74 03                	je     c0018baa <Vm::faultHandler(regs*)+0x5a9>
 c0018ba7:	ed                   	in     eax,dx
-c0018ba8:	eb 0d                	jmp    c0018bb7 <vm8086FaultHandler(regs*)+0x5b6>
+c0018ba8:	eb 0d                	jmp    c0018bb7 <Vm::faultHandler(regs*)+0x5b6>
 c0018baa:	66 ed                	in     ax,dx
 c0018bac:	8b 53 2c             	mov    edx,DWORD PTR [ebx+0x2c]
 c0018baf:	0f b7 c0             	movzx  eax,ax
 c0018bb2:	66 31 d2             	xor    dx,dx
 c0018bb5:	09 d0                	or     eax,edx
 c0018bb7:	89 43 2c             	mov    DWORD PTR [ebx+0x2c],eax
-c0018bba:	eb 1a                	jmp    c0018bd6 <vm8086FaultHandler(regs*)+0x5d5>
+c0018bba:	eb 1a                	jmp    c0018bd6 <Vm::faultHandler(regs*)+0x5d5>
 c0018bbc:	ff 43 38             	inc    DWORD PTR [ebx+0x38]
 c0018bbf:	83 c4 10             	add    esp,0x10
-c0018bc2:	eb 15                	jmp    c0018bd9 <vm8086FaultHandler(regs*)+0x5d8>
+c0018bc2:	eb 15                	jmp    c0018bd9 <Vm::faultHandler(regs*)+0x5d8>
 c0018bc4:	8b 43 2c             	mov    eax,DWORD PTR [ebx+0x2c]
 c0018bc7:	8b 53 24             	mov    edx,DWORD PTR [ebx+0x24]
 c0018bca:	80 7c 24 02 00       	cmp    BYTE PTR [esp+0x2],0x0
-c0018bcf:	74 03                	je     c0018bd4 <vm8086FaultHandler(regs*)+0x5d3>
+c0018bcf:	74 03                	je     c0018bd4 <Vm::faultHandler(regs*)+0x5d3>
 c0018bd1:	ef                   	out    dx,eax
-c0018bd2:	eb 02                	jmp    c0018bd6 <vm8086FaultHandler(regs*)+0x5d5>
+c0018bd2:	eb 02                	jmp    c0018bd6 <Vm::faultHandler(regs*)+0x5d5>
 c0018bd4:	66 ef                	out    dx,ax
 c0018bd6:	ff 43 38             	inc    DWORD PTR [ebx+0x38]
 c0018bd9:	b0 01                	mov    al,0x1
-c0018bdb:	eb 56                	jmp    c0018c33 <vm8086FaultHandler(regs*)+0x632>
+c0018bdb:	eb 56                	jmp    c0018c33 <Vm::faultHandler(regs*)+0x632>
 c0018bdd:	0f b6 47 05          	movzx  eax,BYTE PTR [edi+0x5]
 c0018be1:	50                   	push   eax
 c0018be2:	0f b6 47 04          	movzx  eax,BYTE PTR [edi+0x4]
@@ -33998,21 +33998,21 @@ c0018bfd:	e8 34 2f ff ff       	call   c000bb36 <kprintf(char const*, ...)>
 c0018c02:	83 c4 20             	add    esp,0x20
 c0018c05:	83 ec 0c             	sub    esp,0xc
 c0018c08:	6a 60                	push   0x60
-c0018c0a:	e8 98 f7 ff ff       	call   c00183a7 <inbv(unsigned short)>
+c0018c0a:	e8 98 f7 ff ff       	call   c00183a7 <Vm::inbv(unsigned short)>
 c0018c0f:	83 c4 10             	add    esp,0x10
 c0018c12:	3c 1c                	cmp    al,0x1c
-c0018c14:	74 04                	je     c0018c1a <vm8086FaultHandler(regs*)+0x619>
+c0018c14:	74 04                	je     c0018c1a <Vm::faultHandler(regs*)+0x619>
 c0018c16:	3c 5a                	cmp    al,0x5a
-c0018c18:	75 eb                	jne    c0018c05 <vm8086FaultHandler(regs*)+0x604>
+c0018c18:	75 eb                	jne    c0018c05 <Vm::faultHandler(regs*)+0x604>
 c0018c1a:	3c 5a                	cmp    al,0x5a
-c0018c1c:	74 04                	je     c0018c22 <vm8086FaultHandler(regs*)+0x621>
+c0018c1c:	74 04                	je     c0018c22 <Vm::faultHandler(regs*)+0x621>
 c0018c1e:	3c 1c                	cmp    al,0x1c
-c0018c20:	75 0f                	jne    c0018c31 <vm8086FaultHandler(regs*)+0x630>
+c0018c20:	75 0f                	jne    c0018c31 <Vm::faultHandler(regs*)+0x630>
 c0018c22:	83 ec 0c             	sub    esp,0xc
 c0018c25:	6a 60                	push   0x60
-c0018c27:	e8 7b f7 ff ff       	call   c00183a7 <inbv(unsigned short)>
+c0018c27:	e8 7b f7 ff ff       	call   c00183a7 <Vm::inbv(unsigned short)>
 c0018c2c:	83 c4 10             	add    esp,0x10
-c0018c2f:	eb e9                	jmp    c0018c1a <vm8086FaultHandler(regs*)+0x619>
+c0018c2f:	eb e9                	jmp    c0018c1a <Vm::faultHandler(regs*)+0x619>
 c0018c31:	31 c0                	xor    eax,eax
 c0018c33:	83 c4 1c             	add    esp,0x1c
 c0018c36:	5b                   	pop    ebx
