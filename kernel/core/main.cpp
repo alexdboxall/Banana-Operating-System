@@ -2,7 +2,7 @@
 #include "core/physmgr.hpp"
 #include "core/virtmgr.hpp"
 #include "core/kheap.hpp"
-#include "core/kconsole.hpp"
+#include "dbg/kconsole.hpp"
 #include "core/computer.hpp"
 #include "hw/ports.hpp"
 #pragma GCC optimize ("O0")

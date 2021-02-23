@@ -1,4 +1,5 @@
 #include "core/common.hpp"
+#include "krnl/panic.hpp"
 #include "sys/syscalls.hpp"
 #include "thr/prcssthr.hpp"
 #include "hal/intctrl.hpp"
@@ -69,8 +70,7 @@ char exceptionNames[][32] = {
 
 extern "C" uint64_t int_handler(struct regs* r)
 {
-	extern bool kernelInPanic;
-	while (kernelInPanic) {
+	while (Krnl::kernelInPanic) {
 		asm("cli; hlt");
 	}
 

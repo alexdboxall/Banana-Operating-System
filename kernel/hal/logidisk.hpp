@@ -6,7 +6,7 @@
 #include "hal/device.hpp"
 #include "hal/vcache.hpp"
 #include "fs/vfs.hpp"
-#include "core/kconsole.hpp"
+#include "dbg/kconsole.hpp"
 
 #define MAX_DISK_COUNT 26
 

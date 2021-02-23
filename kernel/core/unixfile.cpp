@@ -3,7 +3,7 @@
 #include "core/kheap.hpp"
 #include "coreobjs/linkedlist.hpp"
 #include "thr/prcssthr.hpp"
-#include "core/kconsole.hpp"
+#include "dbg/kconsole.hpp"
 extern "C" {
 #include "libk/string.h"
 }

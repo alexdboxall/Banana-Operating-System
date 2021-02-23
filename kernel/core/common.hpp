@@ -9,7 +9,7 @@
 #include <stdbool.h>
 
 #include "core/main.hpp"
-#include "core/kconsole.hpp"
+#include "dbg/kconsole.hpp"
 #include "core/kheap.hpp"
 #include "core/terminal.hpp"
 #include "core/computer.hpp"
