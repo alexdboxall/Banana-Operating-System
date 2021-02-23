@@ -15,7 +15,7 @@ namespace Krnl
 {
 	bool kernelInPanic = false;
 
-	void panic(const char* _message) {
+	void panic(const char* message) {
 		asm("cli");
 		kernelInPanic = true;
 
