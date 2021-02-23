@@ -46,7 +46,8 @@ namespace Sys
 		delete f;
 
 		//try loading the DLL as a non-critical driver
-		size_t addr = loadDLL((char*) r->ebx, false);
+		//stange notation here because we are calling the 'other' loadDLL()
+		size_t addr = ::loadDLL((char*) r->ebx, false);
 
 		//check for failure
 		if (!addr) {
