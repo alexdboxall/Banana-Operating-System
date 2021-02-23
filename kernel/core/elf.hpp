@@ -163,11 +163,14 @@ bool loadDriverIntoMemory(const char* filename, size_t address, bool critical = 
 bool loadKernelSymbolTable(const char* filename);
 size_t getAddressOfKernelSymbol(const char* name);
 
-size_t loadDLL(const char* name, bool critical = true);
-void executeDLL(size_t startAddr, void* parentDevice);
+namespace Thr
+{
+	size_t loadDLL(const char* name, bool critical = true);
+	void executeDLL(size_t startAddr, void* parentDevice);
 
-char* getDriverNameFromAddress(size_t addr);
-size_t getDriverOffsetFromAddress(size_t addr);
-size_t getDriverBaseFromAddress(size_t addr);
+	char* getDriverNameFromAddress(size_t addr);
+	size_t getDriverOffsetFromAddress(size_t addr);
+	size_t getDriverBaseFromAddress(size_t addr);
+}
 
 #endif

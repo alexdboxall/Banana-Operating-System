@@ -35,7 +35,7 @@ Krnl	Core Kernel
 Phys	Physical Memory Manager
 Virt	Virtual Memory Manager
 Sys		System Calls
-Thr		Processes and Threads
+Thr		Processes, Threads, Program / Driver Loading
 Hal		Hardware Abstraction Library
 Dev		Device Subsystem
 Dbg		Debugging

@@ -654,90 +654,93 @@ bool loadDriverIntoMemory(const char* filename, size_t address, bool critical)
 	return true;
 }
 
-char* driverNameLookup[128];
-size_t driverLookupAddr[128];
-size_t driverLookupLen[128];
-int driverLookupNext = 0;
-
-size_t getDriverBaseFromAddress(size_t addr)
+namespace Thr
 {
-	for (int i = 0; i < driverLookupNext; ++i) {
-		if (addr >= driverLookupAddr[i] && addr < driverLookupAddr[i] + driverLookupLen[i]) {
-			return driverLookupAddr[i];
+	char* driverNameLookup[128];
+	size_t driverLookupAddr[128];
+	size_t driverLookupLen[128];
+	int driverLookupNext = 0;
+
+	size_t getDriverBaseFromAddress(size_t addr)
+	{
+		for (int i = 0; i < driverLookupNext; ++i) {
+			if (addr >= driverLookupAddr[i] && addr < driverLookupAddr[i] + driverLookupLen[i]) {
+				return driverLookupAddr[i];
+			}
 		}
-	}
 
-	return 0;
-}
-
-char* getDriverNameFromAddress(size_t addr)
-{
-	for (int i = 0; i < driverLookupNext; ++i) {
-		if (addr >= driverLookupAddr[i] && addr < driverLookupAddr[i] + driverLookupLen[i]) {
-			return driverNameLookup[i];
-		}
-	}
-
-	return nullptr;
-}
-
-size_t getDriverOffsetFromAddress(size_t addr)
-{
-	size_t base = getDriverBaseFromAddress(addr);
-	if (base) {
-		return addr - base;
-	} else {
 		return 0;
 	}
-}
 
-size_t loadDLL(const char* name, bool critical)
-{
-	kprintf("loading dll: %s\n", name);
-	uint64_t siz;
-	bool dir;
+	char* getDriverNameFromAddress(size_t addr)
+	{
+		for (int i = 0; i < driverLookupNext; ++i) {
+			if (addr >= driverLookupAddr[i] && addr < driverLookupAddr[i] + driverLookupLen[i]) {
+				return driverNameLookup[i];
+			}
+		}
 
-	File* f = new File(name, kernelProcess);
-	if (!f) {
-		if (!critical) return 0;
-
-		char msg[256];
-		strcpy(msg, "COULD NOT LOAD DLL '");
-		strcat(msg, name);
-		strcat(msg, "'");
-		panic(msg);
-	}
-	FileStatus status = f->stat(&siz, &dir);
-	delete f;
-	if (dir || !siz) {
-		if (!critical) return 0;
-		char msg[256];
-		strcpy(msg, "COULD NOT LOAD DLL '");
-		strcat(msg, name);
-		strcat(msg, "'");
-		panic(msg);
+		return nullptr;
 	}
 
-	size_t addr = (size_t) malloc(siz);
-
-	driverNameLookup[driverLookupNext] = (char*) malloc(strlen(name) + 1);
-	strcpy(driverNameLookup[driverLookupNext], name);
-	driverLookupAddr[driverLookupNext] = addr;
-	driverLookupLen[driverLookupNext++] = siz;
-
-	kprintf("Loaded driver to address 0x%X\n", addr);
-
-	bool couldLoad = loadDriverIntoMemory(name, addr);
-	if (!couldLoad && critical) {
-		panic("COULD NOT LOAD CRITICAL DRIVER");
+	size_t getDriverOffsetFromAddress(size_t addr)
+	{
+		size_t base = getDriverBaseFromAddress(addr);
+		if (base) {
+			return addr - base;
+		} else {
+			return 0;
+		}
 	}
-	return couldLoad ? addr : 0;
-}
 
-void executeDLL(size_t startAddr, void* parentDevice)
-{
-	if (!startAddr) {
-		panic("ATTEMPTING TO START DRIVER LOCATED AT 0x0");
+	size_t loadDLL(const char* name, bool critical)
+	{
+		kprintf("loading dll: %s\n", name);
+		uint64_t siz;
+		bool dir;
+
+		File* f = new File(name, kernelProcess);
+		if (!f) {
+			if (!critical) return 0;
+
+			char msg[256];
+			strcpy(msg, "COULD NOT LOAD DLL '");
+			strcat(msg, name);
+			strcat(msg, "'");
+			panic(msg);
+		}
+		FileStatus status = f->stat(&siz, &dir);
+		delete f;
+		if (dir || !siz) {
+			if (!critical) return 0;
+			char msg[256];
+			strcpy(msg, "COULD NOT LOAD DLL '");
+			strcat(msg, name);
+			strcat(msg, "'");
+			panic(msg);
+		}
+
+		size_t addr = (size_t) malloc(siz);
+
+		driverNameLookup[driverLookupNext] = (char*) malloc(strlen(name) + 1);
+		strcpy(driverNameLookup[driverLookupNext], name);
+		driverLookupAddr[driverLookupNext] = addr;
+		driverLookupLen[driverLookupNext++] = siz;
+
+		kprintf("Loaded driver to address 0x%X\n", addr);
+
+		bool couldLoad = loadDriverIntoMemory(name, addr);
+		if (!couldLoad && critical) {
+			panic("COULD NOT LOAD CRITICAL DRIVER");
+		}
+		return couldLoad ? addr : 0;
 	}
-	reinterpret_cast<int(*)(void*)>(startAddr)(parentDevice);
+
+	void executeDLL(size_t startAddr, void* parentDevice)
+	{
+		if (!startAddr) {
+			panic("ATTEMPTING TO START DRIVER LOCATED AT 0x0");
+		}
+		reinterpret_cast<int(*)(void*)>(startAddr)(parentDevice);
+	}
 }

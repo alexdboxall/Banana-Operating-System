@@ -63,8 +63,8 @@ void startGUI(void* a)
 	vga->open(0, 0, nullptr);
 	screen = vga;*/
 
-	executeDLL(loadDLL("C:/Banana/Drivers/vga.sys"), computer);
-	executeDLL(loadDLL("C:/Banana/System/wsbe.sys"), computer);
+	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/vga.sys"), computer);
+	Thr::executeDLL(Thr::loadDLL("C:/Banana/System/wsbe.sys"), computer);
 }
 
 void sendKeyboardToken(KeyboardToken kt)

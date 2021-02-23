@@ -47,7 +47,7 @@ namespace Sys
 
 		//try loading the DLL as a non-critical driver
 		//stange notation here because we are calling the 'other' loadDLL()
-		size_t addr = ::loadDLL((char*) r->ebx, false);
+		size_t addr = Thr::loadDLL((char*) r->ebx, false);
 
 		//check for failure
 		if (!addr) {
@@ -55,7 +55,7 @@ namespace Sys
 		}
 
 		//execute the DLL
-		executeDLL(addr, computer);
+		Thr::executeDLL(addr, computer);
 
 		return 0;
 	}

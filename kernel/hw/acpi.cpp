@@ -346,11 +346,11 @@ int ACPI::open(int mode, int, void*)
 
 	loadKernelSymbolTable("C:/Banana/System/KERNEL32.EXE");
 
-	executeDLL(loadDLL("C:/Banana/Drivers/common.sys"), computer);
-	executeDLL(loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
+	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/common.sys"), computer);
+	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
 
 	if (computer->features.hasACPI) {
-		executeDLL(loadDLL("C:/Banana/Drivers/acpica.sys"), computer);
+		Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/acpica.sys"), computer);
 
 		SimpleBootFlagTable* sbf = (SimpleBootFlagTable*) findDataTable(RSDTpointer, (char*) "BOOT");
 		if (sbf) {
