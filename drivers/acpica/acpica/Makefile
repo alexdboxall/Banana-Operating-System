@@ -1,4 +1,4 @@
-OUTPUT32="D:/Users/Alex/Desktop/Banana/packages/system/32/0002/acpica.sys"
+OUTPUT32="D:/Users/Alex/Desktop/Banana/packages/banana/32/0002/acpica.sys"
 OUTPUT64="D:/Users/Alex/Desktop/acpica64.sys"
 
 AS32=i386-banana-as

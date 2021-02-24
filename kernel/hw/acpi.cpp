@@ -350,7 +350,13 @@ int ACPI::open(int mode, int, void*)
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
 
 	if (computer->features.hasACPI) {
-		Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/acpica.sys"), computer);
+		File* f = new File("C:/Banana/System/setupisd.one", kernelProcess);
+		if (f && f->exists()) {
+			//Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/acpica.sys"), computer);
+		}
+		if (f) {
+			delete f;
+		}
 
 		SimpleBootFlagTable* sbf = (SimpleBootFlagTable*) findDataTable(RSDTpointer, (char*) "BOOT");
 		if (sbf) {

@@ -550,6 +550,8 @@ void loadExtensions()
 
 void playJingle(void* context)
 {
+    unlockScheduler();
+
     /*systemBuzzer->beep(131, 400);
     systemBuzzer->beep(175, 400);
     systemBuzzer->beep(247, 400);
@@ -559,21 +561,42 @@ void playJingle(void* context)
     systemBuzzer->beep(784, 400);
     systemBuzzer->beep(698, 400);
     systemBuzzer->beep(659, 800);*/
+
+    while (1) {
+        sleep(10);
+    }
 }
 
 void begin(void* a)
 {
-	firstRun();
+    bool firstTime = false;
 
-    kernelProcess->createThread(playJingle, nullptr, 10);
+    File* f = new File("C:/Banana/System/setupisd.one", kernelProcess);
+    if (!f) {
+        panic("SYSINIT FAILURE");
+    }
+    firstTime = !f->exists();
+    delete f;
 
-	loadExtensions();
+    if (firstTime) {
+        firstRun();
+
+    } else {
+        loadExtensions();
+    }
 
     VgaText::hiddenOut = false;
-    //kernelProcess->terminal->showCursor(true);
     preemptionOn = true;
 
-    Process* usertask = new Process("C:/Banana/System/command.exe");
+    Process* usertask;
+    
+    if (firstTime) {
+        createUser("Alex");
+        char* argv[] = { "C:/Banana/System/command.exe", "call", "C:/Banana/System/init.bat", 0 };
+        usertask = new Process("C:/Banana/System/command.exe", nullptr, argv);
+    } else {
+        usertask = new Process("C:/Banana/System/command.exe");
+    }
     setActiveTerminal(usertask->terminal);
     usertask->createUserThread();
 
@@ -581,6 +604,4 @@ void begin(void* a)
     waitTask(usertask->pid, &wstatus, 0);
 
     computer->close(0, 0, nullptr);
-
-    //createUser("Alex");
 }

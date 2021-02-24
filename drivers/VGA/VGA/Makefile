@@ -1,4 +1,4 @@
-OUTPUT32="D:/Users/Alex/Desktop/Banana/packages/system/32/0002/vga.sys"
+OUTPUT32="D:/Users/Alex/Desktop/Banana/packages/banana/32/0002/vga.sys"
 OUTPUT64="D:/Users/Alex/Desktop/VGA64.sys"
 
 AS32=i386-banana-as
