@@ -575,13 +575,21 @@ void begin(void* a)
     if (!f) {
         panic("SYSINIT FAILURE");
     }
-    firstTime = !f->exists();
+    FileStatus fs = f->open(FileOpenMode::Read);
+
+    if (fs == FileStatus::Success) {
+        f->close();
+    } else {
+        firstTime = true;
+    }
     delete f;
 
     if (firstTime) {
+        kprintf("THIS IS THE FIRST RUN!!!\n");
         firstRun();
 
     } else {
+        kprintf("THIS IS NOT THE FIRST RUN!!!\n");
         loadExtensions();
     }
 

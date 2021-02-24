@@ -584,5 +584,24 @@ FileStatus FAT::mkdir(const char* file)
 
 bool FAT::exists(const char* file)
 {
+	FRESULT fr;
+	FILINFO fno;
+
+	char filename[256];
+	strcpy(filename, file);
+	fixFilepath(filename);
+
+	fr = f_stat(filename, &fno);
+	switch (fr) {
+	case FR_OK:
+		return true;
+
+	case FR_NO_FILE:
+		return false;
+
+	default:
+		return false;
+	}
+
 	return false;
 }

@@ -649,12 +649,9 @@ void sleep(uint64_t seconds)
 }
 
 extern "C" void taskReturned()
-{
-	unlockScheduler();		//not sure why this is needed
+{	
+	panic("TASK RETURNED. CHECK KERNEL TASKS AND ALL DRIVERS.\n");
 
-	kprintf("A task returned. Name = %s\n", currentTaskTCB->processRelatedTo->taskname);
-	
-	//panic("TASK RETURNED. ENSURE IT LOOPS AT END.\n");
 	while (1) {
 		blockTask(TaskState::Paused);
 		lockScheduler();
