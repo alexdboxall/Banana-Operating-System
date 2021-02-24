@@ -539,6 +539,8 @@ void firstRun()
 	mkdir("C:/Banana/Registry/System", 0700);
 	mkdir("C:/Banana/Registry/User", 0700);
 	copytree("C:/Banana/Registry/DefaultSystem", "C:/Banana/Registry/System");
+
+    createUser("Alex");
 }
 
 void loadExtensions()
@@ -561,7 +563,7 @@ void playJingle(void* context)
 
 void begin(void* a)
 {
-	//firstRun();
+	firstRun();
 
     kernelProcess->createThread(playJingle, nullptr, 10);
 

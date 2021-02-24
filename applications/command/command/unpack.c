@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "D:/Users/Alex/Desktop/Banana/kernel/core/syscalls.hpp"
+#include "D:/Users/Alex/Desktop/Banana/kernel/sys/syscalls.hpp"
 
 /* miniz.c v1.14 - public domain deflate/inflate, zlib-subset, ZIP reading/writing/appending, PNG writing
    See "unlicense" statement at the end of this file.

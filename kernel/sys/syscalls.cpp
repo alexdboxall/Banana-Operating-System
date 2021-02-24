@@ -619,6 +619,11 @@ uint64_t sysShutdown(regs* r)
 			systemSleepFunction();
 		}
 		return 0;
+
+	} else if (r->ebx == 2) {
+		computer->close(1, 0, nullptr);
+		return -1;
+
 	}
 
 	return -1;

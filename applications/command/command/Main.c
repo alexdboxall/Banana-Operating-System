@@ -13,7 +13,7 @@
 #include <sys/banana.h>
 #include "tinyexpr.h"
 
-#include "D:/Users/Alex/Desktop/Banana/kernel/core/syscalls.hpp"
+#include "D:/Users/Alex/Desktop/Banana/kernel/sys/syscalls.hpp"
 
 #define MAX_BATCH_RECURSION 12
 
@@ -1106,6 +1106,10 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 	} else if (!strcasecmp(argv[0], "shutdown")) {
 		extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
 		SystemCall(Shutdown, 0, 0, 0);
+
+	} else if (!strcasecmp(argv[0], "restart")) {
+		extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
+		SystemCall(Shutdown, 2, 0, 0);
 
 	} else if (!strcasecmp(argv[0], "sleep")) {
 		extern uint64_t SystemCall(size_t, size_t, size_t, size_t);

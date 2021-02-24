@@ -1,21 +1,12 @@
-#ifndef _UTIME_H
-#define _UTIME_H
-
-#include <bits/ansi/time_t.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-struct utimbuf {
-	time_t actime;
-	time_t modtime;
-};
+#include <_ansi.h>
 
-int utime(const char *, const struct utimbuf *);
+/* The utime function is defined in libc/sys/<arch>/sys if it exists. */
+#include <sys/utime.h>
 
 #ifdef __cplusplus
 }
 #endif
-
-#endif // _UTIME_H
