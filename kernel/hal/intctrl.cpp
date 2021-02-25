@@ -275,8 +275,8 @@ void displayDebugInfo(regs* r)
 	kernelProcess->terminal->putx((uint32_t) CPU::readDR6());
 	kernelProcess->terminal->puts("\n DR7: ");
 	kernelProcess->terminal->putx((uint32_t) CPU::readDR7());
-	asm("cli;hlt;");
-	while (1);
+	//asm("cli;hlt;");
+	//while (1);
 
 	kernelProcess->terminal->puts("\n 1: ");
 	kernelProcess->terminal->putx((uint32_t) __builtin_return_address(1));

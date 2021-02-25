@@ -58,8 +58,6 @@ namespace Vm
 
 	bool loadFileAsThread(Process* p, const char* filename, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss)
 	{
-		kprintf("VM::loadFileAsThread.\n");
-
 		lockScheduler();
 		ThreadControlBlock* thread = p->createThread(vm8086EntryPoint, nullptr, 128);
 		thread->vm86IP = ip;
@@ -67,7 +65,6 @@ namespace Vm
 		thread->vm86SP = sp;
 		thread->vm86SS = ss;
 		thread->vm86Task = true;
-		kprintf("VM::A.\n");
 
 		File* f = new File(filename, p);
 		if (!f) {
@@ -75,41 +72,32 @@ namespace Vm
 			unlockScheduler();
 			return false;
 		}
-		kprintf("VM::B.\n");
 
 		uint64_t siz;
 		bool dir;
 		f->stat(&siz, &dir);
-		kprintf("VM::C.\n");
 
 		if (dir) {
 			panic("VM8086 FILE STAT FAILED!");
 			unlockScheduler();
 			return false;
 		}
-		kprintf("VM::D.\n");
 
 		FileStatus st = f->open(FileOpenMode::Read);
-		kprintf("VM::E.\n");
 
 		if (st != FileStatus::Success) {
 			panic("VM8086 FILE OPEN FAILED!");
 			unlockScheduler();
 			return false;
 		}
-		kprintf("VM::F.\n");
 
 		p->vas->mapRange(0x0, 0x0, 256, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
-		kprintf("VM::G.\n");
 
 		int br;
 		f->read(siz, (uint8_t*) (size_t) realToLinear(cs, ip), &br);
-		kprintf("VM::H.\n");
 		f->close();
-		kprintf("VM::I.\n");
 
 		unlockScheduler();
-		kprintf("VM::J.\n");
 
 		return true;
 	}
@@ -192,7 +180,7 @@ namespace Vm
 				}
 			}
 		}*/
-		kprintf("<%X, %X %X%X> ", r->cs * 16 + r->eip, ip, ip[0], ip[1], ip[2]);
+		kprintf("<%X, %X %X%X%X> ", r->cs * 16 + r->eip, ip, ip[0], ip[1], ip[2]);
 
 		bool operand32 = false;
 		bool address32 = false;
