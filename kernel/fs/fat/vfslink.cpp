@@ -596,9 +596,6 @@ bool FAT::exists(const char* file)
 	case FR_OK:
 		return true;
 
-	case FR_NO_FILE:
-		return false;
-
 	default:
 		return false;
 	}

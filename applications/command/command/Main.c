@@ -1234,6 +1234,42 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 			fclose(f);
 		}
 
+	} else if (!strcasecmp(argv[0], "more")) {
+		if (argc == 1) {
+			fprintf(stderr, "Please enter file name.\n");
+			return -1;
+		}
+
+		FILE* f = fopen(argv[1], "r");
+		if (!f) {
+			fprintf(stderr, "Error opening file.\n");
+		} else {
+			char s;
+			int x = 0;
+			int y = 0;
+			while ((s = fgetc(f)) != EOF) {
+				fprintf(out, "%c", s);
+				if (s == '\n') {
+					x = 0;
+					y++;
+				} else {
+					x++;
+					if (x == 80) {
+						y++;
+						x = 0;
+					}
+				}
+
+				if (y == 22) {
+					printf("Press ENTER to continue... ");
+					int c = getchar();
+					if (c != '\n' && c != EOF) while ((c = getchar()) != '\n' && c != EOF) {}
+					y = 0;
+				}
+			}
+			fclose(f);
+		}
+
 	} else if (!strcasecmp(argv[0], "status")) {
 		if (argc == 1) {
 			fprintf(out, "%d", errorLevel);
@@ -1445,12 +1481,13 @@ int parseLine(char* line, Label labels[64], int batchNesting)
 
 	for (int i = 0; i < argno; ++i) {
 		if (!strcmp(args[i], ">") || !strcmp(args[i], ">>")) {
+			bool append = !strcmp(args[i], ">>");
 			args[i] = 0;
 			if (givenArgno == argno) givenArgno = i;
 
 			if (i + 1 < argno) {
 				++i;
-				FILE* f = fopen(args[i], ((!strcmp(args[i], ">")) ? "w" : "a"));
+				FILE* f = fopen(args[i], append ? "a" : "w");
 				if (f) {
 					newStdout = f;
 					needToCloseStream = true;
