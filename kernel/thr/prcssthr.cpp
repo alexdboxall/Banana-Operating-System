@@ -764,11 +764,15 @@ Mutex::Mutex() : Semaphore(1)
 
 namespace Thr
 {
-	void terminateFromIRQ()
+	void terminateFromIRQ(int returnCode)
 	{
+		lockStuff();
+
 		currentTaskTCB->returnCodeForUseOnTerminationList = returnCode;
 		currentTaskTCB->next;
 		terminatedTaskList.addElement(currentTaskTCB);
 		currentTaskTCB->state = TaskState::Terminated;
+
+		unlockStuff();
 	}
 }
