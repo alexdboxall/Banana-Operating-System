@@ -562,9 +562,7 @@ void playJingle(void* context)
     systemBuzzer->beep(698, 400);
     systemBuzzer->beep(659, 800);*/
 
-    while (1) {
-        sleep(10);
-    }
+    terminateTask(0);
 }
 
 void begin(void* a)
@@ -589,7 +587,7 @@ void begin(void* a)
         firstRun();
 
     } else {
-        kprintf("THIS IS NOT THE FIRST RUN!!!\n");
+        kernelProcess->createThread(playJingle);
         loadExtensions();
     }
 
