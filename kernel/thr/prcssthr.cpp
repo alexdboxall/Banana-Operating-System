@@ -508,7 +508,7 @@ void cleanupTerminatedTask(ThreadControlBlock* task)
 	}
 	kprintf("CTT 14\n");
 
-	delete task;
+	//delete task; //@@@
 	kprintf("CTT 15\n");
 }
 
