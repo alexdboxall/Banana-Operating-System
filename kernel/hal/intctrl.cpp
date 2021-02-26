@@ -275,8 +275,12 @@ void displayDebugInfo(regs* r)
 	kernelProcess->terminal->putx((uint32_t) CPU::readDR6());
 	kernelProcess->terminal->puts("\n DR7: ");
 	kernelProcess->terminal->putx((uint32_t) CPU::readDR7());
-	//asm("cli;hlt;");
-	//while (1);
+	asm("cli;hlt;");
+	while (1);
+
+	kprintf("'0x%X'\n", __builtin_return_address(1));
+	kprintf("'0x%X'\n", __builtin_return_address(2));
+	kprintf("'0x%X'\n", __builtin_return_address(3));
 
 	kernelProcess->terminal->puts("\n 1: ");
 	kernelProcess->terminal->putx((uint32_t) __builtin_return_address(1));
@@ -284,10 +288,6 @@ void displayDebugInfo(regs* r)
 	kernelProcess->terminal->putx((uint32_t) __builtin_return_address(2));
 	kernelProcess->terminal->puts("\n 3: ");
 	kernelProcess->terminal->putx((uint32_t) __builtin_return_address(3));
-
-	kprintf("'0x%X'\n", __builtin_return_address(1));
-	kprintf("'0x%X'\n", __builtin_return_address(2));
-	kprintf("'0x%X'\n", __builtin_return_address(3));
 }
 
 void displayProgramFault(const char* text)

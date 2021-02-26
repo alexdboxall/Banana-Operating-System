@@ -297,7 +297,10 @@ namespace Vm
 				//kprintf("int 0x%X ", ip[1]);
 
 				if (ip[1] == 0xFF) {
+					kprintf("TERMINATING THE VM8086 TASK.\n");
 					terminateTask(r->eax);
+					kprintf("TERMINATED.\n");
+
 					return true;
 				}
 
