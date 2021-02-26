@@ -509,6 +509,7 @@ void cleanupTerminatedTask(ThreadControlBlock* task)
 	kprintf("CTT 14\n");
 
 	delete task;
+	kprintf("CTT 15\n");
 }
 
 int waitTask(int pid, int* wstatus, int options)
