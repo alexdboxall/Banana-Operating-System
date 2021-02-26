@@ -507,7 +507,7 @@ void cleanupTerminatedTask(ThreadControlBlock* task)
 		kprintf("Deleted VAS.\n");
 	}
 	kprintf("CTT 14\n");
-
+	kprintf("TASK = 0x%X\n", task);
 	//delete task; //@@@
 	kprintf("CTT 15\n");
 }
