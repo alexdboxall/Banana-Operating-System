@@ -69,6 +69,17 @@ int VGAVideo::open(int a, int b, void* c)
 	sleep(1);
 	kprintf("::sleep.\n");
 
+	volatile uint8_t * volatile vram = (volatile uint8_t * volatile) (VIRT_LOW_MEGS + 0xA0000);
+
+	setPlane(0);
+	memset((void*) vram, 0, 640 * 480 / 8);
+	setPlane(1);
+	memset((void*) vram, 0, 640 * 480 / 8);
+	setPlane(2);
+	memset((void*) vram, 0, 640 * 480 / 8);
+	setPlane(3);
+	memset((void*) vram, 0, 640 * 480 / 8);
+
 	width = 640;
 	height = 480;
 

@@ -766,13 +766,7 @@ namespace Thr
 {
 	void terminateFromIRQ(int returnCode)
 	{
-		lockStuff();
+		terminateTask(returnCode);
 
-		currentTaskTCB->returnCodeForUseOnTerminationList = returnCode;
-		currentTaskTCB->next;
-		terminatedTaskList.addElement(currentTaskTCB);
-		currentTaskTCB->state = TaskState::Terminated;
-
-		unlockStuff();
 	}
 }
