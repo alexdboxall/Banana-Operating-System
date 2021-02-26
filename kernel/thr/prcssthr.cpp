@@ -541,23 +541,32 @@ void terminateTask(int returnCode)
 	extern int postponeTaskSwitchesCounter;
 	extern int taskSwitchesPostponedFlag;
 
+	kprintf("terminate task called. A\n");
+
 	// Note: Can do any harmless stuff here (close files, free memory in user-space, ...) but there's none of that yet
 
 	// Put this task on the terminated task list
 	lockStuff();
 	lockScheduler();
+	kprintf("terminate task called. B\n");
 
 	currentTaskTCB->returnCodeForUseOnTerminationList = returnCode;
 	currentTaskTCB->next;
 	terminatedTaskList.addElement(currentTaskTCB);
 	currentTaskTCB->state = TaskState::Terminated;
+	kprintf("terminate task called. C\n");
 
 	// Block this task (note: task switch will be postponed until scheduler lock is released)
 
 	if (cleanerThread) {
+		kprintf("terminate task called. D\n");
+
 		// Make sure the cleaner task isn't paused
 		weNeedTheCleanerToNotBlock = true;
 		unblockTask(cleanerThread);
+
+		kprintf("terminate task called. E\n");
+
 
 	} else {
 		kprintf("CLEANER CALLED BEFORE STARTED");
@@ -565,6 +574,8 @@ void terminateTask(int returnCode)
 
 	unlockScheduler();
 	unlockStuff();
+
+	kprintf("terminate task called. F\n");
 
 	while (1) {
 		lockScheduler();
