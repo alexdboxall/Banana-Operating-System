@@ -166,5 +166,9 @@ extern LinkedList<volatile ThreadControlBlock> sleepingTaskList;
 
 extern void terminateTask(int returnCode = 0);
 
+namespace Thr
+{
+	void terminateFromIRQ(int returnCode = 0);
+}
 
 #endif

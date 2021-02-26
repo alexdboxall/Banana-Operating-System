@@ -313,7 +313,7 @@ void gpFault(regs* r, void* context)
 	displayDebugInfo(r);
 	displayProgramFault("General protection fault");
 
-	terminateTask();
+	Thr::terminateFromIRQ();
 }
 
 size_t* pf0 = 0;
@@ -330,7 +330,7 @@ void pgFault(regs* r, void* context)
 	displayDebugInfo(r);
 	displayProgramFault("Page fault");
 
-	terminateTask();
+	Thr::terminateFromIRQ();
 }
 
 void nmiHandler(regs* r, void* context)
@@ -345,7 +345,7 @@ void otherISRHandler(regs* r, void* context)
 	displayDebugInfo(r);
 	displayProgramFault("Unhandled exception - CHECK KERNEL LOGS");
 
-	terminateTask();
+	Thr::terminateFromIRQ();
 }
 
 void opcodeFault(regs* r, void* context)
@@ -362,7 +362,7 @@ void opcodeFault(regs* r, void* context)
 	displayDebugInfo(r);
 	displayProgramFault("Opcode fault");
 
-	terminateTask();
+	Thr::terminateFromIRQ();
 }
 
 #pragma GCC diagnostic pop

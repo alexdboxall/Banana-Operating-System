@@ -761,3 +761,14 @@ Mutex::Mutex() : Semaphore(1)
 {
 
 }
+
+namespace Thr
+{
+	void terminateFromIRQ()
+	{
+		currentTaskTCB->returnCodeForUseOnTerminationList = returnCode;
+		currentTaskTCB->next;
+		terminatedTaskList.addElement(currentTaskTCB);
+		currentTaskTCB->state = TaskState::Terminated;
+	}
+}
