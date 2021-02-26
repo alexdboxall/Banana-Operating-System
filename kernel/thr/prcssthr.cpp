@@ -410,13 +410,9 @@ void updateTimeUsed()
 
 void cleanupTerminatedTask(ThreadControlBlock* task)
 {
-	kprintf("CTT 0\n");
-
 	for (int i = 0; i < task->processRelatedTo->argc; ++i) {
-		kprintf("CTT 1\n");
 		free(task->processRelatedTo->argv[i]);
 	}
-	kprintf("CTT 2\n");
 
 	task->processRelatedTo->argc = 0;
 
@@ -425,17 +421,12 @@ void cleanupTerminatedTask(ThreadControlBlock* task)
 
 	//check if all threads have finished
 	if (task->processRelatedTo->threadUsage == 0) {
-		kprintf("CTT 3!\n");
 
 		int returnCode = task->returnCodeForUseOnTerminationList;
 
 		// handle 'waitpid'
 		if (task->processRelatedTo->parent) {
-			kprintf("CTT 4\n");
-
 			for (int i = 0; i < 16; ++i) {
-				kprintf("CTT 5\n");
-
 				if (task->processRelatedTo->parent->threadUsage & (1 << i)) {
 					if (task->processRelatedTo->parent->threads[i].state == TaskState::WaitPID) {
 						if (task->processRelatedTo->parent->threads[i].waitingPID < -1) {
@@ -456,60 +447,38 @@ void cleanupTerminatedTask(ThreadControlBlock* task)
 						}
 					}
 				}
-				kprintf("CTT 6\n");
 			}
-			kprintf("CTT 7\n");
 		}
 
-		kprintf("CTT 8\n");
-
 		if (task->processRelatedTo->terminal != nullptr && task->processRelatedTo->parent->terminal != task->processRelatedTo->terminal) {
-			kprintf("CTT 9\n");
 
 			//next check for any threads using our terminal
 			ThreadControlBlock* first = (ThreadControlBlock*) taskList.getFirstElement();
 			if (!taskList.isEmpty()) {
 				do {
-					kprintf("CTT 10.1\n");
-
 					ThreadControlBlock* curr = (ThreadControlBlock*) taskList.getFirstElement();
-					kprintf("CTT 10.2\n");
-
 					taskList.removeFirst();
-					kprintf("CTT 10.3\n");
-
 					//we have to get rid of children using our terminal
 					if (curr != task && curr->processRelatedTo->parent == task->processRelatedTo && curr->processRelatedTo->terminal == task->processRelatedTo->terminal) {
 						kprintf("Terminating a child using our terminal!");
 						blockTask(TaskState::Terminated);
 					}
-					kprintf("CTT 10.4\n");
-
 					taskList.addElement(curr);
-					kprintf("CTT 10.5\n");
 
 				} while (taskList.getFirstElement() != first);
-				kprintf("CTT 10.99\n");
-
 			}
 
-			kprintf("CTT 11\n");
-
 			delete task->processRelatedTo->terminal;
-
 			task->processRelatedTo->terminal = nullptr;
-			kprintf("CTT 12\n");
-
 		}
-		kprintf("CTT 13\n");
 
 		delete task->processRelatedTo->vas;
 		kprintf("Deleted VAS.\n");
 	}
-	kprintf("CTT 14\n");
-	kprintf("TASK = 0x%X\n", task);
-	//delete task; //@@@
-	kprintf("CTT 15\n");
+
+	if (!task->vm86Task) {
+		delete task;
+	}
 }
 
 int waitTask(int pid, int* wstatus, int options)
