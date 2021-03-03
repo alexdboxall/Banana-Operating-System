@@ -1,8 +1,8 @@
 #include "core/common.hpp"
 #include "hal/device.hpp"
-#include "hal/cpu.hpp"
 #include "hal/fpu.hpp"
 
+#include "hw/cpu.hpp"
 #include "hw/fpu/x87.hpp"
 #include "hw/fpu/sse.hpp"
 #include "hw/fpu/avx.hpp"
