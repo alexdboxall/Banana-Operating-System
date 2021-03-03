@@ -2,6 +2,7 @@
 #include "krnl/panic.hpp"
 #include "sys/syscalls.hpp"
 #include "thr/prcssthr.hpp"
+#include "thr/elf.hpp"
 #include "hal/intctrl.hpp"
 #include "hw/intctrl/pic.hpp"
 #include "hw/intctrl/apic.hpp"
@@ -303,7 +304,7 @@ bool (*gpFaultIntercept)(regs* r) = nullptr;
 void x87EmulHandler(regs* r, void* context)
 {
 	if (!x87FaultIntercept) {
-		Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/emulx87.sys"), computer);
+		Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/em8087.sys"), computer);
 	}
 
 	if (x87FaultIntercept) {
