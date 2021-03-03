@@ -243,6 +243,8 @@ void displayDebugInfo(regs* r)
 	setActiveTerminal(kernelProcess->terminal);
 
 	kernelProcess->terminal->puts(exceptionNames[r->int_no]);
+	kernelProcess->terminal->puts("\n TASK: ");
+	kernelProcess->terminal->puts(currentTaskTCB->processRelatedTo->taskname);
 	kernelProcess->terminal->puts("\n EIP: ");
 	kernelProcess->terminal->putx(r->eip);
 	kernelProcess->terminal->puts("\n ESP: ");
