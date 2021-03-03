@@ -76,7 +76,7 @@ Float80 get0()
 
 Float80 get1()
 {
-    return longToFloat(0);
+    return longToFloat(1);
 }
 
 Float80 fpuStack[8];
