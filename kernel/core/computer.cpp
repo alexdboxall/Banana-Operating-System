@@ -80,8 +80,10 @@ int Computer::open(int a, int b, void* vas)
 	cpu[0]->open(0, 0, vas);		//FIRST ARG IS CPU NUMBER
 	
 	fpu = setupFPU();
-	addChild(fpu);
-	fpu->open(0, 0, nullptr);
+	if (fpu) {
+		addChild(fpu);
+		fpu->open(0, 0, nullptr);
+	}
 
 	setupMultitasking(firstTask);
 	return -1;
