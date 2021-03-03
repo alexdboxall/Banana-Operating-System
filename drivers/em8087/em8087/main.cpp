@@ -24,8 +24,7 @@ typedef struct Float80
 {
 	uint64_t fraction;
 	uint16_t exponent : 15;
-    uint16_t  : 1;
-    bool sign;
+	uint16_t sign : 1;
 
 } Float80;
 
