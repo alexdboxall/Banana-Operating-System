@@ -38,6 +38,7 @@ rm disasm.txt
 rm disacpica.txt
 rm dislegacy.txt
 rm diswsbe.txt
+rm dis87.txt
 objdump -drwC -Mintel kernel/KERNEL32.EXE >> disasm.txt
 objdump -drwC -Mintel packages/banana/32/0002/acpica.sys >> disacpica.txt
 objdump -drwC -Mintel packages/system/32/0002/legacy.sys >> dislegacy.txt
