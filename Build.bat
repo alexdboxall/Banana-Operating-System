@@ -42,6 +42,7 @@ objdump -drwC -Mintel kernel/KERNEL32.EXE >> disasm.txt
 objdump -drwC -Mintel packages/system/32/0002/acpica.sys >> disacpica.txt
 objdump -drwC -Mintel packages/system/32/0002/legacy.sys >> dislegacy.txt
 objdump -drwC -Mintel packages/system/32/0001/wsbe.sys >> diswsbe.txt
+objdump -drwC -Mintel packages/system/32/0002/em8087.sys >> dis87.txt
 
 call Run
 pause
