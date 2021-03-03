@@ -13,7 +13,8 @@ CC64=x86_64-banana-gcc
 LD64=x86_64-banana-ld
 
 ASFLAGS=
-CXXFLAGS=
+CXXFLAGS=-O1
+CFLAGS=-O1
 LDFLAGS=-g
 
 CXXOBJECTS32 = $(patsubst %.cpp, %.32, $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp) $(wildcard */*/*/*.cpp) $(wildcard **/*.cpp))
