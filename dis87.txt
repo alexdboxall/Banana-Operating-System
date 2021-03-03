@@ -1,0 +1,251 @@
+
+packages/system/32/0002/em8087.sys:     file format elf32-i386
+
+
+Disassembly of section .text:
+
+10000000 <start()>:
+10000000:	55                   	push   ebp
+10000001:	89 e5                	mov    ebp,esp
+10000003:	83 ec 08             	sub    esp,0x8
+10000006:	e8 fc ff ff ff       	call   10000007 <start()+0x7>	10000007: R_386_PC32	begin()
+1000000b:	90                   	nop
+1000000c:	c9                   	leave  
+1000000d:	c3                   	ret    
+
+1000000e <floatToLong(Float80)>:
+1000000e:	b8 00 00 00 00       	mov    eax,0x0
+10000013:	ba 00 00 00 00       	mov    edx,0x0
+10000018:	c3                   	ret    
+
+10000019 <longToFloat(long long)>:
+10000019:	55                   	push   ebp
+1000001a:	89 e5                	mov    ebp,esp
+1000001c:	83 ec 18             	sub    esp,0x18
+1000001f:	8b 4d 0c             	mov    ecx,DWORD PTR [ebp+0xc]
+10000022:	89 4d e8             	mov    DWORD PTR [ebp-0x18],ecx
+10000025:	8b 4d 10             	mov    ecx,DWORD PTR [ebp+0x10]
+10000028:	89 4d ec             	mov    DWORD PTR [ebp-0x14],ecx
+1000002b:	8b 4d e8             	mov    ecx,DWORD PTR [ebp-0x18]
+1000002e:	80 f5 00             	xor    ch,0x0
+10000031:	89 c8                	mov    eax,ecx
+10000033:	8b 4d ec             	mov    ecx,DWORD PTR [ebp-0x14]
+10000036:	80 f5 00             	xor    ch,0x0
+10000039:	89 ca                	mov    edx,ecx
+1000003b:	09 d0                	or     eax,edx
+1000003d:	85 c0                	test   eax,eax
+1000003f:	75 30                	jne    10000071 <longToFloat(long long)+0x58>
+10000041:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000044:	8a 50 09             	mov    dl,BYTE PTR [eax+0x9]
+10000047:	83 e2 7f             	and    edx,0x7f
+1000004a:	88 50 09             	mov    BYTE PTR [eax+0x9],dl
+1000004d:	8b 55 08             	mov    edx,DWORD PTR [ebp+0x8]
+10000050:	8b 42 08             	mov    eax,DWORD PTR [edx+0x8]
+10000053:	25 00 80 ff ff       	and    eax,0xffff8000
+10000058:	66 89 42 08          	mov    WORD PTR [edx+0x8],ax
+1000005c:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+1000005f:	c7 00 00 00 00 00    	mov    DWORD PTR [eax],0x0
+10000065:	c7 40 04 00 00 00 00 	mov    DWORD PTR [eax+0x4],0x0
+1000006c:	e9 84 00 00 00       	jmp    100000f5 <longToFloat(long long)+0xdc>
+10000071:	83 7d ec 00          	cmp    DWORD PTR [ebp-0x14],0x0
+10000075:	79 18                	jns    1000008f <longToFloat(long long)+0x76>
+10000077:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+1000007a:	8a 50 09             	mov    dl,BYTE PTR [eax+0x9]
+1000007d:	83 ca 80             	or     edx,0xffffff80
+10000080:	88 50 09             	mov    BYTE PTR [eax+0x9],dl
+10000083:	f7 5d e8             	neg    DWORD PTR [ebp-0x18]
+10000086:	83 55 ec 00          	adc    DWORD PTR [ebp-0x14],0x0
+1000008a:	f7 5d ec             	neg    DWORD PTR [ebp-0x14]
+1000008d:	eb 0c                	jmp    1000009b <longToFloat(long long)+0x82>
+1000008f:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000092:	8a 50 09             	mov    dl,BYTE PTR [eax+0x9]
+10000095:	83 e2 7f             	and    edx,0x7f
+10000098:	88 50 09             	mov    BYTE PTR [eax+0x9],dl
+1000009b:	c7 45 fc 00 00 00 00 	mov    DWORD PTR [ebp-0x4],0x0
+100000a2:	83 7d ec 00          	cmp    DWORD PTR [ebp-0x14],0x0
+100000a6:	78 15                	js     100000bd <longToFloat(long long)+0xa4>
+100000a8:	8b 45 e8             	mov    eax,DWORD PTR [ebp-0x18]
+100000ab:	8b 55 ec             	mov    edx,DWORD PTR [ebp-0x14]
+100000ae:	01 c0                	add    eax,eax
+100000b0:	11 d2                	adc    edx,edx
+100000b2:	89 45 e8             	mov    DWORD PTR [ebp-0x18],eax
+100000b5:	89 55 ec             	mov    DWORD PTR [ebp-0x14],edx
+100000b8:	ff 45 fc             	inc    DWORD PTR [ebp-0x4]
+100000bb:	eb e5                	jmp    100000a2 <longToFloat(long long)+0x89>
+100000bd:	8b 45 e8             	mov    eax,DWORD PTR [ebp-0x18]
+100000c0:	8b 55 ec             	mov    edx,DWORD PTR [ebp-0x14]
+100000c3:	8b 4d 08             	mov    ecx,DWORD PTR [ebp+0x8]
+100000c6:	89 01                	mov    DWORD PTR [ecx],eax
+100000c8:	89 51 04             	mov    DWORD PTR [ecx+0x4],edx
+100000cb:	8b 45 fc             	mov    eax,DWORD PTR [ebp-0x4]
+100000ce:	ba 3e 40 00 00       	mov    edx,0x403e
+100000d3:	29 c2                	sub    edx,eax
+100000d5:	89 d0                	mov    eax,edx
+100000d7:	25 ff 7f 00 00       	and    eax,0x7fff
+100000dc:	8b 55 08             	mov    edx,DWORD PTR [ebp+0x8]
+100000df:	25 ff 7f 00 00       	and    eax,0x7fff
+100000e4:	89 c1                	mov    ecx,eax
+100000e6:	8b 42 08             	mov    eax,DWORD PTR [edx+0x8]
+100000e9:	25 00 80 ff ff       	and    eax,0xffff8000
+100000ee:	09 c8                	or     eax,ecx
+100000f0:	66 89 42 08          	mov    WORD PTR [edx+0x8],ax
+100000f4:	90                   	nop
+100000f5:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100000f8:	c9                   	leave  
+100000f9:	c2 04 00             	ret    0x4
+
+100000fc <x87Handler(regs*)>:
+100000fc:	55                   	push   ebp
+100000fd:	89 e5                	mov    ebp,esp
+100000ff:	83 ec 18             	sub    esp,0x18
+10000102:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000105:	8b 40 38             	mov    eax,DWORD PTR [eax+0x38]
+10000108:	89 45 f4             	mov    DWORD PTR [ebp-0xc],eax
+1000010b:	8b 45 f4             	mov    eax,DWORD PTR [ebp-0xc]
+1000010e:	83 c0 02             	add    eax,0x2
+10000111:	8a 00                	mov    al,BYTE PTR [eax]
+10000113:	0f b6 c8             	movzx  ecx,al
+10000116:	8b 45 f4             	mov    eax,DWORD PTR [ebp-0xc]
+10000119:	40                   	inc    eax
+1000011a:	8a 00                	mov    al,BYTE PTR [eax]
+1000011c:	0f b6 d0             	movzx  edx,al
+1000011f:	8b 45 f4             	mov    eax,DWORD PTR [ebp-0xc]
+10000122:	8a 00                	mov    al,BYTE PTR [eax]
+10000124:	0f b6 c0             	movzx  eax,al
+10000127:	51                   	push   ecx
+10000128:	52                   	push   edx
+10000129:	50                   	push   eax
+1000012a:	68 e8 01 00 10       	push   0x100001e8	1000012b: R_386_32	.text
+1000012f:	e8 fc ff ff ff       	call   10000130 <x87Handler(regs*)+0x34>	10000130: R_386_PC32	Dbg::kprintf(char const*, ...)
+10000134:	83 c4 10             	add    esp,0x10
+10000137:	b0 00                	mov    al,0x0
+10000139:	c9                   	leave  
+1000013a:	c3                   	ret    
+
+1000013b <begin()>:
+1000013b:	c7 05 00 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x0,0x0	1000013d: R_386_32	x87FaultIntercept
+	10000141: R_386_32	x87Handler(regs*)
+10000145:	90                   	nop
+10000146:	c3                   	ret    
+10000147:	90                   	nop
+
+10000148 <PHYS_RAM_TABLE_SIZE>:
+10000148:	13 05 00 00                                         ....
+
+1000014c <PHYS_HIGHEST_UNUSED_ADDRESS>:
+1000014c:	24 05 00 00                                         $...
+
+10000150 <PHYS_RAM_TABLE>:
+10000150:	00 06 00 00                                         ....
+
+10000154 <PHYS_DMA_MEMORY_1>:
+10000154:	00 00 01 00                                         ....
+
+10000158 <PHYS_PHYS_PAGE_BITMAP>:
+10000158:	00 00 02 00                                         ....
+
+1000015c <PHYS_VIRT_PAGE_BITMAP>:
+1000015c:	00 00 04 00                                         ....
+
+10000160 <PHYS_DMA_MEMORY_2>:
+10000160:	00 00 06 00                                         ....
+
+10000164 <PHYS_ALLOCED_VIRT_PAGES>:
+10000164:	00 00 10 00                                         ....
+
+10000168 <PHYS_KRNL_PAGE_DIRECTORY>:
+10000168:	00 10 00 00                                         ....
+
+1000016c <VIRT_KERNEL_BASE>:
+1000016c:	00 00 00 c0                                         ....
+
+10000170 <VIRT_LOW_MEGS>:
+10000170:	00 00 00 c2                                         ....
+
+10000174 <VIRT_CPU_SPECIFIC>:
+10000174:	00 00 40 c2                                         ..@.
+
+10000178 <VIRT_RECURSIVE_SPOT_1>:
+10000178:	00 00 80 c2                                         ....
+
+1000017c <VIRT_RECURSIVE_SPOT_2>:
+1000017c:	00 00 c0 c2                                         ....
+
+10000180 <VIRT_DMA_MEMORY_1>:
+10000180:	00 00 01 c2                                         ....
+
+10000184 <SIZE_DMA_MEMORY_1>:
+10000184:	00 00 01 00                                         ....
+
+10000188 <VIRT_DMA_MEMORY_2>:
+10000188:	00 00 06 c2                                         ....
+
+1000018c <SIZE_DMA_MEMORY_2>:
+1000018c:	00 00 02 00                                         ....
+
+10000190 <VIRT_KRNL_PAGE_DIRECTORY>:
+10000190:	00 10 00 c2                                         ....
+
+10000194 <VIRT_PHYS_PAGE_BITMAP>:
+10000194:	00 00 02 c2                                         ....
+
+10000198 <SIZE_PHYS_PAGE_BITMAP>:
+10000198:	00 00 02 00                                         ....
+
+1000019c <VIRT_VIRT_PAGE_BITMAP>:
+1000019c:	00 00 04 c2                                         ....
+
+100001a0 <SIZE_VIRT_PAGE_BITMAP>:
+100001a0:	00 80 00 00                                         ....
+
+100001a4 <VIRT_RAM_TABLE>:
+100001a4:	00 06 00 c2                                         ....
+
+100001a8 <VIRT_RAM_TABLE_SIZE>:
+100001a8:	13 05 00 c2                                         ....
+
+100001ac <VIRT_HIGHEST_UNUSED_ADDRESS>:
+100001ac:	24 05 00 c2                                         $...
+
+100001b0 <SIZE_APP_STACK_USER>:
+100001b0:	00 00 18 00                                         ....
+
+100001b4 <SIZE_APP_STACK_KRNL>:
+100001b4:	00 00 08 00                                         ....
+
+100001b8 <SIZE_APP_STACK_TOTAL>:
+100001b8:	00 00 20 00                                         .. .
+
+100001bc <VIRT_APP_DATA>:
+100001bc:	00 00 00 10                                         ....
+
+100001c0 <VIRT_APP_STACK_USER_TOP>:
+100001c0:	00 00 00 02                                         ....
+
+100001c4 <VIRT_APP_STACK_KRNL_TOP>:
+100001c4:	00 00 e8 01                                         ....
+
+100001c8 <VIRT_HEAP_MIN>:
+100001c8:	00 00 00 c8                                         ....
+
+100001cc <VIRT_HEAP_MAX>:
+100001cc:	ff ff ff ef                                         ....
+
+100001d0 <VIRT_SBRK_MIN>:
+100001d0:	00 00 00 f0                                         ....
+
+100001d4 <VIRT_SBRK_MAX>:
+100001d4:	00 00 c0 ff                                         ....
+
+100001d8 <VIRT_ALLOCED_VIRT_PAGES>:
+100001d8:	00 00 10 c2                                         ....
+
+100001dc <VIRT_ACPI_DRIVER>:
+100001dc:	00 40 48 c2                                         .@H.
+
+100001e0 <TERMINAL_KEYBUFFER_IN_SIZE>:
+100001e0:	96 00 00 00                                         ....
+
+100001e4 <TERMINAL_KEYBUFFER_OUT_SIZE>:
+100001e4:	2c 01 00 00 78 38 37 3a 20 25 58 20 25 58 20 25     ,...x87: %X %X %
+100001f4:	58 0a 00                                            X..
