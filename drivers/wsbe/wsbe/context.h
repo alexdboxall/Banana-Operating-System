@@ -22,6 +22,7 @@ typedef struct Context_struct {
 
 //Methods
 Context* Context_new(uint16_t width, uint16_t height, uint32_t* buffer);
+
 void Context_fill_rect(Context* context, int x, int y,  
                        unsigned int width, unsigned int height, uint32_t color);
 void Context_horizontal_line(Context* context, int x, int y,

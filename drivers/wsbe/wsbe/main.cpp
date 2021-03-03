@@ -28,6 +28,7 @@ void start()
 extern "C" {
     #include "desktop.h"
     #include "button.h"
+    #include "bitmap.h"
 }
 
 int mouse_x;
@@ -154,6 +155,25 @@ void spawn_calculator(Button* button, int x, int y)
 
     oldHandler = w->paint_function;
     w->paint_function = newpaint;
+
+    uint32_t d[16] = {
+        0xFF0000,
+        0xFF0000,
+        0xFF0000,
+        0xFF0000,
+        0x00FF00,
+        0x00FF00,
+        0x00FF00,
+        0x00FF00,
+        0x0000FF,
+        0x0000FF,
+        0x0000FF,
+        0x0000FF,
+        0xFFFF00,
+        0xFF00FF,
+        0x00FFFF,
+        0xFFFFFF
+    };
 
     Window_paint((Window*) desktop, (List*) 0, 1);
 }

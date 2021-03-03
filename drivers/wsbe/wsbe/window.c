@@ -706,8 +706,8 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
 		child = (Window*) List_get_at(window->children, i);
 
 		//If mouse isn't window bounds, we can't possibly be interacting with it 
-		if (!(mouse_x >= child->x && mouse_x < (child->x + child->width) &&
-			mouse_y >= child->y && mouse_y < (child->y + child->height))) {
+		if (!(mouse_x >= child->x - 12 && mouse_x < (child->x + child->width) &&
+			mouse_y >= child->y - 12 && mouse_y < (child->y + child->height))) {
 			continue;
 		}
 
@@ -718,6 +718,14 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
 		bool onRightEdge = !(child->flags & WIN_NODECORATION) && !child->fullscreen &&
 			mouse_x >= child->x + child->width - 12 && mouse_x < child->x + child->width &&
 			mouse_y >= child->y && mouse_y < child->y + child->height;
+
+		bool onLeftEdge = !(child->flags & WIN_NODECORATION) && !child->fullscreen &&
+			mouse_x >= child->x - 12 && mouse_x < child->x + 3 &&
+			mouse_y >= child->y && mouse_y < child->y + child->height;
+
+		bool onTopEdge = !(child->flags & WIN_NODECORATION) && !child->fullscreen &&
+			mouse_x >= child->x && mouse_x < child->x + child->width &&
+			mouse_y >= child->y - 12 && mouse_y < child->y;
 
 		bool onBottomEdge = !(child->flags & WIN_NODECORATION) && !child->fullscreen &&
 			mouse_x >= child->x && mouse_x < child->x + child->width &&
@@ -732,6 +740,14 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
 			overridenMouse = MOUSE_OFFSET_HORZ;
 		} else if (onBottomEdge) {
 			overridenMouse = MOUSE_OFFSET_VERT;
+		} else if (onLeftEdge) {
+			overridenMouse = MOUSE_OFFSET_HORZ;
+		} else if (onTopEdge) {
+			overridenMouse = MOUSE_OFFSET_VERT;
+		}
+
+		if ((mouse_x < child->x || mouse_y < child->y) && overridenMouse == -1) {
+			continue;
 		}
 
 		//Now we'll check to see if we're dragging a titlebar
@@ -754,8 +770,8 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
 						child->restoreHeight = child->height;
 						child->restoreX = child->x;
 						child->restoreY = child->y;
-						Window_move(child, 0, 0);
-						Window_resize(child, desktop->window.width, desktop->window.height);
+						Window_move(child, -3, -3);
+						Window_resize(child, desktop->window.width + 6, desktop->window.height + 6);
 					}
 					child->fullscreen ^= 1;
 					break;
@@ -766,7 +782,6 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
 				}
 			}
 
-	
 			if (onTitleBar) {
 				window->drag_off_x = mouse_x - child->x;
 				window->drag_off_y = mouse_y - child->y;
@@ -791,12 +806,27 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
 				break;
 			}
 
-			if (onBottomEdge) {
+			if (onLeftEdge) {
+				window->drag_off_x = mouse_x - child->width;
+				window->drag_off_y = mouse_y - child->height;
+				window->drag_child = child;
+				window->dragType = DRAG_TYPE_RESIZE_HZ_LEFT;
+				break;
+			}
 
+			if (onBottomEdge) {
 				window->drag_off_x = mouse_x - child->width;
 				window->drag_off_y = mouse_y - child->height;
 				window->drag_child = child;
 				window->dragType = DRAG_TYPE_RESIZE_VT;
+				break;
+			}
+
+			if (onTopEdge) {
+				window->drag_off_x = mouse_x - child->width;
+				window->drag_off_y = mouse_y - child->height;
+				window->drag_child = child;
+				window->dragType = DRAG_TYPE_RESIZE_VT_TOP;
 				break;
 			}
 		}
@@ -821,7 +851,6 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
 
 	//Update drag window to match the mouse if we have an active drag window
 	if (window->drag_child) {
-
 		if (window->dragType == DRAG_TYPE_MOVE) {
 			Window_move(window->drag_child, mouse_x - window->drag_off_x, mouse_y - window->drag_off_y);
 		} else if (window->dragType == DRAG_TYPE_RESIZE_ALL) {
@@ -830,6 +859,28 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
 			Window_resize(window->drag_child, mouse_x - window->drag_off_x, window->drag_child->height);
 		} else if (window->dragType == DRAG_TYPE_RESIZE_VT) {
 			Window_resize(window->drag_child, window->drag_child->width, mouse_y - window->drag_off_y);
+		
+		} else if (window->dragType == DRAG_TYPE_RESIZE_HZ_LEFT) {
+			int xmove = window->drag_child->x - mouse_x;
+			int oldwidth = window->drag_child->width;
+
+			Window_resize(window->drag_child, window->drag_child->width + xmove, window->drag_child->height);
+
+			//only move if the window could actually be resized (e.g. might become too small)
+			if (window->drag_child->width != oldwidth) {
+				Window_move(window->drag_child, mouse_x, window->drag_child->y);
+			}
+
+		} else if (window->dragType == DRAG_TYPE_RESIZE_VT_TOP) {
+			int xmove = window->drag_child->y - mouse_y;
+			int oldwidth = window->drag_child->height;
+
+			Window_resize(window->drag_child, window->drag_child->width, window->drag_child->height + xmove);
+
+			//only move if the window could actually be resized (e.g. might become too small)
+			if (window->drag_child->height != oldwidth) {
+				Window_move(window->drag_child, window->drag_child->x, mouse_y);
+			}
 		}
 	}
 

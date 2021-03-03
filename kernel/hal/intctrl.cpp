@@ -297,7 +297,26 @@ void displayProgramFault(const char* text)
 	}
 }
 
+bool (*x87FaultIntercept)(regs* r) = nullptr;
 bool (*gpFaultIntercept)(regs* r) = nullptr;
+
+void x87EmulHandler(regs* r, void* context)
+{
+	if (x87FaultIntercept) {
+		bool handled = x87FaultIntercept();
+		if (handled) {
+			return;
+		}
+	}
+
+	kprintf("General Protection Fault!\n");
+
+	displayDebugInfo(r);
+	displayProgramFault("x87 not available");
+
+	Thr::terminateFromIRQ();
+}
+
 void gpFault(regs* r, void* context)
 {
 	gpFaultIntercept = Vm::faultHandler;
@@ -411,7 +430,7 @@ InterruptController* setupInterruptController()
 	controller->installISRHandler(ISR_OVERFLOW, otherISRHandler);
 	controller->installISRHandler(ISR_BOUNDS, otherISRHandler);
 	controller->installISRHandler(ISR_INVALID_OPCODE, opcodeFault);
-	controller->installISRHandler(ISR_DEVICE_NOT_AVAILABLE, otherISRHandler);
+	controller->installISRHandler(ISR_DEVICE_NOT_AVAILABLE, x87EmulHandler);
 	controller->installISRHandler(ISR_DOUBLE_FAULT, doubleFault);
 	controller->installISRHandler(ISR_COPROCESSOR_SEGMENT_OVERRUN, otherISRHandler);
 	controller->installISRHandler(ISR_INVALID_TSS, otherISRHandler);

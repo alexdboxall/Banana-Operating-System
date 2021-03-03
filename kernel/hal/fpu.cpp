@@ -1,5 +1,6 @@
 #include "core/common.hpp"
 #include "hal/device.hpp"
+#include "hal/cpu.hpp"
 #include "hal/fpu.hpp"
 
 #include "hw/fpu/x87.hpp"
@@ -40,11 +41,11 @@ FPU* setupFPU() {
 	if (computer->features.hasx87) {
 		return (FPU*) new x87();
 	}
-	
-#ifdef JUMPER32
-	return (FPU*) new x87();
-#endif
+
+	kprintf("NO FPU!\n");
+
+	//turn on x87 emulation
+	thisCPU()->writeCR0(thisCPU()->readCR0() | 4);
     
-    panic("NO FPU!");
 	return nullptr;
 }

@@ -34,11 +34,13 @@ typedef void (*WindowDoubleClickHandler)(struct Window_struct*, int, int);
 typedef void (*WindowResizeHandler)(struct Window_struct*, int, int);
 typedef void (*WindowMoveHandler)(struct Window_struct*, int, int);
 
-#define DRAG_TYPE_NONE          0
-#define DRAG_TYPE_MOVE          1
-#define DRAG_TYPE_RESIZE_ALL    2
-#define DRAG_TYPE_RESIZE_HZ     3
-#define DRAG_TYPE_RESIZE_VT     4
+#define DRAG_TYPE_NONE              0
+#define DRAG_TYPE_MOVE              1
+#define DRAG_TYPE_RESIZE_ALL        2
+#define DRAG_TYPE_RESIZE_HZ         3
+#define DRAG_TYPE_RESIZE_VT         4
+#define DRAG_TYPE_RESIZE_HZ_LEFT    5
+#define DRAG_TYPE_RESIZE_VT_TOP     6
 
 typedef struct Window_struct {  
     struct Window_struct* parent;
