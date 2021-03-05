@@ -601,6 +601,7 @@ namespace Thr
 
 					if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum) {
 						if (critical) {
+							kprintf("Info = 0x%X\n", info);
 							kprintf("Dynamic? %d\n", dynamic);
 							kprintf("Addr = 0x%X, pos = 0x%X, *entry = 0x%X, entrypt = 0x%X, relocpt = 0x%X\n", addr, pos, *entry, entryPoint, relocationPoint);
 							kprintf("SYMBOL: %s\n", ((char*) stringTab) + symbolTab[symbolNum].st_name);
