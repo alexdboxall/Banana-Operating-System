@@ -566,7 +566,7 @@ namespace Thr
 					uint32_t x;
 					if (dynamic) {
 						x = addr + *entry;
-						if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum) {
+						if (info == 0x101 || info == 0x401 /*|| (info >> 8) < elf->shNum*/) {
 							if (critical) {
 								kprintf("SYMBOL: %s\n", ((char*) stringTab) + symbolTab[symbolNum].st_name);
 								panic("RELOCATION UNHANDLED CASE 1");
@@ -584,7 +584,7 @@ namespace Thr
 							}
 						}
 					} else {
-						if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum) {
+						if (info == 0x101 || info == 0x401 /*|| (info >> 8) < elf->shNum*/) {
 							x = *entry - entryPoint + relocationPoint;
 
 						} else {
@@ -599,7 +599,7 @@ namespace Thr
 					uint32_t* entry = (uint32_t*) (pos - entryPoint + relocationPoint);
 					uint32_t x;
 
-					if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum) {
+					if (info == 0x101 || info == 0x401 /*|| (info >> 8) < elf->shNum*/) {
 						if (critical) {
 							kprintf("Info = 0x%X\n", info);
 							kprintf("Dynamic? %d\n", dynamic);
