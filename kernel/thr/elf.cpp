@@ -568,6 +568,7 @@ namespace Thr
 						x = addr + *entry;
 						if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum) {
 							if (critical) {
+								kprintf("SYMBOL: %s\n", ((char*) stringTab) + symbolTab[symbolNum].st_name);
 								panic("RELOCATION UNHANDLED CASE 1");
 							} else {
 								f->close();
@@ -600,6 +601,7 @@ namespace Thr
 
 					if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum) {
 						if (critical) {
+							kprintf("SYMBOL: %s\n", ((char*) stringTab) + symbolTab[symbolNum].st_name);
 							panic("RELOCATION UNHANDLED CASE 2");
 						} else {
 							f->close();

@@ -239,7 +239,8 @@ Float80 fpuSub(Float80 x, Float80 y)
 
 Float80 fpuReverseSub(Float80 x, Float80 y)
 {
-    return fpuSub(y, x);
+    y.sign ^= 1;
+    return fpuAdd(y, x);
 }
 
 Float80 fpuMultiply(Float80 x, Float80 y)
