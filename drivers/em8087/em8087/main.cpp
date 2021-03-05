@@ -160,6 +160,11 @@ bool fpuIsSecondLarger(Float80 x, Float80 y)
     }
 }
 
+bool fpuAreEqual(Float80 x, Float80 y)
+{
+    return (x.exponent == y.exponent && x.sign == y.sign && x.fraction == y.fraction);
+}
+
 Float80 fpuNormalise(Float80 flt)
 {
     //ensure the top bit of the fraction is set
@@ -234,8 +239,7 @@ Float80 fpuSub(Float80 x, Float80 y)
 
 Float80 fpuReverseSub(Float80 x, Float80 y)
 {
-    x.sign ^= 1;
-    return fpuAdd(y, x);
+    return fpuSub(y, x);
 }
 
 Float80 fpuMultiply(Float80 x, Float80 y)
@@ -287,7 +291,6 @@ Float80 fpuDivide(Float80 x, Float80 y)
     Float80 product;
 
     product.sign = x.sign ^ y.sign;
-
     product.fraction = fpuMantissaDivision(x.fraction, y.fraction);
 
     if (y.fraction > x.fraction) {
@@ -319,13 +322,9 @@ Float80 fpuInverseSqrt(Float80 flt)
     guess.exponent = -((guess.exponent - EXPONENT_BIAS) >> 1) + EXPONENT_BIAS;
     flt.exponent--;
 
-    guess = fpuMultiply(guess, fpuSub(threeHalves, fpuMultiply(fpuSquare(guess), flt)));
-    guess = fpuMultiply(guess, fpuSub(threeHalves, fpuMultiply(fpuSquare(guess), flt)));
-    guess = fpuMultiply(guess, fpuSub(threeHalves, fpuMultiply(fpuSquare(guess), flt)));
-    guess = fpuMultiply(guess, fpuSub(threeHalves, fpuMultiply(fpuSquare(guess), flt)));
-    guess = fpuMultiply(guess, fpuSub(threeHalves, fpuMultiply(fpuSquare(guess), flt)));
-    guess = fpuMultiply(guess, fpuSub(threeHalves, fpuMultiply(fpuSquare(guess), flt)));
-    guess = fpuMultiply(guess, fpuSub(threeHalves, fpuMultiply(fpuSquare(guess), flt)));
+    for (int i = 0; i < 7; ++i) {
+        guess = fpuMultiply(guess, fpuSub(threeHalves, fpuMultiply(fpuSquare(guess), flt)));
+    }
 
     return guess;
 }
