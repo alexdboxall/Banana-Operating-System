@@ -4,996 +4,883 @@ packages/system/32/0002/em8087.sys:     file format elf32-i386
 
 Disassembly of section .text:
 
-10000000 <start()>:
-10000000:	c7 05 00 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x0,0x0	10000002: R_386_32	x87FaultIntercept
-	10000006: R_386_32	x87Handler(regs*)
-1000000a:	c3                   	ret    
+10000000 <x87Handler(regs*)>:
+10000000:	53                   	push   ebx
+10000001:	83 ec 10             	sub    esp,0x10
+10000004:	8b 44 24 18          	mov    eax,DWORD PTR [esp+0x18]
+10000008:	8b 58 38             	mov    ebx,DWORD PTR [eax+0x38]
+1000000b:	53                   	push   ebx
+1000000c:	68 d0 09 00 10       	push   0x100009d0	1000000d: R_386_32	.text
+10000011:	e8 fc ff ff ff       	call   10000012 <x87Handler(regs*)+0x12>	10000012: R_386_PC32	Dbg::kprintf(char const*, ...)
+10000016:	0f b6 43 02          	movzx  eax,BYTE PTR [ebx+0x2]
+1000001a:	50                   	push   eax
+1000001b:	0f b6 43 01          	movzx  eax,BYTE PTR [ebx+0x1]
+1000001f:	50                   	push   eax
+10000020:	0f b6 03             	movzx  eax,BYTE PTR [ebx]
+10000023:	50                   	push   eax
+10000024:	68 00 0a 00 10       	push   0x10000a00	10000025: R_386_32	.text
+10000029:	e8 fc ff ff ff       	call   1000002a <x87Handler(regs*)+0x2a>	1000002a: R_386_PC32	Dbg::kprintf(char const*, ...)
+1000002e:	83 c4 20             	add    esp,0x20
+10000031:	80 3b d9             	cmp    BYTE PTR [ebx],0xd9
+10000034:	74 07                	je     1000003d <x87Handler(regs*)+0x3d>
+10000036:	b0 00                	mov    al,0x0
+10000038:	83 c4 08             	add    esp,0x8
+1000003b:	5b                   	pop    ebx
+1000003c:	c3                   	ret    
+1000003d:	8a 43 01             	mov    al,BYTE PTR [ebx+0x1]
+10000040:	83 c0 18             	add    eax,0x18
+10000043:	3c 06                	cmp    al,0x6
+10000045:	0f 96 c0             	setbe  al
+10000048:	eb ee                	jmp    10000038 <x87Handler(regs*)+0x38>
 
-1000000b <fpuFloatToLong(_Float80)>:
-1000000b:	56                   	push   esi
-1000000c:	53                   	push   ebx
-1000000d:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
-10000011:	8d 90 01 c0 ff ff    	lea    edx,[eax-0x3fff]
-10000017:	66 83 fa 3e          	cmp    dx,0x3e
-1000001b:	77 31                	ja     1000004e <fpuFloatToLong(_Float80)+0x43>
-1000001d:	b9 3d 40 00 00       	mov    ecx,0x403d
-10000022:	29 c1                	sub    ecx,eax
-10000024:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
-10000028:	8b 54 24 10          	mov    edx,DWORD PTR [esp+0x10]
-1000002c:	0f ad d0             	shrd   eax,edx,cl
-1000002f:	d3 ea                	shr    edx,cl
-10000031:	f6 c1 20             	test   cl,0x20
-10000034:	74 04                	je     1000003a <fpuFloatToLong(_Float80)+0x2f>
-10000036:	89 d0                	mov    eax,edx
-10000038:	31 d2                	xor    edx,edx
-1000003a:	89 c3                	mov    ebx,eax
-1000003c:	89 d6                	mov    esi,edx
-1000003e:	80 7c 24 16 00       	cmp    BYTE PTR [esp+0x16],0x0
-10000043:	74 13                	je     10000058 <fpuFloatToLong(_Float80)+0x4d>
-10000045:	f7 db                	neg    ebx
-10000047:	83 d6 00             	adc    esi,0x0
-1000004a:	f7 de                	neg    esi
-1000004c:	eb 0a                	jmp    10000058 <fpuFloatToLong(_Float80)+0x4d>
-1000004e:	bb 00 00 00 00       	mov    ebx,0x0
-10000053:	be 00 00 00 00       	mov    esi,0x0
-10000058:	89 d8                	mov    eax,ebx
-1000005a:	89 f2                	mov    edx,esi
-1000005c:	5b                   	pop    ebx
-1000005d:	5e                   	pop    esi
-1000005e:	c3                   	ret    
+1000004a <start()>:
+1000004a:	c7 05 00 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x0,0x0	1000004c: R_386_32	x87FaultIntercept
+	10000050: R_386_32	x87Handler(regs*)
+10000054:	c3                   	ret    
 
-1000005f <fpuLongToFloat(long long)>:
-1000005f:	57                   	push   edi
-10000060:	56                   	push   esi
-10000061:	53                   	push   ebx
-10000062:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
-10000066:	8b 74 24 14          	mov    esi,DWORD PTR [esp+0x14]
-1000006a:	8b 7c 24 18          	mov    edi,DWORD PTR [esp+0x18]
-1000006e:	89 f9                	mov    ecx,edi
-10000070:	09 f1                	or     ecx,esi
-10000072:	75 1d                	jne    10000091 <fpuLongToFloat(long long)+0x32>
-10000074:	c6 40 0a 00          	mov    BYTE PTR [eax+0xa],0x0
-10000078:	66 c7 40 08 00 00    	mov    WORD PTR [eax+0x8],0x0
-1000007e:	c7 00 00 00 00 00    	mov    DWORD PTR [eax],0x0
-10000084:	c7 40 04 00 00 00 00 	mov    DWORD PTR [eax+0x4],0x0
-1000008b:	5b                   	pop    ebx
-1000008c:	5e                   	pop    esi
-1000008d:	5f                   	pop    edi
-1000008e:	c2 04 00             	ret    0x4
-10000091:	85 ff                	test   edi,edi
-10000093:	78 35                	js     100000ca <fpuLongToFloat(long long)+0x6b>
-10000095:	b2 00                	mov    dl,0x0
-10000097:	88 50 0a             	mov    BYTE PTR [eax+0xa],dl
-1000009a:	89 f1                	mov    ecx,esi
-1000009c:	89 fb                	mov    ebx,edi
-1000009e:	f7 c7 00 00 00 20    	test   edi,0x20000000
-100000a4:	75 2f                	jne    100000d5 <fpuLongToFloat(long long)+0x76>
-100000a6:	ba 00 00 00 00       	mov    edx,0x0
-100000ab:	01 c9                	add    ecx,ecx
-100000ad:	11 db                	adc    ebx,ebx
-100000af:	42                   	inc    edx
-100000b0:	f7 c3 00 00 00 20    	test   ebx,0x20000000
-100000b6:	74 f3                	je     100000ab <fpuLongToFloat(long long)+0x4c>
-100000b8:	89 08                	mov    DWORD PTR [eax],ecx
-100000ba:	89 58 04             	mov    DWORD PTR [eax+0x4],ebx
-100000bd:	b9 3d 40 00 00       	mov    ecx,0x403d
-100000c2:	29 d1                	sub    ecx,edx
-100000c4:	66 89 48 08          	mov    WORD PTR [eax+0x8],cx
-100000c8:	eb c1                	jmp    1000008b <fpuLongToFloat(long long)+0x2c>
-100000ca:	f7 de                	neg    esi
-100000cc:	83 d7 00             	adc    edi,0x0
-100000cf:	f7 df                	neg    edi
-100000d1:	b2 01                	mov    dl,0x1
-100000d3:	eb c2                	jmp    10000097 <fpuLongToFloat(long long)+0x38>
-100000d5:	ba 00 00 00 00       	mov    edx,0x0
-100000da:	eb dc                	jmp    100000b8 <fpuLongToFloat(long long)+0x59>
+10000055 <fpuFloatToLong(_Float80)>:
+10000055:	56                   	push   esi
+10000056:	53                   	push   ebx
+10000057:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
+1000005b:	8d 90 01 c0 ff ff    	lea    edx,[eax-0x3fff]
+10000061:	66 83 fa 3e          	cmp    dx,0x3e
+10000065:	77 31                	ja     10000098 <fpuFloatToLong(_Float80)+0x43>
+10000067:	b9 3d 40 00 00       	mov    ecx,0x403d
+1000006c:	29 c1                	sub    ecx,eax
+1000006e:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
+10000072:	8b 54 24 10          	mov    edx,DWORD PTR [esp+0x10]
+10000076:	0f ad d0             	shrd   eax,edx,cl
+10000079:	d3 ea                	shr    edx,cl
+1000007b:	f6 c1 20             	test   cl,0x20
+1000007e:	74 04                	je     10000084 <fpuFloatToLong(_Float80)+0x2f>
+10000080:	89 d0                	mov    eax,edx
+10000082:	31 d2                	xor    edx,edx
+10000084:	89 c3                	mov    ebx,eax
+10000086:	89 d6                	mov    esi,edx
+10000088:	80 7c 24 16 00       	cmp    BYTE PTR [esp+0x16],0x0
+1000008d:	74 13                	je     100000a2 <fpuFloatToLong(_Float80)+0x4d>
+1000008f:	f7 db                	neg    ebx
+10000091:	83 d6 00             	adc    esi,0x0
+10000094:	f7 de                	neg    esi
+10000096:	eb 0a                	jmp    100000a2 <fpuFloatToLong(_Float80)+0x4d>
+10000098:	bb 00 00 00 00       	mov    ebx,0x0
+1000009d:	be 00 00 00 00       	mov    esi,0x0
+100000a2:	89 d8                	mov    eax,ebx
+100000a4:	89 f2                	mov    edx,esi
+100000a6:	5b                   	pop    ebx
+100000a7:	5e                   	pop    esi
+100000a8:	c3                   	ret    
 
-100000dc <fpuGet0()>:
-100000dc:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
-100000e0:	c6 40 0a 00          	mov    BYTE PTR [eax+0xa],0x0
-100000e4:	c7 00 00 00 00 00    	mov    DWORD PTR [eax],0x0
-100000ea:	c7 40 04 00 00 00 00 	mov    DWORD PTR [eax+0x4],0x0
-100000f1:	66 c7 40 08 ff 3f    	mov    WORD PTR [eax+0x8],0x3fff
-100000f7:	c2 04 00             	ret    0x4
+100000a9 <fpuLongToFloat(long long)>:
+100000a9:	57                   	push   edi
+100000aa:	56                   	push   esi
+100000ab:	53                   	push   ebx
+100000ac:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
+100000b0:	8b 74 24 14          	mov    esi,DWORD PTR [esp+0x14]
+100000b4:	8b 7c 24 18          	mov    edi,DWORD PTR [esp+0x18]
+100000b8:	89 f9                	mov    ecx,edi
+100000ba:	09 f1                	or     ecx,esi
+100000bc:	75 1d                	jne    100000db <fpuLongToFloat(long long)+0x32>
+100000be:	c6 40 0a 00          	mov    BYTE PTR [eax+0xa],0x0
+100000c2:	66 c7 40 08 00 00    	mov    WORD PTR [eax+0x8],0x0
+100000c8:	c7 00 00 00 00 00    	mov    DWORD PTR [eax],0x0
+100000ce:	c7 40 04 00 00 00 00 	mov    DWORD PTR [eax+0x4],0x0
+100000d5:	5b                   	pop    ebx
+100000d6:	5e                   	pop    esi
+100000d7:	5f                   	pop    edi
+100000d8:	c2 04 00             	ret    0x4
+100000db:	85 ff                	test   edi,edi
+100000dd:	78 35                	js     10000114 <fpuLongToFloat(long long)+0x6b>
+100000df:	b2 00                	mov    dl,0x0
+100000e1:	88 50 0a             	mov    BYTE PTR [eax+0xa],dl
+100000e4:	89 f1                	mov    ecx,esi
+100000e6:	89 fb                	mov    ebx,edi
+100000e8:	f7 c7 00 00 00 20    	test   edi,0x20000000
+100000ee:	75 2f                	jne    1000011f <fpuLongToFloat(long long)+0x76>
+100000f0:	ba 00 00 00 00       	mov    edx,0x0
+100000f5:	01 c9                	add    ecx,ecx
+100000f7:	11 db                	adc    ebx,ebx
+100000f9:	42                   	inc    edx
+100000fa:	f7 c3 00 00 00 20    	test   ebx,0x20000000
+10000100:	74 f3                	je     100000f5 <fpuLongToFloat(long long)+0x4c>
+10000102:	89 08                	mov    DWORD PTR [eax],ecx
+10000104:	89 58 04             	mov    DWORD PTR [eax+0x4],ebx
+10000107:	b9 3d 40 00 00       	mov    ecx,0x403d
+1000010c:	29 d1                	sub    ecx,edx
+1000010e:	66 89 48 08          	mov    WORD PTR [eax+0x8],cx
+10000112:	eb c1                	jmp    100000d5 <fpuLongToFloat(long long)+0x2c>
+10000114:	f7 de                	neg    esi
+10000116:	83 d7 00             	adc    edi,0x0
+10000119:	f7 df                	neg    edi
+1000011b:	b2 01                	mov    dl,0x1
+1000011d:	eb c2                	jmp    100000e1 <fpuLongToFloat(long long)+0x38>
+1000011f:	ba 00 00 00 00       	mov    edx,0x0
+10000124:	eb dc                	jmp    10000102 <fpuLongToFloat(long long)+0x59>
 
-100000fa <fpuGet1()>:
-100000fa:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
-100000fe:	c6 40 0a 00          	mov    BYTE PTR [eax+0xa],0x0
-10000102:	c7 00 00 00 00 00    	mov    DWORD PTR [eax],0x0
-10000108:	c7 40 04 00 00 00 20 	mov    DWORD PTR [eax+0x4],0x20000000
-1000010f:	66 c7 40 08 ff 3f    	mov    WORD PTR [eax+0x8],0x3fff
-10000115:	c2 04 00             	ret    0x4
+10000126 <fpuGet0()>:
+10000126:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
+1000012a:	c6 40 0a 00          	mov    BYTE PTR [eax+0xa],0x0
+1000012e:	c7 00 00 00 00 00    	mov    DWORD PTR [eax],0x0
+10000134:	c7 40 04 00 00 00 00 	mov    DWORD PTR [eax+0x4],0x0
+1000013b:	66 c7 40 08 ff 3f    	mov    WORD PTR [eax+0x8],0x3fff
+10000141:	c2 04 00             	ret    0x4
 
-10000118 <fpuGetPi()>:
-10000118:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
-1000011c:	c6 40 0a 00          	mov    BYTE PTR [eax+0xa],0x0
-10000120:	c7 00 8c 30 5a 88    	mov    DWORD PTR [eax],0x885a308c
-10000126:	c7 40 04 a8 f6 43 32 	mov    DWORD PTR [eax+0x4],0x3243f6a8
-1000012d:	66 c7 40 08 01 40    	mov    WORD PTR [eax+0x8],0x4001
-10000133:	c2 04 00             	ret    0x4
+10000144 <fpuGet1()>:
+10000144:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
+10000148:	c6 40 0a 00          	mov    BYTE PTR [eax+0xa],0x0
+1000014c:	c7 00 00 00 00 00    	mov    DWORD PTR [eax],0x0
+10000152:	c7 40 04 00 00 00 20 	mov    DWORD PTR [eax+0x4],0x20000000
+10000159:	66 c7 40 08 ff 3f    	mov    WORD PTR [eax+0x8],0x3fff
+1000015f:	c2 04 00             	ret    0x4
 
-10000136 <fpuGetLog2E()>:
-10000136:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
-1000013a:	c6 40 0a 00          	mov    BYTE PTR [eax+0xa],0x0
-1000013e:	c7 00 1c fc 05 57    	mov    DWORD PTR [eax],0x5705fc1c
-10000144:	c7 40 04 ca 8e 2a 2e 	mov    DWORD PTR [eax+0x4],0x2e2a8eca
-1000014b:	66 c7 40 08 00 40    	mov    WORD PTR [eax+0x8],0x4000
-10000151:	c2 04 00             	ret    0x4
+10000162 <fpuGetPi()>:
+10000162:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
+10000166:	c6 40 0a 00          	mov    BYTE PTR [eax+0xa],0x0
+1000016a:	c7 00 8c 30 5a 88    	mov    DWORD PTR [eax],0x885a308c
+10000170:	c7 40 04 a8 f6 43 32 	mov    DWORD PTR [eax+0x4],0x3243f6a8
+10000177:	66 c7 40 08 01 40    	mov    WORD PTR [eax+0x8],0x4001
+1000017d:	c2 04 00             	ret    0x4
 
-10000154 <fpuGetLogE2()>:
-10000154:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
-10000158:	c6 40 0a 00          	mov    BYTE PTR [eax+0xa],0x0
-1000015c:	c7 00 68 de 73 f4    	mov    DWORD PTR [eax],0xf473de68
-10000162:	c7 40 04 fd 85 5c 2c 	mov    DWORD PTR [eax+0x4],0x2c5c85fd
-10000169:	66 c7 40 08 ff 3f    	mov    WORD PTR [eax+0x8],0x3fff
-1000016f:	c2 04 00             	ret    0x4
+10000180 <fpuGetLog2E()>:
+10000180:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
+10000184:	c6 40 0a 00          	mov    BYTE PTR [eax+0xa],0x0
+10000188:	c7 00 1c fc 05 57    	mov    DWORD PTR [eax],0x5705fc1c
+1000018e:	c7 40 04 ca 8e 2a 2e 	mov    DWORD PTR [eax+0x4],0x2e2a8eca
+10000195:	66 c7 40 08 00 40    	mov    WORD PTR [eax+0x8],0x4000
+1000019b:	c2 04 00             	ret    0x4
 
-10000172 <fpuGetLog210()>:
-10000172:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
-10000176:	c6 40 0a 00          	mov    BYTE PTR [eax+0xa],0x0
-1000017a:	c7 00 be e2 46 f3    	mov    DWORD PTR [eax],0xf346e2be
-10000180:	c7 40 04 12 9e 26 35 	mov    DWORD PTR [eax+0x4],0x35269e12
-10000187:	66 c7 40 08 01 40    	mov    WORD PTR [eax+0x8],0x4001
-1000018d:	c2 04 00             	ret    0x4
+1000019e <fpuGetLogE2()>:
+1000019e:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
+100001a2:	c6 40 0a 00          	mov    BYTE PTR [eax+0xa],0x0
+100001a6:	c7 00 68 de 73 f4    	mov    DWORD PTR [eax],0xf473de68
+100001ac:	c7 40 04 fd 85 5c 2c 	mov    DWORD PTR [eax+0x4],0x2c5c85fd
+100001b3:	66 c7 40 08 ff 3f    	mov    WORD PTR [eax+0x8],0x3fff
+100001b9:	c2 04 00             	ret    0x4
 
-10000190 <fpuGetLog102()>:
-10000190:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
-10000194:	c6 40 0a 00          	mov    BYTE PTR [eax+0xa],0x0
-10000198:	c7 00 e6 fd f3 3e    	mov    DWORD PTR [eax],0x3ef3fde6
-1000019e:	c7 40 04 a1 26 88 26 	mov    DWORD PTR [eax+0x4],0x268826a1
-100001a5:	66 c7 40 08 fe 3f    	mov    WORD PTR [eax+0x8],0x3ffe
-100001ab:	c2 04 00             	ret    0x4
+100001bc <fpuGetLog210()>:
+100001bc:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
+100001c0:	c6 40 0a 00          	mov    BYTE PTR [eax+0xa],0x0
+100001c4:	c7 00 be e2 46 f3    	mov    DWORD PTR [eax],0xf346e2be
+100001ca:	c7 40 04 12 9e 26 35 	mov    DWORD PTR [eax+0x4],0x35269e12
+100001d1:	66 c7 40 08 01 40    	mov    WORD PTR [eax+0x8],0x4001
+100001d7:	c2 04 00             	ret    0x4
 
-100001ae <fpuIsSecondLarger(_Float80, _Float80)>:
-100001ae:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
-100001b2:	8b 54 24 18          	mov    edx,DWORD PTR [esp+0x18]
-100001b6:	66 39 c2             	cmp    dx,ax
-100001b9:	77 16                	ja     100001d1 <fpuIsSecondLarger(_Float80, _Float80)+0x23>
-100001bb:	72 17                	jb     100001d4 <fpuIsSecondLarger(_Float80, _Float80)+0x26>
-100001bd:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
-100001c1:	39 44 24 04          	cmp    DWORD PTR [esp+0x4],eax
-100001c5:	8b 44 24 08          	mov    eax,DWORD PTR [esp+0x8]
-100001c9:	1b 44 24 14          	sbb    eax,DWORD PTR [esp+0x14]
-100001cd:	0f 92 c0             	setb   al
-100001d0:	c3                   	ret    
-100001d1:	b0 01                	mov    al,0x1
-100001d3:	c3                   	ret    
-100001d4:	b0 00                	mov    al,0x0
-100001d6:	c3                   	ret    
+100001da <fpuGetLog102()>:
+100001da:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
+100001de:	c6 40 0a 00          	mov    BYTE PTR [eax+0xa],0x0
+100001e2:	c7 00 e6 fd f3 3e    	mov    DWORD PTR [eax],0x3ef3fde6
+100001e8:	c7 40 04 a1 26 88 26 	mov    DWORD PTR [eax+0x4],0x268826a1
+100001ef:	66 c7 40 08 fe 3f    	mov    WORD PTR [eax+0x8],0x3ffe
+100001f5:	c2 04 00             	ret    0x4
 
-100001d7 <fpuAreEqual(_Float80, _Float80)>:
-100001d7:	8b 54 24 0c          	mov    edx,DWORD PTR [esp+0xc]
-100001db:	81 e2 ff ff ff 00    	and    edx,0xffffff
-100001e1:	8b 44 24 18          	mov    eax,DWORD PTR [esp+0x18]
-100001e5:	25 ff ff ff 00       	and    eax,0xffffff
-100001ea:	39 c2                	cmp    edx,eax
-100001ec:	74 03                	je     100001f1 <fpuAreEqual(_Float80, _Float80)+0x1a>
-100001ee:	b0 00                	mov    al,0x0
-100001f0:	c3                   	ret    
-100001f1:	8b 54 24 04          	mov    edx,DWORD PTR [esp+0x4]
-100001f5:	33 54 24 10          	xor    edx,DWORD PTR [esp+0x10]
-100001f9:	8b 44 24 08          	mov    eax,DWORD PTR [esp+0x8]
-100001fd:	33 44 24 14          	xor    eax,DWORD PTR [esp+0x14]
-10000201:	09 c2                	or     edx,eax
-10000203:	0f 94 c0             	sete   al
-10000206:	c3                   	ret    
+100001f8 <fpuIsSecondLarger(_Float80, _Float80)>:
+100001f8:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
+100001fc:	8b 54 24 18          	mov    edx,DWORD PTR [esp+0x18]
+10000200:	66 39 c2             	cmp    dx,ax
+10000203:	77 16                	ja     1000021b <fpuIsSecondLarger(_Float80, _Float80)+0x23>
+10000205:	72 17                	jb     1000021e <fpuIsSecondLarger(_Float80, _Float80)+0x26>
+10000207:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
+1000020b:	39 44 24 04          	cmp    DWORD PTR [esp+0x4],eax
+1000020f:	8b 44 24 08          	mov    eax,DWORD PTR [esp+0x8]
+10000213:	1b 44 24 14          	sbb    eax,DWORD PTR [esp+0x14]
+10000217:	0f 92 c0             	setb   al
+1000021a:	c3                   	ret    
+1000021b:	b0 01                	mov    al,0x1
+1000021d:	c3                   	ret    
+1000021e:	b0 00                	mov    al,0x0
+10000220:	c3                   	ret    
 
-10000207 <fpuNormalise(_Float80)>:
-10000207:	57                   	push   edi
-10000208:	56                   	push   esi
-10000209:	53                   	push   ebx
-1000020a:	83 ec 08             	sub    esp,0x8
-1000020d:	8b 44 24 18          	mov    eax,DWORD PTR [esp+0x18]
-10000211:	8b 74 24 1c          	mov    esi,DWORD PTR [esp+0x1c]
-10000215:	8b 7c 24 20          	mov    edi,DWORD PTR [esp+0x20]
-10000219:	8b 54 24 24          	mov    edx,DWORD PTR [esp+0x24]
-1000021d:	f7 c7 00 00 00 20    	test   edi,0x20000000
-10000223:	75 56                	jne    1000027b <fpuNormalise(_Float80)+0x74>
-10000225:	89 fb                	mov    ebx,edi
-10000227:	09 f3                	or     ebx,esi
-10000229:	74 2a                	je     10000255 <fpuNormalise(_Float80)+0x4e>
-1000022b:	4a                   	dec    edx
-1000022c:	89 f1                	mov    ecx,esi
-1000022e:	89 fb                	mov    ebx,edi
-10000230:	01 f1                	add    ecx,esi
-10000232:	11 fb                	adc    ebx,edi
-10000234:	89 0c 24             	mov    DWORD PTR [esp],ecx
-10000237:	89 5c 24 04          	mov    DWORD PTR [esp+0x4],ebx
-1000023b:	89 ce                	mov    esi,ecx
-1000023d:	89 df                	mov    edi,ebx
-1000023f:	f7 44 24 04 00 00 00 20 	test   DWORD PTR [esp+0x4],0x20000000
-10000247:	75 32                	jne    1000027b <fpuNormalise(_Float80)+0x74>
-10000249:	4a                   	dec    edx
-1000024a:	8b 0c 24             	mov    ecx,DWORD PTR [esp]
-1000024d:	8b 5c 24 04          	mov    ebx,DWORD PTR [esp+0x4]
-10000251:	09 cb                	or     ebx,ecx
-10000253:	75 d7                	jne    1000022c <fpuNormalise(_Float80)+0x25>
-10000255:	c7 44 24 1c 00 00 00 00 	mov    DWORD PTR [esp+0x1c],0x0
-1000025d:	c7 44 24 20 00 00 00 00 	mov    DWORD PTR [esp+0x20],0x0
-10000265:	66 c7 44 24 24 00 00 	mov    WORD PTR [esp+0x24],0x0
-1000026c:	8d 74 24 1c          	lea    esi,[esp+0x1c]
-10000270:	b9 03 00 00 00       	mov    ecx,0x3
-10000275:	89 c7                	mov    edi,eax
-10000277:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-10000279:	eb 1a                	jmp    10000295 <fpuNormalise(_Float80)+0x8e>
-1000027b:	89 74 24 1c          	mov    DWORD PTR [esp+0x1c],esi
-1000027f:	89 7c 24 20          	mov    DWORD PTR [esp+0x20],edi
-10000283:	66 89 54 24 24       	mov    WORD PTR [esp+0x24],dx
-10000288:	8d 74 24 1c          	lea    esi,[esp+0x1c]
-1000028c:	b9 03 00 00 00       	mov    ecx,0x3
-10000291:	89 c7                	mov    edi,eax
-10000293:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-10000295:	83 c4 08             	add    esp,0x8
-10000298:	5b                   	pop    ebx
-10000299:	5e                   	pop    esi
-1000029a:	5f                   	pop    edi
-1000029b:	c2 04 00             	ret    0x4
+10000221 <fpuAreEqual(_Float80, _Float80)>:
+10000221:	8b 54 24 0c          	mov    edx,DWORD PTR [esp+0xc]
+10000225:	81 e2 ff ff ff 00    	and    edx,0xffffff
+1000022b:	8b 44 24 18          	mov    eax,DWORD PTR [esp+0x18]
+1000022f:	25 ff ff ff 00       	and    eax,0xffffff
+10000234:	39 c2                	cmp    edx,eax
+10000236:	74 03                	je     1000023b <fpuAreEqual(_Float80, _Float80)+0x1a>
+10000238:	b0 00                	mov    al,0x0
+1000023a:	c3                   	ret    
+1000023b:	8b 54 24 04          	mov    edx,DWORD PTR [esp+0x4]
+1000023f:	33 54 24 10          	xor    edx,DWORD PTR [esp+0x10]
+10000243:	8b 44 24 08          	mov    eax,DWORD PTR [esp+0x8]
+10000247:	33 44 24 14          	xor    eax,DWORD PTR [esp+0x14]
+1000024b:	09 c2                	or     edx,eax
+1000024d:	0f 94 c0             	sete   al
+10000250:	c3                   	ret    
 
-1000029e <fpuAdd(_Float80, _Float80)>:
-1000029e:	55                   	push   ebp
-1000029f:	57                   	push   edi
-100002a0:	56                   	push   esi
-100002a1:	53                   	push   ebx
-100002a2:	83 ec 2c             	sub    esp,0x2c
-100002a5:	8b 5c 24 44          	mov    ebx,DWORD PTR [esp+0x44]
-100002a9:	8b 74 24 48          	mov    esi,DWORD PTR [esp+0x48]
-100002ad:	89 5c 24 10          	mov    DWORD PTR [esp+0x10],ebx
-100002b1:	89 74 24 14          	mov    DWORD PTR [esp+0x14],esi
-100002b5:	8b 44 24 4c          	mov    eax,DWORD PTR [esp+0x4c]
-100002b9:	8a 54 24 4e          	mov    dl,BYTE PTR [esp+0x4e]
-100002bd:	8b 7c 24 50          	mov    edi,DWORD PTR [esp+0x50]
-100002c1:	8b 6c 24 54          	mov    ebp,DWORD PTR [esp+0x54]
-100002c5:	89 3c 24             	mov    DWORD PTR [esp],edi
-100002c8:	89 6c 24 04          	mov    DWORD PTR [esp+0x4],ebp
-100002cc:	8b 4c 24 58          	mov    ecx,DWORD PTR [esp+0x58]
-100002d0:	66 89 4c 24 0c       	mov    WORD PTR [esp+0xc],cx
-100002d5:	8a 4c 24 5a          	mov    cl,BYTE PTR [esp+0x5a]
-100002d9:	88 4c 24 0f          	mov    BYTE PTR [esp+0xf],cl
-100002dd:	66 3b 44 24 0c       	cmp    ax,WORD PTR [esp+0xc]
-100002e2:	0f 82 dd 00 00 00    	jb     100003c5 <fpuAdd(_Float80, _Float80)+0x127>
-100002e8:	0f 87 0c 01 00 00    	ja     100003fa <fpuAdd(_Float80, _Float80)+0x15c>
-100002ee:	3b 1c 24             	cmp    ebx,DWORD PTR [esp]
-100002f1:	89 f7                	mov    edi,esi
-100002f3:	1b 7c 24 04          	sbb    edi,DWORD PTR [esp+0x4]
-100002f7:	0f 83 fd 00 00 00    	jae    100003fa <fpuAdd(_Float80, _Float80)+0x15c>
-100002fd:	89 d5                	mov    ebp,edx
-100002ff:	88 ca                	mov    dl,cl
-10000301:	89 e9                	mov    ecx,ebp
-10000303:	88 4c 24 0f          	mov    BYTE PTR [esp+0xf],cl
-10000307:	89 c5                	mov    ebp,eax
-10000309:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
-1000030d:	66 89 6c 24 0c       	mov    WORD PTR [esp+0xc],bp
-10000312:	89 f7                	mov    edi,esi
-10000314:	89 de                	mov    esi,ebx
-10000316:	8b 0c 24             	mov    ecx,DWORD PTR [esp]
-10000319:	8b 5c 24 04          	mov    ebx,DWORD PTR [esp+0x4]
-1000031d:	89 4c 24 10          	mov    DWORD PTR [esp+0x10],ecx
-10000321:	89 5c 24 14          	mov    DWORD PTR [esp+0x14],ebx
-10000325:	89 34 24             	mov    DWORD PTR [esp],esi
-10000328:	89 7c 24 04          	mov    DWORD PTR [esp+0x4],edi
-1000032c:	e9 c9 00 00 00       	jmp    100003fa <fpuAdd(_Float80, _Float80)+0x15c>
-10000331:	88 54 24 26          	mov    BYTE PTR [esp+0x26],dl
-10000335:	03 74 24 10          	add    esi,DWORD PTR [esp+0x10]
-10000339:	13 7c 24 14          	adc    edi,DWORD PTR [esp+0x14]
-1000033d:	89 74 24 1c          	mov    DWORD PTR [esp+0x1c],esi
-10000341:	89 7c 24 20          	mov    DWORD PTR [esp+0x20],edi
-10000345:	83 ec 0c             	sub    esp,0xc
-10000348:	8d 74 24 28          	lea    esi,[esp+0x28]
-1000034c:	b9 03 00 00 00       	mov    ecx,0x3
-10000351:	89 e7                	mov    edi,esp
-10000353:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-10000355:	ff 74 24 4c          	push   DWORD PTR [esp+0x4c]
-10000359:	e8 fc ff ff ff       	call   1000035a <fpuAdd(_Float80, _Float80)+0xbc>	1000035a: R_386_PC32	fpuNormalise(_Float80)
-1000035e:	8b 44 24 4c          	mov    eax,DWORD PTR [esp+0x4c]
-10000362:	83 c4 38             	add    esp,0x38
-10000365:	5b                   	pop    ebx
-10000366:	5e                   	pop    esi
-10000367:	5f                   	pop    edi
-10000368:	5d                   	pop    ebp
-10000369:	c2 04 00             	ret    0x4
-1000036c:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
-10000370:	8b 54 24 14          	mov    edx,DWORD PTR [esp+0x14]
-10000374:	29 f0                	sub    eax,esi
-10000376:	19 fa                	sbb    edx,edi
-10000378:	89 44 24 1c          	mov    DWORD PTR [esp+0x1c],eax
-1000037c:	89 54 24 20          	mov    DWORD PTR [esp+0x20],edx
-10000380:	c6 44 24 26 00       	mov    BYTE PTR [esp+0x26],0x0
-10000385:	eb be                	jmp    10000345 <fpuAdd(_Float80, _Float80)+0xa7>
-10000387:	84 d2                	test   dl,dl
-10000389:	74 ba                	je     10000345 <fpuAdd(_Float80, _Float80)+0xa7>
-1000038b:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
-1000038f:	8b 54 24 14          	mov    edx,DWORD PTR [esp+0x14]
-10000393:	39 c6                	cmp    esi,eax
-10000395:	89 f9                	mov    ecx,edi
-10000397:	19 d1                	sbb    ecx,edx
-10000399:	73 13                	jae    100003ae <fpuAdd(_Float80, _Float80)+0x110>
-1000039b:	29 f0                	sub    eax,esi
-1000039d:	19 fa                	sbb    edx,edi
-1000039f:	89 44 24 1c          	mov    DWORD PTR [esp+0x1c],eax
-100003a3:	89 54 24 20          	mov    DWORD PTR [esp+0x20],edx
-100003a7:	c6 44 24 26 01       	mov    BYTE PTR [esp+0x26],0x1
-100003ac:	eb 97                	jmp    10000345 <fpuAdd(_Float80, _Float80)+0xa7>
-100003ae:	2b 74 24 10          	sub    esi,DWORD PTR [esp+0x10]
-100003b2:	1b 7c 24 14          	sbb    edi,DWORD PTR [esp+0x14]
-100003b6:	89 74 24 1c          	mov    DWORD PTR [esp+0x1c],esi
-100003ba:	89 7c 24 20          	mov    DWORD PTR [esp+0x20],edi
-100003be:	c6 44 24 26 00       	mov    BYTE PTR [esp+0x26],0x0
-100003c3:	eb 80                	jmp    10000345 <fpuAdd(_Float80, _Float80)+0xa7>
-100003c5:	89 d5                	mov    ebp,edx
-100003c7:	8a 54 24 0f          	mov    dl,BYTE PTR [esp+0xf]
-100003cb:	89 e9                	mov    ecx,ebp
-100003cd:	88 4c 24 0f          	mov    BYTE PTR [esp+0xf],cl
-100003d1:	89 c5                	mov    ebp,eax
-100003d3:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
-100003d7:	66 89 6c 24 0c       	mov    WORD PTR [esp+0xc],bp
-100003dc:	8b 74 24 10          	mov    esi,DWORD PTR [esp+0x10]
-100003e0:	8b 7c 24 14          	mov    edi,DWORD PTR [esp+0x14]
-100003e4:	8b 0c 24             	mov    ecx,DWORD PTR [esp]
-100003e7:	8b 5c 24 04          	mov    ebx,DWORD PTR [esp+0x4]
-100003eb:	89 4c 24 10          	mov    DWORD PTR [esp+0x10],ecx
-100003ef:	89 5c 24 14          	mov    DWORD PTR [esp+0x14],ebx
-100003f3:	89 34 24             	mov    DWORD PTR [esp],esi
-100003f6:	89 7c 24 04          	mov    DWORD PTR [esp+0x4],edi
-100003fa:	88 c3                	mov    bl,al
-100003fc:	2b 5c 24 0c          	sub    ebx,DWORD PTR [esp+0xc]
-10000400:	88 d9                	mov    cl,bl
-10000402:	8b 34 24             	mov    esi,DWORD PTR [esp]
-10000405:	8b 7c 24 04          	mov    edi,DWORD PTR [esp+0x4]
-10000409:	0f ad fe             	shrd   esi,edi,cl
-1000040c:	d3 ef                	shr    edi,cl
-1000040e:	f6 c3 20             	test   bl,0x20
-10000411:	74 04                	je     10000417 <fpuAdd(_Float80, _Float80)+0x179>
-10000413:	89 fe                	mov    esi,edi
-10000415:	31 ff                	xor    edi,edi
-10000417:	66 89 44 24 24       	mov    WORD PTR [esp+0x24],ax
-1000041c:	3a 54 24 0f          	cmp    dl,BYTE PTR [esp+0xf]
-10000420:	0f 84 0b ff ff ff    	je     10000331 <fpuAdd(_Float80, _Float80)+0x93>
-10000426:	80 7c 24 0f 00       	cmp    BYTE PTR [esp+0xf],0x0
-1000042b:	0f 84 56 ff ff ff    	je     10000387 <fpuAdd(_Float80, _Float80)+0xe9>
-10000431:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
-10000435:	8b 54 24 14          	mov    edx,DWORD PTR [esp+0x14]
-10000439:	39 f0                	cmp    eax,esi
-1000043b:	89 d1                	mov    ecx,edx
-1000043d:	19 f9                	sbb    ecx,edi
-1000043f:	0f 83 27 ff ff ff    	jae    1000036c <fpuAdd(_Float80, _Float80)+0xce>
-10000445:	29 c6                	sub    esi,eax
-10000447:	19 d7                	sbb    edi,edx
-10000449:	89 74 24 1c          	mov    DWORD PTR [esp+0x1c],esi
-1000044d:	89 7c 24 20          	mov    DWORD PTR [esp+0x20],edi
-10000451:	c6 44 24 26 01       	mov    BYTE PTR [esp+0x26],0x1
-10000456:	e9 ea fe ff ff       	jmp    10000345 <fpuAdd(_Float80, _Float80)+0xa7>
+10000251 <fpuNormalise(_Float80)>:
+10000251:	57                   	push   edi
+10000252:	56                   	push   esi
+10000253:	53                   	push   ebx
+10000254:	83 ec 08             	sub    esp,0x8
+10000257:	8b 44 24 18          	mov    eax,DWORD PTR [esp+0x18]
+1000025b:	8b 74 24 1c          	mov    esi,DWORD PTR [esp+0x1c]
+1000025f:	8b 7c 24 20          	mov    edi,DWORD PTR [esp+0x20]
+10000263:	8b 54 24 24          	mov    edx,DWORD PTR [esp+0x24]
+10000267:	f7 c7 00 00 00 20    	test   edi,0x20000000
+1000026d:	75 56                	jne    100002c5 <fpuNormalise(_Float80)+0x74>
+1000026f:	89 fb                	mov    ebx,edi
+10000271:	09 f3                	or     ebx,esi
+10000273:	74 2a                	je     1000029f <fpuNormalise(_Float80)+0x4e>
+10000275:	4a                   	dec    edx
+10000276:	89 f1                	mov    ecx,esi
+10000278:	89 fb                	mov    ebx,edi
+1000027a:	01 f1                	add    ecx,esi
+1000027c:	11 fb                	adc    ebx,edi
+1000027e:	89 0c 24             	mov    DWORD PTR [esp],ecx
+10000281:	89 5c 24 04          	mov    DWORD PTR [esp+0x4],ebx
+10000285:	89 ce                	mov    esi,ecx
+10000287:	89 df                	mov    edi,ebx
+10000289:	f7 44 24 04 00 00 00 20 	test   DWORD PTR [esp+0x4],0x20000000
+10000291:	75 32                	jne    100002c5 <fpuNormalise(_Float80)+0x74>
+10000293:	4a                   	dec    edx
+10000294:	8b 0c 24             	mov    ecx,DWORD PTR [esp]
+10000297:	8b 5c 24 04          	mov    ebx,DWORD PTR [esp+0x4]
+1000029b:	09 cb                	or     ebx,ecx
+1000029d:	75 d7                	jne    10000276 <fpuNormalise(_Float80)+0x25>
+1000029f:	c7 44 24 1c 00 00 00 00 	mov    DWORD PTR [esp+0x1c],0x0
+100002a7:	c7 44 24 20 00 00 00 00 	mov    DWORD PTR [esp+0x20],0x0
+100002af:	66 c7 44 24 24 00 00 	mov    WORD PTR [esp+0x24],0x0
+100002b6:	8d 74 24 1c          	lea    esi,[esp+0x1c]
+100002ba:	b9 03 00 00 00       	mov    ecx,0x3
+100002bf:	89 c7                	mov    edi,eax
+100002c1:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+100002c3:	eb 1a                	jmp    100002df <fpuNormalise(_Float80)+0x8e>
+100002c5:	89 74 24 1c          	mov    DWORD PTR [esp+0x1c],esi
+100002c9:	89 7c 24 20          	mov    DWORD PTR [esp+0x20],edi
+100002cd:	66 89 54 24 24       	mov    WORD PTR [esp+0x24],dx
+100002d2:	8d 74 24 1c          	lea    esi,[esp+0x1c]
+100002d6:	b9 03 00 00 00       	mov    ecx,0x3
+100002db:	89 c7                	mov    edi,eax
+100002dd:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+100002df:	83 c4 08             	add    esp,0x8
+100002e2:	5b                   	pop    ebx
+100002e3:	5e                   	pop    esi
+100002e4:	5f                   	pop    edi
+100002e5:	c2 04 00             	ret    0x4
 
-1000045b <fpuAbs(_Float80)>:
-1000045b:	57                   	push   edi
-1000045c:	56                   	push   esi
-1000045d:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
-10000461:	c6 44 24 1a 00       	mov    BYTE PTR [esp+0x1a],0x0
-10000466:	8d 74 24 10          	lea    esi,[esp+0x10]
-1000046a:	b9 03 00 00 00       	mov    ecx,0x3
-1000046f:	89 c7                	mov    edi,eax
-10000471:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-10000473:	5e                   	pop    esi
-10000474:	5f                   	pop    edi
-10000475:	c2 04 00             	ret    0x4
+100002e8 <fpuAdd(_Float80, _Float80)>:
+100002e8:	55                   	push   ebp
+100002e9:	57                   	push   edi
+100002ea:	56                   	push   esi
+100002eb:	53                   	push   ebx
+100002ec:	83 ec 2c             	sub    esp,0x2c
+100002ef:	8b 5c 24 44          	mov    ebx,DWORD PTR [esp+0x44]
+100002f3:	8b 74 24 48          	mov    esi,DWORD PTR [esp+0x48]
+100002f7:	89 5c 24 10          	mov    DWORD PTR [esp+0x10],ebx
+100002fb:	89 74 24 14          	mov    DWORD PTR [esp+0x14],esi
+100002ff:	8b 44 24 4c          	mov    eax,DWORD PTR [esp+0x4c]
+10000303:	8a 54 24 4e          	mov    dl,BYTE PTR [esp+0x4e]
+10000307:	8b 7c 24 50          	mov    edi,DWORD PTR [esp+0x50]
+1000030b:	8b 6c 24 54          	mov    ebp,DWORD PTR [esp+0x54]
+1000030f:	89 3c 24             	mov    DWORD PTR [esp],edi
+10000312:	89 6c 24 04          	mov    DWORD PTR [esp+0x4],ebp
+10000316:	8b 4c 24 58          	mov    ecx,DWORD PTR [esp+0x58]
+1000031a:	66 89 4c 24 0c       	mov    WORD PTR [esp+0xc],cx
+1000031f:	8a 4c 24 5a          	mov    cl,BYTE PTR [esp+0x5a]
+10000323:	88 4c 24 0f          	mov    BYTE PTR [esp+0xf],cl
+10000327:	66 3b 44 24 0c       	cmp    ax,WORD PTR [esp+0xc]
+1000032c:	0f 82 dd 00 00 00    	jb     1000040f <fpuAdd(_Float80, _Float80)+0x127>
+10000332:	0f 87 0c 01 00 00    	ja     10000444 <fpuAdd(_Float80, _Float80)+0x15c>
+10000338:	3b 1c 24             	cmp    ebx,DWORD PTR [esp]
+1000033b:	89 f7                	mov    edi,esi
+1000033d:	1b 7c 24 04          	sbb    edi,DWORD PTR [esp+0x4]
+10000341:	0f 83 fd 00 00 00    	jae    10000444 <fpuAdd(_Float80, _Float80)+0x15c>
+10000347:	89 d5                	mov    ebp,edx
+10000349:	88 ca                	mov    dl,cl
+1000034b:	89 e9                	mov    ecx,ebp
+1000034d:	88 4c 24 0f          	mov    BYTE PTR [esp+0xf],cl
+10000351:	89 c5                	mov    ebp,eax
+10000353:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
+10000357:	66 89 6c 24 0c       	mov    WORD PTR [esp+0xc],bp
+1000035c:	89 f7                	mov    edi,esi
+1000035e:	89 de                	mov    esi,ebx
+10000360:	8b 0c 24             	mov    ecx,DWORD PTR [esp]
+10000363:	8b 5c 24 04          	mov    ebx,DWORD PTR [esp+0x4]
+10000367:	89 4c 24 10          	mov    DWORD PTR [esp+0x10],ecx
+1000036b:	89 5c 24 14          	mov    DWORD PTR [esp+0x14],ebx
+1000036f:	89 34 24             	mov    DWORD PTR [esp],esi
+10000372:	89 7c 24 04          	mov    DWORD PTR [esp+0x4],edi
+10000376:	e9 c9 00 00 00       	jmp    10000444 <fpuAdd(_Float80, _Float80)+0x15c>
+1000037b:	88 54 24 26          	mov    BYTE PTR [esp+0x26],dl
+1000037f:	03 74 24 10          	add    esi,DWORD PTR [esp+0x10]
+10000383:	13 7c 24 14          	adc    edi,DWORD PTR [esp+0x14]
+10000387:	89 74 24 1c          	mov    DWORD PTR [esp+0x1c],esi
+1000038b:	89 7c 24 20          	mov    DWORD PTR [esp+0x20],edi
+1000038f:	83 ec 0c             	sub    esp,0xc
+10000392:	8d 74 24 28          	lea    esi,[esp+0x28]
+10000396:	b9 03 00 00 00       	mov    ecx,0x3
+1000039b:	89 e7                	mov    edi,esp
+1000039d:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+1000039f:	ff 74 24 4c          	push   DWORD PTR [esp+0x4c]
+100003a3:	e8 fc ff ff ff       	call   100003a4 <fpuAdd(_Float80, _Float80)+0xbc>	100003a4: R_386_PC32	fpuNormalise(_Float80)
+100003a8:	8b 44 24 4c          	mov    eax,DWORD PTR [esp+0x4c]
+100003ac:	83 c4 38             	add    esp,0x38
+100003af:	5b                   	pop    ebx
+100003b0:	5e                   	pop    esi
+100003b1:	5f                   	pop    edi
+100003b2:	5d                   	pop    ebp
+100003b3:	c2 04 00             	ret    0x4
+100003b6:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
+100003ba:	8b 54 24 14          	mov    edx,DWORD PTR [esp+0x14]
+100003be:	29 f0                	sub    eax,esi
+100003c0:	19 fa                	sbb    edx,edi
+100003c2:	89 44 24 1c          	mov    DWORD PTR [esp+0x1c],eax
+100003c6:	89 54 24 20          	mov    DWORD PTR [esp+0x20],edx
+100003ca:	c6 44 24 26 00       	mov    BYTE PTR [esp+0x26],0x0
+100003cf:	eb be                	jmp    1000038f <fpuAdd(_Float80, _Float80)+0xa7>
+100003d1:	84 d2                	test   dl,dl
+100003d3:	74 ba                	je     1000038f <fpuAdd(_Float80, _Float80)+0xa7>
+100003d5:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
+100003d9:	8b 54 24 14          	mov    edx,DWORD PTR [esp+0x14]
+100003dd:	39 c6                	cmp    esi,eax
+100003df:	89 f9                	mov    ecx,edi
+100003e1:	19 d1                	sbb    ecx,edx
+100003e3:	73 13                	jae    100003f8 <fpuAdd(_Float80, _Float80)+0x110>
+100003e5:	29 f0                	sub    eax,esi
+100003e7:	19 fa                	sbb    edx,edi
+100003e9:	89 44 24 1c          	mov    DWORD PTR [esp+0x1c],eax
+100003ed:	89 54 24 20          	mov    DWORD PTR [esp+0x20],edx
+100003f1:	c6 44 24 26 01       	mov    BYTE PTR [esp+0x26],0x1
+100003f6:	eb 97                	jmp    1000038f <fpuAdd(_Float80, _Float80)+0xa7>
+100003f8:	2b 74 24 10          	sub    esi,DWORD PTR [esp+0x10]
+100003fc:	1b 7c 24 14          	sbb    edi,DWORD PTR [esp+0x14]
+10000400:	89 74 24 1c          	mov    DWORD PTR [esp+0x1c],esi
+10000404:	89 7c 24 20          	mov    DWORD PTR [esp+0x20],edi
+10000408:	c6 44 24 26 00       	mov    BYTE PTR [esp+0x26],0x0
+1000040d:	eb 80                	jmp    1000038f <fpuAdd(_Float80, _Float80)+0xa7>
+1000040f:	89 d5                	mov    ebp,edx
+10000411:	8a 54 24 0f          	mov    dl,BYTE PTR [esp+0xf]
+10000415:	89 e9                	mov    ecx,ebp
+10000417:	88 4c 24 0f          	mov    BYTE PTR [esp+0xf],cl
+1000041b:	89 c5                	mov    ebp,eax
+1000041d:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
+10000421:	66 89 6c 24 0c       	mov    WORD PTR [esp+0xc],bp
+10000426:	8b 74 24 10          	mov    esi,DWORD PTR [esp+0x10]
+1000042a:	8b 7c 24 14          	mov    edi,DWORD PTR [esp+0x14]
+1000042e:	8b 0c 24             	mov    ecx,DWORD PTR [esp]
+10000431:	8b 5c 24 04          	mov    ebx,DWORD PTR [esp+0x4]
+10000435:	89 4c 24 10          	mov    DWORD PTR [esp+0x10],ecx
+10000439:	89 5c 24 14          	mov    DWORD PTR [esp+0x14],ebx
+1000043d:	89 34 24             	mov    DWORD PTR [esp],esi
+10000440:	89 7c 24 04          	mov    DWORD PTR [esp+0x4],edi
+10000444:	88 c3                	mov    bl,al
+10000446:	2b 5c 24 0c          	sub    ebx,DWORD PTR [esp+0xc]
+1000044a:	88 d9                	mov    cl,bl
+1000044c:	8b 34 24             	mov    esi,DWORD PTR [esp]
+1000044f:	8b 7c 24 04          	mov    edi,DWORD PTR [esp+0x4]
+10000453:	0f ad fe             	shrd   esi,edi,cl
+10000456:	d3 ef                	shr    edi,cl
+10000458:	f6 c3 20             	test   bl,0x20
+1000045b:	74 04                	je     10000461 <fpuAdd(_Float80, _Float80)+0x179>
+1000045d:	89 fe                	mov    esi,edi
+1000045f:	31 ff                	xor    edi,edi
+10000461:	66 89 44 24 24       	mov    WORD PTR [esp+0x24],ax
+10000466:	3a 54 24 0f          	cmp    dl,BYTE PTR [esp+0xf]
+1000046a:	0f 84 0b ff ff ff    	je     1000037b <fpuAdd(_Float80, _Float80)+0x93>
+10000470:	80 7c 24 0f 00       	cmp    BYTE PTR [esp+0xf],0x0
+10000475:	0f 84 56 ff ff ff    	je     100003d1 <fpuAdd(_Float80, _Float80)+0xe9>
+1000047b:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
+1000047f:	8b 54 24 14          	mov    edx,DWORD PTR [esp+0x14]
+10000483:	39 f0                	cmp    eax,esi
+10000485:	89 d1                	mov    ecx,edx
+10000487:	19 f9                	sbb    ecx,edi
+10000489:	0f 83 27 ff ff ff    	jae    100003b6 <fpuAdd(_Float80, _Float80)+0xce>
+1000048f:	29 c6                	sub    esi,eax
+10000491:	19 d7                	sbb    edi,edx
+10000493:	89 74 24 1c          	mov    DWORD PTR [esp+0x1c],esi
+10000497:	89 7c 24 20          	mov    DWORD PTR [esp+0x20],edi
+1000049b:	c6 44 24 26 01       	mov    BYTE PTR [esp+0x26],0x1
+100004a0:	e9 ea fe ff ff       	jmp    1000038f <fpuAdd(_Float80, _Float80)+0xa7>
 
-10000478 <fpuSub(_Float80, _Float80)>:
-10000478:	57                   	push   edi
-10000479:	56                   	push   esi
-1000047a:	53                   	push   ebx
-1000047b:	8b 5c 24 10          	mov    ebx,DWORD PTR [esp+0x10]
-1000047f:	80 74 24 2a 01       	xor    BYTE PTR [esp+0x2a],0x1
-10000484:	83 ec 10             	sub    esp,0x10
-10000487:	8d 74 24 30          	lea    esi,[esp+0x30]
-1000048b:	b9 03 00 00 00       	mov    ecx,0x3
-10000490:	89 e7                	mov    edi,esp
-10000492:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-10000494:	83 ec 0c             	sub    esp,0xc
-10000497:	8d 74 24 30          	lea    esi,[esp+0x30]
-1000049b:	b9 03 00 00 00       	mov    ecx,0x3
-100004a0:	89 e7                	mov    edi,esp
-100004a2:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-100004a4:	53                   	push   ebx
-100004a5:	e8 fc ff ff ff       	call   100004a6 <fpuSub(_Float80, _Float80)+0x2e>	100004a6: R_386_PC32	fpuAdd(_Float80, _Float80)
-100004aa:	83 c4 1c             	add    esp,0x1c
-100004ad:	89 d8                	mov    eax,ebx
-100004af:	5b                   	pop    ebx
-100004b0:	5e                   	pop    esi
-100004b1:	5f                   	pop    edi
-100004b2:	c2 04 00             	ret    0x4
+100004a5 <fpuAbs(_Float80)>:
+100004a5:	57                   	push   edi
+100004a6:	56                   	push   esi
+100004a7:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
+100004ab:	c6 44 24 1a 00       	mov    BYTE PTR [esp+0x1a],0x0
+100004b0:	8d 74 24 10          	lea    esi,[esp+0x10]
+100004b4:	b9 03 00 00 00       	mov    ecx,0x3
+100004b9:	89 c7                	mov    edi,eax
+100004bb:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+100004bd:	5e                   	pop    esi
+100004be:	5f                   	pop    edi
+100004bf:	c2 04 00             	ret    0x4
 
-100004b5 <fpuReverseSub(_Float80, _Float80)>:
-100004b5:	57                   	push   edi
-100004b6:	56                   	push   esi
-100004b7:	53                   	push   ebx
-100004b8:	8b 5c 24 10          	mov    ebx,DWORD PTR [esp+0x10]
-100004bc:	83 ec 10             	sub    esp,0x10
-100004bf:	8d 74 24 24          	lea    esi,[esp+0x24]
-100004c3:	b9 03 00 00 00       	mov    ecx,0x3
-100004c8:	89 e7                	mov    edi,esp
-100004ca:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-100004cc:	83 ec 0c             	sub    esp,0xc
-100004cf:	8d 74 24 3c          	lea    esi,[esp+0x3c]
-100004d3:	b9 03 00 00 00       	mov    ecx,0x3
-100004d8:	89 e7                	mov    edi,esp
-100004da:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-100004dc:	53                   	push   ebx
-100004dd:	e8 fc ff ff ff       	call   100004de <fpuReverseSub(_Float80, _Float80)+0x29>	100004de: R_386_PC32	fpuSub(_Float80, _Float80)
-100004e2:	83 c4 1c             	add    esp,0x1c
-100004e5:	89 d8                	mov    eax,ebx
-100004e7:	5b                   	pop    ebx
-100004e8:	5e                   	pop    esi
-100004e9:	5f                   	pop    edi
-100004ea:	c2 04 00             	ret    0x4
+100004c2 <fpuSub(_Float80, _Float80)>:
+100004c2:	57                   	push   edi
+100004c3:	56                   	push   esi
+100004c4:	53                   	push   ebx
+100004c5:	8b 5c 24 10          	mov    ebx,DWORD PTR [esp+0x10]
+100004c9:	80 74 24 2a 01       	xor    BYTE PTR [esp+0x2a],0x1
+100004ce:	83 ec 10             	sub    esp,0x10
+100004d1:	8d 74 24 30          	lea    esi,[esp+0x30]
+100004d5:	b9 03 00 00 00       	mov    ecx,0x3
+100004da:	89 e7                	mov    edi,esp
+100004dc:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+100004de:	83 ec 0c             	sub    esp,0xc
+100004e1:	8d 74 24 30          	lea    esi,[esp+0x30]
+100004e5:	b9 03 00 00 00       	mov    ecx,0x3
+100004ea:	89 e7                	mov    edi,esp
+100004ec:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+100004ee:	53                   	push   ebx
+100004ef:	e8 fc ff ff ff       	call   100004f0 <fpuSub(_Float80, _Float80)+0x2e>	100004f0: R_386_PC32	fpuAdd(_Float80, _Float80)
+100004f4:	83 c4 1c             	add    esp,0x1c
+100004f7:	89 d8                	mov    eax,ebx
+100004f9:	5b                   	pop    ebx
+100004fa:	5e                   	pop    esi
+100004fb:	5f                   	pop    edi
+100004fc:	c2 04 00             	ret    0x4
 
-100004ed <fpuMultiply(_Float80, _Float80)>:
-100004ed:	57                   	push   edi
-100004ee:	56                   	push   esi
-100004ef:	53                   	push   ebx
-100004f0:	83 ec 24             	sub    esp,0x24
-100004f3:	8b 5c 24 34          	mov    ebx,DWORD PTR [esp+0x34]
-100004f7:	8b 44 24 38          	mov    eax,DWORD PTR [esp+0x38]
-100004fb:	8b 54 24 3c          	mov    edx,DWORD PTR [esp+0x3c]
-100004ff:	0f ac d0 1f          	shrd   eax,edx,0x1f
-10000503:	c1 ea 1f             	shr    edx,0x1f
-10000506:	89 44 24 0c          	mov    DWORD PTR [esp+0xc],eax
-1000050a:	89 54 24 10          	mov    DWORD PTR [esp+0x10],edx
-1000050e:	8b 74 24 44          	mov    esi,DWORD PTR [esp+0x44]
-10000512:	8b 7c 24 48          	mov    edi,DWORD PTR [esp+0x48]
-10000516:	0f ac fe 1f          	shrd   esi,edi,0x1f
-1000051a:	c1 ef 1f             	shr    edi,0x1f
-1000051d:	8a 44 24 4e          	mov    al,BYTE PTR [esp+0x4e]
-10000521:	38 44 24 42          	cmp    BYTE PTR [esp+0x42],al
-10000525:	0f 95 44 24 22       	setne  BYTE PTR [esp+0x22]
-1000052a:	8b 4c 24 4c          	mov    ecx,DWORD PTR [esp+0x4c]
-1000052e:	03 4c 24 40          	add    ecx,DWORD PTR [esp+0x40]
-10000532:	81 e9 ff 3f 00 00    	sub    ecx,0x3fff
-10000538:	66 89 4c 24 20       	mov    WORD PTR [esp+0x20],cx
-1000053d:	8b 4c 24 10          	mov    ecx,DWORD PTR [esp+0x10]
-10000541:	0f af ce             	imul   ecx,esi
-10000544:	89 fa                	mov    edx,edi
-10000546:	0f af 54 24 0c       	imul   edx,DWORD PTR [esp+0xc]
-1000054b:	01 d1                	add    ecx,edx
-1000054d:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
-10000551:	f7 e6                	mul    esi
-10000553:	01 ca                	add    edx,ecx
-10000555:	89 44 24 18          	mov    DWORD PTR [esp+0x18],eax
-10000559:	89 54 24 1c          	mov    DWORD PTR [esp+0x1c],edx
-1000055d:	8d 74 24 18          	lea    esi,[esp+0x18]
-10000561:	b9 03 00 00 00       	mov    ecx,0x3
-10000566:	89 e7                	mov    edi,esp
-10000568:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-1000056a:	53                   	push   ebx
-1000056b:	e8 fc ff ff ff       	call   1000056c <fpuMultiply(_Float80, _Float80)+0x7f>	1000056c: R_386_PC32	fpuNormalise(_Float80)
-10000570:	89 d8                	mov    eax,ebx
-10000572:	83 c4 24             	add    esp,0x24
-10000575:	5b                   	pop    ebx
-10000576:	5e                   	pop    esi
-10000577:	5f                   	pop    edi
-10000578:	c2 04 00             	ret    0x4
+100004ff <fpuReverseSub(_Float80, _Float80)>:
+100004ff:	57                   	push   edi
+10000500:	56                   	push   esi
+10000501:	53                   	push   ebx
+10000502:	8b 5c 24 10          	mov    ebx,DWORD PTR [esp+0x10]
+10000506:	80 74 24 2a 01       	xor    BYTE PTR [esp+0x2a],0x1
+1000050b:	83 ec 10             	sub    esp,0x10
+1000050e:	8d 74 24 24          	lea    esi,[esp+0x24]
+10000512:	b9 03 00 00 00       	mov    ecx,0x3
+10000517:	89 e7                	mov    edi,esp
+10000519:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+1000051b:	83 ec 0c             	sub    esp,0xc
+1000051e:	8d 74 24 3c          	lea    esi,[esp+0x3c]
+10000522:	b9 03 00 00 00       	mov    ecx,0x3
+10000527:	89 e7                	mov    edi,esp
+10000529:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+1000052b:	53                   	push   ebx
+1000052c:	e8 fc ff ff ff       	call   1000052d <fpuReverseSub(_Float80, _Float80)+0x2e>	1000052d: R_386_PC32	fpuAdd(_Float80, _Float80)
+10000531:	83 c4 1c             	add    esp,0x1c
+10000534:	89 d8                	mov    eax,ebx
+10000536:	5b                   	pop    ebx
+10000537:	5e                   	pop    esi
+10000538:	5f                   	pop    edi
+10000539:	c2 04 00             	ret    0x4
 
-1000057b <fpuMantissaDivision(unsigned long long, unsigned long long)>:
-1000057b:	55                   	push   ebp
-1000057c:	57                   	push   edi
-1000057d:	56                   	push   esi
-1000057e:	53                   	push   ebx
-1000057f:	83 ec 24             	sub    esp,0x24
-10000582:	8b 44 24 38          	mov    eax,DWORD PTR [esp+0x38]
-10000586:	8b 54 24 3c          	mov    edx,DWORD PTR [esp+0x3c]
-1000058a:	89 44 24 18          	mov    DWORD PTR [esp+0x18],eax
-1000058e:	89 54 24 1c          	mov    DWORD PTR [esp+0x1c],edx
-10000592:	8b 44 24 40          	mov    eax,DWORD PTR [esp+0x40]
-10000596:	8b 54 24 44          	mov    edx,DWORD PTR [esp+0x44]
-1000059a:	89 44 24 08          	mov    DWORD PTR [esp+0x8],eax
-1000059e:	89 54 24 0c          	mov    DWORD PTR [esp+0xc],edx
-100005a2:	bd 3d 00 00 00       	mov    ebp,0x3d
-100005a7:	bb ff ff ff ff       	mov    ebx,0xffffffff
-100005ac:	be 00 00 00 00       	mov    esi,0x0
-100005b1:	bf 00 00 00 00       	mov    edi,0x0
-100005b6:	c7 44 24 14 00 00 00 00 	mov    DWORD PTR [esp+0x14],0x0
-100005be:	c7 44 24 10 00 00 00 00 	mov    DWORD PTR [esp+0x10],0x0
-100005c6:	eb 4c                	jmp    10000614 <fpuMantissaDivision(unsigned long long, unsigned long long)+0x99>
-100005c8:	8b 74 24 18          	mov    esi,DWORD PTR [esp+0x18]
-100005cc:	8b 7c 24 1c          	mov    edi,DWORD PTR [esp+0x1c]
-100005d0:	89 e9                	mov    ecx,ebp
-100005d2:	0f ad fe             	shrd   esi,edi,cl
-100005d5:	d3 ef                	shr    edi,cl
-100005d7:	f6 c1 20             	test   cl,0x20
-100005da:	74 02                	je     100005de <fpuMantissaDivision(unsigned long long, unsigned long long)+0x63>
-100005dc:	89 fe                	mov    esi,edi
-100005de:	89 f1                	mov    ecx,esi
-100005e0:	83 e1 01             	and    ecx,0x1
-100005e3:	8b 54 24 04          	mov    edx,DWORD PTR [esp+0x4]
-100005e7:	0b 0c 24             	or     ecx,DWORD PTR [esp]
-100005ea:	89 ce                	mov    esi,ecx
-100005ec:	89 d7                	mov    edi,edx
-100005ee:	8b 44 24 08          	mov    eax,DWORD PTR [esp+0x8]
-100005f2:	8b 54 24 0c          	mov    edx,DWORD PTR [esp+0xc]
-100005f6:	39 c1                	cmp    ecx,eax
-100005f8:	89 f9                	mov    ecx,edi
-100005fa:	19 d1                	sbb    ecx,edx
-100005fc:	72 15                	jb     10000613 <fpuMantissaDivision(unsigned long long, unsigned long long)+0x98>
-100005fe:	2b 74 24 08          	sub    esi,DWORD PTR [esp+0x8]
-10000602:	1b 7c 24 0c          	sbb    edi,DWORD PTR [esp+0xc]
-10000606:	81 4c 24 10 00 00 00 20 	or     DWORD PTR [esp+0x10],0x20000000
-1000060e:	bb 3c 00 00 00       	mov    ebx,0x3c
-10000613:	4d                   	dec    ebp
-10000614:	89 f0                	mov    eax,esi
-10000616:	89 fa                	mov    edx,edi
-10000618:	01 f0                	add    eax,esi
-1000061a:	11 fa                	adc    edx,edi
-1000061c:	89 c6                	mov    esi,eax
-1000061e:	89 d7                	mov    edi,edx
-10000620:	89 04 24             	mov    DWORD PTR [esp],eax
-10000623:	89 54 24 04          	mov    DWORD PTR [esp+0x4],edx
-10000627:	83 fb ff             	cmp    ebx,0xffffffff
-1000062a:	74 9c                	je     100005c8 <fpuMantissaDivision(unsigned long long, unsigned long long)+0x4d>
-1000062c:	8b 44 24 08          	mov    eax,DWORD PTR [esp+0x8]
-10000630:	8b 54 24 0c          	mov    edx,DWORD PTR [esp+0xc]
-10000634:	39 04 24             	cmp    DWORD PTR [esp],eax
-10000637:	8b 4c 24 04          	mov    ecx,DWORD PTR [esp+0x4]
-1000063b:	19 d1                	sbb    ecx,edx
-1000063d:	72 2e                	jb     1000066d <fpuMantissaDivision(unsigned long long, unsigned long long)+0xf2>
-1000063f:	8b 04 24             	mov    eax,DWORD PTR [esp]
-10000642:	8b 54 24 04          	mov    edx,DWORD PTR [esp+0x4]
-10000646:	2b 44 24 08          	sub    eax,DWORD PTR [esp+0x8]
-1000064a:	1b 54 24 0c          	sbb    edx,DWORD PTR [esp+0xc]
-1000064e:	89 c6                	mov    esi,eax
-10000650:	89 d7                	mov    edi,edx
-10000652:	88 d9                	mov    cl,bl
-10000654:	31 c0                	xor    eax,eax
-10000656:	31 d2                	xor    edx,edx
-10000658:	f6 c3 20             	test   bl,0x20
-1000065b:	0f 94 c0             	sete   al
-1000065e:	0f 95 c2             	setne  dl
-10000661:	d3 e0                	shl    eax,cl
-10000663:	d3 e2                	shl    edx,cl
-10000665:	09 44 24 14          	or     DWORD PTR [esp+0x14],eax
-10000669:	09 54 24 10          	or     DWORD PTR [esp+0x10],edx
-1000066d:	85 db                	test   ebx,ebx
-1000066f:	78 a2                	js     10000613 <fpuMantissaDivision(unsigned long long, unsigned long long)+0x98>
-10000671:	4b                   	dec    ebx
-10000672:	75 9f                	jne    10000613 <fpuMantissaDivision(unsigned long long, unsigned long long)+0x98>
-10000674:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
-10000678:	8b 54 24 10          	mov    edx,DWORD PTR [esp+0x10]
-1000067c:	83 c4 24             	add    esp,0x24
-1000067f:	5b                   	pop    ebx
-10000680:	5e                   	pop    esi
-10000681:	5f                   	pop    edi
-10000682:	5d                   	pop    ebp
-10000683:	c3                   	ret    
+1000053c <fpuMultiply(_Float80, _Float80)>:
+1000053c:	57                   	push   edi
+1000053d:	56                   	push   esi
+1000053e:	53                   	push   ebx
+1000053f:	83 ec 24             	sub    esp,0x24
+10000542:	8b 5c 24 34          	mov    ebx,DWORD PTR [esp+0x34]
+10000546:	8b 44 24 38          	mov    eax,DWORD PTR [esp+0x38]
+1000054a:	8b 54 24 3c          	mov    edx,DWORD PTR [esp+0x3c]
+1000054e:	0f ac d0 1f          	shrd   eax,edx,0x1f
+10000552:	c1 ea 1f             	shr    edx,0x1f
+10000555:	89 44 24 0c          	mov    DWORD PTR [esp+0xc],eax
+10000559:	89 54 24 10          	mov    DWORD PTR [esp+0x10],edx
+1000055d:	8b 74 24 44          	mov    esi,DWORD PTR [esp+0x44]
+10000561:	8b 7c 24 48          	mov    edi,DWORD PTR [esp+0x48]
+10000565:	0f ac fe 1f          	shrd   esi,edi,0x1f
+10000569:	c1 ef 1f             	shr    edi,0x1f
+1000056c:	8a 44 24 4e          	mov    al,BYTE PTR [esp+0x4e]
+10000570:	38 44 24 42          	cmp    BYTE PTR [esp+0x42],al
+10000574:	0f 95 44 24 22       	setne  BYTE PTR [esp+0x22]
+10000579:	8b 4c 24 4c          	mov    ecx,DWORD PTR [esp+0x4c]
+1000057d:	03 4c 24 40          	add    ecx,DWORD PTR [esp+0x40]
+10000581:	81 e9 ff 3f 00 00    	sub    ecx,0x3fff
+10000587:	66 89 4c 24 20       	mov    WORD PTR [esp+0x20],cx
+1000058c:	8b 4c 24 10          	mov    ecx,DWORD PTR [esp+0x10]
+10000590:	0f af ce             	imul   ecx,esi
+10000593:	89 fa                	mov    edx,edi
+10000595:	0f af 54 24 0c       	imul   edx,DWORD PTR [esp+0xc]
+1000059a:	01 d1                	add    ecx,edx
+1000059c:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
+100005a0:	f7 e6                	mul    esi
+100005a2:	01 ca                	add    edx,ecx
+100005a4:	89 44 24 18          	mov    DWORD PTR [esp+0x18],eax
+100005a8:	89 54 24 1c          	mov    DWORD PTR [esp+0x1c],edx
+100005ac:	8d 74 24 18          	lea    esi,[esp+0x18]
+100005b0:	b9 03 00 00 00       	mov    ecx,0x3
+100005b5:	89 e7                	mov    edi,esp
+100005b7:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+100005b9:	53                   	push   ebx
+100005ba:	e8 fc ff ff ff       	call   100005bb <fpuMultiply(_Float80, _Float80)+0x7f>	100005bb: R_386_PC32	fpuNormalise(_Float80)
+100005bf:	89 d8                	mov    eax,ebx
+100005c1:	83 c4 24             	add    esp,0x24
+100005c4:	5b                   	pop    ebx
+100005c5:	5e                   	pop    esi
+100005c6:	5f                   	pop    edi
+100005c7:	c2 04 00             	ret    0x4
 
-10000684 <fpuDivide(_Float80, _Float80)>:
-10000684:	55                   	push   ebp
-10000685:	57                   	push   edi
-10000686:	56                   	push   esi
-10000687:	53                   	push   ebx
-10000688:	83 ec 1c             	sub    esp,0x1c
-1000068b:	8b 74 24 34          	mov    esi,DWORD PTR [esp+0x34]
-1000068f:	8b 7c 24 38          	mov    edi,DWORD PTR [esp+0x38]
-10000693:	8b 5c 24 3c          	mov    ebx,DWORD PTR [esp+0x3c]
-10000697:	8b 44 24 40          	mov    eax,DWORD PTR [esp+0x40]
-1000069b:	8b 54 24 44          	mov    edx,DWORD PTR [esp+0x44]
-1000069f:	89 d1                	mov    ecx,edx
-100006a1:	89 c2                	mov    edx,eax
-100006a3:	8b 6c 24 48          	mov    ebp,DWORD PTR [esp+0x48]
-100006a7:	8a 44 24 4a          	mov    al,BYTE PTR [esp+0x4a]
-100006ab:	38 44 24 3e          	cmp    BYTE PTR [esp+0x3e],al
-100006af:	0f 95 44 24 16       	setne  BYTE PTR [esp+0x16]
-100006b4:	89 14 24             	mov    DWORD PTR [esp],edx
-100006b7:	89 4c 24 04          	mov    DWORD PTR [esp+0x4],ecx
-100006bb:	51                   	push   ecx
-100006bc:	52                   	push   edx
-100006bd:	57                   	push   edi
-100006be:	56                   	push   esi
-100006bf:	e8 fc ff ff ff       	call   100006c0 <fpuDivide(_Float80, _Float80)+0x3c>	100006c0: R_386_PC32	fpuMantissaDivision(unsigned long long, unsigned long long)
-100006c4:	83 c4 10             	add    esp,0x10
-100006c7:	89 44 24 0c          	mov    DWORD PTR [esp+0xc],eax
-100006cb:	89 54 24 10          	mov    DWORD PTR [esp+0x10],edx
-100006cf:	8b 04 24             	mov    eax,DWORD PTR [esp]
-100006d2:	8b 54 24 04          	mov    edx,DWORD PTR [esp+0x4]
-100006d6:	39 c6                	cmp    esi,eax
-100006d8:	19 d7                	sbb    edi,edx
-100006da:	73 34                	jae    10000710 <fpuDivide(_Float80, _Float80)+0x8c>
-100006dc:	81 c3 00 40 00 00    	add    ebx,0x4000
-100006e2:	29 eb                	sub    ebx,ebp
-100006e4:	66 89 5c 24 14       	mov    WORD PTR [esp+0x14],bx
-100006e9:	83 ec 0c             	sub    esp,0xc
-100006ec:	8d 74 24 18          	lea    esi,[esp+0x18]
-100006f0:	b9 03 00 00 00       	mov    ecx,0x3
-100006f5:	89 e7                	mov    edi,esp
-100006f7:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-100006f9:	ff 74 24 3c          	push   DWORD PTR [esp+0x3c]
-100006fd:	e8 fc ff ff ff       	call   100006fe <fpuDivide(_Float80, _Float80)+0x7a>	100006fe: R_386_PC32	fpuNormalise(_Float80)
-10000702:	8b 44 24 3c          	mov    eax,DWORD PTR [esp+0x3c]
-10000706:	83 c4 28             	add    esp,0x28
-10000709:	5b                   	pop    ebx
-1000070a:	5e                   	pop    esi
-1000070b:	5f                   	pop    edi
-1000070c:	5d                   	pop    ebp
-1000070d:	c2 04 00             	ret    0x4
-10000710:	81 c3 00 40 00 00    	add    ebx,0x4000
-10000716:	29 eb                	sub    ebx,ebp
-10000718:	eb ca                	jmp    100006e4 <fpuDivide(_Float80, _Float80)+0x60>
+100005ca <fpuMantissaDivision(unsigned long long, unsigned long long)>:
+100005ca:	55                   	push   ebp
+100005cb:	57                   	push   edi
+100005cc:	56                   	push   esi
+100005cd:	53                   	push   ebx
+100005ce:	83 ec 24             	sub    esp,0x24
+100005d1:	8b 44 24 38          	mov    eax,DWORD PTR [esp+0x38]
+100005d5:	8b 54 24 3c          	mov    edx,DWORD PTR [esp+0x3c]
+100005d9:	89 44 24 18          	mov    DWORD PTR [esp+0x18],eax
+100005dd:	89 54 24 1c          	mov    DWORD PTR [esp+0x1c],edx
+100005e1:	8b 44 24 40          	mov    eax,DWORD PTR [esp+0x40]
+100005e5:	8b 54 24 44          	mov    edx,DWORD PTR [esp+0x44]
+100005e9:	89 44 24 08          	mov    DWORD PTR [esp+0x8],eax
+100005ed:	89 54 24 0c          	mov    DWORD PTR [esp+0xc],edx
+100005f1:	bd 3d 00 00 00       	mov    ebp,0x3d
+100005f6:	bb ff ff ff ff       	mov    ebx,0xffffffff
+100005fb:	be 00 00 00 00       	mov    esi,0x0
+10000600:	bf 00 00 00 00       	mov    edi,0x0
+10000605:	c7 44 24 14 00 00 00 00 	mov    DWORD PTR [esp+0x14],0x0
+1000060d:	c7 44 24 10 00 00 00 00 	mov    DWORD PTR [esp+0x10],0x0
+10000615:	eb 4c                	jmp    10000663 <fpuMantissaDivision(unsigned long long, unsigned long long)+0x99>
+10000617:	8b 74 24 18          	mov    esi,DWORD PTR [esp+0x18]
+1000061b:	8b 7c 24 1c          	mov    edi,DWORD PTR [esp+0x1c]
+1000061f:	89 e9                	mov    ecx,ebp
+10000621:	0f ad fe             	shrd   esi,edi,cl
+10000624:	d3 ef                	shr    edi,cl
+10000626:	f6 c1 20             	test   cl,0x20
+10000629:	74 02                	je     1000062d <fpuMantissaDivision(unsigned long long, unsigned long long)+0x63>
+1000062b:	89 fe                	mov    esi,edi
+1000062d:	89 f1                	mov    ecx,esi
+1000062f:	83 e1 01             	and    ecx,0x1
+10000632:	8b 54 24 04          	mov    edx,DWORD PTR [esp+0x4]
+10000636:	0b 0c 24             	or     ecx,DWORD PTR [esp]
+10000639:	89 ce                	mov    esi,ecx
+1000063b:	89 d7                	mov    edi,edx
+1000063d:	8b 44 24 08          	mov    eax,DWORD PTR [esp+0x8]
+10000641:	8b 54 24 0c          	mov    edx,DWORD PTR [esp+0xc]
+10000645:	39 c1                	cmp    ecx,eax
+10000647:	89 f9                	mov    ecx,edi
+10000649:	19 d1                	sbb    ecx,edx
+1000064b:	72 15                	jb     10000662 <fpuMantissaDivision(unsigned long long, unsigned long long)+0x98>
+1000064d:	2b 74 24 08          	sub    esi,DWORD PTR [esp+0x8]
+10000651:	1b 7c 24 0c          	sbb    edi,DWORD PTR [esp+0xc]
+10000655:	81 4c 24 10 00 00 00 20 	or     DWORD PTR [esp+0x10],0x20000000
+1000065d:	bb 3c 00 00 00       	mov    ebx,0x3c
+10000662:	4d                   	dec    ebp
+10000663:	89 f0                	mov    eax,esi
+10000665:	89 fa                	mov    edx,edi
+10000667:	01 f0                	add    eax,esi
+10000669:	11 fa                	adc    edx,edi
+1000066b:	89 c6                	mov    esi,eax
+1000066d:	89 d7                	mov    edi,edx
+1000066f:	89 04 24             	mov    DWORD PTR [esp],eax
+10000672:	89 54 24 04          	mov    DWORD PTR [esp+0x4],edx
+10000676:	83 fb ff             	cmp    ebx,0xffffffff
+10000679:	74 9c                	je     10000617 <fpuMantissaDivision(unsigned long long, unsigned long long)+0x4d>
+1000067b:	8b 44 24 08          	mov    eax,DWORD PTR [esp+0x8]
+1000067f:	8b 54 24 0c          	mov    edx,DWORD PTR [esp+0xc]
+10000683:	39 04 24             	cmp    DWORD PTR [esp],eax
+10000686:	8b 4c 24 04          	mov    ecx,DWORD PTR [esp+0x4]
+1000068a:	19 d1                	sbb    ecx,edx
+1000068c:	72 2e                	jb     100006bc <fpuMantissaDivision(unsigned long long, unsigned long long)+0xf2>
+1000068e:	8b 04 24             	mov    eax,DWORD PTR [esp]
+10000691:	8b 54 24 04          	mov    edx,DWORD PTR [esp+0x4]
+10000695:	2b 44 24 08          	sub    eax,DWORD PTR [esp+0x8]
+10000699:	1b 54 24 0c          	sbb    edx,DWORD PTR [esp+0xc]
+1000069d:	89 c6                	mov    esi,eax
+1000069f:	89 d7                	mov    edi,edx
+100006a1:	88 d9                	mov    cl,bl
+100006a3:	31 c0                	xor    eax,eax
+100006a5:	31 d2                	xor    edx,edx
+100006a7:	f6 c3 20             	test   bl,0x20
+100006aa:	0f 94 c0             	sete   al
+100006ad:	0f 95 c2             	setne  dl
+100006b0:	d3 e0                	shl    eax,cl
+100006b2:	d3 e2                	shl    edx,cl
+100006b4:	09 44 24 14          	or     DWORD PTR [esp+0x14],eax
+100006b8:	09 54 24 10          	or     DWORD PTR [esp+0x10],edx
+100006bc:	85 db                	test   ebx,ebx
+100006be:	78 a2                	js     10000662 <fpuMantissaDivision(unsigned long long, unsigned long long)+0x98>
+100006c0:	4b                   	dec    ebx
+100006c1:	75 9f                	jne    10000662 <fpuMantissaDivision(unsigned long long, unsigned long long)+0x98>
+100006c3:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
+100006c7:	8b 54 24 10          	mov    edx,DWORD PTR [esp+0x10]
+100006cb:	83 c4 24             	add    esp,0x24
+100006ce:	5b                   	pop    ebx
+100006cf:	5e                   	pop    esi
+100006d0:	5f                   	pop    edi
+100006d1:	5d                   	pop    ebp
+100006d2:	c3                   	ret    
 
-1000071a <fpuReciprocal(_Float80)>:
-1000071a:	57                   	push   edi
-1000071b:	56                   	push   esi
-1000071c:	53                   	push   ebx
-1000071d:	83 ec 20             	sub    esp,0x20
-10000720:	8b 5c 24 30          	mov    ebx,DWORD PTR [esp+0x30]
-10000724:	c6 44 24 1e 00       	mov    BYTE PTR [esp+0x1e],0x0
-10000729:	c7 44 24 14 00 00 00 00 	mov    DWORD PTR [esp+0x14],0x0
-10000731:	c7 44 24 18 00 00 00 20 	mov    DWORD PTR [esp+0x18],0x20000000
-10000739:	66 c7 44 24 1c ff 3f 	mov    WORD PTR [esp+0x1c],0x3fff
-10000740:	8d 74 24 34          	lea    esi,[esp+0x34]
-10000744:	b9 03 00 00 00       	mov    ecx,0x3
-10000749:	89 e7                	mov    edi,esp
-1000074b:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-1000074d:	83 ec 0c             	sub    esp,0xc
-10000750:	8d 74 24 20          	lea    esi,[esp+0x20]
-10000754:	b9 03 00 00 00       	mov    ecx,0x3
-10000759:	89 e7                	mov    edi,esp
-1000075b:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-1000075d:	53                   	push   ebx
-1000075e:	e8 fc ff ff ff       	call   1000075f <fpuReciprocal(_Float80)+0x45>	1000075f: R_386_PC32	fpuDivide(_Float80, _Float80)
-10000763:	89 d8                	mov    eax,ebx
-10000765:	83 c4 2c             	add    esp,0x2c
-10000768:	5b                   	pop    ebx
-10000769:	5e                   	pop    esi
-1000076a:	5f                   	pop    edi
-1000076b:	c2 04 00             	ret    0x4
+100006d3 <fpuDivide(_Float80, _Float80)>:
+100006d3:	55                   	push   ebp
+100006d4:	57                   	push   edi
+100006d5:	56                   	push   esi
+100006d6:	53                   	push   ebx
+100006d7:	83 ec 1c             	sub    esp,0x1c
+100006da:	8b 74 24 34          	mov    esi,DWORD PTR [esp+0x34]
+100006de:	8b 7c 24 38          	mov    edi,DWORD PTR [esp+0x38]
+100006e2:	8b 5c 24 3c          	mov    ebx,DWORD PTR [esp+0x3c]
+100006e6:	8b 44 24 40          	mov    eax,DWORD PTR [esp+0x40]
+100006ea:	8b 54 24 44          	mov    edx,DWORD PTR [esp+0x44]
+100006ee:	89 d1                	mov    ecx,edx
+100006f0:	89 c2                	mov    edx,eax
+100006f2:	8b 6c 24 48          	mov    ebp,DWORD PTR [esp+0x48]
+100006f6:	8a 44 24 4a          	mov    al,BYTE PTR [esp+0x4a]
+100006fa:	38 44 24 3e          	cmp    BYTE PTR [esp+0x3e],al
+100006fe:	0f 95 44 24 16       	setne  BYTE PTR [esp+0x16]
+10000703:	89 14 24             	mov    DWORD PTR [esp],edx
+10000706:	89 4c 24 04          	mov    DWORD PTR [esp+0x4],ecx
+1000070a:	51                   	push   ecx
+1000070b:	52                   	push   edx
+1000070c:	57                   	push   edi
+1000070d:	56                   	push   esi
+1000070e:	e8 fc ff ff ff       	call   1000070f <fpuDivide(_Float80, _Float80)+0x3c>	1000070f: R_386_PC32	fpuMantissaDivision(unsigned long long, unsigned long long)
+10000713:	83 c4 10             	add    esp,0x10
+10000716:	89 44 24 0c          	mov    DWORD PTR [esp+0xc],eax
+1000071a:	89 54 24 10          	mov    DWORD PTR [esp+0x10],edx
+1000071e:	8b 04 24             	mov    eax,DWORD PTR [esp]
+10000721:	8b 54 24 04          	mov    edx,DWORD PTR [esp+0x4]
+10000725:	39 c6                	cmp    esi,eax
+10000727:	19 d7                	sbb    edi,edx
+10000729:	73 34                	jae    1000075f <fpuDivide(_Float80, _Float80)+0x8c>
+1000072b:	81 c3 00 40 00 00    	add    ebx,0x4000
+10000731:	29 eb                	sub    ebx,ebp
+10000733:	66 89 5c 24 14       	mov    WORD PTR [esp+0x14],bx
+10000738:	83 ec 0c             	sub    esp,0xc
+1000073b:	8d 74 24 18          	lea    esi,[esp+0x18]
+1000073f:	b9 03 00 00 00       	mov    ecx,0x3
+10000744:	89 e7                	mov    edi,esp
+10000746:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+10000748:	ff 74 24 3c          	push   DWORD PTR [esp+0x3c]
+1000074c:	e8 fc ff ff ff       	call   1000074d <fpuDivide(_Float80, _Float80)+0x7a>	1000074d: R_386_PC32	fpuNormalise(_Float80)
+10000751:	8b 44 24 3c          	mov    eax,DWORD PTR [esp+0x3c]
+10000755:	83 c4 28             	add    esp,0x28
+10000758:	5b                   	pop    ebx
+10000759:	5e                   	pop    esi
+1000075a:	5f                   	pop    edi
+1000075b:	5d                   	pop    ebp
+1000075c:	c2 04 00             	ret    0x4
+1000075f:	81 c3 00 40 00 00    	add    ebx,0x4000
+10000765:	29 eb                	sub    ebx,ebp
+10000767:	eb ca                	jmp    10000733 <fpuDivide(_Float80, _Float80)+0x60>
 
-1000076e <fpuSquare(_Float80)>:
-1000076e:	57                   	push   edi
-1000076f:	56                   	push   esi
-10000770:	53                   	push   ebx
-10000771:	8b 5c 24 10          	mov    ebx,DWORD PTR [esp+0x10]
-10000775:	83 ec 10             	sub    esp,0x10
-10000778:	8d 74 24 24          	lea    esi,[esp+0x24]
-1000077c:	b9 03 00 00 00       	mov    ecx,0x3
-10000781:	89 e7                	mov    edi,esp
-10000783:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-10000785:	83 ec 0c             	sub    esp,0xc
-10000788:	8d 74 24 30          	lea    esi,[esp+0x30]
-1000078c:	b9 03 00 00 00       	mov    ecx,0x3
-10000791:	89 e7                	mov    edi,esp
-10000793:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-10000795:	53                   	push   ebx
-10000796:	e8 fc ff ff ff       	call   10000797 <fpuSquare(_Float80)+0x29>	10000797: R_386_PC32	fpuMultiply(_Float80, _Float80)
-1000079b:	83 c4 1c             	add    esp,0x1c
-1000079e:	89 d8                	mov    eax,ebx
-100007a0:	5b                   	pop    ebx
-100007a1:	5e                   	pop    esi
-100007a2:	5f                   	pop    edi
-100007a3:	c2 04 00             	ret    0x4
+10000769 <fpuReciprocal(_Float80)>:
+10000769:	57                   	push   edi
+1000076a:	56                   	push   esi
+1000076b:	53                   	push   ebx
+1000076c:	83 ec 20             	sub    esp,0x20
+1000076f:	8b 5c 24 30          	mov    ebx,DWORD PTR [esp+0x30]
+10000773:	c6 44 24 1e 00       	mov    BYTE PTR [esp+0x1e],0x0
+10000778:	c7 44 24 14 00 00 00 00 	mov    DWORD PTR [esp+0x14],0x0
+10000780:	c7 44 24 18 00 00 00 20 	mov    DWORD PTR [esp+0x18],0x20000000
+10000788:	66 c7 44 24 1c ff 3f 	mov    WORD PTR [esp+0x1c],0x3fff
+1000078f:	8d 74 24 34          	lea    esi,[esp+0x34]
+10000793:	b9 03 00 00 00       	mov    ecx,0x3
+10000798:	89 e7                	mov    edi,esp
+1000079a:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+1000079c:	83 ec 0c             	sub    esp,0xc
+1000079f:	8d 74 24 20          	lea    esi,[esp+0x20]
+100007a3:	b9 03 00 00 00       	mov    ecx,0x3
+100007a8:	89 e7                	mov    edi,esp
+100007aa:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+100007ac:	53                   	push   ebx
+100007ad:	e8 fc ff ff ff       	call   100007ae <fpuReciprocal(_Float80)+0x45>	100007ae: R_386_PC32	fpuDivide(_Float80, _Float80)
+100007b2:	89 d8                	mov    eax,ebx
+100007b4:	83 c4 2c             	add    esp,0x2c
+100007b7:	5b                   	pop    ebx
+100007b8:	5e                   	pop    esi
+100007b9:	5f                   	pop    edi
+100007ba:	c2 04 00             	ret    0x4
 
-100007a6 <fpuInverseSqrt(_Float80)>:
-100007a6:	55                   	push   ebp
-100007a7:	57                   	push   edi
-100007a8:	56                   	push   esi
-100007a9:	53                   	push   ebx
-100007aa:	83 ec 5c             	sub    esp,0x5c
-100007ad:	8b 5c 24 7c          	mov    ebx,DWORD PTR [esp+0x7c]
-100007b1:	8d 44 24 20          	lea    eax,[esp+0x20]
-100007b5:	83 ec 04             	sub    esp,0x4
-100007b8:	6a 00                	push   0x0
-100007ba:	6a 03                	push   0x3
-100007bc:	50                   	push   eax
-100007bd:	e8 fc ff ff ff       	call   100007be <fpuInverseSqrt(_Float80)+0x18>	100007be: R_386_PC32	fpuLongToFloat(long long)
-100007c2:	8b 44 24 34          	mov    eax,DWORD PTR [esp+0x34]
-100007c6:	48                   	dec    eax
-100007c7:	66 89 44 24 18       	mov    WORD PTR [esp+0x18],ax
-100007cc:	8d b4 24 80 00 00 00 	lea    esi,[esp+0x80]
-100007d3:	b9 03 00 00 00       	mov    ecx,0x3
-100007d8:	8b 7c 24 7c          	mov    edi,DWORD PTR [esp+0x7c]
-100007dc:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-100007de:	0f b7 c3             	movzx  eax,bx
-100007e1:	2d ff 3f 00 00       	sub    eax,0x3fff
-100007e6:	d1 f8                	sar    eax,1
-100007e8:	ba ff 3f 00 00       	mov    edx,0x3fff
-100007ed:	29 c2                	sub    edx,eax
-100007ef:	89 d0                	mov    eax,edx
-100007f1:	8b 54 24 7c          	mov    edx,DWORD PTR [esp+0x7c]
-100007f5:	66 89 42 08          	mov    WORD PTR [edx+0x8],ax
-100007f9:	8d 43 ff             	lea    eax,[ebx-0x1]
-100007fc:	66 89 44 24 1a       	mov    WORD PTR [esp+0x1a],ax
-10000801:	83 c4 0c             	add    esp,0xc
-10000804:	c7 44 24 08 07 00 00 00 	mov    DWORD PTR [esp+0x8],0x7
-1000080c:	83 ec 0c             	sub    esp,0xc
-1000080f:	b9 03 00 00 00       	mov    ecx,0x3
-10000814:	89 e7                	mov    edi,esp
-10000816:	8b 74 24 7c          	mov    esi,DWORD PTR [esp+0x7c]
-1000081a:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-1000081c:	8d 44 24 38          	lea    eax,[esp+0x38]
-10000820:	50                   	push   eax
-10000821:	e8 fc ff ff ff       	call   10000822 <fpuInverseSqrt(_Float80)+0x7c>	10000822: R_386_PC32	fpuSquare(_Float80)
-10000826:	66 8b 44 24 1a       	mov    ax,WORD PTR [esp+0x1a]
-1000082b:	66 89 84 24 88 00 00 00 	mov    WORD PTR [esp+0x88],ax
-10000833:	83 ec 0c             	sub    esp,0xc
-10000836:	8d b4 24 8c 00 00 00 	lea    esi,[esp+0x8c]
-1000083d:	b9 03 00 00 00       	mov    ecx,0x3
-10000842:	89 e7                	mov    edi,esp
-10000844:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-10000846:	83 ec 0c             	sub    esp,0xc
-10000849:	b9 03 00 00 00       	mov    ecx,0x3
-1000084e:	89 e7                	mov    edi,esp
-10000850:	8d 74 24 50          	lea    esi,[esp+0x50]
-10000854:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-10000856:	8d 44 24 5c          	lea    eax,[esp+0x5c]
-1000085a:	50                   	push   eax
-1000085b:	e8 fc ff ff ff       	call   1000085c <fpuInverseSqrt(_Float80)+0xb6>	1000085c: R_386_PC32	fpuMultiply(_Float80, _Float80)
-10000860:	8b 44 24 30          	mov    eax,DWORD PTR [esp+0x30]
-10000864:	66 89 44 24 4c       	mov    WORD PTR [esp+0x4c],ax
-10000869:	8d 6c 24 68          	lea    ebp,[esp+0x68]
-1000086d:	83 c4 14             	add    esp,0x14
-10000870:	b9 03 00 00 00       	mov    ecx,0x3
-10000875:	89 e7                	mov    edi,esp
-10000877:	8d 74 24 48          	lea    esi,[esp+0x48]
-1000087b:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-1000087d:	83 ec 0c             	sub    esp,0xc
-10000880:	8d 74 24 3c          	lea    esi,[esp+0x3c]
-10000884:	b9 03 00 00 00       	mov    ecx,0x3
-10000889:	89 e7                	mov    edi,esp
-1000088b:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-1000088d:	55                   	push   ebp
-1000088e:	e8 fc ff ff ff       	call   1000088f <fpuInverseSqrt(_Float80)+0xe9>	1000088f: R_386_PC32	fpuSub(_Float80, _Float80)
-10000893:	8d 5c 24 2c          	lea    ebx,[esp+0x2c]
-10000897:	83 ec 0c             	sub    esp,0xc
-1000089a:	b9 03 00 00 00       	mov    ecx,0x3
-1000089f:	89 e7                	mov    edi,esp
-100008a1:	89 ee                	mov    esi,ebp
+100007bd <fpuSquare(_Float80)>:
+100007bd:	57                   	push   edi
+100007be:	56                   	push   esi
+100007bf:	53                   	push   ebx
+100007c0:	8b 5c 24 10          	mov    ebx,DWORD PTR [esp+0x10]
+100007c4:	83 ec 10             	sub    esp,0x10
+100007c7:	8d 74 24 24          	lea    esi,[esp+0x24]
+100007cb:	b9 03 00 00 00       	mov    ecx,0x3
+100007d0:	89 e7                	mov    edi,esp
+100007d2:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+100007d4:	83 ec 0c             	sub    esp,0xc
+100007d7:	8d 74 24 30          	lea    esi,[esp+0x30]
+100007db:	b9 03 00 00 00       	mov    ecx,0x3
+100007e0:	89 e7                	mov    edi,esp
+100007e2:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+100007e4:	53                   	push   ebx
+100007e5:	e8 fc ff ff ff       	call   100007e6 <fpuSquare(_Float80)+0x29>	100007e6: R_386_PC32	fpuMultiply(_Float80, _Float80)
+100007ea:	83 c4 1c             	add    esp,0x1c
+100007ed:	89 d8                	mov    eax,ebx
+100007ef:	5b                   	pop    ebx
+100007f0:	5e                   	pop    esi
+100007f1:	5f                   	pop    edi
+100007f2:	c2 04 00             	ret    0x4
+
+100007f5 <fpuInverseSqrt(_Float80)>:
+100007f5:	55                   	push   ebp
+100007f6:	57                   	push   edi
+100007f7:	56                   	push   esi
+100007f8:	53                   	push   ebx
+100007f9:	83 ec 5c             	sub    esp,0x5c
+100007fc:	8b 5c 24 7c          	mov    ebx,DWORD PTR [esp+0x7c]
+10000800:	8d 44 24 20          	lea    eax,[esp+0x20]
+10000804:	83 ec 04             	sub    esp,0x4
+10000807:	6a 00                	push   0x0
+10000809:	6a 03                	push   0x3
+1000080b:	50                   	push   eax
+1000080c:	e8 fc ff ff ff       	call   1000080d <fpuInverseSqrt(_Float80)+0x18>	1000080d: R_386_PC32	fpuLongToFloat(long long)
+10000811:	8b 44 24 34          	mov    eax,DWORD PTR [esp+0x34]
+10000815:	48                   	dec    eax
+10000816:	66 89 44 24 18       	mov    WORD PTR [esp+0x18],ax
+1000081b:	8d b4 24 80 00 00 00 	lea    esi,[esp+0x80]
+10000822:	b9 03 00 00 00       	mov    ecx,0x3
+10000827:	8b 7c 24 7c          	mov    edi,DWORD PTR [esp+0x7c]
+1000082b:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+1000082d:	0f b7 c3             	movzx  eax,bx
+10000830:	2d ff 3f 00 00       	sub    eax,0x3fff
+10000835:	d1 f8                	sar    eax,1
+10000837:	ba ff 3f 00 00       	mov    edx,0x3fff
+1000083c:	29 c2                	sub    edx,eax
+1000083e:	89 d0                	mov    eax,edx
+10000840:	8b 54 24 7c          	mov    edx,DWORD PTR [esp+0x7c]
+10000844:	66 89 42 08          	mov    WORD PTR [edx+0x8],ax
+10000848:	8d 43 ff             	lea    eax,[ebx-0x1]
+1000084b:	66 89 44 24 1a       	mov    WORD PTR [esp+0x1a],ax
+10000850:	83 c4 0c             	add    esp,0xc
+10000853:	c7 44 24 08 07 00 00 00 	mov    DWORD PTR [esp+0x8],0x7
+1000085b:	83 ec 0c             	sub    esp,0xc
+1000085e:	b9 03 00 00 00       	mov    ecx,0x3
+10000863:	89 e7                	mov    edi,esp
+10000865:	8b 74 24 7c          	mov    esi,DWORD PTR [esp+0x7c]
+10000869:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+1000086b:	8d 44 24 38          	lea    eax,[esp+0x38]
+1000086f:	50                   	push   eax
+10000870:	e8 fc ff ff ff       	call   10000871 <fpuInverseSqrt(_Float80)+0x7c>	10000871: R_386_PC32	fpuSquare(_Float80)
+10000875:	66 8b 44 24 1a       	mov    ax,WORD PTR [esp+0x1a]
+1000087a:	66 89 84 24 88 00 00 00 	mov    WORD PTR [esp+0x88],ax
+10000882:	83 ec 0c             	sub    esp,0xc
+10000885:	8d b4 24 8c 00 00 00 	lea    esi,[esp+0x8c]
+1000088c:	b9 03 00 00 00       	mov    ecx,0x3
+10000891:	89 e7                	mov    edi,esp
+10000893:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+10000895:	83 ec 0c             	sub    esp,0xc
+10000898:	b9 03 00 00 00       	mov    ecx,0x3
+1000089d:	89 e7                	mov    edi,esp
+1000089f:	8d 74 24 50          	lea    esi,[esp+0x50]
 100008a3:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-100008a5:	83 ec 0c             	sub    esp,0xc
-100008a8:	b9 03 00 00 00       	mov    ecx,0x3
-100008ad:	89 e7                	mov    edi,esp
-100008af:	8b b4 24 a4 00 00 00 	mov    esi,DWORD PTR [esp+0xa4]
-100008b6:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-100008b8:	53                   	push   ebx
-100008b9:	e8 fc ff ff ff       	call   100008ba <fpuInverseSqrt(_Float80)+0x114>	100008ba: R_386_PC32	fpuMultiply(_Float80, _Float80)
-100008be:	b9 03 00 00 00       	mov    ecx,0x3
-100008c3:	8b bc 24 a4 00 00 00 	mov    edi,DWORD PTR [esp+0xa4]
-100008ca:	89 de                	mov    esi,ebx
-100008cc:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-100008ce:	83 c4 34             	add    esp,0x34
-100008d1:	ff 4c 24 08          	dec    DWORD PTR [esp+0x8]
-100008d5:	0f 85 31 ff ff ff    	jne    1000080c <fpuInverseSqrt(_Float80)+0x66>
-100008db:	8b 44 24 70          	mov    eax,DWORD PTR [esp+0x70]
-100008df:	83 c4 5c             	add    esp,0x5c
-100008e2:	5b                   	pop    ebx
-100008e3:	5e                   	pop    esi
-100008e4:	5f                   	pop    edi
-100008e5:	5d                   	pop    ebp
-100008e6:	c2 04 00             	ret    0x4
+100008a5:	8d 44 24 5c          	lea    eax,[esp+0x5c]
+100008a9:	50                   	push   eax
+100008aa:	e8 fc ff ff ff       	call   100008ab <fpuInverseSqrt(_Float80)+0xb6>	100008ab: R_386_PC32	fpuMultiply(_Float80, _Float80)
+100008af:	8b 44 24 30          	mov    eax,DWORD PTR [esp+0x30]
+100008b3:	66 89 44 24 4c       	mov    WORD PTR [esp+0x4c],ax
+100008b8:	8d 6c 24 68          	lea    ebp,[esp+0x68]
+100008bc:	83 c4 14             	add    esp,0x14
+100008bf:	b9 03 00 00 00       	mov    ecx,0x3
+100008c4:	89 e7                	mov    edi,esp
+100008c6:	8d 74 24 48          	lea    esi,[esp+0x48]
+100008ca:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+100008cc:	83 ec 0c             	sub    esp,0xc
+100008cf:	8d 74 24 3c          	lea    esi,[esp+0x3c]
+100008d3:	b9 03 00 00 00       	mov    ecx,0x3
+100008d8:	89 e7                	mov    edi,esp
+100008da:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+100008dc:	55                   	push   ebp
+100008dd:	e8 fc ff ff ff       	call   100008de <fpuInverseSqrt(_Float80)+0xe9>	100008de: R_386_PC32	fpuSub(_Float80, _Float80)
+100008e2:	8d 5c 24 2c          	lea    ebx,[esp+0x2c]
+100008e6:	83 ec 0c             	sub    esp,0xc
+100008e9:	b9 03 00 00 00       	mov    ecx,0x3
+100008ee:	89 e7                	mov    edi,esp
+100008f0:	89 ee                	mov    esi,ebp
+100008f2:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+100008f4:	83 ec 0c             	sub    esp,0xc
+100008f7:	b9 03 00 00 00       	mov    ecx,0x3
+100008fc:	89 e7                	mov    edi,esp
+100008fe:	8b b4 24 a4 00 00 00 	mov    esi,DWORD PTR [esp+0xa4]
+10000905:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+10000907:	53                   	push   ebx
+10000908:	e8 fc ff ff ff       	call   10000909 <fpuInverseSqrt(_Float80)+0x114>	10000909: R_386_PC32	fpuMultiply(_Float80, _Float80)
+1000090d:	b9 03 00 00 00       	mov    ecx,0x3
+10000912:	8b bc 24 a4 00 00 00 	mov    edi,DWORD PTR [esp+0xa4]
+10000919:	89 de                	mov    esi,ebx
+1000091b:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+1000091d:	83 c4 34             	add    esp,0x34
+10000920:	ff 4c 24 08          	dec    DWORD PTR [esp+0x8]
+10000924:	0f 85 31 ff ff ff    	jne    1000085b <fpuInverseSqrt(_Float80)+0x66>
+1000092a:	8b 44 24 70          	mov    eax,DWORD PTR [esp+0x70]
+1000092e:	83 c4 5c             	add    esp,0x5c
+10000931:	5b                   	pop    ebx
+10000932:	5e                   	pop    esi
+10000933:	5f                   	pop    edi
+10000934:	5d                   	pop    ebp
+10000935:	c2 04 00             	ret    0x4
 
-100008e9 <fpuSqrt(_Float80)>:
-100008e9:	55                   	push   ebp
-100008ea:	57                   	push   edi
-100008eb:	56                   	push   esi
-100008ec:	53                   	push   ebx
-100008ed:	83 ec 2c             	sub    esp,0x2c
-100008f0:	8b 5c 24 40          	mov    ebx,DWORD PTR [esp+0x40]
-100008f4:	8d 6c 24 08          	lea    ebp,[esp+0x8]
-100008f8:	83 ec 0c             	sub    esp,0xc
-100008fb:	8d 74 24 50          	lea    esi,[esp+0x50]
-100008ff:	b9 03 00 00 00       	mov    ecx,0x3
-10000904:	89 e7                	mov    edi,esp
-10000906:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-10000908:	55                   	push   ebp
-10000909:	e8 fc ff ff ff       	call   1000090a <fpuSqrt(_Float80)+0x21>	1000090a: R_386_PC32	fpuInverseSqrt(_Float80)
-1000090e:	c6 44 24 2a 00       	mov    BYTE PTR [esp+0x2a],0x0
-10000913:	c7 44 24 20 00 00 00 00 	mov    DWORD PTR [esp+0x20],0x0
-1000091b:	c7 44 24 24 00 00 00 20 	mov    DWORD PTR [esp+0x24],0x20000000
-10000923:	66 c7 44 24 28 ff 3f 	mov    WORD PTR [esp+0x28],0x3fff
-1000092a:	83 ec 14             	sub    esp,0x14
-1000092d:	b9 03 00 00 00       	mov    ecx,0x3
-10000932:	89 e7                	mov    edi,esp
-10000934:	89 ee                	mov    esi,ebp
-10000936:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-10000938:	83 ec 0c             	sub    esp,0xc
-1000093b:	8d 74 24 40          	lea    esi,[esp+0x40]
-1000093f:	b9 03 00 00 00       	mov    ecx,0x3
-10000944:	89 e7                	mov    edi,esp
-10000946:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-10000948:	53                   	push   ebx
-10000949:	e8 fc ff ff ff       	call   1000094a <fpuSqrt(_Float80)+0x61>	1000094a: R_386_PC32	fpuDivide(_Float80, _Float80)
-1000094e:	89 d8                	mov    eax,ebx
-10000950:	83 c4 58             	add    esp,0x58
-10000953:	5b                   	pop    ebx
-10000954:	5e                   	pop    esi
-10000955:	5f                   	pop    edi
-10000956:	5d                   	pop    ebp
-10000957:	c2 04 00             	ret    0x4
+10000938 <fpuSqrt(_Float80)>:
+10000938:	55                   	push   ebp
+10000939:	57                   	push   edi
+1000093a:	56                   	push   esi
+1000093b:	53                   	push   ebx
+1000093c:	83 ec 2c             	sub    esp,0x2c
+1000093f:	8b 5c 24 40          	mov    ebx,DWORD PTR [esp+0x40]
+10000943:	8d 6c 24 08          	lea    ebp,[esp+0x8]
+10000947:	83 ec 0c             	sub    esp,0xc
+1000094a:	8d 74 24 50          	lea    esi,[esp+0x50]
+1000094e:	b9 03 00 00 00       	mov    ecx,0x3
+10000953:	89 e7                	mov    edi,esp
+10000955:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+10000957:	55                   	push   ebp
+10000958:	e8 fc ff ff ff       	call   10000959 <fpuSqrt(_Float80)+0x21>	10000959: R_386_PC32	fpuInverseSqrt(_Float80)
+1000095d:	c6 44 24 2a 00       	mov    BYTE PTR [esp+0x2a],0x0
+10000962:	c7 44 24 20 00 00 00 00 	mov    DWORD PTR [esp+0x20],0x0
+1000096a:	c7 44 24 24 00 00 00 20 	mov    DWORD PTR [esp+0x24],0x20000000
+10000972:	66 c7 44 24 28 ff 3f 	mov    WORD PTR [esp+0x28],0x3fff
+10000979:	83 ec 14             	sub    esp,0x14
+1000097c:	b9 03 00 00 00       	mov    ecx,0x3
+10000981:	89 e7                	mov    edi,esp
+10000983:	89 ee                	mov    esi,ebp
+10000985:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+10000987:	83 ec 0c             	sub    esp,0xc
+1000098a:	8d 74 24 40          	lea    esi,[esp+0x40]
+1000098e:	b9 03 00 00 00       	mov    ecx,0x3
+10000993:	89 e7                	mov    edi,esp
+10000995:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+10000997:	53                   	push   ebx
+10000998:	e8 fc ff ff ff       	call   10000999 <fpuSqrt(_Float80)+0x61>	10000999: R_386_PC32	fpuDivide(_Float80, _Float80)
+1000099d:	89 d8                	mov    eax,ebx
+1000099f:	83 c4 58             	add    esp,0x58
+100009a2:	5b                   	pop    ebx
+100009a3:	5e                   	pop    esi
+100009a4:	5f                   	pop    edi
+100009a5:	5d                   	pop    ebp
+100009a6:	c2 04 00             	ret    0x4
 
-1000095a <fpuPush(_Float80)>:
-1000095a:	57                   	push   edi
-1000095b:	56                   	push   esi
-1000095c:	83 ec 04             	sub    esp,0x4
-1000095f:	a1 00 00 00 00       	mov    eax,ds:0x0	10000960: R_386_32	fpuSP
-10000964:	8d 50 01             	lea    edx,[eax+0x1]
-10000967:	89 15 00 00 00 00    	mov    DWORD PTR ds:0x0,edx	10000969: R_386_32	fpuSP
-1000096d:	8d 0c 00             	lea    ecx,[eax+eax*1]
-10000970:	01 c8                	add    eax,ecx
-10000972:	8d 04 85 00 00 00 00 	lea    eax,[eax*4+0x0]	10000975: R_386_32	fpuStack
-10000979:	b9 03 00 00 00       	mov    ecx,0x3
-1000097e:	89 c7                	mov    edi,eax
-10000980:	8d 74 24 10          	lea    esi,[esp+0x10]
-10000984:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-10000986:	83 fa 08             	cmp    edx,0x8
-10000989:	74 06                	je     10000991 <fpuPush(_Float80)+0x37>
-1000098b:	83 c4 04             	add    esp,0x4
-1000098e:	5e                   	pop    esi
-1000098f:	5f                   	pop    edi
-10000990:	c3                   	ret    
-10000991:	83 ec 0c             	sub    esp,0xc
-10000994:	68 b6 0b 00 10       	push   0x10000bb6	10000995: R_386_32	.text
-10000999:	e8 fc ff ff ff       	call   1000099a <fpuPush(_Float80)+0x40>	1000099a: R_386_PC32	Krnl::panic(char const*)
-1000099e:	83 c4 10             	add    esp,0x10
-100009a1:	eb e8                	jmp    1000098b <fpuPush(_Float80)+0x31>
+100009a9 <fpuPush(_Float80)>:
+100009a9:	c3                   	ret    
 
-100009a3 <x87Handler(regs*)>:
-100009a3:	57                   	push   edi
-100009a4:	56                   	push   esi
-100009a5:	53                   	push   ebx
-100009a6:	83 ec 60             	sub    esp,0x60
-100009a9:	8b 44 24 70          	mov    eax,DWORD PTR [esp+0x70]
-100009ad:	8b 58 38             	mov    ebx,DWORD PTR [eax+0x38]
-100009b0:	0f b6 43 02          	movzx  eax,BYTE PTR [ebx+0x2]
-100009b4:	50                   	push   eax
-100009b5:	0f b6 43 01          	movzx  eax,BYTE PTR [ebx+0x1]
-100009b9:	50                   	push   eax
-100009ba:	0f b6 03             	movzx  eax,BYTE PTR [ebx]
-100009bd:	50                   	push   eax
-100009be:	68 c4 0b 00 10       	push   0x10000bc4	100009bf: R_386_32	.text
-100009c3:	e8 fc ff ff ff       	call   100009c4 <x87Handler(regs*)+0x21>	100009c4: R_386_PC32	Dbg::kprintf(char const*, ...)
-100009c8:	83 c4 10             	add    esp,0x10
-100009cb:	80 3b d9             	cmp    BYTE PTR [ebx],0xd9
-100009ce:	74 09                	je     100009d9 <x87Handler(regs*)+0x36>
-100009d0:	b0 00                	mov    al,0x0
-100009d2:	83 c4 60             	add    esp,0x60
-100009d5:	5b                   	pop    ebx
-100009d6:	5e                   	pop    esi
-100009d7:	5f                   	pop    edi
-100009d8:	c3                   	ret    
-100009d9:	8a 43 01             	mov    al,BYTE PTR [ebx+0x1]
-100009dc:	83 c0 18             	add    eax,0x18
-100009df:	3c 06                	cmp    al,0x6
-100009e1:	0f 87 a4 01 00 00    	ja     10000b8b <x87Handler(regs*)+0x1e8>
-100009e7:	0f b6 c0             	movzx  eax,al
-100009ea:	ff 24 85 d4 0b 00 10 	jmp    DWORD PTR [eax*4+0x10000bd4]	100009ed: R_386_32	.text
-100009f1:	c6 44 24 16 00       	mov    BYTE PTR [esp+0x16],0x0
-100009f6:	c7 44 24 0c 00 00 00 00 	mov    DWORD PTR [esp+0xc],0x0
-100009fe:	c7 44 24 10 00 00 00 20 	mov    DWORD PTR [esp+0x10],0x20000000
-10000a06:	66 c7 44 24 14 ff 3f 	mov    WORD PTR [esp+0x14],0x3fff
-10000a0d:	83 ec 10             	sub    esp,0x10
-10000a10:	8d 74 24 1c          	lea    esi,[esp+0x1c]
-10000a14:	b9 03 00 00 00       	mov    ecx,0x3
-10000a19:	89 e7                	mov    edi,esp
-10000a1b:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-10000a1d:	e8 fc ff ff ff       	call   10000a1e <x87Handler(regs*)+0x7b>	10000a1e: R_386_PC32	fpuPush(_Float80)
-10000a22:	83 c4 10             	add    esp,0x10
-10000a25:	b0 01                	mov    al,0x1
-10000a27:	eb a9                	jmp    100009d2 <x87Handler(regs*)+0x2f>
-10000a29:	c6 44 24 22 00       	mov    BYTE PTR [esp+0x22],0x0
-10000a2e:	c7 44 24 18 be e2 46 f3 	mov    DWORD PTR [esp+0x18],0xf346e2be
-10000a36:	c7 44 24 1c 12 9e 26 35 	mov    DWORD PTR [esp+0x1c],0x35269e12
-10000a3e:	66 c7 44 24 20 01 40 	mov    WORD PTR [esp+0x20],0x4001
-10000a45:	83 ec 10             	sub    esp,0x10
-10000a48:	8d 74 24 28          	lea    esi,[esp+0x28]
-10000a4c:	b9 03 00 00 00       	mov    ecx,0x3
-10000a51:	89 e7                	mov    edi,esp
-10000a53:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-10000a55:	e8 fc ff ff ff       	call   10000a56 <x87Handler(regs*)+0xb3>	10000a56: R_386_PC32	fpuPush(_Float80)
-10000a5a:	83 c4 10             	add    esp,0x10
-10000a5d:	b0 01                	mov    al,0x1
-10000a5f:	e9 6e ff ff ff       	jmp    100009d2 <x87Handler(regs*)+0x2f>
-10000a64:	c6 44 24 2e 00       	mov    BYTE PTR [esp+0x2e],0x0
-10000a69:	c7 44 24 24 1c fc 05 57 	mov    DWORD PTR [esp+0x24],0x5705fc1c
-10000a71:	c7 44 24 28 ca 8e 2a 2e 	mov    DWORD PTR [esp+0x28],0x2e2a8eca
-10000a79:	66 c7 44 24 2c 00 40 	mov    WORD PTR [esp+0x2c],0x4000
-10000a80:	83 ec 10             	sub    esp,0x10
-10000a83:	8d 74 24 34          	lea    esi,[esp+0x34]
-10000a87:	b9 03 00 00 00       	mov    ecx,0x3
-10000a8c:	89 e7                	mov    edi,esp
-10000a8e:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-10000a90:	e8 fc ff ff ff       	call   10000a91 <x87Handler(regs*)+0xee>	10000a91: R_386_PC32	fpuPush(_Float80)
-10000a95:	83 c4 10             	add    esp,0x10
-10000a98:	b0 01                	mov    al,0x1
-10000a9a:	e9 33 ff ff ff       	jmp    100009d2 <x87Handler(regs*)+0x2f>
-10000a9f:	c6 44 24 3a 00       	mov    BYTE PTR [esp+0x3a],0x0
-10000aa4:	c7 44 24 30 8c 30 5a 88 	mov    DWORD PTR [esp+0x30],0x885a308c
-10000aac:	c7 44 24 34 a8 f6 43 32 	mov    DWORD PTR [esp+0x34],0x3243f6a8
-10000ab4:	66 c7 44 24 38 01 40 	mov    WORD PTR [esp+0x38],0x4001
-10000abb:	83 ec 10             	sub    esp,0x10
-10000abe:	8d 74 24 40          	lea    esi,[esp+0x40]
-10000ac2:	b9 03 00 00 00       	mov    ecx,0x3
-10000ac7:	89 e7                	mov    edi,esp
-10000ac9:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-10000acb:	e8 fc ff ff ff       	call   10000acc <x87Handler(regs*)+0x129>	10000acc: R_386_PC32	fpuPush(_Float80)
-10000ad0:	83 c4 10             	add    esp,0x10
-10000ad3:	b0 01                	mov    al,0x1
-10000ad5:	e9 f8 fe ff ff       	jmp    100009d2 <x87Handler(regs*)+0x2f>
-10000ada:	c6 44 24 46 00       	mov    BYTE PTR [esp+0x46],0x0
-10000adf:	c7 44 24 3c e6 fd f3 3e 	mov    DWORD PTR [esp+0x3c],0x3ef3fde6
-10000ae7:	c7 44 24 40 a1 26 88 26 	mov    DWORD PTR [esp+0x40],0x268826a1
-10000aef:	66 c7 44 24 44 fe 3f 	mov    WORD PTR [esp+0x44],0x3ffe
-10000af6:	83 ec 10             	sub    esp,0x10
-10000af9:	8d 74 24 4c          	lea    esi,[esp+0x4c]
-10000afd:	b9 03 00 00 00       	mov    ecx,0x3
-10000b02:	89 e7                	mov    edi,esp
-10000b04:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-10000b06:	e8 fc ff ff ff       	call   10000b07 <x87Handler(regs*)+0x164>	10000b07: R_386_PC32	fpuPush(_Float80)
-10000b0b:	83 c4 10             	add    esp,0x10
-10000b0e:	b0 01                	mov    al,0x1
-10000b10:	e9 bd fe ff ff       	jmp    100009d2 <x87Handler(regs*)+0x2f>
-10000b15:	c6 44 24 52 00       	mov    BYTE PTR [esp+0x52],0x0
-10000b1a:	c7 44 24 48 68 de 73 f4 	mov    DWORD PTR [esp+0x48],0xf473de68
-10000b22:	c7 44 24 4c fd 85 5c 2c 	mov    DWORD PTR [esp+0x4c],0x2c5c85fd
-10000b2a:	66 c7 44 24 50 ff 3f 	mov    WORD PTR [esp+0x50],0x3fff
-10000b31:	83 ec 10             	sub    esp,0x10
-10000b34:	8d 74 24 58          	lea    esi,[esp+0x58]
-10000b38:	b9 03 00 00 00       	mov    ecx,0x3
-10000b3d:	89 e7                	mov    edi,esp
-10000b3f:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-10000b41:	e8 fc ff ff ff       	call   10000b42 <x87Handler(regs*)+0x19f>	10000b42: R_386_PC32	fpuPush(_Float80)
-10000b46:	83 c4 10             	add    esp,0x10
-10000b49:	b0 01                	mov    al,0x1
-10000b4b:	e9 82 fe ff ff       	jmp    100009d2 <x87Handler(regs*)+0x2f>
-10000b50:	c6 44 24 5e 00       	mov    BYTE PTR [esp+0x5e],0x0
-10000b55:	c7 44 24 54 00 00 00 00 	mov    DWORD PTR [esp+0x54],0x0
-10000b5d:	c7 44 24 58 00 00 00 00 	mov    DWORD PTR [esp+0x58],0x0
-10000b65:	66 c7 44 24 5c ff 3f 	mov    WORD PTR [esp+0x5c],0x3fff
-10000b6c:	83 ec 10             	sub    esp,0x10
-10000b6f:	8d 74 24 64          	lea    esi,[esp+0x64]
-10000b73:	b9 03 00 00 00       	mov    ecx,0x3
-10000b78:	89 e7                	mov    edi,esp
-10000b7a:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-10000b7c:	e8 fc ff ff ff       	call   10000b7d <x87Handler(regs*)+0x1da>	10000b7d: R_386_PC32	fpuPush(_Float80)
-10000b81:	83 c4 10             	add    esp,0x10
-10000b84:	b0 01                	mov    al,0x1
-10000b86:	e9 47 fe ff ff       	jmp    100009d2 <x87Handler(regs*)+0x2f>
-10000b8b:	b0 00                	mov    al,0x0
-10000b8d:	e9 40 fe ff ff       	jmp    100009d2 <x87Handler(regs*)+0x2f>
+100009aa <fpuPop()>:
+100009aa:	57                   	push   edi
+100009ab:	56                   	push   esi
+100009ac:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
+100009b0:	be 00 00 00 00       	mov    esi,0x0	100009b1: R_386_32	fpuStack
+100009b5:	b9 03 00 00 00       	mov    ecx,0x3
+100009ba:	89 c7                	mov    edi,eax
+100009bc:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
+100009be:	5e                   	pop    esi
+100009bf:	5f                   	pop    edi
+100009c0:	c2 04 00             	ret    0x4
 
-10000b92 <fpuPop()>:
-10000b92:	57                   	push   edi
-10000b93:	56                   	push   esi
-10000b94:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
-10000b98:	be 00 00 00 00       	mov    esi,0x0	10000b99: R_386_32	fpuStack
-10000b9d:	b9 03 00 00 00       	mov    ecx,0x3
-10000ba2:	89 c7                	mov    edi,eax
-10000ba4:	f3 a5                	rep movs DWORD PTR es:[edi],DWORD PTR ds:[esi]
-10000ba6:	5e                   	pop    esi
-10000ba7:	5f                   	pop    edi
-10000ba8:	c2 04 00             	ret    0x4
-
-10000bab <begin()>:
-10000bab:	c7 05 00 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x0,0x0	10000bad: R_386_32	x87FaultIntercept
-	10000bb1: R_386_32	x87Handler(regs*)
-10000bb5:	c3                   	ret    
-10000bb6:	46                   	inc    esi
-10000bb7:	50                   	push   eax
-10000bb8:	55                   	push   ebp
-10000bb9:	20 4f 56             	and    BYTE PTR [edi+0x56],cl
-10000bbc:	45                   	inc    ebp
-10000bbd:	52                   	push   edx
-10000bbe:	46                   	inc    esi
-10000bbf:	4c                   	dec    esp
-10000bc0:	4f                   	dec    edi
-10000bc1:	57                   	push   edi
-10000bc2:	2e 00 78 38          	add    BYTE PTR cs:[eax+0x38],bh
-10000bc6:	37                   	aaa    
-10000bc7:	3a 20                	cmp    ah,BYTE PTR [eax]
-10000bc9:	25 58 20 25 58       	and    eax,0x58252058
-10000bce:	20 25 58 0a 00 90    	and    BYTE PTR ds:0x90000a58,ah
-10000bd4:	f1                   	icebp  	10000bd4: R_386_32	.text
-10000bd5:	09 00                	or     DWORD PTR [eax],eax
-10000bd7:	10 29                	adc    BYTE PTR [ecx],ch	10000bd8: R_386_32	.text
-10000bd9:	0a 00                	or     al,BYTE PTR [eax]
-10000bdb:	10 64 0a 00          	adc    BYTE PTR [edx+ecx*1+0x0],ah	10000bdc: R_386_32	.text
-10000bdf:	10 9f 0a 00 10 da    	adc    BYTE PTR [edi-0x25effff6],bl	10000be0: R_386_32	.text
-	10000be4: R_386_32	.text
-10000be5:	0a 00                	or     al,BYTE PTR [eax]
-10000be7:	10 15 0b 00 10 50    	adc    BYTE PTR ds:0x5010000b,dl	10000be8: R_386_32	.text
-	10000bec: R_386_32	.text
-10000bed:	0b 00                	or     eax,DWORD PTR [eax]
-10000bef:	10                   	.byte 0x10
+100009c3 <begin()>:
+100009c3:	c7 05 00 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x0,0x0	100009c5: R_386_32	x87FaultIntercept
+	100009c9: R_386_32	x87Handler(regs*)
+100009cd:	c3                   	ret    
+100009ce:	66 90                	xchg   ax,ax
+100009d0:	78 38                	js     10000a0a <begin()+0x47>
+100009d2:	37                   	aaa    
+100009d3:	20 68 61             	and    BYTE PTR [eax+0x61],ch
+100009d6:	6e                   	outs   dx,BYTE PTR ds:[esi]
+100009d7:	64 6c                	fs ins BYTE PTR es:[edi],dx
+100009d9:	65 72 20             	gs jb  100009fc <begin()+0x39>
+100009dc:	63 61 6c             	arpl   WORD PTR [ecx+0x6c],sp
+100009df:	6c                   	ins    BYTE PTR es:[edi],dx
+100009e0:	65 64 20 77 69       	gs and BYTE PTR fs:[edi+0x69],dh
+100009e5:	74 68                	je     10000a4f <begin()+0x8c>
+100009e7:	20 66 61             	and    BYTE PTR [esi+0x61],ah
+100009ea:	75 6c                	jne    10000a58 <begin()+0x95>
+100009ec:	74 69                	je     10000a57 <begin()+0x94>
+100009ee:	6e                   	outs   dx,BYTE PTR ds:[esi]
+100009ef:	67 20 45 49          	and    BYTE PTR [di+0x49],al
+100009f3:	50                   	push   eax
+100009f4:	20 6f 66             	and    BYTE PTR [edi+0x66],ch
+100009f7:	20 30                	and    BYTE PTR [eax],dh
+100009f9:	78 25                	js     10000a20 <begin()+0x5d>
+100009fb:	58                   	pop    eax
+100009fc:	0a 00                	or     al,BYTE PTR [eax]
+100009fe:	00 00                	add    BYTE PTR [eax],al
+10000a00:	78 38                	js     10000a3a <begin()+0x77>
+10000a02:	37                   	aaa    
+10000a03:	3a 20                	cmp    ah,BYTE PTR [eax]
+10000a05:	25 58 20 25 58       	and    eax,0x58252058
+10000a0a:	20                   	.byte 0x20
+10000a0b:	25                   	.byte 0x25
+10000a0c:	58                   	pop    eax
+10000a0d:	0a 00                	or     al,BYTE PTR [eax]
