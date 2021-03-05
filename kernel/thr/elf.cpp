@@ -463,7 +463,7 @@ namespace Thr
 			int actual;
 			f->read(31, namebuffer, &actual);
 
-			//kprintf("segment: %s\n", namebuffer);
+			kprintf("segment: %d: %s\n", i, namebuffer);
 
 			if (!memcmp(namebuffer, ".rel.text", 9)) {
 				relTextOffsets[nextRelSection] = fileOffset;
