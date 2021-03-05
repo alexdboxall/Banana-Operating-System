@@ -566,7 +566,7 @@ namespace Thr
 					uint32_t x;
 					if (dynamic) {
 						x = addr + *entry;
-						if (info == 0x101 || info == 0x401 /*|| (info >> 8) < elf->shNum*/) {
+						if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum) {
 							if (critical) {
 								kprintf("SYMBOL: %s\n", ((char*) stringTab) + symbolTab[symbolNum].st_name);
 								panic("RELOCATION UNHANDLED CASE 1");
