@@ -463,7 +463,7 @@ namespace Thr
 			int actual;
 			f->read(31, namebuffer, &actual);
 
-			kprintf("segment: %d: %s\n", i, namebuffer);
+			//kprintf("segment: %s\n", namebuffer);
 
 			if (!memcmp(namebuffer, ".rel.text", 9)) {
 				relTextOffsets[nextRelSection] = fileOffset;
@@ -568,7 +568,6 @@ namespace Thr
 						x = addr + *entry;
 						if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum) {
 							if (critical) {
-								kprintf("SYMBOL: %s\n", ((char*) stringTab) + symbolTab[symbolNum].st_name);
 								panic("RELOCATION UNHANDLED CASE 1");
 							} else {
 								f->close();
@@ -584,7 +583,7 @@ namespace Thr
 							}
 						}
 					} else {
-						if (info == 0x101 || info == 0x401 /*|| (info >> 8) < elf->shNum*/) {
+						if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum) {
 							x = *entry - entryPoint + relocationPoint;
 
 						} else {
@@ -601,10 +600,6 @@ namespace Thr
 
 					if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum) {
 						if (critical) {
-							kprintf("Info = 0x%X\n", info);
-							kprintf("Dynamic? %d\n", dynamic);
-							kprintf("Addr = 0x%X, pos = 0x%X, *entry = 0x%X, entrypt = 0x%X, relocpt = 0x%X\n", addr, pos, *entry, entryPoint, relocationPoint);
-							kprintf("SYMBOL: %s\n", ((char*) stringTab) + symbolTab[symbolNum].st_name);
 							panic("RELOCATION UNHANDLED CASE 2");
 						} else {
 							f->close();
