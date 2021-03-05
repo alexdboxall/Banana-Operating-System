@@ -599,7 +599,7 @@ namespace Thr
 					uint32_t* entry = (uint32_t*) (pos - entryPoint + relocationPoint);
 					uint32_t x;
 
-					if (info == 0x101 || info == 0x401 /*|| (info >> 8) < elf->shNum*/) {
+					if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum) {
 						if (critical) {
 							kprintf("Info = 0x%X\n", info);
 							kprintf("Dynamic? %d\n", dynamic);
