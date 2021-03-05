@@ -340,10 +340,7 @@ int fpuSP = 0;
 
 void fpuPush(Float80 flt)
 {
-    fpuStack[fpuSP++] = flt;
-    if (fpuSP == 8) {
-        panic("FPU OVERFLOW.");
-    }
+    
 }
 
 Float80 fpuPop()
@@ -354,6 +351,7 @@ Float80 fpuPop()
 bool x87Handler(regs* r)
 {
 	uint8_t* eip = (uint8_t*) r->eip;
+    kprintf("x87 handler called with faulting EIP of 0x%X\n", eip);
 	kprintf("x87: %X %X %X\n", *eip, *(eip + 1), *(eip + 2));
 
     if (eip[0] == 0xD9) {
