@@ -88,6 +88,37 @@ int64_t fpuFloatToLong(Float80 flt)
 
 Float80 fpuReciprocal(Float80 x);
 
+Float80 fpuULongToFloat(uint64_t significand)
+{
+    Float80 out;
+
+    if (significand == 0) {
+        out.sign = 0;
+        out.exponent = 0;
+        out.fraction = 0;
+        return out;
+    }
+
+    out.sign = 0;
+
+    int shifts = 0;
+    int extraShifts = 0;
+    while (significand >> 62) {
+        extraShifts++;
+        significand >>= 1;
+    }
+
+    while ((significand & (1ULL << (FRACTION_LENGTH - 1))) == 0) {
+        significand <<= 1;
+        shifts++;
+    }
+
+    out.fraction = significand;
+    out.exponent = FRACTION_LENGTH - shifts + EXPONENT_BIAS + extraShifts;
+
+    return out;
+}
+
 Float80 fpuLongToFloat(int64_t signedSignificand)
 {
     Float80 out;
@@ -109,6 +140,11 @@ Float80 fpuLongToFloat(int64_t signedSignificand)
     uint64_t significand = signedSignificand;
 
     int shifts = 0;
+    int extraShifts = 0;
+    while (significand >> 62) {
+        extraShifts++;
+        significand >>= 1;
+    }
 
     while ((significand & (1ULL << (FRACTION_LENGTH - 1))) == 0) {
         significand <<= 1;
@@ -116,7 +152,7 @@ Float80 fpuLongToFloat(int64_t signedSignificand)
     }
 
     out.fraction = significand;
-    out.exponent = FRACTION_LENGTH - shifts + EXPONENT_BIAS;
+    out.exponent = FRACTION_LENGTH - shifts + EXPONENT_BIAS + extraShifts;
 
     return out;
 }
@@ -571,9 +607,17 @@ bool x87Handler(regs* r)
         if (registerOnly) panic("em8087 not implemented (1)");
 
         uint64_t* p = (uint64_t*) ptr;
-        kprintf("about to write.\n");
         *p = fpuInternalTo64(fpuGetReg(0));
-        kprintf("written.\n");
+        r->eip += instrLen;
+        return true;
+
+    } else if (eip[0] == 0xDF && middleDigit == 5) {
+        if (registerOnly) panic("em8087 not implemented (2)");
+
+        uint64_t* p = (uint64_t*) ptr;
+        kprintf("ptr A.\n");
+        fpuPush(fpuULongToFloat(*p));
+        kprintf("ptr B.\n");
         r->eip += instrLen;
         return true;
     }
