@@ -4,8 +4,8 @@ void begin();
 void start()
 {
 	begin();
-}
-
+} 
+ 
 #include "core/main.hpp"
 #include "core/terminal.hpp"
 #include "core/physmgr.hpp"
@@ -31,6 +31,39 @@ typedef struct _Float80
     bool sign;
 
 } Float80;
+
+
+typedef struct _FPUState
+{
+    union
+    {
+        struct
+        {
+            uint16_t invalidOperation : 1;
+            uint16_t denormalisedOperand : 1;
+            uint16_t zeroDivide : 1;
+            uint16_t overflow : 1;
+            uint16_t underflow : 1;
+            uint16_t precision : 1;
+            uint16_t stackFault : 1;
+            uint16_t errSummaryStatus : 1;
+            uint16_t c0 : 1;
+            uint16_t c1 : 1;
+            uint16_t c2 : 1;
+            uint16_t stackTop : 3;
+            uint16_t c3 : 1;
+            uint16_t fpuBusy : 1;
+        };
+
+        uint16_t status;
+    };
+
+    Float80 regs[8];
+    int valuesOnStack = 0;
+
+} FPUState;
+
+FPUState fpuState;
 
 int64_t fpuFloatToLong(Float80 flt)
 {
@@ -335,51 +368,190 @@ Float80 fpuSqrt(Float80 flt)
     return fpuDivide(fpuGet1(), fpuInverseSqrt(flt));
 }
 
-Float80 fpuStack[8];
-int fpuSP = 0;
+Float80 fpuGetReg(int num)
+{
+    return fpuState.regs[(fpuState.stackTop + num) % 8];
+}
+
+uint64_t fpuInternalTo64(Float80 flt)
+{
+    uint64_t out = 0;
+    if (flt.sign) {
+        out |= (1ULL << 63ULL);
+    }
+    out |= flt.fraction >> (FRACTION_LENGTH - 52);
+    out |= ((uint64_t)((flt.exponent - EXPONENT_BIAS + 1023) & 0x7FF)) << 52ULL;
+    return out;
+}
 
 void fpuPush(Float80 flt)
 {
-    
+    fpuState.stackTop = (fpuState.stackTop + 7) % 8;
+    fpuState.regs[fpuState.stackTop] = flt;
+    if (fpuState.valuesOnStack == 8) {
+        fpuState.stackFault = 1;
+    } else {
+        fpuState.valuesOnStack++;
+    }
 }
 
 Float80 fpuPop()
 {
-    return fpuStack[0];
+    Float80 v = fpuState.regs[fpuState.stackTop];
+    fpuState.stackTop = (fpuState.stackTop + 1) % 8;
+    if (fpuState.valuesOnStack) {
+        --fpuState.valuesOnStack;
+    } else {
+        fpuState.stackFault = 1;
+    }
+    return v;
 }
 
 bool x87Handler(regs* r)
 {
 	uint8_t* eip = (uint8_t*) r->eip;
+    uint8_t middleDigit = (eip[1] >> 3) & 7;
+    uint8_t mod = (eip[1] >> 6) & 3;
+    uint8_t rm = (eip[1] >> 0) & 7;
+
+    //mod 1      01
+    //mid 3     011
+    //r/m 4     100
+    uint8_t* ptr = 0;
+    bool registerOnly = false;
+    bool ptrIllegal = false;
+
+    int instrLen = 2;
+
+    if (mod != 3 && rm != 4 && !(mod == 0 && rm == 5)) {
+        //[reg]
+        //[reg + disp8]
+        //[reg + disp32]
+        if (rm == 0) ptr = (uint8_t*) r->eax;
+        if (rm == 1) ptr = (uint8_t*) r->ecx;
+        if (rm == 2) ptr = (uint8_t*) r->edx;
+        if (rm == 3) ptr = (uint8_t*) r->ebx;
+        if (rm == 5) ptr = (uint8_t*) r->useresp;
+        if (rm == 6) ptr = (uint8_t*) r->esi;
+        if (rm == 7) ptr = (uint8_t*) r->edi;
+
+        if (mod == 1) {
+            ptr += *((int8_t*) (eip + 2));
+            instrLen += 1;
+
+        } else if (mod == 2) {
+            ptr += *((int32_t*) (eip + 2));
+            instrLen += 4;
+        }
+
+    } else if (mod == 0 && rm == 5) {
+        //32 bit displacement
+        ptr = (uint8_t*) (*((uint32_t*) (eip + 2)));
+        instrLen += 4;
+
+    } else if (mod == 3) {
+        //register only mode
+        registerOnly = true;
+
+    } else if (rm == 4) {
+        //SIB mode
+        uint8_t sib = eip[2];
+        uint8_t scale = (sib >> 6) & 3;
+        uint8_t index = (sib >> 3) & 7;
+        uint8_t base = (sib >> 0) & 7;
+        instrLen += 1;
+
+        uint32_t actBase;
+        uint32_t actIndex;
+        
+        if (base == 0) actBase = r->eax;
+        else if (base == 1) actBase = r->ecx;
+        else if (base == 2) actBase = r->edx;
+        else if (base == 3) actBase = r->ebx;
+        else if (base == 4)actIndex = r->useresp;
+        else if (base == 5) actBase = r->ebp;
+        else if (base == 6) actBase = r->esi;
+        else if (base == 7) actBase = r->edi;
+
+        if (index == 0) actIndex = r->eax;
+        else if (index == 1) actIndex = r->ecx;
+        else if (index == 2) actIndex = r->edx;
+        else if (index == 3) actIndex = r->ebx;
+        else if (index == 4) ptrIllegal = true;
+        else if (index == 5) actIndex = r->ebp;
+        else if (index == 6) actIndex = r->esi;
+        else if (index == 7) actIndex = r->edi;
+
+        if (mod == 0 && base == 5) {
+            //displacement only
+            ptr = (uint8_t*) (actIndex << scale);
+            ptr += *((int32_t*) (eip + 3));
+            instrLen += 4;
+
+        } else if (mod == 0) {
+            ptr = (uint8_t*) (actBase + actIndex << scale);
+
+        } else if (mod == 1) {
+            ptr = (uint8_t*) (actBase + actIndex << scale);
+            ptr += *((int8_t*) (eip + 3));
+            instrLen += 1;
+
+        } else if (mod == 2) {
+            ptr = (uint8_t*) (actBase + actIndex << scale);
+            ptr += *((int32_t*) (eip + 3));
+            instrLen += 4;
+        }
+    }
+
     kprintf("x87 handler called with faulting EIP of 0x%X\n", eip);
-	kprintf("x87: %X %X %X\n", *eip, *(eip + 1), *(eip + 2));
+	kprintf("x87: %X %X %X %X\n", *eip, *(eip + 1), *(eip + 2), *(eip + 3));
+
+    kprintf("decoded address = 0x%X\n", ptr);
+    kprintf("r->useresp = 0x%X, r->esp = 0x%X\n", r->useresp, r->esp);
 
     if (eip[0] == 0xD9) {
         switch (eip[1]) { 
         case 0xE8:  //D9 E8     FLD1
             fpuPush(fpuGet1());
+            r->eip += 2;
             return true;
         case 0xE9:  //D9 E9     FLDL2T
             fpuPush(fpuGetLog210());
+            r->eip += 2;
             return true;
         case 0xEA:  //D9 EA     FLDL2E
             fpuPush(fpuGetLog2E());
+            r->eip += 2;
             return true;
         case 0xEB:  //D9 EB     FLDPI
             fpuPush(fpuGetPi());
+            r->eip += 2;
             return true;
         case 0xEC:  //D9 EC     FLDLG2
             fpuPush(fpuGetLog102());
+            r->eip += 2;
             return true;
         case 0xED:  //D9 ED     FLDLN2
             fpuPush(fpuGetLogE2());
+            r->eip += 2;
             return true;
         case 0xEE:  //D9 EE     FLD0
             fpuPush(fpuGet0());
+            r->eip += 2;
             return true;
         default:
             break;
         }
+
+    } else if (eip[0] == 0xDD && middleDigit == 3) {
+        if (ptrIllegal) panic("em8087 illegal SIB. 0xDD /3");
+        if (registerOnly) panic("em8087 not implemented (1)");
+
+        uint64_t* p = (uint64_t*) ptr;
+        kprintf("PTR at 0x%X\n", p);
+        *p = fpuInternalTo64(fpuGetReg(0));
+        r->eip += instrLen;
+        return true;
     }
 
 	return false;
