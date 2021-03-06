@@ -379,8 +379,8 @@ uint64_t fpuInternalTo64(Float80 flt)
     if (flt.sign) {
         out |= (1ULL << 63ULL);
     }
-    out |= flt.fraction >> (FRACTION_LENGTH - 52);
-    out |= ((uint64_t)((flt.exponent - EXPONENT_BIAS + 1023) & 0x7FF)) << 52ULL;
+    out |= (flt.fraction & ~(1ULL << (FRACTION_LENGTH - 1))) >> (FRACTION_LENGTH - 53);
+    out |= ((uint64_t)((flt.exponent - EXPONENT_BIAS + 1022) & 0x7FF)) << 52ULL;
     return out;
 }
 
@@ -461,6 +461,8 @@ bool x87Handler(regs* r)
         uint8_t base = (sib >> 0) & 7;
         instrLen += 1;
 
+        kprintf("SIB. mod = %d, rm = %d, scale = %d, index = %d, base = %d\n", mod, rm, scale, index, base);
+
         uint32_t actBase;
         uint32_t actIndex;
         
@@ -468,7 +470,7 @@ bool x87Handler(regs* r)
         else if (base == 1) actBase = r->ecx;
         else if (base == 2) actBase = r->edx;
         else if (base == 3) actBase = r->ebx;
-        else if (base == 4)actIndex = r->useresp;
+        else if (base == 4) actBase = r->useresp;
         else if (base == 5) actBase = r->ebp;
         else if (base == 6) actBase = r->esi;
         else if (base == 7) actBase = r->edi;
