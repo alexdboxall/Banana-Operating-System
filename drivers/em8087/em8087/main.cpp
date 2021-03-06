@@ -373,14 +373,34 @@ Float80 fpuGetReg(int num)
     return fpuState.regs[(fpuState.stackTop + num) % 8];
 }
 
+
+uint32_t fpuInternalTo32(Float80 flt)
+{
+    if (flt.exponent - EXPONENT_BIAS > 127) {
+        flt.exponent = 127;
+        fpuState.overflow = 1;
+    }
+    uint32_t out = 0;
+    if (flt.sign) {
+        out |= (1ULL << 31ULL);
+    }
+    out |= (flt.fraction & ~(1ULL << (FRACTION_LENGTH - 1))) >> (FRACTION_LENGTH - 24);
+    out |= ((uint32_t) ((flt.exponent - EXPONENT_BIAS + 126))) << 23ULL;
+    return out;
+}
+
 uint64_t fpuInternalTo64(Float80 flt)
 {
+    if (flt.exponent - EXPONENT_BIAS > 1023) {
+        flt.exponent = 1023;
+        fpuState.overflow = 1;
+    }
     uint64_t out = 0;
     if (flt.sign) {
         out |= (1ULL << 63ULL);
     }
     out |= (flt.fraction & ~(1ULL << (FRACTION_LENGTH - 1))) >> (FRACTION_LENGTH - 53);
-    out |= ((uint64_t)((flt.exponent - EXPONENT_BIAS + 1022) & 0x7FF)) << 52ULL;
+    out |= ((uint64_t)((flt.exponent - EXPONENT_BIAS + 1022))) << 52ULL;
     return out;
 }
 
@@ -431,7 +451,7 @@ bool x87Handler(regs* r)
         if (rm == 1) ptr = (uint8_t*) r->ecx;
         if (rm == 2) ptr = (uint8_t*) r->edx;
         if (rm == 3) ptr = (uint8_t*) r->ebx;
-        if (rm == 5) ptr = (uint8_t*) r->useresp;
+        if (rm == 5) ptr = (uint8_t*) r->ebp;
         if (rm == 6) ptr = (uint8_t*) r->esi;
         if (rm == 7) ptr = (uint8_t*) r->edi;
 
@@ -479,7 +499,7 @@ bool x87Handler(regs* r)
         else if (index == 1) actIndex = r->ecx;
         else if (index == 2) actIndex = r->edx;
         else if (index == 3) actIndex = r->ebx;
-        else if (index == 4) ptrIllegal = true;
+        else if (index == 4) actIndex = 0;
         else if (index == 5) actIndex = r->ebp;
         else if (index == 6) actIndex = r->esi;
         else if (index == 7) actIndex = r->edi;
@@ -491,14 +511,17 @@ bool x87Handler(regs* r)
             instrLen += 4;
 
         } else if (mod == 0) {
+            //SIB
             ptr = (uint8_t*) (actBase + actIndex << scale);
 
         } else if (mod == 1) {
+            //SIB + disp8
             ptr = (uint8_t*) (actBase + actIndex << scale);
             ptr += *((int8_t*) (eip + 3));
             instrLen += 1;
 
         } else if (mod == 2) {
+            //SIB + disp32
             ptr = (uint8_t*) (actBase + actIndex << scale);
             ptr += *((int32_t*) (eip + 3));
             instrLen += 4;
@@ -509,7 +532,6 @@ bool x87Handler(regs* r)
 	kprintf("x87: %X %X %X %X\n", *eip, *(eip + 1), *(eip + 2), *(eip + 3));
 
     kprintf("decoded address = 0x%X\n", ptr);
-    kprintf("r->useresp = 0x%X, r->esp = 0x%X\n", r->useresp, r->esp);
 
     if (eip[0] == 0xD9) {
         switch (eip[1]) { 
@@ -546,12 +568,12 @@ bool x87Handler(regs* r)
         }
 
     } else if (eip[0] == 0xDD && middleDigit == 3) {
-        if (ptrIllegal) panic("em8087 illegal SIB. 0xDD /3");
         if (registerOnly) panic("em8087 not implemented (1)");
 
         uint64_t* p = (uint64_t*) ptr;
-        kprintf("PTR at 0x%X\n", p);
+        kprintf("about to write.\n");
         *p = fpuInternalTo64(fpuGetReg(0));
+        kprintf("written.\n");
         r->eip += instrLen;
         return true;
     }
