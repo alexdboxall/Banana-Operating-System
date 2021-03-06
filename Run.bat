@@ -16,10 +16,12 @@ rm disacpica.txt
 rm dislegacy.txt
 rm diswsbe.txt
 rm dis87.txt
+rm discmd.txt
 objdump -drwC -Mintel packages/banana/32/0002/acpica.sys >> disacpica.txt
 objdump -drwC -Mintel packages/system/32/0002/legacy.sys >> dislegacy.txt
 objdump -drwC -Mintel packages/banana/32/0001/wsbe.sys >> diswsbe.txt
 objdump -drwC -Mintel packages/system/32/0002/em8087.sys >> dis87.txt
+objdump -drwC -Mintel packages/system/32/0001/command.exe >> discmd.txt
 
 cd D:/Users/Alex/Desktop/Banana/firmware/BOOT2
 call build.bat
@@ -135,7 +137,7 @@ if exist Banana/qemuinhibit.txt (
     echo a
 ) else (
 rem "C:/Program Files/QEMU/qemu-system-i386" 
-    qemu-system-i386 -cpu 486 -serial file:log3.txt -m 16 -rtc base=utc -soundhw pcspk,sb16 -d guest_errors,cpu_reset -monitor stdio -hda banana-os/newimage.img -cdrom D:/Users/Alex/Desktop/Banana/Installer/BANANA.ISO -hdb mikeos.flp
+    qemu-system-i386 -cpu pentium3 -serial file:log3.txt -m 64 -rtc base=utc -soundhw pcspk,sb16 -d guest_errors,cpu_reset -monitor stdio -hda banana-os/newimage.img -cdrom D:/Users/Alex/Desktop/Banana/Installer/BANANA.ISO -hdb mikeos.flp
     pause
     rem -drive file="banana-os/newimage.img",id=abcdefg,if=none -device ich9-ahci,id=ahci -device ide-drive,drive=abcdefg,bus=ahci.0 
     rem -cdrom D:/Users/Alex/Desktop/banana-os/Installer/BANANA.ISO 

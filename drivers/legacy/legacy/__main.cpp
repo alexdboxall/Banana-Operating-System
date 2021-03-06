@@ -63,7 +63,7 @@ void ISA::doSpeaker()
 
 void ISA::doSoundblaster()
 {
-	return;
+	//return;
 
 	outb(0x226, 1);
 	nanoSleep(1000 * 1000 * 3);
