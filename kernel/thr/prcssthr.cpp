@@ -476,6 +476,7 @@ void cleanupTerminatedTask(ThreadControlBlock* task)
 		kprintf("Deleted VAS.\n");
 	}
 
+	kprintf("sizeof(Process) = %d\n", sizeof(Process));
 	if (!task->vm86Task) {
 		//delete task;
 	}
