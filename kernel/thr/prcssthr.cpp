@@ -477,7 +477,7 @@ void cleanupTerminatedTask(ThreadControlBlock* task)
 	}
 
 	if (!task->vm86Task) {
-		delete task;
+		//delete task;
 	}
 }
 
