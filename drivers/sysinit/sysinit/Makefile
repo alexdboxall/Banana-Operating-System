@@ -15,7 +15,7 @@ LD64=x86_64-banana-ld
 ASFLAGS=
 CFLAGS=-x c
 CXXFLAGS=-x c++
-LDFLAGS=-g
+LDFLAGS=-g -T D:/Users/Alex/Desktop/Banana/drivers/dlink.ld
 
 DFIX=python D:/Users/Alex/Desktop/Banana/drivers/dfix.py
 

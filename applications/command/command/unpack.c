@@ -4577,7 +4577,7 @@ typedef struct FileHeader
 
 } FileHeader;
 
-#define COPYSIZE 65536 * 2
+#define COPYSIZE 65536
 char rawdatabuffer[COPYSIZE];
 
 int unpackmain(int argc, char* argv[])

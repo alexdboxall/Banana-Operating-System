@@ -1314,8 +1314,6 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 	} else if (!strcasecmp(argv[0], "exit")) {
 		exit(0);
 
-
-
 	} else if (!strcasecmp(argv[0], "rem") || !strcmp(argv[0], "//")) {
 
 	} else if (!strcasecmp(argv[0], "cd") || !strcasecmp(argv[0], "pwd") || !strcasecmp(argv[0], "cwd") || !strcasecmp(argv[0], "chdir")) {

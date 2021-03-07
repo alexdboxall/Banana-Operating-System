@@ -15,6 +15,8 @@ namespace Krnl
 {
 	bool kernelInPanic = false;
 
+	void (*guiPanicHandler)();
+
 	void panic(const char* message) {
 		asm("cli");
 		kernelInPanic = true;
@@ -44,6 +46,9 @@ namespace Krnl
 		kernelProcess->terminal->puts("      screen appears again, hold the 7 key on startup and disable\n");
 		kernelProcess->terminal->puts("      APIC and ACPI.\n\n\n");
 
+		if (guiPanicHandler) {
+			guiPanicHandler();
+		}
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wframe-address"
