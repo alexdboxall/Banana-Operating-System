@@ -20,8 +20,18 @@ LinkedList<UnixFile> unixFileLinkedList;
 
 bool initialFilesAdded = false;
 
+UnixFile* sfileCon;
+UnixFile* sfileAux;
+UnixFile* sfilePnt;
+UnixFile* sfileNul;
+UnixFile* sfileCom[9];
+UnixFile* sfileLpt[9];
+
 UnixFile::UnixFile(int _fd)
 {
+	if (_fd >= RESERVED_FD_START) {
+		return;
+	}
 	fd = nextFd++;
 	unixFileLinkedList.addElement(this);
 
@@ -30,14 +40,14 @@ UnixFile::UnixFile(int _fd)
 		//in a recursion loop
 		initialFilesAdded = true;
 
-		new ReservedFilename(RESERVED_FD_AUX);
-		new ReservedFilename(RESERVED_FD_CON);
-		new ReservedFilename(RESERVED_FD_NUL);
-		new ReservedFilename(RESERVED_FD_PNT);
+		sfileAux = new ReservedFilename(RESERVED_FD_AUX);
+		sfileCon = new ReservedFilename(RESERVED_FD_CON);
+		sfileNul = new ReservedFilename(RESERVED_FD_NUL);
+		sfilePnt = new ReservedFilename(RESERVED_FD_PNT);
 
 		for (int i = 0; i < 9; ++i) {
-			new ReservedFilename(RESERVED_FD_COM1 + i);
-			new ReservedFilename(RESERVED_FD_LPT1 + i);
+			sfileCom[i] = new ReservedFilename(RESERVED_FD_COM1 + i);
+			sfileLpt[i] = new ReservedFilename(RESERVED_FD_LPT1 + i);
 		}
 	}
 }
@@ -68,13 +78,27 @@ int UnixFile::getFileDescriptor()
 
 UnixFile* getFromFileDescriptor(int fdIn)
 {
-	UnixFile* f = unixFileLinkedList.getFirstElement();
-	while (f) {
-		if (f->fd == fdIn) {
-			return f;
+	if (fdIn < RESERVED_FD_START) {
+		UnixFile* f = unixFileLinkedList.getFirstElement();
+		while (f) {
+			if (f->fd == fdIn) {
+				return f;
+			}
+			f = unixFileLinkedList.getNext(f);
 		}
-		f = unixFileLinkedList.getNext(f);
+	} else {
+		if (fdIn == RESERVED_FD_AUX) return sfileAux;
+		else if (fdIn == RESERVED_FD_CON) return sfileCon;
+		else if (fdIn == RESERVED_FD_PNT) return sfilePnt;
+		else if (fdIn == RESERVED_FD_NUL) return sfileNul;
+		else if (fdIn >= RESERVED_FD_COM1 && fdIn <= RESERVED_FD_COM9) {
+			return sfileCom[fdIn - RESERVED_FD_COM1];
+
+		} else if (fdIn >= RESERVED_FD_LPT1 && fdIn <= RESERVED_FD_LPT9) {
+			return sfileLpt[fdIn - RESERVED_FD_LPT1];
+		}
 	}
+	
 	return nullptr;
 }
 
