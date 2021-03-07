@@ -502,7 +502,14 @@ uint64_t sysCallGetEnv(regs* r)
 	char* addr = (char*) r->edx;
 	int num = r->ebx;
 
-	kprintf("sysCallGetEnv ECX = 0x%X, EDX = 0x%X\n", r->ecx, r->edx);
+	/*
+	int size = SystemCall(GetEnv, i, 0, 0);
+	if (!size) break;
+	__env[i] = malloc(size);
+	SystemCall(GetEnv, i, 1, (size_t) __env[i]);
+	*/
+
+	kprintf("sysCallGetEnv EBX = 0x%X, ECX = 0x%X, EDX = 0x%X\n", r->ebx, r->ecx, r->edx);
 
 	if (r->ecx == 0) {
 		//get length
