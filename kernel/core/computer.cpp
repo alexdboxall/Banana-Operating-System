@@ -359,6 +359,7 @@ void Computer::setDiskActivityLight(int disk, bool state)
 
 extern "C" void debug_strcpy()
 {
+	if (!schedulingOn) return;
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wframe-address"
 
