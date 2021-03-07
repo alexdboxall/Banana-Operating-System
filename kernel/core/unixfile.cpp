@@ -90,6 +90,7 @@ UnixFile* getFromFileDescriptor(int fdIn)
 			f = unixFileLinkedList.getNext(f);
 		}
 	} else {
+		kprintf("This is aspecial file of some sort...\n");
 		if (fdIn == RESERVED_FD_AUX) return sfileAux;
 		else if (fdIn == RESERVED_FD_CON) {
 			kprintf("returning the con file.\n");

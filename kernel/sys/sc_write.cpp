@@ -28,6 +28,7 @@ namespace Sys
 		if (r->ebx <= 2) {
 			file = currentTaskTCB->processRelatedTo->terminal;
 		} else {
+			kprintf("Getting file from file descr.\n");
 			file = getFromFileDescriptor(r->ebx);
 		}
 
