@@ -737,13 +737,13 @@ namespace Thr
 		}
 
 		int used = 0;
-		int not = 0;
+		int nnot = 0;
 		for (size_t i = 0; i < (siz + 4095) / 4096; ++i) {
 			size_t* ptentry = Virt::getAKernelVAS()->getPageTableEntry(addr + i * 4096);
 			if (*ptentry & (PAGE_ACCESSED | PAGE_DIRTY)) {
 				kprintf("Driver page used. %d\n", ++used);
 			} else {
-				kprintf("Driver page not used. %d\n", ++not);
+				kprintf("Driver page not used. %d\n", ++nnot);
 			}
 		}
 
