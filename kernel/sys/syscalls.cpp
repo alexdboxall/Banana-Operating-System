@@ -507,9 +507,6 @@ uint64_t sysCallGetEnv(regs* r)
 	int num = r->ebx;
 
 	kprintf("sysCallGetEnv\n");
-	if (!addr) {
-		return 0;
-	}
 
 	if (r->ecx == 0) {
 		//get length
