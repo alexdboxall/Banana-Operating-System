@@ -108,11 +108,6 @@ void Computer::start()
 	initVFS();
 	root->open(0, 0, nullptr);
 
-	// AB 123456
-	char key[8];
-	thisCPU()->writeDR2(key);
-	validateKey();
-
 	setupSystemCalls();
 	loadClockSettings();
 	loadDriversForAll();
