@@ -155,7 +155,6 @@ void nanoSleep(uint64_t nanoseconds);
 void updateTimeUsed();
 void cleanerTaskFunction(void* context);
 int waitTask(int pid, int* wstatus, int options);
-int execveProcess(const char* pathname, char* const argv[], char* const envp[]);
 void disableIRQs();
 void enableIRQs();
 int getIRQNestingLevel();

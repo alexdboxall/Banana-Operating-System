@@ -357,20 +357,13 @@ uint64_t sysCallWait(regs* r)
 	return waitTask(r->ebx, (int*) r->edx, r->ecx);
 }
 
-int forkProcess(regs* r);
-
 uint64_t sysCallFork(regs* r)
 {
-	kprintf("FORK CALLED.\n");
-	return forkProcess(r);
+	return -1;
 }
 
 uint64_t sysCallExecve(regs* r)
 {
-	kprintf("EXECVE CALLED.\n");
-	char x[257];
-	getcwd(currentTaskTCB->processRelatedTo, x, 256);
-	execveProcess((const char*) r->ebx, (char**) r->ecx, (char**) r->edx);
 	return -1;
 }
 

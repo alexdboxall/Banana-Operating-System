@@ -371,74 +371,7 @@ void VAS::setCPUSpecific(size_t physAddr)
 
 VAS::VAS(VAS* old)
 {
-	//a scary, voodoo, black magic ritual that doesn't work
-	lockStuff();
-
-	sbrk = old->sbrk;
-	supervisorVAS = old->supervisorVAS;
-
-	pageDirectoryBasePhysical = Phys::allocatePage();
-
-	//DO NOT mark as allocated, as we shouldn't be able to swap out a page table
-	pageDirectoryBase = (size_t*) Virt::getAKernelVAS()->mapRange(pageDirectoryBasePhysical, Virt::allocateKernelVirtualPages(1), 1, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
-
-	mapOtherVASIn(true, this);
-
-	size_t mappingSpotOld = Virt::allocateKernelVirtualPages(1);
-	size_t mappingSpotNew = Virt::allocateKernelVirtualPages(1);
-
-	for (int i = 0; i < 1024; ++i) {
-		size_t oldEntry = currentTaskTCB->processRelatedTo->vas->pageDirectoryBase[i];
-
-		kprintf("OLD ENTRY: 0x%X\n", oldEntry);
-
-		if ((oldEntry & PAGE_ALLOCATED) && (oldEntry & PAGE_PRESENT)) {
-			kprintf("Tricky allocation...\n");
-
-			size_t addr = Phys::allocatePage();
-			kprintf("New addr 0x%X\n", addr);
-
-			pageDirectoryBase[i] = addr | (oldEntry & 0xFFF);
-
-			for (int j = 0; j < 1024; ++j) {
-				size_t vaddr = ((size_t) i) * 0x400000 + ((size_t) j) * 0x1000;
-				size_t oldPageEntry = *getPageTableEntry(vaddr);
-
-				size_t* ent = currentTaskTCB->processRelatedTo->vas->getForeignPageTableEntry(true, vaddr);
-
-				kprintf("vaddr = 0x%X\nold page entry = 0x%X\n", vaddr, oldPageEntry);
-
-				if ((oldPageEntry & PAGE_ALLOCATED) && (oldPageEntry & PAGE_PRESENT)) {
-					kprintf("    New copy.\n");
-					
-					size_t newPage = Phys::allocatePage();
-					kprintf("    newPage = 0x%X\n", newPage);
-					kprintf("    oldPage = 0x%X\n", oldPageEntry & ~0xFFF);
-
-					Virt::getAKernelVAS()->mapRange(newPage, mappingSpotNew, 1, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
-					Virt::getAKernelVAS()->mapRange(oldPageEntry & ~0xFFF, mappingSpotOld, 1, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
-
-					memcpy((void*) mappingSpotNew, (const void*) mappingSpotOld, 4096);
-
-					*ent = newPage | (oldPageEntry & 0xFFF);
-					kprintf("    Entry = 0x%X\n    ent = 0x%X\n", newPage | (oldPageEntry & 0xFFF), ent);
-
-				} else {
-					kprintf("    Straight copy.\n");
-					*ent = oldPageEntry;
-				}
-			}
-			
-		} else {
-			kprintf("Straight copy.\n");
-			pageDirectoryBase[i] = oldEntry;
-		}
-	}
-
-	Virt::freeKernelVirtualPages(mappingSpotNew);
-	Virt::freeKernelVirtualPages(mappingSpotOld);
-
-	unlockStuff();
+	panic("VAS::VAS(VAS* old) not implemented");
 }
 
 VAS::VAS(bool kernel) {
