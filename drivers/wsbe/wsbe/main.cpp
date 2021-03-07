@@ -136,6 +136,7 @@ void mup(struct Window_struct* win, int x, int y)
 void resizehandler(struct Window_struct* win, int x, int y)
 {
     strcpy(szstring, "Resizing...");
+    panic("TEST");
 }
 
 
