@@ -520,6 +520,7 @@ strtok (
  *
  ******************************************************************************/
 
+#include "dbg/kconsole.hpp"
 char *
 strcpy (
     char                    *DstString,
