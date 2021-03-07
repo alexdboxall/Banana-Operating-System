@@ -111,7 +111,7 @@ UnixFile* getFromFileDescriptor(int fdIn)
 
 ReservedFilename::ReservedFilename(int _fd) : UnixFile(_fd)
 {
-
+	fd = _fd;
 }
 
 ReservedFilename::~ReservedFilename()
