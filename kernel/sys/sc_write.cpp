@@ -22,6 +22,7 @@ namespace Sys
 	/// 
 	uint64_t write(regs* r)
 	{
+		kprintf("WRITING A FILE.\n");
 		UnixFile* file = nullptr;
 
 		if (r->ebx <= 2) {
