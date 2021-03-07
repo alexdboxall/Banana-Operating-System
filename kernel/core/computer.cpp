@@ -89,6 +89,8 @@ int Computer::open(int a, int b, void* vas)
 	return -1;
 }
 
+extern "C" size_t validateKey();
+
 void Computer::start()
 {
 	lockScheduler();
@@ -105,6 +107,11 @@ void Computer::start()
 
 	initVFS();
 	root->open(0, 0, nullptr);
+
+	// AB 123456
+	char key[8];
+	thisCPU()->writeDR2(key);
+	validateKey();
 
 	setupSystemCalls();
 	loadClockSettings();
