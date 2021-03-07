@@ -142,10 +142,12 @@ FileStatus ReservedFilename::read(uint64_t bytes, void* where, int* bytesRead)
 
 bool ReservedFilename::isAtty()
 {
+	kprintf("reserved file isAtty\n");
 	if (fd == RESERVED_FD_AUX) {
 		return false;
 
 	} else if (fd == RESERVED_FD_CON) {
+		kprintf("Yes, con is a TTY\n");
 		return true;
 
 	} else if (fd == RESERVED_FD_NUL) {
