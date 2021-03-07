@@ -604,7 +604,13 @@ void begin(void* a)
         usertask = new Process("C:/Banana/System/command.exe");
     }
     setActiveTerminal(usertask->terminal);
-    usertask->createUserThread();
+
+    if (firstTime) {
+        usertask->createUserThread();
+    } else {
+        usertask->createUserThread();
+        while (1);
+    }
 
     int wstatus;
     waitTask(usertask->pid, &wstatus, 0);

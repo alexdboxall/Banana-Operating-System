@@ -711,6 +711,7 @@ void setupSystemCalls()
 uint64_t systemCall(regs* r, void* context)
 {	
 	if (r->eax < 128 && systemCallHandlers[r->eax]) {
+		kprintf("syscall 0x%X\n", r->eax);
 		r->eax = systemCallHandlers[r->eax](r);
 	} else {
 		kprintf("Invalid syscall %d\n", r->eax);
