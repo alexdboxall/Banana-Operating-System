@@ -54,6 +54,9 @@ UnixFile::UnixFile(int _fd)
 
 UnixFile::~UnixFile()
 {
+	if (_fd >= RESERVED_FD_START) {
+		return;
+	}
 	int timeout = 0;
 	while (1) {
 		UnixFile* f = unixFileLinkedList.getFirstElement();

@@ -156,7 +156,8 @@ uint64_t sysCallTell(regs* r)
 		return -1;
 	} else if (r->ebx > RESERVED_FD_START) {
 		kprintf("Telling special file. %d\n", r->ebx);
-		return -1;
+		*((uint64_t*) r->ecx) = 0;
+		return 0;
 	} else {
 		file = getFromFileDescriptor(r->ebx);
 	}
@@ -179,7 +180,8 @@ uint64_t sysCallSizeFromFilename(regs* r)
 		return -1;
 	} else if (r->ebx > RESERVED_FD_START) {
 		kprintf("Statting special file. %d\n", r->ebx);
-		return -1;
+		*((uint64_t*) r->ecx) = 0;
+		return 0;
 	} else {
 		file = new File(filename, currentTaskTCB->processRelatedTo);
 	}
@@ -204,7 +206,8 @@ uint64_t sysCallSize(regs* r)
 		return -1;
 	} else if (r->ebx > RESERVED_FD_START) {
 		kprintf("Statting special file. %d\n", r->ebx);
-		return -1;
+		*((uint64_t*) r->ecx) = 0;
+		return 0;
 	} else {
 		file = getFromFileDescriptor(r->ebx);
 	}
