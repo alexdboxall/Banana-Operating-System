@@ -514,7 +514,9 @@ uint64_t sysCallGetEnv(regs* r)
 	if (r->ecx == 0) {
 		//get length
 		if (num == 0) {
-			return strlen("PATH=C:/Banana/System;C:/Banana/Applications;C:/Banana/Applications/System;");
+			int len = strlen("PATH=C:/Banana/System;C:/Banana/Applications;C:/Banana/Applications/System;");
+			kprintf("getEnv length = %d\n", len);
+			return len;
 		} else {
 			return 0;
 		}

@@ -276,7 +276,6 @@ size_t VAS::allocatePages(int count, int flags)
 		for (int i = 0; i < count; ++i) {
 			size_t phys = Phys::allocatePage();
 			mapPage(phys, virt + i * 4096, flags | PAGE_ALLOCATED);
-			memset((void*) (virt + i * 4096), 0, 4096);
 			if (invlpg) {
 				asm volatile ("invlpg (%0)" : : "b"((void*) (virt + i * 4096)) : "memory");
 			}
