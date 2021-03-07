@@ -527,9 +527,6 @@ strcpy (
 {
     char                    *String = DstString;
 
-    extern void debug_strcpy();
-    debug_strcpy();
-
     /* Move bytes brute force */
 
     while (*SrcString)

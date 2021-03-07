@@ -352,18 +352,3 @@ void Computer::setDiskActivityLight(int disk, bool state)
 		outb(PORT_SYSTEM_CONTROL_A, sysA);
 	}
 }
-
-
-
-
-
-extern "C" void debug_strcpy()
-{
-	if (!schedulingOn) return;
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wframe-address"
-
-	kprintf("strcpy 0x%X, 0x%X\n", __builtin_return_address(1), __builtin_return_address(2));
-
-#pragma GCC diagnostic pop
-}
