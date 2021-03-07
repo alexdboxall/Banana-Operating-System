@@ -584,7 +584,7 @@ void begin(void* a)
 
     if (firstTime) {
         kprintf("THIS IS THE FIRST RUN!!!\n");
-        firstRun();
+        //firstRun();
 
     } else {
         kernelProcess->createThread(playJingle);
@@ -597,7 +597,7 @@ void begin(void* a)
     Process* usertask;
     
     if (firstTime) {
-        createUser("Alex");
+        //createUser("Alex");
         char* argv[] = { "C:/Banana/System/command.exe", "call", "C:/Banana/System/init.bat", 0 };
         usertask = new Process("C:/Banana/System/command.exe", nullptr, argv);
     } else {
@@ -605,12 +605,7 @@ void begin(void* a)
     }
     setActiveTerminal(usertask->terminal);
 
-    if (firstTime) {
-        usertask->createUserThread();
-    } else {
-        usertask->createUserThread();
-        while (1);
-    }
+    usertask->createUserThread();
 
     int wstatus;
     waitTask(usertask->pid, &wstatus, 0);

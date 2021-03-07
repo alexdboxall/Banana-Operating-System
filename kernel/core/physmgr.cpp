@@ -215,6 +215,7 @@ namespace Phys
 			uint64_t top = bottom + length;
 			uint64_t type = *(((uint32_t*) ramTable) + 4);
 
+
 			kprintf("Memory range: 0x%X -> 0x%X (%d)\n", (uint32_t) bottom, (uint32_t) top, (uint32_t) type);
 
 			//check that the high bits are clear
@@ -226,14 +227,26 @@ namespace Phys
 				break;
 			}
 
+			bool belowEBDA = false;
+			if (type == 1 && bottom <= 0x80000 && 0x80000 < top) {
+				bottom = 0x80000;
+				if (top >= 0xA0000) {
+					top = 0xA0000;
+				}
+				length = top - bottom;
+				belowEBDA = true;
+			}
+
 			//check that it is usable, and that at least some of it is in the range
 			//we want it to be in
-			if (type == 1 && top >= highestUsedAddr && length >= 0x2000) {
+			if (type == 1 && (top >= highestUsedAddr || belowEBDA) && length >= 0x2000) {
 				//if it starts too low, move it up, recalculate length
-				if (bottom < highestUsedAddr) {
+				if (bottom < highestUsedAddr && !belowEBDA) {
 					bottom = highestUsedAddr;
 					length = top - bottom;
 				}
+
+				kprintf("Allowing range to be used: 0x%X -> 0x%X\n", (uint32_t) bottom, (uint32_t) top);
 
 				//allow it to be used
 				allowSegmentToBeUsed(bottom, top);
