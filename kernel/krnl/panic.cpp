@@ -18,8 +18,8 @@ namespace Krnl
 	void (*guiPanicHandler)();
 
 	void panic(const char* message) {
+		kprintf("panic handler at 0x%X\n", guiPanicHandler);
 		if (guiPanicHandler) {
-			kprintf("panic handler at 0x%X\n", guiPanicHandler);
 			guiPanicHandler();
 		}
 
