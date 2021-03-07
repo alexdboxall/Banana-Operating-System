@@ -64,6 +64,9 @@ uint64_t sysCallOpen(regs* r)
 	if (!r->ebx) {
 		return -1;
 	}
+	if (!r->edx) {
+		return -1;
+	}
 
 	char fname[256];
 	standardiseFiles(fname, (const char*) r->edx, "Z:/");
@@ -711,6 +714,7 @@ uint64_t systemCall(regs* r, void* context)
 	if (r->eax < 128 && systemCallHandlers[r->eax]) {
 		kprintf("syscall 0x%X\n", r->eax);
 		r->eax = systemCallHandlers[r->eax](r);
+		kprintf("syscall done.\n");
 	} else {
 		kprintf("Invalid syscall %d\n", r->eax);
 	}
