@@ -78,6 +78,7 @@ uint64_t sysCallOpen(regs* r)
 
 	if (string_ends_with((const char*) r->edx, "/con") || string_ends_with((const char*) r->edx, "\\con") || !strcmp((const char*) r->edx, "con") || string_ends_with(fname, "/con")) {
 		*((uint64_t*) r->ebx) = RESERVED_FD_CON;
+		kprintf("opened con!\n");
 		return 0;
 	}
 	if (string_ends_with((const char*) r->edx, "/nul") || string_ends_with((const char*) r->edx, "\\nul") || !strcmp((const char*) r->edx, "nul") || string_ends_with(fname, "/nul")) {
