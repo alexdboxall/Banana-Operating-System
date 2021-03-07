@@ -402,6 +402,7 @@ uint64_t sysCallUnlink(regs* r)
 
 uint64_t sysCallGetArgc(regs* r)
 {
+	kprintf("ARGC = %d\n", currentTaskTCB->processRelatedTo->argc);
 	return currentTaskTCB->processRelatedTo->argc;
 }
 
