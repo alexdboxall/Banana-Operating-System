@@ -99,6 +99,7 @@ int64_t fpuFloatToLong(Float80 flt)
     if (exponent > FRACTION_LENGTH) {
         return 0;
     }
+    kprintf("Float->Int: 0x%X00000000 >> %d\n", (uint32_t)(flt.fraction >> 32), FRACTION_LENGTH - exponent);
     int64_t res = flt.fraction >> (FRACTION_LENGTH - exponent);
     if (flt.sign) {
         res = -res;
@@ -191,7 +192,7 @@ Float80 fpuGet1()
     Float80 out;
     out.sign = 0;
     out.fraction = (1ULL << (FRACTION_LENGTH - 1));
-    out.exponent = 16383;
+    out.exponent = 16384;
     return out;
 }
 
@@ -254,9 +255,23 @@ bool fpuAreEqual(Float80 x, Float80 y)
     return (x.exponent == y.exponent && x.sign == y.sign && x.fraction == y.fraction);
 }
 
+void fpuUnorderedCompare(Float80 x, Float80 y)
+{
+    fpuState.c0 = !fpuAreEqual(x, y) && fpuIsSecondLarger(x, y);
+    fpuState.c2 = 0;
+    fpuState.c3 = fpuAreEqual(x, y);
+}
+
 Float80 fpuNormalise(Float80 flt)
 {
-    //ensure the top bit of the fraction is set
+    //check if there is a bit set further left (higher) than the hidden bit
+    //and if so, shift the thing right and increase exponent
+    while (flt.fraction >> FRACTION_LENGTH) {
+        flt.fraction >>= 1;
+        flt.exponent++;
+    }
+
+    //check for times where it falls short (high bit not set)
     while (!(flt.fraction & (1ULL << (FRACTION_LENGTH - 1)))) {
         //check for zero
         if (flt.fraction == 0) {
@@ -265,7 +280,7 @@ Float80 fpuNormalise(Float80 flt)
         }
 
         flt.fraction <<= 1;
-        flt.exponent -= 1;
+        flt.exponent--;
     }
 
     return flt;
@@ -462,6 +477,22 @@ uint32_t fpuInternalTo32(Float80 flt)
     return out;
 }
 
+
+uint64_t fpuInternalTo64(Float80 flt)
+{
+    if (flt.exponent - EXPONENT_BIAS > 1023) {
+        flt.exponent = 1023;
+        fpuState.overflow = 1;
+    }
+    uint64_t out = 0;
+    if (flt.sign) {
+        out |= (1ULL << 63ULL);
+    }
+    out |= (flt.fraction & ~(1ULL << (FRACTION_LENGTH - 1))) >> (FRACTION_LENGTH - 53);
+    out |= ((uint64_t) ((flt.exponent - EXPONENT_BIAS + 1022))) << 52ULL;
+    return out;
+}
+
 Float80 fpu32ToInternal(uint32_t flt)
 {
     Float80 out;
@@ -484,20 +515,6 @@ Float80 fpu64ToInternal(uint64_t flt)
     return out;
 }
 
-uint64_t fpuInternalTo64(Float80 flt)
-{
-    if (flt.exponent - EXPONENT_BIAS > 1023) {
-        flt.exponent = 1023;
-        fpuState.overflow = 1;
-    }
-    uint64_t out = 0;
-    if (flt.sign) {
-        out |= (1ULL << 63ULL);
-    }
-    out |= (flt.fraction & ~(1ULL << (FRACTION_LENGTH - 1))) >> (FRACTION_LENGTH - 53);
-    out |= ((uint64_t)((flt.exponent - EXPONENT_BIAS + 1022))) << 52ULL;
-    return out;
-}
 
 void fpuPush(Float80 flt)
 {
@@ -520,13 +537,6 @@ Float80 fpuPop()
         fpuState.stackFault = 1;
     }
     return v;
-}
-
-void fpuUnorderedCompare(Float80 x, Float80 y)
-{
-    fpuState.c0 = !fpuAreEqual(x, y) && fpuIsSecondLarger(x, y);
-    fpuState.c2 = 0;
-    fpuState.c3 = fpuAreEqual(x, y);
 }
 
 bool x87Handler(regs* r)
@@ -583,7 +593,7 @@ bool x87Handler(regs* r)
         uint8_t base = (sib >> 0) & 7;
         instrLen += 1;
 
-        kprintf("SIB. mod = %d, rm = %d, scale = %d, index = %d, base = %d\n", mod, rm, scale, index, base);
+        //kprintf("SIB. mod = %d, rm = %d, scale = %d, index = %d, base = %d\n", mod, rm, scale, index, base);
 
         uint32_t actBase;
         uint32_t actIndex;
@@ -632,7 +642,6 @@ bool x87Handler(regs* r)
 
     kprintf("x87 handler called with faulting EIP of 0x%X\n", eip);
 	kprintf("x87: %X %X %X %X\n", *eip, *(eip + 1), *(eip + 2), *(eip + 3));
-
     kprintf("decoded address = 0x%X\n", ptr);
 
     if (eip[0] == 0xD9) {
@@ -678,23 +687,23 @@ bool x87Handler(regs* r)
         }
     }
 
-    if (eip[0] == 0xD9 && eip[1] >= 0xC0 && eip[1] < 0xC8) {            //FLD
-        fpuPush(fpuGetReg(eip[1] - 0xC0));
-        r->eip += 2;
-        return true;
-
-    } else if (eip[0] == 0xD8 && eip[1] >= 0xC0 && eip[1] <= 0xC7) {     //FADD
+    if (eip[0] == 0xD8 && eip[1] >= 0xC0 && eip[1] <= 0xC7) {           //FADD
         fpuSetReg(0, fpuAdd(fpuGetReg(0), fpuGetReg(eip[1] - 0xC0)));
         r->eip += 2;
         return true;
 
-    } else if (eip[0] == 0xDC && eip[1] >= 0xC0 && eip[1] <= 0xC7) {     //FADD
-        fpuSetReg(eip[1] - 0xC0, fpuAdd(fpuGetReg(0), fpuGetReg(eip[1] - 0xC0)));
+    } else if (eip[0] == 0xD8 && eip[1] >= 0xC8 && eip[1] <= 0xCF) {     //FMUL
+        fpuSetReg(0, fpuMultiply(fpuGetReg(0), fpuGetReg(eip[1] - 0xC8)));
         r->eip += 2;
         return true;
 
-    } else if (eip[0] == 0xDE && eip[1] >= 0xC0 && eip[1] <= 0xC7) {     //FADDP
-        fpuSetReg(eip[1] - 0xC0, fpuAdd(fpuGetReg(0), fpuGetReg(eip[1] - 0xC0)));
+    } else if (eip[0] == 0xD8 && eip[1] >= 0xD0 && eip[1] <= 0xD7) {     //FCOM
+        fpuUnorderedCompare(fpuGetReg(0), fpuGetReg(eip[1] - 0xD0));
+        r->eip += 2;
+        return true;
+
+    } else if (eip[0] == 0xD8 && eip[1] >= 0xD8 && eip[1] <= 0xDF) {     //FCOMP
+        fpuUnorderedCompare(fpuGetReg(0), fpuGetReg(eip[1] - 0xD8));
         fpuPop();
         r->eip += 2;
         return true;
@@ -709,8 +718,48 @@ bool x87Handler(regs* r)
         r->eip += 2;
         return true;
 
+    } else if (eip[0] == 0xD8 && eip[1] >= 0xF0 && eip[1] <= 0xF7) {     //FDIVP
+        fpuSetReg(0, fpuDivide(fpuGetReg(0), fpuGetReg(eip[1] - 0xF0)));
+        r->eip += 2;
+        fpuPop();
+        return true;
+
+    } else if (eip[0] == 0xD8 && eip[1] >= 0xF8 && eip[1] <= 0xFF) {     //FDIVRP
+        fpuSetReg(0, fpuDivide(fpuGetReg(eip[1] - 0xF8), fpuGetReg(0)));
+        r->eip += 2;
+        fpuPop();
+        return true;
+
+    } else if (eip[0] == 0xD9 && eip[1] >= 0xC0 && eip[1] <= 0xC7) {      //FLD
+        fpuPush(fpuGetReg(eip[1] - 0xC0));
+        r->eip += 2;
+        return true;
+
+    } else if (eip[0] == 0xD9 && eip[1] >= 0xC8 && eip[1] <= 0xCF) {     //FXCH
+        Float80 st1 = fpuGetReg(eip[1] - 0xC8);
+        fpuSetReg(eip[1] - 0xC8, fpuGetReg(0));
+        fpuSetReg(0, st1);
+        r->eip += 2;
+        return true;
+
+    } else if (eip[0] == 0xDC && eip[1] >= 0xC0 && eip[1] <= 0xC7) {     //FADD
+        fpuSetReg(eip[1] - 0xC0, fpuAdd(fpuGetReg(0), fpuGetReg(eip[1] - 0xC0)));
+        r->eip += 2;
+        return true;
+
+    } else if (eip[0] == 0xDC && eip[1] >= 0xC8 && eip[1] <= 0xCF) {     //FMUL
+        fpuSetReg(eip[1] - 0xC8, fpuMultiply(fpuGetReg(0), fpuGetReg(eip[1] - 0xC8)));
+        r->eip += 2;
+        return true;
+
     } else if (eip[0] == 0xDC && eip[1] >= 0xE8 && eip[1] <= 0xEF) {     //FSUB
         fpuSetReg(eip[1] - 0xE8, fpuSub(fpuGetReg(eip[1] - 0xE8), fpuGetReg(0)));
+        r->eip += 2;
+        return true;
+
+    } else if (eip[0] == 0xDE && eip[1] >= 0xC0 && eip[1] <= 0xC7) {     //FADDP
+        fpuSetReg(eip[1] - 0xC0, fpuAdd(fpuGetReg(0), fpuGetReg(eip[1] - 0xC0)));
+        fpuPop();
         r->eip += 2;
         return true;
 
@@ -726,25 +775,8 @@ bool x87Handler(regs* r)
         r->eip += 2;
         return true;
 
-    } else if (eip[0] == 0xD8 && eip[1] >= 0xC8 && eip[1] <= 0xCF) {     //FMUL
-        fpuSetReg(0, fpuMultiply(fpuGetReg(0), fpuGetReg(eip[1] - 0xC8)));
-        r->eip += 2;
-        return true;
-
-    } else if (eip[0] == 0xDC && eip[1] >= 0xC8 && eip[1] <= 0xCF) {     //FMUL
-        fpuSetReg(eip[1] - 0xC8, fpuMultiply(fpuGetReg(0), fpuGetReg(eip[1] - 0xC8)));
-        r->eip += 2;
-        return true;
-
     } else if (eip[0] == 0xDE && eip[1] >= 0xC8 && eip[1] <= 0xCF) {     //FMULP
         fpuSetReg(eip[1] - 0xC8, fpuMultiply(fpuGetReg(0), fpuGetReg(eip[1] - 0xC8)));
-        r->eip += 2;
-        fpuPop();
-        return true;
-
-
-    } else if (eip[0] == 0xD8 && eip[1] >= 0xF0 && eip[1] <= 0xF7) {     //FDIVP
-        fpuSetReg(0, fpuDivide(fpuGetReg(0), fpuGetReg(eip[1] - 0xF0)));
         r->eip += 2;
         fpuPop();
         return true;
@@ -755,24 +787,10 @@ bool x87Handler(regs* r)
         fpuPop();
         return true;
 
-    } else if (eip[0] == 0xD8 && eip[1] >= 0xF8 && eip[1] <= 0xFF) {     //FDIVRP
-        fpuSetReg(0, fpuDivide(fpuGetReg(eip[1] - 0xF8), fpuGetReg(0)));
-        r->eip += 2;
-        fpuPop();
-        return true;
-
     } else if (eip[0] == 0xDE && eip[1] >= 0xF0 && eip[1] <= 0xF7) {     //FDIVRP
         fpuSetReg(eip[1] - 0xF0, fpuDivide(fpuGetReg(0), fpuGetReg(eip[1] - 0xF0)));
         r->eip += 2;
         fpuPop();
-        return true;
-
-
-    } else if (eip[0] == 0xD9 && eip[1] >= 0xC8 && eip[1] <= 0xCF) {     //FXCH
-        Float80 st1 = fpuGetReg(eip[1] - 0xC8);
-        fpuSetReg(eip[1] - 0xC8, fpuGetReg(0));
-        fpuSetReg(0, st1);
-        r->eip += 2;
         return true;
 
     } else if (eip[0] == 0xDD && eip[1] >= 0xD0 && eip[1] <= 0xD7) {     //FST
@@ -782,17 +800,6 @@ bool x87Handler(regs* r)
 
     } else if (eip[0] == 0xDD && eip[1] >= 0xD8 && eip[1] <= 0xDF) {     //FSTP
         fpuSetReg(eip[1] - 0xD8, fpuGetReg(0));
-        fpuPop();
-        r->eip += 2;
-        return true;
-
-    } else if (eip[0] == 0xD8 && eip[1] >= 0xD0 && eip[1] <= 0xD7) {     //FCOM
-        fpuUnorderedCompare(fpuGetReg(0), fpuGetReg(eip[1] - 0xD0));
-        r->eip += 2;
-        return true;
-
-    } else if (eip[0] == 0xD8 && eip[1] >= 0xD8 && eip[1] <= 0xDF) {     //FCOMP
-        fpuUnorderedCompare(fpuGetReg(0), fpuGetReg(eip[1] - 0xD8));
         fpuPop();
         r->eip += 2;
         return true;
@@ -816,7 +823,7 @@ bool x87Handler(regs* r)
         return true;
 
     } else if (eip[0] == 0xDE && eip[1] == 0xD9) {                      //FCOMPP
-        fpuUnorderedCompare(fpuGetReg(0), fpuGetReg(eip[1] - 0xD8));
+        fpuUnorderedCompare(fpuGetReg(0), fpuGetReg(1));
         r->eip += 2;
         fpuPop();
         fpuPop();
@@ -828,58 +835,153 @@ bool x87Handler(regs* r)
         r->eip += 2;
         return true;
 
-    } else if (eip[0] == 0xDC && middleDigit == 2) {                        //FCOM
-        uint64_t* p = (uint64_t*) ptr;
-        fpuUnorderedCompare(fpuGetReg(0), fpu64ToInternal(*p));
-        r->eip += instrLen;
-        return true;
 
-    } else if (eip[0] == 0xDC && middleDigit == 3) {                        //FCOMP
-        uint64_t* p = (uint64_t*) ptr;
-        fpuUnorderedCompare(fpuGetReg(0), fpu64ToInternal(*p));
-        fpuPop();
-        r->eip += instrLen;
-        return true;
 
-    } else if (eip[0] == 0xD9 && middleDigit == 7) {                      //FNSTCW
-        uint16_t* p = (uint16_t*) ptr;
-        *ptr = fpuState.control;
-        r->eip += instrLen;
-        return true;
 
-    } else if (eip[0] == 0xD9 && middleDigit == 5) {                      //FLDCW
-        uint16_t* p = (uint16_t*) ptr;
-        fpuState.control = *ptr;
-        r->eip += instrLen;
-        return true;
-
-    } else if (eip[0] == 0xDB && middleDigit == 2) {                      //FIST
+    } else if (eip[0] == 0xD8 && middleDigit == 0) {                    //FADD
         uint32_t* p = (uint32_t*) ptr;
-        *ptr = fpuFloatToLong(fpuGetReg(0));
+        fpuSetReg(0, fpuAdd(fpuGetReg(0), fpu32ToInternal(*p)));
         r->eip += instrLen;
         return true;
 
-    } else if (eip[0] == 0xDB && middleDigit == 3) {                      //FISTP
+    } else if (eip[0] == 0xD8 && middleDigit == 1) {                    //FMUL
         uint32_t* p = (uint32_t*) ptr;
-        *ptr = fpuFloatToLong(fpuPop());
+        fpuSetReg(0, fpuMultiply(fpuGetReg(0), fpu32ToInternal(*p)));
         r->eip += instrLen;
         return true;
 
-    } else if (eip[0] == 0xDF && middleDigit == 7) {                      //FISTP
-        uint64_t* p = (uint64_t*) ptr;
-        *ptr = fpuFloatToLong(fpuPop());
+
+    } else if (eip[0] == 0xD8 && middleDigit == 4) {                    //FSUB
+        uint32_t* p = (uint32_t*) ptr;
+        fpuSetReg(0, fpuSub(fpuGetReg(0), fpu32ToInternal(*p)));
         r->eip += instrLen;
         return true;
 
-    } else if (eip[0] == 0xDD && middleDigit == 0) {                    //FLD
-        uint64_t* p = (uint64_t*) ptr;
-        fpuPush(fpu64ToInternal(*p));
+    } else if (eip[0] == 0xD8 && middleDigit == 5) {                    //FSUBR
+        uint32_t* p = (uint32_t*) ptr;
+        fpuSetReg(0, fpuSub(fpu32ToInternal(*p), fpuGetReg(0)));
+        r->eip += instrLen;
+        return true;
+
+    } else if (eip[0] == 0xD8 && middleDigit == 6) {                    //FDIV
+        uint32_t* p = (uint32_t*) ptr;
+        fpuSetReg(0, fpuDivide(fpuGetReg(0), fpu32ToInternal(*p)));
+        r->eip += instrLen;
+        return true;
+
+    } else if (eip[0] == 0xD8 && middleDigit == 7) {                    //FDIVR
+        uint32_t* p = (uint32_t*) ptr;
+        fpuSetReg(0, fpuDivide(fpu32ToInternal(*p), fpuGetReg(0)));
         r->eip += instrLen;
         return true;
 
     } else if (eip[0] == 0xD9 && middleDigit == 0) {                    //FLD
         uint32_t* p = (uint32_t*) ptr;
         fpuPush(fpu32ToInternal(*p));
+        r->eip += instrLen;
+        return true;
+
+    } else if (eip[0] == 0xD9 && middleDigit == 3) {                    //FSTP
+        uint32_t* p = (uint32_t*) ptr;
+        *p = fpuInternalTo32(fpuPop());
+        r->eip += instrLen;
+        return true;
+
+    } else if (eip[0] == 0xD9 && middleDigit == 5) {                      //FLDCW
+        uint16_t* p = (uint16_t*) ptr;
+        fpuState.control = *p;
+        r->eip += instrLen;
+        return true;
+
+    } else if (eip[0] == 0xD9 && middleDigit == 7) {                      //FNSTCW
+        uint16_t* p = (uint16_t*) ptr;
+        *p = fpuState.control;
+        r->eip += instrLen;
+        return true;
+
+    } else if (eip[0] == 0xDA && middleDigit == 1) {                    //FIMUL
+        uint32_t* p = (uint32_t*) ptr;
+        fpuSetReg(0, fpuMultiply(fpuGetReg(0), fpuLongToFloat(*p)));
+        r->eip += instrLen;
+        return true;
+
+    } else if (eip[0] == 0xDA && middleDigit == 4) {                    //FISUB
+        uint32_t* p = (uint32_t*) ptr;
+        fpuSetReg(0, fpuSub(fpuGetReg(0), fpuLongToFloat(*p)));
+        r->eip += instrLen;
+        return true;
+
+    } else if (eip[0] == 0xDB && middleDigit == 0) {                    //FILD
+        uint32_t* p = (uint32_t*) ptr;
+        fpuPush(fpuULongToFloat(*p));
+        r->eip += instrLen;
+        return true;
+
+    } else if (eip[0] == 0xDB && middleDigit == 2) {                      //FIST
+        uint32_t* p = (uint32_t*) ptr;
+        *p = fpuFloatToLong(fpuGetReg(0));
+        r->eip += instrLen;
+        return true;
+
+    } else if (eip[0] == 0xDB && middleDigit == 3) {                      //FISTP
+        uint32_t* p = (uint32_t*) ptr;
+        *p = fpuFloatToLong(fpuPop());
+        r->eip += instrLen;
+        return true;
+
+    } else if (eip[0] == 0xDC && middleDigit == 0) {                    //FADD
+        uint64_t* p = (uint64_t*) ptr;
+        fpuSetReg(0, fpuAdd(fpuGetReg(0), fpu64ToInternal(*p)));
+        r->eip += instrLen;
+        return true;
+
+    } else if (eip[0] == 0xDC && middleDigit == 1) {                    //FMUL
+        uint64_t* p = (uint64_t*) ptr;
+        fpuSetReg(0, fpuMultiply(fpuGetReg(0), fpu64ToInternal(*p)));
+        r->eip += instrLen;
+        return true;
+
+    } else if (eip[0] == 0xDC && middleDigit == 2) {                    //FCOM
+        uint64_t* p = (uint64_t*) ptr;
+        fpuUnorderedCompare(fpuGetReg(0), fpu64ToInternal(*p));
+        r->eip += instrLen;
+        return true;
+
+    } else if (eip[0] == 0xDC && middleDigit == 3) {                     //FCOMP
+        uint64_t* p = (uint64_t*) ptr;
+        fpuUnorderedCompare(fpuGetReg(0), fpu64ToInternal(*p));
+        fpuPop();
+        r->eip += instrLen;
+        return true;
+
+    } else if (eip[0] == 0xDC && middleDigit == 4) {                    //FSUB
+        uint64_t* p = (uint64_t*) ptr;
+        fpuSetReg(0, fpuSub(fpuGetReg(0), fpu64ToInternal(*p)));
+        r->eip += instrLen;
+        return true;
+
+    } else if (eip[0] == 0xDC && middleDigit == 5) {                    //FSUBR
+        uint64_t* p = (uint64_t*) ptr;
+        fpuSetReg(0, fpuSub(fpu64ToInternal(*p), fpuGetReg(0)));
+        r->eip += instrLen;
+        return true;
+
+    } else if (eip[0] == 0xDC && middleDigit == 6) {                    //FDIV
+        uint64_t* p = (uint64_t*) ptr;
+        fpuSetReg(0, fpuDivide(fpuGetReg(0), fpu64ToInternal(*p)));
+        r->eip += instrLen;
+        return true;
+
+    } else if (eip[0] == 0xDC && middleDigit == 7) {                    //FDIVR
+        uint64_t* p = (uint64_t*) ptr;
+        fpuSetReg(0, fpuDivide(fpu64ToInternal(*p), fpuGetReg(0)));
+        r->eip += instrLen;
+        return true;
+
+
+    } else if (eip[0] == 0xDD && middleDigit == 0) {                    //FLD
+        uint64_t* p = (uint64_t*) ptr;
+        fpuPush(fpu64ToInternal(*p));
         r->eip += instrLen;
         return true;
 
@@ -901,96 +1003,12 @@ bool x87Handler(regs* r)
         r->eip += instrLen;
         return true;
 
-    } else if (eip[0] == 0xDB && middleDigit == 0) {                    //FILD
-        uint32_t* p = (uint32_t*) ptr;
-        fpuPush(fpuULongToFloat(*p));
-        r->eip += instrLen;
-        return true;
-
-    } else if (eip[0] == 0xD8 && middleDigit == 0) {                    //FADD
-        uint32_t* p = (uint32_t*) ptr;
-        fpuSetReg(0, fpuAdd(fpuGetReg(0), fpu32ToInternal(*p)));
-        r->eip += instrLen;
-        return true;
-
-    } else if (eip[0] == 0xD8 && middleDigit == 1) {                    //FMUL
-        uint32_t* p = (uint32_t*) ptr;
-        fpuSetReg(0, fpuMultiply(fpuGetReg(0), fpu32ToInternal(*p)));
-        r->eip += instrLen;
-        return true;
-
-    } else if (eip[0] == 0xDC && middleDigit == 1) {                    //FMUL
+    } else if (eip[0] == 0xDF && middleDigit == 7) {                    //FISTP
         uint64_t* p = (uint64_t*) ptr;
-        fpuSetReg(0, fpuMultiply(fpuGetReg(0), fpu64ToInternal(*p)));
+        *p = fpuFloatToLong(fpuPop());
         r->eip += instrLen;
         return true;
 
-    } else if (eip[0] == 0xD8 && middleDigit == 6) {                    //FDIV
-        uint32_t* p = (uint32_t*) ptr;
-        fpuSetReg(0, fpuDivide(fpuGetReg(0), fpu32ToInternal(*p)));
-        r->eip += instrLen;
-        return true;
-
-    } else if (eip[0] == 0xDC && middleDigit == 6) {                    //FDIV
-        uint64_t* p = (uint64_t*) ptr;
-        fpuSetReg(0, fpuDivide(fpuGetReg(0), fpu64ToInternal(*p)));
-        r->eip += instrLen;
-        return true;
-
-    } else if (eip[0] == 0xD8 && middleDigit == 4) {                    //FSUB
-        uint32_t* p = (uint32_t*) ptr;
-        fpuSetReg(0, fpuSub(fpuGetReg(0), fpu32ToInternal(*p)));
-        r->eip += instrLen;
-        return true;
-
-    } else if (eip[0] == 0xDC && middleDigit == 4) {                    //FSUB
-        uint64_t* p = (uint64_t*) ptr;
-        fpuSetReg(0, fpuSub(fpuGetReg(0), fpu64ToInternal(*p)));
-        r->eip += instrLen;
-        return true;
-
-    } else if (eip[0] == 0xD8 && middleDigit == 5) {                    //FSUBR
-        uint32_t* p = (uint32_t*) ptr;
-        fpuSetReg(0, fpuSub(fpu32ToInternal(*p), fpuGetReg(0)));
-        r->eip += instrLen;
-        return true;
-
-    } else if (eip[0] == 0xDC && middleDigit == 5) {                    //FSUBR
-        uint64_t* p = (uint64_t*) ptr;
-        fpuSetReg(0, fpuSub(fpu64ToInternal(*p), fpuGetReg(0)));
-        r->eip += instrLen;
-        return true;
-
-    } else if (eip[0] == 0xD8 && middleDigit == 7) {                    //FDIVR
-        uint32_t* p = (uint32_t*) ptr;
-        fpuSetReg(0, fpuDivide(fpu32ToInternal(*p), fpuGetReg(0)));
-        r->eip += instrLen;
-        return true;
-
-    } else if (eip[0] == 0xDC && middleDigit == 7) {                    //FDIVR
-        uint64_t* p = (uint64_t*) ptr;
-        fpuSetReg(0, fpuDivide(fpu64ToInternal(*p), fpuGetReg(0)));
-        r->eip += instrLen;
-        return true;
-
-
-    } else if (eip[0] == 0xDA && middleDigit == 1) {                    //FIMUL
-        uint32_t* p = (uint32_t*) ptr;
-        fpuSetReg(0, fpuMultiply(fpuGetReg(0), fpuLongToFloat(*p)));
-        r->eip += instrLen;
-        return true;
-
-    } else if (eip[0] == 0xDA && middleDigit == 4) {                    //FISUB
-        uint32_t* p = (uint32_t*) ptr;
-        fpuSetReg(0, fpuSub(fpuGetReg(0), fpuLongToFloat(*p)));
-        r->eip += instrLen;
-        return true;
-
-    } else if (eip[0] == 0xDC && middleDigit == 0) {                    //FADD
-        uint64_t* p = (uint64_t*) ptr;
-        fpuSetReg(0, fpuAdd(fpuGetReg(0), fpu64ToInternal(*p)));
-        r->eip += instrLen;
-        return true;
     }
 
 	return false;
@@ -1000,7 +1018,5 @@ void begin()
 {
 	extern bool (*x87FaultIntercept)(regs * r);
 	x87FaultIntercept = x87Handler;
-
-
 }
 

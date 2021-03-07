@@ -14,7 +14,7 @@ extern "C" {
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-int UnixFile::nextFd = 3;// FIRST_AVAILABLE_FD;
+int UnixFile::nextFd = 3;
 
 LinkedList<UnixFile> unixFileLinkedList;
 
@@ -25,7 +25,7 @@ UnixFile::UnixFile(int _fd)
 	fd = nextFd++;
 	unixFileLinkedList.addElement(this);
 
-	/*if (!initialFilesAdded) {
+	if (!initialFilesAdded) {
 		//this must go first, otherwise we'll end up
 		//in a recursion loop
 		initialFilesAdded = true;
@@ -39,7 +39,7 @@ UnixFile::UnixFile(int _fd)
 			new ReservedFilename(RESERVED_FD_COM1 + i);
 			new ReservedFilename(RESERVED_FD_LPT1 + i);
 		}
-	}*/
+	}
 }
 
 UnixFile::~UnixFile()
