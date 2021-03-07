@@ -215,6 +215,8 @@ namespace Phys
 			uint64_t top = bottom + length;
 			uint64_t type = *(((uint32_t*) ramTable) + 4);
 
+			kprintf("Memory range: 0x%X -> 0x%X (%d)\n", (uint32_t) bottom, (uint32_t) top, (uint32_t) type);
+
 			//check that the high bits are clear
 			if ((bottom >> 32) || (top >> 32)) {
 				//stop the search if we're accessing memory above 4GB (in 32 bit mode)
