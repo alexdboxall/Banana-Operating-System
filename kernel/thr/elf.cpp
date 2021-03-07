@@ -432,7 +432,9 @@ namespace Thr
 				}
 
 				int actu;
+				kprintf("Reading 0x%X bytes of driver data.\n", size);
 				f->read(size, (void*) (addr - entryPoint + relocationPoint), &actu);
+				kprintf("Clearing 0x%X bytes of BSS.\n", (progHeaders + i)->p_memsz - (progHeaders + i)->p_filsz);
 				memset((void*) (addr - entryPoint + relocationPoint + size), 0, (progHeaders + i)->p_memsz - (progHeaders + i)->p_filsz);
 			}
 		}
