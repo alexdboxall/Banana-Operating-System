@@ -528,6 +528,13 @@ strcpy (
     char                    *String = DstString;
 
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wframe-address"
+
+    kprintf("strcpy 0x%X, 0x%X\n", __builtin_return_address(1), __builtin_return_address(2));
+
+#pragma GCC diagnostic pop
+
     /* Move bytes brute force */
 
     while (*SrcString)

@@ -1,11 +1,5 @@
 [bits 32]
 
-global validateKey
-
-validateKey:
-    mov eax, 1
-    ret
-
 global switchToThreadASM
 currentTaskTCB equ 0xC2002000		;JUST FOR NOW, NEEDS CHANGING IS prcssthr.hpp AS WELL IF CHANGED
 extern taskStartupFunction
