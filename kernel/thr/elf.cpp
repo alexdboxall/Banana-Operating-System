@@ -744,6 +744,7 @@ namespace Thr
 				kprintf("Driver page used. %d\n", ++used);
 			} else {
 				kprintf("Driver page not used. %d\n", ++nnot);
+				Phys::freePage(addr + i * 4096);
 			}
 		}
 
