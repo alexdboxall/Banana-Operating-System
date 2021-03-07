@@ -54,7 +54,7 @@ UnixFile::UnixFile(int _fd)
 
 UnixFile::~UnixFile()
 {
-	if (_fd >= RESERVED_FD_START) {
+	if (fd >= RESERVED_FD_START) {
 		return;
 	}
 	int timeout = 0;
