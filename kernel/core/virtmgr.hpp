@@ -9,6 +9,8 @@
 #define PAGE_WRITABLE       (1 << 1)
 #define PAGE_USER           (1 << 2)
 #define PAGE_CACHE_DISABLE  (1 << 4)
+#define PAGE_ACCESSED		(1 << 5)
+#define PAGE_DIRTY			(1 << 6)
 #define PAGE_GLOBAL		    (1 << 8)
 #define PAGE_GUARD_PAGE     (1 << 9 | PAGE_NOT_PRESENT)
 #define PAGE_SWAPPABLE      (1 << 9 | PAGE_PRESENT)

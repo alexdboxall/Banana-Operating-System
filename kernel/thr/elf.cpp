@@ -722,7 +722,6 @@ namespace Thr
 			panic(msg);
 		}
 
-		//size_t addr = (size_t) malloc(siz);
 		size_t addr = (size_t) Virt::getAKernelVAS()->allocatePages((siz + 4095) / 4096, PAGE_PRESENT | PAGE_SUPERVISOR | PAGE_WRITABLE);
 
 		driverNameLookup[driverLookupNext] = (char*) malloc(strlen(name) + 1);
@@ -736,6 +735,18 @@ namespace Thr
 		if (!couldLoad && critical) {
 			panic("COULD NOT LOAD CRITICAL DRIVER");
 		}
+
+		int used = 0;
+		int not = 0;
+		for (size_t i = 0; i < (siz + 4095) / 4096; ++i) {
+			size_t* ptentry = Virt::getAKernelVAS()->getPageTableEntry(addr + i * 4096);
+			if (*ptentry & (PAGE_ACCESSED | PAGE_DIRTY)) {
+				kprintf("Driver page used. %d\n", ++used);
+			} else {
+				kprintf("Driver page not used. %d\n", ++not);
+			}
+		}
+
 		return couldLoad ? addr : 0;
 	}
 
