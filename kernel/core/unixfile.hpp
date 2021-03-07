@@ -22,14 +22,16 @@ enum class FileStatus
 	NoFilesystem = 11,
 };
 
-#define RESERVED_FD_NUL		0xFF00
-#define RESERVED_FD_CON		0xFF01
-#define RESERVED_FD_PNT		0xFF02
-#define RESERVED_FD_AUX		0xFF03
-#define RESERVED_FD_COM1	0xFF10
-#define RESERVED_FD_COM9	0xFF18
-#define RESERVED_FD_LPT1	0xFF20
-#define RESERVED_FD_LPT9	0xFF28
+//these need to be way up here becuase newlib decided a signed short
+//was long enough for file descriptors...
+#define RESERVED_FD_NUL		0xFFFFFF00
+#define RESERVED_FD_CON		0xFFFFFF01
+#define RESERVED_FD_PNT		0xFFFFFF02
+#define RESERVED_FD_AUX		0xFFFFFF03
+#define RESERVED_FD_COM1	0xFFFFFF10
+#define RESERVED_FD_COM9	0xFFFFFF18
+#define RESERVED_FD_LPT1	0xFFFFFF20
+#define RESERVED_FD_LPT9	0xFFFFFF28
 
 #define RESERVED_FD_START	RESERVED_FD_NUL
 
