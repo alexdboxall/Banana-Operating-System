@@ -91,7 +91,10 @@ UnixFile* getFromFileDescriptor(int fdIn)
 		}
 	} else {
 		if (fdIn == RESERVED_FD_AUX) return sfileAux;
-		else if (fdIn == RESERVED_FD_CON) return sfileCon;
+		else if (fdIn == RESERVED_FD_CON) {
+			kprintf("returning the con file.\n");
+			return sfileCon;
+		}
 		else if (fdIn == RESERVED_FD_PNT) return sfilePnt;
 		else if (fdIn == RESERVED_FD_NUL) return sfileNul;
 		else if (fdIn >= RESERVED_FD_COM1 && fdIn <= RESERVED_FD_COM9) {
