@@ -27,7 +27,9 @@ enum class FileStatus
 #define RESERVED_FD_PNT		0x7FFFFF02
 #define RESERVED_FD_AUX		0x7FFFFF03
 #define RESERVED_FD_COM1	0x7FFFFF10
+#define RESERVED_FD_COM9	0x7FFFFF18
 #define RESERVED_FD_LPT1	0x7FFFFF20
+#define RESERVED_FD_LPT9	0x7FFFFF28
 
 class UnixFile;
 UnixFile* getFromFileDescriptor(int fd);
