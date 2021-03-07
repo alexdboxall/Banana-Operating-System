@@ -76,14 +76,14 @@ uint64_t sysCallOpen(regs* r)
 		fname[i] = 0;
 	}
 
-	/*if (string_ends_with((const char*) r->edx, "/con") || string_ends_with((const char*) r->edx, "\\con") || !strcmp((const char*) r->edx, "con") || string_ends_with(fname, "/con")) {
+	if (string_ends_with((const char*) r->edx, "/con") || string_ends_with((const char*) r->edx, "\\con") || !strcmp((const char*) r->edx, "con") || string_ends_with(fname, "/con")) {
 		*((uint64_t*) r->ebx) = RESERVED_FD_CON;
 		return 0;
 	}
 	if (string_ends_with((const char*) r->edx, "/nul") || string_ends_with((const char*) r->edx, "\\nul") || !strcmp((const char*) r->edx, "nul") || string_ends_with(fname, "/nul")) {
 		*((uint64_t*) r->ebx) = RESERVED_FD_NUL;
 		return 0;
-	}*/
+	}
 
 	File* f = new File((const char*) r->edx, currentTaskTCB->processRelatedTo);
 	if (!f) {
@@ -131,9 +131,9 @@ uint64_t sysCallSeek(regs* r)
 
 	if (r->ebx <= 2) {
 		return -1;
-	/*} else if (r->ebx < FIRST_AVAILABLE_FD) {
+	} else if (r->ebx > RESERVED_FD_START) {
 		kprintf("Seeking special file. %d\n", r->ebx);
-		return -1;*/
+		return -1;
 	} else {
 		file = getFromFileDescriptor(r->ebx);
 	}
@@ -153,9 +153,9 @@ uint64_t sysCallTell(regs* r)
 
 	if (r->ebx <= 2) {
 		return -1;
-	/*} else if (r->ebx < FIRST_AVAILABLE_FD) {
+	} else if (r->ebx > RESERVED_FD_START) {
 		kprintf("Telling special file. %d\n", r->ebx);
-		return -1;*/
+		return -1;
 	} else {
 		file = getFromFileDescriptor(r->ebx);
 	}
@@ -176,9 +176,9 @@ uint64_t sysCallSizeFromFilename(regs* r)
 
 	if (r->ebx <= 2) {
 		return -1;
-	/*} else if (r->ebx < FIRST_AVAILABLE_FD) {
+	} else if (r->ebx > RESERVED_FD_START) {
 		kprintf("Statting special file. %d\n", r->ebx);
-		return -1;*/
+		return -1;
 	} else {
 		file = new File(filename, currentTaskTCB->processRelatedTo);
 	}
@@ -201,9 +201,9 @@ uint64_t sysCallSize(regs* r)
 
 	if (r->ebx <= 2) {
 		return -1;
-	/*} else if (r->ebx < FIRST_AVAILABLE_FD) {
+	} else if (r->ebx > RESERVED_FD_START) {
 		kprintf("Statting special file. %d\n", r->ebx);
-		return -1;*/
+		return -1;
 	} else {
 		file = getFromFileDescriptor(r->ebx);
 	}
@@ -224,15 +224,15 @@ uint64_t sysCallClose(regs* r)
 
 	if (r->ebx <= 2) {
 		return -1;
-	/*} else if (r->ebx == RESERVED_FD_CON) {
+	} else if (r->ebx == RESERVED_FD_CON) {
 		kprintf("closing con.\n");
 		return 0;
 	} else if (r->ebx == RESERVED_FD_NUL) {
 		kprintf("closing nul.\n");
 		return 0;
-	} else if (r->ebx < FIRST_AVAILABLE_FD) {
+	} else if (r->ebx > RESERVED_FD_START) {
 		kprintf("Closing non-con/nul special file. %d\n", r->ebx);
-		return -1;*/
+		return -1;
 	} else {
 		file = getFromFileDescriptor(r->ebx);
 	}
@@ -272,9 +272,9 @@ uint64_t sysCallReadDir(regs* r)
 
 	if (r->ecx <= 2) {
 		return 1;
-	/*} else if (r->ebx < FIRST_AVAILABLE_FD) {
+	} else if (r->ebx > RESERVED_FD_START) {
 		kprintf("Readdir special file (oops!). %d\n", r->ebx);
-		return -1;*/
+		return -1;
 	} else {
 		file = getFromFileDescriptor(r->ecx);
 	}
@@ -329,9 +329,9 @@ uint64_t sysCallCloseDir(regs* r)
 
 	if (r->ebx <= 2) {
 		return -1;
-	/*} else if (r->ebx < FIRST_AVAILABLE_FD) {
+	} else if (r->ebx > RESERVED_FD_START) {
 		kprintf("Closedir special file (oops!). %d\n", r->ebx);
-		return -1;*/
+		return -1;
 	} else {
 		file = getFromFileDescriptor(r->ebx);
 	}
@@ -436,7 +436,7 @@ uint64_t sysCallTTYName(regs* r)
 	}
 
 	UnixFile* file;
-	if (r->ebx <= 2 /*|| r->ebx == RESERVED_FD_CON*/) {
+	if (r->ebx <= 2 || r->ebx == RESERVED_FD_CON) {
 		file = currentTaskTCB->processRelatedTo->terminal;
 	} else {
 		file = getFromFileDescriptor(r->ebx);
@@ -457,7 +457,7 @@ uint64_t sysCallTTYName(regs* r)
 uint64_t sysCallIsATTY(regs* r)
 {
 	UnixFile* file;
-	if (r->ebx <= 2/* || r->ebx == RESERVED_FD_CON*/) {
+	if (r->ebx <= 2 || r->ebx == RESERVED_FD_CON) {
 		file = currentTaskTCB->processRelatedTo->terminal;
 	} else {
 		file = getFromFileDescriptor(r->ebx);
