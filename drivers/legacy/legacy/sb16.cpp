@@ -37,6 +37,8 @@
 #define IRQ_7			4
 #define IRQ_10			8
 
+#define DMA_SIZE (8192 * 2)
+
 #include "isadma.hpp"
 #include "sb16.hpp"
 #include "main.hpp"
@@ -52,14 +54,21 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-uint8_t buf[4096];
-uint8_t buf2[4096];
+/*uint8_t buf[4096];
+uint8_t buf2[4096];*/
 
 char egFile[] = "C:/ybr.wav";
 void sb16Demo(void* s)
 {
 	unlockScheduler();
 
+	while (1) {
+		lockScheduler();
+		schedule();
+		unlockScheduler();
+	}
+
+	/*
 	SoundBlaster16* dev = (SoundBlaster16*) s;
 
 	SoundChannel* c = new SoundChannel(22050, 8, 90);
@@ -95,7 +104,7 @@ void sb16Demo(void* s)
 			c->play();
 			playedYet = true;
 		}
-	}
+	}*/
 }
 
 char badVer[] = "BAD Soundblaster version, got 0x%X\n";
@@ -133,10 +142,16 @@ void SoundBlaster16::turnSpeakerOn(bool on)
 	}
 }
 
+float* tempBuffer = nullptr;
+float* outputBuffer = nullptr;
+
 char sb16name[] = "SoundBlaster 16";
 SoundBlaster16::SoundBlaster16(): SoundDevice(sb16name)
 {
-
+	if (tempBuffer == nullptr) {
+		tempBuffer = (float*) malloc(DMA_SIZE / 2 * sizeof(float));
+		outputBuffer = (float*) malloc(DMA_SIZE / 2 * sizeof(float));
+	}
 }
 
 void SoundBlaster16::handleIRQ()
@@ -160,8 +175,6 @@ void sb16Handler(regs* r, void* context)
 {
 	reinterpret_cast<SoundBlaster16*>(context)->handleIRQ();
 }
-
-#define DMA_SIZE (8192 * 2)
 
 int SoundBlaster16::getNumHwChannels()
 {
@@ -313,9 +326,6 @@ int SoundBlaster16::open(int, int, void*)
 
 	return 0;
 }
-
-float tempBuffer[DMA_SIZE / 2];
-float outputBuffer[DMA_SIZE / 2];
 
 void SoundBlaster16::onInterrupt()
 {
