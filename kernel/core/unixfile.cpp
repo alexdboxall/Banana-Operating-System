@@ -81,6 +81,10 @@ int UnixFile::getFileDescriptor()
 
 UnixFile* getFromFileDescriptor(int fdIn)
 {
+	//shenanigans to make things work with reserved filenames
+	//even though newlib truncates to a SIGNED SHORT!
+	fdIn &= 0x0FFFFFFF;
+
 	if (fdIn < RESERVED_FD_START) {
 		UnixFile* f = unixFileLinkedList.getFirstElement();
 		while (f) {
