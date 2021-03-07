@@ -486,16 +486,12 @@ uint64_t sysCallUSleep(regs* r)
 
 uint64_t sysCallSpawn(regs* r)
 {
-	if (r->edx == 0) return 0;
-
-	kprintf("Spwaning!\n");
+	if (!r->edx) return 0;
 
 	Process* p = new Process((const char*) r->edx, currentTaskTCB->processRelatedTo, (char**) r->ecx);
 	if (p->failedToLoadProgram) {
 		return 0;
 	}
-
-	kprintf("Spwaning B!\n");
 
 	p->createUserThread();
 	return p->pid;
@@ -506,15 +502,16 @@ uint64_t sysCallGetEnv(regs* r)
 	char* addr = (char*) r->edx;
 	int num = r->ebx;
 
-	kprintf("sysCallGetEnv\n");
+	kprintf("sysCallGetEnv ECX = 0x%X, EDX = 0x%X\n", r->ecx, r->edx);
 
 	if (r->ecx == 0) {
 		//get length
 		if (num == 0) {
 			return strlen("PATH=C:/Banana/System;C:/Banana/Applications;C:/Banana/Applications/System;");
 		} else {
-			
+			return 0;
 		}
+
 	} else {
 		if (num == 0) {
 			strcpy(addr, "PATH=C:/Banana/System;C:/Banana/Applications;C:/Banana/Applications/System;");
