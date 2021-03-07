@@ -162,6 +162,7 @@ namespace Phys
 				currentPagePointer = 0;
 			}
 			if (currentPagePointer == first) {
+				kprintf("doing into DMA.\n");
 				size_t dma = allocateDMA(4096);
 				if (dma) {
 					return dma;
