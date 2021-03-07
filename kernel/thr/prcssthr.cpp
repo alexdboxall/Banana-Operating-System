@@ -546,7 +546,7 @@ void terminateTask(int returnCode)
 	extern int postponeTaskSwitchesCounter;
 	extern int taskSwitchesPostponedFlag;
 
-	kprintf("terminate task called. A\n");
+	kprintf("terminate task called. A (%s)\n", currentTaskTCB->processRelatedTo->taskname);
 
 	// Note: Can do any harmless stuff here (close files, free memory in user-space, ...) but there's none of that yet
 

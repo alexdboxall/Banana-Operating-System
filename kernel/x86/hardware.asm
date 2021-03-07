@@ -3,7 +3,7 @@
 global validateKey
 
 validateKey:
-    mov eax, 0
+    mov eax, 1
     ret
 
 global switchToThreadASM
