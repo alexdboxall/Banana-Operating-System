@@ -384,11 +384,15 @@ void opcodeFault(regs* r, void* context)
 		return;
 	}
 
+	//emulate instructions added to the 486 and Pentium
+
 	uint8_t* eip = (uint8_t*) r->eip;
 
 	//lock prefix
 	bool hasNonLockPrefix = false;
 	bool has66Prefix = false;
+
+	uint8_t* originalEIP = eip;
 
 	if (eip[0] == 0xF0) {
 		eip++;
@@ -420,6 +424,11 @@ void opcodeFault(regs* r, void* context)
 		hasNonLockPrefix = true;
 		eip++;
 		r->eip++;
+	}
+
+	//XADD
+	if (eip[0] == 0x0F && (eip[1] == 0xC0 || eip[1] == 0xC1)) {
+		
 	}
 
 	//BSWAP		introduced with i486
