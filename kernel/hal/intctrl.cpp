@@ -430,7 +430,8 @@ void opcodeFault(regs* r, void* context)
 	}
 
 	//XADD
-	if (eip[0] == 0x0F && (eip[1] == 0xC0 || eip[1] == 0xC1)) {
+	if (eip[0] == 0x0F && (eip[1] == 0xC2 || eip[1] == 0xC3)) {
+		kprintf("XADD HANDLER.\n");
 		r->eip++;
 		eip++;
 
