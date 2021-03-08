@@ -447,9 +447,9 @@ void opcodeFault(regs* r, void* context)
 		int trueLength = instrLen + (r->eip - originalEIP);
 		int opcodeStart = (r->eip - originalEIP) - 1;			//the 0xF starts here
 
+		r->eip = originalEIP;
 		voodooXADD((size_t) r, trueLength, opcodeStart);
-
-		r->eip += instrLen;
+		r->eip = originalEIP + trueLength;
 		return;
 	}
 
