@@ -19,6 +19,13 @@ voodooXADD:
     mov [.oldStack], esp
 
     pusha
+    mov al, 0x90
+    mov ecx, 32
+    mov edi, .helper
+    rep stosb
+    popa
+
+    pusha
     mov esi, edx                ;COPY FROM ESI 
     mov edi, .helper            ;TO THE HELPER
     rep movsb                   ;WITH THE LENGTH IN ECX
@@ -64,7 +71,7 @@ voodooXADD:
     leave
     ret
 
-.xaddHelper times 32 db 0x90
+.helper times 32 db 0x90
     jmp .finish
 
 .oldStack dd 0
