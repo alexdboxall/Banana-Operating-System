@@ -61,18 +61,14 @@ voodooXADD:
     ;user stack
     mov esp, [.newStack]
 
-    ;do the instruction
-    jmp .helper
-.finish:
+.helper times 32 db 0x90
+    jmp .finish
 
     mov esp, [.oldStack]
     popad
 
     leave
     ret
-
-.helper times 32 db 0x90
-    jmp .finish
 
 .oldStack dd 0
 .newStack dd 0
