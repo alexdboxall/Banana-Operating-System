@@ -11,6 +11,7 @@ void start()
 #include "core/physmgr.hpp"
 #include "hal/intctrl.hpp"
 #include "hw/ports.hpp"
+#include "hw/cpu.hpp"
 #include "hw/acpi.hpp"
 #include "thr/prcssthr.hpp"
 #include "reg/registry.hpp"
@@ -542,103 +543,13 @@ Float80 fpuPop()
 bool x87Handler(regs* r)
 {
 	uint8_t* eip = (uint8_t*) r->eip;
-    uint8_t middleDigit = (eip[1] >> 3) & 7;
-    uint8_t mod = (eip[1] >> 6) & 3;
-    uint8_t rm = (eip[1] >> 0) & 7;
-
-    //mod 1      01
-    //mid 3     011
-    //r/m 4     100
+    
     uint8_t* ptr = 0;
     bool registerOnly = false;
-    bool ptrIllegal = false;
-
     int instrLen = 2;
+    uint8_t middleDigit;
 
-    if (mod != 3 && rm != 4 && !(mod == 0 && rm == 5)) {
-        //[reg]
-        //[reg + disp8]
-        //[reg + disp32]
-        if (rm == 0) ptr = (uint8_t*) r->eax;
-        if (rm == 1) ptr = (uint8_t*) r->ecx;
-        if (rm == 2) ptr = (uint8_t*) r->edx;
-        if (rm == 3) ptr = (uint8_t*) r->ebx;
-        if (rm == 5) ptr = (uint8_t*) r->ebp;
-        if (rm == 6) ptr = (uint8_t*) r->esi;
-        if (rm == 7) ptr = (uint8_t*) r->edi;
-
-        if (mod == 1) {
-            ptr += *((int8_t*) (eip + 2));
-            instrLen += 1;
-
-        } else if (mod == 2) {
-            ptr += *((int32_t*) (eip + 2));
-            instrLen += 4;
-        }
-
-    } else if (mod == 0 && rm == 5) {
-        //32 bit displacement
-        ptr = (uint8_t*) (*((uint32_t*) (eip + 2)));
-        instrLen += 4;
-
-    } else if (mod == 3) {
-        //register only mode
-        registerOnly = true;
-
-    } else if (rm == 4) {
-        //SIB mode
-        uint8_t sib = eip[2];
-        uint8_t scale = (sib >> 6) & 3;
-        uint8_t index = (sib >> 3) & 7;
-        uint8_t base = (sib >> 0) & 7;
-        instrLen += 1;
-
-        //kprintf("SIB. mod = %d, rm = %d, scale = %d, index = %d, base = %d\n", mod, rm, scale, index, base);
-
-        uint32_t actBase;
-        uint32_t actIndex;
-        
-        if (base == 0) actBase = r->eax;
-        else if (base == 1) actBase = r->ecx;
-        else if (base == 2) actBase = r->edx;
-        else if (base == 3) actBase = r->ebx;
-        else if (base == 4) actBase = r->useresp;
-        else if (base == 5) actBase = r->ebp;
-        else if (base == 6) actBase = r->esi;
-        else if (base == 7) actBase = r->edi;
-
-        if (index == 0) actIndex = r->eax;
-        else if (index == 1) actIndex = r->ecx;
-        else if (index == 2) actIndex = r->edx;
-        else if (index == 3) actIndex = r->ebx;
-        else if (index == 4) actIndex = 0;
-        else if (index == 5) actIndex = r->ebp;
-        else if (index == 6) actIndex = r->esi;
-        else if (index == 7) actIndex = r->edi;
-
-        if (mod == 0 && base == 5) {
-            //displacement only
-            ptr = (uint8_t*) (actIndex << scale);
-            ptr += *((int32_t*) (eip + 3));
-            instrLen += 4;
-
-        } else if (mod == 0) {
-            //SIB
-            ptr = (uint8_t*) (actBase + actIndex << scale);
-
-        } else if (mod == 1) {
-            //SIB + disp8
-            ptr = (uint8_t*) (actBase + actIndex << scale);
-            ptr += *((int8_t*) (eip + 3));
-            instrLen += 1;
-
-        } else if (mod == 2) {
-            //SIB + disp32
-            ptr = (uint8_t*) (actBase + actIndex << scale);
-            ptr += *((int32_t*) (eip + 3));
-            instrLen += 4;
-        }
-    }
+    ptr = CPU::decodeAddress(r, &instrLen, &registerOnly, &middleDigit);
 
     kprintf("x87 handler called with faulting EIP of 0x%X\n", eip);
 	kprintf("x87: %X %X %X %X\n", *eip, *(eip + 1), *(eip + 2), *(eip + 3));
@@ -834,9 +745,6 @@ bool x87Handler(regs* r)
         r->eax |= fpuState.status;
         r->eip += 2;
         return true;
-
-
-
 
     } else if (eip[0] == 0xD8 && middleDigit == 0) {                    //FADD
         uint32_t* p = (uint32_t*) ptr;

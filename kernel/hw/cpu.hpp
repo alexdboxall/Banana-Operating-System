@@ -298,6 +298,7 @@ public:
 	void allowUsermodeDataAccess();
 	void prohibitUsermodeDataAccess();
 
+	static uint8_t* decodeAddress(regs* r, int* instrLenOut, bool* registerOnlyOut, uint8_t* middleDigitOut);
 };
 
 CPU* thisCPU();
