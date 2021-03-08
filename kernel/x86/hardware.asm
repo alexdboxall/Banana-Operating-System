@@ -39,11 +39,11 @@ voodooXADD:
     popa
 
     ;change the first one to an exchange
-    mov [.helper + ebx    ], byte 0x90
+    mov [.helper + ebx    ], byte 0x2E
     sub [.helper + ebx + 1], byte (0xC0 - 0x86)
 
     ;change the first one to an add
-    mov [.helper + ebx + 16], byte 0x90
+    mov [.helper + ebx + 16], byte 0x2E
     sub [.helper + ebx + 17], byte (0xC0 - 0x02)
 
     ;set stack to where the pushed registers were
@@ -62,7 +62,6 @@ voodooXADD:
     mov esp, [.newStack]
 
     ;do the instruction
-    jmp $
     jmp .helper
 .finish:
 
