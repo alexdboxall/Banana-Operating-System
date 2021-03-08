@@ -156,7 +156,7 @@ void PCI::getDeviceData(uint8_t bus, uint8_t slot, uint8_t function)
 	uint32_t headerType = pciReadWord(bus, slot, function, 0xC);
 	headerType >>= 16;
 	headerType &= 0xFF;
-	kprintf("Header type = 0x%X\n", headerType);
+
 	if (headerType != 0) {
 		return;
 	}
@@ -169,7 +169,7 @@ void PCI::getDeviceData(uint8_t bus, uint8_t slot, uint8_t function)
 	uint32_t intPIN = pciReadWord(bus, slot, function, 0x3C);
 	intPIN >>= 8;
 	intPIN &= 0xFF;
-	kprintf("intPIN = 0x%X\n", intPIN);
+
 	info.intPIN = intPIN;
 
 	if (computer->root->nextPCIIRQAssignment) {
