@@ -38,12 +38,19 @@ voodooXADD:
     rep movsb                   ;WITH THE LENGTH IN ECX
     popa
 
-    ;change the first one to an exchange
-    mov [.helper + ebx    ], byte 0x2E
+    ;work out what to change the 0x0F byte to
+    mov cl, 0x90                ;start with a NOP
+    test ebx, ebx              
+    jz .skipChange
+    mov cl, [.helper + ebx - 1] ;if there was a prefix, duplicate it
+ .skipChange:
+
+     ;change the first one to an exchange
+    mov [.helper + ebx    ], cl
     sub [.helper + ebx + 1], byte (0xC0 - 0x86)
 
-    ;change the first one to an add
-    mov [.helper + ebx + 16], byte 0x2E
+    ;change the second one to an add
+    mov [.helper + ebx + 16], byte cl
     sub [.helper + ebx + 17], byte (0xC0 - 0x02)
 
     ;set stack to where the pushed registers were
@@ -60,7 +67,6 @@ voodooXADD:
 
     ;user stack
     mov esp, [.newStack]
-    jmp $
 
 .helper times 32 db 0x90
 
