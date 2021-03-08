@@ -11,6 +11,7 @@
 #define PAGE_CACHE_DISABLE  (1 << 4)
 #define PAGE_ACCESSED		(1 << 5)
 #define PAGE_DIRTY			(1 << 6)
+#define PAGE_PAT		    (1 << 7)
 #define PAGE_GLOBAL		    (1 << 8)
 #define PAGE_GUARD_PAGE     (1 << 9 | PAGE_NOT_PRESENT)
 #define PAGE_SWAPPABLE      (1 << 9 | PAGE_PRESENT)
@@ -59,6 +60,9 @@ public:
 	void freeAllocatedPages(size_t virt);
     void mapPage(size_t physicalAddr, size_t virtualAddr, int flags);
 	size_t mapRange(size_t physicalAddr, size_t virtualAddr, int pages, int flags);
+
+	void reflagRange(size_t virtualAddr, int pages, int andFlags, int orFlags);
+	void setToWriteCombining(size_t virtualAddr, int pages);
 
 	void mapOtherVASIn(bool secondSlot, VAS* other);
 	void mapForeignPage(bool secondSlot, VAS* other, size_t physicalAddr, size_t virtualAddr, int flags);

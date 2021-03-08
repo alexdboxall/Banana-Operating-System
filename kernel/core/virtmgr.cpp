@@ -466,6 +466,22 @@ size_t* VAS::getPageTableEntry(size_t virt)
 	return pageTable + pageNumber;
 }
 
+void VAS::reflagRange(size_t virtualAddr, int pages, int andFlags, int orFlags)
+{
+	for (int i = 0; i < pages; ++i) {
+		size_t* entry = getPageTableEntry(virtualAddr + i * 4096);
+		*entry &= andFlags;
+		*entry |= orFlags;
+	}
+}
+
+void VAS::setToWriteCombining(size_t virtualAddr, int pages)
+{
+	if (thisCPU()->features.hasPAT) {
+		reflagRange(virtualAddr, pages, -1, PAGE_PAT);
+	}
+}
+
 void VAS::mapOtherVASIn(bool secondSlot, VAS* other)
 {
 	//recursively map the thingy

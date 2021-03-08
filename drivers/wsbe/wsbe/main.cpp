@@ -136,7 +136,6 @@ void mup(struct Window_struct* win, int x, int y)
 void resizehandler(struct Window_struct* win, int x, int y)
 {
     strcpy(szstring, "Resizing...");
-    panic("TEST");
 }
 
 
@@ -698,7 +697,7 @@ uint8_t thomas[] = {
 
 namespace Krnl
 {
-    void (*guiPanicHandler)();
+    extern void (*guiPanicHandler)();
 }
 
 void panichandler()
@@ -724,10 +723,12 @@ void panichandler()
         0xFFFFFF,
     };
 
+    int spot = 0;
     for (int y = 0; y < 480; ++y) {
         for (int x = 0; x < 320; ++x) {
-            uint32_t c1 = vgaLookup[thomas[y * 320 + x] & 0xF];
-            uint32_t c2 = vgaLookup[thomas[y * 320 + x] >> 4];
+            uint8_t d = thomas[spot++];
+            uint32_t c1 = vgaLookup[d & 0xF];
+            uint32_t c2 = vgaLookup[d >> 4];
 
             if (x > 325 / 2 && x < 395 / 2 && y > 190 && y < 270) {
                 if (c1 == 0xD4AA2A) c1 = 0xFFFFAA;

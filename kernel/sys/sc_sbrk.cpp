@@ -26,7 +26,6 @@ namespace Sys
 	uint64_t sbrk(regs* r)
 	{
 		size_t previousBreak = currentTaskTCB->processRelatedTo->vas->sbrk;
-		kprintf("sbrk called. amount = 0x%X\n", r->ebx);
 
 		if (r->ebx == 0) {
 			return previousBreak;

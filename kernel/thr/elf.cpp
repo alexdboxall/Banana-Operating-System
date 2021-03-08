@@ -729,8 +729,6 @@ namespace Thr
 		driverLookupAddr[driverLookupNext] = addr;
 		driverLookupLen[driverLookupNext++] = siz;
 
-		kprintf("Loaded driver to address 0x%X\n", addr);
-
 		bool couldLoad = Thr::loadDriverIntoMemory(name, addr);
 		if (!couldLoad && critical) {
 			panic("COULD NOT LOAD CRITICAL DRIVER");
@@ -740,10 +738,7 @@ namespace Thr
 		int nnot = 0;
 		for (size_t i = 0; i < (siz + 4095) / 4096; ++i) {
 			size_t* ptentry = Virt::getAKernelVAS()->getPageTableEntry(addr + i * 4096);
-			if (*ptentry & (PAGE_ACCESSED | PAGE_DIRTY)) {
-				kprintf("Driver page used. %d\n", ++used);
-			} else {
-				kprintf("Driver page not used. %d\n", ++nnot);
+			if (!(*ptentry & (PAGE_ACCESSED | PAGE_DIRTY))) {
 				Phys::freePage(addr + i * 4096);
 			}
 		}

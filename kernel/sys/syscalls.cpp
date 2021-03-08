@@ -402,7 +402,6 @@ uint64_t sysCallUnlink(regs* r)
 
 uint64_t sysCallGetArgc(regs* r)
 {
-	kprintf("ARGC = %d\n", currentTaskTCB->processRelatedTo->argc);
 	return currentTaskTCB->processRelatedTo->argc;
 }
 
@@ -503,21 +502,10 @@ uint64_t sysCallGetEnv(regs* r)
 	char* addr = (char*) r->edx;
 	int num = r->ebx;
 
-	/*
-	int size = SystemCall(GetEnv, i, 0, 0);
-	if (!size) break;
-	__env[i] = malloc(size);
-	SystemCall(GetEnv, i, 1, (size_t) __env[i]);
-	*/
-
-	kprintf("sysCallGetEnv EBX = 0x%X, ECX = 0x%X, EDX = 0x%X\n", r->ebx, r->ecx, r->edx);
-
 	if (r->ecx == 0) {
 		//get length
 		if (num == 0) {
-			int len = strlen("PATH=C:/Banana/System;C:/Banana/Applications;C:/Banana/Applications/System;");
-			kprintf("getEnv length = %d\n", len);
-			return len;
+			return strlen("PATH=C:/Banana/System;C:/Banana/Applications;C:/Banana/Applications/System;");
 		} else {
 			return 0;
 		}
@@ -716,9 +704,7 @@ void setupSystemCalls()
 uint64_t systemCall(regs* r, void* context)
 {	
 	if (r->eax < 128 && systemCallHandlers[r->eax]) {
-		kprintf("syscall 0x%X\n", r->eax);
 		r->eax = systemCallHandlers[r->eax](r);
-		kprintf("syscall done.\n");
 	} else {
 		kprintf("Invalid syscall %d\n", r->eax);
 	}

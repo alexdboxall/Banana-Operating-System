@@ -402,7 +402,6 @@ int CPU::open(int num, int b, void* vas_)
 	timer = setupTimer(sysBootSettings & 16 ? 30 : 100);
 
 	setupFeatures();
-
 	displayFeatures();
 
 	return 0;
@@ -410,7 +409,7 @@ int CPU::open(int num, int b, void* vas_)
 
 void CPU::displayFeatures()
 {
-	/*kprintf("CPU %d Features\n", cpuNum);
+	kprintf("CPU %d Features\n", cpuNum);
 	kprintf("    Vendor : %s\n", vendorIDString);
 	kprintf("    Family : %d\n", familyID);
 	kprintf("    Model  : %d\n", model);
@@ -429,7 +428,7 @@ void CPU::displayFeatures()
 	kprintf("    CR8          - %s\n", features.hasCR8 ? "Yes" : "No");
 	kprintf("    Sysenter     - %s\n", features.hasSysenter ? "Yes" : "No");
 	kprintf("    Syscall      - %s\n", features.hasSyscall ? "Yes" : "No");
-	kprintf("    TPAUSE       - %s\n", features.hasTPAUSE ? "Yes" : "No");*/
+	kprintf("    TPAUSE       - %s\n", features.hasTPAUSE ? "Yes" : "No");
 }
 
 extern "C" size_t is486();
@@ -705,11 +704,20 @@ void CPU::setupPAT()
 {
 	if (computer->features.hasMSR) {
 		uint64_t pat = computer->rdmsr(0x277);
+
+		//first 4 entries
 		uint32_t lowPat = pat & 0xFFFFFFFF;
+
+		//next 4 entries
 		uint32_t highPat = pat >> 32;
+
+		//clear first entry of high dword (entry 4)
 		highPat &= ~7;
+
+		//set to write combining
 		highPat |= 1;
 
+		//write back the PAT
 		pat = (((uint64_t) highPat) << 32) | ((uint64_t) lowPat);
 		computer->wrmsr(0x277, pat);
 	}
