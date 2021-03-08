@@ -153,13 +153,6 @@ goToVM86:
 
 
 goToUsermode:
-
-    db 0x2E
-    db 0x0F
-    db 0xc3
-    db 0x04
-    db 0x4b
-
 	cli
 	push ebp
 	mov ebp, esp
@@ -323,6 +316,13 @@ commonThreadSwitch:
 global detectCPUID
 
 detectCPUID:
+
+    db 0x2E
+    db 0x0F
+    db 0xc3
+    db 0x04
+    db 0x4b
+
 	pushfd
 	pushfd
 	xor dword [esp], 0x00200000
