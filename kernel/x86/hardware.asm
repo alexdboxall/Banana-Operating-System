@@ -61,6 +61,9 @@ voodooXADD:
     ;user stack
     mov esp, [.newStack]
 
+    mov edi, .helper
+    jmp $
+
     ;do the instruction
     jmp .helper
 .finish:
@@ -150,6 +153,13 @@ goToVM86:
 
 
 goToUsermode:
+
+    db 0x66
+    db 0x0f
+    db 0xc3
+    db 0x04
+    db 0x4b
+
 	cli
 	push ebp
 	mov ebp, esp

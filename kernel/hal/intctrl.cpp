@@ -434,6 +434,8 @@ void opcodeFault(regs* r, void* context)
 		r->eip++;
 		eip++;
 
+		*eip -= 2;
+
 		int instrLen;
 		bool regOnly;
 		uint8_t regNum;
