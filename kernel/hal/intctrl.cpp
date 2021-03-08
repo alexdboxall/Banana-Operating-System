@@ -385,9 +385,77 @@ void opcodeFault(regs* r, void* context)
 	uint8_t* eip = (uint8_t*) r->eip;
 
 	//lock prefix
+	bool hasNonLockPrefix = false;
+	bool has66Prefix = false;
+
 	if (eip[0] == 0xF0) {
 		eip++;
 		r->eip++;
+
+	} else if (eip[0] == 0xF2 || eip[0] == 0xF3) {
+		hasNonLockPrefix = true;
+		eip++;
+		r->eip++;
+
+	} else if (eip[0] == 0x66) {						//operand size
+		hasNonLockPrefix = true;
+		has66Prefix = true;
+		eip++;
+		r->eip++;
+
+	} else if (eip[0] == 0x67) {						//address size
+		hasNonLockPrefix = true;
+		eip++;
+		r->eip++;
+
+	} else if (eip[0] == 0x2E || eip[0] == 0x3E) {		//branch prediction, CS/DS override
+		hasNonLockPrefix = true;
+		eip++;
+		r->eip++;
+
+	} else if (eip[0] == 0x36 || eip[0] == 0x26 || \
+			   eip[0] == 0x64 || eip[0] == 0x65) {		//segment overrides
+		hasNonLockPrefix = true;
+		eip++;
+		r->eip++;
+	}
+
+	//BSWAP
+	if (eip[0] == 0x0F && eip[1] >= 0xC8 && eip[1] <= 0xCF) {
+		uint32_t in;
+		uint8_t base = eip[1] - 0xC8;
+
+		if (base == 0) in = r->eax;
+		else if (base == 1) in = r->ecx;
+		else if (base == 2) in = r->edx;
+		else if (base == 3) in = r->ebx;
+		else if (base == 4) in = r->useresp;
+		else if (base == 5) in = r->ebp;
+		else if (base == 6) in = r->esi;
+		else if (base == 7) in = r->edi;
+
+		if (has66Prefix) {
+			//undefined behavior
+
+			in &= ~0xFFFF;
+			in |= 0xDEAD;
+
+		} else {
+			in = (in << 24) | ((in << 8) & 0x00FF0000) | ((in >> 8) & 0x0000FF00) | (in >> 24);
+			
+		}
+
+		if (base == 0) r->eax = in;
+		else if (base == 1) r->ecx = in;
+		else if (base == 2) r->edx = in;
+		else if (base == 3) r->ebx = in;
+		else if (base == 4) r->useresp = in;
+		else if (base == 5) r->ebp = in;
+		else if (base == 6) r->esi = in;
+		else if (base == 7) r->edi = in;
+
+		r->eip += 2;
+		return;
 	}
 
 	//CMPXHG8B
@@ -402,7 +470,7 @@ void opcodeFault(regs* r, void* context)
 		//get the memory address
 		uint64_t* ptr = (uint64_t*) CPU::decodeAddress(r, &instrLen, &regOnly, &middleDigit);
 		
-		if (!regOnly) {
+		if (!regOnly && middleDigit == 1 && !hasNonLockPrefix) {
 			//get the pseudo-64 bit regs
 			uint64_t edxeax = r->edx;
 			edxeax <<= 32;
@@ -441,6 +509,8 @@ void opcodeFault(regs* r, void* context)
 		} else {
 			//you're not allowed register encodings,
 			//in fact, this is what caused the F00F bug on early Pentiums!
+
+			//and the middle digit needs to be 1 for this instruction
 		}
 	}
 
