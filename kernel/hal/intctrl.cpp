@@ -374,6 +374,9 @@ void otherISRHandler(regs* r, void* context)
 	Thr::terminateFromIRQ();
 }
 
+#pragma GCC diagnostic push
+#pragma GCC optimize ("-mtune=i386")
+#pragma GCC optimize ("-march=i386")
 void opcodeFault(regs* r, void* context)
 {
 	if (thisCPU()->opcodeDetectionMode) {
@@ -441,11 +444,8 @@ void opcodeFault(regs* r, void* context)
 			in |= 0xDEAD;
 
 		} else {
-#pragma GCC diagnostic push
-#pragma GCC optimize ("-mtune=i386")
-#pragma GCC optimize ("-march=i386")
+
 			in = (in << 24) | ((in << 8) & 0x00FF0000) | ((in >> 8) & 0x0000FF00) | (in >> 24);
-#pragma GCC diagnostic pop
 		}
 
 		if (base == 0) r->eax = in;
@@ -525,6 +525,7 @@ void opcodeFault(regs* r, void* context)
 
 	Thr::terminateFromIRQ();
 }
+#pragma GCC diagnostic pop
 
 #pragma GCC diagnostic pop
 
