@@ -403,39 +403,46 @@ void opcodeFault(regs* r, void* context)
 		//get the memory address
 		uint64_t* ptr = (uint8_t*) CPU::decodeAddress(r, &instrLen, &regOnly, &middleDigit);
 		
-		//get the pseudo-64 bit regs
-		uint64_t edxeax = r->edx;
-		edxeax <<= 32;
-		edxeax |= (uint64_t) r->eax;
+		if (!regOnly) {
+			//get the pseudo-64 bit regs
+			uint64_t edxeax = r->edx;
+			edxeax <<= 32;
+			edxeax |= (uint64_t) r->eax;
 
-		uint64_t ecxebx = r->ecx;
-		ecxebx <<= 32;
-		ecxebx |= (uint64_t) r->ebx;
+			uint64_t ecxebx = r->ecx;
+			ecxebx <<= 32;
+			ecxebx |= (uint64_t) r->ebx;
 
-		lockScheduler();
-		if (*ptr == edxeax) {
-			//if equal, load ECX:EBX to memory
-			*ptr = ecxebx;
+			lockScheduler();
+			if (*ptr == edxeax) {
+				//if equal, load ECX:EBX to memory
+				*ptr = ecxebx;
 
-			//set the zero flag
-			r->eflags |= 0x0040;	
+				//set the zero flag
+				r->eflags |= 0x0040;
+
+			} else {
+				//otherwise, load memory to EDX:EAX
+				edxeax = *ptr;
+				r->eax = (edxeax & 0xFFFFFFFFU);
+				r->edx = edxeax >> 32;
+
+				//clear the zero flag
+				r->eflags &= ~0x0040;
+			}
+			unlockScheduler();
+
+			//change EIP
+			r->eip += instrLen;
+
+			kprintf("Handled CMPXCHG8B\n");
+			//don't terminate the program
+			return;
 
 		} else {
-			//otherwise, load memory to EDX:EAX
-			edxeax = *ptr;
-			r->eax = (edxeax & 0xFFFFFFFFU);
-			r->edx = edxeax >> 32;
-
-			//clear the zero flag
-			r->eflags &= ~0x0040;		
+			//you're not allowed register encodings,
+			//in fact, this is what caused the F00F bug on early Pentiums!
 		}
-		unlockScheduler();
-
-		//change EIP
-		r->eip += instrLen;
-
-		//don't terminate the program
-		return;
 	}
 
 	kprintf("Invalid Opcode!\n");
