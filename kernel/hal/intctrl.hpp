@@ -7,7 +7,7 @@
 #include "hw/acpi.hpp"
 
 //if you change this, very bad stuff could happen if you don't change the matching assembly
-//(warning: THIS INCLUDES THE FORKING CODE!)
+//(warning: THIS INCLUDES THE FORKING CODE, SYSCALLS AND INTERRUPTS, TASK CREATION, TASK SWITCHING, XADD VOODOO, ETC.!)
 struct regs
 {	
 	//PUSHED LATER				PUSHED EARLIER
