@@ -48,7 +48,7 @@ voodooXADD:
     add [.helper + edx + 18], byte 0x02
 
     ;set stack to where the pushed registers were
-    mov esp, eax + 4 * 4
+    mov esp, [eax + 4 * 4]
     pop edi
     pop esi
     pop ebp
