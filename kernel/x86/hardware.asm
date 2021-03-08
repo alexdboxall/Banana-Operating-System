@@ -62,6 +62,7 @@ voodooXADD:
     mov esp, [.newStack]
 
     ;do the instruction
+    jmp $
     jmp .helper
 .finish:
 
