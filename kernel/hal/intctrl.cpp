@@ -384,6 +384,13 @@ void opcodeFault(regs* r, void* context)
 
 	uint8_t* eip = (uint8_t*) r->eip;
 
+	bool lock = false;
+	if (eip[0] == 0xF0) {
+		lock = true;
+		eip++;
+		r->eip++;
+	}
+
 	//CMPXHG8B
 	if (eip[0] == 0x0F && eip[1] == 0xC7) {
 		eip++;			//CPU::decodeAddress only allows one byte before the MOD/RM byte
@@ -391,7 +398,7 @@ void opcodeFault(regs* r, void* context)
 
 		int instrLen;
 		bool regOnly;
-		int middleDigit;
+		uint8_t middleDigit;
 
 		//get the memory address
 		uint64_t* ptr = (uint8_t*) CPU::decodeAddress(r, &instrLen, &regOnly, &middleDigit);
