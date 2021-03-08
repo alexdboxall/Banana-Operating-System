@@ -40,7 +40,7 @@ voodooXADD:
 
     ;change the first one to an exchange
     mov [.helper + ebx    ], byte 0x90
-    sub [.helper + edx + 1], byte 0xC0
+    sub [.helper + ebx + 1], byte 0xC0
     add [.helper + ebx + 2], byte 0x86
 
     ;change the first one to an add
