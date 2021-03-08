@@ -13,7 +13,6 @@ voodooXADD:
     mov ebx, [ebp+16]           ;OPCODE START (OFFSET)
     mov edx, [eax + 14 * 4]     ;EIP
     mov esi, [eax + 17 * 4]     ;USER ESP
-    jmp $
 
     mov [.newStack], esi
 
