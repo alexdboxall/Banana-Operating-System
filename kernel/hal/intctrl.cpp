@@ -375,7 +375,7 @@ void otherISRHandler(regs* r, void* context)
 }
 
 #pragma GCC diagnostic push
-#pragma GCC target ("-march=i386")
+#pragma GCC optimise ("O0")
 void opcodeFault(regs* r, void* context)
 {
 	if (thisCPU()->opcodeDetectionMode) {
