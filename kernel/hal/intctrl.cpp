@@ -382,6 +382,55 @@ void opcodeFault(regs* r, void* context)
 		return;
 	}
 
+	uint8_t* eip = (uint8_t*) r->eip;
+
+	//CMPXHG8B
+	if (eip[0] == 0x0F && eip[1] == 0xC7) {
+		eip++;			//CPU::decodeAddress only allows one byte before the MOD/RM byte
+		r->eip++;		//ditto
+
+		int instrLen;
+		bool regOnly;
+		int middleDigit;
+
+		//get the memory address
+		uint64_t* ptr = (uint8_t*) CPU::decodeAddress(r, &instrLen, &regOnly, &middleDigit);
+		
+		//get the pseudo-64 bit regs
+		uint64_t edxeax = r->edx;
+		edxeax <<= 32;
+		edxeax |= (uint64_t) r->eax;
+
+		uint64_t ecxebx = r->ecx;
+		ecxebx <<= 32;
+		ecxebx |= (uint64_t) r->ebx;
+
+		lockScheduler();
+		if (*ptr == edxeax) {
+			//if equal, load ECX:EBX to memory
+			*ptr = ecxebx;
+
+			//set the zero flag
+			r->eflags |= 0x0040;	
+
+		} else {
+			//otherwise, load memory to EDX:EAX
+			edxeax = *ptr;
+			r->eax = (edxeax & 0xFFFFFFFFU);
+			r->edx = edxeax >> 32;
+
+			//clear the zero flag
+			r->eflags &= ~0x0040;		
+		}
+		unlockScheduler();
+
+		//change EIP
+		r->eip += instrLen;
+
+		//don't terminate the program
+		return;
+	}
+
 	kprintf("Invalid Opcode!\n");
 	kprintf("OPCODE: 0x%X (then 0x%X %X %X)\n", *((uint8_t*)(0 + r->eip + r->cs * 16)), *((uint8_t*) (1 + r->eip + r->cs * 16)), *((uint8_t*) (2 + r->eip + r->cs * 16)), *((uint8_t*) (3 + r->eip + r->cs * 16)));
 	
