@@ -40,16 +40,15 @@ voodooXADD:
 
     ;change the first one to an exchange
     mov [.helper + ebx    ], byte 0x90
-    sub [.helper + ebx + 1], byte 0xC0
-    add [.helper + ebx + 2], byte 0x86
+    sub [.helper + ebx + 1], byte (0xC0 - 0x86)
 
     ;change the first one to an add
     mov [.helper + ebx + 16], byte 0x90
-    sub [.helper + ebx + 17], byte 0xC0
-    add [.helper + ebx + 18], byte 0x02
+    sub [.helper + ebx + 17], byte (0xC0 - 0x02)
 
     ;set stack to where the pushed registers were
-    mov esp, [eax + 4 * 4]
+    mov esp, eax
+    add esp, 4 * 4
     pop edi
     pop esi
     pop ebp
@@ -61,8 +60,6 @@ voodooXADD:
 
     ;user stack
     mov esp, [.newStack]
-
-    jmp $
 
     ;do the instruction
     jmp .helper
