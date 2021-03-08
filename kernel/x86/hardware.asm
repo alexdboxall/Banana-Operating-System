@@ -62,7 +62,6 @@ voodooXADD:
     mov esp, [.newStack]
 
 .helper times 32 db 0x90
-    jmp .finish
 
     mov esp, [.oldStack]
     popad
