@@ -22,13 +22,11 @@ namespace Sys
 	/// 
 	uint64_t write(regs* r)
 	{
-		kprintf("WRITING A FILE. r->ebx = 0x%X\n", r->ebx);
 		UnixFile* file = nullptr;
 
 		if (r->ebx <= 2) {
 			file = currentTaskTCB->processRelatedTo->terminal;
 		} else {
-			kprintf("Getting file from file descr.\n");
 			file = getFromFileDescriptor(r->ebx);
 		}
 

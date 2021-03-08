@@ -94,10 +94,8 @@ UnixFile* getFromFileDescriptor(int fdIn)
 			f = unixFileLinkedList.getNext(f);
 		}
 	} else {
-		kprintf("This is aspecial file of some sort...\n");
 		if (fdIn == RESERVED_FD_AUX) return sfileAux;
 		else if (fdIn == RESERVED_FD_CON) {
-			kprintf("returning the con file.\n");
 			return sfileCon;
 		}
 		else if (fdIn == RESERVED_FD_PNT) return sfilePnt;
@@ -129,7 +127,6 @@ FileStatus ReservedFilename::read(uint64_t bytes, void* where, int* bytesRead)
 		*bytesRead = 0;
 
 	} else if (fd == RESERVED_FD_CON) {
-		kprintf("READING CON\n");
 		return currentTaskTCB->processRelatedTo->terminal->read(bytes, where, bytesRead);
 
 	} else if (fd == RESERVED_FD_NUL) {
@@ -150,12 +147,10 @@ FileStatus ReservedFilename::read(uint64_t bytes, void* where, int* bytesRead)
 
 bool ReservedFilename::isAtty()
 {
-	kprintf("reserved file isAtty\n");
 	if (fd == RESERVED_FD_AUX) {
 		return false;
 
 	} else if (fd == RESERVED_FD_CON) {
-		kprintf("Yes, con is a TTY\n");
 		return true;
 
 	} else if (fd == RESERVED_FD_NUL) {
@@ -180,7 +175,6 @@ FileStatus ReservedFilename::write(uint64_t bytes, void* where, int* bytesWritte
 		*bytesWritten = 0;
 
 	} else if (fd == RESERVED_FD_CON) {
-		kprintf("WRITING CON\n");
 		return currentTaskTCB->processRelatedTo->terminal->write(bytes, where, bytesWritten);
 
 	} else if (fd == RESERVED_FD_NUL) {

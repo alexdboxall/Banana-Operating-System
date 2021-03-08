@@ -100,7 +100,6 @@ int64_t fpuFloatToLong(Float80 flt)
     if (exponent > FRACTION_LENGTH) {
         return 0;
     }
-    kprintf("Float->Int: 0x%X00000000 >> %d\n", (uint32_t)(flt.fraction >> 32), FRACTION_LENGTH - exponent);
     int64_t res = flt.fraction >> (FRACTION_LENGTH - exponent);
     if (flt.sign) {
         res = -res;
@@ -551,9 +550,9 @@ bool x87Handler(regs* r)
 
     ptr = CPU::decodeAddress(r, &instrLen, &registerOnly, &middleDigit);
 
-    kprintf("x87 handler called with faulting EIP of 0x%X\n", eip);
-	kprintf("x87: %X %X %X %X\n", *eip, *(eip + 1), *(eip + 2), *(eip + 3));
-    kprintf("decoded address = 0x%X\n", ptr);
+    //kprintf("x87 handler called with faulting EIP of 0x%X\n", eip);
+	//kprintf("x87: %X %X %X %X\n", *eip, *(eip + 1), *(eip + 2), *(eip + 3));
+    //kprintf("decoded address = 0x%X\n", ptr);
 
     if (eip[0] == 0xD9) {
         switch (eip[1]) {
