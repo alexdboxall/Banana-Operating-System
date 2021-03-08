@@ -58,11 +58,11 @@ int Window_init(Window* window, int16_t x, int16_t y, uint16_t width,
 	window->move_function = Window_move_handler;
 	window->nanoLastClicked = 0;
 	window->fullscreen = 0;
+	window->previousMouseOverride = -1;
 	window->currentMouse = MOUSE_OFFSET_NORMAL;
 	window->active_child = (Window*) 0;
 	window->title = (char*) 0;
 	window->dragType = DRAG_TYPE_NONE;
-	window->mouseTypeOverride = false;
 
 	if (flags & WIN_TOPLEVELWIN) {
 		active_window = window;
@@ -720,7 +720,7 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
 			mouse_y >= child->y && mouse_y < child->y + child->height;
 
 		bool onLeftEdge = !(child->flags & WIN_NODECORATION) && !child->fullscreen &&
-			mouse_x >= child->x - 12 && mouse_x < child->x + 3 &&
+			mouse_x >= child->x - 12 && mouse_x < child->x + 1 &&
 			mouse_y >= child->y && mouse_y < child->y + child->height;
 
 		bool onTopEdge = !(child->flags & WIN_NODECORATION) && !child->fullscreen &&
@@ -733,8 +733,14 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
 
 		bool onTitleBar = !(child->flags & WIN_NODECORATION) &&
 			mouse_y >= child->y && mouse_y < (child->y + 28) && !child->fullscreen;
+
+		bool onBottomLeft = !(child->flags & WIN_NODECORATION) && !child->fullscreen &&
+			mouse_x >= child->x - 12 && mouse_x < child->x + 3 &&
+			mouse_y >= child->y + child->height - 18 && mouse_y < child->y + child->height;
 		
 		if (onBottomCorner) {
+			overridenMouse = MOUSE_OFFSET_TLDR;
+		} else if (onBottomLeft) {
 			overridenMouse = MOUSE_OFFSET_TLDR;
 		} else if (onRightEdge) {
 			overridenMouse = MOUSE_OFFSET_HORZ;
@@ -745,6 +751,8 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
 		} else if (onTopEdge) {
 			overridenMouse = MOUSE_OFFSET_VERT;
 		}
+
+		window->previousMouseOverride = overridenMouse;
 
 		if ((mouse_x < child->x || mouse_y < child->y) && overridenMouse == -1) {
 			continue;
@@ -782,19 +790,19 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
 				}
 			}
 
-			if (onTitleBar) {
-				window->drag_off_x = mouse_x - child->x;
-				window->drag_off_y = mouse_y - child->y;
-				window->drag_child = child;
-				window->dragType = DRAG_TYPE_MOVE;
-				break;
-			}
-
 			if (onBottomCorner) {
 				window->drag_off_x = mouse_x - child->width;
 				window->drag_off_y = mouse_y - child->height;
 				window->drag_child = child;
 				window->dragType = DRAG_TYPE_RESIZE_ALL;
+				break;
+			}
+
+			if (onBottomLeft) {
+				window->drag_off_x = mouse_x - child->width;
+				window->drag_off_y = mouse_y - child->height;
+				window->drag_child = child;
+				window->dragType = DRAG_TYPE_RESIZE_ALL_BOTTOM_LEFT;
 				break;
 			}
 
@@ -829,6 +837,14 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
 				window->dragType = DRAG_TYPE_RESIZE_VT_TOP;
 				break;
 			}
+
+			if (onTitleBar) {
+				window->drag_off_x = mouse_x - child->x;
+				window->drag_off_y = mouse_y - child->y;
+				window->drag_child = child;
+				window->dragType = DRAG_TYPE_MOVE;
+				break;
+			}
 		}
 
 		//Found a target, so forward the mouse event to that window and quit looking
@@ -860,6 +876,17 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
 		} else if (window->dragType == DRAG_TYPE_RESIZE_VT) {
 			Window_resize(window->drag_child, window->drag_child->width, mouse_y - window->drag_off_y);
 		
+		} else if (window->dragType == DRAG_TYPE_RESIZE_ALL_BOTTOM_LEFT) {
+			int xmove = window->drag_child->x - mouse_x;
+			int oldwidth = window->drag_child->width;
+
+			Window_resize(window->drag_child, window->drag_child->width + xmove, mouse_y - window->drag_off_y);
+
+			//only move if the window could actually be resized (e.g. might become too small)
+			if (window->drag_child->width != oldwidth) {
+				Window_move(window->drag_child, mouse_x, window->drag_child->y);
+			}
+
 		} else if (window->dragType == DRAG_TYPE_RESIZE_HZ_LEFT) {
 			int xmove = window->drag_child->x - mouse_x;
 			int oldwidth = window->drag_child->width;
