@@ -11,6 +11,7 @@ voodooXADD:
     mov eax, [ebp+8]            ;REGISTER STRUCT BASE ADDRESS
     mov ecx, [ebp+12]           ;ACTUAL LENGTH
     mov ebx, [ebp+16]           ;OPCODE START (OFFSET)
+    jmp $
     mov edx, [eax + 15 * 4]     ;EIP
     mov esi, [eax + 18 * 4]     ;USER ESP
     mov [.newStack], esi
@@ -61,7 +62,6 @@ voodooXADD:
     ;user stack
     mov esp, [.newStack]
 
-    mov edi, .helper
     jmp $
 
     ;do the instruction
