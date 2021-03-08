@@ -152,14 +152,6 @@ goToVM86:
 
 
 goToUsermode:
-    db 0x0f 
-    db 0xc3 
-    db 0x1d 
-    db 0x00 
-    db 0x00 
-    db 0x00 
-    db 0xc0
-
 	cli
 	push ebp
 	mov ebp, esp
