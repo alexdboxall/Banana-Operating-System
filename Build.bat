@@ -23,7 +23,7 @@ cd kernel
 cp crti.322 crti.32
 cp crtn.322 crtn.32
 
-rem make clean || pause
+make clean || pause
 cp crti.322 crti.32
 cp crtn.322 crtn.32
 make -j4 kernel386 TUNING=pentium || (pause && exit)
