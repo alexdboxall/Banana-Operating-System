@@ -401,7 +401,7 @@ void opcodeFault(regs* r, void* context)
 		uint8_t middleDigit;
 
 		//get the memory address
-		uint64_t* ptr = (uint8_t*) CPU::decodeAddress(r, &instrLen, &regOnly, &middleDigit);
+		uint64_t* ptr = (uint64_t*) CPU::decodeAddress(r, &instrLen, &regOnly, &middleDigit);
 		
 		if (!regOnly) {
 			//get the pseudo-64 bit regs
