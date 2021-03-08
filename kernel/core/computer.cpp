@@ -220,7 +220,7 @@ void Computer::detectFeatures()
 
 void Computer::displayFeatures()
 {
-	/*kprintf("Computer Features\n");
+	kprintf("Computer Features\n");
 	kprintf("    APIC   - %s\n", features.hasAPIC ? "Yes" : "No");
 	kprintf("    ACPI   - %s\n", features.hasACPI ? "Yes" : "No");
 	kprintf("    CPUID  - %s\n", features.hasCPUID ? "Yes" : "No");
@@ -239,7 +239,7 @@ void Computer::displayFeatures()
 	kprintf("    MCE    - %s\n", features.hasMCE ? "Yes" : "No");
 	kprintf("    x86-64 - %s\n", features.hasLongMode ? "Yes" : "No");
 	kprintf("    NX bit - %s\n", features.hasNXBit ? "Yes" : "No");
-	kprintf("\n");*/
+	kprintf("\n");
 }
 
 uint64_t Computer::rdmsr(uint32_t msr_id)
