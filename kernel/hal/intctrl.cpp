@@ -376,6 +376,9 @@ void otherISRHandler(regs* r, void* context)
 
 #pragma GCC diagnostic push
 #pragma GCC optimize ("O0")
+
+extern "C" void voodooXADD(size_t, int, int);
+
 void opcodeFault(regs* r, void* context)
 {
 	if (thisCPU()->opcodeDetectionMode) {
@@ -435,13 +438,12 @@ void opcodeFault(regs* r, void* context)
 		bool regOnly;
 		uint8_t regNum;
 
-		//get the memory address
-		uint8_t* ptr = (uint64_t*) CPU::decodeAddress(r, &instrLen, &regOnly, &regNum);
+		//get the instruction length
+		CPU::decodeAddress(r, &instrLen, &regOnly, &regNum);
 
-		int trueLength = instrLen + (eip - originalEIP);
-		int opcodeStart = (eip - originalEIP) - 1;			//the 0xF starts here
+		int trueLength = instrLen + (r->eip - originalEIP);
+		int opcodeStart = (r->eip - originalEIP) - 1;			//the 0xF starts here
 
-		extern "C" void voodooXADD(size_t, int, int);
 		voodooXADD((size_t) r, trueLength, opcodeStart);
 
 		r->eip += instrLen;
