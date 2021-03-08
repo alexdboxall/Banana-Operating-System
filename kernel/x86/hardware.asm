@@ -319,9 +319,9 @@ detectCPUID:
 
     db 0x2E
     db 0x0F
-    db 0xc3
+    db 0xC3
     db 0x04
-    db 0x4b
+    db 0x4B
 
 	pushfd
 	pushfd
