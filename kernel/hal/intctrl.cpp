@@ -420,7 +420,7 @@ void opcodeFault(regs* r, void* context)
 		r->eip++;
 	}
 
-	//BSWAP
+	//BSWAP		introduced with i486
 	if (eip[0] == 0x0F && eip[1] >= 0xC8 && eip[1] <= 0xCF) {
 		uint32_t in;
 		uint8_t base = eip[1] - 0xC8;
@@ -441,8 +441,11 @@ void opcodeFault(regs* r, void* context)
 			in |= 0xDEAD;
 
 		} else {
+#pragma GCC diagnostic push
+#pragma GCC optimize ("-mtune=i386")
+#pragma GCC optimize ("-march=i386")
 			in = (in << 24) | ((in << 8) & 0x00FF0000) | ((in >> 8) & 0x0000FF00) | (in >> 24);
-			
+#pragma GCC diagnostic pop
 		}
 
 		if (base == 0) r->eax = in;
@@ -458,7 +461,7 @@ void opcodeFault(regs* r, void* context)
 		return;
 	}
 
-	//CMPXHG8B
+	//CMPXHG8B	introduced with Pentium
 	if (eip[0] == 0x0F && eip[1] == 0xC7) {
 		eip++;			//CPU::decodeAddress only allows one byte before the MOD/RM byte
 		r->eip++;		//ditto
