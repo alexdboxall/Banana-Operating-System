@@ -865,17 +865,17 @@ uint8_t* CPU::decodeAddress(regs* r, int* instrLenOut, bool* registerOnlyOut, ui
 
 		} else if (mod == 0) {
 			//SIB
-			ptr = (uint8_t*) (actBase + actIndex << scale);
+			ptr = (uint8_t*) (actBase + (actIndex << scale));
 
 		} else if (mod == 1) {
 			//SIB + disp8
-			ptr = (uint8_t*) (actBase + actIndex << scale);
+			ptr = (uint8_t*) (actBase + (actIndex << scale));
 			ptr += *((int8_t*) (eip + 3));
 			instrLen += 1;
 
 		} else if (mod == 2) {
 			//SIB + disp32
-			ptr = (uint8_t*) (actBase + actIndex << scale);
+			ptr = (uint8_t*) (actBase + (actIndex << scale));
 			ptr += *((int32_t*) (eip + 3));
 			instrLen += 4;
 		}
