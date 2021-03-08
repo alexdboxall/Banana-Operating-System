@@ -60,6 +60,7 @@ voodooXADD:
 
     ;user stack
     mov esp, [.newStack]
+    jmp $
 
 .helper times 32 db 0x90
 
