@@ -392,7 +392,7 @@ void opcodeFault(regs* r, void* context)
 	bool hasNonLockPrefix = false;
 	bool has66Prefix = false;
 
-	uint8_t* originalEIP = eip;
+	size_t originalEIP = r->eip;
 
 	if (eip[0] == 0xF0) {
 		eip++;
@@ -428,7 +428,24 @@ void opcodeFault(regs* r, void* context)
 
 	//XADD
 	if (eip[0] == 0x0F && (eip[1] == 0xC0 || eip[1] == 0xC1)) {
-		
+		r->eip++;
+		eip++;
+
+		int instrLen;
+		bool regOnly;
+		uint8_t regNum;
+
+		//get the memory address
+		uint8_t* ptr = (uint64_t*) CPU::decodeAddress(r, &instrLen, &regOnly, &regNum);
+
+		int trueLength = instrLen + (eip - originalEIP);
+		int opcodeStart = (eip - originalEIP) - 1;			//the 0xF starts here
+
+		extern "C" void voodooXADD(size_t, int, int);
+		voodooXADD((size_t) r, trueLength, opcodeStart);
+
+		r->eip += instrLen;
+		return;
 	}
 
 	//BSWAP		introduced with i486

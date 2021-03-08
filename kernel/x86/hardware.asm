@@ -1,5 +1,75 @@
 [bits 32]
 
+global voodooXADD
+
+voodooXADD:
+    push ebp
+	mov ebp, esp
+
+    pushad
+
+    mov eax, [ebp+8]            ;REGISTER STRUCT BASE ADDRESS
+    mov ecx, [ebp+12]           ;ACTUAL LENGTH
+    mov ebx, [ebp+16]           ;OPCODE START (OFFSET)
+    mov edx, [eax + 15 * 4]     ;EIP
+    mov esi, [eax + 18 * 4]     ;USER ESP
+    mov [.newStack], esi
+
+    ;save the stack
+    mov [.oldStack], esp
+
+    pusha
+    mov esi, edx                ;COPY FROM ESI 
+    mov edi, .helper            ;TO THE HELPER
+    rep movsb                   ;WITH THE LENGTH IN ECX
+    popa
+
+    pusha
+    mov esi, edx                ;COPY FROM ESI 
+    mov edi, .helper + 16       ;TO THE HELPER (PART 2)
+    rep movsb                   ;WITH THE LENGTH IN ECX
+    popa
+
+    ;change the first one to an exchange
+    mov [.helper + edx    ], byte 0x90
+    sub [.helper + edx + 1], byte 0xC0
+    add [.helper + edx + 2], byte 0x86
+
+    ;change the first one to an add
+    mov [.helper + edx + 16], byte 0x90
+    sub [.helper + edx + 17], byte 0xC0
+    add [.helper + edx + 18], byte 0x02
+
+    ;set stack to where the pushed registers were
+    mov esp, eax + 4 * 4
+    pop edi
+    pop esi
+    pop ebp
+    pop ebx     ;don't pop ESP
+    pop ebx
+    pop edx
+    pop ecx
+    pop eax    
+
+    ;user stack
+    mov esp, [.newStack]
+
+    ;do the instruction
+    jmp .xaddHelper
+.finish:
+
+    mov esp, [.oldStack]
+    popad
+
+    leave
+    ret
+
+.xaddHelper times 32 db 0x90
+    jmp .finish
+
+.oldStack dd 0
+.newStack dd 0
+
 global switchToThreadASM
 currentTaskTCB equ 0xC2002000		;JUST FOR NOW, NEEDS CHANGING IS prcssthr.hpp AS WELL IF CHANGED
 extern taskStartupFunction
