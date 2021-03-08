@@ -384,9 +384,8 @@ void opcodeFault(regs* r, void* context)
 
 	uint8_t* eip = (uint8_t*) r->eip;
 
-	bool lock = false;
+	//lock prefix
 	if (eip[0] == 0xF0) {
-		lock = true;
 		eip++;
 		r->eip++;
 	}
