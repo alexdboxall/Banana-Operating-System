@@ -335,119 +335,119 @@ c00002a4:	50                   	push   eax
 c00002a5:	cf                   	iret   
 
 c00002a6 <goToUsermode>:
-c00002a6:	2e 0f c3 04 4b       	movnti DWORD PTR cs:[ebx+ecx*2],eax
-c00002ab:	fa                   	cli    
-c00002ac:	55                   	push   ebp
-c00002ad:	89 e5                	mov    ebp,esp
-c00002af:	8b 5d 08             	mov    ebx,DWORD PTR [ebp+0x8]
-c00002b2:	66 b8 23 00          	mov    ax,0x23
-c00002b6:	66 8e d8             	mov    ds,ax
-c00002b9:	66 8e c0             	mov    es,ax
-c00002bc:	66 8e e0             	mov    fs,ax
-c00002bf:	66 8e e8             	mov    gs,ax
-c00002c2:	89 e0                	mov    eax,esp
-c00002c4:	68 23 00 00 00       	push   0x23
-c00002c9:	50                   	push   eax
-c00002ca:	68 02 02 00 00       	push   0x202
-c00002cf:	68 1b 00 00 00       	push   0x1b
+c00002a6:	fa                   	cli    
+c00002a7:	55                   	push   ebp
+c00002a8:	89 e5                	mov    ebp,esp
+c00002aa:	8b 5d 08             	mov    ebx,DWORD PTR [ebp+0x8]
+c00002ad:	66 b8 23 00          	mov    ax,0x23
+c00002b1:	66 8e d8             	mov    ds,ax
+c00002b4:	66 8e c0             	mov    es,ax
+c00002b7:	66 8e e0             	mov    fs,ax
+c00002ba:	66 8e e8             	mov    gs,ax
+c00002bd:	89 e0                	mov    eax,esp
+c00002bf:	68 23 00 00 00       	push   0x23
+c00002c4:	50                   	push   eax
+c00002c5:	68 02 02 00 00       	push   0x202
+c00002ca:	68 1b 00 00 00       	push   0x1b
+c00002cf:	53                   	push   ebx
+c00002d0:	cf                   	iret   
+
+c00002d1 <switchToThreadASMFirstTime>:
+c00002d1:	9c                   	pushf  
+c00002d2:	fa                   	cli    
+c00002d3:	50                   	push   eax
 c00002d4:	53                   	push   ebx
-c00002d5:	cf                   	iret   
+c00002d5:	51                   	push   ecx
+c00002d6:	52                   	push   edx
+c00002d7:	56                   	push   esi
+c00002d8:	57                   	push   edi
+c00002d9:	55                   	push   ebp
+c00002da:	e9 11 00 00 00       	jmp    c00002f0 <commonThreadSwitch>
 
-c00002d6 <switchToThreadASMFirstTime>:
-c00002d6:	9c                   	pushf  
-c00002d7:	fa                   	cli    
-c00002d8:	50                   	push   eax
-c00002d9:	53                   	push   ebx
-c00002da:	51                   	push   ecx
-c00002db:	52                   	push   edx
-c00002dc:	56                   	push   esi
-c00002dd:	57                   	push   edi
-c00002de:	55                   	push   ebp
-c00002df:	e9 11 00 00 00       	jmp    c00002f5 <commonThreadSwitch>
+c00002df <switchToThreadASM>:
+c00002df:	9c                   	pushf  
+c00002e0:	50                   	push   eax
+c00002e1:	53                   	push   ebx
+c00002e2:	51                   	push   ecx
+c00002e3:	52                   	push   edx
+c00002e4:	56                   	push   esi
+c00002e5:	57                   	push   edi
+c00002e6:	55                   	push   ebp
+c00002e7:	8b 3d 00 20 00 c2    	mov    edi,DWORD PTR ds:0xc2002000
+c00002ed:	89 67 04             	mov    DWORD PTR [edi+0x4],esp
 
-c00002e4 <switchToThreadASM>:
-c00002e4:	9c                   	pushf  
-c00002e5:	50                   	push   eax
-c00002e6:	53                   	push   ebx
-c00002e7:	51                   	push   ecx
-c00002e8:	52                   	push   edx
-c00002e9:	56                   	push   esi
-c00002ea:	57                   	push   edi
-c00002eb:	55                   	push   ebp
-c00002ec:	8b 3d 00 20 00 c2    	mov    edi,DWORD PTR ds:0xc2002000
-c00002f2:	89 67 04             	mov    DWORD PTR [edi+0x4],esp
+c00002f0 <commonThreadSwitch>:
+c00002f0:	8b 74 24 24          	mov    esi,DWORD PTR [esp+0x24]
+c00002f4:	89 35 00 20 00 c2    	mov    DWORD PTR ds:0xc2002000,esi
+c00002fa:	8b 06                	mov    eax,DWORD PTR [esi]
+c00002fc:	8b 5e 08             	mov    ebx,DWORD PTR [esi+0x8]
+c00002ff:	8b 56 0c             	mov    edx,DWORD PTR [esi+0xc]
+c0000302:	0f 20 d9             	mov    ecx,cr3
+c0000305:	39 c8                	cmp    eax,ecx
+c0000307:	74 03                	je     c000030c <commonThreadSwitch.doneVAS>
+c0000309:	0f 22 d8             	mov    cr3,eax
 
-c00002f5 <commonThreadSwitch>:
-c00002f5:	8b 74 24 24          	mov    esi,DWORD PTR [esp+0x24]
-c00002f9:	89 35 00 20 00 c2    	mov    DWORD PTR ds:0xc2002000,esi
-c00002ff:	8b 06                	mov    eax,DWORD PTR [esi]
-c0000301:	8b 5e 08             	mov    ebx,DWORD PTR [esi+0x8]
-c0000304:	8b 56 0c             	mov    edx,DWORD PTR [esi+0xc]
-c0000307:	0f 20 d9             	mov    ecx,cr3
-c000030a:	39 c8                	cmp    eax,ecx
-c000030c:	74 03                	je     c0000311 <commonThreadSwitch.doneVAS>
-c000030e:	0f 22 d8             	mov    cr3,eax
+c000030c <commonThreadSwitch.doneVAS>:
+c000030c:	85 d2                	test   edx,edx
+c000030e:	74 4e                	je     c000035e <commonThreadSwitch.notFirstTime>
+c0000310:	fa                   	cli    
+c0000311:	8b 46 04             	mov    eax,DWORD PTR [esi+0x4]
+c0000314:	bc 00 fe 07 c2       	mov    esp,0xc207fe00
+c0000319:	60                   	pusha  
+c000031a:	e8 8d ec 00 00       	call   c000efac <mapVASFirstTime>
+c000031f:	61                   	popa   
+c0000320:	89 c4                	mov    esp,eax
+c0000322:	56                   	push   esi
+c0000323:	52                   	push   edx
+c0000324:	e8 37 83 01 00       	call   c0018660 <changeTSS>
+c0000329:	5a                   	pop    edx
+c000032a:	5e                   	pop    esi
+c000032b:	c7 46 0c 00 00 00 00 	mov    DWORD PTR [esi+0xc],0x0
+c0000332:	81 fa 01 00 00 00    	cmp    edx,0x1
+c0000338:	74 39                	je     c0000373 <commonThreadSwitch.cameOffAFork>
+c000033a:	5d                   	pop    ebp
+c000033b:	5f                   	pop    edi
+c000033c:	5e                   	pop    esi
+c000033d:	59                   	pop    ecx
+c000033e:	59                   	pop    ecx
+c000033f:	5b                   	pop    ebx
+c0000340:	58                   	pop    eax
+c0000341:	81 c4 04 00 00 00    	add    esp,0x4
+c0000347:	6a 02                	push   0x2
+c0000349:	9d                   	popf   
+c000034a:	52                   	push   edx
+c000034b:	e8 3d 87 01 00       	call   c0018a8d <taskStartupFunction>
+c0000350:	5a                   	pop    edx
+c0000351:	50                   	push   eax
+c0000352:	ff d2                	call   edx
+c0000354:	e8 f2 8c 01 00       	call   c001904b <taskReturned>
+c0000359:	e9 fb ff ff ff       	jmp    c0000359 <commonThreadSwitch.doneVAS+0x4d>
 
-c0000311 <commonThreadSwitch.doneVAS>:
-c0000311:	85 d2                	test   edx,edx
-c0000313:	74 4e                	je     c0000363 <commonThreadSwitch.notFirstTime>
-c0000315:	fa                   	cli    
-c0000316:	8b 46 04             	mov    eax,DWORD PTR [esi+0x4]
-c0000319:	bc 00 fe 07 c2       	mov    esp,0xc207fe00
-c000031e:	60                   	pusha  
-c000031f:	e8 88 ec 00 00       	call   c000efac <mapVASFirstTime>
-c0000324:	61                   	popa   
-c0000325:	89 c4                	mov    esp,eax
-c0000327:	56                   	push   esi
-c0000328:	52                   	push   edx
-c0000329:	e8 32 83 01 00       	call   c0018660 <changeTSS>
-c000032e:	5a                   	pop    edx
-c000032f:	5e                   	pop    esi
-c0000330:	c7 46 0c 00 00 00 00 	mov    DWORD PTR [esi+0xc],0x0
-c0000337:	81 fa 01 00 00 00    	cmp    edx,0x1
-c000033d:	74 39                	je     c0000378 <commonThreadSwitch.cameOffAFork>
-c000033f:	5d                   	pop    ebp
-c0000340:	5f                   	pop    edi
-c0000341:	5e                   	pop    esi
-c0000342:	59                   	pop    ecx
-c0000343:	59                   	pop    ecx
-c0000344:	5b                   	pop    ebx
-c0000345:	58                   	pop    eax
-c0000346:	81 c4 04 00 00 00    	add    esp,0x4
-c000034c:	6a 02                	push   0x2
-c000034e:	9d                   	popf   
-c000034f:	52                   	push   edx
-c0000350:	e8 38 87 01 00       	call   c0018a8d <taskStartupFunction>
-c0000355:	5a                   	pop    edx
-c0000356:	50                   	push   eax
-c0000357:	ff d2                	call   edx
-c0000359:	e8 ed 8c 01 00       	call   c001904b <taskReturned>
-c000035e:	e9 fb ff ff ff       	jmp    c000035e <commonThreadSwitch.doneVAS+0x4d>
-
-c0000363 <commonThreadSwitch.notFirstTime>:
-c0000363:	8b 66 04             	mov    esp,DWORD PTR [esi+0x4]
-c0000366:	56                   	push   esi
-c0000367:	52                   	push   edx
-c0000368:	e8 f3 82 01 00       	call   c0018660 <changeTSS>
+c000035e <commonThreadSwitch.notFirstTime>:
+c000035e:	8b 66 04             	mov    esp,DWORD PTR [esi+0x4]
+c0000361:	56                   	push   esi
+c0000362:	52                   	push   edx
+c0000363:	e8 f8 82 01 00       	call   c0018660 <changeTSS>
+c0000368:	5a                   	pop    edx
+c0000369:	5e                   	pop    esi
+c000036a:	5d                   	pop    ebp
+c000036b:	5f                   	pop    edi
+c000036c:	5e                   	pop    esi
 c000036d:	5a                   	pop    edx
-c000036e:	5e                   	pop    esi
-c000036f:	5d                   	pop    ebp
-c0000370:	5f                   	pop    edi
-c0000371:	5e                   	pop    esi
-c0000372:	5a                   	pop    edx
-c0000373:	59                   	pop    ecx
-c0000374:	5b                   	pop    ebx
-c0000375:	58                   	pop    eax
-c0000376:	9d                   	popf   
-c0000377:	c3                   	ret    
+c000036e:	59                   	pop    ecx
+c000036f:	5b                   	pop    ebx
+c0000370:	58                   	pop    eax
+c0000371:	9d                   	popf   
+c0000372:	c3                   	ret    
 
-c0000378 <commonThreadSwitch.cameOffAFork>:
-c0000378:	31 c0                	xor    eax,eax
-c000037a:	31 d2                	xor    edx,edx
-c000037c:	8b 66 1c             	mov    esp,DWORD PTR [esi+0x1c]
-c000037f:	e9 a2 02 00 00       	jmp    c0000626 <offAForkJumpThingy>
+c0000373 <commonThreadSwitch.cameOffAFork>:
+c0000373:	31 c0                	xor    eax,eax
+c0000375:	31 d2                	xor    edx,edx
+c0000377:	8b 66 1c             	mov    esp,DWORD PTR [esi+0x1c]
+c000037a:	e9 a7 02 00 00       	jmp    c0000626 <offAForkJumpThingy>
 
-c0000384 <detectCPUID>:
+c000037f <detectCPUID>:
+c000037f:	2e 0f c3 04 4b       	movnti DWORD PTR cs:[ebx+ecx*2],eax
 c0000384:	9c                   	pushf  
 c0000385:	9c                   	pushf  
 c0000386:	81 34 24 00 00 20 00 	xor    DWORD PTR [esp],0x200000
@@ -15252,7 +15252,7 @@ c000b0b9:	8b 5c 24 30          	mov    ebx,DWORD PTR [esp+0x30]
 c000b0bd:	8b b3 e8 01 00 00    	mov    esi,DWORD PTR [ebx+0x1e8]
 c000b0c3:	81 e6 04 00 fc ff    	and    esi,0xfffc0004
 c000b0c9:	89 b3 e8 01 00 00    	mov    DWORD PTR [ebx+0x1e8],esi
-c000b0cf:	e8 b0 52 ff ff       	call   c0000384 <detectCPUID>
+c000b0cf:	e8 ab 52 ff ff       	call   c000037f <detectCPUID>
 c000b0d4:	85 c0                	test   eax,eax
 c000b0d6:	8a 83 e8 01 00 00    	mov    al,BYTE PTR [ebx+0x1e8]
 c000b0dc:	0f 95 c2             	setne  dl
@@ -34201,7 +34201,7 @@ c0018b25:	e8 6c ff ff ff       	call   c0018a96 <updateTimeUsed()>
 c0018b2a:	89 5c 24 10          	mov    DWORD PTR [esp+0x10],ebx
 c0018b2e:	83 c4 08             	add    esp,0x8
 c0018b31:	5b                   	pop    ebx
-c0018b32:	e9 ad 77 fe ff       	jmp    c00002e4 <switchToThreadASM>
+c0018b32:	e9 a8 77 fe ff       	jmp    c00002df <switchToThreadASM>
 c0018b37:	31 c0                	xor    eax,eax
 c0018b39:	eb e7                	jmp    c0018b22 <switchToThread(ThreadControlBlock*)+0x2e>
 c0018b3b:	c7 05 c4 5b 02 c0 01 00 00 00 	mov    DWORD PTR ds:0xc0025bc4,0x1
@@ -34377,7 +34377,7 @@ c0018d90:	89 74 24 20          	mov    DWORD PTR [esp+0x20],esi
 c0018d94:	83 c4 14             	add    esp,0x14
 c0018d97:	5b                   	pop    ebx
 c0018d98:	5e                   	pop    esi
-c0018d99:	e9 38 75 fe ff       	jmp    c00002d6 <switchToThreadASMFirstTime>
+c0018d99:	e9 33 75 fe ff       	jmp    c00002d1 <switchToThreadASMFirstTime>
 
 c0018d9e <schedule()>:
 c0018d9e:	a1 c8 5b 02 c0       	mov    eax,ds:0xc0025bc8

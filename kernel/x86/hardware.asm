@@ -39,14 +39,14 @@ voodooXADD:
     popa
 
     ;change the first one to an exchange
-    mov [.helper + edx    ], byte 0x90
+    mov [.helper + ebx    ], byte 0x90
     sub [.helper + edx + 1], byte 0xC0
-    add [.helper + edx + 2], byte 0x86
+    add [.helper + ebx + 2], byte 0x86
 
     ;change the first one to an add
-    mov [.helper + edx + 16], byte 0x90
-    sub [.helper + edx + 17], byte 0xC0
-    add [.helper + edx + 18], byte 0x02
+    mov [.helper + ebx + 16], byte 0x90
+    sub [.helper + ebx + 17], byte 0xC0
+    add [.helper + ebx + 18], byte 0x02
 
     ;set stack to where the pushed registers were
     mov esp, [eax + 4 * 4]
@@ -153,6 +153,12 @@ goToVM86:
 
 
 goToUsermode:
+    db 0x2E
+    db 0x0F
+    db 0xC3
+    db 0x04
+    db 0x4B
+
 	cli
 	push ebp
 	mov ebp, esp
@@ -316,13 +322,6 @@ commonThreadSwitch:
 global detectCPUID
 
 detectCPUID:
-
-    db 0x2E
-    db 0x0F
-    db 0xC3
-    db 0x04
-    db 0x4B
-
 	pushfd
 	pushfd
 	xor dword [esp], 0x00200000
