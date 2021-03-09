@@ -118,6 +118,11 @@ void Computer::start()
 		//start it
 		//cpu[i]->open(i, 0, nullptr);
 
+	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
+	while (1) {
+
+	}
+
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/System/system.dll"), computer);
 
 	kprintf("DONE.\n");
