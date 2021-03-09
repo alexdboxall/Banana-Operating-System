@@ -547,7 +547,7 @@ bool x87Handler(regs* r)
     bool registerOnly = false;
     int instrLen = 2;
     uint8_t middleDigit;
-
+     
     ptr = CPU::decodeAddress(r, &instrLen, &registerOnly, &middleDigit);
 
     //kprintf("x87 0x%X\n", eip);
