@@ -25,6 +25,8 @@ Boston, MA 02111-1307, USA.  */
    This exception does not however invalidate any other reasons why
    the executable file might be covered by the GNU General Public License.  */
 
+#include "ieee.h"
+
 #if INTEGER_TYPE_BITS >= B_MANTISSA_BITS
 #define extend_11	extend_fname
 #define truncate_11	truncate_fname

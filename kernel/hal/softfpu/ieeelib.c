@@ -30,6 +30,8 @@ Boston, MA 02111-1307, USA.  */
 #include "real.h"
 */
 
+#include "ieee.h"
+
 union real_extract_1
 {
   FLOATING_TYPE d;
