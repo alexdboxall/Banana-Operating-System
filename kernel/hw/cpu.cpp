@@ -794,7 +794,7 @@ uint8_t* CPU::decodeAddress(regs* r, int* instrLenOut, bool* registerOnlyOut, ui
 	*/
 
 	uint16_t segmentInfo;
-	asm volatile ("lar" : "=r"(segmentInfo) : "r"(r->cs));
+	asm volatile ("lar %0, %1" : "=r"(segmentInfo) : "r"(r->cs));
 
 	uint8_t* eip = (uint8_t*) r->eip;
 
