@@ -19,7 +19,6 @@
 #define EXP_BITS 8
 #define FLOATING_TYPE float
 #define SFmode
-#define DFmode
 #define MSB_IMPLICIT true
 
 #define S_MANTISSA_NWORDS 1
