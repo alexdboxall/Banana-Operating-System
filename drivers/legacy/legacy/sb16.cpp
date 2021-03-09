@@ -57,14 +57,14 @@
 uint8_t buf[4096];
 uint8_t buf2[4096];
 
-char egFile[] = "C:/flopside.wav";
+char egFile[] = "C:/night44100.wav";
 void sb16Demo(void* s)
 {
 	unlockScheduler();
 
 	SoundBlaster16* dev = (SoundBlaster16*) s;
 
-	SoundChannel* c = new SoundChannel(8000, 8, 90);
+	SoundChannel* c = new SoundChannel(44100, 8, 90);
 
 	File* f = new File(egFile, kernelProcess);
 	f->open(FileOpenMode::Read);
@@ -75,6 +75,7 @@ void sb16Demo(void* s)
 		int bytesRead = 0;
 		FileStatus st = f->read(4096, buf, &bytesRead);
 		if (bytesRead == 0 || st != FileStatus::Success) {
+			kprintf("SONG SHOULD BE DONE.\n");
 			return;
 		}
 
@@ -94,6 +95,8 @@ void sb16Demo(void* s)
 			playedYet = true;
 		}
 	}
+
+	terminateTask(0);
 }
 
 char badVer[] = "BAD Soundblaster version, got 0x%X\n";
@@ -206,7 +209,7 @@ int SoundBlaster16::open(int, int, void*)
 	sign = true;
 	stereo = false;
 
-	hertz = 8000;// sampleRate;
+	hertz = 41100 / 6 * 5;// sampleRate;
 	bits = 8;// _bits;
 
 	bool readonly = false;

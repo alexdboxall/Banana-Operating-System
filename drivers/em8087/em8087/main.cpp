@@ -791,7 +791,7 @@ bool x87Handler(regs* r)
 
     } else if (eip[0] == 0xD9 && middleDigit == 3) {                    //FSTP
         uint32_t* p = (uint32_t*) ptr;
-        *p = fpuInternalTo32(fpuPop());
+        //*p = fpuInternalTo32(fpuPop());
         r->eip += instrLen;
         return true;
 
@@ -803,7 +803,7 @@ bool x87Handler(regs* r)
 
     } else if (eip[0] == 0xD9 && middleDigit == 7) {                      //FNSTCW
         uint16_t* p = (uint16_t*) ptr;
-        *p = fpuState.control;
+        //*p = fpuState.control;
         r->eip += instrLen;
         return true;
 
@@ -928,7 +928,6 @@ bool x87Handler(regs* r)
         *p = fpuFloatToLong(fpuPop());
         r->eip += instrLen;
         return true;
-
     }
 
 	return false;

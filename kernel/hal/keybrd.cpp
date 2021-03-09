@@ -217,7 +217,7 @@ int readKeyboard(VgaText* terminal, char* buf, size_t count)
 		*/
 
 		while (terminal->keybufferSent[0] == 0) {
-			
+			kprintf("If this isn't zero, that's a problem: %d\n", getIRQNestingLevel());
 		}
 
 		//we shouldn't block twice on keyboard, we should just return if we don't get enough characters
