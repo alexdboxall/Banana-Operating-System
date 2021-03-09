@@ -602,6 +602,7 @@ void begin(void* a)
         usertask = new Process("C:/Banana/System/command.exe", nullptr, argv);
     } else {
         usertask = new Process("C:/Banana/System/command.exe");
+        Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
 
     }
     setActiveTerminal(usertask->terminal);
