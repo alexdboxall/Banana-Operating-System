@@ -54,21 +54,14 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-/*uint8_t buf[4096];
-uint8_t buf2[4096];*/
+uint8_t buf[4096];
+uint8_t buf2[4096];
 
-char egFile[] = "C:/ybr.wav";
+char egFile[] = "C:/flopside.wav";
 void sb16Demo(void* s)
 {
 	unlockScheduler();
 
-	while (1) {
-		lockScheduler();
-		schedule();
-		unlockScheduler();
-	}
-
-	/*
 	SoundBlaster16* dev = (SoundBlaster16*) s;
 
 	SoundChannel* c = new SoundChannel(22050, 8, 90);
@@ -104,7 +97,7 @@ void sb16Demo(void* s)
 			c->play();
 			playedYet = true;
 		}
-	}*/
+	}
 }
 
 char badVer[] = "BAD Soundblaster version, got 0x%X\n";

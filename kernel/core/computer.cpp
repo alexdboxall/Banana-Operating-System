@@ -122,10 +122,9 @@ void Computer::start()
 		//cpu[i]->open(i, 0, nullptr);
 
 	extern void sb16Demo(void*);
-	//kernelProcess->createThread(sb16Demo, nullptr, 254);
+	kernelProcess->createThread(sb16Demo, nullptr, 254);
 
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/System/system.dll"), computer);
-
 
 	kprintf("DONE.\n");
 
