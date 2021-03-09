@@ -64,7 +64,7 @@ void sb16Demo(void* s)
 
 	SoundBlaster16* dev = (SoundBlaster16*) s;
 
-	SoundChannel* c = new SoundChannel(22050, 8, 90);
+	SoundChannel* c = new SoundChannel(8000, 8, 90);
 
 	File* f = new File(egFile, kernelProcess);
 	f->open(FileOpenMode::Read);
