@@ -305,11 +305,6 @@ bool (*gpFaultIntercept)(regs* r) = nullptr;
 
 #include <stdint.h>
 
-void begin();
-void start()
-{
-    begin();
-}
 
 #include "core/main.hpp"
 #include "core/terminal.hpp"
@@ -1019,7 +1014,7 @@ bool x87Handler(regs* r)
         fpuPop();
         return true;
 
-    } else if (eip[0] == 0xD8 && eip[1] >= 0xF8 && eip[1] <= 0xFF) {     //FDIVRP
+    } else if (eip[0] == 0xD8 && eip[1] >= 0xF8 /*&& eip[1] <= 0xFF*/) {     //FDIVRP
         fpuSetReg(0, fpuDivide(fpuGetReg(eip[1] - 0xF8), fpuGetReg(0)));
         r->eip += 2;
         fpuPop();
@@ -1076,7 +1071,7 @@ bool x87Handler(regs* r)
         fpuPop();
         return true;
 
-    } else if (eip[0] == 0xDE && eip[1] >= 0xF8 && eip[1] <= 0xFF) {     //FDIVP
+    } else if (eip[0] == 0xDE && eip[1] >= 0xF8 /*&& eip[1] <= 0xFF*/) {     //FDIVP
         fpuSetReg(eip[1] - 0xF8, fpuDivide(fpuGetReg(eip[1] - 0xF8), fpuGetReg(0)));
         r->eip += 2;
         fpuPop();
