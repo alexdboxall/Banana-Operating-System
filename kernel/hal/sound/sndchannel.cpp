@@ -128,6 +128,10 @@ int SoundChannel::buffer8(uint8_t* data, int len)
 	static bool gotLookupTable = false;
 	static float lookupTable[256];
 
+	//the reason we do this is so that 386s without FPUs can
+	//still play audio using the soft floating point library
+	//(which is slow as hell)
+
 	if (!gotLookupTable) {
 		const float f = 1.0 / (1.0 * 0x80);
 
