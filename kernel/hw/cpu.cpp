@@ -787,7 +787,9 @@ uint8_t* CPU::decodeAddress(regs* r, int* instrLenOut, bool* registerOnlyOut, ui
 {
 	uint32_t segmentInfo;
 	asm volatile ("lar %1, %0" : "=r"(segmentInfo) : "r"(r->cs));
-	bool fromKernel = !(segmentInfo >> 13);
+	bool fromKernel = ((segmentInfo >> 13) & 3) == 0;
+	kprintf("0x%X -> lar -> 0x%X\n", r->cs, segmentInfo);
+	kprintf("kernel? %d\n", fromKernel);
 
 	uint8_t* eip = (uint8_t*) r->eip;
 
