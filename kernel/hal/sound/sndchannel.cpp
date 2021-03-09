@@ -125,15 +125,26 @@ int SoundChannel::unbuffer(float* output, int outSampleRate, int maxOut)
 
 int SoundChannel::buffer8(uint8_t* data, int len)
 {
+	static bool gotLookupTable = false;
+	static float lookupTable[256];
+
+	if (!gotLookupTable) {
+		const float f = 1.0 / (1.0 * 0x80);
+
+		for (int i = 0; i < 256; ++i) {
+			lookupTable[i] = ((float) i) * f;
+		}
+		gotLookupTable = true;
+	}
+
 	int done = 0;
 
 	if (buffUsed == buffSize) {
 		return 0;
 	}
 
-	const float f = 1.0 / (1.0 * 0x80);
 	for (int i = 0; i < len; ++i) {
-		buff[buffUsed++] = ((float) data[i]) * f;
+		buff[buffUsed++] = lookupTable[data[i]];
 		
 		++done;
 
