@@ -112,17 +112,12 @@ void Computer::start()
 	loadClockSettings();
 	loadDriversForAll();
 
-	uint64_t a = 0, b = 1, c = 2;
-	__sync_bool_compare_and_swap(&a, b, c);
-
 	//Vm::loadFileAsThread(kernelProcess, "C:/Banana/System/vm86/VGASET.COM", 0x0000, 0x90, 0x12, 0x12);
 
 	//for each cpu
 		//start it
 		//cpu[i]->open(i, 0, nullptr);
 
-	extern void sb16Demo(void*);
-	kernelProcess->createThread(sb16Demo, nullptr, 254);
 
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/System/system.dll"), computer);
 
