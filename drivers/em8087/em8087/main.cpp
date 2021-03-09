@@ -784,11 +784,9 @@ bool x87Handler(regs* r)
         return true;
 
     } else if (eip[0] == 0xD9 && middleDigit == 0) {                    //FLD
-        kprintf("Hello... ");
         uint32_t* p = (uint32_t*) ptr;
         fpuPush(fpu32ToInternal(*p));
         r->eip += instrLen;
-        kprintf("World!\n");
         return true;
 
     } else if (eip[0] == 0xD9 && middleDigit == 3) {                    //FSTP
