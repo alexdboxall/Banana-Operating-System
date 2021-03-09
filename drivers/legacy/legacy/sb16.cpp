@@ -206,7 +206,7 @@ int SoundBlaster16::open(int, int, void*)
 	sign = true;
 	stereo = false;
 
-	hertz = 22050;// sampleRate;
+	hertz = 8000;// sampleRate;
 	bits = 8;// _bits;
 
 	bool readonly = false;
