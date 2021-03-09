@@ -785,16 +785,9 @@ void CPU::setupFeatures()
 
 uint8_t* CPU::decodeAddress(regs* r, int* instrLenOut, bool* registerOnlyOut, uint8_t* middleDigitOut)
 {
-	/*
-	TODO:
-		Check if CS is from the kernel (use a weirdo instruction to test this!),
-		and if so, use r->esp instead of r->useresp, which is only set correctly
-		when coming from usermode
-	
-	*/
-
 	uint16_t segmentInfo;
-	asm volatile ("lar %0, %1" : "=r"(segmentInfo) : "r"(r->cs));
+	asm volatile ("lar %1, %0" : "=r"(segmentInfo) : "r"(r->cs));
+	bool fromKernel = !(segmentInfo >> 13);
 
 	uint8_t* eip = (uint8_t*) r->eip;
 
@@ -856,7 +849,7 @@ uint8_t* CPU::decodeAddress(regs* r, int* instrLenOut, bool* registerOnlyOut, ui
 		else if (base == 1) actBase = r->ecx;
 		else if (base == 2) actBase = r->edx;
 		else if (base == 3) actBase = r->ebx;
-		else if (base == 4) actBase = r->useresp;
+		else if (base == 4) actBase = fromKernel ? r->esp : r->useresp;
 		else if (base == 5) actBase = r->ebp;
 		else if (base == 6) actBase = r->esi;
 		else if (base == 7) actBase = r->edi;
