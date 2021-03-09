@@ -60,7 +60,7 @@ kernelSkylake: common32 $(TARGET32_Skylake)
 TARGET32_Cannonlake = Banana32_Cannonlake
 kernelCannonlake: common32 $(TARGET32_Cannonlake)
 
-OPTIMISATIONS = -O0 -fno-strict-aliasing -fpeephole2 -fauto-inc-dec -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-stack-protector -fomit-frame-pointer -ftoplevel-reorder -freorder-functions -fdelete-null-pointer-checks -fcompare-elim -fcprop-registers -fdce -fif-conversion -fif-conversion2 -fmerge-constants -fno-reorder-blocks  -fno-reorder-blocks-and-partition -fno-prefetch-loop-arrays -fno-align-functions -falign-loops=1 -falign-labels=1 -falign-jumps=1 
+OPTIMISATIONS = -msoft-float -O0 -fno-strict-aliasing -fpeephole2 -fauto-inc-dec -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-stack-protector -fomit-frame-pointer -ftoplevel-reorder -freorder-functions -fdelete-null-pointer-checks -fcompare-elim -fcprop-registers -fdce -fif-conversion -fif-conversion2 -fmerge-constants -fno-reorder-blocks  -fno-reorder-blocks-and-partition -fno-prefetch-loop-arrays -fno-align-functions -falign-loops=1 -falign-labels=1 -falign-jumps=1 
 			  
 #
 CFLAGSCOMMON = $(WARNINGS) $(ACPI) $(OPTIMISATIONS) -march=$(TUNING) -mtune=$(TUNING) -mcld -ffreestanding -fmax-errors=5 -I $(INCPATH) -I $(LIBKPATH) -DKERNEL_CODE -D_libk
