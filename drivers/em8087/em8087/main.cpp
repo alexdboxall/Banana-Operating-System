@@ -813,6 +813,12 @@ bool x87Handler(regs* r)
         r->eip += instrLen;
         return true;
 
+    } else if (eip[0] == 0xDE && middleDigit == 1) {                    //FIMUL 16
+        uint16_t* p = (uint16_t*) ptr;
+        fpuSetReg(0, fpuMultiply(fpuGetReg(0), fpuLongToFloat(*p)));
+        r->eip += instrLen;
+        return true;
+
     } else if (eip[0] == 0xDA && middleDigit == 4) {                    //FISUB
         uint32_t* p = (uint32_t*) ptr;
         fpuSetReg(0, fpuSub(fpuGetReg(0), fpuLongToFloat(*p)));
