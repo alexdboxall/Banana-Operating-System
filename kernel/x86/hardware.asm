@@ -1,5 +1,16 @@
 [bits 32]
 
+
+global prepareTramp
+prepareTramp:
+    sgdt [0xFE0]
+    sidt [0xFE8]
+    push eax
+    mov eax, cr3
+    mov [0xFF0], eax
+    pop eax
+    ret
+
 global voodooXADD
 
 voodooXADD:
