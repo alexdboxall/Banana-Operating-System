@@ -57,14 +57,14 @@
 uint8_t buf[4096];
 uint8_t buf2[4096];
 
-char egFile[] = "C:/night44100.wav";
+char egFile[] = "C:/night11025.wav";
 void sb16Demo(void* s)
 {
 	unlockScheduler();
 
 	SoundBlaster16* dev = (SoundBlaster16*) s;
 
-	SoundChannel* c = new SoundChannel(44100, 8, 90);
+	SoundChannel* c = new SoundChannel(11025, 8, 90);
 
 	File* f = new File(egFile, kernelProcess);
 	f->open(FileOpenMode::Read);
@@ -209,7 +209,7 @@ int SoundBlaster16::open(int, int, void*)
 	sign = true;
 	stereo = false;
 
-	hertz = 41100 / 6 * 5;// sampleRate;
+	hertz = 11025 / 6 * 5;// sampleRate;
 	bits = 8;// _bits;
 
 	bool readonly = false;
