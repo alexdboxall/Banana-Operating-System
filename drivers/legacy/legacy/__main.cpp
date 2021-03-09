@@ -73,7 +73,9 @@ void ISA::doSoundblaster()
 		sb->open(0, 0, nullptr);
 
 		extern void sb16Demo(void*);
-		kernelProcess->createThread(sb16Demo, (void*) sb, 111);
+		sb16Demo(this);
+
+		//kernelProcess->createThread(sb16Demo, (void*) sb, 111);
 	}
 }
 
