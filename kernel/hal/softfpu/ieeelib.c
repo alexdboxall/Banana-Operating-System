@@ -31,6 +31,7 @@ Boston, MA 02111-1307, USA.  */
 */
 
 #include "ieee.h"
+#pragma gcc warning ("-Wno-error")
 
 union real_extract_1
 {
