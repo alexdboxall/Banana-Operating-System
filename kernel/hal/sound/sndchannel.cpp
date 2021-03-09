@@ -131,8 +131,9 @@ int SoundChannel::buffer8(uint8_t* data, int len)
 		return 0;
 	}
 
+	const float f = 1.0 / (1.0 * 0x80);
 	for (int i = 0; i < len; ++i) {
-		buff[buffUsed++] = ((float) data[i]) / (1.0 * 0x80);
+		buff[buffUsed++] = ((float) data[i]) * f;
 		
 		++done;
 
