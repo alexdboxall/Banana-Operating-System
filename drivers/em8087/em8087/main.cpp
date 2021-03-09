@@ -27,9 +27,11 @@ extern "C" {
 
 typedef struct _Float80
 {
-    uint64_t fraction;
+    /*uint64_t fraction;
     uint16_t exponent;
-    bool sign;
+    bool sign;*/
+
+    double flt;
 
 } Float80;
 
@@ -88,7 +90,8 @@ FPUState fpuState;
 
 int64_t fpuFloatToLong(Float80 flt)
 {
-    int exponent = flt.exponent - EXPONENT_BIAS;
+    return flt.flt;
+    /*int exponent = flt.exponent - EXPONENT_BIAS;
     if (exponent > FRACTION_LENGTH + 1) {
         //overflow
         return 0;
@@ -104,7 +107,7 @@ int64_t fpuFloatToLong(Float80 flt)
     if (flt.sign) {
         res = -res;
     }
-    return res;
+    return res;*/
 }
 
 Float80 fpuReciprocal(Float80 x);
@@ -112,6 +115,10 @@ Float80 fpuReciprocal(Float80 x);
 Float80 fpuULongToFloat(uint64_t significand)
 {
     Float80 out;
+    out.flt = significand;
+    return out;
+
+    /*Float80 out;
 
     if (significand == 0) {
         out.sign = 0;
@@ -137,12 +144,16 @@ Float80 fpuULongToFloat(uint64_t significand)
     out.fraction = significand;
     out.exponent = FRACTION_LENGTH - shifts + EXPONENT_BIAS + extraShifts;
 
-    return out;
+    return out;*/
 }
 
 Float80 fpuLongToFloat(int64_t signedSignificand)
 {
     Float80 out;
+    out.flt = signedSignificand;
+    return out;
+
+    /*Float80 out;
 
     if (signedSignificand == 0) {
         out.sign = 0;
@@ -175,84 +186,120 @@ Float80 fpuLongToFloat(int64_t signedSignificand)
     out.fraction = significand;
     out.exponent = FRACTION_LENGTH - shifts + EXPONENT_BIAS + extraShifts;
 
-    return out;
+    return out;*/
 }
 
 Float80 fpuGet0()
 {
     Float80 out;
+    out.flt = 0;
+    return out;
+
+    /*
+    Float80 out;
     out.sign = 0;
     out.fraction = 0;
     out.exponent = 16383;
-    return out;
+    return out;*/
 }
 
 Float80 fpuGet1()
 {
     Float80 out;
+    out.flt = 1.0;
+    return out;
+
+    /*Float80 out;
     out.sign = 0;
     out.fraction = (1ULL << (FRACTION_LENGTH - 1));
     out.exponent = 16384;
-    return out;
+    return out;*/
 }
 
 Float80 fpuGetPi()
 {
     Float80 out;
+    out.flt = 3.14;
+    return out;
+
+    /*Float80 out;
     out.sign = 0;
     out.fraction = 0x3243F6A8885A308CULL;
     out.exponent = 16385;
-    return out;
+    return out;*/
 }
 
 Float80 fpuGetLog2E()
 {
     Float80 out;
+    out.flt = 0;
+    return out;
+
+    /*
+    Float80 out;
     out.sign = 0;
     out.fraction = 0x2E2A8ECA5705FC1CULL;
     out.exponent = 16384;
-    return out;
+    return out;*/
 }
 
 Float80 fpuGetLogE2()
 {
     Float80 out;
+    out.flt = 0;
+    return out;
+
+    /*
+    Float80 out;
     out.sign = 0;
     out.fraction = 0x2C5C85FDF473DE68ULL;
     out.exponent = 16383;
-    return out;
+    return out;*/
 }
 
 Float80 fpuGetLog210()
 {
     Float80 out;
+    out.flt = 0;
+    return out;
+
+    /*
+    Float80 out;
     out.sign = 0;
     out.fraction = 0x35269E12F346E2BEULL;
     out.exponent = 16385;
-    return out;
+    return out;*/
 }
 
 Float80 fpuGetLog102()
 {
     Float80 out;
+    out.flt = 0;
+    return out;
+
+    /*
+    Float80 out;
     out.sign = 0;
     out.fraction = 0x268826A13EF3FDE6ULL;
     out.exponent = 16382;
-    return out;
+    return out;*/
 }
 
 bool fpuIsSecondLarger(Float80 x, Float80 y)
 {
+    return y.flt > x.flt;
+    /*
     if (y.exponent > x.exponent) return true;
     else if (y.exponent < x.exponent) return false;
     else {
         return y.fraction > x.fraction;
-    }
+    }*/
 }
 
 bool fpuAreEqual(Float80 x, Float80 y)
 {
-    return (x.exponent == y.exponent && x.sign == y.sign && x.fraction == y.fraction);
+    return x.flt == y.flt;
+    //return (x.exponent == y.exponent && x.sign == y.sign && x.fraction == y.fraction);
 }
 
 void fpuUnorderedCompare(Float80 x, Float80 y)
@@ -264,7 +311,8 @@ void fpuUnorderedCompare(Float80 x, Float80 y)
 
 Float80 fpuNormalise(Float80 flt)
 {
-    //check if there is a bit set further left (higher) than the hidden bit
+    return flt;
+    /*//check if there is a bit set further left (higher) than the hidden bit
     //and if so, shift the thing right and increase exponent
     while (flt.fraction >> FRACTION_LENGTH) {
         flt.fraction >>= 1;
@@ -283,11 +331,15 @@ Float80 fpuNormalise(Float80 flt)
         flt.exponent--;
     }
 
-    return flt;
+    return flt;*/
 }
 
 Float80 fpuAdd(Float80 x, Float80 y)
 {
+    x.flt += y.flt;
+    return x;
+
+    /*
     if (fpuIsSecondLarger(x, y)) {
         Float80 z = x;
         x = y;
@@ -326,36 +378,45 @@ Float80 fpuAdd(Float80 x, Float80 y)
         }
     }
 
-    return fpuNormalise(sum);
+    return fpuNormalise(sum);*/
 }
 
 Float80 fpuAbs(Float80 x)
 {
-    x.sign = 0;
+    if (x.flt < 0.0) {
+        x.flt = -x.flt;
+    }
+    //x.sign = 0;
     return x;
 }
 
 Float80 fpuChs(Float80 x)
 {
-    x.sign ^= 1;
+    x.flt = -x.flt;
+    //x.sign ^= 1;
     return x;
 }
 
 Float80 fpuSub(Float80 x, Float80 y)
 {
-    y.sign ^= 1;
+    //y.sign ^= 1;
+    y.flt = -y.flt;
     return fpuAdd(x, y);
 }
 
 Float80 fpuReverseSub(Float80 x, Float80 y)
 {
-    y.sign ^= 1;
+    //y.sign ^= 1;
+    y.flt = -y.flt;
     return fpuAdd(y, x);
 }
 
 Float80 fpuMultiply(Float80 x, Float80 y)
 {
-    Float80 product;
+    x.flt *= y.flt;
+    return x;
+
+    /*Float80 product;
 
     x.fraction >>= FRACTION_LENGTH / 2;
     y.fraction >>= FRACTION_LENGTH / 2;
@@ -364,7 +425,7 @@ Float80 fpuMultiply(Float80 x, Float80 y)
     product.exponent = x.exponent + y.exponent - EXPONENT_BIAS;
     product.fraction = (x.fraction * y.fraction);
 
-    return fpuNormalise(product);
+    return fpuNormalise(product);*/
 }
 
 uint64_t fpuMantissaDivision(uint64_t dividend, uint64_t divisor)
@@ -399,6 +460,10 @@ uint64_t fpuMantissaDivision(uint64_t dividend, uint64_t divisor)
 
 Float80 fpuDivide(Float80 x, Float80 y)
 {
+    x.flt /= y.flt;
+    return x;
+
+    /*
     Float80 product;
 
     product.sign = x.sign ^ y.sign;
@@ -411,7 +476,7 @@ Float80 fpuDivide(Float80 x, Float80 y)
         product.exponent = x.exponent - y.exponent + EXPONENT_BIAS + (x.fraction >= y.fraction);
     }
 
-    return fpuNormalise(product);
+    return fpuNormalise(product);*/
 }
 
 Float80 fpuReciprocal(Float80 x)
@@ -426,7 +491,8 @@ Float80 fpuSquare(Float80 flt)
 
 Float80 fpuInverseSqrt(Float80 flt)
 {
-    Float80 threeHalves = fpuLongToFloat(3);
+    return flt;
+    /*Float80 threeHalves = fpuLongToFloat(3);
     threeHalves.exponent--;
 
     Float80 guess = flt;
@@ -437,7 +503,7 @@ Float80 fpuInverseSqrt(Float80 flt)
         guess = fpuMultiply(guess, fpuSub(threeHalves, fpuMultiply(fpuSquare(guess), flt)));
     }
 
-    return guess;
+    return guess;*/
 }
 
 Float80 fpuSqrt(Float80 flt)
@@ -464,7 +530,8 @@ void fpuSetReg(int num, Float80 flt)
 
 uint32_t fpuInternalTo32(Float80 flt)
 {
-    if (flt.exponent - EXPONENT_BIAS > 127) {
+    return flt.flt;
+    /*if (flt.exponent - EXPONENT_BIAS > 127) {
         flt.exponent = 127;
         fpuState.overflow = 1;
     }
@@ -474,12 +541,14 @@ uint32_t fpuInternalTo32(Float80 flt)
     }
     out |= (flt.fraction & ~(1ULL << (FRACTION_LENGTH - 1))) >> (FRACTION_LENGTH - 24);
     out |= ((uint32_t) ((flt.exponent - EXPONENT_BIAS + 126))) << 23ULL;
-    return out;
+    return out;*/
 }
 
 
 uint64_t fpuInternalTo64(Float80 flt)
 {
+    return flt.flt;
+/*
     if (flt.exponent - EXPONENT_BIAS > 1023) {
         flt.exponent = 1023;
         fpuState.overflow = 1;
@@ -490,29 +559,38 @@ uint64_t fpuInternalTo64(Float80 flt)
     }
     out |= (flt.fraction & ~(1ULL << (FRACTION_LENGTH - 1))) >> (FRACTION_LENGTH - 53);
     out |= ((uint64_t) ((flt.exponent - EXPONENT_BIAS + 1022))) << 52ULL;
-    return out;
+    return out;*/
 }
 
 Float80 fpu32ToInternal(uint32_t flt)
 {
+    Float80 a;
+    a.flt = flt;
+    return a;
+/*
     Float80 out;
     out.sign = flt >> 31;
     out.fraction = flt & 0x7FFFFFULL;
     out.fraction <<= (FRACTION_LENGTH - 23) - 1;
     out.fraction |= (1ULL << (FRACTION_LENGTH - 1));
     out.exponent = ((flt >> 23) & 0xFF) - 126 + EXPONENT_BIAS;
-    return out;
+    return out;*/
 }
 
 Float80 fpu64ToInternal(uint64_t flt)
 {
+    Float80 a;
+    a.flt = flt;
+    return a;
+    
+    /*
     Float80 out;
     out.sign = flt >> 63;
     out.fraction = flt & 0xFFFFFFFFFFFFFULL;
     out.fraction <<= (FRACTION_LENGTH - 52) - 1;
     out.fraction |= (1ULL << (FRACTION_LENGTH - 1));
     out.exponent = ((flt >> 52) & 0x7FF) - 1022 + EXPONENT_BIAS;
-    return out;
+    return out;*/
 }
 
 
@@ -552,9 +630,9 @@ bool x87Handler(regs* r)
 
     //kprintf("x87 0x%X\n", eip);
 
-    /*kprintf("r->esp = 0x%X\n", r->esp);
+    kprintf("r->esp = 0x%X\n", r->esp);
 	kprintf("x87: %X %X %X %X\n", *eip, *(eip + 1), *(eip + 2), *(eip + 3));
-    kprintf("decoded address = 0x%X\n", ptr);*/
+    kprintf("decoded address = 0x%X\n", ptr);
 
     if (eip[0] == 0xD9) {
         switch (eip[1]) {

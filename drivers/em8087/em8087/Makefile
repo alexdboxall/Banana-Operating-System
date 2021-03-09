@@ -13,8 +13,8 @@ CC64=x86_64-banana-gcc
 LD64=x86_64-banana-ld
 
 ASFLAGS=
-CXXFLAGS=-Os -fno-strict-aliasing
-CFLAGS=-Os -fno-strict-aliasing
+CXXFLAGS=-Os -fno-strict-aliasing -msoft-float
+CFLAGS=-Os -fno-strict-aliasing -msoft-float
 LDFLAGS=-g -T D:/Users/Alex/Desktop/Banana/drivers/dlink.ld
 
 CXXOBJECTS32 = $(patsubst %.cpp, %.32, $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp) $(wildcard */*/*/*.cpp) $(wildcard **/*.cpp))
