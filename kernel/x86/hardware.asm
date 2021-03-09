@@ -1,6 +1,5 @@
 [bits 32]
 
-
 global prepareTramp
 prepareTramp:
     sgdt [0xFE0]
@@ -22,8 +21,16 @@ voodooXADD:
     mov eax, [ebp+8]            ;REGISTER STRUCT BASE ADDRESS
     mov ecx, [ebp+12]           ;ACTUAL LENGTH
     mov ebx, [ebp+16]           ;OPCODE START (OFFSET)
-    mov edx, [eax + 14 * 4]     ;EIP
     mov esi, [eax + 17 * 4]     ;USER ESP
+
+    mov edx, [eax + 14 * 4]     ;EIP
+    mov edi, [eax + 15 * 4]     ;CS
+    lar edi, di
+    shr edi, 13
+    and di, 3
+    jnz .usermode
+    mov esi, [eax + 7 * 4]     ;KERNEL ESP
+.usermode:
 
     mov [.newStack], esi
 
