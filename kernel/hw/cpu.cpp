@@ -785,11 +785,22 @@ void CPU::setupFeatures()
 
 uint8_t* CPU::decodeAddress(regs* r, int* instrLenOut, bool* registerOnlyOut, uint8_t* middleDigitOut)
 {
+	/*
+	TODO:
+		Check if CS is from the kernel (use a weirdo instruction to test this!),
+		and if so, use r->esp instead of r->useresp, which is only set correctly
+		when coming from usermode
+	
+	*/
+
+	uint16_t segmentInfo;
+	asm volatile ("lar" : "=A"(segmentInfo));
+
 	uint8_t* eip = (uint8_t*) r->eip;
 
-	uint8_t middleDigit = (eip[1] >> 3) & 7;
+	uint8_t middleDigit = (eip[1] >> 3) & 7;		//0
 	uint8_t mod = (eip[1] >> 6) & 3;
-	uint8_t rm = (eip[1] >> 0) & 7;
+	uint8_t rm = (eip[1] >> 0) & 7;					//4
 
 	*middleDigitOut = middleDigit;
 
@@ -797,6 +808,8 @@ uint8_t* CPU::decodeAddress(regs* r, int* instrLenOut, bool* registerOnlyOut, ui
 	bool registerOnly = false;
 	bool ptrIllegal = false;
 	int instrLen = 2;
+
+	// d9 1c 24                fstp   DWORD PTR[esp]
 
 	if (mod != 3 && rm != 4 && !(mod == 0 && rm == 5)) {
 		//[reg]
@@ -831,9 +844,9 @@ uint8_t* CPU::decodeAddress(regs* r, int* instrLenOut, bool* registerOnlyOut, ui
 	} else if (rm == 4) {
 		//SIB mode
 		uint8_t sib = eip[2];
-		uint8_t scale = (sib >> 6) & 3;
-		uint8_t index = (sib >> 3) & 7;
-		uint8_t base = (sib >> 0) & 7;
+		uint8_t scale = (sib >> 6) & 3;		//0
+		uint8_t index = (sib >> 3) & 7;		//4
+		uint8_t base = (sib >> 0) & 7;		//4
 		instrLen += 1;
 
 		uint32_t actBase;

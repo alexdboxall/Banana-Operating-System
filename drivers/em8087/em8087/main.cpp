@@ -550,9 +550,10 @@ bool x87Handler(regs* r)
 
     ptr = CPU::decodeAddress(r, &instrLen, &registerOnly, &middleDigit);
 
-    //kprintf("x87 handler called with faulting EIP of 0x%X\n", eip);
-	//kprintf("x87: %X %X %X %X\n", *eip, *(eip + 1), *(eip + 2), *(eip + 3));
-    //kprintf("decoded address = 0x%X\n", ptr);
+    kprintf("r->esp = 0x%X\n", r->esp);
+    kprintf("x87 handler called with faulting EIP of 0x%X\n", eip);
+	kprintf("x87: %X %X %X %X\n", *eip, *(eip + 1), *(eip + 2), *(eip + 3));
+    kprintf("decoded address = 0x%X\n", ptr);
 
     if (eip[0] == 0xD9) {
         switch (eip[1]) {
