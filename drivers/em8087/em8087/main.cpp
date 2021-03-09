@@ -550,10 +550,10 @@ bool x87Handler(regs* r)
 
     ptr = CPU::decodeAddress(r, &instrLen, &registerOnly, &middleDigit);
 
-    kprintf("r->esp = 0x%X\n", r->esp);
-    kprintf("x87 handler called with faulting EIP of 0x%X\n", eip);
-	kprintf("x87: %X %X %X %X\n", *eip, *(eip + 1), *(eip + 2), *(eip + 3));
-    kprintf("decoded address = 0x%X\n", ptr);
+    //kprintf("r->esp = 0x%X\n", r->esp);
+    //kprintf("x87 handler called with faulting EIP of 0x%X\n", eip);
+	//kprintf("x87: %X %X %X %X\n", *eip, *(eip + 1), *(eip + 2), *(eip + 3));
+    //kprintf("decoded address = 0x%X\n", ptr);
 
     if (eip[0] == 0xD9) {
         switch (eip[1]) {
@@ -784,9 +784,11 @@ bool x87Handler(regs* r)
         return true;
 
     } else if (eip[0] == 0xD9 && middleDigit == 0) {                    //FLD
+        kprintf("Hello... ");
         uint32_t* p = (uint32_t*) ptr;
         fpuPush(fpu32ToInternal(*p));
         r->eip += instrLen;
+        kprintf("World!\n");
         return true;
 
     } else if (eip[0] == 0xD9 && middleDigit == 3) {                    //FSTP
@@ -813,15 +815,15 @@ bool x87Handler(regs* r)
         r->eip += instrLen;
         return true;
 
-    } else if (eip[0] == 0xDE && middleDigit == 1) {                    //FIMUL 16
-        uint16_t* p = (uint16_t*) ptr;
-        fpuSetReg(0, fpuMultiply(fpuGetReg(0), fpuLongToFloat(*p)));
-        r->eip += instrLen;
-        return true;
-
     } else if (eip[0] == 0xDA && middleDigit == 4) {                    //FISUB
         uint32_t* p = (uint32_t*) ptr;
         fpuSetReg(0, fpuSub(fpuGetReg(0), fpuLongToFloat(*p)));
+        r->eip += instrLen;
+        return true;
+
+    } else if (eip[0] == 0xDA && middleDigit == 7) {                    //FISUB
+        uint32_t* p = (uint32_t*) ptr;
+        fpuSetReg(0, fpuDivide(fpuLongToFloat(*p), fpuGetReg(0)));
         r->eip += instrLen;
         return true;
 
@@ -908,6 +910,12 @@ bool x87Handler(regs* r)
     } else if (eip[0] == 0xDD && middleDigit == 3) {                    //FSTP
         uint64_t* p = (uint64_t*) ptr;
         *p = fpuInternalTo64(fpuPop());
+        r->eip += instrLen;
+        return true;
+
+    } else if (eip[0] == 0xDE && middleDigit == 1) {                    //FIMUL 16
+        uint16_t* p = (uint16_t*) ptr;
+        fpuSetReg(0, fpuMultiply(fpuGetReg(0), fpuLongToFloat(*p)));
         r->eip += instrLen;
         return true;
 
