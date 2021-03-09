@@ -27,8 +27,6 @@ Boston, MA 02111-1307, USA.  */
 
 #include "ieee.h"
 
-#pragma GCC diagnostic ignored "-Wno-error"
-
 #if INTEGER_TYPE_BITS >= B_MANTISSA_BITS
 #define extend_11	extend_fname
 #define truncate_11	truncate_fname

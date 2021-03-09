@@ -1,5 +1,8 @@
 #include <stdint.h>
 
+#pragma GCC diagnostic ignored "-Wimplicit-function-declaration"
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+
 #define INTEGER_TYPE uint32_t
 #define INTEGER_STYPE int32_t
 
