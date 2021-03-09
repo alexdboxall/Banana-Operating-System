@@ -1,6 +1,9 @@
 #include <stdint.h>
 
 #define INTEGER_TYPE uint32_t
+#define INTEGER_STYPE uint32_t
+#define INTEGER_DTYPE uint64_t
+#define INTEGER_BTYPE uint64_t
 
 #define COMPUTE_TYPE uint32_t
 #define COMPUTE_STYPE int32_t

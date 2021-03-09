@@ -70,8 +70,6 @@ typedef unsigned int UDItype __attribute__ ((mode (DI)));
 /* Make longlong avoid depending on separate, machine-dependent files.  */
 #define LONGLONG_STANDALONE
 
-#include "longlong.h"
-
 typedef float SFtype __attribute__ ((mode (SF)));
 typedef float DFtype __attribute__ ((mode (DF)));
 
