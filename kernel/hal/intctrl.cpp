@@ -865,8 +865,22 @@ uint64_t fpuInternalTo64(Float80 flt)
 Float80 fpu32ToInternal(uint32_t flt)
 {
     Float80 a;
-    a.flt = flt;
+    uint64_t* p = (uint64_t*) &a.flt;
+
+    uint64_t significand = flt;
+    int shifts = 0;
+
+    while ((significand & (1 << 52)) == 0) {
+        significand <<= 1;
+        shifts++;
+    }
+
+    uint64_t exponent = 1023 + 52 - shifts;
+    uint64_t merged = (exponent << 52) | (significand & 0xFFFFFFFFFFFFFULL);
+
+    *p = merged;
     return a;
+
     /*
         Float80 out;
         out.sign = flt >> 31;
@@ -880,7 +894,20 @@ Float80 fpu32ToInternal(uint32_t flt)
 Float80 fpu64ToInternal(uint64_t flt)
 {
     Float80 a;
-    a.flt = flt;
+    uint64_t* p = (uint64_t*) &a.flt;
+
+    uint64_t significand = flt;
+    int shifts = 0;
+
+    while ((significand & (1 << 52)) == 0) {
+        significand <<= 1;
+        shifts++;
+    }
+
+    uint64_t exponent = 1023 + 52 - shifts;
+    uint64_t merged = (exponent << 52) | (significand & 0xFFFFFFFFFFFFFULL);
+
+    *p = merged;
     return a;
 
     /*
