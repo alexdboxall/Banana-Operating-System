@@ -899,13 +899,13 @@ Float80 fpu64ToInternal(uint64_t flt)
     uint64_t significand = flt;
     int shifts = 0;
 
-    while ((significand & (1 << 52)) == 0) {
+    while ((significand & (1ULL << 52ULL)) == 0) {
         significand <<= 1;
         shifts++;
     }
 
     uint64_t exponent = 1023 + 52 - shifts;
-    uint64_t merged = (exponent << 52) | (significand & 0xFFFFFFFFFFFFFULL);
+    uint64_t merged = (exponent << 52ULL) | (significand & 0xFFFFFFFFFFFFFULL);
 
     *p = merged;
     return a;
