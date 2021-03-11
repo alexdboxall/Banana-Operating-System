@@ -61,7 +61,6 @@ int64_t fpuFloatToLong(Float80 flt)
 
 	int expo = ((flt >> 52) & 0x7FF) - 1023;
 	if (expo < 0) {
-		panic("HMMM... 2");
 		return 0;
 	}
 
@@ -251,6 +250,12 @@ Float80 fpuPop()
 	return v;
 }
 
+/*
+c0026a07:	dd 04 24             	fld    QWORD PTR [esp]
+c0026a10:	dd 44 24 04          	fld    QWORD PTR [esp+0x4]
+c0026a17:	db 1c 24             	fistp  DWORD PTR [esp]
+*/
+
 bool x87Handler(regs* r)
 {
 	uint8_t* eip = (uint8_t*) r->eip;
@@ -264,9 +269,9 @@ bool x87Handler(regs* r)
 
 	kprintf("x87 0x%X\n", eip);
 
-	//kprintf("r->esp = 0x%X\n", r->esp);
+	kprintf("r->esp = 0x%X, r->useresp\n", r->esp, r->useresp);
 	//kprintf("x87: %X %X %X %X\n", *eip, *(eip + 1), *(eip + 2), *(eip + 3));
-	//kprintf("decoded address = 0x%X\n", ptr);
+	kprintf("decoded address = 0x%X\n", ptr);
 
 	if (eip[0] == 0xD9) {
 		switch (eip[1]) {
