@@ -629,19 +629,19 @@ bool x87Handler(regs* r)
 		r->eip += instrLen;
 		return true;
 
-	} else if (eip[0] == 0xDD && middleDigit == 2) {                    //FST
+	/*} else if (eip[0] == 0xDD && middleDigit == 2) {                    //FST
 		uint64_t* p = (uint64_t*) ptr;
 		*p = fpuInternalTo64(fpuGetReg(0));
 		r->eip += instrLen;
-		return true;
+		return true;*/
 
-	/*} else if (eip[0] == 0xDD && middleDigit == 3) {                    //FSTP
+	} else if (eip[0] == 0xDD && middleDigit == 3) {                    //FSTP
 		uint64_t* p = (uint64_t*) ptr;
 		*p = fpuInternalTo64(fpuPop());
 		r->eip += instrLen;
 		return true;
 
-	} else if (eip[0] == 0xDE && middleDigit == 1) {                    //FIMUL 16
+	/*} else if (eip[0] == 0xDE && middleDigit == 1) {                    //FIMUL 16
 		uint16_t* p = (uint16_t*) ptr;
 		fpuSetReg(0, fpuMultiply(fpuGetReg(0), fpuLongToFloat(*p)));
 		r->eip += instrLen;
