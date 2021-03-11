@@ -1,4 +1,5 @@
 #include "hw/x87em.hpp"
+#include "hw/cpu.hpp"
 
 FPUState fpuState;
 
