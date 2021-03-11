@@ -386,7 +386,7 @@ uint32_t fpuInternalTo32(Float80 flt)
 	}
 
 	uint64_t significand = flt & 0xFFFFFFFFFFFFFULL;
-	uint64_t expo = ((flt >> 52) & 0x7FF) - 1023 + 127;
+	int64_t expo = ((flt >> 52) & 0x7FF) - 1023 + 127;
 	if (expo < 0 || expo > 255) {
 		//underflow / overflow
 		return 0;
