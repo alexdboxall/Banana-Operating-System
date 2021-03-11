@@ -229,8 +229,12 @@ void fpuSetReg(int num, Float80 flt)
 
 void fpuPush(Float80 flt)
 {
+	kprintf("old stack top = %d\n", fpuState.stackTop);
 	fpuState.stackTop = (fpuState.stackTop + 7) % 8;
 	fpuState.regs[fpuState.stackTop] = flt;
+
+	kprintf("pushing, ST(%d) set.\n\n", fpuState.stackTop);
+
 	if (fpuState.valuesOnStack == 8) {
 		fpuState.stackFault = 1;
 	} else {
@@ -240,6 +244,8 @@ void fpuPush(Float80 flt)
 
 Float80 fpuPop()
 {
+	kprintf("popping from ST(%d).\n", fpuState.stackTop);
+
 	Float80 v = fpuState.regs[fpuState.stackTop];
 	fpuState.stackTop = (fpuState.stackTop + 1) % 8;
 	if (fpuState.valuesOnStack) {
@@ -247,6 +253,9 @@ Float80 fpuPop()
 	} else {
 		fpuState.stackFault = 1;
 	}
+
+	kprintf("top now at %d.\n\n", fpuState.stackTop);
+
 	return v;
 }
 
@@ -553,6 +562,12 @@ bool x87Handler(regs* r)
 		*p = fpuFloatToLong(fpuGetReg(0));
 		r->eip += instrLen;
 		return true;
+
+		/*
+c0026a07:	dd 04 24             	fld    QWORD PTR [esp]
+c0026a10:	dd 44 24 04          	fld    QWORD PTR [esp+0x4]
+c0026a17:	db 1c 24             	fistp  DWORD PTR [esp]
+*/
 
 	} else if (eip[0] == 0xDB && middleDigit == 3) {                      //FISTP
 		uint32_t* p = (uint32_t*) ptr;
