@@ -262,7 +262,7 @@ bool x87Handler(regs* r)
 
 	ptr = CPU::decodeAddress(r, &instrLen, &registerOnly, &middleDigit);
 
-	//kprintf("x87 0x%X\n", eip);
+	kprintf("x87 0x%X\n", eip);
 
 	//kprintf("r->esp = 0x%X\n", r->esp);
 	//kprintf("x87: %X %X %X %X\n", *eip, *(eip + 1), *(eip + 2), *(eip + 3));
