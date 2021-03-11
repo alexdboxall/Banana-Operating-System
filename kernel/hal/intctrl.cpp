@@ -317,7 +317,7 @@ void x87EmulHandler(regs* r, void* context)
 		thisCPU()->writeCR0(thisCPU()->readCR0() & ~4);
 		int oeip = r->eip;
 		bool handled = x87FaultIntercept(r);
-		kprintf("INSTR LENGTH = %d\n", oeip - r->eip);
+		kprintf("INSTR LENGTH = %d\n", r->eip - oeip);
 
 		//turn on emulation
 		thisCPU()->writeCR0(thisCPU()->readCR0() | 4);
