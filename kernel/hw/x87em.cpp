@@ -330,6 +330,7 @@ bool x87Handler(regs* r)
 	}
 
 	if (eip[0] == 0xD8 && eip[1] >= 0xC0 && eip[1] <= 0xC7) {           //FADD
+		panic("NOT IMPLEMENTED");
 		fpuSetReg(0, fpuAdd(fpuGetReg(0), fpuGetReg(eip[1] - 0xC0)));
 		r->eip += 2;
 		return true;
@@ -367,6 +368,7 @@ bool x87Handler(regs* r)
 		return true;*/
 		
 	} else if (eip[0] == 0xD8 && eip[1] >= 0xF8 /*&& eip[1] <= 0xFF*/) {     //FDIVRP
+		panic("NOT IMPLEMENTED");
 		fpuSetReg(0, fpuDivide(fpuGetReg(eip[1] - 0xF8), fpuGetReg(0)));
 		r->eip += 2;
 		fpuPop();
@@ -424,6 +426,7 @@ bool x87Handler(regs* r)
 		return true;*/
 
 	} else if (eip[0] == 0xDE && eip[1] >= 0xF8 /*&& eip[1] <= 0xFF*/) {     //FDIVP
+		panic("NOT IMPLEMENTED");
 		fpuSetReg(eip[1] - 0xF8, fpuDivide(fpuGetReg(eip[1] - 0xF8), fpuGetReg(0)));
 		r->eip += 2;
 		fpuPop();
