@@ -12,7 +12,7 @@ uint32_t fpuInternalTo32(Float80 flt)
 		float f;
 		uint32_t i;
 	} w;
-	w.f = (float) f;
+	w.f = (float) flt;
 	return w.i;
 
 	uint32_t out = 0;
@@ -128,7 +128,7 @@ Float80 fpuLongToFloat(int64_t signedSignificand)
 		double f;
 		int64_t i;
 	} w;
-	w.i = significand;
+	w.i = signedSignificand;
 	return w.f;
 
 	// long -> double
