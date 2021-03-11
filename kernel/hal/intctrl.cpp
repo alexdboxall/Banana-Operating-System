@@ -10,6 +10,7 @@
 #include "hw/acpi.hpp"
 #include "hw/ports.hpp"
 #include "hw/cpu.hpp"
+#include "hw/x87em.hpp"
 #include "vm86/vm8086.hpp"
 
 #pragma GCC optimize ("O2")
