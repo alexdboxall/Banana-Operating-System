@@ -269,7 +269,7 @@ bool x87Handler(regs* r)
 
 	kprintf("x87 0x%X\n", eip);
 
-	kprintf("r->esp = 0x%X, r->useresp\n", r->esp, r->useresp);
+	kprintf("r->esp = 0x%X, r->useresp = 0x%X\n", r->esp, r->useresp);
 	//kprintf("x87: %X %X %X %X\n", *eip, *(eip + 1), *(eip + 2), *(eip + 3));
 	kprintf("decoded address = 0x%X\n", ptr);
 
@@ -608,6 +608,12 @@ bool x87Handler(regs* r)
 		fpuSetReg(0, fpuDivide(fpu64ToInternal(*p), fpuGetReg(0)));
 		r->eip += instrLen;
 		return true;
+
+	/*
+	c0026a07:	dd 04 24             	fld    QWORD PTR [esp]
+	c0026a10:	dd 44 24 04          	fld    QWORD PTR [esp+0x4]
+	c0026a17:	db 1c 24             	fistp  DWORD PTR [esp]
+	*/
 
 	} else if (eip[0] == 0xDD && middleDigit == 0) {                    //FLD
 		uint64_t* p = (uint64_t*) ptr;
