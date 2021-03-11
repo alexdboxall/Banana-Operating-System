@@ -287,44 +287,53 @@ bool x87Handler(regs* r)
 	kprintf("decoded address = 0x%X\n", ptr);
 
 	if (eip[0] == 0xD9) {
-		panic("NOT IMPL.");
 		switch (eip[1]) {
-		case 0xE0:
-			fpuSetReg(0, fpuChs(fpuGetReg(0)));
-			r->eip += 2;
-			return true;
-		case 0xE1:              //FABS
-			fpuSetReg(0, fpuAbs(fpuGetReg(0)));
+		case 0xEE:              //FLD0
+			fpuPush(fpuGet0());
 			r->eip += 2;
 			return true;
 		case 0xE8:              //FLD1
 			fpuPush(fpuGet1());
 			r->eip += 2;
 			return true;
+
+		case 0xE0:
+			fpuSetReg(0, fpuChs(fpuGetReg(0)));
+			r->eip += 2;
+			panic("NOT IMPL 1.");
+			return true;
+		case 0xE1:              //FABS
+			fpuSetReg(0, fpuAbs(fpuGetReg(0)));
+			r->eip += 2;
+			panic("NOT IMPL 2.");
+			return true;
+		
 		case 0xE9:              //FLD1
 			fpuPush(fpuGetLog210());
 			r->eip += 2;
+			panic("NOT IMPL 4.");
 			return true;
 		case 0xEA:              //FLD1
 			fpuPush(fpuGetLog2E());
 			r->eip += 2;
+			panic("NOT IMPL 5.");
 			return true;
 		case 0xEB:              //FLD1
 			fpuPush(fpuGetPi());
 			r->eip += 2;
+			panic("NOT IMPL 6.");
 			return true;
 		case 0xEC:              //FLD1
 			fpuPush(fpuGetLog102());
 			r->eip += 2;
+			panic("NOT IMPL 7.");
 			return true;
 		case 0xED:              //FLD1
 			fpuPush(fpuGetLogE2());
 			r->eip += 2;
+			panic("NOT IMPL8.");
 			return true;
-		case 0xEE:              //FLD1
-			fpuPush(fpuGet0());
-			r->eip += 2;
-			return true;
+		
 		default:
 			break;
 		}
