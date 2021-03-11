@@ -658,7 +658,8 @@ bool x87Handler(regs* r)
 		*p = fpuFloatToLong(fpuPop());
 		r->eip += instrLen;
 		return true;
-	}*/
+	*/
+	}
 
 	return false;
 }
