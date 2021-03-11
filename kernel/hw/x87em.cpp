@@ -287,6 +287,7 @@ bool x87Handler(regs* r)
 	kprintf("decoded address = 0x%X\n", ptr);
 
 	if (eip[0] == 0xD9) {
+		panic("NOT IMPL.");
 		switch (eip[1]) {
 		case 0xE0:
 			fpuSetReg(0, fpuChs(fpuGetReg(0)));
