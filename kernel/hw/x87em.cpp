@@ -7,6 +7,14 @@ uint32_t fpuInternalTo32(Float80 flt)
 {
 	//double -> float
 
+	union
+	{
+		float f;
+		uint32_t i;
+	} w;
+	w.f = (float) f;
+	return w.i;
+
 	uint32_t out = 0;
 	if (flt >> 63) {
 		out |= (1ULL << 31ULL);
@@ -34,6 +42,14 @@ uint64_t fpuInternalTo64(Float80 flt)
 
 Float80 fpu32ToInternal(uint32_t flt)
 {
+	union
+	{
+		uint32_t i;
+		float f;
+	} w;
+	w.i = flt;
+	return (double) w.f;
+
 	// float -> double
 	uint32_t out = 0;
 	if (flt >> 31) {
@@ -57,6 +73,14 @@ Float80 fpu64ToInternal(uint64_t flt)
 
 int64_t fpuFloatToLong(Float80 flt)
 {
+	union
+	{
+		double f;
+		uint64_t i;
+	} w;
+	w.f = flt;
+	return w.i;
+
 	// double -> int
 
 	int expo = ((flt >> 52) & 0x7FF) - 1023;
@@ -77,6 +101,14 @@ int64_t fpuFloatToLong(Float80 flt)
 
 Float80 fpuULongToFloat(uint64_t significand)
 {
+	union
+	{
+		double f;
+		uint64_t i;
+	} w;
+	w.i = significand;
+	return w.f;
+
 	// unsigned long -> double
 
 	int shifts = 0;
@@ -91,6 +123,14 @@ Float80 fpuULongToFloat(uint64_t significand)
 
 Float80 fpuLongToFloat(int64_t signedSignificand)
 {
+	union
+	{
+		double f;
+		int64_t i;
+	} w;
+	w.i = significand;
+	return w.f;
+
 	// long -> double
 
 	int shifts = 0;
