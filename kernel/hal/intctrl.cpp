@@ -314,11 +314,11 @@ void x87EmulHandler(regs* r, void* context)
 
 	if (x87FaultIntercept) {
 		//turn off emulation
-		thisCPU()->writeCR0(thisCPU()->readCR0() & ~4);
+		//thisCPU()->writeCR0(thisCPU()->readCR0() & ~4);
 		bool handled = x87FaultIntercept(r);
 
 		//turn on emulation
-		thisCPU()->writeCR0(thisCPU()->readCR0() | 4);
+		//thisCPU()->writeCR0(thisCPU()->readCR0() | 4);
 		if (handled) {
 			return;
 		}

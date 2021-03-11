@@ -26,7 +26,7 @@ FPU::~FPU()
 
 FPU* setupFPU() {
 
-	if (computer->features.hasAVX) {
+	/*if (computer->features.hasAVX) {
 		return (FPU*) new AVX();
 	}
 
@@ -39,9 +39,10 @@ FPU* setupFPU() {
 	}
 
 	if (computer->features.hasx87) {
-		//return (FPU*) new x87();
-	}
+		return (FPU*) new x87();
+	}*/
 
+	computer->features.hasx87 = false;
 	kprintf("NO FPU!\n");
 
 	//turn on x87 emulation
