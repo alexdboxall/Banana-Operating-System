@@ -134,21 +134,25 @@ Float80 fpuGetPi()
 
 Float80 fpuGetLog2E()
 {
+	panic("AHA!");
 	return 0xDEADBEEF;
 }
 
 Float80 fpuGetLogE2()
 {
+	panic("AHA!");
 	return 0xDEADBEEF;
 }
 
 Float80 fpuGetLog210()
 {
+	panic("AHA!");
 	return 0xDEADBEEF;
 }
 
 Float80 fpuGetLog102()
 {
+	panic("AHA!");
 	return 0xDEADBEEF;
 }
 
@@ -167,11 +171,6 @@ void fpuUnorderedCompare(Float80 x, Float80 y)
 	fpuState.c0 = !fpuAreEqual(x, y) && fpuIsSecondLarger(x, y);
 	fpuState.c2 = 0;
 	fpuState.c3 = fpuAreEqual(x, y);
-}
-
-Float80 fpuNormalise(Float80 flt)
-{
-	return flt;
 }
 
 Float80 fpuAdd(Float80 x, Float80 y)
