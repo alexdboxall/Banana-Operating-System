@@ -39,7 +39,7 @@ FPU* setupFPU() {
 	}
 
 	if (computer->features.hasx87) {
-		return (FPU*) new x87();
+		//return (FPU*) new x87();
 	}
 
 	kprintf("NO FPU!\n");
