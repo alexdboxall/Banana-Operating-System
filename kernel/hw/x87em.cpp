@@ -15,13 +15,14 @@ uint32_t fpuInternalTo32(Float80 flt)
 	uint64_t significand = flt & 0xFFFFFFFFFFFFFULL;
 	int64_t expo = ((flt >> 52) & 0x7FF) - 1023 + 127;
 	if (expo < 0 || expo > 255) {
+		panic("HMMM...");
 		//underflow / overflow
 		return 0;
 	}
 
-	significand >>= 52 - 23;
+	significand >>= 52ULL - 23ULL;
 	out |= significand;
-	out |= expo << 23;
+	out |= expo << 23ULL;
 	return out;
 }
 
@@ -42,9 +43,9 @@ Float80 fpu32ToInternal(uint32_t flt)
 	uint64_t significand = flt & 0x7FFFFF;
 	uint64_t expo = ((flt >> 23) & 0xFF) - 127 + 1023;
 
-	significand <<= 52 - 23;
+	significand <<= 52ULL - 23ULL;
 	out |= significand;
-	out |= expo << 52;
+	out |= expo << 52ULL;
 	return out;
 }
 
@@ -60,6 +61,7 @@ int64_t fpuFloatToLong(Float80 flt)
 
 	int expo = ((flt >> 52) & 0x7FF) - 1023;
 	if (expo < 0) {
+		panic("HMMM... 2");
 		return 0;
 	}
 
@@ -124,7 +126,6 @@ Float80 fpuGet0()
 Float80 fpuGet1()
 {
 	return 1.0;
-
 }
 
 Float80 fpuGetPi()
