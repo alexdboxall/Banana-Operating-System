@@ -214,8 +214,9 @@ Float80 fpuSquare(Float80 flt)
 Float80 fpuGetReg(int num)
 {
 	if (num < 0 || num > 7) {
-		panic("em8087 bad reg set");
+		panic("em8087 bad reg get");
 	}
+	kprintf("REG(%d) = ST(%d)\n", num, (fpuState.stackTop + num) % 8);
 	return fpuState.regs[(fpuState.stackTop + num) % 8];
 }
 
@@ -224,16 +225,16 @@ void fpuSetReg(int num, Float80 flt)
 	if (num < 0 || num > 7) {
 		panic("em8087 bad reg set");
 	}
+	kprintf("REG(%d) = ST(%d)\n", num, (fpuState.stackTop + num) % 8);
 	fpuState.regs[(fpuState.stackTop + num) % 8] = flt;
 }
 
 void fpuPush(Float80 flt)
 {
-	kprintf("old stack top = %d\n", fpuState.stackTop);
 	fpuState.stackTop = (fpuState.stackTop + 7) % 8;
 	fpuState.regs[fpuState.stackTop] = flt;
 
-	kprintf("pushing, ST(%d) set.\n\n", fpuState.stackTop);
+	kprintf("pushing, REG(%d) set.\n\n", fpuState.stackTop);
 
 	if (fpuState.valuesOnStack == 8) {
 		fpuState.stackFault = 1;
@@ -244,7 +245,7 @@ void fpuPush(Float80 flt)
 
 Float80 fpuPop()
 {
-	kprintf("popping from ST(%d).\n", fpuState.stackTop);
+	kprintf("popping from REG(%d).\n", fpuState.stackTop);
 
 	Float80 v = fpuState.regs[fpuState.stackTop];
 	fpuState.stackTop = (fpuState.stackTop + 1) % 8;
@@ -253,8 +254,6 @@ Float80 fpuPop()
 	} else {
 		fpuState.stackFault = 1;
 	}
-
-	kprintf("top now at %d.\n\n", fpuState.stackTop);
 
 	return v;
 }
