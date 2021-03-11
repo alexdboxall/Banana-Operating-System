@@ -213,6 +213,7 @@ Float80 fpuSquare(Float80 flt)
 
 Float80 fpuGetReg(int num)
 {
+	kprintf("GET REG.\n");
 	if (num < 0 || num > 7) {
 		panic("em8087 bad reg get");
 	}
@@ -222,6 +223,8 @@ Float80 fpuGetReg(int num)
 
 void fpuSetReg(int num, Float80 flt)
 {
+	kprintf("SET REG.\n");
+
 	if (num < 0 || num > 7) {
 		panic("em8087 bad reg set");
 	}
