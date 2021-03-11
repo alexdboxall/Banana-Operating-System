@@ -271,6 +271,8 @@ bool x87Handler(regs* r)
 {
 	uint8_t* eip = (uint8_t*) r->eip;
 
+	bool supported = false;
+
 	uint8_t* ptr = 0;
 	bool registerOnly = false;
 	int instrLen = 2;
@@ -281,7 +283,7 @@ bool x87Handler(regs* r)
 	kprintf("x87 0x%X\n", eip);
 
 	kprintf("r->esp = 0x%X, r->useresp = 0x%X\n", r->esp, r->useresp);
-	//kprintf("x87: %X %X %X %X\n", *eip, *(eip + 1), *(eip + 2), *(eip + 3));
+	kprintf("x87: %X %X %X %X\n", *eip, *(eip + 1), *(eip + 2), *(eip + 3));
 	kprintf("decoded address = 0x%X\n", ptr);
 
 	if (eip[0] == 0xD9) {
@@ -332,7 +334,7 @@ bool x87Handler(regs* r)
 		r->eip += 2;
 		return true;
 
-	} else if (eip[0] == 0xD8 && eip[1] >= 0xC8 && eip[1] <= 0xCF) {     //FMUL
+	/*} else if (eip[0] == 0xD8 && eip[1] >= 0xC8 && eip[1] <= 0xCF) {     //FMUL
 		fpuSetReg(0, fpuMultiply(fpuGetReg(0), fpuGetReg(eip[1] - 0xC8)));
 		r->eip += 2;
 		return true;
@@ -362,15 +364,15 @@ bool x87Handler(regs* r)
 		fpuSetReg(0, fpuDivide(fpuGetReg(0), fpuGetReg(eip[1] - 0xF0)));
 		r->eip += 2;
 		fpuPop();
-		return true;
-
+		return true;*/
+		
 	} else if (eip[0] == 0xD8 && eip[1] >= 0xF8 /*&& eip[1] <= 0xFF*/) {     //FDIVRP
 		fpuSetReg(0, fpuDivide(fpuGetReg(eip[1] - 0xF8), fpuGetReg(0)));
 		r->eip += 2;
 		fpuPop();
 		return true;
 
-	} else if (eip[0] == 0xD9 && eip[1] >= 0xC0 && eip[1] <= 0xC7) {      //FLD
+	/*} else if (eip[0] == 0xD9 && eip[1] >= 0xC0 && eip[1] <= 0xC7) {      //FLD
 		fpuPush(fpuGetReg(eip[1] - 0xC0));
 		r->eip += 2;
 		return true;
@@ -419,7 +421,7 @@ bool x87Handler(regs* r)
 		fpuSetReg(eip[1] - 0xC8, fpuMultiply(fpuGetReg(0), fpuGetReg(eip[1] - 0xC8)));
 		r->eip += 2;
 		fpuPop();
-		return true;
+		return true;*/
 
 	} else if (eip[0] == 0xDE && eip[1] >= 0xF8 /*&& eip[1] <= 0xFF*/) {     //FDIVP
 		fpuSetReg(eip[1] - 0xF8, fpuDivide(fpuGetReg(eip[1] - 0xF8), fpuGetReg(0)));
@@ -427,7 +429,7 @@ bool x87Handler(regs* r)
 		fpuPop();
 		return true;
 
-	} else if (eip[0] == 0xDE && eip[1] >= 0xF0 && eip[1] <= 0xF7) {     //FDIVRP
+	/*} else if (eip[0] == 0xDE && eip[1] >= 0xF0 && eip[1] <= 0xF7) {     //FDIVRP
 		fpuSetReg(eip[1] - 0xF0, fpuDivide(fpuGetReg(0), fpuGetReg(eip[1] - 0xF0)));
 		r->eip += 2;
 		fpuPop();
@@ -510,14 +512,14 @@ bool x87Handler(regs* r)
 		fpuSetReg(0, fpuDivide(fpu32ToInternal(*p), fpuGetReg(0)));
 		r->eip += instrLen;
 		return true;
-
+		*/
 	} else if (eip[0] == 0xD9 && middleDigit == 0) {                    //FLD
 		uint32_t* p = (uint32_t*) ptr;
 		fpuPush(fpu32ToInternal(*p));
 		r->eip += instrLen;
 		return true;
 
-	} else if (eip[0] == 0xD9 && middleDigit == 3) {                    //FSTP
+	/*} else if (eip[0] == 0xD9 && middleDigit == 3) {                    //FSTP
 		uint32_t* p = (uint32_t*) ptr;
 		*p = fpuInternalTo32(fpuPop());
 		r->eip += instrLen;
@@ -563,13 +565,7 @@ bool x87Handler(regs* r)
 		uint32_t* p = (uint32_t*) ptr;
 		*p = fpuFloatToLong(fpuGetReg(0));
 		r->eip += instrLen;
-		return true;
-
-		/*
-c0026a07:	dd 04 24             	fld    QWORD PTR [esp]
-c0026a10:	dd 44 24 04          	fld    QWORD PTR [esp+0x4]
-c0026a17:	db 1c 24             	fistp  DWORD PTR [esp]
-*/
+		return true;*/
 
 	} else if (eip[0] == 0xDB && middleDigit == 3) {                      //FISTP
 		uint32_t* p = (uint32_t*) ptr;
@@ -577,7 +573,7 @@ c0026a17:	db 1c 24             	fistp  DWORD PTR [esp]
 		r->eip += instrLen;
 		return true;
 
-	} else if (eip[0] == 0xDC && middleDigit == 0) {                    //FADD
+	/*} else if (eip[0] == 0xDC && middleDigit == 0) {                    //FADD
 		uint64_t* p = (uint64_t*) ptr;
 		fpuSetReg(0, fpuAdd(fpuGetReg(0), fpu64ToInternal(*p)));
 		r->eip += instrLen;
@@ -626,19 +622,14 @@ c0026a17:	db 1c 24             	fistp  DWORD PTR [esp]
 		r->eip += instrLen;
 		return true;
 
-	/*
-	c0026a07:	dd 04 24             	fld    QWORD PTR [esp]
-	c0026a10:	dd 44 24 04          	fld    QWORD PTR [esp+0x4]
-	c0026a17:	db 1c 24             	fistp  DWORD PTR [esp]
-	*/
-
+		*/
 	} else if (eip[0] == 0xDD && middleDigit == 0) {                    //FLD
 		uint64_t* p = (uint64_t*) ptr;
 		fpuPush(fpu64ToInternal(*p));
 		r->eip += instrLen;
 		return true;
 
-	} else if (eip[0] == 0xDD && middleDigit == 2) {                    //FST
+	/*} else if (eip[0] == 0xDD && middleDigit == 2) {                    //FST
 		uint64_t* p = (uint64_t*) ptr;
 		*p = fpuInternalTo64(fpuGetReg(0));
 		r->eip += instrLen;
@@ -661,13 +652,13 @@ c0026a17:	db 1c 24             	fistp  DWORD PTR [esp]
 		fpuPush(fpuULongToFloat(*p));
 		r->eip += instrLen;
 		return true;
-
+		
 	} else if (eip[0] == 0xDF && middleDigit == 7) {                    //FISTP
 		uint64_t* p = (uint64_t*) ptr;
 		*p = fpuFloatToLong(fpuPop());
 		r->eip += instrLen;
 		return true;
-	}
+	}*/
 
 	return false;
 }
