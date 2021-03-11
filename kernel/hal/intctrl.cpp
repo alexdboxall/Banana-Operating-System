@@ -375,7 +375,6 @@ typedef struct _FPUState
 
 FPUState fpuState;
 
-
 uint32_t fpuInternalTo32(Float80 flt)
 {
 	//double -> float
@@ -637,9 +636,9 @@ bool x87Handler(regs* r)
 
 	//kprintf("x87 0x%X\n", eip);
 
-	kprintf("r->esp = 0x%X\n", r->esp);
-	kprintf("x87: %X %X %X %X\n", *eip, *(eip + 1), *(eip + 2), *(eip + 3));
-	kprintf("decoded address = 0x%X\n", ptr);
+	//kprintf("r->esp = 0x%X\n", r->esp);
+	//kprintf("x87: %X %X %X %X\n", *eip, *(eip + 1), *(eip + 2), *(eip + 3));
+	//kprintf("decoded address = 0x%X\n", ptr);
 
 	if (eip[0] == 0xD9) {
 		switch (eip[1]) {
