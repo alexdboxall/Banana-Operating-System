@@ -112,7 +112,9 @@ setcs:
 	jmp err2
 
 continue:
-	mov [_bpb.bytesPerSector - 1], dword 0x20202020		;this overwrites bytesPerSector and sectorsPerCluster
+	mov ax, 0xCAFE
+	jmp $
+	;mov [_bpb.bytesPerSector - 1], dword 0x20202020		;this overwrites bytesPerSector and sectorsPerCluster
 
 	xor bp, bp
 
