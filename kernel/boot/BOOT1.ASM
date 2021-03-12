@@ -105,7 +105,7 @@ setcs:
 	mov [4 * 1], word continue
 	mov [4 * 1 + 2], word 0
 
-	db 0xF1					;this acts as a prefix which does nothing before the 80386
+	int 1					;this acts as a prefix which does nothing before the 80386
 							;on the 386 it causes INT 0x01
 	mov si, errMsg3
 	jmp err2
@@ -115,7 +115,7 @@ continue:
 	jmp $
 	;mov [_bpb.bytesPerSector - 1], dword 0x20202020		;this overwrites bytesPerSector and sectorsPerCluster
 
-	xor bp, bp
+	;xor bp, bp
 
 	;THIS SECTOR MANAGES TO USE ALL 8 GENERAL PURPOSE REGISTERS AT ONCE
 	;INCLUDING THE STACK POINTE ITSELF, AND THE PARITY FLAG!
@@ -124,14 +124,14 @@ continue:
 	; (in reality, just replace 'jnp' with 'jp')
 
 fileLoad:
-	;call getRoot							;puts in EAX
+	call getRoot							;puts in EAX
 	
 .retryNext:
-	;call readSectors						;read root
+	call readSectors						;read root
 
 	;sector number in EAX
 
-	;mov di, 0x0500
+	mov di, 0x0500
 .nextentry:
 	mov si, filename
 	add si, bp
