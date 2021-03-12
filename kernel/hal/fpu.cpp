@@ -45,7 +45,7 @@ FPU* setupFPU() {
 	computer->features.hasx87 = false;
 	kprintf("NO FPU!\n");
 
-	turn on x87 emulation
+	//turn on x87 emulation
 	thisCPU()->writeCR0(thisCPU()->readCR0() | 4);
     
 	return nullptr;
