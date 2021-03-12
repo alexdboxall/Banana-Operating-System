@@ -103,7 +103,7 @@ setcs:
 	int 0x10
 
 	mov bx, 4
-	mov [bx], word continue - 0x40
+	mov [bx], word continue - 0x40 + 0x7C00
 	mov [bx + 2], bx
 
 	db 0xF1					;this acts as a prefix which does nothing before the 80386
