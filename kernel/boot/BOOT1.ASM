@@ -288,7 +288,7 @@ err3:
 	mov ah, 0xE
 	lodsb
 	int 0x10
-	loop short .err3
+	loop short err3
 	hlt
 
 getRoot:
@@ -330,7 +330,7 @@ getNext:
 	mov eax, edx
 	call readSectors
 	
-	add bh, 5								;"add ebx, 0x500" (only 9 bits in ebx used due to the and statement below)
+	add bh, 5								;"add ebx, 0x500" (only 9 bits in ebx used due to the AND statement below)
 
 	push dword [bx]							;preserve it (es has zero)
 	call getRoot
