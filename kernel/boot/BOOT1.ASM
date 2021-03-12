@@ -227,8 +227,6 @@ readSectors:
 	int 0x13
 	jc short err
 
-	jmp $
-
 	and cx, 0x3F		;NUM SECTORS PER CYLINDER IN CX
 	
 	;CX = 0x3F
@@ -258,13 +256,10 @@ readSectors:
 	;ABSOLUTE HEAD:		DL	0x0A
 	;ABSOLUTE CYLINDER:	AX	0x08
 
-	jmp $
-
 	;get the low two bits of AH into the top 2 bits of CL
 	and ah, 3
 	shl ah, 6
 	or cl, ah
-
 					;SECTOR ALREADY IN CL
 	mov ch, al		;CYL
 	mov ax, 0x0201	;SECTOR COUNT AND FUNCTION NUMBER
@@ -272,6 +267,7 @@ readSectors:
 	pop bx
 	mov dl, bl		;byte [driveNumber]
 	mov bx, [d_add]
+	jmp $
 	int 0x13
 	jc short err
 .endReadSectors:
