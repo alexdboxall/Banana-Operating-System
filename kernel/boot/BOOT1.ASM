@@ -88,7 +88,6 @@ _main:
 
 	jmp 0:setcs							;set CS so we know we're at 07C0:0000 instead of, e.g. 0000:7C00 or even 049B:3250
 
-errMsg3 db "Not 386"
 setcs:
 	xor ax, ax								;needed for stuff later on...
 	mov ds, ax
@@ -191,6 +190,7 @@ rootdone:
 	
 	jmp short .readFileLoop
 
+errMsg3 db "Not 386"
 file2 db 0xFF
 errMsg2 db "No file"
 addstore dw 0x7E00
