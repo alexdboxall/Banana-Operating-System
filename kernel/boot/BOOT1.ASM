@@ -97,7 +97,7 @@ setcs:
 	mov ss, ax
 
 	mov si, errMsg3
-	jmp short err2
+	jmp err2
 
 	mov [_bpb.bytesPerSector - 1], dword 0x20202020		;this overwrites bytesPerSector and sectorsPerCluster
 
@@ -212,18 +212,6 @@ fileReadDone:
 
 	retf
 
-
-err:
-	mov si, errMsg
-err2:
-	mov cl, 8
-err3:
-	mov ah, 0xE
-	lodsb
-	int 0x10
-	loop err3
-	hlt
-
 readSectors:
 	pushad
 	mov [d_lba], eax
@@ -284,6 +272,17 @@ readSectors:
 .endReadSectors:
 	popad
 	ret
+
+err:
+	mov si, errMsg
+err2:
+	mov cl, 8
+err3:
+	mov ah, 0xE
+	lodsb
+	int 0x10
+	loop err3
+	hlt
 
 getRoot:
 	mov eax, [_bpb.logicalSectorsPerFAT]
