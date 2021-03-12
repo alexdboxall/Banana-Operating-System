@@ -212,6 +212,18 @@ fileReadDone:
 
 	retf
 
+
+err:
+	mov si, errMsg
+err2:
+	mov cl, 8
+err3:
+	mov ah, 0xE
+	lodsb
+	int 0x10
+	loop err3
+	hlt
+
 readSectors:
 	pushad
 	mov [d_lba], eax
@@ -272,17 +284,6 @@ readSectors:
 .endReadSectors:
 	popad
 	ret
-
-err:
-	mov si, errMsg
-err2:
-	mov cl, 8
-err3:
-	mov ah, 0xE
-	lodsb
-	int 0x10
-	loop err3
-	hlt
 
 getRoot:
 	mov eax, [_bpb.logicalSectorsPerFAT]
