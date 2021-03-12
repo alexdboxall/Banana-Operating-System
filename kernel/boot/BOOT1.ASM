@@ -236,7 +236,7 @@ readSectors:
 	
 	;BX = 0x0F
 
-	mov ecx, [d_lba]
+	mov [d_lba], dword 0x12345678
 	lgs ax, [d_lba]		;first load [d_lba] into GS:AX
 	mov dx, gs			;then copy GS to DX to make it DX:AX
 	jmp $
