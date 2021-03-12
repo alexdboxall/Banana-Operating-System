@@ -226,7 +226,7 @@ readSectors:
 	push dx
 	int 0x13
 	jc short err
-	inc dh				;the BIOS returns (HEADS - 1) in DH, so correct this
+	;inc dh				;the BIOS returns (HEADS - 1) in DH, so correct this
 
 	and cx, 0x3F		;NUM SECTORS PER CYLINDER IN CX
 	
