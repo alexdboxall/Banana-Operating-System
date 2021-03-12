@@ -102,9 +102,8 @@ setcs:
 	;AX is already zero
 	int 0x10
 
-	mov bx, 12
-	mov [bx ], word (continue - 0xC0 + 0x7C00)
-	mov [bx + 2], bx
+	mov [4 * 3], word continue
+	mov [4 * 3 + 2], word 0
 
 	int 3
 	;db 0xF1					;this acts as a prefix which does nothing before the 80386
@@ -126,14 +125,14 @@ continue:
 	; (in reality, just replace 'jnp' with 'jp')
 
 fileLoad:
-	call getRoot							;puts in EAX
+	;call getRoot							;puts in EAX
 	
 .retryNext:
-	call readSectors						;read root
+	;call readSectors						;read root
 
 	;sector number in EAX
 
-	mov di, 0x0500
+	;mov di, 0x0500
 .nextentry:
 	mov si, filename
 	add si, bp
