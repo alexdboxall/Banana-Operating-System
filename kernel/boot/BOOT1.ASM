@@ -227,17 +227,25 @@ readSectors:
 	int 0x13
 	jc short err
 
-	jmp $
-
 	and cx, 0x3F		;NUM SECTORS PER CYLINDER IN CX
+	
+	;CX = 0x3F
 
 	mov bl, dh			
 	xor bh, bh			;NUM HEADS IN BX
 	
+	;BX = 0x0F
+
+	mov ecx, [d_lba]
 	lgs ax, [d_lba]		;first load [d_lba] into GS:AX
 	mov dx, gs			;then copy GS to DX to make it DX:AX
+	jmp $
 
+	;DX:AX = LBA
 	div cx
+
+	;AX = LBA / SECTORS PER CYLINDER
+	;DX = LBA % SECTORS PER CYLINDER
 
 	inc dl
 	mov cl, dl
