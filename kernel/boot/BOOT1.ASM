@@ -105,7 +105,7 @@ setcs:
 	mov [4 * 1], word continue
 	mov [4 * 1 + 2], word 0
 
-	int 1					;this acts as a prefix which does nothing before the 80386
+	int1					;this acts as a prefix which does nothing before the 80386
 							;on the 386 it causes INT 0x01
 	mov si, errMsg3
 	jmp err2
