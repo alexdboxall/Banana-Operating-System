@@ -268,9 +268,9 @@ readSectors:
 	mov dl, bl		;byte [driveNumber]
 	mov bx, [d_add]
 	int 0x13
-	jmp $
 	jc short err
 .endReadSectors:
+	jmp $
 	popad
 	ret
 
