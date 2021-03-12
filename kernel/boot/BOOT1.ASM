@@ -288,7 +288,7 @@ err3:
 	mov ah, 0xE
 	lodsb
 	int 0x10
-	loop short err3
+	loop err3
 	hlt
 
 getRoot:
