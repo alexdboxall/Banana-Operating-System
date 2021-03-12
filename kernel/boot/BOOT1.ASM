@@ -227,6 +227,8 @@ readSectors:
 	int 0x13
 	jc short err
 
+	jmp $
+
 	and cx, 0x3F		;NUM SECTORS PER CYLINDER IN CX
 	
 	;CX = 0x3F
