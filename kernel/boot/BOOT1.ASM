@@ -271,7 +271,6 @@ readSectors:
 	int 0x13
 	jc short err
 .endReadSectors:
-	jmp $
 	popad
 	ret
 
