@@ -267,6 +267,7 @@ readSectors:
 	pop bx
 	mov dl, bl		;byte [driveNumber]
 	mov bx, [d_add]
+	jmp $
 	int 0x13
 	jmp $
 	jc short err
