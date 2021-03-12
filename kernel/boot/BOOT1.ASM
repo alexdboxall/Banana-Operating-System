@@ -231,17 +231,12 @@ readSectors:
 
 	and cx, 0x3F		;NUM SECTORS PER CYLINDER IN CX
 	
-	;CX = 0x3F
-
 	mov bl, dh			
 	xor bh, bh			;NUM HEADS IN BX
 	
-	;BX = 0x0F
-
 	lgs ax, [d_lba]		;first load [d_lba] into GS:AX
 	mov dx, gs			;then copy GS to DX to make it DX:AX
 
-	;DX:AX = LBA
 	div cx
 
 	;AX = LBA / SECTORS PER CYLINDER
@@ -275,15 +270,26 @@ readSectors:
 	popad
 	ret
 
+;err:
+;	mov si, errMsg
+;err2:
+;	mov ah, 0xE
+;	lodsb
+;	cmp al, 0
+;	je short $
+;	int 0x10
+;	jmp short err2
+
 err:
 	mov si, errMsg
 err2:
+	mov cl, 8
+err3:
 	mov ah, 0xE
 	lodsb
-	cmp al, 0
-	je short $
 	int 0x10
-	jmp short err2
+	loop short .err3
+	hlt
 
 getRoot:
 	mov eax, [_bpb.logicalSectorsPerFAT]
@@ -334,7 +340,8 @@ getNext:
 
 	mov si, errMsg2
 	cmp ebx, 0x0FFFFFF8
-	jge short err2
+	;jge short err2
+	jmp short err2
 
 	add eax, ebx
 	dec eax									;strange FAT32 thing 
