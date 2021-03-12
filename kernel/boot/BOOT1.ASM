@@ -102,8 +102,9 @@ setcs:
 	;AX is already zero
 	int 0x10
 
-	mov [0x4], word 0
-	mov [0x6], word continue
+	mov bx, 4
+	mov [bx], word 0
+	mov [bx + 2], word continue
 
 	db 0xF1					;this acts as a prefix which does nothing before the 80386
 							;on the 386 it causes INT 0x01
@@ -198,9 +199,9 @@ rootdone:
 
 errMsg3 db "Not 386"
 file2 db 0xFF
-errMsg2 db "No file"
+errMsg2 db "NF "; "No file"
 addstore dw 0x7E00
-errMsg db "Disk err"
+errMsg db "DE ";"Disk err"
 
 fileReadDone:
 	mov bx, 0xC000
