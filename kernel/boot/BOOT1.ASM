@@ -189,6 +189,7 @@ rootdone:
 	jmp short .readFileLoop
 
 file2 db 0xFF
+errMsg3 db "Not 386"
 errMsg2 db "No file"
 addstore dw 0x7E00
 errMsg db "Disk err"
@@ -269,7 +270,6 @@ readSectors:
 .endReadSectors:
 	popad
 	ret
-
 
 err:
 	mov si, errMsg
