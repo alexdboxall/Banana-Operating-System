@@ -331,8 +331,7 @@ getNext:
 
 	mov si, errMsg2
 	cmp ebx, 0x0FFFFFF8
-	;jge short err2
-	jmp short err2
+	jge short err2
 
 	add eax, ebx
 	dec eax									;strange FAT32 thing 
