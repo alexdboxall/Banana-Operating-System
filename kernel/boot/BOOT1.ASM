@@ -102,9 +102,15 @@ setcs:
 	;AX is already zero
 	int 0x10
 
+	mov [0x4], word 0
+	mov [0x6], word continue
+
+	db 0xF1					;this acts as a prefix which does nothing before the 80386
+							;on the 386 it causes INT 0x01
 	mov si, errMsg3
 	jmp err2
 
+continue:
 	mov [_bpb.bytesPerSector - 1], dword 0x20202020		;this overwrites bytesPerSector and sectorsPerCluster
 
 	xor bp, bp
