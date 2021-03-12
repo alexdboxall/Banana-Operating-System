@@ -236,10 +236,8 @@ readSectors:
 	
 	;BX = 0x0F
 
-	mov [d_lba], dword 0x12345678
 	lgs ax, [d_lba]		;first load [d_lba] into GS:AX
 	mov dx, gs			;then copy GS to DX to make it DX:AX
-	jmp $
 
 	;DX:AX = LBA
 	div cx
@@ -257,6 +255,8 @@ readSectors:
 	;ABSOLUTE SECTOR:	CL	0x03
 	;ABSOLUTE HEAD:		DL	0x0A
 	;ABSOLUTE CYLINDER:	AX	0x08
+
+	jmp $
 
 	;get the low two bits of AH into the top 2 bits of CL
 	and ah, 3
