@@ -226,6 +226,7 @@ readSectors:
 	push dx
 	int 0x13
 	jc short err
+	inc dh
 
 	and cx, 0x3F		;NUM SECTORS PER CYLINDER IN CX
 	
