@@ -270,26 +270,26 @@ readSectors:
 	popad
 	ret
 
-;err:
-;	mov si, errMsg
-;err2:
-;	mov ah, 0xE
-;	lodsb
-;	cmp al, 0
-;	je short $
-;	int 0x10
-;	jmp short err2
-
 err:
 	mov si, errMsg
 err2:
-	mov cl, 8
-err3:
 	mov ah, 0xE
 	lodsb
+	cmp al, 0
+	je short $
 	int 0x10
-	loop err3
-	hlt
+	jmp short err2
+
+;err:
+;	mov si, errMsg
+;err2:
+;	mov cl, 8
+;err3:
+;	mov ah, 0xE
+;	lodsb
+;	int 0x10
+;	loop err3
+;	hlt
 
 getRoot:
 	mov eax, [_bpb.logicalSectorsPerFAT]
