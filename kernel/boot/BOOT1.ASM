@@ -58,7 +58,7 @@ _bpb:
 	_bpb.fsInfoSectorSector			dw 1
 	_bpb.sectorOfBootsectorCopy		dw 6
 	
-	filename2: db "FIRMWARELIB "			;this 12 (not 11) byte spot is actually reserved for boot filename, and I've updated join.py and INSTALLER.C to put this string here for us
+	filename2: db "FIRMWARELIB "						;this 12 (not 11) byte spot is actually reserved for boot filename, and I've updated join.py and INSTALLER.C to put this string here for us
 
 	_bpb.driveNumber				db 0x80				; Sectors per FAT
 	driveNumber db 0									; WE'RE NOT USING THE VALUE HERE, ONLY THE MEMORY ADDRESS
