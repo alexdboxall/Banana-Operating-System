@@ -218,7 +218,7 @@ readSectors:
 	mov si, DAPACK
 	int 0x13
 	pop dx
-	jnc short .endReadSectors
+	;jnc short .endReadSectors
 
 .noExt:
 	mov ah, 0x8
@@ -226,6 +226,8 @@ readSectors:
 	push dx
 	int 0x13
 	jc short err
+
+	jmp $
 
 	and cx, 0x3F		;NUM SECTORS PER CYLINDER IN CX
 
