@@ -95,17 +95,17 @@ setcs:
 	mov sp, ax
 	mov ss, ax
 
-	mov si, errMsg3
-	jmp err2
-
-	mov [_bpb.bytesPerSector - 1], dword 0x20202020		;this overwrites bytesPerSector and sectorsPerCluster
-
 	mov [driveNumber], dl
 	push ax									;ax is zero here. used just before we jump to stage two
 	push dx									;used to reload DL at the end, will trash DH, but we set that after the pop
 	
 	;AX is already zero
 	int 0x10
+
+	mov si, errMsg3
+	jmp err2
+
+	mov [_bpb.bytesPerSector - 1], dword 0x20202020		;this overwrites bytesPerSector and sectorsPerCluster
 
 	xor bp, bp
 
