@@ -102,20 +102,9 @@ setcs:
 	;AX is already zero
 	int 0x10
 
-	mov [4 * 1], word continue
-	mov [4 * 1 + 2], word 0
+	mov [_bpb.bytesPerSector - 1], dword 0x20202020		;this overwrites bytesPerSector and sectorsPerCluster
 
-	int1					;this acts as a prefix which does nothing before the 80386
-							;on the 386 it causes INT 0x01
-	mov si, errMsg3
-	jmp err2
-
-continue:
-	mov ax, 0xCAFE
-	jmp $
-	;mov [_bpb.bytesPerSector - 1], dword 0x20202020		;this overwrites bytesPerSector and sectorsPerCluster
-
-	;xor bp, bp
+	xor bp, bp
 
 	;THIS SECTOR MANAGES TO USE ALL 8 GENERAL PURPOSE REGISTERS AT ONCE
 	;INCLUDING THE STACK POINTE ITSELF, AND THE PARITY FLAG!
@@ -198,7 +187,6 @@ rootdone:
 	
 	jmp short .readFileLoop
 
-errMsg3 db "Not 386"
 file2 db 0xFF
 errMsg2 db "NF "; "No file"
 addstore dw 0x7E00
