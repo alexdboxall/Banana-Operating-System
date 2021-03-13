@@ -37,7 +37,6 @@ uint32_t fpuInternalTo32(Float80 flt)
 uint64_t fpuInternalTo64(Float80 flt)
 {
 	// double -> double
-	flt = (flt >> 32) | ((flt & 0xFFFFFFFFU) << 32);
 	return flt;
 }
 
@@ -69,8 +68,6 @@ Float80 fpu32ToInternal(uint32_t flt)
 Float80 fpu64ToInternal(uint64_t flt)
 {
 	// double -> double
-
-	flt = (flt >> 32) | ((flt & 0xFFFFFFFFU) << 32);
 	return flt;
 }
 
