@@ -161,15 +161,15 @@ void Computer::detectFeatures()
 	features.hasCPUID = detectCPUID() ? true : false;
 
 	if (features.hasCPUID) {
-		features.hasMSR = cpuidCheckEDX(CPUID_FEAT_EDX_MSR);
-		features.hasSSE2 = cpuidCheckEDX(CPUID_FEAT_EDX_SSE2);
-		features.hasMCE = cpuidCheckEDX(CPUID_FEAT_EDX_MCE);
-		features.hasMMX = cpuidCheckEDX(CPUID_FEAT_EDX_MMX);
+		features.hasMSR = CPU::cpuidCheckEDX(CPUID_FEAT_EDX_MSR);
+		features.hasSSE2 = CPU::cpuidCheckEDX(CPUID_FEAT_EDX_SSE2);
+		features.hasMCE = CPU::cpuidCheckEDX(CPUID_FEAT_EDX_MCE);
+		features.hasMMX = CPU::cpuidCheckEDX(CPUID_FEAT_EDX_MMX);
 
 		if ((sysBootSettings & 1) || (sysBootSettings & 1024)) {
 			features.hasAPIC = false;
 		} else {
-			features.hasAPIC = cpuidCheckEDX(CPUID_FEAT_EDX_APIC);
+			features.hasAPIC = CPU::cpuidCheckEDX(CPUID_FEAT_EDX_APIC);
 		}
 
 		if (features.hasAPIC && !features.hasMSR) {
@@ -189,9 +189,9 @@ void Computer::detectFeatures()
 		}
 
 		size_t eax, ebx, ecx, edx;
-		cpuid(0x80000000, &eax, &ebx, &ecx, &edx);
+		CPU::cpuid(0x80000000, &eax, &ebx, &ecx, &edx);
 		if (eax >= 0x80000001) {
-			cpuid(0x80000001, &eax, &ebx, &ecx, &edx);
+			CPU::cpuid(0x80000001, &eax, &ebx, &ecx, &edx);
 
 			features.has3DNow = edx & (1 << 31);
 			features.hasLongMode = edx & (1 << 29);
