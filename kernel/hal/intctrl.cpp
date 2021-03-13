@@ -305,13 +305,11 @@ bool (*gpFaultIntercept)(regs* r) = nullptr;
 
 void x87EmulHandler(regs* r, void* context)
 {
-	if (x87FaultIntercept) {
-		bool handled = Vm::x87Handler(r);
-		if (handled) {
-			return;
-		}
+	bool handled = Vm::x87Handler(r);
+	if (handled) {
+		return;
 	}
-
+	
 	kprintf("Device not available\n");
 
 	displayDebugInfo(r);
