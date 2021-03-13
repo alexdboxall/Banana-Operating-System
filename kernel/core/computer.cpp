@@ -176,7 +176,7 @@ void Computer::detectFeatures()
 			features.hasAPIC = false;
 		}
 
-		features.hasAPIC = false;
+		//features.hasAPIC = false;
 
 		bool ecxCanReturnFeatures = true;
 		ecxCanReturnFeatures = false;
