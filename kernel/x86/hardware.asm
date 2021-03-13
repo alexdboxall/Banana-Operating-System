@@ -751,11 +751,9 @@ int_common_stub:
     push fs
     push gs
 
-    mov  ecx, esp		; Push us the stack
-    push ecx
-    mov  ecx, int_handler
-    call ecx			; A special call, preserves the 'eip' register
-    pop  ecx				;leave the return value 
+    push esp
+    call int_handler
+    add esp, 4
 
 	pop gs
     pop fs
@@ -784,12 +782,10 @@ syscall_common_stub:
 	mov ecx, [currentTaskTCB]				;get the address of the TCB
 	mov [ecx + 0x1C], esp
 
-    mov  ecx, esp		; Push us the stack
-    push ecx
+    push esp
     sti
-    mov  ecx, int_handler
-    call ecx			; A special call, preserves the 'eip' register
-    pop  ecx				;leave the return value 
+    call int_handler
+    add esp, 4
 
 offAForkJumpThingy:
 	pop gs
