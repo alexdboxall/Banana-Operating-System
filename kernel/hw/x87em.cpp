@@ -36,7 +36,7 @@ Float80 fpu32ToInternal(uint32_t flt)
 {
 	// float -> double
 
-	uint32_t out = 0;
+	uint64_t out = 0;
 	if (flt >> 31) {
 		out |= (1ULL << 63ULL);
 	}
