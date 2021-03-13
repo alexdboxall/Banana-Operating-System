@@ -66,15 +66,16 @@ int64_t fpuFloatToLong(Float80 flt)
 
 	// double -> int
 
+	int64_t significand = flt & 0xFFFFFFFFFFFFFULL;
+
 	int expo = ((flt >> 52) & 0x7FF) - 1023;
-	if (expo == -1) {
+	if (expo == -1 && (significand >> 51)) {
 		return 1;
 	}
 	if (expo < 0) {
 		return 0;
 	}
 
-	int64_t significand = flt & 0xFFFFFFFFFFFFFULL;
 	significand |= (1ULL << 52ULL);
 	significand >>= 52 - expo;
 
