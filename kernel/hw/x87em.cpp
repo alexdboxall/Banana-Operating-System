@@ -6,6 +6,7 @@ FPUState fpuState;
 uint32_t fpuInternalTo32(Float80 flt)
 {
 	//double -> float
+
 	uint32_t out = 0;
 	if (flt >> 63) {
 		out |= (1ULL << 31ULL);
@@ -34,6 +35,7 @@ uint64_t fpuInternalTo64(Float80 flt)
 Float80 fpu32ToInternal(uint32_t flt)
 {
 	// float -> double
+
 	uint32_t out = 0;
 	if (flt >> 31) {
 		out |= (1ULL << 63ULL);
@@ -56,22 +58,11 @@ Float80 fpu64ToInternal(uint64_t flt)
 
 int64_t fpuFloatToLong(Float80 flt)
 {
-	/*union
-	{
-		double f;
-		uint64_t i;
-	} w;
-	w.f = flt;
-	return w.i;*/
-
 	// double -> int
 
 	int64_t significand = flt & 0xFFFFFFFFFFFFFULL;
 
 	int expo = ((flt >> 52) & 0x7FF) - 1023;
-	if (expo == -1 && !(significand >> 51)) {
-		return 1;
-	}
 	if (expo < 0) {
 		return 0;
 	}
