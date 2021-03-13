@@ -58,7 +58,7 @@ _bpb:
 	_bpb.fsInfoSectorSector			dw 1
 	_bpb.sectorOfBootsectorCopy		dw 6
 	
-	filename2: db "FIRMWARELIB "						;this 12 (not 11) byte spot is actually reserved for boot filename, and I've updated join.py and INSTALLER.C to put this string here for us
+	filename2: db "FIRMWARELIB "			;this 12 (not 11) byte spot is actually reserved for boot filename, and I've updated join.py and INSTALLER.C to put this string here for us
 
 	_bpb.driveNumber				db 0x80				; Sectors per FAT
 	driveNumber db 0									; WE'RE NOT USING THE VALUE HERE, ONLY THE MEMORY ADDRESS
@@ -88,6 +88,7 @@ _main:
 
 	jmp 0:setcs							;set CS so we know we're at 07C0:0000 instead of, e.g. 0000:7C00 or even 049B:3250
 
+
 setcs:
 	xor ax, ax								;needed for stuff later on...
 	mov ds, ax
@@ -95,14 +96,14 @@ setcs:
 	mov sp, ax
 	mov ss, ax
 
+	mov [_bpb.bytesPerSector - 1], dword 0x20202020		;this overwrites bytesPerSector and sectorsPerCluster
+
 	mov [driveNumber], dl
 	push ax									;ax is zero here. used just before we jump to stage two
 	push dx									;used to reload DL at the end, will trash DH, but we set that after the pop
 	
 	;AX is already zero
 	int 0x10
-
-	mov [_bpb.bytesPerSector - 1], dword 0x20202020		;this overwrites bytesPerSector and sectorsPerCluster
 
 	xor bp, bp
 
@@ -188,9 +189,9 @@ rootdone:
 	jmp short .readFileLoop
 
 file2 db 0xFF
-errMsg2 db "NF "; "No file"
+errMsg2 db "No file"
 addstore dw 0x7E00
-errMsg db "DE ";"Disk err"
+errMsg db "Disk err"
 
 fileReadDone:
 	mov bx, 0xC000
@@ -226,10 +227,10 @@ readSectors:
 	int 0x13
 	jc short err
 
-	inc dh				;the BIOS returns (HEADS - 1) in DH, so correct this
+	inc dh				;BIOS returns one less than actual value
 
 	and cx, 0x3F		;NUM SECTORS PER CYLINDER IN CX
-	
+
 	mov bl, dh			
 	xor bh, bh			;NUM HEADS IN BX
 	
@@ -237,9 +238,6 @@ readSectors:
 	mov dx, gs			;then copy GS to DX to make it DX:AX
 
 	div cx
-
-	;AX = LBA / SECTORS PER CYLINDER
-	;DX = LBA % SECTORS PER CYLINDER
 
 	inc dl
 	mov cl, dl
@@ -256,6 +254,7 @@ readSectors:
 	and ah, 3
 	shl ah, 6
 	or cl, ah
+
 					;SECTOR ALREADY IN CL
 	mov ch, al		;CYL
 	mov ax, 0x0201	;SECTOR COUNT AND FUNCTION NUMBER
@@ -272,13 +271,12 @@ readSectors:
 err:
 	mov si, errMsg
 err2:
-	mov cl, 8
-err3:
 	mov ah, 0xE
 	lodsb
+	cmp al, 0
+	je short $
 	int 0x10
-	loop err3
-	hlt
+	jmp short err2
 
 getRoot:
 	mov eax, [_bpb.logicalSectorsPerFAT]
@@ -319,7 +317,7 @@ getNext:
 	mov eax, edx
 	call readSectors
 	
-	add bh, 5								;"add ebx, 0x500" (only 9 bits in ebx used due to the AND statement below)
+	add bh, 5								;"add ebx, 0x500" (only 9 bits in ebx used due to the and statement below)
 
 	push dword [bx]							;preserve it (es has zero)
 	call getRoot
