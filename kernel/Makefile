@@ -12,9 +12,6 @@ CC32 = i386-banana-gcc
 CXX32 = i386-banana-g++
 OBJCOPY32 = i386-banana-objcopy
 
-TARGET32_386NoACPI = Banana32_i386NoACPI
-kernel386NoACPI: common32 $(TARGET32_386NoACPI)
-
 TARGET32_386 = Banana32_i386
 kernel386: common32 $(TARGET32_386)
 
@@ -62,7 +59,7 @@ kernelCannonlake: common32 $(TARGET32_Cannonlake)
 
 #
 OPTIMISATIONS = -msoft-float -O0 -fno-strict-aliasing -fpeephole2 -fauto-inc-dec -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-stack-protector -fomit-frame-pointer -ftoplevel-reorder -freorder-functions -fdelete-null-pointer-checks -fcompare-elim -fcprop-registers -fdce -fif-conversion -fif-conversion2 -fmerge-constants -fno-reorder-blocks  -fno-reorder-blocks-and-partition -fno-prefetch-loop-arrays -fno-align-functions -falign-loops=1 -falign-labels=1 -falign-jumps=1 
-			  
+
 #
 CFLAGSCOMMON = $(WARNINGS) $(ACPI) $(OPTIMISATIONS) -march=$(TUNING) -mtune=$(TUNING) -mcld -ffreestanding -fmax-errors=5 -I $(INCPATH) -I $(LIBKPATH) -DKERNEL_CODE -D_libk
 CFLAGS32 = -c -m32 -DTHIRTYTWOBIT $(CFLAGSCOMMON) -fvisibility=hidden
@@ -96,14 +93,6 @@ common32:
 	nasm -O0 -f bin $(SOURCEDIR)/boot/BOOT1.ASM -o $(SOURCEDIR)/STAGE1.bin   -w+orphan-labels
 	nasm -O0 -f bin $(SOURCEDIR)/boot/FIRMWARE.ASM -o $(SOURCEDIR)/FIRMWARE.LIB -w+orphan-labels -i $(SOURCEDIR)/boot/
 	
-$(TARGET32_386NoACPI): $(OBJECTSNOACPI32)
-	$(CC32) -T $(SOURCEDIR)/x86/linker.ld -o $(SOURCEDIR)/JUMPER32.EXE $(SOURCEDIR)/boot.32 $(CRTI_OBJ32) $(CRTBEGIN_OBJ32) $(EXTRAFILES32) $^ $(CRTEND_OBJ32) $(CRTN_OBJ32) $(LDFLAGS32) -L$(SYSROOTDIR)
-	#$(OBJCOPY32) --localize-hidden $(SOURCEDIR)/JUMPER32.EXE
-	#$(OBJCOPY32) --discard-locals $(SOURCEDIR)/JUMPER32.EXE
-	#$(OBJCOPY32) --discard-all $(SOURCEDIR)/JUMPER32.EXE
-	$(OBJCOPY32) --remove-section .eh_frame $(SOURCEDIR)/JUMPER32.EXE
-	
-	cp $(SOURCEDIR)/JUMPER32.EXE $(SOURCEDIR)/KERNEL32.EXE
 
 $(TARGET32_386): $(OBJECTS32)
 	$(CC32) -T $(SOURCEDIR)/x86/linker.ld -o $(SOURCEDIR)/KRNL386.EXE $(SOURCEDIR)/boot.32 $(CRTI_OBJ32) $(CRTBEGIN_OBJ32) $(EXTRAFILES32) $^ $(CRTEND_OBJ32) $(CRTN_OBJ32) $(LDFLAGS32) -L$(SYSROOTDIR)

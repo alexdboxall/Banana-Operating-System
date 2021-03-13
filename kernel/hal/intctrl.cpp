@@ -10,7 +10,7 @@
 #include "hw/acpi.hpp"
 #include "hw/ports.hpp"
 #include "hw/cpu.hpp"
-#include "hw/x87em.hpp"
+#include "vm86/x87em.hpp"
 #include "vm86/vm8086.hpp"
 
 #pragma GCC optimize ("O2")
@@ -301,35 +301,21 @@ void displayProgramFault(const char* text)
 	}
 }
 
-bool (*x87FaultIntercept)(regs* r) = nullptr;
 bool (*gpFaultIntercept)(regs* r) = nullptr;
 
 void x87EmulHandler(regs* r, void* context)
 {
-	if (!x87FaultIntercept) {
-		x87FaultIntercept = x87Handler;
-
-		//Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/em8087.sys"), computer);
-	}
-
 	if (x87FaultIntercept) {
-		//turn off emulation
-		//thisCPU()->writeCR0(thisCPU()->readCR0() & ~4);
-		//int oeip = r->eip;
-		bool handled = x87FaultIntercept(r);
-		//kprintf("INSTR LENGTH = %d\n", r->eip - oeip);
-
-		//turn on emulation
-		//thisCPU()->writeCR0(thisCPU()->readCR0() | 4);
+		bool handled = Vm::x87Handler(r);
 		if (handled) {
 			return;
 		}
 	}
 
-	kprintf("General Protection Fault!\n");
+	kprintf("Device not available\n");
 
 	displayDebugInfo(r);
-	displayProgramFault("x87 not available");
+	displayProgramFault("Device not available");
 
 	Thr::terminateFromIRQ();
 }
