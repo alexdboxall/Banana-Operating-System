@@ -39,6 +39,8 @@ int TSS::setup(size_t esp, size_t eip)
 	entry->cs = 0x08;
 	entry->ds = 0x10;
 	entry->es = 0x10;
+	entry->fs = 0x10;
+	entry->gs = 0x10;
 	entry->ss = 0x10;
 
 	entry->eip = eip;

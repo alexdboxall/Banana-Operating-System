@@ -751,12 +751,6 @@ int_common_stub:
     push fs
     push gs
 
-    mov ax, 0x10   ; Load the Kernel Data Segment descriptor!
-    mov ds, ax
-    mov es, ax
-    mov fs, ax
-    mov gs, ax
-
     mov  ecx, esp		; Push us the stack
     push ecx
     mov  ecx, int_handler
@@ -787,13 +781,6 @@ syscall_common_stub:
     push fs
     push gs
 
-    mov ax, 0x10   ; Load the Kernel Data Segment descriptor!
-    mov ds, ax
-    mov es, ax
-    mov fs, ax
-    mov gs, ax
-
-	;save our current stack
 	mov ecx, [currentTaskTCB]				;get the address of the TCB
 	mov [ecx + 0x1C], esp
 
