@@ -29,7 +29,8 @@ voodooXADD:
     shr edi, 13
     and di, 3
     jnz .usermode
-    mov esi, [eax + 7 * 4]     ;KERNEL ESP
+    mov esi, [eax + 7 * 4]
+    add esp, 20
 .usermode:
 
     mov [.newStack], esi
