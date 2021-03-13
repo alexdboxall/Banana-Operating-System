@@ -69,7 +69,7 @@ int64_t fpuFloatToLong(Float80 flt)
 	int64_t significand = flt & 0xFFFFFFFFFFFFFULL;
 
 	int expo = ((flt >> 52) & 0x7FF) - 1023;
-	if (expo == -1 && (significand >> 51)) {
+	if (expo == -1 && !(significand >> 51)) {
 		return 1;
 	}
 	if (expo < 0) {
