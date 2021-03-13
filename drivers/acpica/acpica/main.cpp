@@ -249,7 +249,7 @@ UINT32 acpiWalkCallback(ACPI_HANDLE object, UINT32 nestingLevel, void* context, 
 
 	if ((info->Flags & ACPI_PCI_ROOT_BRIDGE) && name[0] == 'P') {
 		acpi->pciDetected = true;
-
+		
 		ACPI_BUFFER prtbuf;
 		prtbuf.Length = ACPI_ALLOCATE_BUFFER;
 		prtbuf.Pointer = nullptr;
@@ -387,7 +387,7 @@ void start(void* xxa)
 		params.Pointer = arg;
 
 		arg[0].Type = ACPI_TYPE_INTEGER;
-		arg[0].Integer.Value = thisCPU()->intCtrl->getName()[0] == 'A';
+		arg[0].Integer.Value = CPU::current()->intCtrl->getName()[0] == 'A';
 
 		status = AcpiEvaluateObject(NULL, (ACPI_STRING) "\\_PIC", &params, NULL);
 		if (ACPI_FAILURE(status) && status != AE_NOT_FOUND) {

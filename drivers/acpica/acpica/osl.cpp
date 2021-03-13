@@ -334,7 +334,7 @@ extern "C" {
 
 	void* AcpiOsMapMemory(ACPI_PHYSICAL_ADDRESS PhysicalAddress, ACPI_SIZE Length)
 	{
-		bool invlpg = thisCPU()->features.hasINVLPG;
+		bool invlpg = CPU::current()->features.hasINVLPG;
 		
 		int pages = (Length + 4096) / 4096;
 		size_t virt = Virt::allocateKernelVirtualPages(pages);
@@ -522,7 +522,7 @@ extern "C" {
 		ctx[0] = reinterpret_cast<size_t>(Handler);
 		ctx[1] = (size_t) Context;
 
-		thisCPU()->intCtrl->installIRQHandler(InterruptLevel, (void(*)(struct regs*, void*))Subhandler, false, ctx);
+		CPU::current()->intCtrl->installIRQHandler(InterruptLevel, (void(*)(struct regs*, void*))Subhandler, false, ctx);
 		return AE_OK;
 	}
 
