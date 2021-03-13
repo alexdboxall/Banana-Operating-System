@@ -219,6 +219,18 @@ void IOAPIC::redirect(uint8_t irq, uint64_t apic_id, uint8_t irqNumberOnLocalAPI
 	//set to fixed delivery mode
 	low &= ~0x700;
 
+	if (levelTriggered) {
+		low |= (1 << 13);
+	} else {
+		low &= ~(1 << 13);
+	}
+
+	if (activeLow) {
+		low |= (1 << 15);
+	} else {
+		low &= ~(1 << 15);
+	}
+
 	// set delivery vector
 	low &= ~0xff;
 	low |= irqNumberOnLocalAPIC;
