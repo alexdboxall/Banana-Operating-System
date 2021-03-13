@@ -182,10 +182,10 @@ void Computer::detectFeatures()
 		ecxCanReturnFeatures = false;
 
 		if (ecxCanReturnFeatures) {
-			features.hasSSE3 = cpuidCheckECX(CPUID_FEAT_ECX_SSE3);
-			features.hasSSSE3 = cpuidCheckECX(CPUID_FEAT_ECX_SSSE3);
-			features.hasSSE41 = cpuidCheckECX(CPUID_FEAT_ECX_SSE4_1);
-			features.hasSSE42 = cpuidCheckECX(CPUID_FEAT_ECX_SSE4_2);
+			features.hasSSE3 = CPU::cpuidCheckECX(CPUID_FEAT_ECX_SSE3);
+			features.hasSSSE3 = CPU::cpuidCheckECX(CPUID_FEAT_ECX_SSSE3);
+			features.hasSSE41 = CPU::cpuidCheckECX(CPUID_FEAT_ECX_SSE4_1);
+			features.hasSSE42 = CPU::cpuidCheckECX(CPUID_FEAT_ECX_SSE4_2);
 		}
 
 		size_t eax, ebx, ecx, edx;
