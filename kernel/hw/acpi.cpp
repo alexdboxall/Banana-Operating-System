@@ -274,7 +274,12 @@ void scanMADT()
 			legacyIRQFlags[irqSource] = flags;
 
 		} else if (type == 4) {
-			pointingTo += 4;
+			uint8_t processorID = a->data[pointingTo++];
+			uint16_t flags = a->data[pointingTo] | (a->data[pointingTo + 1] << 8);
+			pointingTo += 2;
+			uint8_t lintNum = a->data[pointingTo++];
+
+			kprintf("processor ID (0xFF = all) = 0x%X\nflags = 0x%X\nLINT# = 0x%X\n", processorID, flags, lintNum);
 
 		} else if (type == 5) {
 			pointingTo += 10;
