@@ -37,6 +37,7 @@ uint32_t fpuInternalTo32(Float80 flt)
 uint64_t fpuInternalTo64(Float80 flt)
 {
 	// double -> double
+	flt = (flt >> 32) | ((flt & 0xFFFFFFFFU) << 32);
 	return flt;
 }
 
@@ -68,6 +69,8 @@ Float80 fpu32ToInternal(uint32_t flt)
 Float80 fpu64ToInternal(uint64_t flt)
 {
 	// double -> double
+
+	flt = (flt >> 32) | ((flt & 0xFFFFFFFFU) << 32);
 	return flt;
 }
 
@@ -579,13 +582,13 @@ bool x87Handler(regs* r)
 		return true;
 
 	} else if (eip[0] == 0xDD && middleDigit == 0) {                    //FLD
-		uint64_t* p = (uint64_t*) (ptr + 4);
+		uint64_t* p = (uint64_t*) (ptr);
 		fpuPush(fpu64ToInternal(*p));
 		r->eip += instrLen;
 		return true;
 
 	} else if (eip[0] == 0xDD && middleDigit == 3) {                    //FSTP
-		uint64_t* p = (uint64_t*) (ptr + 4);
+		uint64_t* p = (uint64_t*) (ptr);
 		*p = fpuInternalTo64(fpuPop());
 		r->eip += instrLen;
 		return true;
