@@ -779,8 +779,9 @@ syscall_common_stub:
     push fs
     push gs
 
-	mov ecx, [currentTaskTCB]				;get the address of the TCB
-	mov [ecx + 0x1C], esp
+    ;I think this is only for forking...
+	;mov ecx, [currentTaskTCB]				;get the address of the TCB
+	;mov [ecx + 0x1C], esp
 
     push esp
     sti
