@@ -75,7 +75,7 @@ int APIC::installIRQHandler(int num, void (*handler)(regs*, void*), bool legacy,
 	kprintf("System has %d IOAPICs\n", noOfIOAPICs);
 	for (int i = 0; i < noOfIOAPICs; ++i) {
 		if (ioapics[i]->handlesGSIWithNumber(num)) {
-			ioapics[i]->redirect(num, getCPUNumber(), num + 32);
+			ioapics[i]->redirect(num, CPU::getNumber(), num + 32);
 			found = true;
 			break;
 		}

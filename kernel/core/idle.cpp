@@ -24,7 +24,7 @@ void idleFunction(void* context)
 {
 	unlockScheduler();
 
-	if (thisCPU()->features.hasTPAUSE && computer->features.hasMSR) {
+	if (CPU::current()->features.hasTPAUSE && computer->features.hasMSR) {
 		//set mode, no timeout and 
 		uint64_t msr = computer->rdmsr(0xE1);
 		computer->wrmsr(0xE1, msr & 2);	//only keep bit 1 as it is reserved

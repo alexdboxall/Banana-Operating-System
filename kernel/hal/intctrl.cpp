@@ -76,7 +76,7 @@ extern "C" uint64_t int_handler(struct regs* r)
 		asm("cli; hlt");
 	}
 
-	InterruptController* intCtrl = thisCPU()->intCtrl;
+	InterruptController* intCtrl = CPU::current()->intCtrl;
 
 	int num = r->int_no;
 
@@ -375,7 +375,7 @@ extern "C" void voodooXADD(size_t, int, int);
 
 void opcodeFault(regs* r, void* context)
 {
-	if (thisCPU()->opcodeDetectionMode) {
+	if (CPU::current()->opcodeDetectionMode) {
 		kprintf("Opcode detection: invalid opcode.\n");
 		r->eip += 25;
 		return;
@@ -560,7 +560,7 @@ void doubleFault(regs* r, void* context)
 
 InterruptController* setupInterruptController()
 {
-	if (getCPUNumber() != 0) {
+	if (CPU::getNumber() != 0) {
 		//start an APIC
 		InterruptController* controller = new APIC();
 		controller->open(0, 0, nullptr);

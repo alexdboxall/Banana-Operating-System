@@ -33,14 +33,14 @@ int Timer::read()
 
 Timer* setupTimer(int hz)
 {
-	if (getCPUNumber() != 0) {
+	if (CPU::getNumber() != 0) {
 		APICTimer* t = new APICTimer();
 		t->open(hz, 0, nullptr);
-		thisCPU()->intCtrl->addChild(t);
+		CPU::current()->intCtrl->addChild(t);
 		return t;
 	}
 
-	if (thisCPU()->intCtrl->getName()[0] == 'A' && computer->features.hasAPIC) {
+	if (CPU::current()->intCtrl->getName()[0] == 'A' && computer->features.hasAPIC) {
 		PIT* timer = new PIT();
 		computer->addChild(timer);
 		timer->open(hz, 0, nullptr);
@@ -50,7 +50,7 @@ Timer* setupTimer(int hz)
 
 		timer->close(0, 0, nullptr);
 
-		thisCPU()->intCtrl->addChild(timer2);
+		CPU::current()->intCtrl->addChild(timer2);
 
 		return timer;
 

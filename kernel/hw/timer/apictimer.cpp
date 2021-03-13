@@ -29,7 +29,7 @@ int APICTimer::open(int hz, int _irqNum, void*)
 	write(hz);
 
 	//set the memory range
-	memory[noMems].rangeStart = reinterpret_cast<APIC*>(thisCPU()->intCtrl)->getBase() + 0x300;
+	memory[noMems].rangeStart = reinterpret_cast<APIC*>(CPU::current()->intCtrl)->getBase() + 0x300;
 	memory[noMems++].rangeLength = 0x100;
 
 	//install it as a legacy handler just to keep it on the same number as the PIT was
@@ -43,7 +43,7 @@ void APICTimer::write(int hz)
 {
 	frequency = hz;
 
-	uint32_t base = reinterpret_cast<APIC*>(thisCPU()->intCtrl)->getBase();
+	uint32_t base = reinterpret_cast<APIC*>(CPU::current()->intCtrl)->getBase();
 
 	uint64_t oldticks = nanoSinceBoot;
 	*((uint32_t*) ((uint8_t*) (size_t) base + APIC_REGISTER_TIMER_DIV)) = 0x3;

@@ -315,7 +315,7 @@ void AMD_K6_read_msr(uint32_t msr, REGS* regs)
 }
 #endif
 
-void cpuid(int code, size_t* a, size_t* b, size_t* c, size_t* d)
+void CPU::cpuid(int code, size_t* a, size_t* b, size_t* c, size_t* d)
 {
 	if (code == lastCode) {
 		*a = lastA;
@@ -332,42 +332,42 @@ void cpuid(int code, size_t* a, size_t* b, size_t* c, size_t* d)
 	lastD = *d;
 }
 
-bool cpuidCheckEDX(uint32_t check)
+bool CPU::cpuidCheckEDX(uint32_t check)
 {
 	size_t eax, ebx, ecx, edx;
 	cpuid(CPUID_GETFEATURES, &eax, &ebx, &ecx, &edx);
 	return edx & check;
 }
 
-bool cpuidCheckECX(uint32_t check)
+bool CPU::cpuidCheckECX(uint32_t check)
 {
 	size_t eax, ebx, ecx, edx;
 	cpuid(CPUID_GETFEATURES, &eax, &ebx, &ecx, &edx);
 	return ecx & check;
 }
 
-bool cpuidCheckExtendedEBX(uint32_t check)
+bool CPU::cpuidCheckExtendedEBX(uint32_t check)
 {
 	size_t eax, ebx, ecx, edx;
 	cpuid(CPUID_GETEXTENDED, &eax, &ebx, &ecx, &edx);
 	return ebx & check;
 }
 
-bool cpuidCheckExtendedECX(uint32_t check)
+bool CPU::cpuidCheckExtendedECX(uint32_t check)
 {
 	size_t eax, ebx, ecx, edx;
 	cpuid(CPUID_GETEXTENDED, &eax, &ebx, &ecx, &edx);
 	return ecx & check;
 }
 
-int getCPUNumber()
+int CPU::getNumber()
 {
 	return 0;
 }
 
-CPU* thisCPU()
+CPU* CPU::current()
 {
-	return computer->cpu[getCPUNumber()];
+	return computer->cpu[CPU::getNumber()];
 }
 
 CPU::CPU(): Device("CPU")

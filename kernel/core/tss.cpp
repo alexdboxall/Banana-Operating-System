@@ -54,8 +54,8 @@ int TSS::setup(size_t esp, size_t eip)
 	tssEnt.flags = 0;
 	tssEnt.size = PLATFORM_ID == 64 ? 0 : 1;
 
-	gdtEntry = thisCPU()->gdt.addEntry(tssEnt);
-	thisCPU()->gdt.flush();
+	gdtEntry = CPU::current()->gdt.addEntry(tssEnt);
+	CPU::current()->gdt.flush();
 
 	kprintf("Setup TSS, GDT entry is 0x%X\n", gdtEntry);
 

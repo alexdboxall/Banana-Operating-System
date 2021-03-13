@@ -23,7 +23,7 @@ extern "C" void* sbrk(ptrdiff_t increment)
 		return (void*) -1;
 
 	} else {
-		bool invlpg = thisCPU()->features.hasINVLPG;
+		bool invlpg = CPU::current()->features.hasINVLPG;
 		
 		size_t oldbrk = brk;
 		int pages = (increment + 4095) / 4096;

@@ -128,7 +128,7 @@ int Device::addIRQHandler(int num, void (*handler)(regs*, void*), bool legacy, v
 		return intc->installIRQHandler(num, handler, legacy, context);
 
 	} else {
-		return thisCPU()->intCtrl->installIRQHandler(num, handler, legacy, context);
+		return CPU::current()->intCtrl->installIRQHandler(num, handler, legacy, context);
 	}
 }
 
@@ -138,7 +138,7 @@ void Device::removeIRQHandler(int num, void (*handler)(regs*, void*), bool legac
 		(reinterpret_cast<InterruptController*>(this))->uninstallIRQHandler(num, handler, legacy);
 
 	} else {
-		thisCPU()->intCtrl->uninstallIRQHandler(num, handler, legacy);
+		CPU::current()->intCtrl->uninstallIRQHandler(num, handler, legacy);
 	}
 }
 

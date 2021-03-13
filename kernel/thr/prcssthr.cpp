@@ -30,7 +30,7 @@ extern "C" void switchToThreadASMFirstTime(ThreadControlBlock * nextThreadToRun)
 
 extern "C" void changeTSS()
 {
-	thisCPU()->tss.setESP(VIRT_APP_STACK_KRNL_TOP - SIZE_APP_STACK_TOTAL * currentTaskTCB->rtid);
+	CPU::current()->tss.setESP(VIRT_APP_STACK_KRNL_TOP - SIZE_APP_STACK_TOTAL * currentTaskTCB->rtid);
 }
 
 void switchToThread(ThreadControlBlock* nextThreadToRun)
@@ -323,7 +323,7 @@ void schedule()
 
 void updateTimeUsed()
 {
-	if (!thisCPU()->features.hasTSC) return;
+	if (!CPU::current()->features.hasTSC) return;
 
 	static uint64_t currentCount = 0;
 	static uint64_t elapsed = 0;

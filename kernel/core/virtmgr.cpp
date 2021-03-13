@@ -234,11 +234,11 @@ namespace Virt
 
 size_t VAS::allocatePages(int count, int flags)
 {
-	bool invlpg = thisCPU()->features.hasINVLPG;
+	bool invlpg = CPU::current()->features.hasINVLPG;
 
 	if (supervisorVAS) {
 		size_t virt = Virt::allocateKernelVirtualPages(count);
-		if (virt >= VIRT_KERNEL_BASE && thisCPU()->features.hasGlobalPages) {
+		if (virt >= VIRT_KERNEL_BASE && CPU::current()->features.hasGlobalPages) {
 			flags |= PAGE_GLOBAL;
 		}
 		for (int i = 0; i < count; ++i) {
@@ -388,31 +388,31 @@ VAS::VAS(bool kernel) {
 
 	//map in the kernel
 	for (int i = 768; i < 1024; ++i) {
-		pageDirectoryBase[i] = PAGE_PRESENT | PAGE_SUPERVISOR | PAGE_WRITABLE | (0x100000 + (i - 768) * 4096) | (thisCPU()->features.hasGlobalPages ? PAGE_GLOBAL : 0);
+		pageDirectoryBase[i] = PAGE_PRESENT | PAGE_SUPERVISOR | PAGE_WRITABLE | (0x100000 + (i - 768) * 4096) | (CPU::current()->features.hasGlobalPages ? PAGE_GLOBAL : 0);
 
 		if (1 && (i - 768) >= 64 && (i - 768) < 64 * 3) {
 			pageDirectoryBase[i] = PAGE_NOT_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR;
 		}
 	}
 
-	pageDirectoryBase[0xC20 / 4] = 0x4003 | (thisCPU()->features.hasGlobalPages ? PAGE_GLOBAL : 0);
+	pageDirectoryBase[0xC20 / 4] = 0x4003 | (CPU::current()->features.hasGlobalPages ? PAGE_GLOBAL : 0);
 
 	//the first VAS on each CPU gets called with a different constructor
-	setCPUSpecific((size_t) thisCPU()->cpuSpecificPhysAddr);
+	setCPUSpecific((size_t) CPU::current()->cpuSpecificPhysAddr);
 
 	//set up recursive mapping (wizardry!)
-	pageDirectoryBase[1023] = (size_t) pageDirectoryBasePhysical | PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR | (thisCPU()->features.hasGlobalPages ? PAGE_GLOBAL : 0);
+	pageDirectoryBase[1023] = (size_t) pageDirectoryBasePhysical | PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR | (CPU::current()->features.hasGlobalPages ? PAGE_GLOBAL : 0);
 
-	if (!strcmp(thisCPU()->getName(), "Intel Pentium")) {
+	if (!strcmp(CPU::current()->getName(), "Intel Pentium")) {
 		disableIRQs();
-		mapPage((*getPageTableEntry(thisCPU()->idt.getPointerToInvalidOpcodeEntryForF00F())) & ~0xFFF, thisCPU()->idt.getPointerToInvalidOpcodeEntryForF00F() & ~0xFFF, PAGE_PRESENT | PAGE_SUPERVISOR | PAGE_CACHE_DISABLE);
+		mapPage((*getPageTableEntry(CPU::current()->idt.getPointerToInvalidOpcodeEntryForF00F())) & ~0xFFF, CPU::current()->idt.getPointerToInvalidOpcodeEntryForF00F() & ~0xFFF, PAGE_PRESENT | PAGE_SUPERVISOR | PAGE_CACHE_DISABLE);
 		enableIRQs();
 	}
 }
 
 size_t VAS::mapRange(size_t physicalAddr, size_t virtualAddr, int pages, int flags)
 {
-	bool invlpg = thisCPU()->features.hasINVLPG;
+	bool invlpg = CPU::current()->features.hasINVLPG;
 
 	for (int i = 0; i < pages; ++i) {
 		mapPage(physicalAddr + i * 4096, virtualAddr + i * 4096, flags);
@@ -477,7 +477,7 @@ void VAS::reflagRange(size_t virtualAddr, int pages, int andFlags, int orFlags)
 
 void VAS::setToWriteCombining(size_t virtualAddr, int pages)
 {
-	if (thisCPU()->features.hasPAT) {
+	if (CPU::current()->features.hasPAT) {
 		reflagRange(virtualAddr, pages, -1, PAGE_PAT);
 	}
 }
