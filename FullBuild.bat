@@ -17,16 +17,16 @@ rem git remote add origin https://github.com/A22347/Banana-OS.git
 rem git push -u origin master
  
 cd firmware\BOOT2
-call build
+rem call build
 cd ..\INSTALLER
-call build
+rem call build
 cd ..\..
 
 cd applications
-call build
+rem call build
 
 cd ..\drivers
-call build
+rem call build
 
 cd ..
 
@@ -41,27 +41,13 @@ make -j4 TUNING=pentium kernelPentium || pause
 make clean || pause
 make -j4 TUNING=pentium2 kernelPentium2 || pause
 make clean || pause
-make -j4 TUNING=pentium3 kernelPentium3 || pause
-make clean || pause
 make -j4 TUNING=pentium4 kernelPentium4 || pause
 make clean || pause
-make -j4 TUNING=core2 kernelCore2 || pause
-make clean || pause
 make -j4 TUNING=nehalem kernelNehalem || pause
-make clean || pause
-make -j4 TUNING=westmere kernelWestmere || pause
-make clean || pause
-make -j4 TUNING=sandybridge kernelSandy || pause
-make clean || pause
-make -j4 TUNING=ivybridge kernelIvy || pause
 make clean || pause
 make -j4 TUNING=haswell kernelHaswell || pause
 make clean || pause
 make -j4 TUNING=broadwell kernelBroadwell || pause
-make clean || pause
-make -j4 TUNING=skylake kernelSkylake || pause
-make clean || pause
-make -j4 TUNING=cannonlake kernelCannonlake || pause
 
 D:
 cd D:/Users/Alex/Desktop/Banana/kernel

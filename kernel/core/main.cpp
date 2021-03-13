@@ -17,7 +17,7 @@
 Minimum System Requirements:
 
 	CPU:	Intel 386 or better (hopefully, 486 is the oldest tested)
-	RAM:	4 MB
+	RAM:	4 MB (8 MB to install it)
 	HDD:	64 MB
 
 	VGA compatible video card
@@ -41,7 +41,19 @@ Dev		Device Subsystem
 Dbg		Debugging
 Fs		Filesystem
 Reg		Registry
-Vm		Virtual 8086
+Vm		x86 Virtualisation
+*/
+
+/*
+*									New (used in kernel)		New (detected by kernel)
+KERNEL32.EXE		i386			
+KRNL486.EXE			i486			BSWAP, CMPXCHG				INVLPG
+KRNL586.EXE			Pentium			CMPXCHG8B					CPUID, RDTSC, RDMSR, WRMSR
+KRNLP2.EXE			Pentium II		CMOVcc						MMX, SYSENTER, SYSEXIT
+KRNLP4.EXE			Pentium IV									SSE and stuff, etc.
+KRNLNHLM.EXE		Nehalem			POPCNT
+KRNLHWEL.EXE		Haswell			More bit manipulations
+KRNLBWEL.EXE		Broadwell		ADCX, ADOX
 */
 
 extern "C" {
