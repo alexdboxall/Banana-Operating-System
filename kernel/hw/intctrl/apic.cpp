@@ -135,6 +135,7 @@ int APIC::open(int, int, void*)
 
 	uint32_t* ptr = (uint32_t*) (size_t) (getBase() + 0xf0);
 
+	//get current register data
 	uint32_t val = *ptr;
 
 	//enable the thing
@@ -143,7 +144,24 @@ int APIC::open(int, int, void*)
 	//spurious IRQ is now at 0xFF
 	val |= 0xFF;
 
+	//set the new value
 	*ptr = val;
+
+	//set NMIs 
+	for (int i = 0; i < nextAPICNMI; ++i) {
+		uint8_t processorID = apicNMIInfo[i] & 0xFF;
+		uint16_t flags = (apicNMIInfo[i] >> 8) & 0xFFFF;
+		uint8_t lint = (apicNMIInfo[i] >> 24) & 0xFF;
+
+		if (processorID == 0xFF/* || processorID == thisAPIC*/) {
+			uint32_t* ptr = (uint32_t*) (size_t) (getBase() + (lint == 1 ? 0x360 : 0x350));
+
+			uint32_t data = *ptr;
+			data &= ~0xFF;
+			data |= 0x2;		//point NMI to IRQ 2
+			*ptr = data;
+		}
+	}
 
 	return 0;
 }

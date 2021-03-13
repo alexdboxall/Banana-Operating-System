@@ -86,6 +86,8 @@ uint8_t ioapicFoundInMADT[MAX_IOAPICS];		//the IDs of IOAPICs found on the syste
 uint8_t ioapicDiscoveryNumber = 0;	//ioapicFoundInMADT[ioapicDiscoveryNumber++] = id;
 uint8_t legacyIRQRemaps[16] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 uint16_t legacyIRQFlags[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+uint32_t apicNMIInfo[MAX_IOAPICS];
+int nextAPICNMI;
 
 uint8_t* RSDPpointer;
 uint8_t* RSDTpointer;
@@ -274,10 +276,12 @@ void scanMADT()
 			legacyIRQFlags[irqSource] = flags;
 
 		} else if (type == 4) {
-			uint8_t processorID = a->data[pointingTo++];
-			uint16_t flags = a->data[pointingTo] | (a->data[pointingTo + 1] << 8);
+			uint32_t processorID = a->data[pointingTo++];
+			uint32_t flags = a->data[pointingTo] | (a->data[pointingTo + 1] << 8);
 			pointingTo += 2;
-			uint8_t lintNum = a->data[pointingTo++];
+			uint32_t lintNum = a->data[pointingTo++];
+
+			apicNMIInfo[nextAPICNMI++] = processorID | (flags << 8) | (lintNum << 24);
 
 			kprintf("processor ID (0xFF = all) = 0x%X\nflags = 0x%X\nLINT# = 0x%X\n", processorID, flags, lintNum);
 
