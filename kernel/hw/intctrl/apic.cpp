@@ -59,9 +59,18 @@ void APIC::disable()
 
 int APIC::installIRQHandler(int num, void (*handler)(regs*, void*), bool legacy, void* context)
 {
+	bool levelTriggered = false;
+	bool activeLow = false;
+
 	if (legacy) {
 		if (num < 16) {
 			num = legacyIRQRemaps[num];
+			if (legacyIRQFlags[num] & 2) {
+				activeLow = true;
+			}
+			if (legacyIRQFlags[num] & 8) {
+				levelTriggered = false;
+			}
 		} else {
 			panic("[installIRQHandler] Legacy IRQ with number 16 or higher");
 		}
@@ -75,7 +84,7 @@ int APIC::installIRQHandler(int num, void (*handler)(regs*, void*), bool legacy,
 	kprintf("System has %d IOAPICs\n", noOfIOAPICs);
 	for (int i = 0; i < noOfIOAPICs; ++i) {
 		if (ioapics[i]->handlesGSIWithNumber(num)) {
-			ioapics[i]->redirect(num, CPU::getNumber(), num + 32);
+			ioapics[i]->redirect(num, CPU::getNumber(), num + 32, levelTriggered, activeLow);
 			found = true;
 			break;
 		}
@@ -121,13 +130,19 @@ uint32_t APIC::getBase()
 
 int APIC::open(int, int, void*)
 {
-	uint32_t* ptr = (uint32_t*) (size_t) (getBase() + 0xf0);
-
 	memory[noMems].rangeStart = getBase();
 	memory[noMems++].rangeLength = 0x100;
 
+	uint32_t* ptr = (uint32_t*) (size_t) (getBase() + 0xf0);
+
 	uint32_t val = *ptr;
+
+	//enable the thing
 	val |= (1 << 8);
+
+	//spurious IRQ is now at 0xFF
+	val |= 0xFF;
+
 	*ptr = val;
 
 	return 0;
@@ -181,7 +196,7 @@ void IOAPIC::write(int reg, int val)
 	ioapic[4] = (uint32_t) val;
 }
 
-void IOAPIC::redirect(uint8_t irq, uint64_t apic_id, uint8_t irqNumberOnLocalAPIC)
+void IOAPIC::redirect(uint8_t irq, uint64_t apic_id, uint8_t irqNumberOnLocalAPIC, bool levelTriggered, bool activeLow)
 {
 	const uint32_t low_index = 0x10 + irq * 2;
 	const uint32_t high_index = 0x10 + irq * 2 + 1;

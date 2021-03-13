@@ -19,7 +19,7 @@ public:
 
 	bool handlesGSIWithNumber(unsigned number);
 
-	void redirect(uint8_t irq, uint64_t apic_id, uint8_t vector);
+	void redirect(uint8_t irq, uint64_t apic_id, uint8_t vector, bool levelTriggered = false, bool activeLow = false);
 
 	IOAPIC();
 

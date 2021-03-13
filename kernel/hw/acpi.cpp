@@ -85,6 +85,7 @@ uint32_t ioapicAddresses[MAX_IOAPICS];
 uint8_t ioapicFoundInMADT[MAX_IOAPICS];		//the IDs of IOAPICs found on the system (using the MADT ACPI table)
 uint8_t ioapicDiscoveryNumber = 0;	//ioapicFoundInMADT[ioapicDiscoveryNumber++] = id;
 uint8_t legacyIRQRemaps[16] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+uint16_t legacyIRQFlags[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 uint8_t* RSDPpointer;
 uint8_t* RSDTpointer;
@@ -266,9 +267,11 @@ void scanMADT()
 			uint8_t irqSource = a->data[pointingTo++];
 			uint32_t globalSysInt = a->data[pointingTo] | a->data[pointingTo + 1] << 8 | a->data[pointingTo + 2] << 16 | a->data[pointingTo + 3] << 24;
 			pointingTo += 4;
+			uint16_t flags = a->data[pointingTo] | (a->data[pointingTo + 1] << 8);
 			pointingTo += 2;
 
 			legacyIRQRemaps[irqSource] = globalSysInt;
+			legacyIRQFlags[irqSource] = flags;
 
 		} else if (type == 4) {
 			pointingTo += 4;

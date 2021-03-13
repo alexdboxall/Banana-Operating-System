@@ -164,6 +164,7 @@ extern uint32_t ioapicAddresses[MAX_IOAPICS];
 extern uint8_t ioapicFoundInMADT[MAX_IOAPICS];		//the IDs of IOAPICs found on the system (using the MADT ACPI table)
 extern uint8_t ioapicDiscoveryNumber;	//ioapicFoundInMADT[ioapicDiscoveryNumber++] = id;
 extern uint8_t legacyIRQRemaps[16];
+extern uint16_t legacyIRQFlags[16];
 
 void scanMADT();
 
