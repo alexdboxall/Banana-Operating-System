@@ -849,7 +849,7 @@ uint8_t* CPU::decodeAddress(regs* r, int* instrLenOut, bool* registerOnlyOut, ui
 		else if (base == 1) actBase = r->ecx;
 		else if (base == 2) actBase = r->edx;
 		else if (base == 3) actBase = r->ebx;
-		else if (base == 4) actBase = fromKernel ? r->esp + (4 * 4) : r->useresp;		//plus 5 * 4 because error code, irq num, EIP, EFLAGS, CS get pushed before this
+		else if (base == 4) actBase = fromKernel ? r->esp + (5 * 4) : r->useresp;		//plus 5 * 4 because error code, irq num, EIP, EFLAGS, CS get pushed before this
 		else if (base == 5) actBase = r->ebp;
 		else if (base == 6) actBase = r->esi;
 		else if (base == 7) actBase = r->edi;
