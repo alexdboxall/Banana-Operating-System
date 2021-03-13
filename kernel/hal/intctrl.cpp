@@ -314,13 +314,13 @@ void x87EmulHandler(regs* r, void* context)
 
 	if (x87FaultIntercept) {
 		//turn off emulation
-		thisCPU()->writeCR0(thisCPU()->readCR0() & ~4);
-		int oeip = r->eip;
+		//thisCPU()->writeCR0(thisCPU()->readCR0() & ~4);
+		//int oeip = r->eip;
 		bool handled = x87FaultIntercept(r);
-		kprintf("INSTR LENGTH = %d\n", r->eip - oeip);
+		//kprintf("INSTR LENGTH = %d\n", r->eip - oeip);
 
 		//turn on emulation
-		thisCPU()->writeCR0(thisCPU()->readCR0() | 4);
+		//thisCPU()->writeCR0(thisCPU()->readCR0() | 4);
 		if (handled) {
 			return;
 		}
