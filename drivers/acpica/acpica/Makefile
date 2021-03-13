@@ -13,7 +13,8 @@ CC64=x86_64-banana-gcc
 LD64=x86_64-banana-ld
 
 ASFLAGS=
-CXXFLAGS=
+CXXFLAGS=-march=pentium -mtune=pentium
+CFLAGS=-march=pentium -mtune=pentium
 LDFLAGS=-g -T D:/Users/Alex/Desktop/Banana/drivers/dlink.ld
 
 CXXOBJECTS32 = $(patsubst %.cpp, %.32, $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp) $(wildcard */*/*/*.cpp) $(wildcard **/*.cpp))

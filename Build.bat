@@ -23,7 +23,12 @@ cd kernel
 cp crti.322 crti.32
 cp crtn.322 crtn.32
 
-rem make clean || pause
+make clean || pause
+cp crti.322 crti.32
+cp crtn.322 crtn.32
+make -j4 kernel486 TUNING=i486 || (pause && exit)
+
+make clean || pause
 cp crti.322 crti.32
 cp crtn.322 crtn.32
 make -j4 kernel386 TUNING=i386 || (pause && exit)
