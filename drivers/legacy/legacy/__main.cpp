@@ -68,6 +68,7 @@ void ISA::doSoundblaster()
 	outb(0x226, 0);
 
 	if (inb(0x22A) == 0xAA) {
+		//panic("Soundblaster IS SUPPORTED!! :)");
 		SoundBlaster16* sb = new SoundBlaster16();
 		addChild(sb);
 		sb->open(0, 0, nullptr);
@@ -75,6 +76,8 @@ void ISA::doSoundblaster()
 		extern void sb16Demo(void*);
 		//sb16Demo((void*) sb);
 		kernelProcess->createThread(sb16Demo, (void*) sb, 111);
+	} else {
+		//panic("Soundblaster is *NOT* supported!! :(");
 	}
 }
 
