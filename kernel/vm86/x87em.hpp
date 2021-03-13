@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "vm86/intctrl.hpp"
+#include "hal/intctrl.hpp"
 
 namespace Vm
 {
