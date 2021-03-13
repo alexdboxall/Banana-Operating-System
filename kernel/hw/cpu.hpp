@@ -319,6 +319,7 @@ public:
 
 	static void AMD_K6_write_msr(uint32_t msr, uint32_t v1, uint32_t v2, REGS* regs);
 	static void AMD_K6_read_msr(uint32_t msr, REGS* regs);
+	static void AMD_K6_writeback(int family, int model, int stepping);
 
 	static char* lookupAMDName(uint8_t a, uint8_t b);
 	static char* lookupIntelName(uint8_t a, uint8_t b);

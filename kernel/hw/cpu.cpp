@@ -36,7 +36,6 @@ size_t lastD = 0;
 #define CPUID_VENDOR_MICROSOFT_HV "Microsoft Hv"
 #define CPUID_VENDOR_PARALLELS    " lrpepyh vr"
 
-#ifndef JUMPER32
 char cpuNameList[42][16] = {
 	"i486 DX",		//0
 	"i486 SX",		//1
@@ -303,7 +302,6 @@ void CPU::AMD_K6_read_msr(uint32_t msr, REGS* regs)
 	);
 	asm __volatile__("popa");
 }
-#endif
 
 void CPU::cpuid(int code, size_t* a, size_t* b, size_t* c, size_t* d)
 {
