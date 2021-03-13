@@ -579,13 +579,13 @@ bool x87Handler(regs* r)
 		return true;
 
 	} else if (eip[0] == 0xDD && middleDigit == 0) {                    //FLD
-		uint64_t* p = (uint64_t*) (ptr - 4);
+		uint64_t* p = (uint64_t*) (ptr + 4);
 		fpuPush(fpu64ToInternal(*p));
 		r->eip += instrLen;
 		return true;
 
 	} else if (eip[0] == 0xDD && middleDigit == 3) {                    //FSTP
-		uint64_t* p = (uint64_t*) (ptr - 4);
+		uint64_t* p = (uint64_t*) (ptr + 4);
 		*p = fpuInternalTo64(fpuPop());
 		r->eip += instrLen;
 		return true;
