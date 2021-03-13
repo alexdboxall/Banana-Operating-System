@@ -308,6 +308,20 @@ public:
 	static bool cpuidCheckECX(uint32_t check);
 	static bool cpuidCheckExtendedEBX(uint32_t check);
 	static bool cpuidCheckExtendedECX(uint32_t check);
+
+	static void AMD_K6_write_msr(uint32_t msr, uint32_t v1, uint32_t v2, REGS* regs);
+	static void AMD_K6_read_msr(uint32_t msr, REGS* regs);
+
+	static char* lookupAMDName(uint8_t a, uint8_t b);
+	static char* lookupIntelName(uint8_t a, uint8_t b);
+
+	struct REGS
+	{
+		size_t eax;
+		size_t ebx;
+		size_t ecx;
+		size_t edx;
+	};
 };
 
 

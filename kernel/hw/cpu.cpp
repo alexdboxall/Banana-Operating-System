@@ -81,7 +81,7 @@ char cpuNameList[42][16] = {
 	"Jaguar (Puma)",//40
 };
 
-char* lookupAMDCPUName(uint8_t a, uint8_t b)
+char* CPU::lookupAMDName(uint8_t a, uint8_t b)
 {
 	if (a == 0x04) {
 		if (b == 0x03) return cpuNameList[26];
@@ -154,7 +154,7 @@ char* lookupAMDCPUName(uint8_t a, uint8_t b)
 	return (char*) "CPU";
 }
 
-char* lookupIntelCPUName(uint8_t a, uint8_t b)
+char* CPU::lookupIntelName(uint8_t a, uint8_t b)
 {
 	if (a == 0x04) {
 		if (b == 0x00) return cpuNameList[0];
@@ -232,17 +232,7 @@ char* lookupIntelCPUName(uint8_t a, uint8_t b)
 }
 
 
-struct REGS
-{
-	size_t eax;
-	size_t ebx;
-	size_t ecx;
-	size_t edx;
-};
-void AMD_K6_write_msr(uint32_t msr, uint32_t v1, uint32_t v2, REGS* regs);
-void AMD_K6_read_msr(uint32_t msr, REGS* regs);
-
-void AMD_K6_writeback(int family, int model, int stepping)
+void CPU::AMD_K6_writeback(int family, int model, int stepping)
 {
 	/* mem_end == top of memory in bytes */
 	int mem = (Phys::highestMem >> 20) / 4; /* turn into 4mb aligned pages */
@@ -279,7 +269,7 @@ void AMD_K6_writeback(int family, int model, int stepping)
 	}
 }
 
-void AMD_K6_write_msr(uint32_t msr, uint32_t v1, uint32_t v2, REGS* regs)
+void CPU::AMD_K6_write_msr(uint32_t msr, uint32_t v1, uint32_t v2, REGS* regs)
 {
 	asm __volatile__("pusha");
 	asm __volatile__(
@@ -297,7 +287,7 @@ void AMD_K6_write_msr(uint32_t msr, uint32_t v1, uint32_t v2, REGS* regs)
 
 }
 
-void AMD_K6_read_msr(uint32_t msr, REGS* regs)
+void CPU::AMD_K6_read_msr(uint32_t msr, REGS* regs)
 {
 	asm __volatile__("pusha");
 	asm __volatile__(
@@ -531,7 +521,7 @@ void CPU::detectFeatures()
 		if (vendor == CPUVendor::Intel) {
 			char n[32];
 			strcpy(n, "Intel ");
-			strcat(n, lookupIntelCPUName(familyID, model));
+			strcat(n, lookupIntelName(familyID, model));
 			setName(n);
 
 			if (!strcmp(humanName, "Intel Pentium Pro")) {
@@ -543,7 +533,7 @@ void CPU::detectFeatures()
 		} else if (vendor == CPUVendor::AMD) {
 			char n[32];
 			strcpy(n, "AMD ");
-			strcat(n, lookupAMDCPUName(familyID, model));
+			strcat(n, lookupAMDName(familyID, model));
 			setName(n);
 
 			//more dodgy CPUID return values
