@@ -15,7 +15,6 @@ uint32_t fpuInternalTo32(Float80 flt)
 	uint64_t significand = flt & 0xFFFFFFFFFFFFFULL;
 	int64_t expo = ((flt >> 52) & 0x7FF) - 1023 + 127;
 	if (expo < 0 || expo > 255) {
-		panic("HMMM...");
 		//underflow / overflow
 		return 0;
 	}
@@ -36,7 +35,7 @@ Float80 fpu32ToInternal(uint32_t flt)
 {
 	// float -> double
 
-	uint64_t out = 0;
+	uint64_t out = 0;				//change to uint32_t if you want walkie-talkie audio re-recorded with a toy microphone, played back on a toaster
 	if (flt >> 31) {
 		out |= (1ULL << 63ULL);
 	}
@@ -136,25 +135,25 @@ Float80 fpuGetPi()
 
 Float80 fpuGetLog2E()
 {
-	panic("AHA!");
+	panic("fpuGetLog2E");
 	return 0xDEADBEEF;
 }
 
 Float80 fpuGetLogE2()
 {
-	panic("AHA!");
+	panic("fpuGetLogE2");
 	return 0xDEADBEEF;
 }
 
 Float80 fpuGetLog210()
 {
-	panic("AHA!");
+	panic("fpuGetLog210");
 	return 0xDEADBEEF;
 }
 
 Float80 fpuGetLog102()
 {
-	panic("AHA!");
+	panic("fpuGetLog102");
 	return 0xDEADBEEF;
 }
 
@@ -302,38 +301,30 @@ bool x87Handler(regs* r)
 		case 0xE0:
 			fpuSetReg(0, fpuChs(fpuGetReg(0)));
 			r->eip += 2;
-			panic("NOT IMPL 1.");
 			return true;
 		case 0xE1:              //FABS
 			fpuSetReg(0, fpuAbs(fpuGetReg(0)));
 			r->eip += 2;
-			panic("NOT IMPL 2.");
 			return true;
-		
 		case 0xE9:              //FLD1
 			fpuPush(fpuGetLog210());
 			r->eip += 2;
-			panic("NOT IMPL 4.");
 			return true;
 		case 0xEA:              //FLD1
 			fpuPush(fpuGetLog2E());
 			r->eip += 2;
-			panic("NOT IMPL 5.");
 			return true;
 		case 0xEB:              //FLD1
 			fpuPush(fpuGetPi());
 			r->eip += 2;
-			panic("NOT IMPL 6.");
 			return true;
 		case 0xEC:              //FLD1
 			fpuPush(fpuGetLog102());
 			r->eip += 2;
-			panic("NOT IMPL 7.");
 			return true;
 		case 0xED:              //FLD1
 			fpuPush(fpuGetLogE2());
 			r->eip += 2;
-			panic("NOT IMPL8.");
 			return true;
 		
 		default:
@@ -342,12 +333,11 @@ bool x87Handler(regs* r)
 	}
 
 	if (eip[0] == 0xD8 && eip[1] >= 0xC0 && eip[1] <= 0xC7) {           //FADD
-		panic("NOT IMPLEMENTED");
 		fpuSetReg(0, fpuAdd(fpuGetReg(0), fpuGetReg(eip[1] - 0xC0)));
 		r->eip += 2;
 		return true;
 
-	/*} else if (eip[0] == 0xD8 && eip[1] >= 0xC8 && eip[1] <= 0xCF) {     //FMUL
+	} else if (eip[0] == 0xD8 && eip[1] >= 0xC8 && eip[1] <= 0xCF) {     //FMUL
 		fpuSetReg(0, fpuMultiply(fpuGetReg(0), fpuGetReg(eip[1] - 0xC8)));
 		r->eip += 2;
 		return true;
@@ -377,16 +367,15 @@ bool x87Handler(regs* r)
 		fpuSetReg(0, fpuDivide(fpuGetReg(0), fpuGetReg(eip[1] - 0xF0)));
 		r->eip += 2;
 		fpuPop();
-		return true;*/
+		return true;
 		
 	} else if (eip[0] == 0xD8 && eip[1] >= 0xF8 /*&& eip[1] <= 0xFF*/) {     //FDIVRP
-		panic("NOT IMPLEMENTED");
 		fpuSetReg(0, fpuDivide(fpuGetReg(eip[1] - 0xF8), fpuGetReg(0)));
 		r->eip += 2;
 		fpuPop();
 		return true;
 
-	/*} else if (eip[0] == 0xD9 && eip[1] >= 0xC0 && eip[1] <= 0xC7) {      //FLD
+	} else if (eip[0] == 0xD9 && eip[1] >= 0xC0 && eip[1] <= 0xC7) {      //FLD
 		fpuPush(fpuGetReg(eip[1] - 0xC0));
 		r->eip += 2;
 		return true;
@@ -438,13 +427,12 @@ bool x87Handler(regs* r)
 		return true;*/
 
 	} else if (eip[0] == 0xDE && eip[1] >= 0xF8 /*&& eip[1] <= 0xFF*/) {     //FDIVP
-		panic("NOT IMPLEMENTED");
 		fpuSetReg(eip[1] - 0xF8, fpuDivide(fpuGetReg(eip[1] - 0xF8), fpuGetReg(0)));
 		r->eip += 2;
 		fpuPop();
 		return true;
 
-	/*} else if (eip[0] == 0xDE && eip[1] >= 0xF0 && eip[1] <= 0xF7) {     //FDIVRP
+	} else if (eip[0] == 0xDE && eip[1] >= 0xF0 && eip[1] <= 0xF7) {     //FDIVRP
 		fpuSetReg(eip[1] - 0xF0, fpuDivide(fpuGetReg(0), fpuGetReg(eip[1] - 0xF0)));
 		r->eip += 2;
 		fpuPop();
@@ -527,7 +515,7 @@ bool x87Handler(regs* r)
 		fpuSetReg(0, fpuDivide(fpu32ToInternal(*p), fpuGetReg(0)));
 		r->eip += instrLen;
 		return true;
-		*/
+		
 	} else if (eip[0] == 0xD9 && middleDigit == 0) {                    //FLD
 		uint32_t* p = (uint32_t*) ptr;
 		fpuPush(fpu32ToInternal(*p));
@@ -552,7 +540,7 @@ bool x87Handler(regs* r)
 		r->eip += instrLen;
 		return true;
 
-	/*} else if (eip[0] == 0xD9 && middleDigit == 3) {                    //FSTP
+	} else if (eip[0] == 0xD9 && middleDigit == 3) {                    //FSTP
 		uint32_t* p = (uint32_t*) ptr;
 		*p = fpuInternalTo32(fpuPop());
 		r->eip += instrLen;
@@ -598,9 +586,9 @@ bool x87Handler(regs* r)
 		uint32_t* p = (uint32_t*) ptr;
 		*p = fpuFloatToLong(fpuGetReg(0));
 		r->eip += instrLen;
-		return true;*/
+		return true;
 
-	/*} else if (eip[0] == 0xDC && middleDigit == 0) {                    //FADD
+	} else if (eip[0] == 0xDC && middleDigit == 0) {                    //FADD
 		uint64_t* p = (uint64_t*) ptr;
 		fpuSetReg(0, fpuAdd(fpuGetReg(0), fpu64ToInternal(*p)));
 		r->eip += instrLen;
@@ -649,15 +637,13 @@ bool x87Handler(regs* r)
 		r->eip += instrLen;
 		return true;
 
-		*/
-
-	/*} else if (eip[0] == 0xDD && middleDigit == 2) {                    //FST
+	} else if (eip[0] == 0xDD && middleDigit == 2) {                    //FST
 		uint64_t* p = (uint64_t*) ptr;
 		*p = fpuInternalTo64(fpuGetReg(0));
 		r->eip += instrLen;
-		return true;*/
+		return true;
 
-	/*} else if (eip[0] == 0xDE && middleDigit == 1) {                    //FIMUL 16
+	} else if (eip[0] == 0xDE && middleDigit == 1) {                    //FIMUL 16
 		uint16_t* p = (uint16_t*) ptr;
 		fpuSetReg(0, fpuMultiply(fpuGetReg(0), fpuLongToFloat(*p)));
 		r->eip += instrLen;
@@ -674,7 +660,6 @@ bool x87Handler(regs* r)
 		*p = fpuFloatToLong(fpuPop());
 		r->eip += instrLen;
 		return true;
-	*/
 	}
 
 	return false;
