@@ -1,6 +1,7 @@
 #include "thr/prcssthr.hpp"
 #include "sys/syscalls.hpp"
 #include "hal/intctrl.hpp"
+#include "hal/timer.hpp"
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -14,7 +15,7 @@ namespace Sys
 	/// <summary>
 	/// Yields the currently running thread's timeslice.
 	/// </summary>
-	/// <returns>Always returns zero.</returns>
+	/// <returns>Returns a random value based on the system timer.</returns>
 	/// 
 	uint64_t yield(regs* r)
 	{
@@ -22,7 +23,7 @@ namespace Sys
 		schedule();
 		unlockScheduler();
 
-		return nanoSinceBoot;
+		return nanoSinceBoot >> 24;
 	}
 }
 
