@@ -34,13 +34,6 @@ namespace Vm
 		outb(port, val);
 	}
 
-	void vm8086EntryPoint(void* v)
-	{
-		unlockScheduler();
-		asm("sti");
-		goToVM86(currentTaskTCB->vm86IP, currentTaskTCB->vm86CS, currentTaskTCB->vm86SP, currentTaskTCB->vm86SS);
-	}
-
 	uint32_t realToLinear(uint16_t seg, uint16_t off)
 	{
 		return (((uint32_t) seg) << 4) + ((uint32_t) off);
@@ -60,32 +53,29 @@ namespace Vm
 	bool vmReady = false;
 	bool vmDone = false;
 	uint32_t vmRetV;
-	void* vmContext;
 
-	void mainloop2(void* context)
+	void mainloop2()
 	{
-		kprintf("VM is ready and waiting...\n");
 		lockScheduler();
 		vmReady = true;
-		vmContext = context;
 		blockTaskWithSchedulerLockAlreadyHeld(TaskState::Paused);
-		vm8086EntryPoint(context);
+		asm volatile ("sti");
+		goToVM86(currentTaskTCB->vm86IP, currentTaskTCB->vm86CS, currentTaskTCB->vm86SP, currentTaskTCB->vm86SS);
 	}
 
 	void mainloop3(size_t retv)
 	{
-		kprintf("VM is done and waiting...\n");
 		lockScheduler();
 		vmDone = true;
 		vmRetV = retv;
 		blockTaskWithSchedulerLockAlreadyHeld(TaskState::Paused);
-		mainloop2(vmContext);
+		mainloop2();
 	}
 
 	void mainVm8086Loop(void* context)
 	{
 		unlockScheduler();
-		mainloop2(context);
+		mainloop2();
 	}
 
 	void initialise8086()
