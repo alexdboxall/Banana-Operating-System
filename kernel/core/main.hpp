@@ -5,6 +5,8 @@
 #include <stdarg.h>
 #include <stddef.h>
 
+#pragma GCC diagnostic ignored "-Wsized-deallocation"
+
 extern "C" void kernel_main();
 
 extern "C" void* malloc(size_t);
