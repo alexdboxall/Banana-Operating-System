@@ -56,7 +56,6 @@ namespace Vm
 		return linear & 0xFFFF;
 	}
 
-	Process* vm86Process;
 	ThreadControlBlock* vm86Thread;
 	bool vmReady = false;
 	bool vmDone = false;
@@ -75,10 +74,7 @@ namespace Vm
 
 	void initialise8086()
 	{
-		vm86Process = new Process(true, "VM8086 Monitor", kernelProcess, nullptr);
-		vm86Thread = vm86Process->createThread(mainVm8086Loop, nullptr, 128);
-
-		vm86Process->vas->mapRange(0x0, 0x0, 256, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
+		kernelProcess->vas->mapRange(0x0, 0x0, 256, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
 	}
 
 	void finish8086()

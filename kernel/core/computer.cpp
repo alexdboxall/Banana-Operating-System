@@ -93,9 +93,6 @@ extern "C" size_t validateKey();
 
 void Computer::start()
 {
-	lockScheduler();
-	schedule();
-	unlockScheduler();
 	asm("sti");
 
 	//setup up the core processes and threads we need
