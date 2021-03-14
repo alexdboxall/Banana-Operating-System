@@ -139,7 +139,7 @@ int zoh_set_converter (SRC_PRIVATE *psrc, int src_enum) ;
 **	Common static inline functions.
 */
 
-static inline double
+static inline __attribute__((always_inline)) double
 fmod_one (double x)
 {	double res ;
 
@@ -150,7 +150,7 @@ fmod_one (double x)
 	return res ;
 } /* fmod_one */
 
-static inline int
+static inline __attribute__((always_inline)) int
 is_bad_src_ratio (double ratio)
 {	return (ratio < (1.0 / SRC_MAX_RATIO) || ratio > (1.0 * SRC_MAX_RATIO)) ;
 } /* is_bad_src_ratio */

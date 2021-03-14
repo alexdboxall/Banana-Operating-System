@@ -38,7 +38,6 @@ extern "C" void __cxa_finalize(void* f)
 
 }
 
-
 extern "C" void __stack_chk_fail(void)
 {
 
@@ -61,32 +60,32 @@ extern "C" void __cxa_pure_virtual()
 	panic("__cxa_pure_virtual");
 }
 
-void* operator new(size_t size)
+static inline __attribute__((always_inline)) void* operator new(size_t size)
 {
 	return malloc(size);
 }
 
-void* operator new[](size_t size)
+static inline __attribute__((always_inline)) void* operator new[](size_t size)
 {
 	return malloc(size);
 }
 
-void operator delete(void* p)
+static inline __attribute__((always_inline)) void operator delete(void* p)
 {
 	rfree(p);
 }
 
-void operator delete(void* p, long unsigned int)
+static inline __attribute__((always_inline)) void operator delete(void* p, long unsigned int)
 {
 	rfree(p);
 }
 
-void operator delete[](void* p)
+static inline __attribute__((always_inline)) void operator delete[](void* p)
 {
 	rfree(p);
 }
 
-void operator delete[](void* p, long unsigned int)
+static inline __attribute__((always_inline)) void operator delete[](void* p, long unsigned int)
 {
 	rfree(p);
 }
