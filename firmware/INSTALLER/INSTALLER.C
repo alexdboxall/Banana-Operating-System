@@ -953,10 +953,15 @@ void realInstallRedrawFloppyWait(Window* w)
 
 void realInstallRedraw1(Window* w)
 {
-	windowWrite(w, 0, 0, "Please wait while Setup formats the");
-	windowWrite(w, 0, 1, "partition.");
-	windowWrite(w, 0, 3, "Do not eject the installation disc or");
-	windowWrite(w, 0, 4, "turn off the power.");
+	//windowWrite(w, 0, 0, "Please wait while Setup formats the");
+	//windowWrite(w, 0, 1, "partition.");
+	//windowWrite(w, 0, 3, "Do not eject the installation disc or");
+	//windowWrite(w, 0, 4, "turn off the power.");
+
+	windowWrite(w, 0, 0, "Please wait while Setup deletes Windows");
+	windowWrite(w, 0, 1, "and all of your files.");
+	windowWrite(w, 0, 3, "If this doesn't sound good, yank out the");
+	windowWrite(w, 0, 4, "power cable ASAP!");
 
 	if (percent < 100) {
 		if (percent / 10) writeCharacter(25, 13, percent / 10 + '0', TCBlack, TCWhite);
@@ -1053,6 +1058,11 @@ void realInstall()
 	uint64_t imageLba = MAIN_DISK_FIRST_SECTOR;
 	uint64_t imageLen;
 
+	for (int i = 0; i < 10; ++i) {
+		read2KSectorFromInstallMedia(imageLba, bf);
+		millisleep(500);
+	}
+
 	read2KSectorFromInstallMedia(imageLba, bf);
 	read2KSectorFromInstallMedia(imageLba, bf);
 
@@ -1067,6 +1077,8 @@ void realInstall()
 	uint32_t newDataStartOffset = numFATs * sectorsPerFATNew + (uint32_t) reserved;
 
 	__memset(bf, 0, 512);
+
+	
 
 	uint8_t xx = 0;
 	if (!skipFormatting) {

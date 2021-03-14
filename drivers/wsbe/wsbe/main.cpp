@@ -138,14 +138,14 @@ void resizehandler(struct Window_struct* win, int x, int y)
     strcpy(szstring, "Resizing...");
 }
 
-void dopanic(Button* b, int x, int y)
+void dopanic(Window* b, int x, int y)
 {
     panic("You clicked the panic button!");
 }
 
 char tw[] = "The quick brown fox jumps";
 //And, finally, the handler that causes that button to make a new calculator
-void spawn_calculator(Button* button, int x, int y)
+void spawn_calculator(Window* button, int x, int y)
 {
     Window* w = (Window*) malloc(sizeof(Window));
     Window_init(w, 50, 50, 300, 200, WIN_TOPLEVELWIN, 0);
@@ -153,9 +153,9 @@ void spawn_calculator(Button* button, int x, int y)
     Window_insert_child((Window*) desktop, w);
 
     //Create a simple launcher window
-    Button* launch_button = Button_new(10, 10, 150, 30);
+    Button* launch_button = Button_new(40, 60, 150, 30);
     Window_set_title((Window*) launch_button, (char*) "Cause a panic!");
-    launch_button->onmousedown = dopanic;
+    launch_button->window.mousedown_function = dopanic;
     Window_insert_child((Window*) w, (Window*) launch_button);
 
     w->resize_function = resizehandler;
@@ -783,7 +783,7 @@ int main(int argc, const char* argv[])
     //Create a simple launcher window
     Button* launch_button = Button_new(10, 10, 150, 30);
     Window_set_title((Window*) launch_button, (char*) nw);
-    launch_button->onmousedown = spawn_calculator;
+    launch_button->window.mousedown_function = spawn_calculator;
     Window_insert_child((Window*) desktop, (Window*) launch_button);
     Window_paint((Window*) desktop, (List*) 0, 1);
 

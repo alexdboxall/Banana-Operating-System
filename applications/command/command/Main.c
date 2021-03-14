@@ -1622,7 +1622,16 @@ void runBatchFile(char* filename, int batchNesting)
 
 int main (int argc, char *argv[])
 {
-	printf("\n%s\n    (C)Copyright Alex Boxall 2016-2021\n\n", VERSION_STRING);
+	srand(clock());
+	srand(rand());
+	srand(clock() + rand());
+
+	if ((rand() + clock()) & 1) {
+		printf("\n%s\n    (C)Copyright Alex Boxall 2016-2021\n\n          \"Now there's a dream, now there's a goal\n               Now there's a need I'll never control\"\n\n", VERSION_STRING);
+	} else {
+		printf("\n%s\n    (C)Copyright Alex Boxall 2016-2021\n\n          \"Because I can feel I'll never be full\n               But I can see, I'll never be part of your world\"\n\n", VERSION_STRING);
+	}
+	
 
 	for (int i = 0; i < 26; ++i) {
 		mathVars[i] = 0;
