@@ -142,7 +142,6 @@ attrib +r "T:/BANANA/SYSTEM/KERNEL64.EXE"
 attrib +r "T:/BANANA/SYSTEM/KERNEL32.EXE" 
 attrib "T:/BANANA/SYSTEM/TRAMP.EXE" 
 
-pause
 imdisk -D -m T:
 
 python Banana/join.py || pause
