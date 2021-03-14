@@ -22,7 +22,7 @@ namespace Sys
 		schedule();
 		unlockScheduler();
 
-		return 0;
+		return nanoSinceBoot;
 	}
 }
 
