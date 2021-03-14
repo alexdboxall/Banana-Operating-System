@@ -65,15 +65,18 @@ namespace Vm
 		unlockScheduler();
 		while (1) {
 			vmReady = true;
+			kprintf("VM is ready and waiting...\n");
 			blockTask(TaskState::Paused);
 			vm8086EntryPoint(context);
 			vmDone = true;
+			kprintf("VM is done and waiting...\n");
 			blockTask(TaskState::Paused);
 		}
 	}
 
 	void initialise8086()
 	{
+		vm86Thread = kernelProcess->createThread(mainVm8086Loop, nullptr, 128);
 		kernelProcess->vas->mapRange(0x0, 0x0, 256, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
 	}
 
@@ -94,6 +97,8 @@ namespace Vm
 
 	bool start8086(const char* filename, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss)
 	{
+		kprintf("VM86 start started.\n");
+
 		while (1) {
 			lockScheduler();
 			if (vmReady) {
@@ -140,9 +145,12 @@ namespace Vm
 		f->read(siz, (uint8_t*) (size_t) realToLinear(cs, ip), &br);
 		f->close();
 
+		kprintf("VM86 start almost done.\n");
+
 		vmReady = false;
 		unblockTask(vm86Thread);
 		unlockScheduler();
+		kprintf("VM86 start is done.\n");
 
 		return true;
 	}
