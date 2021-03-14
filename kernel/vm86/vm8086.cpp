@@ -59,15 +59,15 @@ namespace Vm
 	ThreadControlBlock* vm86Thread;
 	bool vmReady = false;
 	bool vmDone = false;
-	size_t vmRetV;
+	uint32_t vmRetV;
 	void* vmContext;
 
-	void mainloop2(void* ctxt)
+	void mainloop2(void* context)
 	{
 		vmReady = true;
 		kprintf("VM is ready and waiting...\n");
 		blockTask(TaskState::Paused);
-		vmContext = ctxt;
+		vmContext = context;
 		vm8086EntryPoint(context);
 	}
 
@@ -92,7 +92,7 @@ namespace Vm
 		kernelProcess->vas->mapRange(0x0, 0x0, 256, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
 	}
 
-	size_t finish8086()
+	uint32_t finish8086()
 	{
 		while (1) {
 			lockScheduler();
@@ -102,7 +102,7 @@ namespace Vm
 			unlockScheduler();
 		}
 
-		size_t retv = vmRetV;
+		uint32_t retv = vmRetV;
 		vmDone = false;
 		unblockTask(vm86Thread);
 		unlockScheduler();
