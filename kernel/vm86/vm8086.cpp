@@ -58,18 +58,22 @@ namespace Vm
 	{
 		lockScheduler();
 		vmReady = true;
+		kprintf("VM ready + blocking...\n");
 		blockTaskWithSchedulerLockAlreadyHeld(TaskState::Paused);
-		asm volatile ("sti");
+		kprintf("VM actually doing 'it'...\n");
 		goToVM86(currentTaskTCB->vm86IP, currentTaskTCB->vm86CS, currentTaskTCB->vm86SP, currentTaskTCB->vm86SS);
 	}
 
 	void mainloop3(size_t retv)
 	{
+		kprintf("VM finished doing 'it'...\n");
 		lockScheduler();
 		vmDone = true;
 		vmRetV = retv;
+		kprintf("VM done + blocking...\n");
 		blockTaskWithSchedulerLockAlreadyHeld(TaskState::Paused);
-		mainloop2();
+		kprintf("VM ready + blocking...\n");
+		mainloop2();							//GCC had better use tail call optimisations, or we could get recursion errors after running thousands of VM tasks
 	}
 
 	void mainVm8086Loop(void* context)
@@ -153,8 +157,8 @@ namespace Vm
 		kprintf("VM86 start almost done.\n");
 
 		vmReady = false;
-		unblockTask(vm86Thread);
 		unlockScheduler();
+		unblockTask(vm86Thread);
 		kprintf("VM86 start is done.\n");
 
 		return true;
