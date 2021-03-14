@@ -145,6 +145,21 @@ is486:
 	xor eax, eax
 	ret
 
+global detectCPUID
+
+detectCPUID:
+	pushfd
+	pushfd
+	xor dword [esp], 0x00200000
+	popfd
+	pushfd
+	pop eax
+	xor eax, [esp]
+	popfd
+	and eax, 0x00200000
+	ret
+
+
 global goToVM86
 
 goToVM86:
@@ -240,70 +255,11 @@ commonThreadSwitch:
 .doneVAS:
 
 	test edx, edx
-	je .notFirstTime
+	jne .firstTime
 
-		cli
-
-		;REMEMBER:	NOTHING IS ACTUALLY MAPPED IN YET!!!
-		;			THIS IS WHAT WE DO HERE
-		;
-		;			WE NEED A STACK (THE OLD ONE)
-		;			IN ORDER TO DO THIS, OTHERWISE 'call'
-		;			WILL TRIPLE FAULT (CANNOT PUSH DUE TO PAGE FAULT, CANNOT PUSH INTERRUPT CODE DUE TO PAGE FAULT, BOOM!)
-
-		mov eax, [esi + 0x4]	;ESP stored at offset 0x4 into the struct
-		mov esp, 0xC207FE00
-
-		pusha
-		call mapVASFirstTime
-		popa
-
-		mov esp, eax			
-
-		;first time, so we can trash registers to make it work
-
-		push esi
-		push edx
-		call changeTSS
-		pop edx
-		pop esi
-
-		;don't keep EIP stored, so it won't be the first time next time
-		mov [esi + 0xC], dword 0
-
-		cmp edx, 1
-		je .cameOffAFork
-
-		pop ebp
-		pop edi
-		pop esi
-		pop ecx			;don't pop edx
-		pop ecx
-		pop ebx
-		pop eax
-		add esp, 4          ;DON'T POP FLAGS
-        
-        push byte 0x2
-        popf                ;get a safe set of flags
-
-		;and we're off!
-		push edx					;start point
-		call taskStartupFunction	;jumps to start point when it returns
-		pop edx						;EDX contains the start point
-		push eax					;EAX was the return value of the previous thing, and the argument of the next function
-		call edx					;go to the start point
-		call taskReturned			;in case anything returns
-
-		jmp $
-
-.notFirstTime:
 	mov esp, [esi + 0x4]			;ESP stored at offset 0x4 into the struct
 
-	push esi
-	push edx
 	call changeTSS
-	pop edx
-	pop esi
 
 	pop ebp
 	pop edi
@@ -316,34 +272,57 @@ commonThreadSwitch:
 
 	ret
 
-.cameOffAFork:
-	;heavy wizardry
-	xor eax, eax
-	xor edx, edx
-	mov esp, [esi + 0x1C]
+.firstTime:
+    cli
 
-	jmp offAForkJumpThingy
+	;REMEMBER:	NOTHING IS ACTUALLY MAPPED IN YET!!!
+	;			THIS IS WHAT WE DO HERE
+	;
+	;			WE NEED A STACK (THE OLD ONE)
+	;			IN ORDER TO DO THIS, OTHERWISE 'call'
+	;			WILL TRIPLE FAULT (CANNOT PUSH DUE TO PAGE FAULT, CANNOT PUSH INTERRUPT CODE DUE TO PAGE FAULT, BOOM!)
 
+	mov eax, [esi + 0x4]	;ESP stored at offset 0x4 into the struct
+	mov esp, 0xC207FE00
 
+	pusha
+	call mapVASFirstTime
+	popa
 
+	mov esp, eax			
 
+	;first time, so we can trash registers to make it work
 
+	push esi
+	push edx
+	call changeTSS
+	pop edx
+	pop esi
 
+	;don't keep EIP stored, so it won't be the first time next time
+	mov [esi + 0xC], dword 0
 
-
-global detectCPUID
-
-detectCPUID:
-	pushfd
-	pushfd
-	xor dword [esp], 0x00200000
-	popfd
-	pushfd
+	pop ebp
+	pop edi
+	pop esi
+	pop ecx			;don't pop edx
+	pop ecx
+	pop ebx
 	pop eax
-	xor eax, [esp]
-	popfd
-	and eax, 0x00200000
-	ret
+	add esp, 4          ;DON'T POP FLAGS
+        
+    push byte 0x2
+    popf                ;get a safe set of flags
+
+	;and we're off!
+	push edx					;start point
+	call taskStartupFunction	;jumps to start point when it returns
+	pop edx						;EDX contains the start point
+	push eax					;EAX was the return value of the previous thing, and the argument of the next function
+	call edx					;go to the start point
+	call taskReturned			;in case anything returns
+
+	jmp $
 
 global asmAcquireLock
 global asmReleaseLock
@@ -584,30 +563,6 @@ isr18:
     push byte 18
     jmp int_common_stub
 
-isr96:
-    cli
-    push byte 0
-    push byte 96
-    jmp syscall_common_stub
-
-irq0:
-    cli
-    push byte 0
-    push byte 32
-    jmp int_common_stub
-
-irq1:
-    cli
-    push byte 0
-    push byte 33
-    jmp int_common_stub
-
-irq2:
-    cli
-    push byte 0
-    push byte 34
-    jmp int_common_stub
-
 irq3:
     cli
     push byte 0
@@ -686,6 +641,57 @@ irq15:
     push byte 47
     jmp int_common_stub
 
+irq1:
+    cli
+    push byte 0
+    push byte 33
+    jmp short int_common_stub
+
+irq2:
+    cli
+    push byte 0
+    push byte 34
+    jmp short int_common_stub
+
+isr96:
+    push byte 0
+    push byte 96
+    sti
+    jmp short syscall_common_stub
+
+global int_common_stub
+global syscall_common_stub
+extern int_handler
+
+irq0:
+    cli
+    push byte 0
+    push byte 32
+
+syscall_common_stub:
+int_common_stub:
+    pushad
+
+    push ds
+    push es
+    push fs
+    push gs
+
+    push esp
+    call int_handler
+    add esp, 4
+
+	pop gs
+    pop fs
+    pop es
+    pop ds
+
+	popa
+    add esp, 8     ; Cleans up the pushed error code and pushed ISR number
+
+    iret
+
+
 irq16:
     cli
     push byte 0
@@ -733,71 +739,3 @@ irq23:
     push byte 0
     push byte 55
     jmp int_common_stub
-
-global int_common_stub
-extern int_handler
-
-; WHY MUST THESE TWO BE DIFFERENT?
-;
-;	THE SYSCALL HANDLER ASSUMES EAX AND EDX CAN BE TRASHED (THE RETURN VALUE GOES IN)
-;	AN INTERRUPT CAN HAPPEN AT ANY TIME. IF THEY WERE THE SAME HANDLER, ON EVERY 
-;	INTERRUPT, EAX AND EDX WOULD 'MAGICALLY CHANGE', WHICH IS *VERY BAD*
-
-int_common_stub:
-    pushad
-
-    push ds
-    push es
-    push fs
-    push gs
-
-    push esp
-    call int_handler
-    add esp, 4
-
-	pop gs
-    pop fs
-    pop es
-    pop ds
-
-	popa
-    add esp, 8     ; Cleans up the pushed error code and pushed ISR number
-
-    iret           ; pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP!
-
-
-global syscall_common_stub
-
-;SYSTEM CALL NOTE:
-;	RETURN VALUES ARE NOW DONE BY CHANGING EAX AND EDX IN THE REGS STRUCT
-
-syscall_common_stub:
-    pusha
-
-    push ds
-    push es
-    push fs
-    push gs
-
-    ;I think this is only for forking...
-	;mov ecx, [currentTaskTCB]				;get the address of the TCB
-	;mov [ecx + 0x1C], esp
-
-    push esp
-    sti
-    call int_handler
-    add esp, 4
-
-offAForkJumpThingy:
-	pop gs
-    pop fs
-    pop es
-    pop ds
-
-	;SYSCALLS NOW ACTUALLY CHANGE THE VALUES THAT GET PUSHED HERE
-	;SO POPA IS CORRECT (THE PRE-REWRITE METHOD OF KEEPING EDX:EAX IS *INCORRECT* NOW)
-	popa
-    add esp, 8     ; Cleans up the pushed error code and pushed ISR number
-
-    iret           ; pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP!
-

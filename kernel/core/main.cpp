@@ -44,18 +44,6 @@ Reg		Registry
 Vm		x86 Virtualisation
 */
 
-/*
-*									New (used in kernel)		New (detected by kernel)
-KERNEL32.EXE		i386			
-KRNL486.EXE			i486			BSWAP, CMPXCHG				INVLPG
-KRNL586.EXE			Pentium			CMPXCHG8B					CPUID, RDTSC, RDMSR, WRMSR
-KRNLP2.EXE			Pentium II		CMOVcc						MMX, SYSENTER, SYSEXIT
-KRNLP4.EXE			Pentium IV									SSE and stuff, etc.
-KRNLNHLM.EXE		Nehalem			POPCNT
-KRNLHWEL.EXE		Haswell			More bit manipulations
-KRNLBWEL.EXE		Broadwell		ADCX, ADOX
-*/
-
 extern "C" {
 	#include "libk/string.h"
 }

@@ -300,8 +300,19 @@ public:
 
 	static uint8_t* decodeAddress(regs* r, int* instrLenOut, bool* registerOnlyOut, uint8_t* middleDigitOut);
 
-	static CPU* current();
-	static int getNumber();
+	static int getNumber_();
+	static int current_();
+
+
+	static inline int getNumber()
+	{
+		return 0;
+	}
+
+	static inline CPU* current()
+	{
+		return computer->cpu[0];
+	}
 
 	static void cpuid(int code, size_t* a, size_t* b, size_t* c, size_t* d);
 	static bool cpuidCheckEDX(uint32_t check);

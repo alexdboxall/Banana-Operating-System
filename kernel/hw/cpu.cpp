@@ -348,14 +348,14 @@ bool CPU::cpuidCheckExtendedECX(uint32_t check)
 	return ecx & check;
 }
 
-int CPU::getNumber()
-{
-	return 0;
-}
-
 CPU* CPU::current()
 {
-	return computer->cpu[CPU::getNumber()];
+	return computer->cpu[0];
+}
+
+int CPU::getNumber_()
+{
+	return 0;
 }
 
 CPU::CPU(): Device("CPU")

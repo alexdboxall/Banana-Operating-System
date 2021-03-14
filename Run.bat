@@ -96,6 +96,18 @@ copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummyC.txt"
 copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummyD.txt"
 copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummyE.txt"
 copy "D:/Users/Alex/Desktop/Banana/tools/lotsof0s.bin" "T:/dummyF.txt"
+
+copy "D:/Users/Alex/Desktop/Banana/tools/less0s.bin" "T:/dummyAA.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/less0s.bin" "T:/dummyAB.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/less0s.bin" "T:/dummyAC.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/less0s.bin" "T:/dummyAD.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/less0s.bin" "T:/dummyAE.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/less0s.bin" "T:/dummyAF.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/less0s.bin" "T:/dummyAG.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/less0s.bin" "T:/dummyAH.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/less0s.bin" "T:/dummyAI.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/less0s.bin" "T:/dummyAJ.txt"
+
 rm T:\dummy.txt
 rm T:\dummy2.txt
 rm T:\dummy3.txt
@@ -111,6 +123,16 @@ rm T:\dummyC.txt
 rm T:\dummyD.txt
 rm T:\dummyE.txt
 rm T:\dummyF.txt
+rm T:\dummyAA.txt
+rm T:\dummyAB.txt
+rm T:\dummyAC.txt
+rm T:\dummyAD.txt
+rm T:\dummyAE.txt
+rm T:\dummyAF.txt
+rm T:\dummyAG.txt
+rm T:\dummyAH.txt
+rm T:\dummyAI.txt
+rm T:\dummyAJ.txt
 
 cd D:/Users/Alex/Desktop/
 attrib +r "T:/Banana/BANANABT" 
@@ -119,6 +141,8 @@ rem attrib +h +r "T:/JUMPER32.SYS"
 attrib +r "T:/BANANA/SYSTEM/KERNEL64.EXE" 
 attrib +r "T:/BANANA/SYSTEM/KERNEL32.EXE" 
 attrib "T:/BANANA/SYSTEM/TRAMP.EXE" 
+
+pause
 imdisk -D -m T:
 
 python Banana/join.py || pause
