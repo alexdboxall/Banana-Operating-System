@@ -7,12 +7,15 @@
 
 extern "C" void kernel_main();
 
-extern inline void* operator new(size_t size);
-extern inline void* operator new[](size_t size);
-extern inline void operator delete(void* p);
-extern inline void operator delete(void* p, long unsigned int);
-extern inline void operator delete[](void* p);
-extern inline void operator delete[](void* p, long unsigned int);
+inline __attribute__((always_inline)) void* operator new(size_t size)
+{
+	return malloc(size);
+}
+
+inline __attribute__((always_inline)) void operator delete(void* p)
+{
+	rfree(p);
+}
 
 #define KERNEL_DEBUG 
 

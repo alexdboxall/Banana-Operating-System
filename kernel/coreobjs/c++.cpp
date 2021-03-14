@@ -66,7 +66,7 @@ inline __attribute__((always_inline)) void* operator new(size_t size)
 	return malloc(size);
 }
 
-inline __attribute__((always_inline)) void* operator new[](size_t size)
+void* operator new[](size_t size)
 {
 	return malloc(size);
 }
@@ -76,17 +76,17 @@ inline __attribute__((always_inline)) void operator delete(void* p)
 	rfree(p);
 }
 
-inline __attribute__((always_inline)) void operator delete(void* p, long unsigned int)
+void operator delete(void* p, long unsigned int)
 {
 	rfree(p);
 }
 
-inline __attribute__((always_inline)) void operator delete[](void* p)
+void operator delete[](void* p)
 {
 	rfree(p);
 }
 
-inline __attribute__((always_inline)) void operator delete[](void* p, long unsigned int)
+void operator delete[](void* p, long unsigned int)
 {
 	rfree(p);
 }
