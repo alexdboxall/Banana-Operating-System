@@ -11,7 +11,10 @@
 
 namespace Vm
 {
-	bool loadFileAsThread(Process* p, const char* filename, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss);
+	void initialise8086();
+	void finish8086();
+	bool start8086(const char* filename, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss);
+		
 	bool faultHandler(regs* r);
 }
 

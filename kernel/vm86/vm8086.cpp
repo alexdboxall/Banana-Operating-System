@@ -56,15 +56,66 @@ namespace Vm
 		return linear & 0xFFFF;
 	}
 
-	bool loadFileAsThread(Process* p, const char* filename, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss)
+	Process* vm86Process;
+	ThreadControlBlock* vm86Thread;
+	bool vmReady = false;
+	bool vmDone = false;
+
+	void pleaseBlock(void* context)
+	{
+		unlockScheduler();
+		while (1) {
+			vmReady = true;
+			blockTask();
+			vm8086EntryPoint(context);
+			vmDone = true;
+			blockTask();
+		}
+	}
+
+	void initialise8086()
 	{
 		lockScheduler();
-		ThreadControlBlock* thread = p->createThread(vm8086EntryPoint, nullptr, 128);
-		thread->vm86IP = ip;
-		thread->vm86CS = cs;
-		thread->vm86SP = sp;
-		thread->vm86SS = ss;
-		thread->vm86Task = true;
+
+		vm86Process = new Process(true, "VM8086 Monitor", kernelProcess, nullptr);
+
+		ThreadControlBlock* thread = lockScheduler->createThread(pleaseBlock, nullptr, 128);
+		unlockScheduler();
+	}
+
+	void finish8086()
+	{
+		while (1) {
+			lockScheduler();
+			if (vmDone) {
+				break;
+			}
+			unlockScheduler();
+		}
+
+		vmDone = false;
+		unblockTask(vm86Thread);
+		unlockScheduler();
+	}
+
+	bool start8086(const char* filename, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss)
+	{
+		while (1) {
+			lockScheduler();
+			if (vmReady) {
+				break;
+			}
+			unlockScheduler();
+			nanoSleep(1000 * 1000 * 100);
+		}
+
+		//scheduler still locked here
+
+		vm86Thread->vm86IP = ip;
+		vm86Thread->vm86CS = cs;
+		vm86Thread->vm86SP = sp;
+		vm86Thread->vm86SS = ss;
+		vm86Thread->vm86Task = true;
 
 		File* f = new File(filename, p);
 		if (!f) {
@@ -97,6 +148,8 @@ namespace Vm
 		f->read(siz, (uint8_t*) (size_t) realToLinear(cs, ip), &br);
 		f->close();
 
+		vmReady = false;
+		unblockTask(vm86Thread);
 		unlockScheduler();
 
 		return true;
@@ -296,8 +349,8 @@ namespace Vm
 			case 0xCD:		//INT N
 				//kprintf("int 0x%X ", ip[1]);
 
-				if (ip[1] == 0xFF) {
-					//do a strange terminate because we're in a GPF handler
+				if (ip[1] == 0xEE) {
+					//@@@
 					Thr::terminateFromIRQ(r->eax);
 					return true;
 				}

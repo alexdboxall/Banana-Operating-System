@@ -98,10 +98,13 @@ void Computer::start()
 	unlockScheduler();
 	asm("sti");
 
+	//setup up the core processes and threads we need
 	Process* idleProcess = new Process(true, "Idle Process", kernelProcess);
 	idleProcess->createThread(idleFunction, nullptr, 255);
 
 	cleanerThread = kernelProcess->createThread(cleanerTaskFunction, nullptr, 122);
+
+	Vm::initialise8086();
 
 	schedulingOn = true;
 
@@ -111,8 +114,6 @@ void Computer::start()
 	setupSystemCalls();
 	loadClockSettings();
 	loadDriversForAll();
-
-	//Vm::loadFileAsThread(kernelProcess, "C:/Banana/System/vm86/VGASET.COM", 0x0000, 0x90, 0x12, 0x12);
 
 	//for each cpu
 		//start it

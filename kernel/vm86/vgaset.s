@@ -20,8 +20,5 @@ mov sp, 0x0
 mov ax, bx
 int 0x10
 
-mov eax, 0
-int 0xFF			;soft terminate
-
-hlt					;hard terminate
-jmp $				;the backup
+xor eax, eax
+int 0xEE			;terminate (0xFF used by APIC spurious)

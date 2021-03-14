@@ -64,10 +64,8 @@ int VGAVideo::open(int a, int b, void* c)
 {
 	kprintf("::open.\n");
 
-	Vm::loadFileAsThread(kernelProcess, "C:/Banana/System/VGASET.COM", 0x0000, 0x90, 0x12, 0x12);
-	kprintf("::vm.\n");
-	sleep(1);
-	kprintf("::sleep.\n");
+	Vm::start8086("C:/Banana/System/VGASET.COM", 0x0000, 0x90, 0x12, 0x12);
+	Vm::finish8086();
 
 	volatile uint8_t * volatile vram = (volatile uint8_t * volatile) (VIRT_LOW_MEGS + 0xA0000);
 
