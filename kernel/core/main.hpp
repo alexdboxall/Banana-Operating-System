@@ -7,6 +7,9 @@
 
 extern "C" void kernel_main();
 
+void* malloc(size_t);
+void  rfree(void*);
+
 inline __attribute__((always_inline)) void* operator new(size_t size)
 {
 	return malloc(size);

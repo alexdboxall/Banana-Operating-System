@@ -110,7 +110,7 @@ extern "C" void free(void* __addr)
 
 extern "C" void rfree(void* __addr)
 {
-	free(__addr);
+	dlfree(__addr);
 }
 
 extern "C" void* calloc(size_t nobj, size_t size)
