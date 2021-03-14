@@ -171,119 +171,129 @@ public:
 
 	bool opcodeDetectionMode = false;
 
-	static inline size_t readCR0()
+	static inline __attribute__((always_inline)) size_t readCR0()
 	{
 		size_t val;
 		asm volatile ("mov %%cr0, %0" : "=r"(val));
 		return val;
 	}
 
-	static inline size_t readCR2()
+	static inline __attribute__((always_inline)) size_t readCR2()
 	{
 		size_t val;
 		asm volatile ("mov %%cr2, %0" : "=r"(val));
 		return val;
 	}
 
-	static inline size_t readCR3()
+	static inline __attribute__((always_inline)) size_t readCR3()
 	{
 		size_t val;
 		asm volatile ("mov %%cr3, %0" : "=r"(val));
 		return val;
 	}
 
-	static inline size_t readCR4()
+	static inline __attribute__((always_inline)) size_t readCR4()
 	{
 		size_t val;
 		asm volatile ("mov %%cr4, %0" : "=r"(val));
 		return val;
 	}
 
-	static inline size_t readDR0()
+	static inline __attribute__((always_inline)) size_t readDR0()
 	{
 		size_t val;
 		asm volatile ("mov %%dr0, %0" : "=r"(val));
 		return val;
 	}
 
-	static inline size_t readDR1()
+	static inline __attribute__((always_inline)) size_t readDR1()
 	{
 		size_t val;
 		asm volatile ("mov %%dr1, %0" : "=r"(val));
 		return val;
 	}
 
-	static inline size_t readDR2()
+	static inline __attribute__((always_inline)) size_t readDR2()
 	{
 		size_t val;
 		asm volatile ("mov %%dr2, %0" : "=r"(val));
 		return val;
 	}
 
-	static inline size_t readDR3()
+	static inline __attribute__((always_inline)) size_t readDR3()
 	{
 		size_t val;
 		asm volatile ("mov %%dr3, %0" : "=r"(val));
 		return val;
 	}
 
-	static inline size_t readDR6()
+	static inline __attribute__((always_inline)) size_t readDR6()
 	{
 		size_t val;
 		asm volatile ("mov %%dr6, %0" : "=r"(val));
 		return val;
 	}
 
-	static inline size_t readDR7()
+	static inline __attribute__((always_inline)) size_t readDR7()
 	{
 		size_t val;
 		asm volatile ("mov %%dr7, %0" : "=r"(val));
 		return val;
 	}
 
-	static inline void writeDR0(size_t val)
+	static inline __attribute__((always_inline)) void writeDR0(size_t val)
 	{
 		asm volatile ("mov %0, %%dr0" :: "r"(val));
 	}
 
-	static inline void writeDR1(size_t val)
+	static inline __attribute__((always_inline)) void writeDR1(size_t val)
 	{
 		asm volatile ("mov %0, %%dr1" :: "r"(val));
 	}
 
-	static inline void writeDR2(size_t val)
+	static inline __attribute__((always_inline)) void writeDR2(size_t val)
 	{
 		asm volatile ("mov %0, %%dr2" :: "r"(val));
 	}
 
-	static inline void writeDR3(size_t val)
+	static inline __attribute__((always_inline)) void writeDR3(size_t val)
 	{
 		asm volatile ("mov %0, %%dr3" :: "r"(val));
 	}
 
-	static inline void writeDR6(size_t val)
+	static inline __attribute__((always_inline)) void writeDR6(size_t val)
 	{
 		asm volatile ("mov %0, %%dr6" :: "r"(val));
 	}
 
-	static inline void writeDR7(size_t val)
+	static inline __attribute__((always_inline)) void writeDR7(size_t val)
 	{
 		asm volatile ("mov %0, %%dr7" :: "r"(val));
 	}
 
-	static inline void writeCR0(size_t val)
+	static inline __attribute__((always_inline)) void writeCR0(size_t val)
 	{
 		asm volatile ("mov %0, %%cr0" :: "r"(val));
 	}
 
-	static inline void writeCR3(size_t val)
+	static inline __attribute__((always_inline)) void writeCR3(size_t val)
 	{
 		asm volatile ("mov %0, %%cr3" :: "r"(val));
 	}
 
-	static inline void writeCR4(size_t val)
+	static inline __attribute__((always_inline)) void writeCR4(size_t val)
 	{
 		asm volatile ("mov %0, %%cr4" :: "r"(val));
+	}
+
+	static inline __attribute__((always_inline)) int getNumber()
+	{
+		return 0;
+	}
+
+	static inline __attribute__((always_inline)) CPU* current()
+	{
+		return computer->cpu[0];
 	}
 
 	void setupSMEP();
@@ -299,19 +309,6 @@ public:
 	void prohibitUsermodeDataAccess();
 
 	static uint8_t* decodeAddress(regs* r, int* instrLenOut, bool* registerOnlyOut, uint8_t* middleDigitOut);
-
-	static int getNumber_();
-	static CPU* current_();
-
-	static inline int getNumber()
-	{
-		return 0;
-	}
-
-	static inline CPU* current()
-	{
-		return computer->cpu[0];
-	}
 
 	static void cpuid(int code, size_t* a, size_t* b, size_t* c, size_t* d);
 	static bool cpuidCheckEDX(uint32_t check);
