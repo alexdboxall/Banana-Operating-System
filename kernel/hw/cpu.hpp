@@ -301,8 +301,7 @@ public:
 	static uint8_t* decodeAddress(regs* r, int* instrLenOut, bool* registerOnlyOut, uint8_t* middleDigitOut);
 
 	static int getNumber_();
-	static int current_();
-
+	static CPU* current_();
 
 	static inline int getNumber()
 	{
