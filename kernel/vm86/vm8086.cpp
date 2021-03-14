@@ -64,19 +64,21 @@ namespace Vm
 
 	void mainloop2(void* context)
 	{
-		vmReady = true;
 		kprintf("VM is ready and waiting...\n");
-		blockTask(TaskState::Paused);
+		lockScheduler();
+		vmReady = true;
 		vmContext = context;
+		blockTaskWithSchedulerLockAlreadyHeld(TaskState::Paused);
 		vm8086EntryPoint(context);
 	}
 
 	void mainloop3(size_t retv)
 	{
+		kprintf("VM is done and waiting...\n");
+		lockScheduler();
 		vmDone = true;
 		vmRetV = retv;
-		kprintf("VM is done and waiting...\n");
-		blockTask(TaskState::Paused);
+		blockTaskWithSchedulerLockAlreadyHeld(TaskState::Paused);
 		mainloop2(vmContext);
 	}
 
@@ -119,7 +121,6 @@ namespace Vm
 				break;
 			}
 			unlockScheduler();
-			nanoSleep(1000 * 1000 * 100);
 		}
 
 		//scheduler still locked here
