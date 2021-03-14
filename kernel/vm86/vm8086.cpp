@@ -83,7 +83,7 @@ namespace Vm
 	void mainVm8086Loop(void* context)
 	{
 		unlockScheduler();
-		mainloop2(ctxt);
+		mainloop2(context);
 	}
 
 	void initialise8086()
