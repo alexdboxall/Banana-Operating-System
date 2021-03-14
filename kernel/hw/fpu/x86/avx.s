@@ -22,7 +22,9 @@ avxInit:
 avxClose:
     ret
 
-nothingToSeeHere:
+global wouldSheSayYes
+wouldSheSayYes:
+    ret
     dec ecx
     and [edi+ebp*2+0x76],ch
     and [gs:ecx+0x6f],bh
