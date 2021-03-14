@@ -61,7 +61,7 @@ namespace Vm
 	bool vmReady = false;
 	bool vmDone = false;
 
-	void pleaseBlock(void* context)
+	void mainVm8086Loop(void* context)
 	{
 		unlockScheduler();
 		while (1) {
@@ -76,7 +76,9 @@ namespace Vm
 	void initialise8086()
 	{
 		vm86Process = new Process(true, "VM8086 Monitor", kernelProcess, nullptr);
-		vm86Thread = vm86Process->createThread(pleaseBlock, nullptr, 128);
+		vm86Thread = vm86Process->createThread(mainVm8086Loop, nullptr, 128);
+
+		vm86Process->vas->mapRange(0x0, 0x0, 256, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
 	}
 
 	void finish8086()
@@ -137,8 +139,6 @@ namespace Vm
 			unlockScheduler();
 			return false;
 		}
-
-		p->vas->mapRange(0x0, 0x0, 256, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
 
 		int br;
 		f->read(siz, (uint8_t*) (size_t) realToLinear(cs, ip), &br);
