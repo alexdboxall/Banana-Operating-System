@@ -66,21 +66,17 @@ namespace Vm
 		unlockScheduler();
 		while (1) {
 			vmReady = true;
-			blockTask();
+			blockTask(TaskState::Paused);
 			vm8086EntryPoint(context);
 			vmDone = true;
-			blockTask();
+			blockTask(TaskState::Paused);
 		}
 	}
 
 	void initialise8086()
 	{
-		lockScheduler();
-
 		vm86Process = new Process(true, "VM8086 Monitor", kernelProcess, nullptr);
-
-		ThreadControlBlock* thread = lockScheduler->createThread(pleaseBlock, nullptr, 128);
-		unlockScheduler();
+		vm86Thread = vm86Process->createThread(pleaseBlock, nullptr, 128);
 	}
 
 	void finish8086()
@@ -117,7 +113,7 @@ namespace Vm
 		vm86Thread->vm86SS = ss;
 		vm86Thread->vm86Task = true;
 
-		File* f = new File(filename, p);
+		File* f = new File(filename, kernelProcess);
 		if (!f) {
 			panic("VM8086 FILE FAILED!");
 			unlockScheduler();
