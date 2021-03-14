@@ -1624,8 +1624,12 @@ int main (int argc, char *argv[])
 {
 	extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
 	uint64_t rval = SystemCall(Yield, 0, 0, 0);
-
-	if (rval & 16) {
+	bool parity = false;
+	for (int i = 0; i < 64; ++i) {
+		parity ^= rval & 1;
+		rval >>= 1;
+	}
+	if (parity) {
 		printf("\n%s\n    (C)Copyright Alex Boxall 2016-2021\n\n          \"Now there's a dream, now there's a goal\n               Now there's a need I'll never control\"\n\n", VERSION_STRING);
 	} else {
 		printf("\n%s\n    (C)Copyright Alex Boxall 2016-2021\n\n          \"Because I can feel I'll never be full\n               But I can see, I'll never be part of your world\"\n\n", VERSION_STRING);
