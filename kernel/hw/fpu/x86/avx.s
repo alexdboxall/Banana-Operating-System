@@ -26,7 +26,9 @@ nothingToSeeHere:
     dec ecx
     and [edi+ebp*2+0x76],ch
     and [gs:ecx+0x6f],bh
-    jne 0x2b
+    db 0x75
+    db 0x20
     dec esi
-    jns 0x6f
+    db 0x79
+    db 0x61
     push 0x2e2e2e 
