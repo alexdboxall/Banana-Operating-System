@@ -58,21 +58,16 @@ namespace Vm
 	{
 		lockScheduler();
 		vmReady = true;
-		kprintf("VM ready + blocking...\n");
 		blockTaskWithSchedulerLockAlreadyHeld(TaskState::Paused);
-		kprintf("VM actually doing 'it'...\n");
 		goToVM86(currentTaskTCB->vm86IP, currentTaskTCB->vm86CS, currentTaskTCB->vm86SP, currentTaskTCB->vm86SS);
 	}
 
 	void mainloop3(size_t retv)
 	{
-		kprintf("VM finished doing 'it'...\n");
 		lockScheduler();
 		vmDone = true;
 		vmRetV = retv;
-		kprintf("VM done + blocking...\n");
 		blockTaskWithSchedulerLockAlreadyHeld(TaskState::Paused);
-		kprintf("VM starting loop again...\n");
 		mainloop2();							//GCC had better use tail call optimisations, or we could get recursion errors after running thousands of VM tasks
 	}
 
@@ -108,8 +103,6 @@ namespace Vm
 
 	bool start8086(const char* filename, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss)
 	{
-		kprintf("VM86 start started.\n");
-
 		while (1) {
 			lockScheduler();
 			if (vmReady) {
@@ -156,12 +149,9 @@ namespace Vm
 		f->read(siz, (uint8_t*) (size_t) realToLinear(cs, ip), &br);
 		f->close();
 
-		kprintf("VM86 start almost done.\n");
-
 		vmReady = false;
 		unlockScheduler();
 		unblockTask(vm86Thread);
-		kprintf("VM86 start is done.\n");
 
 		return true;
 	}
