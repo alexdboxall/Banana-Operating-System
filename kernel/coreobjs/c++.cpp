@@ -60,32 +60,32 @@ extern "C" void __cxa_pure_virtual()
 	panic("__cxa_pure_virtual");
 }
 
-static inline __attribute__((always_inline)) void* operator new(size_t size)
+inline __attribute__((always_inline)) void* operator new(size_t size)
 {
 	return malloc(size);
 }
 
-static inline __attribute__((always_inline)) void* operator new[](size_t size)
+inline __attribute__((always_inline)) void* operator new[](size_t size)
 {
 	return malloc(size);
 }
 
-static inline __attribute__((always_inline)) void operator delete(void* p)
+inline __attribute__((always_inline)) void operator delete(void* p)
 {
 	rfree(p);
 }
 
-static inline __attribute__((always_inline)) void operator delete(void* p, long unsigned int)
+inline __attribute__((always_inline)) void operator delete(void* p, long unsigned int)
 {
 	rfree(p);
 }
 
-static inline __attribute__((always_inline)) void operator delete[](void* p)
+inline __attribute__((always_inline)) void operator delete[](void* p)
 {
 	rfree(p);
 }
 
-static inline __attribute__((always_inline)) void operator delete[](void* p, long unsigned int)
+inline __attribute__((always_inline)) void operator delete[](void* p, long unsigned int)
 {
 	rfree(p);
 }
