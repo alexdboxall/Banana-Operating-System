@@ -6,6 +6,7 @@
 #include <stddef.h>
 
 #pragma GCC diagnostic ignored "-Wsized-deallocation"
+#pragma GCC diagnostic ignored "-Wattributes"
 
 extern "C" void kernel_main();
 
