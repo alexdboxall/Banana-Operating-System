@@ -17,16 +17,14 @@ sseDetect:          ;RETURNS A SIZE_T, 0 OR 1
     mov eax, 1
     ret
 .noSSE:
-    mov eax, 0
+    xor eax, eax
     ret
 
 sseSave:            ;TAKES IN A SIZE_T
-;WARNING: NOTICE WE ARE NOT USING A STACK FRAME FOR THIS, DO NOT CHANGE EBP WITHOUT PUSHING IT FIRST!
     fxsave [esp + 8]
     ret
 
 sseLoad:            ;TAKES IN A SIZE_T
-;WARNING: NOTICE WE ARE NOT USING A STACK FRAME FOR THIS, DO NOT CHANGE EBP WITHOUT PUSHING IT FIRST!
     fxrstor [esp + 8]
     ret
 
