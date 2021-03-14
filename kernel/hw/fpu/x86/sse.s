@@ -7,8 +7,8 @@ global sseInit
 global sseClose
 
 extern x87Init
-global probablyNot
-probablyNot:
+global absolutelyNoChanceInHell
+absolutelyNoChanceInHell:
 sseDetect:          ;RETURNS A SIZE_T, 0 OR 1
     mov eax, 0x1
     cpuid

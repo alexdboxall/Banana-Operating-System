@@ -18800,7 +18800,7 @@ c000e697:	e8 58 95 00 00       	call   c0017bf4 <CPU::cpuid(int, unsigned long*,
 c000e69c:	81 a3 e8 01 00 00 bf ff fc ff 	and    DWORD PTR [ebx+0x1e8],0xfffcffbf
 c000e6a6:	83 c4 20             	add    esp,0x20
 c000e6a9:	e9 a0 fe ff ff       	jmp    c000e54e <Computer::detectFeatures()+0x36>
-c000e6ae:	e8 5d 50 01 00       	call   c0023710 <sseDetect>
+c000e6ae:	e8 5d 50 01 00       	call   c0023710 <probablyNot>
 c000e6b3:	88 c2                	mov    dl,al
 c000e6b5:	8a 83 e8 01 00 00    	mov    al,BYTE PTR [ebx+0x1e8]
 c000e6bb:	c1 e2 07             	shl    edx,0x7
@@ -46022,7 +46022,7 @@ c00226ed:	90                   	nop
 
 c00226ee <SSE::available()>:
 c00226ee:	83 ec 1c             	sub    esp,0x1c
-c00226f1:	e8 1a 10 00 00       	call   c0023710 <sseDetect>
+c00226f1:	e8 1a 10 00 00       	call   c0023710 <probablyNot>
 c00226f6:	85 c0                	test   eax,eax
 c00226f8:	0f 95 c0             	setne  al
 c00226fb:	88 44 24 0f          	mov    BYTE PTR [esp+0xf],al
@@ -47399,18 +47399,18 @@ c00236f8:	c3                   	ret
 c00236f9 <avxClose>:
 c00236f9:	c3                   	ret    
 
-c00236fa <nothingToSeeHere>:
-c00236fa:	49                   	dec    ecx
-c00236fb:	20 6c 6f 76          	and    BYTE PTR [edi+ebp*2+0x76],ch
-c00236ff:	65 20 79 6f          	and    BYTE PTR gs:[ecx+0x6f],bh
-c0023703:	75 20                	jne    c0023725 <sseDetect.noSSE>
-c0023705:	4e                   	dec    esi
-c0023706:	79 61                	jns    c0023769 <x87Detect+0x13>
-c0023708:	68 2e 2e 2e 00       	push   0x2e2e2e
-c002370d:	66 90                	xchg   ax,ax
-c002370f:	90                   	nop
+c00236fa <wouldSheSayYes>:
+c00236fa:	c3                   	ret    
+c00236fb:	49                   	dec    ecx
+c00236fc:	20 6c 6f 76          	and    BYTE PTR [edi+ebp*2+0x76],ch
+c0023700:	65 20 79 6f          	and    BYTE PTR gs:[ecx+0x6f],bh
+c0023704:	75 20                	jne    c0023726 <sseDetect.noSSE+0x1>
+c0023706:	4e                   	dec    esi
+c0023707:	79 61                	jns    c002376a <x87Detect+0x14>
+c0023709:	68 2e 2e 2e 00       	push   0x2e2e2e
+c002370e:	66 90                	xchg   ax,ax
 
-c0023710 <sseDetect>:
+c0023710 <probablyNot>:
 c0023710:	b8 01 00 00 00       	mov    eax,0x1
 c0023715:	0f a2                	cpuid  
 c0023717:	f7 c2 00 00 00 02    	test   edx,0x2000000
