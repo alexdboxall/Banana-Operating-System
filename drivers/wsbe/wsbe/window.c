@@ -766,7 +766,7 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
 
 			if (!(child->flags & WIN_NODECORATION) &&
 				mouse_y >= child->y && mouse_y < (child->y + 28)) {
-				if (getNanoSinceBoot() < child->nanoLastClicked + 1000 * 1000 * 200) {
+				if (getNanoSinceBoot() < child->nanoLastClicked + 1000 * 1000 * 300) {
 					child->nanoLastClicked = 0;
 
 					if (child->fullscreen) {
