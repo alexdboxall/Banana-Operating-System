@@ -59,19 +59,29 @@ namespace Vm
 	ThreadControlBlock* vm86Thread;
 	bool vmReady = false;
 	bool vmDone = false;
+	size_t vmRetV;
+
+	void mainloop2()
+	{
+		vmReady = true;
+		kprintf("VM is ready and waiting...\n");
+		blockTask(TaskState::Paused);
+		vm8086EntryPoint(context);
+	}
+
+	void mainloop3(size_t retv)
+	{
+		vmDone = true;
+		vmRetV = retv;
+		kprintf("VM is done and waiting...\n");
+		blockTask(TaskState::Paused);
+		mainloop2();
+	}
 
 	void mainVm8086Loop(void* context)
 	{
 		unlockScheduler();
-		while (1) {
-			vmReady = true;
-			kprintf("VM is ready and waiting...\n");
-			blockTask(TaskState::Paused);
-			vm8086EntryPoint(context);
-			vmDone = true;
-			kprintf("VM is done and waiting...\n");
-			blockTask(TaskState::Paused);
-		}
+		mainloop2();
 	}
 
 	void initialise8086()
@@ -80,7 +90,7 @@ namespace Vm
 		kernelProcess->vas->mapRange(0x0, 0x0, 256, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
 	}
 
-	void finish8086()
+	size_t finish8086()
 	{
 		while (1) {
 			lockScheduler();
@@ -90,9 +100,11 @@ namespace Vm
 			unlockScheduler();
 		}
 
+		size_t retv = vmRetV;
 		vmDone = false;
 		unblockTask(vm86Thread);
 		unlockScheduler();
+		return retv;
 	}
 
 	bool start8086(const char* filename, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss)
@@ -351,7 +363,7 @@ namespace Vm
 
 				if (ip[1] == 0xEE) {
 					//@@@
-					Thr::terminateFromIRQ(r->eax);
+					mainloop3(r->eax);
 					return true;
 				}
 
