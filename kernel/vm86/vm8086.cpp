@@ -60,12 +60,14 @@ namespace Vm
 	bool vmReady = false;
 	bool vmDone = false;
 	size_t vmRetV;
+	void* vmContext;
 
-	void mainloop2()
+	void mainloop2(void* ctxt)
 	{
 		vmReady = true;
 		kprintf("VM is ready and waiting...\n");
 		blockTask(TaskState::Paused);
+		vmContext = ctxt;
 		vm8086EntryPoint(context);
 	}
 
@@ -75,13 +77,13 @@ namespace Vm
 		vmRetV = retv;
 		kprintf("VM is done and waiting...\n");
 		blockTask(TaskState::Paused);
-		mainloop2();
+		mainloop2(vmContext);
 	}
 
 	void mainVm8086Loop(void* context)
 	{
 		unlockScheduler();
-		mainloop2();
+		mainloop2(ctxt);
 	}
 
 	void initialise8086()
