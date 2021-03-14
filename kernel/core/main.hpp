@@ -7,6 +7,13 @@
 
 extern "C" void kernel_main();
 
+extern inline void* operator new(size_t size);
+extern inline void* operator new[](size_t size);
+extern inline void operator delete(void* p);
+extern inline void operator delete(void* p, long unsigned int);
+extern inline void operator delete[](void* p);
+extern inline void operator delete[](void* p, long unsigned int);
+
 #define KERNEL_DEBUG 
 
 #ifdef THIRTYTWOBIT

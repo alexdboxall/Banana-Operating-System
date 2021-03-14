@@ -40,6 +40,7 @@ extern "C" void __cxa_finalize(void* f)
 
 extern "C" void __stack_chk_fail(void)
 {
+	kprintf("\n\nSTACK CHECK FAILED.\n    FUNCTION __stack_chk_fail IN kernel/coreobjs/c++.cpp\n");
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wframe-address"
