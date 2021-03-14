@@ -348,7 +348,7 @@ bool CPU::cpuidCheckExtendedECX(uint32_t check)
 	return ecx & check;
 }
 
-CPU* CPU::current()
+CPU* CPU::current_()
 {
 	return computer->cpu[0];
 }
