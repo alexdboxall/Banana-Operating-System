@@ -25,7 +25,7 @@ avxClose:
 nothingToSeeHere:
     dec ecx
     and [edi+ebp*2+0x76],ch
-    and gs:[ecx+0x6f],bh
+    and [gs:ecx+0x6f],bh
     jne 0x2b
     dec esi
     jns 0x6f
