@@ -233,7 +233,6 @@ namespace Thr
 				}
 				++sym;
 			}
-
 		}
 
 		return 0;
@@ -432,9 +431,7 @@ namespace Thr
 				}
 
 				int actu;
-				kprintf("Reading 0x%X bytes of driver data.\n", size);
 				f->read(size, (void*) (addr - entryPoint + relocationPoint), &actu);
-				kprintf("Clearing 0x%X bytes of BSS.\n", (progHeaders + i)->p_memsz - (progHeaders + i)->p_filsz);
 				memset((void*) (addr - entryPoint + relocationPoint + size), 0, (progHeaders + i)->p_memsz - (progHeaders + i)->p_filsz);
 			}
 		}
@@ -446,8 +443,8 @@ namespace Thr
 
 		size_t symTabOffset = 0;			//offset into file of .symtab
 		size_t symTabLength = 0;			//length of .symtab
-		size_t strTabLength = 0;			//length of .symtab
-		size_t strTabOffset = 0;			//length of .symtab
+		size_t strTabOffset = 0;			//offset into file of .strtab
+		size_t strTabLength = 0;			//length of .strtab
 
 		int nextRelSection = 0;
 
@@ -464,8 +461,6 @@ namespace Thr
 
 			int actual;
 			f->read(31, namebuffer, &actual);
-
-			//kprintf("segment: %s\n", namebuffer);
 
 			if (!memcmp(namebuffer, ".rel.text", 9)) {
 				relTextOffsets[nextRelSection] = fileOffset;

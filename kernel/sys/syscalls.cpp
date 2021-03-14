@@ -360,15 +360,12 @@ uint64_t sysCallWait(regs* r)
 	return waitTask(r->ebx, (int*) r->edx, r->ecx);
 }
 
-uint64_t sysCallFork(regs* r)
+uint64_t sysCallNotImpl(regs* r)
 {
+	panic("UNIMPLEMENTED SYSTEM CALL");
 	return -1;
 }
 
-uint64_t sysCallExecve(regs* r)
-{
-	return -1;
-}
 
 uint64_t sysCallRmdir(regs* r)
 {
@@ -676,8 +673,8 @@ void setupSystemCalls()
 	systemCallHandlers[(int) SystemCallNumber::Size] = sysCallSize;
 	systemCallHandlers[(int) SystemCallNumber::Verify] = sysCallVerify;
 	systemCallHandlers[(int) SystemCallNumber::Wait] = sysCallWait;
-	systemCallHandlers[(int) SystemCallNumber::Fork] = sysCallFork;
-	systemCallHandlers[(int) SystemCallNumber::Execve] = sysCallExecve;
+	systemCallHandlers[(int) SystemCallNumber::Fork] = sysCallNotImpl;
+	systemCallHandlers[(int) SystemCallNumber::Execve] = sysCallNotImpl;
 	systemCallHandlers[(int) SystemCallNumber::Rmdir] = sysCallRmdir;
 	systemCallHandlers[(int) SystemCallNumber::Unlink] = sysCallUnlink;
 	systemCallHandlers[(int) SystemCallNumber::GetArgc] = sysCallGetArgc;
