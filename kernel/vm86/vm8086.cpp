@@ -72,7 +72,7 @@ namespace Vm
 		vmRetV = retv;
 		kprintf("VM done + blocking...\n");
 		blockTaskWithSchedulerLockAlreadyHeld(TaskState::Paused);
-		kprintf("VM ready + blocking...\n");
+		kprintf("VM starting loop again...\n");
 		mainloop2();							//GCC had better use tail call optimisations, or we could get recursion errors after running thousands of VM tasks
 	}
 
@@ -95,6 +95,7 @@ namespace Vm
 			if (vmDone) {
 				break;
 			}
+			schedule();
 			unlockScheduler();
 		}
 
@@ -114,6 +115,7 @@ namespace Vm
 			if (vmReady) {
 				break;
 			}
+			schedule();
 			unlockScheduler();
 		}
 
