@@ -2,6 +2,7 @@
 #include "sys/syscalls.hpp"
 #include "hal/intctrl.hpp"
 #include "hal/timer.hpp"
+#include "fs/vfs.hpp"
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")

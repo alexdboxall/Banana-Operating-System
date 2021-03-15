@@ -1,6 +1,7 @@
 #include "thr/prcssthr.hpp"
 #include "sys/syscalls.hpp"
 #include "hal/intctrl.hpp"
+#include "fs/vfs.hpp"
 #include "hal/timer.hpp"
 
 #pragma GCC optimize ("Os")
