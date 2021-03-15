@@ -19,7 +19,7 @@ namespace Sys
 	/// <param name="ebx">The directory name to switch to.</param>
 	/// <returns>Returns the return code.</returns>
 	/// 
-	uint64_t sysCallSetCwd(regs* r)
+	uint64_t setCwd(regs* r)
 	{
 		return setcwd(currentTaskTCB->processRelatedTo, (char*) r->ebx);
 	}

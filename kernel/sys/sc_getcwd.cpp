@@ -20,7 +20,7 @@ namespace Sys
 	/// <param name="ecx">The maximum number of bytes to copy to the buffer in EBX</param>
 	/// <returns>Returns the return code.</returns>
 	/// 
-	uint64_t sysCallGetCwd(regs* r)
+	uint64_t getCwd(regs* r)
 	{
 		return getcwd(currentTaskTCB->processRelatedTo, (char*) r->ebx, r->ecx);
 	}

@@ -17,7 +17,7 @@ namespace Sys
 	/// </summary>
 	/// <returns>Returns the process ID.</returns>
 	/// 
-	uint64_t sysCallGetPID(regs* r)
+	uint64_t getPID(regs* r)
 	{
 		return currentTaskTCB->processRelatedTo->pid;
 	}
