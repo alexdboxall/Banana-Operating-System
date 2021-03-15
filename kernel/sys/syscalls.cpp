@@ -30,23 +30,11 @@ namespace Sys
 	uint64_t sbrk(regs* r);
 	uint64_t write(regs* r);
 	uint64_t read(regs* r);
+	uint64_t getPID(regs* r);
+	uint64_t getCwd(regs* r);
+	uint64_t setCwd(regs* r);
 
 	uint64_t loadDLL(regs* r);
-}
-
-uint64_t sysCallGetPID(regs* r)
-{
-	return currentTaskTCB->processRelatedTo->pid;
-}
-
-uint64_t sysCallGetCwd(regs* r)
-{
-	return getcwd(currentTaskTCB->processRelatedTo, (char*) r->ebx, r->ecx);
-}
-
-uint64_t sysCallSetCwd(regs* r)
-{
-	return setcwd(currentTaskTCB->processRelatedTo, (char*) r->ebx);
 }
 
 int string_ends_with(const char* str, const char* suffix)
@@ -657,9 +645,10 @@ void setupSystemCalls()
 	systemCallHandlers[(int) SystemCallNumber::Sbrk] = Sys::sbrk;
 	systemCallHandlers[(int) SystemCallNumber::Write] = Sys::write;
 	systemCallHandlers[(int) SystemCallNumber::Read] = Sys::read;
-	systemCallHandlers[(int) SystemCallNumber::GetPID] = sysCallGetPID;
-	systemCallHandlers[(int) SystemCallNumber::GetCwd] = sysCallGetCwd;
-	systemCallHandlers[(int) SystemCallNumber::SetCwd] = sysCallSetCwd;
+	systemCallHandlers[(int) SystemCallNumber::GetPID] = Sys::getPID;
+	systemCallHandlers[(int) SystemCallNumber::GetCwd] = Sys::getCwd;
+	systemCallHandlers[(int) SystemCallNumber::SetCwd] = Sys::setCwd;
+
 	systemCallHandlers[(int) SystemCallNumber::Close] = sysCallClose;
 	systemCallHandlers[(int) SystemCallNumber::Open] = sysCallOpen;
 	systemCallHandlers[(int) SystemCallNumber::OpenDir] = sysCallOpenDir;
