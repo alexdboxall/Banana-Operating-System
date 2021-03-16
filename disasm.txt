@@ -33849,427 +33849,427 @@ c0019652:	83 c4 1c             	add    esp,0x1c
 c0019655:	89 c2                	mov    edx,eax
 c0019657:	c3                   	ret    
 
-c0019658 <Sys::loadDLL(regs*)>:
-c0019658:	56                   	push   esi
-c0019659:	53                   	push   ebx
-c001965a:	31 d2                	xor    edx,edx
-c001965c:	51                   	push   ecx
-c001965d:	b8 01 00 00 00       	mov    eax,0x1
-c0019662:	8b 74 24 10          	mov    esi,DWORD PTR [esp+0x10]
-c0019666:	83 7e 20 00          	cmp    DWORD PTR [esi+0x20],0x0
-c001966a:	0f 84 8c 00 00 00    	je     c00196fc <Sys::loadDLL(regs*)+0xa4>
-c0019670:	83 ec 0c             	sub    esp,0xc
-c0019673:	68 14 01 00 00       	push   0x114
-c0019678:	e8 43 5e ff ff       	call   c000f4c0 <malloc>
-c001967d:	83 c4 0c             	add    esp,0xc
-c0019680:	89 c3                	mov    ebx,eax
-c0019682:	a1 00 20 00 c2       	mov    eax,ds:0xc2002000
-c0019687:	ff 70 40             	push   DWORD PTR [eax+0x40]
-c001968a:	ff 76 20             	push   DWORD PTR [esi+0x20]
-c001968d:	53                   	push   ebx
-c001968e:	e8 cf 94 ff ff       	call   c0012b62 <File::File(char const*, Process*)>
-c0019693:	83 c4 10             	add    esp,0x10
-c0019696:	31 d2                	xor    edx,edx
-c0019698:	b8 02 00 00 00       	mov    eax,0x2
-c001969d:	85 db                	test   ebx,ebx
-c001969f:	74 5b                	je     c00196fc <Sys::loadDLL(regs*)+0xa4>
-c00196a1:	83 ec 0c             	sub    esp,0xc
-c00196a4:	53                   	push   ebx
-c00196a5:	e8 8a 97 ff ff       	call   c0012e34 <File::exists()>
-c00196aa:	83 c4 10             	add    esp,0x10
-c00196ad:	84 c0                	test   al,al
-c00196af:	8b 03                	mov    eax,DWORD PTR [ebx]
-c00196b1:	75 11                	jne    c00196c4 <Sys::loadDLL(regs*)+0x6c>
-c00196b3:	83 ec 0c             	sub    esp,0xc
-c00196b6:	53                   	push   ebx
-c00196b7:	ff 50 08             	call   DWORD PTR [eax+0x8]
-c00196ba:	83 c4 10             	add    esp,0x10
-c00196bd:	b8 03 00 00 00       	mov    eax,0x3
-c00196c2:	eb 36                	jmp    c00196fa <Sys::loadDLL(regs*)+0xa2>
-c00196c4:	83 ec 0c             	sub    esp,0xc
-c00196c7:	53                   	push   ebx
-c00196c8:	ff 50 08             	call   DWORD PTR [eax+0x8]
-c00196cb:	58                   	pop    eax
-c00196cc:	5a                   	pop    edx
-c00196cd:	6a 00                	push   0x0
-c00196cf:	ff 76 20             	push   DWORD PTR [esi+0x20]
-c00196d2:	e8 34 21 00 00       	call   c001b80b <Thr::loadDLL(char const*, bool)>
-c00196d7:	83 c4 10             	add    esp,0x10
-c00196da:	89 c1                	mov    ecx,eax
-c00196dc:	31 d2                	xor    edx,edx
-c00196de:	b8 04 00 00 00       	mov    eax,0x4
-c00196e3:	85 c9                	test   ecx,ecx
-c00196e5:	74 15                	je     c00196fc <Sys::loadDLL(regs*)+0xa4>
-c00196e7:	53                   	push   ebx
-c00196e8:	53                   	push   ebx
-c00196e9:	ff 35 c8 aa 02 c0    	push   DWORD PTR ds:0xc002aac8
-c00196ef:	51                   	push   ecx
-c00196f0:	e8 25 23 00 00       	call   c001ba1a <Thr::executeDLL(unsigned long, void*)>
-c00196f5:	83 c4 10             	add    esp,0x10
-c00196f8:	31 c0                	xor    eax,eax
-c00196fa:	31 d2                	xor    edx,edx
-c00196fc:	59                   	pop    ecx
-c00196fd:	5b                   	pop    ebx
-c00196fe:	5e                   	pop    esi
-c00196ff:	c3                   	ret    
+c0019658 <Sys::getCwd(regs*)>:
+c0019658:	83 ec 10             	sub    esp,0x10
+c001965b:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
+c001965f:	ff 70 28             	push   DWORD PTR [eax+0x28]
+c0019662:	ff 70 20             	push   DWORD PTR [eax+0x20]
+c0019665:	a1 00 20 00 c2       	mov    eax,ds:0xc2002000
+c001966a:	ff 70 40             	push   DWORD PTR [eax+0x40]
+c001966d:	e8 61 98 ff ff       	call   c0012ed3 <getcwd(Process*, char*, int)>
+c0019672:	83 c4 1c             	add    esp,0x1c
+c0019675:	99                   	cdq    
+c0019676:	c3                   	ret    
 
-c0019700 <Sys::read(regs*)>:
-c0019700:	57                   	push   edi
-c0019701:	56                   	push   esi
-c0019702:	53                   	push   ebx
-c0019703:	83 ec 10             	sub    esp,0x10
-c0019706:	8b 5c 24 20          	mov    ebx,DWORD PTR [esp+0x20]
-c001970a:	8b 43 20             	mov    eax,DWORD PTR [ebx+0x20]
-c001970d:	83 f8 02             	cmp    eax,0x2
-c0019710:	77 10                	ja     c0019722 <Sys::read(regs*)+0x22>
-c0019712:	a1 00 20 00 c2       	mov    eax,ds:0xc2002000
-c0019717:	8b 40 40             	mov    eax,DWORD PTR [eax+0x40]
-c001971a:	8b 88 26 05 00 00    	mov    ecx,DWORD PTR [eax+0x526]
-c0019720:	eb 0e                	jmp    c0019730 <Sys::read(regs*)+0x30>
-c0019722:	83 ec 0c             	sub    esp,0xc
-c0019725:	50                   	push   eax
-c0019726:	e8 c2 7d ff ff       	call   c00114ed <getFromFileDescriptor(int)>
-c001972b:	83 c4 10             	add    esp,0x10
-c001972e:	89 c1                	mov    ecx,eax
-c0019730:	83 c8 ff             	or     eax,0xffffffff
-c0019733:	85 c9                	test   ecx,ecx
-c0019735:	89 c2                	mov    edx,eax
-c0019737:	74 28                	je     c0019761 <Sys::read(regs*)+0x61>
-c0019739:	c7 44 24 0c 00 00 00 00 	mov    DWORD PTR [esp+0xc],0x0
-c0019741:	31 ff                	xor    edi,edi
-c0019743:	83 ec 0c             	sub    esp,0xc
-c0019746:	8b 01                	mov    eax,DWORD PTR [ecx]
-c0019748:	8d 54 24 18          	lea    edx,[esp+0x18]
-c001974c:	52                   	push   edx
-c001974d:	ff 73 24             	push   DWORD PTR [ebx+0x24]
-c0019750:	8b 73 28             	mov    esi,DWORD PTR [ebx+0x28]
-c0019753:	57                   	push   edi
-c0019754:	56                   	push   esi
-c0019755:	51                   	push   ecx
-c0019756:	ff 50 0c             	call   DWORD PTR [eax+0xc]
-c0019759:	8b 44 24 2c          	mov    eax,DWORD PTR [esp+0x2c]
-c001975d:	83 c4 20             	add    esp,0x20
-c0019760:	99                   	cdq    
-c0019761:	83 c4 10             	add    esp,0x10
-c0019764:	5b                   	pop    ebx
-c0019765:	5e                   	pop    esi
-c0019766:	5f                   	pop    edi
-c0019767:	c3                   	ret    
+c0019677 <Sys::getPID(regs*)>:
+c0019677:	a1 00 20 00 c2       	mov    eax,ds:0xc2002000
+c001967c:	8b 40 40             	mov    eax,DWORD PTR [eax+0x40]
+c001967f:	8b 00                	mov    eax,DWORD PTR [eax]
+c0019681:	99                   	cdq    
+c0019682:	c3                   	ret    
 
-c0019768 <Sys::sbrk(regs*)>:
-c0019768:	56                   	push   esi
-c0019769:	53                   	push   ebx
-c001976a:	50                   	push   eax
-c001976b:	a1 00 20 00 c2       	mov    eax,ds:0xc2002000
-c0019770:	8b 54 24 10          	mov    edx,DWORD PTR [esp+0x10]
-c0019774:	8b 40 40             	mov    eax,DWORD PTR [eax+0x40]
-c0019777:	8b 5a 20             	mov    ebx,DWORD PTR [edx+0x20]
-c001977a:	8b 88 32 05 00 00    	mov    ecx,DWORD PTR [eax+0x532]
-c0019780:	85 db                	test   ebx,ebx
-c0019782:	8b 71 04             	mov    esi,DWORD PTR [ecx+0x4]
-c0019785:	74 02                	je     c0019789 <Sys::sbrk(regs*)+0x21>
-c0019787:	79 06                	jns    c001978f <Sys::sbrk(regs*)+0x27>
-c0019789:	89 f0                	mov    eax,esi
-c001978b:	31 d2                	xor    edx,edx
-c001978d:	eb 2a                	jmp    c00197b9 <Sys::sbrk(regs*)+0x51>
-c001978f:	83 c8 ff             	or     eax,0xffffffff
-c0019792:	81 fb 00 00 00 04    	cmp    ebx,0x4000000
-c0019798:	89 c2                	mov    edx,eax
-c001979a:	77 1d                	ja     c00197b9 <Sys::sbrk(regs*)+0x51>
-c001979c:	8d 93 ff 0f 00 00    	lea    edx,[ebx+0xfff]
-c00197a2:	50                   	push   eax
-c00197a3:	c1 ea 0c             	shr    edx,0xc
-c00197a6:	68 07 04 00 00       	push   0x407
-c00197ab:	52                   	push   edx
-c00197ac:	51                   	push   ecx
-c00197ad:	e8 5c 86 ff ff       	call   c0011e0e <VAS::allocatePages(int, int)>
-c00197b2:	89 f0                	mov    eax,esi
-c00197b4:	31 d2                	xor    edx,edx
-c00197b6:	83 c4 10             	add    esp,0x10
-c00197b9:	59                   	pop    ecx
-c00197ba:	5b                   	pop    ebx
-c00197bb:	5e                   	pop    esi
-c00197bc:	c3                   	ret    
+c0019683 <Sys::loadDLL(regs*)>:
+c0019683:	56                   	push   esi
+c0019684:	53                   	push   ebx
+c0019685:	31 d2                	xor    edx,edx
+c0019687:	51                   	push   ecx
+c0019688:	b8 01 00 00 00       	mov    eax,0x1
+c001968d:	8b 74 24 10          	mov    esi,DWORD PTR [esp+0x10]
+c0019691:	83 7e 20 00          	cmp    DWORD PTR [esi+0x20],0x0
+c0019695:	0f 84 8c 00 00 00    	je     c0019727 <Sys::loadDLL(regs*)+0xa4>
+c001969b:	83 ec 0c             	sub    esp,0xc
+c001969e:	68 14 01 00 00       	push   0x114
+c00196a3:	e8 18 5e ff ff       	call   c000f4c0 <malloc>
+c00196a8:	83 c4 0c             	add    esp,0xc
+c00196ab:	89 c3                	mov    ebx,eax
+c00196ad:	a1 00 20 00 c2       	mov    eax,ds:0xc2002000
+c00196b2:	ff 70 40             	push   DWORD PTR [eax+0x40]
+c00196b5:	ff 76 20             	push   DWORD PTR [esi+0x20]
+c00196b8:	53                   	push   ebx
+c00196b9:	e8 a4 94 ff ff       	call   c0012b62 <File::File(char const*, Process*)>
+c00196be:	83 c4 10             	add    esp,0x10
+c00196c1:	31 d2                	xor    edx,edx
+c00196c3:	b8 02 00 00 00       	mov    eax,0x2
+c00196c8:	85 db                	test   ebx,ebx
+c00196ca:	74 5b                	je     c0019727 <Sys::loadDLL(regs*)+0xa4>
+c00196cc:	83 ec 0c             	sub    esp,0xc
+c00196cf:	53                   	push   ebx
+c00196d0:	e8 5f 97 ff ff       	call   c0012e34 <File::exists()>
+c00196d5:	83 c4 10             	add    esp,0x10
+c00196d8:	84 c0                	test   al,al
+c00196da:	8b 03                	mov    eax,DWORD PTR [ebx]
+c00196dc:	75 11                	jne    c00196ef <Sys::loadDLL(regs*)+0x6c>
+c00196de:	83 ec 0c             	sub    esp,0xc
+c00196e1:	53                   	push   ebx
+c00196e2:	ff 50 08             	call   DWORD PTR [eax+0x8]
+c00196e5:	83 c4 10             	add    esp,0x10
+c00196e8:	b8 03 00 00 00       	mov    eax,0x3
+c00196ed:	eb 36                	jmp    c0019725 <Sys::loadDLL(regs*)+0xa2>
+c00196ef:	83 ec 0c             	sub    esp,0xc
+c00196f2:	53                   	push   ebx
+c00196f3:	ff 50 08             	call   DWORD PTR [eax+0x8]
+c00196f6:	58                   	pop    eax
+c00196f7:	5a                   	pop    edx
+c00196f8:	6a 00                	push   0x0
+c00196fa:	ff 76 20             	push   DWORD PTR [esi+0x20]
+c00196fd:	e8 09 21 00 00       	call   c001b80b <Thr::loadDLL(char const*, bool)>
+c0019702:	83 c4 10             	add    esp,0x10
+c0019705:	89 c1                	mov    ecx,eax
+c0019707:	31 d2                	xor    edx,edx
+c0019709:	b8 04 00 00 00       	mov    eax,0x4
+c001970e:	85 c9                	test   ecx,ecx
+c0019710:	74 15                	je     c0019727 <Sys::loadDLL(regs*)+0xa4>
+c0019712:	53                   	push   ebx
+c0019713:	53                   	push   ebx
+c0019714:	ff 35 c8 aa 02 c0    	push   DWORD PTR ds:0xc002aac8
+c001971a:	51                   	push   ecx
+c001971b:	e8 fa 22 00 00       	call   c001ba1a <Thr::executeDLL(unsigned long, void*)>
+c0019720:	83 c4 10             	add    esp,0x10
+c0019723:	31 c0                	xor    eax,eax
+c0019725:	31 d2                	xor    edx,edx
+c0019727:	59                   	pop    ecx
+c0019728:	5b                   	pop    ebx
+c0019729:	5e                   	pop    esi
+c001972a:	c3                   	ret    
 
-c00197bd <Sys::write(regs*)>:
-c00197bd:	57                   	push   edi
-c00197be:	56                   	push   esi
-c00197bf:	53                   	push   ebx
-c00197c0:	83 ec 10             	sub    esp,0x10
-c00197c3:	8b 5c 24 20          	mov    ebx,DWORD PTR [esp+0x20]
-c00197c7:	8b 43 20             	mov    eax,DWORD PTR [ebx+0x20]
-c00197ca:	83 f8 02             	cmp    eax,0x2
-c00197cd:	77 10                	ja     c00197df <Sys::write(regs*)+0x22>
-c00197cf:	a1 00 20 00 c2       	mov    eax,ds:0xc2002000
-c00197d4:	8b 40 40             	mov    eax,DWORD PTR [eax+0x40]
-c00197d7:	8b 88 26 05 00 00    	mov    ecx,DWORD PTR [eax+0x526]
-c00197dd:	eb 0e                	jmp    c00197ed <Sys::write(regs*)+0x30>
-c00197df:	83 ec 0c             	sub    esp,0xc
-c00197e2:	50                   	push   eax
-c00197e3:	e8 05 7d ff ff       	call   c00114ed <getFromFileDescriptor(int)>
-c00197e8:	83 c4 10             	add    esp,0x10
-c00197eb:	89 c1                	mov    ecx,eax
-c00197ed:	83 c8 ff             	or     eax,0xffffffff
-c00197f0:	85 c9                	test   ecx,ecx
-c00197f2:	89 c2                	mov    edx,eax
-c00197f4:	74 28                	je     c001981e <Sys::write(regs*)+0x61>
-c00197f6:	c7 44 24 0c 00 00 00 00 	mov    DWORD PTR [esp+0xc],0x0
-c00197fe:	31 ff                	xor    edi,edi
-c0019800:	83 ec 0c             	sub    esp,0xc
-c0019803:	8b 01                	mov    eax,DWORD PTR [ecx]
-c0019805:	8d 54 24 18          	lea    edx,[esp+0x18]
-c0019809:	52                   	push   edx
-c001980a:	ff 73 24             	push   DWORD PTR [ebx+0x24]
-c001980d:	8b 73 28             	mov    esi,DWORD PTR [ebx+0x28]
-c0019810:	57                   	push   edi
-c0019811:	56                   	push   esi
-c0019812:	51                   	push   ecx
-c0019813:	ff 50 10             	call   DWORD PTR [eax+0x10]
-c0019816:	8b 44 24 2c          	mov    eax,DWORD PTR [esp+0x2c]
-c001981a:	83 c4 20             	add    esp,0x20
-c001981d:	99                   	cdq    
-c001981e:	83 c4 10             	add    esp,0x10
-c0019821:	5b                   	pop    ebx
-c0019822:	5e                   	pop    esi
-c0019823:	5f                   	pop    edi
-c0019824:	c3                   	ret    
+c001972b <Sys::read(regs*)>:
+c001972b:	57                   	push   edi
+c001972c:	56                   	push   esi
+c001972d:	53                   	push   ebx
+c001972e:	83 ec 10             	sub    esp,0x10
+c0019731:	8b 5c 24 20          	mov    ebx,DWORD PTR [esp+0x20]
+c0019735:	8b 43 20             	mov    eax,DWORD PTR [ebx+0x20]
+c0019738:	83 f8 02             	cmp    eax,0x2
+c001973b:	77 10                	ja     c001974d <Sys::read(regs*)+0x22>
+c001973d:	a1 00 20 00 c2       	mov    eax,ds:0xc2002000
+c0019742:	8b 40 40             	mov    eax,DWORD PTR [eax+0x40]
+c0019745:	8b 88 26 05 00 00    	mov    ecx,DWORD PTR [eax+0x526]
+c001974b:	eb 0e                	jmp    c001975b <Sys::read(regs*)+0x30>
+c001974d:	83 ec 0c             	sub    esp,0xc
+c0019750:	50                   	push   eax
+c0019751:	e8 97 7d ff ff       	call   c00114ed <getFromFileDescriptor(int)>
+c0019756:	83 c4 10             	add    esp,0x10
+c0019759:	89 c1                	mov    ecx,eax
+c001975b:	83 c8 ff             	or     eax,0xffffffff
+c001975e:	85 c9                	test   ecx,ecx
+c0019760:	89 c2                	mov    edx,eax
+c0019762:	74 28                	je     c001978c <Sys::read(regs*)+0x61>
+c0019764:	c7 44 24 0c 00 00 00 00 	mov    DWORD PTR [esp+0xc],0x0
+c001976c:	31 ff                	xor    edi,edi
+c001976e:	83 ec 0c             	sub    esp,0xc
+c0019771:	8b 01                	mov    eax,DWORD PTR [ecx]
+c0019773:	8d 54 24 18          	lea    edx,[esp+0x18]
+c0019777:	52                   	push   edx
+c0019778:	ff 73 24             	push   DWORD PTR [ebx+0x24]
+c001977b:	8b 73 28             	mov    esi,DWORD PTR [ebx+0x28]
+c001977e:	57                   	push   edi
+c001977f:	56                   	push   esi
+c0019780:	51                   	push   ecx
+c0019781:	ff 50 0c             	call   DWORD PTR [eax+0xc]
+c0019784:	8b 44 24 2c          	mov    eax,DWORD PTR [esp+0x2c]
+c0019788:	83 c4 20             	add    esp,0x20
+c001978b:	99                   	cdq    
+c001978c:	83 c4 10             	add    esp,0x10
+c001978f:	5b                   	pop    ebx
+c0019790:	5e                   	pop    esi
+c0019791:	5f                   	pop    edi
+c0019792:	c3                   	ret    
 
-c0019825 <Sys::yield(regs*)>:
-c0019825:	57                   	push   edi
-c0019826:	56                   	push   esi
-c0019827:	53                   	push   ebx
-c0019828:	e8 1a 26 00 00       	call   c001be47 <lockScheduler()>
-c001982d:	e8 50 29 00 00       	call   c001c182 <schedule()>
-c0019832:	e8 12 26 00 00       	call   c001be49 <unlockScheduler()>
-c0019837:	8b 35 30 b1 02 c0    	mov    esi,DWORD PTR ds:0xc002b130
-c001983d:	8b 3d 34 b1 02 c0    	mov    edi,DWORD PTR ds:0xc002b134
-c0019843:	89 f0                	mov    eax,esi
-c0019845:	89 fb                	mov    ebx,edi
-c0019847:	89 f1                	mov    ecx,esi
-c0019849:	c1 e0 07             	shl    eax,0x7
-c001984c:	0f ac d9 17          	shrd   ecx,ebx,0x17
-c0019850:	25 80 30 0f 00       	and    eax,0xf3080
-c0019855:	c1 eb 17             	shr    ebx,0x17
-c0019858:	31 c8                	xor    eax,ecx
-c001985a:	89 da                	mov    edx,ebx
-c001985c:	5b                   	pop    ebx
-c001985d:	5e                   	pop    esi
-c001985e:	5f                   	pop    edi
-c001985f:	c3                   	ret    
+c0019793 <Sys::sbrk(regs*)>:
+c0019793:	56                   	push   esi
+c0019794:	53                   	push   ebx
+c0019795:	50                   	push   eax
+c0019796:	a1 00 20 00 c2       	mov    eax,ds:0xc2002000
+c001979b:	8b 54 24 10          	mov    edx,DWORD PTR [esp+0x10]
+c001979f:	8b 40 40             	mov    eax,DWORD PTR [eax+0x40]
+c00197a2:	8b 5a 20             	mov    ebx,DWORD PTR [edx+0x20]
+c00197a5:	8b 88 32 05 00 00    	mov    ecx,DWORD PTR [eax+0x532]
+c00197ab:	85 db                	test   ebx,ebx
+c00197ad:	8b 71 04             	mov    esi,DWORD PTR [ecx+0x4]
+c00197b0:	74 02                	je     c00197b4 <Sys::sbrk(regs*)+0x21>
+c00197b2:	79 06                	jns    c00197ba <Sys::sbrk(regs*)+0x27>
+c00197b4:	89 f0                	mov    eax,esi
+c00197b6:	31 d2                	xor    edx,edx
+c00197b8:	eb 2a                	jmp    c00197e4 <Sys::sbrk(regs*)+0x51>
+c00197ba:	83 c8 ff             	or     eax,0xffffffff
+c00197bd:	81 fb 00 00 00 04    	cmp    ebx,0x4000000
+c00197c3:	89 c2                	mov    edx,eax
+c00197c5:	77 1d                	ja     c00197e4 <Sys::sbrk(regs*)+0x51>
+c00197c7:	8d 93 ff 0f 00 00    	lea    edx,[ebx+0xfff]
+c00197cd:	50                   	push   eax
+c00197ce:	c1 ea 0c             	shr    edx,0xc
+c00197d1:	68 07 04 00 00       	push   0x407
+c00197d6:	52                   	push   edx
+c00197d7:	51                   	push   ecx
+c00197d8:	e8 31 86 ff ff       	call   c0011e0e <VAS::allocatePages(int, int)>
+c00197dd:	89 f0                	mov    eax,esi
+c00197df:	31 d2                	xor    edx,edx
+c00197e1:	83 c4 10             	add    esp,0x10
+c00197e4:	59                   	pop    ecx
+c00197e5:	5b                   	pop    ebx
+c00197e6:	5e                   	pop    esi
+c00197e7:	c3                   	ret    
 
-c0019860 <sysCallGetPID(regs*)>:
-c0019860:	a1 00 20 00 c2       	mov    eax,ds:0xc2002000
-c0019865:	8b 40 40             	mov    eax,DWORD PTR [eax+0x40]
-c0019868:	8b 00                	mov    eax,DWORD PTR [eax]
-c001986a:	99                   	cdq    
+c00197e8 <Sys::setCwd(regs*)>:
+c00197e8:	83 ec 14             	sub    esp,0x14
+c00197eb:	8b 44 24 18          	mov    eax,DWORD PTR [esp+0x18]
+c00197ef:	ff 70 20             	push   DWORD PTR [eax+0x20]
+c00197f2:	a1 00 20 00 c2       	mov    eax,ds:0xc2002000
+c00197f7:	ff 70 40             	push   DWORD PTR [eax+0x40]
+c00197fa:	e8 fe 96 ff ff       	call   c0012efd <setcwd(Process*, char*)>
+c00197ff:	83 c4 1c             	add    esp,0x1c
+c0019802:	99                   	cdq    
+c0019803:	c3                   	ret    
+
+c0019804 <Sys::write(regs*)>:
+c0019804:	57                   	push   edi
+c0019805:	56                   	push   esi
+c0019806:	53                   	push   ebx
+c0019807:	83 ec 10             	sub    esp,0x10
+c001980a:	8b 5c 24 20          	mov    ebx,DWORD PTR [esp+0x20]
+c001980e:	8b 43 20             	mov    eax,DWORD PTR [ebx+0x20]
+c0019811:	83 f8 02             	cmp    eax,0x2
+c0019814:	77 10                	ja     c0019826 <Sys::write(regs*)+0x22>
+c0019816:	a1 00 20 00 c2       	mov    eax,ds:0xc2002000
+c001981b:	8b 40 40             	mov    eax,DWORD PTR [eax+0x40]
+c001981e:	8b 88 26 05 00 00    	mov    ecx,DWORD PTR [eax+0x526]
+c0019824:	eb 0e                	jmp    c0019834 <Sys::write(regs*)+0x30>
+c0019826:	83 ec 0c             	sub    esp,0xc
+c0019829:	50                   	push   eax
+c001982a:	e8 be 7c ff ff       	call   c00114ed <getFromFileDescriptor(int)>
+c001982f:	83 c4 10             	add    esp,0x10
+c0019832:	89 c1                	mov    ecx,eax
+c0019834:	83 c8 ff             	or     eax,0xffffffff
+c0019837:	85 c9                	test   ecx,ecx
+c0019839:	89 c2                	mov    edx,eax
+c001983b:	74 28                	je     c0019865 <Sys::write(regs*)+0x61>
+c001983d:	c7 44 24 0c 00 00 00 00 	mov    DWORD PTR [esp+0xc],0x0
+c0019845:	31 ff                	xor    edi,edi
+c0019847:	83 ec 0c             	sub    esp,0xc
+c001984a:	8b 01                	mov    eax,DWORD PTR [ecx]
+c001984c:	8d 54 24 18          	lea    edx,[esp+0x18]
+c0019850:	52                   	push   edx
+c0019851:	ff 73 24             	push   DWORD PTR [ebx+0x24]
+c0019854:	8b 73 28             	mov    esi,DWORD PTR [ebx+0x28]
+c0019857:	57                   	push   edi
+c0019858:	56                   	push   esi
+c0019859:	51                   	push   ecx
+c001985a:	ff 50 10             	call   DWORD PTR [eax+0x10]
+c001985d:	8b 44 24 2c          	mov    eax,DWORD PTR [esp+0x2c]
+c0019861:	83 c4 20             	add    esp,0x20
+c0019864:	99                   	cdq    
+c0019865:	83 c4 10             	add    esp,0x10
+c0019868:	5b                   	pop    ebx
+c0019869:	5e                   	pop    esi
+c001986a:	5f                   	pop    edi
 c001986b:	c3                   	ret    
 
-c001986c <sysCallSeekDir(regs*)>:
-c001986c:	31 c0                	xor    eax,eax
-c001986e:	31 d2                	xor    edx,edx
-c0019870:	c3                   	ret    
+c001986c <Sys::yield(regs*)>:
+c001986c:	57                   	push   edi
+c001986d:	56                   	push   esi
+c001986e:	53                   	push   ebx
+c001986f:	e8 d3 25 00 00       	call   c001be47 <lockScheduler()>
+c0019874:	e8 09 29 00 00       	call   c001c182 <schedule()>
+c0019879:	e8 cb 25 00 00       	call   c001be49 <unlockScheduler()>
+c001987e:	8b 35 30 b1 02 c0    	mov    esi,DWORD PTR ds:0xc002b130
+c0019884:	8b 3d 34 b1 02 c0    	mov    edi,DWORD PTR ds:0xc002b134
+c001988a:	89 f0                	mov    eax,esi
+c001988c:	89 fb                	mov    ebx,edi
+c001988e:	89 f1                	mov    ecx,esi
+c0019890:	c1 e0 07             	shl    eax,0x7
+c0019893:	0f ac d9 17          	shrd   ecx,ebx,0x17
+c0019897:	25 80 30 0f 00       	and    eax,0xf3080
+c001989c:	c1 eb 17             	shr    ebx,0x17
+c001989f:	31 c8                	xor    eax,ecx
+c00198a1:	89 da                	mov    edx,ebx
+c00198a3:	5b                   	pop    ebx
+c00198a4:	5e                   	pop    esi
+c00198a5:	5f                   	pop    edi
+c00198a6:	c3                   	ret    
 
-c0019871 <sysCallTellDir(regs*)>:
-c0019871:	31 c0                	xor    eax,eax
-c0019873:	31 d2                	xor    edx,edx
-c0019875:	c3                   	ret    
+c00198a7 <sysCallSeekDir(regs*)>:
+c00198a7:	31 c0                	xor    eax,eax
+c00198a9:	31 d2                	xor    edx,edx
+c00198ab:	c3                   	ret    
 
-c0019876 <sysCallVerify(regs*)>:
-c0019876:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
-c001987a:	31 d2                	xor    edx,edx
-c001987c:	8b 40 20             	mov    eax,DWORD PTR [eax+0x20]
-c001987f:	c3                   	ret    
+c00198ac <sysCallTellDir(regs*)>:
+c00198ac:	31 c0                	xor    eax,eax
+c00198ae:	31 d2                	xor    edx,edx
+c00198b0:	c3                   	ret    
 
-c0019880 <sysCallGetArgc(regs*)>:
-c0019880:	a1 00 20 00 c2       	mov    eax,ds:0xc2002000
-c0019885:	8b 40 40             	mov    eax,DWORD PTR [eax+0x40]
-c0019888:	8b 80 36 05 00 00    	mov    eax,DWORD PTR [eax+0x536]
-c001988e:	99                   	cdq    
-c001988f:	c3                   	ret    
+c00198b1 <sysCallVerify(regs*)>:
+c00198b1:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
+c00198b5:	31 d2                	xor    edx,edx
+c00198b7:	8b 40 20             	mov    eax,DWORD PTR [eax+0x20]
+c00198ba:	c3                   	ret    
 
-c0019890 <sysFormatDisk(regs*)>:
-c0019890:	56                   	push   esi
-c0019891:	53                   	push   ebx
-c0019892:	53                   	push   ebx
-c0019893:	8b 74 24 10          	mov    esi,DWORD PTR [esp+0x10]
-c0019897:	8b 1d 28 ac 02 c0    	mov    ebx,DWORD PTR ds:0xc002ac28
-c001989d:	eb 25                	jmp    c00198c4 <sysFormatDisk(regs*)+0x34>
-c001989f:	83 ec 0c             	sub    esp,0xc
-c00198a2:	8b 46 20             	mov    eax,DWORD PTR [esi+0x20]
-c00198a5:	8b 13                	mov    edx,DWORD PTR [ebx]
-c00198a7:	ff 76 28             	push   DWORD PTR [esi+0x28]
-c00198aa:	ff 76 24             	push   DWORD PTR [esi+0x24]
-c00198ad:	50                   	push   eax
-c00198ae:	ff 34 85 c0 b0 02 c0 	push   DWORD PTR [eax*4-0x3ffd4f40]
-c00198b5:	53                   	push   ebx
-c00198b6:	ff 52 48             	call   DWORD PTR [edx+0x48]
-c00198b9:	83 c4 20             	add    esp,0x20
-c00198bc:	83 f8 08             	cmp    eax,0x8
-c00198bf:	75 12                	jne    c00198d3 <sysFormatDisk(regs*)+0x43>
-c00198c1:	8b 5b 04             	mov    ebx,DWORD PTR [ebx+0x4]
-c00198c4:	85 db                	test   ebx,ebx
-c00198c6:	75 d7                	jne    c001989f <sysFormatDisk(regs*)+0xf>
-c00198c8:	59                   	pop    ecx
-c00198c9:	b8 03 00 00 00       	mov    eax,0x3
-c00198ce:	31 d2                	xor    edx,edx
-c00198d0:	5b                   	pop    ebx
-c00198d1:	5e                   	pop    esi
-c00198d2:	c3                   	ret    
-c00198d3:	85 c0                	test   eax,eax
-c00198d5:	74 1b                	je     c00198f2 <sysFormatDisk(regs*)+0x62>
-c00198d7:	83 f8 09             	cmp    eax,0x9
-c00198da:	74 0b                	je     c00198e7 <sysFormatDisk(regs*)+0x57>
-c00198dc:	59                   	pop    ecx
-c00198dd:	b8 02 00 00 00       	mov    eax,0x2
-c00198e2:	31 d2                	xor    edx,edx
-c00198e4:	5b                   	pop    ebx
-c00198e5:	5e                   	pop    esi
-c00198e6:	c3                   	ret    
-c00198e7:	59                   	pop    ecx
-c00198e8:	b8 01 00 00 00       	mov    eax,0x1
-c00198ed:	31 d2                	xor    edx,edx
-c00198ef:	5b                   	pop    ebx
-c00198f0:	5e                   	pop    esi
-c00198f1:	c3                   	ret    
-c00198f2:	59                   	pop    ecx
-c00198f3:	31 c0                	xor    eax,eax
-c00198f5:	31 d2                	xor    edx,edx
-c00198f7:	5b                   	pop    ebx
-c00198f8:	5e                   	pop    esi
-c00198f9:	c3                   	ret    
+c00198bb <sysCallGetArgc(regs*)>:
+c00198bb:	a1 00 20 00 c2       	mov    eax,ds:0xc2002000
+c00198c0:	8b 40 40             	mov    eax,DWORD PTR [eax+0x40]
+c00198c3:	8b 80 36 05 00 00    	mov    eax,DWORD PTR [eax+0x536]
+c00198c9:	99                   	cdq    
+c00198ca:	c3                   	ret    
 
-c00198fa <sysSetDiskVolumeLabel(regs*)>:
-c00198fa:	56                   	push   esi
-c00198fb:	53                   	push   ebx
-c00198fc:	53                   	push   ebx
-c00198fd:	8b 54 24 10          	mov    edx,DWORD PTR [esp+0x10]
-c0019901:	8b 42 20             	mov    eax,DWORD PTR [edx+0x20]
-c0019904:	83 f8 19             	cmp    eax,0x19
-c0019907:	77 29                	ja     c0019932 <sysSetDiskVolumeLabel(regs*)+0x38>
-c0019909:	8b 0c 85 c0 b0 02 c0 	mov    ecx,DWORD PTR [eax*4-0x3ffd4f40]
-c0019910:	85 c9                	test   ecx,ecx
-c0019912:	74 1e                	je     c0019932 <sysSetDiskVolumeLabel(regs*)+0x38>
-c0019914:	8b 52 24             	mov    edx,DWORD PTR [edx+0x24]
-c0019917:	85 d2                	test   edx,edx
-c0019919:	74 17                	je     c0019932 <sysSetDiskVolumeLabel(regs*)+0x38>
-c001991b:	8b 99 70 01 00 00    	mov    ebx,DWORD PTR [ecx+0x170]
-c0019921:	8b 33                	mov    esi,DWORD PTR [ebx]
-c0019923:	52                   	push   edx
-c0019924:	50                   	push   eax
-c0019925:	51                   	push   ecx
-c0019926:	53                   	push   ebx
-c0019927:	ff 56 58             	call   DWORD PTR [esi+0x58]
-c001992a:	83 c4 10             	add    esp,0x10
-c001992d:	99                   	cdq    
-c001992e:	59                   	pop    ecx
-c001992f:	5b                   	pop    ebx
-c0019930:	5e                   	pop    esi
-c0019931:	c3                   	ret    
-c0019932:	59                   	pop    ecx
-c0019933:	b8 fe ff ff ff       	mov    eax,0xfffffffe
-c0019938:	ba ff ff ff ff       	mov    edx,0xffffffff
-c001993d:	5b                   	pop    ebx
-c001993e:	5e                   	pop    esi
-c001993f:	c3                   	ret    
+c00198cb <sysFormatDisk(regs*)>:
+c00198cb:	56                   	push   esi
+c00198cc:	53                   	push   ebx
+c00198cd:	53                   	push   ebx
+c00198ce:	8b 74 24 10          	mov    esi,DWORD PTR [esp+0x10]
+c00198d2:	8b 1d 28 ac 02 c0    	mov    ebx,DWORD PTR ds:0xc002ac28
+c00198d8:	eb 25                	jmp    c00198ff <sysFormatDisk(regs*)+0x34>
+c00198da:	83 ec 0c             	sub    esp,0xc
+c00198dd:	8b 46 20             	mov    eax,DWORD PTR [esi+0x20]
+c00198e0:	8b 13                	mov    edx,DWORD PTR [ebx]
+c00198e2:	ff 76 28             	push   DWORD PTR [esi+0x28]
+c00198e5:	ff 76 24             	push   DWORD PTR [esi+0x24]
+c00198e8:	50                   	push   eax
+c00198e9:	ff 34 85 c0 b0 02 c0 	push   DWORD PTR [eax*4-0x3ffd4f40]
+c00198f0:	53                   	push   ebx
+c00198f1:	ff 52 48             	call   DWORD PTR [edx+0x48]
+c00198f4:	83 c4 20             	add    esp,0x20
+c00198f7:	83 f8 08             	cmp    eax,0x8
+c00198fa:	75 12                	jne    c001990e <sysFormatDisk(regs*)+0x43>
+c00198fc:	8b 5b 04             	mov    ebx,DWORD PTR [ebx+0x4]
+c00198ff:	85 db                	test   ebx,ebx
+c0019901:	75 d7                	jne    c00198da <sysFormatDisk(regs*)+0xf>
+c0019903:	59                   	pop    ecx
+c0019904:	b8 03 00 00 00       	mov    eax,0x3
+c0019909:	31 d2                	xor    edx,edx
+c001990b:	5b                   	pop    ebx
+c001990c:	5e                   	pop    esi
+c001990d:	c3                   	ret    
+c001990e:	85 c0                	test   eax,eax
+c0019910:	74 1b                	je     c001992d <sysFormatDisk(regs*)+0x62>
+c0019912:	83 f8 09             	cmp    eax,0x9
+c0019915:	74 0b                	je     c0019922 <sysFormatDisk(regs*)+0x57>
+c0019917:	59                   	pop    ecx
+c0019918:	b8 02 00 00 00       	mov    eax,0x2
+c001991d:	31 d2                	xor    edx,edx
+c001991f:	5b                   	pop    ebx
+c0019920:	5e                   	pop    esi
+c0019921:	c3                   	ret    
+c0019922:	59                   	pop    ecx
+c0019923:	b8 01 00 00 00       	mov    eax,0x1
+c0019928:	31 d2                	xor    edx,edx
+c001992a:	5b                   	pop    ebx
+c001992b:	5e                   	pop    esi
+c001992c:	c3                   	ret    
+c001992d:	59                   	pop    ecx
+c001992e:	31 c0                	xor    eax,eax
+c0019930:	31 d2                	xor    edx,edx
+c0019932:	5b                   	pop    ebx
+c0019933:	5e                   	pop    esi
+c0019934:	c3                   	ret    
 
-c0019940 <sysGetDiskVolumeLabel(regs*)>:
-c0019940:	57                   	push   edi
-c0019941:	56                   	push   esi
-c0019942:	53                   	push   ebx
-c0019943:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
-c0019947:	8b 50 20             	mov    edx,DWORD PTR [eax+0x20]
-c001994a:	83 fa 19             	cmp    edx,0x19
-c001994d:	77 34                	ja     c0019983 <sysGetDiskVolumeLabel(regs*)+0x43>
-c001994f:	8b 0c 95 c0 b0 02 c0 	mov    ecx,DWORD PTR [edx*4-0x3ffd4f40]
-c0019956:	85 c9                	test   ecx,ecx
-c0019958:	74 29                	je     c0019983 <sysGetDiskVolumeLabel(regs*)+0x43>
-c001995a:	8b 58 24             	mov    ebx,DWORD PTR [eax+0x24]
-c001995d:	85 db                	test   ebx,ebx
-c001995f:	74 22                	je     c0019983 <sysGetDiskVolumeLabel(regs*)+0x43>
-c0019961:	8b 40 28             	mov    eax,DWORD PTR [eax+0x28]
-c0019964:	85 c0                	test   eax,eax
-c0019966:	74 1b                	je     c0019983 <sysGetDiskVolumeLabel(regs*)+0x43>
-c0019968:	8b b1 70 01 00 00    	mov    esi,DWORD PTR [ecx+0x170]
-c001996e:	83 ec 0c             	sub    esp,0xc
-c0019971:	8b 3e                	mov    edi,DWORD PTR [esi]
-c0019973:	50                   	push   eax
-c0019974:	53                   	push   ebx
-c0019975:	52                   	push   edx
-c0019976:	51                   	push   ecx
-c0019977:	56                   	push   esi
-c0019978:	ff 57 54             	call   DWORD PTR [edi+0x54]
-c001997b:	83 c4 20             	add    esp,0x20
-c001997e:	99                   	cdq    
-c001997f:	5b                   	pop    ebx
-c0019980:	5e                   	pop    esi
-c0019981:	5f                   	pop    edi
-c0019982:	c3                   	ret    
-c0019983:	5b                   	pop    ebx
-c0019984:	b8 fe ff ff ff       	mov    eax,0xfffffffe
-c0019989:	ba ff ff ff ff       	mov    edx,0xffffffff
-c001998e:	5e                   	pop    esi
-c001998f:	5f                   	pop    edi
-c0019990:	c3                   	ret    
+c0019935 <sysSetDiskVolumeLabel(regs*)>:
+c0019935:	56                   	push   esi
+c0019936:	53                   	push   ebx
+c0019937:	53                   	push   ebx
+c0019938:	8b 54 24 10          	mov    edx,DWORD PTR [esp+0x10]
+c001993c:	8b 42 20             	mov    eax,DWORD PTR [edx+0x20]
+c001993f:	83 f8 19             	cmp    eax,0x19
+c0019942:	77 29                	ja     c001996d <sysSetDiskVolumeLabel(regs*)+0x38>
+c0019944:	8b 0c 85 c0 b0 02 c0 	mov    ecx,DWORD PTR [eax*4-0x3ffd4f40]
+c001994b:	85 c9                	test   ecx,ecx
+c001994d:	74 1e                	je     c001996d <sysSetDiskVolumeLabel(regs*)+0x38>
+c001994f:	8b 52 24             	mov    edx,DWORD PTR [edx+0x24]
+c0019952:	85 d2                	test   edx,edx
+c0019954:	74 17                	je     c001996d <sysSetDiskVolumeLabel(regs*)+0x38>
+c0019956:	8b 99 70 01 00 00    	mov    ebx,DWORD PTR [ecx+0x170]
+c001995c:	8b 33                	mov    esi,DWORD PTR [ebx]
+c001995e:	52                   	push   edx
+c001995f:	50                   	push   eax
+c0019960:	51                   	push   ecx
+c0019961:	53                   	push   ebx
+c0019962:	ff 56 58             	call   DWORD PTR [esi+0x58]
+c0019965:	83 c4 10             	add    esp,0x10
+c0019968:	99                   	cdq    
+c0019969:	59                   	pop    ecx
+c001996a:	5b                   	pop    ebx
+c001996b:	5e                   	pop    esi
+c001996c:	c3                   	ret    
+c001996d:	59                   	pop    ecx
+c001996e:	b8 fe ff ff ff       	mov    eax,0xfffffffe
+c0019973:	ba ff ff ff ff       	mov    edx,0xffffffff
+c0019978:	5b                   	pop    ebx
+c0019979:	5e                   	pop    esi
+c001997a:	c3                   	ret    
 
-c0019991 <sysShutdown(regs*)>:
-c0019991:	83 ec 0c             	sub    esp,0xc
-c0019994:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
-c0019998:	8b 40 20             	mov    eax,DWORD PTR [eax+0x20]
-c001999b:	85 c0                	test   eax,eax
-c001999d:	74 18                	je     c00199b7 <sysShutdown(regs*)+0x26>
-c001999f:	83 f8 01             	cmp    eax,0x1
-c00199a2:	74 38                	je     c00199dc <sysShutdown(regs*)+0x4b>
-c00199a4:	83 f8 02             	cmp    eax,0x2
-c00199a7:	74 24                	je     c00199cd <sysShutdown(regs*)+0x3c>
-c00199a9:	b8 ff ff ff ff       	mov    eax,0xffffffff
-c00199ae:	ba ff ff ff ff       	mov    edx,0xffffffff
-c00199b3:	83 c4 0c             	add    esp,0xc
-c00199b6:	c3                   	ret    
-c00199b7:	a1 c8 aa 02 c0       	mov    eax,ds:0xc002aac8
-c00199bc:	8b 10                	mov    edx,DWORD PTR [eax]
-c00199be:	6a 00                	push   0x0
-c00199c0:	6a 00                	push   0x0
-c00199c2:	6a 00                	push   0x0
-c00199c4:	50                   	push   eax
-c00199c5:	ff 52 0c             	call   DWORD PTR [edx+0xc]
-c00199c8:	83 c4 10             	add    esp,0x10
-c00199cb:	eb dc                	jmp    c00199a9 <sysShutdown(regs*)+0x18>
-c00199cd:	a1 c8 aa 02 c0       	mov    eax,ds:0xc002aac8
-c00199d2:	8b 10                	mov    edx,DWORD PTR [eax]
-c00199d4:	6a 00                	push   0x0
-c00199d6:	6a 00                	push   0x0
-c00199d8:	6a 01                	push   0x1
-c00199da:	eb e8                	jmp    c00199c4 <sysShutdown(regs*)+0x33>
-c00199dc:	a1 40 b1 02 c0       	mov    eax,ds:0xc002b140
-c00199e1:	85 c0                	test   eax,eax
-c00199e3:	74 02                	je     c00199e7 <sysShutdown(regs*)+0x56>
-c00199e5:	ff d0                	call   eax
-c00199e7:	31 c0                	xor    eax,eax
-c00199e9:	31 d2                	xor    edx,edx
-c00199eb:	83 c4 0c             	add    esp,0xc
-c00199ee:	c3                   	ret    
+c001997b <sysGetDiskVolumeLabel(regs*)>:
+c001997b:	57                   	push   edi
+c001997c:	56                   	push   esi
+c001997d:	53                   	push   ebx
+c001997e:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
+c0019982:	8b 50 20             	mov    edx,DWORD PTR [eax+0x20]
+c0019985:	83 fa 19             	cmp    edx,0x19
+c0019988:	77 34                	ja     c00199be <sysGetDiskVolumeLabel(regs*)+0x43>
+c001998a:	8b 0c 95 c0 b0 02 c0 	mov    ecx,DWORD PTR [edx*4-0x3ffd4f40]
+c0019991:	85 c9                	test   ecx,ecx
+c0019993:	74 29                	je     c00199be <sysGetDiskVolumeLabel(regs*)+0x43>
+c0019995:	8b 58 24             	mov    ebx,DWORD PTR [eax+0x24]
+c0019998:	85 db                	test   ebx,ebx
+c001999a:	74 22                	je     c00199be <sysGetDiskVolumeLabel(regs*)+0x43>
+c001999c:	8b 40 28             	mov    eax,DWORD PTR [eax+0x28]
+c001999f:	85 c0                	test   eax,eax
+c00199a1:	74 1b                	je     c00199be <sysGetDiskVolumeLabel(regs*)+0x43>
+c00199a3:	8b b1 70 01 00 00    	mov    esi,DWORD PTR [ecx+0x170]
+c00199a9:	83 ec 0c             	sub    esp,0xc
+c00199ac:	8b 3e                	mov    edi,DWORD PTR [esi]
+c00199ae:	50                   	push   eax
+c00199af:	53                   	push   ebx
+c00199b0:	52                   	push   edx
+c00199b1:	51                   	push   ecx
+c00199b2:	56                   	push   esi
+c00199b3:	ff 57 54             	call   DWORD PTR [edi+0x54]
+c00199b6:	83 c4 20             	add    esp,0x20
+c00199b9:	99                   	cdq    
+c00199ba:	5b                   	pop    ebx
+c00199bb:	5e                   	pop    esi
+c00199bc:	5f                   	pop    edi
+c00199bd:	c3                   	ret    
+c00199be:	5b                   	pop    ebx
+c00199bf:	b8 fe ff ff ff       	mov    eax,0xfffffffe
+c00199c4:	ba ff ff ff ff       	mov    edx,0xffffffff
+c00199c9:	5e                   	pop    esi
+c00199ca:	5f                   	pop    edi
+c00199cb:	c3                   	ret    
 
-c00199ef <sysCallGetCwd(regs*)>:
-c00199ef:	83 ec 10             	sub    esp,0x10
-c00199f2:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
-c00199f6:	ff 70 28             	push   DWORD PTR [eax+0x28]
-c00199f9:	ff 70 20             	push   DWORD PTR [eax+0x20]
-c00199fc:	a1 00 20 00 c2       	mov    eax,ds:0xc2002000
-c0019a01:	ff 70 40             	push   DWORD PTR [eax+0x40]
-c0019a04:	e8 ca 94 ff ff       	call   c0012ed3 <getcwd(Process*, char*, int)>
-c0019a09:	83 c4 1c             	add    esp,0x1c
-c0019a0c:	99                   	cdq    
-c0019a0d:	c3                   	ret    
-
-c0019a0e <sysCallSetCwd(regs*)>:
-c0019a0e:	83 ec 14             	sub    esp,0x14
-c0019a11:	8b 44 24 18          	mov    eax,DWORD PTR [esp+0x18]
-c0019a15:	ff 70 20             	push   DWORD PTR [eax+0x20]
-c0019a18:	a1 00 20 00 c2       	mov    eax,ds:0xc2002000
-c0019a1d:	ff 70 40             	push   DWORD PTR [eax+0x40]
-c0019a20:	e8 d8 94 ff ff       	call   c0012efd <setcwd(Process*, char*)>
-c0019a25:	83 c4 1c             	add    esp,0x1c
-c0019a28:	99                   	cdq    
+c00199cc <sysShutdown(regs*)>:
+c00199cc:	83 ec 0c             	sub    esp,0xc
+c00199cf:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
+c00199d3:	8b 40 20             	mov    eax,DWORD PTR [eax+0x20]
+c00199d6:	85 c0                	test   eax,eax
+c00199d8:	74 18                	je     c00199f2 <sysShutdown(regs*)+0x26>
+c00199da:	83 f8 01             	cmp    eax,0x1
+c00199dd:	74 38                	je     c0019a17 <sysShutdown(regs*)+0x4b>
+c00199df:	83 f8 02             	cmp    eax,0x2
+c00199e2:	74 24                	je     c0019a08 <sysShutdown(regs*)+0x3c>
+c00199e4:	b8 ff ff ff ff       	mov    eax,0xffffffff
+c00199e9:	ba ff ff ff ff       	mov    edx,0xffffffff
+c00199ee:	83 c4 0c             	add    esp,0xc
+c00199f1:	c3                   	ret    
+c00199f2:	a1 c8 aa 02 c0       	mov    eax,ds:0xc002aac8
+c00199f7:	8b 10                	mov    edx,DWORD PTR [eax]
+c00199f9:	6a 00                	push   0x0
+c00199fb:	6a 00                	push   0x0
+c00199fd:	6a 00                	push   0x0
+c00199ff:	50                   	push   eax
+c0019a00:	ff 52 0c             	call   DWORD PTR [edx+0xc]
+c0019a03:	83 c4 10             	add    esp,0x10
+c0019a06:	eb dc                	jmp    c00199e4 <sysShutdown(regs*)+0x18>
+c0019a08:	a1 c8 aa 02 c0       	mov    eax,ds:0xc002aac8
+c0019a0d:	8b 10                	mov    edx,DWORD PTR [eax]
+c0019a0f:	6a 00                	push   0x0
+c0019a11:	6a 00                	push   0x0
+c0019a13:	6a 01                	push   0x1
+c0019a15:	eb e8                	jmp    c00199ff <sysShutdown(regs*)+0x33>
+c0019a17:	a1 40 b1 02 c0       	mov    eax,ds:0xc002b140
+c0019a1c:	85 c0                	test   eax,eax
+c0019a1e:	74 02                	je     c0019a22 <sysShutdown(regs*)+0x56>
+c0019a20:	ff d0                	call   eax
+c0019a22:	31 c0                	xor    eax,eax
+c0019a24:	31 d2                	xor    edx,edx
+c0019a26:	83 c4 0c             	add    esp,0xc
 c0019a29:	c3                   	ret    
 
 c0019a2a <sysCallRealpath(regs*)>:
@@ -35420,32 +35420,32 @@ c001a64f:	c7 40 04 00 00 00 00 	mov    DWORD PTR [eax+0x4],0x0
 c001a656:	e9 ab fe ff ff       	jmp    c001a506 <sysCallOpen(regs*)+0xc0>
 
 c001a65b <setupSystemCalls()>:
-c001a65b:	c7 05 e0 b5 02 c0 25 98 01 c0 	mov    DWORD PTR ds:0xc002b5e0,0xc0019825
+c001a65b:	c7 05 e0 b5 02 c0 6c 98 01 c0 	mov    DWORD PTR ds:0xc002b5e0,0xc001986c
 c001a665:	c7 05 e4 b5 02 c0 40 96 01 c0 	mov    DWORD PTR ds:0xc002b5e4,0xc0019640
-c001a66f:	c7 05 e8 b5 02 c0 68 97 01 c0 	mov    DWORD PTR ds:0xc002b5e8,0xc0019768
-c001a679:	c7 05 ec b5 02 c0 bd 97 01 c0 	mov    DWORD PTR ds:0xc002b5ec,0xc00197bd
-c001a683:	c7 05 f0 b5 02 c0 00 97 01 c0 	mov    DWORD PTR ds:0xc002b5f0,0xc0019700
-c001a68d:	c7 05 f4 b5 02 c0 60 98 01 c0 	mov    DWORD PTR ds:0xc002b5f4,0xc0019860
-c001a697:	c7 05 f8 b5 02 c0 ef 99 01 c0 	mov    DWORD PTR ds:0xc002b5f8,0xc00199ef
-c001a6a1:	c7 05 fc b5 02 c0 0e 9a 01 c0 	mov    DWORD PTR ds:0xc002b5fc,0xc0019a0e
+c001a66f:	c7 05 e8 b5 02 c0 93 97 01 c0 	mov    DWORD PTR ds:0xc002b5e8,0xc0019793
+c001a679:	c7 05 ec b5 02 c0 04 98 01 c0 	mov    DWORD PTR ds:0xc002b5ec,0xc0019804
+c001a683:	c7 05 f0 b5 02 c0 2b 97 01 c0 	mov    DWORD PTR ds:0xc002b5f0,0xc001972b
+c001a68d:	c7 05 f4 b5 02 c0 77 96 01 c0 	mov    DWORD PTR ds:0xc002b5f4,0xc0019677
+c001a697:	c7 05 f8 b5 02 c0 58 96 01 c0 	mov    DWORD PTR ds:0xc002b5f8,0xc0019658
+c001a6a1:	c7 05 fc b5 02 c0 e8 97 01 c0 	mov    DWORD PTR ds:0xc002b5fc,0xc00197e8
 c001a6ab:	c7 05 04 b6 02 c0 7e 9d 01 c0 	mov    DWORD PTR ds:0xc002b604,0xc0019d7e
 c001a6b5:	c7 05 00 b6 02 c0 46 a4 01 c0 	mov    DWORD PTR ds:0xc002b600,0xc001a446
 c001a6bf:	c7 05 08 b6 02 c0 06 9e 01 c0 	mov    DWORD PTR ds:0xc002b608,0xc0019e06
 c001a6c9:	c7 05 0c b6 02 c0 6d 9a 01 c0 	mov    DWORD PTR ds:0xc002b60c,0xc0019a6d
-c001a6d3:	c7 05 10 b6 02 c0 6c 98 01 c0 	mov    DWORD PTR ds:0xc002b610,0xc001986c
-c001a6dd:	c7 05 14 b6 02 c0 71 98 01 c0 	mov    DWORD PTR ds:0xc002b614,0xc0019871
+c001a6d3:	c7 05 10 b6 02 c0 a7 98 01 c0 	mov    DWORD PTR ds:0xc002b610,0xc00198a7
+c001a6dd:	c7 05 14 b6 02 c0 ac 98 01 c0 	mov    DWORD PTR ds:0xc002b614,0xc00198ac
 c001a6e7:	c7 05 18 b6 02 c0 e1 9e 01 c0 	mov    DWORD PTR ds:0xc002b618,0xc0019ee1
 c001a6f1:	c7 05 1c b6 02 c0 7b 9e 01 c0 	mov    DWORD PTR ds:0xc002b61c,0xc0019e7b
 c001a6fb:	c7 05 20 b6 02 c0 55 9b 01 c0 	mov    DWORD PTR ds:0xc002b620,0xc0019b55
 c001a705:	c7 05 24 b6 02 c0 be 9b 01 c0 	mov    DWORD PTR ds:0xc002b624,0xc0019bbe
 c001a70f:	c7 05 28 b6 02 c0 3b 9c 01 c0 	mov    DWORD PTR ds:0xc002b628,0xc0019c3b
-c001a719:	c7 05 2c b6 02 c0 76 98 01 c0 	mov    DWORD PTR ds:0xc002b62c,0xc0019876
+c001a719:	c7 05 2c b6 02 c0 b1 98 01 c0 	mov    DWORD PTR ds:0xc002b62c,0xc00198b1
 c001a723:	c7 05 30 b6 02 c0 51 9f 01 c0 	mov    DWORD PTR ds:0xc002b630,0xc0019f51
 c001a72d:	c7 05 34 b6 02 c0 6b 9f 01 c0 	mov    DWORD PTR ds:0xc002b634,0xc0019f6b
 c001a737:	c7 05 38 b6 02 c0 6b 9f 01 c0 	mov    DWORD PTR ds:0xc002b638,0xc0019f6b
 c001a741:	c7 05 3c b6 02 c0 ac 9f 01 c0 	mov    DWORD PTR ds:0xc002b63c,0xc0019fac
 c001a74b:	c7 05 40 b6 02 c0 10 a0 01 c0 	mov    DWORD PTR ds:0xc002b640,0xc001a010
-c001a755:	c7 05 44 b6 02 c0 80 98 01 c0 	mov    DWORD PTR ds:0xc002b644,0xc0019880
+c001a755:	c7 05 44 b6 02 c0 bb 98 01 c0 	mov    DWORD PTR ds:0xc002b644,0xc00198bb
 c001a75f:	c7 05 48 b6 02 c0 74 a0 01 c0 	mov    DWORD PTR ds:0xc002b648,0xc001a074
 c001a769:	c7 05 4c b6 02 c0 2a 9a 01 c0 	mov    DWORD PTR ds:0xc002b64c,0xc0019a2a
 c001a773:	c7 05 50 b6 02 c0 c0 a0 01 c0 	mov    DWORD PTR ds:0xc002b650,0xc001a0c0
@@ -35455,15 +35455,15 @@ c001a791:	c7 05 5c b6 02 c0 be 9c 01 c0 	mov    DWORD PTR ds:0xc002b65c,0xc0019c
 c001a79b:	c7 05 60 b6 02 c0 bc a1 01 c0 	mov    DWORD PTR ds:0xc002b660,0xc001a1bc
 c001a7a5:	c7 05 64 b6 02 c0 43 a1 01 c0 	mov    DWORD PTR ds:0xc002b664,0xc001a143
 c001a7af:	c7 05 68 b6 02 c0 14 a2 01 c0 	mov    DWORD PTR ds:0xc002b668,0xc001a214
-c001a7b9:	c7 05 6c b6 02 c0 90 98 01 c0 	mov    DWORD PTR ds:0xc002b66c,0xc0019890
-c001a7c3:	c7 05 70 b6 02 c0 fa 98 01 c0 	mov    DWORD PTR ds:0xc002b670,0xc00198fa
-c001a7cd:	c7 05 74 b6 02 c0 40 99 01 c0 	mov    DWORD PTR ds:0xc002b674,0xc0019940
+c001a7b9:	c7 05 6c b6 02 c0 cb 98 01 c0 	mov    DWORD PTR ds:0xc002b66c,0xc00198cb
+c001a7c3:	c7 05 70 b6 02 c0 35 99 01 c0 	mov    DWORD PTR ds:0xc002b670,0xc0019935
+c001a7cd:	c7 05 74 b6 02 c0 7b 99 01 c0 	mov    DWORD PTR ds:0xc002b674,0xc001997b
 c001a7d7:	c7 05 78 b6 02 c0 33 a3 01 c0 	mov    DWORD PTR ds:0xc002b678,0xc001a333
 c001a7e1:	c7 05 7c b6 02 c0 86 9f 01 c0 	mov    DWORD PTR ds:0xc002b67c,0xc0019f86
-c001a7eb:	c7 05 80 b6 02 c0 91 99 01 c0 	mov    DWORD PTR ds:0xc002b680,0xc0019991
+c001a7eb:	c7 05 80 b6 02 c0 cc 99 01 c0 	mov    DWORD PTR ds:0xc002b680,0xc00199cc
 c001a7f5:	c7 05 84 b6 02 c0 a5 a3 01 c0 	mov    DWORD PTR ds:0xc002b684,0xc001a3a5
 c001a7ff:	c7 05 88 b6 02 c0 ea a3 01 c0 	mov    DWORD PTR ds:0xc002b688,0xc001a3ea
-c001a809:	c7 05 8c b6 02 c0 58 96 01 c0 	mov    DWORD PTR ds:0xc002b68c,0xc0019658
+c001a809:	c7 05 8c b6 02 c0 83 96 01 c0 	mov    DWORD PTR ds:0xc002b68c,0xc0019683
 c001a813:	c3                   	ret    
 
 c001a814 <systemCall(regs*, void*)>:
@@ -46006,7 +46006,7 @@ c00226c9:	c3                   	ret
 
 c00226ca <SSE::open(int, int, void*)>:
 c00226ca:	83 ec 0c             	sub    esp,0xc
-c00226cd:	e8 65 10 00 00       	call   c0023737 <sseInit>
+c00226cd:	e8 62 10 00 00       	call   c0023734 <sseInit>
 c00226d2:	b8 00 00 00 00       	mov    eax,0x0
 c00226d7:	83 c4 0c             	add    esp,0xc
 c00226da:	c3                   	ret    
@@ -46014,7 +46014,7 @@ c00226db:	90                   	nop
 
 c00226dc <SSE::close(int, int, void*)>:
 c00226dc:	83 ec 0c             	sub    esp,0xc
-c00226df:	e8 63 10 00 00       	call   c0023747 <sseClose>
+c00226df:	e8 60 10 00 00       	call   c0023744 <sseClose>
 c00226e4:	b8 00 00 00 00       	mov    eax,0x0
 c00226e9:	83 c4 0c             	add    esp,0xc
 c00226ec:	c3                   	ret    
@@ -46036,7 +46036,7 @@ c0022708:	83 ec 0c             	sub    esp,0xc
 c002270b:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
 c002270f:	83 ec 0c             	sub    esp,0xc
 c0022712:	50                   	push   eax
-c0022713:	e8 13 10 00 00       	call   c002372b <sseSave>
+c0022713:	e8 10 10 00 00       	call   c0023728 <sseSave>
 c0022718:	83 c4 10             	add    esp,0x10
 c002271b:	90                   	nop
 c002271c:	83 c4 0c             	add    esp,0xc
@@ -46047,7 +46047,7 @@ c0022720:	83 ec 0c             	sub    esp,0xc
 c0022723:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
 c0022727:	83 ec 0c             	sub    esp,0xc
 c002272a:	50                   	push   eax
-c002272b:	e8 01 10 00 00       	call   c0023731 <sseLoad>
+c002272b:	e8 fe 0f 00 00       	call   c002372e <sseLoad>
 c0022730:	83 c4 10             	add    esp,0x10
 c0022733:	90                   	nop
 c0022734:	83 c4 0c             	add    esp,0xc
@@ -47419,30 +47419,32 @@ c002371f:	b8 01 00 00 00       	mov    eax,0x1
 c0023724:	c3                   	ret    
 
 c0023725 <sseDetect.noSSE>:
-c0023725:	b8 00 00 00 00       	mov    eax,0x0
-c002372a:	c3                   	ret    
+c0023725:	31 c0                	xor    eax,eax
+c0023727:	c3                   	ret    
 
-c002372b <sseSave>:
-c002372b:	0f ae 44 24 08       	fxsave [esp+0x8]
-c0023730:	c3                   	ret    
+c0023728 <sseSave>:
+c0023728:	0f ae 44 24 08       	fxsave [esp+0x8]
+c002372d:	c3                   	ret    
 
-c0023731 <sseLoad>:
-c0023731:	0f ae 4c 24 08       	fxrstor [esp+0x8]
-c0023736:	c3                   	ret    
+c002372e <sseLoad>:
+c002372e:	0f ae 4c 24 08       	fxrstor [esp+0x8]
+c0023733:	c3                   	ret    
 
-c0023737 <sseInit>:
-c0023737:	e8 40 00 00 00       	call   c002377c <x87Init>
-c002373c:	0f 20 e0             	mov    eax,cr4
-c002373f:	66 0d 00 06          	or     ax,0x600
-c0023743:	0f 22 e0             	mov    cr4,eax
-c0023746:	c3                   	ret    
+c0023734 <sseInit>:
+c0023734:	e8 43 00 00 00       	call   c002377c <x87Init>
+c0023739:	0f 20 e0             	mov    eax,cr4
+c002373c:	66 0d 00 06          	or     ax,0x600
+c0023740:	0f 22 e0             	mov    cr4,eax
+c0023743:	c3                   	ret    
 
-c0023747 <sseClose>:
-c0023747:	c3                   	ret    
-c0023748:	66 90                	xchg   ax,ax
-c002374a:	66 90                	xchg   ax,ax
-c002374c:	66 90                	xchg   ax,ax
-c002374e:	66 90                	xchg   ax,ax
+c0023744 <sseClose>:
+c0023744:	c3                   	ret    
+c0023745:	66 90                	xchg   ax,ax
+c0023747:	66 90                	xchg   ax,ax
+c0023749:	66 90                	xchg   ax,ax
+c002374b:	66 90                	xchg   ax,ax
+c002374d:	66 90                	xchg   ax,ax
+c002374f:	90                   	nop
 
 c0023750 <value_37F>:
 c0023750:	7f 03                	jg     c0023755 <value_37A+0x1>

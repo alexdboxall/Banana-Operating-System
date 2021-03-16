@@ -8,6 +8,7 @@
 #include "thr/elf.hpp"
 #include "core/terminal.hpp"
 #include "core/physmgr.hpp"
+#include "reg/registry.hpp"
 #include "thr/prcssthr.hpp"
 #include "hal/buzzer.hpp"
 #include "fs/vfs.hpp"
@@ -552,7 +553,7 @@ void playJingle(void* context)
 {
     unlockScheduler();
 
-    /*systemBuzzer->beep(131, 400);
+    systemBuzzer->beep(131, 400);
     systemBuzzer->beep(175, 400);
     systemBuzzer->beep(247, 400);
     systemBuzzer->beep(330, 400);
@@ -560,7 +561,8 @@ void playJingle(void* context)
     systemBuzzer->beep(587, 400);
     systemBuzzer->beep(784, 400);
     systemBuzzer->beep(698, 400);
-    systemBuzzer->beep(659, 800);*/
+    systemBuzzer->beep(659, 800);
+    systemBuzzer->stop();
 
     terminateTask(0);
 }
@@ -587,7 +589,10 @@ void begin(void* a)
         //firstRun();
 
     } else {
-        kernelProcess->createThread(playJingle);
+        if (Reg::readBoolWithDefault("shell", "@misc:playJingle", true)) {
+            kernelProcess->createThread(playJingle);
+        }        
+
         loadExtensions();
     }
 
