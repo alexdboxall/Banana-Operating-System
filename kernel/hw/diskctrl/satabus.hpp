@@ -180,6 +180,6 @@ public:
 	int close(int, int, void*);
 
 	void detect();
-}
+};
 
 #endif
