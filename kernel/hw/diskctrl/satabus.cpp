@@ -79,7 +79,7 @@ int SATABus::checkType(HBA_PORT* port)
 		return AHCI_DEV_NULL;
 	}
 
-	if (ipm != HBA_POR_IPM_ACTIVE) {
+	if (ipm != HBA_PORT_IPM_ACTIVE) {
 		return AHCI_DEV_NULL;
 	}
 
