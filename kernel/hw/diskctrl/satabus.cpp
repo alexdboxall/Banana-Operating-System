@@ -11,7 +11,7 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-SATABus::SATABus("Advanced Host Controller Interface")
+SATABus::SATABus() : HardDiskController("Advanced Host Controller Interface")
 {
 
 }
