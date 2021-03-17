@@ -37,6 +37,12 @@ Desktop* desktop = nullptr;
 
 extern "C" bool invertMouse;
 
+extern "C" void drawtga(int x, int y, uint8_t* data, int len)
+{
+    extern Video* screen;
+    screen->putbitmap(x, y, data, len);
+}
+
 extern "C" void screendrawcursor(int x, int y, uint8_t* data)
 {
     extern Video* screen;
@@ -758,6 +764,16 @@ int main(int argc, const char* argv[])
     //FFFF55
     //AA5500
     //D4AA2A
+
+    int tgalen = 276379;
+    uint8_t* tgadata = (uint8_t*) malloc(tgalen);
+    int br;
+    File* f = new File("C:/Banana/Wallpapers/default.tga", kernelProcess);
+    f->open(FileOpenMode::Read);
+    f->read(tgalen, tgadata, &br);
+    while (1) {
+        drawtga(0, 0, tgadata, tgalen);
+    }
 
     canDoMouse = false;
     loadCursors();
