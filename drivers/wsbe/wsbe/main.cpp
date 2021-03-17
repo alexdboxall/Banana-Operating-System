@@ -771,8 +771,9 @@ int main(int argc, const char* argv[])
     File* f = new File("C:/Banana/Wallpapers/default.tga", kernelProcess);
     f->open(FileOpenMode::Read);
     f->read(tgalen, tgadata, &br);
+    drawtga(0, 0, tgadata, tgalen);
+    f->close();
     while (1) {
-        drawtga(0, 0, tgadata, tgalen);
     }
 
     canDoMouse = false;

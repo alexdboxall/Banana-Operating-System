@@ -228,16 +228,19 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size)
 
 void Video::putbitmap(int baseX, int baseY, uint8_t* tgaData, int tgaLen)
 {
+    kprintf("Video::putbitmap %d, %d, 0x%X, %d\n", baseX, baseY, tgaData, tgaLen);
 	uint32_t* parsed = tgaParse(tgaData, tgaLen);
     if (!parsed) {
         return;
     }
 	
-	int width = *parsed++;
-	int height = *parsed++;
+	int tgaWidth = *parsed++;
+	int tgaHeight = *parsed++;
 
-	for (int y = baseY; y < baseY + height; ++y) {
-		for (int x = baseX; x < baseX + width; ++x) {
+    kprintf("width = %d, height = %d\n", tgaWidth, tgaHeight);
+
+	for (int y = baseY; y < baseY + tgaHeight; ++y) {
+		for (int x = baseX; x < baseX + tgaWidth; ++x) {
 			putpixel(x, y, *parsed++);
 		}
 	}

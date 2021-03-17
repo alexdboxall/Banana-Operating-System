@@ -590,7 +590,7 @@ void begin(void* a)
 
     } else {
         if (Reg::readBoolWithDefault("shell", "@misc:playJingle", true)) {
-            kernelProcess->createThread(playJingle);
+            //kernelProcess->createThread(playJingle);
         }        
 
         loadExtensions();
