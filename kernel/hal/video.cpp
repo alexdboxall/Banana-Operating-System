@@ -146,6 +146,9 @@ typedef struct
 
 uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 {
+	int w = (ptr[13] << 8) + ptr[12];
+	int h = (ptr[15] << 8) + ptr[14];
+
     uint32_t* data = (uint32_t*) malloc((w * h + 2) * sizeof(uint32_t));
 	tga_header_t* header = (tga_header_t*) data;
 
@@ -155,10 +158,8 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 	}
 
 	int j, k;
-	int w = header->w;
-	int h = header->h;
 	int o = header->y;
-    int m = ((ptr[1] ? (ptr[7] >> 3) * ptr[5] : 0) + 18);
+    int imageDataOffset = ((header->colormap ? (header->cmapent >> 3) * header->cmaplen : 0) + 18);
 
     if (w < 1 || h < 1) {
         kprintf("width or height < 1\n");
