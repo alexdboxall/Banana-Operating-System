@@ -233,7 +233,7 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size)
     return data;
 }
 
-void Video::putbitmap(int baseX, int baseY, uint8_t* tgaData, int tgaLen)
+void Video::putTGA(int baseX, int baseY, uint8_t* tgaData, int tgaLen)
 {
     kprintf("Video::putbitmap %d, %d, 0x%X, %d\n", baseX, baseY, tgaData, tgaLen);
 	uint32_t* parsed = tgaParse(tgaData, tgaLen);
