@@ -152,6 +152,19 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
     uint32_t* data = (uint32_t*) malloc((w * h + 2) * sizeof(uint32_t));
 	tga_header_t* header = (tga_header_t*) data;
 
+	kprintf("magic1     0x%X\n", header->magic1);
+	kprintf("colormap   0x%X\n", header->colormap);
+	kprintf("encoding   0x%X\n", header->encoding);
+	kprintf("cmaporig   0x%X\n", header->cmaporig);
+	kprintf("cmaplen    0x%X\n", header->cmaplen);
+	kprintf("cmapent    0x%X\n", header->cmapent);
+	kprintf("x          0x%X\n", header->x);
+	kprintf("y          0x%X\n", header->y);
+	kprintf("w          0x%X\n", header->w);
+	kprintf("h          0x%X\n", header->h);
+	kprintf("bpp        0x%X\n", header->bpp);
+	kprintf("pixeltype  0x%X\n", header->pixeltype);
+
 	if (!data) {
 		kprintf("malloc stopped working");
 		return NULL;
