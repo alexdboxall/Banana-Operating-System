@@ -146,7 +146,14 @@ typedef struct
 
 uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 {
-    uint32_t* data;
+    uint32_t* data = (uint32_t*) malloc((w * h + 2) * sizeof(uint32_t));
+	tga_header_t* header = (tga_header_t*) data;
+
+	if (!data) {
+		kprintf("malloc stopped working");
+		return NULL;
+	}
+
 	int j, k;
 	int w = header->w;
 	int h = header->h;
@@ -155,14 +162,6 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 
     if (w < 1 || h < 1) {
         kprintf("width or height < 1\n");
-        return NULL;
-    }
-
-    data = (uint32_t*) malloc((w * h + 2) * sizeof(uint32_t));
-	tga_header_t* header = (tga_header_t*) data;
-
-    if (!data) {
-        kprintf("malloc stopped working");
         return NULL;
     }
 
