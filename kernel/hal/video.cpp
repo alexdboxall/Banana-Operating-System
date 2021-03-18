@@ -173,7 +173,7 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size)
             return NULL;
         }
         for (y = i = 0; y < h; y++) {
-            k = ((!o ? h - y - 1 : y) * w);
+            k = 0;// ((!o ? h - y - 1 : y) * w);
             for (x = 0; x < w; x++) {
                 j = ptr[m + k++] * (ptr[7] >> 3) + 18;
                 data[2 + i++] = ((ptr[7] == 32 ? ptr[j + 3] : 0xFF) << 24) | (ptr[j + 2] << 16) | (ptr[j + 1] << 8) | ptr[j];
