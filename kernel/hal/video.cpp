@@ -3,6 +3,10 @@
 #include "hal/device.hpp"
 #include "hal/video.hpp"
 
+extern "C" {
+#include "libk/string.h"
+}
+
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
