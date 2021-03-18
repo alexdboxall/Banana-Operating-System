@@ -144,7 +144,7 @@ typedef struct
  *   ret[2..] = 32 bit ARGB pixels (blue channel in the least significant byte, alpha channel in the most)
  */
 
-uint32_t* Video::tgaParse(uint8_t* ptr, int size)
+uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 {
     kprintf("TGA parse called.\n");
     uint32_t* data;
@@ -176,10 +176,10 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size)
             free(data);
             return NULL;
         }
-		j = m;// ((!o ? h - y - 1 : y) * w * (header->bpp >> 3));
         for (y = i = 0; y < h; y++) {
+			j = ((!o ? h - y - 1 : y) * w * (header->bpp >> 3));
             for (x = 0; x < w; x++) {
-                data[2 + i++] = ((ptr[16] == 32 ? ptr[j + 3] : 0xFF) << 24) | (ptr[j + 2] << 16) | (ptr[j + 1] << 8) | ptr[j];
+                data[i++] = ((header->bpp == 32 ? ptr[j + 3] : 0) << 24) | (ptr[j + 2] << 16) | (ptr[j + 1] << 8) | ptr[j];
                 j += ptr[16] >> 3;
             }
         }
@@ -191,22 +191,20 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size)
     }
 
     kprintf("ret 0x%X\n", data);
-    data[0] = w;
-    data[1] = h;
+	*widthOut = w;
+    *heightOut = h;
     return data;
 }
 
 void Video::putTGA(int baseX, int baseY, uint8_t* tgaData, int tgaLen)
 {
-    kprintf("Video::putbitmap %d, %d, 0x%X, %d\n", baseX, baseY, tgaData, tgaLen);
-	uint32_t* parsed = tgaParse(tgaData, tgaLen);
-    kprintf("parsed ptr = 0x%X\n", parsed);
+	int tgaWidth;
+	int tgaHeight;
+	uint32_t* parsed = tgaParse(tgaData, tgaLen, &tgaWidth, &tgaHeight);
+
     if (!parsed) {
         return;
     }
-	
-	int tgaWidth = *parsed++;
-	int tgaHeight = *parsed++;
 
     kprintf("width = %d, height = %d\n", tgaWidth, tgaHeight);
 
