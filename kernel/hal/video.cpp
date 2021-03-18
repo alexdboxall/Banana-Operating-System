@@ -188,7 +188,7 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
             free(data);
             return NULL;
         }
-		j = m;
+		j = imageDataOffset;
         for (int y = 0, i = 0; y < h; y++) {
 			//j = ((!o ? h - y - 1 : y) * w * (header->bpp >> 3));
             for (int x = 0; x < w; x++) {
