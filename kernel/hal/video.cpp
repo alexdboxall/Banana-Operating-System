@@ -153,6 +153,7 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size)
     }
 
     data = (uint32_t*) malloc((w * h + 2) * sizeof(uint32_t));
+    memset(data, 0, (w * h + 2) * 4);
     kprintf("data is at 0x%X\n", data);
     if (!data) {
         kprintf("malloc stopped working");
