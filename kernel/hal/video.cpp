@@ -204,8 +204,6 @@ void Video::putTGA(int baseX, int baseY, uint8_t* tgaData, int tgaLen)
         return;
     }
 
-    kprintf("width = %d, height = %d\n", tgaWidth, tgaHeight);
-
 	for (int y = baseY; y < baseY + tgaHeight; ++y) {
 		for (int x = baseX; x < baseX + tgaWidth; ++x) {
 			putpixel(x, y, *parsed++);

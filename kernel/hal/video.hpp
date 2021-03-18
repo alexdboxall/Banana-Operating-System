@@ -22,7 +22,7 @@ public:
 	int getHeight();
 	bool isMonochrome();
 
-	uint32_t* tgaParse(uint8_t* ptr, int size);
+	uint32_t* tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut);
 
 	virtual void putpixel(int x, int y, uint32_t colour);
 	virtual void putrect(int x, int y, int w, int h, uint32_t colour);
