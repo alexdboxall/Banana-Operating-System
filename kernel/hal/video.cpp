@@ -146,10 +146,16 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size)
     int i, j, k, x, y, w = (ptr[13] << 8) + ptr[12], h = (ptr[15] << 8) + ptr[14], o = (ptr[11] << 8) + ptr[10];
     int m = ((ptr[1] ? (ptr[7] >> 3) * ptr[5] : 0) + 18);
 
-    if (w < 1 || h < 1) return NULL;
+    if (w < 1 || h < 1) {
+        kprintf("width or height < 1\n");
+        return NULL;
+    }
 
     data = (uint32_t*) malloc((w * h + 2) * sizeof(uint32_t));
-    if (!data) return NULL;
+    if (!data) {
+        kprintf("malloc stopped working");
+        return NULL;
+    }
 
     switch (ptr[2]) {
     case 1:
@@ -218,6 +224,7 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size)
         break;
 
     default:
+        kprintf("unsupported TGA %d\n", ptr[2]);
         free(data); return NULL;
     }
 
@@ -230,6 +237,7 @@ void Video::putbitmap(int baseX, int baseY, uint8_t* tgaData, int tgaLen)
 {
     kprintf("Video::putbitmap %d, %d, 0x%X, %d\n", baseX, baseY, tgaData, tgaLen);
 	uint32_t* parsed = tgaParse(tgaData, tgaLen);
+    kprintf("parsed ptr = 0x%X\n", parsed);
     if (!parsed) {
         return;
     }
