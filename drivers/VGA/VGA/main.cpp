@@ -85,7 +85,7 @@ int VGAVideo::open(int a, int b, void* c)
 	kprintf("::done.\n");
 
 	return 0;
-}
+} 
 
 uint8_t dither16Data[512][2] = {
 {0, 0},

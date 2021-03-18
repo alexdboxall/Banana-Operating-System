@@ -40,7 +40,9 @@ extern "C" bool invertMouse;
 extern "C" void drawtga(int x, int y, uint8_t* data, int len)
 {
     extern Video* screen;
+    kprintf("calling screen->putbitmap.\n");
     screen->putbitmap(x, y, data, len);
+    kprintf("called screen->putbitmap.\n");
 }
 
 extern "C" void screendrawcursor(int x, int y, uint8_t* data)
