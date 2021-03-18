@@ -147,7 +147,7 @@ typedef struct
 uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 {
     uint32_t* data;
-	int i, j, k, x, y;
+	int j, k;
 	int w = (ptr[13] << 8) + ptr[12];
 	int h = (ptr[15] << 8) + ptr[14];
 	int o = (ptr[11] << 8) + ptr[10];
@@ -174,9 +174,9 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
             free(data);
             return NULL;
         }
-        for (y = i = 0; y < h; y++) {
+        for (int y = 0, i = 0; y < h; y++) {
 			j = ((!o ? h - y - 1 : y) * w * (header->bpp >> 3));
-            for (x = 0; x < w; x++) {
+            for (int x = 0; x < w; x++) {
                 data[i++] = ((header->bpp == 32 ? ptr[j + 3] : 0) << 24) | (ptr[j + 2] << 16) | (ptr[j + 1] << 8) | ptr[j];
                 j += ptr[16] >> 3;
             }
