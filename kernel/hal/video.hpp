@@ -26,7 +26,7 @@ public:
 
 	virtual void putpixel(int x, int y, uint32_t colour);
 	virtual void putrect(int x, int y, int w, int h, uint32_t colour);
-	virtual void putTGA(int x, int y, uint8_t* tgaData, int tgaLen);
+	virtual void putTGA(int x, int y, uint8_t* tgaData, int tgaLen, int* widthOut, int* heightOut));
 	virtual void drawCursor(int x, int y, uint8_t* data, int invertMouse);
 
 	virtual void blit(uint32_t* buffer, int x, int y, int width, int height);

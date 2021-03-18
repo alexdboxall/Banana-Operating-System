@@ -146,7 +146,6 @@ typedef struct
 
 uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 {
-    kprintf("TGA parse called.\n");
     uint32_t* data;
 	int i, j, k, x, y;
 	int w = (ptr[13] << 8) + ptr[12];
@@ -162,7 +161,6 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
     data = (uint32_t*) malloc((w * h + 2) * sizeof(uint32_t));
 	tga_header_t* header = (tga_header_t*) data;
 
-    kprintf("data is at 0x%X\n", data);
     if (!data) {
         kprintf("malloc stopped working");
         return NULL;
