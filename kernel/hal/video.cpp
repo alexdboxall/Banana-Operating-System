@@ -150,7 +150,7 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 	int h = (ptr[15] << 8) + ptr[14];
 
     uint32_t* data = (uint32_t*) malloc((w * h + 2) * sizeof(uint32_t));
-	tga_header_t* header = (tga_header_t*) data;
+	tga_header_t* header = (tga_header_t*) ptr;
 
 	kprintf("magic1     0x%X\n", header->magic1);
 	kprintf("colormap   0x%X\n", header->colormap);
