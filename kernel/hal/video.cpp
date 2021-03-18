@@ -123,18 +123,18 @@ void Video::clearScreen(uint32_t colour)
 
 typedef struct
 {
-	uint8_t magic1;             // must be zero
-	uint8_t colormap;           // must be zero
-	uint8_t encoding;           // must be 2
-	uint16_t cmaporig;			// must be zero
-	uint16_t cmaplen;			// must be zero
-	uint8_t cmapent;            // must be zero
-	uint16_t x;                 // must be zero
-	uint16_t y;                 // image's height
-	uint16_t h;                 // image's height
-	uint16_t w;                 // image's width
-	uint8_t bpp;                // must be 32
-	uint8_t pixeltype;          // must be 40
+	uint8_t magic1;
+	uint8_t colormap;
+	uint8_t encoding;
+	uint16_t cmaporig;	
+	uint16_t cmaplen;
+	uint8_t cmapent;
+	uint16_t x;
+	uint16_t y;
+	uint16_t w;
+	uint16_t h; 
+	uint8_t bpp;
+	uint8_t pixeltype; 
 } __attribute__((packed)) tga_header_t;
 
 /**
@@ -148,9 +148,9 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 {
     uint32_t* data;
 	int j, k;
-	int w = (ptr[13] << 8) + ptr[12];
-	int h = (ptr[15] << 8) + ptr[14];
-	int o = (ptr[11] << 8) + ptr[10];
+	int w = header->w;
+	int h = header->h;
+	int o = header->y;
     int m = ((ptr[1] ? (ptr[7] >> 3) * ptr[5] : 0) + 18);
 
     if (w < 1 || h < 1) {
@@ -169,7 +169,8 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
     kprintf("TGA type %d\n", ptr[2]);
     switch (ptr[2]) {
     case 2:
-        if (ptr[5] != 0 || ptr[6] != 0 || header->colormap != 0 || (header->bpp != 24 && header->bpp != 32)) {
+		kprintf("cmapl = %d, cmap = %d, bpp = %d\n", header->cmaplen, header->colormap, header->bpp);
+        if (header->cmaplen != 0 || header->colormap != 0 || (header->bpp != 24 && header->bpp != 32)) {
             kprintf("case 2 null.\n");
             free(data);
             return NULL;
