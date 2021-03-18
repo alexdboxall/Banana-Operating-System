@@ -300,6 +300,8 @@ protected:
 		HBA_PRDT_ENTRY	prdt_entry[1];	// Physical region descriptor table entries, 0 ~ 65535
 	} HBA_CMD_TBL;
 
+	uint32_t AHCI_BASE;
+
 public:
 	SATABus();
 
@@ -308,6 +310,10 @@ public:
 
 	void probePort(HBA_MEM* abar);
 	int checkType(HBA_PORT* port);
+
+	void portRebase(HBA_PORT* port, int portNo);
+	void startCmd(HBA_PORT* port);
+	void stopCmd(HBA_PORT* port);
 
 	void detect();
 };

@@ -25,9 +25,15 @@
 #define HBA_PORT_IPM_ACTIVE		1
 #define HBA_PORT_DET_PRESENT	3
 
+#define HBA_PxCMD_ST    0x0001
+#define HBA_PxCMD_FRE   0x0010
+#define HBA_PxCMD_FR    0x4000
+#define HBA_PxCMD_CR    0x8000
+
 SATABus::SATABus() : HardDiskController("Advanced Host Controller Interface")
 {
-
+	//best not to run this on low memory systems
+	AHCI_BASE = malloc(303104);
 }
 
 int SATABus::open(int, int, void*)
@@ -95,5 +101,71 @@ int SATABus::checkType(HBA_PORT* port)
 
 	default:
 		return AHCI_DEV_SATA;
+	}
+}
+
+void SATABus::portRebase(HBA_PORT* port, int portNo)
+{
+	// Stop command engine
+	stopCmd(port);	
+
+	// Command list offset: 1K*portno
+	// Command list entry size = 32
+	// Command list entry maxim count = 32
+	// Command list maxim size = 32*32 = 1K per port
+	port->clb = AHCI_BASE + (portno << 10);
+	port->clbu = 0;
+	memset((void*) (port->clb), 0, 1024);
+
+	// FIS offset: 32K+256*portno
+	// FIS entry size = 256 bytes per port
+	port->fb = AHCI_BASE + (32 << 10) + (portno << 8);
+	port->fbu = 0;
+	memset((void*) (port->fb), 0, 256);
+
+	// Command table offset: 40K + 8K*portno
+	// Command table size = 256*32 = 8K per port
+	HBA_CMD_HEADER* cmdheader = (HBA_CMD_HEADER*) (port->clb);
+	for (int i = 0; i < 32; i++) {
+		cmdheader[i].prdtl = 8;	// 8 prdt entries per command table
+					// 256 bytes per command table, 64+16+48+16*8
+		// Command table offset: 40K + 8K*portno + cmdheader_index*256
+		cmdheader[i].ctba = AHCI_BASE + (40 << 10) + (portno << 13) + (i << 8);
+		cmdheader[i].ctbau = 0;
+		memset((void*) cmdheader[i].ctba, 0, 256);
+	}
+
+	startCmd(port);	// Start command engine
+}
+
+void SATABus::startCmd(HBA_PORT* port)
+{
+	// Wait until CR (bit15) is cleared
+	while (port->cmd & HBA_PxCMD_CR) {
+		;
+	}
+
+	// Set FRE (bit4) and ST (bit0)
+	port->cmd |= HBA_PxCMD_FRE;
+	port->cmd |= HBA_PxCMD_ST;
+}
+
+void SATABus::stopCmd(HBA_PORT* port)
+{
+	// Clear ST (bit0)
+	port->cmd &= ~HBA_PxCMD_ST;
+
+	// Clear FRE (bit4)
+	port->cmd &= ~HBA_PxCMD_FRE;
+
+	// Wait until FR (bit14), CR (bit15) are cleared
+	while (1) {
+		if (port->cmd & HBA_PxCMD_FR) {
+			continue;
+		}
+		if (port->cmd & HBA_PxCMD_CR) {
+			continue;
+		}
+		break;
 	}
 }
