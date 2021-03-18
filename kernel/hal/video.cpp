@@ -142,7 +142,7 @@ typedef struct
 
 uint32_t* Video::tgaParse(uint8_t* ptr, int size)
 {
-    kprintf("TGA parsed called.\n");
+    kprintf("TGA parse called.\n");
     uint32_t* data;
     int i, j, k, x, y, w = (ptr[13] << 8) + ptr[12], h = (ptr[15] << 8) + ptr[14], o = (ptr[11] << 8) + ptr[10];
     int m = ((ptr[1] ? (ptr[7] >> 3) * ptr[5] : 0) + 18);
@@ -161,7 +161,11 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size)
 
     switch (ptr[2]) {
     case 1:
-        if (ptr[6] != 0 || ptr[4] != 0 || ptr[3] != 0 || (ptr[7] != 24 && ptr[7] != 32)) { free(data); return NULL; }
+        if (ptr[6] != 0 || ptr[4] != 0 || ptr[3] != 0 || (ptr[7] != 24 && ptr[7] != 32)) {
+            kprintf("case 1 null.\n");
+            free(data);
+            return NULL;
+        }
         for (y = i = 0; y < h; y++) {
             k = ((!o ? h - y - 1 : y) * w);
             for (x = 0; x < w; x++) {
@@ -171,7 +175,11 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size)
         }
         break;
     case 2:
-        if (ptr[5] != 0 || ptr[6] != 0 || ptr[1] != 0 || (ptr[16] != 24 && ptr[16] != 32)) { free(data); return NULL; }
+        if (ptr[5] != 0 || ptr[6] != 0 || ptr[1] != 0 || (ptr[16] != 24 && ptr[16] != 32)) {
+            kprintf("case 2 null.\n");
+            free(data);
+            return NULL;
+        }
         for (y = i = 0; y < h; y++) {
             j = ((!o ? h - y - 1 : y) * w * (ptr[16] >> 3));
             for (x = 0; x < w; x++) {
@@ -181,7 +189,11 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size)
         }
         break;
     case 9:
-        if (ptr[6] != 0 || ptr[4] != 0 || ptr[3] != 0 || (ptr[7] != 24 && ptr[7] != 32)) { free(data); return NULL; }
+        if (ptr[6] != 0 || ptr[4] != 0 || ptr[3] != 0 || (ptr[7] != 24 && ptr[7] != 32)) { 
+            kprintf("case 9 null.\n");
+            free(data); 
+            return NULL;
+        }
         y = i = 0;
         for (x = 0; x < w * h && m < size;) {
             k = ptr[m++];
@@ -203,7 +215,10 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size)
         }
         break;
     case 10:
-        if (ptr[5] != 0 || ptr[6] != 0 || ptr[1] != 0 || (ptr[16] != 24 && ptr[16] != 32)) { free(data); return NULL; }
+        if (ptr[5] != 0 || ptr[6] != 0 || ptr[1] != 0 || (ptr[16] != 24 && ptr[16] != 32)) { 
+            kprintf("case 10 null.\n");
+            free(data); return NULL; 
+        }
         y = i = 0;
         for (x = 0; x < w * h && m < size;) {
             k = ptr[m++];
