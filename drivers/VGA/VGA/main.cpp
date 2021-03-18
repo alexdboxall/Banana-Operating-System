@@ -12,31 +12,23 @@
 #include "fs/vfs.hpp"
 #include "vm86/vm8086.hpp"
 
-extern "C" {
+extern "C" { 
 	#include "libk/string.h"
 }
 
 
 void start(void* parent)
-{
-	kprintf("VGA DRIVER STARTED.\n");
-	
+{	
 	Device* rootDevice = (Device*) parent;
-	kprintf("GOT ROOT DEVICE.\n");
 
 	VGAVideo* dev = new VGAVideo();
-	kprintf("CREATED VGAVideo.\n");
 
 	rootDevice->addChild(dev);
-	kprintf("ADDED VGAVideo.\n");
 
 	dev->open(0, 0, nullptr);
-	kprintf("OPENED VGAVideo.\n");
 
 	extern Video* screen;
 	screen = dev;
-
-	kprintf("VGA DONE.\n");
 }
 
 
@@ -62,8 +54,6 @@ int VGAVideo::close(int a, int b, void* c)
 
 int VGAVideo::open(int a, int b, void* c)
 {
-	kprintf("::open.\n");
-
 	Vm::start8086("C:/Banana/System/VGASET.COM", 0x0000, 0x90, 0x12, 0x12);
 	Vm::finish8086();
 
@@ -82,7 +72,6 @@ int VGAVideo::open(int a, int b, void* c)
 	height = 480;
 
 	mono = false;
-	kprintf("::done.\n");
 
 	return 0;
 } 
