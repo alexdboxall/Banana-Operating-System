@@ -159,6 +159,7 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size)
         return NULL;
     }
 
+    kprintf("TGA type %d\n", ptr[2]);
     switch (ptr[2]) {
     case 1:
         if (ptr[6] != 0 || ptr[4] != 0 || ptr[3] != 0 || (ptr[7] != 24 && ptr[7] != 32)) {
