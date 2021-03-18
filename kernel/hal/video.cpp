@@ -193,7 +193,7 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 			//j = ((!o ? h - y - 1 : y) * w * (header->bpp >> 3));
             for (int x = 0; x < w; x++) {
                 data[i++] = ((header->bpp == 32 ? ptr[j + 3] : 0) << 24) | (ptr[j + 2] << 16) | (ptr[j + 1] << 8) | ptr[j];
-                j += ptr[16] >> 3;
+                j += header->bpp >> 3;
             }
         }
         break;
