@@ -668,8 +668,6 @@ int main(int argc, char* argv[])
 		int arg2 = -2;
 		memset(arg0, 0, 64);
 
-		strcpy(arg0, "h");
-
 		sscanf(buffer, "%s %d %d", arg0, &arg1, &arg2);
 
 		if (!strcasecmp(arg0, "s") || !strcasecmp(arg0, "summary")) {
