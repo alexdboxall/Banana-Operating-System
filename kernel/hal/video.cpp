@@ -95,13 +95,16 @@ void Video::putrect(int x, int y, int w, int h, uint32_t colour)
 //THIS IS PROBABLY THE MOST CRUCIAL FUNCTION TO GET RIGHT WHEN YOU ARE WRITING A VIDEO DRIVER
 //all images pass through this!
 //SO PLEASE OVERRIDE IT!!!
+//any video driver writer that doesn't implement this should not be writing drivers
 void Video::bitblit(int sx, int sy, int x, int y, int w, int h, int pitch, uint32_t* data)
 {
-	kprintf("%d, %d, %d, %d, %d, %d, %d.\n", sx, sy, x, y, w, h, pitch);
 	for (int yyy = 0; yyy < h; ++yyy) {
+		int tempx = sx;
+		uint32_t* database = data + ((y + yyy) * pitch + x);
 		for (int xxx = 0; xxx < w; ++xxx) {
-			putpixel(sx + xxx, sy + yyy, data[(y + yyy) * pitch + x + xxx]);
+			putpixel(tempx++, sy, *database++);
 		}
+		++sy;
 	}
 }
 
@@ -124,7 +127,6 @@ void Video::blit(uint32_t* buffer, int x, int y, int _width, int _height)
 }
 
 //this will be even SLOWER! 
-//any video driver writer that doesn't implement this should not be writing drivers
 void Video::clearScreen(uint32_t colour)
 {
 	for (int y = 0; y < height; ++y) {
