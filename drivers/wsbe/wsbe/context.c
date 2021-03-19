@@ -556,6 +556,47 @@ void loadbuiltinfonts()
     System = 0;
 }
 
+void bitblit(int sx, int sy, int x, int y, int w, int h, int pitch, uint8_t * data)
+
+void Context_draw_bitmap_clipped(Context* context, uint32_t* data, int x, int y, int w, int h, Rect* bound_rect)
+{
+	int font_x, font_y;
+	int off_x = 0;
+	int off_y = 0;
+	int count_x = w;
+	int count_y = h;
+	uint8_t shift_line;
+
+	//Make sure to take context translation into account
+	x += context->translate_x;
+	y += context->translate_y;
+
+	//Check to see if the character is even inside of this rectangle
+	if (x > bound_rect->right || (x + count_x) <= bound_rect->left ||
+		y > bound_rect->bottom || (y + count_y) <= bound_rect->top)
+		return;
+
+	//Limit the drawn portion of the character to the interior of the rect
+	if (x < bound_rect->left)
+		off_x = bound_rect->left - x;
+
+	if ((x + count_x) > bound_rect->right)
+		count_x = bound_rect->right - x + 1;
+
+	if (y < bound_rect->top)
+		off_y = bound_rect->top - y;
+
+	if ((y + count_y) > bound_rect->bottom)
+		count_y = bound_rect->bottom - y + 1;
+
+	bitblit(font_x + off_x, font_y + y, off_x, off_y, count_x - off_x, county - off_y, w, data);
+	/*for (font_y = off_y; font_y < count_y; font_y++) {
+		for (font_x = off_x; font_x < count_x; font_x++) {
+			screenputpixel(font_x + x, font_y + y, data[font_y * w + font_x]);
+		}
+	}*/
+}
+
 //Draw a single character with the specified font color at the specified coordinates
 void Context_draw_char_clipped(Context* context, char character, int x, int y,
                                uint32_t color, Rect* bound_rect) {
@@ -602,6 +643,33 @@ void Context_draw_char_clipped(Context* context, char character, int x, int y,
 			}
 
 			shift_line <<= 1;
+		}
+	}
+}
+
+void Context_draw_bitmap(Context* context, uint32_t* data, int x, int y, int w, int h)
+{
+	int i;
+	Rect* clip_area;
+	Rect screen_area;
+
+	//If there are clipping rects, draw the character clipped to
+	//each of them. Otherwise, draw unclipped (clipped to the screen)
+	if (context->clip_rects->count) {
+		for (i = 0; i < context->clip_rects->count; i++) {
+			clip_area = (Rect*) List_get_at(context->clip_rects, i);
+			Context_draw_bitmap_clipped(context, data, x, y, w, h, clip_area);
+		}
+
+	} else {
+
+		if (!context->clipping_on) {
+
+			screen_area.top = 0;
+			screen_area.left = 0;
+			screen_area.bottom = context->height - 1;
+			screen_area.right = context->width - 1;
+			Context_draw_bitmap_clipped(context, data, x, y, w, h, clip_area);
 		}
 	}
 }

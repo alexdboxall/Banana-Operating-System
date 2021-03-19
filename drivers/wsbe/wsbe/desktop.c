@@ -53,10 +53,13 @@ Desktop* Desktop_new(Context* context)
 	return desktop;
 }
 
+
 //Paint the desktop 
 void Desktop_paint_handler(Window* desktop_window)
 {
-	Context_fill_rect(desktop_window->context, 0, 0, desktop_window->context->width, desktop_window->context->height, desktopColour);
+	extern uint32_t* parsedTGA;
+
+	Context_draw_bitmap(desktop_window->context, parsedTGA, 0, 0, 640, 480);
 }
 
 int oldMouse;

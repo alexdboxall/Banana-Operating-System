@@ -36,5 +36,6 @@ void Context_subtract_clip_rect(Context* context, Rect* subtracted_rect);
 void Context_add_clip_rect(Context* context, Rect* rect);
 void Context_clear_clip_rects(Context* context);
 void Context_draw_text(Context* context, char* string, int x, int y, uint32_t color, int flags);
+void Context_draw_bitmap(Context* context, uint32_t* data, int x, int y, int w, int h);
 
 #endif //CONTEXT_H

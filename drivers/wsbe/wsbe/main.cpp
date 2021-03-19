@@ -35,14 +35,20 @@ int mouse_y;
 int buttons = 0;
 Desktop* desktop = nullptr;
 
+uint32_t* parsedTGA;
+
 extern "C" bool invertMouse;
+
+extern "C" void bitblit(int sx, int sy, int x, int y, int w, int h, int pitch, uint8_t* data)
+{
+    extern Video* screen;
+    screen->bitblit(sx, sy, x, y, w, h, pitch, data);
+}
 
 extern "C" void drawtga(int x, int y, uint8_t* data, int len)
 {
     extern Video* screen;
-    kprintf("calling screen->putTGA.\n");
     screen->putTGA(x, y, data, len);
-    kprintf("called screen->putTGA.\n");
 }
 
 extern "C" void screendrawcursor(int x, int y, uint8_t* data)
@@ -127,8 +133,15 @@ WindowPaintHandler oldHandler;
 char szstring[64];
 void newpaint(struct Window_struct* win)
 {
+    uint32_t bmp[] = {
+        0xFF0000, 0xFF0000, 0xFF0000, 0xFF0000,
+        0xFF0000, 0x00FF00, 0x00FF00, 0xFF0000,
+        0xFF0000, 0x00FF00, 0x00FF00, 0xFF0000,
+        0xFF0000, 0xFF0000, 0xFF0000, 0xFF0000,
+    };
     oldHandler(win);
-    Context_draw_text(win->context, szstring, 50, 50, 0, 0);
+    //Context_draw_text(win->context, szstring, 50, 50, 0, 0);
+    Context_draw_bitmap(win->context, bmp, 50, 50, 4, 4);
 }
 
 void mdown(struct Window_struct* win, int x, int y)
@@ -774,14 +787,14 @@ int main(int argc, const char* argv[])
     uint64_t tgalen;
     bool dir;
     f->stat(&tgalen, &dir);
-    uint8_t* tgadata = (uint8_t*) malloc(tgalen);
+    uint8_t* bgImgTGA = (uint8_t*) malloc(tgalen);
     f->open(FileOpenMode::Read);
-    f->read(tgalen, tgadata, &br);
-    drawtga(0, 0, tgadata, tgalen);
+    f->read(tgalen, bgImgTGA, &br);
     f->close();
-    while (1) {
-
-    }
+    int wo;
+    int ho;
+    extern Video* screen;
+    parsedTGA = screen->tgaParse(bgImgTGA, tgalen, &wo, &ho);
 
     canDoMouse = false;
     loadCursors();

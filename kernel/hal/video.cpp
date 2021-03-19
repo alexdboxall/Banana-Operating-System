@@ -92,6 +92,15 @@ void Video::putrect(int x, int y, int w, int h, uint32_t colour)
 	}
 }
 
+void Video::bitblit(int sx, int sy, int x, int y, int w, int h, int pitch, uint32_t* data)
+{
+	for (int yyy = 0; yyy < h; ++yyy) {
+		for (int xxx = 0; xxx < w; ++xxx) {
+			putpixel(sx + xxx, sy + yyy, data[(y + yyy) * pitch + x + xxx]);
+		}
+	}
+}
+
 //please, please, override this when you write a video driver
 //this is a last resort function that should never be called
 void Video::blit(uint32_t* buffer, int x, int y, int _width, int _height)
