@@ -15,16 +15,7 @@ protected:
 public:
 	VGAVideo();
 
-	static inline void setPlane(int pl)
-	{
-		//set the read plane
-		outb(0x3CE, 4);
-		outb(0x3CF, pl & 3);
-
-		//set the write plane
-		outb(0x3C4, 2);
-		outb(0x3C5, 1 << (pl & 3));
-	}
+	void setPlane(int pl);
 
 	int open(int, int, void*);
 	int close(int, int, void*);

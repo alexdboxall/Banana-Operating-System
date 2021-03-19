@@ -3,6 +3,7 @@
 #include "hw/acpi.hpp"
 #include "hw/bus/pci.hpp"
 #include "hw/diskctrl/ide.hpp"
+#include "hw/diskctrl/satabus.hpp"
 #include <stdint.h>
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -129,9 +130,10 @@ void PCI::foundDevice(PCIDeviceInfo info)
 
 	//hardcode the boot related things in first
 	if (info.classCode == 1 && info.subClass == 6) {
-		DriverlessDevice* dev = new DriverlessDevice("AHCI controller without driver");
+		IDE* dev = new SATABus();
 		addChild(dev);
 		dev->preOpenPCI(info);
+		dev->open(0, 0, nullptr);
 
 	} else if (info.classCode == 1 && info.subClass == 1) {
 		IDE* dev = new IDE();

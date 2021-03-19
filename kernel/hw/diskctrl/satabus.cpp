@@ -38,6 +38,9 @@ SATABus::SATABus() : HardDiskController("Advanced Host Controller Interface")
 
 int SATABus::open(int, int, void*)
 {
+	HBA_MEM* abar = (HBA_MEM*) (size_t) info.bar[5];
+	probePort(abar);
+
 	return 0;
 }
 
@@ -60,12 +63,20 @@ void SATABus::probePort(HBA_MEM* abar)
 			int dt = checkType(&abar->ports[i]);
 			if (dt == AHCI_DEV_SATA) {
 				kprintf("SATA drive at port %d\n", i);
+				portRebase(&abar->ports[i], i);
+
 			} else if (dt == AHCI_DEV_SATA) {
 				kprintf("SATAPI drive at port %d\n", i);
+				portRebase(&abar->ports[i], i);
+
 			} else if (dt == AHCI_DEV_SATA) {
 				kprintf("SEMB drive at port %d\n", i);
+				portRebase(&abar->ports[i], i);
+
 			} else if (dt == AHCI_DEV_SATA) {
 				kprintf("PM drive at port %d\n", i);
+				portRebase(&abar->ports[i], i);
+
 			} else {
 				kprintf("No drive at port %d\n", i);
 			}

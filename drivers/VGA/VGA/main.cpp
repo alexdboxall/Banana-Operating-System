@@ -42,6 +42,21 @@ void start(void* parent)
 //#define FAST_PLANE_SWITCH(pl) outb(0x3CE, 4);outb(0x3CF, pl & 3);outb(0x3C4, 2);outb(0x3C5, 1 << (pl & 3));
 #define FAST_PLANE_SWITCH(pl) setPlane(pl);
 
+void VGAVideo::setPlane(int pl)
+{
+	static int current = -1;
+	if (pl == current) return;
+	current = pl;
+
+	//set the read plane
+	outb(0x3CE, 4);
+	outb(0x3CF, pl);
+
+	//set the write plane
+	outb(0x3C4, 2);
+	outb(0x3C5, 1 << pl);
+}
+
 VGAVideo::VGAVideo(): Video("VGA Display")
 {
 
@@ -591,13 +606,63 @@ uint8_t dither16Data[512][2] = {
 {15, 15},
 };
 
-inline int pixelLookup(int source, int addr)
+static inline __attribute__((always_inline)) int pixelLookup(int source, int addr)
 {
 	//80
 	//10
 	//2
 	//return (source >> 22) + ((source >> 14) & 3) + ((source >> 6) & 3);
 	return dither16Data[((source & 0xE00000) >> 21) | ((source & 0xE000) >> 10) | ((source & 0xE0) << 1)][addr & 1];
+}
+
+static inline __attribute__((always_inline)) uint8_t mergeColours(uint8_t cols[8], int plane)
+{
+	uint32_t out = 0;
+	int mask = (1 << plane);
+	for (int i = 0; i < 8; ++i) {
+		out <<= 1;
+		out |= (*cols++) & mask;
+	}
+	return out >> plane;
+}
+
+#define MAX_BITBLIT_BLOCKS 100
+void VGAVideo::bitblit(int sx, int sy, int x, int y, int w, int h, int pitch, uint32_t* data)
+{
+	//static so it doesn't go on the stack, so that EBP offsets will fit in one byte, reducing code size
+	static uint8_t cols[MAX_BITBLIT_BLOCKS * 8];
+	int baseoffset = sy * width;
+	for (int yyy = 0; yyy < h; ++yyy) {
+		int tempx = sx;
+		uint32_t* database = data + ((y + yyy) * pitch + x);
+		int xxx = 0;
+		while (xxx < w) {
+			int blocks = (w - xxx) >> 3;
+
+			if (blocks && !(tempx & 7)) {
+				if (blocks > MAX_BITBLIT_BLOCKS) blocks = MAX_BITBLIT_BLOCKS;
+				for (int i = 0; i < blocks * 8; ++i) {
+					cols[i] = pixelLookup(*database++, sy + i);
+				}
+				uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + 0xA0000 + ((baseoffset + tempx) >> 3));
+				for (int k = 0; k < 4; ++k) {
+					FAST_PLANE_SWITCH(k);
+					uint8_t* tempVRAM = vram;
+					for (int j = 0; j < blocks; ++j) {
+						*tempVRAM++ = mergeColours(cols + (j << 3), k);
+					}
+				}
+				xxx += (blocks << 3);
+				tempx += (blocks << 3);
+
+			} else {
+				putpixel(tempx++, sy, *database++);
+				++xxx;
+			}
+		}
+		++sy;
+		baseoffset += width;
+	}
 }
 
 void VGAVideo::putrect(int __x, int __y, int maxx, int maxy, uint32_t colour)
@@ -686,17 +751,5 @@ void VGAVideo::putpixel(int x, int y, uint32_t colour)
 		FAST_PLANE_SWITCH(i);
 		vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
 		px >>= 1;
-	}
-}
-
-void VGAVideo::bitblit(int sx, int sy, int x, int y, int w, int h, int pitch, uint32_t* data)
-{
-	for (int yyy = 0; yyy < h; ++yyy) {
-		int tempx = sx;
-		uint32_t* database = data + ((y + yyy) * pitch + x);
-		for (int xxx = 0; xxx < w; ++xxx) {
-			putpixel(tempx++, sy, *database++);
-		}
-		++sy;
 	}
 }
