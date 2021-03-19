@@ -130,7 +130,7 @@ void PCI::foundDevice(PCIDeviceInfo info)
 
 	//hardcode the boot related things in first
 	if (info.classCode == 1 && info.subClass == 6) {
-		IDE* dev = new SATABus();
+		SATABus* dev = new SATABus();
 		addChild(dev);
 		dev->preOpenPCI(info);
 		dev->open(0, 0, nullptr);
