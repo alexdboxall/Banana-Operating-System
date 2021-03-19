@@ -39,7 +39,7 @@ uint32_t* parsedTGA;
 
 extern "C" bool invertMouse;
 
-extern "C" void bitblit(int sx, int sy, int x, int y, int w, int h, int pitch, uint8_t* data)
+extern "C" void bitblit(int sx, int sy, int x, int y, int w, int h, int pitch, uint32_t* data)
 {
     extern Video* screen;
     screen->bitblit(sx, sy, x, y, w, h, pitch, data);

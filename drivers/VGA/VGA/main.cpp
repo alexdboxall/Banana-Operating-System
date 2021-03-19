@@ -682,7 +682,7 @@ void VGAVideo::putpixel(int x, int y, uint32_t colour)
 	int px = pixelLookup(colour, y + x);
 
 	int w = ~(1 << bit);
-	for (int i = 0; i < 4; ++i) {
+	for (int i = 0; i < 4; ++i) { 
 		FAST_PLANE_SWITCH(i);
 		vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
 		px >>= 1;

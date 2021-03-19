@@ -556,7 +556,7 @@ void loadbuiltinfonts()
     System = 0;
 }
 
-void bitblit(int sx, int sy, int x, int y, int w, int h, int pitch, uint8_t * data)
+void bitblit(int sx, int sy, int x, int y, int w, int h, int pitch, uint32_t* data);
 
 void Context_draw_bitmap_clipped(Context* context, uint32_t* data, int x, int y, int w, int h, Rect* bound_rect)
 {
@@ -589,7 +589,7 @@ void Context_draw_bitmap_clipped(Context* context, uint32_t* data, int x, int y,
 	if ((y + count_y) > bound_rect->bottom)
 		count_y = bound_rect->bottom - y + 1;
 
-	bitblit(font_x + off_x, font_y + y, off_x, off_y, count_x - off_x, county - off_y, w, data);
+	bitblit(font_x + off_x, font_y + y, off_x, off_y, count_x - off_x, count_y - off_y, w, data);
 	/*for (font_y = off_y; font_y < count_y; font_y++) {
 		for (font_x = off_x; font_x < count_x; font_x++) {
 			screenputpixel(font_x + x, font_y + y, data[font_y * w + font_x]);
