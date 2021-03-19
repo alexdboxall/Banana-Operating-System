@@ -38,7 +38,7 @@ SATABus::SATABus() : HardDiskController("Advanced Host Controller Interface")
 
 int SATABus::open(int, int, void*)
 {
-	HBA_MEM* abar = (HBA_MEM*) (size_t) info.bar[5];
+	HBA_MEM* abar = (HBA_MEM*) (size_t) pci.info.bar[5];
 	probePort(abar);
 
 	return 0;
