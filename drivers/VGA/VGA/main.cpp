@@ -688,3 +688,15 @@ void VGAVideo::putpixel(int x, int y, uint32_t colour)
 		px >>= 1;
 	}
 }
+
+void VGAVideo::bitblit(int sx, int sy, int x, int y, int w, int h, int pitch, uint32_t* data)
+{
+	for (int yyy = 0; yyy < h; ++yyy) {
+		int tempx = sx;
+		uint32_t* database = data + ((y + yyy) * pitch + x);
+		for (int xxx = 0; xxx < w; ++xxx) {
+			putpixel(tempx++, sy, *database++);
+		}
+		++sy;
+	}
+}
