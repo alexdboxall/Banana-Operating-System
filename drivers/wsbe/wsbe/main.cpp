@@ -767,15 +767,20 @@ int main(int argc, const char* argv[])
     //AA5500
     //D4AA2A
 
-    int tgalen = 276379;
-    uint8_t* tgadata = (uint8_t*) malloc(tgalen);
     int br;
-    File* f = new File("C:/Banana/Wallpapers/default.tga", kernelProcess);
+    char bgImgName[256];
+    Reg::readStringWithDefault((char*) "wsbe", (char*) "bgImageFile", bgImgName, 255, (char*) "C:/Banana/Wallpapers/crisp.tga");
+    File* f = new File(bgImgName, kernelProcess);
+    uint64_t tgalen;
+    bool dir;
+    f->stat(&tgalen, &dir);
+    uint8_t* tgadata = (uint8_t*) malloc(tgalen);
     f->open(FileOpenMode::Read);
     f->read(tgalen, tgadata, &br);
     drawtga(0, 0, tgadata, tgalen);
     f->close();
     while (1) {
+
     }
 
     canDoMouse = false;

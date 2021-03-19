@@ -337,6 +337,8 @@ namespace Reg
 		}
 
 		//otherwise return the default
+		memset(buffer, 0, maxLen);
+		memcpy(buffer, defaultVal, maxLen - 1);
 		return defaultVal;
 	}
 }

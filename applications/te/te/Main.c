@@ -818,7 +818,7 @@ int main(int argc, char* argv[])
 			} else {
 				typeAfterLine(arg1);
 			}
-		} else if (!strcasecmp(arg0, "q") || !strcasecmp(arg0, "quit")) {
+		} else if (!strcasecmp(arg0, "q") || !strcasecmp(arg0, "quit") || !strcasecmp(arg0, "exit")) {
 			printf("Save before quitting? Y/N/Cancel: ");
 			int c = getchar();
 			if (c == 'y' || c == 'Y') {

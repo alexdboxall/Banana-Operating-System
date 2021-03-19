@@ -137,13 +137,6 @@ typedef struct
 	uint8_t pixeltype; 
 } __attribute__((packed)) tga_header_t;
 
-/**
- * Parse TGA format into pixels. Returns NULL or error, otherwise the returned data looks like
- *   ret[0] = width of the image
- *   ret[1] = height of the image
- *   ret[2..] = 32 bit ARGB pixels (blue channel in the least significant byte, alpha channel in the most)
- */
-
 uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 {
 	int w = (ptr[13] << 8) + ptr[12];
@@ -152,7 +145,7 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
     uint32_t* data = (uint32_t*) malloc((w * h + 2) * sizeof(uint32_t));
 	tga_header_t* header = (tga_header_t*) ptr;
 
-	kprintf("magic1     0x%X\n", header->magic1);
+	/*kprintf("magic1     0x%X\n", header->magic1);
 	kprintf("colormap   0x%X\n", header->colormap);
 	kprintf("encoding   0x%X\n", header->encoding);
 	kprintf("cmaporig   0x%X\n", header->cmaporig);
@@ -163,7 +156,7 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 	kprintf("w          0x%X\n", header->w);
 	kprintf("h          0x%X\n", header->h);
 	kprintf("bpp        0x%X\n", header->bpp);
-	kprintf("pixeltype  0x%X\n", header->pixeltype);
+	kprintf("pixeltype  0x%X\n", header->pixeltype);*/
 
 	if (!data) {
 		kprintf("malloc stopped working");
@@ -183,7 +176,6 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
     switch (ptr[2]) {
 	case 2:
 	{
-		kprintf("cmapl = %d, cmap = %d, bpp = %d\n", header->cmaplen, header->colormap, header->bpp);
 		if (header->cmaplen != 0 || header->colormap != 0 || (header->bpp != 24 && header->bpp != 32)) {
 			kprintf("case 2 null.\n");
 			free(data);
@@ -192,9 +184,8 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 		j = imageDataOffset;
 		int i = 0;
 		for (int y = 0; y < h; y++) {
-			// j = ((!o ? h - y - 1 : y) * w * (header->bpp >> 3));
 			for (int x = 0; x < w; x++) {
-				data[i++] = /*((header->bpp == 32 ? ptr[j + 3] : 0) << 24) |*/ (ptr[j + 2] << 16) | (ptr[j + 1] << 8) | ptr[j];
+				data[i++] = ((header->bpp == 32 ? ptr[j + 3] : 0) << 24) | (ptr[j + 2] << 16) | (ptr[j + 1] << 8) | ptr[j];
 				j += header->bpp >> 3;
 			}
 		}
@@ -206,7 +197,6 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
         free(data); return NULL;
     }
 
-    kprintf("ret 0x%X\n", data);
 	*widthOut = w;
     *heightOut = h;
     return data;
