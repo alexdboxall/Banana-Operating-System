@@ -181,23 +181,25 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 
     kprintf("TGA type %d\n", ptr[2]);
     switch (ptr[2]) {
-    case 2:
+	case 2:
+	{
 		kprintf("cmapl = %d, cmap = %d, bpp = %d\n", header->cmaplen, header->colormap, header->bpp);
-        if (header->cmaplen != 0 || header->colormap != 0 || (header->bpp != 24 && header->bpp != 32)) {
-            kprintf("case 2 null.\n");
-            free(data);
-            return NULL;
-        }
+		if (header->cmaplen != 0 || header->colormap != 0 || (header->bpp != 24 && header->bpp != 32)) {
+			kprintf("case 2 null.\n");
+			free(data);
+			return NULL;
+		}
 		j = imageDataOffset;
 		int i = 0;
-        for (int y = 0; y < h; y++) {
+		for (int y = 0; y < h; y++) {
 			// j = ((!o ? h - y - 1 : y) * w * (header->bpp >> 3));
-            for (int x = 0; x < w; x++) {
-                data[i++] = /*((header->bpp == 32 ? ptr[j + 3] : 0) << 24) |*/ (ptr[j + 2] << 16) | (ptr[j + 1] << 8) | ptr[j];
+			for (int x = 0; x < w; x++) {
+				data[i++] = /*((header->bpp == 32 ? ptr[j + 3] : 0) << 24) |*/ (ptr[j + 2] << 16) | (ptr[j + 1] << 8) | ptr[j];
 				j += header->bpp >> 3;
-            }
-        }
-        break;
+			}
+		}
+		break;
+	}
 
     default:
         kprintf("unsupported TGA %d\n", ptr[2]);
