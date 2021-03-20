@@ -151,6 +151,7 @@ void SATABus::portRebase(HBA_PORT* port, int portNo)
 	// Command list maxim size = 32*32 = 1K per port
 	port->clb = AHCI_BASE + (portNo << 10);
 	port->clbu = 0;
+	kprintf("port->clb = 0x%X\n", port->clb);
 	memset((void*) (port->clb), 0, 1024);
 
 	// FIS offset: 32K+256*portNo
