@@ -163,6 +163,7 @@ detectCPUID:
 global goToVM86
 
 goToVM86:
+    cli
 	push ebp
 	mov ebp, esp
 
@@ -181,6 +182,7 @@ goToVM86:
 	push dword 0x20202
 	push ebx
 	push eax
+
 	iretd
 
 
