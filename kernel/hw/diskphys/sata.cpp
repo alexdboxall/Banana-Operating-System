@@ -42,8 +42,9 @@ int SATA::open(int _deviceNum, int b, void* _ide)
 	return 0;
 }
 
-int SATA::access(uint64_t lba, int count, void* buf, bool write)
+int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 {
+	uint8_t* buf = (void* buffer);
 	uint32_t startl = lba & 0xFFFFFFFF;
 	uint32_t starth = lba >> 32;
 
@@ -68,7 +69,8 @@ int SATA::access(uint64_t lba, int count, void* buf, bool write)
 		   (cmdheader->prdtl - 1) * sizeof(SATABus::HBA_PRDT_ENTRY));
 
 	// 8K bytes (16 sectors) per PRDT
-	for (int i = 0; i < cmdheader->prdtl - 1; i++) {
+	int i = 0;
+	for (; i < cmdheader->prdtl - 1; i++) {
 		cmdtbl->prdt_entry[i].dba = (uint32_t) buf;
 		cmdtbl->prdt_entry[i].dbc = 8 * 1024 - 1;	// 8K bytes (this value should always be set to 1 less than the actual value)
 		cmdtbl->prdt_entry[i].i = 1;
@@ -81,7 +83,7 @@ int SATA::access(uint64_t lba, int count, void* buf, bool write)
 	cmdtbl->prdt_entry[i].i = 1;
 
 	// Setup command
-	FIS_REG_H2D* cmdfis = (SATABus::FIS_REG_H2D*) (&cmdtbl->cfis);
+	SATABus::FIS_REG_H2D* cmdfis = (SATABus::FIS_REG_H2D*) (&cmdtbl->cfis);
 
 	cmdfis->fis_type = SATABus::FIS_TYPE_REG_H2D;
 	cmdfis->c = 1;	// Command
