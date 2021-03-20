@@ -12,7 +12,7 @@ class SATA: public PhysicalDisk
 private:
 
 protected:
-
+	int deviceNum;
 	SATABus* sbus;
 
 public:
