@@ -73,7 +73,7 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 		return 1;
 	}
 
-	uint8_t* spot = (uint8_t*) (((size_t) cmdheader->clb) - sbus->AHCI_BASE_PHYS + sbus->AHCI_BASE_VIRT);
+	uint8_t* spot = (uint8_t*) (((size_t) port->clb) - sbus->AHCI_BASE_PHYS + sbus->AHCI_BASE_VIRT);
 	SATABus::HBA_CMD_HEADER* cmdheader = (SATABus::HBA_CMD_HEADER*) spot;
 	cmdheader += slot;
 	cmdheader->cfl = sizeof(SATABus::FIS_REG_H2D) / sizeof(uint32_t);
