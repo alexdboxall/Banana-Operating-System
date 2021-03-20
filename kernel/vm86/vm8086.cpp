@@ -61,7 +61,7 @@ namespace Vm
 		lockScheduler();
 		vmReady = true;
 		blockTaskWithSchedulerLockAlreadyHeld(TaskState::Paused);
-		kprintf("going to VM86\n");
+		kprintf("going to VM86. %X:%X code, %X:%X stack\n", currentTaskTCB->vm86CS, currentTaskTCB->vm86IP, currentTaskTCB->vm86SS, currentTaskTCB->vm86SP);
 		goToVM86(currentTaskTCB->vm86IP, currentTaskTCB->vm86CS, currentTaskTCB->vm86SP, currentTaskTCB->vm86SS);
 	}
 
