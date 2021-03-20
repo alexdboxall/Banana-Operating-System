@@ -58,6 +58,8 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 	uint32_t startl = lba & 0xFFFFFFFF;
 	uint32_t starth = lba >> 32;
 
+	kprintf("SATA::access. lba = 0x%X, count = %d\n", startl, count);
+
 	SATABus::HBA_PORT* port = &sbus->abar->ports[deviceNum];
 
 	port->is = (uint32_t) -1;
