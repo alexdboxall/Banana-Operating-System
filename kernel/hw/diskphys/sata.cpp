@@ -1,4 +1,5 @@
 #include "hw/diskphys/sata.hpp"
+#include "hw/diskphys/ata.hpp"
 #include "hw/diskctrl/satabus.hpp"
 #include "hw/ports.hpp"
 #include "hw/acpi.hpp"
@@ -46,7 +47,7 @@ int SATA::access(uint64_t lba, int count, void* buf, bool write)
 	uint32_t startl = lba & 0xFFFFFFFF;
 	uint32_t starth = lba >> 32;
 
-	HBA_PORT* port = &sbus->abar->ports[deviceNum];
+	SATABus::HBA_PORT* port = &sbus->abar->ports[deviceNum];
 
 	port->is = (uint32_t) -1;
 
@@ -56,15 +57,15 @@ int SATA::access(uint64_t lba, int count, void* buf, bool write)
 		return 1;
 	}
 
-	HBA_CMD_HEADER* cmdheader = (HBA_CMD_HEADER*) port->clb;
+	SATABus::HBA_CMD_HEADER* cmdheader = (SATABus::HBA_CMD_HEADER*) port->clb;
 	cmdheader += slot;
 	cmdheader->cfl = sizeof(FIS_REG_H2D) / sizeof(uint32_t);	// Command FIS size
 	cmdheader->w = 0;		// Read from device
 	cmdheader->prdtl = (uint16_t) ((count - 1) >> 4) + 1;	// PRDT entries count
 
-	HBA_CMD_TBL* cmdtbl = (HBA_CMD_TBL*) (cmdheader->ctba);
-	memset(cmdtbl, 0, sizeof(HBA_CMD_TBL) +
-		   (cmdheader->prdtl - 1) * sizeof(HBA_PRDT_ENTRY));
+	SATABus::HBA_CMD_TBL* cmdtbl = (SATABus::HBA_CMD_TBL*) (cmdheader->ctba);
+	memset(cmdtbl, 0, sizeof(SATABus::HBA_CMD_TBL) +
+		   (cmdheader->prdtl - 1) * sizeof(SATABus::HBA_PRDT_ENTRY));
 
 	// 8K bytes (16 sectors) per PRDT
 	for (int i = 0; i < cmdheader->prdtl - 1; i++) {
@@ -80,9 +81,9 @@ int SATA::access(uint64_t lba, int count, void* buf, bool write)
 	cmdtbl->prdt_entry[i].i = 1;
 
 	// Setup command
-	FIS_REG_H2D* cmdfis = (FIS_REG_H2D*) (&cmdtbl->cfis);
+	FIS_REG_H2D* cmdfis = (SATABus::FIS_REG_H2D*) (&cmdtbl->cfis);
 
-	cmdfis->fis_type = FIS_TYPE_REG_H2D;
+	cmdfis->fis_type = SATABus::FIS_TYPE_REG_H2D;
 	cmdfis->c = 1;	// Command
 	cmdfis->command = ATA_CMD_READ_DMA_EX;
 
