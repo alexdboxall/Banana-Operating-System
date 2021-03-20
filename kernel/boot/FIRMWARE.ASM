@@ -699,13 +699,13 @@ real16:
 
 .KEYBOARD_BLOCK:
 	mov ax, 0
-	int 0x16
+	;int 0x16
 	jmp goBackHome
 
 .KEYBOARD_NOBLOCK:
 	mov ah, 1
 	mov al, 0
-	int 0x16
+	;int 0x16
 	jnz .hasKey
 	mov eax, 0
 .hasKey:

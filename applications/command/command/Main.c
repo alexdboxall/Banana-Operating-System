@@ -1107,6 +1107,20 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 		extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
 		SystemCall(Shutdown, 0, 0, 0);
 
+	} else if (!strcasecmp(argv[0], "loaddll")) {
+		extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
+		if (argc == 2) {
+			int ret = SystemCall(LoadDLL, (size_t) argv[1], 0, 0);
+			if (ret == 0)		fprintf(stdout, "Driver has been loaded.\n");
+			else if (ret == 2)	fprintf(stderr, "The driver could not be found.\n");
+			else if (ret == 3)	fprintf(stderr, "The driver could not be loaded into memory.\n");
+			else if (ret == 4)	fprintf(stderr, "The driver has relocations which cannnot be resolved.\n");
+			else				fprintf(stderr, "An unknown error occured.\n");
+
+		} else {
+			fprintf(stderr, "Please enter driver filename.\n");
+		}
+
 	} else if (!strcasecmp(argv[0], "restart")) {
 		extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
 		SystemCall(Shutdown, 2, 0, 0);
