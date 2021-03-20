@@ -54,11 +54,11 @@ int SATA::open(int _deviceNum, int b, void* _ide)
 
 int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 {
-	kprintf("SATA::access. lba = 0x%X, count = %d, buffer = 0x%X\n", startl, count, buffer);
-
 	uint8_t* buf = (uint8_t*) buffer;
 	uint32_t startl = lba & 0xFFFFFFFF;
 	uint32_t starth = lba >> 32;
+
+	kprintf("SATA::access. lba = 0x%X, count = %d, buffer = 0x%X\n", startl, count, buffer);
 
 	SATABus::HBA_PORT* port = &sbus->abar->ports[deviceNum];
 
