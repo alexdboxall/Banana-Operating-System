@@ -56,14 +56,19 @@ namespace Vm
 
 	void mainloop2()
 	{
+		kprintf("mainloop2\n");
+
 		lockScheduler();
 		vmReady = true;
 		blockTaskWithSchedulerLockAlreadyHeld(TaskState::Paused);
+		kprintf("going to VM86\n");
 		goToVM86(currentTaskTCB->vm86IP, currentTaskTCB->vm86CS, currentTaskTCB->vm86SP, currentTaskTCB->vm86SS);
 	}
 
 	void mainloop3(size_t retv)
 	{
+		kprintf("mainloop3\n");
+
 		lockScheduler();
 		vmDone = true;
 		vmRetV = retv;
@@ -73,18 +78,24 @@ namespace Vm
 
 	void mainVm8086Loop(void* context)
 	{
+		kprintf("mainVm8086Loop\n");
+
 		unlockScheduler();
 		mainloop2();
 	}
 
 	void initialise8086()
 	{
+		kprintf("initialise8086\n");
 		vm86Thread = kernelProcess->createThread(mainVm8086Loop, nullptr, 128);
 		kernelProcess->vas->mapRange(0x0, 0x0, 256, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
+		kprintf("initialise8086 2\n");
 	}
 
 	uint32_t finish8086()
 	{
+		kprintf("finish8086\n");
+
 		while (1) {
 			lockScheduler();
 			if (vmDone) {
@@ -94,15 +105,22 @@ namespace Vm
 			unlockScheduler();
 		}
 
+		kprintf("finish8086 2.\n");
+
 		uint32_t retv = vmRetV;
 		vmDone = false;
 		unblockTask(vm86Thread);
 		unlockScheduler();
+
+		kprintf("finish8086 3.\n");
+
 		return retv;
 	}
 
 	bool start8086(const char* filename, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss)
 	{
+		kprintf("start8086\n");
+
 		while (1) {
 			lockScheduler();
 			if (vmReady) {
@@ -111,6 +129,8 @@ namespace Vm
 			schedule();
 			unlockScheduler();
 		}
+
+		kprintf("the vm is ready.\n");
 
 		//scheduler still locked here
 
@@ -149,9 +169,13 @@ namespace Vm
 		f->read(siz, (uint8_t*) (size_t) realToLinear(cs, ip), &br);
 		f->close();
 
+		kprintf("the file loading is almost done.\n");
+
 		vmReady = false;
 		unlockScheduler();
 		unblockTask(vm86Thread);
+
+		kprintf("the file loaded.\n");
 
 		return true;
 	}
