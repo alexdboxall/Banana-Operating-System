@@ -66,6 +66,7 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 	int spin = 0;
 	int slot = sbus->findCmdslot(port);
+	kprintf("slot %d\n", slot);
 	if (slot == -1) {
 		return 1;
 	}
