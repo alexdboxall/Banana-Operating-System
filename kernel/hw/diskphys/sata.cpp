@@ -97,13 +97,13 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 	}*/
 	// Last entry
 	cmdtbl->prdt_entry[i].dba = (uint32_t) buf;
-	cmdtbl->prdt_entry[i].dbc = (count << 9) - 1;	// 512 bytes per sector
+	cmdtbl->prdt_entry[i].dbc = 511;	// 512 bytes per sector
 	cmdtbl->prdt_entry[i].i = 1;
 
 	for (i = 1; i < 16; ++i) {
 		cmdtbl->prdt_entry[i].dba = (uint32_t) (size_t) buf2;
 		cmdtbl->prdt_entry[i].dbc = 0;    // 512 bytes per sector
-		cmdtbl->prdt_entry[i].i = 1;
+		cmdtbl->prdt_entry[i].i = 0;
 	}
 
 	// Setup command
