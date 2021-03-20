@@ -19,6 +19,7 @@ extern int ataSectorsWritten;
 #define HBA_PxCMD_FRE   0x0010
 #define HBA_PxCMD_FR    0x4000
 #define HBA_PxCMD_CR    0x8000
+#define HBA_PxIS_TFES   (1 << 30)
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
