@@ -32,7 +32,7 @@ int SATA::open(int _deviceNum, int b, void* _ide)
 	sizeInKBs = 0;
 
 	//reset the drive
-
+	kprintf("Starting up a SATA drive!\n");
 
 	//set up logical disks
 	startCache();

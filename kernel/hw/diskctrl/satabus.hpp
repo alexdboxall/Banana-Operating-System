@@ -302,6 +302,8 @@ protected:
 
 	uint32_t AHCI_BASE;
 
+	HBA_MEM* abar;
+
 public:
 	SATABus();
 
