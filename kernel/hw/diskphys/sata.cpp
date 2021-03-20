@@ -95,7 +95,7 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 	cmdtbl->prdt_entry[i].i = 1;
 
 	for (i = 1; i < 16; ++i) {
-		cmdtbl->prdt_entry[i].dba = (uint32_t) (size_t) buf2;
+		cmdtbl->prdt_entry[i].dba = (uint32_t) (size_t) buf;
 		cmdtbl->prdt_entry[i].dbc = 0;    // 512 bytes per sector
 		cmdtbl->prdt_entry[i].i = 1;
 	}
