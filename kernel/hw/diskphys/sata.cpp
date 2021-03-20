@@ -57,11 +57,11 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 	if (count > 8) {
 		panic("SATA need virt->phys implementation for count > 8");
 	}
-	uint8_t* buf = (uint8_t*) buffer;
+	uint16_t buf[256];
 	uint32_t startl = lba & 0xFFFFFFFF;
 	uint32_t starth = lba >> 32;
 
-	kprintf("SATA::access. lba = 0x%X, count = %d, buffer = 0x%X\n", startl, count, buffer);
+	kprintf("SATA::access. lba = 0x%X, count = %d, buffer = 0x%X\n", startl, count, buf);
 
 	SATABus::HBA_PORT* port = &sbus->abar->ports[deviceNum];
 
