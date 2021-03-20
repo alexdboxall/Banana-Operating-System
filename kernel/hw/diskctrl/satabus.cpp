@@ -59,8 +59,7 @@ void SATABus::detect()
 int SATABus::findCmdslot(HBA_PORT* port)
 {
 	uint32_t slots = (port->sact | port->ci);
-	int cmdslots = (sbus->abar->cap & 0x0f00) >> 8; // Bit 8-12
-
+	int cmdslots = (abar->cap & 0x0f00) >> 8; // Bit 8-12
 
 	for (int i = 0; i < cmdslots; i++) {
 		if ((slots & 1) == 0) {
