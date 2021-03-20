@@ -36,6 +36,7 @@ SATABus::SATABus() : HardDiskController("Advanced Host Controller Interface")
 {
 	//best not to run this on low memory systems
 	AHCI_BASE = (uint32_t) malloc(303104);
+	kprintf("AHCI BASE at 0x%X\n", AHCI_BASE);
 }
 
 int SATABus::open(int, int, void*)
