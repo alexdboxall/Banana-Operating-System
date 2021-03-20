@@ -41,7 +41,7 @@ SATABus::SATABus() : HardDiskController("Advanced Host Controller Interface")
 	AHCI_BASE_PHYS = Phys::allocateContiguousPages(80);
 	AHCI_BASE_VIRT = Virt::allocateKernelVirtualPages(80);
 
-	Virt::mapRange(AHCI_BASE_PHYS, AHCI_BASE_VIRT, 80, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
+	Virt::getAKernelVAS()->mapRange(AHCI_BASE_PHYS, AHCI_BASE_VIRT, 80, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
 
 	kprintf("AHCI BASE at 0x%X phys, 0x%X virt\n", AHCI_BASE_PHYS, AHCI_BASE_VIRT);
 }
@@ -153,16 +153,17 @@ void SATABus::portRebase(HBA_PORT* port, int portNo)
 	// Command list entry size = 32
 	// Command list entry maxim count = 32
 	// Command list maxim size = 32*32 = 1K per port
-	port->clb = AHCI_BASE + (portNo << 10);
-	port->clbu = 0;
-	kprintf("port->clb = 0x%X\n", port->clb);
+	port->clb = AHCI_BASE_VIRT + (portNo << 10);
 	memset((void*) (port->clb), 0, 1024);
+	port->clb = AHCI_BASE_PHYS + (portNo << 10);
+	port->clbu = 0;
 
 	// FIS offset: 32K+256*portNo
 	// FIS entry size = 256 bytes per port
-	port->fb = AHCI_BASE + (32 << 10) + (portNo << 8);
-	port->fbu = 0;
+	port->fb = AHCI_BASE_VIRT + (32 << 10) + (portNo << 8);
 	memset((void*) (port->fb), 0, 256);
+	port->fb = AHCI_BASE_PHYS + (32 << 10) + (portNo << 8);
+	port->fbu = 0;
 
 	// Command table offset: 40K + 8K*portNo
 	// Command table size = 256*32 = 8K per port
@@ -171,9 +172,10 @@ void SATABus::portRebase(HBA_PORT* port, int portNo)
 		cmdheader[i].prdtl = 8;	// 8 prdt entries per command table
 					// 256 bytes per command table, 64+16+48+16*8
 		// Command table offset: 40K + 8K*portNo + cmdheader_index*256
-		cmdheader[i].ctba = AHCI_BASE + (40 << 10) + (portNo << 13) + (i << 8);
-		cmdheader[i].ctbau = 0;
+		cmdheader[i].ctba = AHCI_BASE_VIRT + (40 << 10) + (portNo << 13) + (i << 8);
 		memset((void*) cmdheader[i].ctba, 0, 256);
+		cmdheader[i].ctba = AHCI_BASE_PHYS + (40 << 10) + (portNo << 13) + (i << 8);
+		cmdheader[i].ctbau = 0;
 	}
 
 	startCmd(port);	// Start command engine
