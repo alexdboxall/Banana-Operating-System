@@ -54,16 +54,15 @@ int SATA::open(int _deviceNum, int b, void* _ide)
 
 int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 {
+	kprintf("SATA::access. lba = 0x%X, count = %d, buffer = 0x%X\n", startl, count, buffer);
+
 	uint8_t* buf = (uint8_t*) buffer;
 	uint32_t startl = lba & 0xFFFFFFFF;
 	uint32_t starth = lba >> 32;
 
-	kprintf("SATA::access. lba = 0x%X, count = %d\n", startl, count);
-
 	SATABus::HBA_PORT* port = &sbus->abar->ports[deviceNum];
 
 	port->is = (uint32_t) -1;
-
 	int spin = 0;
 	int slot = sbus->findCmdslot(port);
 	kprintf("slot %d\n", slot);
@@ -73,8 +72,8 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 	SATABus::HBA_CMD_HEADER* cmdheader = (SATABus::HBA_CMD_HEADER*) port->clb;
 	cmdheader += slot;
-	cmdheader->cfl = sizeof(SATABus::FIS_REG_H2D) / sizeof(uint32_t);	// Command FIS size
-	cmdheader->w = 0;		// Read from device
+	cmdheader->cfl = sizeof(SATABus::FIS_REG_H2D) / sizeof(uint32_t);
+	cmdheader->w = 0;										// Read from device
 	cmdheader->prdtl = (uint16_t) ((count - 1) >> 4) + 1;	// PRDT entries count
 
 	SATABus::HBA_CMD_TBL* cmdtbl = (SATABus::HBA_CMD_TBL*) (cmdheader->ctba);
@@ -83,17 +82,23 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 	// 8K bytes (16 sectors) per PRDT
 	int i = 0;
-	for (; i < cmdheader->prdtl - 1; i++) {
+	/*for (; i < cmdheader->prdtl - 1; i++) {
 		cmdtbl->prdt_entry[i].dba = (uint32_t) buf;
 		cmdtbl->prdt_entry[i].dbc = 8 * 1024 - 1;	// 8K bytes (this value should always be set to 1 less than the actual value)
 		cmdtbl->prdt_entry[i].i = 1;
 		buf += 4 * 1024;	// 4K words
 		count -= 16;	// 16 sectors
-	}
+	}*/
 	// Last entry
 	cmdtbl->prdt_entry[i].dba = (uint32_t) buf;
 	cmdtbl->prdt_entry[i].dbc = (count << 9) - 1;	// 512 bytes per sector
 	cmdtbl->prdt_entry[i].i = 1;
+
+	for (i = 1; i < 16; ++i) {
+		cmdtbl->prdt_entry[i].dba = (uint32_t) (size_t) buf2;
+		cmdtbl->prdt_entry[i].dbc = 0;    // 512 bytes per sector
+		cmdtbl->prdt_entry[i].i = 1;
+	}
 
 	// Setup command
 	SATABus::FIS_REG_H2D* cmdfis = (SATABus::FIS_REG_H2D*) (&cmdtbl->cfis);
@@ -127,6 +132,7 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 	// Wait for completion
 	while (1) {
+		kprintf("spinning...\n");
 		// In some longer duration reads, it may be helpful to spin on the DPS bit 
 		// in the PxIS port field as well (1 << 5)
 		if ((port->ci & (1 << slot)) == 0)
