@@ -56,6 +56,19 @@ void SATABus::detect()
 
 }
 
+int SATABus::findCmdslot(HBA_PORT* port)
+{
+	uint32_t slots = (port->sact | port->ci);
+	for (int i = 0; i < cmdslots; i++) {
+		if ((slots & 1) == 0) {
+			return i;
+		}
+		slots >>= 1;
+	}
+	panic("Cannot find free command list entry\n");
+	return -1;
+}
+
 void SATABus::probePort(HBA_MEM* abar)
 {
 	uint32_t pi = abar->pi;

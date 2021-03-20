@@ -310,6 +310,8 @@ public:
 	int open(int, int, void*);
 	int close(int, int, void*);
 
+	int findCmdslot(HBA_PORT* port);
+
 	void probePort(HBA_MEM* abar);
 	int checkType(HBA_PORT* port);
 
