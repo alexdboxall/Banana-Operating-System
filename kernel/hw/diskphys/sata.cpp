@@ -58,7 +58,9 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 		panic("SATA need virt->phys implementation for count > 8");
 	}
 	uint16_t buf[256];
+	memset(buf, 0xEE, 512);
 	uint16_t buf2[256];
+	memset(buf2, 0xEE, 512);
 	uint32_t startl = lba & 0xFFFFFFFF;
 	uint32_t starth = lba >> 32;
 
