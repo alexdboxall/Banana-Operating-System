@@ -172,6 +172,40 @@ namespace Phys
 		}
 	}
 
+	size_t allocateContiguousPages(int needed)
+	{
+		//this one is going to be slow, and only really useful
+		//for very early allocations (like the AHCI driver)
+
+		//you can reimplement this later if you need to
+
+		lockScheduler();
+
+		int got = 0;
+		size_t base;
+		while (1) {
+			if (got == 0) {
+				base = allocatePage();
+				got = 1;
+			} else {
+				size_t pg = allocatePage();
+				if (pg == base + got * 4096) {
+					++got;
+				} else {
+					base = pg;
+					got = 1;
+				}
+			}
+
+			if (got == needed) {
+				break;
+			}
+		}
+
+		unlockScheduler();
+		return base;
+	}
+
 	void allowSegmentToBeUsed(size_t bottom, size_t top)
 	{
 		if (top > highestMem) {

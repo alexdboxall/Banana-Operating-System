@@ -15,6 +15,7 @@ namespace Phys
 	void physicalMemorySetup(uint32_t highestUsedAddr);
 	void freePage(size_t address);
 	size_t allocatePage();
+	size_t allocateContiguousPages(int pages);
 
 	size_t allocateDMA(size_t size);
 	void freeDMA(size_t addr, size_t size);

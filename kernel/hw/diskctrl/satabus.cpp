@@ -1,4 +1,6 @@
 #include "core/common.hpp"
+#include "core/physmgr.hpp"
+#include "core/virtmgr.hpp"
 #include "thr/prcssthr.hpp"
 #include "hw/diskctrl/satabus.hpp"
 #include "hw/ports.hpp"
@@ -36,10 +38,12 @@ SATABus::SATABus() : HardDiskController("Advanced Host Controller Interface")
 {
 	//AHCI systems usually aren't that memory constrained
 	//so this allocation shouldn't much matter
-	AHCI_BASE = (uint32_t) malloc(303104 + 4096);
-	AHCI_BASE = (AHCI_BASE + 4095) & ~0xFFF;
-	AHCI_BASE = 0x60000;
-	kprintf("AHCI BASE at 0x%X\n", AHCI_BASE);
+	AHCI_BASE_PHYS = Phys::allocateContiguousPages(80);
+	AHCI_BASE_VIRT = Virt::allocateKernelVirtualPages(80);
+
+	Virt::mapRange(AHCI_BASE_PHYS, AHCI_BASE_VIRT, 80, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
+
+	kprintf("AHCI BASE at 0x%X phys, 0x%X virt\n", AHCI_BASE_PHYS, AHCI_BASE_VIRT);
 }
 
 int SATABus::open(int, int, void*)

@@ -303,7 +303,8 @@ public:
 		HBA_PRDT_ENTRY	prdt_entry[1];	// Physical region descriptor table entries, 0 ~ 65535
 	} HBA_CMD_TBL;
 
-	uint32_t AHCI_BASE;
+	uint32_t AHCI_BASE_VIRT;
+	uint32_t AHCI_BASE_PHYS;
 
 	HBA_MEM* abar;
 
