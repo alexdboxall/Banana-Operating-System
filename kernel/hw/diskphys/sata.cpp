@@ -92,7 +92,7 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 		cmdtbl->prdt_entry[i].dba = (uint32_t) buff2;
 		cmdtbl->prdt_entry[i].dbc = 8 * 1024 - 1;	// 8K bytes (this value should always be set to 1 less than the actual value)
 		cmdtbl->prdt_entry[i].i = 1;
-		buf += 4 * 1024;	// 4K words
+		buff2 += 4 * 1024;	// 4K words
 		count -= 16;	// 16 sectors
 	}
 	// Last entry
