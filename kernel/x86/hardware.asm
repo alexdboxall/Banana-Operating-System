@@ -677,6 +677,12 @@ int_common_stub:
     push fs
     push gs
 
+    mov ax, 0x10   ; Load the Kernel Data Segment descriptor!
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+
     push esp
     call int_handler
     add esp, 4
