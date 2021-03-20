@@ -59,7 +59,7 @@ int SATA::access(uint64_t lba, int count, void* buf, bool write)
 
 	SATABus::HBA_CMD_HEADER* cmdheader = (SATABus::HBA_CMD_HEADER*) port->clb;
 	cmdheader += slot;
-	cmdheader->cfl = sizeof(FIS_REG_H2D) / sizeof(uint32_t);	// Command FIS size
+	cmdheader->cfl = sizeof(SATABus::FIS_REG_H2D) / sizeof(uint32_t);	// Command FIS size
 	cmdheader->w = 0;		// Read from device
 	cmdheader->prdtl = (uint16_t) ((count - 1) >> 4) + 1;	// PRDT entries count
 
