@@ -38,7 +38,7 @@ SATABus::SATABus() : HardDiskController("Advanced Host Controller Interface")
 	//so this allocation shouldn't much matter
 	AHCI_BASE = (uint32_t) malloc(303104 + 4096);
 	AHCI_BASE = (AHCI_BASE + 4095) & ~0xFFF;
-
+	AHCI_BASE = 0x60000;
 	kprintf("AHCI BASE at 0x%X\n", AHCI_BASE);
 }
 
