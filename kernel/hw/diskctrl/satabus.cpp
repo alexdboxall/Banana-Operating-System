@@ -3,7 +3,9 @@
 #include "hw/diskctrl/satabus.hpp"
 #include "hw/ports.hpp"
 #include "hw/acpi.hpp"
+#include "hw/diskphys/sata.hpp"
 #include "hal/device.hpp"
+
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
@@ -65,7 +67,11 @@ void SATABus::probePort(HBA_MEM* abar)
 				kprintf("SATA drive at port %d\n", i);
 				portRebase(&abar->ports[i], i);
 
-			} else if (dt == AHCI_DEV_SATA) {
+				SATA* dev = new SATA();
+				addChild(dev);
+				dev->open(i, deviceCount, this);
+
+			} else if (dt == AHCI_DEV_SATAPI) {
 				kprintf("SATAPI drive at port %d\n", i);
 				portRebase(&abar->ports[i], i);
 

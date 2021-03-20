@@ -591,11 +591,6 @@ void Context_draw_bitmap_clipped(Context* context, uint32_t* data, int x, int y,
 
 	bitblit(x + off_x, y + off_y, off_x, off_y, count_x - off_x, count_y - off_y, w, data);
 
-	/*for (font_y = off_y; font_y < count_y; font_y++) {
-		for (font_x = off_x; font_x < count_x; font_x++) {
-			screenputpixel(font_x + x, font_y + y, data[font_y * w + font_x]);
-		}
-	}*/
 }
 
 //Draw a single character with the specified font color at the specified coordinates
