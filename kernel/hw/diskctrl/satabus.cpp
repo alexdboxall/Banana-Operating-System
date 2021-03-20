@@ -69,7 +69,7 @@ void SATABus::probePort(HBA_MEM* abar)
 
 				SATA* dev = new SATA();
 				addChild(dev);
-				dev->open(i, deviceCount, this);
+				dev->open(i, 0, this);
 
 			} else if (dt == AHCI_DEV_SATAPI) {
 				kprintf("SATAPI drive at port %d\n", i);
