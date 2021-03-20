@@ -8,9 +8,6 @@
 #include "hal/logidisk.hpp"
 #include "hw/cpu.hpp"
 
-int ataSectorsRead = 0;
-int ataSectorsWritten = 0;
-
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
