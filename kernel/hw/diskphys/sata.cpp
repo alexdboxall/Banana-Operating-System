@@ -155,6 +155,10 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 		return 1;
 	}
 
+	panic("For debugging, please check the buffer.\n");
+	while (1) {
+	}
+
 	return 0;
 }
 
