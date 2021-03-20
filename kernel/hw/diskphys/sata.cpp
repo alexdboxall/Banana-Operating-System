@@ -58,7 +58,7 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 		panic("SATA need virt->phys implementation for count > 8");
 	}
 	uint16_t buf[256];
-	uint16_t* buff2 = buf;
+	uint16_t buf2[256];
 	uint32_t startl = lba & 0xFFFFFFFF;
 	uint32_t starth = lba >> 32;
 
@@ -88,23 +88,23 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 	// 8K bytes (16 sectors) per PRDT
 	int i = 0;
-	for (; i < cmdheader->prdtl - 1; i++) {
+	/*for (; i < cmdheader->prdtl - 1; i++) {
 		cmdtbl->prdt_entry[i].dba = (uint32_t) buff2;
 		cmdtbl->prdt_entry[i].dbc = 8 * 1024 - 1;	// 8K bytes (this value should always be set to 1 less than the actual value)
 		cmdtbl->prdt_entry[i].i = 1;
 		buff2 += 4 * 1024;	// 4K words
 		count -= 16;	// 16 sectors
-	}
+	}*/
 	// Last entry
-	cmdtbl->prdt_entry[i].dba = (uint32_t) buff2;
+	cmdtbl->prdt_entry[i].dba = (uint32_t) buf;
 	cmdtbl->prdt_entry[i].dbc = (count << 9) - 1;	// 512 bytes per sector
 	cmdtbl->prdt_entry[i].i = 1;
 
-	/*for (i = 1; i < 16; ++i) {
-		cmdtbl->prdt_entry[i].dba = (uint32_t) (size_t) buf;
+	for (i = 1; i < 16; ++i) {
+		cmdtbl->prdt_entry[i].dba = (uint32_t) (size_t) buf2;
 		cmdtbl->prdt_entry[i].dbc = 0;    // 512 bytes per sector
 		cmdtbl->prdt_entry[i].i = 1;
-	}*/
+	}
 
 	// Setup command
 	SATABus::FIS_REG_H2D* cmdfis = (SATABus::FIS_REG_H2D*) (&cmdtbl->cfis);
