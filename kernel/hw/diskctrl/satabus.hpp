@@ -11,6 +11,9 @@ class SATABus : public HardDiskController
 private:
 
 protected:
+
+public:
+
 	typedef enum
 	{
 		FIS_TYPE_REG_H2D = 0x27,	// Register FIS - host to device
@@ -304,7 +307,6 @@ protected:
 
 	HBA_MEM* abar;
 
-public:
 	SATABus();
 
 	int open(int, int, void*);
