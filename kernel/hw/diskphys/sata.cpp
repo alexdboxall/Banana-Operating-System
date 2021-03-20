@@ -54,7 +54,7 @@ int SATA::open(int _deviceNum, int b, void* _ide)
 
 int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 {
-	uint8_t* buf = (void*) buffer;
+	uint8_t* buf = (uint8_t*) buffer;
 	uint32_t startl = lba & 0xFFFFFFFF;
 	uint32_t starth = lba >> 32;
 
@@ -97,7 +97,7 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 	cmdfis->fis_type = SATABus::FIS_TYPE_REG_H2D;
 	cmdfis->c = 1;	// Command
-	cmdfis->command = ATA_CMD_READ_DMA_EX;
+	cmdfis->command = ATA_CMD_READ_DMA_EXT;
 
 	cmdfis->lba0 = (uint8_t) startl;
 	cmdfis->lba1 = (uint8_t) (startl >> 8);
