@@ -54,6 +54,9 @@ int SATA::open(int _deviceNum, int b, void* _ide)
 
 int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 {
+	if (count > 8) {
+		panic("SATA need virt->phys implementation for count > 8")
+	}
 	uint8_t* buf = (uint8_t*) buffer;
 	uint32_t startl = lba & 0xFFFFFFFF;
 	uint32_t starth = lba >> 32;

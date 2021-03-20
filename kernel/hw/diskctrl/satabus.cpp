@@ -167,7 +167,7 @@ void SATABus::portRebase(HBA_PORT* port, int portNo)
 
 	// Command table offset: 40K + 8K*portNo
 	// Command table size = 256*32 = 8K per port
-	HBA_CMD_HEADER* cmdheader = (HBA_CMD_HEADER*) (port->clb);
+	HBA_CMD_HEADER* cmdheader = (HBA_CMD_HEADER*) (AHCI_BASE_VIRT + (portNo << 10));
 	for (int i = 0; i < 32; i++) {
 		cmdheader[i].prdtl = 8;	// 8 prdt entries per command table
 					// 256 bytes per command table, 64+16+48+16*8
