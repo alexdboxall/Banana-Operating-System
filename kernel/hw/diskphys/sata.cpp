@@ -79,7 +79,8 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 	cmdheader->w = 0;										// Read from device
 	cmdheader->prdtl = (uint16_t) ((count - 1) >> 4) + 1;	// PRDT entries count
 
-	SATABus::HBA_CMD_TBL* cmdtbl = (SATABus::HBA_CMD_TBL*) (cmdheader->ctba);
+	uint8_t* spot = (uint8_t*) (((size_t) cmdheader->ctba) - sbus->AHCI_BASE_PHYS + sbus->AHCI_BASE_VIRT);
+	SATABus::HBA_CMD_TBL* cmdtbl = (SATABus::HBA_CMD_TBL*) (spot);
 	memset(cmdtbl, 0, sizeof(SATABus::HBA_CMD_TBL) +
 		   (cmdheader->prdtl - 1) * sizeof(SATABus::HBA_PRDT_ENTRY));
 
