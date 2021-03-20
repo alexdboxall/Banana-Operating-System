@@ -1,5 +1,6 @@
 #include "hw/diskphys/sata.hpp"
 #include "hw/diskphys/ata.hpp"
+#include "hw/diskctrl/ide.hpp"
 #include "hw/diskctrl/satabus.hpp"
 #include "hw/ports.hpp"
 #include "hw/acpi.hpp"
@@ -53,7 +54,7 @@ int SATA::open(int _deviceNum, int b, void* _ide)
 
 int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 {
-	uint8_t* buf = (void* buffer);
+	uint8_t* buf = (void*) buffer;
 	uint32_t startl = lba & 0xFFFFFFFF;
 	uint32_t starth = lba >> 32;
 
