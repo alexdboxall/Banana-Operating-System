@@ -88,7 +88,7 @@ int VGAVideo::open(int a, int b, void* c)
 		mono = true;
 	}
 
-	Vm::start8086("C:/Banana/System/VGASET.COM", 0x0000, 0x90, mono ? 0x11 : 0x12, mono ? 0x11 : 0x12);
+	Vm::start8086("C:/Banana/System/VGA.COM", 0x0000, 0x90, mono ? 0x11 : 0x12, mono ? 0x11 : 0x12);
 	Vm::finish8086();
 	kprintf("Set to video mode %d\n", mono ? 0x11 : 0x12);
 
