@@ -11,7 +11,7 @@ mov ds, ax
 mov es, ax
 mov fs, ax
 
-:GS has mode number
+;GS has mode number
 
 mov ax, 0x4F02
 mov bx, gs
@@ -53,3 +53,5 @@ framebuffer dd 0
 offscreenMemOff dd 0
 offscreenMemSize dw 0
 times 206 db 0
+
+db "DONE"
