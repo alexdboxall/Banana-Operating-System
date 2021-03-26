@@ -10,6 +10,9 @@ mov ax, 0x90
 mov ds, ax
 mov es, ax
 mov fs, ax
+mov ss, ax
+
+mov sp, stack
 
 mov bx, gs
 
@@ -22,3 +25,6 @@ int 0x10
 
 xor eax, eax
 int 0xEE			;terminate (0xFF used by APIC spurious)
+
+times 128 db 0
+stack:

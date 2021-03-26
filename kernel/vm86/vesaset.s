@@ -10,6 +10,9 @@ mov ax, 0x90
 mov ds, ax
 mov es, ax
 mov fs, ax
+mov ss, ax
+
+mov sp, stack
 
 ;GS has mode number
 
@@ -91,3 +94,6 @@ framebuffer dd 0
 offscreenMemOff dd 0
 offscreenMemSize dw 0
 times 206 db 0
+
+times 128 db 0
+stack:

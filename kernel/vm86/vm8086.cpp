@@ -142,6 +142,7 @@ namespace Vm
 		vm86Thread->vm86Task = true;
 
 		vmToHostCommsPtr = 0;
+		memset(vmToHostComms, 0, 32);
 
 		File* f = new File(filename, kernelProcess);
 		if (!f) {
