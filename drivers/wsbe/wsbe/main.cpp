@@ -38,6 +38,8 @@ int buttons = 0;
 Desktop* desktop = nullptr;
 
 uint32_t* parsedTGA;
+int desktopImageWidth = 640;
+int desktopImageHeight = 480;
 
 extern "C" bool invertMouse;
 
@@ -122,9 +124,9 @@ void loadCursors()
 
 WindowPaintHandler oldHandler;
 char szstring[64];
-void newpaint(struct Window_struct* win)
+void newpaint(struct Window_struct* win, int sx, int sy, List* dr, int pc)
 {
-    oldHandler(win);
+    oldHandler(win, sx, sy, dr, pc);
     Context_draw_text(win->context, szstring, 50, 50, 0, 0);
 }
 
@@ -205,6 +207,12 @@ extern "C" void loadbuiltinfonts();
 namespace Krnl
 {
     extern void (*guiPanicHandler)();
+    extern void (*guiProgramFaultHandler)();
+}
+
+void faulthandler()
+{
+
 }
 
 void panichandler()
@@ -247,10 +255,65 @@ void panichandler()
     }
 }
 
+#include "interface.h"
+
+
+
+void guiProc(Window* window, Message msg) {
+    switch (msg.type) {
+    case MESSAGE_PAINT:
+    {
+        Window_paint_wrapper(window, (List*) msg.dr, msg.paintChildren);
+
+        char newTitle[32];
+        strcpy(newTitle, "TitleTitleTitle");
+        newTitle[2] = (window->x % 10) + '0';
+        newTitle[4] = (window->y % 10) + '0';
+        newTitle[6] = (window->width % 10) + '0';
+        newTitle[8] = (window->height % 10) + '0';
+        setWindowTitle(window, newTitle);
+        Context_fill_rect(window->context, 0, 0, window->width, window->height, 0xFF0000);
+
+        //Now that we're done drawing this window, we can clear the changes we made to the context
+        Context_clear_clip_rects(window->context);
+        window->context->translate_x = 0;
+        window->context->translate_y = 0;
+
+        break;
+    }
+
+    default:
+        guiDefaultProc(window, msg);
+    }
+}
+
+void internalMain(Window* __v)
+{
+    __v->hasProc = true;
+    while (1) {
+        Message msg;
+        int count = getMessage(__v, &msg);
+        if (!count) continue;
+        guiProc((Window*) msg.window, msg);
+    }
+}
+
+void myapp(void* ctxt)
+{
+    //unlockScheduler();
+
+    Window* test = createWindow(150, 100, 350, 200, WIN_TOPLEVELWIN);
+    setWindowTitle(test, "WSBE Window!");
+    addWindow((Window*) getDesktop(), test);
+
+    internalMain(test);
+}
+
 int main(int argc, const char* argv[])
 {
     extern Video* screen;
     Krnl::guiPanicHandler = panichandler;
+    Krnl::guiProgramFaultHandler = faulthandler;
 
     //FFFF55
     //AA5500
@@ -271,6 +334,9 @@ int main(int argc, const char* argv[])
     int ho;
     extern Video* screen;
     parsedTGA = screen->tgaParse(bgImgTGA, tgalen, &wo, &ho);
+    kprintf("wo = %d, ho = %d\n", wo, ho);
+    desktopImageWidth = wo;
+    desktopImageHeight = ho;
 
     canDoMouse = false;
     loadCursors();
@@ -303,6 +369,9 @@ int main(int argc, const char* argv[])
     spawn_calculator(nullptr, 0, 0);
 
     Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
+
+    //kernelProcess->createThread(myapp);
+    //myapp(0);
 
     while (1) {  
         sleep(3);

@@ -63,6 +63,8 @@ int Window_init(Window* window, int16_t x, int16_t y, uint16_t width,
 	window->active_child = (Window*) 0;
 	window->title = (char*) 0;
 	window->dragType = DRAG_TYPE_NONE;
+	window->messageCount = 0;
+	window->hasProc = false;
 
 	if (flags & WIN_TOPLEVELWIN) {
 		active_window = window;
@@ -295,7 +297,6 @@ void Window_invalidate(Window* window, int top, int left, int bottom, int right)
 //Another override-redirect function
 void Window_paint(Window* window, List* dirty_regions, uint8_t paint_children)
 {
-
 	int i, j, screen_x, screen_y, child_screen_x, child_screen_y;
 	Window* current_child;
 	Rect* temp_rect;
@@ -351,19 +352,94 @@ void Window_paint(Window* window, List* dirty_regions, uint8_t paint_children)
 	window->context->translate_x = screen_x;
 	window->context->translate_y = screen_y;
 
-	window->paint_function(window);
-
-	//Now that we're done drawing this window, we can clear the changes we made to the context
+	window->paint_function(window, 0, 0, dirty_regions, paint_children);
+	
 	Context_clear_clip_rects(window->context);
 	window->context->translate_x = 0;
 	window->context->translate_y = 0;
+	if (paint_children) {
+		Window_paint_children(window, dirty_regions);
+	}
+}
+
+List* Window_paint_wrapper(Window* window, List* dirty_regions, uint8_t paint_children)
+{
+	int i, j, screen_x, screen_y, child_screen_x, child_screen_y;
+	Window* current_child;
+	Rect* temp_rect;
+
+	//Can't paint without a context
+	if (!window->context)
+		return;
+
+	//Start by limiting painting to the window's visible area
+	Window_apply_bound_clipping(window, 0, dirty_regions);
+
+	//Set the context translation
+	screen_x = Window_screen_x(window);
+	screen_y = Window_screen_y(window);
+
+	//If we have window decorations turned on, draw them and then further
+	//limit the clipping area to the inner drawable area of the window 
+	if (!(window->flags & WIN_NODECORATION)) {
+
+		//Draw border
+		Window_draw_border(window);
+
+		//Limit client drawable area 
+		screen_x += WIN_BORDERWIDTH;
+		screen_y += WIN_TITLEHEIGHT;
+		temp_rect = Rect_new(screen_y, screen_x,
+							 screen_y + window->height - WIN_TITLEHEIGHT - WIN_BORDERWIDTH - 1,
+							 screen_x + window->width - (2 * WIN_BORDERWIDTH) - 1);
+		Context_intersect_clip_rect(window->context, temp_rect);
+	}
+
+	//Then subtract the screen rectangles of any children 
+	//NOTE: We don't do this in Window_apply_bound_clipping because, due to 
+	//its recursive nature, it would cause the screen rectangles of all of 
+	//our parent's children to be subtracted from the clipping area -- which
+	//would eliminate this window. 
+	for (i = 0; i < window->children->count; i++) {
+
+		current_child = (Window*) List_get_at(window->children, i);
+
+		child_screen_x = Window_screen_x(current_child);
+		child_screen_y = Window_screen_y(current_child);
+
+		temp_rect = Rect_new(child_screen_y, child_screen_x,
+							 child_screen_y + current_child->height - 1,
+							 child_screen_x + current_child->width - 1);
+		Context_subtract_clip_rect(window->context, temp_rect);
+		free(temp_rect);
+	}
+
+	//Finally, with all the clipping set up, we can set the context's 0,0 to the top-left corner
+	//of the window's drawable area, and call the window's final paint function 
+	window->context->translate_x = screen_x;
+	window->context->translate_y = screen_y;
+}
+/*
+	Context_clear_clip_rects(window->context);
+	window->context->translate_x = 0;
+	window->context->translate_y = 0;
+
+	if (paint_children) {
+		//Window_paint_children(window, dirty_regions);
+	}
+	*/
+
+
+void Window_paint_children(Window* window, List* dirty_regions)
+{
+	int i, j, screen_x, screen_y, child_screen_x, child_screen_y;
+	Window* current_child;
+	Rect* temp_rect;
 
 	//Even though we're no longer having all mouse events cause a redraw from the desktop
 	//down, we still need to call paint on our children in the case that we were called with
 	//a dirty region list since each window needs to be responsible for recursively checking
 	//if its children were dirtied 
-	if (!paint_children)
-		return;
 
 	for (i = 0; i < window->children->count; i++) {
 
@@ -398,12 +474,13 @@ void Window_paint(Window* window, List* dirty_regions, uint8_t paint_children)
 }
 
 //This is the default paint method for a new window
-void Window_paint_handler(Window* window)
+void Window_paint_handler(Window* window, int sx, int sy, List* dr, int pc)
 {
 
 	//Fill in the window background
 	Context_fill_rect(window->context, 0, 0,
 					  window->width, window->height, WIN_BGCOLOR);
+
 }
 
 //Used to get a list of windows overlapping the passed window
@@ -737,7 +814,7 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
 		bool onBottomLeft = !(child->flags & WIN_NODECORATION) && !child->fullscreen &&
 			mouse_x >= child->x - 12 && mouse_x < child->x + 3 &&
 			mouse_y >= child->y + child->height - 18 && mouse_y < child->y + child->height;
-		
+
 		if (onBottomCorner) {
 			overridenMouse = MOUSE_OFFSET_TLDR;
 		} else if (onBottomLeft) {
@@ -875,7 +952,7 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
 			Window_resize(window->drag_child, mouse_x - window->drag_off_x, window->drag_child->height);
 		} else if (window->dragType == DRAG_TYPE_RESIZE_VT) {
 			Window_resize(window->drag_child, window->drag_child->width, mouse_y - window->drag_off_y);
-		
+
 		} else if (window->dragType == DRAG_TYPE_RESIZE_ALL_BOTTOM_LEFT) {
 			int xmove = window->drag_child->x - mouse_x;
 			int oldwidth = window->drag_child->width;

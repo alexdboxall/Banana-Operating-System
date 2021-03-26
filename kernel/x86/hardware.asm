@@ -163,7 +163,6 @@ detectCPUID:
 global goToVM86
 
 goToVM86:
-    cli
 	push ebp
 	mov ebp, esp
 

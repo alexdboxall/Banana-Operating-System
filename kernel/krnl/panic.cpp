@@ -16,6 +16,7 @@ namespace Krnl
 	bool kernelInPanic = false;
 
 	void (*guiPanicHandler)();
+	void (*guiProgramFaultHandler)();
 
 	void panic(const char* message) {
 		if (guiPanicHandler) {

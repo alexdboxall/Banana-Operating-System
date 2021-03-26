@@ -605,6 +605,7 @@ void Context_draw_char_clipped(Context* context, char character, int x, int y,
     uint8_t shift_line;
 
     //Make sure to take context translation into account
+    //Make sure to take context translation into account
     x += context->translate_x;
     y += context->translate_y;
 

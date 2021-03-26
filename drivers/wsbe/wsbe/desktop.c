@@ -57,6 +57,8 @@ Desktop* Desktop_new(Context* context)
 //Paint the desktop 
 void Desktop_paint_handler(Window* desktop_window)
 {
+	extern int desktopImageWidth;
+	extern int desktopImageHeight;
 	extern uint32_t* parsedTGA;
 
 	Context_draw_bitmap(desktop_window->context, parsedTGA, 0, 0, 640, 480);
