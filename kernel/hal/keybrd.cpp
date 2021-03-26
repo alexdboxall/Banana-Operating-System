@@ -53,17 +53,16 @@ void sendKeyToTerminal(uint8_t code)
 void startGUI(void* a)
 {
 	unlockScheduler();
-	//unlockScheduler();		//this isn't good
-
-	kprintf("SGUI: nesting level = %d\n", getIRQNestingLevel());
-
-	/*extern Video* screen;
-	VGAVideo* vga = new VGAVideo();
-	computer->addChild(vga);
-	vga->open(0, 0, nullptr);
-	screen = vga;*/
 
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/vga.sys"), computer);
+	Thr::executeDLL(Thr::loadDLL("C:/Banana/System/wsbe.sys"), computer);
+}
+
+void startGUIVESA(void* a)
+{
+	unlockScheduler();
+
+	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/vesa.sys"), computer);
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/System/wsbe.sys"), computer);
 }
 
@@ -123,7 +122,11 @@ void sendKeyboardToken(KeyboardToken kt)
 	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::Home && !guiStated) {
 		kernelProcess->createThread(startGUI, nullptr, 1);
 		guiStated = true;
+	} else if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::End && !guiStated) {
+		kernelProcess->createThread(startGUIVESA, nullptr, 1);
+		guiStated = true;
 	}
+	
 
 	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::KeypadEnter) kt.halScancode = (uint16_t) KeyboardSpecialKeys::Enter;
 	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::KeypadMinus) kt.halScancode = (uint16_t) '-';

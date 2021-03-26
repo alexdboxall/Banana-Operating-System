@@ -53,5 +53,3 @@ framebuffer dd 0
 offscreenMemOff dd 0
 offscreenMemSize dw 0
 times 206 db 0
-
-db "DONE"
