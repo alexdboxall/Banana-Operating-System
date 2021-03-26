@@ -15,6 +15,8 @@ protected:
 public:
 	VGAVideo();
 
+	bool mono;
+
 	void setPlane(int pl);
 
 	int open(int, int, void*);

@@ -61,7 +61,27 @@ void Desktop_paint_handler(Window* desktop_window)
 	extern int desktopImageHeight;
 	extern uint32_t* parsedTGA;
 
-	Context_draw_bitmap(desktop_window->context, parsedTGA, 0, 0, 640, 480);
+	int numX = desktop_window->width / desktopImageWidth;
+	if (desktop_window->width % desktopImageWidth) {
+		numX++;
+	}
+
+	int numY = desktop_window->height / desktopImageHeight;
+
+	int yRemainder = desktop_window->height % desktopImageHeight;
+	
+
+	for (int y = 0; y < numY; ++y) {
+		for (int x = 0; x < numX; ++x) {
+			Context_draw_bitmap(desktop_window->context, parsedTGA, desktopImageWidth * x, desktopImageHeight * y, desktopImageWidth, desktopImageHeight);
+		}
+	}
+
+	if (yRemainder) {
+		for (int x = 0; x < numX; ++x) {
+			Context_draw_bitmap(desktop_window->context, parsedTGA, desktopImageWidth * x, desktop_window->height - yRemainder, desktopImageWidth, yRemainder);
+		}
+	}
 }
 
 int oldMouse;

@@ -67,26 +67,43 @@ int VGAVideo::close(int a, int b, void* c)
 	return 0;
 }
 
+enum video_type
+{
+	VIDEO_TYPE_NONE = 0x00,
+	VIDEO_TYPE_COLOUR = 0x20,
+	VIDEO_TYPE_MONOCHROME = 0x30,
+};
+
+int get_bios_area_video_type()
+{
+	uint16_t* bda_detected_hardware_ptr = (uint16_t*) 0x410;
+	return (*bda_detected_hardware_ptr) & 0x30;
+}
+
 int VGAVideo::open(int a, int b, void* c)
 {
-	Vm::start8086("C:/Banana/System/VGASET.COM", 0x0000, 0x90, 0x12, 0x12);
+	mono = get_bios_area_video_type() == VIDEO_TYPE_MONOCHROME;
+	mono = true;
+
+	Vm::start8086("C:/Banana/System/VGASET.COM", 0x0000, 0x90, mono ? 0x11 : 0x12, mono ? 0x11 : 0x12);
 	Vm::finish8086();
+	kprintf("Set to video mode %d\n", mono ? 0x11 : 0x12);
 
 	volatile uint8_t * volatile vram = (volatile uint8_t * volatile) (VIRT_LOW_MEGS + 0xA0000);
 
 	setPlane(0);
 	memset((void*) vram, 0, 640 * 480 / 8);
-	setPlane(1);
-	memset((void*) vram, 0, 640 * 480 / 8);
-	setPlane(2);
-	memset((void*) vram, 0, 640 * 480 / 8);
-	setPlane(3);
-	memset((void*) vram, 0, 640 * 480 / 8);
+	if (!mono) {
+		setPlane(1);
+		memset((void*) vram, 0, 640 * 480 / 8);
+		setPlane(2);
+		memset((void*) vram, 0, 640 * 480 / 8);
+		setPlane(3);
+		memset((void*) vram, 0, 640 * 480 / 8);
+	}
 
 	width = 640;
 	height = 480;
-
-	mono = false;
 
 	return 0;
 } 
@@ -608,10 +625,17 @@ uint8_t dither16Data[512][2] = {
 
 static inline __attribute__((always_inline)) int pixelLookup(int source, int addr)
 {
-	//80
-	//10
-	//2
-	//return (source >> 22) + ((source >> 14) & 3) + ((source >> 6) & 3);
+	if (mono) {
+		int pix = ((addr + (addr / pitch)) & 1) + (((addr / pitch) & 1) << 1);
+
+		int zeroToFour = ((source & 0xC0) >> 6) + ((source & 0xC000) >> 14) + ((source & 0xC00000) >> 22);
+		zeroToFour /= 2;
+
+		uint32_t num = 0b111111111110101010000000;
+
+		return (((num >> (zeroToFour << 2)) >> pix) & 1) ? 15 : 0;
+	}
+
 	return dither16Data[((source & 0xE00000) >> 21) | ((source & 0xE000) >> 10) | ((source & 0xE0) << 1)][addr & 1];
 }
 
@@ -645,7 +669,7 @@ void VGAVideo::bitblit(int sx, int sy, int x, int y, int w, int h, int pitch, ui
 					cols[i] = pixelLookup(*database++, sy + i);
 				}
 				uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + 0xA0000 + ((baseoffset + tempx) >> 3));
-				for (int k = 0; k < 4; ++k) {
+				for (int k = 0; k < (mono ? 1 : 4); ++k) {
 					FAST_PLANE_SWITCH(k);
 					uint8_t* tempVRAM = vram;
 					for (int j = 0; j < blocks; ++j) {
@@ -681,7 +705,7 @@ void VGAVideo::putrect(int __x, int __y, int maxx, int maxy, uint32_t colour)
 		if (blocks && !(x & 7)) {
 			int baseaddr = (__y * width + x) >> 3;
 			int addr;
-			for (int i = 0; i < 4; ++i) {
+			for (int i = 0; i < (mono ? 1 : 4); ++i) {
 				FAST_PLANE_SWITCH(i);
 
 				int val1 = (((col1 >> i) & 1) ? 0x55 : 0) | (((col2 >> i) & 1) ? 0xAA : 0);
@@ -706,7 +730,7 @@ void VGAVideo::putrect(int __x, int __y, int maxx, int maxy, uint32_t colour)
 			int px1 = (x + __y) & 1 ? col2 : col1;
 			int px2 = (x + __y) & 1 ? col1 : col2;
 
-			for (int i = 0; i < 4; ++i) {
+			for (int i = 0; i < (mono ? 1 : 4); ++i) {
 				FAST_PLANE_SWITCH(i);
 				int addr = baseaddr;
 
@@ -747,7 +771,7 @@ void VGAVideo::putpixel(int x, int y, uint32_t colour)
 	int px = pixelLookup(colour, y + x);
 
 	int w = ~(1 << bit);
-	for (int i = 0; i < 4; ++i) { 
+	for (int i = 0; i < (mono ? 1 : 4); ++i) {
 		FAST_PLANE_SWITCH(i);
 		vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
 		px >>= 1;
