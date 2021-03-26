@@ -18,9 +18,20 @@ mov sp, stack
 
 mov ax, 0x4F02
 mov bx, gs
-or bx, 0x4000				;want LFB
-mov di, crtcInfoBlock
 int 0x10
+
+mov ax, 0x4F01
+mov cx, gs
+mov di, block
+int 0x10
+cmp ax, 0x004F
+je .success
+
+xor ax, ax
+mov [width], ax
+mov [height], ax
+mov [pitch], ax
+.success:
 
 ;send back the data we got through the virtual communications port
 mov dx, 0xFEFE
@@ -64,7 +75,7 @@ out dx, al
 xor eax, eax
 int 0xEE			;terminate (0xFF used by APIC spurious)
 
-crtcInfoBlock:
+block:
 attributes dw 0x0
 windowA db 0
 windowB db 0
@@ -96,4 +107,5 @@ offscreenMemSize dw 0
 times 206 db 0
 
 times 128 db 0
+times 64 db 0
 stack:
