@@ -83,7 +83,10 @@ int get_bios_area_video_type()
 int VGAVideo::open(int a, int b, void* c)
 {
 	mono = get_bios_area_video_type() == VIDEO_TYPE_MONOCHROME;
-	mono = true;
+	extern uint32_t sysBootSettings;
+	if (sysBootSettings & 2048) {
+		mono = true;
+	}
 
 	Vm::start8086("C:/Banana/System/VGASET.COM", 0x0000, 0x90, mono ? 0x11 : 0x12, mono ? 0x11 : 0x12);
 	Vm::finish8086();
@@ -632,12 +635,18 @@ int monoPixelLookup(int source, int x, int y)
 {
 	int pix = ((x + y) & 1) + ((y & 1) << 1);
 
-	int zeroToFour = ((source & 0xC0) >> 6) + ((source & 0xC000) >> 14) + ((source & 0xC00000) >> 22);
-	zeroToFour /= 2;
+	int B = ((source & 0xC0) >> 6);
+	int G = ((source & 0xC000) >> 14);
+	int R = ((source & 0xC00000) >> 22);
+	if (source == 0xBBBBBB) {
+		return 1;
+	}
+
+	int zeroToFour = (R + R + G + G + G + B) / 4;
 
 	uint32_t num = 0b111111111110101010000000;
 
-	return (((num >> (zeroToFour << 2)) >> pix) & 1) ? 0b1111 : 0b0000;
+	return (((num >> (zeroToFour << 2)) >> pix) & 1);
 }
 
 static inline __attribute__((always_inline)) uint8_t mergeColours(uint8_t cols[8], int plane)
@@ -754,34 +763,40 @@ void VGAVideo::putrect(int __x, int __y, int maxx, int maxy, uint32_t colour)
 			int px1 = (x + __y) & 1 ? col2 : col1;
 			int px2 = (x + __y) & 1 ? col1 : col2;
 
-			for (int i = 0; i < (mono ? 1 : 4); ++i) {
-				FAST_PLANE_SWITCH(i);
-				int addr = baseaddr;
+			if (mono) {
+				for (int y = __y; y < maxy; y++) {
+					putpixel(x, y, colour);
+				}
 
-				if (col1 == col2) {
-					int shift = (((col1 >> i) & 1) << bit);
-					for (int y = __y; y < maxy; ++y) {
-						vram[addr] = (vram[addr] & ww) | shift;
-						addr += width >> 3;
-					}
+			} else {
+				for (int i = 0; i < 4; ++i) {
+					FAST_PLANE_SWITCH(i);
+					int addr = baseaddr;
 
-				} else {
-					int shift = (((px1 >> i) & 1) << bit);
-					for (int y = __y; y < maxy; y += 2) {
-						vram[addr] = (vram[addr] & ww) | shift;
-						addr += width >> 2;
-					}
+					if (col1 == col2) {
+						int shift = (((col1 >> i) & 1) << bit);
+						for (int y = __y; y < maxy; ++y) {
+							vram[addr] = (vram[addr] & ww) | shift;
+							addr += width >> 3;
+						}
 
-					addr = baseaddr + (width >> 3);
-					shift = (((px2 >> i) & 1) << bit);
-					for (int y = __y + 1; y < maxy; y += 2) {
-						vram[addr] = (vram[addr] & ww) | shift;
-						addr += width >> 2;
+					} else {
+						int shift = (((px1 >> i) & 1) << bit);
+						for (int y = __y; y < maxy; y += 2) {
+							vram[addr] = (vram[addr] & ww) | shift;
+							addr += width >> 2;
+						}
+
+						addr = baseaddr + (width >> 3);
+						shift = (((px2 >> i) & 1) << bit);
+						for (int y = __y + 1; y < maxy; y += 2) {
+							vram[addr] = (vram[addr] & ww) | shift;
+							addr += width >> 2;
+						}
 					}
 				}
 			}
 		}
-
 	}
 }
 
