@@ -35,7 +35,7 @@ namespace Vm
 	void outbv(uint16_t port, uint8_t val)
 	{
 		if (port == 0xFEFE) {
-			printf("Sending byte 0x%X to host.\n", val);
+			kprintf("Sending byte 0x%X to host.\n", val);
 			vmToHostComms[vmToHostCommsPtr++] = val;
 			if (vmToHostCommsPtr == 32) {
 				vmToHostCommsPtr = 31;
