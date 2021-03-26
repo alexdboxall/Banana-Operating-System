@@ -26,12 +26,16 @@ namespace Vm
 
 	uint8_t inbv(uint16_t port)
 	{
+		if (port == 0xFEFE) {
+			return vmToHostCommsPtr;
+		}
 		return inb(port);
 	}
 
 	void outbv(uint16_t port, uint8_t val)
 	{
 		if (port == 0xFEFE) {
+			printf("Sending byte 0x%X to host.\n", val);
 			vmToHostComms[vmToHostCommsPtr++] = val;
 			if (vmToHostCommsPtr == 32) {
 				vmToHostCommsPtr = 31;
@@ -113,7 +117,9 @@ namespace Vm
 	int getOutput8086(uint8_t* buffer)
 	{
 		memcpy(buffer, vmToHostComms, vmToHostCommsPtr);
-		return vmToHostCommsPtr;
+		int x = vmToHostCommsPtr;
+		vmToHostCommsPtr = 0;
+		return x;
 	}
 
 	bool start8086(const char* filename, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss)
