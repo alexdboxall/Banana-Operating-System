@@ -625,18 +625,19 @@ uint8_t dither16Data[512][2] = {
 
 static inline __attribute__((always_inline)) int pixelLookup(int source, int addr)
 {
-	if (mono) {
-		int pix = ((addr + (addr / pitch)) & 1) + (((addr / pitch) & 1) << 1);
-
-		int zeroToFour = ((source & 0xC0) >> 6) + ((source & 0xC000) >> 14) + ((source & 0xC00000) >> 22);
-		zeroToFour /= 2;
-
-		uint32_t num = 0b111111111110101010000000;
-
-		return (((num >> (zeroToFour << 2)) >> pix) & 1) ? 15 : 0;
-	}
-
 	return dither16Data[((source & 0xE00000) >> 21) | ((source & 0xE000) >> 10) | ((source & 0xE0) << 1)][addr & 1];
+}
+
+int monoPixelLookup(int source, int x, int y)
+{
+	int pix = ((x + y) & 1) + ((y & 1) << 1);
+
+	int zeroToFour = ((source & 0xC0) >> 6) + ((source & 0xC000) >> 14) + ((source & 0xC00000) >> 22);
+	zeroToFour /= 2;
+
+	uint32_t num = 0b111111111110101010000000;
+
+	return (((num >> (zeroToFour << 2)) >> pix) & 1) ? 0b1111 : 0b0000;
 }
 
 static inline __attribute__((always_inline)) uint8_t mergeColours(uint8_t cols[8], int plane)
@@ -665,9 +666,16 @@ void VGAVideo::bitblit(int sx, int sy, int x, int y, int w, int h, int pitch, ui
 
 			if (blocks && !(tempx & 7)) {
 				if (blocks > MAX_BITBLIT_BLOCKS) blocks = MAX_BITBLIT_BLOCKS;
-				for (int i = 0; i < blocks * 8; ++i) {
-					cols[i] = pixelLookup(*database++, sy + i);
+				if (mono) {
+					for (int i = 0; i < blocks * 8; ++i) {
+						cols[i] = monoPixelLookup(*database++, i + x + xxx, sy);
+					}
+				} else {
+					for (int i = 0; i < blocks * 8; ++i) {
+						cols[i] = pixelLookup(*database++, sy + i);
+					}
 				}
+				
 				uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + 0xA0000 + ((baseoffset + tempx) >> 3));
 				for (int k = 0; k < (mono ? 1 : 4); ++k) {
 					FAST_PLANE_SWITCH(k);
@@ -708,16 +716,32 @@ void VGAVideo::putrect(int __x, int __y, int maxx, int maxy, uint32_t colour)
 			for (int i = 0; i < (mono ? 1 : 4); ++i) {
 				FAST_PLANE_SWITCH(i);
 
-				int val1 = (((col1 >> i) & 1) ? 0x55 : 0) | (((col2 >> i) & 1) ? 0xAA : 0);
-				int val2 = (((col2 >> i) & 1) ? 0x55 : 0) | (((col1 >> i) & 1) ? 0xAA : 0);
+				if (mono) {
+					for (int b = 0; b < blocks; ++b) {
+						addr = baseaddr + b;
+						for (int y = __y; y < maxy; ++y) {
+							col1 = monoPixelLookup(colour, x, y);
+							col2 = monoPixelLookup(colour, x + 1, y);
+							int val1 = (((col1 >> i) & 1) ? 0x55 : 0) | (((col2 >> i) & 1) ? 0xAA : 0);
+							int val2 = (((col2 >> i) & 1) ? 0x55 : 0) | (((col1 >> i) & 1) ? 0xAA : 0);
+							vram[addr] = x & 1 ? val1 : val2;
+							addr += width >> 3;
+						}
+					}
 
-				for (int b = 0; b < blocks; ++b) {
-					addr = baseaddr + b;
-					for (int y = __y; y < maxy; ++y) {
-						vram[addr] = (x + y) & 1 ? val1 : val2;
-						addr += width >> 3;
+				} else {
+					int val1 = (((col1 >> i) & 1) ? 0x55 : 0) | (((col2 >> i) & 1) ? 0xAA : 0);
+					int val2 = (((col2 >> i) & 1) ? 0x55 : 0) | (((col1 >> i) & 1) ? 0xAA : 0);
+
+					for (int b = 0; b < blocks; ++b) {
+						addr = baseaddr + b;
+						for (int y = __y; y < maxy; ++y) {
+							vram[addr] = (x + y) & 1 ? val1 : val2;
+							addr += width >> 3;
+						}
 					}
 				}
+
 			}
 
 			x += (blocks << 3) - 1;
@@ -768,8 +792,12 @@ void VGAVideo::putpixel(int x, int y, uint32_t colour)
 	int addr = (y * width + x) >> 3;
 	int bit = 7 - (x & 7);
 
-	int px = pixelLookup(colour, y + x);
-
+	int px;
+	if (mono) {
+		px = monoPixelLookup(colour, x, y);
+	} else {
+		px = pixelLookup(colour, y + x);
+	}
 	int w = ~(1 << bit);
 	for (int i = 0; i < (mono ? 1 : 4); ++i) {
 		FAST_PLANE_SWITCH(i);
