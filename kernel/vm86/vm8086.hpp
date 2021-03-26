@@ -14,6 +14,7 @@ namespace Vm
 	void initialise8086();
 	bool start8086(const char* filename, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss);
 	uint32_t finish8086();
+	int getOutput8086(uint8_t* buffer);
 
 	bool faultHandler(regs* r);
 }

@@ -21,6 +21,9 @@ extern "C" void goToVM86(size_t ip, size_t cs, size_t sp, size_t ss);
 
 namespace Vm
 {
+	uint8_t vmToHostComms[32];
+	int vmToHostCommsPtr = 0;
+
 	uint8_t inbv(uint16_t port)
 	{
 		return inb(port);
@@ -28,7 +31,15 @@ namespace Vm
 
 	void outbv(uint16_t port, uint8_t val)
 	{
-		outb(port, val);
+		if (port == 0xFEFE) {
+			vmToHostComms[vmToHostCommsPtr++] = val;
+			if (vmToHostCommsPtr == 32) {
+				vmToHostCommsPtr = 31;
+			}
+
+		} else {
+			outb(port, val);
+		}
 	}
 
 	uint32_t realToLinear(uint16_t seg, uint16_t off)
@@ -99,6 +110,12 @@ namespace Vm
 		return retv;
 	}
 
+	int getOutput8086(uint8_t* buffer)
+	{
+		memcpy(buffer, vmToHostComms, vmToHostCommsPtr);
+		return vmToHostCommsPtr;
+	}
+
 	bool start8086(const char* filename, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss)
 	{
 		while (1) {
@@ -117,6 +134,8 @@ namespace Vm
 		vm86Thread->vm86SP = sp;
 		vm86Thread->vm86SS = ss;
 		vm86Thread->vm86Task = true;
+
+		vmToHostCommsPtr = 0;
 
 		File* f = new File(filename, kernelProcess);
 		if (!f) {

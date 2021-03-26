@@ -19,6 +19,44 @@ or bx, 0x4000				;want LFB
 mov di, crtcInfoBlock
 int 0x10
 
+;send back the data we got through the virtual communications port
+mov dx, 0xFEFE
+
+;uint16_t width;
+;uint16_t height;
+;uint16_t pitch;
+;uint8_t bpp;
+;uint8_t reserved;
+;uint32_t lfb;
+
+mov ax, [width]
+out dx, al
+xchg al, ah
+out dx, al
+
+mov ax, [height]
+out dx, al
+xchg al, ah
+out dx, al
+
+mov ax, [pitch]
+out dx, al
+xchg al, ah
+out dx, al
+
+mov al, [bpp]
+out dx, al
+xor al, al
+out dx, al
+
+mov al, [framebuffer]
+out dx, al
+mov al, [framebuffer + 1]
+out dx, al
+mov al, [framebuffer + 2]
+out dx, al
+mov al, [framebuffer + 3]
+out dx, al
 
 xor eax, eax
 int 0xEE			;terminate (0xFF used by APIC spurious)
