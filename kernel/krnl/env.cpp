@@ -24,12 +24,12 @@ void EnvVarContainer::deleteEnv()
 
 }
 
-void EnvVarContainer::loadUser()
+void EnvVarContainer::__loadUser()
 {
 
 }
 
-void EnvVarContainer::loadSystem()
+void EnvVarContainer::__loadSystem()
 {
 
 }
@@ -55,7 +55,7 @@ namespace Krnl
 
 	char* getEnv(Process* prcss, const char* envname)
 	{
-		if (prcss != kernelProcess && krcss != nullptr) {
+		if (prcss != kernelProcess && prcss != nullptr) {
 			char* processEnv = prcss->env->getEnv(envname);
 			if (processEnv) {
 				return processEnv;
