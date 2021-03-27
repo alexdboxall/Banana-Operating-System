@@ -45,6 +45,10 @@ rep fs movsb
 
 mov [0x80], ax		;store status code
 
+;does not matter what we send
+mov dx, 0xFEFE
+out dx, al
+
 mov eax, 0
 int 0xEE			;soft terminate
 
