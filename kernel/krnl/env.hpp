@@ -4,6 +4,8 @@
 #include "core/main.hpp"
 #include "thr/prcssthr.hpp"
 
+class Process;
+
 struct EnvVar
 {
 	char* key;
@@ -18,13 +20,11 @@ private:
 	Process* process;
 
 protected:
-	friend void Krnl::loadSystemEnv();
-	friend void Krnl::loadUserEnv();
-
-	void loadUser();
-	void loadSystem();
 
 public:
+	void __loadUser();
+	void __loadSystem();
+
 	char* getEnv(const char* envname);
 	void setEnv(const char* envname, const char* data);
 	void deleteEnv();
