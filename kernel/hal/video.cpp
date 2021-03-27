@@ -89,6 +89,7 @@ void Video::putrect(int x, int y, int w, int h, uint32_t colour)
 
 	for (; y < maxY; ++y) {
 		for (; x < maxX; ++x) {
+			kprintf("calling some version of putpixel...\n");
 			putpixel(x, y, colour);
 		}
 	}
