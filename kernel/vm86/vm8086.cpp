@@ -258,7 +258,7 @@ namespace Vm
 				}
 			}
 		}*/
-		//kprintf("<%X, %X %X%X%X> ", r->cs * 16 + r->eip, ip, ip[0], ip[1], ip[2]);
+		kprintf("<%X, %X %X%X%X> ", r->cs * 16 + r->eip, ip, ip[0], ip[1], ip[2]);
 
 		bool operand32 = false;
 		bool address32 = false;
