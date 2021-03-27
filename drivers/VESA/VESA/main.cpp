@@ -199,15 +199,16 @@ ModeInfo VESA::calculateBestMode()
 	uint16_t ax = *axPtr;
 	Vm::finish8086();
 
-	biosEDIDSupported = ((ax & 0xFF) == 0x4F) && ((ax >> 8) == 0);
+	bool biosEDIDSupported = ((ax & 0xFF) == 0x4F) && ((ax >> 8) == 0);
 
 	int monitorResolution = RATIO_43;
 	int monitorWidth = 800;
 	int monitorHeight = 600;
 
+	EDIDRecord* edid = (EDIDRecord*) defaultMonitorEDID;
 	if (biosEDIDSupported) {
-		monitorWidth  = defaultMonitorEDID->detailedTiming[0][0x38 - 0x36] | ((int) (defaultMonitorEDID->detailedTiming[0][0x3A - 0x36] & 0xF0) << 4);
-		monitorHeight = defaultMonitorEDID->detailedTiming[0][0x3B - 0x36] | ((int) (defaultMonitorEDID->detailedTiming[0][0x3D - 0x36] & 0xF0) << 4);
+		monitorWidth  = edid->detailedTiming[0][0x38 - 0x36] | ((int) (edid->detailedTiming[0][0x3A - 0x36] & 0xF0) << 4);
+		monitorHeight = edid->detailedTiming[0][0x3B - 0x36] | ((int) (edid->detailedTiming[0][0x3D - 0x36] & 0xF0) << 4);
 	}
 
 	kprintf("Best resolution: %dx%d\n", monitorWidth, monitorHeight);
