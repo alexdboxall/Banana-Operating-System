@@ -52,8 +52,8 @@ namespace Krnl
 
 	void flushEnv();
 
-	EnvVarContainer* newProcessEnv();
-	EnvVarContainer* copyProcessEnv(EnvVarContainer* container);
+	EnvVarContainer* newProcessEnv(Process* prcss);
+	EnvVarContainer* copyProcessEnv(Process* newProcess);
 }
 
 #endif

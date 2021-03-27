@@ -105,24 +105,30 @@ namespace Krnl
 		prcss->env->deleteEnv(envname);
 	}
 
-	EnvVarContainer* newProcessEnv()
+	EnvVarContainer* newProcessEnv(Process* prcss)
 	{
-		return new EnvVarContainer();
+		return new EnvVarContainer(prcss);
 	}
 
-	EnvVarContainer* copyProcessEnv(EnvVarContainer* container)
+	EnvVarContainer* copyProcessEnv(Process* newProcess)
 	{
-
+		EnvVarContainer* copy = new EnvVarContainer(newProcess);
+		copy->count = count;
+		copy->envarr = malloc(sizeof(EnvVar) * count);
+		memcpy(copy->envarr, envarr, sizeof(EnvVar) * count);
+		return copy;
 	}
 
 	void loadSystemEnv()
 	{
-
+		systemEnv = new EnvVarContainer(kernelProcess);
+		systemEnv->__loadSystem();
 	}
 
 	void loadUserEnv()
 	{
-
+		userEnv = new EnvVarContainer(kernelProcess);
+		userEnv->__loadUser();
 	}
 
 	void flushEnv()
