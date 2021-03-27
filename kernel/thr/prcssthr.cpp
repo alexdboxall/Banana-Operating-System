@@ -152,6 +152,7 @@ int nextPID = 1;
 
 Process::Process(const char* _filepath, Process* _parent, char** _argv)
 {
+	env = Krnl::newProcessEnv();
 	threadUsage = 0;
 	pid = nextPID++;
 	vas = new VAS(false);
@@ -178,6 +179,7 @@ Process::Process(const char* _filepath, Process* _parent, char** _argv)
 
 Process::Process(bool _kernel, const char* _name, Process* _parent, char** _argv)
 {
+	env = Krnl::newProcessEnv();
 	threadUsage = 0;
 	pid = nextPID++;
 	vas = new VAS(_kernel);

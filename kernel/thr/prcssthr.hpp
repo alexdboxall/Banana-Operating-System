@@ -8,6 +8,7 @@
 #include "core/main.hpp"
 #include "core/pipe.hpp"
 #include "core/virtmgr.hpp"
+#include "krnl/env.hpp"
 
 struct Process;
 
@@ -88,6 +89,8 @@ struct Process
 
 	int argc;
 	char* argv[128];
+
+	EnvVarContainer* env;
 
 	bool failedToLoadProgram = false;
 
