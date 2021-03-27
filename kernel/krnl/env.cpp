@@ -115,7 +115,7 @@ namespace Krnl
 		EnvVarContainer* e = oldProcess->env;
 		EnvVarContainer* copy = new EnvVarContainer(newProcess);
 		copy->count = e->count;
-		copy->envarr = malloc(sizeof(EnvVar) * e->count);
+		copy->envarr = (EnvVar*) malloc(sizeof(EnvVar) * e->count);
 		memcpy(copy->envarr, e->envarr, sizeof(EnvVar) * e->count);
 		return copy;
 	}
