@@ -355,6 +355,8 @@ void cleanupTerminatedTask(ThreadControlBlock* task)
 	//check if all threads have finished
 	if (task->processRelatedTo->threadUsage == 0) {
 
+		delete task->processRelatedTo->env;
+
 		int returnCode = task->returnCodeForUseOnTerminationList;
 
 		// handle 'waitpid'

@@ -37,16 +37,20 @@ void EnvVarContainer::__loadSystem()
 
 EnvVarContainer::EnvVarContainer(Process* p)
 {
+	kprintf("making env.\n");
 	count = 0;
 	process = p;
 	envarr = nullptr;
+	kprintf("made env.\n");
 }
 
 EnvVarContainer::~EnvVarContainer()
 {
+	kprintf("deleting env.\n");
 	if (envarr != nullptr && count) {
 		free(envarr);
 	}
+	kprintf("deleted env.\n");
 }
 
 namespace Krnl

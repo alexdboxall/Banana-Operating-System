@@ -580,7 +580,7 @@ void begin(void* a)
     if (fs == FileStatus::Success) {
         f->close();
     } else {
-        firstTime = true;
+        firstTime = true; 
     }
     delete f;
 
