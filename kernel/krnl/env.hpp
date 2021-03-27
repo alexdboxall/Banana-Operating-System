@@ -2,7 +2,6 @@
 #define _ENV_KRNL_HPP_
 
 #include "core/main.hpp"
-#include "thr/prcssthr.hpp"
 
 class Process;
 

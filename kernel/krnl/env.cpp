@@ -1,6 +1,7 @@
-#include "dbg/kconsole.hpp"
-#include "core/common.hpp"
 #include "krnl/env.hpp"
+#include "core/common.hpp"
+#include "thr/prcssthr.hpp"
+#include "dbg/kconsole.hpp"
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
