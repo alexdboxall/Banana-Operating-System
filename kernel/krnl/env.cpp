@@ -20,7 +20,7 @@ void EnvVarContainer::setEnv(const char* envname, const char* data)
 
 }
 
-void EnvVarContainer::deleteEnv()
+void EnvVarContainer::deleteEnv(const char* envname)
 {
 
 }
@@ -42,7 +42,7 @@ EnvVarContainer::EnvVarContainer(Process* p)
 	envarr = nullptr;
 }
 
-~EnvVarContainer::EnvVarContainer()
+EnvVarContainer::~EnvVarContainer()
 {
 	if (envarr != nullptr && count) {
 		free(envvar);

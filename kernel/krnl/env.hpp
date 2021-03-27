@@ -14,19 +14,20 @@ struct EnvVar
 class EnvVarContainer
 {
 private:
-	int count;
-	EnvVar* envarr;
-	Process* process;
 
 protected:
 
 public:
+	int count;
+	EnvVar* envarr;
+	Process* process;
+
 	void __loadUser();
 	void __loadSystem();
 
 	char* getEnv(const char* envname);
 	void setEnv(const char* envname, const char* data);
-	void deleteEnv();
+	void deleteEnv(const char* envname);
 
 	EnvVarContainer(Process* p);
 	~EnvVarContainer();
