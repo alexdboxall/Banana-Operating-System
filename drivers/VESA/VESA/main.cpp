@@ -118,6 +118,32 @@ void VESA::getModes()
 	}
 	gotModes = true;
 
+	File* fil = new File("C:/Banana/System/vesamode.dat", kernelProcess);
+	if (fil->exists()) {
+		FileStatus res = fil->open(FileOpenMode::Read);
+		int br;
+		if (res == FileStatus::Success) {
+			uint16_t count = 0;
+			fil->read(2, &count, &br);
+			if (br != 2) {
+				fil->close();
+				fil->unlink();
+			} else {
+				fil->read(sizeof(ModeInfo) * ((int) count), modes, &br);
+				fil->close();
+				if (br != sizeof(ModeInfo) * ((int) count)) {
+					fil->unlink();
+				} else {
+					numModes = count;
+					return;
+				}
+			}
+
+		} else {
+			fil->unlink();
+		}
+	}
+
 	for (int i = 0x4100; i < 0x41FF; ++i) {
 		ModeInfo mode = getModeStruct(i);
 		//filter out invalid modes and very bad modes
@@ -146,8 +172,15 @@ void VESA::getModes()
 			strcpy(ratioString, "16:10");
 			modes[i].ratioEstimation = RATIO_1610;
 		}
+	}
 
-		//kprintf("0x%X: %dx%d @ %dbpp. %s\n", modes[i].number, modes[i].width, modes[i].height, modes[i].bpp, ratioString);
+	FileStatus res = fil->open(FILE_OPEN_WRITE_NORMAL);
+	if (res == FileStatus::Success) {
+		uint16_t count = numModes;
+		int br;
+		fil->write(2, &count, &br);
+		fil->write(count * sizeof(ModeInfo), modes, &br);
+		fil->close();
 	}
 }
 
@@ -182,7 +215,9 @@ ModeInfo VESA::calculateBestMode()
 {
 	getModes();
 
-	uint8_t addr[32];
+	uint8_t defaultMonitorEDID[128];
+
+	/*uint8_t addr[32];
 	Vm::start8086("C:/Banana/System/EDID.COM", 0x0000, 0x90, 0, 0);
 	int totalGot = 0;
 	while (1) {
@@ -191,7 +226,6 @@ ModeInfo VESA::calculateBestMode()
 		nanoSleep(1000 * 1000 * 10);
 	}
 
-	uint8_t defaultMonitorEDID[128];
 	uint8_t* ptr = (uint8_t*) 0x900;
 	memcpy(&defaultMonitorEDID, (const void*) 0x900, 128);
 
@@ -200,6 +234,8 @@ ModeInfo VESA::calculateBestMode()
 	Vm::finish8086();
 
 	bool biosEDIDSupported = ((ax & 0xFF) == 0x4F) && ((ax >> 8) == 0);
+	kprintf("EDID: %d. status = 0x%X\n", biosEDIDSupported, ax);*/
+	bool biosEDIDSupported = false;
 
 	int monitorResolution = RATIO_43;
 	int monitorWidth = 800;
