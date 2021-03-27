@@ -43,7 +43,7 @@ int Video::getHeight()
 
 void Video::putpixel(int x, int y, uint32_t col)
 {
-	panic("Video::pixel NEEDS TO BE OVERRIDDEN\n");
+	panic("Video::pixel MUST BE OVERRIDDEN\n");
 }
 
 void Video::drawCursor(int mouse_x, int mouse_y, uint8_t* data, int invertMouse)
@@ -82,14 +82,13 @@ void Video::drawCursor(int mouse_x, int mouse_y, uint8_t* data, int invertMouse)
 //seriously, override this. This is slower than slow.
 void Video::putrect(int x, int y, int w, int h, uint32_t colour)
 {
-	kprintf("Video::rect called.\n");
-
 	int maxX = x + w;
 	int maxY = y + h;
 
+	int ox = x;
+
 	for (; y < maxY; ++y) {
-		for (; x < maxX; ++x) {
-			kprintf("calling some version of putpixel...\n");
+		for (x = ox; x < maxX; ++x) {
 			putpixel(x, y, colour);
 		}
 	}
