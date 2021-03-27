@@ -18,10 +18,14 @@ mov sp, stack
 
 mov ax, 0x4F02
 mov bx, gs
+test bx, 0x8000
+jnz .skipSet
 int 0x10
+.skipSet:
 
 mov ax, 0x4F01
 mov cx, gs
+and cx, 0x7FFF
 mov di, block
 int 0x10
 cmp ax, 0x004F
