@@ -350,8 +350,8 @@ int main(int argc, const char* argv[])
     //Fill this in with the info particular to your project
     Context* context = Context_new(0, 0, 0);
     context->buffer = nullptr;
-    context->width = 640;
-    context->height = 480;
+    context->width = screen->getWidth();
+    context->height = screen->getHeight();
 
     mouse_x = context->width / 2;
     mouse_y = context->height / 2;
