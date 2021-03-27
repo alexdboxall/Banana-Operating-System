@@ -107,5 +107,4 @@ offscreenMemSize dw 0
 times 206 db 0
 
 times 128 db 0
-times 64 db 0
 stack:

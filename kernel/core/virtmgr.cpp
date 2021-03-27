@@ -549,6 +549,8 @@ void VAS::mapPage(size_t physicalAddr, size_t virtualAddr, int flags) {
 	size_t pageNumber = (virtualAddr % 0x400000) / 0x1000;
 	size_t* pageTable = (size_t*) (0xFFC00000 + pageTableNumber * 0x1000);
 
+	kprintf("Page number 0x%X. Page table = 0x%X\n", pageNumber, pageTable);
+
 	pageTable[pageNumber] = physicalAddr | flags;
 }
 
