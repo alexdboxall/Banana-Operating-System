@@ -90,6 +90,7 @@ CRTN_OBJ32:=crtn.32
 common32:
 	nasm -O0 -f bin $(SOURCEDIR)/vm86/VGASET.S -o $(SYSROOTDIR)/Banana/System/VGA.COM   -w+orphan-labels
 	nasm -O0 -f bin $(SOURCEDIR)/vm86/VESASET.S -o $(SYSROOTDIR)/Banana/System/VESA.COM   -w+orphan-labels
+	nasm -O0 -f bin $(SOURCEDIR)/vm86/EDID.S -o $(SYSROOTDIR)/Banana/System/EDID.COM   -w+orphan-labels
 	nasm -O0 -f bin $(SOURCEDIR)/vm86/INT13.S -o $(SYSROOTDIR)/Banana/System/DUCTTAPE.COM   -w+orphan-labels
 	nasm $(SOURCEDIR)/x86/boot.asm     -felf32 -O0 -o $(SOURCEDIR)/boot.32
 	nasm $(SOURCEDIR)/x86/hardware.asm -felf32 -O0 -o $(SOURCEDIR)/morenasm.32
