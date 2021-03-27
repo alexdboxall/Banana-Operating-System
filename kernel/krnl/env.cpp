@@ -45,7 +45,7 @@ EnvVarContainer::EnvVarContainer(Process* p)
 EnvVarContainer::~EnvVarContainer()
 {
 	if (envarr != nullptr && count) {
-		free(envvar);
+		free(envarr);
 	}
 }
 
@@ -110,12 +110,13 @@ namespace Krnl
 		return new EnvVarContainer(prcss);
 	}
 
-	EnvVarContainer* copyProcessEnv(Process* newProcess)
+	EnvVarContainer* copyProcessEnv(Process* oldProcess, Process* newProcess)
 	{
+		EnvVarContainer* e = oldProcess->env;
 		EnvVarContainer* copy = new EnvVarContainer(newProcess);
-		copy->count = count;
-		copy->envarr = malloc(sizeof(EnvVar) * count);
-		memcpy(copy->envarr, envarr, sizeof(EnvVar) * count);
+		copy->count = e->count;
+		copy->envarr = malloc(sizeof(EnvVar) * e->count);
+		memcpy(copy->envarr, e->envarr, sizeof(EnvVar) * e->count);
 		return copy;
 	}
 
