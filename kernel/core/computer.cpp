@@ -108,6 +108,7 @@ void Computer::start()
 	initVFS();
 	root->open(0, 0, nullptr);
 
+	Krnl::loadSystemEnv();
 	setupSystemCalls();
 	loadClockSettings();
 	loadDriversForAll();

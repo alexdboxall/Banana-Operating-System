@@ -16,6 +16,11 @@
 
 #define STACK_LEEWAY 32
 
+namespace Thr
+{
+	int nextPID = 1;
+};
+
 Process* kernelProcess = nullptr;
 LinkedList<volatile ThreadControlBlock> taskList;
 LinkedList<volatile ThreadControlBlock> sleepingTaskList;
@@ -148,13 +153,11 @@ void setupMultitasking(void (*where)())
 	switchToThreadASMFirstTime(&p->threads[0]);
 }
 
-int nextPID = 1;
-
 Process::Process(const char* _filepath, Process* _parent, char** _argv)
 {
 	env = Krnl::newProcessEnv(this);
 	threadUsage = 0;
-	pid = nextPID++;
+	pid = Thr::nextPID++;
 	vas = new VAS(false);
 	argc = 0;
 	parent = _parent;
@@ -181,7 +184,7 @@ Process::Process(bool _kernel, const char* _name, Process* _parent, char** _argv
 {
 	env = Krnl::newProcessEnv(this);
 	threadUsage = 0;
-	pid = nextPID++;
+	pid = Thr::nextPID++;
 	vas = new VAS(_kernel);
 	argc = 0;
 	parent = _parent;
