@@ -210,7 +210,7 @@ namespace Krnl
 			if (num < prcss->env->count) {
 				return prcss->env->envarr[num];
 
-			} else if (num < prcss->env->count systemEnv->count) {
+			} else if (num < prcss->env->count + systemEnv->count) {
 				return userEnv->envarr[num - prcss->env->count];
 			}
 
