@@ -159,9 +159,18 @@ void setupTextMode()
 {
 	extern bool vgamono;
 	if (((*((uint16_t*) 0x410)) & 0x30) != 0x30) {		//@@@ ==
-		VGA_TEXT_MODE_ADDRESS -= 0x4000;
+		VGA_TEXT_MODE_ADDRESS -= 0x8000;
 		vgamono = true;
 	}
+
+	uint16_t* ptr = (uint16_t*) 0xC20B0000;
+	*ptr++ = 0x0244;
+	*ptr++ = 0x4202;
+	*ptr++ = 0x0244;
+	*ptr++ = 0x4202;
+	*ptr++ = 0x0244;
+	*ptr++ = 0x4202;
+	while (1);
 
 	textModeImplementation.disableBlink = hwTextMode_disableBlink;
 	textModeImplementation.loadInData = hwTextMode_loadInData;
