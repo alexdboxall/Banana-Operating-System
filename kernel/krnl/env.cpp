@@ -11,17 +11,6 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-int EnvVarContainer::getProcessTotalEnvCount(Process* prcss)
-{
-	return prcss->count + Krnl::systemEnv->count + Krnl::userEnv->count;
-}
-
-EnvVar getProcessEnvPair(Process* prcss, int num)
-{
-	EnvVar e;
-	return e;
-}
-
 char* EnvVarContainer::getEnv(const char* envname)
 {
 	for (int i = 0; i < count; ++i) {
@@ -205,5 +194,16 @@ namespace Krnl
 	void flushEnv()
 	{
 
+	}
+
+	int getProcessTotalEnvCount(Process* prcss)
+	{
+		return prcss->env->count + systemEnv->count + userEnv->count;
+	}
+
+	EnvVar getProcessEnvPair(Process* prcss, int num)
+	{
+		EnvVar e;
+		return e;
 	}
 }
