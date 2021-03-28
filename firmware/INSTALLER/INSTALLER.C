@@ -189,6 +189,15 @@ void windowWrite(Window* w, int x, int y, char* t)
 	}
 }
 
+void windowWriteBlue(Window* w, int x, int y, char* t)
+{
+	bool q = (windows[0] == w || windows[1] == w) && fadeWindows1And2;
+
+	for (int j = 0; j < __strlen(t); ++j) {
+		writeCharacter(w->x + x + j + 18, w->y + y + 3, t[j], TCBlue, q ? TCLightGrey : TCWhite);
+	}
+}
+
 void reallyQuitRepaint(Window* w)
 {
 	windowWrite(w, 0, 0, "To quit   setup, press ENTER");
@@ -1223,7 +1232,7 @@ void installHere()
 	wx.x = 8;
 	wx.y = 4;
 	wx.w = 44;
-	wx.h = 12;
+	wx.h = 14;
 	wx.repaint = 0;
 	__memcpy(wx.title, "Install Here", __strlen("Install Here"));
 	fadeWindows1And2 = true;
@@ -1237,6 +1246,9 @@ void installHere()
 
 	windowWrite(&wx, 0, 5, "Press ESC to cancel, or hold shift and");
 	windowWrite(&wx, 0, 6, "press I to install.");
+
+	windowWriteBlue(&wx, 1, 8, " \"Take a gulp and take a breath");
+	windowWriteBlue(&wx, 1, 9, "   and go ahead and sign the scroll!\"");
 
 	while (1) {
 		char c = blockingKeyboard();

@@ -2,6 +2,7 @@
 #include "core/common.hpp"
 #include "thr/prcssthr.hpp"
 #include "dbg/kconsole.hpp"
+#include "fs/vfs.hpp"
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -30,9 +31,49 @@ void EnvVarContainer::__loadUser()
 
 }
 
+char defaultSysEnv[] = "PATH=C:/Banana/System;C:/Banana/Applications;C:/Banana/Applications/System;\n";
 void EnvVarContainer::__loadSystem()
 {
+	File* f = new File("C:/Banana/Registry/System/env.txt", process);
+	int br;
 
+	if (!f->exists()) {
+		f->open(FILE_OPEN_WRITE_NORMAL);
+		f->write(strlen(defaultSysEnv), defaultSysEnv, &br);
+		f->close();
+	}
+
+	char line[256];
+	int linePtr = 0;
+	int equSpot = 0;
+	f->open(FILE_OPEN_READ);
+	do {
+		f->read(1, &c, &br);
+		if (c == '\n' || br == 0 || linePtr >= 255) {
+			EnvVar e;
+			e.key = (char*) malloc(equSpot + 1);
+			e.value = (char*) malloc(linePtr - equSpot + 4);
+			memset(e.key, 0, equSpot + 1);
+			memcpy(e.key, line, equSpot);
+
+			memset(e.value, 0, linePtr - equSpot + 4);
+			memcpy(e.value, line + equSpot, strlen(line + equSpot));
+
+			count++;
+			envarr = realloc(envvar, count * sizeof(EnvVar));
+			memcpy((void) (envarr + count - 1), &e, sizeof(EnvVar));
+
+			memset(line, 0, 256);
+			linePtr = 0;
+		} else if (c == '=') {
+			equSpot = linePtr;
+		} else {
+			line[linePtr++] = c;
+		}
+
+	} while (br);
+
+	kprintf("loaded %d system environment variables...\n", count);
 }
 
 EnvVarContainer::EnvVarContainer(Process* p)

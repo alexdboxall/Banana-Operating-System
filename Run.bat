@@ -109,7 +109,29 @@ copy "D:/Users/Alex/Desktop/Banana/tools/less0s.bin" "T:/dummyAG.txt"
 copy "D:/Users/Alex/Desktop/Banana/tools/less0s.bin" "T:/dummyAH.txt"
 copy "D:/Users/Alex/Desktop/Banana/tools/less0s.bin" "T:/dummyAI.txt"
 copy "D:/Users/Alex/Desktop/Banana/tools/less0s.bin" "T:/dummyAJ.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/less0s.bin" "T:/dummyAK.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/less0s.bin" "T:/dummyAL.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/less0s.bin" "T:/dummyAM.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/less0s.bin" "T:/dummyAN.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/less0s.bin" "T:/dummyAO.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/less0s.bin" "T:/dummyAP.txt"
 
+copy "D:/Users/Alex/Desktop/Banana/tools/tiny0s.bin" "T:/dummyA111.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/tiny0s.bin" "T:/dummyA112.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/tiny0s.bin" "T:/dummyA113.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/tiny0s.bin" "T:/dummyA114.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/tiny0s.bin" "T:/dummyA115.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/tiny0s.bin" "T:/dummyA116.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/tiny0s.bin" "T:/dummyA117.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/tiny0s.bin" "T:/dummyA118.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/tiny00.bin" "T:/dummyA101.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/tiny00.bin" "T:/dummyA102.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/tiny00.bin" "T:/dummyA103.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/tiny00.bin" "T:/dummyA104.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/tiny00.bin" "T:/dummyA105.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/tiny00.bin" "T:/dummyA106.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/tiny00.bin" "T:/dummyA107.txt"
+copy "D:/Users/Alex/Desktop/Banana/tools/tiny00.bin" "T:/dummyA108.txt"
 rm T:\dummy.txt
 rm T:\dummy2.txt
 rm T:\dummy3.txt
@@ -135,6 +157,28 @@ rm T:\dummyAG.txt
 rm T:\dummyAH.txt
 rm T:\dummyAI.txt
 rm T:\dummyAJ.txt
+rm T:\dummyAK.txt
+rm T:\dummyAL.txt
+rm T:\dummyAM.txt
+rm T:\dummyAN.txt
+rm T:\dummyAO.txt
+rm T:\dummyAP.txt
+rm T:\dummyA111.txt
+rm T:\dummyA112.txt
+rm T:\dummyA113.txt
+rm T:\dummyA114.txt
+rm T:\dummyA115.txt
+rm T:\dummyA116.txt
+rm T:\dummyA117.txt
+rm T:\dummyA118.txt
+rm T:\dummyA101.txt
+rm T:\dummyA102.txt
+rm T:\dummyA103.txt
+rm T:\dummyA104.txt
+rm T:\dummyA105.txt
+rm T:\dummyA106.txt
+rm T:\dummyA107.txt
+rm T:\dummyA108.txt
 
 cd D:/Users/Alex/Desktop/
 attrib +r "T:/Banana/BANANABT" 
