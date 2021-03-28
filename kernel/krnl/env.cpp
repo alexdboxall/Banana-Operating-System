@@ -211,7 +211,7 @@ namespace Krnl
 				return prcss->env->envarr[num];
 
 			} else if (num < prcss->env->count + systemEnv->count) {
-				return userEnv->envarr[num - prcss->env->count];
+				return systemEnv->envarr[num - prcss->env->count];
 			}
 
 		} else {
@@ -222,7 +222,7 @@ namespace Krnl
 				return userEnv->envarr[num - prcss->env->count];
 
 			} else if (num < prcss->env->count + userEnv->count + systemEnv->count) {
-				return userEnv->envarr[num - prcss->env->count - userEnv->count];
+				return systemEnv->envarr[num - prcss->env->count - userEnv->count];
 			}
 
 		}
