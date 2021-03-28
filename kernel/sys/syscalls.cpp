@@ -490,6 +490,8 @@ uint64_t sysCallGetEnv(regs* r)
 	kprintf("sysCallGetEnv. num = %d. ecx = %d\n", num, r->ecx);
 
 	int count = Krnl::getProcessTotalEnvCount(currentTaskTCB->processRelatedTo);
+	kprintf("count = %d\n", count);
+
 	if (num > count) {
 		if (!r->ecx) {
 			*addr = 0;

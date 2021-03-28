@@ -233,6 +233,10 @@ namespace Krnl
 		}
 		
 		panic("getProcessEnvPair FAILURE");
-		return systemEnv->envarr[0];		//we have to return something...
+
+		EnvVar e;
+		e.key = nullptr;
+		e.value = nullptr;
+		return e;
 	}
 }
