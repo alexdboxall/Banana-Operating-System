@@ -163,13 +163,15 @@ void setupTextMode()
 		vgamono = true;
 	}
 
-	uint16_t* ptr = (uint16_t*) 0xC20B0000;
-	*ptr++ = 0x0244;
-	*ptr++ = 0x4202;
-	*ptr++ = 0x0244;
-	*ptr++ = 0x4202;
-	*ptr++ = 0x0244;
-	*ptr++ = 0x4202;
+	uint8_t* ptr = (uint16_t*) 0xC20B0000;
+	*ptr++ = 0x41;
+	*ptr++ = 0x02;
+	*ptr++ = 0x42;
+	*ptr++ = 0x02;
+	*ptr++ = 0x43;
+	*ptr++ = 0x02;
+	*ptr++ = 0x44;
+	*ptr++ = 0x02;
 	while (1);
 
 	textModeImplementation.disableBlink = hwTextMode_disableBlink;
