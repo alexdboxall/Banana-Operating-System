@@ -73,10 +73,14 @@ void EnvVarContainer::loadFrom(const char* filename, const char* defaultN)
 			memcpy(e.key, line, equSpot);
 
 			memset(e.value, 0, linePtr - equSpot + 4);
-			memcpy(e.value, line + equSpot, strlen(line + equSpot) + 1);
+			memcpy(e.value, line + equSpot, strlen(line + equSpot));
 
 			count++;
-			envarr = (EnvVar*) realloc(envarr, count * sizeof(EnvVar));
+			if (!envarr) {
+				envarr = (EnvVar*) malloc(sizeof(EnvVar));
+			} else {
+				envarr = (EnvVar*) realloc(envarr, count * sizeof(EnvVar));
+			}
 			memcpy((void*) (envarr + count - 1), &e, sizeof(EnvVar));
 
 			memset(line, 0, 256);
@@ -85,6 +89,7 @@ void EnvVarContainer::loadFrom(const char* filename, const char* defaultN)
 
 		} else if (c == '=') {
 			equSpot = linePtr;
+		
 		} else {
 			line[linePtr++] = c;
 		}
