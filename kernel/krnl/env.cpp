@@ -92,20 +92,16 @@ void EnvVarContainer::__loadUser()
 
 EnvVarContainer::EnvVarContainer(Process* p)
 {
-	kprintf("making env.\n");
 	count = 0;
 	process = p;
 	envarr = nullptr;
-	kprintf("made env.\n");
 }
 
 EnvVarContainer::~EnvVarContainer()
 {
-	kprintf("deleting env.\n");
 	if (envarr != nullptr && count) {
 		free(envarr);
 	}
-	kprintf("deleted env.\n");
 }
 
 namespace Krnl
@@ -181,10 +177,8 @@ namespace Krnl
 
 	void loadSystemEnv()
 	{
-		kprintf("loading system env.\n");
 		systemEnv = new EnvVarContainer(kernelProcess);
 		systemEnv->__loadSystem();
-		kprintf("loaded system env.\n");
 	}
 
 	void loadUserEnv()
@@ -208,9 +202,7 @@ namespace Krnl
 
 	EnvVar getProcessEnvPair(Process* prcss, int num)
 	{
-		kprintf("num = %d\n", num);
 		if (!userEnv) {
-			kprintf("B prcss->env->count = %d\n", prcss->env->count);
 			if (num < prcss->env->count) {
 				return prcss->env->envarr[num];
 
@@ -219,7 +211,6 @@ namespace Krnl
 			}
 
 		} else {
-			kprintf("A prcss->env->count = %d\n", prcss->env->count);
 			if (num < prcss->env->count) {
 				return prcss->env->envarr[num];
 

@@ -1121,6 +1121,18 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 			fprintf(stderr, "Please enter driver filename.\n");
 		}
 
+	} else if (!strcasecmp(argv[0], "getenv")) {
+		extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
+		if (argc == 2) {
+			char* env = getenv(argv[1]);
+			if (env) {
+				fprintf(out, "%s\n", env);
+			}
+
+		} else {
+			fprintf(stderr, "Please enter an environment variable name.\n");
+		}
+
 	} else if (!strcasecmp(argv[0], "restart")) {
 		extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
 		SystemCall(Shutdown, 2, 0, 0);
