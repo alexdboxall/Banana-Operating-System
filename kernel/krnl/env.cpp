@@ -51,7 +51,7 @@ void EnvVarContainer::loadFrom(const char* filename, const char* defaultN)
 	char c;
 	do {
 		f->read(1, &c, &br);
-		if (c == '\n' || br == 0 || linePtr >= 255) {
+		if (equSpot && (c == '\n' || br == 0 || linePtr >= 255)) {
 			EnvVar e;
 			e.key = (char*) malloc(equSpot + 1);
 			e.value = (char*) malloc(linePtr - equSpot + 4);
@@ -67,6 +67,7 @@ void EnvVarContainer::loadFrom(const char* filename, const char* defaultN)
 
 			memset(line, 0, 256);
 			linePtr = 0;
+			equSpot = 0;
 
 		} else if (c == '=') {
 			equSpot = linePtr;
