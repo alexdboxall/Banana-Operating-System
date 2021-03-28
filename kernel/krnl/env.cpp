@@ -73,7 +73,7 @@ void EnvVarContainer::loadFrom(const char* filename, const char* defaultN)
 			memcpy(e.key, line, equSpot);
 
 			memset(e.value, 0, linePtr - equSpot + 4);
-			memcpy(e.value, line + equSpot, strlen(line + equSpot));
+			memcpy(e.value, line + equSpot, strlen(line + equSpot) + 1);
 
 			count++;
 			envarr = (EnvVar*) realloc(envarr, count * sizeof(EnvVar));
