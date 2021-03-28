@@ -55,6 +55,9 @@ namespace Krnl
 
 	EnvVarContainer* newProcessEnv(Process* prcss);
 	EnvVarContainer* copyProcessEnv(Process* oldProcess, Process* newProcess);
+
+	int getProcessTotalEnvCount(Process* prcss);
+	EnvVar getProcessEnvPair(Process* prcss, int num);
 }
 
 #endif

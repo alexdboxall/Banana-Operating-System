@@ -11,22 +11,33 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
+int EnvVarContainer::getProcessTotalEnvCount(Process* prcss)
+{
+	return prcss->count + Krnl::systemEnv->count + Krnl::userEnv->count;
+}
+
+EnvVar getProcessEnvPair(Process* prcss, int num)
+{
+	EnvVar e;
+	return e;
+}
+
 char* EnvVarContainer::getEnv(const char* envname)
 {
+	for (int i = 0; i < count; ++i) {
+		if (!strcmp(envname, envarr[i].key)) {
+			return envarr[i].value;
+		}
+	}
 	return nullptr;
 }
 
 void EnvVarContainer::setEnv(const char* envname, const char* data)
 {
-
+	
 }
 
 void EnvVarContainer::deleteEnv(const char* envname)
-{
-
-}
-
-void EnvVarContainer::__loadUser()
 {
 
 }
@@ -83,6 +94,11 @@ void EnvVarContainer::loadFrom(const char* filename, const char* defaultN)
 void EnvVarContainer::__loadSystem()
 {
 	loadFrom("C:/Banana/Registry/System/env.txt", defaultSysEnv);
+}
+
+void EnvVarContainer::__loadUser()
+{
+
 }
 
 EnvVarContainer::EnvVarContainer(Process* p)
