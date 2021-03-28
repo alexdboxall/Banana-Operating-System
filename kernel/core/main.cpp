@@ -79,6 +79,10 @@ void hwTextMode_loadInData(VgaText* terminal)
 
 void hwTextMode_loadInTitle(VgaText* terminal, char* title)
 {
+	if (vgamono) {
+		terminal->titleFg = (VgaColour) 2;
+		terminal->titleCol = (VgaColour) 0;
+	}
 	uint16_t* ptr = (uint16_t*) VGA_TEXT_MODE_ADDRESS;
 	for (int i = 0; i < 80; ++i) {
 		*ptr++ = ((uint8_t) title[i]) | (((uint16_t) (((int) terminal->titleFg) & 0xF) | ((((int) terminal->titleCol) & 0xF) << 4)) << 8);
@@ -87,6 +91,10 @@ void hwTextMode_loadInTitle(VgaText* terminal, char* title)
 
 void hwTextMode_scrollScreen(VgaText* terminal)
 {
+	if (vgamono) {
+		terminal->currentFg = (VgaColour) 2;
+		terminal->currentBg = (VgaColour) 0;
+	}
 	uint8_t* ptr = (uint8_t*) VGA_TEXT_MODE_ADDRESS;
 	for (int y = 2; y < 25; ++y) {
 		for (int x = 0; x < 160; ++x) {
