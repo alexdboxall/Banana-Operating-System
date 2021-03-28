@@ -181,8 +181,10 @@ namespace Krnl
 
 	void loadSystemEnv()
 	{
+		kprintf("loading system env.\n");
 		systemEnv = new EnvVarContainer(kernelProcess);
 		systemEnv->__loadSystem();
+		kprintf("loaded system env.\n");
 	}
 
 	void loadUserEnv()
@@ -206,7 +208,9 @@ namespace Krnl
 
 	EnvVar getProcessEnvPair(Process* prcss, int num)
 	{
+		kprintf("num = %d\n", num);
 		if (!userEnv) {
+			kprintf("B prcss->env->count = %d\n", prcss->env->count);
 			if (num < prcss->env->count) {
 				return prcss->env->envarr[num];
 
@@ -215,6 +219,7 @@ namespace Krnl
 			}
 
 		} else {
+			kprintf("A prcss->env->count = %d\n", prcss->env->count);
 			if (num < prcss->env->count) {
 				return prcss->env->envarr[num];
 
