@@ -219,7 +219,7 @@ namespace Krnl
 				return prcss->env->envarr[num];
 
 			} else if (num < prcss->env->count + systemEnv->count) {
-				kprintf("got env %d -> %s\n", num, systemEnv->envarr[num - prcss->env->count].value);
+				kprintf("got env %d -> '%s'\n", num, systemEnv->envarr[num - prcss->env->count].value);
 				return systemEnv->envarr[num - prcss->env->count];
 			}
 
