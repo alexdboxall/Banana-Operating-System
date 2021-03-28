@@ -487,23 +487,23 @@ uint64_t sysCallGetEnv(regs* r)
 	char* addr = (char*) r->edx;
 	int num = r->ebx;
 
-	if (r->ecx == 0) {
-		//get length
-		if (num == 0) {
-			return strlen("PATH=C:/Banana/System;C:/Banana/Applications;C:/Banana/Applications/System;");
-		} else {
-			return 0;
-		}
-
-	} else {
-		if (num == 0) {
-			strcpy(addr, "PATH=C:/Banana/System;C:/Banana/Applications;C:/Banana/Applications/System;");
-		} else {
+	int count = Krnl::getProcessTotalEnvCount(currentTaskTCB->processRelatedTo);
+	if (num > count) {
+		if (!r->ecx) {
 			*addr = 0;
 		}
+		return 0;
 	}
-	
 
+	EnvVar ev = Krnl::getProcessEnvPair(currentTaskTCB->processRelatedTo, num);
+	if (r->ecx == 0) {
+		return strlen(ev.key) + strlen(ev.value) + 1;
+	}
+
+	*addr = 0;
+	strcpy(addr, ev.key);
+	strcat(addr, "=");
+	strcat(addr, ev.value);
 	return 0;
 }
 
