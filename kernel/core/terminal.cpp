@@ -527,7 +527,7 @@ void VgaText::incrementCursor (bool update) {
     if (update) updateCursor();
 }
 
-#define VGA_TEXT_MODE_ADDRESS 0xC20B8000
+size_t VGA_TEXT_MODE_ADDRESS = 0xC20B8000;
 
 void VgaText::updateRAMUsageDisplay(int percent)
 {
@@ -601,6 +601,10 @@ VgaText::~VgaText()
 
 
 VgaText::VgaText (const char* n) {
+	if (((*((uint16_t*) 0x410)) & 0x30) == 0x30) {
+		VGA_TEXT_MODE_ADDRESS -= 0x8000;
+	}
+
 	implementation = textModeImplementation;
 
 	strcpy(name, n);

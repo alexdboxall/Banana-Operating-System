@@ -24,8 +24,18 @@ REAL_MODE_INIT:
 	mov [___bootFATReservedSectors], cx
 	mov [___bootFATHiddenSectors], ebx
 
-	mov ax, 7		;3
+	mov ax, [0x410]
+	and ax, 0x30
+
+	cmp ax, 0x30
+	je .mono
+	mov ax, 3
 	int 0x10
+	jmp .done
+.mono:
+	mov ax, 7
+	int 0x10
+.done:
 
 	;disable blink
 	mov ax, 0x1003
