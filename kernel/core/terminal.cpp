@@ -449,12 +449,22 @@ void VgaText::clearScreen() {
 }
 
 void VgaText::setDefaultBgColour (enum VgaColour bg) {
+	if (mono) {
+		defaultBg = VgaColour::Blue;
+		currentBg = VgaColour::Blue;
+		return;
+	}
     defaultBg = bg;
 	currentBg = bg;
 }
 
 void VgaText::setDefaultFgColour (enum VgaColour fg) {
-    defaultFg = fg;
+	if (mono) {
+		defaultFg = VgaColour::Black;
+		currentFg = VgaColour::Black;
+		return;
+	}
+	defaultFg = fg;
 	currentFg = fg;
 }
 
@@ -465,12 +475,22 @@ void VgaText::setDefaultColours (enum VgaColour fg, enum VgaColour bg) {
 
 void VgaText::setTitleTextColour(enum VgaColour fg)
 {
+	if (mono) {
+		titleFg = VgaColour::Black;
+		updateTitle();
+		return;
+	}
 	titleFg = fg;
 	updateTitle();
 }
 
 void VgaText::setTitleColour(enum VgaColour bg)
 {
+	if (mono) {
+		titleCol = VgaColour::Blue;
+		updateTitle();
+		return;
+	}
 	titleCol = bg;
 	updateTitle();
 }
@@ -603,6 +623,7 @@ VgaText::~VgaText()
 VgaText::VgaText (const char* n) {
 	if (((*((uint16_t*) 0x410)) & 0x30) != 0x30) {
 		VGA_TEXT_MODE_ADDRESS -= 0x8000;
+		mono = true;
 	}
 
 	implementation = textModeImplementation;
