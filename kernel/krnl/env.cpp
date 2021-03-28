@@ -198,21 +198,35 @@ namespace Krnl
 
 	int getProcessTotalEnvCount(Process* prcss)
 	{
+		if (!userEnv) {
+			return prcss->env->count + systemEnv->count;
+		}
 		return prcss->env->count + systemEnv->count + userEnv->count;
 	}
 
 	EnvVar getProcessEnvPair(Process* prcss, int num)
 	{
-		if (num < prcss->env->count) {
-			return prcss->env->envarr[num];
+		if (!userEnv) {
+			if (num < prcss->env->count) {
+				return prcss->env->envarr[num];
 
-		} else if (num < prcss->env->count + userEnv->count) {
-			return userEnv->envarr[num - prcss->env->count];
+			} else if (num < prcss->env->count systemEnv->count) {
+				return userEnv->envarr[num - prcss->env->count];
+			}
 
-		} else if (num < prcss->env->count + userEnv->count + systemEnv->count) {
-			return userEnv->envarr[num - prcss->env->count - userEnv->count];
+		} else {
+			if (num < prcss->env->count) {
+				return prcss->env->envarr[num];
+
+			} else if (num < prcss->env->count + userEnv->count) {
+				return userEnv->envarr[num - prcss->env->count];
+
+			} else if (num < prcss->env->count + userEnv->count + systemEnv->count) {
+				return userEnv->envarr[num - prcss->env->count - userEnv->count];
+			}
+
 		}
-
+		
 		panic("getProcessEnvPair FAILURE");
 		return systemEnv->envarr[0];		//we have to return something...
 	}
