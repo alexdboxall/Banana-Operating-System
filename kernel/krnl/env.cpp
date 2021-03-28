@@ -40,7 +40,7 @@ void EnvVarContainer::loadFrom(const char* filename, const char* defaultN)
 
 	if (!f->exists()) {
 		f->open(FILE_OPEN_WRITE_NORMAL);
-		f->write(strlen(defaultN), defaultN, &br);
+		f->write(strlen(defaultN), (void*) defaultN, &br);
 		f->close();
 	}
 
@@ -48,6 +48,7 @@ void EnvVarContainer::loadFrom(const char* filename, const char* defaultN)
 	int linePtr = 0;
 	int equSpot = 0;
 	f->open(FILE_OPEN_READ);
+	char c;
 	do {
 		f->read(1, &c, &br);
 		if (c == '\n' || br == 0 || linePtr >= 255) {
@@ -61,7 +62,7 @@ void EnvVarContainer::loadFrom(const char* filename, const char* defaultN)
 			memcpy(e.value, line + equSpot, strlen(line + equSpot));
 
 			count++;
-			envarr = realloc(envarr, count * sizeof(EnvVar));
+			envarr = (EnvVar*) realloc(envarr, count * sizeof(EnvVar));
 			memcpy((void*) (envarr + count - 1), &e, sizeof(EnvVar));
 
 			memset(line, 0, 256);
@@ -80,7 +81,7 @@ void EnvVarContainer::loadFrom(const char* filename, const char* defaultN)
 
 void EnvVarContainer::__loadSystem()
 {
-	loadFrom("C:/Banana/Registry/System/env.txt", defaultSysEnv)
+	loadFrom("C:/Banana/Registry/System/env.txt", defaultSysEnv);
 }
 
 EnvVarContainer::EnvVarContainer(Process* p)
