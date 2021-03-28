@@ -42,6 +42,8 @@ struct VgaTextImplementation
 	void (*writeCharacter)(VgaText* terminal, char c, enum VgaColour fg, enum VgaColour bg, int x, int y);
 };
 
+extern bool vgamonomono;
+
 class VgaText : public UnixFile {
 private:
     
@@ -66,8 +68,6 @@ public:
 	enum VgaColour currentFg;
 	enum VgaColour titleCol = VgaColour::Blue;
 	enum VgaColour titleFg = VgaColour::White;
-
-	static bool mono;
 
 	bool asciiEscape = false;
 	bool csiEscape = false;

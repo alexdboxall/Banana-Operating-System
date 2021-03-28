@@ -490,7 +490,7 @@ void VgaText::setTitle(char* text)
 
 uint8_t VgaText::combineColours(uint8_t fg, uint8_t bg)
 {
-	if (mono) return 1;
+	if (vgamono) return 1;
 	return (fg & 0xF) | ((bg & 0xF) << 4);
 }
 
@@ -543,7 +543,7 @@ void VgaText::incrementCursor(bool update)
 	if (update) updateCursor();
 }
 
-bool VgaText::mono = false;
+bool vgamono = false;
 size_t VGA_TEXT_MODE_ADDRESS = 0xC20B8000;
 
 void VgaText::updateRAMUsageDisplay(int percent)
@@ -625,11 +625,6 @@ VgaText::~VgaText()
 
 VgaText::VgaText(const char* n)
 {
-	if (((*((uint16_t*) 0x410)) & 0x30) != 0x30) {
-		VGA_TEXT_MODE_ADDRESS -= 0x8000;
-		mono = true;
-	}
-
 	implementation = textModeImplementation;
 
 	strcpy(name, n);
