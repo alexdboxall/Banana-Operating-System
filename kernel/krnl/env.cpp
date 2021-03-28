@@ -33,7 +33,7 @@ void EnvVarContainer::__loadUser()
 
 char defaultSysEnv[] = "PATH=C:/Banana/System;C:/Banana/Applications;C:/Banana/Applications/System;\n";
 
-void EnvVarContainer::__loadFrom(const char* filename, char* defaultN)
+void EnvVarContainer::loadFrom(const char* filename, const char* defaultN)
 {
 	File* f = new File(filename, process);
 	int br;
@@ -66,6 +66,7 @@ void EnvVarContainer::__loadFrom(const char* filename, char* defaultN)
 
 			memset(line, 0, 256);
 			linePtr = 0;
+
 		} else if (c == '=') {
 			equSpot = linePtr;
 		} else {
