@@ -543,6 +543,7 @@ void VgaText::incrementCursor(bool update)
 	if (update) updateCursor();
 }
 
+bool VgaText::mono = false;
 size_t VGA_TEXT_MODE_ADDRESS = 0xC20B8000;
 
 void VgaText::updateRAMUsageDisplay(int percent)

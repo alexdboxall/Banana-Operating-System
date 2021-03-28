@@ -67,7 +67,7 @@ public:
 	enum VgaColour titleCol = VgaColour::Blue;
 	enum VgaColour titleFg = VgaColour::White;
 
-	static bool mono = false;
+	static bool mono;
 
 	bool asciiEscape = false;
 	bool csiEscape = false;
