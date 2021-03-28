@@ -32,14 +32,15 @@ void EnvVarContainer::__loadUser()
 }
 
 char defaultSysEnv[] = "PATH=C:/Banana/System;C:/Banana/Applications;C:/Banana/Applications/System;\n";
-void EnvVarContainer::__loadSystem()
+
+void EnvVarContainer::__loadFrom(const char* filename, char* defaultN)
 {
-	File* f = new File("C:/Banana/Registry/System/env.txt", process);
+	File* f = new File(filename, process);
 	int br;
 
 	if (!f->exists()) {
 		f->open(FILE_OPEN_WRITE_NORMAL);
-		f->write(strlen(defaultSysEnv), defaultSysEnv, &br);
+		f->write(strlen(defaultN), defaultN, &br);
 		f->close();
 	}
 
@@ -60,8 +61,8 @@ void EnvVarContainer::__loadSystem()
 			memcpy(e.value, line + equSpot, strlen(line + equSpot));
 
 			count++;
-			envarr = realloc(envvar, count * sizeof(EnvVar));
-			memcpy((void) (envarr + count - 1), &e, sizeof(EnvVar));
+			envarr = realloc(envarr, count * sizeof(EnvVar));
+			memcpy((void*) (envarr + count - 1), &e, sizeof(EnvVar));
 
 			memset(line, 0, 256);
 			linePtr = 0;
@@ -74,6 +75,11 @@ void EnvVarContainer::__loadSystem()
 	} while (br);
 
 	kprintf("loaded %d system environment variables...\n", count);
+}
+
+void EnvVarContainer::__loadSystem()
+{
+	loadFrom("C:/Banana/Registry/System/env.txt", defaultSysEnv)
 }
 
 EnvVarContainer::EnvVarContainer(Process* p)

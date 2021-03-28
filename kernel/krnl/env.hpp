@@ -14,6 +14,7 @@ struct EnvVar
 class EnvVarContainer
 {
 private:
+	void loadFrom(const char* filename, const char* defaultN);
 
 protected:
 
@@ -21,7 +22,6 @@ public:
 	int count;
 	EnvVar* envarr;
 	Process* process;
-
 	void __loadUser();
 	void __loadSystem();
 
