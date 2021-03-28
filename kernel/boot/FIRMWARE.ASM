@@ -24,7 +24,7 @@ REAL_MODE_INIT:
 	mov [___bootFATReservedSectors], cx
 	mov [___bootFATHiddenSectors], ebx
 
-	mov ax, 3
+	mov ax, 7		;3
 	int 0x10
 
 	;disable blink
