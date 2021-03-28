@@ -23,7 +23,19 @@ char* EnvVarContainer::getEnv(const char* envname)
 
 void EnvVarContainer::setEnv(const char* envname, const char* data)
 {
-	
+	EnvVar e;
+	e.key = (char*) malloc(strlen(envname) + 1);
+	e.value = (char*) malloc(strlen(data) + 1);
+
+	memset(e.key, 0, strlen(envname) + 1);
+	memcpy(e.key, envname, strlen(envname) + 1);
+
+	memset(e.value, 0, strlen(data) + 1);
+	memcpy(e.value, data, strlen(data) + 1);
+
+	count++;
+	envarr = (EnvVar*) realloc(envarr, count * sizeof(EnvVar));
+	memcpy((void*) (envarr + count - 1), &e, sizeof(EnvVar));
 }
 
 void EnvVarContainer::deleteEnv(const char* envname)
@@ -207,6 +219,7 @@ namespace Krnl
 				return prcss->env->envarr[num];
 
 			} else if (num < prcss->env->count + systemEnv->count) {
+				kprintf("got env %d -> %s\n", num, systemEnv->envarr[num - prcss->env->count].value);
 				return systemEnv->envarr[num - prcss->env->count];
 			}
 
