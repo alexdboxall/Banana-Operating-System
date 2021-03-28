@@ -63,6 +63,7 @@ void EnvVarContainer::loadFrom(const char* filename, const char* defaultN)
 	char c;
 	do {
 		f->read(1, &c, &br);
+		if (c == '\r') continue;
 		if (equSpot && (c == '\n' || br == 0 || linePtr >= 255)) {
 			EnvVar e;
 			e.key = (char*) malloc(equSpot + 1);
