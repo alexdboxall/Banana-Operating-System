@@ -74,6 +74,7 @@ void EnvVarContainer::loadFrom(const char* filename, const char* defaultN)
 
 			memset(e.value, 0, linePtr - equSpot + 4);
 			memcpy(e.value, line + equSpot, strlen(line + equSpot));
+			kprintf("e.value = %s\n", e.value);
 
 			count++;
 			if (!envarr) {
