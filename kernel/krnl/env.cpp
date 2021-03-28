@@ -57,6 +57,7 @@ void EnvVarContainer::loadFrom(const char* filename, const char* defaultN)
 	}
 
 	char line[256];
+	memset(line, 0, 256);
 	int linePtr = 0;
 	int equSpot = 0;
 	f->open(FILE_OPEN_READ);
