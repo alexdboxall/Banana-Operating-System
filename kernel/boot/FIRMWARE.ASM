@@ -29,11 +29,11 @@ REAL_MODE_INIT:
 
 	cmp ax, 0x30
 	je .mono
-	mov ax, 3
+	mov ax, 7
 	int 0x10
 	jmp .done
 .mono:
-	mov ax, 7
+	mov ax, 3
 	int 0x10
 .done:
 
