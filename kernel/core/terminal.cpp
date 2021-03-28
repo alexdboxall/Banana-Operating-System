@@ -490,7 +490,7 @@ void VgaText::setTitle(char* text)
 
 uint8_t VgaText::combineColours(uint8_t fg, uint8_t bg)
 {
-	if (vgamono) return 0xA;
+	if (vgamono) return 2;
 	return (fg & 0xF) | ((bg & 0xF) << 4);
 }
 

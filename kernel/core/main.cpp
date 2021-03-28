@@ -158,8 +158,8 @@ void hwTextMode_disableBlink(VgaText* terminal, bool disable)
 void setupTextMode()
 {
 	extern bool vgamono;
-	if (((*((uint16_t*) 0x410)) & 0x30) != 0x30) {
-		VGA_TEXT_MODE_ADDRESS -= 0x8000;
+	if (((*((uint16_t*) 0x410)) & 0x30) != 0x30) {		//@@@ ==
+		VGA_TEXT_MODE_ADDRESS -= 0x4000;
 		vgamono = true;
 	}
 
