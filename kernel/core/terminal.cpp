@@ -51,7 +51,7 @@ VgaText* terminalCycle = nullptr;
 
 void setTerminalScrollLock(bool state)
 {
-	
+
 }
 
 void doTerminalCycle()
@@ -86,7 +86,7 @@ void setActiveTerminal(VgaText* terminal)
 		activeTerminal->updateCursor();
 	}
 
-	activeTerminal = terminal; 
+	activeTerminal = terminal;
 	kprintf("active terminal now = 0x%X\n", activeTerminal);
 
 	//reload the cursor for this terminal
@@ -119,7 +119,7 @@ void scrollTerminalScrollLock(int amount)
 	/*activeTerminal->scrollPoint += amount;
 	if (activeTerminal->scrollPoint > 0) activeTerminal->scrollPoint = 0;
 	if (activeTerminal->scrollPoint < -VgaText::bufferHeight) activeTerminal->scrollPoint = VgaText::bufferHeight;
-	
+
 	if (activeTerminal->implementation.loadInData) {
 		//activeTerminal->implementation.loadInData(activeTerminal);
 	}*/
@@ -186,71 +186,73 @@ void VgaText::scrollScreen()
 	updateCursor();
 }
 
-void VgaText::writeCharacter(char c, enum VgaColour fg, enum VgaColour bg, int x, int y) {
-	
+void VgaText::writeCharacter(char c, enum VgaColour fg, enum VgaColour bg, int x, int y)
+{
+
 	uint16_t word = combineCharAndColour(c, combineColours((uint8_t) fg, (uint8_t) bg));
-    
-    uint16_t pos = (y * VgaText::width + x);
-    
-    uint16_t* ptr = (uint16_t*) this->displayData;
-    ptr += pos;
-    *ptr = word;
+
+	uint16_t pos = (y * VgaText::width + x);
+
+	uint16_t* ptr = (uint16_t*) this->displayData;
+	ptr += pos;
+	*ptr = word;
 
 	if (this == activeTerminal) {
 		if (implementation.writeCharacter) {
 			implementation.writeCharacter(this, c, fg, bg, x, y);
 		}
-	}	
+	}
 }
 
-void VgaText::puts(const char* c, enum VgaColour fg, enum VgaColour bg) {
+void VgaText::puts(const char* c, enum VgaColour fg, enum VgaColour bg)
+{
 	noUpdate = true;
 
 	bool needsRepainting = false;
 
 	uint8_t cols = combineColours((uint8_t) fg, (uint8_t) bg);
-    
-	uint16_t pos =  (cursorY * VgaText::width + cursorX);
-    uint16_t* ptr = (uint16_t*) this->displayData;
-    ptr += pos;
-    
-    for (int i = 0; c[i]; ++i) {
+
+	uint16_t pos = (cursorY * VgaText::width + cursorX);
+	uint16_t* ptr = (uint16_t*) this->displayData;
+	ptr += pos;
+
+	for (int i = 0; c[i]; ++i) {
 		if (c[i] == '\r') {
 			cursorX = 0;
 			continue;
 		}
 
-        if (c[i] == '\n') {
+		if (c[i] == '\n') {
 			//doRepaint = true;
 			needsRepainting = false;
 
-            cursorX = 0;
-            cursorY++;
-            
-            if (cursorY == terminalDisplayHeight) {
+			cursorX = 0;
+			cursorY++;
+
+			if (cursorY == terminalDisplayHeight) {
 				cursorY--;
-                scrollScreen();
-            }
-            
-            updateCursor();
-            
+				scrollScreen();
+			}
+
+			updateCursor();
+
 			pos = (cursorY * VgaText::width + cursorX);
-            ptr = (uint16_t*) this->displayData;
-            ptr += pos;
-            continue;
-        }
-        
-        if (c[i] == '\b') {
+			ptr = (uint16_t*) this->displayData;
+			ptr += pos;
+			continue;
+		}
+
+		if (c[i] == '\b') {
 			decrementCursor();
-            writeCharacter(' ', currentFg, currentBg, cursorX, cursorY);
-            
+			writeCharacter(' ', currentFg, currentBg, cursorX, cursorY);
+
 			pos = (cursorY * VgaText::width + cursorX);
-            ptr = (uint16_t*) this->displayData;
-            ptr += pos;
-            continue;
-        }
-        
-        *ptr++ = combineCharAndColour(c[i], cols);
+			ptr = (uint16_t*) this->displayData;
+			ptr += pos;
+			continue;
+		}
+
+		*ptr++ = combineCharAndColour(c[i], cols);
 		if (this == activeTerminal) {
 			if (implementation.writeCharacter) {
 				implementation.writeCharacter(this, c[i], fg, bg, cursorX, cursorY);
@@ -258,14 +260,14 @@ void VgaText::puts(const char* c, enum VgaColour fg, enum VgaColour bg) {
 		}
 		needsRepainting = true;
 
-        incrementCursor(false);
+		incrementCursor(false);
 		//recalculate positions because a scroll might have happened
 		if (cursorX == 0) {
 			pos = (cursorY * VgaText::width + cursorX);
 			ptr = (uint16_t*) this->displayData;
 			ptr += pos;
 		}
-    }
+	}
 
 	updateCursor();
 	if (needsRepainting) {
@@ -426,71 +428,56 @@ void VgaText::putchar(char c)
 	putchar(c, currentFg, currentBg);
 }
 
-void VgaText::puts(const char* c) {
+void VgaText::puts(const char* c)
+{
 	for (int i = 0; c[i]; ++c) {
 		putchar(c[i]);
 	}
 }
 
-void VgaText::clearScreen() {
+void VgaText::clearScreen()
+{
 	setCursor(0, 0);
 
 	noUpdate = true;
 
-    for (int y = 0; y < terminalDisplayHeight; ++y) {
-        for (int x = 0; x < VgaText::width; ++x) {
-            writeCharacter(' ', currentFg, currentBg, x, y);
-        }
-    }
+	for (int y = 0; y < terminalDisplayHeight; ++y) {
+		for (int x = 0; x < VgaText::width; ++x) {
+			writeCharacter(' ', currentFg, currentBg, x, y);
+		}
+	}
 
 	doUpdate();
 
 	noUpdate = false;
 }
 
-void VgaText::setDefaultBgColour (enum VgaColour bg) {
-	if (mono) {
-		defaultBg = VgaColour::Blue;
-		currentBg = VgaColour::Blue;
-		return;
-	}
-    defaultBg = bg;
+void VgaText::setDefaultBgColour(enum VgaColour bg)
+{
+	defaultBg = bg;
 	currentBg = bg;
 }
 
-void VgaText::setDefaultFgColour (enum VgaColour fg) {
-	if (mono) {
-		defaultFg = VgaColour::Black;
-		currentFg = VgaColour::Black;
-		return;
-	}
+void VgaText::setDefaultFgColour(enum VgaColour fg)
+{
 	defaultFg = fg;
 	currentFg = fg;
 }
 
-void VgaText::setDefaultColours (enum VgaColour fg, enum VgaColour bg) {
-    setDefaultBgColour (bg);
-    setDefaultFgColour (fg);
+void VgaText::setDefaultColours(enum VgaColour fg, enum VgaColour bg)
+{
+	setDefaultBgColour(bg);
+	setDefaultFgColour(fg);
 }
 
 void VgaText::setTitleTextColour(enum VgaColour fg)
 {
-	if (mono) {
-		titleFg = VgaColour::Black;
-		updateTitle();
-		return;
-	}
 	titleFg = fg;
 	updateTitle();
 }
 
 void VgaText::setTitleColour(enum VgaColour bg)
 {
-	if (mono) {
-		titleCol = VgaColour::Blue;
-		updateTitle();
-		return;
-	}
 	titleCol = bg;
 	updateTitle();
 }
@@ -501,50 +488,59 @@ void VgaText::setTitle(char* text)
 	updateTitle();
 }
 
-uint8_t VgaText::combineColours(uint8_t fg, uint8_t bg) {
-    return (fg & 0xF) | ((bg & 0xF) << 4);
+uint8_t VgaText::combineColours(uint8_t fg, uint8_t bg)
+{
+	if (mono) return 1;
+	return (fg & 0xF) | ((bg & 0xF) << 4);
 }
 
-uint16_t VgaText::combineCharAndColour (char c, uint8_t col) {
-    return ((uint8_t) c) | (((uint16_t)col) << 8);
+uint16_t VgaText::combineCharAndColour(char c, uint8_t col)
+{
+	return ((uint8_t) c) | (((uint16_t) col) << 8);
 }
 
-int VgaText::getCursorX() {
-    return cursorX;
+int VgaText::getCursorX()
+{
+	return cursorX;
 }
 
-int VgaText::getCursorY() {
-    return cursorY;
+int VgaText::getCursorY()
+{
+	return cursorY;
 }
 
-void VgaText::setCursor (int x, int y) {
-    cursorX = x;
-    cursorY = y;
-    
-    updateCursor();
+void VgaText::setCursor(int x, int y)
+{
+	cursorX = x;
+	cursorY = y;
+
+	updateCursor();
 }
 
-void VgaText::setCursorX (int x) {
-    setCursor(x, cursorY);
+void VgaText::setCursorX(int x)
+{
+	setCursor(x, cursorY);
 }
 
-void VgaText::setCursorY (int y) {
-    setCursor(cursorX, y);
+void VgaText::setCursorY(int y)
+{
+	setCursor(cursorX, y);
 }
 
-void VgaText::incrementCursor (bool update) {
-    ++cursorX;
-    if (cursorX == VgaText::width) {
-        cursorX = 0;
-        ++cursorY;
-        
-        if (cursorY == terminalDisplayHeight) {
-            cursorY--;
-            scrollScreen();
-        }
-    }
-    
-    if (update) updateCursor();
+void VgaText::incrementCursor(bool update)
+{
+	++cursorX;
+	if (cursorX == VgaText::width) {
+		cursorX = 0;
+		++cursorY;
+
+		if (cursorY == terminalDisplayHeight) {
+			cursorY--;
+			scrollScreen();
+		}
+	}
+
+	if (update) updateCursor();
 }
 
 size_t VGA_TEXT_MODE_ADDRESS = 0xC20B8000;
@@ -569,7 +565,8 @@ void VgaText::putx(uint32_t num)
 	}
 }
 
-void VgaText::updateDiskUsage() {
+void VgaText::updateDiskUsage()
+{
 	uint16_t* p = (uint16_t*) VGA_TEXT_MODE_ADDRESS;
 	p += 63;
 	extern int ataSectorsRead;
@@ -588,39 +585,45 @@ void VgaText::updateDiskUsage() {
 	*p++ = combineCharAndColour((ataSectorsWritten / 1) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
 }
 
-void VgaText::decrementCursor (bool update) {
-    if (cursorX != 0) {
-        cursorX--;
-    }
-    
-    if (update) updateCursor();
+void VgaText::decrementCursor(bool update)
+{
+	if (cursorX != 0) {
+		cursorX--;
+	}
+
+	if (update) updateCursor();
 }
 
-bool VgaText::isShowingCursor() {
-    return cursorEnabled;
+bool VgaText::isShowingCursor()
+{
+	return cursorEnabled;
 }
 
-bool VgaText::isBlinkDisabled() {
-    return !blinkEnabled;
+bool VgaText::isBlinkDisabled()
+{
+	return !blinkEnabled;
 }
 
-void VgaText::setCursorHeight (int h) {
-    cursorHeight = h;
-    
-    showCursor(cursorEnabled);      //refresh cursor
+void VgaText::setCursorHeight(int h)
+{
+	cursorHeight = h;
+
+	showCursor(cursorEnabled);      //refresh cursor
 }
 
-int VgaText::getCursorHeight() {
-    return cursorHeight;
+int VgaText::getCursorHeight()
+{
+	return cursorHeight;
 }
 
 VgaText::~VgaText()
 {
-	
+
 }
 
 
-VgaText::VgaText (const char* n) {
+VgaText::VgaText(const char* n)
+{
 	if (((*((uint16_t*) 0x410)) & 0x30) != 0x30) {
 		VGA_TEXT_MODE_ADDRESS -= 0x8000;
 		mono = true;
@@ -633,12 +636,12 @@ VgaText::VgaText (const char* n) {
 	terminalDisplayHeight = bufferHeight;
 	memset(displayData, 0, bufferHeight * width * 2);
 
-    setDefaultColours(VgaColour::LightGrey, VgaColour::Black);
-    setCursorHeight(2);
-    setCursor(0, 0);
-    showCursor(true);
-    disableBlink(true);
-    clearScreen();
+	setDefaultColours(VgaColour::LightGrey, VgaColour::Black);
+	setCursorHeight(2);
+	setCursor(0, 0);
+	showCursor(true);
+	disableBlink(true);
+	clearScreen();
 	scrollLock = false;
 
 	memset(keybufferInternal, 0, TERMINAL_KEYBUFFER_IN_SIZE);
@@ -705,13 +708,13 @@ void VgaText::doUpdate()
 	}
 }
 
-FileStatus VgaText::write(uint64_t bytes, void* data, int *bw)
+FileStatus VgaText::write(uint64_t bytes, void* data, int* bw)
 {
 	//slD.lock();
 	noUpdate = true;
 	for (uint64_t i = 0; i < bytes; ++i) {
 		this->putchar(((char*) data)[i]);
-	}	
+	}
 	noUpdate = false;
 
 	doUpdate();
