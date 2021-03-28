@@ -53,7 +53,7 @@ extern "C" void callGlobalConstructors();
 extern VAS* firstVAS;
 extern void installVgaTextImplementation();
 
-#define VGA_TEXT_MODE_ADDRESS 0xC20B8000
+extern size_t A_VGA_TEXT_MODE_ADDRESS;
 
 #pragma GCC optimize ("O2")
 #pragma GCC optimize ("-fno-strict-aliasing")
