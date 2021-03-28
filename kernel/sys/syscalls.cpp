@@ -494,7 +494,7 @@ uint64_t sysCallGetEnv(regs* r)
 
 	if (num >= count) {
 		kprintf("ABC.\n");
-		if (!r->ecx) {
+		if (addr) {
 			kprintf("BCD.\n");
 			*addr = 0;
 			kprintf("CDE.\n");
