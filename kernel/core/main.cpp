@@ -118,7 +118,7 @@ void hwTextMode_writeCharacter(VgaText* terminal, char c, enum VgaColour fg, enu
 	}
 	uint16_t word = terminal->combineCharAndColour(c, terminal->combineColours((uint8_t) fg, (uint8_t) bg));
 	uint16_t* ptr = (uint16_t*) VGA_TEXT_MODE_ADDRESS;
-	word = c | 0x200;
+	if (vgamono) word = c | 0x200;
 	ptr += (y * VgaText::width + x) + (25 - terminal->terminalDisplayHeight) * 80;
 	*ptr = word;
 }
