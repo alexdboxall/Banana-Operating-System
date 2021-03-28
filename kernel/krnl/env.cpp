@@ -203,7 +203,17 @@ namespace Krnl
 
 	EnvVar getProcessEnvPair(Process* prcss, int num)
 	{
-		EnvVar e;
-		return e;
+		if (num < prcss->env->count) {
+			return prcss->env->envarr[num];
+
+		} else if (num < prcss->env->count + userEnv->count) {
+			return userEnv->envarr[num - prcss->env->count];
+
+		} else if (num < prcss->env->count + userEnv->count + systemEnv->count) {
+			return userEnv->envarr[num - prcss->env->count - userEnv->count];
+		}
+
+		panic("getProcessEnvPair FAILURE");
+		return systemEnv->envarr[0];		//we have to return something...
 	}
 }
