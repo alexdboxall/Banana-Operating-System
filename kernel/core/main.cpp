@@ -112,14 +112,21 @@ void hwTextMode_scrollScreen(VgaText* terminal)
 
 void hwTextMode_writeCharacter(VgaText* terminal, char c, enum VgaColour fg, enum VgaColour bg, int x, int y)
 {
+	if (vgamono) {
+		fg = (VgaColour) 2;
+		bg = (VgaColour) 0;
+	}
 	uint16_t word = terminal->combineCharAndColour(c, terminal->combineColours((uint8_t) fg, (uint8_t) bg));
 	uint16_t* ptr = (uint16_t*) VGA_TEXT_MODE_ADDRESS;
+	word = c | 0x200;
 	ptr += (y * VgaText::width + x) + (25 - terminal->terminalDisplayHeight) * 80;
 	*ptr = word;
 }
 
 void hwTextMode_showCursor(VgaText* terminal, bool show)
 {
+	if (vgamono) return;
+
 	if (show) {
 		outb(0x3D4, 0x0A);
 		outb(0x3D5, (inb(0x3D5) & 0xC0) | (15 - terminal->cursorHeight));
@@ -140,6 +147,8 @@ void hwTextMode_update(VgaText* terminal)
 
 void hwTextMode_updateCursor(VgaText* terminal)
 {
+	if (vgamono) return;
+
 	uint16_t pos = terminal->cursorX + (terminal->cursorY + (25 - terminal->terminalDisplayHeight)) * VgaText::width;
 
 	outb(0x3D4, 0x0F);
@@ -150,6 +159,8 @@ void hwTextMode_updateCursor(VgaText* terminal)
 
 void hwTextMode_disableBlink(VgaText* terminal, bool disable)
 {
+	if (vgamono) return;
+
 	if (!disable) {           //enable
 		inb(0x3DA);
 		outb(0x3C0, 0x30);
@@ -170,16 +181,6 @@ void setupTextMode()
 		VGA_TEXT_MODE_ADDRESS -= 0x8000;
 		vgamono = true;
 	}
-
-	uint8_t* ptr = (uint8_t*) 0xC20B0000;
-	*ptr++ = 0x41;
-	*ptr++ = 0x02;
-	*ptr++ = 0x42;
-	*ptr++ = 0x02;
-	*ptr++ = 0x43;
-	*ptr++ = 0x02;
-	*ptr++ = 0x44;
-	*ptr++ = 0x02;
 
 	textModeImplementation.disableBlink = hwTextMode_disableBlink;
 	textModeImplementation.loadInData = hwTextMode_loadInData;
