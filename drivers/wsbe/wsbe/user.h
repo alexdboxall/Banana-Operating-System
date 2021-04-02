@@ -54,6 +54,7 @@ extern "C" {
         int16_t height;
         uint16_t flags;
         Context* context;
+        Context* eventContext;
         struct Window_struct* drag_child;
         struct Window_struct* active_child;
         List* children;

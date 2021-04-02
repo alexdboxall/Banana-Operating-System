@@ -8,22 +8,24 @@
 
 //================| Context Class Implementation |================//
 
+Context* Context_copy(Context* original)
+{
+	Context* context = malloc(sizeof(Context));
+	context->buffer = original->buffer;
+	context->clipping_on = original->clipping_on;
+	context->height = original->height;
+	context->translate_x = original->translate_x;
+	context->translate_y = original->translate_y;
+	context->width = original->width;
+	context->clip_rects = List_copy(original->clip_rects);
+	return context;
+}
+
 //Constructor for our context
 Context* Context_new(uint16_t width, uint16_t height, uint32_t* buffer) {
 
-    //Attempt to allocate
-    Context* context;
-    if(!(context = (Context*)malloc(sizeof(Context))))
-        return context; 
-
-    //Attempt to allocate new rect list 
-    if(!(context->clip_rects = List_new())) {
-
-        free(context);
-        return (Context*)0;
-    }
-
-    //Finish assignments
+    Context* context = (Context*) malloc(sizeof(Context));
+	context->clip_rects = List_new();
     context->width = width; 
     context->height = height; 
     context->buffer = buffer;

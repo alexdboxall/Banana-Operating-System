@@ -19,6 +19,7 @@ typedef struct List_struct {
 
 //Methods
 List* List_new();
+List* List_copy(List* original);
 int List_add(List* list, void* payload);
 void* List_get_at(List* list, unsigned int index);
 void* List_remove_at(List* list, unsigned int index);

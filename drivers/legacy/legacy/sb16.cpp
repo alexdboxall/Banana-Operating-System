@@ -140,6 +140,10 @@ float* outputBuffer = nullptr;
 char sb16name[] = "SoundBlaster 16";
 SoundBlaster16::SoundBlaster16(): SoundDevice(sb16name)
 {
+	ports[noPorts].rangeStart = 0x220;
+	ports[noPorts].rangeLength = 16;
+	ports[noPorts++].width = 0;
+
 	if (tempBuffer == nullptr) {
 		tempBuffer = (float*) malloc(DMA_SIZE / 2 * sizeof(float));
 		outputBuffer = (float*) malloc(DMA_SIZE / 2 * sizeof(float));

@@ -5,6 +5,28 @@
 
 //================| ListNode Class Implementation |================//
 
+List* List_copy(List* original)
+{
+    extern void debugwrite(char* t);
+
+    debugwrite("copying list...\n");
+    List* list = malloc(sizeof(List));
+    list->count = 0;
+    list->root_node = 0;
+
+    ListNode* current = original->root_node;
+    while (current) {
+        debugwrite("adding node...\n");
+
+        List_add(list, current->payload);
+        current = current->next;
+        debugwrite("added node...\n");
+
+    }
+    debugwrite("copied list...\n");
+    return list;
+}
+
 //Basic list constructor
 List* List_new() {
     

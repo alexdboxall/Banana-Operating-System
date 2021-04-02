@@ -354,83 +354,19 @@ void Window_paint(Window* window, List* dirty_regions, uint8_t paint_children)
 
 	if (!window->hasProc) {
 		window->paint_function(window, 0, 0, dirty_regions, paint_children);
+	} else {
+		window->eventContext = Context_copy(window->context);
+		updateWindow(window, 0, 0, 0, paint_children);
 	}
 	
 	Context_clear_clip_rects(window->context);
 	window->context->translate_x = 0;
 	window->context->translate_y = 0;
-	if (paint_children) {
+
+	if (paint_children && !window->hasProc) {
 		Window_paint_children(window, dirty_regions);
 	}
 }
-
-List* Window_paint_wrapper(Window* window, List* dirty_regions, uint8_t paint_children)
-{
-	int i, j, screen_x, screen_y, child_screen_x, child_screen_y;
-	Window* current_child;
-	Rect* temp_rect;
-
-	//Can't paint without a context
-	if (!window->context)
-		return;
-
-	//Start by limiting painting to the window's visible area
-	Window_apply_bound_clipping(window, 0, dirty_regions);
-
-	//Set the context translation
-	screen_x = Window_screen_x(window);
-	screen_y = Window_screen_y(window);
-
-	//If we have window decorations turned on, draw them and then further
-	//limit the clipping area to the inner drawable area of the window 
-	if (!(window->flags & WIN_NODECORATION)) {
-
-		//Draw border
-		Window_draw_border(window);
-
-		//Limit client drawable area 
-		screen_x += WIN_BORDERWIDTH;
-		screen_y += WIN_TITLEHEIGHT;
-		temp_rect = Rect_new(screen_y, screen_x,
-							 screen_y + window->height - WIN_TITLEHEIGHT - WIN_BORDERWIDTH - 1,
-							 screen_x + window->width - (2 * WIN_BORDERWIDTH) - 1);
-		Context_intersect_clip_rect(window->context, temp_rect);
-	}
-
-	//Then subtract the screen rectangles of any children 
-	//NOTE: We don't do this in Window_apply_bound_clipping because, due to 
-	//its recursive nature, it would cause the screen rectangles of all of 
-	//our parent's children to be subtracted from the clipping area -- which
-	//would eliminate this window. 
-	for (i = 0; i < window->children->count; i++) {
-
-		current_child = (Window*) List_get_at(window->children, i);
-
-		child_screen_x = Window_screen_x(current_child);
-		child_screen_y = Window_screen_y(current_child);
-
-		temp_rect = Rect_new(child_screen_y, child_screen_x,
-							 child_screen_y + current_child->height - 1,
-							 child_screen_x + current_child->width - 1);
-		Context_subtract_clip_rect(window->context, temp_rect);
-		free(temp_rect);
-	}
-
-	//Finally, with all the clipping set up, we can set the context's 0,0 to the top-left corner
-	//of the window's drawable area, and call the window's final paint function 
-	window->context->translate_x = screen_x;
-	window->context->translate_y = screen_y;
-}
-/*
-	Context_clear_clip_rects(window->context);
-	window->context->translate_x = 0;
-	window->context->translate_y = 0;
-
-	if (paint_children) {
-		//Window_paint_children(window, dirty_regions);
-	}
-	*/
-
 
 void Window_paint_children(Window* window, List* dirty_regions)
 {

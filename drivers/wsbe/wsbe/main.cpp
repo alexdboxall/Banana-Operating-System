@@ -158,11 +158,11 @@ void spawn_calculator(Window* button, int x, int y)
     Window_init(w, 50, 50, 300, 200, WIN_TOPLEVELWIN, 0);
     Window_set_title(w, (char*) tw);
     Window_insert_child((Window*) desktop, w);
+    w->hasProc = true;
 
     //Create a simple launcher window
     Button* launch_button = Button_new(40, 60, 150, 30);
     Window_set_title((Window*) launch_button, (char*) "Cause a panic!");
-    launch_button->window.hasProc = true;
     launch_button->window.mousedown_function = dopanic;
     Window_insert_child((Window*) w, (Window*) launch_button);
 
@@ -264,7 +264,11 @@ void guiProc(Window* window, Message msg) {
     switch (msg.type) {
     case MESSAGE_PAINT:
     {
-        Window_paint_wrapper(window, (List*) msg.dr, msg.paintChildren);
+        kprintf("GOT EVENT.\n");
+        lockScheduler();
+        Context* ctxt = window->context;
+        window->context = window->eventContext;
+        kprintf("CHANGED CONTEXTS.\n");
 
         char newTitle[32];
         strcpy(newTitle, "TitleTitleTitle");
@@ -274,12 +278,11 @@ void guiProc(Window* window, Message msg) {
         newTitle[8] = (window->height % 10) + '0';
         setWindowTitle(window, newTitle);
         Context_fill_rect(window->context, 0, 0, window->width, window->height, 0xFF0000);
-
-        //Now that we're done drawing this window, we can clear the changes we made to the context
-        Context_clear_clip_rects(window->context);
-        window->context->translate_x = 0;
-        window->context->translate_y = 0;
-
+        kprintf("DONE EVENT.\n");
+        window->context = ctxt;
+        unlockScheduler();
+        kprintf("CLEANUP DONE.\n");
+        //TODO: free the list and context
         break;
     }
 
@@ -305,6 +308,7 @@ void myapp(void* ctxt)
 
     Window* test = createWindow(150, 100, 350, 200, WIN_TOPLEVELWIN);
     setWindowTitle(test, "WSBE Window!");
+    test->hasProc = true;
     addWindow((Window*) getDesktop(), test);
 
     internalMain(test);
@@ -372,7 +376,7 @@ int main(int argc, const char* argv[])
     Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
 
     //kernelProcess->createThread(myapp);
-    //myapp(0);
+    myapp(0);
 
     while (1) {  
         sleep(3);
