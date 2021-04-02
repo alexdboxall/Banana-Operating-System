@@ -162,6 +162,7 @@ void spawn_calculator(Window* button, int x, int y)
     //Create a simple launcher window
     Button* launch_button = Button_new(40, 60, 150, 30);
     Window_set_title((Window*) launch_button, (char*) "Cause a panic!");
+    launch_button->window.hasProc = true;
     launch_button->window.mousedown_function = dopanic;
     Window_insert_child((Window*) w, (Window*) launch_button);
 

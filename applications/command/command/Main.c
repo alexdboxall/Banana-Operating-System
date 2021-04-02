@@ -734,6 +734,7 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 	} else if (!strcasecmp(argv[0], "resclink")) {
 		extern int _bna_misc_size;
 		printf("0x%X\n", _bna_misc_size);
+
 		printf("0x%X\n", &_bna_misc_size);
 		printf("%s\n", ((char*) &_bna_misc_size) - _bna_misc_size);
 
@@ -1649,21 +1650,12 @@ void runBatchFile(char* filename, int batchNesting)
 int main (int argc, char *argv[])
 {
 	extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
-	uint64_t rval = SystemCall(Yield, 0, 0, 0);
-	bool parity = false;
-	for (int i = 0; i < 64; ++i) {
-		parity ^= rval & 1;
-		rval >>= 1;
-	}
-	if (parity) {
-		printf("\n%s\n    (C)Copyright Alex Boxall 2016-2021\n\n          \"Now there's a dream, now there's a goal\n               Now there's a need I'll never control\"\n\n", VERSION_STRING);
-	} else {
-		printf("\n%s\n    (C)Copyright Alex Boxall 2016-2021\n\n          \"Because I can feel I'll never be full\n               But I can see, I'll never be part of your world\"\n\n", VERSION_STRING);
-	}
 	
 	for (int i = 0; i < 26; ++i) {
 		mathVars[i] = 0;
 	}
+
+	printf("\n%s\n    (C)Copyright Alex Boxall 2016-2021\n\n", VERSION_STRING);
 
 	//setttyname("Banana Command Prompt");
 

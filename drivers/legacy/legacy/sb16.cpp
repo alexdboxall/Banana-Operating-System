@@ -201,9 +201,6 @@ void SoundBlaster16::stopPlayback()
 	turnSpeakerOn(false);
 }
 
-//36750
-//52920
-
 char nodma[] = "could not get a SB16 DMA channel\n";
 char noirq[] = "SB16 READONLY IRQ PROBLEM";
 char baddma[] = "SOUNDBLASTER INVL. DMA CHANNEL";

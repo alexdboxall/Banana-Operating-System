@@ -17,6 +17,9 @@ public:
 
 	bool mono;
 
+	size_t vramBase = 0xA0000;
+	int biosMode = 0x12;
+
 	void setPlane(int pl);
 
 	int open(int, int, void*);

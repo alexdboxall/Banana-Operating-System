@@ -10,6 +10,7 @@ void start(void* _parent)
 #include "main.hpp"
 #include "isadma.hpp"
 #include "sb16.hpp"
+#include "gameport.hpp"
 #include "ps2.hpp"
 
 #include "core/common.hpp"
@@ -28,8 +29,6 @@ void start(void* _parent)
 
 void realstart(void* _parent)
 {
-	kprintf("string test.\n");
-
 	Device* parent = (Device*) _parent;
 
 	ISA* dev = new ISA();
@@ -38,9 +37,7 @@ void realstart(void* _parent)
 	dev->open(0, 0, nullptr);
 }
 
-char busname[] = "ISA Bus";
-
-ISA::ISA(): Bus(busname)
+ISA::ISA(): Bus("ISA Bus")
 {
 
 }
@@ -63,6 +60,8 @@ void ISA::doSpeaker()
 
 void ISA::doSoundblaster()
 {
+	return;
+
 	outb(0x226, 1);
 	nanoSleep(1000 * 1000 * 3);
 	outb(0x226, 0);
@@ -74,8 +73,8 @@ void ISA::doSoundblaster()
 		sb->open(0, 0, nullptr);
 
 		extern void sb16Demo(void*);
-		//sb16Demo((void*) sb);
 		kernelProcess->createThread(sb16Demo, (void*) sb, 111);
+
 	} else {
 		//panic("Soundblaster is *NOT* supported!! :(");
 	}
@@ -93,7 +92,9 @@ void ISA::doParallel()
 
 void ISA::doGameport()
 {
-
+	Gameport* gp = new Gameport();
+	addChild(gp);
+	gp->open(0, 0, nullptr);
 }
 
 void ISA::doFloppy()
@@ -147,6 +148,9 @@ bool detectDone = false;
 
 void ISA::detect()
 {
+	static bool didGameport = false;
+	static bool didPS2 = false;
+
 	//DMA needs to be setup first
 	isaDMAController = new DMA();
 	addChild(isaDMAController);
@@ -187,11 +191,16 @@ void ISA::detect()
 
 			if (i == 0) doSpeaker();
 			if (i == 1) doRTC();
-			if (i == 2) doPS2();
+			if (i == 2) {
+				doPS2();
+			}
 			if (i == 3) doFloppy();
 			if (i == 4) doSoundblaster();
 			if (i == 5) doATA();
-			if (i == 6) doGameport();
+			if (i == 6) {
+				doGameport();
+			}
+
 
 			if (needsSafeCheck) {
 				// Reg::writeInt((char*) str_isa, (char*) key, val);

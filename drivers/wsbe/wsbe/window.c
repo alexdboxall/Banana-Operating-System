@@ -352,7 +352,9 @@ void Window_paint(Window* window, List* dirty_regions, uint8_t paint_children)
 	window->context->translate_x = screen_x;
 	window->context->translate_y = screen_y;
 
-	window->paint_function(window, 0, 0, dirty_regions, paint_children);
+	if (!window->hasProc) {
+		window->paint_function(window, 0, 0, dirty_regions, paint_children);
+	}
 	
 	Context_clear_clip_rects(window->context);
 	window->context->translate_x = 0;
