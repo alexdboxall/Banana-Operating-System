@@ -252,6 +252,7 @@ FileStatus ISO9660::read(void* ptr, size_t bytes, void* bf, int* bytesRead)
 	kprintf("D\n");
 	kprintf("Count = %d, buffer = 0x%X, sectorBuffer = 0x%X, seekMark = 0x%X\n", count, buffer, sectorBuffer, file->seekMark);
 	kprintf("sectorBuffer + file->seekMark % 2048 = 0x%X\n", (size_t) (sectorBuffer + file->seekMark % 2048));
+	kprintf("that plus + count = 0x%X\n", (size_t) (sectorBuffer + count + file->seekMark % 2048));
 	kprintf("count = %d\n", count);
 
 	//read them
