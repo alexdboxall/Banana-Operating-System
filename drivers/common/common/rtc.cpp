@@ -36,14 +36,15 @@ bool RTC::setTimeInSecondsUTC(time_t t)
 	return setTimeInDatetimeUTC(secondsToDatetime(t));
 }
 
-bool RTC::setTimeInDatetimeUTC(datetime_t d)
-{
-	return false;
-}
-
 bool RTC::get_update_in_progress_flag()
 {
 	return computer->readCMOS(0xA) & 0x80;
+}
+
+bool RTC::setTimeInDatetimeUTC(datetime_t d)
+{
+
+	return false;
 }
 
 void RTC::completeRTCRefresh()
@@ -63,7 +64,7 @@ void RTC::completeRTCRefresh()
 		//wait until it becomes set
 		if (nanoSinceBoot > startTime + (uint64_t) (2000 * 1000 * 1000)) {
 			//if the system is broken enough that this fails, we
-				//may as well just read it
+			//may as well just read it
 			break;
 		}
 	}

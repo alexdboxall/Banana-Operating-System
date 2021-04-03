@@ -213,6 +213,7 @@ FileStatus ISO9660::read(void* ptr, size_t bytes, void* bf, int* bytesRead)
 	if (file->error) {
 		return FileStatus::Failure;
 	}
+	kprintf("A\n");
 
 	int64_t ulength = (int64_t) bytes;							//1024
 	uint64_t intendedSeekMark = file->seekMark + ulength;		//1024
@@ -228,6 +229,7 @@ FileStatus ISO9660::read(void* ptr, size_t bytes, void* bf, int* bytesRead)
 	//
 	// we now have how many bytes we need in 'ulength'
 	//
+	kprintf("B\n");
 
 	//33314 * 2048 + 0
 	//
@@ -236,6 +238,7 @@ FileStatus ISO9660::read(void* ptr, size_t bytes, void* bf, int* bytesRead)
 	//read from the partial first sector (could be the entire sector though)
 	uint8_t sectorBuffer[2048];
 	readSectorFromCDROM(startPoint / 2048, sectorBuffer, file->driveLetter);
+	kprintf("C\n");
 
 	//work out how many bytes to read
 	int count = 2048 - file->seekMark % 2048;
@@ -246,12 +249,14 @@ FileStatus ISO9660::read(void* ptr, size_t bytes, void* bf, int* bytesRead)
 		*bytesRead = 0;
 		return FileStatus::Success;
 	}
+	kprintf("D\n");
 
 	//read them
 	memcpy(buffer, sectorBuffer + file->seekMark % 2048, count);
 	buffer += count;
 	startPoint += count;
 	ulength -= count;
+	kprintf("E\n");
 
 	//now we are on a sector boundry
 	while (ulength >= 2048) {
@@ -261,17 +266,23 @@ FileStatus ISO9660::read(void* ptr, size_t bytes, void* bf, int* bytesRead)
 		buffer += 2048;
 		ulength -= 2048;
 	}
+	kprintf("F\n");
 
 	if (ulength) {
 		//now we just have bytes left on the final sector
+		kprintf("F1\n");
 		readSectorFromCDROM(startPoint / 2048, sectorBuffer, file->driveLetter);
+		kprintf("F2\n");
 		memcpy(buffer, sectorBuffer, ulength);
+		kprintf("F3\n");
 
 		//kprintf("reading sector %d, count = %d\n", startPoint / 2048, ulength);
 	}
-	
+	kprintf("G\n");
+
 	*bytesRead = bytesToRead;
 	file->seekMark = intendedSeekMark;
+	kprintf("DONE\n");
 
 	return FileStatus::Success;
 }
