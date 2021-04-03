@@ -267,17 +267,18 @@ void guiProc(Window* window, Message msg) {
         kprintf("GOT EVENT.\n");
         lockScheduler();
         Context* ctxt = window->context;
-        window->context = window->eventContext;
+        window->context = (Context*) msg.dr;
         kprintf("CHANGED CONTEXTS.\n");
 
-        char newTitle[32];
+        /*char newTitle[32];
         strcpy(newTitle, "TitleTitleTitle");
         newTitle[2] = (window->x % 10) + '0';
         newTitle[4] = (window->y % 10) + '0';
         newTitle[6] = (window->width % 10) + '0';
         newTitle[8] = (window->height % 10) + '0';
-        setWindowTitle(window, newTitle);
-        Context_fill_rect(window->context, 0, 0, window->width, window->height, 0xFF0000);
+        setWindowTitle(window, newTitle);*/
+
+        Context_fill_rect(window->context, 0, 0, 20, 20, 0xFF0000);
         kprintf("DONE EVENT.\n");
         window->context = ctxt;
         unlockScheduler();

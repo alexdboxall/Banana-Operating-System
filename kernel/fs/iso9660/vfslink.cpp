@@ -174,6 +174,10 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 {
 	if (__fn == nullptr || ptr == nullptr) return FileStatus::InvalidArgument;
 
+	if (mode != FileOpenMode::Read) {
+		return FileStatus::WriteProtect;
+	}
+
 	*ptr = malloc(sizeof(isoFile_t));
 	isoFile_t* file = (isoFile_t*) *ptr;
 

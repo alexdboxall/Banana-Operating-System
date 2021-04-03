@@ -355,8 +355,7 @@ void Window_paint(Window* window, List* dirty_regions, uint8_t paint_children)
 	if (!window->hasProc) {
 		window->paint_function(window, 0, 0, dirty_regions, paint_children);
 	} else {
-		window->eventContext = Context_copy(window->context);
-		updateWindow(window, 0, 0, 0, paint_children);
+		updateWindow(window, 0, 0, (List*) Context_copy(window->context), paint_children);
 	}
 	
 	Context_clear_clip_rects(window->context);
