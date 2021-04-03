@@ -257,6 +257,7 @@ FileStatus ISO9660::read(void* ptr, size_t bytes, void* bf, int* bytesRead)
 
 	//read them
 	memcpy((void*) buffer, (const void*) (sectorBuffer + file->seekMark % 2048), (size_t) count);
+	kprintf("D2\n");
 	buffer += count;
 	startPoint += count;
 	ulength -= count;
