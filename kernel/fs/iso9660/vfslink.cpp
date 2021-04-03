@@ -257,7 +257,7 @@ FileStatus ISO9660::read(void* ptr, size_t bytes, void* bf, int* bytesRead)
 
 	//read them
 	//memcpy((void*) buffer, (const void*) (sectorBuffer + file->seekMark % 2048), (size_t) count);
-	void* v = (sectorBuffer + file->seekMark % 2048);
+	uint8_t* v = (sectorBuffer + file->seekMark % 2048);
 	for (int i = 0; i < count; ++i) {
 		*buffer++ = *v++;
 	}
