@@ -250,7 +250,7 @@ FileStatus ISO9660::read(void* ptr, size_t bytes, void* bf, int* bytesRead)
 		return FileStatus::Success;
 	}
 	kprintf("D\n");
-	kprintf("Count = %d, buffer = 0x%X, sectorBuffer = 0x%X, seekMark = 0x%X, sb+f->sm%2048 = 0x%X\n", count, buffer, sectorBuffer, file->seekMark, sectorBuffer + file->seekMark % 2048);
+	kprintf("Count = %d, buffer = 0x%X, sectorBuffer = 0x%X, seekMark = 0x%X, sb+f->sm%2048 = 0x%X\n", count, buffer, sectorBuffer, file->seekMark, sectorBuffer + (file->seekMark % 2048));
 
 	//read them
 	memcpy(buffer, sectorBuffer + file->seekMark % 2048, count);
