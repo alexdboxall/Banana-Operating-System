@@ -207,6 +207,7 @@ FileStatus ISO9660::read(void* ptr, size_t bytes, void* bf, int* bytesRead)
 	uint8_t* buffer = (uint8_t*) bf;
 
 	isoFile_t* file = (isoFile_t*) ptr;
+	kprintf("isofile = 0x%X\n", file);
 
 	if (ptr == nullptr || bytesRead == nullptr) return FileStatus::InvalidArgument;
 	if (file->error) {
