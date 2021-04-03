@@ -1,5 +1,8 @@
 cls
 echo
+settime
+cls
+echo
 echo Please wait while Banana installs system components...
 echo
 cd C:/Banana/Packages

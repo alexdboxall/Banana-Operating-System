@@ -1190,6 +1190,9 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 			fprintf(stderr, "An unknown error occured.\n");
 		}
 
+	} else if (!strcasecmp(argv[0], "setdate") || !strcasecmp(argv[0], "settime")) {
+		fprintf(stderr, "Not implemented.\n");
+
 	} else if (!strcasecmp(argv[0], "date") || !strcasecmp(argv[0], "time")) {
 		time_t rawtime;
 		struct tm* timeinfo;

@@ -175,6 +175,7 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 	if (__fn == nullptr || ptr == nullptr) return FileStatus::InvalidArgument;
 
 	if (mode != FileOpenMode::Read) {
+		kprintf("write protect error on ISO9660 open.\n");
 		return FileStatus::WriteProtect;
 	}
 
