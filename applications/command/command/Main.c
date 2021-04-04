@@ -1232,9 +1232,11 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 		sscanf(line, "%d/%d/%d %d:%d:%d\n", &day, &month, &year, &hour, &minute, &seconds);
 
 		printf("%d/%d/%d %d:%d:%d\n", day, month, year, hour, minute, seconds);
-		year %= 100;
+		if (year < 100) {
+			year += 2000;
+		}
 
-		if (year != -1) timeinfo->tm_year = year % 100;
+		if (year != -1) timeinfo->tm_year = year + 1900;
 		if (month != -1) timeinfo->tm_mon = month - 1;
 		if (day != -1) timeinfo->tm_mday = day;
 		if (hour != -1) timeinfo->tm_hour = hour;
@@ -1246,7 +1248,7 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 		extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
 		uint32_t b = seconds + minute * 60 + hour * 3600;
 		uint32_t c = (day - 1) + month * 32;
-		uint32_t d = year + 1900;
+		uint32_t d = year;
 		int res = SystemCall(SetTime, b, c, d);
 		if (res) {
 			fprintf(out, "The time could not be set.\n");
