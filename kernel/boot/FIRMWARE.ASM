@@ -48,7 +48,7 @@ REAL_MODE_INIT:
 	mov ax, 0xB101
 	xor edi, edi
 
-	mov [0xC5F], 0
+	mov [0xC5F], byte 0
 
 	mov di, 0x1200
 	mov ax, 0
