@@ -349,7 +349,7 @@ extern "C" size_t manualPCIProbe();
 int ACPI::open(int mode, int, void*)
 {
 	pciDetected = false;
-	pciAccessMech2 = false;
+	pciAccessMech1 = false;
 
 	if (computer->features.hasACPI) {
 		void* table = (void*) findDataTable(RSDTpointer, (char*) "MCFG");
@@ -385,7 +385,7 @@ int ACPI::open(int mode, int, void*)
 		}
 	}
 
-	kprintf("PCI: %d\n", pciDetected ? ((int) pciAccessMech2) + 1 : 0);
+	kprintf("PCI: %d\n", pciDetected ? ((int) !pciAccessMech1) + 1 : 0);
 
 	if (pciDetected) {
 		PCI* pci = new PCI();
