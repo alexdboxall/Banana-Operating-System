@@ -15,7 +15,8 @@ namespace User
 
 	void loadClockSettings(int tzID)
 	{
-		File* fil = new File("C:/Banana/System/timezone.txt", FileOpenMode::Read);
+		File* fil = new File("C:/Banana/System/timezone.txt", kernelProcess);
+		fil->open(FileOpenMode::Read);
 
 		//TODO: read the file
 
