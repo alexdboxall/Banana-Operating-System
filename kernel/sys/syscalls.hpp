@@ -89,6 +89,7 @@ SystemCallNumber
 	Pipe,
 	GetUnixTime,
 	LoadDLL,
+	SetTime,
 };
 
 

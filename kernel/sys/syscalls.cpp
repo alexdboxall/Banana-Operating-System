@@ -684,7 +684,9 @@ void setupSystemCalls()
 	systemCallHandlers[(int) SystemCallNumber::Shutdown] = sysShutdown;
 	systemCallHandlers[(int) SystemCallNumber::Pipe] = sysPipe;
 	systemCallHandlers[(int) SystemCallNumber::GetUnixTime] = sysGetUnixTime;
+
 	systemCallHandlers[(int) SystemCallNumber::LoadDLL] = Sys::loadDLL;
+	systemCallHandlers[(int) SystemCallNumber::SetTime] = Sys::setTime;
 }
 
 uint64_t systemCall(regs* r, void* context)

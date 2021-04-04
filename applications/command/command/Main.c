@@ -1191,7 +1191,42 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 		}
 
 	} else if (!strcasecmp(argv[0], "setdate") || !strcasecmp(argv[0], "settime")) {
-		fprintf(stderr, "Not implemented.\n");
+		time_t rawtime;
+		struct tm* timeinfo;
+
+		time(&rawtime);
+		timeinfo = localtime(&rawtime);
+
+		char days[7][10] = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+
+		fprintf(out, "Current time is: %02d/%02d/%04d %02d:%02d:%02d\n", timeinfo->tm_mday, timeinfo->tm_mon + 1, timeinfo->tm_year + 1900, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+		fprintf(out, "                 DD/MM/YYYY HH:MM:SS\n");
+		fprintf(out, "Enter new time : ");
+
+		int day = -1;
+		int month = -1;
+		int year = -1;
+		int hour = -1;
+		int minute = -1;
+		int seconds = -1;
+		char line[256];
+		fgets(line, 255, stdin);
+		fflush(stdin);
+		sscanf(line, "%d/%d/%d %d:%d:%d\n", &day, &month, &year, &hour, &minute, &seconds);
+
+		printf("%d/%d/%d %d:%d:%d\n", day, month, year, hour, minute, seconds);
+		if (year < 70) {
+			year += 2000;
+		} else if (year < 100) {
+			year += 1900;
+		}
+
+		if (year != -1) timeinfo->tm_year = year - 1900;
+		if (month != -1) timeinfo->tm_mon = month - 1;
+		if (day != -1) timeinfo->tm_mday = day;
+		if (hour != -1) timeinfo->tm_hour = hour;
+		if (minute != -1) timeinfo->tm_min = minute;
+		if (seconds != -1) timeinfo->tm_sec = seconds;
 
 	} else if (!strcasecmp(argv[0], "date") || !strcasecmp(argv[0], "time")) {
 		time_t rawtime;
