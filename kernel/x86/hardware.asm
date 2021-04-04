@@ -26,7 +26,7 @@ manualPCIProbe:
    mov dx,0x0CF8
    in al,dx
    mov bl,al
-   clr al
+   xor al, al
    out dx,al
    in al,dx
    test al,al
@@ -35,7 +35,7 @@ manualPCIProbe:
    mov dx,0x0CFA
    in al,dx
    mov bh,al
-   clr al
+   xor al, al
    out dx,al
    in al,dx
    test al,al
