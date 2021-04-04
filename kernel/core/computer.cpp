@@ -282,7 +282,7 @@ namespace Krnl
 
 		Vm::initialise8086();
 		Fs::initVFS();
-		root->open(0, 0, nullptr);
+		computer->root->open(0, 0, nullptr);
 		Sys::loadSyscalls();
 		Krnl::loadSystemEnv();
 		User::loadClockSettings(Reg::readIntWithDefault((char*) "country", (char*) "timezone", 58));
