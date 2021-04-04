@@ -1,5 +1,50 @@
 [bits 32]
 
+
+global manualPCIProbe
+
+manualPCIProbe:
+    xor eax, eax
+
+;Detect if mechanism #1 is supported
+   mov dx,0x0CF8
+   in eax,dx
+   mov ebx,eax
+   mov eax,0x80000000
+   out dx,eax
+   in eax,dx
+   cmp eax,0x80000000
+   jne .noMech1
+   mov eax,0x01
+   jmp .gotPCI
+.noMech1:
+   mov eax,ebx
+   out dx, eax
+
+;Detect if mechanism #2 is supported
+
+   mov dx,0x0CF8
+   in al,dx
+   mov bl,al
+   clr al
+   out dx,al
+   in al,dx
+   test al,al
+   jne .noPCI
+
+   mov dx,0x0CFA
+   in al,dx
+   mov bh,al
+   clr al
+   out dx,al
+   in al,dx
+   test al,al
+   jne .noPCI
+   mov eax,0x02
+
+.gotPCI:       ; Value in EAX will be 1 if mechanism #1 is supported, or 2 if mechanism #2 is supported
+    ret
+
 global prepareTramp
 prepareTramp:
     sgdt [0xFE0]

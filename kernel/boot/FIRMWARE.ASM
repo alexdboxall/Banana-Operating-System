@@ -45,10 +45,23 @@ REAL_MODE_INIT:
 
 	call enableA20
 
+
+
 	mov ax, 0xB101
 	xor edi, edi
-
+	int 0x1A
 	mov [0xC5F], byte 0
+	jc .noBIOSPCI
+	cmp ah, 0
+	jne .noBIOSPCI
+
+	mov [0xC5F], byte 1
+
+	test al, 2
+	jz .noBIOSPCI
+	mov [0xC5F], byte 2
+
+.noBIOSPCI:
 
 	mov di, 0x1200
 	mov ax, 0
