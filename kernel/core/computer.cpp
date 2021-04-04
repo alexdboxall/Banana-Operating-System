@@ -286,7 +286,7 @@ namespace Krnl
 		Sys::loadSyscalls();
 		Krnl::loadSystemEnv();
 		User::loadClockSettings(Reg::readIntWithDefault((char*) "country", (char*) "timezone", 58));
-		loadDriversForAll();
+		computer->root->loadDriversForAll();
 
 		//for each cpu
 			//start it
