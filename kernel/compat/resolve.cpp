@@ -14,7 +14,7 @@ namespace Krnl
 	size_t resolveCompatibilitySymbol(char* name)
 	{
 		if (!strcmp(name, "computer")) {
-			return (size_t) Krnl::computer;
+			return (size_t) (&Krnl::computer);
 
 		} else if (!strcmp(name, "__udivdi3")) {
 			return (size_t) __udivdi3;
@@ -27,6 +27,13 @@ namespace Krnl
 
 		} else if (!strcmp(name, "__moddi3")) {
 			return (size_t) __moddi3;
+
+		} else if (!strcmp(name, "preemptionOn")) {
+			return (size_t) &preemptionOn;
+
+		} else if (!strcmp(name, "schedulingOn")) {
+			return (size_t) &schedulingOn;
+
 		}
 
 		return 0;
