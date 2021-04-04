@@ -101,16 +101,14 @@ void Computer::start()
 
 	cleanerThread = kernelProcess->createThread(cleanerTaskFunction, nullptr, 122);
 
-	Vm::initialise8086();
-
 	schedulingOn = true;
 
-	initVFS();
+	Vm::initialise8086();
+	Fs::initVFS();
 	root->open(0, 0, nullptr);
-
 	Sys::loadSyscalls();
 	Krnl::loadSystemEnv();
-	User::loadClockSettings(58);
+	User::loadClockSettings(Reg::readIntWithDefault("country", "timezone", 58));
 	loadDriversForAll();
 
 	//for each cpu

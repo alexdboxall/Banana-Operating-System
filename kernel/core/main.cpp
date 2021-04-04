@@ -42,6 +42,8 @@ Dbg		Debugging
 Fs		Filesystem
 Reg		Registry
 Vm		x86 Virtualisation
+User	User settings, etc.
+
 */
 
 extern "C" {

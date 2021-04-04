@@ -26,100 +26,165 @@ Filesystem::~Filesystem()
 
 }
 
-void initVFS()
+namespace Fs
 {
-	//just so the constructors can be called, so it gets added to the filesystem list
-	FAT* f = new FAT();
-	ISO9660* i = new ISO9660();
-}
-
-void standardiseFiles(char* outBuffer, const char* filename, const char* cwd)
-{
-	char middleBuffer[1024];
-	memset(middleBuffer, 0, 1024);
-
-	//if the filename has its own directory
-	if (filename[1] == ':') {
-		//copy it directly in
-		strcpy(middleBuffer, filename);
-
-	} else if (filename[0] == '/' || filename[0] == '\\') {
-		//copy it directly in
-		middleBuffer[0] = cwd[0] >= 'a' ? cwd[0] - 32 : cwd[0];
-		middleBuffer[1] = ':';
-		middleBuffer[2] = '/';
-		strcat(middleBuffer, filename);
-
-	} else {
-		//otherwise, copy them both in 
-		strcpy(middleBuffer, cwd);
-		strcat(middleBuffer, "/");
-		strcat(middleBuffer, filename);
+	int getcwd(Process* process, char* buffer, int bytes)
+	{
+		int i = 0;
+		for (i = 0; i < bytes; ++i) {
+			buffer[i] = process->cwd[i];
+			if (buffer[i] == 0) return 0;
+		}
+		buffer[i] = 0;
+		return 0;
 	}
 
-	//ensure things are correct
-	middleBuffer[0] = middleBuffer[0] >= 'a' ? middleBuffer[0] - 32 : middleBuffer[0];
-	middleBuffer[1] = ':';
-	middleBuffer[2] = '/';
+	int setcwd(Process* process, char* buffer)
+	{
+		char tmpbuffer[512];
+		Fs::standardiseFiles(tmpbuffer, buffer, process->cwd);
 
-	outBuffer[0] = middleBuffer[0];
-	outBuffer[1] = middleBuffer[1];
-	outBuffer[2] = middleBuffer[2];
-	outBuffer[3] = 0;
+		//i.e. the root directory, for which 'stat' won't work on (it has no directory entry)
+		if (strlen(tmpbuffer) <= 2 || (strlen(tmpbuffer) == 3 && tmpbuffer[2] == '/')) {
+			int diskNo = tmpbuffer[0] - 'A';
 
-	int op = 3;
-	int mp = 3;
+			if (diskNo >= 0 && diskNo <= 25) {
+				if (disks[diskNo] == nullptr) {
+					return 5;
+				}
+				if (disks[diskNo]->fs == nullptr) {
+					return 6;
+				}
 
-	while (middleBuffer[mp]) {
-		if ((middleBuffer[mp] == '/' || middleBuffer[mp] == '\\') && outBuffer[op - 1] != '/') {
-			outBuffer[op++] = '/';
-			++mp;
+				strcpy(process->cwd, tmpbuffer);
+				return 0;
 
-		} else if (middleBuffer[mp - 1] == '/' && middleBuffer[mp] == '.' && middleBuffer[mp + 1] != '.' && middleBuffer[mp + 2] != '.') {
-			do {
-				++mp;
-			} while (middleBuffer[mp] == '/' || middleBuffer[mp] == '\\');
-		
-		} else if (middleBuffer[mp - 1] == '/' && middleBuffer[mp] == '.' && middleBuffer[mp + 1] == '.' && middleBuffer[mp + 2] != '.') {
-			if (op == 3) {
-				++mp;
-				continue;
+			} else {
+				return 3;
 			}
-			++mp;
-			do {
-				++mp;
-			} while (middleBuffer[mp] == '/' || middleBuffer[mp] == '\\');
-
-			--op;
-
-			//go back past the slash, erasing as we go
-			while (outBuffer[op] == '/') {
-				outBuffer[op] = 0;
-				--op;
-			}
-
-			//now that we're on a character, keep going until we hit a slash, erasing as we go
-			while (outBuffer[op] != '/') {
-				outBuffer[op] = 0;
-				--op;
-			}
-			++op;		//move off the slash
-
-		} else if (middleBuffer[mp] != '/' && middleBuffer[mp] != '\\') {
-			outBuffer[op++] = middleBuffer[mp++];
-
-		} else {
-			mp++;
+			return 4;
 		}
 
+		File* f = new File(tmpbuffer, process);
+
+		uint64_t sz;
+		bool dir = false;
+		FileStatus status = f->stat(&sz, &dir);
+
+		if (status == FileStatus::NotExist) {
+			delete f;
+			return 1;
+
+		} else if (status != FileStatus::Success) {
+			delete f;
+			return 1;
+
+		} else if (dir == false) {
+			delete f;
+			return 2;
+		}
+
+		delete f;
+		strcpy(process->cwd, tmpbuffer);
+		return 0;
 	}
-	outBuffer[op] = 0;
-	while ((outBuffer[strlen(outBuffer) - 1] == '.' || outBuffer[strlen(outBuffer) - 1] == '/') && outBuffer[strlen(outBuffer) - 2] != ':') outBuffer[strlen(outBuffer) - 1] = 0;
+
+	void initVFS()
+	{
+		//just so the constructors can be called, so it gets added to the filesystem list
+		FAT* f = new FAT();
+		ISO9660* i = new ISO9660();
+	}
+
+	void standardiseFiles(char* outBuffer, const char* filename, const char* cwd)
+	{
+		char middleBuffer[1024];
+		memset(middleBuffer, 0, 1024);
+
+		//if the filename has its own directory
+		if (filename[1] == ':') {
+			//copy it directly in
+			strcpy(middleBuffer, filename);
+
+		} else if (filename[0] == '/' || filename[0] == '\\') {
+			//copy it directly in
+			middleBuffer[0] = cwd[0] >= 'a' ? cwd[0] - 32 : cwd[0];
+			middleBuffer[1] = ':';
+			middleBuffer[2] = '/';
+			strcat(middleBuffer, filename);
+
+		} else {
+			//otherwise, copy them both in 
+			strcpy(middleBuffer, cwd);
+			strcat(middleBuffer, "/");
+			strcat(middleBuffer, filename);
+		}
+
+		//ensure things are correct
+		middleBuffer[0] = middleBuffer[0] >= 'a' ? middleBuffer[0] - 32 : middleBuffer[0];
+		middleBuffer[1] = ':';
+		middleBuffer[2] = '/';
+
+		outBuffer[0] = middleBuffer[0];
+		outBuffer[1] = middleBuffer[1];
+		outBuffer[2] = middleBuffer[2];
+		outBuffer[3] = 0;
+
+		int op = 3;
+		int mp = 3;
+
+		while (middleBuffer[mp]) {
+			if ((middleBuffer[mp] == '/' || middleBuffer[mp] == '\\') && outBuffer[op - 1] != '/') {
+				outBuffer[op++] = '/';
+				++mp;
+
+			} else if (middleBuffer[mp - 1] == '/' && middleBuffer[mp] == '.' && middleBuffer[mp + 1] != '.' && middleBuffer[mp + 2] != '.') {
+				do {
+					++mp;
+				} while (middleBuffer[mp] == '/' || middleBuffer[mp] == '\\');
+
+			} else if (middleBuffer[mp - 1] == '/' && middleBuffer[mp] == '.' && middleBuffer[mp + 1] == '.' && middleBuffer[mp + 2] != '.') {
+				if (op == 3) {
+					++mp;
+					continue;
+				}
+				++mp;
+				do {
+					++mp;
+				} while (middleBuffer[mp] == '/' || middleBuffer[mp] == '\\');
+
+				--op;
+
+				//go back past the slash, erasing as we go
+				while (outBuffer[op] == '/') {
+					outBuffer[op] = 0;
+					--op;
+				}
+
+				//now that we're on a character, keep going until we hit a slash, erasing as we go
+				while (outBuffer[op] != '/') {
+					outBuffer[op] = 0;
+					--op;
+				}
+				++op;		//move off the slash
+
+			} else if (middleBuffer[mp] != '/' && middleBuffer[mp] != '\\') {
+				outBuffer[op++] = middleBuffer[mp++];
+
+			} else {
+				mp++;
+			}
+
+		}
+		outBuffer[op] = 0;
+		while ((outBuffer[strlen(outBuffer) - 1] == '.' || outBuffer[strlen(outBuffer) - 1] == '/') && outBuffer[strlen(outBuffer) - 2] != ':') outBuffer[strlen(outBuffer) - 1] = 0;
+	}
+
 }
 
 File::File(const char* filename, Process* process) : UnixFile()
 {
-	standardiseFiles(this->filepath, filename, process->cwd);
+	Fs::standardiseFiles(this->filepath, filename, process->cwd);
 
 	this->driveNo = this->filepath[0] - 'A';
 	fileOpen = false;
@@ -231,66 +296,7 @@ FileStatus File::stat(uint64_t* size, bool* directory)
 	}
 }
 
-int getcwd(Process* process, char* buffer, int bytes)
-{
-	int i = 0;
-	for (i = 0; i < bytes; ++i) {
-		buffer[i] = process->cwd[i];
-		if (buffer[i] == 0) return 0;
-	}
-	buffer[i] = 0;
-	return 0;
-}
 
-int setcwd(Process* process, char* buffer)
-{
-	char tmpbuffer[512];
-	standardiseFiles(tmpbuffer, buffer, process->cwd);
-	
-	//i.e. the root directory, for which 'stat' won't work on (it has no directory entry)
-	if (strlen(tmpbuffer) <= 2 || (strlen(tmpbuffer) == 3 && tmpbuffer[2] == '/')) {
-		int diskNo = tmpbuffer[0] - 'A';
-
-		if (diskNo >= 0 && diskNo <= 25) {
-			if (disks[diskNo] == nullptr) {
-				return 5;
-			}
-			if (disks[diskNo]->fs == nullptr) {
-				return 6;
-			}
-
-			strcpy(process->cwd, tmpbuffer);
-			return 0;
-
-		} else {
-			return 3;
-		}
-		return 4;
-	}
-
-	File* f = new File(tmpbuffer, process);
-
-	uint64_t sz;
-	bool dir = false;
-	FileStatus status = f->stat(&sz, &dir);
-
-	if (status == FileStatus::NotExist) {
-		delete f;
-		return 1;
-
-	} else if (status != FileStatus::Success) {
-		delete f;
-		return 1;
-
-	} else if (dir == false) {
-		delete f;
-		return 2;
-	}
-
-	delete f;
-	strcpy(process->cwd, tmpbuffer);
-	return 0;
-}
 
 
 
@@ -298,7 +304,7 @@ int setcwd(Process* process, char* buffer)
 
 Directory::Directory(const char* filename, Process* process) : UnixFile()
 {
-	standardiseFiles(this->filepath, filename, process->cwd);
+	Fs::standardiseFiles(this->filepath, filename, process->cwd);
 
 	this->driveNo = this->filepath[0] - 'A';
 	fileOpen = false;
