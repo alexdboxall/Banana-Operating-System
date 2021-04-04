@@ -68,7 +68,7 @@ void timerHandler(uint64_t nanosecs)
 {
 	nanoSinceBoot += nanosecs;
 
-	if (!schedulingOn) return;
+	if (!Krnl::schedulingOn) return;
 
 	ThreadControlBlock* next_task;
 	ThreadControlBlock* this_task = nullptr;
@@ -98,7 +98,7 @@ void timerHandler(uint64_t nanosecs)
 	}
 
 	//do preemption
-	if (currentTaskTCB->timeSliceRemaining != 0 && preemptionOn) {
+	if (currentTaskTCB->timeSliceRemaining != 0 && Krnl::preemptionOn) {
 		if (currentTaskTCB->timeSliceRemaining <= nanosecs) {
 			lockScheduler();
 			currentTaskTCB->timeSliceRemaining -= nanosecs;
