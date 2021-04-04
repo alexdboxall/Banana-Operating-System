@@ -39,32 +39,28 @@ REAL_MODE_INIT:
 
 	;disable blink
 	mov ax, 0x1003
-	mov bl, 0
-	mov bh, 0
+	xor bx, bx
 	int 0x10
 
 	call enableA20
 
-
-
 	mov ax, 0xB101
 	xor edi, edi
 	int 0x1A
-	mov [0xC5F], byte 0
+	mov dl, 0
 	jc .noBIOSPCI
 	cmp ah, 0
 	jne .noBIOSPCI
-
-	mov [0xC5F], byte 1
-
+	inc dl
 	test al, 2
 	jz .noBIOSPCI
-	mov [0xC5F], byte 2
-
+	inc dl
 .noBIOSPCI:
 
+	mov [0xC5F], dl
+
 	mov di, 0x1200
-	mov ax, 0
+	xor ax, ax
 	mov es, ax
 	call do_e820
 
