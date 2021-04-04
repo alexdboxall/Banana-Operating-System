@@ -88,7 +88,7 @@ int Computer::open(int a, int b, void* vas)
 		fpu->open(0, 0, nullptr);
 	}
 
-	setupMultitasking(firstTask);
+	setupMultitasking(Krnl::firstTask);
 	return -1;
 }
 
