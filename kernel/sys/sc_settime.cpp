@@ -16,7 +16,7 @@ namespace Sys
 	/// Sets the system time.
 	/// </summary>
 	/// <param name="ebx">The number of seconds since midnight of the current day.</param>
-	/// <param name="ecx">This is equal to DAY_OF_MONTH + MONTH * 32, where both a zero based.</param>
+	/// <param name="ecx">This is equal to DAY_OF_MONTH + MONTH * 32, both are zero based.</param>
 	/// <param name="edx">The year is stored in the low word. The high word is reserved.</param>
 	/// <returns>Returns zero, even when it fails.</returns>
 	/// 

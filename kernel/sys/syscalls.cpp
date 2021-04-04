@@ -35,6 +35,7 @@ namespace Sys
 	uint64_t setCwd(regs* r);
 
 	uint64_t loadDLL(regs* r);
+	uint64_t setTime(regs* r);
 }
 
 int string_ends_with(const char* str, const char* suffix)
