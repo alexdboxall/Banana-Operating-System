@@ -45,6 +45,10 @@ manualPCIProbe:
 .gotPCI:       ; Value in EAX will be 1 if mechanism #1 is supported, or 2 if mechanism #2 is supported
     ret
 
+.noPCI:
+    xor eax, eax
+    ret
+
 global prepareTramp
 prepareTramp:
     sgdt [0xFE0]
