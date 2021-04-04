@@ -57,6 +57,14 @@ Desktop* Desktop_new(Context* context)
 //Paint the desktop 
 void Desktop_paint_handler(Window* desktop_window)
 {
+	extern uint32_t desktopBgCol;
+	extern bool desktopUseBgCol;
+
+	if (desktopUseBgCol) {
+		Context_fill_rect(desktop_window->context, 0, 0, desktop_window->context->width, desktop_window->context->height, desktopBgCol);
+		return;
+	}
+	
 	extern int desktopImageWidth;
 	extern int desktopImageHeight;
 	extern uint32_t* parsedTGA;

@@ -40,6 +40,8 @@ Desktop* desktop = nullptr;
 uint32_t* parsedTGA;
 int desktopImageWidth = 640;
 int desktopImageHeight = 480;
+uint32_t desktopBgCol = 0x008080;
+bool desktopUseBgCol = true;
 
 extern "C" bool invertMouse;
 
@@ -158,7 +160,6 @@ void spawn_calculator(Window* button, int x, int y)
     Window_init(w, 50, 50, 300, 200, WIN_TOPLEVELWIN, 0);
     Window_set_title(w, (char*) tw);
     Window_insert_child((Window*) desktop, w);
-    w->hasProc = true;
 
     //Create a simple launcher window
     Button* launch_button = Button_new(40, 60, 150, 30);
@@ -309,7 +310,6 @@ void myapp(void* ctxt)
 
     Window* test = createWindow(150, 100, 350, 200, WIN_TOPLEVELWIN);
     setWindowTitle(test, "WSBE Window!");
-    test->hasProc = true;
     addWindow((Window*) getDesktop(), test);
 
     internalMain(test);
@@ -327,7 +327,7 @@ int main(int argc, const char* argv[])
 
     int br;
     char bgImgName[256];
-    Reg::readStringWithDefault((char*) "wsbe", (char*) "bgImageFile", bgImgName, 255, (char*) "C:/Banana/Wallpapers/crisp.tga");
+    Reg::readStringWithDefault((char*) "wsbe", (char*) "@desktop:imageFile", bgImgName, 255, (char*) "C:/Banana/Wallpapers/crisp.tga");
     File* f = new File(bgImgName, kernelProcess);
     uint64_t tgalen;
     bool dir;
@@ -348,8 +348,9 @@ int main(int argc, const char* argv[])
     loadCursors();
     loadbuiltinfonts();
 
-    desktopColour = Reg::readIntWithDefault((char*) "wsbe", (char*) "desktopcolour", 0x2A2AD4);
-    invertMouse = Reg::readIntWithDefault((char*) "wsbe", (char*) "invertmouse", 0);
+    desktopUseBgCol = Reg::readIntWithDefault((char*) "wsbe", (char*) "@desktop:backgroundMode", 0) == 0;
+    desktopBgCol = Reg::readIntWithDefault((char*) "wsbe", (char*) "@desktop:solidColour", 0x008080/*0x2A2AD4*/);
+    invertMouse = Reg::readIntWithDefault((char*) "wsbe", (char*) "invertMouse", 0);
 
     guiMouseHandler = handleMouse;
 
@@ -377,7 +378,7 @@ int main(int argc, const char* argv[])
     Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
 
     //kernelProcess->createThread(myapp);
-    myapp(0);
+    //myapp(0);
 
     while (1) {  
         sleep(3);
