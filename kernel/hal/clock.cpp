@@ -15,7 +15,7 @@ namespace User
 
 	void loadClockSettings(int tzID)
 	{
-		File* fil = new File("C:/Banana/System/timezone.txt", FileModeOpen::Read);
+		File* fil = new File("C:/Banana/System/timezone.txt", FileOpenMode::Read);
 
 		//TODO: read the file
 
@@ -27,8 +27,6 @@ namespace User
 		//dstOn = true;
 	}
 }
-
-using User;
 
 Clock::Clock(const char* name): Device(name)
 {
@@ -43,6 +41,7 @@ Clock::~Clock()
 
 time_t Clock::timeInSecondsLocal()
 {
+	using User;
 	return timeInSecondsUTC() + (timezoneHourOffset + dstOn) * 3600 + (timezoneHalfHourOffset ? 1800 : 0);
 }
 
@@ -53,12 +52,13 @@ datetime_t Clock::timeInDatetimeLocal()
 
 bool Clock::setTimeInSecondsLocal(time_t t)
 {
+	using User;
 	return setTimeInSecondsUTC(t - (timezoneHourOffset + dstOn) * 3600 - (timezoneHalfHourOffset ? 1800 : 0));
 }
 
 bool Clock::setTimeInDatetimeLocal(datetime_t d)
 {
-	kprintf("local conversion = %d\n", (timezoneHourOffset + dstOn) * 3600 - (timezoneHalfHourOffset ? 1800 : 0));
+	using User;
 	return setTimeInSecondsUTC(datetimeToSeconds(d) - (timezoneHourOffset + dstOn) * 3600 - (timezoneHalfHourOffset ? 1800 : 0));
 }
 
