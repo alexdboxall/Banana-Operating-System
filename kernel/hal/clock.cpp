@@ -12,9 +12,9 @@ bool dstOn = false;
 
 void loadClockSettings()
 {
-	timezoneHourOffset = 10;
-	timezoneHalfHourOffset = false;
-	dstOn = true;
+	//timezoneHourOffset = 10;
+	//timezoneHalfHourOffset = false;
+	//dstOn = true;
 }
 
 Clock::Clock(const char* name): Device(name)
