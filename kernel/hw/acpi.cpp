@@ -356,32 +356,32 @@ int ACPI::open(int mode, int, void*)
 		if (table) {
 			kprintf("GOT MCFG table.\n");
 			pciDetected = true;
-			pciAccessMech2 = true;
+			pciAccessMech1 = true;
 		}
 	}
 
 	uint8_t* biosPCIDetect = (uint8_t*) 0xC5F;
 	if (*biosPCIDetect == 1) {
 		pciDetected = true;
+		pciAccessMech1 = true;
 		kprintf("BIOS 1\n");
 
 	} else if (*biosPCIDetect == 2) {
 		pciDetected = true;
-		pciAccessMech2 = true;
 		kprintf("BIOS 2\n");
 	}
 
-	if (!pciDetected || !pciAccessMech2) {
+	if (!pciDetected) {
 		kprintf("MANUAL PROBE\n");
 		size_t detected = manualPCIProbe();
 		if (detected == 1) {
 			pciDetected = true;
+			pciAccessMech1 = true;
 			kprintf("MANUAL 1\n");
 
 		} else if (detected == 2) {
 			pciDetected = true;
-			pciAccessMech2 = true;
-			kprintf("MANUAL 1\n");
+			kprintf("MANUAL 2\n");
 		}
 	}
 

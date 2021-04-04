@@ -51,10 +51,10 @@ REAL_MODE_INIT:
 	jc .noBIOSPCI
 	cmp ah, 0
 	jne .noBIOSPCI
-	inc dl
-	test al, 2
+	mov dl, 2
+	test al, 1
 	jz .noBIOSPCI
-	inc dl
+	dec dl
 .noBIOSPCI:
 
 	mov [0xC5F], dl
