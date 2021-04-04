@@ -1,6 +1,7 @@
 #include "thr/prcssthr.hpp"
 #include "sys/syscalls.hpp"
 #include "hal/intctrl.hpp"
+#include "hal/clock.hpp"
 #include "hal/timer.hpp"
 
 #pragma GCC optimize ("Os")
@@ -29,11 +30,21 @@ namespace Sys
 
 		//one based
 		int day = ((r->ecx) % 32) + 1;
-		int month = ((r->ecx / 32) % 12) + 1;
+
+		//zero based
+		int month = ((r->ecx / 32) % 12);
 
 		int year = r->edx & 0xFFFF;
 
-		return 1;
+		datetime_t dt;
+		dt.day = day;
+		dt.month = month;
+		dt.year = year;
+		dt.second = seconds;
+		dt.minute = minutes;
+		dt.hour = hours;
+
+		return computer->clock->setTimeInDatetimeLocal(dt);
 	}
 }
 

@@ -1191,13 +1191,12 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 		}
 
 	} else if (!strcasecmp(argv[0], "setdate") || !strcasecmp(argv[0], "settime")) {
+	retry:;
 		time_t rawtime;
 		struct tm* timeinfo;
 
 		time(&rawtime);
 		timeinfo = localtime(&rawtime);
-
-		char days[7][10] = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
 
 		fprintf(out, "Current time is: %02d/%02d/%04d %02d:%02d:%02d\n", timeinfo->tm_mday, timeinfo->tm_mon + 1, timeinfo->tm_year + 1900, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
 		fprintf(out, "                 DD/MM/YYYY HH:MM:SS\n");
@@ -1234,10 +1233,10 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 		uint32_t d = year + 1900;
 		int res = SystemCall(SetTime, b, c, d);
 		if (res) {
-			fprintf(line, "The time could not be set.\n\n");
+			fprintf(out, "The time could not be set.\n");
 
 		} else {
-			fprintf(line, "The time was set.\n\n");
+			fprintf(out, "The time was set.\n");
 		}
 
 	} else if (!strcasecmp(argv[0], "date") || !strcasecmp(argv[0], "time")) {
