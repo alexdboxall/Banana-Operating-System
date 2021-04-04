@@ -363,20 +363,25 @@ int ACPI::open(int mode, int, void*)
 	uint8_t* biosPCIDetect = (uint8_t*) 0xC5F;
 	if (*biosPCIDetect == 1) {
 		pciDetected = true;
+		kprintf("BIOS 1\n");
 
 	} else if (*biosPCIDetect == 2) {
 		pciDetected = true;
 		pciAccessMech2 = true;
+		kprintf("BIOS 2\n");
 	}
 
 	if (!pciDetected || !pciAccessMech2) {
+		kprintf("MANUAL PROBE\n");
 		size_t detected = manualPCIProbe();
 		if (detected == 1) {
 			pciDetected = true;
+			kprintf("MANUAL 1\n");
 
 		} else if (detected == 2) {
 			pciDetected = true;
 			pciAccessMech2 = true;
+			kprintf("MANUAL 1\n");
 		}
 	}
 
