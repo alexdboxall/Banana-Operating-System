@@ -43,8 +43,58 @@ bool RTC::get_update_in_progress_flag()
 
 bool RTC::setTimeInDatetimeUTC(datetime_t d)
 {
+	//clear minutes and seconds so we know no imporant updates will take place
+	computer->writeCMOS(0x00, 0);
+	computer->writeCMOS(0x02, 0);
 
-	return false;
+	uint8_t second = d.second;
+	uint8_t minute = d.minute;
+	uint8_t hour = d.hour;
+	uint8_t day = d.day;
+	uint8_t month = d.month;
+	uint8_t year = d.year % 100;
+
+	uint8_t registerB = computer->readCMOS(0x0B);
+
+	kprintf("writing to the CMOS.\n");
+
+	//convert binary to BCD
+	if (!(registerB & 0x04)) {
+		kprintf("filthy BCD mode\n");
+		second = (second % 10) | ((second / 10) * 16);
+		minute = (minute % 10) | ((minute / 10) * 16);
+		hour = (hour % 10)	| ((hour / 10) * 16);
+		day = (day % 10) | ((day / 10) * 16);
+		month = (month % 10) | ((month / 10) * 16);
+		year = (year % 10) | ((year / 10) * 16);
+	}
+
+	//12 hour mode
+	if (!(registerB & 0x02)) {
+		kprintf("digusting 12 hour mode\n");
+		if (hour >= 12) {
+			//12-23 to 1-12
+			hour -= 12;
+			//0-11 to 1-12
+			if (hour == 0) hour = 12;
+			hour |= 0x80;
+		} else {
+			//0-11 to 1-12
+			if (hour == 0) hour = 12;
+		}
+	}
+
+	kprintf("sec 0x%X, min 0x%X, hour 0x%X, year 0x%X\n", second, minute, hour, year);
+
+	computer->writeCMOS(0x00, second);
+	computer->writeCMOS(0x02, minute);
+	computer->writeCMOS(0x04, hour);
+	computer->writeCMOS(0x07, day);
+	computer->writeCMOS(0x08, month);
+	computer->writeCMOS(0x09, year);
+
+	rtcTime = datetimeToSeconds(d);
+	return true;
 }
 
 void RTC::completeRTCRefresh()

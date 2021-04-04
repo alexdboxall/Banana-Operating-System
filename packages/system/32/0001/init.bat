@@ -1,5 +1,6 @@
 cls
 echo
+settimezone
 settime
 cls
 echo

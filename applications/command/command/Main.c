@@ -1190,6 +1190,24 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 			fprintf(stderr, "An unknown error occured.\n");
 		}
 
+	} else if (!strcasecmp(argv[0], "settimezone") || !strcasecmp(argv[0], "settz") || !strcasecmp(argv[0], "timezone")) {
+		char currtimezone[] = "+10.0	Hobart";
+
+		fprintf(out, "Current timezone: ");
+		for (int i = 0; currtimezone[i]; ++i) {
+			if (currtimezone[i] == '\t') {
+				fprintf(out, ", ");
+				continue;
+			}
+			fputc(currtimezone[i], out);
+		}
+
+		fprintf(out, "\nNew timezone    : ");
+
+		char newtimezone[256];
+		fgets(newtimezone, 255, stdin);
+
+
 	} else if (!strcasecmp(argv[0], "setdate") || !strcasecmp(argv[0], "settime")) {
 	retry:;
 		time_t rawtime;
@@ -1226,6 +1244,8 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 		if (hour != -1) timeinfo->tm_hour = hour;
 		if (minute != -1) timeinfo->tm_min = minute;
 		if (seconds != -1) timeinfo->tm_sec = seconds;
+
+		printf("%d/%d/%d %d:%d:%d\n", day, month, year, hour, minute, seconds);
 
 		extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
 		uint32_t b = seconds + minute * 60 + hour * 3600;
