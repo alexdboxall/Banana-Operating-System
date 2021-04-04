@@ -4,6 +4,11 @@ extern "C" {
 #include "libk/string.h"
 }
 
+extern "C" unsigned long __udivdi3(unsigned long, unsigned long);
+extern "C" long __divdi3(long, long);
+extern "C" unsigned long __umoddi3(unsigned long, unsigned long);
+extern "C" long __moddi3(long, long);
+
 namespace Krnl
 {
 	size_t resolveCompatibilitySymbol(char* name)

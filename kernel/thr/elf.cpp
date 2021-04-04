@@ -349,11 +349,6 @@ namespace Thr
 		return true;
 	}
 
-	extern "C" unsigned long __udivdi3(unsigned long, unsigned long);
-	extern "C" long __divdi3(long, long);
-	extern "C" unsigned long __umoddi3(unsigned long, unsigned long);
-	extern "C" long __moddi3(long, long);
-
 	bool loadDriverIntoMemory(const char* filename, size_t address, bool critical)
 	{
 		Process* p = kernelProcess;
