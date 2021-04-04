@@ -108,7 +108,7 @@ void Computer::start()
 	root->open(0, 0, nullptr);
 	Sys::loadSyscalls();
 	Krnl::loadSystemEnv();
-	User::loadClockSettings(Reg::readIntWithDefault("country", "timezone", 58));
+	User::loadClockSettings(Reg::readIntWithDefault((const char*) "country", (const char*) "timezone", 58));
 	loadDriversForAll();
 
 	//for each cpu
