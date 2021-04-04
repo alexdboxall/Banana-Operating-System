@@ -26,10 +26,13 @@
 
 #define PORT_CMOS_BASE			0x70	
 
-bool schedulingOn = false;
-bool preemptionOn = false;
+namespace Krnl
+{
+	bool schedulingOn = false;
+	bool preemptionOn = false;
 
-Computer* computer;
+	Computer* computer;
+}
 
 
 Computer::Computer(): Device("Computer")
@@ -90,42 +93,6 @@ int Computer::open(int a, int b, void* vas)
 }
 
 extern "C" size_t validateKey();
-
-void Computer::start()
-{
-	asm("sti");
-
-	//setup up the core processes and threads we need
-	Process* idleProcess = new Process(true, "Idle Process", kernelProcess);
-	idleProcess->createThread(idleFunction, nullptr, 255);
-
-	cleanerThread = kernelProcess->createThread(cleanerTaskFunction, nullptr, 122);
-
-	schedulingOn = true;
-
-	Vm::initialise8086();
-	Fs::initVFS();
-	root->open(0, 0, nullptr);
-	Sys::loadSyscalls();
-	Krnl::loadSystemEnv();
-	User::loadClockSettings(Reg::readIntWithDefault((char*) "country", (char*) "timezone", 58));
-	loadDriversForAll();
-
-	//for each cpu
-		//start it
-		//cpu[i]->open(i, 0, nullptr);
-
-	Thr::executeDLL(Thr::loadDLL("C:/Banana/System/system.dll"), computer);
-
-	kprintf("DONE.\n");
-
-	while (1) {
-		blockTask(TaskState::Paused);
-	}
-}
-
-
-
 extern "C" int detectCPUID();
 extern "C" size_t x87Detect();
 extern "C" size_t sseDetect();
@@ -299,9 +266,38 @@ void Computer::disableNMI()
 	enableNMI(false);
 }
 
-void firstTask()
+namespace Krnl
 {
-	computer->start();
+	void firstTask()
+	{
+		asm("sti");
+
+		//setup up the core processes and threads we need
+		Process* idleProcess = new Process(true, "Idle Process", kernelProcess);
+		idleProcess->createThread(idleFunction, nullptr, 255);
+
+		cleanerThread = kernelProcess->createThread(cleanerTaskFunction, nullptr, 122);
+
+		schedulingOn = true;
+
+		Vm::initialise8086();
+		Fs::initVFS();
+		root->open(0, 0, nullptr);
+		Sys::loadSyscalls();
+		Krnl::loadSystemEnv();
+		User::loadClockSettings(Reg::readIntWithDefault((char*) "country", (char*) "timezone", 58));
+		loadDriversForAll();
+
+		//for each cpu
+			//start it
+			//cpu[i]->open(i, 0, nullptr);
+
+		Thr::executeDLL(Thr::loadDLL("C:/Banana/System/system.dll"), computer);
+
+		while (1) {
+			blockTask(TaskState::Paused);
+		}
+	}
 }
 
 uint8_t Computer::readCMOS(uint8_t reg)

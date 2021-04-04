@@ -21,7 +21,6 @@ private:
 	friend void kernel_main();
 	Computer();
 	int open(int a, int b, void* c);
-	void start();
 
 protected:
 	bool nmi;
@@ -78,8 +77,15 @@ public:
 	uint64_t rdmsr(uint32_t msr_id);
 };
 
-extern Computer* computer;
-extern bool schedulingOn;
-extern bool preemptionOn;
+namespace Krnl
+{
+	extern Computer* computer;
+	extern bool schedulingOn;
+	extern bool preemptionOn;
+
+	void firstTask();
+}
+
+using Krnl::computer;
 
 #endif

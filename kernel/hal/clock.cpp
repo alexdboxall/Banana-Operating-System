@@ -1,5 +1,5 @@
-#include "hal/clock.hpp"
 #include "fs/vfs.hpp"
+#include "hal/clock.hpp"
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
@@ -27,6 +27,8 @@ namespace User
 		//dstOn = true;
 	}
 }
+
+using User;
 
 Clock::Clock(const char* name): Device(name)
 {
