@@ -95,7 +95,6 @@ SystemCallNumber
 	LoadDLL,
 	SetTime,
 	Timezone,
-
 };
 
 

@@ -17,7 +17,6 @@ extern void firstTask();
 class Computer : public Device
 {
 private:
-	friend void firstTask();
 	friend void kernel_main();
 	Computer();
 	int open(int a, int b, void* c);
