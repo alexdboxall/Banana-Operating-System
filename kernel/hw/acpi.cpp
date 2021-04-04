@@ -354,6 +354,7 @@ int ACPI::open(int mode, int, void*)
 	if (computer->features.hasACPI) {
 		void* table = (void*) findDataTable(RSDTpointer, (char*) "MCFG");
 		if (table) {
+			kprintf("GOT MCFG table.\n");
 			pciDetected = true;
 			pciAccessMech2 = true;
 		}
@@ -362,18 +363,16 @@ int ACPI::open(int mode, int, void*)
 	uint8_t* biosPCIDetect = (uint8_t*) 0xC5F;
 	if (*biosPCIDetect == 1) {
 		pciDetected = true;
-		pciAccessMech2 = false;
 
 	} else if (*biosPCIDetect == 2) {
 		pciDetected = true;
 		pciAccessMech2 = true;
 	}
 
-	if (!pciDetected) {
+	if (!pciDetected || !pciAccessMech2) {
 		size_t detected = manualPCIProbe();
 		if (detected == 1) {
 			pciDetected = true;
-			pciAccessMech2 = false;
 
 		} else if (detected == 2) {
 			pciDetected = true;
