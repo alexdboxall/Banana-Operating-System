@@ -1232,13 +1232,9 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 		sscanf(line, "%d/%d/%d %d:%d:%d\n", &day, &month, &year, &hour, &minute, &seconds);
 
 		printf("%d/%d/%d %d:%d:%d\n", day, month, year, hour, minute, seconds);
-		if (year < 70) {
-			year += 2000;
-		} else if (year < 100) {
-			year += 1900;
-		}
+		year %= 100;
 
-		if (year != -1) timeinfo->tm_year = year - 1900;
+		if (year != -1) timeinfo->tm_year = year % 100;
 		if (month != -1) timeinfo->tm_mon = month - 1;
 		if (day != -1) timeinfo->tm_mday = day;
 		if (hour != -1) timeinfo->tm_hour = hour;

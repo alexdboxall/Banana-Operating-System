@@ -37,7 +37,7 @@ namespace Sys
 
 		int year = r->edx & 0xFFFF;
 
-		kprintf("setTime: %d/%d/%d\n", year, month, day);
+		kprintf("setTime: %d/%d/%d %d:%d:%d\n", day, month, year, hours, minutes, seconds);
 
 		datetime_t dt;
 		dt.day = day;
