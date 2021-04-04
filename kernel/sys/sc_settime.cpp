@@ -1,3 +1,4 @@
+#include "core/computer.hpp"
 #include "thr/prcssthr.hpp"
 #include "sys/syscalls.hpp"
 #include "hal/intctrl.hpp"
