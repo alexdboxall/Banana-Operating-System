@@ -21,7 +21,7 @@ namespace Sys
 	/// 
 	uint64_t setCwd(regs* r)
 	{
-		return setcwd(currentTaskTCB->processRelatedTo, (char*) r->ebx);
+		return Fs::setcwd(currentTaskTCB->processRelatedTo, (char*) r->ebx);
 	}
 }
 

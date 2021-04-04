@@ -22,7 +22,7 @@ namespace Sys
 	/// 
 	uint64_t getCwd(regs* r)
 	{
-		return getcwd(currentTaskTCB->processRelatedTo, (char*) r->ebx, r->ecx);
+		return Fs::getcwd(currentTaskTCB->processRelatedTo, (char*) r->ebx, r->ecx);
 	}
 
 }
