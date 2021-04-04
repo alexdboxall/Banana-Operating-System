@@ -102,6 +102,8 @@ setcs:
 	push ax									;ax is zero here. used just before we jump to stage two
 	push dx									;used to reload DL at the end, will trash DH, but we set that after the pop
 	
+	jmp $
+
 	;AX is already zero
 	int 0x10
 

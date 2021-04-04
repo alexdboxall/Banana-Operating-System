@@ -12,7 +12,6 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-#ifndef JUMPER32
 PCI::PCI() : Bus("PCI Bus")
 {
 	ports[noPorts].rangeStart = 0xCF8;
@@ -245,4 +244,3 @@ void PCI::detect()
 	}
 
 }
-#endif

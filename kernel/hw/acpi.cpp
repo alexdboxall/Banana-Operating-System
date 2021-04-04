@@ -347,7 +347,18 @@ ACPI_STATUS ACPI::setScreenBrightnessLevel(ACPI_HANDLE screenObj, int level)
 
 int ACPI::open(int mode, int, void*)
 {
-	pciDetected = true;
+	pciDetected = false;
+	pciAccessMech2 = false;
+
+	if (computer->features.hasACPI) {
+		void* table = (void*) findDataTable(RSDTpointer, (char*) "MCFG");
+		if (table) {
+			pciDetected = true;
+			pciAccessMech2 = true;
+		}
+	}
+
+
 
 	if (pciDetected) {
 		PCI* pci = new PCI();

@@ -45,6 +45,11 @@ REAL_MODE_INIT:
 
 	call enableA20
 
+	mov ax, 0xB101
+	xor edi, edi
+
+	mov [0xC5F], 0
+
 	mov di, 0x1200
 	mov ax, 0
 	mov es, ax

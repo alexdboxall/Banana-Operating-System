@@ -147,6 +147,7 @@ public:
 	int nextScreenControl = 0;
 
 	bool pciDetected = false;
+	bool pciAccessMech2 = false;
 
 
 	ACPI_STATUS setScreenBrightnessLevel(ACPI_HANDLE screenObj, int level);
