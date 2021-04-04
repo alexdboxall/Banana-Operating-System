@@ -43,6 +43,8 @@ bool RTC::get_update_in_progress_flag()
 
 bool RTC::setTimeInDatetimeUTC(datetime_t d)
 {
+	kprintf("rtc set %d/%d/%d %d:%d:%d\n", d.day, d.month, d.year, d.hour, d.minute, d.second);
+
 	//clear minutes and seconds so we know no imporant updates will take place
 	computer->writeCMOS(0x00, 0);
 	computer->writeCMOS(0x02, 0);

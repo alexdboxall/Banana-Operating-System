@@ -45,6 +45,7 @@ bool Clock::setTimeInSecondsLocal(time_t t)
 
 bool Clock::setTimeInDatetimeLocal(datetime_t d)
 {
+	kprintf("local conversion = %d\n", (timezoneHourOffset + dstOn) * 3600 - (timezoneHalfHourOffset ? 1800 : 0));
 	return setTimeInSecondsUTC(datetimeToSeconds(d) - (timezoneHourOffset + dstOn) * 3600 - (timezoneHalfHourOffset ? 1800 : 0));
 }
 

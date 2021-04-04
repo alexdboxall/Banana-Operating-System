@@ -49,7 +49,7 @@ namespace Sys
 
 		uint64_t secs = datetimeToSeconds(dt);
 		datetime_t d2 = secondsToDatetime(secs);
-		kprintf("%d/%d/%d %d:%d:%d\n", d2.day, dt.month, dt.year, dt.hour, dt.minute, dt.second);
+		kprintf("setTime2 %d/%d/%d %d:%d:%d\n", d2.day, d2.month, d2.year, d2.hour, d2.minute, d2.second);
 
 		return !computer->clock->setTimeInDatetimeLocal(dt);
 	}
