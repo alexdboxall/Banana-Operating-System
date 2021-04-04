@@ -324,12 +324,7 @@ void realSave()
 	}
 	Line* cond = root;
 	while (cond) {
-		int written = fwrite(cond->text, strlen(cond->text), 1, f);
-		if (written != strlen(cond->text)) {
-			fclose(f);
-			printf("The file could not be saved, and may be corrupted.\n\n");
-			return;
-		}
+		fwrite(cond->text, strlen(cond->text), 1, f);
 		if (cond->next && cond->text[strlen(cond->text) - 1] != '\n') fputc('\n', f);
 		cond = cond->next;
 	}
