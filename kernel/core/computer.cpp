@@ -34,8 +34,7 @@ namespace Krnl
 	Computer* computer;
 }
 
-
-Computer::Computer(): Device("Computer")
+Computer::Computer() : Device("Computer")
 {
 	deviceType = DeviceType::Bus;
 	parent = nullptr;

@@ -6,6 +6,7 @@
 #include "libk/string.h"
 #include "core/physmgr.hpp"
 #include "hw/cpu.hpp"
+#include "compat/resolve.hpp"
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -523,15 +524,7 @@ namespace Thr
 					addr = getAddressOfKernelSymbol(((char*) stringTab) + symbolTab[symbolNum].st_name);
 					dynamic = true;
 					if (addr == 0) {
-						if (!strcmp(((char*) stringTab) + symbolTab[symbolNum].st_name, "__udivdi3")) {
-							addr = (size_t) __udivdi3;
-						} else if (!strcmp(((char*) stringTab) + symbolTab[symbolNum].st_name, "__divdi3")) {
-							addr = (size_t) __divdi3;
-						} else if (!strcmp(((char*) stringTab) + symbolTab[symbolNum].st_name, "__umoddi3")) {
-							addr = (size_t) __umoddi3;
-						} else if (!strcmp(((char*) stringTab) + symbolTab[symbolNum].st_name, "__moddi3")) {
-							addr = (size_t) __moddi3;
-						}
+						addr = Krnl::resolveCompatibilitySymbol(((char*) stringTab) + symbolTab[symbolNum].st_name);
 
 						if (addr == 0) {
 							kprintf("UNDEFINED DLL SYMBOL: %s\n", ((char*) stringTab) + symbolTab[symbolNum].st_name);
