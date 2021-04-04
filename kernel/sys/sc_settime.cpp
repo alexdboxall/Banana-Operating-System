@@ -42,7 +42,7 @@ namespace Sys
 		datetime_t dt;
 		dt.day = day;
 		dt.month = month;
-		dt.year = year - 1970;
+		dt.year = year - 1900;
 		dt.second = seconds;
 		dt.minute = minutes;
 		dt.hour = hours;
