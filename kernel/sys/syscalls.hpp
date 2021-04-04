@@ -6,8 +6,12 @@
 
 #ifdef __cplusplus
 struct regs;
-void setupSystemCalls();
-uint64_t systemCall(regs* r, void* context);
+namespace Sys
+{
+	void loadSyscalls();
+	uint64_t systemCall(regs* r, void* context);
+
+}
 #endif
 
 #define _APPSETTINGS_VALIDATION_V1			'N'

@@ -108,9 +108,9 @@ void Computer::start()
 	initVFS();
 	root->open(0, 0, nullptr);
 
+	Sys::loadSyscalls();
 	Krnl::loadSystemEnv();
-	setupSystemCalls();
-	loadClockSettings();
+	User::loadClockSettings(58);
 	loadDriversForAll();
 
 	//for each cpu

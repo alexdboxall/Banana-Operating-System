@@ -615,7 +615,7 @@ InterruptController* setupInterruptController()
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcast-function-type"
-	controller->installISRHandler(96, reinterpret_cast<void(*)(regs*, void*)>(systemCall));
+	controller->installISRHandler(96, reinterpret_cast<void(*)(regs*, void*)>(Sys::systemCall));
 #pragma GCC diagnostic pop
 
 	return controller;

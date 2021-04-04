@@ -19,6 +19,15 @@ struct datetime_t
 time_t datetimeToSeconds(datetime_t dt);
 datetime_t secondsToDatetime(time_t tim);
 
+namespace User
+{
+	extern int timezoneHourOffset;
+	extern bool timezoneHalfHourOffset;
+	extern bool dstOn;
+
+	void loadClockSettings(int tzID);
+}
+
 class Clock: public Device
 {
 private:
@@ -41,7 +50,5 @@ public:
 	Clock(const char* name);
 	virtual ~Clock();
 };
-
-void loadClockSettings();
 
 #endif

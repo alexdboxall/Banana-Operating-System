@@ -30,8 +30,8 @@ namespace Sys
 
 		} else {
 			//set the timezone
-			kprintf("TODO: unimplemented, sc_timezone.cpp: set the timezone\n");
-
+			kprintf("TODO: unimplemented, sc_timezone.cpp: TODO! WRITE TO REGISTRY\n");
+			loadClockSettings(r->ebx);
 			return 1;
 		}
 	}

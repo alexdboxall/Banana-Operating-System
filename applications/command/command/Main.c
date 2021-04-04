@@ -1209,11 +1209,10 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 			}
 			fputc('\n', out);
 
-			if ((lineNum % 19) == 18) {
+			if ((lineNum % 15) == 14) {
 				fprintf(out, "\nPress ENTER to continue\n");
 				int c = getchar();
 				if (c != '\n') while ((c = getchar()) != '\n' && c != EOF) {}
-				fprintf(out, "\n");
 			}
 			
 			++lineNum;

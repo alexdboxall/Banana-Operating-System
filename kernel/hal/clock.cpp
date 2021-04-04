@@ -1,4 +1,5 @@
 #include "hal/clock.hpp"
+#include "fs/vfs.hpp"
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
@@ -6,15 +7,25 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-int timezoneHourOffset = 0;
-bool timezoneHalfHourOffset = false;
-bool dstOn = false;
-
-void loadClockSettings()
+namespace User
 {
-	//timezoneHourOffset = 10;
-	//timezoneHalfHourOffset = false;
-	//dstOn = true;
+	int timezoneHourOffset = 0;
+	bool timezoneHalfHourOffset = false;
+	bool dstOn = false;
+
+	void loadClockSettings(int tzID)
+	{
+		File* fil = new File("C:/Banana/System/timezone.txt", FileModeOpen::Read);
+
+		//TODO: read the file
+
+		fil->close();
+		delete fil;
+
+		//timezoneHourOffset = 10;
+		//timezoneHalfHourOffset = false;
+		//dstOn = true;
+	}
 }
 
 Clock::Clock(const char* name): Device(name)
