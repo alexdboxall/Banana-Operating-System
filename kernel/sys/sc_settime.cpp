@@ -47,6 +47,10 @@ namespace Sys
 		dt.minute = minutes;
 		dt.hour = hours;
 
+		uint64_t secs = datetimeToSeconds(d);
+		datetime_t d2 = secondsToDatetime(d);
+		kprintf("%d/%d/%d %d:%d:%d\n", d2.day, dt.month, dt.year, dt.hour, dt.minute, dt.second);
+
 		return !computer->clock->setTimeInDatetimeLocal(dt);
 	}
 }
