@@ -58,6 +58,8 @@ bool RTC::setTimeInDatetimeUTC(datetime_t d)
 
 	kprintf("writing to the CMOS.\n");
 
+	kprintf("sec 0x%X, min 0x%X, hour 0x%X, day 0x%X, month 0x%X, year 0x%X\n", second, minute, hour, day, month, year);
+
 	//convert binary to BCD
 	if (!(registerB & 0x04)) {
 		kprintf("filthy BCD mode\n");
@@ -84,7 +86,7 @@ bool RTC::setTimeInDatetimeUTC(datetime_t d)
 		}
 	}
 
-	kprintf("sec 0x%X, min 0x%X, hour 0x%X, year 0x%X\n", second, minute, hour, year);
+	kprintf("sec 0x%X, min 0x%X, hour 0x%X, day 0x%X, month 0x%X, year 0x%X\n", second, minute, hour, day, month, year);
 
 	computer->writeCMOS(0x00, second);
 	computer->writeCMOS(0x02, minute);
