@@ -18,7 +18,7 @@ namespace Sys
 	/// <param name="ebx">The number of seconds since midnight of the current day.</param>
 	/// <param name="ecx">This is equal to DAY_OF_MONTH + MONTH * 32, both are zero based.</param>
 	/// <param name="edx">The year is stored in the low word. The high word is reserved.</param>
-	/// <returns>Returns zero, even when it fails.</returns>
+	/// <returns>Returns zero on success, non-zero otherwise.</returns>
 	/// 
 	uint64_t setTime(regs* r)
 	{
@@ -33,7 +33,7 @@ namespace Sys
 
 		int year = r->edx & 0xFFFF;
 
-		return 0;
+		return 1;
 	}
 }
 

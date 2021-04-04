@@ -1228,6 +1228,18 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 		if (minute != -1) timeinfo->tm_min = minute;
 		if (seconds != -1) timeinfo->tm_sec = seconds;
 
+		extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
+		uint32_t b = seconds + minute * 60 + hour * 3600;
+		uint32_t c = (day - 1) + month * 32;
+		uint32_t d = year + 1900;
+		int res = SystemCall(SetTime, b, c, d);
+		if (res) {
+			fprintf(line, "The time could not be set.\n\n");
+
+		} else {
+			fprintf(line, "The time was set.\n\n");
+		}
+
 	} else if (!strcasecmp(argv[0], "date") || !strcasecmp(argv[0], "time")) {
 		time_t rawtime;
 		struct tm* timeinfo;
