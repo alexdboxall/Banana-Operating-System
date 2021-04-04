@@ -62,7 +62,7 @@ uint64_t sysCallOpen(regs* r)
 	}
 
 	char fname[256];
-	standardiseFiles(fname, (const char*) r->edx, "Z:/");
+	Fs::standardiseFiles(fname, (const char*) r->edx, "Z:/");
 
 	for (int i = strlen(fname) - 1; i; --i) {
 		if (fname[i] == '.' || fname[i] == ':') {
@@ -416,7 +416,7 @@ uint64_t sysCallRealpath(regs* r)
 	}
 
 	char* path = (char*) r->ecx;
-	standardiseFiles((char*) r->edx, path, currentTaskTCB->processRelatedTo->cwd);
+	Fs::standardiseFiles((char*) r->edx, path, currentTaskTCB->processRelatedTo->cwd);
 	return 0;
 }
 
