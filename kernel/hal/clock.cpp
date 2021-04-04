@@ -41,7 +41,7 @@ Clock::~Clock()
 
 time_t Clock::timeInSecondsLocal()
 {
-	using User;
+	using namespace User;
 	return timeInSecondsUTC() + (timezoneHourOffset + dstOn) * 3600 + (timezoneHalfHourOffset ? 1800 : 0);
 }
 
@@ -52,13 +52,13 @@ datetime_t Clock::timeInDatetimeLocal()
 
 bool Clock::setTimeInSecondsLocal(time_t t)
 {
-	using User;
+	using namespace User;
 	return setTimeInSecondsUTC(t - (timezoneHourOffset + dstOn) * 3600 - (timezoneHalfHourOffset ? 1800 : 0));
 }
 
 bool Clock::setTimeInDatetimeLocal(datetime_t d)
 {
-	using User;
+	using namespace User;
 	return setTimeInSecondsUTC(datetimeToSeconds(d) - (timezoneHourOffset + dstOn) * 3600 - (timezoneHalfHourOffset ? 1800 : 0));
 }
 
