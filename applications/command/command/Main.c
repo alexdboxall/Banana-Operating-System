@@ -1191,22 +1191,54 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 		}
 
 	} else if (!strcasecmp(argv[0], "settimezone") || !strcasecmp(argv[0], "settz") || !strcasecmp(argv[0], "timezone")) {
-		char currtimezone[] = "+10.0	Hobart";
+		FILE* f = fopen("C:/Banana/System/timezone.txt", "r");
 
-		fprintf(out, "Current timezone: ");
-		for (int i = 0; currtimezone[i]; ++i) {
-			if (currtimezone[i] == '\t') {
-				fprintf(out, ", ");
-				continue;
+		fprintf(out, "Please find the ID number of your timezone:\n\n");
+
+		char buffer[256];
+		int lineNum = 0;
+		while (fgets(buffer, 255, f)) {
+			fprintf(out, "    %d: ", lineNum + 1);
+			for (int i = 0; buffer[i]; ++i) {
+				if (buffer[i] == '\n' || buffer[i] == '\r') break;
+				if (buffer[i] == '\t') {
+					fprintf(out, ", ");
+					continue;
+				}
+				fputc(buffer[i], out);
 			}
-			fputc(currtimezone[i], out);
+			fputc('\n', out);
+
+			if ((lineNum % 19) == 18) {
+				fprintf(out, "\nPress ENTER to continue\n");
+				int c = getchar();
+				if (c != '\n') while ((c = getchar()) != '\n' && c != EOF) {}
+				fprintf(out, "\n");
+			}
+			
+			++lineNum;
 		}
 
-		fprintf(out, "\nNew timezone    : ");
+		fclose(f);
+		fflush(stdin);
+		fprintf(out, "\nEnter your timezone ID: ");
 
-		char newtimezone[256];
-		fgets(newtimezone, 255, stdin);
-
+		char num[32];
+		int tzID = -1;
+		fgets(num, 31, stdin);
+		sscanf(num, "%d", &tzID);
+		tzID -= 1;
+		if (tzID == -1 || tzID < 0 || tzID >= lineNum) {
+			fprintf(out, "The timezone was not set.\n");
+		} else {
+			extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
+			int failed = SystemCall(Timezone, tzID, 1, 0);
+			if (failed) {
+				fprintf(out, "The timezone failed to be set.\n");
+			} else {
+				fprintf(out, "The timezone was set.\n", tzID);
+			}
+		}
 
 	} else if (!strcasecmp(argv[0], "setdate") || !strcasecmp(argv[0], "settime")) {
 	retry:;
@@ -1229,21 +1261,18 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 		char line[256];
 		fgets(line, 255, stdin);
 		fflush(stdin);
-		sscanf(line, "%d/%d/%d %d:%d:%d\n", &day, &month, &year, &hour, &minute, &seconds);
+		sscanf(line, "%d/%d/%d %d:%d:%d", &day, &month, &year, &hour, &minute, &seconds);
 
-		printf("%d/%d/%d %d:%d:%d\n", day, month, year, hour, minute, seconds);
-		if (year < 100) {
+		if (year < 100 && year != -1) {
 			year += 2000;
 		}
 
-		if (year != -1) timeinfo->tm_year = year + 1900;
-		if (month != -1) timeinfo->tm_mon = month - 1;
-		if (day != -1) timeinfo->tm_mday = day;
-		if (hour != -1) timeinfo->tm_hour = hour;
-		if (minute != -1) timeinfo->tm_min = minute;
-		if (seconds != -1) timeinfo->tm_sec = seconds;
-
-		printf("%d/%d/%d %d:%d:%d\n", day, month, year, hour, minute, seconds);
+		if (year == -1) year = timeinfo->tm_year + 1900;
+		if (month == -1) month = timeinfo->tm_mon + 1;
+		if (day == -1) day = timeinfo->tm_mday;
+		if (hour == -1) hour = timeinfo->tm_hour;
+		if (minute == -1) minute = timeinfo->tm_min;
+		if (seconds == -1) seconds = timeinfo->tm_sec;
 
 		extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
 		uint32_t b = seconds + minute * 60 + hour * 3600;
@@ -1252,7 +1281,6 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 		int res = SystemCall(SetTime, b, c, d);
 		if (res) {
 			fprintf(out, "The time could not be set.\n");
-
 		} else {
 			fprintf(out, "The time was set.\n");
 		}

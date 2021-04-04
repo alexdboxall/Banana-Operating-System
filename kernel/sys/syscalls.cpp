@@ -23,6 +23,9 @@
 
 uint64_t (*systemCallHandlers[128])(regs* r);
 
+//			int failed = SystemCall(Timezone, tzID, 1, 0);
+
+
 namespace Sys
 {
 	uint64_t yield(regs* r);
@@ -36,6 +39,7 @@ namespace Sys
 
 	uint64_t loadDLL(regs* r);
 	uint64_t setTime(regs* r);
+	uint64_t timezone(regs* r);
 }
 
 int string_ends_with(const char* str, const char* suffix)
@@ -688,6 +692,7 @@ void setupSystemCalls()
 
 	systemCallHandlers[(int) SystemCallNumber::LoadDLL] = Sys::loadDLL;
 	systemCallHandlers[(int) SystemCallNumber::SetTime] = Sys::setTime;
+	systemCallHandlers[(int) SystemCallNumber::Timezone] = Sys::timezone;
 }
 
 uint64_t systemCall(regs* r, void* context)

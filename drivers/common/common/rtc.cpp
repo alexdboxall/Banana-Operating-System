@@ -97,7 +97,7 @@ bool RTC::setTimeInDatetimeUTC(datetime_t d)
 	computer->writeCMOS(0x08, month);
 	computer->writeCMOS(0x09, year);
 
-	rtcTime = datetimeToSeconds(d);
+	completeRTCRefresh();
 	return true;
 }
 

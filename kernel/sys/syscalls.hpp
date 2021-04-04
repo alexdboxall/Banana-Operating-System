@@ -90,6 +90,8 @@ SystemCallNumber
 	GetUnixTime,
 	LoadDLL,
 	SetTime,
+	Timezone,
+
 };
 
 
