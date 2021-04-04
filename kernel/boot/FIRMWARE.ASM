@@ -64,30 +64,33 @@ REAL_MODE_INIT:
 	mov es, ax
 	call do_e820
 
-	mov [fs:0x900], dword 0
-	mov [fs:0x904], dword 0
+	xor eax, eax
+	mov bx, 0xFFFF
+
+	mov [fs:0x900], eax
+	mov [fs:0x904], eax
 
 	;32 bit p-mode code
-	mov [fs:0x908], word 0xFFFF
-	mov [fs:0x90A], word 0
+	mov [fs:0x908], word bx
+	mov [fs:0x90A], word ax
 	mov [fs:0x90C], word 0x9A00
 	mov [fs:0x90E], word 0xCF
 	
 	;32 bit p-mode code
-	mov [fs:0x910], word 0xFFFF
-	mov [fs:0x912], word 0
+	mov [fs:0x910], word bx
+	mov [fs:0x912], word ax
 	mov [fs:0x914], word 0x9200
 	mov [fs:0x916], word 0xCF
 	
 	;16 bit p-mode code
-	mov [fs:0x918], word 0xFFFF
-	mov [fs:0x91A], word 0
+	mov [fs:0x918], word bx
+	mov [fs:0x91A], word ax
 	mov [fs:0x91C], word 0x9A00
 	mov [fs:0x91E], word 0x0F
 
 	;16 bit p-mode data
-	mov [fs:0x920], word 0xFFFF
-	mov [fs:0x922], word 0
+	mov [fs:0x920], word bx
+	mov [fs:0x922], word ax
 	mov [fs:0x924], word 0x9200
 	mov [fs:0x926], word 0x0F
 
