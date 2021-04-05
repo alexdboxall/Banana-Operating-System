@@ -45,7 +45,7 @@ int SATA::open(int _deviceNum, int b, void* _ide)
 	sizeInKBs = 64 * 1024;
 	removable = false;
 
-	//allocate 2 pages
+	//allocate 2 contiguous pages
 	sataPhysAddr = Phys::allocatePage();
 	size_t prev = sataPhysAddr;
 	for (int i = 1; i < 2; ++i) {
