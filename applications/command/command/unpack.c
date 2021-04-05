@@ -4773,3 +4773,190 @@ end:
 
     return 0;
 }
+
+
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <dirent.h>
+#include <string.h>
+#include <unistd.h>
+#include <stdbool.h>
+
+#define OVERWRITE_ALWAYS	0
+#define OVERWRITE_ASK		1
+#define OVERWRITE_ABORT		2
+
+int copytreeX(char* basePath, char* newPath, int overwrite)
+{
+    char* path = calloc(400, 1);
+    char* npath = calloc(400, 1);
+
+    struct dirent* dp;
+    DIR* dir = opendir(basePath);
+
+    if (!dir) return 0;
+
+    while ((dp = readdir(dir)) != NULL) {
+        if (strcmp(dp->d_name, ".") != 0 && strcmp(dp->d_name, "..") != 0) {
+            strcpy(path, basePath);
+            strcat(path, "/");
+            strcat(path, dp->d_name);
+
+            strcpy(npath, newPath);
+            strcat(npath, "/");
+            strcat(npath, dp->d_name);
+
+            if (dp->d_type & DT_DIR) {
+                mkdir(npath, 0700);
+                int res = copytreeX(path, npath, overwrite);
+                if (res) return 1;
+
+            } else {
+                FILE* f = fopen(path, "rb");
+                if (!f) {
+                    fprintf(stderr, "File %s could not be copied.\n", path);
+                    return 1;
+                }
+
+                if (f) {
+                    if (overwrite == OVERWRITE_ABORT || overwrite == OVERWRITE_ASK) {
+                        FILE* check = fopen(npath, "rb");
+                        if (check) {
+                            if (overwrite == OVERWRITE_ABORT) {
+                                fprintf(stderr, "File %s already exists.\n", path);
+                                return 1;
+                            } else {
+                                while (1) {
+                                    printf("File %s already exists.\n Overwrite? Y/N: ", path);
+                                    int c = getchar();
+                                    int d = c;
+                                    while ((c = getchar()) != '\n' && c != EOF) {}
+                                    if (d == 'y' || d == 'Y') {
+                                        break;
+                                    } else if (d == 'n' || d == 'N') {
+                                        return 1;
+                                    }
+                                }
+                            }
+                        }
+                        fclose(check);
+                    }
+
+                    FILE* dest = fopen(npath, "wb");
+                    if (!dest) {
+                        fprintf(stderr, "File %s could not be created.\n", npath);
+                        fclose(f);
+                        return 1;
+                    }
+
+                    int copysize = 65536;
+                    char* m = malloc(copysize);
+                    if (!m) {
+                        fprintf(stderr, "Memory error!\n");
+                        free(path);
+                        free(npath);
+                        return 1;
+                    }
+                    while (1) {
+                        int red = fread(m, 1, copysize, f);
+                        fwrite(m, 1, red, dest);
+                        if (red != copysize) {
+                            break;
+                        }
+                    }
+                    free(m);
+
+                    fclose(f);
+                    fclose(dest);
+                }
+            }
+        }
+    }
+
+    free(path);
+    free(npath);
+
+    closedir(dir);
+    return 0;
+}
+
+int installmain(int argc, char* argv[])
+{
+    if (argc != 2) {
+        printf("Invalid parameters. Expected:\n    install foldername\n");
+        return 1;
+    }
+
+    bool done96 = false;
+
+    int res = chdir(argv[1]);
+    if (res) {
+        printf("Could not enter the package.\n");
+        return 1;
+    }
+
+    res = chdir(sizeof(size_t) == 4 ? "32" : "64");
+    if (res) {
+        done96 = true;
+        res = chdir("96");
+    }
+    if (res) {
+        printf("Package does not support %d bit systems.\n", sizeof(size_t) * 8);
+        return 1;
+    }
+
+redoFor96:
+    ;
+    FILE* pkgscript = fopen("PACKAGE.TXT", "r");
+    if (!pkgscript) {
+        printf("The package is invalid.\n");
+        return 1;
+    }
+
+    int overwrite = OVERWRITE_ALWAYS;
+
+    char line[256];
+    while (fgets(line, 256, pkgscript) != NULL) {
+        char src[5];
+        memset(src, 0, 5);
+        memcpy(src, line, 4);
+        if (line[4] != '\t') {
+            fclose(pkgscript);
+            printf("The package is invalid.\n");
+            return 1;
+        }
+        char* dest = line + 5;
+        mkdir(dest, 0700);		//does not need to succeed
+        while (dest[strlen(dest) - 1] == '\n' || dest[strlen(dest) - 1] == '\r') {
+            dest[strlen(dest) - 1] = 0;
+        }
+
+        char srcdirfull[300];
+        memset(srcdirfull, 0, 300);
+        getcwd(srcdirfull, 256);
+        strcat(srcdirfull, "/");
+        strcat(srcdirfull, src);
+
+        res = copytreeX(srcdirfull, dest, overwrite);
+        if (res) {
+            fclose(pkgscript);
+            printf("An error occured while copying a file.\n");
+            return 1;
+        }
+    }
+
+    if (!done96) {
+        done96 = true;
+        res = chdir("../96");
+        if (!res) {
+            goto redoFor96;
+        }
+    }
+
+    printf("Installed successfully.\n");
+
+    return 0;
+}

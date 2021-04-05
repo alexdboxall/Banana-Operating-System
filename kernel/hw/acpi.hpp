@@ -9,7 +9,7 @@ extern "C" {
 #include "acpica/acpi.h"
 }
 
-#define MAC_PCI_IRQ_ASSIGNMENTS 256
+#define MAC_PCI_IRQ_ASSIGNMENTS 2048
 
 struct MADTHeader
 {
