@@ -17,6 +17,9 @@ protected:
 
 public:
 	SATA();
+
+	size_t sataPhysAddr;
+	size_t sataVirtAddr;
 	
 	int access(uint64_t lba, int count, void* buffer, bool write);
 

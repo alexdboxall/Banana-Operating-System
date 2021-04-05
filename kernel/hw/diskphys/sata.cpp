@@ -4,6 +4,8 @@
 #include "hw/diskctrl/satabus.hpp"
 #include "hw/ports.hpp"
 #include "hw/acpi.hpp"
+#include "core/physmgr.hpp"
+#include "core/virtmgr.hpp"
 #include "core/common.hpp"
 #include "thr/prcssthr.hpp"
 #include "hal/vcache.hpp"
@@ -42,6 +44,10 @@ int SATA::open(int _deviceNum, int b, void* _ide)
 	sectorSize = 512;
 	sizeInKBs = 0;
 
+	sataPhysAddr = Phys::allocatePage();
+	sataVirtAddr = Virt::allocateKernelVirtualPages(1);
+	Virt::getAKernelVAS()->mapPage(sataPhysAddr, sataVirtAddr, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
+
 	//reset the drive
 	kprintf("Starting up a SATA drive!\n");
 
@@ -54,6 +60,9 @@ int SATA::open(int _deviceNum, int b, void* _ide)
 
 int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 {
+	if (count > 1) {
+		panic("SATA need count > 1, NOT IMPLEMENTED");
+	}
 	if (count > 8) {
 		panic("SATA need virt->phys implementation for count > 8");
 	}
@@ -80,33 +89,17 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 	SATABus::HBA_CMD_HEADER* cmdheader = (SATABus::HBA_CMD_HEADER*) spot;
 	cmdheader += slot;
 	cmdheader->cfl = sizeof(SATABus::FIS_REG_H2D) / sizeof(uint32_t);
-	cmdheader->w = 0;										// Read from device
-	cmdheader->prdtl = (uint16_t) ((count - 1) >> 4) + 1;	// PRDT entries count
+	cmdheader->w = 0;			// Read from device
+	cmdheader->prdtl = 1;		// PRDT entries count
 
 	spot = (uint8_t*) (((size_t) cmdheader->ctba) - sbus->AHCI_BASE_PHYS + sbus->AHCI_BASE_VIRT);
 	SATABus::HBA_CMD_TBL* cmdtbl = (SATABus::HBA_CMD_TBL*) spot;
 	memset(cmdtbl, 0, sizeof(SATABus::HBA_CMD_TBL) +
 		   (cmdheader->prdtl - 1) * sizeof(SATABus::HBA_PRDT_ENTRY));
 
-	// 8K bytes (16 sectors) per PRDT
-	int i = 0;
-	/*for (; i < cmdheader->prdtl - 1; i++) {
-		cmdtbl->prdt_entry[i].dba = (uint32_t) buff2;
-		cmdtbl->prdt_entry[i].dbc = 8 * 1024 - 1;	// 8K bytes (this value should always be set to 1 less than the actual value)
-		cmdtbl->prdt_entry[i].i = 1;
-		buff2 += 4 * 1024;	// 4K words
-		count -= 16;	// 16 sectors
-	}*/
-	// Last entry
-	cmdtbl->prdt_entry[i].dba = (uint32_t) buf;
-	cmdtbl->prdt_entry[i].dbc = 511;	// 512 bytes per sector
-	cmdtbl->prdt_entry[i].i = 1;
-
-	for (i = 1; i < 16; ++i) {
-		cmdtbl->prdt_entry[i].dba = (uint32_t) (size_t) buf2;
-		cmdtbl->prdt_entry[i].dbc = 0;    // 512 bytes per sector
-		cmdtbl->prdt_entry[i].i = 0;
-	}
+	cmdtbl->prdt_entry[0].dba = sataPhysAddr;	//data base address
+	cmdtbl->prdt_entry[0].dbc = 511;			// 512 bytes per sector
+	cmdtbl->prdt_entry[0].i = 1;				//interrupt when done
 
 	// Setup command
 	SATABus::FIS_REG_H2D* cmdfis = (SATABus::FIS_REG_H2D*) (&cmdtbl->cfis);
@@ -157,6 +150,9 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 		panic("Read disk error\n");
 		return 1;
 	}
+
+	kprintf("phys buffer = 0x%X\n", sataPhysAddr);
+	kprintf("virt buffer = 0x%X\n", sataVirtAddr);
 
 	panic("For debugging, please check the buffer.\n");
 	while (1) {
