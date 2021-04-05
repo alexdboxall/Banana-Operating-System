@@ -124,7 +124,6 @@ public:
 	PCIIRQAssignments getPCIIRQAssignment(uint8_t bus, uint16_t slot, uint8_t pin);
 
 	PCIIRQAssignments pciIRQAssignments[MAC_PCI_IRQ_ASSIGNMENTS];
-
 	int nextPCIIRQAssignment = 0;
 
 	struct ScreenControlInfo

@@ -324,8 +324,10 @@ PCIIRQAssignments ACPI::getPCIIRQAssignment(uint8_t bus, uint16_t slot, uint8_t 
 
 void ACPI::registerPCIIRQAssignment(ACPI_HANDLE handle, uint16_t slot, uint8_t pin, uint8_t irq)
 {
-	pciIRQAssignments[nextPCIIRQAssignment].interrupt = irq;
-	/*pciIRQAssignments[nextPCIIRQAssignment].slot = slot;
+	kprintf("pciIRQAssignments[%d] is at 0x%X\n", nextPCIIRQAssignment, &pciIRQAssignments[nextPCIIRQAssignment]);
+
+	/*pciIRQAssignments[nextPCIIRQAssignment].interrupt = irq;
+	pciIRQAssignments[nextPCIIRQAssignment].slot = slot;
 	pciIRQAssignments[nextPCIIRQAssignment].pin = pin + 1;
 	pciIRQAssignments[nextPCIIRQAssignment].rootBus = handle;*/
 	++nextPCIIRQAssignment;
