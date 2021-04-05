@@ -319,11 +319,11 @@ memmove (
 #include <stddef.h>
 void *
 memcpy (
-    void                    * destination,
-    const void              * source,
-    ACPI_SIZE               num)
+    void                    * Dest /*destination*/,
+    const void              * Src /*source*/,
+    ACPI_SIZE               Count /*num*/)
 {
-	const void* osource = source;
+	/*const void* osource = source;
 	void* odest = destination;
 	//extern void __memcpy_debug(void*, void*, size_t);
 	//__memcpy_debug(destination, (void*) source, (size_t) num);
@@ -336,9 +336,9 @@ memcpy (
 		*(((uint8_t*) odest) + bytesdone + i) = *(((uint8_t*) osource) + bytesdone + i);
 	}
 
-	return odest;
+	return odest;*/
 
-    /*char                    *New = (char *) Dest;
+    char                    *New = (char *) Dest;
     char                    *Old = (char *) Src;
 
 
@@ -350,7 +350,7 @@ memcpy (
         Count--;
     }
 
-    return (Dest);*/
+    return (Dest);
 }
 
 
