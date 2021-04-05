@@ -302,12 +302,12 @@ UINT32 acpiWalkCallback(ACPI_HANDLE object, UINT32 nestingLevel, void* context, 
 
 		ACPI_PCI_ROUTING_TABLE* table = (ACPI_PCI_ROUTING_TABLE*) prtbuf.Pointer;
 		for (; table->Length; table = (ACPI_PCI_ROUTING_TABLE*) (((uint8_t*) table) + table->Length)) {
-
 			if (table->Source[0] == 0) {
 				kprintf("table->Source[0] == 0\n");
 				acpi->registerPCIIRQAssignment(object, table->Address >> 16, table->Pin + 1, table->SourceIndex);
 
 			} else {
+				kprintf("table = 0x%X, table->Source = 0x%X\n", table, table->Source);
 				kprintf("table->Source = %s\n", table->Source);
 
 				ACPI_HANDLE link;
@@ -328,7 +328,9 @@ UINT32 acpiWalkCallback(ACPI_HANDLE object, UINT32 nestingLevel, void* context, 
 					kprintf("[acpiWalkCallback] AcpiWalkResources (status = 0x%X)\n", (int) status);
 				} else {
 					kprintf("Not a failure!\n");
+				
 				}
+
 			}
 		}
 	}

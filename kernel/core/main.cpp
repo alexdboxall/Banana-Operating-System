@@ -207,7 +207,7 @@ extern "C" void kernel_main()
 	outb(0x3f8 + 2, 0xC7);    // Enable FIFO, clear them, with 14-byte threshold
 	outb(0x3f8 + 4, 0x0B);    // IRQs enabled, RTS/DSR set
 
-	kprintf("\nKERNEL HAS STARTED.\n");
+	kprintf("\n\nKERNEL HAS STARTED.\n");
 
 	size_t highestFreeAddr = *((uint32_t*) 0x524);
 	highestFreeAddr = (highestFreeAddr + 4095) & ~0xFFF;
