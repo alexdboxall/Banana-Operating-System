@@ -19,10 +19,6 @@ namespace Krnl
 	void (*guiProgramFaultHandler)();
 
 	void panic(const char* message) {
-		if (guiPanicHandler) {
-			guiPanicHandler();
-		}
-
 		asm("cli");
 		kernelInPanic = true;
 
@@ -43,7 +39,11 @@ namespace Krnl
 		kernelProcess->terminal->puts(message);
 		kernelProcess->terminal->puts("\n\n");
 
-		char* drvName = Thr::getDriverNameFromAddress(__builtin_return_address(0));
+		if (guiPanicHandler) {
+			guiPanicHandler();
+		}
+
+		char* drvName = Thr::getDriverNameFromAddress((size_t) __builtin_return_address(0));
 		if (drvName) {
 			kernelProcess->terminal->puts("      The currently executing driver was:\n\n");
 			kernelProcess->terminal->puts("          ");
