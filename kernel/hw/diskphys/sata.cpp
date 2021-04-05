@@ -151,13 +151,7 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 		return 1;
 	}
 
-	kprintf("phys buffer = 0x%X\n", sataPhysAddr);
-	kprintf("virt buffer = 0x%X\n", sataVirtAddr);
-
-	panic("For debugging, please check the buffer.\n");
-	while (1) {
-	}
-
+	memcpy(buffer, (const void*) sataVirtAddr, 512);
 	return 0;
 }
 
