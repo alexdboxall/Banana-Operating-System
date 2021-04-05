@@ -43,7 +43,7 @@ namespace Krnl
 		kernelProcess->terminal->puts(message);
 		kernelProcess->terminal->puts("\n\n");
 
-		char* drvName = getDriverNameFromAddress(__builtin_return_address(0));
+		char* drvName = Thr::getDriverNameFromAddress(__builtin_return_address(0));
 		if (drvName) {
 			kernelProcess->terminal->puts("      The currently executing driver was:\n\n");
 			kernelProcess->terminal->puts("          ");
