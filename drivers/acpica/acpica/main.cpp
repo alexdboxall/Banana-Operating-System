@@ -384,6 +384,7 @@ void start(void* xxa)
 	ths->nextScreenControl = 0;
 
 	ACPI_STATUS a = AcpiInitializeSubsystem();
+	if (ACPI_FAILURE(a)) panic("FAILURE AcpiInitializeSubsystem");
 
 	a = AcpiInitializeTables(nullptr, 16, true);
 	if (ACPI_FAILURE(a)) panic("FAILURE AcpiInitializeTables");
@@ -412,14 +413,14 @@ void start(void* xxa)
 	ACPI_STATUS status;
 	if (computer->features.hasAPIC) {
 		ACPI_OBJECT_LIST params;
-		ACPI_OBJECT arg[1];
+		ACPI_OBJECT arg;
 
 		params.Count = 1;
-		params.Pointer = arg;
+		params.Pointer = &arg;
 
-		arg[0].Type = ACPI_TYPE_INTEGER;
-		arg[0].Integer.Value = CPU::current()->intCtrl->getName()[0] == 'A';
-		kprintf("value = %d\n", arg[0].Integer.Value);
+		arg.Type = ACPI_TYPE_INTEGER;
+		arg.Integer.Value = CPU::current()->intCtrl->getName()[0] == 'A';
+		kprintf("value = %d\n", arg.Integer.Value);
 
 		status = AcpiEvaluateObject(NULL, (ACPI_STRING) "\\_PIC", &params, NULL);
 		if (ACPI_FAILURE(status) && status != AE_NOT_FOUND) {
