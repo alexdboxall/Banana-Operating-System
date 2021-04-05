@@ -126,6 +126,7 @@ int ATAPI::open(int __a, int _ideDeviceNum, void* _ide)
 	channel = ide->devices[ideDeviceNum].channel;
 	drive = ide->devices[ideDeviceNum].drive;
 	sectorSize = 2048;
+	removable = true;
 
 	//reset the drive
 	ide->write(channel, ATA_REG_CONTROL, 4);
