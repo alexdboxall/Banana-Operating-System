@@ -71,6 +71,9 @@ int Computer::open(int a, int b, void* vas)
 	}
 	
 	root = new ACPI();
+	kprintf("this (computer) = 0x%X\n", this);
+	kprintf("Krnl::computer  = 0x%X (*MUST* be the same as above)\n", Krnl::computer);
+	kprintf("root            = 0x%X (*MUST* be the DIFFERENT)\n", root);
 	addChild(root);
 
 	detectFeatures();

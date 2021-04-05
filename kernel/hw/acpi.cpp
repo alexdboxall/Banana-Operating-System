@@ -405,7 +405,7 @@ int ACPI::open(int mode, int, void*)
 	if (computer->features.hasACPI) {
 		File* f = new File("C:/Banana/Drivers/acpica.sys", kernelProcess);
 		if (f && f->exists()) {
-			Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/acpica.sys"), computer);
+			Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/acpica.sys"), this);
 		}
 		if (f) {
 			delete f;
