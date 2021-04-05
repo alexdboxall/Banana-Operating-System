@@ -149,8 +149,10 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 		return 1;
 	}
 
-	kprintf("disk read done.\n");
+	kprintf("sata disk read done.\n");
 	memcpy(buffer, (const void*) sataVirtAddr, 512);
+	kprintf("check buffer @ 0x%X\n", buffer);
+	while (1);
 	return 0;
 }
 
