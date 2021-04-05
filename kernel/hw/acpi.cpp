@@ -324,17 +324,10 @@ PCIIRQAssignments ACPI::getPCIIRQAssignment(uint8_t bus, uint16_t slot, uint8_t 
 
 void ACPI::registerPCIIRQAssignment(ACPI_HANDLE handle, uint16_t slot, uint8_t pin, uint8_t irq)
 {
-	kprintf("this = 0x%X\n", this);
-	kprintf("pciIRQAssignments[%d] is at 0x%X\n", nextPCIIRQAssignment, &pciIRQAssignments[nextPCIIRQAssignment]);
-	kprintf("pciIRQAssignments[%d].interrupt is at 0x%X\n", nextPCIIRQAssignment, &pciIRQAssignments[nextPCIIRQAssignment].interrupt);
-	kprintf("pciIRQAssignments[%d].slot      is at 0x%X\n", nextPCIIRQAssignment, &pciIRQAssignments[nextPCIIRQAssignment].slot);
-	kprintf("pciIRQAssignments[%d].pin       is at 0x%X\n", nextPCIIRQAssignment, &pciIRQAssignments[nextPCIIRQAssignment].pin);
-	kprintf("pciIRQAssignments[%d].rootBus   is at 0x%X\n", nextPCIIRQAssignment, &pciIRQAssignments[nextPCIIRQAssignment].rootBus);
-
-	/*pciIRQAssignments[nextPCIIRQAssignment].interrupt = irq;
+	pciIRQAssignments[nextPCIIRQAssignment].interrupt = irq;
 	pciIRQAssignments[nextPCIIRQAssignment].slot = slot;
 	pciIRQAssignments[nextPCIIRQAssignment].pin = pin + 1;
-	pciIRQAssignments[nextPCIIRQAssignment].rootBus = handle;*/
+	pciIRQAssignments[nextPCIIRQAssignment].rootBus = handle;
 	++nextPCIIRQAssignment;
 
 	if (nextPCIIRQAssignment == MAC_PCI_IRQ_ASSIGNMENTS) {
