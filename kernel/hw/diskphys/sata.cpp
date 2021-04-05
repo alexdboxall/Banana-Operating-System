@@ -60,6 +60,9 @@ int SATA::open(int _deviceNum, int b, void* _ide)
 
 int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 {
+	if (write) {
+		panic("SATA::access write not implemented");
+	}
 	if (count > 1) {
 		panic("SATA need count > 1, NOT IMPLEMENTED");
 	}
