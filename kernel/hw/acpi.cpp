@@ -324,11 +324,6 @@ PCIIRQAssignments ACPI::getPCIIRQAssignment(uint8_t bus, uint16_t slot, uint8_t 
 
 void ACPI::registerPCIIRQAssignment(ACPI_HANDLE handle, uint16_t slot, uint8_t pin, uint8_t irq)
 {
-	return;
-
-	lockScheduler();
-
-	kprintf("registering assignment: handle = 0x%X, slot = %d, pin = %d, irq = %d, next = %d, pciIRQs = 0x%X\n", handle, slot, pin, irq, nextPCIIRQAssignment, pciIRQAssignments);
 	pciIRQAssignments[nextPCIIRQAssignment].interrupt = irq;
 	pciIRQAssignments[nextPCIIRQAssignment].slot = slot;
 	pciIRQAssignments[nextPCIIRQAssignment].pin = pin + 1;
@@ -338,9 +333,6 @@ void ACPI::registerPCIIRQAssignment(ACPI_HANDLE handle, uint16_t slot, uint8_t p
 	if (nextPCIIRQAssignment == MAC_PCI_IRQ_ASSIGNMENTS) {
 		panic("TOO MANY PCI IRQ ASSIGNMENTS");
 	}
-
-	kprintf("assignment registered (%d).\n", nextPCIIRQAssignment - 1);
-	unlockScheduler();
 }
 
 ACPI_STATUS ACPI::setScreenBrightnessLevel(ACPI_HANDLE screenObj, int level)
