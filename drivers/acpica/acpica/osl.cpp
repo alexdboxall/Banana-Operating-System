@@ -618,9 +618,9 @@ extern "C" {
 
 	int __i_internal_printf(const char*  format, va_list list, FILE* stream, char* buffer, int size)
 	{
-		return 0;
+		//return 0;
 
-		/*int chars = 0;
+		int chars = 0;
 		char intStrBuffer[256] = { 0 };
 
 		char plainCharBuffer[1024] = { 0 };
@@ -946,7 +946,7 @@ extern "C" {
 					break;
 				}
 
-				case 'e':
+				/*case 'e':
 				case 'E':
 					emode = true;
 					__attribute__((fallthrough));
@@ -1005,7 +1005,7 @@ extern "C" {
 					}
 
 					break;
-				}
+				}*/
 
 
 				case 'a':
@@ -1017,7 +1017,7 @@ extern "C" {
 					break;
 				}
 
-				if (specifier == 'e') {
+				/*if (specifier == 'e') {
 					__i_displayString((char*) "e+", &chars, stream, buffer, size);
 				} else if (specifier == 'E') {
 					__i_displayString((char*) "E+", &chars, stream, buffer, size);
@@ -1026,7 +1026,7 @@ extern "C" {
 				if (specifier == 'e' || specifier == 'E') {
 					__i__int_str(expo, intStrBuffer, 10, false, false, 2, false, true);
 					__i_displayString(intStrBuffer, &chars, stream, buffer, size);
-				}
+				}*/
 
 			} else {
 				int ln = strlen(plainCharBuffer);
@@ -1056,13 +1056,13 @@ extern "C" {
 			__i_displayCharacter(0, &dummy, stream, buffer, size);
 		}
 
-		return chars;*/
+		return chars;
 	}
 
 
 	void AcpiOsVprintf(const char* format, va_list list)
 	{
-		//__i_internal_printf(format, list, nullptr, nullptr, 0);
+		__i_internal_printf(format, list, nullptr, nullptr, 0);
 	}
 
 	void AcpiOsPrintf(const char* format, ...)
