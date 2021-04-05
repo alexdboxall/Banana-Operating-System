@@ -189,6 +189,7 @@ int ATA::open(int __a, int _ideDeviceNum, void* _ide)
 	channel = ide->devices[ideDeviceNum].channel;
 	drive = ide->devices[ideDeviceNum].drive;
 	sectorSize = 512;
+	removable = false;
 
 	//set disk size
 	if (!ide->devices[ideDeviceNum].hasLBA) {

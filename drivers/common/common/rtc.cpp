@@ -113,6 +113,7 @@ void RTC::completeRTCRefresh()
 
 	extern uint64_t nanoSinceBoot;
 
+	panic("<< testing panic handler >> (rtc.cpp)");
 	uint64_t startTime = nanoSinceBoot;
 	while (get_update_in_progress_flag()) {
 		//wait until it becomes set

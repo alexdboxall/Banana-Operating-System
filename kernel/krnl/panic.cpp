@@ -42,9 +42,17 @@ namespace Krnl
 		kernelProcess->terminal->puts("          ");
 		kernelProcess->terminal->puts(message);
 		kernelProcess->terminal->puts("\n\n");
-		kernelProcess->terminal->puts("      The currently executing task was:\n\n");
-		kernelProcess->terminal->puts("          ");
-		kernelProcess->terminal->puts(currentTaskTCB->processRelatedTo->taskname);
+
+		char* drvName = getDriverNameFromAddress(__builtin_return_address(0));
+		if (drvName) {
+			kernelProcess->terminal->puts("      The currently executing driver was:\n\n");
+			kernelProcess->terminal->puts("          ");
+			kernelProcess->terminal->puts(drvName);
+		} else {
+			kernelProcess->terminal->puts("      The currently executing task was:\n\n");
+			kernelProcess->terminal->puts("          ");
+			kernelProcess->terminal->puts(currentTaskTCB->processRelatedTo->taskname);
+		}
 
 		kernelProcess->terminal->puts("\n\n\n");
 		kernelProcess->terminal->puts("      Please restart your computer or press RETURN. If this\n");

@@ -43,6 +43,7 @@ int SATA::open(int _deviceNum, int b, void* _ide)
 	deviceNum = _deviceNum;
 	sectorSize = 512;
 	sizeInKBs = 64 * 1024;
+	removable = false;
 
 	sataPhysAddr = Phys::allocatePage();
 	sataVirtAddr = Virt::allocateKernelVirtualPages(1);
