@@ -127,8 +127,6 @@ public:
 
 	int nextPCIIRQAssignment = 0;
 
-
-
 	struct ScreenControlInfo
 	{
 		ACPI_HANDLE handle;
