@@ -62,9 +62,6 @@ int SATA::open(int _deviceNum, int b, void* _ide)
 int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 {
 	kprintf("Access lba = 0x%X, count = %d, buffer = 0x%X, %s\n", (uint32_t) lba, count, buffer, write ? "write" : "read");
-	if (write) {
-		panic("SATA::access write not implemented");
-	}
 	if (count > 1) {
 		panic("SATA need count > 1, NOT IMPLEMENTED");
 	}
@@ -83,6 +80,10 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 	kprintf("slot %d\n", slot);
 	if (slot == -1) {
 		return 1;
+	}
+
+	if (write) {
+		memcpy((void*) sataVirtAddr, buffer, 512);
 	}
 
 	uint8_t* spot = (uint8_t*) (((size_t) port->clb) - sbus->AHCI_BASE_PHYS + sbus->AHCI_BASE_VIRT);
@@ -106,7 +107,7 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 	cmdfis->fis_type = SATABus::FIS_TYPE_REG_H2D;
 	cmdfis->c = 1;	// Command
-	cmdfis->command = ATA_CMD_READ_DMA_EXT;
+	cmdfis->command = write ? ATA_CMD_WRITE_DMA_EXT : ATA_CMD_READ_DMA_EXT;
 
 	cmdfis->lba0 = (uint8_t) startl;
 	cmdfis->lba1 = (uint8_t) (startl >> 8);
@@ -151,8 +152,10 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 		return 1;
 	}
 
-	kprintf("sata disk read done.\n");
-	memcpy(buffer, (const void*) sataVirtAddr, 512);
+	kprintf("sata disk access done.\n");
+	if (!write) {
+		memcpy(buffer, (const void*) sataVirtAddr, 512);
+	}
 	return 0;
 }
 
