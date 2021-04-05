@@ -60,6 +60,7 @@ int SATA::open(int _deviceNum, int b, void* _ide)
 
 int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 {
+	kprintf("Access lba = 0x%X, count = %d, buffer = 0x%X, %s\n", (uint32_t) lba, count, buffer, write ? "write" : "read");
 	if (write) {
 		panic("SATA::access write not implemented");
 	}
