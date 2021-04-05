@@ -64,6 +64,11 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 	kprintf("Access lba = 0x%X, count = %d, buffer = 0x%X, %s\n", (uint32_t) lba, count, buffer, write ? "write" : "read");
 	if (count > 1) {
 		kprintf("COUNT = %d\n", count);
+		while (count--) {
+			access(lba++, 1, buffer, write);
+			buffer = (void*) (((uint8_t*) buffer) + 512);
+		}
+		return 0;
 		panic("SATA need count > 1, NOT IMPLEMENTED");
 	}
 	if (count > 8) {
@@ -135,7 +140,6 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 	// Wait for completion
 	while (1) {
-		kprintf("spinning...\n");
 		// In some longer duration reads, it may be helpful to spin on the DPS bit 
 		// in the PxIS port field as well (1 << 5)
 		if ((port->ci & (1 << slot)) == 0)
