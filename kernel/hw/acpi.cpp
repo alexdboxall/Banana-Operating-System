@@ -334,6 +334,8 @@ void ACPI::registerPCIIRQAssignment(ACPI_HANDLE handle, uint16_t slot, uint8_t p
 	if (nextPCIIRQAssignment == 2048) {
 		panic("TOO MANY PCI IRQ ASSIGNMENTS");
 	}
+
+	kprintf("assignment registered.\n");
 }
 
 ACPI_STATUS ACPI::setScreenBrightnessLevel(ACPI_HANDLE screenObj, int level)

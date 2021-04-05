@@ -212,19 +212,29 @@ UINT32 acpiDynamicIrqCallback(ACPI_RESOURCE* resource, void* context)
 {
 	kprintf("dynamic callback.\n");
 	ACPIDynamicIRQCallbackContext* ctxt = (ACPIDynamicIRQCallbackContext*) context;
+	kprintf("A.\n");
 
 	ACPI* acpi = ctxt->acpi;
 	ACPI_HANDLE pciRootBus = ctxt->pciRootBus;
 	ACPI_PCI_ROUTING_TABLE* table = ctxt->table;
+	kprintf("B.\n");
 
 	if (resource->Type == ACPI_RESOURCE_TYPE_IRQ) {
+		kprintf("C.\n");
 		ACPI_RESOURCE_IRQ* irq = &resource->Data.Irq;
+		kprintf("D.\n");
 		acpi->registerPCIIRQAssignment(pciRootBus, table->Address >> 16, table->Pin, irq->Interrupts[table->SourceIndex]);
+		kprintf("E.\n");
 
 	} else if (resource->Type == ACPI_RESOURCE_TYPE_EXTENDED_IRQ) {
+		kprintf("F.\n");
 		ACPI_RESOURCE_EXTENDED_IRQ* xirq = &resource->Data.ExtendedIrq;
+		kprintf("G.\n");
 		acpi->registerPCIIRQAssignment(pciRootBus, table->Address >> 16, table->Pin, xirq->Interrupts[table->SourceIndex]);
+		kprintf("H.\n");
 	}
+
+	kprintf("I.\n");
 
 	return AE_OK;
 }
