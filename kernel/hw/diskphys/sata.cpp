@@ -151,8 +151,6 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 	kprintf("sata disk read done.\n");
 	memcpy(buffer, (const void*) sataVirtAddr, 512);
-	kprintf("check buffer @ 0x%X\n", buffer);
-	while (1);
 	return 0;
 }
 
@@ -179,6 +177,9 @@ int SATA::read(uint64_t lba, int count, void* buffer)
 	ataSectorsRead += count;
 	VgaText::updateDiskUsage();
 #endif
+
+	kprintf("check buffer @ 0x%X\n", buffer);
+	while (1);
 
 	return (int) DiskError::Success;
 }
