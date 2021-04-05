@@ -246,6 +246,7 @@ namespace Thr
 		File* f = new File(filename, p);
 		FileStatus status = f->open(FileOpenMode::Read);
 		if (status != FileStatus::Success) {
+			panic("KERNEL FILE CAN'T LOAD");
 			return false;
 		}
 

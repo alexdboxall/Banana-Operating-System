@@ -180,7 +180,6 @@ int SATA::read(uint64_t lba, int count, void* buffer)
 #endif
 
 	kprintf("check buffer @ 0x%X\n", buffer);
-	while (1);
 
 	return (int) DiskError::Success;
 }
