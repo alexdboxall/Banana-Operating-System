@@ -542,7 +542,8 @@ void opcodeFault(regs* r, void* context)
 	}
 
 	kprintf("Invalid Opcode!\n");
-	kprintf("OPCODE: 0x%X (then 0x%X %X %X)\n", *((uint8_t*) (0 + r->eip + r->cs * 16)), *((uint8_t*) (1 + r->eip + r->cs * 16)), *((uint8_t*) (2 + r->eip + r->cs * 16)), *((uint8_t*) (3 + r->eip + r->cs * 16)));
+	kprintf("OPCODE vm86: 0x%X (then 0x%X %X %X)\n", *((uint8_t*) (0 + r->eip + r->cs * 16)), *((uint8_t*) (1 + r->eip + r->cs * 16)), *((uint8_t*) (2 + r->eip + r->cs * 16)), *((uint8_t*) (3 + r->eip + r->cs * 16)));
+	kprintf("OPCODE i386: 0x%X (then 0x%X %X %X)\n", *((uint8_t*) (0 + r->eip)), *((uint8_t*) (1 + r->eip)), *((uint8_t*) (2 + r->eip)), *((uint8_t*) (3 + r->eip)));
 
 	displayDebugInfo(r);
 	displayProgramFault("Opcode fault");
