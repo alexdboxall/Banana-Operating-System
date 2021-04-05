@@ -9,6 +9,8 @@ extern "C" {
 #include "acpica/acpi.h"
 }
 
+#define MAC_PCI_IRQ_ASSIGNMENTS 256
+
 struct MADTHeader
 {
 	char Signature[4];
@@ -121,7 +123,7 @@ public:
 
 	PCIIRQAssignments getPCIIRQAssignment(uint8_t bus, uint16_t slot, uint8_t pin);
 
-	PCIIRQAssignments pciIRQAssignments[1024];
+	PCIIRQAssignments pciIRQAssignments[MAC_PCI_IRQ_ASSIGNMENTS];
 
 	int nextPCIIRQAssignment = 0;
 
@@ -148,7 +150,6 @@ public:
 
 	bool pciDetected = false;
 	bool pciAccessMech1 = false;
-
 
 	ACPI_STATUS setScreenBrightnessLevel(ACPI_HANDLE screenObj, int level);
 
