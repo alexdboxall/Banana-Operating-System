@@ -279,6 +279,14 @@ void displayDebugInfo(regs* r)
 	kernelProcess->terminal->putx((uint32_t) CPU::readDR6());
 	kernelProcess->terminal->puts("\n DR7: ");
 	kernelProcess->terminal->putx((uint32_t) CPU::readDR7());
+
+	char* drvName = Thr::getDriverNameFromAddress((size_t) r->eip);
+	if (drvName) {
+		kernelProcess->terminal->puts("\n\n DRIVER: ");
+		kernelProcess->terminal->puts(drvName);
+		kprintf("\n DRIVER: %s\n", drvName);
+	}
+
 	asm("cli;hlt;");
 	while (1);
 
