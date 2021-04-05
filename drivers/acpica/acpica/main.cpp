@@ -28,6 +28,7 @@ extern "C" {
 void start(void* s);
 void begin(void* s)
 {
+	kprintf("begin ACPICA.\n");
 	start(s);
 }
 
@@ -47,7 +48,7 @@ void acpiGlobalEventHandler(uint32_t type, ACPI_HANDLE device, uint32_t number, 
 char currentACPIWalkPath[256];
 
 int wait = 0;
-UINT32 acpiWalkDescendingCallback23456789(ACPI_HANDLE object, UINT32 nestingLevel, void* context, void** returnValue)
+UINT32 acpiWalkDescendingCallback(ACPI_HANDLE object, UINT32 nestingLevel, void* context, void** returnValue)
 {
 	ACPI* acpi = (ACPI*) context;
 
@@ -209,6 +210,7 @@ struct ACPIDynamicIRQCallbackContext
 
 UINT32 acpiDynamicIrqCallback(ACPI_RESOURCE* resource, void* context)
 {
+	kprintf("dynamic callback.\n");
 	ACPIDynamicIRQCallbackContext* ctxt = (ACPIDynamicIRQCallbackContext*) context;
 
 	ACPI* acpi = ctxt->acpi;
@@ -227,7 +229,28 @@ UINT32 acpiDynamicIrqCallback(ACPI_RESOURCE* resource, void* context)
 	return AE_OK;
 }
 
-//http://cinnabar.sosdg.org/~qiyong/qxr/minix3/source/minix/drivers/power/acpi/pci.c#L147
+// http://cinnabar.sosdg.org/~qiyong/qxr/minix3/source/minix/drivers/power/acpi/pci.c#L147
+
+/*
+The process is essentially:
+
+1) Initialize the namespace (\\_SB_._INI) followed by all devices whose _STA method reports they are present and/or functional.
+
+2) Execute \\_PIC(1) to inform ACPI that you are using the IOAPIC (this is required otherwise it will probably give you the wrong IRQ routing tables).
+
+3) Find the PCI root bridge (_HID = EisaId(PNP0A03))
+
+4) Execute its _PRT method. This will return a Package object (which is ACPI-speak for an array) containing many other package objects. Iterate through each of them and the first entry is the PCI device number in the format (dev_num << 16) | 0xffff. The second is the PCI pin number (1 = INTA#, 2 = INTB#, 3 = INTC#, 4 = INTD#). You then need to match them up with what you found during PCI enumeration (e.g. if device 5 has the interrupt pin entry of its PCI configuration space being 3, you'd look for an entry in the _PRT response with the first item being 0x0005ffff and the second being 0x3). Look up the _PRT method in the spec for further info.
+
+5) Once you've found the correct method, then examine the third entry of the _PRT response for that device:
+5a) If it is an Integer with value Zero, then the 4th entry is an Integer whose value is the Global System Interrupt that device uses. Once you know this, you find which IOAPIC it points to and the pin on that IOAPIC. To do this, iterate through the MADT table looking for an IOAPIC with its gsibase field being less than and within 24 of the value you're looking for. Typically you have only one IOAPIC with gsibase being zero. Thus a GSI of 16 means pin 16 on IOAPIC 1.
+
+5b) If it is a string, it is the name of another object in the namespace (a PCI IRQ Link object, e.g. \\_SB_\LNKA). You need to execute the _CRS method of this object to find out what interrupt it uses. You will want to read the spec to see the layout of the response. This will typically give you an ISA IRQ to use, and you will have to parse MADT again looking for InterruptSourceOverride structures that will convert this ISA IRQ to a GSI. If there is none, then GSI = ISA IRQ.
+
+6) Choose a free interrupt vector in a particular CPU's IDT and program the handler into it.
+
+7) Program the appropriate pin on the appropriate IOAPIC to route to the particular vector on the particular processor.
+*/
 
 UINT32 acpiWalkCallback(ACPI_HANDLE object, UINT32 nestingLevel, void* context, void** returnValue)
 {
@@ -246,6 +269,7 @@ UINT32 acpiWalkCallback(ACPI_HANDLE object, UINT32 nestingLevel, void* context, 
 	char name[5];
 	memcpy((void*) name, &info->Name, 4);
 	name[4] = 0;
+	kprintf("acpiWalkCallback name = %s\n", name);
 
 	if ((info->Flags & ACPI_PCI_ROOT_BRIDGE) && name[0] == 'P') {
 		acpi->pciDetected = true;
@@ -270,14 +294,19 @@ UINT32 acpiWalkCallback(ACPI_HANDLE object, UINT32 nestingLevel, void* context, 
 		for (; table->Length; table = (ACPI_PCI_ROUTING_TABLE*) (((uint8_t*) table) + table->Length)) {
 
 			if (table->Source[0] == 0) {
+				kprintf("table->Source[0] == 0\n");
 				acpi->registerPCIIRQAssignment(object, table->Address >> 16, table->Pin + 1, table->SourceIndex);
 
 			} else {
+				kprintf("table->Source = %s\n", table->Source);
+
 				ACPI_HANDLE link;
 				status = AcpiGetHandle(object, table->Source, &link);
 				if (ACPI_FAILURE(status)) {
 					panic("[acpiWalkCallback] AcpiGetHandle");
 				}
+
+				kprintf("link = 0x%X\n", link);
 
 				ACPIDynamicIRQCallbackContext ctxt;
 				ctxt.acpi = acpi;
@@ -286,7 +315,9 @@ UINT32 acpiWalkCallback(ACPI_HANDLE object, UINT32 nestingLevel, void* context, 
 
 				status = AcpiWalkResources(link, (char*) "_CRS", acpiDynamicIrqCallback, (void*) &ctxt);
 				if (ACPI_FAILURE(status)) {
-					panic("[acpiWalkCallback] AcpiWalkResources");
+					kprintf("[acpiWalkCallback] AcpiWalkResources (status = 0x%X)\n", (int) status);
+				} else {
+					kprintf("Not a failure!\n");
 				}
 			}
 		}
@@ -388,14 +419,22 @@ void start(void* xxa)
 
 		arg[0].Type = ACPI_TYPE_INTEGER;
 		arg[0].Integer.Value = CPU::current()->intCtrl->getName()[0] == 'A';
+		kprintf("value = %d\n", arg[0].Integer.Value);
 
 		status = AcpiEvaluateObject(NULL, (ACPI_STRING) "\\_PIC", &params, NULL);
 		if (ACPI_FAILURE(status) && status != AE_NOT_FOUND) {
 			kprintf("status = 0x%X\n", status);
 			panic("ACPI failure AcpiEvaluateObject(_PIC)");
-		}
-	}
 
+		} else if (status == AE_NOT_FOUND) {
+			kprintf("_PIC method not found.\n");
+
+		} else {
+			kprintf("_PIC method success.\n");
+		}
+	} else {
+		kprintf("Computer not using APIC.\n");
+	}
 
 	AcpiWriteBitRegister(ACPI_BITREG_SCI_ENABLE, 1);
 
@@ -405,14 +444,12 @@ void start(void* xxa)
 	a = AcpiEnableEvent(ACPI_EVENT_SLEEP_BUTTON, 0);
 	a = AcpiEnableEvent(ACPI_EVENT_POWER_BUTTON, 0);
 
-	return;
-
-	/*void* ret;
+	void* ret;
 	status = AcpiGetDevices(nullptr, (ACPI_WALK_CALLBACK) acpiWalkCallback, (void*) ths, &ret);
 	if (ACPI_FAILURE(status)) {
 		panic("NAMESPACE COULD NOT BE WALKED FOR PCI DEVICES");
 	}
 
 	void* retVal;
-	status = AcpiWalkNamespace(ACPI_TYPE_ANY, ACPI_ROOT_OBJECT, 8, (ACPI_WALK_CALLBACK) acpiWalkDescendingCallback, (ACPI_WALK_CALLBACK) acpiWalkAscendingCallback, (void*) ths, &retVal);*/
+	status = AcpiWalkNamespace(ACPI_TYPE_ANY, ACPI_ROOT_OBJECT, 8, (ACPI_WALK_CALLBACK) acpiWalkDescendingCallback, (ACPI_WALK_CALLBACK) acpiWalkAscendingCallback, (void*) ths, &retVal);
 }

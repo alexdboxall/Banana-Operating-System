@@ -134,6 +134,16 @@ void Window_draw_border(Window* window)
 	Context_draw_text(window->context, window->title, screen_x + 10, screen_y + 6,
 					  (active_window == window && window->parent->active_child == window) ?
 					  WIN_TEXTCOLOR : WIN_TEXTCOLOR_INACTIVE, TEXT_FLAG_BOLD);
+
+	Context_fill_rect(window->context, screen_x + window->width - 21, screen_y + 5, 16, 16, 0xAAAAAA);
+	Context_draw_rect(window->context, screen_x + window->width - 21, screen_y + 5, 16, 16, 0);
+	
+	Context_horizontal_line(window->context, screen_x + window->width - 21, screen_y + 5, 15, 0xFFFFFF);
+	Context_vertical_line(window->context, screen_x + window->width - 21, screen_y + 5, 15, 0xFFFFFF);
+
+	Context_horizontal_line(window->context, screen_x + window->width - 20, screen_y + 19, 14, 0x555555);
+	Context_vertical_line(window->context, screen_x + window->width - 7, screen_y + 6, 14, 0x555555);
+
 }
 
 //Apply clipping for window bounds without subtracting child window rects

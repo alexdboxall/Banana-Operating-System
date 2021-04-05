@@ -13,9 +13,9 @@ CC64=x86_64-banana-gcc
 LD64=x86_64-banana-ld
 
 ASFLAGS=
-CXXFLAGS=-march=pentium -mtune=pentium
-CFLAGS=-march=pentium -mtune=pentium
-LDFLAGS=-g -T D:/Users/Alex/Desktop/Banana/drivers/dlink.ld
+CXXFLAGS=-fno-toplevel-reorder -march=i386 -mtune=i386 -msoft-float -O0 -fno-strict-aliasing -fpeephole2 -fauto-inc-dec -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-stack-protector -fomit-frame-pointer -fno-align-functions -falign-loops=1 -falign-labels=1 -falign-jumps=1 
+CFLAGS=-fno-toplevel-reorder -march=i386 -mtune=i386 -msoft-float -O0 -fno-strict-aliasing -fpeephole2 -fauto-inc-dec -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-stack-protector -fomit-frame-pointer -fno-align-functions -falign-loops=1 -falign-labels=1 -falign-jumps=1 
+LDFLAGS=-fno-toplevel-reorder -O0 -g -T D:/Users/Alex/Desktop/Banana/drivers/dlink.ld
 
 CXXOBJECTS32 = $(patsubst %.cpp, %.32, $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp) $(wildcard */*/*/*.cpp) $(wildcard **/*.cpp))
 CXXOBJECTS64 = $(patsubst %.cpp, %.64, $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp) $(wildcard */*/*/*.cpp) $(wildcard **/*.cpp))
