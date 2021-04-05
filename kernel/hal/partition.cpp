@@ -20,6 +20,8 @@ void makePartition(PhysicalDisk* parent, uint64_t start, uint64_t length)
 	char letter = ld->assignDriveLetter();
 	bool couldMount = ld->mount();
 	parent->addChild(ld);
+
+	kprintf("Mounted a partition to drive %c:\n", letter);
 }
 
 void createPartitionsForDisk(PhysicalDisk* parent)
