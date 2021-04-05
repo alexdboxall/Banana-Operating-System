@@ -230,8 +230,11 @@ extern "C" void kernel_main()
 
 		//needs memory to be set up before calling
 		callGlobalConstructors();
+		kprintf("global constructors called.\n");
 
 		computer = new Computer();
+		kprintf("computer at 0x%X.\n", computer);
+
 		computer->open(0, 0, nullptr);
 	}
 
