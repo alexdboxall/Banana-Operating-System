@@ -6,6 +6,7 @@
 #include "hw/ports.hpp"
 #include "hw/acpi.hpp"
 #include "hw/diskphys/sata.hpp"
+#include "hw/diskphys/satapi.hpp"
 #include "hal/device.hpp"
 
 #pragma GCC optimize ("Os")
@@ -97,6 +98,10 @@ void SATABus::probePort(HBA_MEM* abar)
 			} else if (dt == AHCI_DEV_SATAPI) {
 				kprintf("SATAPI drive at port %d\n", i);
 				portRebase(&abar->ports[i], i);
+
+				SATAPI* dev = new SATAPI();
+				addChild(dev);
+				dev->open(i, 0, this);
 
 			} else if (dt == AHCI_DEV_SATA) {
 				kprintf("SEMB drive at port %d\n", i);

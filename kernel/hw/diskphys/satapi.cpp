@@ -1,0 +1,254 @@
+#include "hw/diskphys/satapi.hpp"
+#include "hw/diskphys/ata.hpp"
+#include "hw/diskctrl/ide.hpp"
+#include "hw/diskctrl/satabus.hpp"
+#include "hw/ports.hpp"
+#include "hw/acpi.hpp"
+#include "core/physmgr.hpp"
+#include "core/virtmgr.hpp"
+#include "core/common.hpp"
+#include "thr/prcssthr.hpp"
+#include "hal/vcache.hpp"
+#include "hal/logidisk.hpp"
+#include "hw/cpu.hpp"
+
+#define ATA_DEV_BUSY 0x80
+#define ATA_DEV_DRQ 0x08
+
+#define HBA_PxCMD_ST    0x0001
+#define HBA_PxCMD_FRE   0x0010
+#define HBA_PxCMD_FR    0x4000
+#define HBA_PxCMD_CR    0x8000
+#define HBA_PxIS_TFES   (1 << 30)
+
+#pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
+#pragma GCC optimize ("-fno-align-labels")
+#pragma GCC optimize ("-fno-align-jumps")
+#pragma GCC optimize ("-fno-align-loops")
+#pragma GCC optimize ("-fno-align-functions")
+
+SATA::SATA(): PhysicalDisk("SATAPI Disk", 2048)
+{
+
+}
+
+void SATAPI::diskRemoved()
+{
+	kprintf("SATAPI: Disk removed.\n");
+	diskIn = false;
+}
+
+void SATAPI::diskInserted()
+{
+	kprintf("SATAPI: Disk inserted.\n");
+	diskIn = true;
+
+	startCache();
+	createPartitionsForDisk(this);
+}
+
+int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, bool write, uint16_t* data, int count)
+{
+	SATABus::HBA_PORT* port = &sbus->abar->ports[deviceNum];
+
+	port->is = (uint32_t) -1;
+	int spin = 0;
+	int slot = sbus->findCmdslot(port);
+	if (slot == -1) {
+		return 1;
+	}
+
+	uint8_t* spot = (uint8_t*) (((size_t) port->clb) - sbus->AHCI_BASE_PHYS + sbus->AHCI_BASE_VIRT);
+	SATABus::HBA_CMD_HEADER* cmdheader = (SATABus::HBA_CMD_HEADER*) spot;
+	cmdheader += slot;
+	cmdheader->cfl = sizeof(SATABus::FIS_REG_H2D) / sizeof(uint32_t);
+	cmdheader->w = 0;				// Read from device
+	cmdheader->prdtl = 1;			// PRDT entries count
+	cmdheader->a = true;			// ATAPI
+
+	spot = (uint8_t*) (((size_t) cmdheader->ctba) - sbus->AHCI_BASE_PHYS + sbus->AHCI_BASE_VIRT);
+	SATABus::HBA_CMD_TBL* cmdtbl = (SATABus::HBA_CMD_TBL*) spot;
+
+	memset(cmdtbl, 0, sizeof(SATABus::HBA_CMD_TBL) +
+		   (cmdheader->prdtl - 1) * sizeof(SATABus::HBA_PRDT_ENTRY));
+
+	memcpy(cmdtbl->acmd, packet, 16);
+	
+	cmdtbl->prdt_entry[0].dba = sataPhysAddr;			//data base address
+	cmdtbl->prdt_entry[0].dbc = maxTransferSize - 1;	
+	cmdtbl->prdt_entry[0].i = 1;						//interrupt when done
+
+	// Setup command
+	SATABus::FIS_REG_H2D* cmdfis = (SATABus::FIS_REG_H2D*) (&cmdtbl->cfis);
+
+	cmdfis->fis_type = SATABus::FIS_TYPE_REG_H2D;
+	cmdfis->c = 1;
+	cmdfis->command = ATA_CMD_PACKET;
+
+	cmdfis->lba0 = 0;
+	cmdfis->lba1 = (uint8_t) (maxTransferSize & 0xFF);
+	cmdfis->lba2 = (uint8_t) (maxTransferSize >> 8);
+	cmdfis->device = 1 << 6;	// LBA mode
+
+	cmdfis->lba3 = 0;
+	cmdfis->lba4 = 0;
+	cmdfis->lba5 = 0;
+
+	cmdfis->countl = count & 0xFF;
+	cmdfis->counth = (count >> 8) & 0xFF;
+
+	// The below loop waits until the port is no longer busy before issuing a new command
+	while ((port->tfd & (ATA_DEV_BUSY | ATA_DEV_DRQ)) && spin < 1000000) {
+		spin++;
+	}
+	if (spin == 1000000) {
+		panic("Port is hung\n");
+		return 1;
+	}
+
+	port->ci = 1 << slot;	// Issue command
+
+	// Wait for completion
+	while (1) {
+		// In some longer duration reads, it may be helpful to spin on the DPS bit 
+		// in the PxIS port field as well (1 << 5)
+		if ((port->ci & (1 << slot)) == 0)
+			break;
+		if (port->is & HBA_PxIS_TFES)	// Task file error
+		{
+			panic("satapi disk error\n");
+			return FALSE;
+		}
+	}
+
+	// Check again
+	if (port->is & HBA_PxIS_TFES) {
+		panic("satapi disk error 2\n");
+		return 1;
+	}
+
+	if (maxTransferSize) {
+		memcpy(data, sataPhysAddr, maxTransferSize);
+	}
+	kprintf("satapi packet sent.\n");
+	return 0;
+}
+
+int SATAPI::open(int _deviceNum, int b, void* _ide)
+{
+	//save parameters
+	sbus = (SATABus*) _ide;
+	deviceNum = _deviceNum;
+	sizeInKBs = 64 * 1024;
+	sectorSize = 2048;
+	removable = true;
+
+	//allocate 2 contiguous pages
+	sataPhysAddr = Phys::allocatePage();
+	size_t prev = sataPhysAddr;
+	for (int i = 1; i < 2; ++i) {
+		size_t got = Phys::allocatePage();
+		if (got != prev + 4096) {
+			panic("SATA NOT CONTIGUOUS");
+		}
+		prev = got;
+	}
+
+	sataVirtAddr = Virt::allocateKernelVirtualPages(2);
+	Virt::getAKernelVAS()->mapPage(sataPhysAddr, sataVirtAddr, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
+
+	//reset the drive
+	kprintf("Starting up a SATA drive!\n");
+
+	//detect if disk is in
+	diskIn = false;
+	detectMedia();
+
+	return 0;
+}
+
+int SATAPI::read(uint64_t lba, int count, void* buffer)
+{
+	//check that there is a disk and it hasn't changed
+	if (!diskIn) {
+		detectMedia();
+		if (!diskIn) {
+			return (int) DiskError::NotReady;
+		}
+	}
+
+	if (count > 4) {
+		panic("UNIMPLEMENTED SATAPI::read with count > 4");
+	}
+
+	//create the packet
+	uint8_t packet[12] = { ATAPI_CMD_READ, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	packet[2] = (lba >> 24) & 0xFF;
+	packet[3] = (lba >> 16) & 0xFF;
+	packet[4] = (lba >> 8) & 0xFF;
+	packet[5] = (lba >> 0) & 0xFF;
+	packet[9] = count;
+
+	//send the packet
+	return sendPacket(packet, 2048 * count, false, (uint16_t*) buffer, count);
+}
+
+int SATAPI::write(uint64_t lba, int count, void* buffer)
+{
+	return (int) DiskError::WriteProtected;
+}
+
+int SATAPI::close(int a, int b, void* c)
+{
+	delete cache;
+	return 0;
+}
+
+void SATAPI::detectMedia()
+{
+	//create a TEST UNIT READY packet
+	uint8_t packet[12];
+	memset(packet, 0, 12);
+
+	//send it
+	sendPacket(packet, 0, false, nullptr, 0);
+
+	//create a REQUEST SENSE packet
+	memset(packet, 0, 12);
+	packet[0] = ATAPI_CMD_REQUEST_SENSE;
+	packet[4] = 18;
+
+	//send it
+	uint8_t senseData[18];
+	sendPacket(packet, 18, false, (uint16_t*) senseData, 1);
+
+	//check there is actually error data
+	if ((senseData[0] & 0x7F) != 0x70) {
+		if (!diskIn) {
+			diskInserted();
+		}
+	}
+
+	//parse the response
+	uint8_t senseKey = senseData[2] & 0xF;
+	uint8_t additionalSenseCode = senseData[12];
+
+	//check for NO MEDIA
+	if (senseKey == 0x02 && additionalSenseCode == 0x3A) {
+		if (diskIn) {
+			diskRemoved();
+		}
+
+		//check for success (meaning there is a disk)
+	} else if (senseKey == 0x00) {
+		if (!diskIn) {
+			diskInserted();
+		}
+	}
+}
+
+void SATAPI::eject()
+{
+
+}
