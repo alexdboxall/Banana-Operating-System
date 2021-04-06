@@ -194,7 +194,7 @@ int SATAPI::read(uint64_t lba, int count, void* buffer)
 	packet[9] = count;
 
 	//send the packet
-	return sendPacket(packet, 2048 * count, false, (uint16_t*) buffer, count);
+	return sendPacket(packet, 2048 * count, lba, (uint16_t*) buffer, count);
 }
 
 int SATAPI::write(uint64_t lba, int count, void* buffer)
