@@ -79,7 +79,7 @@ int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, uint64_t lba, uint1
 		   (cmdheader->prdtl - 1) * sizeof(SATABus::HBA_PRDT_ENTRY));
 	kprintf("memcpy 1\n");
 	memcpy(cmdtbl->acmd, packet, 12);
-	kprintf("memcpy 1\n");
+	kprintf("memcpy 1!\n");
 
 	cmdtbl->prdt_entry[0].dba = sataPhysAddr;			//data base address
 	cmdtbl->prdt_entry[0].dbc = maxTransferSize - 1;	
@@ -136,7 +136,7 @@ int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, uint64_t lba, uint1
 
 	if (maxTransferSize && data) {
 		kprintf("memcpy 2\n");
-		memcpy(data, (const void*) sataPhysAddr, maxTransferSize);
+		memcpy(data, (const void*) sataVirtAddr, maxTransferSize);
 		kprintf("memcpy 2!\n");
 	}
 	kprintf("satapi packet sent.\n");
@@ -215,9 +215,6 @@ int SATAPI::close(int a, int b, void* c)
 
 void SATAPI::detectMedia()
 {
-	if (!diskIn) diskInserted();
-	return;
-
 	//create a TEST UNIT READY packet
 	uint8_t packet[12];
 	memset(packet, 0, 12);
