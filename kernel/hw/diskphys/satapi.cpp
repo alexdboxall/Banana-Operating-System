@@ -48,7 +48,7 @@ void SATAPI::diskInserted()
 	createPartitionsForDisk(this);
 }
 
-int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, bool write, uint16_t* data, int count)
+int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, uint64_t lba, uint16_t* data, int count)
 {
 	SATABus::HBA_PORT* port = &sbus->abar->ports[deviceNum];
 
@@ -58,6 +58,9 @@ int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, bool write, uint16_
 	if (slot == -1) {
 		return 1;
 	}
+
+	uint32_t startl = lba & 0xFFFFFFFF;
+	uint32_t starth = lba >> 32;
 
 	uint8_t* spot = (uint8_t*) (((size_t) port->clb) - sbus->AHCI_BASE_PHYS + sbus->AHCI_BASE_VIRT);
 	SATABus::HBA_CMD_HEADER* cmdheader = (SATABus::HBA_CMD_HEADER*) spot;
@@ -73,7 +76,7 @@ int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, bool write, uint16_
 	memset(cmdtbl, 0, sizeof(SATABus::HBA_CMD_TBL) +
 		   (cmdheader->prdtl - 1) * sizeof(SATABus::HBA_PRDT_ENTRY));
 
-	memcpy(cmdtbl->acmd, packet, 16);
+	memcpy(cmdtbl->acmd, packet, 12);
 	
 	cmdtbl->prdt_entry[0].dba = sataPhysAddr;			//data base address
 	cmdtbl->prdt_entry[0].dbc = maxTransferSize - 1;	
@@ -86,14 +89,14 @@ int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, bool write, uint16_
 	cmdfis->c = 1;
 	cmdfis->command = ATA_CMD_PACKET;
 
-	cmdfis->lba0 = 0;
-	cmdfis->lba1 = (uint8_t) (maxTransferSize & 0xFF);
-	cmdfis->lba2 = (uint8_t) (maxTransferSize >> 8);
+	cmdfis->lba0 = (uint8_t) startl;
+	cmdfis->lba1 = (uint8_t) (startl >> 8);
+	cmdfis->lba2 = (uint8_t) (startl >> 16);
 	cmdfis->device = 1 << 6;	// LBA mode
 
-	cmdfis->lba3 = 0;
-	cmdfis->lba4 = 0;
-	cmdfis->lba5 = 0;
+	cmdfis->lba3 = (uint8_t) (startl >> 24);
+	cmdfis->lba4 = (uint8_t) starth;
+	cmdfis->lba5 = (uint8_t) (starth >> 8);
 
 	cmdfis->countl = count & 0xFF;
 	cmdfis->counth = (count >> 8) & 0xFF;
@@ -117,18 +120,18 @@ int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, bool write, uint16_
 			break;
 		if (port->is & HBA_PxIS_TFES)	// Task file error
 		{
-			panic("satapi disk error\n");
-			return FALSE;
+			kprintf("satapi disk error\n");
+			return 1;
 		}
 	}
 
 	// Check again
 	if (port->is & HBA_PxIS_TFES) {
-		panic("satapi disk error 2\n");
+		kprintf("satapi disk error 2\n");
 		return 1;
 	}
 
-	if (maxTransferSize) {
+	if (maxTransferSize && data) {
 		memcpy(data, (const void*) sataPhysAddr, maxTransferSize);
 	}
 	kprintf("satapi packet sent.\n");

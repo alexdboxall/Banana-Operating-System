@@ -26,7 +26,7 @@ public:
 	size_t sataPhysAddr;
 	size_t sataVirtAddr;
 	
-	int sendPacket(uint8_t* packet, int maxTransferSize, bool write, uint16_t* data, int count);
+	int sendPacket(uint8_t* packet, int maxTransferSize, uint64_t lba, uint16_t* data, int count);
 
 	int open(int channel, int drive, void* ide);
 	int read(uint64_t, int, void*);	
