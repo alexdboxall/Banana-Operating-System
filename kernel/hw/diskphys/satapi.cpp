@@ -28,7 +28,7 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-SATA::SATA(): PhysicalDisk("SATAPI Disk", 2048)
+SATAPI::SATAPI(): PhysicalDisk("SATAPI Disk", 2048)
 {
 
 }
@@ -129,7 +129,7 @@ int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, bool write, uint16_
 	}
 
 	if (maxTransferSize) {
-		memcpy(data, sataPhysAddr, maxTransferSize);
+		memcpy(data, (const void*) sataPhysAddr, maxTransferSize);
 	}
 	kprintf("satapi packet sent.\n");
 	return 0;
