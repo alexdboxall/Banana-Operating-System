@@ -456,6 +456,8 @@ namespace Thr
 			char namebuffer[32];
 			memset(namebuffer, 0, 32);
 
+			kprintf("section at file offset 0x%X, addr 0x%X, name = %s\n", fileOffset, addr, namebuffer);
+
 			int actual;
 			f->read(31, namebuffer, &actual);
 
