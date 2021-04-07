@@ -36,7 +36,7 @@ public:
 
 	void detectMedia();
 
-	void eject();
+	int eject();
 };
 
 #endif

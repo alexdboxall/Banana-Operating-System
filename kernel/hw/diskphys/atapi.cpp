@@ -140,7 +140,7 @@ int ATAPI::open(int __a, int _ideDeviceNum, void* _ide)
 	return 0;
 }
 
-void ATAPI::eject()
+int ATAPI::eject()
 {
 	//eject the disk
 	uint8_t packet[12] = {ATAPI_CMD_EJECT, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0 };
@@ -148,6 +148,8 @@ void ATAPI::eject()
 
 	//acknowledge the removed disk
 	diskRemoved();
+
+	return 0;
 }
 
 void ATAPI::diskRemoved()
