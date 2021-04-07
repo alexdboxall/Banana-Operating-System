@@ -68,9 +68,7 @@ int SATA::open(int _deviceNum, int b, void* _ide)
 
 int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 {
-	kprintf("SATA access count = %d, lba = %d, buffer = 0x%X\n", count, (uint32_t*) lba, buffer);
 	while (count > 16) {
-		kprintf("       half access count = %d, lba = %d, buffer = 0x%X\n", count, (uint32_t*) lba, buffer);
 		int ret = access(lba, 16, buffer, write);
 		count -= 16;
 		lba += 16;
@@ -80,7 +78,6 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 			return ret;
 		}
 	}
-	kprintf(" *   access count = %d, lba = %d, buffer = 0x%X\n\n", count, (uint32_t*) lba, buffer);
 
 	uint32_t startl = lba & 0xFFFFFFFF;
 	uint32_t starth = lba >> 32;
@@ -207,7 +204,14 @@ int SATA::write(uint64_t lba, int count, void* buffer)
 	}
 
 	//perform the read operation
-	int err = access(lba, count, buffer, true);
+	//int err = access(lba, count, buffer, true);
+	int err = 0;
+
+	uint8_t* bf = (uint8_t*) buffer;
+	for (int i = 0; i < count; ++i) {
+		access(lba++, 1, bf, true);
+		bf += 512;
+	}
 
 	//error checking
 	if (err) {
