@@ -137,24 +137,16 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 
 			//first in block AND you hit the last in block last time
 			if ((lba & (READ_BUFFER_BLOCK_SIZE - 1)) == 0 && hitBlockEnd) {
-				if (increaseNextTime) {
-					increaseNextTime = false;
-
-					READ_BUFFER_BLOCK_SIZE *= 2;
-					if (READ_BUFFER_BLOCK_SIZE >= READ_BUFFER_MAX_SECTORS) {
-						READ_BUFFER_BLOCK_SIZE = READ_BUFFER_MAX_SECTORS;
-					}
-					kprintf("INCREASING BLOCK SIZE TO %d\n", READ_BUFFER_BLOCK_SIZE);
-					hitBlockEnd = false;
-
-				} else {
-					increaseNextTime = true;
-
+				READ_BUFFER_BLOCK_SIZE *= 2;
+				if (READ_BUFFER_BLOCK_SIZE >= READ_BUFFER_MAX_SECTORS) {
+					READ_BUFFER_BLOCK_SIZE = READ_BUFFER_MAX_SECTORS;
 				}
+				kprintf("INCREASING BLOCK SIZE TO %d\n", READ_BUFFER_BLOCK_SIZE);
+				hitBlockEnd = false;
 			}
 
 			//used the last in block?
-			if (((lba - 1) & (READ_BUFFER_BLOCK_SIZE - 1)) == 0) {
+			if (((lba + 1) & (READ_BUFFER_BLOCK_SIZE - 1)) == 0) {
 				hitBlockEnd = true;
 				clearBlockEnd = false;
 			}
