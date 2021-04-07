@@ -323,6 +323,10 @@ memcpy (
     const void              * Src /*source*/,
     ACPI_SIZE               Count /*num*/)
 {
+    void* OriginalDest;
+    asm volatile("cld; rep movsb" :: "S"(Src), "D"(Dest), "c"(num) : "flags", "memory");
+    return OriginalDest;
+
 	/*const void* osource = source;
 	void* odest = destination;
 	//extern void __memcpy_debug(void*, void*, size_t);
