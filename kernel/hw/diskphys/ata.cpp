@@ -174,6 +174,11 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 		flush(lbaMode == MODE_LBA48);
 	}
 
+	if (count == 4) {
+		kprintf("Check the buffer: 0x%X\n", buffer);
+		while (1);
+	}
+
 	return 0;
 }
 
