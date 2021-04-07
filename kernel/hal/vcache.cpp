@@ -135,10 +135,11 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 			}
 
 			disk->read((lba & ~(READ_BUFFER_BLOCK_SIZE - 1)), READ_BUFFER_BLOCK_SIZE, testBuffer);
+			memcpy((void*) readCacheBuffer, (const void*) testBuffer, READ_BUFFER_BLOCK_SIZE * 512);
 
-			int mcr = memcmp((const void*) testBuffer, (const void*) readCacheBuffer, READ_BUFFER_BLOCK_SIZE * 512);
+			//int mcr = memcmp((const void*) testBuffer, (const void*) readCacheBuffer, READ_BUFFER_BLOCK_SIZE * 512);
 
-			kprintf("mcr = %d\n", mcr);
+			//kprintf("mcr = %d\n", mcr);
 		}
 
 		kprintf("from cache (offset = 0x%X)\n", (lba - readCacheLBA) * disk->sectorSize);
