@@ -324,7 +324,7 @@ memcpy (
     ACPI_SIZE               Count /*num*/)
 {
     void* OriginalDest;
-    asm volatile("cld; rep movsb" :: "S"(Src), "D"(Dest), "c"(num) : "flags", "memory");
+    asm volatile("cld; rep movsb" :: "S"(Src), "D"(Dest), "c"(Count) : "flags", "memory");
     return OriginalDest;
 
 	/*const void* osource = source;
