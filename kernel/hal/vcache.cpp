@@ -45,13 +45,6 @@ VCache::~VCache()
 	free(readCacheBuffer);
 }
 
-/*
-uint64_t writeCacheLBA = 0;
-int writeCacheSectors = 0;
-uint8_t* writeCacheBuffer;
-bool writeCacheValid = false;
-*/
-
 void VCache::invalidateReadBuffer()
 {
 	readCacheValid = false;
@@ -61,8 +54,6 @@ void VCache::invalidateReadBuffer()
 
 void VCache::writeWriteBuffer()
 {
-	kprintf("Writing write buffer with %d sectors.\n", writeCacheSectors);
-
 	disk->write(writeCacheLBA, writeCacheSectors, writeCacheBuffer);
 
 	writeCacheLBA = 0;
