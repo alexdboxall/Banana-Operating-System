@@ -126,7 +126,7 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 			readCacheValid = true;
 			readCacheLBA = lba & ~(READ_BUFFER_BLOCK_SIZE - 1);
 			disk->read(lba & ~(READ_BUFFER_BLOCK_SIZE - 1), 1, readCacheBuffer);
-			disk->read(lba & ~(READ_BUFFER_BLOCK_SIZE - 1), 1, readCacheBuffer + 512);
+			disk->read((lba & ~(READ_BUFFER_BLOCK_SIZE - 1)) + 1, 1, readCacheBuffer + 512);
 		}
 
 		kprintf("from cache (offset = 0x%X)\n", (lba - readCacheLBA) * disk->sectorSize);
