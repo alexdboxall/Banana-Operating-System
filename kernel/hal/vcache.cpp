@@ -115,7 +115,7 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 	}
 
 	kprintf("    VCACHE::READ 0x%X - ", (uint32_t) lba);
-	if (count == 1) {
+	if (0 && count == 1) {
 		if (readCacheValid && lba >= readCacheLBA && lba < readCacheLBA + readCacheSectors) {
 			kprintf("from cache\n");
 			memcpy(ptr, readCacheBuffer + (lba - readCacheLBA) * disk->sectorSize, disk->sectorSize);
