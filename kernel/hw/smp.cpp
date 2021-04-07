@@ -17,7 +17,11 @@ namespace Krnl
 	{
 		lockScheduler();
 
-		uint32_t apicBase = ((APIC*) computer->cpu[0]->intCtrl)->getBase();
+		if (!computer->features.hasMSR) {
+			return;
+		}
+
+		uint64_t apicBase = computer->rdmsr(IA32_APIC_BASE_MSR) & 0xfffff000;
 		kprintf("apicBase = 0x%X\n", apicBase);
 
 		unlockScheduler();
