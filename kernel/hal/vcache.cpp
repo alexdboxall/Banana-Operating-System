@@ -137,22 +137,26 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 
 			//first in block AND you hit the last in block last time
 			if ((lba & (READ_BUFFER_BLOCK_SIZE - 1)) == 0 && hitBlockEnd) {
-				increaseNextTime = true;
-			}
-
-			//used the last in block?
-			if (((lba - 1) & (READ_BUFFER_BLOCK_SIZE - 1)) == 0) {
 				if (increaseNextTime) {
+					increaseNextTime = false;
+
 					READ_BUFFER_BLOCK_SIZE *= 2;
 					if (READ_BUFFER_BLOCK_SIZE >= READ_BUFFER_MAX_SECTORS) {
 						READ_BUFFER_BLOCK_SIZE = READ_BUFFER_MAX_SECTORS;
 					}
 					kprintf("INCREASING BLOCK SIZE TO %d\n", READ_BUFFER_BLOCK_SIZE);
 					hitBlockEnd = false;
+
 				} else {
-					hitBlockEnd = true;
-					clearBlockEnd = false;
+					increaseNextTime = true;
+
 				}
+			}
+
+			//used the last in block?
+			if (((lba - 1) & (READ_BUFFER_BLOCK_SIZE - 1)) == 0) {
+				hitBlockEnd = true;
+				clearBlockEnd = false;
 			}
 
 			//both disk drivers somehow fail the multicount reads
