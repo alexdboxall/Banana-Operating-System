@@ -17,7 +17,7 @@ namespace Krnl
 	{
 		lockScheduler();
 
-		uint32_t apicBase = ((APIC*) computer->intctrl)->getBase();
+		uint32_t apicBase = ((APIC*) computer->cpu[0]->intCtrl)->getBase();
 		kprintf("apicBase = 0x%X\n", apicBase);
 
 		unlockScheduler();
