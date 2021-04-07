@@ -282,9 +282,12 @@ void displayDebugInfo(regs* r)
 
 	char* drvName = Thr::getDriverNameFromAddress((size_t) r->eip);
 	if (drvName) {
+		kprintf("\n DRIVER: %s\n", drvName);
 		kernelProcess->terminal->puts("\n\n DRIVER: ");
 		kernelProcess->terminal->puts(drvName);
-		kprintf("\n DRIVER: %s\n", drvName);
+		kernelProcess->terminal->puts("\n\n OFFSET: ");
+		kernelProcess->terminal->putx((uint32_t) Thr::getDriverOffsetFromAddress((size_t) r->eip));
+		kprintf("\n OFFSET: 0x%X\n", drvName);
 	}
 
 	asm("cli;hlt;");
