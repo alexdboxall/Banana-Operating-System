@@ -341,13 +341,9 @@ memcpy (
     char                    *New = (char *) Dest;
     char                    *Old = (char *) Src;
 
-
-    while (Count)
+    while (Count--)
     {
-        *New = *Old;
-        New++;
-        Old++;
-        Count--;
+        *New++ = *Old++;
     }
 
     return (Dest);
