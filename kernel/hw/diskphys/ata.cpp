@@ -54,11 +54,6 @@ bool ATA::readyForCommand()
 int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 {
 	kprintf("ATA is accessing %d sectors from LBA 0x%X\n", count, (uint32_t) lba);
-	if (count == 4) {
-		lba = 0;
-		count = 4;
-		kprintf("FORCING ATA to accessing %d sectors from LBA 0x%X\n", count, (uint32_t) lba);
-	}
 	
 	uint8_t lbaIO[6];
 	uint8_t lbaMode;
@@ -184,11 +179,6 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 	if (write) {
 		flush(lbaMode == MODE_LBA48);
-	}
-
-	if (ogcount != 1) {
-		kprintf("Check the buffer: 0x%X\n", buffer);
-		while (1);
 	}
 
 	return 0;

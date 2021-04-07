@@ -323,23 +323,8 @@ memcpy (
     const void              * Src /*source*/,
     ACPI_SIZE               Count /*num*/)
 {
-    asm volatile("cld; rep movsb" :: "S"(Src), "D"(Dest), "c"(Count) : "flags", "memory");
-    return ((uint8_t*) Dest) - Count;
-
-	/*const void* osource = source;
-	void* odest = destination;
-	//extern void __memcpy_debug(void*, void*, size_t);
-	//__memcpy_debug(destination, (void*) source, (size_t) num);
-
-	ACPI_SIZE leftover = num - ((num >> 2) << 2);
-	ACPI_SIZE bytesdone = num - leftover;
-	asm volatile("cld ; rep movsd" :: "S"(source), "D"(destination), "c"(num >> 2) : "flags", "memory");
-
-	for (ACPI_SIZE i = 0; i < leftover; ++i) {
-		*(((uint8_t*) odest) + bytesdone + i) = *(((uint8_t*) osource) + bytesdone + i);
-	}
-
-	return odest;*/
+    /*asm volatile("cld; rep movsb" :: "S"(Src), "D"(Dest), "c"(Count) : "flags", "memory");
+    return ((uint8_t*) Dest) - Count;*/
 
     char                    *New = (char *) Dest;
     char                    *Old = (char *) Src;
