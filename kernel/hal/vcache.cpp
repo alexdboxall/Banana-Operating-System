@@ -114,7 +114,7 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 	return 0;
 }
 
-uint8_t testBuffer[512 * READ_BUFFER_BLOCK_SIZE];
+uint8_t testBuffer[512 * READ_BUFFER_MAX_SECTORS];
 
 int VCache::read(uint64_t lba, int count, void* ptr)
 {
