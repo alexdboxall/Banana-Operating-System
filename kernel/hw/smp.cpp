@@ -2,6 +2,7 @@
 #include "hw/ports.hpp"
 #include "core/virtmgr.hpp"
 #include "core/physmgr.hpp"
+#include "thr/prcssthr.hpp"
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
