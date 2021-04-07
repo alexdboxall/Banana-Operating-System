@@ -31,7 +31,6 @@ protected:
 	bool writeCacheValid = false;
 
 	uint64_t readCacheLBA = 0;
-	int readCacheSectors = 0;
 	uint8_t* readCacheBuffer;
 	bool readCacheValid = false;
 

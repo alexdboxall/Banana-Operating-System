@@ -10,7 +10,9 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-#define READ_BUFFER_BLOCK_SIZE		2
+//must be a power of 2
+#define READ_BUFFER_BLOCK_SIZE		4	
+
 #define WRITE_BUFFER_MAX_SECTORS	64
 
 VCache::VCache(PhysicalDisk* d)
@@ -51,6 +53,7 @@ bool writeCacheValid = false;
 
 void VCache::invalidateReadBuffer()
 {
+	kprintf("   ** invalidating the read buffer.\n");
 	readCacheValid = false;
 }
 
@@ -116,20 +119,15 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 
 	kprintf("    VCACHE::READ 0x%X - ", (uint32_t) lba);
 	if (count == 1) {
-		if (readCacheValid && lba >= readCacheLBA && lba < readCacheLBA + readCacheSectors) {
-			kprintf("from cache (offset = 0x%X)\n", (lba - readCacheLBA) * disk->sectorSize);
-			memcpy(ptr, readCacheBuffer + (lba - readCacheLBA) * disk->sectorSize, disk->sectorSize);
-		
-		} else {
-			count = READ_BUFFER_BLOCK_SIZE;
+		if (!(readCacheValid && lba >= readCacheLBA && lba < readCacheLBA + readCacheSectors)) {
 			kprintf("caching now\n");
 			readCacheValid = true;
 			readCacheLBA = lba;
-			readCacheSectors = count;
-			disk->read(lba, count, readCacheBuffer);
-			memcpy(ptr, readCacheBuffer, disk->sectorSize);
-			
+			disk->read(lba & ~(READ_BUFFER_BLOCK_SIZE - 1), READ_BUFFER_BLOCK_SIZE, readCacheBuffer);
 		}
+
+		kprintf("from cache (offset = 0x%X)\n", (lba - readCacheLBA) * disk->sectorSize);
+		memcpy(ptr, readCacheBuffer + (lba & (READ_BUFFER_BLOCK_SIZE - 1)) * disk->sectorSize, disk->sectorSize);
 
 	} else {
 		kprintf("uncached (%d).\n", count);
