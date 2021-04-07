@@ -120,7 +120,7 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 	}
 
 	kprintf("    VCACHE::READ 0x%X - ", (uint32_t) lba);
-	if (count == 1) {
+	if (count == 1 && !disk->removable) {
 		if (!(readCacheValid && (lba & ~(READ_BUFFER_BLOCK_SIZE - 1)) == readCacheLBA)) {
 			kprintf("caching now... ");
 			readCacheValid = true;
