@@ -109,6 +109,7 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 	return 0;
 }
 
+uint8_t testBuffer[512 * READ_BUFFER_BLOCK_SIZE];
 int VCache::read(uint64_t lba, int count, void* ptr)
 {
 	mutex->acquire();
@@ -133,9 +134,11 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 				disk->read((lba & ~(READ_BUFFER_BLOCK_SIZE - 1)) + i, 1, readCacheBuffer + 512 * i);
 			}
 
-			disk->read(0, 8, readCacheBuffer);
-			kprintf("read cache buffer = 0x%X\n", readCacheBuffer);
-			while (1);
+			disk->read((lba & ~(READ_BUFFER_BLOCK_SIZE - 1)), READ_BUFFER_BLOCK_SIZE, testBuffer);
+
+			int mcr = memcmp((const void*) testBuffer, (const void*) readCacheBuffer, READ_BUFFER_BLOCK_SIZE * 512);
+
+			kprintf("mcr = %d\n", mcr);
 		}
 
 		kprintf("from cache (offset = 0x%X)\n", (lba - readCacheLBA) * disk->sectorSize);
