@@ -153,6 +153,7 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 	//for each sector
 	uint16_t* buffer16 = (uint16_t*) buffer;
+	int ogcount = count;
 	while (count--) {
 		//wait for the device to be ready
 		uint8_t err = ide->polling(channel, 1);
@@ -179,7 +180,7 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 		flush(lbaMode == MODE_LBA48);
 	}
 
-	if (count != 1) {
+	if (ogcount != 1) {
 		kprintf("Check the buffer: 0x%X\n", buffer);
 		while (1);
 	}
