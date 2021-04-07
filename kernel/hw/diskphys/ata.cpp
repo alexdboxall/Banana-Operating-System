@@ -109,6 +109,7 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 	//wait for the drive to be not busy
 	if (!readyForCommand()) {
+		kprintf("ata not ready\n");
 		return 1;
 	}
 
@@ -142,8 +143,11 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 	else if (write && lbaMode != MODE_LBA48) command = ATA_CMD_WRITE_PIO;
 	else if (!write && lbaMode == MODE_LBA48) command = ATA_CMD_READ_PIO_EXT;
 	else if (!write && lbaMode != MODE_LBA48) command = ATA_CMD_READ_PIO;
-	else return 1;
-
+	else {
+		kprintf("ata wrong type\n");
+		return 1;
+	}
+		
 	//send the command
 	ide->write(channel, ATA_REG_COMMAND, command);
 
@@ -154,6 +158,7 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 		uint8_t err = ide->polling(channel, 1);
 		if (err) {
 			ide->printError(channel, drive, err);
+			kprintf("ata error\n");
 			return err;
 		}
 
@@ -174,7 +179,7 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 		flush(lbaMode == MODE_LBA48);
 	}
 
-	if (count == 4) {
+	if (count != 1) {
 		kprintf("Check the buffer: 0x%X\n", buffer);
 		while (1);
 	}
