@@ -178,9 +178,7 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 			}
 
 		} else {
-			uint16_t* tempBuf = buffer16;
-			asm("cld; rep insw" : : "c"(256), "d"(ide->getBase(channel)), "D"(tempBuf) : "flags", "memory");
-			buffer16 += 256;
+			asm("cld; rep insw" : : "c"(256), "d"(ide->getBase(channel)), "D"(buffer16) : "flags", "memory");
 		}
 	}
 
