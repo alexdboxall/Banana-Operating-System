@@ -932,6 +932,41 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 			fprintf(stderr, "Error deleting directory.\nMaybe the directory isn't empty? Use rmtree to delete contents as well.\n");
 		}
 
+	} else if (!strcasecmp(argv[0], "eject")) {
+		if (argc == 1) {
+			fprintf(stderr, "Please enter a drive name to eject.\n");
+			return -1;
+		}
+		if (argc != 2) {
+			fprintf(stderr, "Please only enter one drive name.\n");
+			return -1;
+		}
+		if (strlen(argv[1]) > 3) {
+			fprintf(stderr, "Not a drive.\n");
+			return -1;
+		}
+		if (strlen(argv[1]) >= 2 && argv[1][1] != ':') {
+			fprintf(stderr, "Not a drive.\n");
+			return -1;
+		}
+		if (strlen(argv[1]) == 3 && argv[1][2] != '/' && argv[1][2] != '\\') {
+			fprintf(stderr, "Not a drive.\n");
+			return -1;
+		}
+
+		extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
+		int res = SystemCall(Eject, argv[1][0], 0, 0);
+		if (res == -1) {
+			fprintf(stderr, "Not a removable drive.\n");
+			return -1;
+		} else if (res == -2) {
+			fprintf(stderr, "Not a drive.\n");
+			return -1;
+		}  else if (res != 0) {
+			fprintf(stderr, "The drive cannot eject the disk.\n");
+			return -1;
+		}
+
 	} else if (!strcasecmp(argv[0], "mkdir") || !strcasecmp(argv[0], "md")) {
 		if (argc == 1) {
 			fprintf(stderr, "Please enter directory path to create.\n");
