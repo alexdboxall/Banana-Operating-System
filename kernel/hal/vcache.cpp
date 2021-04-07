@@ -41,7 +41,9 @@ VCache::~VCache()
 		writeWriteBuffer();
 	}
 	free(writeCacheBuffer);
+	kprintf("freeing readCacheBuffer.\n");
 	free(readCacheBuffer);
+	kprintf("freed readCacheBuffer.\n");
 }
 
 /*
