@@ -110,7 +110,7 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 }
 
 uint8_t testBuffer[512 * READ_BUFFER_BLOCK_SIZE];
-uint8_t uhOh[512];
+uint8_t uhOh[512 * READ_BUFFER_BLOCK_SIZE];
 
 int VCache::read(uint64_t lba, int count, void* ptr)
 {
