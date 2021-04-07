@@ -145,18 +145,18 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 				hitBlockEnd = false;
 			}
 
-			//used the last in block?
-			if (((lba + 1) & (READ_BUFFER_BLOCK_SIZE - 1)) == 0) {
-				hitBlockEnd = true;
-				clearBlockEnd = false;
-			}
-
 			//both disk drivers somehow fail the multicount reads
 			//SATA does it subtly
 			//ATA does it blatantly
 
 			disk->read((lba & ~(READ_BUFFER_BLOCK_SIZE - 1)), READ_BUFFER_BLOCK_SIZE, readCacheBuffer /*testBuffer*/);
 			//memcpy((void*) readCacheBuffer, (const void*) testBuffer, READ_BUFFER_BLOCK_SIZE * 512);
+		}
+
+		//used the last in block?
+		if (((lba + 1) & (READ_BUFFER_BLOCK_SIZE - 1)) == 0) {
+			hitBlockEnd = true;
+			clearBlockEnd = false;
 		}
 
 		kprintf("from cache (offset = 0x%X)\n", (lba - readCacheLBA) * disk->sectorSize);
