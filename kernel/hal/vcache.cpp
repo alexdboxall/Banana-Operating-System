@@ -29,7 +29,7 @@ VCache::VCache(PhysicalDisk* d)
 	diskSizeKBs = d->sizeInKBs;
 
 	readCacheValid = false;
-	readCacheBuffer = (uint8_t*) malloc(d->sectorSize * READ_BUFFER_BLOCK_SIZE);
+	readCacheBuffer = (uint8_t*) malloc(d->sectorSize * READ_BUFFER_BLOCK_SIZE * 4);
 
 	writeCacheValid = false;
 	writeCacheBuffer = (uint8_t*) malloc(d->sectorSize * WRITE_BUFFER_MAX_SECTORS);
@@ -110,7 +110,6 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 }
 
 uint8_t testBuffer[512 * READ_BUFFER_BLOCK_SIZE];
-uint8_t uhOh[512 * READ_BUFFER_BLOCK_SIZE];
 
 int VCache::read(uint64_t lba, int count, void* ptr)
 {
@@ -129,28 +128,12 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 			readCacheValid = true;
 			readCacheLBA = lba & ~(READ_BUFFER_BLOCK_SIZE - 1);
 
-			uhOh[0] = 0xFE;
-			uhOh[1] = 0xFE;
-			uhOh[2] = 0xFE;
-			uhOh[30] = 0xFE;
-			uhOh[454] = 0xFE;
-
 			//both disk drivers somehow fail the multicount reads
 			//SATA does it subtly
 			//ATA does it blatantly
-			for (int i = 0; i < READ_BUFFER_BLOCK_SIZE; ++i) {
-				//disk->read((lba & ~(READ_BUFFER_BLOCK_SIZE - 1)) + i, 1, readCacheBuffer + 512 * i);
-			}
 
-			disk->read((lba & ~(READ_BUFFER_BLOCK_SIZE - 1)), READ_BUFFER_BLOCK_SIZE, testBuffer);
-			memcpy((void*) readCacheBuffer, (const void*) testBuffer, READ_BUFFER_BLOCK_SIZE * 512);
-
-			if (uhOh[0] != 0xFE) {
-				panic("MEMORY OVERFLOW VCache::read, probably caused by disk driver");
-			}
-			//int mcr = memcmp((const void*) testBuffer, (const void*) readCacheBuffer, READ_BUFFER_BLOCK_SIZE * 512);
-
-			//kprintf("mcr = %d\n", mcr);
+			disk->read((lba & ~(READ_BUFFER_BLOCK_SIZE - 1)), READ_BUFFER_BLOCK_SIZE, readCacheBuffer /*testBuffer*/);
+			//memcpy((void*) readCacheBuffer, (const void*) testBuffer, READ_BUFFER_BLOCK_SIZE * 512);
 		}
 
 		kprintf("from cache (offset = 0x%X)\n", (lba - readCacheLBA) * disk->sectorSize);
