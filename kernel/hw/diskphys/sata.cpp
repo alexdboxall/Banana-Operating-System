@@ -69,6 +69,7 @@ int SATA::open(int _deviceNum, int b, void* _ide)
 int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 {
 	while (count > 16) {
+		kprintf("count > 16.\n");
 		int ret = access(lba, 16, buffer, write);
 		count -= 16;
 		lba += 16;
