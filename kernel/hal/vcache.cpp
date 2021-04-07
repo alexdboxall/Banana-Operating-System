@@ -131,7 +131,7 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 			//SATA does it subtly
 			//ATA does it blatantly
 			for (int i = 0; i < READ_BUFFER_BLOCK_SIZE; ++i) {
-				disk->read((lba & ~(READ_BUFFER_BLOCK_SIZE - 1)) + i, 1, readCacheBuffer + 512 * i);
+				//disk->read((lba & ~(READ_BUFFER_BLOCK_SIZE - 1)) + i, 1, readCacheBuffer + 512 * i);
 			}
 
 			disk->read((lba & ~(READ_BUFFER_BLOCK_SIZE - 1)), READ_BUFFER_BLOCK_SIZE, testBuffer);
