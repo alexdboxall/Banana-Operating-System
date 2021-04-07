@@ -395,6 +395,9 @@ int ACPI::open(int mode, int, void*)
 
 	Thr::loadKernelSymbolTable("C:/Banana/System/KERNEL32.EXE");
 	
+	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/common.sys"), computer);
+	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
+
 	if (computer->features.hasACPI) {
 		File* f = new File("C:/Banana/Drivers/acpica.sys", kernelProcess);
 		if (f && f->exists()) {
@@ -409,9 +412,6 @@ int ACPI::open(int mode, int, void*)
 			writeSimpleBootFlag(sbf);
 		}
 	}
-
-	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/common.sys"), computer);
-	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
 
 	return 0;
 }
