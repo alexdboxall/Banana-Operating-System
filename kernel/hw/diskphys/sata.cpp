@@ -68,8 +68,8 @@ int SATA::open(int _deviceNum, int b, void* _ide)
 
 int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 {
-	while (count > 16) {
-		panic("SATA::access with > 16. SATA::read/write should prevent.")
+	if (count > 16) {
+		panic("SATA::access with > 16. SATA::read/write should prevent.");
 	}
 
 	uint32_t startl = lba & 0xFFFFFFFF;
