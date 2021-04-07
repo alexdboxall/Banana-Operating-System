@@ -157,8 +157,9 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 	//for each sector
 	uint16_t* buffer16 = (uint16_t*) buffer;
 	int ogcount = count;
+	kprintf("Count = %d\n", count);
 	while (count--) {
-		kprintf("Reading sector. buffer16 = 0x%X\n", buffer16);
+		kprintf("Reading sector. buffer16 = 0x%X. count = %d\n", buffer16, count);
 
 		//wait for the device to be ready
 		uint8_t err = ide->polling(channel, 1);
