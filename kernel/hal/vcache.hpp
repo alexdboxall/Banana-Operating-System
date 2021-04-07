@@ -34,6 +34,10 @@ protected:
 	uint8_t* readCacheBuffer;
 	bool readCacheValid = false;
 
+	bool hitBlockEnd = false;
+	bool increaseNextTime = false;
+	int READ_BUFFER_BLOCK_SIZE = 4;
+
 	void writeWriteBuffer();		//what a stupid name
 	void invalidateReadBuffer();
 

@@ -11,9 +11,9 @@
 #pragma GCC optimize ("-fno-align-functions")
 
 //must be a power of 2
-#define READ_BUFFER_BLOCK_SIZE		16
+#define READ_BUFFER_MAX_SECTORS 16
 
-#define WRITE_BUFFER_MAX_SECTORS	64
+#define WRITE_BUFFER_MAX_SECTORS 64
 
 VCache::VCache(PhysicalDisk* d)
 {
@@ -29,7 +29,8 @@ VCache::VCache(PhysicalDisk* d)
 	diskSizeKBs = d->sizeInKBs;
 
 	readCacheValid = false;
-	readCacheBuffer = (uint8_t*) malloc(d->sectorSize * READ_BUFFER_BLOCK_SIZE + 4096);
+	readCacheBuffer = (uint8_t*) malloc(d->sectorSize * READ_BUFFER_MAX_SECTORS + 4096);
+	READ_BUFFER_BLOCK_SIZE = 4;
 
 	writeCacheValid = false;
 	writeCacheBuffer = (uint8_t*) malloc(d->sectorSize * WRITE_BUFFER_MAX_SECTORS);
@@ -41,9 +42,7 @@ VCache::~VCache()
 		writeWriteBuffer();
 	}
 	free(writeCacheBuffer);
-	kprintf("freeing readCacheBuffer.\n");
 	free(readCacheBuffer);
-	kprintf("freed readCacheBuffer.\n");
 }
 
 /*
@@ -55,8 +54,14 @@ bool writeCacheValid = false;
 
 void VCache::invalidateReadBuffer()
 {
+	if (READ_BUFFER_BLOCK_SIZE >= 8) {
+		READ_BUFFER_BLOCK_SIZE /= 2;
+	}
+	kprintf("DECREASING BLOCK SIZE TO %d\n", READ_BUFFER_BLOCK_SIZE);
 	kprintf("   ** invalidating the read buffer.\n");
 	readCacheValid = false;
+	increaseNextTime = false;
+	hitBlockEnd = false;
 }
 
 void VCache::writeWriteBuffer()
@@ -115,6 +120,8 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 {
 	mutex->acquire();
 
+	bool clearBlockEnd = true;
+
 	//NOTE: this is very inefficient, we should check if it is in the cache
 	//		and if it is, just memcpy the data
 	if (writeCacheValid) {
@@ -127,6 +134,26 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 			kprintf("caching now... ");
 			readCacheValid = true;
 			readCacheLBA = lba & ~(READ_BUFFER_BLOCK_SIZE - 1);
+
+			//first in block AND you hit the last in block last time
+			if ((lba & (READ_BUFFER_BLOCK_SIZE - 1)) == 0 && hitBlockEnd) {
+				increaseNextTime = true;
+			}
+
+			//used the last in block?
+			if (((lba - 1) & (READ_BUFFER_BLOCK_SIZE - 1)) == 0) {
+				if (increaseNextTime) {
+					READ_BUFFER_BLOCK_SIZE *= 2;
+					if (READ_BUFFER_BLOCK_SIZE >= READ_BUFFER_MAX_SECTORS) {
+						READ_BUFFER_BLOCK_SIZE = READ_BUFFER_MAX_SECTORS;
+					}
+					kprintf("INCREASING BLOCK SIZE TO %d\n", READ_BUFFER_BLOCK_SIZE);
+					hitBlockEnd = false;
+				} else {
+					hitBlockEnd = true;
+					clearBlockEnd = false;
+				}
+			}
 
 			//both disk drivers somehow fail the multicount reads
 			//SATA does it subtly
@@ -143,6 +170,10 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 		kprintf("uncached (%d).\n", count);
 		invalidateReadBuffer();
 		disk->read(lba, count, ptr);
+	}
+
+	if (clearBlockEnd) {
+		hitBlockEnd = false;
 	}
 
 	mutex->release();
