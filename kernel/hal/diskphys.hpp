@@ -37,6 +37,8 @@ public:
 	bool removable = false;
 	bool floppy = false;
 
+	virtual int eject();
+
 	PhysicalDisk(const char* name, int sectorSize);
 	void startCache();
 	virtual ~PhysicalDisk();

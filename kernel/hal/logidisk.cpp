@@ -111,6 +111,11 @@ int LogicalDisk::open(int a, int b, void* c)
 	return -1;
 }
 
+int LogicalDisk::eject()
+{
+	return physDisk->eject();
+}
+
 int LogicalDisk::close(int a, int b, void* c)
 {
 	return -1;

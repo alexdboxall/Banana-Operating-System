@@ -25,3 +25,9 @@ PhysicalDisk::~PhysicalDisk()
 {
 
 }
+
+int eject()
+{
+	printf("Eject called on non-removable medium.\n");
+	return 1;
+}

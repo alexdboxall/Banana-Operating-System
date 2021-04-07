@@ -40,6 +40,7 @@ namespace Sys
 	uint64_t loadDLL(regs* r);
 	uint64_t setTime(regs* r);
 	uint64_t timezone(regs* r);
+	uint64_t eject(regs* r);
 }
 
 int string_ends_with(const char* str, const char* suffix)
@@ -695,6 +696,7 @@ namespace Sys
 		systemCallHandlers[(int) SystemCallNumber::LoadDLL] = Sys::loadDLL;
 		systemCallHandlers[(int) SystemCallNumber::SetTime] = Sys::setTime;
 		systemCallHandlers[(int) SystemCallNumber::Timezone] = Sys::timezone;
+		systemCallHandlers[(int) SystemCallNumber::Eject] = Sys::eject;
 	}
 
 	uint64_t systemCall(regs* r, void* context)

@@ -40,9 +40,10 @@ public:
 	bool mount();
 	void unmount();
 
+	int eject();
+
 	int open(int a, int b, void* c);
 	int close(int a, int b, void* c);
-
 	int read(uint64_t lba, int count, void* ptr);
 	int write(uint64_t lba, int count, void* ptr);
 };
