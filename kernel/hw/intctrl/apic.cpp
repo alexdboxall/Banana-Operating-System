@@ -11,16 +11,6 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-#define IA32_APIC_BASE_MSR 0x1B
-#define IA32_APIC_BASE_MSR_BSP 0x100 // Processor is a BSP
-#define IA32_APIC_BASE_MSR_ENABLE 0x800
-#define APIC_REGISTER_LVT_TIMER					0x320
-#define APIC_REGISTER_TIMER_INITCNT				0x380
-#define APIC_REGISTER_TIMER_CURRCNT				0x390
-#define APIC_REGISTER_TIMER_DIV					0x3E0
-#define APIC_REGISTER_LVT_MASKED				0x10000
-#define APIC_REGISTER_LVT_TIMER_MODE_PERIODIC	0x20000
-
 bool IOAPICsSetupYet = false;
 IOAPIC* ioapics[8];
 int noOfIOAPICs;
