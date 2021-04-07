@@ -13,7 +13,7 @@
 //must be a power of 2
 #define READ_BUFFER_MAX_SECTORS 16
 
-#define WRITE_BUFFER_MAX_SECTORS 64
+#define WRITE_BUFFER_MAX_SECTORS 128
 
 VCache::VCache(PhysicalDisk* d)
 {
