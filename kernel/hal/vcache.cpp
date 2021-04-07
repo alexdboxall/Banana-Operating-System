@@ -114,9 +114,10 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 		writeWriteBuffer();
 	}
 
+	kprintf("reading from 0x%X\n", (uint32_t) lba);
 	if (count == 1) {
 		if (readCacheValid && lba >= readCacheLBA && lba < readCacheLBA + readCacheSectors) {
-			kprintf("reading from read cache");
+			kprintf("reading from read cache\n");
 			memcpy(ptr, readCacheBuffer + (lba - readCacheLBA) * disk->sectorSize, disk->sectorSize);
 		} else {
 			count = 8;
