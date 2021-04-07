@@ -70,18 +70,17 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 {
 	kprintf("SATA access count = %d, lba = %d, buffer = 0x%X\n", count, (uint32_t*) lba, buffer);
 	while (count > 16) {
-		kprintf("count > 16.\n");
-
 		kprintf("       half access count = %d, lba = %d, buffer = 0x%X\n", count, (uint32_t*) lba, buffer);
 		int ret = access(lba, 16, buffer, write);
 		count -= 16;
 		lba += 16;
 		buffer = (void*) (((uint8_t*) buffer) + 512 * 16);
 		if (count == 0) {
+			kprintf("ending early, count = 0, lba = 0x%X\n", (uint32_t) lba);
 			return ret;
 		}
 	}
-	kprintf(" *   access count = %d, lba = %d, buffer = 0x%X\n", count, (uint32_t*) lba, buffer);
+	kprintf(" *   access count = %d, lba = %d, buffer = 0x%X\n\n", count, (uint32_t*) lba, buffer);
 
 	uint32_t startl = lba & 0xFFFFFFFF;
 	uint32_t starth = lba >> 32;
