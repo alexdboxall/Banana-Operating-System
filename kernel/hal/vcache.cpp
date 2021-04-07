@@ -11,7 +11,7 @@
 #pragma GCC optimize ("-fno-align-functions")
 
 //must be a power of 2
-#define READ_BUFFER_BLOCK_SIZE		4	
+#define READ_BUFFER_BLOCK_SIZE		1
 
 #define WRITE_BUFFER_MAX_SECTORS	64
 
@@ -120,9 +120,9 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 	kprintf("    VCACHE::READ 0x%X - ", (uint32_t) lba);
 	if (count == 1) {
 		if (!(readCacheValid && (lba & ~(READ_BUFFER_BLOCK_SIZE - 1)) == readCacheLBA)) {
-			kprintf("caching now\n");
+			kprintf("caching now... ");
 			readCacheValid = true;
-			readCacheLBA = lba;
+			readCacheLBA = lba & ~(READ_BUFFER_BLOCK_SIZE - 1);
 			disk->read(lba & ~(READ_BUFFER_BLOCK_SIZE - 1), READ_BUFFER_BLOCK_SIZE, readCacheBuffer);
 		}
 
