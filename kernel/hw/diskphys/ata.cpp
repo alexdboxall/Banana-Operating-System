@@ -152,10 +152,11 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 	ide->write(channel, ATA_REG_COMMAND, command);
 
 	//for each sector
-	uint16_t* buffer16 = (uint16_t*) buffer;
 	int ogcount = count;
 	kprintf("Count = %d\n", count);
 	while (count--) {
+		uint16_t* buffer16 = (uint16_t*) buffer;
+
 		kprintf("Reading sector. buffer16 = 0x%X. count = %d\n", buffer16, count);
 
 		//wait for the device to be ready
@@ -175,6 +176,8 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 		} else {
 			asm("cld; rep insw" : : "c"(256), "d"(ide->getBase(channel)), "D"(buffer16) : "flags", "memory");
 		}
+
+		buffer = (void*) (((uint8_t*) buffer) + 512);
 	}
 
 	if (write) {
