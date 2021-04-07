@@ -2664,13 +2664,13 @@ c00019fe:	c3                   	ret
 
 c00019ff <disk_read>:
 c00019ff:	0f b6 44 24 04       	movzx  eax,BYTE PTR [esp+0x4]
-c0001a04:	0f b6 04 85 a0 03 03 c0 	movzx  eax,BYTE PTR [eax*4-0x3ffcfc60]
+c0001a04:	0f b6 04 85 a0 11 03 c0 	movzx  eax,BYTE PTR [eax*4-0x3ffcee60]
 c0001a0c:	89 44 24 04          	mov    DWORD PTR [esp+0x4],eax
 c0001a10:	e9 85 ea 01 00       	jmp    c002049a <fatWrapperReadDisk>
 
 c0001a15 <disk_write>:
 c0001a15:	0f b6 44 24 04       	movzx  eax,BYTE PTR [esp+0x4]
-c0001a1a:	0f b6 04 85 a0 03 03 c0 	movzx  eax,BYTE PTR [eax*4-0x3ffcfc60]
+c0001a1a:	0f b6 04 85 a0 11 03 c0 	movzx  eax,BYTE PTR [eax*4-0x3ffcee60]
 c0001a22:	89 44 24 04          	mov    DWORD PTR [esp+0x4],eax
 c0001a26:	e9 b6 ea 01 00       	jmp    c00204e1 <fatWrapperWriteDisk>
 
@@ -2678,7 +2678,7 @@ c0001a2b <disk_ioctl>:
 c0001a2b:	0f b6 44 24 08       	movzx  eax,BYTE PTR [esp+0x8]
 c0001a30:	89 44 24 08          	mov    DWORD PTR [esp+0x8],eax
 c0001a34:	0f b6 44 24 04       	movzx  eax,BYTE PTR [esp+0x4]
-c0001a39:	0f b6 04 85 a0 03 03 c0 	movzx  eax,BYTE PTR [eax*4-0x3ffcfc60]
+c0001a39:	0f b6 04 85 a0 11 03 c0 	movzx  eax,BYTE PTR [eax*4-0x3ffcee60]
 c0001a41:	89 44 24 04          	mov    DWORD PTR [esp+0x4],eax
 c0001a45:	e9 de ea 01 00       	jmp    c0020528 <fatWrapperIoctl>
 
@@ -18663,7 +18663,7 @@ c000e439:	68 3f 07 00 00       	push   0x73f
 c000e43e:	e8 e1 11 00 00       	call   c000f624 <malloc>
 c000e443:	c7 04 24 00 00 00 00 	mov    DWORD PTR [esp],0x0
 c000e44a:	89 c3                	mov    ebx,eax
-c000e44c:	ff 35 34 02 03 c0    	push   DWORD PTR ds:0xc0030234
+c000e44c:	ff 35 34 10 03 c0    	push   DWORD PTR ds:0xc0031034
 c000e452:	68 2f 97 02 c0       	push   0xc002972f
 c000e457:	6a 01                	push   0x1
 c000e459:	50                   	push   eax
@@ -18677,10 +18677,10 @@ c000e46f:	e8 76 f1 00 00       	call   c001d5ea <Process::createThread(void (*)(
 c000e474:	6a 7a                	push   0x7a
 c000e476:	6a 00                	push   0x0
 c000e478:	68 48 de 01 c0       	push   0xc001de48
-c000e47d:	ff 35 34 02 03 c0    	push   DWORD PTR ds:0xc0030234
+c000e47d:	ff 35 34 10 03 c0    	push   DWORD PTR ds:0xc0031034
 c000e483:	e8 62 f1 00 00       	call   c001d5ea <Process::createThread(void (*)(void*), void*, int)>
 c000e488:	83 c4 20             	add    esp,0x20
-c000e48b:	a3 e8 01 03 c0       	mov    ds:0xc00301e8,eax
+c000e48b:	a3 e8 0f 03 c0       	mov    ds:0xc0030fe8,eax
 c000e490:	c6 05 cd da 02 c0 01 	mov    BYTE PTR ds:0xc002dacd,0x1
 c000e497:	e8 2d fd 00 00       	call   c001e1c9 <Vm::initialise8086()>
 c000e49c:	e8 d7 47 00 00       	call   c0012c78 <Fs::initVFS()>
@@ -21684,7 +21684,7 @@ c001076b:	e8 96 fd ff ff       	call   c0010506 <VgaText::combineColours(unsigne
 c0010770:	5a                   	pop    edx
 c0010771:	0f b6 d8             	movzx  ebx,al
 c0010774:	59                   	pop    ecx
-c0010775:	8b 35 28 10 03 c0    	mov    esi,DWORD PTR ds:0xc0031028
+c0010775:	8b 35 28 1e 03 c0    	mov    esi,DWORD PTR ds:0xc0031e28
 c001077b:	53                   	push   ebx
 c001077c:	b9 0a 00 00 00       	mov    ecx,0xa
 c0010781:	89 f0                	mov    eax,esi
@@ -21747,7 +21747,7 @@ c0010805:	0f b6 f0             	movzx  esi,al
 c0010808:	56                   	push   esi
 c0010809:	e8 9e fd ff ff       	call   c00105ac <VgaText::combineCharAndColour(char, unsigned char)>
 c001080e:	5e                   	pop    esi
-c001080f:	8b 35 24 10 03 c0    	mov    esi,DWORD PTR ds:0xc0031024
+c001080f:	8b 35 24 1e 03 c0    	mov    esi,DWORD PTR ds:0xc0031e24
 c0010815:	5d                   	pop    ebp
 c0010816:	66 89 87 86 00 00 00 	mov    WORD PTR [edi+0x86],ax
 c001081d:	bd 10 27 00 00       	mov    ebp,0x2710
@@ -23361,7 +23361,7 @@ c0011a9f:	68 14 01 00 00       	push   0x114
 c0011aa4:	e8 7b db ff ff       	call   c000f624 <malloc>
 c0011aa9:	83 c4 0c             	add    esp,0xc
 c0011aac:	89 c6                	mov    esi,eax
-c0011aae:	ff 35 34 02 03 c0    	push   DWORD PTR ds:0xc0030234
+c0011aae:	ff 35 34 10 03 c0    	push   DWORD PTR ds:0xc0031034
 c0011ab4:	68 73 9e 02 c0       	push   0xc0029e73
 c0011ab9:	50                   	push   eax
 c0011aba:	e8 8d 13 00 00       	call   c0012e4c <File::File(char const*, Process*)>
@@ -25902,7 +25902,7 @@ c001372e:	5e                   	pop    esi
 c001372f:	5f                   	pop    edi
 c0013730:	e9 6f ff ff ff       	jmp    c00136a4 <Buzzer::stop()>
 c0013735:	89 9e 58 01 00 00    	mov    DWORD PTR [esi+0x158],ebx
-c001373b:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c001373b:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0013740:	c7 44 24 1c e6 00 00 00 	mov    DWORD PTR [esp+0x1c],0xe6
 c0013748:	89 74 24 18          	mov    DWORD PTR [esp+0x18],esi
 c001374c:	c7 44 24 14 b7 36 01 c0 	mov    DWORD PTR [esp+0x14],0xc00136b7
@@ -25919,7 +25919,7 @@ c0013764:	68 14 01 00 00       	push   0x114
 c0013769:	e8 b6 be ff ff       	call   c000f624 <malloc>
 c001376e:	83 c4 0c             	add    esp,0xc
 c0013771:	89 c3                	mov    ebx,eax
-c0013773:	ff 35 34 02 03 c0    	push   DWORD PTR ds:0xc0030234
+c0013773:	ff 35 34 10 03 c0    	push   DWORD PTR ds:0xc0031034
 c0013779:	68 5c a2 02 c0       	push   0xc002a25c
 c001377e:	50                   	push   eax
 c001377f:	e8 c8 f6 ff ff       	call   c0012e4c <File::File(char const*, Process*)>
@@ -27232,11 +27232,11 @@ c00145d7:	56                   	push   esi
 c00145d8:	53                   	push   ebx
 c00145d9:	83 ec 0c             	sub    esp,0xc
 c00145dc:	8b 74 24 20          	mov    esi,DWORD PTR [esp+0x20]
-c00145e0:	80 3d 20 f8 02 c0 00 	cmp    BYTE PTR ds:0xc002f820,0x0
+c00145e0:	80 3d 20 06 03 c0 00 	cmp    BYTE PTR ds:0xc0030620,0x0
 c00145e7:	74 0b                	je     c00145f4 <int_handler+0x1f>
 c00145e9:	fa                   	cli    
 c00145ea:	f4                   	hlt    
-c00145eb:	80 3d 20 f8 02 c0 00 	cmp    BYTE PTR ds:0xc002f820,0x0
+c00145eb:	80 3d 20 06 03 c0 00 	cmp    BYTE PTR ds:0xc0030620,0x0
 c00145f2:	75 f5                	jne    c00145e9 <int_handler+0x14>
 c00145f4:	a1 c8 da 02 c0       	mov    eax,ds:0xc002dac8
 c00145f9:	8b 5e 30             	mov    ebx,DWORD PTR [esi+0x30]
@@ -27440,7 +27440,7 @@ c0014837:	56                   	push   esi
 c0014838:	68 b6 a5 02 c0       	push   0xc002a5b6
 c001483d:	e8 b1 e0 ff ff       	call   c00128f3 <Dbg::kprintf(char const*, ...)>
 c0014842:	59                   	pop    ecx
-c0014843:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014843:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014848:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c001484e:	e8 62 c2 ff ff       	call   c0010ab5 <setActiveTerminal(VgaText*)>
 c0014853:	58                   	pop    eax
@@ -27449,12 +27449,12 @@ c0014857:	5a                   	pop    edx
 c0014858:	c1 e0 05             	shl    eax,0x5
 c001485b:	05 80 ca 02 c0       	add    eax,0xc002ca80
 c0014860:	50                   	push   eax
-c0014861:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014861:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014866:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c001486c:	e8 63 c6 ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c0014871:	59                   	pop    ecx
 c0014872:	58                   	pop    eax
-c0014873:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014873:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014878:	68 c1 a5 02 c0       	push   0xc002a5c1
 c001487d:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0014883:	e8 4c c6 ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
@@ -27464,89 +27464,89 @@ c001488e:	5a                   	pop    edx
 c001488f:	8b 40 40             	mov    eax,DWORD PTR [eax+0x40]
 c0014892:	83 c0 0c             	add    eax,0xc
 c0014895:	50                   	push   eax
-c0014896:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014896:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c001489b:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c00148a1:	e8 2e c6 ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c00148a6:	59                   	pop    ecx
 c00148a7:	58                   	pop    eax
-c00148a8:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c00148a8:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c00148ad:	68 ca a5 02 c0       	push   0xc002a5ca
 c00148b2:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c00148b8:	e8 17 c6 ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c00148bd:	58                   	pop    eax
-c00148be:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c00148be:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c00148c3:	5a                   	pop    edx
 c00148c4:	ff 73 38             	push   DWORD PTR [ebx+0x38]
 c00148c7:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c00148cd:	e8 28 c6 ff ff       	call   c0010efa <VgaText::putx(unsigned int)>
 c00148d2:	59                   	pop    ecx
 c00148d3:	58                   	pop    eax
-c00148d4:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c00148d4:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c00148d9:	68 d2 a5 02 c0       	push   0xc002a5d2
 c00148de:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c00148e4:	e8 eb c5 ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c00148e9:	58                   	pop    eax
-c00148ea:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c00148ea:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c00148ef:	5a                   	pop    edx
 c00148f0:	ff 73 1c             	push   DWORD PTR [ebx+0x1c]
 c00148f3:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c00148f9:	e8 fc c5 ff ff       	call   c0010efa <VgaText::putx(unsigned int)>
 c00148fe:	59                   	pop    ecx
 c00148ff:	58                   	pop    eax
-c0014900:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014900:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014905:	68 da a5 02 c0       	push   0xc002a5da
 c001490a:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0014910:	e8 bf c5 ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c0014915:	58                   	pop    eax
-c0014916:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014916:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c001491b:	5a                   	pop    edx
 c001491c:	ff 73 44             	push   DWORD PTR [ebx+0x44]
 c001491f:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0014925:	e8 d0 c5 ff ff       	call   c0010efa <VgaText::putx(unsigned int)>
 c001492a:	59                   	pop    ecx
 c001492b:	58                   	pop    eax
-c001492c:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c001492c:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014931:	68 e2 a5 02 c0       	push   0xc002a5e2
 c0014936:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c001493c:	e8 93 c5 ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c0014941:	58                   	pop    eax
-c0014942:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014942:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014947:	5a                   	pop    edx
 c0014948:	ff 73 3c             	push   DWORD PTR [ebx+0x3c]
 c001494b:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0014951:	e8 a4 c5 ff ff       	call   c0010efa <VgaText::putx(unsigned int)>
 c0014956:	59                   	pop    ecx
 c0014957:	58                   	pop    eax
-c0014958:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014958:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c001495d:	68 ea a5 02 c0       	push   0xc002a5ea
 c0014962:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0014968:	e8 67 c5 ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c001496d:	58                   	pop    eax
-c001496e:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c001496e:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014973:	5a                   	pop    edx
 c0014974:	ff 73 34             	push   DWORD PTR [ebx+0x34]
 c0014977:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c001497d:	e8 78 c5 ff ff       	call   c0010efa <VgaText::putx(unsigned int)>
 c0014982:	59                   	pop    ecx
 c0014983:	58                   	pop    eax
-c0014984:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014984:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014989:	68 f2 a5 02 c0       	push   0xc002a5f2
 c001498e:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0014994:	e8 3b c5 ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c0014999:	58                   	pop    eax
-c001499a:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c001499a:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c001499f:	5a                   	pop    edx
 c00149a0:	ff 73 40             	push   DWORD PTR [ebx+0x40]
 c00149a3:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c00149a9:	e8 4c c5 ff ff       	call   c0010efa <VgaText::putx(unsigned int)>
 c00149ae:	59                   	pop    ecx
 c00149af:	58                   	pop    eax
-c00149b0:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c00149b0:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c00149b5:	68 fa a5 02 c0       	push   0xc002a5fa
 c00149ba:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c00149c0:	e8 0f c5 ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c00149c5:	58                   	pop    eax
-c00149c6:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c00149c6:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c00149cb:	5a                   	pop    edx
 c00149cc:	8b 54 24 14          	mov    edx,DWORD PTR [esp+0x14]
 c00149d0:	52                   	push   edx
@@ -27554,42 +27554,42 @@ c00149d1:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c00149d7:	e8 1e c5 ff ff       	call   c0010efa <VgaText::putx(unsigned int)>
 c00149dc:	59                   	pop    ecx
 c00149dd:	58                   	pop    eax
-c00149de:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c00149de:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c00149e3:	68 03 a6 02 c0       	push   0xc002a603
 c00149e8:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c00149ee:	e8 e1 c4 ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c00149f3:	58                   	pop    eax
-c00149f4:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c00149f4:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c00149f9:	5a                   	pop    edx
 c00149fa:	57                   	push   edi
 c00149fb:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0014a01:	e8 f4 c4 ff ff       	call   c0010efa <VgaText::putx(unsigned int)>
 c0014a06:	59                   	pop    ecx
-c0014a07:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014a07:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014a0c:	5f                   	pop    edi
 c0014a0d:	68 0b a6 02 c0       	push   0xc002a60b
 c0014a12:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0014a18:	e8 b7 c4 ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c0014a1d:	58                   	pop    eax
-c0014a1e:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014a1e:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014a23:	5a                   	pop    edx
 c0014a24:	56                   	push   esi
 c0014a25:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0014a2b:	e8 ca c4 ff ff       	call   c0010efa <VgaText::putx(unsigned int)>
 c0014a30:	59                   	pop    ecx
-c0014a31:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014a31:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014a36:	5e                   	pop    esi
 c0014a37:	68 13 a6 02 c0       	push   0xc002a613
 c0014a3c:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0014a42:	e8 8d c4 ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c0014a47:	5f                   	pop    edi
 c0014a48:	58                   	pop    eax
-c0014a49:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014a49:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014a4e:	55                   	push   ebp
 c0014a4f:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0014a55:	e8 a0 c4 ff ff       	call   c0010efa <VgaText::putx(unsigned int)>
 c0014a5a:	58                   	pop    eax
-c0014a5b:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014a5b:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014a60:	5a                   	pop    edx
 c0014a61:	68 1b a6 02 c0       	push   0xc002a61b
 c0014a66:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
@@ -27598,11 +27598,11 @@ c0014a71:	0f 21 c0             	mov    eax,db0
 c0014a74:	59                   	pop    ecx
 c0014a75:	5e                   	pop    esi
 c0014a76:	50                   	push   eax
-c0014a77:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014a77:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014a7c:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0014a82:	e8 73 c4 ff ff       	call   c0010efa <VgaText::putx(unsigned int)>
 c0014a87:	5f                   	pop    edi
-c0014a88:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014a88:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014a8d:	5d                   	pop    ebp
 c0014a8e:	68 24 a6 02 c0       	push   0xc002a624
 c0014a93:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
@@ -27611,11 +27611,11 @@ c0014a9e:	0f 21 c8             	mov    eax,db1
 c0014aa1:	5a                   	pop    edx
 c0014aa2:	59                   	pop    ecx
 c0014aa3:	50                   	push   eax
-c0014aa4:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014aa4:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014aa9:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0014aaf:	e8 46 c4 ff ff       	call   c0010efa <VgaText::putx(unsigned int)>
 c0014ab4:	5e                   	pop    esi
-c0014ab5:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014ab5:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014aba:	5f                   	pop    edi
 c0014abb:	68 2c a6 02 c0       	push   0xc002a62c
 c0014ac0:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
@@ -27624,11 +27624,11 @@ c0014acb:	0f 21 d0             	mov    eax,db2
 c0014ace:	5d                   	pop    ebp
 c0014acf:	5a                   	pop    edx
 c0014ad0:	50                   	push   eax
-c0014ad1:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014ad1:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014ad6:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0014adc:	e8 19 c4 ff ff       	call   c0010efa <VgaText::putx(unsigned int)>
 c0014ae1:	59                   	pop    ecx
-c0014ae2:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014ae2:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014ae7:	5e                   	pop    esi
 c0014ae8:	68 34 a6 02 c0       	push   0xc002a634
 c0014aed:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
@@ -27637,11 +27637,11 @@ c0014af8:	0f 21 d8             	mov    eax,db3
 c0014afb:	5f                   	pop    edi
 c0014afc:	5d                   	pop    ebp
 c0014afd:	50                   	push   eax
-c0014afe:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014afe:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014b03:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0014b09:	e8 ec c3 ff ff       	call   c0010efa <VgaText::putx(unsigned int)>
 c0014b0e:	58                   	pop    eax
-c0014b0f:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014b0f:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014b14:	5a                   	pop    edx
 c0014b15:	68 3c a6 02 c0       	push   0xc002a63c
 c0014b1a:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
@@ -27650,11 +27650,11 @@ c0014b25:	0f 21 f0             	mov    eax,db6
 c0014b28:	59                   	pop    ecx
 c0014b29:	5e                   	pop    esi
 c0014b2a:	50                   	push   eax
-c0014b2b:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014b2b:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014b30:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0014b36:	e8 bf c3 ff ff       	call   c0010efa <VgaText::putx(unsigned int)>
 c0014b3b:	5f                   	pop    edi
-c0014b3c:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014b3c:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014b41:	5d                   	pop    ebp
 c0014b42:	68 44 a6 02 c0       	push   0xc002a644
 c0014b47:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
@@ -27663,7 +27663,7 @@ c0014b52:	0f 21 f8             	mov    eax,db7
 c0014b55:	5a                   	pop    edx
 c0014b56:	59                   	pop    ecx
 c0014b57:	50                   	push   eax
-c0014b58:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014b58:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014b5d:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0014b63:	e8 92 c3 ff ff       	call   c0010efa <VgaText::putx(unsigned int)>
 c0014b68:	5e                   	pop    esi
@@ -27679,25 +27679,25 @@ c0014b7c:	56                   	push   esi
 c0014b7d:	68 4c a6 02 c0       	push   0xc002a64c
 c0014b82:	e8 6c dd ff ff       	call   c00128f3 <Dbg::kprintf(char const*, ...)>
 c0014b87:	5a                   	pop    edx
-c0014b88:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014b88:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014b8d:	59                   	pop    ecx
 c0014b8e:	68 5a a6 02 c0       	push   0xc002a65a
 c0014b93:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0014b99:	e8 36 c3 ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c0014b9e:	5f                   	pop    edi
-c0014b9f:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014b9f:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014ba4:	5d                   	pop    ebp
 c0014ba5:	56                   	push   esi
 c0014ba6:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0014bac:	e8 23 c3 ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c0014bb1:	58                   	pop    eax
-c0014bb2:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014bb2:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014bb7:	5a                   	pop    edx
 c0014bb8:	68 66 a6 02 c0       	push   0xc002a666
 c0014bbd:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0014bc3:	e8 0c c3 ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c0014bc8:	59                   	pop    ecx
-c0014bc9:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0014bc9:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0014bce:	8b b8 26 05 00 00    	mov    edi,DWORD PTR [eax+0x526]
 c0014bd4:	ff 73 38             	push   DWORD PTR [ebx+0x38]
 c0014bd7:	e8 4f 82 00 00       	call   c001ce2b <Thr::getDriverOffsetFromAddress(unsigned long)>
@@ -28942,7 +28942,7 @@ c00159d2:	a0 a0 e0 02 c0       	mov    al,ds:0xc002e0a0
 c00159d7:	83 f0 01             	xor    eax,0x1
 c00159da:	84 c0                	test   al,al
 c00159dc:	74 20                	je     c00159fe <sendKeyboardToken(KeyboardToken)+0x200>
-c00159de:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c00159de:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c00159e3:	6a 01                	push   0x1
 c00159e5:	6a 00                	push   0x0
 c00159e7:	68 da 56 01 c0       	push   0xc00156da
@@ -28958,7 +28958,7 @@ c0015a07:	a0 a0 e0 02 c0       	mov    al,ds:0xc002e0a0
 c0015a0c:	83 f0 01             	xor    eax,0x1
 c0015a0f:	84 c0                	test   al,al
 c0015a11:	74 1e                	je     c0015a31 <sendKeyboardToken(KeyboardToken)+0x233>
-c0015a13:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0015a13:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0015a18:	6a 01                	push   0x1
 c0015a1a:	6a 00                	push   0x0
 c0015a1c:	68 36 57 01 c0       	push   0xc0015736
@@ -30005,9 +30005,9 @@ c0016688:	80 3d cd da 02 c0 00 	cmp    BYTE PTR ds:0xc002dacd,0x0
 c001668f:	0f 84 07 01 00 00    	je     c001679c <timerHandler(unsigned long long)+0x12f>
 c0016695:	e8 45 6e 00 00       	call   c001d4df <lockStuff()>
 c001669a:	83 ec 0c             	sub    esp,0xc
-c001669d:	68 1c 02 03 c0       	push   0xc003021c
+c001669d:	68 1c 10 03 c0       	push   0xc003101c
 c00166a2:	e8 e7 1a 01 00       	call   c002818e <LinkedList<ThreadControlBlock volatile>::getFirstElement()>
-c00166a7:	c7 04 24 1c 02 03 c0 	mov    DWORD PTR [esp],0xc003021c
+c00166a7:	c7 04 24 1c 10 03 c0 	mov    DWORD PTR [esp],0xc003101c
 c00166ae:	89 c3                	mov    ebx,eax
 c00166b0:	e8 e1 1a 01 00       	call   c0028196 <LinkedList<ThreadControlBlock volatile>::isEmpty()>
 c00166b5:	83 c4 10             	add    esp,0x10
@@ -30025,26 +30025,26 @@ c00166db:	83 c4 10             	add    esp,0x10
 c00166de:	39 eb                	cmp    ebx,ebp
 c00166e0:	75 12                	jne    c00166f4 <timerHandler(unsigned long long)+0x87>
 c00166e2:	83 ec 0c             	sub    esp,0xc
-c00166e5:	68 1c 02 03 c0       	push   0xc003021c
+c00166e5:	68 1c 10 03 c0       	push   0xc003101c
 c00166ea:	e8 9f 1a 01 00       	call   c002818e <LinkedList<ThreadControlBlock volatile>::getFirstElement()>
 c00166ef:	89 c3                	mov    ebx,eax
 c00166f1:	83 c4 10             	add    esp,0x10
 c00166f4:	83 ec 0c             	sub    esp,0xc
-c00166f7:	68 1c 02 03 c0       	push   0xc003021c
+c00166f7:	68 1c 10 03 c0       	push   0xc003101c
 c00166fc:	e8 95 1a 01 00       	call   c0028196 <LinkedList<ThreadControlBlock volatile>::isEmpty()>
 c0016701:	83 c4 10             	add    esp,0x10
 c0016704:	84 c0                	test   al,al
 c0016706:	75 b4                	jne    c00166bc <timerHandler(unsigned long long)+0x4f>
 c0016708:	83 ec 0c             	sub    esp,0xc
-c001670b:	68 1c 02 03 c0       	push   0xc003021c
+c001670b:	68 1c 10 03 c0       	push   0xc003101c
 c0016710:	e8 79 1a 01 00       	call   c002818e <LinkedList<ThreadControlBlock volatile>::getFirstElement()>
 c0016715:	83 c4 10             	add    esp,0x10
 c0016718:	39 d8                	cmp    eax,ebx
 c001671a:	74 a0                	je     c00166bc <timerHandler(unsigned long long)+0x4f>
 c001671c:	83 ec 0c             	sub    esp,0xc
-c001671f:	68 1c 02 03 c0       	push   0xc003021c
+c001671f:	68 1c 10 03 c0       	push   0xc003101c
 c0016724:	e8 65 1a 01 00       	call   c002818e <LinkedList<ThreadControlBlock volatile>::getFirstElement()>
-c0016729:	c7 04 24 1c 02 03 c0 	mov    DWORD PTR [esp],0xc003021c
+c0016729:	c7 04 24 1c 10 03 c0 	mov    DWORD PTR [esp],0xc003101c
 c0016730:	89 c5                	mov    ebp,eax
 c0016732:	e8 7b 1a 01 00       	call   c00281b2 <LinkedList<ThreadControlBlock volatile>::removeFirst()>
 c0016737:	8b 55 2c             	mov    edx,DWORD PTR [ebp+0x2c]
@@ -30057,7 +30057,7 @@ c001674d:	73 83                	jae    c00166d2 <timerHandler(unsigned long long
 c001674f:	50                   	push   eax
 c0016750:	50                   	push   eax
 c0016751:	55                   	push   ebp
-c0016752:	68 1c 02 03 c0       	push   0xc003021c
+c0016752:	68 1c 10 03 c0       	push   0xc003101c
 c0016757:	e8 04 1b 01 00       	call   c0028260 <LinkedList<ThreadControlBlock volatile>::addElement(ThreadControlBlock volatile*)>
 c001675c:	eb 93                	jmp    c00166f1 <timerHandler(unsigned long long)+0x84>
 c001675e:	80 3d cc da 02 c0 00 	cmp    BYTE PTR ds:0xc002dacc,0x0
@@ -30485,7 +30485,7 @@ c0016c5a:	89 43 30             	mov    DWORD PTR [ebx+0x30],eax
 c0016c5d:	c6 05 60 e1 02 c0 fe 	mov    BYTE PTR ds:0xc002e160,0xfe
 c0016c64:	8b 4b 08             	mov    ecx,DWORD PTR [ebx+0x8]
 c0016c67:	8b 29                	mov    ebp,DWORD PTR [ecx]
-c0016c69:	c7 04 24 60 e3 02 c0 	mov    DWORD PTR [esp],0xc002e360
+c0016c69:	c7 04 24 60 f1 02 c0 	mov    DWORD PTR [esp],0xc002f160
 c0016c70:	6a 08                	push   0x8
 c0016c72:	52                   	push   edx
 c0016c73:	50                   	push   eax
@@ -30493,7 +30493,7 @@ c0016c74:	51                   	push   ecx
 c0016c75:	ff 55 28             	call   DWORD PTR [ebp+0x28]
 c0016c78:	83 c4 1c             	add    esp,0x1c
 c0016c7b:	68 00 10 00 00       	push   0x1000
-c0016c80:	68 60 e3 02 c0       	push   0xc002e360
+c0016c80:	68 60 f1 02 c0       	push   0xc002f160
 c0016c85:	ff 73 38             	push   DWORD PTR [ebx+0x38]
 c0016c88:	e8 13 9a fe ff       	call   c00006a0 <memcpy>
 c0016c8d:	83 c4 10             	add    esp,0x10
@@ -31048,10 +31048,10 @@ c0017238:	83 ec 0c             	sub    esp,0xc
 c001723b:	68 8c ab 02 c0       	push   0xc002ab8c
 c0017240:	e8 ae b6 ff ff       	call   c00128f3 <Dbg::kprintf(char const*, ...)>
 c0017245:	83 c4 10             	add    esp,0x10
-c0017248:	a1 88 f3 02 c0       	mov    eax,ds:0xc002f388
+c0017248:	a1 88 01 03 c0       	mov    eax,ds:0xc0030188
 c001724d:	85 c0                	test   eax,eax
 c001724f:	74 07                	je     c0017258 <ACPI::close(int, int, void*)+0x3e>
-c0017251:	a1 88 f3 02 c0       	mov    eax,ds:0xc002f388
+c0017251:	a1 88 01 03 c0       	mov    eax,ds:0xc0030188
 c0017256:	ff d0                	call   eax
 c0017258:	83 ec 0c             	sub    esp,0xc
 c001725b:	68 b0 ac 02 c0       	push   0xc002acb0
@@ -31061,10 +31061,10 @@ c0017268:	b8 ff ff ff ff       	mov    eax,0xffffffff
 c001726d:	eb 5c                	jmp    c00172cb <ACPI::close(int, int, void*)+0xb1>
 c001726f:	83 7c 24 24 01       	cmp    DWORD PTR [esp+0x24],0x1
 c0017274:	75 50                	jne    c00172c6 <ACPI::close(int, int, void*)+0xac>
-c0017276:	a1 84 f3 02 c0       	mov    eax,ds:0xc002f384
+c0017276:	a1 84 01 03 c0       	mov    eax,ds:0xc0030184
 c001727b:	85 c0                	test   eax,eax
 c001727d:	74 07                	je     c0017286 <ACPI::close(int, int, void*)+0x6c>
-c001727f:	a1 84 f3 02 c0       	mov    eax,ds:0xc002f384
+c001727f:	a1 84 01 03 c0       	mov    eax,ds:0xc0030184
 c0017284:	ff d0                	call   eax
 c0017286:	c6 44 24 0f 02       	mov    BYTE PTR [esp+0xf],0x2
 c001728b:	0f b6 44 24 0f       	movzx  eax,BYTE PTR [esp+0xf]
@@ -31135,7 +31135,7 @@ c0017363:	8a 80 e8 01 00 00    	mov    al,BYTE PTR [eax+0x1e8]
 c0017369:	83 e0 04             	and    eax,0x4
 c001736c:	84 c0                	test   al,al
 c001736e:	0f 84 05 02 00 00    	je     c0017579 <loadACPITables(unsigned char*)+0x220>
-c0017374:	a0 a0 f5 02 c0       	mov    al,ds:0xc002f5a0
+c0017374:	a0 a0 03 03 c0       	mov    al,ds:0xc00303a0
 c0017379:	84 c0                	test   al,al
 c001737b:	74 75                	je     c00173f2 <loadACPITables(unsigned char*)+0x99>
 c001737d:	8b 44 24 50          	mov    eax,DWORD PTR [esp+0x50]
@@ -31161,11 +31161,11 @@ c00173ca:	8b 44 24 24          	mov    eax,DWORD PTR [esp+0x24]
 c00173ce:	8b 50 04             	mov    edx,DWORD PTR [eax+0x4]
 c00173d1:	8b 00                	mov    eax,DWORD PTR [eax]
 c00173d3:	89 c1                	mov    ecx,eax
-c00173d5:	a1 8c f3 02 c0       	mov    eax,ds:0xc002f38c
+c00173d5:	a1 8c 01 03 c0       	mov    eax,ds:0xc003018c
 c00173da:	8d 50 01             	lea    edx,[eax+0x1]
-c00173dd:	89 15 8c f3 02 c0    	mov    DWORD PTR ds:0xc002f38c,edx
+c00173dd:	89 15 8c 01 03 c0    	mov    DWORD PTR ds:0xc003018c,edx
 c00173e3:	89 ca                	mov    edx,ecx
-c00173e5:	89 14 c5 a4 f3 02 c0 	mov    DWORD PTR [eax*8-0x3ffd0c5c],edx
+c00173e5:	89 14 c5 a4 01 03 c0 	mov    DWORD PTR [eax*8-0x3ffcfe5c],edx
 c00173ec:	ff 44 24 3c          	inc    DWORD PTR [esp+0x3c]
 c00173f0:	eb ac                	jmp    c001739e <loadACPITables(unsigned char*)+0x45>
 c00173f2:	8b 44 24 50          	mov    eax,DWORD PTR [esp+0x50]
@@ -31189,19 +31189,19 @@ c0017434:	c1 e0 02             	shl    eax,0x2
 c0017437:	01 44 24 14          	add    DWORD PTR [esp+0x14],eax
 c001743b:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
 c001743f:	8b 08                	mov    ecx,DWORD PTR [eax]
-c0017441:	a1 8c f3 02 c0       	mov    eax,ds:0xc002f38c
+c0017441:	a1 8c 01 03 c0       	mov    eax,ds:0xc003018c
 c0017446:	8d 50 01             	lea    edx,[eax+0x1]
-c0017449:	89 15 8c f3 02 c0    	mov    DWORD PTR ds:0xc002f38c,edx
+c0017449:	89 15 8c 01 03 c0    	mov    DWORD PTR ds:0xc003018c,edx
 c001744f:	89 ca                	mov    edx,ecx
-c0017451:	89 14 c5 a4 f3 02 c0 	mov    DWORD PTR [eax*8-0x3ffd0c5c],edx
+c0017451:	89 14 c5 a4 01 03 c0 	mov    DWORD PTR [eax*8-0x3ffcfe5c],edx
 c0017458:	ff 44 24 38          	inc    DWORD PTR [esp+0x38]
 c001745c:	eb b5                	jmp    c0017413 <loadACPITables(unsigned char*)+0xba>
 c001745e:	c7 44 24 34 00 00 00 00 	mov    DWORD PTR [esp+0x34],0x0
-c0017466:	a1 8c f3 02 c0       	mov    eax,ds:0xc002f38c
+c0017466:	a1 8c 01 03 c0       	mov    eax,ds:0xc003018c
 c001746b:	39 44 24 34          	cmp    DWORD PTR [esp+0x34],eax
 c001746f:	0f 8d 05 01 00 00    	jge    c001757a <loadACPITables(unsigned char*)+0x221>
 c0017475:	8b 44 24 34          	mov    eax,DWORD PTR [esp+0x34]
-c0017479:	8b 04 c5 a4 f3 02 c0 	mov    eax,DWORD PTR [eax*8-0x3ffd0c5c]
+c0017479:	8b 04 c5 a4 01 03 c0 	mov    eax,DWORD PTR [eax*8-0x3ffcfe5c]
 c0017480:	89 44 24 10          	mov    DWORD PTR [esp+0x10],eax
 c0017484:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
 c0017488:	89 44 24 0c          	mov    DWORD PTR [esp+0xc],eax
@@ -31228,7 +31228,7 @@ c00174c7:	09 f0                	or     eax,esi
 c00174c9:	89 44 24 10          	mov    DWORD PTR [esp+0x10],eax
 c00174cd:	8b 44 24 34          	mov    eax,DWORD PTR [esp+0x34]
 c00174d1:	c1 e0 03             	shl    eax,0x3
-c00174d4:	05 a0 f3 02 c0       	add    eax,0xc002f3a0
+c00174d4:	05 a0 01 03 c0       	add    eax,0xc00301a0
 c00174d9:	83 ec 04             	sub    esp,0x4
 c00174dc:	6a 04                	push   0x4
 c00174de:	ff 74 24 18          	push   DWORD PTR [esp+0x18]
@@ -31272,7 +31272,7 @@ c0017559:	e8 09 a7 ff ff       	call   c0011c67 <Virt::freeKernelVirtualPages(un
 c001755e:	83 c4 10             	add    esp,0x10
 c0017561:	8b 44 24 34          	mov    eax,DWORD PTR [esp+0x34]
 c0017565:	8b 54 24 10          	mov    edx,DWORD PTR [esp+0x10]
-c0017569:	89 14 c5 a4 f3 02 c0 	mov    DWORD PTR [eax*8-0x3ffd0c5c],edx
+c0017569:	89 14 c5 a4 01 03 c0 	mov    DWORD PTR [eax*8-0x3ffcfe5c],edx
 c0017570:	ff 44 24 34          	inc    DWORD PTR [esp+0x34]
 c0017574:	e9 ed fe ff ff       	jmp    c0017466 <loadACPITables(unsigned char*)+0x10d>
 c0017579:	90                   	nop
@@ -31351,13 +31351,13 @@ c0017657:	09 f0                	or     eax,esi
 c0017659:	89 44 24 30          	mov    DWORD PTR [esp+0x30],eax
 c001765d:	80 7c 24 3b 00       	cmp    BYTE PTR [esp+0x3b],0x0
 c0017662:	75 11                	jne    c0017675 <findRSDT(unsigned char*)+0xf5>
-c0017664:	c6 05 a0 f5 02 c0 00 	mov    BYTE PTR ds:0xc002f5a0,0x0
+c0017664:	c6 05 a0 03 03 c0 00 	mov    BYTE PTR ds:0xc00303a0,0x0
 c001766b:	8b 44 24 30          	mov    eax,DWORD PTR [esp+0x30]
 c001766f:	89 44 24 3c          	mov    DWORD PTR [esp+0x3c],eax
 c0017673:	eb 1f                	jmp    c0017694 <findRSDT(unsigned char*)+0x114>
 c0017675:	80 7c 24 3b 02       	cmp    BYTE PTR [esp+0x3b],0x2
 c001767a:	75 11                	jne    c001768d <findRSDT(unsigned char*)+0x10d>
-c001767c:	c6 05 a0 f5 02 c0 01 	mov    BYTE PTR ds:0xc002f5a0,0x1
+c001767c:	c6 05 a0 03 03 c0 01 	mov    BYTE PTR ds:0xc00303a0,0x1
 c0017683:	8b 44 24 34          	mov    eax,DWORD PTR [esp+0x34]
 c0017687:	89 44 24 3c          	mov    DWORD PTR [esp+0x3c],eax
 c001768b:	eb 07                	jmp    c0017694 <findRSDT(unsigned char*)+0x114>
@@ -31379,12 +31379,12 @@ c00176b1:	75 07                	jne    c00176ba <findDataTable(unsigned char*, c
 c00176b3:	b8 00 00 00 00       	mov    eax,0x0
 c00176b8:	eb 7c                	jmp    c0017736 <findDataTable(unsigned char*, char*)+0x98>
 c00176ba:	c7 44 24 0c 00 00 00 00 	mov    DWORD PTR [esp+0xc],0x0
-c00176c2:	a1 8c f3 02 c0       	mov    eax,ds:0xc002f38c
+c00176c2:	a1 8c 01 03 c0       	mov    eax,ds:0xc003018c
 c00176c7:	39 44 24 0c          	cmp    DWORD PTR [esp+0xc],eax
 c00176cb:	7d 3a                	jge    c0017707 <findDataTable(unsigned char*, char*)+0x69>
 c00176cd:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
 c00176d1:	c1 e0 03             	shl    eax,0x3
-c00176d4:	05 a0 f3 02 c0       	add    eax,0xc002f3a0
+c00176d4:	05 a0 01 03 c0       	add    eax,0xc00301a0
 c00176d9:	83 ec 04             	sub    esp,0x4
 c00176dc:	6a 04                	push   0x4
 c00176de:	ff 74 24 2c          	push   DWORD PTR [esp+0x2c]
@@ -31396,11 +31396,11 @@ c00176ed:	0f 94 c0             	sete   al
 c00176f0:	84 c0                	test   al,al
 c00176f2:	74 0d                	je     c0017701 <findDataTable(unsigned char*, char*)+0x63>
 c00176f4:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
-c00176f8:	8b 04 c5 a4 f3 02 c0 	mov    eax,DWORD PTR [eax*8-0x3ffd0c5c]
+c00176f8:	8b 04 c5 a4 01 03 c0 	mov    eax,DWORD PTR [eax*8-0x3ffcfe5c]
 c00176ff:	eb 35                	jmp    c0017736 <findDataTable(unsigned char*, char*)+0x98>
 c0017701:	ff 44 24 0c          	inc    DWORD PTR [esp+0xc]
 c0017705:	eb bb                	jmp    c00176c2 <findDataTable(unsigned char*, char*)+0x24>
-c0017707:	a0 a0 f5 02 c0       	mov    al,ds:0xc002f5a0
+c0017707:	a0 a0 03 03 c0       	mov    al,ds:0xc00303a0
 c001770c:	84 c0                	test   al,al
 c001770e:	74 07                	je     c0017717 <findDataTable(unsigned char*, char*)+0x79>
 c0017710:	b8 58 00 00 00       	mov    eax,0x58
@@ -31425,8 +31425,8 @@ c0017749:	83 e0 04             	and    eax,0x4
 c001774c:	84 c0                	test   al,al
 c001774e:	0f 84 63 04 00 00    	je     c0017bb7 <scanMADT()+0x47d>
 c0017754:	e8 76 fb ff ff       	call   c00172cf <findRSDP()>
-c0017759:	a3 ac f5 02 c0       	mov    ds:0xc002f5ac,eax
-c001775e:	a1 ac f5 02 c0       	mov    eax,ds:0xc002f5ac
+c0017759:	a3 ac 03 03 c0       	mov    ds:0xc00303ac,eax
+c001775e:	a1 ac 03 03 c0       	mov    eax,ds:0xc00303ac
 c0017763:	85 c0                	test   eax,eax
 c0017765:	75 19                	jne    c0017780 <scanMADT()+0x46>
 c0017767:	a1 c8 da 02 c0       	mov    eax,ds:0xc002dac8
@@ -31434,13 +31434,13 @@ c001776c:	8a 90 e8 01 00 00    	mov    dl,BYTE PTR [eax+0x1e8]
 c0017772:	83 e2 fb             	and    edx,0xfffffffb
 c0017775:	88 90 e8 01 00 00    	mov    BYTE PTR [eax+0x1e8],dl
 c001777b:	e9 3b 04 00 00       	jmp    c0017bbb <scanMADT()+0x481>
-c0017780:	a1 ac f5 02 c0       	mov    eax,ds:0xc002f5ac
+c0017780:	a1 ac 03 03 c0       	mov    eax,ds:0xc00303ac
 c0017785:	83 ec 0c             	sub    esp,0xc
 c0017788:	50                   	push   eax
 c0017789:	e8 f2 fd ff ff       	call   c0017580 <findRSDT(unsigned char*)>
 c001778e:	83 c4 10             	add    esp,0x10
-c0017791:	a3 a8 f5 02 c0       	mov    ds:0xc002f5a8,eax
-c0017796:	a1 a8 f5 02 c0       	mov    eax,ds:0xc002f5a8
+c0017791:	a3 a8 03 03 c0       	mov    ds:0xc00303a8,eax
+c0017796:	a1 a8 03 03 c0       	mov    eax,ds:0xc00303a8
 c001779b:	85 c0                	test   eax,eax
 c001779d:	75 19                	jne    c00177b8 <scanMADT()+0x7e>
 c001779f:	a1 c8 da 02 c0       	mov    eax,ds:0xc002dac8
@@ -31448,12 +31448,12 @@ c00177a4:	8a 90 e8 01 00 00    	mov    dl,BYTE PTR [eax+0x1e8]
 c00177aa:	83 e2 fb             	and    edx,0xfffffffb
 c00177ad:	88 90 e8 01 00 00    	mov    BYTE PTR [eax+0x1e8],dl
 c00177b3:	e9 03 04 00 00       	jmp    c0017bbb <scanMADT()+0x481>
-c00177b8:	a1 a8 f5 02 c0       	mov    eax,ds:0xc002f5a8
+c00177b8:	a1 a8 03 03 c0       	mov    eax,ds:0xc00303a8
 c00177bd:	83 ec 0c             	sub    esp,0xc
 c00177c0:	50                   	push   eax
 c00177c1:	e8 93 fb ff ff       	call   c0017359 <loadACPITables(unsigned char*)>
 c00177c6:	83 c4 10             	add    esp,0x10
-c00177c9:	a1 a8 f5 02 c0       	mov    eax,ds:0xc002f5a8
+c00177c9:	a1 a8 03 03 c0       	mov    eax,ds:0xc00303a8
 c00177ce:	83 ec 08             	sub    esp,0x8
 c00177d1:	68 a2 ab 02 c0       	push   0xc002aba2
 c00177d6:	50                   	push   eax
@@ -31495,21 +31495,21 @@ c0017870:	75 57                	jne    c00178c9 <scanMADT()+0x18f>
 c0017872:	8b 44 24 2c          	mov    eax,DWORD PTR [esp+0x2c]
 c0017876:	8d 50 01             	lea    edx,[eax+0x1]
 c0017879:	89 54 24 2c          	mov    DWORD PTR [esp+0x2c],edx
-c001787d:	8a 15 a0 f7 02 c0    	mov    dl,BYTE PTR ds:0xc002f7a0
+c001787d:	8a 15 a0 05 03 c0    	mov    dl,BYTE PTR ds:0xc00305a0
 c0017883:	0f b6 d2             	movzx  edx,dl
 c0017886:	8b 4c 24 28          	mov    ecx,DWORD PTR [esp+0x28]
 c001788a:	8a 44 01 2c          	mov    al,BYTE PTR [ecx+eax*1+0x2c]
-c001788e:	88 82 e0 f7 02 c0    	mov    BYTE PTR [edx-0x3ffd0820],al
+c001788e:	88 82 e0 05 03 c0    	mov    BYTE PTR [edx-0x3ffcfa20],al
 c0017894:	8b 44 24 2c          	mov    eax,DWORD PTR [esp+0x2c]
 c0017898:	8d 50 01             	lea    edx,[eax+0x1]
 c001789b:	89 54 24 2c          	mov    DWORD PTR [esp+0x2c],edx
-c001789f:	8a 15 a0 f7 02 c0    	mov    dl,BYTE PTR ds:0xc002f7a0
+c001789f:	8a 15 a0 05 03 c0    	mov    dl,BYTE PTR ds:0xc00305a0
 c00178a5:	8d 4a 01             	lea    ecx,[edx+0x1]
-c00178a8:	88 0d a0 f7 02 c0    	mov    BYTE PTR ds:0xc002f7a0,cl
+c00178a8:	88 0d a0 05 03 c0    	mov    BYTE PTR ds:0xc00305a0,cl
 c00178ae:	0f b6 d2             	movzx  edx,dl
 c00178b1:	8b 4c 24 28          	mov    ecx,DWORD PTR [esp+0x28]
 c00178b5:	8a 44 01 2c          	mov    al,BYTE PTR [ecx+eax*1+0x2c]
-c00178b9:	88 82 c0 f7 02 c0    	mov    BYTE PTR [edx-0x3ffd0840],al
+c00178b9:	88 82 c0 05 03 c0    	mov    BYTE PTR [edx-0x3ffcfa40],al
 c00178bf:	83 44 24 2c 04       	add    DWORD PTR [esp+0x2c],0x4
 c00178c4:	e9 da 02 00 00       	jmp    c0017ba3 <scanMADT()+0x469>
 c00178c9:	80 7c 24 23 01       	cmp    BYTE PTR [esp+0x23],0x1
@@ -31517,11 +31517,11 @@ c00178ce:	0f 85 14 01 00 00    	jne    c00179e8 <scanMADT()+0x2ae>
 c00178d4:	8b 44 24 2c          	mov    eax,DWORD PTR [esp+0x2c]
 c00178d8:	8d 50 01             	lea    edx,[eax+0x1]
 c00178db:	89 54 24 2c          	mov    DWORD PTR [esp+0x2c],edx
-c00178df:	8a 15 60 f6 02 c0    	mov    dl,BYTE PTR ds:0xc002f660
+c00178df:	8a 15 60 04 03 c0    	mov    dl,BYTE PTR ds:0xc0030460
 c00178e5:	0f b6 d2             	movzx  edx,dl
 c00178e8:	8b 4c 24 28          	mov    ecx,DWORD PTR [esp+0x28]
 c00178ec:	8a 44 01 2c          	mov    al,BYTE PTR [ecx+eax*1+0x2c]
-c00178f0:	88 82 80 f6 02 c0    	mov    BYTE PTR [edx-0x3ffd0980],al
+c00178f0:	88 82 80 04 03 c0    	mov    BYTE PTR [edx-0x3ffcfb80],al
 c00178f6:	ff 44 24 2c          	inc    DWORD PTR [esp+0x2c]
 c00178fa:	8b 54 24 28          	mov    edx,DWORD PTR [esp+0x28]
 c00178fe:	8b 44 24 2c          	mov    eax,DWORD PTR [esp+0x2c]
@@ -31552,9 +31552,9 @@ c001794b:	0f b6 c0             	movzx  eax,al
 c001794e:	c1 e0 18             	shl    eax,0x18
 c0017951:	09 c1                	or     ecx,eax
 c0017953:	89 ca                	mov    edx,ecx
-c0017955:	a0 60 f6 02 c0       	mov    al,ds:0xc002f660
+c0017955:	a0 60 04 03 c0       	mov    al,ds:0xc0030460
 c001795a:	0f b6 c0             	movzx  eax,al
-c001795d:	89 14 85 a0 f6 02 c0 	mov    DWORD PTR [eax*4-0x3ffd0960],edx
+c001795d:	89 14 85 a0 04 03 c0 	mov    DWORD PTR [eax*4-0x3ffcfb60],edx
 c0017964:	83 44 24 2c 04       	add    DWORD PTR [esp+0x2c],0x4
 c0017969:	8b 54 24 28          	mov    edx,DWORD PTR [esp+0x28]
 c001796d:	8b 44 24 2c          	mov    eax,DWORD PTR [esp+0x2c]
@@ -31585,13 +31585,13 @@ c00179ba:	0f b6 c0             	movzx  eax,al
 c00179bd:	c1 e0 18             	shl    eax,0x18
 c00179c0:	09 c1                	or     ecx,eax
 c00179c2:	89 ca                	mov    edx,ecx
-c00179c4:	a0 60 f6 02 c0       	mov    al,ds:0xc002f660
+c00179c4:	a0 60 04 03 c0       	mov    al,ds:0xc0030460
 c00179c9:	0f b6 c0             	movzx  eax,al
-c00179cc:	89 14 85 20 f7 02 c0 	mov    DWORD PTR [eax*4-0x3ffd08e0],edx
+c00179cc:	89 14 85 20 05 03 c0 	mov    DWORD PTR [eax*4-0x3ffcfae0],edx
 c00179d3:	83 44 24 2c 04       	add    DWORD PTR [esp+0x2c],0x4
-c00179d8:	a0 60 f6 02 c0       	mov    al,ds:0xc002f660
+c00179d8:	a0 60 04 03 c0       	mov    al,ds:0xc0030460
 c00179dd:	40                   	inc    eax
-c00179de:	a2 60 f6 02 c0       	mov    ds:0xc002f660,al
+c00179de:	a2 60 04 03 c0       	mov    ds:0xc0030460,al
 c00179e3:	e9 bb 01 00 00       	jmp    c0017ba3 <scanMADT()+0x469>
 c00179e8:	80 7c 24 23 02       	cmp    BYTE PTR [esp+0x23],0x2
 c00179ed:	0f 85 e9 00 00 00    	jne    c0017adc <scanMADT()+0x3a2>
@@ -31657,7 +31657,7 @@ c0017abb:	8b 54 24 1c          	mov    edx,DWORD PTR [esp+0x1c]
 c0017abf:	88 90 20 cd 02 c0    	mov    BYTE PTR [eax-0x3ffd32e0],dl
 c0017ac5:	0f b6 54 24 20       	movzx  edx,BYTE PTR [esp+0x20]
 c0017aca:	66 8b 44 24 1a       	mov    ax,WORD PTR [esp+0x1a]
-c0017acf:	66 89 84 12 40 f6 02 c0 	mov    WORD PTR [edx+edx*1-0x3ffd09c0],ax
+c0017acf:	66 89 84 12 40 04 03 c0 	mov    WORD PTR [edx+edx*1-0x3ffcfbc0],ax
 c0017ad7:	e9 c7 00 00 00       	jmp    c0017ba3 <scanMADT()+0x469>
 c0017adc:	80 7c 24 23 04       	cmp    BYTE PTR [esp+0x23],0x4
 c0017ae1:	0f 85 b0 00 00 00    	jne    c0017b97 <scanMADT()+0x45d>
@@ -31697,12 +31697,12 @@ c0017b58:	89 c1                	mov    ecx,eax
 c0017b5a:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
 c0017b5e:	c1 e0 18             	shl    eax,0x18
 c0017b61:	89 c3                	mov    ebx,eax
-c0017b63:	a1 b0 f5 02 c0       	mov    eax,ds:0xc002f5b0
+c0017b63:	a1 b0 03 03 c0       	mov    eax,ds:0xc00303b0
 c0017b68:	8d 50 01             	lea    edx,[eax+0x1]
-c0017b6b:	89 15 b0 f5 02 c0    	mov    DWORD PTR ds:0xc002f5b0,edx
+c0017b6b:	89 15 b0 03 03 c0    	mov    DWORD PTR ds:0xc00303b0,edx
 c0017b71:	09 d9                	or     ecx,ebx
 c0017b73:	89 ca                	mov    edx,ecx
-c0017b75:	89 14 85 c0 f5 02 c0 	mov    DWORD PTR [eax*4-0x3ffd0a40],edx
+c0017b75:	89 14 85 c0 03 03 c0 	mov    DWORD PTR [eax*4-0x3ffcfc40],edx
 c0017b7c:	ff 74 24 0c          	push   DWORD PTR [esp+0xc]
 c0017b80:	ff 74 24 14          	push   DWORD PTR [esp+0x14]
 c0017b84:	ff 74 24 1c          	push   DWORD PTR [esp+0x1c]
@@ -31909,7 +31909,7 @@ c0017e3f:	8a 80 e8 01 00 00    	mov    al,BYTE PTR [eax+0x1e8]
 c0017e45:	83 e0 04             	and    eax,0x4
 c0017e48:	84 c0                	test   al,al
 c0017e4a:	74 47                	je     c0017e93 <ACPI::open(int, int, void*)+0x73>
-c0017e4c:	a1 a8 f5 02 c0       	mov    eax,ds:0xc002f5a8
+c0017e4c:	a1 a8 03 03 c0       	mov    eax,ds:0xc00303a8
 c0017e51:	83 ec 08             	sub    esp,0x8
 c0017e54:	68 d8 ab 02 c0       	push   0xc002abd8
 c0017e59:	50                   	push   eax
@@ -32046,7 +32046,7 @@ c0018049:	ff 74 24 0c          	push   DWORD PTR [esp+0xc]
 c001804d:	e8 d2 75 ff ff       	call   c000f624 <malloc>
 c0018052:	83 c4 10             	add    esp,0x10
 c0018055:	89 c3                	mov    ebx,eax
-c0018057:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0018057:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c001805c:	83 ec 04             	sub    esp,0x4
 c001805f:	50                   	push   eax
 c0018060:	68 52 ac 02 c0       	push   0xc002ac52
@@ -32089,7 +32089,7 @@ c00180d1:	83 ec 0c             	sub    esp,0xc
 c00180d4:	ff 74 24 18          	push   DWORD PTR [esp+0x18]
 c00180d8:	ff d0                	call   eax
 c00180da:	83 c4 10             	add    esp,0x10
-c00180dd:	a1 a8 f5 02 c0       	mov    eax,ds:0xc002f5a8
+c00180dd:	a1 a8 03 03 c0       	mov    eax,ds:0xc00303a8
 c00180e2:	83 ec 08             	sub    esp,0x8
 c00180e5:	68 6f ac 02 c0       	push   0xc002ac6f
 c00180ea:	50                   	push   eax
@@ -32133,10 +32133,10 @@ c0018165:	90                   	nop
 
 c0018166 <ACPI::sleep()>:
 c0018166:	83 ec 0c             	sub    esp,0xc
-c0018169:	a1 80 f3 02 c0       	mov    eax,ds:0xc002f380
+c0018169:	a1 80 01 03 c0       	mov    eax,ds:0xc0030180
 c001816e:	85 c0                	test   eax,eax
 c0018170:	74 07                	je     c0018179 <ACPI::sleep()+0x13>
-c0018172:	a1 80 f3 02 c0       	mov    eax,ds:0xc002f380
+c0018172:	a1 80 01 03 c0       	mov    eax,ds:0xc0030180
 c0018177:	ff d0                	call   eax
 c0018179:	90                   	nop
 c001817a:	83 c4 0c             	add    esp,0xc
@@ -32539,14 +32539,14 @@ c0018678:	8b 7c 24 1c          	mov    edi,DWORD PTR [esp+0x1c]
 c001867c:	8b 6c 24 20          	mov    ebp,DWORD PTR [esp+0x20]
 c0018680:	39 05 e0 cf 02 c0    	cmp    DWORD PTR ds:0xc002cfe0,eax
 c0018686:	75 23                	jne    c00186ab <CPU::cpuid(int, unsigned long*, unsigned long*, unsigned long*, unsigned long*)+0x3f>
-c0018688:	a1 0c f8 02 c0       	mov    eax,ds:0xc002f80c
+c0018688:	a1 0c 06 03 c0       	mov    eax,ds:0xc003060c
 c001868d:	8b 54 24 24          	mov    edx,DWORD PTR [esp+0x24]
 c0018691:	89 06                	mov    DWORD PTR [esi],eax
-c0018693:	a1 08 f8 02 c0       	mov    eax,ds:0xc002f808
+c0018693:	a1 08 06 03 c0       	mov    eax,ds:0xc0030608
 c0018698:	89 07                	mov    DWORD PTR [edi],eax
-c001869a:	a1 04 f8 02 c0       	mov    eax,ds:0xc002f804
+c001869a:	a1 04 06 03 c0       	mov    eax,ds:0xc0030604
 c001869f:	89 45 00             	mov    DWORD PTR [ebp+0x0],eax
-c00186a2:	a1 00 f8 02 c0       	mov    eax,ds:0xc002f800
+c00186a2:	a1 00 06 03 c0       	mov    eax,ds:0xc0030600
 c00186a7:	89 02                	mov    DWORD PTR [edx],eax
 c00186a9:	eb 3f                	jmp    c00186ea <CPU::cpuid(int, unsigned long*, unsigned long*, unsigned long*, unsigned long*)+0x7e>
 c00186ab:	31 c9                	xor    ecx,ecx
@@ -32560,14 +32560,14 @@ c00186be:	89 10                	mov    DWORD PTR [eax],edx
 c00186c0:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
 c00186c4:	a3 e0 cf 02 c0       	mov    ds:0xc002cfe0,eax
 c00186c9:	8b 06                	mov    eax,DWORD PTR [esi]
-c00186cb:	a3 0c f8 02 c0       	mov    ds:0xc002f80c,eax
+c00186cb:	a3 0c 06 03 c0       	mov    ds:0xc003060c,eax
 c00186d0:	8b 07                	mov    eax,DWORD PTR [edi]
-c00186d2:	a3 08 f8 02 c0       	mov    ds:0xc002f808,eax
+c00186d2:	a3 08 06 03 c0       	mov    ds:0xc0030608,eax
 c00186d7:	8b 45 00             	mov    eax,DWORD PTR [ebp+0x0]
-c00186da:	a3 04 f8 02 c0       	mov    ds:0xc002f804,eax
+c00186da:	a3 04 06 03 c0       	mov    ds:0xc0030604,eax
 c00186df:	8b 44 24 24          	mov    eax,DWORD PTR [esp+0x24]
 c00186e3:	8b 00                	mov    eax,DWORD PTR [eax]
-c00186e5:	a3 00 f8 02 c0       	mov    ds:0xc002f800,eax
+c00186e5:	a3 00 06 03 c0       	mov    ds:0xc0030600,eax
 c00186ea:	5b                   	pop    ebx
 c00186eb:	5e                   	pop    esi
 c00186ec:	5f                   	pop    edi
@@ -34339,11 +34339,11 @@ c0019c04:	53                   	push   ebx
 c0019c05:	83 ec 08             	sub    esp,0x8
 c0019c08:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
 c0019c0c:	8b 5c 24 14          	mov    ebx,DWORD PTR [esp+0x14]
-c0019c10:	39 05 34 02 03 c0    	cmp    DWORD PTR ds:0xc0030234,eax
+c0019c10:	39 05 34 10 03 c0    	cmp    DWORD PTR ds:0xc0031034,eax
 c0019c16:	74 04                	je     c0019c1c <Krnl::getEnv(Process*, char const*)+0x18>
 c0019c18:	85 c0                	test   eax,eax
 c0019c1a:	75 0b                	jne    c0019c27 <Krnl::getEnv(Process*, char const*)+0x23>
-c0019c1c:	a1 10 f8 02 c0       	mov    eax,ds:0xc002f810
+c0019c1c:	a1 10 06 03 c0       	mov    eax,ds:0xc0030610
 c0019c21:	85 c0                	test   eax,eax
 c0019c23:	75 19                	jne    c0019c3e <Krnl::getEnv(Process*, char const*)+0x3a>
 c0019c25:	eb 27                	jmp    c0019c4e <Krnl::getEnv(Process*, char const*)+0x4a>
@@ -34365,7 +34365,7 @@ c0019c47:	83 c4 10             	add    esp,0x10
 c0019c4a:	85 c0                	test   eax,eax
 c0019c4c:	75 16                	jne    c0019c64 <Krnl::getEnv(Process*, char const*)+0x60>
 c0019c4e:	89 5c 24 14          	mov    DWORD PTR [esp+0x14],ebx
-c0019c52:	a1 14 f8 02 c0       	mov    eax,ds:0xc002f814
+c0019c52:	a1 14 06 03 c0       	mov    eax,ds:0xc0030614
 c0019c57:	89 44 24 10          	mov    DWORD PTR [esp+0x10],eax
 c0019c5b:	83 c4 08             	add    esp,0x8
 c0019c5e:	5b                   	pop    ebx
@@ -34378,13 +34378,13 @@ c0019c69 <Krnl::setEnvSystem(char const*, char const*)>:
 c0019c69:	83 ec 10             	sub    esp,0x10
 c0019c6c:	ff 74 24 18          	push   DWORD PTR [esp+0x18]
 c0019c70:	ff 74 24 18          	push   DWORD PTR [esp+0x18]
-c0019c74:	ff 35 14 f8 02 c0    	push   DWORD PTR ds:0xc002f814
+c0019c74:	ff 35 14 06 03 c0    	push   DWORD PTR ds:0xc0030614
 c0019c7a:	e8 53 fc ff ff       	call   c00198d2 <EnvVarContainer::setEnv(char const*, char const*)>
 c0019c7f:	83 c4 1c             	add    esp,0x1c
 c0019c82:	c3                   	ret    
 
 c0019c83 <Krnl::setEnvUser(char const*, char const*)>:
-c0019c83:	a1 10 f8 02 c0       	mov    eax,ds:0xc002f810
+c0019c83:	a1 10 06 03 c0       	mov    eax,ds:0xc0030610
 c0019c88:	85 c0                	test   eax,eax
 c0019c8a:	74 15                	je     c0019ca1 <Krnl::setEnvUser(char const*, char const*)+0x1e>
 c0019c8c:	83 ec 10             	sub    esp,0x10
@@ -34466,11 +34466,11 @@ c0019d34:	e8 eb 58 ff ff       	call   c000f624 <malloc>
 c0019d39:	89 c3                	mov    ebx,eax
 c0019d3b:	58                   	pop    eax
 c0019d3c:	5a                   	pop    edx
-c0019d3d:	ff 35 34 02 03 c0    	push   DWORD PTR ds:0xc0030234
+c0019d3d:	ff 35 34 10 03 c0    	push   DWORD PTR ds:0xc0031034
 c0019d43:	53                   	push   ebx
 c0019d44:	e8 69 fe ff ff       	call   c0019bb2 <EnvVarContainer::EnvVarContainer(Process*)>
 c0019d49:	89 1c 24             	mov    DWORD PTR [esp],ebx
-c0019d4c:	89 1d 14 f8 02 c0    	mov    DWORD PTR ds:0xc002f814,ebx
+c0019d4c:	89 1d 14 06 03 c0    	mov    DWORD PTR ds:0xc0030614,ebx
 c0019d52:	e8 3f fe ff ff       	call   c0019b96 <EnvVarContainer::__loadSystem()>
 c0019d57:	83 c4 18             	add    esp,0x18
 c0019d5a:	5b                   	pop    ebx
@@ -34484,10 +34484,10 @@ c0019d62:	e8 bd 58 ff ff       	call   c000f624 <malloc>
 c0019d67:	89 c3                	mov    ebx,eax
 c0019d69:	58                   	pop    eax
 c0019d6a:	5a                   	pop    edx
-c0019d6b:	ff 35 34 02 03 c0    	push   DWORD PTR ds:0xc0030234
+c0019d6b:	ff 35 34 10 03 c0    	push   DWORD PTR ds:0xc0031034
 c0019d71:	53                   	push   ebx
 c0019d72:	e8 3b fe ff ff       	call   c0019bb2 <EnvVarContainer::EnvVarContainer(Process*)>
-c0019d77:	89 1d 10 f8 02 c0    	mov    DWORD PTR ds:0xc002f810,ebx
+c0019d77:	89 1d 10 06 03 c0    	mov    DWORD PTR ds:0xc0030610,ebx
 c0019d7d:	83 c4 18             	add    esp,0x18
 c0019d80:	5b                   	pop    ebx
 c0019d81:	c3                   	ret    
@@ -34497,9 +34497,9 @@ c0019d82:	c3                   	ret
 
 c0019d83 <Krnl::getProcessTotalEnvCount(Process*)>:
 c0019d83:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
-c0019d87:	8b 15 10 f8 02 c0    	mov    edx,DWORD PTR ds:0xc002f810
+c0019d87:	8b 15 10 06 03 c0    	mov    edx,DWORD PTR ds:0xc0030610
 c0019d8d:	8b 88 3a 07 00 00    	mov    ecx,DWORD PTR [eax+0x73a]
-c0019d93:	a1 14 f8 02 c0       	mov    eax,ds:0xc002f814
+c0019d93:	a1 14 06 03 c0       	mov    eax,ds:0xc0030614
 c0019d98:	8b 00                	mov    eax,DWORD PTR [eax]
 c0019d9a:	03 01                	add    eax,DWORD PTR [ecx]
 c0019d9c:	85 d2                	test   edx,edx
@@ -34509,7 +34509,7 @@ c0019da2:	c3                   	ret
 
 c0019da3 <Krnl::getProcessEnvPair(Process*, int)>:
 c0019da3:	57                   	push   edi
-c0019da4:	8b 0d 10 f8 02 c0    	mov    ecx,DWORD PTR ds:0xc002f810
+c0019da4:	8b 0d 10 06 03 c0    	mov    ecx,DWORD PTR ds:0xc0030610
 c0019daa:	56                   	push   esi
 c0019dab:	85 c9                	test   ecx,ecx
 c0019dad:	53                   	push   ebx
@@ -34521,7 +34521,7 @@ c0019dc0:	8b 02                	mov    eax,DWORD PTR [edx]
 c0019dc2:	75 47                	jne    c0019e0b <Krnl::getProcessEnvPair(Process*, int)+0x68>
 c0019dc4:	39 c3                	cmp    ebx,eax
 c0019dc6:	7c 47                	jl     c0019e0f <Krnl::getProcessEnvPair(Process*, int)+0x6c>
-c0019dc8:	8b 15 14 f8 02 c0    	mov    edx,DWORD PTR ds:0xc002f814
+c0019dc8:	8b 15 14 06 03 c0    	mov    edx,DWORD PTR ds:0xc0030614
 c0019dce:	8b 0a                	mov    ecx,DWORD PTR [edx]
 c0019dd0:	01 c1                	add    ecx,eax
 c0019dd2:	39 d9                	cmp    ecx,ebx
@@ -34536,7 +34536,7 @@ c0019de3:	68 e7 b1 02 c0       	push   0xc002b1e7
 c0019de8:	e8 06 8b ff ff       	call   c00128f3 <Dbg::kprintf(char const*, ...)>
 c0019ded:	8b 87 3a 07 00 00    	mov    eax,DWORD PTR [edi+0x73a]
 c0019df3:	2b 18                	sub    ebx,DWORD PTR [eax]
-c0019df5:	a1 14 f8 02 c0       	mov    eax,ds:0xc002f814
+c0019df5:	a1 14 06 03 c0       	mov    eax,ds:0xc0030614
 c0019dfa:	8b 40 04             	mov    eax,DWORD PTR [eax+0x4]
 c0019dfd:	8b 54 d8 04          	mov    edx,DWORD PTR [eax+ebx*8+0x4]
 c0019e01:	8b 04 d8             	mov    eax,DWORD PTR [eax+ebx*8]
@@ -34553,7 +34553,7 @@ c0019e19:	39 da                	cmp    edx,ebx
 c0019e1b:	7e 04                	jle    c0019e21 <Krnl::getProcessEnvPair(Process*, int)+0x7e>
 c0019e1d:	29 c3                	sub    ebx,eax
 c0019e1f:	eb 10                	jmp    c0019e31 <Krnl::getProcessEnvPair(Process*, int)+0x8e>
-c0019e21:	8b 0d 14 f8 02 c0    	mov    ecx,DWORD PTR ds:0xc002f814
+c0019e21:	8b 0d 14 06 03 c0    	mov    ecx,DWORD PTR ds:0xc0030614
 c0019e27:	03 11                	add    edx,DWORD PTR [ecx]
 c0019e29:	39 da                	cmp    edx,ebx
 c0019e2b:	7e 15                	jle    c0019e42 <Krnl::getProcessEnvPair(Process*, int)+0x9f>
@@ -34584,56 +34584,56 @@ c0019e6a:	53                   	push   ebx
 c0019e6b:	83 ec 0c             	sub    esp,0xc
 c0019e6e:	8b 5d 08             	mov    ebx,DWORD PTR [ebp+0x8]
 c0019e71:	fa                   	cli    
-c0019e72:	c6 05 20 f8 02 c0 01 	mov    BYTE PTR ds:0xc002f820,0x1
+c0019e72:	c6 05 20 06 03 c0 01 	mov    BYTE PTR ds:0xc0030620,0x1
 c0019e79:	53                   	push   ebx
 c0019e7a:	c6 05 04 ca 02 c0 00 	mov    BYTE PTR ds:0xc002ca04,0x0
 c0019e81:	68 15 b2 02 c0       	push   0xc002b215
 c0019e86:	e8 68 8a ff ff       	call   c00128f3 <Dbg::kprintf(char const*, ...)>
 c0019e8b:	58                   	pop    eax
-c0019e8c:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0019e8c:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0019e91:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0019e97:	e8 19 6c ff ff       	call   c0010ab5 <setActiveTerminal(VgaText*)>
 c0019e9c:	83 c4 0c             	add    esp,0xc
-c0019e9f:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0019e9f:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0019ea4:	6a 01                	push   0x1
 c0019ea6:	6a 0f                	push   0xf
 c0019ea8:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0019eae:	e8 33 66 ff ff       	call   c00104e6 <VgaText::setDefaultColours(VgaColour, VgaColour)>
 c0019eb3:	58                   	pop    eax
-c0019eb4:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0019eb4:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0019eb9:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0019ebf:	e8 92 6e ff ff       	call   c0010d56 <VgaText::clearScreen()>
 c0019ec4:	58                   	pop    eax
-c0019ec5:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0019ec5:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0019eca:	5a                   	pop    edx
 c0019ecb:	68 2e b2 02 c0       	push   0xc002b22e
 c0019ed0:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0019ed6:	e8 f9 6f ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c0019edb:	59                   	pop    ecx
 c0019edc:	58                   	pop    eax
-c0019edd:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0019edd:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0019ee2:	68 d4 b2 02 c0       	push   0xc002b2d4
 c0019ee7:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0019eed:	e8 e2 6f ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c0019ef2:	58                   	pop    eax
-c0019ef3:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0019ef3:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0019ef8:	5a                   	pop    edx
 c0019ef9:	68 4a b2 02 c0       	push   0xc002b24a
 c0019efe:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0019f04:	e8 cb 6f ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c0019f09:	59                   	pop    ecx
 c0019f0a:	58                   	pop    eax
-c0019f0b:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0019f0b:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0019f10:	53                   	push   ebx
 c0019f11:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0019f17:	e8 b8 6f ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c0019f1c:	58                   	pop    eax
-c0019f1d:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0019f1d:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0019f22:	5a                   	pop    edx
 c0019f23:	68 6a b2 02 c0       	push   0xc002b26a
 c0019f28:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0019f2e:	e8 a1 6f ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
-c0019f33:	a1 1c f8 02 c0       	mov    eax,ds:0xc002f81c
+c0019f33:	a1 1c 06 03 c0       	mov    eax,ds:0xc003061c
 c0019f38:	83 c4 10             	add    esp,0x10
 c0019f3b:	85 c0                	test   eax,eax
 c0019f3d:	74 02                	je     c0019f41 <Krnl::panic(char const*)+0xda>
@@ -34646,42 +34646,42 @@ c0019f4f:	89 c3                	mov    ebx,eax
 c0019f51:	85 c0                	test   eax,eax
 c0019f53:	0f 84 50 02 00 00    	je     c001a1a9 <Krnl::panic(char const*)+0x342>
 c0019f59:	83 ec 08             	sub    esp,0x8
-c0019f5c:	8b 15 34 02 03 c0    	mov    edx,DWORD PTR ds:0xc0030234
+c0019f5c:	8b 15 34 10 03 c0    	mov    edx,DWORD PTR ds:0xc0031034
 c0019f62:	68 10 b3 02 c0       	push   0xc002b310
 c0019f67:	ff b2 26 05 00 00    	push   DWORD PTR [edx+0x526]
 c0019f6d:	e8 62 6f ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c0019f72:	58                   	pop    eax
 c0019f73:	5a                   	pop    edx
-c0019f74:	8b 15 34 02 03 c0    	mov    edx,DWORD PTR ds:0xc0030234
+c0019f74:	8b 15 34 10 03 c0    	mov    edx,DWORD PTR ds:0xc0031034
 c0019f7a:	68 4a b2 02 c0       	push   0xc002b24a
 c0019f7f:	ff b2 26 05 00 00    	push   DWORD PTR [edx+0x526]
 c0019f85:	e8 4a 6f ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c0019f8a:	59                   	pop    ecx
 c0019f8b:	58                   	pop    eax
-c0019f8c:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0019f8c:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0019f91:	53                   	push   ebx
 c0019f92:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0019f98:	e8 37 6f ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c0019f9d:	83 c4 10             	add    esp,0x10
 c0019fa0:	83 ec 08             	sub    esp,0x8
-c0019fa3:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0019fa3:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0019fa8:	68 69 b2 02 c0       	push   0xc002b269
 c0019fad:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0019fb3:	e8 1c 6f ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c0019fb8:	58                   	pop    eax
-c0019fb9:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0019fb9:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0019fbe:	5a                   	pop    edx
 c0019fbf:	68 68 b3 02 c0       	push   0xc002b368
 c0019fc4:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0019fca:	e8 05 6f ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c0019fcf:	59                   	pop    ecx
-c0019fd0:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0019fd0:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0019fd5:	5b                   	pop    ebx
 c0019fd6:	68 a8 b3 02 c0       	push   0xc002b3a8
 c0019fdb:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c0019fe1:	e8 ee 6e ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c0019fe6:	58                   	pop    eax
-c0019fe7:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c0019fe7:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c0019fec:	5a                   	pop    edx
 c0019fed:	68 55 b2 02 c0       	push   0xc002b255
 c0019ff2:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
@@ -34705,13 +34705,13 @@ c001a025:	ff 70 04             	push   DWORD PTR [eax+0x4]
 c001a028:	68 7f b2 02 c0       	push   0xc002b27f
 c001a02d:	e8 c1 88 ff ff       	call   c00128f3 <Dbg::kprintf(char const*, ...)>
 c001a032:	58                   	pop    eax
-c001a033:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c001a033:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c001a038:	5a                   	pop    edx
 c001a039:	68 ec b3 02 c0       	push   0xc002b3ec
 c001a03e:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c001a044:	e8 8b 6e ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c001a049:	59                   	pop    ecx
-c001a04a:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c001a04a:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c001a04f:	5b                   	pop    ebx
 c001a050:	68 88 b2 02 c0       	push   0xc002b288
 c001a055:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
@@ -34720,12 +34720,12 @@ c001a060:	0f 20 c0             	mov    eax,cr0
 c001a063:	5a                   	pop    edx
 c001a064:	59                   	pop    ecx
 c001a065:	50                   	push   eax
-c001a066:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c001a066:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c001a06b:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c001a071:	e8 84 6e ff ff       	call   c0010efa <VgaText::putx(unsigned int)>
 c001a076:	5b                   	pop    ebx
 c001a077:	58                   	pop    eax
-c001a078:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c001a078:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c001a07d:	68 92 b2 02 c0       	push   0xc002b292
 c001a082:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c001a088:	e8 47 6e ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
@@ -34733,12 +34733,12 @@ c001a08d:	0f 20 d0             	mov    eax,cr2
 c001a090:	5a                   	pop    edx
 c001a091:	59                   	pop    ecx
 c001a092:	50                   	push   eax
-c001a093:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c001a093:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c001a098:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c001a09e:	e8 57 6e ff ff       	call   c0010efa <VgaText::putx(unsigned int)>
 c001a0a3:	5b                   	pop    ebx
 c001a0a4:	58                   	pop    eax
-c001a0a5:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c001a0a5:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c001a0aa:	68 9c b2 02 c0       	push   0xc002b29c
 c001a0af:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c001a0b5:	e8 1a 6e ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
@@ -34746,12 +34746,12 @@ c001a0ba:	0f 20 d8             	mov    eax,cr3
 c001a0bd:	5a                   	pop    edx
 c001a0be:	59                   	pop    ecx
 c001a0bf:	50                   	push   eax
-c001a0c0:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c001a0c0:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c001a0c5:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c001a0cb:	e8 2a 6e ff ff       	call   c0010efa <VgaText::putx(unsigned int)>
 c001a0d0:	5b                   	pop    ebx
 c001a0d1:	58                   	pop    eax
-c001a0d2:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c001a0d2:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c001a0d7:	68 af b2 02 c0       	push   0xc002b2af
 c001a0dc:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c001a0e2:	e8 ed 6d ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
@@ -34759,17 +34759,17 @@ c001a0e7:	0f 20 e0             	mov    eax,cr4
 c001a0ea:	5a                   	pop    edx
 c001a0eb:	59                   	pop    ecx
 c001a0ec:	50                   	push   eax
-c001a0ed:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c001a0ed:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c001a0f2:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c001a0f8:	e8 fd 6d ff ff       	call   c0010efa <VgaText::putx(unsigned int)>
 c001a0fd:	5b                   	pop    ebx
 c001a0fe:	58                   	pop    eax
-c001a0ff:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c001a0ff:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c001a104:	68 b9 b2 02 c0       	push   0xc002b2b9
 c001a109:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c001a10f:	e8 c0 6d ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c001a114:	5a                   	pop    edx
-c001a115:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c001a115:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c001a11a:	59                   	pop    ecx
 c001a11b:	8b 80 26 05 00 00    	mov    eax,DWORD PTR [eax+0x526]
 c001a121:	ff 75 04             	push   DWORD PTR [ebp+0x4]
@@ -34777,12 +34777,12 @@ c001a124:	50                   	push   eax
 c001a125:	e8 d0 6d ff ff       	call   c0010efa <VgaText::putx(unsigned int)>
 c001a12a:	5b                   	pop    ebx
 c001a12b:	58                   	pop    eax
-c001a12c:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c001a12c:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c001a131:	68 d0 b2 02 c0       	push   0xc002b2d0
 c001a136:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c001a13c:	e8 93 6d ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c001a141:	5a                   	pop    edx
-c001a142:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c001a142:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c001a147:	59                   	pop    ecx
 c001a148:	8b 80 26 05 00 00    	mov    eax,DWORD PTR [eax+0x526]
 c001a14e:	8b 55 00             	mov    edx,DWORD PTR [ebp+0x0]
@@ -34791,11 +34791,11 @@ c001a154:	50                   	push   eax
 c001a155:	e8 a0 6d ff ff       	call   c0010efa <VgaText::putx(unsigned int)>
 c001a15a:	5b                   	pop    ebx
 c001a15b:	58                   	pop    eax
-c001a15c:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c001a15c:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c001a161:	68 d0 b2 02 c0       	push   0xc002b2d0
 c001a166:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c001a16c:	e8 63 6d ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
-c001a171:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c001a171:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c001a176:	8b 55 00             	mov    edx,DWORD PTR [ebp+0x0]
 c001a179:	8b 80 26 05 00 00    	mov    eax,DWORD PTR [eax+0x526]
 c001a17f:	8b 12                	mov    edx,DWORD PTR [edx]
@@ -34821,12 +34821,12 @@ c001a1a6:	f4                   	hlt
 c001a1a7:	eb e8                	jmp    c001a191 <Krnl::panic(char const*)+0x32a>
 c001a1a9:	50                   	push   eax
 c001a1aa:	50                   	push   eax
-c001a1ab:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c001a1ab:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c001a1b0:	68 3c b3 02 c0       	push   0xc002b33c
 c001a1b5:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c001a1bb:	e8 14 6d ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c001a1c0:	58                   	pop    eax
-c001a1c1:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c001a1c1:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c001a1c6:	5a                   	pop    edx
 c001a1c7:	68 4a b2 02 c0       	push   0xc002b24a
 c001a1cc:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
@@ -34837,7 +34837,7 @@ c001a1dd:	5b                   	pop    ebx
 c001a1de:	8b 40 40             	mov    eax,DWORD PTR [eax+0x40]
 c001a1e1:	83 c0 0c             	add    eax,0xc
 c001a1e4:	50                   	push   eax
-c001a1e5:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c001a1e5:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c001a1ea:	ff b0 26 05 00 00    	push   DWORD PTR [eax+0x526]
 c001a1f0:	e8 df 6c ff ff       	call   c0010ed4 <VgaText::puts(char const*)>
 c001a1f5:	83 c4 10             	add    esp,0x10
@@ -35307,7 +35307,7 @@ c001a774:	c7 04 24 14 01 00 00 	mov    DWORD PTR [esp],0x114
 c001a77b:	e8 a4 4e ff ff       	call   c000f624 <malloc>
 c001a780:	83 c4 0c             	add    esp,0xc
 c001a783:	89 c3                	mov    ebx,eax
-c001a785:	ff 35 34 02 03 c0    	push   DWORD PTR ds:0xc0030234
+c001a785:	ff 35 34 10 03 c0    	push   DWORD PTR ds:0xc0031034
 c001a78b:	56                   	push   esi
 c001a78c:	50                   	push   eax
 c001a78d:	e8 ba 86 ff ff       	call   c0012e4c <File::File(char const*, Process*)>
@@ -36205,7 +36205,7 @@ c001b03d:	6a 00                	push   0x0
 c001b03f:	6a 00                	push   0x0
 c001b041:	6a 01                	push   0x1
 c001b043:	eb e8                	jmp    c001b02d <sysShutdown(regs*)+0x33>
-c001b045:	a1 80 f3 02 c0       	mov    eax,ds:0xc002f380
+c001b045:	a1 80 01 03 c0       	mov    eax,ds:0xc0030180
 c001b04a:	85 c0                	test   eax,eax
 c001b04c:	74 02                	je     c001b050 <sysShutdown(regs*)+0x56>
 c001b04e:	ff d0                	call   eax
@@ -37400,53 +37400,53 @@ c001bcd8:	c7 40 04 00 00 00 00 	mov    DWORD PTR [eax+0x4],0x0
 c001bcdf:	e9 ab fe ff ff       	jmp    c001bb8f <sysCallOpen(regs*)+0xc0>
 
 c001bce4 <Sys::loadSyscalls()>:
-c001bce4:	c7 05 40 f8 02 c0 9a ae 01 c0 	mov    DWORD PTR ds:0xc002f840,0xc001ae9a
-c001bcee:	c7 05 44 f8 02 c0 fc aa 01 c0 	mov    DWORD PTR ds:0xc002f844,0xc001aafc
-c001bcf8:	c7 05 48 f8 02 c0 4f ac 01 c0 	mov    DWORD PTR ds:0xc002f848,0xc001ac4f
-c001bd02:	c7 05 4c f8 02 c0 32 ae 01 c0 	mov    DWORD PTR ds:0xc002f84c,0xc001ae32
-c001bd0c:	c7 05 50 f8 02 c0 e7 ab 01 c0 	mov    DWORD PTR ds:0xc002f850,0xc001abe7
-c001bd16:	c7 05 54 f8 02 c0 33 ab 01 c0 	mov    DWORD PTR ds:0xc002f854,0xc001ab33
-c001bd20:	c7 05 58 f8 02 c0 14 ab 01 c0 	mov    DWORD PTR ds:0xc002f858,0xc001ab14
-c001bd2a:	c7 05 5c f8 02 c0 a4 ac 01 c0 	mov    DWORD PTR ds:0xc002f85c,0xc001aca4
-c001bd34:	c7 05 64 f8 02 c0 ac b3 01 c0 	mov    DWORD PTR ds:0xc002f864,0xc001b3ac
-c001bd3e:	c7 05 60 f8 02 c0 cf ba 01 c0 	mov    DWORD PTR ds:0xc002f860,0xc001bacf
-c001bd48:	c7 05 68 f8 02 c0 34 b4 01 c0 	mov    DWORD PTR ds:0xc002f868,0xc001b434
-c001bd52:	c7 05 6c f8 02 c0 9b b0 01 c0 	mov    DWORD PTR ds:0xc002f86c,0xc001b09b
-c001bd5c:	c7 05 70 f8 02 c0 d5 ae 01 c0 	mov    DWORD PTR ds:0xc002f870,0xc001aed5
-c001bd66:	c7 05 74 f8 02 c0 da ae 01 c0 	mov    DWORD PTR ds:0xc002f874,0xc001aeda
-c001bd70:	c7 05 78 f8 02 c0 0f b5 01 c0 	mov    DWORD PTR ds:0xc002f878,0xc001b50f
-c001bd7a:	c7 05 7c f8 02 c0 a9 b4 01 c0 	mov    DWORD PTR ds:0xc002f87c,0xc001b4a9
-c001bd84:	c7 05 80 f8 02 c0 83 b1 01 c0 	mov    DWORD PTR ds:0xc002f880,0xc001b183
-c001bd8e:	c7 05 84 f8 02 c0 ec b1 01 c0 	mov    DWORD PTR ds:0xc002f884,0xc001b1ec
-c001bd98:	c7 05 88 f8 02 c0 69 b2 01 c0 	mov    DWORD PTR ds:0xc002f888,0xc001b269
-c001bda2:	c7 05 8c f8 02 c0 df ae 01 c0 	mov    DWORD PTR ds:0xc002f88c,0xc001aedf
-c001bdac:	c7 05 90 f8 02 c0 7f b5 01 c0 	mov    DWORD PTR ds:0xc002f890,0xc001b57f
-c001bdb6:	c7 05 94 f8 02 c0 99 b5 01 c0 	mov    DWORD PTR ds:0xc002f894,0xc001b599
-c001bdc0:	c7 05 98 f8 02 c0 99 b5 01 c0 	mov    DWORD PTR ds:0xc002f898,0xc001b599
-c001bdca:	c7 05 9c f8 02 c0 da b5 01 c0 	mov    DWORD PTR ds:0xc002f89c,0xc001b5da
-c001bdd4:	c7 05 a0 f8 02 c0 3e b6 01 c0 	mov    DWORD PTR ds:0xc002f8a0,0xc001b63e
-c001bdde:	c7 05 a4 f8 02 c0 e9 ae 01 c0 	mov    DWORD PTR ds:0xc002f8a4,0xc001aee9
-c001bde8:	c7 05 a8 f8 02 c0 a2 b6 01 c0 	mov    DWORD PTR ds:0xc002f8a8,0xc001b6a2
-c001bdf2:	c7 05 ac f8 02 c0 58 b0 01 c0 	mov    DWORD PTR ds:0xc002f8ac,0xc001b058
-c001bdfc:	c7 05 b0 f8 02 c0 ee b6 01 c0 	mov    DWORD PTR ds:0xc002f8b0,0xc001b6ee
-c001be06:	c7 05 b4 f8 02 c0 29 b1 01 c0 	mov    DWORD PTR ds:0xc002f8b4,0xc001b129
-c001be10:	c7 05 b8 f8 02 c0 71 b7 01 c0 	mov    DWORD PTR ds:0xc002f8b8,0xc001b771
-c001be1a:	c7 05 bc f8 02 c0 ec b2 01 c0 	mov    DWORD PTR ds:0xc002f8bc,0xc001b2ec
-c001be24:	c7 05 c0 f8 02 c0 98 b7 01 c0 	mov    DWORD PTR ds:0xc002f8c0,0xc001b798
-c001be2e:	c7 05 c4 f8 02 c0 f0 b7 01 c0 	mov    DWORD PTR ds:0xc002f8c4,0xc001b7f0
-c001be38:	c7 05 c8 f8 02 c0 9d b8 01 c0 	mov    DWORD PTR ds:0xc002f8c8,0xc001b89d
-c001be42:	c7 05 cc f8 02 c0 f9 ae 01 c0 	mov    DWORD PTR ds:0xc002f8cc,0xc001aef9
-c001be4c:	c7 05 d0 f8 02 c0 63 af 01 c0 	mov    DWORD PTR ds:0xc002f8d0,0xc001af63
-c001be56:	c7 05 d4 f8 02 c0 a9 af 01 c0 	mov    DWORD PTR ds:0xc002f8d4,0xc001afa9
-c001be60:	c7 05 d8 f8 02 c0 bc b9 01 c0 	mov    DWORD PTR ds:0xc002f8d8,0xc001b9bc
-c001be6a:	c7 05 dc f8 02 c0 b4 b5 01 c0 	mov    DWORD PTR ds:0xc002f8dc,0xc001b5b4
-c001be74:	c7 05 e0 f8 02 c0 fa af 01 c0 	mov    DWORD PTR ds:0xc002f8e0,0xc001affa
-c001be7e:	c7 05 e4 f8 02 c0 2e ba 01 c0 	mov    DWORD PTR ds:0xc002f8e4,0xc001ba2e
-c001be88:	c7 05 e8 f8 02 c0 73 ba 01 c0 	mov    DWORD PTR ds:0xc002f8e8,0xc001ba73
-c001be92:	c7 05 ec f8 02 c0 3f ab 01 c0 	mov    DWORD PTR ds:0xc002f8ec,0xc001ab3f
-c001be9c:	c7 05 f0 f8 02 c0 c0 ac 01 c0 	mov    DWORD PTR ds:0xc002f8f0,0xc001acc0
-c001bea6:	c7 05 f4 f8 02 c0 e8 ad 01 c0 	mov    DWORD PTR ds:0xc002f8f4,0xc001ade8
-c001beb0:	c7 05 f8 f8 02 c0 c6 aa 01 c0 	mov    DWORD PTR ds:0xc002f8f8,0xc001aac6
+c001bce4:	c7 05 40 06 03 c0 9a ae 01 c0 	mov    DWORD PTR ds:0xc0030640,0xc001ae9a
+c001bcee:	c7 05 44 06 03 c0 fc aa 01 c0 	mov    DWORD PTR ds:0xc0030644,0xc001aafc
+c001bcf8:	c7 05 48 06 03 c0 4f ac 01 c0 	mov    DWORD PTR ds:0xc0030648,0xc001ac4f
+c001bd02:	c7 05 4c 06 03 c0 32 ae 01 c0 	mov    DWORD PTR ds:0xc003064c,0xc001ae32
+c001bd0c:	c7 05 50 06 03 c0 e7 ab 01 c0 	mov    DWORD PTR ds:0xc0030650,0xc001abe7
+c001bd16:	c7 05 54 06 03 c0 33 ab 01 c0 	mov    DWORD PTR ds:0xc0030654,0xc001ab33
+c001bd20:	c7 05 58 06 03 c0 14 ab 01 c0 	mov    DWORD PTR ds:0xc0030658,0xc001ab14
+c001bd2a:	c7 05 5c 06 03 c0 a4 ac 01 c0 	mov    DWORD PTR ds:0xc003065c,0xc001aca4
+c001bd34:	c7 05 64 06 03 c0 ac b3 01 c0 	mov    DWORD PTR ds:0xc0030664,0xc001b3ac
+c001bd3e:	c7 05 60 06 03 c0 cf ba 01 c0 	mov    DWORD PTR ds:0xc0030660,0xc001bacf
+c001bd48:	c7 05 68 06 03 c0 34 b4 01 c0 	mov    DWORD PTR ds:0xc0030668,0xc001b434
+c001bd52:	c7 05 6c 06 03 c0 9b b0 01 c0 	mov    DWORD PTR ds:0xc003066c,0xc001b09b
+c001bd5c:	c7 05 70 06 03 c0 d5 ae 01 c0 	mov    DWORD PTR ds:0xc0030670,0xc001aed5
+c001bd66:	c7 05 74 06 03 c0 da ae 01 c0 	mov    DWORD PTR ds:0xc0030674,0xc001aeda
+c001bd70:	c7 05 78 06 03 c0 0f b5 01 c0 	mov    DWORD PTR ds:0xc0030678,0xc001b50f
+c001bd7a:	c7 05 7c 06 03 c0 a9 b4 01 c0 	mov    DWORD PTR ds:0xc003067c,0xc001b4a9
+c001bd84:	c7 05 80 06 03 c0 83 b1 01 c0 	mov    DWORD PTR ds:0xc0030680,0xc001b183
+c001bd8e:	c7 05 84 06 03 c0 ec b1 01 c0 	mov    DWORD PTR ds:0xc0030684,0xc001b1ec
+c001bd98:	c7 05 88 06 03 c0 69 b2 01 c0 	mov    DWORD PTR ds:0xc0030688,0xc001b269
+c001bda2:	c7 05 8c 06 03 c0 df ae 01 c0 	mov    DWORD PTR ds:0xc003068c,0xc001aedf
+c001bdac:	c7 05 90 06 03 c0 7f b5 01 c0 	mov    DWORD PTR ds:0xc0030690,0xc001b57f
+c001bdb6:	c7 05 94 06 03 c0 99 b5 01 c0 	mov    DWORD PTR ds:0xc0030694,0xc001b599
+c001bdc0:	c7 05 98 06 03 c0 99 b5 01 c0 	mov    DWORD PTR ds:0xc0030698,0xc001b599
+c001bdca:	c7 05 9c 06 03 c0 da b5 01 c0 	mov    DWORD PTR ds:0xc003069c,0xc001b5da
+c001bdd4:	c7 05 a0 06 03 c0 3e b6 01 c0 	mov    DWORD PTR ds:0xc00306a0,0xc001b63e
+c001bdde:	c7 05 a4 06 03 c0 e9 ae 01 c0 	mov    DWORD PTR ds:0xc00306a4,0xc001aee9
+c001bde8:	c7 05 a8 06 03 c0 a2 b6 01 c0 	mov    DWORD PTR ds:0xc00306a8,0xc001b6a2
+c001bdf2:	c7 05 ac 06 03 c0 58 b0 01 c0 	mov    DWORD PTR ds:0xc00306ac,0xc001b058
+c001bdfc:	c7 05 b0 06 03 c0 ee b6 01 c0 	mov    DWORD PTR ds:0xc00306b0,0xc001b6ee
+c001be06:	c7 05 b4 06 03 c0 29 b1 01 c0 	mov    DWORD PTR ds:0xc00306b4,0xc001b129
+c001be10:	c7 05 b8 06 03 c0 71 b7 01 c0 	mov    DWORD PTR ds:0xc00306b8,0xc001b771
+c001be1a:	c7 05 bc 06 03 c0 ec b2 01 c0 	mov    DWORD PTR ds:0xc00306bc,0xc001b2ec
+c001be24:	c7 05 c0 06 03 c0 98 b7 01 c0 	mov    DWORD PTR ds:0xc00306c0,0xc001b798
+c001be2e:	c7 05 c4 06 03 c0 f0 b7 01 c0 	mov    DWORD PTR ds:0xc00306c4,0xc001b7f0
+c001be38:	c7 05 c8 06 03 c0 9d b8 01 c0 	mov    DWORD PTR ds:0xc00306c8,0xc001b89d
+c001be42:	c7 05 cc 06 03 c0 f9 ae 01 c0 	mov    DWORD PTR ds:0xc00306cc,0xc001aef9
+c001be4c:	c7 05 d0 06 03 c0 63 af 01 c0 	mov    DWORD PTR ds:0xc00306d0,0xc001af63
+c001be56:	c7 05 d4 06 03 c0 a9 af 01 c0 	mov    DWORD PTR ds:0xc00306d4,0xc001afa9
+c001be60:	c7 05 d8 06 03 c0 bc b9 01 c0 	mov    DWORD PTR ds:0xc00306d8,0xc001b9bc
+c001be6a:	c7 05 dc 06 03 c0 b4 b5 01 c0 	mov    DWORD PTR ds:0xc00306dc,0xc001b5b4
+c001be74:	c7 05 e0 06 03 c0 fa af 01 c0 	mov    DWORD PTR ds:0xc00306e0,0xc001affa
+c001be7e:	c7 05 e4 06 03 c0 2e ba 01 c0 	mov    DWORD PTR ds:0xc00306e4,0xc001ba2e
+c001be88:	c7 05 e8 06 03 c0 73 ba 01 c0 	mov    DWORD PTR ds:0xc00306e8,0xc001ba73
+c001be92:	c7 05 ec 06 03 c0 3f ab 01 c0 	mov    DWORD PTR ds:0xc00306ec,0xc001ab3f
+c001be9c:	c7 05 f0 06 03 c0 c0 ac 01 c0 	mov    DWORD PTR ds:0xc00306f0,0xc001acc0
+c001bea6:	c7 05 f4 06 03 c0 e8 ad 01 c0 	mov    DWORD PTR ds:0xc00306f4,0xc001ade8
+c001beb0:	c7 05 f8 06 03 c0 c6 aa 01 c0 	mov    DWORD PTR ds:0xc00306f8,0xc001aac6
 c001beba:	c3                   	ret    
 
 c001bebb <Sys::systemCall(regs*, void*)>:
@@ -37456,7 +37456,7 @@ c001bebf:	8b 5c 24 10          	mov    ebx,DWORD PTR [esp+0x10]
 c001bec3:	8b 43 2c             	mov    eax,DWORD PTR [ebx+0x2c]
 c001bec6:	83 f8 7f             	cmp    eax,0x7f
 c001bec9:	77 16                	ja     c001bee1 <Sys::systemCall(regs*, void*)+0x26>
-c001becb:	8b 14 85 40 f8 02 c0 	mov    edx,DWORD PTR [eax*4-0x3ffd07c0]
+c001becb:	8b 14 85 40 06 03 c0 	mov    edx,DWORD PTR [eax*4-0x3ffcf9c0]
 c001bed2:	85 d2                	test   edx,edx
 c001bed4:	74 0b                	je     c001bee1 <Sys::systemCall(regs*, void*)+0x26>
 c001bed6:	83 ec 0c             	sub    esp,0xc
@@ -37841,17 +37841,17 @@ c001c3a3:	57                   	push   edi
 c001c3a4:	56                   	push   esi
 c001c3a5:	53                   	push   ebx
 c001c3a6:	31 db                	xor    ebx,ebx
-c001c3a8:	39 1d e0 01 03 c0    	cmp    DWORD PTR ds:0xc00301e0,ebx
+c001c3a8:	39 1d e0 0f 03 c0    	cmp    DWORD PTR ds:0xc0030fe0,ebx
 c001c3ae:	7e 3c                	jle    c001c3ec <Thr::getAddressOfKernelSymbol(char const*)+0x49>
-c001c3b0:	8b 34 9d 60 01 03 c0 	mov    esi,DWORD PTR [ebx*4-0x3ffcfea0]
+c001c3b0:	8b 34 9d 60 0f 03 c0 	mov    esi,DWORD PTR [ebx*4-0x3ffcf0a0]
 c001c3b7:	31 ff                	xor    edi,edi
-c001c3b9:	39 3c 9d 60 00 03 c0 	cmp    DWORD PTR [ebx*4-0x3ffcffa0],edi
+c001c3b9:	39 3c 9d 60 0e 03 c0 	cmp    DWORD PTR [ebx*4-0x3ffcf1a0],edi
 c001c3c0:	7e 27                	jle    c001c3e9 <Thr::getAddressOfKernelSymbol(char const*)+0x46>
 c001c3c2:	50                   	push   eax
 c001c3c3:	50                   	push   eax
 c001c3c4:	ff 74 24 18          	push   DWORD PTR [esp+0x18]
 c001c3c8:	8b 06                	mov    eax,DWORD PTR [esi]
-c001c3ca:	03 04 9d e0 00 03 c0 	add    eax,DWORD PTR [ebx*4-0x3ffcff20]
+c001c3ca:	03 04 9d e0 0e 03 c0 	add    eax,DWORD PTR [ebx*4-0x3ffcf120]
 c001c3d1:	50                   	push   eax
 c001c3d2:	e8 dd 43 fe ff       	call   c00007b4 <strcmp>
 c001c3d7:	83 c4 10             	add    esp,0x10
@@ -37876,7 +37876,7 @@ c001c3f3:	57                   	push   edi
 c001c3f4:	56                   	push   esi
 c001c3f5:	53                   	push   ebx
 c001c3f6:	83 ec 68             	sub    esp,0x68
-c001c3f9:	8b 35 34 02 03 c0    	mov    esi,DWORD PTR ds:0xc0030234
+c001c3f9:	8b 35 34 10 03 c0    	mov    esi,DWORD PTR ds:0xc0031034
 c001c3ff:	68 14 01 00 00       	push   0x114
 c001c404:	e8 1b 32 ff ff       	call   c000f624 <malloc>
 c001c409:	83 c4 0c             	add    esp,0xc
@@ -38066,10 +38066,10 @@ c001c622:	52                   	push   edx
 c001c623:	53                   	push   ebx
 c001c624:	ff 50 0c             	call   DWORD PTR [eax+0xc]
 c001c627:	8b 44 24 24          	mov    eax,DWORD PTR [esp+0x24]
-c001c62b:	8b 15 e0 01 03 c0    	mov    edx,DWORD PTR ds:0xc00301e0
+c001c62b:	8b 15 e0 0f 03 c0    	mov    edx,DWORD PTR ds:0xc0030fe0
 c001c631:	83 c4 1c             	add    esp,0x1c
 c001c634:	c1 e8 04             	shr    eax,0x4
-c001c637:	89 04 95 60 00 03 c0 	mov    DWORD PTR [edx*4-0x3ffcffa0],eax
+c001c637:	89 04 95 60 0e 03 c0 	mov    DWORD PTR [edx*4-0x3ffcf1a0],eax
 c001c63e:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
 c001c642:	31 d2                	xor    edx,edx
 c001c644:	52                   	push   edx
@@ -38093,12 +38093,12 @@ c001c668:	ff 74 24 14          	push   DWORD PTR [esp+0x14]
 c001c66c:	e8 c3 2f ff ff       	call   c000f634 <free>
 c001c671:	89 3c 24             	mov    DWORD PTR [esp],edi
 c001c674:	e8 bb 2f ff ff       	call   c000f634 <free>
-c001c679:	a1 e0 01 03 c0       	mov    eax,ds:0xc00301e0
+c001c679:	a1 e0 0f 03 c0       	mov    eax,ds:0xc0030fe0
 c001c67e:	8b 4c 24 1c          	mov    ecx,DWORD PTR [esp+0x1c]
 c001c682:	8d 50 01             	lea    edx,[eax+0x1]
-c001c685:	89 0c 85 60 01 03 c0 	mov    DWORD PTR [eax*4-0x3ffcfea0],ecx
-c001c68c:	89 34 85 e0 00 03 c0 	mov    DWORD PTR [eax*4-0x3ffcff20],esi
-c001c693:	89 15 e0 01 03 c0    	mov    DWORD PTR ds:0xc00301e0,edx
+c001c685:	89 0c 85 60 0f 03 c0 	mov    DWORD PTR [eax*4-0x3ffcf0a0],ecx
+c001c68c:	89 34 85 e0 0e 03 c0 	mov    DWORD PTR [eax*4-0x3ffcf120],esi
+c001c693:	89 15 e0 0f 03 c0    	mov    DWORD PTR ds:0xc0030fe0,edx
 c001c699:	83 c4 10             	add    esp,0x10
 c001c69c:	b0 01                	mov    al,0x1
 c001c69e:	83 c4 5c             	add    esp,0x5c
@@ -38115,7 +38115,7 @@ c001c6a8:	56                   	push   esi
 c001c6a9:	53                   	push   ebx
 c001c6aa:	81 ec 68 03 00 00    	sub    esp,0x368
 c001c6b0:	8a 84 24 84 03 00 00 	mov    al,BYTE PTR [esp+0x384]
-c001c6b7:	8b 1d 34 02 03 c0    	mov    ebx,DWORD PTR ds:0xc0030234
+c001c6b7:	8b 1d 34 10 03 c0    	mov    ebx,DWORD PTR ds:0xc0031034
 c001c6bd:	88 44 24 2b          	mov    BYTE PTR [esp+0x2b],al
 c001c6c1:	68 14 01 00 00       	push   0x114
 c001c6c6:	e8 59 2f ff ff       	call   c000f624 <malloc>
@@ -38678,14 +38678,14 @@ c001cdc2 <Thr::getDriverBaseFromAddress(unsigned long)>:
 c001cdc2:	56                   	push   esi
 c001cdc3:	31 d2                	xor    edx,edx
 c001cdc5:	53                   	push   ebx
-c001cdc6:	8b 1d 40 fa 02 c0    	mov    ebx,DWORD PTR ds:0xc002fa40
+c001cdc6:	8b 1d 40 08 03 c0    	mov    ebx,DWORD PTR ds:0xc0030840
 c001cdcc:	8b 4c 24 0c          	mov    ecx,DWORD PTR [esp+0xc]
 c001cdd0:	39 d3                	cmp    ebx,edx
 c001cdd2:	7e 1b                	jle    c001cdef <Thr::getDriverBaseFromAddress(unsigned long)+0x2d>
-c001cdd4:	8b 04 95 60 fc 02 c0 	mov    eax,DWORD PTR [edx*4-0x3ffd03a0]
+c001cdd4:	8b 04 95 60 0a 03 c0 	mov    eax,DWORD PTR [edx*4-0x3ffcf5a0]
 c001cddb:	39 c8                	cmp    eax,ecx
 c001cddd:	77 0d                	ja     c001cdec <Thr::getDriverBaseFromAddress(unsigned long)+0x2a>
-c001cddf:	8b 34 95 60 fa 02 c0 	mov    esi,DWORD PTR [edx*4-0x3ffd05a0]
+c001cddf:	8b 34 95 60 08 03 c0 	mov    esi,DWORD PTR [edx*4-0x3ffcf7a0]
 c001cde6:	01 c6                	add    esi,eax
 c001cde8:	39 ce                	cmp    esi,ecx
 c001cdea:	77 05                	ja     c001cdf1 <Thr::getDriverBaseFromAddress(unsigned long)+0x2f>
@@ -38700,16 +38700,16 @@ c001cdf4 <Thr::getDriverNameFromAddress(unsigned long)>:
 c001cdf4:	53                   	push   ebx
 c001cdf5:	31 c0                	xor    eax,eax
 c001cdf7:	8b 4c 24 08          	mov    ecx,DWORD PTR [esp+0x8]
-c001cdfb:	8b 1d 40 fa 02 c0    	mov    ebx,DWORD PTR ds:0xc002fa40
+c001cdfb:	8b 1d 40 08 03 c0    	mov    ebx,DWORD PTR ds:0xc0030840
 c001ce01:	39 c3                	cmp    ebx,eax
 c001ce03:	7e 22                	jle    c001ce27 <Thr::getDriverNameFromAddress(unsigned long)+0x33>
-c001ce05:	8b 14 85 60 fc 02 c0 	mov    edx,DWORD PTR [eax*4-0x3ffd03a0]
+c001ce05:	8b 14 85 60 0a 03 c0 	mov    edx,DWORD PTR [eax*4-0x3ffcf5a0]
 c001ce0c:	39 ca                	cmp    edx,ecx
 c001ce0e:	77 14                	ja     c001ce24 <Thr::getDriverNameFromAddress(unsigned long)+0x30>
-c001ce10:	03 14 85 60 fa 02 c0 	add    edx,DWORD PTR [eax*4-0x3ffd05a0]
+c001ce10:	03 14 85 60 08 03 c0 	add    edx,DWORD PTR [eax*4-0x3ffcf7a0]
 c001ce17:	39 ca                	cmp    edx,ecx
 c001ce19:	76 09                	jbe    c001ce24 <Thr::getDriverNameFromAddress(unsigned long)+0x30>
-c001ce1b:	8b 04 85 60 fe 02 c0 	mov    eax,DWORD PTR [eax*4-0x3ffd01a0]
+c001ce1b:	8b 04 85 60 0c 03 c0 	mov    eax,DWORD PTR [eax*4-0x3ffcf3a0]
 c001ce22:	eb 05                	jmp    c001ce29 <Thr::getDriverNameFromAddress(unsigned long)+0x35>
 c001ce24:	40                   	inc    eax
 c001ce25:	eb da                	jmp    c001ce01 <Thr::getDriverNameFromAddress(unsigned long)+0xd>
@@ -38747,7 +38747,7 @@ c001ce68:	c7 04 24 14 01 00 00 	mov    DWORD PTR [esp],0x114
 c001ce6f:	e8 b0 27 ff ff       	call   c000f624 <malloc>
 c001ce74:	83 c4 0c             	add    esp,0xc
 c001ce77:	89 c3                	mov    ebx,eax
-c001ce79:	ff 35 34 02 03 c0    	push   DWORD PTR ds:0xc0030234
+c001ce79:	ff 35 34 10 03 c0    	push   DWORD PTR ds:0xc0031034
 c001ce7f:	56                   	push   esi
 c001ce80:	50                   	push   eax
 c001ce81:	e8 c6 5f ff ff       	call   c0012e4c <File::File(char const*, Process*)>
@@ -38834,24 +38834,24 @@ c001cf5d:	e8 6c 51 ff ff       	call   c00120ce <VAS::allocatePages(int, int)>
 c001cf62:	89 34 24             	mov    DWORD PTR [esp],esi
 c001cf65:	89 c3                	mov    ebx,eax
 c001cf67:	e8 75 37 fe ff       	call   c00006e1 <strlen>
-c001cf6c:	8b 3d 40 fa 02 c0    	mov    edi,DWORD PTR ds:0xc002fa40
+c001cf6c:	8b 3d 40 08 03 c0    	mov    edi,DWORD PTR ds:0xc0030840
 c001cf72:	40                   	inc    eax
 c001cf73:	89 04 24             	mov    DWORD PTR [esp],eax
 c001cf76:	e8 a9 26 ff ff       	call   c000f624 <malloc>
-c001cf7b:	89 04 bd 60 fe 02 c0 	mov    DWORD PTR [edi*4-0x3ffd01a0],eax
+c001cf7b:	89 04 bd 60 0c 03 c0 	mov    DWORD PTR [edi*4-0x3ffcf3a0],eax
 c001cf82:	5f                   	pop    edi
 c001cf83:	58                   	pop    eax
-c001cf84:	a1 40 fa 02 c0       	mov    eax,ds:0xc002fa40
+c001cf84:	a1 40 08 03 c0       	mov    eax,ds:0xc0030840
 c001cf89:	56                   	push   esi
-c001cf8a:	ff 34 85 60 fe 02 c0 	push   DWORD PTR [eax*4-0x3ffd01a0]
+c001cf8a:	ff 34 85 60 0c 03 c0 	push   DWORD PTR [eax*4-0x3ffcf3a0]
 c001cf91:	e8 cd 37 fe ff       	call   c0000763 <strcpy>
-c001cf96:	a1 40 fa 02 c0       	mov    eax,ds:0xc002fa40
+c001cf96:	a1 40 08 03 c0       	mov    eax,ds:0xc0030840
 c001cf9b:	8d 50 01             	lea    edx,[eax+0x1]
-c001cf9e:	89 1c 85 60 fc 02 c0 	mov    DWORD PTR [eax*4-0x3ffd03a0],ebx
-c001cfa5:	89 15 40 fa 02 c0    	mov    DWORD PTR ds:0xc002fa40,edx
+c001cf9e:	89 1c 85 60 0a 03 c0 	mov    DWORD PTR [eax*4-0x3ffcf5a0],ebx
+c001cfa5:	89 15 40 08 03 c0    	mov    DWORD PTR ds:0xc0030840,edx
 c001cfab:	8b 54 24 28          	mov    edx,DWORD PTR [esp+0x28]
 c001cfaf:	83 c4 0c             	add    esp,0xc
-c001cfb2:	89 14 85 60 fa 02 c0 	mov    DWORD PTR [eax*4-0x3ffd05a0],edx
+c001cfb2:	89 14 85 60 08 03 c0 	mov    DWORD PTR [eax*4-0x3ffcf7a0],edx
 c001cfb9:	6a 01                	push   0x1
 c001cfbb:	53                   	push   ebx
 c001cfbc:	56                   	push   esi
@@ -39235,17 +39235,17 @@ c001d49a:	c3                   	ret
 
 c001d49b <disableIRQs()>:
 c001d49b:	fa                   	cli    
-c001d49c:	ff 05 0c 02 03 c0    	inc    DWORD PTR ds:0xc003020c
+c001d49c:	ff 05 0c 10 03 c0    	inc    DWORD PTR ds:0xc003100c
 c001d4a2:	c3                   	ret    
 
 c001d4a3 <getIRQNestingLevel()>:
-c001d4a3:	a1 0c 02 03 c0       	mov    eax,ds:0xc003020c
+c001d4a3:	a1 0c 10 03 c0       	mov    eax,ds:0xc003100c
 c001d4a8:	c3                   	ret    
 
 c001d4a9 <enableIRQs()>:
-c001d4a9:	a1 0c 02 03 c0       	mov    eax,ds:0xc003020c
+c001d4a9:	a1 0c 10 03 c0       	mov    eax,ds:0xc003100c
 c001d4ae:	48                   	dec    eax
-c001d4af:	a3 0c 02 03 c0       	mov    ds:0xc003020c,eax
+c001d4af:	a3 0c 10 03 c0       	mov    ds:0xc003100c,eax
 c001d4b4:	75 01                	jne    c001d4b7 <enableIRQs()+0xe>
 c001d4b6:	fb                   	sti    
 c001d4b7:	c3                   	ret    
@@ -39269,7 +39269,7 @@ c001d4da:	e9 4b 2e fe ff       	jmp    c000032a <goToUsermode>
 
 c001d4df <lockStuff()>:
 c001d4df:	e8 b7 ff ff ff       	call   c001d49b <disableIRQs()>
-c001d4e4:	ff 05 08 02 03 c0    	inc    DWORD PTR ds:0xc0030208
+c001d4e4:	ff 05 08 10 03 c0    	inc    DWORD PTR ds:0xc0031008
 c001d4ea:	c3                   	ret    
 
 c001d4eb <taskStartupFunction>:
@@ -39287,17 +39287,17 @@ c001d509:	56                   	push   esi
 c001d50a:	53                   	push   ebx
 c001d50b:	0f 31                	rdtsc  
 c001d50d:	89 c1                	mov    ecx,eax
-c001d50f:	a3 48 02 03 c0       	mov    ds:0xc0030248,eax
-c001d514:	2b 0d 38 02 03 c0    	sub    ecx,DWORD PTR ds:0xc0030238
+c001d50f:	a3 48 10 03 c0       	mov    ds:0xc0031048,eax
+c001d514:	2b 0d 38 10 03 c0    	sub    ecx,DWORD PTR ds:0xc0031038
 c001d51a:	89 d3                	mov    ebx,edx
-c001d51c:	89 0d 40 02 03 c0    	mov    DWORD PTR ds:0xc0030240,ecx
-c001d522:	1b 1d 3c 02 03 c0    	sbb    ebx,DWORD PTR ds:0xc003023c
-c001d528:	a3 38 02 03 c0       	mov    ds:0xc0030238,eax
-c001d52d:	89 1d 44 02 03 c0    	mov    DWORD PTR ds:0xc0030244,ebx
+c001d51c:	89 0d 40 10 03 c0    	mov    DWORD PTR ds:0xc0031040,ecx
+c001d522:	1b 1d 3c 10 03 c0    	sbb    ebx,DWORD PTR ds:0xc003103c
+c001d528:	a3 38 10 03 c0       	mov    ds:0xc0031038,eax
+c001d52d:	89 1d 44 10 03 c0    	mov    DWORD PTR ds:0xc0031044,ebx
 c001d533:	a1 00 20 00 c2       	mov    eax,ds:0xc2002000
-c001d538:	89 15 4c 02 03 c0    	mov    DWORD PTR ds:0xc003024c,edx
+c001d538:	89 15 4c 10 03 c0    	mov    DWORD PTR ds:0xc003104c,edx
 c001d53e:	8b 70 10             	mov    esi,DWORD PTR [eax+0x10]
-c001d541:	89 15 3c 02 03 c0    	mov    DWORD PTR ds:0xc003023c,edx
+c001d541:	89 15 3c 10 03 c0    	mov    DWORD PTR ds:0xc003103c,edx
 c001d547:	8b 78 14             	mov    edi,DWORD PTR [eax+0x14]
 c001d54a:	01 f1                	add    ecx,esi
 c001d54c:	89 48 10             	mov    DWORD PTR [eax+0x10],ecx
@@ -39312,7 +39312,7 @@ c001d558:	c3                   	ret
 c001d559 <switchToThread(ThreadControlBlock*)>:
 c001d559:	53                   	push   ebx
 c001d55a:	83 ec 08             	sub    esp,0x8
-c001d55d:	a1 08 02 03 c0       	mov    eax,ds:0xc0030208
+c001d55d:	a1 08 10 03 c0       	mov    eax,ds:0xc0031008
 c001d562:	8b 5c 24 10          	mov    ebx,DWORD PTR [esp+0x10]
 c001d566:	85 c0                	test   eax,eax
 c001d568:	75 30                	jne    c001d59a <switchToThread(ThreadControlBlock*)+0x41>
@@ -39332,7 +39332,7 @@ c001d590:	5b                   	pop    ebx
 c001d591:	e9 cc 2d fe ff       	jmp    c0000362 <switchToThreadASM>
 c001d596:	31 c0                	xor    eax,eax
 c001d598:	eb e7                	jmp    c001d581 <switchToThread(ThreadControlBlock*)+0x28>
-c001d59a:	c7 05 04 02 03 c0 01 00 00 00 	mov    DWORD PTR ds:0xc0030204,0x1
+c001d59a:	c7 05 04 10 03 c0 01 00 00 00 	mov    DWORD PTR ds:0xc0031004,0x1
 c001d5a4:	83 c4 08             	add    esp,0x8
 c001d5a7:	5b                   	pop    ebx
 c001d5a8:	c3                   	ret    
@@ -39420,7 +39420,7 @@ c001d69e:	c7 80 20 02 00 00 00 00 00 00 	mov    DWORD PTR [eax+0x220],0x0
 c001d6a8:	8d 84 33 0c 02 00 00 	lea    eax,[ebx+esi*1+0x20c]
 c001d6af:	50                   	push   eax
 c001d6b0:	89 44 24 18          	mov    DWORD PTR [esp+0x18],eax
-c001d6b4:	68 28 02 03 c0       	push   0xc0030228
+c001d6b4:	68 28 10 03 c0       	push   0xc0031028
 c001d6b9:	e8 a2 ab 00 00       	call   c0028260 <LinkedList<ThreadControlBlock volatile>::addElement(ThreadControlBlock volatile*)>
 c001d6be:	83 c4 10             	add    esp,0x10
 c001d6c1:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
@@ -39449,11 +39449,11 @@ c001d6ec:	53                   	push   ebx
 c001d6ed:	8b 74 24 10          	mov    esi,DWORD PTR [esp+0x10]
 c001d6f1:	eb 10                	jmp    c001d703 <setupMultitasking(void (*)())+0x19>
 c001d6f3:	83 ec 0c             	sub    esp,0xc
-c001d6f6:	68 28 02 03 c0       	push   0xc0030228
+c001d6f6:	68 28 10 03 c0       	push   0xc0031028
 c001d6fb:	e8 b2 aa 00 00       	call   c00281b2 <LinkedList<ThreadControlBlock volatile>::removeFirst()>
 c001d700:	83 c4 10             	add    esp,0x10
 c001d703:	83 ec 0c             	sub    esp,0xc
-c001d706:	68 28 02 03 c0       	push   0xc0030228
+c001d706:	68 28 10 03 c0       	push   0xc0031028
 c001d70b:	e8 86 aa 00 00       	call   c0028196 <LinkedList<ThreadControlBlock volatile>::isEmpty()>
 c001d710:	83 c4 10             	add    esp,0x10
 c001d713:	84 c0                	test   al,al
@@ -39469,7 +39469,7 @@ c001d734:	6a 01                	push   0x1
 c001d736:	50                   	push   eax
 c001d737:	e8 b0 fb ff ff       	call   c001d2ec <Process::Process(bool, char const*, Process*, char**)>
 c001d73c:	83 c4 18             	add    esp,0x18
-c001d73f:	89 1d 34 02 03 c0    	mov    DWORD PTR ds:0xc0030234,ebx
+c001d73f:	89 1d 34 10 03 c0    	mov    DWORD PTR ds:0xc0031034,ebx
 c001d745:	ff b3 26 05 00 00    	push   DWORD PTR [ebx+0x526]
 c001d74b:	68 6c b9 02 c0       	push   0xc002b96c
 c001d750:	e8 9e 51 ff ff       	call   c00128f3 <Dbg::kprintf(char const*, ...)>
@@ -39504,14 +39504,14 @@ c001d7ee:	5e                   	pop    esi
 c001d7ef:	e9 60 2b fe ff       	jmp    c0000354 <switchToThreadASMFirstTime>
 
 c001d7f4 <schedule()>:
-c001d7f4:	a1 08 02 03 c0       	mov    eax,ds:0xc0030208
+c001d7f4:	a1 08 10 03 c0       	mov    eax,ds:0xc0031008
 c001d7f9:	85 c0                	test   eax,eax
 c001d7fb:	74 0b                	je     c001d808 <schedule()+0x14>
-c001d7fd:	c7 05 04 02 03 c0 01 00 00 00 	mov    DWORD PTR ds:0xc0030204,0x1
+c001d7fd:	c7 05 04 10 03 c0 01 00 00 00 	mov    DWORD PTR ds:0xc0031004,0x1
 c001d807:	c3                   	ret    
 c001d808:	53                   	push   ebx
 c001d809:	83 ec 14             	sub    esp,0x14
-c001d80c:	68 28 02 03 c0       	push   0xc0030228
+c001d80c:	68 28 10 03 c0       	push   0xc0031028
 c001d811:	e8 80 a9 00 00       	call   c0028196 <LinkedList<ThreadControlBlock volatile>::isEmpty()>
 c001d816:	83 c4 10             	add    esp,0x10
 c001d819:	84 c0                	test   al,al
@@ -39521,9 +39521,9 @@ c001d822:	8b 50 18             	mov    edx,DWORD PTR [eax+0x18]
 c001d825:	4a                   	dec    edx
 c001d826:	74 32                	je     c001d85a <schedule()+0x66>
 c001d828:	83 ec 0c             	sub    esp,0xc
-c001d82b:	68 28 02 03 c0       	push   0xc0030228
+c001d82b:	68 28 10 03 c0       	push   0xc0031028
 c001d830:	e8 59 a9 00 00       	call   c002818e <LinkedList<ThreadControlBlock volatile>::getFirstElement()>
-c001d835:	c7 04 24 28 02 03 c0 	mov    DWORD PTR [esp],0xc0030228
+c001d835:	c7 04 24 28 10 03 c0 	mov    DWORD PTR [esp],0xc0031028
 c001d83c:	89 c3                	mov    ebx,eax
 c001d83e:	e8 6f a9 00 00       	call   c00281b2 <LinkedList<ThreadControlBlock volatile>::removeFirst()>
 c001d843:	c7 43 18 01 00 00 00 	mov    DWORD PTR [ebx+0x18],0x1
@@ -39536,22 +39536,22 @@ c001d859:	c3                   	ret
 c001d85a:	83 ec 08             	sub    esp,0x8
 c001d85d:	c7 40 18 00 00 00 00 	mov    DWORD PTR [eax+0x18],0x0
 c001d864:	ff 35 00 20 00 c2    	push   DWORD PTR ds:0xc2002000
-c001d86a:	68 28 02 03 c0       	push   0xc0030228
+c001d86a:	68 28 10 03 c0       	push   0xc0031028
 c001d86f:	e8 ec a9 00 00       	call   c0028260 <LinkedList<ThreadControlBlock volatile>::addElement(ThreadControlBlock volatile*)>
 c001d874:	83 c4 10             	add    esp,0x10
 c001d877:	eb af                	jmp    c001d828 <schedule()+0x34>
 
 c001d879 <unlockStuff()>:
-c001d879:	a1 08 02 03 c0       	mov    eax,ds:0xc0030208
+c001d879:	a1 08 10 03 c0       	mov    eax,ds:0xc0031008
 c001d87e:	48                   	dec    eax
-c001d87f:	a3 08 02 03 c0       	mov    ds:0xc0030208,eax
+c001d87f:	a3 08 10 03 c0       	mov    ds:0xc0031008,eax
 c001d884:	75 09                	jne    c001d88f <unlockStuff()+0x16>
-c001d886:	a1 04 02 03 c0       	mov    eax,ds:0xc0030204
+c001d886:	a1 04 10 03 c0       	mov    eax,ds:0xc0031004
 c001d88b:	85 c0                	test   eax,eax
 c001d88d:	75 05                	jne    c001d894 <unlockStuff()+0x1b>
 c001d88f:	e9 15 fc ff ff       	jmp    c001d4a9 <enableIRQs()>
 c001d894:	83 ec 0c             	sub    esp,0xc
-c001d897:	c7 05 04 02 03 c0 00 00 00 00 	mov    DWORD PTR ds:0xc0030204,0x0
+c001d897:	c7 05 04 10 03 c0 00 00 00 00 	mov    DWORD PTR ds:0xc0031004,0x0
 c001d8a1:	e8 4e ff ff ff       	call   c001d7f4 <schedule()>
 c001d8a6:	83 c4 0c             	add    esp,0xc
 c001d8a9:	e9 fb fb ff ff       	jmp    c001d4a9 <enableIRQs()>
@@ -39661,7 +39661,7 @@ c001d9db:	83 ec 08             	sub    esp,0x8
 c001d9de:	89 41 2c             	mov    DWORD PTR [ecx+0x2c],eax
 c001d9e1:	89 51 30             	mov    DWORD PTR [ecx+0x30],edx
 c001d9e4:	ff 35 00 20 00 c2    	push   DWORD PTR ds:0xc2002000
-c001d9ea:	68 1c 02 03 c0       	push   0xc003021c
+c001d9ea:	68 1c 10 03 c0       	push   0xc003101c
 c001d9ef:	e8 6c a8 00 00       	call   c0028260 <LinkedList<ThreadControlBlock volatile>::addElement(ThreadControlBlock volatile*)>
 c001d9f4:	c7 04 24 03 00 00 00 	mov    DWORD PTR [esp],0x3
 c001d9fb:	e8 4e ff ff ff       	call   c001d94e <blockTask(TaskState)>
@@ -39741,7 +39741,7 @@ c001dae4:	8b 43 18             	mov    eax,DWORD PTR [ebx+0x18]
 c001dae7:	48                   	dec    eax
 c001dae8:	74 31                	je     c001db1b <unblockTask(ThreadControlBlock*)+0x4b>
 c001daea:	83 ec 0c             	sub    esp,0xc
-c001daed:	68 28 02 03 c0       	push   0xc0030228
+c001daed:	68 28 10 03 c0       	push   0xc0031028
 c001daf2:	e8 97 a6 00 00       	call   c002818e <LinkedList<ThreadControlBlock volatile>::getFirstElement()>
 c001daf7:	83 c4 10             	add    esp,0x10
 c001dafa:	85 c0                	test   eax,eax
@@ -39749,7 +39749,7 @@ c001dafc:	75 17                	jne    c001db15 <unblockTask(ThreadControlBlock*
 c001dafe:	eb 65                	jmp    c001db65 <unblockTask(ThreadControlBlock*)+0x95>
 c001db00:	83 ec 08             	sub    esp,0x8
 c001db03:	50                   	push   eax
-c001db04:	68 28 02 03 c0       	push   0xc0030228
+c001db04:	68 28 10 03 c0       	push   0xc0031028
 c001db09:	e8 5a a9 00 00       	call   c0028468 <LinkedList<ThreadControlBlock volatile>::getNext(ThreadControlBlock volatile*)>
 c001db0e:	83 c4 10             	add    esp,0x10
 c001db11:	85 c0                	test   eax,eax
@@ -39777,7 +39777,7 @@ c001db5f:	5b                   	pop    ebx
 c001db60:	e9 55 f9 ff ff       	jmp    c001d4ba <unlockScheduler()>
 c001db65:	83 ec 08             	sub    esp,0x8
 c001db68:	53                   	push   ebx
-c001db69:	68 28 02 03 c0       	push   0xc0030228
+c001db69:	68 28 10 03 c0       	push   0xc0031028
 c001db6e:	e8 ed a6 00 00       	call   c0028260 <LinkedList<ThreadControlBlock volatile>::addElement(ThreadControlBlock volatile*)>
 c001db73:	83 c4 10             	add    esp,0x10
 c001db76:	83 c4 08             	add    esp,0x8
@@ -39886,9 +39886,9 @@ c001dccf:	8b 96 2a 05 00 00    	mov    edx,DWORD PTR [esi+0x52a]
 c001dcd5:	3b 82 26 05 00 00    	cmp    eax,DWORD PTR [edx+0x526]
 c001dcdb:	74 4f                	je     c001dd2c <cleanupTerminatedTask(ThreadControlBlock*)+0x1ad>
 c001dcdd:	83 ec 0c             	sub    esp,0xc
-c001dce0:	68 28 02 03 c0       	push   0xc0030228
+c001dce0:	68 28 10 03 c0       	push   0xc0031028
 c001dce5:	e8 a4 a4 00 00       	call   c002818e <LinkedList<ThreadControlBlock volatile>::getFirstElement()>
-c001dcea:	c7 04 24 28 02 03 c0 	mov    DWORD PTR [esp],0xc0030228
+c001dcea:	c7 04 24 28 10 03 c0 	mov    DWORD PTR [esp],0xc0031028
 c001dcf1:	89 c7                	mov    edi,eax
 c001dcf3:	e8 9e a4 00 00       	call   c0028196 <LinkedList<ThreadControlBlock volatile>::isEmpty()>
 c001dcf8:	83 c4 10             	add    esp,0x10
@@ -39952,17 +39952,17 @@ c001ddba:	e8 8f fb ff ff       	call   c001d94e <blockTask(TaskState)>
 c001ddbf:	83 c4 10             	add    esp,0x10
 c001ddc2:	83 ec 08             	sub    esp,0x8
 c001ddc5:	56                   	push   esi
-c001ddc6:	68 28 02 03 c0       	push   0xc0030228
+c001ddc6:	68 28 10 03 c0       	push   0xc0031028
 c001ddcb:	e8 90 a4 00 00       	call   c0028260 <LinkedList<ThreadControlBlock volatile>::addElement(ThreadControlBlock volatile*)>
-c001ddd0:	c7 04 24 28 02 03 c0 	mov    DWORD PTR [esp],0xc0030228
+c001ddd0:	c7 04 24 28 10 03 c0 	mov    DWORD PTR [esp],0xc0031028
 c001ddd7:	e8 b2 a3 00 00       	call   c002818e <LinkedList<ThreadControlBlock volatile>::getFirstElement()>
 c001dddc:	83 c4 10             	add    esp,0x10
 c001dddf:	39 f8                	cmp    eax,edi
 c001dde1:	0f 84 1c ff ff ff    	je     c001dd03 <cleanupTerminatedTask(ThreadControlBlock*)+0x184>
 c001dde7:	83 ec 0c             	sub    esp,0xc
-c001ddea:	68 28 02 03 c0       	push   0xc0030228
+c001ddea:	68 28 10 03 c0       	push   0xc0031028
 c001ddef:	e8 9a a3 00 00       	call   c002818e <LinkedList<ThreadControlBlock volatile>::getFirstElement()>
-c001ddf4:	c7 04 24 28 02 03 c0 	mov    DWORD PTR [esp],0xc0030228
+c001ddf4:	c7 04 24 28 10 03 c0 	mov    DWORD PTR [esp],0xc0031028
 c001ddfb:	89 c6                	mov    esi,eax
 c001ddfd:	e8 b0 a3 00 00       	call   c00281b2 <LinkedList<ThreadControlBlock volatile>::removeFirst()>
 c001de02:	83 c4 10             	add    esp,0x10
@@ -39991,25 +39991,25 @@ c001de48:	53                   	push   ebx
 c001de49:	83 ec 08             	sub    esp,0x8
 c001de4c:	e8 69 f6 ff ff       	call   c001d4ba <unlockScheduler()>
 c001de51:	e8 62 f6 ff ff       	call   c001d4b8 <lockScheduler()>
-c001de56:	80 3d ec 01 03 c0 00 	cmp    BYTE PTR ds:0xc00301ec,0x0
+c001de56:	80 3d ec 0f 03 c0 00 	cmp    BYTE PTR ds:0xc0030fec,0x0
 c001de5d:	0f 85 8e 00 00 00    	jne    c001def1 <cleanerTaskFunction(void*)+0xa9>
 c001de63:	83 ec 0c             	sub    esp,0xc
 c001de66:	6a 02                	push   0x2
 c001de68:	e8 9f fa ff ff       	call   c001d90c <blockTaskWithSchedulerLockAlreadyHeld(TaskState)>
 c001de6d:	83 c4 10             	add    esp,0x10
-c001de70:	c6 05 ec 01 03 c0 00 	mov    BYTE PTR ds:0xc00301ec,0x0
+c001de70:	c6 05 ec 0f 03 c0 00 	mov    BYTE PTR ds:0xc0030fec,0x0
 c001de77:	e8 63 f6 ff ff       	call   c001d4df <lockStuff()>
 c001de7c:	e8 37 f6 ff ff       	call   c001d4b8 <lockScheduler()>
 c001de81:	83 ec 0c             	sub    esp,0xc
-c001de84:	68 10 02 03 c0       	push   0xc0030210
+c001de84:	68 10 10 03 c0       	push   0xc0031010
 c001de89:	e8 08 a3 00 00       	call   c0028196 <LinkedList<ThreadControlBlock volatile>::isEmpty()>
 c001de8e:	83 c4 10             	add    esp,0x10
 c001de91:	84 c0                	test   al,al
 c001de93:	75 40                	jne    c001ded5 <cleanerTaskFunction(void*)+0x8d>
 c001de95:	83 ec 0c             	sub    esp,0xc
-c001de98:	68 10 02 03 c0       	push   0xc0030210
+c001de98:	68 10 10 03 c0       	push   0xc0031010
 c001de9d:	e8 ec a2 00 00       	call   c002818e <LinkedList<ThreadControlBlock volatile>::getFirstElement()>
-c001dea2:	c7 04 24 10 02 03 c0 	mov    DWORD PTR [esp],0xc0030210
+c001dea2:	c7 04 24 10 10 03 c0 	mov    DWORD PTR [esp],0xc0031010
 c001dea9:	89 c3                	mov    ebx,eax
 c001deab:	e8 02 a3 00 00       	call   c00281b2 <LinkedList<ThreadControlBlock volatile>::removeFirst()>
 c001deb0:	c7 04 24 75 b8 02 c0 	mov    DWORD PTR [esp],0xc002b875
@@ -40023,7 +40023,7 @@ c001ded3:	eb ac                	jmp    c001de81 <cleanerTaskFunction(void*)+0x39
 c001ded5:	e8 e0 f5 ff ff       	call   c001d4ba <unlockScheduler()>
 c001deda:	e8 9a f9 ff ff       	call   c001d879 <unlockStuff()>
 c001dedf:	e8 d4 f5 ff ff       	call   c001d4b8 <lockScheduler()>
-c001dee4:	80 3d ec 01 03 c0 00 	cmp    BYTE PTR ds:0xc00301ec,0x0
+c001dee4:	80 3d ec 0f 03 c0 00 	cmp    BYTE PTR ds:0xc0030fec,0x0
 c001deeb:	0f 84 72 ff ff ff    	je     c001de63 <cleanerTaskFunction(void*)+0x1b>
 c001def1:	e8 c4 f5 ff ff       	call   c001d4ba <unlockScheduler()>
 c001def6:	e9 75 ff ff ff       	jmp    c001de70 <cleanerTaskFunction(void*)+0x28>
@@ -40048,22 +40048,22 @@ c001df3b:	8b 50 20             	mov    edx,DWORD PTR [eax+0x20]
 c001df3e:	5a                   	pop    edx
 c001df3f:	59                   	pop    ecx
 c001df40:	50                   	push   eax
-c001df41:	68 10 02 03 c0       	push   0xc0030210
+c001df41:	68 10 10 03 c0       	push   0xc0031010
 c001df46:	e8 15 a3 00 00       	call   c0028260 <LinkedList<ThreadControlBlock volatile>::addElement(ThreadControlBlock volatile*)>
 c001df4b:	a1 00 20 00 c2       	mov    eax,ds:0xc2002000
 c001df50:	c7 40 18 04 00 00 00 	mov    DWORD PTR [eax+0x18],0x4
 c001df57:	c7 04 24 bb b8 02 c0 	mov    DWORD PTR [esp],0xc002b8bb
 c001df5e:	e8 90 49 ff ff       	call   c00128f3 <Dbg::kprintf(char const*, ...)>
 c001df63:	83 c4 10             	add    esp,0x10
-c001df66:	a1 e8 01 03 c0       	mov    eax,ds:0xc00301e8
+c001df66:	a1 e8 0f 03 c0       	mov    eax,ds:0xc0030fe8
 c001df6b:	85 c0                	test   eax,eax
 c001df6d:	74 5a                	je     c001dfc9 <terminateTask(int)+0xce>
 c001df6f:	83 ec 0c             	sub    esp,0xc
 c001df72:	68 d5 b8 02 c0       	push   0xc002b8d5
 c001df77:	e8 77 49 ff ff       	call   c00128f3 <Dbg::kprintf(char const*, ...)>
 c001df7c:	58                   	pop    eax
-c001df7d:	c6 05 ec 01 03 c0 01 	mov    BYTE PTR ds:0xc00301ec,0x1
-c001df84:	ff 35 e8 01 03 c0    	push   DWORD PTR ds:0xc00301e8
+c001df7d:	c6 05 ec 0f 03 c0 01 	mov    BYTE PTR ds:0xc0030fec,0x1
+c001df84:	ff 35 e8 0f 03 c0    	push   DWORD PTR ds:0xc0030fe8
 c001df8a:	e8 41 fb ff ff       	call   c001dad0 <unblockTask(ThreadControlBlock*)>
 c001df8f:	c7 04 24 ef b8 02 c0 	mov    DWORD PTR [esp],0xc002b8ef
 c001df96:	e8 58 49 ff ff       	call   c00128f3 <Dbg::kprintf(char const*, ...)>
@@ -40116,32 +40116,32 @@ c001e028:	0f 85 88 00 00 00    	jne    c001e0b6 <__static_initialization_and_des
 c001e02e:	81 7c 24 14 ff ff 00 00 	cmp    DWORD PTR [esp+0x14],0xffff
 c001e036:	75 7e                	jne    c001e0b6 <__static_initialization_and_destruction_0(int, int)+0x96>
 c001e038:	83 ec 0c             	sub    esp,0xc
-c001e03b:	68 28 02 03 c0       	push   0xc0030228
+c001e03b:	68 28 10 03 c0       	push   0xc0031028
 c001e040:	e8 cb a3 00 00       	call   c0028410 <LinkedList<ThreadControlBlock volatile>::LinkedList()>
 c001e045:	83 c4 10             	add    esp,0x10
 c001e048:	83 ec 04             	sub    esp,0x4
 c001e04b:	68 d8 c9 02 c0       	push   0xc002c9d8
-c001e050:	68 28 02 03 c0       	push   0xc0030228
+c001e050:	68 28 10 03 c0       	push   0xc0031028
 c001e055:	68 d0 83 02 c0       	push   0xc00283d0
 c001e05a:	e8 2e 47 ff ff       	call   c001278d <__cxa_atexit>
 c001e05f:	83 c4 10             	add    esp,0x10
 c001e062:	83 ec 0c             	sub    esp,0xc
-c001e065:	68 1c 02 03 c0       	push   0xc003021c
+c001e065:	68 1c 10 03 c0       	push   0xc003101c
 c001e06a:	e8 a1 a3 00 00       	call   c0028410 <LinkedList<ThreadControlBlock volatile>::LinkedList()>
 c001e06f:	83 c4 10             	add    esp,0x10
 c001e072:	83 ec 04             	sub    esp,0x4
 c001e075:	68 d8 c9 02 c0       	push   0xc002c9d8
-c001e07a:	68 1c 02 03 c0       	push   0xc003021c
+c001e07a:	68 1c 10 03 c0       	push   0xc003101c
 c001e07f:	68 d0 83 02 c0       	push   0xc00283d0
 c001e084:	e8 04 47 ff ff       	call   c001278d <__cxa_atexit>
 c001e089:	83 c4 10             	add    esp,0x10
 c001e08c:	83 ec 0c             	sub    esp,0xc
-c001e08f:	68 10 02 03 c0       	push   0xc0030210
+c001e08f:	68 10 10 03 c0       	push   0xc0031010
 c001e094:	e8 77 a3 00 00       	call   c0028410 <LinkedList<ThreadControlBlock volatile>::LinkedList()>
 c001e099:	83 c4 10             	add    esp,0x10
 c001e09c:	83 ec 04             	sub    esp,0x4
 c001e09f:	68 d8 c9 02 c0       	push   0xc002c9d8
-c001e0a4:	68 10 02 03 c0       	push   0xc0030210
+c001e0a4:	68 10 10 03 c0       	push   0xc0031010
 c001e0a9:	68 d0 83 02 c0       	push   0xc00283d0
 c001e0ae:	e8 da 46 ff ff       	call   c001278d <__cxa_atexit>
 c001e0b3:	83 c4 10             	add    esp,0x10
@@ -40163,7 +40163,7 @@ c001e0d4 <Vm::inbv(unsigned short)>:
 c001e0d4:	8b 54 24 04          	mov    edx,DWORD PTR [esp+0x4]
 c001e0d8:	66 81 fa fe fe       	cmp    dx,0xfefe
 c001e0dd:	75 06                	jne    c001e0e5 <Vm::inbv(unsigned short)+0x11>
-c001e0df:	a0 6c 02 03 c0       	mov    al,ds:0xc003026c
+c001e0df:	a0 6c 10 03 c0       	mov    al,ds:0xc003106c
 c001e0e4:	c3                   	ret    
 c001e0e5:	ec                   	in     al,dx
 c001e0e6:	c3                   	ret    
@@ -40181,14 +40181,14 @@ c001e0fe:	51                   	push   ecx
 c001e0ff:	50                   	push   eax
 c001e100:	68 eb bb 02 c0       	push   0xc002bbeb
 c001e105:	e8 e9 47 ff ff       	call   c00128f3 <Dbg::kprintf(char const*, ...)>
-c001e10a:	8b 15 6c 02 03 c0    	mov    edx,DWORD PTR ds:0xc003026c
+c001e10a:	8b 15 6c 10 03 c0    	mov    edx,DWORD PTR ds:0xc003106c
 c001e110:	83 c4 10             	add    esp,0x10
 c001e113:	8d 42 01             	lea    eax,[edx+0x1]
-c001e116:	88 9a 80 02 03 c0    	mov    BYTE PTR [edx-0x3ffcfd80],bl
-c001e11c:	a3 6c 02 03 c0       	mov    ds:0xc003026c,eax
+c001e116:	88 9a 80 10 03 c0    	mov    BYTE PTR [edx-0x3ffcef80],bl
+c001e11c:	a3 6c 10 03 c0       	mov    ds:0xc003106c,eax
 c001e121:	83 f8 20             	cmp    eax,0x20
 c001e124:	75 0f                	jne    c001e135 <Vm::outbv(unsigned short, unsigned char)+0x4e>
-c001e126:	c7 05 6c 02 03 c0 1f 00 00 00 	mov    DWORD PTR ds:0xc003026c,0x1f
+c001e126:	c7 05 6c 10 03 c0 1f 00 00 00 	mov    DWORD PTR ds:0xc003106c,0x1f
 c001e130:	eb 03                	jmp    c001e135 <Vm::outbv(unsigned short, unsigned char)+0x4e>
 c001e132:	88 d8                	mov    al,bl
 c001e134:	ee                   	out    dx,al
@@ -40216,7 +40216,7 @@ c001e157 <Vm::mainloop2()>:
 c001e157:	83 ec 0c             	sub    esp,0xc
 c001e15a:	e8 59 f3 ff ff       	call   c001d4b8 <lockScheduler()>
 c001e15f:	83 ec 0c             	sub    esp,0xc
-c001e162:	c6 05 65 02 03 c0 01 	mov    BYTE PTR ds:0xc0030265,0x1
+c001e162:	c6 05 65 10 03 c0 01 	mov    BYTE PTR ds:0xc0031065,0x1
 c001e169:	6a 02                	push   0x2
 c001e16b:	e8 9c f7 ff ff       	call   c001d90c <blockTaskWithSchedulerLockAlreadyHeld(TaskState)>
 c001e170:	a1 00 20 00 c2       	mov    eax,ds:0xc2002000
@@ -40244,9 +40244,9 @@ c001e1a0:	83 ec 08             	sub    esp,0x8
 c001e1a3:	8b 5c 24 10          	mov    ebx,DWORD PTR [esp+0x10]
 c001e1a7:	e8 0c f3 ff ff       	call   c001d4b8 <lockScheduler()>
 c001e1ac:	83 ec 0c             	sub    esp,0xc
-c001e1af:	89 1d 60 02 03 c0    	mov    DWORD PTR ds:0xc0030260,ebx
+c001e1af:	89 1d 60 10 03 c0    	mov    DWORD PTR ds:0xc0031060,ebx
 c001e1b5:	6a 02                	push   0x2
-c001e1b7:	c6 05 64 02 03 c0 01 	mov    BYTE PTR ds:0xc0030264,0x1
+c001e1b7:	c6 05 64 10 03 c0 01 	mov    BYTE PTR ds:0xc0031064,0x1
 c001e1be:	e8 49 f7 ff ff       	call   c001d90c <blockTaskWithSchedulerLockAlreadyHeld(TaskState)>
 c001e1c3:	83 c4 18             	add    esp,0x18
 c001e1c6:	5b                   	pop    ebx
@@ -40257,12 +40257,12 @@ c001e1c9:	83 ec 0c             	sub    esp,0xc
 c001e1cc:	68 80 00 00 00       	push   0x80
 c001e1d1:	6a 00                	push   0x0
 c001e1d3:	68 92 e1 01 c0       	push   0xc001e192
-c001e1d8:	ff 35 34 02 03 c0    	push   DWORD PTR ds:0xc0030234
+c001e1d8:	ff 35 34 10 03 c0    	push   DWORD PTR ds:0xc0031034
 c001e1de:	e8 07 f4 ff ff       	call   c001d5ea <Process::createThread(void (*)(void*), void*, int)>
 c001e1e3:	c7 04 24 07 00 00 00 	mov    DWORD PTR [esp],0x7
-c001e1ea:	a3 68 02 03 c0       	mov    ds:0xc0030268,eax
+c001e1ea:	a3 68 10 03 c0       	mov    ds:0xc0031068,eax
 c001e1ef:	68 00 01 00 00       	push   0x100
-c001e1f4:	a1 34 02 03 c0       	mov    eax,ds:0xc0030234
+c001e1f4:	a1 34 10 03 c0       	mov    eax,ds:0xc0031034
 c001e1f9:	6a 00                	push   0x0
 c001e1fb:	6a 00                	push   0x0
 c001e1fd:	ff b0 32 05 00 00    	push   DWORD PTR [eax+0x532]
@@ -40274,15 +40274,15 @@ c001e20c <Vm::finish8086()>:
 c001e20c:	53                   	push   ebx
 c001e20d:	83 ec 08             	sub    esp,0x8
 c001e210:	e8 a3 f2 ff ff       	call   c001d4b8 <lockScheduler()>
-c001e215:	80 3d 64 02 03 c0 00 	cmp    BYTE PTR ds:0xc0030264,0x0
+c001e215:	80 3d 64 10 03 c0 00 	cmp    BYTE PTR ds:0xc0031064,0x0
 c001e21c:	75 0c                	jne    c001e22a <Vm::finish8086()+0x1e>
 c001e21e:	e8 d1 f5 ff ff       	call   c001d7f4 <schedule()>
 c001e223:	e8 92 f2 ff ff       	call   c001d4ba <unlockScheduler()>
 c001e228:	eb e6                	jmp    c001e210 <Vm::finish8086()+0x4>
 c001e22a:	83 ec 0c             	sub    esp,0xc
-c001e22d:	8b 1d 60 02 03 c0    	mov    ebx,DWORD PTR ds:0xc0030260
-c001e233:	ff 35 68 02 03 c0    	push   DWORD PTR ds:0xc0030268
-c001e239:	c6 05 64 02 03 c0 00 	mov    BYTE PTR ds:0xc0030264,0x0
+c001e22d:	8b 1d 60 10 03 c0    	mov    ebx,DWORD PTR ds:0xc0031060
+c001e233:	ff 35 68 10 03 c0    	push   DWORD PTR ds:0xc0031068
+c001e239:	c6 05 64 10 03 c0 00 	mov    BYTE PTR ds:0xc0031064,0x0
 c001e240:	e8 8b f8 ff ff       	call   c001dad0 <unblockTask(ThreadControlBlock*)>
 c001e245:	e8 70 f2 ff ff       	call   c001d4ba <unlockScheduler()>
 c001e24a:	89 d8                	mov    eax,ebx
@@ -40292,12 +40292,12 @@ c001e250:	c3                   	ret
 
 c001e251 <Vm::getOutput8086(unsigned char*)>:
 c001e251:	83 ec 10             	sub    esp,0x10
-c001e254:	ff 35 6c 02 03 c0    	push   DWORD PTR ds:0xc003026c
-c001e25a:	68 80 02 03 c0       	push   0xc0030280
+c001e254:	ff 35 6c 10 03 c0    	push   DWORD PTR ds:0xc003106c
+c001e25a:	68 80 10 03 c0       	push   0xc0031080
 c001e25f:	ff 74 24 1c          	push   DWORD PTR [esp+0x1c]
 c001e263:	e8 38 24 fe ff       	call   c00006a0 <memcpy>
-c001e268:	a1 6c 02 03 c0       	mov    eax,ds:0xc003026c
-c001e26d:	c7 05 6c 02 03 c0 00 00 00 00 	mov    DWORD PTR ds:0xc003026c,0x0
+c001e268:	a1 6c 10 03 c0       	mov    eax,ds:0xc003106c
+c001e26d:	c7 05 6c 10 03 c0 00 00 00 00 	mov    DWORD PTR ds:0xc003106c,0x0
 c001e277:	83 c4 1c             	add    esp,0x1c
 c001e27a:	c3                   	ret    
 
@@ -40312,15 +40312,15 @@ c001e286:	8b 5c 24 48          	mov    ebx,DWORD PTR [esp+0x48]
 c001e28a:	8b 6c 24 4c          	mov    ebp,DWORD PTR [esp+0x4c]
 c001e28e:	8b 7c 24 50          	mov    edi,DWORD PTR [esp+0x50]
 c001e292:	e8 21 f2 ff ff       	call   c001d4b8 <lockScheduler()>
-c001e297:	a0 65 02 03 c0       	mov    al,ds:0xc0030265
+c001e297:	a0 65 10 03 c0       	mov    al,ds:0xc0031065
 c001e29c:	88 44 24 0f          	mov    BYTE PTR [esp+0xf],al
 c001e2a0:	84 c0                	test   al,al
 c001e2a2:	75 0c                	jne    c001e2b0 <Vm::start8086(char const*, unsigned short, unsigned short, unsigned short, unsigned short)+0x35>
 c001e2a4:	e8 4b f5 ff ff       	call   c001d7f4 <schedule()>
 c001e2a9:	e8 0c f2 ff ff       	call   c001d4ba <unlockScheduler()>
 c001e2ae:	eb e2                	jmp    c001e292 <Vm::start8086(char const*, unsigned short, unsigned short, unsigned short, unsigned short)+0x17>
-c001e2b0:	a1 68 02 03 c0       	mov    eax,ds:0xc0030268
-c001e2b5:	c7 05 6c 02 03 c0 00 00 00 00 	mov    DWORD PTR ds:0xc003026c,0x0
+c001e2b0:	a1 68 10 03 c0       	mov    eax,ds:0xc0031068
+c001e2b5:	c7 05 6c 10 03 c0 00 00 00 00 	mov    DWORD PTR ds:0xc003106c,0x0
 c001e2bf:	66 89 78 5f          	mov    WORD PTR [eax+0x5f],di
 c001e2c3:	66 89 70 59          	mov    WORD PTR [eax+0x59],si
 c001e2c7:	66 89 58 5b          	mov    WORD PTR [eax+0x5b],bx
@@ -40329,13 +40329,13 @@ c001e2cf:	c6 40 62 01          	mov    BYTE PTR [eax+0x62],0x1
 c001e2d3:	50                   	push   eax
 c001e2d4:	6a 20                	push   0x20
 c001e2d6:	6a 00                	push   0x0
-c001e2d8:	68 80 02 03 c0       	push   0xc0030280
+c001e2d8:	68 80 10 03 c0       	push   0xc0031080
 c001e2dd:	e8 e2 23 fe ff       	call   c00006c4 <memset>
 c001e2e2:	c7 04 24 14 01 00 00 	mov    DWORD PTR [esp],0x114
 c001e2e9:	e8 36 13 ff ff       	call   c000f624 <malloc>
 c001e2ee:	83 c4 0c             	add    esp,0xc
 c001e2f1:	89 c7                	mov    edi,eax
-c001e2f3:	ff 35 34 02 03 c0    	push   DWORD PTR ds:0xc0030234
+c001e2f3:	ff 35 34 10 03 c0    	push   DWORD PTR ds:0xc0031034
 c001e2f9:	ff 74 24 48          	push   DWORD PTR [esp+0x48]
 c001e2fd:	50                   	push   eax
 c001e2fe:	e8 49 4b ff ff       	call   c0012e4c <File::File(char const*, Process*)>
@@ -40397,10 +40397,10 @@ c001e395:	ff 52 0c             	call   DWORD PTR [edx+0xc]
 c001e398:	83 c4 14             	add    esp,0x14
 c001e39b:	57                   	push   edi
 c001e39c:	e8 6d 4b ff ff       	call   c0012f0e <File::close()>
-c001e3a1:	c6 05 65 02 03 c0 00 	mov    BYTE PTR ds:0xc0030265,0x0
+c001e3a1:	c6 05 65 10 03 c0 00 	mov    BYTE PTR ds:0xc0031065,0x0
 c001e3a8:	e8 0d f1 ff ff       	call   c001d4ba <unlockScheduler()>
 c001e3ad:	59                   	pop    ecx
-c001e3ae:	ff 35 68 02 03 c0    	push   DWORD PTR ds:0xc0030268
+c001e3ae:	ff 35 68 10 03 c0    	push   DWORD PTR ds:0xc0031068
 c001e3b4:	e8 17 f7 ff ff       	call   c001dad0 <unblockTask(ThreadControlBlock*)>
 c001e3b9:	83 c4 10             	add    esp,0x10
 c001e3bc:	0f b6 6c 24 0f       	movzx  ebp,BYTE PTR [esp+0xf]
@@ -41430,14 +41430,14 @@ c001ef65:	83 e0 01             	and    eax,0x1
 c001ef68:	5b                   	pop    ebx
 c001ef69:	88 c1                	mov    cl,al
 c001ef6b:	83 e2 01             	and    edx,0x1
-c001ef6e:	a0 a1 02 03 c0       	mov    al,ds:0xc00302a1
+c001ef6e:	a0 a1 10 03 c0       	mov    al,ds:0xc00310a1
 c001ef73:	c1 e2 06             	shl    edx,0x6
 c001ef76:	83 e0 ba             	and    eax,0xffffffba
 c001ef79:	5e                   	pop    esi
 c001ef7a:	09 c8                	or     eax,ecx
 c001ef7c:	5f                   	pop    edi
 c001ef7d:	09 d0                	or     eax,edx
-c001ef7f:	a2 a1 02 03 c0       	mov    ds:0xc00302a1,al
+c001ef7f:	a2 a1 10 03 c0       	mov    ds:0xc00310a1,al
 c001ef84:	c3                   	ret    
 
 c001ef85 <Vm::fpuAdd(unsigned long long, unsigned long long)>:
@@ -41510,15 +41510,15 @@ c001f019:	83 ec 0c             	sub    esp,0xc
 c001f01c:	68 ee bd 02 c0       	push   0xc002bdee
 c001f021:	e8 41 ae ff ff       	call   c0019e67 <Krnl::panic(char const*)>
 c001f026:	83 c4 10             	add    esp,0x10
-c001f029:	a0 a1 02 03 c0       	mov    al,ds:0xc00302a1
+c001f029:	a0 a1 10 03 c0       	mov    al,ds:0xc00310a1
 c001f02e:	b9 08 00 00 00       	mov    ecx,0x8
 c001f033:	c0 e8 03             	shr    al,0x3
 c001f036:	83 e0 07             	and    eax,0x7
 c001f039:	03 44 24 10          	add    eax,DWORD PTR [esp+0x10]
 c001f03d:	99                   	cdq    
 c001f03e:	f7 f9                	idiv   ecx
-c001f040:	8b 04 d5 a4 02 03 c0 	mov    eax,DWORD PTR [edx*8-0x3ffcfd5c]
-c001f047:	8b 14 d5 a8 02 03 c0 	mov    edx,DWORD PTR [edx*8-0x3ffcfd58]
+c001f040:	8b 04 d5 a4 10 03 c0 	mov    eax,DWORD PTR [edx*8-0x3ffcef5c]
+c001f047:	8b 14 d5 a8 10 03 c0 	mov    edx,DWORD PTR [edx*8-0x3ffcef58]
 c001f04e:	83 c4 0c             	add    esp,0xc
 c001f051:	c3                   	ret    
 
@@ -41534,22 +41534,22 @@ c001f064:	83 ec 0c             	sub    esp,0xc
 c001f067:	68 01 be 02 c0       	push   0xc002be01
 c001f06c:	e8 f6 ad ff ff       	call   c0019e67 <Krnl::panic(char const*)>
 c001f071:	83 c4 10             	add    esp,0x10
-c001f074:	a0 a1 02 03 c0       	mov    al,ds:0xc00302a1
+c001f074:	a0 a1 10 03 c0       	mov    al,ds:0xc00310a1
 c001f079:	b9 08 00 00 00       	mov    ecx,0x8
 c001f07e:	c0 e8 03             	shr    al,0x3
 c001f081:	83 e0 07             	and    eax,0x7
 c001f084:	03 44 24 10          	add    eax,DWORD PTR [esp+0x10]
 c001f088:	99                   	cdq    
 c001f089:	f7 f9                	idiv   ecx
-c001f08b:	89 34 d5 a4 02 03 c0 	mov    DWORD PTR [edx*8-0x3ffcfd5c],esi
-c001f092:	89 3c d5 a8 02 03 c0 	mov    DWORD PTR [edx*8-0x3ffcfd58],edi
+c001f08b:	89 34 d5 a4 10 03 c0 	mov    DWORD PTR [edx*8-0x3ffcef5c],esi
+c001f092:	89 3c d5 a8 10 03 c0 	mov    DWORD PTR [edx*8-0x3ffcef58],edi
 c001f099:	58                   	pop    eax
 c001f09a:	5e                   	pop    esi
 c001f09b:	5f                   	pop    edi
 c001f09c:	c3                   	ret    
 
 c001f09d <Vm::fpuPush(unsigned long long)>:
-c001f09d:	a0 a1 02 03 c0       	mov    al,ds:0xc00302a1
+c001f09d:	a0 a1 10 03 c0       	mov    al,ds:0xc00310a1
 c001f0a2:	c0 e8 03             	shr    al,0x3
 c001f0a5:	83 e0 07             	and    eax,0x7
 c001f0a8:	83 c0 07             	add    eax,0x7
@@ -41557,43 +41557,43 @@ c001f0ab:	88 c2                	mov    dl,al
 c001f0ad:	83 e0 07             	and    eax,0x7
 c001f0b0:	83 e2 07             	and    edx,0x7
 c001f0b3:	8d 0c d5 00 00 00 00 	lea    ecx,[edx*8+0x0]
-c001f0ba:	8a 15 a1 02 03 c0    	mov    dl,BYTE PTR ds:0xc00302a1
+c001f0ba:	8a 15 a1 10 03 c0    	mov    dl,BYTE PTR ds:0xc00310a1
 c001f0c0:	83 e2 c7             	and    edx,0xffffffc7
 c001f0c3:	09 ca                	or     edx,ecx
 c001f0c5:	8b 4c 24 08          	mov    ecx,DWORD PTR [esp+0x8]
-c001f0c9:	88 15 a1 02 03 c0    	mov    BYTE PTR ds:0xc00302a1,dl
-c001f0cf:	89 0c c5 a8 02 03 c0 	mov    DWORD PTR [eax*8-0x3ffcfd58],ecx
+c001f0c9:	88 15 a1 10 03 c0    	mov    BYTE PTR ds:0xc00310a1,dl
+c001f0cf:	89 0c c5 a8 10 03 c0 	mov    DWORD PTR [eax*8-0x3ffcef58],ecx
 c001f0d6:	8b 54 24 04          	mov    edx,DWORD PTR [esp+0x4]
-c001f0da:	89 14 c5 a4 02 03 c0 	mov    DWORD PTR [eax*8-0x3ffcfd5c],edx
-c001f0e1:	a1 e4 02 03 c0       	mov    eax,ds:0xc00302e4
+c001f0da:	89 14 c5 a4 10 03 c0 	mov    DWORD PTR [eax*8-0x3ffcef5c],edx
+c001f0e1:	a1 e4 10 03 c0       	mov    eax,ds:0xc00310e4
 c001f0e6:	83 f8 08             	cmp    eax,0x8
 c001f0e9:	75 08                	jne    c001f0f3 <Vm::fpuPush(unsigned long long)+0x56>
-c001f0eb:	80 0d a0 02 03 c0 40 	or     BYTE PTR ds:0xc00302a0,0x40
+c001f0eb:	80 0d a0 10 03 c0 40 	or     BYTE PTR ds:0xc00310a0,0x40
 c001f0f2:	c3                   	ret    
 c001f0f3:	40                   	inc    eax
-c001f0f4:	a3 e4 02 03 c0       	mov    ds:0xc00302e4,eax
+c001f0f4:	a3 e4 10 03 c0       	mov    ds:0xc00310e4,eax
 c001f0f9:	c3                   	ret    
 
 c001f0fa <Vm::fpuPop()>:
-c001f0fa:	8a 0d a1 02 03 c0    	mov    cl,BYTE PTR ds:0xc00302a1
+c001f0fa:	8a 0d a1 10 03 c0    	mov    cl,BYTE PTR ds:0xc00310a1
 c001f100:	53                   	push   ebx
 c001f101:	c0 e9 03             	shr    cl,0x3
-c001f104:	8a 1d a1 02 03 c0    	mov    bl,BYTE PTR ds:0xc00302a1
+c001f104:	8a 1d a1 10 03 c0    	mov    bl,BYTE PTR ds:0xc00310a1
 c001f10a:	83 e1 07             	and    ecx,0x7
 c001f10d:	83 e3 c7             	and    ebx,0xffffffc7
-c001f110:	8b 04 cd a4 02 03 c0 	mov    eax,DWORD PTR [ecx*8-0x3ffcfd5c]
-c001f117:	8b 14 cd a8 02 03 c0 	mov    edx,DWORD PTR [ecx*8-0x3ffcfd58]
+c001f110:	8b 04 cd a4 10 03 c0 	mov    eax,DWORD PTR [ecx*8-0x3ffcef5c]
+c001f117:	8b 14 cd a8 10 03 c0 	mov    edx,DWORD PTR [ecx*8-0x3ffcef58]
 c001f11e:	8d 0c cd 08 00 00 00 	lea    ecx,[ecx*8+0x8]
 c001f125:	83 e1 38             	and    ecx,0x38
 c001f128:	09 d9                	or     ecx,ebx
-c001f12a:	88 0d a1 02 03 c0    	mov    BYTE PTR ds:0xc00302a1,cl
-c001f130:	8b 0d e4 02 03 c0    	mov    ecx,DWORD PTR ds:0xc00302e4
+c001f12a:	88 0d a1 10 03 c0    	mov    BYTE PTR ds:0xc00310a1,cl
+c001f130:	8b 0d e4 10 03 c0    	mov    ecx,DWORD PTR ds:0xc00310e4
 c001f136:	85 c9                	test   ecx,ecx
 c001f138:	74 09                	je     c001f143 <Vm::fpuPop()+0x49>
 c001f13a:	49                   	dec    ecx
-c001f13b:	89 0d e4 02 03 c0    	mov    DWORD PTR ds:0xc00302e4,ecx
+c001f13b:	89 0d e4 10 03 c0    	mov    DWORD PTR ds:0xc00310e4,ecx
 c001f141:	eb 07                	jmp    c001f14a <Vm::fpuPop()+0x50>
-c001f143:	80 0d a0 02 03 c0 40 	or     BYTE PTR ds:0xc00302a0,0x40
+c001f143:	80 0d a0 10 03 c0 40 	or     BYTE PTR ds:0xc00310a0,0x40
 c001f14a:	5b                   	pop    ebx
 c001f14b:	c3                   	ret    
 
@@ -41722,12 +41722,12 @@ c001f2ae:	e9 88 00 00 00       	jmp    c001f33b <Vm::x87Handler(regs*)+0x1ef>
 c001f2b3:	80 fa 05             	cmp    dl,0x5
 c001f2b6:	75 0e                	jne    c001f2c6 <Vm::x87Handler(regs*)+0x17a>
 c001f2b8:	66 8b 06             	mov    ax,WORD PTR [esi]
-c001f2bb:	66 a3 a2 02 03 c0    	mov    ds:0xc00302a2,ax
+c001f2bb:	66 a3 a2 10 03 c0    	mov    ds:0xc00310a2,ax
 c001f2c1:	e9 df 00 00 00       	jmp    c001f3a5 <Vm::x87Handler(regs*)+0x259>
 c001f2c6:	31 c0                	xor    eax,eax
 c001f2c8:	80 fa 07             	cmp    dl,0x7
 c001f2cb:	0f 85 dc 08 00 00    	jne    c001fbad <Vm::x87Handler(regs*)+0xa61>
-c001f2d1:	66 a1 a2 02 03 c0    	mov    ax,ds:0xc00302a2
+c001f2d1:	66 a1 a2 10 03 c0    	mov    ax,ds:0xc00310a2
 c001f2d7:	66 89 06             	mov    WORD PTR [esi],ax
 c001f2da:	e9 c6 00 00 00       	jmp    c001f3a5 <Vm::x87Handler(regs*)+0x259>
 c001f2df:	80 fa d8             	cmp    dl,0xd8
@@ -42199,7 +42199,7 @@ c001f875:	0f 85 b5 02 00 00    	jne    c001fb30 <Vm::x87Handler(regs*)+0x9e4>
 c001f87b:	eb bd                	jmp    c001f83a <Vm::x87Handler(regs*)+0x6ee>
 c001f87d:	80 7d 01 e0          	cmp    BYTE PTR [ebp+0x1],0xe0
 c001f881:	0f 85 ea 02 00 00    	jne    c001fb71 <Vm::x87Handler(regs*)+0xa25>
-c001f887:	0f b7 05 a0 02 03 c0 	movzx  eax,WORD PTR ds:0xc00302a0
+c001f887:	0f b7 05 a0 10 03 c0 	movzx  eax,WORD PTR ds:0xc00310a0
 c001f88e:	66 89 43 2c          	mov    WORD PTR [ebx+0x2c],ax
 c001f892:	83 43 38 02          	add    DWORD PTR [ebx+0x38],0x2
 c001f896:	e9 28 f9 ff ff       	jmp    c001f1c3 <Vm::x87Handler(regs*)+0x77>
@@ -42501,7 +42501,7 @@ c001fbbd:	75 1a                	jne    c001fbd9 <__static_initialization_and_des
 c001fbbf:	81 7c 24 14 ff ff 00 00 	cmp    DWORD PTR [esp+0x14],0xffff
 c001fbc7:	75 10                	jne    c001fbd9 <__static_initialization_and_destruction_0(int, int)+0x24>
 c001fbc9:	83 ec 0c             	sub    esp,0xc
-c001fbcc:	68 a0 02 03 c0       	push   0xc00302a0
+c001fbcc:	68 a0 10 03 c0       	push   0xc00310a0
 c001fbd1:	e8 9a 88 00 00       	call   c0028470 <Vm::_FPUState::_FPUState()>
 c001fbd6:	83 c4 10             	add    esp,0x10
 c001fbd9:	90                   	nop
@@ -42596,25 +42596,25 @@ c001fcb2:	83 ec 1c             	sub    esp,0x1c
 c001fcb5:	66 c7 44 24 09 30 3a 	mov    WORD PTR [esp+0x9],0x3a30
 c001fcbc:	c6 44 24 0b 00       	mov    BYTE PTR [esp+0xb],0x0
 c001fcc1:	8b 44 24 28          	mov    eax,DWORD PTR [esp+0x28]
-c001fcc5:	8b 04 85 20 03 03 c0 	mov    eax,DWORD PTR [eax*4-0x3ffcfce0]
+c001fcc5:	8b 04 85 20 11 03 c0 	mov    eax,DWORD PTR [eax*4-0x3ffceee0]
 c001fccc:	83 f8 ff             	cmp    eax,0xffffffff
 c001fccf:	75 34                	jne    c001fd05 <FAT::getlabel(LogicalDisk*, int, char*, unsigned int*)+0x53>
 c001fcd1:	8a 44 24 09          	mov    al,BYTE PTR [esp+0x9]
 c001fcd5:	88 c2                	mov    dl,al
-c001fcd7:	a1 00 03 03 c0       	mov    eax,ds:0xc0030300
+c001fcd7:	a1 00 11 03 c0       	mov    eax,ds:0xc0031100
 c001fcdc:	01 d0                	add    eax,edx
 c001fcde:	88 44 24 09          	mov    BYTE PTR [esp+0x9],al
-c001fce2:	8b 15 00 03 03 c0    	mov    edx,DWORD PTR ds:0xc0030300
+c001fce2:	8b 15 00 11 03 c0    	mov    edx,DWORD PTR ds:0xc0031100
 c001fce8:	8b 44 24 28          	mov    eax,DWORD PTR [esp+0x28]
-c001fcec:	89 14 85 20 03 03 c0 	mov    DWORD PTR [eax*4-0x3ffcfce0],edx
-c001fcf3:	a1 00 03 03 c0       	mov    eax,ds:0xc0030300
+c001fcec:	89 14 85 20 11 03 c0 	mov    DWORD PTR [eax*4-0x3ffceee0],edx
+c001fcf3:	a1 00 11 03 c0       	mov    eax,ds:0xc0031100
 c001fcf8:	8b 54 24 28          	mov    edx,DWORD PTR [esp+0x28]
-c001fcfc:	89 14 85 a0 03 03 c0 	mov    DWORD PTR [eax*4-0x3ffcfc60],edx
+c001fcfc:	89 14 85 a0 11 03 c0 	mov    DWORD PTR [eax*4-0x3ffcee60],edx
 c001fd03:	eb 17                	jmp    c001fd1c <FAT::getlabel(LogicalDisk*, int, char*, unsigned int*)+0x6a>
 c001fd05:	8a 44 24 09          	mov    al,BYTE PTR [esp+0x9]
 c001fd09:	88 c2                	mov    dl,al
 c001fd0b:	8b 44 24 28          	mov    eax,DWORD PTR [esp+0x28]
-c001fd0f:	8b 04 85 20 03 03 c0 	mov    eax,DWORD PTR [eax*4-0x3ffcfce0]
+c001fd0f:	8b 04 85 20 11 03 c0 	mov    eax,DWORD PTR [eax*4-0x3ffceee0]
 c001fd16:	01 d0                	add    eax,edx
 c001fd18:	88 44 24 09          	mov    BYTE PTR [esp+0x9],al
 c001fd1c:	83 ec 04             	sub    esp,0x4
@@ -42645,25 +42645,25 @@ c001fd6a:	fc                   	cld
 c001fd6b:	89 d7                	mov    edi,edx
 c001fd6d:	f3 ab                	rep stos DWORD PTR es:[edi],eax
 c001fd6f:	8b 44 24 68          	mov    eax,DWORD PTR [esp+0x68]
-c001fd73:	8b 04 85 20 03 03 c0 	mov    eax,DWORD PTR [eax*4-0x3ffcfce0]
+c001fd73:	8b 04 85 20 11 03 c0 	mov    eax,DWORD PTR [eax*4-0x3ffceee0]
 c001fd7a:	83 f8 ff             	cmp    eax,0xffffffff
 c001fd7d:	75 34                	jne    c001fdb3 <FAT::setlabel(LogicalDisk*, int, char*)+0x63>
 c001fd7f:	8a 44 24 0c          	mov    al,BYTE PTR [esp+0xc]
 c001fd83:	88 c2                	mov    dl,al
-c001fd85:	a1 00 03 03 c0       	mov    eax,ds:0xc0030300
+c001fd85:	a1 00 11 03 c0       	mov    eax,ds:0xc0031100
 c001fd8a:	01 d0                	add    eax,edx
 c001fd8c:	88 44 24 0c          	mov    BYTE PTR [esp+0xc],al
-c001fd90:	8b 15 00 03 03 c0    	mov    edx,DWORD PTR ds:0xc0030300
+c001fd90:	8b 15 00 11 03 c0    	mov    edx,DWORD PTR ds:0xc0031100
 c001fd96:	8b 44 24 68          	mov    eax,DWORD PTR [esp+0x68]
-c001fd9a:	89 14 85 20 03 03 c0 	mov    DWORD PTR [eax*4-0x3ffcfce0],edx
-c001fda1:	a1 00 03 03 c0       	mov    eax,ds:0xc0030300
+c001fd9a:	89 14 85 20 11 03 c0 	mov    DWORD PTR [eax*4-0x3ffceee0],edx
+c001fda1:	a1 00 11 03 c0       	mov    eax,ds:0xc0031100
 c001fda6:	8b 54 24 68          	mov    edx,DWORD PTR [esp+0x68]
-c001fdaa:	89 14 85 a0 03 03 c0 	mov    DWORD PTR [eax*4-0x3ffcfc60],edx
+c001fdaa:	89 14 85 a0 11 03 c0 	mov    DWORD PTR [eax*4-0x3ffcee60],edx
 c001fdb1:	eb 17                	jmp    c001fdca <FAT::setlabel(LogicalDisk*, int, char*)+0x7a>
 c001fdb3:	8a 44 24 0c          	mov    al,BYTE PTR [esp+0xc]
 c001fdb7:	88 c2                	mov    dl,al
 c001fdb9:	8b 44 24 68          	mov    eax,DWORD PTR [esp+0x68]
-c001fdbd:	8b 04 85 20 03 03 c0 	mov    eax,DWORD PTR [eax*4-0x3ffcfce0]
+c001fdbd:	8b 04 85 20 11 03 c0 	mov    eax,DWORD PTR [eax*4-0x3ffceee0]
 c001fdc4:	01 d0                	add    eax,edx
 c001fdc6:	88 44 24 0c          	mov    BYTE PTR [esp+0xc],al
 c001fdca:	83 ec 08             	sub    esp,0x8
@@ -42750,25 +42750,25 @@ c001fee0:	e9 04 01 00 00       	jmp    c001ffe9 <FAT::format(LogicalDisk*, int, 
 c001fee5:	66 c7 44 24 11 30 3a 	mov    WORD PTR [esp+0x11],0x3a30
 c001feec:	c6 44 24 13 00       	mov    BYTE PTR [esp+0x13],0x0
 c001fef1:	8b 44 24 38          	mov    eax,DWORD PTR [esp+0x38]
-c001fef5:	8b 04 85 20 03 03 c0 	mov    eax,DWORD PTR [eax*4-0x3ffcfce0]
+c001fef5:	8b 04 85 20 11 03 c0 	mov    eax,DWORD PTR [eax*4-0x3ffceee0]
 c001fefc:	83 f8 ff             	cmp    eax,0xffffffff
 c001feff:	75 34                	jne    c001ff35 <FAT::format(LogicalDisk*, int, char const*, int)+0x12b>
 c001ff01:	8a 44 24 11          	mov    al,BYTE PTR [esp+0x11]
 c001ff05:	88 c2                	mov    dl,al
-c001ff07:	a1 00 03 03 c0       	mov    eax,ds:0xc0030300
+c001ff07:	a1 00 11 03 c0       	mov    eax,ds:0xc0031100
 c001ff0c:	01 d0                	add    eax,edx
 c001ff0e:	88 44 24 11          	mov    BYTE PTR [esp+0x11],al
-c001ff12:	8b 15 00 03 03 c0    	mov    edx,DWORD PTR ds:0xc0030300
+c001ff12:	8b 15 00 11 03 c0    	mov    edx,DWORD PTR ds:0xc0031100
 c001ff18:	8b 44 24 38          	mov    eax,DWORD PTR [esp+0x38]
-c001ff1c:	89 14 85 20 03 03 c0 	mov    DWORD PTR [eax*4-0x3ffcfce0],edx
-c001ff23:	a1 00 03 03 c0       	mov    eax,ds:0xc0030300
+c001ff1c:	89 14 85 20 11 03 c0 	mov    DWORD PTR [eax*4-0x3ffceee0],edx
+c001ff23:	a1 00 11 03 c0       	mov    eax,ds:0xc0031100
 c001ff28:	8b 54 24 38          	mov    edx,DWORD PTR [esp+0x38]
-c001ff2c:	89 14 85 a0 03 03 c0 	mov    DWORD PTR [eax*4-0x3ffcfc60],edx
+c001ff2c:	89 14 85 a0 11 03 c0 	mov    DWORD PTR [eax*4-0x3ffcee60],edx
 c001ff33:	eb 17                	jmp    c001ff4c <FAT::format(LogicalDisk*, int, char const*, int)+0x142>
 c001ff35:	8a 44 24 11          	mov    al,BYTE PTR [esp+0x11]
 c001ff39:	88 c2                	mov    dl,al
 c001ff3b:	8b 44 24 38          	mov    eax,DWORD PTR [esp+0x38]
-c001ff3f:	8b 04 85 20 03 03 c0 	mov    eax,DWORD PTR [eax*4-0x3ffcfce0]
+c001ff3f:	8b 04 85 20 11 03 c0 	mov    eax,DWORD PTR [eax*4-0x3ffceee0]
 c001ff46:	01 d0                	add    eax,edx
 c001ff48:	88 44 24 11          	mov    BYTE PTR [esp+0x11],al
 c001ff4c:	8b 44 24 1c          	mov    eax,DWORD PTR [esp+0x1c]
@@ -42817,7 +42817,7 @@ c001ffed:	90                   	nop
 
 c001ffee <FAT::tryMount(LogicalDisk*, int)>:
 c001ffee:	81 ec 6c 03 00 00    	sub    esp,0x36c
-c001fff4:	a1 00 03 03 c0       	mov    eax,ds:0xc0030300
+c001fff4:	a1 00 11 03 c0       	mov    eax,ds:0xc0031100
 c001fff9:	83 f8 14             	cmp    eax,0x14
 c001fffc:	75 17                	jne    c0020015 <FAT::tryMount(LogicalDisk*, int)+0x27>
 c001fffe:	83 ec 0c             	sub    esp,0xc
@@ -42835,7 +42835,7 @@ c002002f:	b0 00                	mov    al,0x0
 c0020031:	e9 b6 01 00 00       	jmp    c00201ec <FAT::tryMount(LogicalDisk*, int)+0x1fe>
 c0020036:	c6 84 24 5f 03 00 00 00 	mov    BYTE PTR [esp+0x35f],0x0
 c002003e:	8b 84 24 78 03 00 00 	mov    eax,DWORD PTR [esp+0x378]
-c0020045:	8b 04 85 20 03 03 c0 	mov    eax,DWORD PTR [eax*4-0x3ffcfce0]
+c0020045:	8b 04 85 20 11 03 c0 	mov    eax,DWORD PTR [eax*4-0x3ffceee0]
 c002004c:	83 f8 ff             	cmp    eax,0xffffffff
 c002004f:	74 07                	je     c0020058 <FAT::tryMount(LogicalDisk*, int)+0x6a>
 c0020051:	b0 01                	mov    al,0x1
@@ -42844,15 +42844,15 @@ c0020058:	66 c7 84 24 51 03 00 00 30 3a 	mov    WORD PTR [esp+0x351],0x3a30
 c0020062:	c6 84 24 53 03 00 00 00 	mov    BYTE PTR [esp+0x353],0x0
 c002006a:	8a 84 24 51 03 00 00 	mov    al,BYTE PTR [esp+0x351]
 c0020071:	88 c2                	mov    dl,al
-c0020073:	a1 00 03 03 c0       	mov    eax,ds:0xc0030300
+c0020073:	a1 00 11 03 c0       	mov    eax,ds:0xc0031100
 c0020078:	01 d0                	add    eax,edx
 c002007a:	88 84 24 51 03 00 00 	mov    BYTE PTR [esp+0x351],al
-c0020081:	8b 15 00 03 03 c0    	mov    edx,DWORD PTR ds:0xc0030300
+c0020081:	8b 15 00 11 03 c0    	mov    edx,DWORD PTR ds:0xc0031100
 c0020087:	8b 84 24 78 03 00 00 	mov    eax,DWORD PTR [esp+0x378]
-c002008e:	89 14 85 20 03 03 c0 	mov    DWORD PTR [eax*4-0x3ffcfce0],edx
-c0020095:	a1 00 03 03 c0       	mov    eax,ds:0xc0030300
+c002008e:	89 14 85 20 11 03 c0 	mov    DWORD PTR [eax*4-0x3ffceee0],edx
+c0020095:	a1 00 11 03 c0       	mov    eax,ds:0xc0031100
 c002009a:	8b 94 24 78 03 00 00 	mov    edx,DWORD PTR [esp+0x378]
-c00200a1:	89 14 85 a0 03 03 c0 	mov    DWORD PTR [eax*4-0x3ffcfc60],edx
+c00200a1:	89 14 85 a0 11 03 c0 	mov    DWORD PTR [eax*4-0x3ffcee60],edx
 c00200a8:	83 ec 0c             	sub    esp,0xc
 c00200ab:	68 54 02 00 00       	push   0x254
 c00200b0:	e8 6f f5 fe ff       	call   c000f624 <malloc>
@@ -42933,9 +42933,9 @@ c00201ce:	e8 45 4b fe ff       	call   c0004d18 <f_mount>
 c00201d3:	83 c4 10             	add    esp,0x10
 c00201d6:	b0 00                	mov    al,0x0
 c00201d8:	eb 12                	jmp    c00201ec <FAT::tryMount(LogicalDisk*, int)+0x1fe>
-c00201da:	a1 00 03 03 c0       	mov    eax,ds:0xc0030300
+c00201da:	a1 00 11 03 c0       	mov    eax,ds:0xc0031100
 c00201df:	40                   	inc    eax
-c00201e0:	a3 00 03 03 c0       	mov    ds:0xc0030300,eax
+c00201e0:	a3 00 11 03 c0       	mov    ds:0xc0031100,eax
 c00201e5:	8a 84 24 5f 03 00 00 	mov    al,BYTE PTR [esp+0x35f]
 c00201ec:	81 c4 6c 03 00 00    	add    esp,0x36c
 c00201f2:	c3                   	ret    
@@ -43267,12 +43267,12 @@ c002063c:	83 c4 10             	add    esp,0x10
 c002063f:	ba d4 be 02 c0       	mov    edx,0xc002bed4
 c0020644:	8b 44 24 20          	mov    eax,DWORD PTR [esp+0x20]
 c0020648:	89 10                	mov    DWORD PTR [eax],edx
-c002064a:	c7 05 00 03 03 c0 00 00 00 00 	mov    DWORD PTR ds:0xc0030300,0x0
+c002064a:	c7 05 00 11 03 c0 00 00 00 00 	mov    DWORD PTR ds:0xc0031100,0x0
 c0020654:	c7 44 24 0c 00 00 00 00 	mov    DWORD PTR [esp+0xc],0x0
 c002065c:	83 7c 24 0c 19       	cmp    DWORD PTR [esp+0xc],0x19
 c0020661:	7f 15                	jg     c0020678 <FAT::FAT()+0x4c>
 c0020663:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
-c0020667:	c7 04 85 20 03 03 c0 ff ff ff ff 	mov    DWORD PTR [eax*4-0x3ffcfce0],0xffffffff
+c0020667:	c7 04 85 20 11 03 c0 ff ff ff ff 	mov    DWORD PTR [eax*4-0x3ffceee0],0xffffffff
 c0020672:	ff 44 24 0c          	inc    DWORD PTR [esp+0xc]
 c0020676:	eb e4                	jmp    c002065c <FAT::FAT()+0x30>
 c0020678:	90                   	nop
@@ -43294,7 +43294,7 @@ c0020697:	88 10                	mov    BYTE PTR [eax],dl
 c0020699:	8b 44 24 08          	mov    eax,DWORD PTR [esp+0x8]
 c002069d:	8a 00                	mov    al,BYTE PTR [eax]
 c002069f:	0f be c0             	movsx  eax,al
-c00206a2:	8b 04 85 20 03 03 c0 	mov    eax,DWORD PTR [eax*4-0x3ffcfce0]
+c00206a2:	8b 04 85 20 11 03 c0 	mov    eax,DWORD PTR [eax*4-0x3ffceee0]
 c00206a9:	83 c0 30             	add    eax,0x30
 c00206ac:	88 c2                	mov    dl,al
 c00206ae:	8b 44 24 08          	mov    eax,DWORD PTR [esp+0x8]
@@ -43878,16 +43878,16 @@ c0020e5b:	52                   	push   edx
 c0020e5c:	8b 4c 24 10          	mov    ecx,DWORD PTR [esp+0x10]
 c0020e60:	8b 74 24 14          	mov    esi,DWORD PTR [esp+0x14]
 c0020e64:	8b 44 24 18          	mov    eax,DWORD PTR [esp+0x18]
-c0020e68:	39 0d 00 04 03 c0    	cmp    DWORD PTR ds:0xc0030400,ecx
+c0020e68:	39 0d 00 12 03 c0    	cmp    DWORD PTR ds:0xc0031200,ecx
 c0020e6e:	75 08                	jne    c0020e78 <readSectorFromCDROM(unsigned int, unsigned char*, char)+0x1f>
 c0020e70:	38 05 54 d0 02 c0    	cmp    BYTE PTR ds:0xc002d054,al
 c0020e76:	74 2b                	je     c0020ea3 <readSectorFromCDROM(unsigned int, unsigned char*, char)+0x4a>
 c0020e78:	83 ec 0c             	sub    esp,0xc
 c0020e7b:	a2 54 d0 02 c0       	mov    ds:0xc002d054,al
-c0020e80:	68 20 04 03 c0       	push   0xc0030420
+c0020e80:	68 20 12 03 c0       	push   0xc0031220
 c0020e85:	0f be c0             	movsx  eax,al
 c0020e88:	6a 01                	push   0x1
-c0020e8a:	89 0d 00 04 03 c0    	mov    DWORD PTR ds:0xc0030400,ecx
+c0020e8a:	89 0d 00 12 03 c0    	mov    DWORD PTR ds:0xc0031200,ecx
 c0020e90:	31 db                	xor    ebx,ebx
 c0020e92:	53                   	push   ebx
 c0020e93:	51                   	push   ecx
@@ -43895,7 +43895,7 @@ c0020e94:	ff 34 85 dc df 02 c0 	push   DWORD PTR [eax*4-0x3ffd2024]
 c0020e9b:	e8 10 52 ff ff       	call   c00160b0 <LogicalDisk::read(unsigned long long, int, void*)>
 c0020ea0:	83 c4 20             	add    esp,0x20
 c0020ea3:	c7 44 24 18 00 08 00 00 	mov    DWORD PTR [esp+0x18],0x800
-c0020eab:	c7 44 24 14 20 04 03 c0 	mov    DWORD PTR [esp+0x14],0xc0030420
+c0020eab:	c7 44 24 14 20 12 03 c0 	mov    DWORD PTR [esp+0x14],0xc0031220
 c0020eb3:	89 74 24 10          	mov    DWORD PTR [esp+0x10],esi
 c0020eb7:	58                   	pop    eax
 c0020eb8:	5b                   	pop    ebx
@@ -44831,7 +44831,7 @@ c00219e4:	83 ec 0c             	sub    esp,0xc
 c00219e7:	68 f0 bf 02 c0       	push   0xc002bff0
 c00219ec:	e8 76 84 ff ff       	call   c0019e67 <Krnl::panic(char const*)>
 c00219f1:	83 c4 10             	add    esp,0x10
-c00219f4:	a0 20 10 03 c0       	mov    al,ds:0xc0031020
+c00219f4:	a0 20 1e 03 c0       	mov    al,ds:0xc0031e20
 c00219f9:	83 f0 01             	xor    eax,0x1
 c00219fc:	84 c0                	test   al,al
 c00219fe:	74 57                	je     c0021a57 <SoundChannel::SoundChannel(int, int, int, int)+0x151>
@@ -44852,10 +44852,10 @@ c0021a35:	e8 1f 4c 00 00       	call   c0026659 <__mulsf3>
 c0021a3a:	83 c4 10             	add    esp,0x10
 c0021a3d:	89 c2                	mov    edx,eax
 c0021a3f:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
-c0021a43:	89 14 85 20 0c 03 c0 	mov    DWORD PTR [eax*4-0x3ffcf3e0],edx
+c0021a43:	89 14 85 20 1a 03 c0 	mov    DWORD PTR [eax*4-0x3ffce5e0],edx
 c0021a4a:	ff 44 24 0c          	inc    DWORD PTR [esp+0xc]
 c0021a4e:	eb c1                	jmp    c0021a11 <SoundChannel::SoundChannel(int, int, int, int)+0x10b>
-c0021a50:	c6 05 20 10 03 c0 01 	mov    BYTE PTR ds:0xc0031020,0x1
+c0021a50:	c6 05 20 1e 03 c0 01 	mov    BYTE PTR ds:0xc0031e20,0x1
 c0021a57:	90                   	nop
 c0021a58:	83 c4 1c             	add    esp,0x1c
 c0021a5b:	c3                   	ret    
@@ -44968,7 +44968,7 @@ c0021b4a:	0f b6 5d 00          	movzx  ebx,BYTE PTR [ebp+0x0]
 c0021b4e:	8d 70 01             	lea    esi,[eax+0x1]
 c0021b51:	8b 4a 10             	mov    ecx,DWORD PTR [edx+0x10]
 c0021b54:	89 72 1c             	mov    DWORD PTR [edx+0x1c],esi
-c0021b57:	8b 1c 9d 20 0c 03 c0 	mov    ebx,DWORD PTR [ebx*4-0x3ffcf3e0]
+c0021b57:	8b 1c 9d 20 1a 03 c0 	mov    ebx,DWORD PTR [ebx*4-0x3ffce5e0]
 c0021b5e:	89 1c 81             	mov    DWORD PTR [ecx+eax*4],ebx
 c0021b61:	8b 42 1c             	mov    eax,DWORD PTR [edx+0x1c]
 c0021b64:	3b 42 14             	cmp    eax,DWORD PTR [edx+0x14]
@@ -44979,7 +44979,7 @@ c0021b6e:	0f b6 5d 01          	movzx  ebx,BYTE PTR [ebp+0x1]
 c0021b72:	8b 4a 10             	mov    ecx,DWORD PTR [edx+0x10]
 c0021b75:	8d 70 01             	lea    esi,[eax+0x1]
 c0021b78:	89 72 1c             	mov    DWORD PTR [edx+0x1c],esi
-c0021b7b:	8b 1c 9d 20 0c 03 c0 	mov    ebx,DWORD PTR [ebx*4-0x3ffcf3e0]
+c0021b7b:	8b 1c 9d 20 1a 03 c0 	mov    ebx,DWORD PTR [ebx*4-0x3ffce5e0]
 c0021b82:	89 1c 81             	mov    DWORD PTR [ecx+eax*4],ebx
 c0021b85:	b8 02 00 00 00       	mov    eax,0x2
 c0021b8a:	8b 4a 1c             	mov    ecx,DWORD PTR [edx+0x1c]
@@ -44991,7 +44991,7 @@ c0021b99:	8d 71 01             	lea    esi,[ecx+0x1]
 c0021b9c:	40                   	inc    eax
 c0021b9d:	89 72 1c             	mov    DWORD PTR [edx+0x1c],esi
 c0021ba0:	8b 72 10             	mov    esi,DWORD PTR [edx+0x10]
-c0021ba3:	8b 1c 9d 20 0c 03 c0 	mov    ebx,DWORD PTR [ebx*4-0x3ffcf3e0]
+c0021ba3:	8b 1c 9d 20 1a 03 c0 	mov    ebx,DWORD PTR [ebx*4-0x3ffce5e0]
 c0021baa:	89 1c 8e             	mov    DWORD PTR [esi+ecx*4],ebx
 c0021bad:	8b 4a 1c             	mov    ecx,DWORD PTR [edx+0x1c]
 c0021bb0:	3b 4a 14             	cmp    ecx,DWORD PTR [edx+0x14]
@@ -47756,7 +47756,7 @@ c0023b14:	83 c4 20             	add    esp,0x20
 c0023b17:	85 c0                	test   eax,eax
 c0023b19:	89 44 24 0c          	mov    DWORD PTR [esp+0xc],eax
 c0023b1d:	75 11                	jne    c0023b30 <ATA::read(unsigned long long, int, void*)+0x5c>
-c0023b1f:	01 1d 28 10 03 c0    	add    DWORD PTR ds:0xc0031028,ebx
+c0023b1f:	01 1d 28 1e 03 c0    	add    DWORD PTR ds:0xc0031e28,ebx
 c0023b25:	e8 2e cc fe ff       	call   c0010758 <VgaText::updateDiskUsage()>
 c0023b2a:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
 c0023b2e:	eb 05                	jmp    c0023b35 <ATA::read(unsigned long long, int, void*)+0x61>
@@ -47796,7 +47796,7 @@ c0023b7c:	83 c4 20             	add    esp,0x20
 c0023b7f:	85 c0                	test   eax,eax
 c0023b81:	89 44 24 0c          	mov    DWORD PTR [esp+0xc],eax
 c0023b85:	75 11                	jne    c0023b98 <ATA::write(unsigned long long, int, void*)+0x5c>
-c0023b87:	01 1d 24 10 03 c0    	add    DWORD PTR ds:0xc0031024,ebx
+c0023b87:	01 1d 24 1e 03 c0    	add    DWORD PTR ds:0xc0031e24,ebx
 c0023b8d:	e8 c6 cb fe ff       	call   c0010758 <VgaText::updateDiskUsage()>
 c0023b92:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
 c0023b96:	eb 05                	jmp    c0023b9d <ATA::write(unsigned long long, int, void*)+0x61>
@@ -48687,7 +48687,7 @@ c002464a:	83 c4 20             	add    esp,0x20
 c002464d:	85 c0                	test   eax,eax
 c002464f:	89 44 24 0c          	mov    DWORD PTR [esp+0xc],eax
 c0024653:	75 11                	jne    c0024666 <SATA::read(unsigned long long, int, void*)+0x5c>
-c0024655:	01 1d 28 10 03 c0    	add    DWORD PTR ds:0xc0031028,ebx
+c0024655:	01 1d 28 1e 03 c0    	add    DWORD PTR ds:0xc0031e28,ebx
 c002465b:	e8 f8 c0 fe ff       	call   c0010758 <VgaText::updateDiskUsage()>
 c0024660:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
 c0024664:	eb 05                	jmp    c002466b <SATA::read(unsigned long long, int, void*)+0x61>
@@ -48727,7 +48727,7 @@ c00246b2:	83 c4 20             	add    esp,0x20
 c00246b5:	85 c0                	test   eax,eax
 c00246b7:	89 44 24 0c          	mov    DWORD PTR [esp+0xc],eax
 c00246bb:	75 11                	jne    c00246ce <SATA::write(unsigned long long, int, void*)+0x5c>
-c00246bd:	01 1d 24 10 03 c0    	add    DWORD PTR ds:0xc0031024,ebx
+c00246bd:	01 1d 24 1e 03 c0    	add    DWORD PTR ds:0xc0031e24,ebx
 c00246c3:	e8 90 c0 fe ff       	call   c0010758 <VgaText::updateDiskUsage()>
 c00246c8:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
 c00246cc:	eb 05                	jmp    c00246d3 <SATA::write(unsigned long long, int, void*)+0x61>
@@ -49550,18 +49550,18 @@ c0024fce:	8b 45 e0             	mov    eax,DWORD PTR [ebp-0x20]
 c0024fd1:	8b 55 dc             	mov    edx,DWORD PTR [ebp-0x24]
 c0024fd4:	89 10                	mov    DWORD PTR [eax],edx
 c0024fd6:	c7 45 e4 00 00 00 00 	mov    DWORD PTR [ebp-0x1c],0x0
-c0024fdd:	a1 b0 f5 02 c0       	mov    eax,ds:0xc002f5b0
+c0024fdd:	a1 b0 03 03 c0       	mov    eax,ds:0xc00303b0
 c0024fe2:	39 45 e4             	cmp    DWORD PTR [ebp-0x1c],eax
 c0024fe5:	7d 7c                	jge    c0025063 <APIC::open(int, int, void*)+0x141>
 c0024fe7:	8b 45 e4             	mov    eax,DWORD PTR [ebp-0x1c]
-c0024fea:	8b 04 85 c0 f5 02 c0 	mov    eax,DWORD PTR [eax*4-0x3ffd0a40]
+c0024fea:	8b 04 85 c0 03 03 c0 	mov    eax,DWORD PTR [eax*4-0x3ffcfc40]
 c0024ff1:	88 45 db             	mov    BYTE PTR [ebp-0x25],al
 c0024ff4:	8b 45 e4             	mov    eax,DWORD PTR [ebp-0x1c]
-c0024ff7:	8b 04 85 c0 f5 02 c0 	mov    eax,DWORD PTR [eax*4-0x3ffd0a40]
+c0024ff7:	8b 04 85 c0 03 03 c0 	mov    eax,DWORD PTR [eax*4-0x3ffcfc40]
 c0024ffe:	c1 e8 08             	shr    eax,0x8
 c0025001:	66 89 45 d8          	mov    WORD PTR [ebp-0x28],ax
 c0025005:	8b 45 e4             	mov    eax,DWORD PTR [ebp-0x1c]
-c0025008:	8b 04 85 c0 f5 02 c0 	mov    eax,DWORD PTR [eax*4-0x3ffd0a40]
+c0025008:	8b 04 85 c0 03 03 c0 	mov    eax,DWORD PTR [eax*4-0x3ffcfc40]
 c002500f:	c1 e8 18             	shr    eax,0x18
 c0025012:	88 45 d7             	mov    BYTE PTR [ebp-0x29],al
 c0025015:	80 7d db ff          	cmp    BYTE PTR [ebp-0x25],0xff
@@ -49622,12 +49622,12 @@ c00250ae:	83 c4 10             	add    esp,0x10
 c00250b1:	ba 74 c8 02 c0       	mov    edx,0xc002c874
 c00250b6:	8b 44 24 20          	mov    eax,DWORD PTR [esp+0x20]
 c00250ba:	89 10                	mov    DWORD PTR [eax],edx
-c00250bc:	a0 80 10 03 c0       	mov    al,ds:0xc0031080
+c00250bc:	a0 80 1e 03 c0       	mov    al,ds:0xc0031e80
 c00250c1:	83 f0 01             	xor    eax,0x1
 c00250c4:	84 c0                	test   al,al
 c00250c6:	0f 84 a1 00 00 00    	je     c002516d <APIC::APIC()+0xd5>
 c00250cc:	c6 44 24 0f 00       	mov    BYTE PTR [esp+0xf],0x0
-c00250d1:	a0 60 f6 02 c0       	mov    al,ds:0xc002f660
+c00250d1:	a0 60 04 03 c0       	mov    al,ds:0xc0030460
 c00250d6:	38 44 24 0f          	cmp    BYTE PTR [esp+0xf],al
 c00250da:	0f 83 86 00 00 00    	jae    c0025166 <APIC::APIC()+0xce>
 c00250e0:	c7 44 24 04 68 01 00 00 	mov    DWORD PTR [esp+0x4],0x168
@@ -49643,10 +49643,10 @@ c0025102:	83 c4 10             	add    esp,0x10
 c0025105:	89 5c 24 08          	mov    DWORD PTR [esp+0x8],ebx
 c0025109:	0f b6 44 24 0f       	movzx  eax,BYTE PTR [esp+0xf]
 c002510e:	8b 54 24 08          	mov    edx,DWORD PTR [esp+0x8]
-c0025112:	89 14 85 60 10 03 c0 	mov    DWORD PTR [eax*4-0x3ffcefa0],edx
-c0025119:	a1 40 10 03 c0       	mov    eax,ds:0xc0031040
+c0025112:	89 14 85 60 1e 03 c0 	mov    DWORD PTR [eax*4-0x3ffce1a0],edx
+c0025119:	a1 40 1e 03 c0       	mov    eax,ds:0xc0031e40
 c002511e:	40                   	inc    eax
-c002511f:	a3 40 10 03 c0       	mov    ds:0xc0031040,eax
+c002511f:	a3 40 1e 03 c0       	mov    ds:0xc0031e40,eax
 c0025124:	a1 c8 da 02 c0       	mov    eax,ds:0xc002dac8
 c0025129:	8b 80 e4 01 00 00    	mov    eax,DWORD PTR [eax+0x1e4]
 c002512f:	83 ec 08             	sub    esp,0x8
@@ -49667,7 +49667,7 @@ c0025158:	ff d0                	call   eax
 c002515a:	83 c4 10             	add    esp,0x10
 c002515d:	fe 44 24 0f          	inc    BYTE PTR [esp+0xf]
 c0025161:	e9 6b ff ff ff       	jmp    c00250d1 <APIC::APIC()+0x39>
-c0025166:	c6 05 80 10 03 c0 01 	mov    BYTE PTR ds:0xc0031080,0x1
+c0025166:	c6 05 80 1e 03 c0 01 	mov    BYTE PTR ds:0xc0031e80,0x1
 c002516d:	90                   	nop
 c002516e:	83 c4 18             	add    esp,0x18
 c0025171:	5b                   	pop    ebx
@@ -49728,12 +49728,12 @@ c00251ea:	8b 55 0c             	mov    edx,DWORD PTR [ebp+0xc]
 c00251ed:	89 90 58 01 00 00    	mov    DWORD PTR [eax+0x158],edx
 c00251f3:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
 c00251f6:	8b 80 58 01 00 00    	mov    eax,DWORD PTR [eax+0x158]
-c00251fc:	8b 14 85 a0 f6 02 c0 	mov    edx,DWORD PTR [eax*4-0x3ffd0960]
+c00251fc:	8b 14 85 a0 04 03 c0 	mov    edx,DWORD PTR [eax*4-0x3ffcfb60]
 c0025203:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
 c0025206:	89 90 5c 01 00 00    	mov    DWORD PTR [eax+0x15c],edx
 c002520c:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
 c002520f:	8b 80 58 01 00 00    	mov    eax,DWORD PTR [eax+0x158]
-c0025215:	8b 14 85 20 f7 02 c0 	mov    edx,DWORD PTR [eax*4-0x3ffd08e0]
+c0025215:	8b 14 85 20 05 03 c0 	mov    edx,DWORD PTR [eax*4-0x3ffcfae0]
 c002521c:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
 c002521f:	89 90 60 01 00 00    	mov    DWORD PTR [eax+0x160],edx
 c0025225:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
@@ -49908,14 +49908,14 @@ c0025415:	8a 00                	mov    al,BYTE PTR [eax]
 c0025417:	0f b6 c0             	movzx  eax,al
 c002541a:	89 45 0c             	mov    DWORD PTR [ebp+0xc],eax
 c002541d:	8b 45 0c             	mov    eax,DWORD PTR [ebp+0xc]
-c0025420:	66 8b 84 00 40 f6 02 c0 	mov    ax,WORD PTR [eax+eax*1-0x3ffd09c0]
+c0025420:	66 8b 84 00 40 04 03 c0 	mov    ax,WORD PTR [eax+eax*1-0x3ffcfbc0]
 c0025428:	0f b7 c0             	movzx  eax,ax
 c002542b:	83 e0 02             	and    eax,0x2
 c002542e:	85 c0                	test   eax,eax
 c0025430:	74 04                	je     c0025436 <APIC::installIRQHandler(int, void (*)(regs*, void*), bool, void*)+0x4c>
 c0025432:	c6 45 e6 01          	mov    BYTE PTR [ebp-0x1a],0x1
 c0025436:	8b 45 0c             	mov    eax,DWORD PTR [ebp+0xc]
-c0025439:	66 8b 84 00 40 f6 02 c0 	mov    ax,WORD PTR [eax+eax*1-0x3ffd09c0]
+c0025439:	66 8b 84 00 40 04 03 c0 	mov    ax,WORD PTR [eax+eax*1-0x3ffcfbc0]
 c0025441:	0f b7 c0             	movzx  eax,ax
 c0025444:	83 e0 08             	and    eax,0x8
 c0025447:	85 c0                	test   eax,eax
@@ -49927,18 +49927,18 @@ c0025454:	68 d8 c7 02 c0       	push   0xc002c7d8
 c0025459:	e8 09 4a ff ff       	call   c0019e67 <Krnl::panic(char const*)>
 c002545e:	83 c4 10             	add    esp,0x10
 c0025461:	c6 45 e5 00          	mov    BYTE PTR [ebp-0x1b],0x0
-c0025465:	a1 40 10 03 c0       	mov    eax,ds:0xc0031040
+c0025465:	a1 40 1e 03 c0       	mov    eax,ds:0xc0031e40
 c002546a:	83 ec 08             	sub    esp,0x8
 c002546d:	50                   	push   eax
 c002546e:	68 10 c8 02 c0       	push   0xc002c810
 c0025473:	e8 7b d4 fe ff       	call   c00128f3 <Dbg::kprintf(char const*, ...)>
 c0025478:	83 c4 10             	add    esp,0x10
 c002547b:	c7 45 e0 00 00 00 00 	mov    DWORD PTR [ebp-0x20],0x0
-c0025482:	a1 40 10 03 c0       	mov    eax,ds:0xc0031040
+c0025482:	a1 40 1e 03 c0       	mov    eax,ds:0xc0031e40
 c0025487:	39 45 e0             	cmp    DWORD PTR [ebp-0x20],eax
 c002548a:	7d 67                	jge    c00254f3 <APIC::installIRQHandler(int, void (*)(regs*, void*), bool, void*)+0x109>
 c002548c:	8b 45 e0             	mov    eax,DWORD PTR [ebp-0x20]
-c002548f:	8b 04 85 60 10 03 c0 	mov    eax,DWORD PTR [eax*4-0x3ffcefa0]
+c002548f:	8b 04 85 60 1e 03 c0 	mov    eax,DWORD PTR [eax*4-0x3ffce1a0]
 c0025496:	8b 55 0c             	mov    edx,DWORD PTR [ebp+0xc]
 c0025499:	83 ec 08             	sub    esp,0x8
 c002549c:	52                   	push   edx
@@ -49948,7 +49948,7 @@ c00254a3:	83 c4 10             	add    esp,0x10
 c00254a6:	84 c0                	test   al,al
 c00254a8:	74 44                	je     c00254ee <APIC::installIRQHandler(int, void (*)(regs*, void*), bool, void*)+0x104>
 c00254aa:	8b 45 e0             	mov    eax,DWORD PTR [ebp-0x20]
-c00254ad:	8b 1c 85 60 10 03 c0 	mov    ebx,DWORD PTR [eax*4-0x3ffcefa0]
+c00254ad:	8b 1c 85 60 1e 03 c0 	mov    ebx,DWORD PTR [eax*4-0x3ffce1a0]
 c00254b4:	0f b6 45 e6          	movzx  eax,BYTE PTR [ebp-0x1a]
 c00254b8:	89 45 d0             	mov    DWORD PTR [ebp-0x30],eax
 c00254bb:	0f b6 7d e7          	movzx  edi,BYTE PTR [ebp-0x19]
@@ -50543,7 +50543,7 @@ c0025bd5:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
 c0025bd9:	8b 54 24 18          	mov    edx,DWORD PTR [esp+0x18]
 c0025bdd:	89 90 58 01 00 00    	mov    DWORD PTR [eax+0x158],edx
 c0025be3:	8b 44 24 18          	mov    eax,DWORD PTR [esp+0x18]
-c0025be7:	a3 84 10 03 c0       	mov    ds:0xc0031084,eax
+c0025be7:	a3 84 1e 03 c0       	mov    ds:0xc0031e84,eax
 c0025bec:	b8 dc 34 12 00       	mov    eax,0x1234dc
 c0025bf1:	99                   	cdq    
 c0025bf2:	f7 7c 24 18          	idiv   DWORD PTR [esp+0x18]
@@ -50574,7 +50574,7 @@ c0025c4f:	c3                   	ret
 
 c0025c50 <pitHandler(regs*, void*)>:
 c0025c50:	83 ec 0c             	sub    esp,0xc
-c0025c53:	a1 84 10 03 c0       	mov    eax,ds:0xc0031084
+c0025c53:	a1 84 1e 03 c0       	mov    eax,ds:0xc0031e84
 c0025c58:	99                   	cdq    
 c0025c59:	52                   	push   edx
 c0025c5a:	50                   	push   eax

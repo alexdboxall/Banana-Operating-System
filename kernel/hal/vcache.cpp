@@ -130,6 +130,10 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 			readCacheLBA = lba & ~(READ_BUFFER_BLOCK_SIZE - 1);
 
 			uhOh[0] = 0xFE;
+			uhOh[1] = 0xFE;
+			uhOh[2] = 0xFE;
+			uhOh[30] = 0xFE;
+			uhOh[454] = 0xFE;
 
 			//both disk drivers somehow fail the multicount reads
 			//SATA does it subtly
