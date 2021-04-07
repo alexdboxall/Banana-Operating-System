@@ -54,10 +54,6 @@ bool writeCacheValid = false;
 
 void VCache::invalidateReadBuffer()
 {
-	if (READ_BUFFER_BLOCK_SIZE >= 8) {
-		READ_BUFFER_BLOCK_SIZE /= 2;
-	}
-	kprintf("DECREASING BLOCK SIZE TO %d\n", READ_BUFFER_BLOCK_SIZE);
 	kprintf("   ** invalidating the read buffer.\n");
 	readCacheValid = false;
 	increaseNextTime = false;
@@ -120,8 +116,6 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 {
 	mutex->acquire();
 
-	bool clearBlockEnd = true;
-
 	//NOTE: this is very inefficient, we should check if it is in the cache
 	//		and if it is, just memcpy the data
 	if (writeCacheValid) {
@@ -132,31 +126,15 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 	if (count == 1 && !disk->removable) {
 		if (!(readCacheValid && (lba & ~(READ_BUFFER_BLOCK_SIZE - 1)) == readCacheLBA)) {
 			kprintf("caching now... ");
+
 			readCacheValid = true;
 			readCacheLBA = lba & ~(READ_BUFFER_BLOCK_SIZE - 1);
-
-			//first in block AND you hit the last in block last time
-			if ((lba & (READ_BUFFER_BLOCK_SIZE - 1)) == 0 && hitBlockEnd) {
-				READ_BUFFER_BLOCK_SIZE *= 2;
-				if (READ_BUFFER_BLOCK_SIZE >= READ_BUFFER_MAX_SECTORS) {
-					READ_BUFFER_BLOCK_SIZE = READ_BUFFER_MAX_SECTORS;
-				}
-				kprintf("INCREASING BLOCK SIZE TO %d\n", READ_BUFFER_BLOCK_SIZE);
-				hitBlockEnd = false;
-			}
 
 			//both disk drivers somehow fail the multicount reads
 			//SATA does it subtly
 			//ATA does it blatantly
 
-			disk->read((lba & ~(READ_BUFFER_BLOCK_SIZE - 1)), READ_BUFFER_BLOCK_SIZE, readCacheBuffer /*testBuffer*/);
-			//memcpy((void*) readCacheBuffer, (const void*) testBuffer, READ_BUFFER_BLOCK_SIZE * 512);
-		}
-
-		//used the last in block?
-		if (((lba + 1) & (READ_BUFFER_BLOCK_SIZE - 1)) == 0) {
-			hitBlockEnd = true;
-			clearBlockEnd = false;
+			disk->read((lba & ~(READ_BUFFER_BLOCK_SIZE - 1)), READ_BUFFER_BLOCK_SIZE, readCacheBuffer);
 		}
 
 		kprintf("from cache (offset = 0x%X)\n", (lba - readCacheLBA) * disk->sectorSize);
@@ -166,10 +144,6 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 		kprintf("uncached (%d).\n", count);
 		invalidateReadBuffer();
 		disk->read(lba, count, ptr);
-	}
-
-	if (clearBlockEnd) {
-		hitBlockEnd = false;
 	}
 
 	mutex->release();
