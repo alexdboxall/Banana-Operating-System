@@ -433,6 +433,8 @@ namespace Thr
 
 				int actu;
 				kprintf("reading data to 0x%X\n", addr - entryPoint + relocationPoint);
+				kprintf("size = %d\n", size);
+				kprintf("extra nulls = %d\n", (progHeaders + i)->p_memsz - (progHeaders + i)->p_filsz);
 				f->read(size, (void*) (addr - entryPoint + relocationPoint), &actu);
 				memset((void*) (addr - entryPoint + relocationPoint + size), 0, (progHeaders + i)->p_memsz - (progHeaders + i)->p_filsz);
 			}
