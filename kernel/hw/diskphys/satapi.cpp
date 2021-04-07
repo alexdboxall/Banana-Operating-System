@@ -50,8 +50,6 @@ void SATAPI::diskInserted()
 
 int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, uint64_t lba, uint16_t* data, int count)
 {
-	kprintf("SATAPI::sendPacket max %d, lba 0x%X, data 0x%X, count %d\n", maxTransferSize, (uint32_t) lba, data, count);
-
 	SATABus::HBA_PORT* port = &sbus->abar->ports[deviceNum];
 
 	port->is = (uint32_t) -1;
@@ -77,9 +75,7 @@ int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, uint64_t lba, uint1
 
 	memset(cmdtbl, 0, sizeof(SATABus::HBA_CMD_TBL) +
 		   (cmdheader->prdtl - 1) * sizeof(SATABus::HBA_PRDT_ENTRY));
-	kprintf("memcpy 1\n");
 	memcpy(cmdtbl->acmd, packet, 12);
-	kprintf("memcpy 1!\n");
 
 	cmdtbl->prdt_entry[0].dba = sataPhysAddr;			//data base address
 	cmdtbl->prdt_entry[0].dbc = maxTransferSize - 1;	
@@ -135,11 +131,8 @@ int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, uint64_t lba, uint1
 	}
 
 	if (maxTransferSize && data) {
-		kprintf("memcpy 2\n");
 		memcpy(data, (const void*) sataVirtAddr, maxTransferSize);
-		kprintf("memcpy 2!\n");
 	}
-	kprintf("satapi packet sent.\n");
 	return 0;
 }
 
@@ -165,9 +158,6 @@ int SATAPI::open(int _deviceNum, int b, void* _ide)
 
 	sataVirtAddr = Virt::allocateKernelVirtualPages(2);
 	Virt::getAKernelVAS()->mapPage(sataPhysAddr, sataVirtAddr, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
-
-	//reset the drive
-	kprintf("Starting up a SATAPI drive!\n");
 
 	//detect if disk is in
 	diskIn = false;
