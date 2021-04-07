@@ -10,6 +10,7 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
+#define READ_BUFFER_BLOCK_SIZE		4
 #define WRITE_BUFFER_MAX_SECTORS	64
 
 VCache::VCache(PhysicalDisk* d)
@@ -25,6 +26,9 @@ VCache::VCache(PhysicalDisk* d)
 	diskSectorSize = d->sectorSize;
 	diskSizeKBs = d->sizeInKBs;
 
+	readCacheValid = false;
+	readCacheBuffer = (uint8_t*) malloc(d->sectorSize * READ_BUFFER_BLOCK_SIZE);
+
 	writeCacheValid = false;
 	writeCacheBuffer = (uint8_t*) malloc(d->sectorSize * WRITE_BUFFER_MAX_SECTORS);
 }
@@ -35,6 +39,7 @@ VCache::~VCache()
 		writeWriteBuffer();
 	}
 	free(writeCacheBuffer);
+	free(readCacheBuffer);
 }
 
 /*
@@ -43,6 +48,11 @@ int writeCacheSectors = 0;
 uint8_t* writeCacheBuffer;
 bool writeCacheValid = false;
 */
+
+void VCache::invalidateReadBuffer()
+{
+	readCacheValid = false;
+}
 
 void VCache::writeWriteBuffer()
 {
@@ -56,6 +66,10 @@ void VCache::writeWriteBuffer()
 int VCache::write(uint64_t lba, int count, void* ptr)
 {
 	mutex->acquire();
+
+	if (readCacheValid) {
+		invalidateReadBuffer();
+	}
 
 	if (writeCacheValid && lba == writeCacheLBA + ((uint64_t) writeCacheSectors) && count == 1) {
 		//add to cache
@@ -100,7 +114,26 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 		writeWriteBuffer();
 	}
 
-	disk->read(lba, count, ptr);
+	if (count == 1) {
+		if (readCacheValid && lba >= readCacheLBA && lba < readCacheLBA + readCacheSectors) {
+			kprintf("reading from read cache");
+			memcpy(ptr, readCacheBuffer + (lba - readCacheLBA) * disk->sectorSize, disk->sectorSize);
+		} else {
+			count = 8;
+			kprintf("caching 8 sectors on read.\n");
+			disk->read(lba, count, readCacheBuffer);
+			memcpy(ptr, readCacheBuffer, disk->sectorSize);
+			readCacheValid = true;
+			readCacheLBA = lba;
+			readCacheSectors = count;
+		}
+
+	} else {
+		kprintf("reading %d sectors uncached.\n", count);
+		invalidateReadBuffer();
+		disk->read(lba, count, ptr);
+	}
+
 	mutex->release();
 	return 0;
 }

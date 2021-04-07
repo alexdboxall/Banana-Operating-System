@@ -30,7 +30,13 @@ protected:
 	uint8_t* writeCacheBuffer;
 	bool writeCacheValid = false;
 
+	uint64_t readCacheLBA = 0;
+	int readCacheSectors = 0;
+	uint8_t* readCacheBuffer;
+	bool readCacheValid = false;
+
 	void writeWriteBuffer();		//what a stupid name
+	void invalidateReadBuffer();
 
 public:	
 	VCache(PhysicalDisk* disk);
