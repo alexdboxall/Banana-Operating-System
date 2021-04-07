@@ -110,6 +110,8 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 }
 
 uint8_t testBuffer[512 * READ_BUFFER_BLOCK_SIZE];
+uint8_t uhOh[512];
+
 int VCache::read(uint64_t lba, int count, void* ptr)
 {
 	mutex->acquire();
@@ -127,6 +129,8 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 			readCacheValid = true;
 			readCacheLBA = lba & ~(READ_BUFFER_BLOCK_SIZE - 1);
 
+			uhOh[0] = 0xFE;
+
 			//both disk drivers somehow fail the multicount reads
 			//SATA does it subtly
 			//ATA does it blatantly
@@ -137,6 +141,9 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 			disk->read((lba & ~(READ_BUFFER_BLOCK_SIZE - 1)), READ_BUFFER_BLOCK_SIZE, testBuffer);
 			memcpy((void*) readCacheBuffer, (const void*) testBuffer, READ_BUFFER_BLOCK_SIZE * 512);
 
+			if (uhOh[0] != 0xFE) {
+				panic("MEMORY OVERFLOW VCache::read, probably caused by disk driver");
+			}
 			//int mcr = memcmp((const void*) testBuffer, (const void*) readCacheBuffer, READ_BUFFER_BLOCK_SIZE * 512);
 
 			//kprintf("mcr = %d\n", mcr);
