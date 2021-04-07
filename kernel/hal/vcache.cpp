@@ -10,7 +10,7 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-#define READ_BUFFER_BLOCK_SIZE		8
+#define READ_BUFFER_BLOCK_SIZE		2
 #define WRITE_BUFFER_MAX_SECTORS	64
 
 VCache::VCache(PhysicalDisk* d)
