@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * */
-#pragma GCC optimize ("Os")
+#pragma GCC optimize ("Ofast")
 //#pragma GCC optimize ("-fno-strict-aliasing")
 //#pragma GCC optimize ("-fno-align-labels")
 //#pragma GCC optimize ("-fno-align-jumps")
@@ -323,10 +323,14 @@ memcpy (
     const void              * Src /*source*/,
     ACPI_SIZE               Count /*num*/)
 {
-    /*asm volatile("cld; rep movsb" :: "S"(Src), "D"(Dest), "c"(Count) : "flags", "memory");
-    return ((uint8_t*) Dest) - Count;*/
+    if (Count & 3) {
+        asm volatile("cld; rep movsb" :: "S"(Src), "D"(Dest), "c"(Count) : "flags", "memory");
+    } else {
+        asm volatile("cld; rep movsd" :: "S"(Src), "D"(Dest), "c"(Count / 4) : "flags", "memory");
+    }
+    return ((uint8_t*) Dest) - Count;
 
-    char                    *New = (char *) Dest;
+    /*char                    *New = (char *) Dest;
     char                    *Old = (char *) Src;
 
     while (Count--)
@@ -334,7 +338,7 @@ memcpy (
         *New++ = *Old++;
     }
 
-    return (Dest);
+    return (Dest);*/
 }
 
 

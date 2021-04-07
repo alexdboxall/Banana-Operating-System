@@ -54,7 +54,6 @@ bool writeCacheValid = false;
 
 void VCache::invalidateReadBuffer()
 {
-	kprintf("   ** invalidating the read buffer.\n");
 	readCacheValid = false;
 	increaseNextTime = false;
 	hitBlockEnd = false;
@@ -122,10 +121,8 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 		writeWriteBuffer();
 	}
 
-	kprintf("    VCACHE::READ 0x%X - ", (uint32_t) lba);
 	if (count == 1 && !disk->removable) {
 		if (!(readCacheValid && (lba & ~(READ_BUFFER_BLOCK_SIZE - 1)) == readCacheLBA)) {
-			kprintf("caching now... ");
 
 			readCacheValid = true;
 			readCacheLBA = lba & ~(READ_BUFFER_BLOCK_SIZE - 1);
@@ -137,11 +134,9 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 			disk->read((lba & ~(READ_BUFFER_BLOCK_SIZE - 1)), READ_BUFFER_BLOCK_SIZE, readCacheBuffer);
 		}
 
-		kprintf("from cache (offset = 0x%X)\n", (lba - readCacheLBA) * disk->sectorSize);
 		memcpy(ptr, readCacheBuffer + (lba & (READ_BUFFER_BLOCK_SIZE - 1)) * disk->sectorSize, disk->sectorSize);
 
 	} else {
-		kprintf("uncached (%d).\n", count);
 		invalidateReadBuffer();
 		disk->read(lba, count, ptr);
 	}

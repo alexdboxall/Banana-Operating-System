@@ -52,9 +52,7 @@ bool ATA::readyForCommand()
 #define MODE_LBA48	2
 
 int ATA::access(uint64_t lba, int count, void* buffer, bool write)
-{
-	kprintf("ATA is accessing %d sectors from LBA 0x%X\n", count, (uint32_t) lba);
-	
+{	
 	uint8_t lbaIO[6];
 	uint8_t lbaMode;
 	uint8_t head;
@@ -109,7 +107,6 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 	//wait for the drive to be not busy
 	if (!readyForCommand()) {
-		kprintf("ata not ready\n");
 		return 1;
 	}
 
@@ -144,7 +141,6 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 	else if (!write && lbaMode == MODE_LBA48) command = ATA_CMD_READ_PIO_EXT;
 	else if (!write && lbaMode != MODE_LBA48) command = ATA_CMD_READ_PIO;
 	else {
-		kprintf("ata wrong type\n");
 		return 1;
 	}
 		
@@ -153,11 +149,8 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 	//for each sector
 	int ogcount = count;
-	kprintf("Count = %d\n", count);
 	while (count--) {
 		uint16_t* buffer16 = (uint16_t*) buffer;
-
-		kprintf("Reading sector. buffer16 = 0x%X. count = %d\n", buffer16, count);
 
 		//wait for the device to be ready
 		uint8_t err = ide->polling(channel, 1);
