@@ -59,9 +59,6 @@ int SATA::open(int _deviceNum, int b, void* _ide)
 	sataVirtAddr = Virt::allocateKernelVirtualPages(2);
 	Virt::getAKernelVAS()->mapPage(sataPhysAddr, sataVirtAddr, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
 
-	//reset the drive
-	kprintf("Starting up a SATA drive!\n");
-
 	//set up logical disks
 	startCache();
 	createPartitionsForDisk(this);
@@ -71,7 +68,6 @@ int SATA::open(int _deviceNum, int b, void* _ide)
 
 int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 {
-	kprintf("Access lba = 0x%X, count = %d, buffer = 0x%X, %s\n", (uint32_t) lba, count, buffer, write ? "write" : "read");
 	while (count > 16) {
 		int ret = access(lba, 16, buffer, write);
 		count -= 16;
@@ -90,7 +86,6 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 	port->is = (uint32_t) -1;
 	int spin = 0;
 	int slot = sbus->findCmdslot(port);
-	kprintf("slot %d\n", slot);
 	if (slot == -1) {
 		return 1;
 	}
@@ -164,7 +159,6 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 		return 1;
 	}
 
-	kprintf("sata disk access done.\n");
 	if (!write) {
 		memcpy(buffer, (const void*) sataVirtAddr, 512 * count);
 	}
@@ -194,8 +188,6 @@ int SATA::read(uint64_t lba, int count, void* buffer)
 	ataSectorsRead += count;
 	VgaText::updateDiskUsage();
 #endif
-
-	kprintf("check buffer @ 0x%X\n", buffer);
 
 	return (int) DiskError::Success;
 }
