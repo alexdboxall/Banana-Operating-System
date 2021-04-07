@@ -455,7 +455,10 @@ namespace Thr
 			size_t fileOffset = (sectHeaders + i)->sh_offset;
 			size_t addr = (sectHeaders + elf->strtabIndex)->sh_offset + (sectHeaders + i)->sh_name;
 
-			f->seek(addr);
+			FileStatus canSeek = f->seek(addr);
+			if (canSeek != FileStatus::Success) {
+				kprintf("The seek failed.\n");
+			}
 
 			char namebuffer[32];
 			memset(namebuffer, 0, 32);
