@@ -9,6 +9,7 @@
 #include "hal/fpu.hpp"
 #include "hal/clock.hpp"
 #include "hw/cpu.hpp"
+#include "hw/smp.hpp"
 #include "hw/ports.hpp"
 #include "hal/vcache.hpp"
 #include "fs/vfs.hpp"
@@ -286,6 +287,8 @@ namespace Krnl
 		Krnl::loadSystemEnv();
 		User::loadClockSettings(Reg::readIntWithDefault((char*) "country", (char*) "timezone", 58));
 		computer->root->loadDriversForAll();
+
+		Krnl::startCPU(1);
 
 		//for each cpu
 			//start it

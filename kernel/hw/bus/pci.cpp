@@ -242,5 +242,4 @@ void PCI::detect()
 			checkBus(bus);
 		}
 	}
-
 }
