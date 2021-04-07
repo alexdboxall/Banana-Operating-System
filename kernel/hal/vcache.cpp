@@ -10,7 +10,7 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-#define READ_BUFFER_BLOCK_SIZE		4
+#define READ_BUFFER_BLOCK_SIZE		8
 #define WRITE_BUFFER_MAX_SECTORS	64
 
 VCache::VCache(PhysicalDisk* d)
@@ -117,17 +117,18 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 	kprintf("    VCACHE::READ 0x%X - ", (uint32_t) lba);
 	if (count == 1) {
 		if (readCacheValid && lba >= readCacheLBA && lba < readCacheLBA + readCacheSectors) {
-			kprintf("from cache\n");
+			kprintf("from cache (offset = 0x%X)\n", (lba - readCacheLBA) * disk->sectorSize);
 			memcpy(ptr, readCacheBuffer + (lba - readCacheLBA) * disk->sectorSize, disk->sectorSize);
 		
 		} else {
 			count = READ_BUFFER_BLOCK_SIZE;
 			kprintf("caching now\n");
-			disk->read(lba, count, readCacheBuffer);
-			memcpy(ptr, readCacheBuffer, disk->sectorSize);
 			readCacheValid = true;
 			readCacheLBA = lba;
 			readCacheSectors = count;
+			disk->read(lba, count, readCacheBuffer);
+			memcpy(ptr, readCacheBuffer, disk->sectorSize);
+			
 		}
 
 	} else {
