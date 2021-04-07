@@ -718,6 +718,9 @@ namespace Thr
 		if (!couldLoad && critical) {
 			panic("COULD NOT LOAD CRITICAL DRIVER");
 		}
+		if (!couldLoad) {
+			panic("DEBUG. DRIVER COULDN'T LOAD");
+		}
 
 		int used = 0;
 		int nnot = 0;
@@ -736,6 +739,7 @@ namespace Thr
 		if (!startAddr) {
 			panic("ATTEMPTING TO START DRIVER LOCATED AT 0x0");
 		}
+		kprintf("start addr = 0x%X\n", startAddr);
 		reinterpret_cast<int(*)(void*)>(startAddr)(parentDevice);
 	}
 }
