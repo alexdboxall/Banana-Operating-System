@@ -367,7 +367,6 @@ namespace Thr
 		if (status != FileStatus::Success) {
 			return false;
 		}
-		kprintf("meant to read %d, got %d\n", sizeof(ELFHeader), actual);
 
 		if (elf->identify[0] == 0x7F && elf->identify[1] == 'E' && elf->identify[2] == 'L' && elf->identify[3] == 'F') {
 		} else {
@@ -390,11 +389,8 @@ namespace Thr
 #if PLATFORM_ID == 86
 		ELFSectionHeader32* sectHeaders = (ELFSectionHeader32*) malloc(elf->shNum * elf->shSize);
 		f->read(elf->shNum * elf->shSize, (void*) sectHeaders, &actual);
-		kprintf("meant to read %d, got %d\n", elf->shNum * elf->shSize, actual);
-
 #else
-		ELFSectionHeader64* sectHeaders = (ELFSectionHeader64*) malloc(elf->shNum * elf->shSize);
-		f->read(elf->shNum * elf->shSize, (void*) sectHeaders, &actual);
+
 #endif
 
 		//LOAD PROGRAM HEADERS
@@ -410,11 +406,7 @@ namespace Thr
 #if PLATFORM_ID == 86
 		ELFProgramHeader32* progHeaders = (ELFProgramHeader32*) malloc(elf->phNum * elf->phSize);
 		f->read(elf->phNum * elf->phSize, (void*) progHeaders, &actual);
-		kprintf("meant to read %d, got %d\n", elf->phNum * elf->phSize, actual);
-
 #else
-		ELFProgramHeader64* progHeaders = (ELFProgramHeader64*) malloc(elf->phNum * elf->phSize);
-		f->read(elf->phNum * elf->phSize, (void*) progHeaders, &actual);
 
 #endif
 
@@ -432,9 +424,6 @@ namespace Thr
 				}
 
 				int actu;
-				kprintf("reading data to 0x%X\n", addr - entryPoint + relocationPoint);
-				kprintf("size = %d\n", size);
-				kprintf("extra nulls = %d\n", (progHeaders + i)->p_memsz - (progHeaders + i)->p_filsz);
 				f->read(size, (void*) (addr - entryPoint + relocationPoint), &actu);
 				memset((void*) (addr - entryPoint + relocationPoint + size), 0, (progHeaders + i)->p_memsz - (progHeaders + i)->p_filsz);
 			}
@@ -457,18 +446,13 @@ namespace Thr
 			size_t fileOffset = (sectHeaders + i)->sh_offset;
 			size_t addr = (sectHeaders + elf->strtabIndex)->sh_offset + (sectHeaders + i)->sh_name;
 
-			FileStatus canSeek = f->seek(addr);
-			if (canSeek != FileStatus::Success) {
-				kprintf("The seek failed.\n");
-			}
+			f->seek(addr);
 
 			char namebuffer[32];
 			memset(namebuffer, 0, 32);
 
 			int actual;
 			f->read(31, namebuffer, &actual);
-
-			kprintf("section at file offset 0x%X, addr 0x%X, name = %s\n", fileOffset, addr, namebuffer);
 
 			if (!memcmp(namebuffer, ".rel.text", 9)) {
 				relTextOffsets[nextRelSection] = fileOffset;
@@ -523,7 +507,7 @@ namespace Thr
 
 				size_t addr = symbolTab[symbolNum].st_value;
 
-				kprintf("Symbol: %s, addr = 0x%X, pos = 0x%X, info = 0x%X\n", ((char*) stringTab) + symbolTab[symbolNum].st_name, addr, pos, info);
+				//kprintf("Symbol: %s, addr = 0x%X, pos = 0x%X, info = 0x%X\n", ((char*) stringTab) + symbolTab[symbolNum].st_name, addr, pos, info);
 
 				bool dynamic = false;
 				if (addr == 0) {
