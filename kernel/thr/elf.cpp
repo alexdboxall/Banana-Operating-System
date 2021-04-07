@@ -451,7 +451,6 @@ namespace Thr
 			size_t fileOffset = (sectHeaders + i)->sh_offset;
 			size_t addr = (sectHeaders + elf->strtabIndex)->sh_offset + (sectHeaders + i)->sh_name;
 
-			//vfs_seek(file, addr);
 			f->seek(addr);
 
 			char namebuffer[32];
@@ -483,7 +482,6 @@ namespace Thr
 #if PLATFORM_ID == 86
 		ELFSymbolTable32* symbolTab = (ELFSymbolTable32*) malloc(symTabLength);
 		f->read(symTabLength, (void*) symbolTab, &actual);
-
 #else
 
 #endif
