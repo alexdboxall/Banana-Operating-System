@@ -428,6 +428,7 @@ namespace Thr
 				}
 
 				int actu;
+				kprintf("reading data to 0x%X\n", addr - entryPoint + relocationPoint);
 				f->read(size, (void*) (addr - entryPoint + relocationPoint), &actu);
 				memset((void*) (addr - entryPoint + relocationPoint + size), 0, (progHeaders + i)->p_memsz - (progHeaders + i)->p_filsz);
 			}
@@ -513,7 +514,7 @@ namespace Thr
 
 				size_t addr = symbolTab[symbolNum].st_value;
 
-				//kprintf("Symbol: %s, addr = 0x%X, pos = 0x%X, info = 0x%X\n", ((char*) stringTab) + symbolTab[symbolNum].st_name, addr, pos, info);
+				kprintf("Symbol: %s, addr = 0x%X, pos = 0x%X, info = 0x%X\n", ((char*) stringTab) + symbolTab[symbolNum].st_name, addr, pos, info);
 
 				bool dynamic = false;
 				if (addr == 0) {
@@ -739,7 +740,7 @@ namespace Thr
 		if (!startAddr) {
 			panic("ATTEMPTING TO START DRIVER LOCATED AT 0x0");
 		}
-		kprintf("start addr = 0x%X\n", startAddr);
+		kprintf("executeDLL: start addr = 0x%X\n", startAddr);
 		reinterpret_cast<int(*)(void*)>(startAddr)(parentDevice);
 	}
 }
