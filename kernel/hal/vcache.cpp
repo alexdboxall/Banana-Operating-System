@@ -11,7 +11,7 @@
 #pragma GCC optimize ("-fno-align-functions")
 
 //must be a power of 2
-#define READ_BUFFER_BLOCK_SIZE		1
+#define READ_BUFFER_BLOCK_SIZE		2
 
 #define WRITE_BUFFER_MAX_SECTORS	64
 
