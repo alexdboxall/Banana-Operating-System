@@ -367,6 +367,7 @@ namespace Thr
 		if (status != FileStatus::Success) {
 			return false;
 		}
+		kprintf("meant to read %d, got %d\n", sizeof(ELFHeader), actual);
 
 		if (elf->identify[0] == 0x7F && elf->identify[1] == 'E' && elf->identify[2] == 'L' && elf->identify[3] == 'F') {
 		} else {
@@ -389,6 +390,8 @@ namespace Thr
 #if PLATFORM_ID == 86
 		ELFSectionHeader32* sectHeaders = (ELFSectionHeader32*) malloc(elf->shNum * elf->shSize);
 		f->read(elf->shNum * elf->shSize, (void*) sectHeaders, &actual);
+		kprintf("meant to read %d, got %d\n", elf->shNum * elf->shSize, actual);
+
 #else
 		ELFSectionHeader64* sectHeaders = (ELFSectionHeader64*) malloc(elf->shNum * elf->shSize);
 		f->read(elf->shNum * elf->shSize, (void*) sectHeaders, &actual);
@@ -407,6 +410,7 @@ namespace Thr
 #if PLATFORM_ID == 86
 		ELFProgramHeader32* progHeaders = (ELFProgramHeader32*) malloc(elf->phNum * elf->phSize);
 		f->read(elf->phNum * elf->phSize, (void*) progHeaders, &actual);
+		kprintf("meant to read %d, got %d\n", elf->phNum * elf->phSize, actual);
 
 #else
 		ELFProgramHeader64* progHeaders = (ELFProgramHeader64*) malloc(elf->phNum * elf->phSize);
