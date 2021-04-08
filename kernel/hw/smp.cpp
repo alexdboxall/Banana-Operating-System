@@ -69,6 +69,8 @@ namespace Krnl
 			f->read(siz, (void*) 0x2000, &br);
 			f->close();
 
+			while (1);
+
 			kprintf("CPU %d: processor ID 0x%X, apic ID 0x%X\n", i, processorID[i], matchingAPICID[i]);
 			startCPU(i);
 		}
