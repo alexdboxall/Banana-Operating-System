@@ -49,15 +49,14 @@ namespace Krnl
 
 	void startCPUs()
 	{
-		return;
 		if (!computer->features.hasCPUID) return;
 		if (!computer->features.hasMSR) return;
 		if (!computer->features.hasAPIC) return;
 
-		asm volatile ("mov $1, %%eax; cpuid; shrl $24, %%ebx;": "=b"(bspID));
+		//asm volatile ("mov $1, %%eax; cpuid; shrl $24, %%ebx;": "=b"(bspID));
 
 		for (int i = 0; i < processorDiscoveryNumber; ++i) {
-			if (i == bspID) {
+			if (i == 0 /*bspID*/) {
 				continue;
 			}
 
@@ -67,13 +66,13 @@ namespace Krnl
 			bool dir;
 			int br;
 			f->stat(&siz, &dir);
-			f->read(siz, (void*) 0x2000, &br);
+			f->read(siz, (void*) (VIRT_LOW_MEGS + 0x2000), &br);
 			f->close();
 
-			while (1);
+			//while (1);
 
 			kprintf("CPU %d: processor ID 0x%X, apic ID 0x%X\n", i, processorID[i], matchingAPICID[i]);
-			startCPU(i);
+			//startCPU(i);
 		}
 
 		//for each cpu
