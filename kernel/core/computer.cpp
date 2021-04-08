@@ -288,11 +288,7 @@ namespace Krnl
 		User::loadClockSettings(Reg::readIntWithDefault((char*) "country", (char*) "timezone", 58));
 		computer->root->loadDriversForAll();
 
-		Krnl::startCPU(1);
-
-		//for each cpu
-			//start it
-			//cpu[i]->open(i, 0, nullptr);
+		Krnl::startCPUs();
 
 		Thr::executeDLL(Thr::loadDLL("C:/Banana/System/system.dll"), computer);
 

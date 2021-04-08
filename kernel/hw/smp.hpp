@@ -10,7 +10,8 @@
 
 namespace Krnl
 {
-	void startCPU (int num);
+	void startCPU(int num);
+	void startCPUs();
 }
 
 #endif
