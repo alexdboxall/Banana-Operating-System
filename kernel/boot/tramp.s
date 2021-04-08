@@ -1,6 +1,11 @@
 org 0xB000
 bits 16
 
+start:
+	cli
+	mov eax, 0x12345678
+	jmp $
+
 main:
 	cli													; We dont want interrupts ATM
 	mov ax, 0										; Were at 0000:7c000, so set our segment registers to that

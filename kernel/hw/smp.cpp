@@ -3,6 +3,7 @@
 #include "core/virtmgr.hpp"
 #include "core/physmgr.hpp"
 #include "thr/prcssthr.hpp"
+#include "fs/vfs.hpp"
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -11,7 +12,7 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-#define SMP_START_PAGE	0x8
+#define SMP_START_PAGE	0x2
 namespace Krnl
 {
 	uint8_t bspID;
@@ -58,6 +59,15 @@ namespace Krnl
 			if (i == bspID) {
 				continue;
 			}
+
+			File* f = new File("C:/Banana/System/TRAMP.EXE", kernelProcess);
+			f->open(FileOpenMode::Read);
+			uint64_t siz;
+			bool dir;
+			int br;
+			f->stat(&siz, &dir);
+			f->read(siz, (void*) 0x2000, &br);
+			f->close();
 
 			kprintf("CPU %d: processor ID 0x%X, apic ID 0x%X\n", i, processorID[i], matchingAPICID[i]);
 			startCPU(i);
