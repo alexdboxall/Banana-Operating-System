@@ -23,6 +23,7 @@ namespace Krnl
 			return;
 		}
 
+		lockScheduler();
 		size_t apicBase = computer->rdmsr(IA32_APIC_BASE_MSR) & 0xfffff000;
 		kprintf("apicBase = 0x%X\n", apicBase);
 
@@ -36,27 +37,32 @@ namespace Krnl
 		*((volatile uint32_t*) (apicBase + 0x300)) = (*((volatile uint32_t*) (apicBase + 0x300)) & 0xfff00000) | 0x008500;          // deassert
 		do { __asm__ __volatile__("pause" : : : "memory"); } while (*((volatile uint32_t*) (apicBase + 0x300)) & (1 << 12));        // wait for delivery
 		
-		nanoSleep(1000 * 1000 * 10);
+		//nanoSleep(1000 * 1000 * 10);
 		
 		for (int j = 0; j < 2; j++) {
 			*((volatile uint32_t*) (apicBase + 0x280)) = 0;																							// clear APIC errors
 			*((volatile uint32_t*) (apicBase + 0x310)) = (*((volatile uint32_t*) (apicBase + 0x310)) & 0x00ffffff) | (num << 24);					// select AP
-			*((volatile uint32_t*) (apicBase + 0x300)) = (*((volatile uint32_t*) (apicBase + 0x300)) & 0xfff0f800) | 0x000600 | SMP_START_PAGE;		// trigger STARTUP IPI for 0800:0000
-			nanoSleep(1000 * 200);
+			*((volatile uint32_t*) (apicBase + 0x300)) = (*((volatile uint32_t*) (apicBase + 0x300)) & 0xfff0f800) | (0x000600 | SMP_START_PAGE);		// trigger STARTUP IPI for 0800:0000
+			//nanoSleep(1000 * 200);
 			do { __asm__ __volatile__("pause" : : : "memory"); } while (*((volatile uint32_t*) (apicBase + 0x300)) & (1 << 12));					// wait for delivery
 		}
+
+		while (1);
+		unlockScheduler();
 	}
 
 	void startCPUs()
 	{
+		return;
+
 		if (!computer->features.hasCPUID) return;
 		if (!computer->features.hasMSR) return;
 		if (!computer->features.hasAPIC) return;
 
-		//asm volatile ("mov $1, %%eax; cpuid; shrl $24, %%ebx;": "=b"(bspID));
+		asm volatile ("mov $1, %%eax; cpuid; shrl $24, %%ebx;": "=b"(bspID));
 
 		for (int i = 0; i < processorDiscoveryNumber; ++i) {
-			if (i == 0 /*bspID*/) {
+			if (i == bspID) {
 				continue;
 			}
 
@@ -69,10 +75,8 @@ namespace Krnl
 			f->read(siz, (void*) (VIRT_LOW_MEGS + 0x2000), &br);
 			f->close();
 
-			//while (1);
-
 			kprintf("CPU %d: processor ID 0x%X, apic ID 0x%X\n", i, processorID[i], matchingAPICID[i]);
-			//startCPU(i);
+			startCPU(i);
 		}
 
 		//for each cpu
