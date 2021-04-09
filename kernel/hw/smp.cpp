@@ -47,6 +47,7 @@ namespace Krnl
 			do { __asm__ __volatile__("pause" : : : "memory"); } while (*((volatile uint32_t*) (apicBase + 0x300)) & (1 << 12));					// wait for delivery
 		}
 
+		while (1);
 		unlockScheduler();
 	}
 
