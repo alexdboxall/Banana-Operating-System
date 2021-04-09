@@ -265,11 +265,9 @@ void guiProc(Window* window, Message msg) {
     switch (msg.type) {
     case MESSAGE_PAINT:
     {
-        kprintf("GOT EVENT.\n");
         lockScheduler();
         Context* ctxt = window->context;
         window->context = (Context*) msg.dr;
-        kprintf("CHANGED CONTEXTS.\n");
 
         /*char newTitle[32];
         strcpy(newTitle, "TitleTitleTitle");
@@ -279,11 +277,12 @@ void guiProc(Window* window, Message msg) {
         newTitle[8] = (window->height % 10) + '0';
         setWindowTitle(window, newTitle);*/
 
-        Context_fill_rect(window->context, 0, 0, 20, 20, 0xFF0000);
-        kprintf("DONE EVENT.\n");
+        Context_fill_rect(window->context, 0, 0, 200, 150, 0xFF0000);
         window->context = ctxt;
+
+        screendrawcursor(mouse_x, mouse_y, desktop->cursor_data);
+
         unlockScheduler();
-        kprintf("CLEANUP DONE.\n");
         //TODO: free the list and context
         break;
     }
@@ -378,7 +377,7 @@ int main(int argc, const char* argv[])
     Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
 
     //kernelProcess->createThread(myapp);
-    //myapp(0);
+    myapp(0);
 
     while (1) {  
         sleep(3);
