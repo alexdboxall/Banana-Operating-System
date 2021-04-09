@@ -53,8 +53,6 @@ namespace Krnl
 
 	void startCPUs()
 	{
-		return;
-
 		if (!computer->features.hasCPUID) return;
 		if (!computer->features.hasMSR) return;
 		if (!computer->features.hasAPIC) return;
