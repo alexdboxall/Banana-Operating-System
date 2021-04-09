@@ -12,10 +12,17 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
+extern "C" void prepareTramp();
+
 #define SMP_START_PAGE	0x2
 namespace Krnl
 {
 	uint8_t bspID;
+
+	void smpEntry()
+	{
+		while (1);
+	}
 
 	void startCPU(int num)
 	{
@@ -56,6 +63,8 @@ namespace Krnl
 		if (!computer->features.hasCPUID) return;
 		if (!computer->features.hasMSR) return;
 		if (!computer->features.hasAPIC) return;
+
+		prepareTramp();
 
 		asm volatile ("mov $1, %%eax; cpuid; shrl $24, %%ebx;": "=b"(bspID));
 
