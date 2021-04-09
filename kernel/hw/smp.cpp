@@ -66,6 +66,8 @@ namespace Krnl
 
 		prepareTramp();
 
+		return;
+
 		asm volatile ("mov $1, %%eax; cpuid; shrl $24, %%ebx;": "=b"(bspID));
 
 		for (int i = 0; i < processorDiscoveryNumber; ++i) {
