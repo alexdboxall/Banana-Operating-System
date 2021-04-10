@@ -25,7 +25,7 @@ namespace Sys
 	uint64_t wsbe(regs* r)
 	{
 		int br;
-		char noGUI[] = "This program requires a GUI driver to run.";
+		char noGUI[] = "This program requires a GUI driver to run.\n";
 		currentTaskTCB->processRelatedTo->terminal->write(strlen(noGUI), (void*) noGUI, &br);
 		terminateTask(r->edx);
 		return 0xDEADBEEF;

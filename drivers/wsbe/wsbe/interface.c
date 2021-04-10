@@ -108,22 +108,13 @@ void debugwritestrhx(char* t, uint32_t hx);
 
 uint64_t sysWSBE(struct regs* r)
 {
-    debugwrite("sysWSBE was called.\n");
-
     if (r->ebx == WSBE_CREATE_WINDOW) {
         struct MoreArgs* ma = (struct MoreArgs*) r->ecx;
 
         Window* win = (Window*) malloc(sizeof(Window));
-        debugwrite("WSBE_CREATE_WINDOW\n");
-        debugwritestrhx("x: ", ma->x);
-        debugwritestrhx("\ny: ", ma->y);
-        debugwritestrhx("\nw: ", ma->w);
-        debugwritestrhx("\nh: ", ma->h);
-        debugwritestrhx("\nf: ", ma->flags);
-        debugwrite("\n\n");
-        win->hasProc = true;
         Window_init(win, ma->x, ma->y, ma->w, ma->h, ma->flags, 0);
         Window_set_title(win, "");
+        win->hasProc = true;
         return (size_t) win;
 
     } else if (r->ebx == WSBE_SET_WINDOW_TITLE) {
@@ -142,11 +133,11 @@ uint64_t sysWSBE(struct regs* r)
         return (size_t) desktop;
 
     } else if (r->ebx == WSBE_SET_SCRIPT) {
-        debugwrite("Setting the script.\n");
         struct MoreArgs* ma = (struct MoreArgs*) r->ecx;
 
         Window* win = (Window*) ma->obj;
         memcpy(win->repaintScript, (const void*) r->edx, ma->flags);
+        win->repaintScript[ma->flags] = OP_END;
         return 0;
     }
 

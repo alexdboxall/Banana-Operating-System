@@ -103,29 +103,29 @@ void Window_draw_border(Window* window)
 	int screen_y = Window_screen_y(window);
 
 	//draw line under titlebar
-	Context_horizontal_line(window->context, screen_x, screen_y + WIN_TITLEHEIGHT - 3, window->width, 0xAAAAAA);
-	Context_horizontal_line(window->context, screen_x, screen_y + WIN_TITLEHEIGHT - 2, window->width, 0xAAAAAA);
-	Context_horizontal_line(window->context, screen_x, screen_y + WIN_TITLEHEIGHT - 1, window->width, 0xAAAAAA);
+	Context_horizontal_line(window->context, screen_x, screen_y + WIN_TITLEHEIGHT - 3, window->width, WIN_BGCOLOR);
+	Context_horizontal_line(window->context, screen_x, screen_y + WIN_TITLEHEIGHT - 2, window->width, WIN_BGCOLOR);
+	Context_horizontal_line(window->context, screen_x, screen_y + WIN_TITLEHEIGHT - 1, window->width, WIN_BGCOLOR);
 
 	//draw top
-	Context_horizontal_line(window->context, screen_x, screen_y, window->width, 0xAAAAAA);
+	Context_horizontal_line(window->context, screen_x, screen_y, window->width, WIN_BGCOLOR);
 	Context_horizontal_line(window->context, screen_x + 1, screen_y + 1, window->width - 2, 0xFFFFFF);
-	Context_horizontal_line(window->context, screen_x + 2, screen_y + 2, window->width - 4, 0xAAAAAA);
+	Context_horizontal_line(window->context, screen_x + 2, screen_y + 2, window->width - 4, WIN_BGCOLOR);
 
 	//draw bottom
-	Context_horizontal_line(window->context, screen_x + 2, screen_y + window->height - 3, window->width - 4, 0xAAAAAA);
+	Context_horizontal_line(window->context, screen_x + 2, screen_y + window->height - 3, window->width - 4, WIN_BGCOLOR);
 	Context_horizontal_line(window->context, screen_x + 1, screen_y + window->height - 2, window->width - 2, 0x555555);
 	Context_horizontal_line(window->context, screen_x, screen_y + window->height - 1, window->width, 0x000000);
 
 	//draw left side
-	Context_vertical_line(window->context, screen_x, screen_y, window->height - 1, 0xAAAAAA);
+	Context_vertical_line(window->context, screen_x, screen_y, window->height - 1, WIN_BGCOLOR);
 	Context_vertical_line(window->context, screen_x + 1, screen_y + 1, window->height - 3, 0xFFFFFF);
-	Context_vertical_line(window->context, screen_x + 2, screen_y + 2, window->height - 5, 0xAAAAAA);
+	Context_vertical_line(window->context, screen_x + 2, screen_y + 2, window->height - 5, WIN_BGCOLOR);
 
 	//draw right side
 	Context_vertical_line(window->context, screen_x + window->width - 1, screen_y, window->height, 0);
 	Context_vertical_line(window->context, screen_x + window->width - 2, screen_y + 1, window->height - 2, 0x555555);
-	Context_vertical_line(window->context, screen_x + window->width - 3, screen_y + 2, window->height - 4, 0xAAAAAA);
+	Context_vertical_line(window->context, screen_x + window->width - 3, screen_y + 2, window->height - 4, WIN_BGCOLOR);
 
 
 	//Fill in the titlebar background
@@ -138,7 +138,7 @@ void Window_draw_border(Window* window)
 					  (active_window == window && window->parent->active_child == window) ?
 					  WIN_TEXTCOLOR : WIN_TEXTCOLOR_INACTIVE, TEXT_FLAG_BOLD);
 
-	Context_fill_rect(window->context, screen_x + window->width - 21, screen_y + 5, 16, 16, 0xAAAAAA);
+	Context_fill_rect(window->context, screen_x + window->width - 21, screen_y + 5, 16, 16, WIN_BGCOLOR);
 	Context_draw_rect(window->context, screen_x + window->width - 21, screen_y + 5, 16, 16, 0);
 	
 	Context_horizontal_line(window->context, screen_x + window->width - 21, screen_y + 5, 15, 0xFFFFFF);
@@ -365,11 +365,9 @@ void Window_paint(Window* window, List* dirty_regions, uint8_t paint_children)
 	window->context->translate_x = screen_x;
 	window->context->translate_y = screen_y;
 
-	extern void scriptParse(uint8_t* code, Context* ctxt);
+	extern void scriptParse(uint8_t* code, Window* win);
 	if (window->hasProc) {
-		extern void debugwrite(char* s);
-		debugwrite("Parsing the script.\n");
-		scriptParse(window->repaintScript, window->context);
+		scriptParse(window->repaintScript, window);
 	} else {
 		window->paint_function(window, 0, 0, 0, 0);
 	}
@@ -768,6 +766,18 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
 			mouse_x >= child->x - 12 && mouse_x < child->x + 3 &&
 			mouse_y >= child->y + child->height - 18 && mouse_y < child->y + child->height;
 
+		if (child->flags & WIN_NORESIZING) {
+			extern void debugwrite(char* t);
+
+			onBottomCorner = false;
+			onBottomLeft = false;
+
+			onBottomEdge = false;
+			onLeftEdge = false;
+			onRightEdge = false;
+			onTopEdge = false;
+		}
+
 		if (onBottomCorner) {
 			overridenMouse = MOUSE_OFFSET_TLDR;
 		} else if (onBottomLeft) {
@@ -796,7 +806,7 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
 
 			if (!(child->flags & WIN_NODECORATION) &&
 				mouse_y >= child->y && mouse_y < (child->y + 28)) {
-				if (getNanoSinceBoot() < child->nanoLastClicked + 1000 * 1000 * 300) {
+				if (getNanoSinceBoot() < child->nanoLastClicked + 1000 * 1000 * 300 && !(child->flags & WIN_NORESIZING)) {
 					child->nanoLastClicked = 0;
 
 					if (child->fullscreen) {

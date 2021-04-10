@@ -22,6 +22,7 @@ extern "C" {
 //Some flags to define our window behavior
 #define WIN_NODECORATION        0x1
 #define WIN_TOPLEVELWIN         0x2
+#define WIN_NORESIZING          0x4
 
 //Forward struct declaration for function type declarations
     struct Window_struct;
@@ -111,6 +112,33 @@ extern "C" {
 
 
     //sort of internal stuff...
+
+#define OP_FILL_RECT		0
+#define OP_DRAW_RECT		1
+#define OP_HORZ_LINE		2
+#define OP_VERT_LINE		3
+#define OP_DRAW_TEXT		4
+#define OP_DRAW_BITMAP		5
+#define OP_VARIABLE			6
+#define OP_DEFAULT_VARS		7
+#define OP_END				8
+#define OP_VARIABLE2		9
+
+#define OP_VARIABLE_SET		0
+#define OP_VARIABLE_ADD		1
+#define OP_VARIABLE_SUB		2
+#define OP_VARIABLE_MUL		3
+#define OP_VARIABLE_DIV		4
+#define OP_VARIABLE_AND		5
+#define OP_VARIABLE_OR		6
+#define OP_VARIABLE_XOR		7
+#define OP_VARIABLE_SHL		8
+#define OP_VARIABLE_SHR		9
+#define OP_VARIABLE_MOD		10
+#define OP_VARIABLE_REG		11
+#define OP_VARIABLE_NOT		12
+#define OP_VARIABLE_NEG		13
+#define OP_VARIABLE_SLIDE	14
 
 #define WSBE_CREATE_WINDOW          0
 #define WSBE_SET_WINDOW_TITLE       1
