@@ -311,6 +311,7 @@ int main(int argc, const char* argv[])
 {
     extern uint64_t(*systemCallHandlers[128])(regs * r);
     systemCallHandlers[(int) SystemCallNumber::WSBE] = sysWSBE;
+
     new Process("C:/guitest.exe");
 
     extern Video* screen;
