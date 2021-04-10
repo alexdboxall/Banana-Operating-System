@@ -61,8 +61,7 @@ Window* createWindow(int x, int y, int w, int h, int flags)
 
 void addWindow(Window* parent, Window* child)
 {
-    Window_insert_child(parent, child);
-    Window_paint((Window*) desktop, (List*) 0, 1);
+    
 }
 
 void updateWindow(Window* window, int sx, int sy, List* dr, int pc)
@@ -105,20 +104,49 @@ struct regs
     unsigned int v86es, v86ds, v86fs, v86gs;
 };
 
+void debugwritestrhx(char* t, uint32_t hx);
+
 uint64_t sysWSBE(struct regs* r)
 {
-    debugwrite("sysWSBE was called.");
+    debugwrite("sysWSBE was called.\n");
 
     if (r->ebx == WSBE_CREATE_WINDOW) {
         struct MoreArgs* ma = (struct MoreArgs*) r->ecx;
 
         Window* win = (Window*) malloc(sizeof(Window));
+        debugwrite("WSBE_CREATE_WINDOW\n");
+        debugwritestrhx("x: ", ma->x);
+        debugwritestrhx("\ny: ", ma->y);
+        debugwritestrhx("\nw: ", ma->w);
+        debugwritestrhx("\nh: ", ma->h);
+        debugwritestrhx("\nf: ", ma->flags);
+        debugwrite("\n\n");
+        win->hasProc = true;
         Window_init(win, ma->x, ma->y, ma->w, ma->h, ma->flags, 0);
         Window_set_title(win, "");
         return (size_t) win;
 
     } else if (r->ebx == WSBE_SET_WINDOW_TITLE) {
         Window_set_title((Window*) r->ecx, (char*) r->edx);
+        return 0;
+
+    } else if (r->ebx == WSBE_UPDATE_WINDOW) {
+        Window_paint((Window*) r->ecx, 0, 1);
+        return 0;
+
+    } else if (r->ebx == WSBE_ADD_WINDOW) {
+        Window_insert_child((Window*) r->ecx, (Window*) r->edx);
+        return 0;
+
+    } else if (r->ebx == WSBE_GET_DESKTOP) {
+        return (size_t) desktop;
+
+    } else if (r->ebx == WSBE_SET_SCRIPT) {
+        debugwrite("Setting the script.\n");
+        struct MoreArgs* ma = (struct MoreArgs*) r->ecx;
+
+        Window* win = (Window*) ma->obj;
+        memcpy(win->repaintScript, (const void*) r->edx, ma->flags);
         return 0;
     }
 

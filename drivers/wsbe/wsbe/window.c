@@ -367,6 +367,8 @@ void Window_paint(Window* window, List* dirty_regions, uint8_t paint_children)
 
 	extern void scriptParse(uint8_t* code, Context* ctxt);
 	if (window->hasProc) {
+		extern void debugwrite(char* s);
+		debugwrite("Parsing the script.\n");
 		scriptParse(window->repaintScript, window->context);
 	} else {
 		window->paint_function(window, 0, 0, 0, 0);

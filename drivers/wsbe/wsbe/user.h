@@ -114,6 +114,10 @@ extern "C" {
 
 #define WSBE_CREATE_WINDOW          0
 #define WSBE_SET_WINDOW_TITLE       1
+#define WSBE_UPDATE_WINDOW          2
+#define WSBE_ADD_WINDOW             3
+#define WSBE_GET_DESKTOP            4
+#define WSBE_SET_SCRIPT             5
 
     struct MoreArgs
     {
@@ -124,6 +128,8 @@ extern "C" {
 
         uint32_t col;
         uint32_t flags;
+
+        void* obj;
     };
 
 

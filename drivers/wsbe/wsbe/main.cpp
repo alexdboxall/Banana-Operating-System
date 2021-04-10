@@ -312,7 +312,8 @@ int main(int argc, const char* argv[])
     extern uint64_t(*systemCallHandlers[128])(regs * r);
     systemCallHandlers[(int) SystemCallNumber::WSBE] = sysWSBE;
 
-    new Process("C:/guitest.exe");
+    Process* p = new Process("C:/guitest.exe");
+    p->createUserThread();
 
     extern Video* screen;
     Krnl::guiPanicHandler = panichandler;
