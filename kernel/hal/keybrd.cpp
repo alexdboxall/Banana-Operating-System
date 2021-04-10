@@ -121,8 +121,6 @@ void sendKeyboardToken(KeyboardToken kt)
 	static bool guiStated = false;
 	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::Home && !guiStated) {
 		kernelProcess->createThread(startGUI, nullptr, 1);
-		nanoSleep(1000 * 1000 * 100);
-		new Process("C:/guitest.exe");
 		guiStated = true;
 	} else if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::End && !guiStated) {
 		kernelProcess->createThread(startGUIVESA, nullptr, 1);
