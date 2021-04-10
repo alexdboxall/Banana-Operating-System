@@ -105,9 +105,10 @@ struct regs
     unsigned int v86es, v86ds, v86fs, v86gs;
 };
 
-
 uint64_t sysWSBE(struct regs* r)
 {
+    debugwrite("sysWSBE was called.");
+
     if (r->ebx == WSBE_CREATE_WINDOW) {
         struct MoreArgs* ma = (struct MoreArgs*) r->ecx;
 

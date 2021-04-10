@@ -24,8 +24,6 @@ namespace Sys
 	/// 
 	uint64_t wsbe(regs* r)
 	{
-		kprintf("Sys::wsbe called.\n");
-
 		int br;
 		char noGUI[] = "This program requires a GUI driver to run.";
 		currentTaskTCB->processRelatedTo->terminal->write(strlen(noGUI), (void*) noGUI, &br);
