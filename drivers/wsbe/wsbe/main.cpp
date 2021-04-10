@@ -5,6 +5,7 @@
 #include "core/main.hpp"
 #include "core/terminal.hpp"
 #include "core/physmgr.hpp"
+#include "sys/syscalls.hpp"
 #include "hal/intctrl.hpp"
 #include "hw/ports.hpp"
 #include "hw/acpi.hpp"
@@ -204,6 +205,13 @@ extern "C" void debugwrite(char* t)
     kprintf(t);
 }
 
+
+extern "C" void debugwritestrhx(char* t, uint32_t hx)
+{
+    kprintf("%s%X", t, hx);
+}
+
+
 extern "C" void loadbuiltinfonts();
 
 namespace Krnl
@@ -265,25 +273,6 @@ void guiProc(Window* window, Message msg) {
     switch (msg.type) {
     case MESSAGE_PAINT:
     {
-        lockScheduler();
-        Context* ctxt = window->context;
-        window->context = (Context*) msg.dr;
-
-        /*char newTitle[32];
-        strcpy(newTitle, "TitleTitleTitle");
-        newTitle[2] = (window->x % 10) + '0';
-        newTitle[4] = (window->y % 10) + '0';
-        newTitle[6] = (window->width % 10) + '0';
-        newTitle[8] = (window->height % 10) + '0';
-        setWindowTitle(window, newTitle);*/
-
-        Context_fill_rect(window->context, 0, 0, 200, 150, 0xFF0000);
-        window->context = ctxt;
-
-        screendrawcursor(mouse_x, mouse_y, desktop->cursor_data);
-
-        unlockScheduler();
-        //TODO: free the list and context
         break;
     }
 
@@ -296,6 +285,7 @@ void internalMain(Window* __v)
 {
     __v->hasProc = true;
     while (1) {
+        nanoSleep(1000 * 1000 * 200);
         Message msg;
         int count = getMessage(__v, &msg);
         if (!count) continue;
@@ -308,14 +298,20 @@ void myapp(void* ctxt)
     //unlockScheduler();
 
     Window* test = createWindow(150, 100, 350, 200, WIN_TOPLEVELWIN);
+    test->hasProc = true;
     setWindowTitle(test, "WSBE Window!");
     addWindow((Window*) getDesktop(), test);
 
     internalMain(test);
 }
 
+extern "C" uint64_t sysWSBE(regs* r);
+
 int main(int argc, const char* argv[])
 {
+    extern uint64_t(*systemCallHandlers[128])(regs * r);
+    systemCallHandlers[(int) SystemCallNumber::WSBE] = sysWSBE;
+
     extern Video* screen;
     Krnl::guiPanicHandler = panichandler;
     Krnl::guiProgramFaultHandler = faulthandler;

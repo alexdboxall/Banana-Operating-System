@@ -56,11 +56,7 @@ int guiDefaultProc(Window* window, Message msg)
 
 Window* createWindow(int x, int y, int w, int h, int flags)
 {
-    Window* win = (Window*) malloc(sizeof(Window));
-    //win->paint_function = updateWindow;
-    Window_init(win, x, y, w, h, flags, 0);
-    Window_set_title(win, "");
-    return win;
+    return 0;
 }    
 
 void addWindow(Window* parent, Window* child)
@@ -93,4 +89,37 @@ void setWindowTitle(Window* window, char* title)
 Context* getWindowContext(Window* window)
 {
 	return window->context;
+}
+
+
+struct regs
+{
+    //PUSHED LATER				PUSHED EARLIER
+    //POPPED EARLIER			POPPED LATER
+    unsigned int gs, fs, es, ds;
+    unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax;
+    unsigned int int_no, err_code;
+    unsigned int eip, cs, eflags, useresp, ss;
+
+    //VM8086 ONLY
+    unsigned int v86es, v86ds, v86fs, v86gs;
+};
+
+
+uint64_t sysWSBE(struct regs* r)
+{
+    if (r->ebx == WSBE_CREATE_WINDOW) {
+        struct MoreArgs* ma = (struct MoreArgs*) r->ecx;
+
+        Window* win = (Window*) malloc(sizeof(Window));
+        Window_init(win, ma->x, ma->y, ma->w, ma->h, ma->flags, 0);
+        Window_set_title(win, "");
+        return (size_t) win;
+
+    } else if (r->ebx == WSBE_SET_WINDOW_TITLE) {
+        Window_set_title((Window*) r->ecx, (char*) r->edx);
+        return 0;
+    }
+
+    return 0;
 }

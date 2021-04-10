@@ -25,6 +25,8 @@ Window* Window_new(int16_t x, int16_t y, uint16_t width,
 	return window;
 }
 
+const uint8_t defaultRepaintScript[] = {0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x01, 0xFF, (WIN_BGCOLOR >> 0) & 0xFF, (WIN_BGCOLOR >> 8) & 0xFF, (WIN_BGCOLOR >> 16) & 0xFF, 0x00, 0x08};
+
 //Seperate object allocation from initialization so we can implement
 //our inheritance scheme
 int Window_init(Window* window, int16_t x, int16_t y, uint16_t width,
@@ -65,6 +67,7 @@ int Window_init(Window* window, int16_t x, int16_t y, uint16_t width,
 	window->dragType = DRAG_TYPE_NONE;
 	window->messageCount = 0;
 	window->hasProc = false;
+	window->repaintScript = defaultRepaintScript;
 
 	if (flags & WIN_TOPLEVELWIN) {
 		active_window = window;
@@ -362,17 +365,18 @@ void Window_paint(Window* window, List* dirty_regions, uint8_t paint_children)
 	window->context->translate_x = screen_x;
 	window->context->translate_y = screen_y;
 
-	if (!window->hasProc) {
-		window->paint_function(window, 0, 0, dirty_regions, paint_children);
+	extern void scriptParse(uint8_t* code, Context* ctxt);
+	if (window->hasProc) {
+		scriptParse(window->repaintScript, window->context);
 	} else {
-		updateWindow(window, 0, 0, (List*) Context_copy(window->context), paint_children);
+		window->paint_function(window, 0, 0, 0, 0);
 	}
 	
 	Context_clear_clip_rects(window->context);
 	window->context->translate_x = 0;
 	window->context->translate_y = 0;
 
-	if (paint_children && !window->hasProc) {
+	if (paint_children) {
 		Window_paint_children(window, dirty_regions);
 	}
 }

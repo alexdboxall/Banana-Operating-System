@@ -96,6 +96,7 @@ SystemCallNumber
 	SetTime,
 	Timezone,
 	Eject,
+	WSBE,
 };
 
 

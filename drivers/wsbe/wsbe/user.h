@@ -88,6 +88,7 @@ extern "C" {
         int messageCount;
 
         bool hasProc;
+        uint8_t* repaintScript;
 
     } Window;
 
@@ -105,6 +106,25 @@ extern "C" {
 		int x;
 		int y;
 	} Point;
+
+
+
+
+    //sort of internal stuff...
+
+#define WSBE_CREATE_WINDOW          0
+#define WSBE_SET_WINDOW_TITLE       1
+
+    struct MoreArgs
+    {
+        uint16_t x;
+        uint16_t y;
+        uint16_t w;
+        uint16_t h;
+
+        uint32_t col;
+        uint32_t flags;
+    };
 
 
 #ifdef __cplusplus

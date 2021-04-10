@@ -12,6 +12,7 @@
 #include <sys/wait.h>
 #include <sys/banana.h>
 #include "tinyexpr.h"
+#include "uwsbe/krnllink.h"
 
 #include "D:/Users/Alex/Desktop/Banana/kernel/sys/syscalls.hpp"
 
@@ -991,6 +992,9 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 		} else {
 			fprintf(stderr, "Not a terminal.\n");
 		}
+
+	} else if (!strcasecmp(argv[0], "testwsbe")) {
+		wsbeCreateWindow(300, 75, 250, 150, WIN_TOPLEVELWIN);
 
 	} else if (!strcasecmp(argv[0], "calc")) {
 		char* joinedargs = malloc(512);
