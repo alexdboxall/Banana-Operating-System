@@ -148,6 +148,7 @@ extern "C" {
 #define WSBE_SET_SCRIPT             5
 #define WSBE_COPY_WINDOW            6
 #define WSBE_TEXT_WIDTH_HEIGHT      7
+#define WSBE_GET_MESSAGE            8
 
     struct MoreArgs
     {

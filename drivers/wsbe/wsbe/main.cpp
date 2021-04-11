@@ -9,6 +9,7 @@
 #include "hal/intctrl.hpp"
 #include "hw/ports.hpp"
 #include "hw/acpi.hpp"
+#include "hal/keybrd.hpp"
 #include "hal/video.hpp"
 #include "thr/prcssthr.hpp"
 #include "hal/timer.hpp"
@@ -129,6 +130,13 @@ void loadCursors()
 bool canDoMouse = false;
 
 extern "C" void (*guiMouseHandler) (int xdelta, int ydelta, int btns, int z);
+extern "C" void (*guiKeyboardHandler) (KeyboardToken kt, bool* keystates[]);
+
+extern "C" void handleKeyboard(KeyboardToken kt, bool* keystates[])
+{
+
+}
+
 extern "C" void handleMouse(int xdelta, int ydelta, int btns, int z)
 {
     mouse_x += xdelta;
@@ -299,6 +307,7 @@ int main(int argc, const char* argv[])
     invertMouse = Reg::readIntWithDefault((char*) "wsbe", (char*) "invertMouse", 0);
 
     guiMouseHandler = handleMouse;
+    guiKeyboardHandler = handleKeyboard;
 
     //Fill this in with the info particular to your project
     Context* context = Context_new(0, 0, 0);

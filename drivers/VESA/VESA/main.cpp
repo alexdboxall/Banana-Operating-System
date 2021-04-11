@@ -269,7 +269,6 @@ ModeInfo VESA::calculateBestMode()
 	ModeInfo bestMode;
 	int bestScore = 0;
 
-
 	for (int i = 0; i < numModes; ++i) {
 		int score = modes[i].width + modes[i].height;
 

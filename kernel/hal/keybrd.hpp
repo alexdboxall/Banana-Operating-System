@@ -3,9 +3,11 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include "hal/device.hpp"
 
+#ifndef _USER_WSBE_WANT_KEYBRD_
+#include "hal/device.hpp"
 extern bool keystates[0x400];
+#endif 
 
 enum class KeyboardSpecialKeys
 {
@@ -89,6 +91,7 @@ struct KeyboardToken
 	bool capslock;
 };
 
+#ifndef _USER_WSBE_WANT_KEYBRD_
 void sendKeyboardToken(KeyboardToken kt);
 
 class Keyboard : public Device
@@ -113,5 +116,6 @@ public:
 extern bool keyboardSetupYet;
 int readKeyboard(VgaText* terminal, char* buf, size_t count);
 void clearInternalKeybuffer(VgaText* terminal);
+#endif
 
 #endif

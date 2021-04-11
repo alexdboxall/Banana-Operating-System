@@ -149,6 +149,21 @@ uint64_t sysWSBE(struct regs* r)
         struct MoreArgs* ma = (struct MoreArgs*) r->ecx;
         Context_text_width_height((char*) ma->obj, ma->flags, (int*) ma->obj2, (int*) ma->obj3);
         return 0;
+   
+    } else if (r->ebx == WSBE_GET_MESSAGE) {
+        Window* win = (Window*) r->ecx;
+        Message* msg = (Message*) r->edx;
+
+        if (!win->messageCount) {
+            return 0;
+        }
+
+        *msg = win->messages[--win->messageCount];
+        for (int i = 0; i < win->messageCount; ++i) {
+            win->messages[i] = win->messages[i + 1];
+        }
+
+        return win->messageCount + 1;
     }
 
     return 0;
