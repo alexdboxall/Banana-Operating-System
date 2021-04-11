@@ -13,7 +13,7 @@
 
 bool keystates[0x400];
 
-void (*guiKeyboardHandler) (KeyboardToken kt, bool* keystates[]) = nullptr;
+void (*guiKeyboardHandler) (KeyboardToken kt, bool* keystates) = nullptr;
 
 bool keyboardSetupYet = false;
 

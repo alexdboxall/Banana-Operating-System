@@ -130,9 +130,9 @@ void loadCursors()
 bool canDoMouse = false;
 
 extern "C" void (*guiMouseHandler) (int xdelta, int ydelta, int btns, int z);
-extern "C" void (*guiKeyboardHandler) (KeyboardToken kt, bool* keystates[]);
+extern "C" void (*guiKeyboardHandler) (KeyboardToken kt, bool* keystates);
 
-extern "C" void handleKeyboard(KeyboardToken kt, bool* keystates[])
+extern "C" void handleKeyboard(KeyboardToken kt, bool* keystates)
 {
 
 }
