@@ -254,10 +254,14 @@ ModeInfo VESA::calculateBestMode()
 	if (biosEDIDSupported) {
 		monitorWidth  = edid->detailedTiming[0][0x38 - 0x36] | ((int) (edid->detailedTiming[0][0x3A - 0x36] & 0xF0) << 4);
 		monitorHeight = edid->detailedTiming[0][0x3B - 0x36] | ((int) (edid->detailedTiming[0][0x3D - 0x36] & 0xF0) << 4);
-		if (monitorWidth == 1366) {
-			panic("EDID SUPPORTED BUT CORRECT.");
+	
+		if (monitorWidth * 9 / 16 == monitorHeight) {
+			monitorResolution = RATIO_169;
+		} else if (monitorWidth * 10 / 16 == monitorHeight) {
+			monitorResolution = RATIO_1610;
+		} else {
+			monitorResolution = RATIO_43;
 		}
-		panic("EDID SUPPORTED BUT INCORRECT.");
 	}
 
 	kprintf("Best resolution: %dx%d\n", monitorWidth, monitorHeight);
