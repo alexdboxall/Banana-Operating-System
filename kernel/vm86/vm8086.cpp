@@ -149,7 +149,7 @@ namespace Vm
 		memset(vmToHostComms, 0, 32);
 
 		if (!strcmp(filename, vm8086RecentFilename)) {
-			memcpy((uint8_t*) (size_t) realToLinear(cs, ip), vm8086RecentData, siz);
+			memcpy((uint8_t*) (size_t) realToLinear(cs, ip), vm8086RecentData, vm8086RecentSize);
 
 		} else {
 			if (vm8086RecentData) {
@@ -188,7 +188,7 @@ namespace Vm
 
 			strcpy(vm8086RecentFilename, filename);
 			vm8086RecentSize = siz;
-			vm8086RecentData = malloc(siz);
+			vm8086RecentData = (uint8_t*) malloc(siz);
 			memcpy(vm8086RecentData, (uint8_t*) (size_t) realToLinear(cs, ip), siz);
 		}
 
