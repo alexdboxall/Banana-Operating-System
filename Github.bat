@@ -10,6 +10,7 @@ git add bochs
 git add drivers
 git add packages
 git add sysroot
+git add ip
 git add installer/*.txt
 git add installer/*.bat
 git add installer/*.s
