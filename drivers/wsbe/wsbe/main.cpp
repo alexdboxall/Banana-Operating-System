@@ -125,58 +125,6 @@ void loadCursors()
     free(curdata);
 }
 
-WindowPaintHandler oldHandler;
-char szstring[64];
-void newpaint(struct Window_struct* win, int sx, int sy, List* dr, int pc)
-{
-    oldHandler(win, sx, sy, dr, pc);
-    Context_draw_text(win->context, szstring, 50, 50, 0, 0);
-}
-
-void mdown(struct Window_struct* win, int x, int y)
-{
-    strcpy(szstring, "Mouse down.");
-}
-
-void mup(struct Window_struct* win, int x, int y)
-{
-    strcpy(szstring, "Mouse up.");
-}
-
-void resizehandler(struct Window_struct* win, int x, int y)
-{
-    strcpy(szstring, "Resizing...");
-}
-
-void dopanic(Window* b, int x, int y)
-{
-    panic("You clicked the panic button!");
-}
-
-char tw[] = "The quick brown fox jumps";
-//And, finally, the handler that causes that button to make a new calculator
-void spawn_calculator(Window* button, int x, int y)
-{
-    Window* w = (Window*) malloc(sizeof(Window));
-    Window_init(w, 50, 50, 300, 200, WIN_TOPLEVELWIN, 0);
-    Window_set_title(w, (char*) tw);
-    Window_insert_child((Window*) desktop, w);
-
-    //Create a simple launcher window
-    Button* launch_button = Button_new(40, 60, 150, 30);
-    Window_set_title((Window*) launch_button, (char*) "Cause a panic!");
-    launch_button->window.mousedown_function = dopanic;
-    Window_insert_child((Window*) w, (Window*) launch_button);
-
-    w->resize_function = resizehandler;
-    w->mousedown_function = mdown;
-    w->mouseup_function = mup;
-
-    oldHandler = w->paint_function;
-    w->paint_function = newpaint;
-
-    Window_paint((Window*) desktop, (List*) 0, 1);
-}
 
 bool canDoMouse = false;
 
@@ -364,22 +312,8 @@ int main(int argc, const char* argv[])
     //Create the desktop
     desktop = Desktop_new(context);
 
-    //Create a simple launcher window
-    Button* launch_button = Button_new(10, 10, 150, 30);
-    Window_set_title((Window*) launch_button, (char*) "New Window");
-    launch_button->window.mousedown_function = spawn_calculator;
-    Window_insert_child((Window*) desktop, (Window*) launch_button);
-    Window_paint((Window*) desktop, (List*) 0, 1);
-
-    spawn_calculator(nullptr, 0, 0);
-
-    Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
-
-    //kernelProcess->createThread(myapp);
-    myapp(0);
-
-    while (1) {  
-        sleep(3);
+    while (1) {
+        blockTask(TaskState::Paused);
     }
 
     return 0;

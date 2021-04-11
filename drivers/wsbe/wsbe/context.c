@@ -713,3 +713,18 @@ void Context_draw_text(Context* context, char* string, int x, int y, uint32_t co
         x += Context_draw_char(context, *(string++), x, y, color);
     }
 }
+
+void Context_text_width_height(char* string, int flags, int* widthOut, int* heightOut)
+{
+	int width = 0;
+	for (; *string; ) {
+		char character = *string++;
+		if (flags & TEXT_FLAG_BOLD) {
+			++width;
+		}
+		width += FontWidths[System][(int) character];
+	}
+
+	*widthOut = width;
+	*heightOut = CELLH;
+}

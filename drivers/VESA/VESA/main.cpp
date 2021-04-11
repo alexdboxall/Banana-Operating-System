@@ -94,6 +94,9 @@ void VESA::setMode(int mode)
 	width = modeInfo.width;
 	height = modeInfo.height;
 	bpp = modeInfo.bpp;
+	if (bpp == 0) {
+		panic("BPP IS ZERO\n");
+	}
 	pitch = modeInfo.pitch / ((bpp + 7) / 8);
 	vramPhys = (uint8_t*) modeInfo.lfb;
 	vram = (uint8_t*) 0xC3000000;
@@ -159,6 +162,8 @@ void VESA::getModes()
 	for (int i = 0; i < numModes; ++i) {
 		char ratioString[8] = "?";
 		modes[i].ratioEstimation = RATIO_UNKNOWN;
+
+		if (modes[i].width == 0) continue;
 
 		if (modes[i].width / 4 * 3 == modes[i].height) {
 			strcpy(ratioString, "4:3");
@@ -259,7 +264,7 @@ ModeInfo VESA::calculateBestMode()
 		score *= (modes[i].bpp + 12);
 
 		if (modes[i].width > monitorWidth || modes[i].height > monitorHeight) {
-			score /= 16;
+			if (score) score /= 16;
 			score -= monitorWidth * 2;
 			score -= monitorHeight * 2;
 

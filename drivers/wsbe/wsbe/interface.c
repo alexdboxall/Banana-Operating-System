@@ -136,8 +136,18 @@ uint64_t sysWSBE(struct regs* r)
         struct MoreArgs* ma = (struct MoreArgs*) r->ecx;
 
         Window* win = (Window*) ma->obj;
+        win->repaintScript = malloc(ma->flags);
         memcpy(win->repaintScript, (const void*) r->edx, ma->flags);
         win->repaintScript[ma->flags] = OP_END;
+        return 0;
+
+    } else if (r->ebx == WSBE_COPY_WINDOW) {
+        memcpy((void*) r->ecx, (const void*) r->edx, sizeof(Window));
+        return 0;
+
+    } else if (r->ebx == WSBE_TEXT_WIDTH_HEIGHT) {
+        struct MoreArgs* ma = (struct MoreArgs*) r->ecx;
+        Context_text_width_height((char*) ma->obj, ma->flags, (int*) ma->obj2, (int*) ma->obj3);
         return 0;
     }
 

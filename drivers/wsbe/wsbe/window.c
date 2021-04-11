@@ -25,7 +25,7 @@ Window* Window_new(int16_t x, int16_t y, uint16_t width,
 	return window;
 }
 
-const uint8_t defaultRepaintScript[] = {0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x01, 0xFF, (WIN_BGCOLOR >> 0) & 0xFF, (WIN_BGCOLOR >> 8) & 0xFF, (WIN_BGCOLOR >> 16) & 0xFF, 0x00, 0x08};
+const uint8_t defaultRepaintScript[] = { 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x01, 0xFF, (WIN_BGCOLOR >> 0) & 0xFF, (WIN_BGCOLOR >> 8) & 0xFF, (WIN_BGCOLOR >> 16) & 0xFF, 0x00, 0x08 };
 
 //Seperate object allocation from initialization so we can implement
 //our inheritance scheme
@@ -140,7 +140,7 @@ void Window_draw_border(Window* window)
 
 	Context_fill_rect(window->context, screen_x + window->width - 21, screen_y + 5, 16, 16, WIN_BGCOLOR);
 	Context_draw_rect(window->context, screen_x + window->width - 21, screen_y + 5, 16, 16, 0);
-	
+
 	Context_horizontal_line(window->context, screen_x + window->width - 21, screen_y + 5, 15, 0xFFFFFF);
 	Context_vertical_line(window->context, screen_x + window->width - 21, screen_y + 5, 15, 0xFFFFFF);
 
@@ -365,27 +365,16 @@ void Window_paint(Window* window, List* dirty_regions, uint8_t paint_children)
 	window->context->translate_x = screen_x;
 	window->context->translate_y = screen_y;
 
-	extern void scriptParse(uint8_t* code, Window* win);
+	extern void scriptParse(uint8_t * code, Window * win);
 	if (window->hasProc) {
 		scriptParse(window->repaintScript, window);
 	} else {
 		window->paint_function(window, 0, 0, 0, 0);
 	}
-	
+
 	Context_clear_clip_rects(window->context);
 	window->context->translate_x = 0;
 	window->context->translate_y = 0;
-
-	if (paint_children) {
-		Window_paint_children(window, dirty_regions);
-	}
-}
-
-void Window_paint_children(Window* window, List* dirty_regions)
-{
-	int i, j, screen_x, screen_y, child_screen_x, child_screen_y;
-	Window* current_child;
-	Rect* temp_rect;
 
 	//Even though we're no longer having all mouse events cause a redraw from the desktop
 	//down, we still need to call paint on our children in the case that we were called with
