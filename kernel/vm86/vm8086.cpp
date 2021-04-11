@@ -122,6 +122,10 @@ namespace Vm
 		return x;
 	}
 
+	char vm8086RecentFilename[256];
+	uint64_t vm8086RecentSize;
+	uint8_t* vm8086RecentData = nullptr;
+
 	bool start8086(const char* filename, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss)
 	{
 		while (1) {
@@ -144,34 +148,49 @@ namespace Vm
 		vmToHostCommsPtr = 0;
 		memset(vmToHostComms, 0, 32);
 
-		File* f = new File(filename, kernelProcess);
-		if (!f) {
-			panic("VM8086 FILE FAILED!");
-			unlockScheduler();
-			return false;
+		if (!strcmp(filename, vm8086RecentFilename)) {
+			memcpy((uint8_t*) (size_t) realToLinear(cs, ip), vm8086RecentData, siz);
+
+		} else {
+			if (vm8086RecentData) {
+				free(vm8086RecentData);
+				vm8086RecentData = nullptr;
+			}
+
+			File* f = new File(filename, kernelProcess);
+			if (!f) {
+				panic("VM8086 FILE FAILED!");
+				unlockScheduler();
+				return false;
+			}
+
+			uint64_t siz;
+			bool dir;
+			f->stat(&siz, &dir);
+
+			if (dir) {
+				panic("VM8086 FILE STAT FAILED!");
+				unlockScheduler();
+				return false;
+			}
+
+			FileStatus st = f->open(FileOpenMode::Read);
+
+			if (st != FileStatus::Success) {
+				panic("VM8086 FILE OPEN FAILED!");
+				unlockScheduler();
+				return false;
+			}
+
+			int br;
+			f->read(siz, (uint8_t*) (size_t) realToLinear(cs, ip), &br);
+			f->close();
+
+			strcpy(vm8086RecentFilename, filename);
+			vm8086RecentSize = siz;
+			vm8086RecentData = malloc(siz);
+			memcpy(vm8086RecentData, (uint8_t*) (size_t) realToLinear(cs, ip), siz);
 		}
-
-		uint64_t siz;
-		bool dir;
-		f->stat(&siz, &dir);
-
-		if (dir) {
-			panic("VM8086 FILE STAT FAILED!");
-			unlockScheduler();
-			return false;
-		}
-
-		FileStatus st = f->open(FileOpenMode::Read);
-
-		if (st != FileStatus::Success) {
-			panic("VM8086 FILE OPEN FAILED!");
-			unlockScheduler();
-			return false;
-		}
-
-		int br;
-		f->read(siz, (uint8_t*) (size_t) realToLinear(cs, ip), &br);
-		f->close();
 
 		vmReady = false;
 		unlockScheduler();

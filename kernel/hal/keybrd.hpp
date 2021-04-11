@@ -7,9 +7,10 @@
 #ifndef _USER_WSBE_WANT_KEYBRD_
 #include "hal/device.hpp"
 extern bool keystates[0x400];
-#endif 
-
 enum class KeyboardSpecialKeys
+#else
+enum KeyboardSpecialKeys
+#endif 
 {
 	Ctrl = 0x100,
 	Alt = 0x101,

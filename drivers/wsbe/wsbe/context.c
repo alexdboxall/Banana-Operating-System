@@ -34,6 +34,17 @@ Context* Context_new(uint16_t width, uint16_t height, uint32_t* buffer) {
     return context;
 }
 
+uint8_t patterns[8] = {
+		0b11111111,
+		0b01110111,
+		0b01010101,
+		0b00110011,
+		0b01010111,
+		0b00000000,
+		0b00000000,
+		0b00000000,
+};
+
 void Context_clipped_rect(Context* context, int x, int y, unsigned int width,
                           unsigned int height, Rect* clip_area, uint32_t color) {
 
@@ -60,7 +71,23 @@ void Context_clipped_rect(Context* context, int x, int y, unsigned int width,
     if(max_y > clip_area->bottom + 1)
         max_y = clip_area->bottom + 1;
 
-    screenputrect(x, y, max_x, max_y, color);
+	int pattern = (color >> 24) & 7;
+
+	if (width == 1 && pattern) {
+		for (int i = 0; i < max_y - y; ++i) {
+			if (!(patterns[pattern] & (1 << ((/*y + */i) & 7)))) continue;
+			screenputpixel(x, y + i, color & 0xFFFFFF);
+		}
+
+	} else if (height == 1 && pattern) {
+		for (int i = 0; i < max_x - x; ++i) {
+			if (!(patterns[pattern] & (1 << ((/*x + */i) & 7)))) continue;
+			screenputpixel(x + i, y, color & 0xFFFFFF);
+		}
+
+	} else {
+		screenputrect(x, y, max_x, max_y, color & 0xFFFFFF);
+	}
 }
 
 //Simple for-loop rectangle into a context
@@ -114,15 +141,21 @@ void Context_fill_rect(Context* context, int x, int y,
 //A horizontal line as a filled rect of height 1
 void Context_horizontal_line(Context* context, int x, int y,
                              unsigned int length, uint32_t color) {
-
-    Context_fill_rect(context, x, y, length, 1, color);
+	int width = (color >> 27);
+	if (width == 0) {
+		width = 1;
+	}
+    Context_fill_rect(context, x, y, length, width, color);
 }
 
 //A vertical line as a filled rect of width 1
 void Context_vertical_line(Context* context, int x, int y,
                            unsigned int length, uint32_t color) {
-
-    Context_fill_rect(context, x, y, 1, length, color);
+	int width = (color >> 27);
+	if (width == 0) {
+		width = 1;
+	}
+    Context_fill_rect(context, x, y, width, length, color);
 }
 
 //Rectangle drawing using our horizontal and vertical lines

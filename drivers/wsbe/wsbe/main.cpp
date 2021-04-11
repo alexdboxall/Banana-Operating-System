@@ -16,7 +16,7 @@
 #include "reg/registry.hpp"
 #include "fs/vfs.hpp"
 
-#include "thomas.h"
+//#include "thomas.h"
 
 extern "C" {
 	#include "libk/string.h"
@@ -131,10 +131,19 @@ bool canDoMouse = false;
 
 extern "C" void (*guiMouseHandler) (int xdelta, int ydelta, int btns, int z);
 extern "C" void (*guiKeyboardHandler) (KeyboardToken kt, bool* keystates);
+extern "C" void dispatchMessage(Window* window, Message msg);
 
+extern Window* active_window;
 extern "C" void handleKeyboard(KeyboardToken kt, bool* keystates)
 {
+    if (!active_window) return;
 
+    Message m;
+    m.window = active_window;
+    m.type = kt.release ? MESSAGE_KEYUP : MESSAGE_KEYDOWN;
+    m.key = kt.halScancode;
+
+    dispatchMessage((Window*) m.window, m);
 }
 
 extern "C" void handleMouse(int xdelta, int ydelta, int btns, int z)
@@ -207,7 +216,7 @@ void panichandler()
     int spot = 0;
     for (int y = 0; y < 480; ++y) {
         for (int x = 0; x < 320; ++x) {
-            uint8_t d = thomas[spot++];
+            /*uint8_t d = thomas[spot++];
             uint32_t c1 = vgaLookup[d & 0xF];
             uint32_t c2 = vgaLookup[d >> 4];
 
@@ -216,7 +225,9 @@ void panichandler()
                 if (c2 == 0xD4AA2A) c2 = 0xFFFFAA;
             }
             screen->putpixel(x * 2, y, c1);
-            screen->putpixel(x * 2 + 1, y, c2);
+            screen->putpixel(x * 2 + 1, y, c2);*/
+            screen->putpixel(x * 2, y, 0x0000E0);
+            screen->putpixel(x * 2 + 1, y, 0x0000E0);
         }
     }
 }

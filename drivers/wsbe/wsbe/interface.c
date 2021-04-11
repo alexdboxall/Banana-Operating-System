@@ -164,6 +164,7 @@ uint64_t sysWSBE(struct regs* r)
         }
 
         return win->messageCount + 1;
+
     }
 
     return 0;

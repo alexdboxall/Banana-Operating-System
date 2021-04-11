@@ -13,9 +13,9 @@ CC64=x86_64-banana-gcc
 LD64=x86_64-banana-ld
 
 ASFLAGS=
-CFLAGS=
-CXXFLAGS=
-LDFLAGS=-g -T D:/Users/Alex/Desktop/Banana/drivers/dlink.ld
+CFLAGS=-Os -fno-reorder-functions
+CXXFLAGS=-O0
+LDFLAGS=-g -T D:/Users/Alex/Desktop/Banana/drivers/dlink.ld -fno-reorder-functions
 
 CXXOBJECTS32 = $(patsubst %.cpp, %.32, $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp) $(wildcard */*/*/*.cpp) $(wildcard **/*.cpp))
 CXXOBJECTS64 = $(patsubst %.cpp, %.64, $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp) $(wildcard */*/*/*.cpp) $(wildcard **/*.cpp))
