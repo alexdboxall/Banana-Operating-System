@@ -35,6 +35,7 @@ namespace Vm
 	void outbv(uint16_t port, uint8_t val)
 	{
 		if (port == 0xFEFE) {
+			kprintf("Sending byte 0x%X to host.\n", val);
 			vmToHostComms[vmToHostCommsPtr++] = val;
 			if (vmToHostCommsPtr == 32) {
 				vmToHostCommsPtr = 31;
@@ -121,10 +122,6 @@ namespace Vm
 		return x;
 	}
 
-	char vm8086RecentFilename[256];
-	uint64_t vm8086RecentSize;
-	uint8_t* vm8086RecentData = nullptr;
-
 	bool start8086(const char* filename, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss)
 	{
 		while (1) {
@@ -147,49 +144,34 @@ namespace Vm
 		vmToHostCommsPtr = 0;
 		memset(vmToHostComms, 0, 32);
 
-		if (!vm8086RecentData || strcmp(filename, vm8086RecentFilename)) {
-			if (vm8086RecentData) {
-				free(vm8086RecentData);
-				vm8086RecentData = nullptr;
-			}
-
-			kprintf("LOADING VM8086 FROM FILE: %s\n", filename);
-
-			File* f = new File(filename, kernelProcess);
-			if (!f) {
-				panic("VM8086 FILE FAILED!");
-				unlockScheduler();
-				return false;
-			}
-
-			uint64_t siz;
-			bool dir;
-			f->stat(&siz, &dir);
-
-			if (dir) {
-				panic("VM8086 FILE STAT FAILED!");
-				unlockScheduler();
-				return false;
-			}
-
-			FileStatus st = f->open(FileOpenMode::Read);
-
-			if (st != FileStatus::Success) {
-				panic("VM8086 FILE OPEN FAILED!");
-				unlockScheduler();
-				return false;
-			}
-
-			strcpy(vm8086RecentFilename, filename);
-			vm8086RecentSize = siz;
-			vm8086RecentData = (uint8_t*) malloc(siz);
-
-			int br;
-			f->read(vm8086RecentSize, vm8086RecentData, &br);
-			f->close();
+		File* f = new File(filename, kernelProcess);
+		if (!f) {
+			panic("VM8086 FILE FAILED!");
+			unlockScheduler();
+			return false;
 		}
-		kprintf("Copying cached VM data, size = 0x%X\n", vm8086RecentSize);
-		memcpy((uint8_t*) (size_t) realToLinear(cs, ip), vm8086RecentData, vm8086RecentSize);
+
+		uint64_t siz;
+		bool dir;
+		f->stat(&siz, &dir);
+
+		if (dir) {
+			panic("VM8086 FILE STAT FAILED!");
+			unlockScheduler();
+			return false;
+		}
+
+		FileStatus st = f->open(FileOpenMode::Read);
+
+		if (st != FileStatus::Success) {
+			panic("VM8086 FILE OPEN FAILED!");
+			unlockScheduler();
+			return false;
+		}
+
+		int br;
+		f->read(siz, (uint8_t*) (size_t) realToLinear(cs, ip), &br);
+		f->close();
 
 		vmReady = false;
 		unlockScheduler();
@@ -276,7 +258,7 @@ namespace Vm
 				}
 			}
 		}*/
-		//kprintf("<%X, %X %X%X%X> ", r->cs * 16 + r->eip, ip, ip[0], ip[1], ip[2]);
+		kprintf("<%X, %X %X%X%X> ", r->cs * 16 + r->eip, ip, ip[0], ip[1], ip[2]);
 
 		bool operand32 = false;
 		bool address32 = false;
@@ -286,49 +268,49 @@ namespace Vm
 		while (1) {
 			switch (ip[0]) {
 			case 0x26:		//ES
-				//kprintf("ES ");
+				kprintf("ES ");
 				segmentOverride = 2;
 				r->eip++;
 				ip++;
 				break;
 
 			case 0x2E:		//CS
-				//kprintf("CS ");
+				kprintf("CS ");
 				segmentOverride = 0;
 				r->eip++;
 				ip++;
 				break;
 
 			case 0x3E:		//DS
-				//kprintf("DS ");
+				kprintf("DS ");
 				segmentOverride = 1;
 				r->eip++;
 				ip++;
 				break;
 
 			case 0x64:		//FS
-				//kprintf("FS ");
+				kprintf("FS ");
 				segmentOverride = 3;
 				r->eip++;
 				ip++;
 				break;
 
 			case 0x65:		//GS
-				//kprintf("GS ");
+				kprintf("GS ");
 				segmentOverride = 4;
 				r->eip++;
 				ip++;
 				break;
 
 			case 0x36:		//SS
-				//kprintf("SS ");
+				kprintf("SS ");
 				segmentOverride = 5;
 				r->eip++;
 				ip++;
 				break;
 
 			case 0x66:
-				//kprintf("O32 ");
+				kprintf("O32 ");
 				operand32 = true;
 				r->eip++;
 				ip++;
@@ -336,19 +318,19 @@ namespace Vm
 
 			case 0x67:
 				address32 = true;
-				//kprintf("A32 %d ", address32);
+				kprintf("A32 %d ", address32);
 				r->eip++;
 				ip++;
 				break;
 
 			case 0xF3:					//REP
-				//kprintf("REP!\n");
+				kprintf("REP!\n");
 				r->eip++;
 				ip++;
 				break;
 
 			case 0x9C:		//PUSHF
-				//kprintf("pushf ");
+				kprintf("pushf ");
 				if (operand32) {
 					r->useresp = (r->useresp - 4) & 0xFFFF;
 					stack32--;
@@ -375,7 +357,7 @@ namespace Vm
 				return true;
 
 			case 0x9D:		//POPF
-				//kprintf("popf ");
+				kprintf("popf ");
 				if (operand32) {
 					r->eflags = 0x20200 | (stack32[0] & 0xDFF);
 					currentTaskTCB->vm86VIE = (stack32[0] & 0x200) != 0;
@@ -390,7 +372,7 @@ namespace Vm
 				return true;
 
 			case 0xCD:		//INT N
-				//kprintf("int 0x%X ", ip[1]);
+				kprintf("int 0x%X ", ip[1]);
 
 				if (ip[1] == 0xEE) {
 					//@@@
@@ -402,27 +384,27 @@ namespace Vm
 				return true;
 
 			case 0xFA:		//CLI
-				//kprintf("cli ");
+				kprintf("cli ");
 
 				currentTaskTCB->vm86VIE = false;
 				r->eip++;
 				return true;
 
 			case 0xFB:		//STI
-				//kprintf("sti ");
+				kprintf("sti ");
 
 				currentTaskTCB->vm86VIE = true;
 				r->eip++;
 				return true;
 
 			case 0xCF:
-				//kprintf("iret ");
+				kprintf("iret ");
 
 				r->eip = stack[0];
 				r->cs = stack[1];
 				r->eflags = 0x20200 | stack[2];
 
-				//kprintf("RELOADING IP AS 0x%X, CS AS 0x%X, (STACK AT 0x%X)\n", r->eip, r->cs, stack);
+				kprintf("RELOADING IP AS 0x%X, CS AS 0x%X, (STACK AT 0x%X)\n", r->eip, r->cs, stack);
 				currentTaskTCB->vm86VIE = (stack[2] & 0x200) != 0;
 
 				r->useresp = (r->useresp + 6) & 0xFFFF;
@@ -432,7 +414,7 @@ namespace Vm
 			case 0x6C:					//INS
 			{
 				///TODO: NEEDS ADDRESS32 SUPPORT
-				//kprintf("ins ");
+				kprintf("ins ");
 
 				uint16_t seg = 0;
 				/*switch (segmentOverride) {
@@ -480,7 +462,7 @@ namespace Vm
 			{
 				///TODO: NEEDS ADDRESS32 SUPPORT
 
-				//kprintf("ins2 ");
+				kprintf("ins2 ");
 
 				uint16_t seg = 0;
 				/*switch (segmentOverride) {
@@ -541,7 +523,7 @@ namespace Vm
 			{
 				///TODO: NEEDS ADDRESS32 SUPPORT
 
-				//kprintf("outs ");
+				kprintf("outs ");
 
 				uint16_t seg = 0;
 				switch (segmentOverride) {
@@ -588,7 +570,7 @@ namespace Vm
 			{
 				///TODO: NEEDS ADDRESS32 SUPPORT
 
-				//kprintf("outs ");
+				kprintf("outs ");
 
 				uint16_t seg = 0;
 				switch (segmentOverride) {
@@ -644,7 +626,7 @@ namespace Vm
 			}
 
 			case 0xE4:
-				//kprintf("In%X ", ip[1]);
+				kprintf("In%X ", ip[1]);
 
 				r->eax &= ~0xFF;
 				r->eax |= inbv(ip[1]);
@@ -653,7 +635,7 @@ namespace Vm
 				return true;
 
 			case 0xE5:
-				//kprintf("iN%X ", ip[1]);
+				kprintf("iN%X ", ip[1]);
 
 				if (operand32) {
 					r->eax = inl(ip[1]);
@@ -666,14 +648,14 @@ namespace Vm
 				return true;
 
 			case 0xE6:
-				//kprintf("OUt%X%X ", ip[1], r->eax);
+				kprintf("OUt%X%X ", ip[1], r->eax);
 
 				outbv(ip[1], r->eax & 0xFF);
 				r->eip += 2;
 				return true;
 
 			case 0xE7:
-				//kprintf("ouT%X%X ", ip[1], r->eax);
+				kprintf("ouT%X%X ", ip[1], r->eax);
 
 				if (operand32) {
 					outl(ip[1], r->eax);
@@ -685,7 +667,7 @@ namespace Vm
 				return true;
 
 			case 0xEC:
-				//kprintf("IN%X ", r->edx);
+				kprintf("IN%X ", r->edx);
 				r->eax &= ~0xFF;
 				r->eax |= inbv(r->edx & 0xFFFF);
 
@@ -694,7 +676,7 @@ namespace Vm
 				return true;
 
 			case 0xED:
-				//kprintf("in%X ", r->edx);
+				kprintf("in%X ", r->edx);
 
 				if (operand32) {
 					r->eax = inl(r->edx & 0xFFFF);
@@ -708,7 +690,7 @@ namespace Vm
 				return true;
 
 			case 0xEE:
-				//kprintf("OUT%X%X ", r->edx, r->eax);
+				kprintf("OUT%X%X ", r->edx, r->eax);
 				outbv(r->edx & 0xFFFF, r->eax & 0xFF);
 
 				r->eip++;
@@ -716,7 +698,7 @@ namespace Vm
 				return true;
 
 			case 0xEF:
-				//kprintf("out%X%X ", r->edx, r->eax);
+				kprintf("out%X%X ", r->edx, r->eax);
 				if (operand32) {
 					outl(r->edx & 0xFFFF, r->eax);
 				} else {
