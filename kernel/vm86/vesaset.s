@@ -15,6 +15,7 @@ mov ss, ax
 mov sp, stack
 
 ;GS has mode number
+push gs
 
 mov ax, 0x4F02
 mov bx, gs
@@ -22,6 +23,8 @@ test bx, 0x8000
 jnz .skipSet
 int 0x10
 .skipSet:
+
+pop gs
 
 mov ax, 0x4F01
 mov cx, gs

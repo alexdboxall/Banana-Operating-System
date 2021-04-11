@@ -160,21 +160,17 @@ void VESA::getModes()
 	}
 
 	for (int i = 0; i < numModes; ++i) {
-		char ratioString[8] = "?";
 		modes[i].ratioEstimation = RATIO_UNKNOWN;
 
 		if (modes[i].width == 0) continue;
 
 		if (modes[i].width / 4 * 3 == modes[i].height) {
-			strcpy(ratioString, "4:3");
 			modes[i].ratioEstimation = RATIO_43;
 
 		} else if (modes[i].width / 16 * 9 == modes[i].height) {
-			strcpy(ratioString, "16:9");
 			modes[i].ratioEstimation = RATIO_169;
 
 		} else if (modes[i].width / 16 * 10 == modes[i].height) {
-			strcpy(ratioString, "16:10");
 			modes[i].ratioEstimation = RATIO_1610;
 		}
 	}

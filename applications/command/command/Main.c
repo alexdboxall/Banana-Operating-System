@@ -16,6 +16,22 @@
 
 #include "D:/Users/Alex/Desktop/Banana/kernel/sys/syscalls.hpp"
 
+typedef struct VESAModeInfo
+{
+	//VM8086 gives us this
+	uint16_t width;
+	uint16_t height;
+	uint16_t pitch;
+	uint8_t bpp;
+	uint8_t reserved;
+	uint32_t lfb;
+
+	//we add this
+	uint16_t number;
+	uint8_t ratioEstimation;
+
+} VESAModeInfo;
+
 #define MAX_BATCH_RECURSION 12
 
 #define VERSION_STRING "Banana 0.1.3"
@@ -1150,6 +1166,46 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 	} else if (!strcasecmp(argv[0], "shutdown")) {
 		extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
 		SystemCall(Shutdown, 0, 0, 0);
+
+	} else if (!strcasecmp(argv[0], "vesamodes")) {
+
+		/*
+	//VM8086 gives us this
+	uint16_t width;
+	uint16_t height;
+	uint16_t pitch;
+	uint8_t bpp;
+	uint8_t reserved;
+	uint32_t lfb;
+
+	//we add this
+	uint16_t number;
+	uint8_t ratioEstimation;
+
+} VESAModeInfo;*/
+
+		FILE* f = fopen("C:/Banana/System/vesamode.dat", "rb");
+		fseek(f, 0, SEEK_END);
+		long size = ftell(f);
+		rewind(f);
+
+		uint16_t count;
+		fread(&count, 2, 1, f);
+
+		for (uint16_t i = 0; i < count; ++i) {
+			VESAModeInfo info;
+			fread(&info, sizeof(info), 1, f);
+			
+			printf("0x%X: %dx%dx%d (pitch = %d)\n", info.number, info.width, info.height, info.bpp, info.pitch);
+
+			if ((i & 15) == 15) {
+				printf("\nWhack the ENTER key!\n");
+				int c;
+				while ((c = getchar()) != '\n' && c != EOF) {}
+			}
+		}
+
+		fclose(f);
 
 	} else if (!strcasecmp(argv[0], "loaddll")) {
 		extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
