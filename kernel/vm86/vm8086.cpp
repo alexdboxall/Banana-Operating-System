@@ -148,14 +148,13 @@ namespace Vm
 		vmToHostCommsPtr = 0;
 		memset(vmToHostComms, 0, 32);
 
-		if (!strcmp(filename, vm8086RecentFilename)) {
-			memcpy((uint8_t*) (size_t) realToLinear(cs, ip), vm8086RecentData, vm8086RecentSize);
-
-		} else {
+		if (!vm8086RecentData || strcmp(filename, vm8086RecentFilename)) {
 			if (vm8086RecentData) {
 				free(vm8086RecentData);
 				vm8086RecentData = nullptr;
 			}
+
+			kprintf("LOADING VM8086 FROM FILE: %s\n", filename);
 
 			File* f = new File(filename, kernelProcess);
 			if (!f) {
@@ -182,15 +181,16 @@ namespace Vm
 				return false;
 			}
 
-			int br;
-			f->read(siz, (uint8_t*) (size_t) realToLinear(cs, ip), &br);
-			f->close();
-
 			strcpy(vm8086RecentFilename, filename);
 			vm8086RecentSize = siz;
 			vm8086RecentData = (uint8_t*) malloc(siz);
-			memcpy(vm8086RecentData, (uint8_t*) (size_t) realToLinear(cs, ip), siz);
+
+			int br;
+			f->read(vm8086RecentSize, vm8086RecentData, &br);
+			f->close();
 		}
+		kprintf("Copying cached VM data, size = 0x%X\n", vm8086RecentSize);
+		memcpy((uint8_t*) (size_t) realToLinear(cs, ip), vm8086RecentData, vm8086RecentSize);
 
 		vmReady = false;
 		unlockScheduler();
