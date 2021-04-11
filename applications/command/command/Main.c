@@ -1221,6 +1221,14 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 			fprintf(stderr, "Please enter driver filename.\n");
 		}
 
+	} else if (!strcasecmp(argv[0], "del") || !strcasecmp(argv[0], "rm")) {
+		if (argc == 2) {
+			unlink(argv[1]);
+
+		} else {
+			fprintf(stderr, "Please enter a filename (no wildcards yet!).\n");
+		}
+
 	} else if (!strcasecmp(argv[0], "getenv")) {
 		extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
 		if (argc == 2) {

@@ -85,7 +85,6 @@ void VESA::setMode(int mode)
 		int outBytes = Vm::getOutput8086(addr);
 		totalGot += outBytes;
 		addr += outBytes;
-		kprintf("Got %d bytes back... total %d\n", outBytes, totalGot);
 		if (totalGot == 12) break;
 		nanoSleep(1000 * 1000);
 	}
@@ -95,17 +94,25 @@ void VESA::setMode(int mode)
 	height = modeInfo.height;
 	bpp = modeInfo.bpp;
 	if (bpp == 0) {
-		panic("BPP IS ZERO\n");
+		kprintf("BPP IS ZERO\n");
+		if (mode == 0x4114) {
+			panic("BPP IS ZERO");
+		}
+		setMode(0x4114);
+		return;
 	}
 	pitch = modeInfo.pitch / ((bpp + 7) / 8);
 	vramPhys = (uint8_t*) modeInfo.lfb;
 	vram = (uint8_t*) 0xC3000000;
 
 	if (width == 0 && height == 0 && pitch == 0) {
-		panic("UNSUPPORTED VESA MODE");
+		kprintf("UNSUPPORTED VESA MODE\n");
+		if (mode == 0x4114) {
+			panic("UNSUPPORTED VESA MODE");
+		}
+		setMode(0x4114);
+		return;
 	}
-
-	kprintf("%dx%d (%d). pitch %d. lfb = 0x%X. bytes = 0x%X\n", width, height, bpp, pitch, vramPhys);
 
 	Virt::getAKernelVAS()->mapRange((size_t) vramPhys, (size_t) vram, pitch * height * bpp / 8 / 4096, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
 
@@ -218,7 +225,7 @@ ModeInfo VESA::calculateBestMode()
 
 	uint8_t defaultMonitorEDID[128];
 
-	/*uint8_t addr[32];
+	uint8_t addr[32];
 	Vm::start8086("C:/Banana/System/EDID.COM", 0x0000, 0x90, 0, 0);
 	int totalGot = 0;
 	while (1) {
@@ -235,12 +242,13 @@ ModeInfo VESA::calculateBestMode()
 	Vm::finish8086();
 
 	bool biosEDIDSupported = ((ax & 0xFF) == 0x4F) && ((ax >> 8) == 0);
-	kprintf("EDID: %d. status = 0x%X\n", biosEDIDSupported, ax);*/
+	kprintf("EDID: %d. status = 0x%X\n", biosEDIDSupported, ax);
+
 	bool biosEDIDSupported = false;
 
-	int monitorResolution = RATIO_43;
-	int monitorWidth = 800;
-	int monitorHeight = 600;
+	int monitorResolution = RATIO_169;
+	int monitorWidth = 1366;
+	int monitorHeight = 768;
 
 	EDIDRecord* edid = (EDIDRecord*) defaultMonitorEDID;
 	if (biosEDIDSupported) {
