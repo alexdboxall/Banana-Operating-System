@@ -21,7 +21,7 @@ namespace Virt
 	size_t swapfileSector = 98304;					//the 48 MB mark of the disk
 	size_t swapfileLength = 24576;					//12 MBs of swap file
 	int swapfileSectorsPerPage = 4096 / 512;
-	uint32_t* swapfileBitmap;
+	size_t* swapfileBitmap;
 
 	enum class VirtPageState: uint8_t
 	{
