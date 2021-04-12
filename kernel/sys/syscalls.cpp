@@ -489,6 +489,7 @@ uint64_t sysCallSpawn(regs* r)
 
 uint64_t sysCallGetEnv(regs* r)
 {
+	return 0;
 	char* addr = (char*) r->edx;
 	int num = r->ebx;
 	int count = Krnl::getProcessTotalEnvCount(currentTaskTCB->processRelatedTo);
