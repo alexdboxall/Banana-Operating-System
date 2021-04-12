@@ -34,7 +34,7 @@ cd ../
 if exist ..\qemuinhibit.txt (
     echo a
 ) else (
-    "D:\Program Files\qemu\qemu-system-i386.exe" -d guest_errors,cpu_reset -m 512 -boot d -serial file:log.txt -cdrom BANANA.ISO -soundhw all -monitor stdio -hda test.bin || pause
+    "D:\Program Files\qemu\qemu-system-i386.exe" -d guest_errors,cpu_reset -m 64  -boot d -serial file:log.txt -cdrom BANANA.ISO -soundhw all -monitor stdio -hda test.bin || pause
     rem "D:\Users\Alex\VirtualBox VMs\Banana OS\NewVirtualDisk17.vdi",format=vdi
     rem 
 )

@@ -552,6 +552,29 @@ void VAS::mapPage(size_t physicalAddr, size_t virtualAddr, int flags) {
 	pageTable[pageNumber] = physicalAddr | flags;
 }
 
+void VAS::scanForSwappable()
+{
+	for (int i = 0; i < 256 * 3; ++i) {
+		size_t oldEntry = pageDirectoryBase[i];
+
+		if (oldEntry & PAGE_PRESENT) {
+			for (int j = 0; j < 1024; ++j) {
+				size_t vaddr = ((size_t) i) * 0x400000 + ((size_t) j) * 0x1000;
+				size_t* oldPageEntryPtr = currentTaskTCB->processRelatedTo->vas->getForeignPageTableEntry(true, vaddr);
+				size_t oldPageEntry = *oldPageEntryPtr;
+
+				if (oldPageEntry & PAGE_SWAPPABLE) {
+					if (oldPageEntry & PAGE_PRESENT) {
+						kprintf("Swappable page at virtual address: 0x%X\n", vaddr);
+					} else {
+						kprintf("Page at virtual address 0x%X resides on disk\n", vaddr);
+					}
+				}
+			}
+		}
+	}
+}
+
 extern uint8_t inb(uint16_t);
 
 extern "C" void mapVASFirstTime()
@@ -574,6 +597,8 @@ extern "C" void mapVASFirstTime()
 	for (int i = 0; i < 32; ++i) {
 		vas->mapRange(Phys::allocatePage(), VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL, 1, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_WRITABLE | (vas->supervisorVAS ? PAGE_SUPERVISOR : PAGE_USER));
 	}
+
+	vas->scanForSwappable();
 
 	CPU::writeCR3(CPU::readCR3());
 }

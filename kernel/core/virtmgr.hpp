@@ -13,9 +13,10 @@
 #define PAGE_DIRTY			(1 << 6)
 #define PAGE_PAT		    (1 << 7)
 #define PAGE_GLOBAL		    (1 << 8)
-#define PAGE_GUARD_PAGE     (1 << 9 | PAGE_NOT_PRESENT)
-#define PAGE_SWAPPABLE      (1 << 9 | PAGE_PRESENT)
+
+// (1 << 9) is free to use for anything you want
 #define PAGE_ALLOCATED      (1 << 10)
+#define PAGE_SWAPPABLE      (1 << 11)
 
 class VAS;
 
@@ -52,6 +53,8 @@ public:
     VAS(bool kernel);
     ~VAS();
 	void setCPUSpecific(size_t phys);
+
+	void scanForSwappable();
 
 	size_t* getForeignPageTableEntry(bool secondSlot, size_t virt);
 	size_t* getPageTableEntry(size_t virt);

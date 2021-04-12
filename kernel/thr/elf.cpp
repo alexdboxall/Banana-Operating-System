@@ -70,7 +70,7 @@ namespace Thr
 				//TODO: you can move mapOtherVASIn outside of the loop, but if someone else maps a VAS into the same slot the system will crash
 				//		(add locking to mapOtherVASIn?, e.g. releaseOtherVAS(bool slot) )
 				currentTaskTCB->processRelatedTo->vas->mapOtherVASIn(false, prcss->vas);
-				currentTaskTCB->processRelatedTo->vas->mapForeignPage(false, prcss->vas, addr, virtualAddr, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_USER | PAGE_WRITABLE);
+				currentTaskTCB->processRelatedTo->vas->mapForeignPage(false, prcss->vas, addr, virtualAddr, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_USER | PAGE_WRITABLE | PAGE_SWAPPABLE);
 
 				memcpy((void*) virtMappingSpot, (const void*) buffer, 4096);
 
@@ -88,7 +88,7 @@ namespace Thr
 			for (size_t i = 0; i < nullPagesReq; ++i) {
 				size_t addr = Phys::allocatePage();
 				currentTaskTCB->processRelatedTo->vas->mapPage(addr, virtMappingSpot, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
-				currentTaskTCB->processRelatedTo->vas->mapForeignPage(false, prcss->vas, addr, virtualAddr, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_USER | PAGE_WRITABLE);
+				currentTaskTCB->processRelatedTo->vas->mapForeignPage(false, prcss->vas, addr, virtualAddr, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_USER | PAGE_WRITABLE | PAGE_SWAPPABLE);
 				memset((void*) virtMappingSpot, 0, 4096);
 				virtualAddr += 4096;
 			}

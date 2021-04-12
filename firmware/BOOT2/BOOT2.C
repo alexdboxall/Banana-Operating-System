@@ -433,11 +433,6 @@ void main()
 	uint32_t data = getBootData();
 	
 	uint16_t count = getRAMMap((void*) 0x600);
-	*((uint16_t*) 0x513) = count;
-	*((uint32_t*) 0x524) = highestFreeAddress;
-	*((uint32_t*) 0x500) = data;
-	*((uint32_t*) 0x504) = data;
-
 	clearScreen();
 	if (fulldebug) {
 		writeString("\nPRESS ANY KEY");
@@ -453,8 +448,8 @@ void main()
 		uint64_t type = *(((uint32_t*) ramTable) + 4);
 
 		if (type == 1 && bottom >= 0x100000) {
-			uint8_t* p = (uint8_t*) bottom;
-			for (uint64_t k = 0; k < length; ++k) {
+			uint32_t* p = (uint32_t*) bottom;
+			for (uint64_t k = 0; k < length; k += 4) {
 				*p++ = 0;
 			}
 		}
