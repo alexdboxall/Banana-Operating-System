@@ -23,7 +23,9 @@ void update(Frame* frame, Message msg) {
 	char str[256];
 	int percent = 0;
 
-	sprintf(str, "%d / %d used. (%d%%)", usedKilobytes, totalKilobytes, percentUsed);
+	sprintf(str, "Memory: %d / %d used. (%d%%)", usedKilobytes, totalKilobytes, percentUsed);
+	ramLabel->setText(str);
+	ramLabel->repaintDesktop();
 }
 
 int main(int argc, char* argv[])
