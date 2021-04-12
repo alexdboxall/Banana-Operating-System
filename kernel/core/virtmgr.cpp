@@ -606,9 +606,13 @@ void VAS::evict(size_t virt)
 	size_t* entry = getPageTableEntry(virt);
 	kprintf("old entry = 0x%X\n", *entry);
 	Phys::freePage((*entry) >> 12);				//free the physical page
+	kprintf("A   entry = 0x%X\n", *entry);
 	*entry &= ~PAGE_PRESENT;					//not present
+	kprintf("B   entry = 0x%X\n", *entry);
 	*entry &= ~PAGE_SWAPPABLE;					//clear bit 11
+	kprintf("C   entry = 0x%X\n", *entry);
 	*entry &= ~0xFFFU;							//clear the address
+	kprintf("D   entry = 0x%X\n", *entry);
 	*entry |= id << 11;							//put the swap ID in
 	kprintf("new entry = 0x%X\n", *entry);
 
