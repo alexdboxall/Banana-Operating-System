@@ -22,6 +22,17 @@ class VAS;
 
 namespace Virt
 {
+	char swapfileDrive = 'C';
+
+	size_t swapfileSector = 98304;					//the 48 MB mark of the disk
+	size_t swapfileLength = 24576;					//12 MBs of swap file
+	int swapfileSectorsPerPage = 4096 / 512;
+	uint32_t* swapfileBitmap;
+
+	size_t swapIDToSector(size_t id);
+	void freeSwapfilePage(size_t id);
+	void allocateSwapfilePage(size_t* sectorOut, size_t* idOut);
+
 	void freeKernelVirtualPages(size_t address);
 	size_t allocateKernelVirtualPages(int pages);
 	void virtualMemorySetup();
@@ -40,6 +51,7 @@ private:
 	bool specialFirstVAS;
 
 protected:
+	
 
 public:
 	bool supervisorVAS;
@@ -55,6 +67,9 @@ public:
 	void setCPUSpecific(size_t phys);
 
 	void scanForSwappable();
+	bool tryLoadBackOffDisk(size_t faultAddr);
+
+	void evict(size_t virt);
 
 	size_t* getForeignPageTableEntry(bool secondSlot, size_t virt);
 	size_t* getPageTableEntry(size_t virt);

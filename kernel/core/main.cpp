@@ -17,7 +17,7 @@
 Minimum System Requirements:
 
 	CPU:	Intel 386 or better (hopefully, 486 is the oldest tested)
-	RAM:	4 MB (8 MB to install it)
+	RAM:	4 MB (12 MB to install it)
 	HDD:	64 MB
 
 	VGA compatible video card
@@ -211,9 +211,9 @@ extern "C" void kernel_main()
 
 	size_t highestFreeAddr = *((uint32_t*) 0x524);
 	highestFreeAddr = (highestFreeAddr + 4095) & ~0xFFF;
-
-	Virt::virtualMemorySetup();
+	
 	Phys::physicalMemorySetup(highestFreeAddr);
+	Virt::virtualMemorySetup();
 
 	uint32_t* dp = (uint32_t*) 0x500;
 	uint32_t da = *dp++;

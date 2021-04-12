@@ -358,6 +358,10 @@ void pgFault(regs* r, void* context)
 {
 	kprintf("Page Fault!\n");
 
+	if (currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(computer->readCR2())) {
+		return;
+	}
+
 	displayDebugInfo(r);
 	displayProgramFault("Page fault");
 

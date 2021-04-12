@@ -172,6 +172,33 @@ namespace Virt
 		}
 	}
 
+	void freeSwapfilePage(size_t id)
+	{
+		swapfileBitmap[id >> 5] &= ~(1 << (id & 0x1F));
+	}
+
+	size_t swapIDToSector(size_t id)
+	{
+		return id * swapfileSectorsPerPage + swapfileSector;
+	}
+
+	size_t allocateSwapfilePage()
+	{
+		size_t pagesLen = swapfileLength / swapfileSectorsPerPage;
+
+		for (size_t i = 0; i < pagesLen; ++i) {
+			size_t bitmapIndex = pagesLen >> 5;
+			size_t bitmask = 1 << (pagesLen & 0x1F);
+
+			if (!(swapfileBitmap[bitmapIndex] & bitmask)) {
+				swapfileBitmap[bitmapIndex] |= bitmask;
+				return i;
+			}
+		}
+
+		panic("NO SWAPFILE SPACE LEFT");
+	}
+
 	void virtualMemorySetup()
 	{
 		int start = VIRT_HEAP_MIN / 4096;
@@ -193,6 +220,9 @@ namespace Virt
 				setPageState(i, VirtPageState::Unusable);
 			}
 		}
+
+		swapfileBitmap = (uint32_t*) malloc(swapfileLength / swapfileSectorsPerPage / (sizeof(uint32_t) * 8));
+		memset(swapfileBitmap, 0, swapfileLength / swapfileSectorsPerPage / (sizeof(uint32_t) * 8));
 	}
 
 	VAS* getAKernelVAS()
@@ -552,21 +582,63 @@ void VAS::mapPage(size_t physicalAddr, size_t virtualAddr, int flags) {
 	pageTable[pageNumber] = physicalAddr | flags;
 }
 
+void VAS::evict(size_t virt)
+{
+	lockScheduler();
+
+	kprintf("evicted page at address 0x%X\n", virt);
+
+	size_t id = Virt::allocateSwapfilePage();
+
+	size_t* entry = getPageTableEntry(virt);
+	Phys::freePage((*entry) >> 12);				//free the physical page
+	*entry &= ~PAGE_PRESENT;					//not present
+	*entry &= ~PAGE_SWAPPABLE;					//clear bit 11
+	*entry &= ~0xFFFU;							//clear the address
+	*entry |= id << 11;							//put the swap ID in
+
+	disks[Virt::swapfileDrive - 'A']->write(Virt::swapIDToSector(id), 8, (void*) virt);
+	kprintf("written to disk, sector 0x%X\n", Virt::swapIDToSector(id));
+
+	unlockScheduler();
+}
+
+bool VAS::tryLoadBackOffDisk(size_t faultAddr)
+{
+	kprintf("trying to load addr 0x%X back off disk.\n");
+	faultAddr &= ~0xFFF;
+	size_t* entry = getPageTableEntry(faultAddr);
+	kprintf("got entry: 0x%X\n", *entry);
+	if ((*entry) & PAGE_ALLOCATED) {
+		kprintf("it has been allocated.\n");
+		size_t id = *entry >> 11;				//we need the ID
+		size_t phys = Phys::allocatePage();		//get a new physical page
+		mapPage(phys, faultAddr, ((*entry) & 0xFFF) | PAGE_SWAPPABLE | PAGE_PRESENT);
+		disks[Virt::swapfileDrive - 'A']->read(Virt::swapIDToSector(id), Virt::swapfileSectorsPerPage, (void*) faultAddr);
+		Virt::freeSwapfilePage(id);
+		kprintf("loaded from disk, sector 0x%X\n", Virt::swapIDToSector(id));
+		return true;
+	}
+	return false;
+}
+
 void VAS::scanForSwappable()
 {
 	kprintf("scanning for swappable pages...\n");
+	int swp = 0;
 	for (int i = 0; i < 1024; ++i) {
 		size_t oldEntry = pageDirectoryBase[i];
 
 		if (oldEntry & PAGE_PRESENT) {
 			for (int j = 0; j < 1024; ++j) {
 				size_t vaddr = ((size_t) i) * 0x400000 + ((size_t) j) * 0x1000;
-				size_t* oldPageEntryPtr = currentTaskTCB->processRelatedTo->vas->getForeignPageTableEntry(true, vaddr);
+				size_t* oldPageEntryPtr = getPageTableEntry(vaddr);
 				size_t oldPageEntry = *oldPageEntryPtr;
 
 				if ((oldPageEntry & PAGE_SWAPPABLE) && (oldPageEntry & PAGE_ALLOCATED)) {
 					if (oldPageEntry & PAGE_PRESENT) {
 						kprintf("Swappable page at virtual address: 0x%X\n", vaddr);
+						++swp;
 					} else {
 						kprintf("Page at virtual address 0x%X resides on disk\n", vaddr);
 					}
@@ -574,6 +646,8 @@ void VAS::scanForSwappable()
 			}
 		}
 	}
+
+	kprintf("%d swappable pages.\n", swp);
 }
 
 extern uint8_t inb(uint16_t);
