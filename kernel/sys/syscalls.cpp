@@ -489,10 +489,13 @@ uint64_t sysCallSpawn(regs* r)
 
 uint64_t sysCallGetEnv(regs* r)
 {
-	return 0;
+	kprintf("getenv.\n");
 	char* addr = (char*) r->edx;
+	kprintf("addr = 0x%X\n", addr);
 	int num = r->ebx;
+	kprintf("num = %d\n", num);
 	int count = Krnl::getProcessTotalEnvCount(currentTaskTCB->processRelatedTo);
+	kprintf("count = %d\n", count);
 
 	if (num >= count) {
 		if (addr) {
@@ -500,16 +503,22 @@ uint64_t sysCallGetEnv(regs* r)
 		}
 		return 0;
 	}
+	kprintf("A\n");
 
 	EnvVar ev = Krnl::getProcessEnvPair(currentTaskTCB->processRelatedTo, num);
+	kprintf("B\n");
 	if (r->ecx == 0) {
 		return strlen(ev.key) + strlen(ev.value) + 1;
 	}
+	kprintf("C\n");
 
 	*addr = 0;
 	strcpy(addr, ev.key);
 	strcat(addr, "=");
 	strcat(addr, ev.value);
+
+	kprintf("D\n");
+
 	return 0;
 }
 
