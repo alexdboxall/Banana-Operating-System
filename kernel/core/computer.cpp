@@ -266,6 +266,24 @@ void Computer::disableNMI()
 	enableNMI(false);
 }
 
+void swapper(void* context)
+{
+	unlockScheduler();
+
+	while (1) {
+		blockTask(TaskState::Paused);
+
+		int percent = Phys::usedPages * 100 / Phys::usablePages;
+
+		if (percent > 70) {
+			if (currentTaskTCB && currentTaskTCB->processRelatedTo && currentTaskTCB->processRelatedTo->vas) {
+				kprintf("doing evictions...\n");
+				currentTaskTCB->processRelatedTo->vas->scanForEviction(4, 2 + Phys::usedPages / 32);
+			}
+		}
+	}
+}
+
 namespace Krnl
 {
 	void firstTask()
@@ -277,6 +295,7 @@ namespace Krnl
 		idleProcess->createThread(idleFunction, nullptr, 255);
 
 		cleanerThread = kernelProcess->createThread(cleanerTaskFunction, nullptr, 122);
+		swapperThread = kernelProcess->createThread(swapper, nullptr, 1);
 
 		schedulingOn = true;
 

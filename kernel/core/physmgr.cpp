@@ -156,11 +156,13 @@ namespace Phys
 				}
 
 				if (percent > 70) {
-					if (currentTaskTCB && currentTaskTCB->processRelatedTo && currentTaskTCB->processRelatedTo->vas) {
-						kprintf("doing evictions...\n");
-						currentTaskTCB->processRelatedTo->vas->scanForEviction(4, 2 + Phys::usedPages / 32);
+					lockScheduler();
+					if (swapperThread->state == TaskState::Paused) {
+						unblockTask(swapperThread);
 					}
+					unlockScheduler();
 				}
+
 				return 4096 * currentPagePointer;
 			}
 

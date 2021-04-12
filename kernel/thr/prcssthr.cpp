@@ -612,6 +612,7 @@ extern "C" void taskReturned()
 }
 
 ThreadControlBlock* cleanerThread = nullptr;
+ThreadControlBlock* swapperThread = nullptr;
 
 Semaphore::Semaphore(int max)
 {
