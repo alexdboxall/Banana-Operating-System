@@ -155,11 +155,13 @@ namespace Phys
 					VgaText::updateRAMUsageDisplay(percent);
 				}
 
-				if (percent > 90) {
+				if (percent > 70) {
 					if (currentTaskTCB && currentTaskTCB->processRelatedTo && currentTaskTCB->processRelatedTo->vas) {
-						currentTaskTCB->processRelatedTo->vas->scanForEviction(throwAwayRate, wantChucks);
+						kprintf("doing evictions...\n");
+						currentTaskTCB->processRelatedTo->vas->scanForEviction(1, Phys::usedPages / 16);
 					} else {
-						Virt::getAKernelVAS()->scanForEviction(2, Phys::usedPages / 12);
+						kprintf("doing kernel only evictions...\n");
+						Virt::getAKernelVAS()->scanForEviction(2, Phys::usedPages / 16);
 					}
 				}
 				return 4096 * currentPagePointer;
