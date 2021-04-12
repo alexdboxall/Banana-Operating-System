@@ -596,9 +596,12 @@ void VAS::evict(size_t virt)
 {
 	lockScheduler();
 
-	kprintf("evicted page at address 0x%X\n", virt);
+	kprintf("evicting page at address 0x%X\n", virt);
 
 	size_t id = Virt::allocateSwapfilePage();
+
+	disks[Virt::swapfileDrive - 'A']->write(Virt::swapIDToSector(id), 8, (void*) virt);
+	kprintf("written to disk, sector 0x%X\n", Virt::swapIDToSector(id));
 
 	size_t* entry = getPageTableEntry(virt);
 	Phys::freePage((*entry) >> 12);				//free the physical page
@@ -607,8 +610,7 @@ void VAS::evict(size_t virt)
 	*entry &= ~0xFFFU;							//clear the address
 	*entry |= id << 11;							//put the swap ID in
 
-	disks[Virt::swapfileDrive - 'A']->write(Virt::swapIDToSector(id), 8, (void*) virt);
-	kprintf("written to disk, sector 0x%X\n", Virt::swapIDToSector(id));
+	kprintf("eviction done.\n");
 
 	unlockScheduler();
 }
