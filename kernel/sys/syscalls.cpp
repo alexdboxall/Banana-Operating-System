@@ -508,6 +508,7 @@ uint64_t sysCallGetEnv(regs* r)
 	EnvVar ev = Krnl::getProcessEnvPair(currentTaskTCB->processRelatedTo, num);
 	kprintf("B\n");
 	if (r->ecx == 0) {
+		kprintf("len = %d\n", strlen(ev.key) + strlen(ev.value) + 1);
 		return strlen(ev.key) + strlen(ev.value) + 1;
 	}
 	kprintf("C\n");
