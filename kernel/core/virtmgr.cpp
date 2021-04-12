@@ -599,9 +599,9 @@ void VAS::evict(size_t virt)
 	kprintf("evicting page at address 0x%X\n", virt);
 
 	size_t id = Virt::allocateSwapfilePage();
+	kprintf("id = 0x%X (%d)\n", id, id);
 
 	disks[Virt::swapfileDrive - 'A']->write(Virt::swapIDToSector(id), 8, (void*) virt);
-	kprintf("written to disk, sector 0x%X\n", Virt::swapIDToSector(id));
 
 	size_t* entry = getPageTableEntry(virt);
 	Phys::freePage((*entry) >> 12);				//free the physical page
@@ -621,9 +621,10 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 	faultAddr &= ~0xFFF;
 	size_t* entry = getPageTableEntry(faultAddr);
 	kprintf("got entry: 0x%X\n", *entry);
+	kprintf("it would have an ID of 0x%X\n", (*entry) >> 11);
 	if ((*entry) & PAGE_ALLOCATED) {
 		kprintf("it has been allocated.\n");
-		size_t id = *entry >> 11;				//we need the ID
+		size_t id = (*entry) >> 11;				//we need the ID
 		size_t phys = Phys::allocatePage();		//get a new physical page
 		mapPage(phys, faultAddr, ((*entry) & 0xFFF) | PAGE_SWAPPABLE | PAGE_PRESENT);
 		disks[Virt::swapfileDrive - 'A']->read(Virt::swapIDToSector(id), Virt::swapfileSectorsPerPage, (void*) faultAddr);
