@@ -392,6 +392,7 @@ uint64_t sysCallUnlink(regs* r)
 
 uint64_t sysCallGetArgc(regs* r)
 {
+	kprintf("argc = %d\n", currentTaskTCB->processRelatedTo->argc);
 	return currentTaskTCB->processRelatedTo->argc;
 }
 
@@ -707,7 +708,7 @@ namespace Sys
 		systemCallHandlers[(int) SystemCallNumber::Timezone] = Sys::timezone;
 		systemCallHandlers[(int) SystemCallNumber::Eject] = Sys::eject;
 		systemCallHandlers[(int) SystemCallNumber::WSBE] = Sys::wsbe;
-		//systemCallHandlers[(int) SystemCallNumber::GetRAMData] = Sys::getRAMData;
+		systemCallHandlers[(int) SystemCallNumber::GetRAMData] = Sys::getRAMData;
 	}
 
 	uint64_t systemCall(regs* r, void* context)

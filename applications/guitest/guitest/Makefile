@@ -16,4 +16,4 @@ all: build
 
 build:
 	$(AS32) $(ASFLAGS) Resclink.s -o _R32.o
-	$(CC32) $(CCFLAGS) *.cpp -Wl,_R32.o -o $(OUTPUT32) -luwsbe -fno-exceptions -fno-rtti
+	$(CC32) $(CCFLAGS) -s *.cpp -Wl,_R32.o -o $(OUTPUT32) -luwsbe -fno-exceptions -fno-rtti
