@@ -159,7 +159,7 @@ namespace Phys
 				if (percent > 50 && !forbidEvictions) {
 					if (currentTaskTCB && currentTaskTCB->processRelatedTo && currentTaskTCB->processRelatedTo->vas) {
 						kprintf("doing evictions...\n");
-						currentTaskTCB->processRelatedTo->vas->scanForEviction(2, 1);
+						currentTaskTCB->processRelatedTo->vas->scanForEviction(8, 1);
 					}
 				}
 
