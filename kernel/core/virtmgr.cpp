@@ -678,10 +678,10 @@ void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 						if ((i % throwAwayRate) == 0) {
 							kprintf("evicting!\n");
 							evict(vaddr);
-							++chucks;
+							/*++chucks;
 							if (chucks == wantChucks) {
 								return;
-							}
+							}*/
 						}
 
 						++swp;
