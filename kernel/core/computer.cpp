@@ -268,7 +268,9 @@ void Computer::disableNMI()
 
 void swapper(void* context)
 {
+	kprintf("the swapper has started.\n");
 	unlockScheduler();
+	kprintf("the swapper has started 2.\n");
 
 	while (1) {
 		kprintf("Swapper blocked.\n");

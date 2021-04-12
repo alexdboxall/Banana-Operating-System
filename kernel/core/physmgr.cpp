@@ -161,6 +161,7 @@ namespace Phys
 					if (swapperThread->state == TaskState::Paused) {
 						kprintf("unblocking the swapper.\n");
 						unblockTask(swapperThread);
+						kprintf("unblocked the swapper.\n");
 					}
 					unlockScheduler();
 				}
