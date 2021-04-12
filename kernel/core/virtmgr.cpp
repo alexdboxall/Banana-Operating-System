@@ -623,6 +623,7 @@ void VAS::evict(size_t virt)
 
 bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 {
+	lockScheduler();
 	kprintf("trying to load addr 0x%X back off disk.\n", faultAddr);
 	faultAddr &= ~0xFFF;
 	size_t* entry = getPageTableEntry(faultAddr);
@@ -636,9 +637,11 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		disks[Virt::swapfileDrive - 'A']->read(Virt::swapIDToSector(id), Virt::swapfileSectorsPerPage, (void*) faultAddr);
 		Virt::freeSwapfilePage(id);
 		kprintf("loaded from disk, sector 0x%X\n", Virt::swapIDToSector(id));
+		unlockScheduler();
 		return true;
 	}
 	kprintf("Not a swapped out page.\n");
+	unlockScheduler();
 	return false;
 }
 
