@@ -22,12 +22,11 @@ class VAS;
 
 namespace Virt
 {
-	char swapfileDrive = 'C';
-
-	extern size_t swapfileSector;
-	extern size_t swapfileLength;
+	extern char swapfileDrive;
+	extern size_t swapfileSector;			//base LBA
+	extern size_t swapfileLength;			//length is sectors
 	extern int swapfileSectorsPerPage;
-	extern uint32_t* swapfileBitmap;
+	extern size_t* swapfileBitmap;
 
 	size_t swapIDToSector(size_t id);
 	void freeSwapfilePage(size_t id);

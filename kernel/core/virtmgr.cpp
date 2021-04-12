@@ -17,6 +17,7 @@ VAS* firstVAS = nullptr;
 
 namespace Virt
 {
+	char swapfileDrive = 'C';
 	size_t swapfileSector = 98304;					//the 48 MB mark of the disk
 	size_t swapfileLength = 24576;					//12 MBs of swap file
 	int swapfileSectorsPerPage = 4096 / 512;
@@ -227,8 +228,8 @@ namespace Virt
 			}
 		}
 
-		swapfileBitmap = (uint32_t*) malloc(swapfileLength / swapfileSectorsPerPage / (sizeof(uint32_t) * 8));
-		memset(swapfileBitmap, 0, swapfileLength / swapfileSectorsPerPage / (sizeof(uint32_t) * 8));
+		swapfileBitmap = (size_t*) malloc(swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
+		memset(swapfileBitmap, 0, swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
 	}
 
 	VAS* getAKernelVAS()
