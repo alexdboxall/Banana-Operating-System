@@ -17,3 +17,4 @@ echo System components have been installed.
 echo Please press ENTER to restart Banana.
 echo
 pause
+restart

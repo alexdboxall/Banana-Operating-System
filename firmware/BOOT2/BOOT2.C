@@ -432,16 +432,41 @@ void main()
 
 	uint32_t data = getBootData();
 	
-	uint32_t* ptr = (uint32_t*) 0x100000;
-	for (int i = 0x100000; i < 0x300000; i += 4) {
-		*ptr++ = 0;
+	uint16_t count = getRAMMap((void*) 0x600);
+	*((uint16_t*) 0x513) = count;
+	*((uint32_t*) 0x524) = highestFreeAddress;
+	*((uint32_t*) 0x500) = data;
+	*((uint32_t*) 0x504) = data;
+
+	clearScreen();
+	if (fulldebug) {
+		writeString("\nPRESS ANY KEY");
+		blockingKeyboard();
+	}
+
+	//zero out memory
+	uint64_t* ramTable = 0x600;
+	for (int i = 0; i < count; ++i) {
+		uint64_t bottom = *(ramTable + 0);
+		uint64_t length = *(ramTable + 1);
+		uint64_t top = bottom + length;
+		uint64_t type = *(((uint32_t*) ramTable) + 4);
+
+		if (type == 1 && bottom >= 0x100000) {
+			uint8_t* p = (uint8_t*) bottom;
+			for (uint64_t k = 0; k < length; ++k) {
+				*p++ = 0;
+			}
+		}
+
+		ramTable += 3;
 	}
 
 	readFATFromHDD("BANANA     /SYSTEM     /KERNEL32EXE", (void*) KERNEL_SOURCE);
 
 	loadKernel32();
 
-	uint16_t count = getRAMMap((void*) 0x600);
+	count = getRAMMap((void*) 0x600);
 	*((uint16_t*) 0x513) = count;
 	*((uint32_t*) 0x524) = highestFreeAddress;
 	*((uint32_t*) 0x500) = data;
