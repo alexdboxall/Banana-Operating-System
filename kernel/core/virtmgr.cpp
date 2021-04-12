@@ -604,17 +604,11 @@ void VAS::evict(size_t virt)
 	disks[Virt::swapfileDrive - 'A']->write(Virt::swapIDToSector(id), 8, (void*) virt);
 
 	size_t* entry = getPageTableEntry(virt);
-	kprintf("old entry = 0x%X\n", *entry);
 	Phys::freePage((*entry) >> 12);				//free the physical page
-	kprintf("A   entry = 0x%X\n", *entry);
 	*entry &= ~PAGE_PRESENT;					//not present
-	kprintf("B   entry = 0x%X\n", *entry);
 	*entry &= ~PAGE_SWAPPABLE;					//clear bit 11
-	kprintf("C   entry = 0x%X\n", *entry);
 	*entry &= 0xFFFU;							//clear the address
-	kprintf("D   entry = 0x%X\n", *entry);
 	*entry |= id << 11;							//put the swap ID in
-	kprintf("new entry = 0x%X\n", *entry);
 
 	kprintf("eviction done.\n");
 
@@ -629,17 +623,30 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 	size_t* entry = getPageTableEntry(faultAddr);
 	kprintf("got entry: 0x%X\n", *entry);
 	kprintf("it would have an ID of 0x%X\n", (*entry) >> 11);
+
 	if ((*entry) & PAGE_ALLOCATED) {
 		kprintf("it has been allocated.\n");
+
 		size_t id = (*entry) >> 11;				//we need the ID
 		size_t phys = Phys::allocatePage();		//get a new physical page
-		mapPage(phys, faultAddr, ((*entry) & 0xFFF) | PAGE_SWAPPABLE | PAGE_PRESENT);
+
+		kprintf("New physical page = 0x%X\n", phys);
+
+		kprintf("*entry cur = 0x%X\n", *entry);
+		*entry &= 0xFFF;						//clear address
+		*entry |= PAGE_PRESENT;					//it is now present
+		*entry |= PAGE_SWAPPABLE;				//if it was swapped it had to be swappable we don't need to
+												//clear this as the low bit of the ID, as we want it set to 1
+		*entry |= phys;
+		kprintf("*entry new = 0x%X\n", *entry);
+
 		disks[Virt::swapfileDrive - 'A']->read(Virt::swapIDToSector(id), Virt::swapfileSectorsPerPage, (void*) faultAddr);
 		Virt::freeSwapfilePage(id);
 		kprintf("loaded from disk, sector 0x%X\n", Virt::swapIDToSector(id));
 		unlockScheduler();
 		return true;
 	}
+
 	kprintf("Not a swapped out page.\n");
 	unlockScheduler();
 	return false;
