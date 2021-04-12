@@ -157,7 +157,9 @@ namespace Phys
 
 				if (percent > 70) {
 					lockScheduler();
+					kprintf("percent > 70\n");
 					if (swapperThread->state == TaskState::Paused) {
+						kprintf("unblocking the swapper.\n");
 						unblockTask(swapperThread);
 					}
 					unlockScheduler();

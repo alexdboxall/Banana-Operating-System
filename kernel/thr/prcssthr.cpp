@@ -564,11 +564,7 @@ void unblockTask(ThreadControlBlock* task)
 			}
 			f = (ThreadControlBlock*) taskList.getNext(f);
 		}
-		if (0 && onlyOneTask) {
-			switchToThread(task);
-		} else {
-			taskList.addElement(task);
-		}
+		taskList.addElement(task);
 	}
 
 	unlockScheduler();

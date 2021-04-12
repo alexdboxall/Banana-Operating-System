@@ -271,15 +271,13 @@ void swapper(void* context)
 	unlockScheduler();
 
 	while (1) {
+		kprintf("Swapper blocked.\n");
 		blockTask(TaskState::Paused);
+		kprintf("Swapper running.\n");
 
-		int percent = Phys::usedPages * 100 / Phys::usablePages;
-
-		if (percent > 70) {
-			if (currentTaskTCB && currentTaskTCB->processRelatedTo && currentTaskTCB->processRelatedTo->vas) {
-				kprintf("doing evictions...\n");
-				currentTaskTCB->processRelatedTo->vas->scanForEviction(4, 2 + Phys::usedPages / 32);
-			}
+		if (currentTaskTCB && currentTaskTCB->processRelatedTo && currentTaskTCB->processRelatedTo->vas) {
+			kprintf("doing evictions...\n");
+			currentTaskTCB->processRelatedTo->vas->scanForEviction(4, 2 + Phys::usedPages / 32);
 		}
 	}
 }
