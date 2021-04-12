@@ -40,7 +40,8 @@ namespace Sys
 		}
 
 		currentTaskTCB->processRelatedTo->vas->allocatePages((r->ebx + 4095) / 4096, PAGE_PRESENT | PAGE_WRITABLE | PAGE_USER | PAGE_ALLOCATED);
-
+		
+		kprintf("Returning the previous break of 0x%X\n", previousBreak);
 		return previousBreak;
 	}
 }
