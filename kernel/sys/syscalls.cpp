@@ -39,7 +39,7 @@ namespace Sys
 	uint64_t timezone(regs* r);
 	uint64_t eject(regs* r);
 	uint64_t wsbe(regs* r);
-	//uint64_t getRAMData(regs* r);
+	uint64_t getRAMData(regs* r);
 }
 
 int string_ends_with(const char* str, const char* suffix)
