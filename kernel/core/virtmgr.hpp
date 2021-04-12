@@ -14,9 +14,9 @@
 #define PAGE_PAT		    (1 << 7)
 #define PAGE_GLOBAL		    (1 << 8)
 
-// (1 << 9) is free to use for anything you want
 #define PAGE_ALLOCATED      (1 << 10)
 #define PAGE_SWAPPABLE      (1 << 11)
+// (1 << 9) is free to use for anything you want 
 
 class VAS;
 
