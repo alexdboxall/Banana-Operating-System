@@ -232,6 +232,8 @@ extern "C" void kernel_main()
 		callGlobalConstructors();
 		kprintf("global constructors called.\n");
 
+		Virt::swappingSetup();
+
 		computer = new Computer();
 		kprintf("computer at 0x%X.\n", computer);
 

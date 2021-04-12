@@ -34,7 +34,9 @@ namespace Virt
 
 	void freeKernelVirtualPages(size_t address);
 	size_t allocateKernelVirtualPages(int pages);
+
 	void virtualMemorySetup();
+	void swappingSetup();
 
 	VAS* getAKernelVAS();
 

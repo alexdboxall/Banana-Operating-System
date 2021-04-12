@@ -227,7 +227,9 @@ namespace Virt
 				setPageState(i, VirtPageState::Unusable);
 			}
 		}
+	}
 
+	void swappingSetup() {
 		swapfileBitmap = (size_t*) malloc(swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
 		memset(swapfileBitmap, 0, swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
 	}
