@@ -452,6 +452,24 @@ void main()
 		blockingKeyboard();
 	}
 
+	//zero out memory
+	uint64_t* ramTable = 0x600;
+	for (int i = 0; i < count; ++i) {
+		uint64_t bottom = *(ramTable + 0);
+		uint64_t length = *(ramTable + 1);
+		uint64_t top = bottom + length;
+		uint64_t type = *(((uint32_t*) ramTable) + 4);
+
+		if (type == 1 && bottom >= 0x100000) {
+			uint8_t* p = (uint8_t*) bottom;
+			for (uint64_t k = 0; k < length; ++k) {
+				*p++ = 0;
+			}
+		}
+
+		ramTable += 3;
+	}
+
 	uint32_t* directoryPointer = (uint32_t*) 0x1000;
 	for (int i = 0; i < 1024; ++i) {
 		directoryPointer[i] = 6;

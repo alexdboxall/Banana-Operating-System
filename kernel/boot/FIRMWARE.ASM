@@ -266,11 +266,6 @@ PMODE_INIT:
 	mov	es, ax
 
 	mov [bootDrive], dl
-
-	mov edi, 0x234000
-	mov al, 0
-	mov ecx, 0xFDF000 - 0x234000
-	rep stosb
 	
 	;TODO: fill the 'driveRemaps' and 'driveTypes' tables
 	cmp dl, 0x80
