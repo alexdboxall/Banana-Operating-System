@@ -96,7 +96,6 @@ namespace Phys
 
 	void setPageState(size_t pageNum, bool state)
 	{
-
 		size_t byteNum = pageNum / 8;
 		size_t bitNum = pageNum % 8;
 
