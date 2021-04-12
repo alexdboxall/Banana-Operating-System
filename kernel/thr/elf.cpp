@@ -89,7 +89,7 @@ namespace Thr
 				size_t addr = Phys::allocatePage();
 				currentTaskTCB->processRelatedTo->vas->mapPage(addr, virtMappingSpot, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
 				currentTaskTCB->processRelatedTo->vas->mapForeignPage(false, prcss->vas, addr, virtualAddr, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_USER | PAGE_WRITABLE);
-				memset((void*) virtMappingSpot, 0xCC, 4096);
+				memset((void*) virtMappingSpot, 0, 4096);
 				virtualAddr += 4096;
 			}
 
