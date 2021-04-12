@@ -631,6 +631,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		kprintf("loaded from disk, sector 0x%X\n", Virt::swapIDToSector(id));
 		return true;
 	}
+	kprintf("Not a swapped out page.\n");
 	return false;
 }
 
@@ -642,7 +643,7 @@ void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 
 	int swp = 0;
 	int chucks = 0;
-	for (int i = 0; i < 1024; ++i) {
+	for (int i = 0; i < 256 * 3; ++i) {
 		size_t oldEntry = pageDirectoryBase[i];
 
 		if (oldEntry & PAGE_PRESENT) {

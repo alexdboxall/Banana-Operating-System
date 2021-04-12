@@ -158,10 +158,7 @@ namespace Phys
 				if (percent > 70) {
 					if (currentTaskTCB && currentTaskTCB->processRelatedTo && currentTaskTCB->processRelatedTo->vas) {
 						kprintf("doing evictions...\n");
-						currentTaskTCB->processRelatedTo->vas->scanForEviction(1, Phys::usedPages / 16);
-					} else {
-						kprintf("doing kernel only evictions...\n");
-						Virt::getAKernelVAS()->scanForEviction(2, Phys::usedPages / 16);
+						currentTaskTCB->processRelatedTo->vas->scanForEviction(4, 2 + Phys::usedPages / 32);
 					}
 				}
 				return 4096 * currentPagePointer;
