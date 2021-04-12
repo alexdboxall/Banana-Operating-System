@@ -11,6 +11,7 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
+/*
 namespace Sys
 {
 	/// <summary>
@@ -24,5 +25,5 @@ namespace Sys
 		return Phys::usablePages | (percent << 24);
 	}
 }
-
+*/
 

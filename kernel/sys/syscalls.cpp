@@ -21,7 +21,7 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-uint64_t (*systemCallHandlers[256])(regs* r);
+uint64_t (*systemCallHandlers[128])(regs* r);
 
 namespace Sys
 {
@@ -39,7 +39,7 @@ namespace Sys
 	uint64_t timezone(regs* r);
 	uint64_t eject(regs* r);
 	uint64_t wsbe(regs* r);
-	uint64_t getRAMData(regs* r);
+	//uint64_t getRAMData(regs* r);
 }
 
 int string_ends_with(const char* str, const char* suffix)
@@ -707,7 +707,7 @@ namespace Sys
 		systemCallHandlers[(int) SystemCallNumber::Timezone] = Sys::timezone;
 		systemCallHandlers[(int) SystemCallNumber::Eject] = Sys::eject;
 		systemCallHandlers[(int) SystemCallNumber::WSBE] = Sys::wsbe;
-		systemCallHandlers[(int) SystemCallNumber::GetRAMData] = Sys::getRAMData;
+		//systemCallHandlers[(int) SystemCallNumber::GetRAMData] = Sys::getRAMData;
 	}
 
 	uint64_t systemCall(regs* r, void* context)
