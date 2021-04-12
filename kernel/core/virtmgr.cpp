@@ -611,7 +611,7 @@ void VAS::evict(size_t virt)
 	kprintf("B   entry = 0x%X\n", *entry);
 	*entry &= ~PAGE_SWAPPABLE;					//clear bit 11
 	kprintf("C   entry = 0x%X\n", *entry);
-	*entry &= ~0xFFFU;							//clear the address
+	*entry &= 0xFFFU;							//clear the address
 	kprintf("D   entry = 0x%X\n", *entry);
 	*entry |= id << 11;							//put the swap ID in
 	kprintf("new entry = 0x%X\n", *entry);
