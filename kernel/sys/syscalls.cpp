@@ -21,7 +21,7 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-uint64_t (*systemCallHandlers[128])(regs* r);
+uint64_t (*systemCallHandlers[256])(regs* r);
 
 namespace Sys
 {
