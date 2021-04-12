@@ -193,8 +193,8 @@ namespace Virt
 		size_t pagesLen = swapfileLength / swapfileSectorsPerPage;
 
 		for (size_t i = 0; i < pagesLen; ++i) {
-			size_t bitmapIndex = pagesLen >> 5;
-			size_t bitmask = 1 << (pagesLen & 0x1F);
+			size_t bitmapIndex = i >> 5;
+			size_t bitmask = 1 << (i & 0x1F);
 
 			if (!(swapfileBitmap[bitmapIndex] & bitmask)) {
 				swapfileBitmap[bitmapIndex] |= bitmask;
@@ -656,7 +656,7 @@ void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 						kprintf("Swappable page at virtual address: 0x%X\n", vaddr);
 
 						if ((swp % throwAwayRate) == 0) {
-							kprintf("evictcing!\n");
+							kprintf("evicting!\n");
 							evict(vaddr);
 							++chucks;
 							if (chucks == wantChucks) {
