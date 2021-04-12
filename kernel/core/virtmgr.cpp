@@ -617,7 +617,7 @@ void VAS::evict(size_t virt)
 
 bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 {
-	kprintf("trying to load addr 0x%X back off disk.\n");
+	kprintf("trying to load addr 0x%X back off disk.\n", faultAddr);
 	faultAddr &= ~0xFFF;
 	size_t* entry = getPageTableEntry(faultAddr);
 	kprintf("got entry: 0x%X\n", *entry);
