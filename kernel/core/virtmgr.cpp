@@ -604,11 +604,13 @@ void VAS::evict(size_t virt)
 	disks[Virt::swapfileDrive - 'A']->write(Virt::swapIDToSector(id), 8, (void*) virt);
 
 	size_t* entry = getPageTableEntry(virt);
+	kprintf("old entry = 0x%X\n", *entry);
 	Phys::freePage((*entry) >> 12);				//free the physical page
 	*entry &= ~PAGE_PRESENT;					//not present
 	*entry &= ~PAGE_SWAPPABLE;					//clear bit 11
 	*entry &= ~0xFFFU;							//clear the address
 	*entry |= id << 11;							//put the swap ID in
+	kprintf("new entry = 0x%X\n", *entry);
 
 	kprintf("eviction done.\n");
 
