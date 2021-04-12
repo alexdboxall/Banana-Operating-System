@@ -1,4 +1,4 @@
-OUTPUT32="D:/Users/Alex/Desktop/Banana/sysroot/guitest.exe"
+OUTPUT32="D:/Users/Alex/Desktop/Banana/packages/banana/32/0001/about.exe"
 OUTPUT64="D:/Users/Alex/Desktop/guitest64.exe"
 
 AS32=i386-banana-as

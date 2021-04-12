@@ -9,6 +9,23 @@ void operator delete(void* p) {free(p);}
 void operator delete[](void* p) {free(p);}
 extern "C" void __cxa_pure_virtual() {}
 
+#include "D:/Users/Alex/Desktop/Banana/kernel/sys/syscalls.hpp"
+extern "C" uint64_t SystemCall(size_t, size_t, size_t, size_t);
+
+Label* ramLabel;
+
+void update(Frame* frame, Message msg) {
+	uint32_t data = SystemCall((int) SystemCallNumber::GetRAMData, 0, 0, 0);
+	int percentUsed = data >> 24;
+	uint32_t totalKilobytes = (data & 0xFFFFFF) * 4;
+	uint32_t usedKilobytes = totalKilobytes * percentUsed / 100;
+
+	char str[256];
+	int percent = 0;
+
+	sprintf(str, "%d / %d used. (%d%%)", usedKilobytes, totalKilobytes, percentUsed);
+}
+
 int main(int argc, char* argv[])
 {
 	Toplevel* win = new Toplevel(100, 90, 350, 195, FrameFlags::Toplevel | FrameFlags::NoResize, "About Banana");
@@ -19,43 +36,19 @@ int main(int argc, char* argv[])
 	(new Label(20, 132, "See C:/Banana/Legal/COPYRIGHT"))->add(win);
 	(new Label(20, 150, "for third party notices."))->add(win);
 
-	Entry* entry = new Entry(20, 98, 150, "Text");
-	entry->add(win);
+	win->keyDownHandler = update;
+
+	//int percent = Phys::usedPages * 100 / Phys::usablePages;
+	//return Phys::usablePages | (percent << 24);
+
+	ramLabel = new Label(20, 95, "");
+	ramLabel->add(win);
 
 	(new Bitmap(230, 37, "C:/Banana/Icons/colour/ewrtherr.tga"))->add(win);
 
+	win->repaintDesktop();
+
 	while (1) {
 		win->processEvents();
-		entry->processEvents();
 	}
 }
-
-/*
-#include <stdio.h>
-#include <stdlib.h>
-#include "uwsbe/krnllink.h"
-
-int main (int argc, char *argv[])
-{
-	Window* win = wsbeCreateWindow(100, 90, 350, 195, WIN_TOPLEVELWIN | WIN_NORESIZING);
-	wsbeSetWindowTitle(win, "About Banana");
-
-	WsbeScript script = wsbeNewScript(1024);
-	wsbeBufferFillRect(&script, 0, 0, WSBE_MATH_WIDTH_DEREF, WSBE_MATH_HEIGHT_DEREF, WIN_BGCOLOR);
-	wsbeBufferDrawText(&script, 20, 10, "Banana 0.1.3", 0);
-	wsbeBufferDrawText(&script, 20, 30, "Copyright (C) 2016-2021 Alex Boxall", 0);
-	wsbeBufferDrawText(&script, 20, 100, "See C:/Banana/Legal/COPYRIGHT", 0);
-	wsbeBufferDrawText(&script, 20, 118, "for third party notices.", 0);
-
-	wsbeBufferDrawTGAFromFile(&script, "C:/Banana/Icons/colour/ewrtherr.tga", 230, 10);
-	wsbeSetRepaintScript(win, script);
-
-	wsbeAddWindow(wsbeDesktopWindow(), win);
-	wsbePaintWindow(win);
-
-	while (1) {
-		;
-	}
-
-	return 0;
-}*/

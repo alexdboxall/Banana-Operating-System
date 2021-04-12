@@ -146,7 +146,6 @@ extern "C" {
 #define WSBE_ADD_WINDOW             3
 #define WSBE_GET_DESKTOP            4
 #define WSBE_SET_SCRIPT             5
-#define WSBE_COPY_WINDOW            6
 #define WSBE_TEXT_WIDTH_HEIGHT      7
 #define WSBE_GET_MESSAGE            8
 

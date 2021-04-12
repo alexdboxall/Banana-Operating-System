@@ -135,14 +135,15 @@ uint64_t sysWSBE(struct regs* r)
     } else if (r->ebx == WSBE_SET_SCRIPT) {
         struct MoreArgs* ma = (struct MoreArgs*) r->ecx;
 
+        debugwrite("WSBE_SET_SCRIPT\n");
+
         Window* win = (Window*) ma->obj;
-        win->repaintScript = malloc(ma->flags);
+        win->repaintScript = malloc(ma->flags + 2);
         memcpy(win->repaintScript, (const void*) r->edx, ma->flags);
         win->repaintScript[ma->flags] = OP_END;
-        return 0;
 
-    } else if (r->ebx == WSBE_COPY_WINDOW) {
-        memcpy((void*) r->ecx, (const void*) r->edx, sizeof(Window));
+        debugwrite("End WSBE_SET_SCRIPT\n");
+
         return 0;
 
     } else if (r->ebx == WSBE_TEXT_WIDTH_HEIGHT) {

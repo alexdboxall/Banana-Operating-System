@@ -234,44 +234,6 @@ void panichandler()
 
 #include "interface.h"
 
-
-
-void guiProc(Window* window, Message msg) {
-    switch (msg.type) {
-    case MESSAGE_PAINT:
-    {
-        break;
-    }
-
-    default:
-        guiDefaultProc(window, msg);
-    }
-}
-
-void internalMain(Window* __v)
-{
-    __v->hasProc = true;
-    while (1) {
-        nanoSleep(1000 * 1000 * 200);
-        Message msg;
-        int count = getMessage(__v, &msg);
-        if (!count) continue;
-        guiProc((Window*) msg.window, msg);
-    }
-}
-
-void myapp(void* ctxt)
-{
-    //unlockScheduler();
-
-    Window* test = createWindow(150, 100, 350, 200, WIN_TOPLEVELWIN);
-    test->hasProc = true;
-    setWindowTitle(test, "WSBE Window!");
-    addWindow((Window*) getDesktop(), test);
-
-    internalMain(test);
-}
-
 extern "C" uint64_t sysWSBE(regs* r);
 
 int main(int argc, const char* argv[])
@@ -279,8 +241,8 @@ int main(int argc, const char* argv[])
     extern uint64_t(*systemCallHandlers[128])(regs * r);
     systemCallHandlers[(int) SystemCallNumber::WSBE] = sysWSBE;
 
-    Process* p = new Process("C:/guitest.exe");
-    p->createUserThread();
+    Process* p2 = new Process("C:/Banana/System/run.exe");
+    p2->createUserThread();
 
     extern Video* screen;
     Krnl::guiPanicHandler = panichandler;

@@ -97,6 +97,7 @@ SystemCallNumber
 	Timezone,
 	Eject,
 	WSBE,
+	GetRAMData,
 };
 
 

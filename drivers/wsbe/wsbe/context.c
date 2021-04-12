@@ -45,6 +45,8 @@ uint8_t patterns[8] = {
 		0b00000000,
 };
 
+void debugwritestrhx(char* t, uint32_t hx);
+
 void Context_clipped_rect(Context* context, int x, int y, unsigned int width,
                           unsigned int height, Rect* clip_area, uint32_t color) {
 
@@ -71,18 +73,20 @@ void Context_clipped_rect(Context* context, int x, int y, unsigned int width,
     if(max_y > clip_area->bottom + 1)
         max_y = clip_area->bottom + 1;
 
+	if (x >= max_x || y >= max_y) return;
+
 	int pattern = (color >> 24) & 7;
 
 	if (width == 1 && pattern) {
-		for (int i = 0; i < max_y - y; ++i) {
-			if (!(patterns[pattern] & (1 << ((/*y + */i) & 7)))) continue;
-			screenputpixel(x, y + i, color & 0xFFFFFF);
+		for (int i = y; i < max_y; ++i) {
+			if (!(patterns[pattern] & (1 << ((i - y + 1) & 7)))) continue;
+			screenputpixel(x, i, color & 0xFFFFFF);
 		}
 
 	} else if (height == 1 && pattern) {
-		for (int i = 0; i < max_x - x; ++i) {
-			if (!(patterns[pattern] & (1 << ((/*x + */i) & 7)))) continue;
-			screenputpixel(x + i, y, color & 0xFFFFFF);
+		for (int i = x; i < max_x; ++i) {
+			if (!(patterns[pattern] & (1 << ((i - x) & 7)))) continue;
+			screenputpixel(i, y, color & 0xFFFFFF);
 		}
 
 	} else {
@@ -632,6 +636,9 @@ void Context_draw_bitmap_clipped(Context* context, uint32_t* data, int x, int y,
 void Context_draw_char_clipped(Context* context, char character, int x, int y,
                                uint32_t color, Rect* bound_rect) {
 
+	if (character == 0 || character >= 127) return;
+	if (!context || !bound_rect) return;
+	
     int font_x, font_y;
     int off_x = 0;
     int off_y = 0;
@@ -639,7 +646,6 @@ void Context_draw_char_clipped(Context* context, char character, int x, int y,
 	int count_y = CELLH;
     uint8_t shift_line;
 
-    //Make sure to take context translation into account
     //Make sure to take context translation into account
     x += context->translate_x;
     y += context->translate_y;

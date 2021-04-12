@@ -98,6 +98,11 @@ void VESA::setMode(int mode)
 		if (mode == 0x4114) {
 			panic("BPP IS ZERO");
 		}
+
+		File* fil = new File("C:/Banana/System/vesamode.dat", kernelProcess);
+		fil->unlink();
+		delete fil;
+
 		setMode(0x4114);
 		return;
 	}
@@ -110,6 +115,11 @@ void VESA::setMode(int mode)
 		if (mode == 0x4114) {
 			panic("UNSUPPORTED VESA MODE");
 		}
+
+		File* fil = new File("C:/Banana/System/vesamode.dat", kernelProcess);
+		fil->unlink();
+		delete fil;
+
 		setMode(0x4114);
 		return;
 	}
@@ -243,8 +253,6 @@ ModeInfo VESA::calculateBestMode()
 
 	bool biosEDIDSupported = ((ax & 0xFF) == 0x4F) && ((ax >> 8) == 0);
 	kprintf("EDID: %d. status = 0x%X\n", biosEDIDSupported, ax);
-
-	//bool biosEDIDSupported = false;
 
 	int monitorResolution = RATIO_43;
 	int monitorWidth = 800;

@@ -25,11 +25,14 @@ protected:
 
 	WsbeScript currScript;
 
-	void redoPaintScript();
 
 public:
+	void redoPaintScript();
+
 	Entry(int x, int y, int width, const char* text = "");
+
 	void setText(const char* text);	
+	char* getText();
 };
 
 #endif
