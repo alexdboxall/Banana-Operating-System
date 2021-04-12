@@ -197,6 +197,7 @@ namespace Virt
 		}
 
 		panic("NO SWAPFILE SPACE LEFT");
+		return 0;
 	}
 
 	void virtualMemorySetup()
