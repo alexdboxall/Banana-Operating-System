@@ -26,16 +26,20 @@ namespace Sys
 	uint64_t sbrk(regs* r)
 	{
 		size_t previousBreak = currentTaskTCB->processRelatedTo->vas->sbrk;
+		kprintf("sbrk called.\n");
 
 		if (r->ebx == 0) {
+			kprintf("r->ebx == 0, 0x%X\n", previousBreak);
 			return previousBreak;
 		}
 
 		if (((int) r->ebx) < 0) {
+			kprintf("r->ebx < 0, 0x%X\n", previousBreak);
 			return previousBreak;
 		}
 
 		if (r->ebx > 67108864) {
+			kprintf("r->ebx > 67108864, 0x%X\n", previousBreak);
 			return -1;
 		}
 
