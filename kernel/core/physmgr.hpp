@@ -12,6 +12,8 @@ namespace Phys
 	extern int usedPages;
 	extern size_t highestMem;
 
+	extern bool forbidEvictions;
+
 	void physicalMemorySetup(uint32_t highestUsedAddr);
 	void freePage(size_t address);
 	size_t allocatePage();

@@ -137,6 +137,7 @@ namespace Phys
 	}
 
 	size_t currentPagePointer = 0;
+	bool forbidEvictions = false;
 
 	size_t allocatePage()
 	{
@@ -155,15 +156,11 @@ namespace Phys
 					VgaText::updateRAMUsageDisplay(percent);
 				}
 
-				if (percent > 70) {
-					lockScheduler();
-					kprintf("percent > 70\n");
-					if (swapperThread->state == TaskState::Paused) {
-						kprintf("unblocking the swapper.\n");
-						unblockTask(swapperThread);
-						kprintf("unblocked the swapper.\n");
+				if (percent > 70 && !forbidEvictions) {
+					if (currentTaskTCB && currentTaskTCB->processRelatedTo && currentTaskTCB->processRelatedTo->vas) {
+						kprintf("doing evictions...\n");
+						currentTaskTCB->processRelatedTo->vas->scanForEviction(4, 2 + Phys::usedPages / 32);
 					}
-					unlockScheduler();
 				}
 
 				return 4096 * currentPagePointer;

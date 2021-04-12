@@ -627,8 +627,10 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 	if ((*entry) & PAGE_ALLOCATED) {
 		kprintf("it has been allocated.\n");
 
+		Phys::forbidEvictions = true;
 		size_t id = (*entry) >> 11;				//we need the ID
 		size_t phys = Phys::allocatePage();		//get a new physical page
+		Phys::forbidEvictions = false;
 
 		kprintf("New physical page = 0x%X\n", phys);
 

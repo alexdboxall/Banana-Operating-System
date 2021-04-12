@@ -164,7 +164,6 @@ int getIRQNestingLevel();
 
 extern Process* kernelProcess;
 extern ThreadControlBlock* cleanerThread;
-extern ThreadControlBlock* swapperThread;
 extern LinkedList<volatile ThreadControlBlock> sleepingTaskList;
 
 extern void terminateTask(int returnCode = 0);
