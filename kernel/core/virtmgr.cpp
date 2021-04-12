@@ -674,8 +674,7 @@ void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 				if ((oldPageEntry & PAGE_SWAPPABLE) && (oldPageEntry & PAGE_ALLOCATED)) {
 					if (oldPageEntry & PAGE_PRESENT) {
 						kprintf("Swappable page at virtual address: 0x%X\n", vaddr);
-
-						if ((i % throwAwayRate) == 0) {
+						if ((j % throwAwayRate) == 0) {
 							kprintf("evicting!\n");
 							evict(vaddr);
 							/*++chucks;
