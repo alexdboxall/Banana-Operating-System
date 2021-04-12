@@ -67,7 +67,7 @@ public:
     ~VAS();
 	void setCPUSpecific(size_t phys);
 
-	void scanForSwappable();
+	void scanForEviction(int throwAwayRate, int wantChucks);
 	bool tryLoadBackOffDisk(size_t faultAddr);
 
 	void evict(size_t virt);

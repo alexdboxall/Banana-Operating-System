@@ -230,6 +230,7 @@ namespace Virt
 	}
 
 	void swappingSetup() {
+		kprintf("swap bitmap length = 0x%X\n", swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
 		swapfileBitmap = (size_t*) malloc(swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
 		memset(swapfileBitmap, 0, swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
 	}
@@ -631,10 +632,14 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 	return false;
 }
 
-void VAS::scanForSwappable()
+void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 {
+	if (throwAwayRate == 0) throwAwayRate = 1;
+
 	kprintf("scanning for swappable pages...\n");
+
 	int swp = 0;
+	int chucks = 0;
 	for (int i = 0; i < 1024; ++i) {
 		size_t oldEntry = pageDirectoryBase[i];
 
@@ -647,6 +652,16 @@ void VAS::scanForSwappable()
 				if ((oldPageEntry & PAGE_SWAPPABLE) && (oldPageEntry & PAGE_ALLOCATED)) {
 					if (oldPageEntry & PAGE_PRESENT) {
 						kprintf("Swappable page at virtual address: 0x%X\n", vaddr);
+
+						if ((swp % throwAwayRate) == 0) {
+							kprintf("evictcing!\n");
+							evict(vaddr);
+							++chucks;
+							if (chucks == wantChucks) {
+								return;
+							}
+						}
+
 						++swp;
 					} else {
 						kprintf("Page at virtual address 0x%X resides on disk\n", vaddr);
@@ -655,8 +670,6 @@ void VAS::scanForSwappable()
 			}
 		}
 	}
-
-	kprintf("%d swappable pages.\n", swp);
 }
 
 extern uint8_t inb(uint16_t);
@@ -683,6 +696,4 @@ extern "C" void mapVASFirstTime()
 	}
 
 	CPU::writeCR3(CPU::readCR3());
-
-	vas->scanForSwappable();
 }

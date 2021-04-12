@@ -154,6 +154,14 @@ namespace Phys
 					oldPercent = percent;
 					VgaText::updateRAMUsageDisplay(percent);
 				}
+
+				if (percent > 90) {
+					if (currentTaskTCB && currentTaskTCB->processRelatedTo && currentTaskTCB->processRelatedTo->vas) {
+						currentTaskTCB->processRelatedTo->vas->scanForEviction(throwAwayRate, wantChucks);
+					} else {
+						Virt::getAKernelVAS()->scanForEviction(2, Phys::usedPages / 12);
+					}
+				}
 				return 4096 * currentPagePointer;
 			}
 
