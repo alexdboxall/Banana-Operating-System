@@ -212,8 +212,8 @@ extern "C" void kernel_main()
 	size_t highestFreeAddr = *((uint32_t*) 0x524);
 	highestFreeAddr = (highestFreeAddr + 4095) & ~0xFFF;
 
-	Phys::physicalMemorySetup(highestFreeAddr);
 	Virt::virtualMemorySetup();
+	Phys::physicalMemorySetup(highestFreeAddr);
 
 	uint32_t* dp = (uint32_t*) 0x500;
 	uint32_t da = *dp++;

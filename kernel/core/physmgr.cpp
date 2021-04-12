@@ -94,13 +94,25 @@ namespace Phys
 	uint8_t* bitmap = (uint8_t*) VIRT_PHYS_PAGE_BITMAP;
 	size_t highestMem = 0;
 
+	size_t virtMappingSpot = 0;
+
 	void setPageState(size_t pageNum, bool state)
 	{
+
 		size_t byteNum = pageNum / 8;
 		size_t bitNum = pageNum % 8;
 
 		bitmap[byteNum] &= ~(1 << bitNum);
 		bitmap[byteNum] |= (((int) state) << bitNum);
+
+		if (state == STATE_FREE) {
+			if (virtMappingSpot == 0) {
+				virtMappingSpot = Virt::allocateKernelVirtualPages(1);
+			}
+
+			Virt::getAKernelVAS()->mapPage(pageNum * 4096, virtMappingSpot, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
+			memset((void*) virtMappingSpot, 0, 4096);
+		}
 	}
 
 	bool getPageState(size_t pageNum)

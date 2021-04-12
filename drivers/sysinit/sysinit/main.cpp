@@ -597,7 +597,7 @@ void begin(void* a)
     }
 
     VgaText::hiddenOut = false;
-    preemptionOn = true;
+    Krnl::preemptionOn = true;
 
     Process* usertask;
     
@@ -607,7 +607,6 @@ void begin(void* a)
         usertask = new Process("C:/Banana/System/command.exe", nullptr, argv);
     } else {
         usertask = new Process("C:/Banana/System/command.exe");
-
     }
     setActiveTerminal(usertask->terminal);
 
