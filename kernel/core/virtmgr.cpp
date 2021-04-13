@@ -617,6 +617,7 @@ void VAS::evict(size_t virt)
 
 bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 {
+	kprintf("fault addr = 0x%X\n", faultAddr);
 	lockScheduler();
 	kprintf("trying to load addr 0x%X back off disk.\n", faultAddr);
 	faultAddr &= ~0xFFF;
