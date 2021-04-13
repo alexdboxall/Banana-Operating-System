@@ -16,8 +16,8 @@
 
 Minimum System Requirements:
 
-	CPU:	Intel 386 (+ patience) or better (hopefully, 486 is the oldest tested)
-	RAM:	6 MB ("thrashing is good... it reminds the user that their computer is on")
+	CPU:	Intel 386 or better (hopefully, 486 is the oldest tested)
+	RAM:	4 MB (12 MB to install it)
 	HDD:	64 MB
 
 	VGA compatible video card
@@ -211,7 +211,7 @@ extern "C" void kernel_main()
 
 	size_t highestFreeAddr = *((uint32_t*) 0x524);
 	highestFreeAddr = (highestFreeAddr + 4095) & ~0xFFF;
-
+	
 	Phys::physicalMemorySetup(highestFreeAddr);
 	Virt::virtualMemorySetup();
 
@@ -231,6 +231,8 @@ extern "C" void kernel_main()
 		//needs memory to be set up before calling
 		callGlobalConstructors();
 		kprintf("global constructors called.\n");
+
+		Virt::swappingSetup();
 
 		computer = new Computer();
 		kprintf("computer at 0x%X.\n", computer);

@@ -596,7 +596,7 @@ void sleep(uint64_t seconds)
 }
 
 extern "C" void taskReturned()
-{
+{	
 	panic("TASK RETURNED. CHECK KERNEL TASKS AND ALL DRIVERS.\n");
 
 	while (1) {
@@ -689,7 +689,7 @@ void Semaphore::release()
 	unlockStuff();
 }
 
-Mutex::Mutex(): Semaphore(1)
+Mutex::Mutex() : Semaphore(1)
 {
 
 }

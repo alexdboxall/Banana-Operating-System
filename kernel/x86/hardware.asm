@@ -148,7 +148,7 @@ voodooXADD:
 .newStack dd 0
 
 global switchToThreadASM
-currentTaskTCB equ 0xC2002000		;JUST FOR NOW, NEEDS CHANGING IN prcssthr.hpp AS WELL IF CHANGED
+currentTaskTCB equ 0xC2002000		;JUST FOR NOW, NEEDS CHANGING IS prcssthr.hpp AS WELL IF CHANGED
 extern taskStartupFunction
 extern taskReturned
 extern changeTSS
@@ -301,14 +301,11 @@ commonThreadSwitch:
 	je .doneVAS						;to save time, skip reloading if not needed
 	mov cr3, eax					;change it if needed
 .doneVAS:
+
 	test edx, edx
 	jne .firstTime
 
 	mov esp, [esi + 0x4]			;ESP stored at offset 0x4 into the struct
-
-    ;mov eax, cr0
-    ;or eax, (1 << 3)                ;set task switched bit
-    ;mov cr0, eax
 
 	call changeTSS
 

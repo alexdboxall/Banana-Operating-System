@@ -13,16 +13,6 @@ namespace Vm
 
 	FPUState fpuState;
 
-	void x87Save(void* ptr)
-	{
-		memcpy(ptr, (const void*) &fpuState, sizeof(fpuState));
-	}
-
-	void x87Load(void* ptr)
-	{
-		memcpy((void*) &fpuState, (const void*) ptr, sizeof(fpuState));
-	}
-
 	uint32_t fpuInternalTo32(Float80 flt)
 	{
 		//double -> float

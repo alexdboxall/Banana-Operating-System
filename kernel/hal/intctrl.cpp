@@ -320,7 +320,7 @@ void x87EmulHandler(regs* r, void* context)
 	if (handled) {
 		return;
 	}
-
+	
 	kprintf("Device not available\n");
 
 	displayDebugInfo(r);
@@ -359,7 +359,8 @@ void pgFault(regs* r, void* context)
 	if (currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2())) {
 		return;
 	}
-	kprintf("Hard Page Fault!\n");
+
+	kprintf("Page Fault!\n");
 
 	displayDebugInfo(r);
 	displayProgramFault("Page fault");

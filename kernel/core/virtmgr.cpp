@@ -229,37 +229,7 @@ namespace Virt
 		}
 	}
 
-	void swappingSetup()
-	{
-		/*uint64_t siz;
-		bool dir;
-		File* f = new File("C:/pagefile.sys", kernelProcess);
-		if (!f) {
-			panic("CANNOT SETUP PAGEFILE.SYS");
-		}
-		FileStatus status = f->stat(&siz, &dir);
-		if (status != FileStatus::Success || dir || !siz || (siz & 0xFFF)) {
-			f->unlink();
-
-			kprintf("creating the swapfile.\n");
-
-			f->open(FILE_OPEN_WRITE_NORMAL);
-			for (int i = 0; i < swapfileLength; ++i) {
-				//just fill out the pages with anything you have on you
-				int br;
-				f->write(512, (void*) swappingSetup, &br);
-				if (br != 512) {
-					panic("CANNOT SETUP PAGEFILE.SYS (2)");
-				}
-			}
-
-			f->close();
-
-			siz = swapfileLength * 512;
-		}
-
-		swapfileLength = siz / 512;*/
-
+	void swappingSetup() {
 		kprintf("swap bitmap length = 0x%X\n", swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
 		swapfileBitmap = (size_t*) malloc(swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
 		memset(swapfileBitmap, 0, swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
@@ -375,8 +345,7 @@ size_t VAS::virtualToPhysical(size_t virt)
 	return (*getPageTableEntry(virt)) & ~0xFFF;
 }
 
-void VAS::freeAllocatedPages(size_t virt)
-{
+void VAS::freeAllocatedPages(size_t virt) {
 	if (supervisorVAS) {
 		Virt::freeKernelVirtualPages(virt);
 
@@ -429,7 +398,7 @@ VAS::~VAS()
 	++fp;
 
 	kprintf("Freed %d KB from VAS deletion.\n", fp * 4);
-
+	
 	unlockScheduler();
 }
 
@@ -444,8 +413,7 @@ VAS::VAS(VAS* old)
 	panic("VAS::VAS(VAS* old) not implemented");
 }
 
-VAS::VAS(bool kernel)
-{
+VAS::VAS(bool kernel) {
 	supervisorVAS = kernel;
 
 	pageDirectoryBasePhysical = Phys::allocatePage();
@@ -589,8 +557,7 @@ void VAS::mapForeignPage(bool secondSlot, VAS* other, size_t physicalAddr, size_
 	pageTable[pageNumber] = physicalAddr | flags;
 }
 
-void VAS::mapPage(size_t physicalAddr, size_t virtualAddr, int flags)
-{
+void VAS::mapPage(size_t physicalAddr, size_t virtualAddr, int flags) {
 	if (virtualAddr < VIRT_KERNEL_BASE) {
 		size_t cr3;
 		asm volatile ("mov %%cr3, %0" : "=r"(cr3));
@@ -599,14 +566,14 @@ void VAS::mapPage(size_t physicalAddr, size_t virtualAddr, int flags)
 			//panic("CANNOT MAP NON-KERNEL IN NON-CURRENT VAS");
 		}
 	}
-
+	
 	if ((virtualAddr | physicalAddr) & 0xFFF) {
 		panic("UNALIGNED PAGE MAPPING REQUESTED");
 	}
 
 	size_t pageTableNumber = virtualAddr / 0x400000;
 
-	if (!(pageDirectoryBase[pageTableNumber] & PAGE_PRESENT)) {
+	if (!(pageDirectoryBase[pageTableNumber] & PAGE_PRESENT)) {		
 		//create the page table first
 		size_t addr = Phys::allocatePage();
 
@@ -629,6 +596,8 @@ int swapBalance = 0;
 
 void VAS::evict(size_t virt)
 {
+	lockScheduler();
+
 	size_t id = Virt::allocateSwapfilePage();
 
 	for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
@@ -636,6 +605,7 @@ void VAS::evict(size_t virt)
 	}
 
 	size_t* entry = getPageTableEntry(virt);
+	Phys::freePage((*entry) & ~0xFFF);			//free the physical page
 	*entry &= ~PAGE_PRESENT;					//not present
 	*entry &= ~PAGE_SWAPPABLE;					//clear bit 11
 	*entry &= 0xFFFU;							//clear the address
@@ -645,6 +615,10 @@ void VAS::evict(size_t virt)
 
 	//flush TLB
 	CPU::writeCR3(CPU::readCR3());
+
+	kprintf("evicting:  0x%X, %d\n", virt, swapBalance);
+
+	unlockScheduler();
 }
 
 bool VAS::tryLoadBackOffDisk(size_t faultAddr)
@@ -652,88 +626,94 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 	static int xyz = 0;
 
 	bool onPageBoundary = (faultAddr & 0xFFF) > 0xFE0;
+
+	lockScheduler();
 	faultAddr &= ~0xFFF;
 	size_t* entry = getPageTableEntry(faultAddr);
-
 	if (!faultAddr) {
 		return false;
 	}
 
-	if (entry && !((*entry) & PAGE_PRESENT)) {
+	if (entry && ((*entry) & PAGE_ALLOCATED) && !((*entry) & PAGE_PRESENT)) {
+
+		Phys::forbidEvictions = true;
 		size_t id = (*entry) >> 11;				//we need the ID
 		size_t phys = Phys::allocatePage();		//get a new physical page
+		Phys::forbidEvictions = false;
 
 		*entry &= 0xFFF;						//clear address
 		*entry |= PAGE_PRESENT;					//it is now present
 		*entry |= PAGE_SWAPPABLE;				//if it was swapped it had to be swappable we don't need to
 												//clear this as the low bit of the ID, as we want it set to 1
 		*entry |= phys;
-
-		//flush TLB
-		CPU::writeCR3(CPU::readCR3());
-
+		
 		for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
 			disks[Virt::swapfileDrive - 'A']->read(Virt::swapIDToSector(id) + i, 1, ((uint8_t*) faultAddr) + 512 * i);
 		}
 
 		--swapBalance;
+		kprintf("reloading: 0x%X, %d\n", faultAddr, swapBalance);
 
 		Virt::freeSwapfilePage(id);
+		unlockScheduler();
 
 		if (onPageBoundary) {
-			kprintf(" ** ON BOUNDARY!!!\n");
+			tryLoadBackOffDisk(faultAddr + 4096);
 		}
+
+		++xyz;
+		if (xyz == 2) {
+			scanForEviction(1, 4);
+			xyz = 0;
+		}
+
+		//flush TLB
+		CPU::writeCR3(CPU::readCR3());
 
 		return true;
 	}
 
+	unlockScheduler();
 	return false;
 }
 
-size_t VAS::scanForEviction()
+void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 {
-	size_t firstVal = evictionScanner;
-	bool through = false;
-	bool doAnything = false;
+	kprintf("scanning for evictions.\n");
+	static int cycle = 0;
+	static int cycle2 = 64;
+	++cycle;
 
-	while (1) {
-		if (firstVal == evictionScanner && through) {
-			doAnything = true;
-		}
+	throwAwayRate = 1;
 
-		//first check that this page directory is present
-		if ((evictionScanner & 0x3FFFFF) == 0) {
-			size_t oldEntry = pageDirectoryBase[evictionScanner / 0x400000];
+	if (throwAwayRate == 0) throwAwayRate = 1;
 
-			if (!(oldEntry & PAGE_PRESENT)) {
-				evictionScanner += 0x400000;
-				continue;
-			}
-		}
+	int swp = 0;
+	int chucks = 0;
+	for (int i = 0; i < 256 * 3; ++i) {
+		size_t oldEntry = pageDirectoryBase[i];
 
-		//now we have an actual page directory, check the pages within
-		size_t* oldEntry = getPageTableEntry(evictionScanner);
-		if ((*oldEntry & PAGE_SWAPPABLE) && (*oldEntry & PAGE_ALLOCATED)) {
-			if (*oldEntry & PAGE_PRESENT) {
-				bool dirty = false;
-				if (*oldEntry & PAGE_DIRTY) {
-					dirty = true;
-					*oldEntry &= ~PAGE_DIRTY;
+		if (oldEntry & PAGE_PRESENT) {
+			for (int j = 0; j < 1024; ++j) {
+				size_t vaddr = ((size_t) i) * 0x400000 + ((size_t) j) * 0x1000;
+				size_t* oldPageEntryPtr = getPageTableEntry(vaddr);
+				size_t oldPageEntry = *oldPageEntryPtr;
+
+				if ((oldPageEntry & PAGE_SWAPPABLE) && (oldPageEntry & PAGE_ALLOCATED)) {
+					if (oldPageEntry & PAGE_PRESENT) {
+						//kernel stacks (like the one the page fault handler uses) live here
+						if (1 || (swp % throwAwayRate) == 0) {
+							evict(vaddr);
+							++chucks;
+							if (chucks == wantChucks) {
+								return;
+							}
+						}
+
+						++swp;
+					}
 				}
-
-				if (doAnything || !dirty) {
-					size_t ret = *oldEntry & ~0xFFF;
-					evict(evictionScanner);
-					evictionScanner += 4096;		//saves a check the next time this gets called
-					return ret;
-				}
 			}
-		}
-
-		evictionScanner += 4096;
-		if (evictionScanner >= 0xFFC00000U) {
-			evictionScanner = 0;
-			through = true;
 		}
 	}
 }

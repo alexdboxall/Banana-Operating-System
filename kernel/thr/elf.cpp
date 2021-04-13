@@ -708,8 +708,8 @@ namespace Thr
 			panic(msg);
 		}
 
-		size_t addr = (size_t) Virt::getAKernelVAS()->allocatePages((siz + 4095) / 4096, PAGE_PRESENT | PAGE_SWAPPABLE | PAGE_SUPERVISOR | PAGE_WRITABLE);
-		kprintf("Addr = 0x%X, num driver pages = %d\n", addr, (siz + 4095) / 4096);
+		size_t addr = (size_t) Virt::getAKernelVAS()->allocatePages((siz + 4095) / 4096, PAGE_PRESENT | PAGE_SUPERVISOR | PAGE_WRITABLE);
+		kprintf("Addr = 0x%X\n", addr);
 
 		driverNameLookup[driverLookupNext] = (char*) malloc(strlen(name) + 1);
 		strcpy(driverNameLookup[driverLookupNext], name);
