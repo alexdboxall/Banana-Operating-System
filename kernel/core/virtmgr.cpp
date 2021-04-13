@@ -626,6 +626,7 @@ void VAS::evict(size_t virt)
 
 bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 {
+	bool onPageBoundary = (faultAddr & 0xFFF) > 0xFE0;
 	kprintf("faultaddr A = 0x%X\n", faultAddr);
 
 	lockScheduler();
@@ -636,7 +637,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		return false;
 	}
 
-	if (entry && ((*entry) & PAGE_ALLOCATED)) {
+	if (entry && ((*entry) & PAGE_ALLOCATED) && !((*entry) & PAGE_PRESENT)) {
 		kprintf("loading page at 0x%X\n", faultAddr);
 
 		Phys::forbidEvictions = true;
@@ -659,6 +660,11 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 
 		Virt::freeSwapfilePage(id);
 		unlockScheduler();
+
+		if (onPageBoundary) {
+			tryLoadBackOffDisk(faultAddr + 4096);
+		}
+
 		return true;
 	}
 
