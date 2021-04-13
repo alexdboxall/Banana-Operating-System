@@ -596,6 +596,8 @@ int swapBalance = 0;
 
 void VAS::evict(size_t virt)
 {
+	if (swapBalance > 30) return;
+
 	lockScheduler();
 
 	kprintf("evicting page at address 0x%X\n", virt);
