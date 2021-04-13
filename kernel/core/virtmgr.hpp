@@ -39,8 +39,6 @@ namespace Virt
 	void swappingSetup();
 
 	VAS* getAKernelVAS();
-
-	void setupPageSwapping(int megs);
 }
 
 extern "C" void kernel_main();

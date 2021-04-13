@@ -268,37 +268,6 @@ namespace Virt
 	{
 		return firstVAS;
 	}
-
-	void setupPageSwapping(int megs)
-	{
-		File* f = new File("C:/Banana/SWAPFILE.SYS", kernelProcess);
-		f->unlink();
-		FileStatus st = f->open(FILE_OPEN_WRITE_NORMAL);
-		if (st != FileStatus::Success) {
-			kprintf("st = %d\n", st);
-			panic("NO PAGE SWAPPING AVAILABLE");
-		}
-
-		int br = 0;
-		int pages = megs * 256;
-		uint8_t* buff = (uint8_t*) malloc(4096 * 16);
-		memset(buff, 0, 4096 * 16);
-		pages /= 16;
-		while (pages--) {
-			st = f->write(4096 * 16, buff, &br);
-			if (st != FileStatus::Success) {
-				kprintf("Status != success = %d\n", (int) st);
-			}
-			if (br != 4096 * 16) {
-				kprintf("Br = %d\n", br);
-				panic("UH OH");
-			}
-		}
-
-		f->close();
-		rfree(buff);
-		delete f;
-	}
 }
 
 size_t VAS::allocatePages(int count, int flags)
