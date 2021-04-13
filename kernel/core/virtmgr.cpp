@@ -690,7 +690,7 @@ void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 
 	int swp = 0;
 	int chucks = 0;
-	for (int i = 0; i < 256 * 4; ++i) {
+	for (int i = 0; i < 256 * 3; ++i) {
 		size_t oldEntry = pageDirectoryBase[i];
 
 		if (oldEntry & PAGE_PRESENT) {
@@ -703,6 +703,7 @@ void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 					if (oldPageEntry & PAGE_PRESENT) {
 						//kernel stacks (like the one the page fault handler uses) live here
 						if ((oldPageEntry & ~0xFFF) < 0x10000000) {
+							kprintf("ope < 0x10000000. (0x%X)\n", (oldPageEntry & ~0xFFF));
 							continue;
 						}
 
