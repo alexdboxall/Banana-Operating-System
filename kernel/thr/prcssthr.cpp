@@ -59,7 +59,12 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 	//nextThreadToRun->timeSliceRemaining = 50000000;
 
 	updateTimeUsed();
-	switchToThreadASM(nextThreadToRun);
+
+	if (computer->fpu) {
+		computer->fpu->save(nextThreadToRun->fpuState);
+		switchToThreadASM(nextThreadToRun);
+		computer->fpu->load(currentTaskTCB->fpuState);
+	}
 }
 
 ThreadControlBlock* Process::createUserThread()
