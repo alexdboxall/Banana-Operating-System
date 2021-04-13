@@ -356,6 +356,7 @@ size_t* pf5 = 0;
 
 void pgFault(regs* r, void* context)
 {
+	kprintf("page fault 0x%X\n", CPU::readCR2());
 	if (currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2())) {
 		return;
 	}
@@ -585,9 +586,9 @@ InterruptController* setupInterruptController()
 	}
 
 	kprintf("ioapicDiscoveryNumber = %d\n", ioapicDiscoveryNumber);
-	if (!ioapicDiscoveryNumber) {
+	/*if (!ioapicDiscoveryNumber) {
 		computer->features.hasAPIC = false;
-	}
+	}*/
 
 	//check if the APIC exists
 	bool hasAPIC = computer->features.hasAPIC;
