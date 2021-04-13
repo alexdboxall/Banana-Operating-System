@@ -598,8 +598,6 @@ void VAS::evict(size_t virt)
 {
 	lockScheduler();
 
-	kprintf("evicting page at address 0x%X\n", virt);
-
 	size_t id = Virt::allocateSwapfilePage();
 
 	for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
@@ -607,8 +605,6 @@ void VAS::evict(size_t virt)
 	}
 
 	size_t* entry = getPageTableEntry(virt);
-	kprintf("freeing this page 0x%X\n", (*entry) & ~0xFFF);
-	//kprintf("freeing phys = 0x%X\n", (*entry) & ~0xFFF);
 	Phys::freePage((*entry) & ~0xFFF);			//free the physical page
 	*entry &= ~PAGE_PRESENT;					//not present
 	*entry &= ~PAGE_SWAPPABLE;					//clear bit 11
@@ -616,10 +612,11 @@ void VAS::evict(size_t virt)
 	*entry |= id << 11;							//put the swap ID in
 
 	++swapBalance;
-	kprintf("    Total on disk: %d. Evict\n", swapBalance);
 
 	//flush TLB
 	CPU::writeCR3(CPU::readCR3());
+
+	kprintf("evicting:  0x%X\n", virt);
 
 	unlockScheduler();
 }
@@ -627,18 +624,16 @@ void VAS::evict(size_t virt)
 bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 {
 	bool onPageBoundary = (faultAddr & 0xFFF) > 0xFE0;
-	kprintf("faultaddr A = 0x%X\n", faultAddr);
 
 	lockScheduler();
 	faultAddr &= ~0xFFF;
 	size_t* entry = getPageTableEntry(faultAddr);
-	kprintf("faultaddr B = 0x%X\n", faultAddr);
 	if (!faultAddr) {
 		return false;
 	}
 
 	if (entry && ((*entry) & PAGE_ALLOCATED) && !((*entry) & PAGE_PRESENT)) {
-		kprintf("loading page at 0x%X\n", faultAddr);
+		kprintf("reloading: 0x%X\n", faultAddr);
 
 		Phys::forbidEvictions = true;
 		size_t id = (*entry) >> 11;				//we need the ID
@@ -656,13 +651,11 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		}
 
 		--swapBalance;
-		kprintf("    Total on disk: %d. Reload\n", swapBalance);
 
 		Virt::freeSwapfilePage(id);
 		unlockScheduler();
 
 		if (onPageBoundary) {
-			kprintf("** ON BOUNDARY! **\n");
 			tryLoadBackOffDisk(faultAddr + 4096);
 		}
 
@@ -683,6 +676,9 @@ void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 	static int cycle = 0;
 	static int cycle2 = 0;
 	++cycle2;
+	if (cycle2 == 256 * 3) {
+		++cycle;
+	}
 
 	if (throwAwayRate == 0) throwAwayRate = 1;
 
@@ -691,7 +687,6 @@ void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 	for (int iii = 0; iii < 256 * 3; ++iii) {
 		int i = (cycle2 + iii) % (256 * 3);
 		size_t oldEntry = pageDirectoryBase[i];
-		kprintf("scanning: 0x%X\n", i);
 
 		if (oldEntry & PAGE_PRESENT) {
 			for (int jjj = 0; jjj < 1024; ++jjj) {
