@@ -160,6 +160,7 @@ namespace Phys
 					VgaText::updateRAMUsageDisplay(percent);
 				}
 
+				kprintf("alloced: 0x%X\n", 4096 * currentPagePointer);
 				return 4096 * currentPagePointer;
 			}
 
@@ -170,6 +171,7 @@ namespace Phys
 			if (currentPagePointer == first) {
 				size_t evicted = currentTaskTCB->processRelatedTo->vas->scanForEviction();
 				if (evicted) {
+					kprintf("Alloced: 0x%X\n", evicted);
 					return evicted;
 				}
 
