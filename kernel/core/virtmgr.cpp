@@ -628,7 +628,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 
 	bool onPageBoundary = (faultAddr & 0xFFF) > 0xFE0;
 	kprintf("A. ");
-	lockScheduler();
+	//lockScheduler();
 	kprintf("B. ");
 	faultAddr &= ~0xFFF;
 	kprintf("C. ");
@@ -637,7 +637,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 
 	if (!faultAddr) {
 		kprintf("fault addr == 0\n");
-		unlockScheduler();
+		//unlockScheduler();
 		return false;
 	}
 	kprintf("E. ");
@@ -645,11 +645,13 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 	if (entry && !((*entry) & PAGE_PRESENT)) {
 		kprintf("F. ");
 
+		lockScheduler();
 		Phys::forbidEvictions = true;
 		size_t id = (*entry) >> 11;				//we need the ID
 		size_t phys = Phys::allocatePage();		//get a new physical page
 		Phys::forbidEvictions = false;
 		kprintf("G. ");
+		unlockScheduler();
 
 		*entry &= 0xFFF;						//clear address
 		*entry |= PAGE_PRESENT;					//it is now present
@@ -657,6 +659,9 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 												//clear this as the low bit of the ID, as we want it set to 1
 		*entry |= phys;
 		kprintf("H. ");
+
+		//flush TLB
+		CPU::writeCR3(CPU::readCR3());
 
 		for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
 			kprintf("reading to addr 0x%X from sector %d\n", ((uint8_t*) faultAddr) + 512 * i, Virt::swapIDToSector(id) + i);
@@ -668,7 +673,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		kprintf("reloading: 0x%X, %d\n", faultAddr, swapBalance);
 
 		Virt::freeSwapfilePage(id);
-		unlockScheduler();
+		//unlockScheduler();
 
 		if (onPageBoundary) {
 			tryLoadBackOffDisk(faultAddr + 4096);
@@ -679,14 +684,11 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 			scanForEviction(1, 8);
 			xyz = 0;
 		}
-
-		//flush TLB
-		CPU::writeCR3(CPU::readCR3());
 		return true;
 	}
 
 	kprintf("Y. ");
-	unlockScheduler();
+	//unlockScheduler();
 	kprintf("Z. ");
 
 	return false;
