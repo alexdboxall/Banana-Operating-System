@@ -641,6 +641,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		*entry |= phys;
 		kprintf("*entry new = 0x%X\n", *entry);
 
+		kprintf("faultAddr = 0x%X\n", faultAddr);
 		disks[Virt::swapfileDrive - 'A']->read(Virt::swapIDToSector(id), Virt::swapfileSectorsPerPage, (void*) faultAddr);
 		Virt::freeSwapfilePage(id);
 		kprintf("loaded from disk, sector 0x%X\n", Virt::swapIDToSector(id));
