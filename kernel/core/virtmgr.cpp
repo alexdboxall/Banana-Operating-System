@@ -654,6 +654,17 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
 			disks[Virt::swapfileDrive - 'A']->read(Virt::swapIDToSector(id) + i, 1, ((uint8_t*) faultAddr) + 512 * i);
 		}
+		uint8_t* a = (uint8_t*) faultAddr;
+		bool found = false;
+		for (int i = 0; i < 4096; ++i) {
+			if (*a++ != 0) {
+				found = true;
+				break;
+			}
+		}
+		if (!found) {
+			kprintf("** ALL ZEROES **\n");
+		}
 
 		--swapBalance;
 		kprintf("    Total on disk: %d. Reload\n", swapBalance);
