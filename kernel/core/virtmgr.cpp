@@ -700,6 +700,11 @@ void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 
 				if (/*(oldPageEntry & PAGE_SWAPPABLE) && */(oldPageEntry & PAGE_ALLOCATED)) {
 					if (oldPageEntry & PAGE_PRESENT) {
+						//kernel stacks (like the one the page fault handler uses) live here
+						if ((oldPageEntry & ~0xFFF) < 0x10000000) {
+							continue;
+						}
+
 						if (1 || (swp % throwAwayRate) == 0) {
 							evict(vaddr);
 							++chucks;
