@@ -618,7 +618,7 @@ void VAS::evict(size_t virt)
 
 bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 {
-	kprintf("try 0x%X\n", faultAddr);
+	kprintf("Trying to reload 0x%X\n", faultAddr);
 	static int xyz = 0;
 
 	bool onPageBoundary = (faultAddr & 0xFFF) > 0xFE0;
@@ -664,10 +664,13 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 
 		Virt::freeSwapfilePage(id);
 		//unlockScheduler();
+		kprintf("J. ");
 
 		if (onPageBoundary) {
 			panic(" ** ON BOUNDARY!!!\n");
 		}
+
+		kprintf("K. ");
 
 		return true;
 	}
