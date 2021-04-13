@@ -4,10 +4,8 @@
 #include "libk/string.h"
 #include "hw/cpu.hpp"
 #include "core/kheap.hpp"
-#include "hal/fpu.hpp"
 #include "core/physmgr.hpp"
 #include "thr/elf.hpp"
-#include "vm86/x87em.hpp"
 
 #pragma GCC optimize ("O2")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -61,7 +59,6 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 	//nextThreadToRun->timeSliceRemaining = 50000000;
 
 	updateTimeUsed();
-
 	switchToThreadASM(nextThreadToRun);
 }
 
@@ -599,7 +596,7 @@ void sleep(uint64_t seconds)
 }
 
 extern "C" void taskReturned()
-{	
+{
 	panic("TASK RETURNED. CHECK KERNEL TASKS AND ALL DRIVERS.\n");
 
 	while (1) {
@@ -692,7 +689,7 @@ void Semaphore::release()
 	unlockStuff();
 }
 
-Mutex::Mutex() : Semaphore(1)
+Mutex::Mutex(): Semaphore(1)
 {
 
 }

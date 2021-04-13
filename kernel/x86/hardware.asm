@@ -306,6 +306,9 @@ commonThreadSwitch:
 
 	mov esp, [esi + 0x4]			;ESP stored at offset 0x4 into the struct
 
+    ;mov eax, cr0
+    ;or eax, (1 << 3)                ;set task switched bit
+    ;mov cr0, eax
 
 	call changeTSS
 

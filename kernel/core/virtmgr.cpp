@@ -230,6 +230,7 @@ namespace Virt
 	}
 
 	void swappingSetup() {
+		kprintf("setting up swapping.\n");
 		uint64_t siz;
 		bool dir;
 		File* f = new File("C:/pagefile.sys", kernelProcess);
