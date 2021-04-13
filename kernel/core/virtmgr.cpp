@@ -634,7 +634,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		return false;
 	}
 
-	if (entry && ((*entry) & PAGE_ALLOCATED) && !((*entry) & PAGE_PRESENT)) {
+	if (entry && !((*entry) & PAGE_PRESENT)) {
 
 		Phys::forbidEvictions = true;
 		size_t id = (*entry) >> 11;				//we need the ID
