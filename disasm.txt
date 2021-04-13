@@ -24734,143 +24734,140 @@ c0012a7c:	56                   	push   esi
 c0012a7d:	53                   	push   ebx
 c0012a7e:	83 ec 1c             	sub    esp,0x1c
 c0012a81:	8b 44 24 30          	mov    eax,DWORD PTR [esp+0x30]
-c0012a85:	8b 74 24 34          	mov    esi,DWORD PTR [esp+0x34]
+c0012a85:	8b 6c 24 34          	mov    ebp,DWORD PTR [esp+0x34]
 c0012a89:	89 44 24 0c          	mov    DWORD PTR [esp+0xc],eax
 c0012a8d:	e8 ee b2 00 00       	call   c001dd80 <lockScheduler()>
 c0012a92:	83 ec 08             	sub    esp,0x8
-c0012a95:	56                   	push   esi
+c0012a95:	55                   	push   ebp
 c0012a96:	68 8c a6 02 c0       	push   0xc002a68c
 c0012a9b:	e8 54 04 00 00       	call   c0012ef4 <Dbg::kprintf(char const*, ...)>
 c0012aa0:	e8 3b f2 ff ff       	call   c0011ce0 <Virt::allocateSwapfilePage()>
 c0012aa5:	83 c4 10             	add    esp,0x10
-c0012aa8:	81 fe 00 d0 01 10    	cmp    esi,0x1001d000
-c0012aae:	74 70                	je     c0012b20 <VAS::evict(unsigned long)+0xa6>
-c0012ab0:	89 c3                	mov    ebx,eax
-c0012ab2:	a1 2c d3 02 c0       	mov    eax,ds:0xc002d32c
-c0012ab7:	85 c0                	test   eax,eax
-c0012ab9:	7e 3d                	jle    c0012af8 <VAS::evict(unsigned long)+0x7e>
-c0012abb:	89 f5                	mov    ebp,esi
-c0012abd:	31 ff                	xor    edi,edi
-c0012abf:	83 ec 0c             	sub    esp,0xc
-c0012ac2:	53                   	push   ebx
-c0012ac3:	e8 06 f2 ff ff       	call   c0011cce <Virt::swapIDToSector(unsigned long)>
-c0012ac8:	89 2c 24             	mov    DWORD PTR [esp],ebp
-c0012acb:	01 f8                	add    eax,edi
-c0012acd:	6a 01                	push   0x1
-c0012acf:	31 d2                	xor    edx,edx
-c0012ad1:	47                   	inc    edi
-c0012ad2:	52                   	push   edx
-c0012ad3:	81 c5 00 02 00 00    	add    ebp,0x200
-c0012ad9:	50                   	push   eax
-c0012ada:	0f be 05 38 d3 02 c0 	movsx  eax,BYTE PTR ds:0xc002d338
-c0012ae1:	ff 34 85 9c e8 02 c0 	push   DWORD PTR [eax*4-0x3ffd1764]
-c0012ae8:	e8 93 3c 00 00       	call   c0016780 <LogicalDisk::write(unsigned long long, int, void*)>
-c0012aed:	83 c4 20             	add    esp,0x20
-c0012af0:	39 3d 2c d3 02 c0    	cmp    DWORD PTR ds:0xc002d32c,edi
-c0012af6:	7f c7                	jg     c0012abf <VAS::evict(unsigned long)+0x45>
-c0012af8:	83 ec 08             	sub    esp,0x8
-c0012afb:	c1 e3 0b             	shl    ebx,0xb
-c0012afe:	56                   	push   esi
-c0012aff:	ff 74 24 18          	push   DWORD PTR [esp+0x18]
-c0012b03:	e8 e8 f4 ff ff       	call   c0011ff0 <VAS::getPageTableEntry(unsigned long)>
-c0012b08:	8b 10                	mov    edx,DWORD PTR [eax]
-c0012b0a:	81 e2 fe 07 00 00    	and    edx,0x7fe
-c0012b10:	09 da                	or     edx,ebx
-c0012b12:	89 10                	mov    DWORD PTR [eax],edx
-c0012b14:	83 c4 2c             	add    esp,0x2c
-c0012b17:	5b                   	pop    ebx
-c0012b18:	5e                   	pop    esi
-c0012b19:	5f                   	pop    edi
-c0012b1a:	5d                   	pop    ebp
-c0012b1b:	e9 62 b2 00 00       	jmp    c001dd82 <unlockScheduler()>
-c0012b20:	eb fe                	jmp    c0012b20 <VAS::evict(unsigned long)+0xa6>
+c0012aa8:	89 c7                	mov    edi,eax
+c0012aaa:	a1 2c d3 02 c0       	mov    eax,ds:0xc002d32c
+c0012aaf:	85 c0                	test   eax,eax
+c0012ab1:	7e 3d                	jle    c0012af0 <VAS::evict(unsigned long)+0x76>
+c0012ab3:	89 ee                	mov    esi,ebp
+c0012ab5:	31 db                	xor    ebx,ebx
+c0012ab7:	83 ec 0c             	sub    esp,0xc
+c0012aba:	57                   	push   edi
+c0012abb:	e8 0e f2 ff ff       	call   c0011cce <Virt::swapIDToSector(unsigned long)>
+c0012ac0:	89 34 24             	mov    DWORD PTR [esp],esi
+c0012ac3:	01 d8                	add    eax,ebx
+c0012ac5:	6a 01                	push   0x1
+c0012ac7:	31 d2                	xor    edx,edx
+c0012ac9:	43                   	inc    ebx
+c0012aca:	52                   	push   edx
+c0012acb:	81 c6 00 02 00 00    	add    esi,0x200
+c0012ad1:	50                   	push   eax
+c0012ad2:	0f be 05 38 d3 02 c0 	movsx  eax,BYTE PTR ds:0xc002d338
+c0012ad9:	ff 34 85 9c e8 02 c0 	push   DWORD PTR [eax*4-0x3ffd1764]
+c0012ae0:	e8 9b 3c 00 00       	call   c0016780 <LogicalDisk::write(unsigned long long, int, void*)>
+c0012ae5:	83 c4 20             	add    esp,0x20
+c0012ae8:	39 1d 2c d3 02 c0    	cmp    DWORD PTR ds:0xc002d32c,ebx
+c0012aee:	7f c7                	jg     c0012ab7 <VAS::evict(unsigned long)+0x3d>
+c0012af0:	83 ec 08             	sub    esp,0x8
+c0012af3:	c1 e7 0b             	shl    edi,0xb
+c0012af6:	55                   	push   ebp
+c0012af7:	ff 74 24 18          	push   DWORD PTR [esp+0x18]
+c0012afb:	e8 f0 f4 ff ff       	call   c0011ff0 <VAS::getPageTableEntry(unsigned long)>
+c0012b00:	8b 10                	mov    edx,DWORD PTR [eax]
+c0012b02:	81 e2 fe 07 00 00    	and    edx,0x7fe
+c0012b08:	09 d7                	or     edi,edx
+c0012b0a:	89 38                	mov    DWORD PTR [eax],edi
+c0012b0c:	83 c4 2c             	add    esp,0x2c
+c0012b0f:	5b                   	pop    ebx
+c0012b10:	5e                   	pop    esi
+c0012b11:	5f                   	pop    edi
+c0012b12:	5d                   	pop    ebp
+c0012b13:	e9 6a b2 00 00       	jmp    c001dd82 <unlockScheduler()>
 
-c0012b22 <VAS::tryLoadBackOffDisk(unsigned long)>:
-c0012b22:	57                   	push   edi
-c0012b23:	56                   	push   esi
-c0012b24:	53                   	push   ebx
-c0012b25:	8b 5c 24 14          	mov    ebx,DWORD PTR [esp+0x14]
-c0012b29:	83 ec 08             	sub    esp,0x8
-c0012b2c:	53                   	push   ebx
-c0012b2d:	81 e3 00 f0 ff ff    	and    ebx,0xfffff000
-c0012b33:	68 c7 a7 02 c0       	push   0xc002a7c7
-c0012b38:	e8 b7 03 00 00       	call   c0012ef4 <Dbg::kprintf(char const*, ...)>
-c0012b3d:	e8 3e b2 00 00       	call   c001dd80 <lockScheduler()>
-c0012b42:	5a                   	pop    edx
-c0012b43:	59                   	pop    ecx
-c0012b44:	53                   	push   ebx
-c0012b45:	68 db a7 02 c0       	push   0xc002a7db
-c0012b4a:	e8 a5 03 00 00       	call   c0012ef4 <Dbg::kprintf(char const*, ...)>
-c0012b4f:	83 c4 10             	add    esp,0x10
-c0012b52:	85 db                	test   ebx,ebx
-c0012b54:	74 29                	je     c0012b7f <VAS::tryLoadBackOffDisk(unsigned long)+0x5d>
-c0012b56:	83 ec 08             	sub    esp,0x8
-c0012b59:	53                   	push   ebx
-c0012b5a:	ff 74 24 1c          	push   DWORD PTR [esp+0x1c]
-c0012b5e:	e8 8d f4 ff ff       	call   c0011ff0 <VAS::getPageTableEntry(unsigned long)>
-c0012b63:	83 c4 10             	add    esp,0x10
-c0012b66:	89 c6                	mov    esi,eax
-c0012b68:	85 c0                	test   eax,eax
-c0012b6a:	74 08                	je     c0012b74 <VAS::tryLoadBackOffDisk(unsigned long)+0x52>
-c0012b6c:	f7 00 00 04 00 00    	test   DWORD PTR [eax],0x400
-c0012b72:	75 11                	jne    c0012b85 <VAS::tryLoadBackOffDisk(unsigned long)+0x63>
-c0012b74:	e8 09 b2 00 00       	call   c001dd82 <unlockScheduler()>
-c0012b79:	5b                   	pop    ebx
-c0012b7a:	31 c0                	xor    eax,eax
-c0012b7c:	5e                   	pop    esi
-c0012b7d:	5f                   	pop    edi
-c0012b7e:	c3                   	ret    
-c0012b7f:	5b                   	pop    ebx
-c0012b80:	31 c0                	xor    eax,eax
-c0012b82:	5e                   	pop    esi
-c0012b83:	5f                   	pop    edi
-c0012b84:	c3                   	ret    
-c0012b85:	83 ec 08             	sub    esp,0x8
-c0012b88:	53                   	push   ebx
-c0012b89:	68 ef a7 02 c0       	push   0xc002a7ef
-c0012b8e:	e8 61 03 00 00       	call   c0012ef4 <Dbg::kprintf(char const*, ...)>
-c0012b93:	c6 05 c0 e3 02 c0 01 	mov    BYTE PTR ds:0xc002e3c0,0x1
-c0012b9a:	8b 3e                	mov    edi,DWORD PTR [esi]
-c0012b9c:	e8 41 d3 ff ff       	call   c000fee2 <Phys::allocatePage()>
-c0012ba1:	c1 ef 0b             	shr    edi,0xb
-c0012ba4:	c6 05 c0 e3 02 c0 00 	mov    BYTE PTR ds:0xc002e3c0,0x0
-c0012bab:	83 c4 10             	add    esp,0x10
-c0012bae:	8b 16                	mov    edx,DWORD PTR [esi]
+c0012b18 <VAS::tryLoadBackOffDisk(unsigned long)>:
+c0012b18:	57                   	push   edi
+c0012b19:	56                   	push   esi
+c0012b1a:	53                   	push   ebx
+c0012b1b:	8b 5c 24 14          	mov    ebx,DWORD PTR [esp+0x14]
+c0012b1f:	83 ec 08             	sub    esp,0x8
+c0012b22:	53                   	push   ebx
+c0012b23:	81 e3 00 f0 ff ff    	and    ebx,0xfffff000
+c0012b29:	68 c7 a7 02 c0       	push   0xc002a7c7
+c0012b2e:	e8 c1 03 00 00       	call   c0012ef4 <Dbg::kprintf(char const*, ...)>
+c0012b33:	e8 48 b2 00 00       	call   c001dd80 <lockScheduler()>
+c0012b38:	5a                   	pop    edx
+c0012b39:	59                   	pop    ecx
+c0012b3a:	53                   	push   ebx
+c0012b3b:	68 db a7 02 c0       	push   0xc002a7db
+c0012b40:	e8 af 03 00 00       	call   c0012ef4 <Dbg::kprintf(char const*, ...)>
+c0012b45:	83 c4 10             	add    esp,0x10
+c0012b48:	85 db                	test   ebx,ebx
+c0012b4a:	74 29                	je     c0012b75 <VAS::tryLoadBackOffDisk(unsigned long)+0x5d>
+c0012b4c:	83 ec 08             	sub    esp,0x8
+c0012b4f:	53                   	push   ebx
+c0012b50:	ff 74 24 1c          	push   DWORD PTR [esp+0x1c]
+c0012b54:	e8 97 f4 ff ff       	call   c0011ff0 <VAS::getPageTableEntry(unsigned long)>
+c0012b59:	83 c4 10             	add    esp,0x10
+c0012b5c:	89 c7                	mov    edi,eax
+c0012b5e:	85 c0                	test   eax,eax
+c0012b60:	74 08                	je     c0012b6a <VAS::tryLoadBackOffDisk(unsigned long)+0x52>
+c0012b62:	f7 00 00 04 00 00    	test   DWORD PTR [eax],0x400
+c0012b68:	75 11                	jne    c0012b7b <VAS::tryLoadBackOffDisk(unsigned long)+0x63>
+c0012b6a:	e8 13 b2 00 00       	call   c001dd82 <unlockScheduler()>
+c0012b6f:	31 c0                	xor    eax,eax
+c0012b71:	5b                   	pop    ebx
+c0012b72:	5e                   	pop    esi
+c0012b73:	5f                   	pop    edi
+c0012b74:	c3                   	ret    
+c0012b75:	5b                   	pop    ebx
+c0012b76:	31 c0                	xor    eax,eax
+c0012b78:	5e                   	pop    esi
+c0012b79:	5f                   	pop    edi
+c0012b7a:	c3                   	ret    
+c0012b7b:	83 ec 08             	sub    esp,0x8
+c0012b7e:	53                   	push   ebx
+c0012b7f:	68 ef a7 02 c0       	push   0xc002a7ef
+c0012b84:	e8 6b 03 00 00       	call   c0012ef4 <Dbg::kprintf(char const*, ...)>
+c0012b89:	83 c4 10             	add    esp,0x10
+c0012b8c:	81 fb 00 d0 01 10    	cmp    ebx,0x1001d000
+c0012b92:	75 02                	jne    c0012b96 <VAS::tryLoadBackOffDisk(unsigned long)+0x7e>
+c0012b94:	eb fe                	jmp    c0012b94 <VAS::tryLoadBackOffDisk(unsigned long)+0x7c>
+c0012b96:	c6 05 c0 e3 02 c0 01 	mov    BYTE PTR ds:0xc002e3c0,0x1
+c0012b9d:	8b 37                	mov    esi,DWORD PTR [edi]
+c0012b9f:	e8 3e d3 ff ff       	call   c000fee2 <Phys::allocatePage()>
+c0012ba4:	c1 ee 0b             	shr    esi,0xb
+c0012ba7:	c6 05 c0 e3 02 c0 00 	mov    BYTE PTR ds:0xc002e3c0,0x0
+c0012bae:	8b 17                	mov    edx,DWORD PTR [edi]
 c0012bb0:	81 e2 ff 0f 00 00    	and    edx,0xfff
-c0012bb6:	09 c2                	or     edx,eax
-c0012bb8:	81 ca 01 08 00 00    	or     edx,0x801
-c0012bbe:	89 16                	mov    DWORD PTR [esi],edx
-c0012bc0:	a1 2c d3 02 c0       	mov    eax,ds:0xc002d32c
-c0012bc5:	85 c0                	test   eax,eax
-c0012bc7:	7e 3b                	jle    c0012c04 <VAS::tryLoadBackOffDisk(unsigned long)+0xe2>
-c0012bc9:	31 f6                	xor    esi,esi
-c0012bcb:	83 ec 0c             	sub    esp,0xc
-c0012bce:	57                   	push   edi
-c0012bcf:	e8 fa f0 ff ff       	call   c0011cce <Virt::swapIDToSector(unsigned long)>
-c0012bd4:	89 1c 24             	mov    DWORD PTR [esp],ebx
-c0012bd7:	01 f0                	add    eax,esi
-c0012bd9:	6a 01                	push   0x1
-c0012bdb:	31 d2                	xor    edx,edx
-c0012bdd:	46                   	inc    esi
-c0012bde:	52                   	push   edx
-c0012bdf:	81 c3 00 02 00 00    	add    ebx,0x200
-c0012be5:	50                   	push   eax
-c0012be6:	0f be 05 38 d3 02 c0 	movsx  eax,BYTE PTR ds:0xc002d338
-c0012bed:	ff 34 85 9c e8 02 c0 	push   DWORD PTR [eax*4-0x3ffd1764]
-c0012bf4:	e8 1b 3b 00 00       	call   c0016714 <LogicalDisk::read(unsigned long long, int, void*)>
-c0012bf9:	83 c4 20             	add    esp,0x20
-c0012bfc:	39 35 2c d3 02 c0    	cmp    DWORD PTR ds:0xc002d32c,esi
-c0012c02:	7f c7                	jg     c0012bcb <VAS::tryLoadBackOffDisk(unsigned long)+0xa9>
-c0012c04:	83 ec 0c             	sub    esp,0xc
-c0012c07:	57                   	push   edi
-c0012c08:	e8 a3 f0 ff ff       	call   c0011cb0 <Virt::freeSwapfilePage(unsigned long)>
-c0012c0d:	e8 70 b1 00 00       	call   c001dd82 <unlockScheduler()>
-c0012c12:	83 c4 10             	add    esp,0x10
-c0012c15:	b0 01                	mov    al,0x1
-c0012c17:	5b                   	pop    ebx
-c0012c18:	5e                   	pop    esi
-c0012c19:	5f                   	pop    edi
-c0012c1a:	c3                   	ret    
+c0012bb6:	09 d0                	or     eax,edx
+c0012bb8:	0d 01 08 00 00       	or     eax,0x801
+c0012bbd:	89 07                	mov    DWORD PTR [edi],eax
+c0012bbf:	a1 2c d3 02 c0       	mov    eax,ds:0xc002d32c
+c0012bc4:	85 c0                	test   eax,eax
+c0012bc6:	7e 3b                	jle    c0012c03 <VAS::tryLoadBackOffDisk(unsigned long)+0xeb>
+c0012bc8:	31 ff                	xor    edi,edi
+c0012bca:	83 ec 0c             	sub    esp,0xc
+c0012bcd:	56                   	push   esi
+c0012bce:	e8 fb f0 ff ff       	call   c0011cce <Virt::swapIDToSector(unsigned long)>
+c0012bd3:	89 1c 24             	mov    DWORD PTR [esp],ebx
+c0012bd6:	01 f8                	add    eax,edi
+c0012bd8:	6a 01                	push   0x1
+c0012bda:	31 d2                	xor    edx,edx
+c0012bdc:	47                   	inc    edi
+c0012bdd:	52                   	push   edx
+c0012bde:	81 c3 00 02 00 00    	add    ebx,0x200
+c0012be4:	50                   	push   eax
+c0012be5:	0f be 05 38 d3 02 c0 	movsx  eax,BYTE PTR ds:0xc002d338
+c0012bec:	ff 34 85 9c e8 02 c0 	push   DWORD PTR [eax*4-0x3ffd1764]
+c0012bf3:	e8 1c 3b 00 00       	call   c0016714 <LogicalDisk::read(unsigned long long, int, void*)>
+c0012bf8:	83 c4 20             	add    esp,0x20
+c0012bfb:	39 3d 2c d3 02 c0    	cmp    DWORD PTR ds:0xc002d32c,edi
+c0012c01:	7f c7                	jg     c0012bca <VAS::tryLoadBackOffDisk(unsigned long)+0xb2>
+c0012c03:	83 ec 0c             	sub    esp,0xc
+c0012c06:	56                   	push   esi
+c0012c07:	e8 a4 f0 ff ff       	call   c0011cb0 <Virt::freeSwapfilePage(unsigned long)>
+c0012c0c:	e8 71 b1 00 00       	call   c001dd82 <unlockScheduler()>
+c0012c11:	83 c4 10             	add    esp,0x10
+c0012c14:	b0 01                	mov    al,0x1
+c0012c16:	e9 56 ff ff ff       	jmp    c0012b71 <VAS::tryLoadBackOffDisk(unsigned long)+0x59>
 c0012c1b:	90                   	nop
 
 c0012c1c <VAS::scanForEviction(int, int)>:
@@ -28359,7 +28356,7 @@ c0015281:	53                   	push   ebx
 c0015282:	a1 00 20 00 c2       	mov    eax,ds:0xc2002000
 c0015287:	8b 40 40             	mov    eax,DWORD PTR [eax+0x40]
 c001528a:	ff b0 32 05 00 00    	push   DWORD PTR [eax+0x532]
-c0015290:	e8 8d d8 ff ff       	call   c0012b22 <VAS::tryLoadBackOffDisk(unsigned long)>
+c0015290:	e8 83 d8 ff ff       	call   c0012b18 <VAS::tryLoadBackOffDisk(unsigned long)>
 c0015295:	83 c4 10             	add    esp,0x10
 c0015298:	84 c0                	test   al,al
 c001529a:	74 05                	je     c00152a1 <pgFault(regs*, void*)+0x40>

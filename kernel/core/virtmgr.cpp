@@ -630,10 +630,6 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 	if (entry && ((*entry) & PAGE_ALLOCATED)) {
 		kprintf("loading page at 0x%X\n", faultAddr);
 
-		if (faultAddr == 0x1001D000) {
-			while (1);
-		}
-
 		Phys::forbidEvictions = true;
 		size_t id = (*entry) >> 11;				//we need the ID
 		size_t phys = Phys::allocatePage();		//get a new physical page
@@ -649,6 +645,10 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 			disks[Virt::swapfileDrive - 'A']->read(Virt::swapIDToSector(id) + i, 1, ((uint8_t*) faultAddr) + 512 * i);
 		}
 		
+		if (faultAddr == 0x1001D000) {
+			while (1);
+		}
+
 		Virt::freeSwapfilePage(id);
 		unlockScheduler();
 		return true;
