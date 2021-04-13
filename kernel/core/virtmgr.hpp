@@ -58,6 +58,7 @@ public:
 	bool supervisorVAS;
 
 	size_t sbrk = 0;
+	size_t evictionScanner = 0;
 	
 	size_t* pageDirectoryBase;
 	size_t pageDirectoryBasePhysical;
