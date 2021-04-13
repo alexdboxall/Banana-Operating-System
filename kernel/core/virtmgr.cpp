@@ -678,7 +678,6 @@ void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 	static int cycle2 = 64;
 	++cycle;
 
-	kprintf("%d. %d.\n", cycle2, cycle);
 	throwAwayRate = 1;
 
 	if (throwAwayRate == 0) throwAwayRate = 1;
@@ -699,7 +698,6 @@ void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 				if ((oldPageEntry & PAGE_SWAPPABLE) && (oldPageEntry & PAGE_ALLOCATED)) {
 					if (oldPageEntry & PAGE_PRESENT) {
 						if ((swp % throwAwayRate) == 0) {
-							kprintf("%d, %d\n", i, j);
 							evict(vaddr);
 							++chucks;
 							if (chucks == wantChucks) {
@@ -713,7 +711,6 @@ void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 			}
 		}
 	}
-	goto retry;
 }
 
 extern uint8_t inb(uint16_t);
