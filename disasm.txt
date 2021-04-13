@@ -24793,59 +24793,58 @@ c0012b35:	e9 8c b2 00 00       	jmp    c001ddc6 <unlockScheduler()>
 
 c0012b3a <VAS::scanForEviction(int, int)>:
 c0012b3a:	55                   	push   ebp
-c0012b3b:	57                   	push   edi
-c0012b3c:	31 ff                	xor    edi,edi
+c0012b3b:	31 ed                	xor    ebp,ebp
+c0012b3d:	57                   	push   edi
 c0012b3e:	56                   	push   esi
-c0012b3f:	53                   	push   ebx
-c0012b40:	bb 00 00 40 00       	mov    ebx,0x400000
+c0012b3f:	be 00 00 40 00       	mov    esi,0x400000
+c0012b44:	53                   	push   ebx
 c0012b45:	83 ec 1c             	sub    esp,0x1c
-c0012b48:	8b 74 24 30          	mov    esi,DWORD PTR [esp+0x30]
+c0012b48:	8b 5c 24 30          	mov    ebx,DWORD PTR [esp+0x30]
 c0012b4c:	ff 05 10 e5 02 c0    	inc    DWORD PTR ds:0xc002e510
 c0012b52:	c7 44 24 0c 00 00 00 00 	mov    DWORD PTR [esp+0xc],0x0
-c0012b5a:	eb 13                	jmp    c0012b6f <VAS::scanForEviction(int, int)+0x35>
-c0012b5c:	83 44 24 0c 04       	add    DWORD PTR [esp+0xc],0x4
-c0012b61:	81 c3 00 00 40 00    	add    ebx,0x400000
-c0012b67:	81 fb 00 00 40 c0    	cmp    ebx,0xc0400000
-c0012b6d:	74 5e                	je     c0012bcd <VAS::scanForEviction(int, int)+0x93>
-c0012b6f:	8b 46 08             	mov    eax,DWORD PTR [esi+0x8]
-c0012b72:	8b 54 24 0c          	mov    edx,DWORD PTR [esp+0xc]
-c0012b76:	f6 04 10 01          	test   BYTE PTR [eax+edx*1],0x1
-c0012b7a:	74 e0                	je     c0012b5c <VAS::scanForEviction(int, int)+0x22>
-c0012b7c:	8d ab 00 00 c0 ff    	lea    ebp,[ebx-0x400000]
-c0012b82:	eb 0a                	jmp    c0012b8e <VAS::scanForEviction(int, int)+0x54>
-c0012b84:	81 c5 00 10 00 00    	add    ebp,0x1000
-c0012b8a:	39 eb                	cmp    ebx,ebp
-c0012b8c:	74 ce                	je     c0012b5c <VAS::scanForEviction(int, int)+0x22>
-c0012b8e:	55                   	push   ebp
-c0012b8f:	56                   	push   esi
-c0012b90:	e8 5d f4 ff ff       	call   c0011ff2 <VAS::getPageTableEntry(unsigned long)>
-c0012b95:	5a                   	pop    edx
-c0012b96:	8b 00                	mov    eax,DWORD PTR [eax]
-c0012b98:	59                   	pop    ecx
-c0012b99:	89 c1                	mov    ecx,eax
-c0012b9b:	81 e1 00 0c 00 00    	and    ecx,0xc00
-c0012ba1:	81 f9 00 0c 00 00    	cmp    ecx,0xc00
-c0012ba7:	75 db                	jne    c0012b84 <VAS::scanForEviction(int, int)+0x4a>
-c0012ba9:	a8 01                	test   al,0x1
-c0012bab:	74 d7                	je     c0012b84 <VAS::scanForEviction(int, int)+0x4a>
-c0012bad:	25 00 f0 ff ff       	and    eax,0xfffff000
-c0012bb2:	3d ff ff ff 0f       	cmp    eax,0xfffffff
-c0012bb7:	76 cb                	jbe    c0012b84 <VAS::scanForEviction(int, int)+0x4a>
-c0012bb9:	83 ec 08             	sub    esp,0x8
-c0012bbc:	47                   	inc    edi
-c0012bbd:	55                   	push   ebp
-c0012bbe:	56                   	push   esi
-c0012bbf:	e8 b8 fe ff ff       	call   c0012a7c <VAS::evict(unsigned long)>
-c0012bc4:	83 c4 10             	add    esp,0x10
-c0012bc7:	3b 7c 24 38          	cmp    edi,DWORD PTR [esp+0x38]
-c0012bcb:	75 b7                	jne    c0012b84 <VAS::scanForEviction(int, int)+0x4a>
-c0012bcd:	83 c4 1c             	add    esp,0x1c
-c0012bd0:	5b                   	pop    ebx
-c0012bd1:	5e                   	pop    esi
-c0012bd2:	5f                   	pop    edi
-c0012bd3:	5d                   	pop    ebp
-c0012bd4:	c3                   	ret    
-c0012bd5:	90                   	nop
+c0012b5a:	eb 11                	jmp    c0012b6d <VAS::scanForEviction(int, int)+0x33>
+c0012b5c:	83 c5 04             	add    ebp,0x4
+c0012b5f:	81 c6 00 00 40 00    	add    esi,0x400000
+c0012b65:	81 fd 00 10 00 00    	cmp    ebp,0x1000
+c0012b6b:	74 61                	je     c0012bce <VAS::scanForEviction(int, int)+0x94>
+c0012b6d:	8b 43 08             	mov    eax,DWORD PTR [ebx+0x8]
+c0012b70:	f6 04 28 01          	test   BYTE PTR [eax+ebp*1],0x1
+c0012b74:	74 e6                	je     c0012b5c <VAS::scanForEviction(int, int)+0x22>
+c0012b76:	8d be 00 00 c0 ff    	lea    edi,[esi-0x400000]
+c0012b7c:	eb 0a                	jmp    c0012b88 <VAS::scanForEviction(int, int)+0x4e>
+c0012b7e:	81 c7 00 10 00 00    	add    edi,0x1000
+c0012b84:	39 fe                	cmp    esi,edi
+c0012b86:	74 d4                	je     c0012b5c <VAS::scanForEviction(int, int)+0x22>
+c0012b88:	57                   	push   edi
+c0012b89:	53                   	push   ebx
+c0012b8a:	e8 63 f4 ff ff       	call   c0011ff2 <VAS::getPageTableEntry(unsigned long)>
+c0012b8f:	5a                   	pop    edx
+c0012b90:	8b 00                	mov    eax,DWORD PTR [eax]
+c0012b92:	59                   	pop    ecx
+c0012b93:	89 c1                	mov    ecx,eax
+c0012b95:	81 e1 00 0c 00 00    	and    ecx,0xc00
+c0012b9b:	81 f9 00 0c 00 00    	cmp    ecx,0xc00
+c0012ba1:	75 db                	jne    c0012b7e <VAS::scanForEviction(int, int)+0x44>
+c0012ba3:	a8 01                	test   al,0x1
+c0012ba5:	74 d7                	je     c0012b7e <VAS::scanForEviction(int, int)+0x44>
+c0012ba7:	25 00 f0 ff ff       	and    eax,0xfffff000
+c0012bac:	3d ff ff ff 0f       	cmp    eax,0xfffffff
+c0012bb1:	76 cb                	jbe    c0012b7e <VAS::scanForEviction(int, int)+0x44>
+c0012bb3:	83 ec 08             	sub    esp,0x8
+c0012bb6:	57                   	push   edi
+c0012bb7:	53                   	push   ebx
+c0012bb8:	e8 bf fe ff ff       	call   c0012a7c <VAS::evict(unsigned long)>
+c0012bbd:	ff 44 24 1c          	inc    DWORD PTR [esp+0x1c]
+c0012bc1:	8b 44 24 1c          	mov    eax,DWORD PTR [esp+0x1c]
+c0012bc5:	83 c4 10             	add    esp,0x10
+c0012bc8:	3b 44 24 38          	cmp    eax,DWORD PTR [esp+0x38]
+c0012bcc:	75 b0                	jne    c0012b7e <VAS::scanForEviction(int, int)+0x44>
+c0012bce:	83 c4 1c             	add    esp,0x1c
+c0012bd1:	5b                   	pop    ebx
+c0012bd2:	5e                   	pop    esi
+c0012bd3:	5f                   	pop    edi
+c0012bd4:	5d                   	pop    ebp
+c0012bd5:	c3                   	ret    
 
 c0012bd6 <VAS::tryLoadBackOffDisk(unsigned long)>:
 c0012bd6:	55                   	push   ebp
@@ -36500,7 +36499,7 @@ c001b41a:	77 1d                	ja     c001b439 <Sys::sbrk(regs*)+0x51>
 c001b41c:	8d 93 ff 0f 00 00    	lea    edx,[ebx+0xfff]
 c001b422:	50                   	push   eax
 c001b423:	c1 ea 0c             	shr    edx,0xc
-c001b426:	68 07 0c 00 00       	push   0xc07
+c001b426:	68 07 04 00 00       	push   0x407
 c001b42b:	52                   	push   edx
 c001b42c:	51                   	push   ecx
 c001b42d:	e8 46 70 ff ff       	call   c0012478 <VAS::allocatePages(int, int)>
