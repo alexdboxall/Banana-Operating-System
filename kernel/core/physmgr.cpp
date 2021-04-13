@@ -134,6 +134,8 @@ namespace Phys
 			VgaText::updateRAMUsageDisplay(percent);
 		}
 		setPageState(page, STATE_FREE);
+
+		kprintf("    freeing: USED KILOBYTES: %d / %d\n", usedPages * 4, usablePages * 4);
 	}
 
 	size_t currentPagePointer = 0;
@@ -147,6 +149,8 @@ namespace Phys
 			if (getPageState(currentPagePointer) == STATE_FREE) {
 				setPageState(currentPagePointer, STATE_ALLOCATED);
 				++usedPages;
+
+				kprintf("   allocing: USED KILOBYTES: %d / %d\n", usedPages * 4, usablePages * 4);
 
 				//first 3MB not counted, but should be in the percentage to give the user a better idea of what's going on
 				//1MB + 1MB + 640KB = 672 pages
