@@ -231,7 +231,7 @@ namespace Virt
 
 	void swappingSetup() {
 		kprintf("setting up swapping.\n");
-		uint64_t siz;
+		/*uint64_t siz;
 		bool dir;
 		File* f = new File("C:/pagefile.sys", kernelProcess);
 		if (!f) {
@@ -258,7 +258,7 @@ namespace Virt
 			siz = swapfileLength * 512;
 		}
 
-		swapfileLength = siz / 512;
+		swapfileLength = siz / 512;*/
 
 		kprintf("swap bitmap length = 0x%X\n", swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
 		swapfileBitmap = (size_t*) malloc(swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
