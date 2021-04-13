@@ -16,8 +16,8 @@
 
 Minimum System Requirements:
 
-	CPU:	Intel 386 or better (hopefully, 486 is the oldest tested)
-	RAM:	4 MB (12 MB to install it)
+	CPU:	Intel 386 (+ patience) or better (hopefully, 486 is the oldest tested)
+	RAM:	6 MB ("thrashing is good... it reminds the user that their computer is on")
 	HDD:	64 MB
 
 	VGA compatible video card
