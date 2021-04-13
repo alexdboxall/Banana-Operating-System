@@ -81,7 +81,7 @@ int liballoc_unlock()
 
 size_t liballoc_alloc(int pages)
 {
-	size_t addr = Virt::getAKernelVAS()->allocatePages(pages, PAGE_PRESENT | PAGE_SWAPPABLE);
+	size_t addr = Virt::getAKernelVAS()->allocatePages(pages, PAGE_PRESENT);
 	return addr;
 }
 
