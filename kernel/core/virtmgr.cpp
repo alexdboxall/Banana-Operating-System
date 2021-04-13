@@ -666,6 +666,8 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 			tryLoadBackOffDisk(faultAddr + 4096);
 		}
 
+		scanForEviction(1, 1);
+
 		//flush TLB
 		CPU::writeCR3(CPU::readCR3());
 
