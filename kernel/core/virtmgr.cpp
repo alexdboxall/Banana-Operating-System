@@ -652,7 +652,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		}
 
 		--swapBalance;
-		kprintf("    Total on disk: %d. Evict\n", swapBalance);
+		kprintf("    Total on disk: %d. Reload\n", swapBalance);
 
 		Virt::freeSwapfilePage(id);
 		unlockScheduler();
