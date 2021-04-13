@@ -622,26 +622,20 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 	static int xyz = 0;
 
 	bool onPageBoundary = (faultAddr & 0xFFF) > 0xFE0;
-	kprintf("A. ");
-	//lockScheduler();
-	kprintf("B. ");
 	faultAddr &= ~0xFFF;
-	kprintf("C. ");
+	kprintf("0x%X\n", faultAddr);
 	size_t* entry = getPageTableEntry(faultAddr);
-	kprintf("D. ");
 
 	if (!faultAddr) {
-		kprintf("fault addr == 0\n");
-		//unlockScheduler();
 		return false;
 	}
-	kprintf("E. ");
 
 	if (entry && !((*entry) & PAGE_PRESENT)) {
-		kprintf("F. ");
+		kprintf("*entry = 0x%X\n", *entry);
+
 		size_t id = (*entry) >> 11;				//we need the ID
 		size_t phys = Phys::allocatePage();		//get a new physical page
-		kprintf("G. ");
+		kprintf("the allocated page was 0x%X\n", phys);
 
 		*entry &= 0xFFF;						//clear address
 		*entry |= PAGE_PRESENT;					//it is now present
