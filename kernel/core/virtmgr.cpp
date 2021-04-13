@@ -600,10 +600,6 @@ void VAS::evict(size_t virt)
 
 	kprintf("evicting page at address 0x%X\n", virt);
 
-	if (virt == 0x1000D000) {
-		while (1);
-	}
-
 	size_t id = Virt::allocateSwapfilePage();
 
 	for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
