@@ -7,7 +7,7 @@
 #include "hal/fpu.hpp"
 #include "core/physmgr.hpp"
 #include "thr/elf.hpp"
-#include "vm/x87em.hpp"
+#include "vm86/x87em.hpp"
 
 #pragma GCC optimize ("O2")
 #pragma GCC optimize ("-fno-strict-aliasing")
