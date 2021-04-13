@@ -40,7 +40,7 @@ namespace Sys
 		}
 
 		currentTaskTCB->processRelatedTo->vas->allocatePages((r->ebx + 4095) / 4096, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SWAPPABLE | PAGE_USER | PAGE_ALLOCATED);
-		
+
 		return previousBreak;
 	}
 }

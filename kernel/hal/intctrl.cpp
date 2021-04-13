@@ -320,7 +320,7 @@ void x87EmulHandler(regs* r, void* context)
 	if (handled) {
 		return;
 	}
-	
+
 	kprintf("Device not available\n");
 
 	displayDebugInfo(r);
@@ -356,10 +356,9 @@ size_t* pf5 = 0;
 
 void pgFault(regs* r, void* context)
 {
-	kprintf("page fault 0x%X\n", CPU::readCR2());
-	/*if (currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2())) {
+	if (currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2())) {
 		return;
-	}*/
+	}
 	kprintf("Hard Page Fault!\n");
 
 	displayDebugInfo(r);
@@ -584,11 +583,6 @@ InterruptController* setupInterruptController()
 
 		return controller;
 	}
-
-	kprintf("ioapicDiscoveryNumber = %d\n", ioapicDiscoveryNumber);
-	/*if (!ioapicDiscoveryNumber) {
-		computer->features.hasAPIC = false;
-	}*/
 
 	//check if the APIC exists
 	bool hasAPIC = computer->features.hasAPIC;

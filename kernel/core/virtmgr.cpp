@@ -229,9 +229,9 @@ namespace Virt
 		}
 	}
 
-	void swappingSetup() {
-		kprintf("setting up swapping.\n");
-		/*uint64_t siz;
+	void swappingSetup()
+	{
+		uint64_t siz;
 		bool dir;
 		File* f = new File("C:/pagefile.sys", kernelProcess);
 		if (!f) {
@@ -252,13 +252,13 @@ namespace Virt
 					panic("CANNOT SETUP PAGEFILE.SYS (2)");
 				}
 			}
-			
+
 			f->close();
 
 			siz = swapfileLength * 512;
 		}
 
-		swapfileLength = siz / 512;*/
+		swapfileLength = siz / 512;
 
 		kprintf("swap bitmap length = 0x%X\n", swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
 		swapfileBitmap = (size_t*) malloc(swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
@@ -344,7 +344,8 @@ size_t VAS::virtualToPhysical(size_t virt)
 	return (*getPageTableEntry(virt)) & ~0xFFF;
 }
 
-void VAS::freeAllocatedPages(size_t virt) {
+void VAS::freeAllocatedPages(size_t virt)
+{
 	if (supervisorVAS) {
 		Virt::freeKernelVirtualPages(virt);
 
@@ -397,7 +398,7 @@ VAS::~VAS()
 	++fp;
 
 	kprintf("Freed %d KB from VAS deletion.\n", fp * 4);
-	
+
 	unlockScheduler();
 }
 
@@ -412,7 +413,8 @@ VAS::VAS(VAS* old)
 	panic("VAS::VAS(VAS* old) not implemented");
 }
 
-VAS::VAS(bool kernel) {
+VAS::VAS(bool kernel)
+{
 	supervisorVAS = kernel;
 
 	pageDirectoryBasePhysical = Phys::allocatePage();
@@ -556,7 +558,8 @@ void VAS::mapForeignPage(bool secondSlot, VAS* other, size_t physicalAddr, size_
 	pageTable[pageNumber] = physicalAddr | flags;
 }
 
-void VAS::mapPage(size_t physicalAddr, size_t virtualAddr, int flags) {
+void VAS::mapPage(size_t physicalAddr, size_t virtualAddr, int flags)
+{
 	if (virtualAddr < VIRT_KERNEL_BASE) {
 		size_t cr3;
 		asm volatile ("mov %%cr3, %0" : "=r"(cr3));
@@ -565,14 +568,14 @@ void VAS::mapPage(size_t physicalAddr, size_t virtualAddr, int flags) {
 			//panic("CANNOT MAP NON-KERNEL IN NON-CURRENT VAS");
 		}
 	}
-	
+
 	if ((virtualAddr | physicalAddr) & 0xFFF) {
 		panic("UNALIGNED PAGE MAPPING REQUESTED");
 	}
 
 	size_t pageTableNumber = virtualAddr / 0x400000;
 
-	if (!(pageDirectoryBase[pageTableNumber] & PAGE_PRESENT)) {		
+	if (!(pageDirectoryBase[pageTableNumber] & PAGE_PRESENT)) {
 		//create the page table first
 		size_t addr = Phys::allocatePage();
 
@@ -595,7 +598,6 @@ int swapBalance = 0;
 
 void VAS::evict(size_t virt)
 {
-	kprintf("evicting 0x%X\n", virt);
 	size_t id = Virt::allocateSwapfilePage();
 
 	for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
@@ -620,8 +622,6 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 
 	bool onPageBoundary = (faultAddr & 0xFFF) > 0xFE0;
 	faultAddr &= ~0xFFF;
-	kprintf("loading 0x%X\n", faultAddr);
-
 	size_t* entry = getPageTableEntry(faultAddr);
 
 	if (!faultAddr) {

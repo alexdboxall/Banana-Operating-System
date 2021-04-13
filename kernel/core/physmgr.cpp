@@ -169,11 +169,11 @@ namespace Phys
 				currentPagePointer = 0;
 			}
 			if (currentPagePointer == first) {
-				/*size_t evicted = currentTaskTCB->processRelatedTo->vas->scanForEviction();
+				size_t evicted = currentTaskTCB->processRelatedTo->vas->scanForEviction();
 				if (evicted) {
-					kprintf("Alloced: 0x%X\n", evicted);
+					kprintf("alloced: 0x%X\n", evicted);
 					return evicted;
-				}*/
+				}
 
 				kprintf("doing into DMA.\n");
 				size_t dma = allocateDMA(4096);

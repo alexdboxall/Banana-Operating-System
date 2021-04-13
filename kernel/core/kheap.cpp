@@ -24,20 +24,20 @@ extern "C" void* sbrk(ptrdiff_t increment)
 
 	} else {
 		bool invlpg = CPU::current()->features.hasINVLPG;
-		
+
 		size_t oldbrk = brk;
 		int pages = (increment + 4095) / 4096;
 		for (int i = 0; i < pages; ++i) {
 			Virt::getAKernelVAS()->mapPage(Phys::allocatePage(), brk, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_SUPERVISOR);
-			
+
 			if (invlpg) {
 				asm volatile ("invlpg (%0)" : : "b"((void*) (brk)) : "memory");
 			}
-			
+
 			brk += 4096;
 
 		}
-		
+
 		if (!invlpg) {
 			CPU::writeCR3(CPU::readCR3());
 		} else {
@@ -50,7 +50,7 @@ extern "C" void* sbrk(ptrdiff_t increment)
 				invaddrLow += 4096;
 			}
 		}
-		
+
 		return (void*) oldbrk;
 	}
 }
@@ -81,7 +81,7 @@ int liballoc_unlock()
 
 size_t liballoc_alloc(int pages)
 {
-	size_t addr = Virt::getAKernelVAS()->allocatePages(pages, PAGE_PRESENT);
+	size_t addr = Virt::getAKernelVAS()->allocatePages(pages, PAGE_PRESENT | PAGE_SWAPPABLE);
 	return addr;
 }
 
@@ -322,7 +322,7 @@ static inline struct boundary_tag* split_tag(struct boundary_tag* tag)
 	unsigned int remainder = tag->real_size - sizeof(struct boundary_tag) - tag->size;
 
 	struct boundary_tag* new_tag =
-		(struct boundary_tag*)((unsigned int) tag + sizeof(struct boundary_tag) + tag->size);
+		(struct boundary_tag*) ((unsigned int) tag + sizeof(struct boundary_tag) + tag->size);
 
 	new_tag->magic = LIBALLOC_MAGIC;
 	new_tag->real_size = remainder;
@@ -365,7 +365,7 @@ static struct boundary_tag* allocate_new_tag(unsigned int size)
 	// Make sure it's >= the minimum size.
 	if (pages < l_pageCount) pages = l_pageCount;
 
-	tag = (struct boundary_tag*)liballoc_alloc(pages);
+	tag = (struct boundary_tag*) liballoc_alloc(pages);
 
 	if (tag == 0) return 0;	// uh oh, we ran out of memory.
 
@@ -518,7 +518,7 @@ extern "C" void* malloc(size_t size)
 
 
 extern "C" void free(void* ptr)
-{	
+{
 	int index;
 	struct boundary_tag* tag;
 
@@ -527,7 +527,7 @@ extern "C" void free(void* ptr)
 	liballoc_lock();
 
 
-	tag = (struct boundary_tag*)((unsigned int) ptr - sizeof(struct boundary_tag));
+	tag = (struct boundary_tag*) ((unsigned int) ptr - sizeof(struct boundary_tag));
 
 	if (tag->magic != LIBALLOC_MAGIC) {
 		liballoc_unlock();		// release the lock
@@ -640,7 +640,7 @@ extern "C" void* realloc(void* p, size_t size)
 	}
 	if (p == 0) return malloc(size);
 
-	tag = (struct boundary_tag*)((unsigned int) p - sizeof(struct boundary_tag));
+	tag = (struct boundary_tag*) ((unsigned int) p - sizeof(struct boundary_tag));
 	real_size = tag->size;
 
 	if (real_size > size) real_size = size;
