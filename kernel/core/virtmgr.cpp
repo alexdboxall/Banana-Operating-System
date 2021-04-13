@@ -693,6 +693,7 @@ void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 		if (oldEntry & PAGE_PRESENT) {
 			for (int jjj = 0; jjj < 1024; ++jjj) {
 				int j = (cycle + jjj) % 1024;
+				kprintf("scanning: 0x%X\n", j);
 				size_t vaddr = ((size_t) i) * 0x400000 + ((size_t) j) * 0x1000;
 				size_t* oldPageEntryPtr = getPageTableEntry(vaddr);
 				size_t oldPageEntry = *oldPageEntryPtr;
