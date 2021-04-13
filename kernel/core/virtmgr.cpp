@@ -627,30 +627,41 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 	static int xyz = 0;
 
 	bool onPageBoundary = (faultAddr & 0xFFF) > 0xFE0;
-
+	kprintf("A. ");
 	lockScheduler();
+	kprintf("B. ");
 	faultAddr &= ~0xFFF;
+	kprintf("C. ");
 	size_t* entry = getPageTableEntry(faultAddr);
+	kprintf("D. ");
+
 	if (!faultAddr) {
+		kprintf("fault addr == 0\n");
+		unlockScheduler();
 		return false;
 	}
+	kprintf("E. ");
 
 	if (entry && !((*entry) & PAGE_PRESENT)) {
+		kprintf("F. ");
 
 		Phys::forbidEvictions = true;
 		size_t id = (*entry) >> 11;				//we need the ID
 		size_t phys = Phys::allocatePage();		//get a new physical page
 		Phys::forbidEvictions = false;
+		kprintf("G. ");
 
 		*entry &= 0xFFF;						//clear address
 		*entry |= PAGE_PRESENT;					//it is now present
 		*entry |= PAGE_SWAPPABLE;				//if it was swapped it had to be swappable we don't need to
 												//clear this as the low bit of the ID, as we want it set to 1
 		*entry |= phys;
-		
+		kprintf("H. ");
+
 		for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
 			disks[Virt::swapfileDrive - 'A']->read(Virt::swapIDToSector(id) + i, 1, ((uint8_t*) faultAddr) + 512 * i);
 		}
+		kprintf("I. ");
 
 		--swapBalance;
 		kprintf("reloading: 0x%X, %d\n", faultAddr, swapBalance);
@@ -670,11 +681,13 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 
 		//flush TLB
 		CPU::writeCR3(CPU::readCR3());
-
 		return true;
 	}
 
+	kprintf("Y. ");
 	unlockScheduler();
+	kprintf("Z. ");
+
 	return false;
 }
 
