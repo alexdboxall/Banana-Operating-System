@@ -159,7 +159,13 @@ namespace Phys
 				if (percent > 50 && !forbidEvictions) {
 					if (currentTaskTCB && currentTaskTCB->processRelatedTo && currentTaskTCB->processRelatedTo->vas) {
 						kprintf("doing evictions...\n");
-						currentTaskTCB->processRelatedTo->vas->scanForEviction(8, 1);
+						currentTaskTCB->processRelatedTo->vas->scanForEviction(8, 4);
+					}
+
+					percent = (usedPages + 0) * 100 / (usablePages + 0);
+					if (percent != oldPercent) {
+						oldPercent = percent;
+						VgaText::updateRAMUsageDisplay(percent);
 					}
 				}
 
