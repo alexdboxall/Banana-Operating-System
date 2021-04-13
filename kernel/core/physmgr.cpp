@@ -168,7 +168,7 @@ namespace Phys
 				currentPagePointer = 0;
 			}
 			if (currentPagePointer == first) {
-				size_t evict = Virt::scanForEviction();
+				size_t evict = currentTaskTCB->processRelatedTo->vas->scanForEviction();
 				if (evict) {
 					return evict;
 				}
