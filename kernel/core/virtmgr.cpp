@@ -607,6 +607,7 @@ void VAS::evict(size_t virt)
 	size_t* entry = getPageTableEntry(virt);
 	//kprintf("freeing phys = 0x%X\n", (*entry) & ~0xFFF);
 	//Phys::freePage((*entry) & ~0xFFF);			//free the physical page
+	Phys::freePage((*entry) >> 12);
 	*entry &= ~PAGE_PRESENT;					//not present
 	*entry &= ~PAGE_SWAPPABLE;					//clear bit 11
 	*entry &= 0xFFFU;							//clear the address
@@ -643,10 +644,6 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		
 		for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
 			disks[Virt::swapfileDrive - 'A']->read(Virt::swapIDToSector(id) + i, 1, ((uint8_t*) faultAddr) + 512 * i);
-		}
-		
-		if (faultAddr == 0x1001D000) {
-			while (1);
 		}
 
 		Virt::freeSwapfilePage(id);
