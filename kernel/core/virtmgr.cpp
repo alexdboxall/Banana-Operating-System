@@ -600,10 +600,6 @@ void VAS::evict(size_t virt)
 
 	kprintf("evicting page at address 0x%X\n", virt);
 
-	if (virt == 0x10009000) {
-		while (1);
-	}
-
 	size_t id = Virt::allocateSwapfilePage();
 
 	for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
@@ -662,6 +658,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		unlockScheduler();
 
 		if (onPageBoundary) {
+			kprintf("** ON BOUNDARY! **\n");
 			tryLoadBackOffDisk(faultAddr + 4096);
 		}
 
