@@ -28,7 +28,7 @@ extern "C" void* sbrk(ptrdiff_t increment)
 		size_t oldbrk = brk;
 		int pages = (increment + 4095) / 4096;
 		for (int i = 0; i < pages; ++i) {
-			Virt::getAKernelVAS()->mapPage(Phys::allocatePage(), brk, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_SWAPPABLE | PAGE_SUPERVISOR);
+			Virt::getAKernelVAS()->mapPage(Phys::allocatePage(), brk, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_SUPERVISOR);
 			
 			if (invlpg) {
 				asm volatile ("invlpg (%0)" : : "b"((void*) (brk)) : "memory");
@@ -81,7 +81,7 @@ int liballoc_unlock()
 
 size_t liballoc_alloc(int pages)
 {
-	size_t addr = Virt::getAKernelVAS()->allocatePages(pages, PAGE_PRESENT | PAGE_SWAPPABLE);
+	size_t addr = Virt::getAKernelVAS()->allocatePages(pages, PAGE_PRESENT);
 	return addr;
 }
 
