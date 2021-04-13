@@ -681,13 +681,15 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 {
 	static int cycle = 0;
-	++cycle;
+	static int cycle2 = 0;
+	++cycle2;
 
 	if (throwAwayRate == 0) throwAwayRate = 1;
 
 	int swp = 0;
 	int chucks = 0;
-	for (int i = 0; i < 256 * 3; ++i) {
+	for (int iii = 0; iii < 256 * 3; ++iii) {
+		int i = (cycle2 + iii) % (256 * 3);
 		size_t oldEntry = pageDirectoryBase[i];
 
 		if (oldEntry & PAGE_PRESENT) {
