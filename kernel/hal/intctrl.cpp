@@ -584,6 +584,11 @@ InterruptController* setupInterruptController()
 		return controller;
 	}
 
+	kprintf("ioapicDiscoveryNumber = %d\n", ioapicDiscoveryNumber);
+	if (!ioapicDiscoveryNumber) {
+		computer->features.hasAPIC = false;
+	}
+
 	//check if the APIC exists
 	bool hasAPIC = computer->features.hasAPIC;
 
