@@ -601,6 +601,9 @@ void VAS::evict(size_t virt)
 	size_t id = Virt::allocateSwapfilePage();
 	kprintf("id = 0x%X (%d)\n", id, id);
 
+	if (virt == 0x10008000) {
+		while (1);
+	}
 	disks[Virt::swapfileDrive - 'A']->write(Virt::swapIDToSector(id), 8, (void*) virt);
 
 	size_t* entry = getPageTableEntry(virt);
