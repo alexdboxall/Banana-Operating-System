@@ -61,6 +61,9 @@ namespace Vm
 	} FPUState;
 
 	bool x87Handler(regs* r);
+
+	void x87Save(void* ptr);
+	void x87Load(void* ptr);
 }
 
 #endif

@@ -66,6 +66,7 @@ struct ThreadControlBlock
 	bool vm86Task = false;
 
 	uint8_t fpuState[512];
+	uint8_t emuFpuState[128];
 };
 
 struct Process

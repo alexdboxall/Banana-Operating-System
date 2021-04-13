@@ -4,8 +4,10 @@
 #include "libk/string.h"
 #include "hw/cpu.hpp"
 #include "core/kheap.hpp"
+#include "core/fpu.hpp"
 #include "core/physmgr.hpp"
 #include "thr/elf.hpp"
+#include "vm/x87em.hpp"
 
 #pragma GCC optimize ("O2")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -60,11 +62,14 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 
 	updateTimeUsed();
 
+	Vm::x87Save(nextThreadToRun->emuFpuState);
 	if (computer->fpu) {
 		computer->fpu->save(nextThreadToRun->fpuState);
 		switchToThreadASM(nextThreadToRun);
 		computer->fpu->load(currentTaskTCB->fpuState);
 	}
+	Vm::x87Load(nextThreadToRun->emuFpuState);
+
 }
 
 ThreadControlBlock* Process::createUserThread()
