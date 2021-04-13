@@ -626,6 +626,8 @@ void VAS::evict(size_t virt)
 
 bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 {
+	static uint8_t cycle = 0;
+
 	bool onPageBoundary = (faultAddr & 0xFFF) > 0xFE0;
 	kprintf("faultaddr A = 0x%X\n", faultAddr);
 
@@ -666,7 +668,11 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 			tryLoadBackOffDisk(faultAddr + 4096);
 		}
 
-		scanForEviction(1, 1);
+		++cycle;
+		if (cycle == 2) {
+			scanForEviction(1, 1);
+			cycle = 0;
+		}
 
 		//flush TLB
 		CPU::writeCR3(CPU::readCR3());
