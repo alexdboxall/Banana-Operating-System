@@ -683,6 +683,7 @@ void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 	static int cycle2 = 64;
 	++cycle;
 
+	wantChucks = 80;
 	throwAwayRate = 1;
 
 	if (throwAwayRate == 0) throwAwayRate = 1;
