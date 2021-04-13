@@ -623,6 +623,9 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 	faultAddr &= ~0xFFF;
 	size_t* entry = getPageTableEntry(faultAddr);
 	kprintf("faultaddr B = 0x%X\n", faultAddr);
+	if (!faultAddr) {
+		return false;
+	}
 
 	if (entry && ((*entry) & PAGE_ALLOCATED)) {
 		kprintf("loading page at 0x%X\n", faultAddr);

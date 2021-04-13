@@ -358,7 +358,10 @@ void pgFault(regs* r, void* context)
 {
 	kprintf("Page Fault!\n");
 
-	if (currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2())) {
+	size_t cr2;
+	asm volatile ("mov %%cr2, %0" : "=r"(cr2));
+	kprintf("cr2 = 0x%X\n", cr2);
+	if (currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(cr2)) {
 		return;
 	}
 
