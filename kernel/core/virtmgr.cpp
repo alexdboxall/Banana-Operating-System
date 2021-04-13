@@ -229,11 +229,9 @@ namespace Virt
 		}
 	}
 
-	uint8_t blankSector[512];
-
 	void swappingSetup()
 	{
-		uint64_t siz;
+		/*uint64_t siz;
 		bool dir;
 		File* f = new File("C:/pagefile.sys", kernelProcess);
 		if (!f) {
@@ -249,7 +247,7 @@ namespace Virt
 			for (int i = 0; i < swapfileLength; ++i) {
 				//just fill out the pages with anything you have on you
 				int br;
-				f->write(512, (void*) blankSector, &br);
+				f->write(512, (void*) swappingSetup, &br);
 				if (br != 512) {
 					panic("CANNOT SETUP PAGEFILE.SYS (2)");
 				}
@@ -260,7 +258,7 @@ namespace Virt
 			siz = swapfileLength * 512;
 		}
 
-		swapfileLength = siz / 512;
+		swapfileLength = siz / 512;*/
 
 		kprintf("swap bitmap length = 0x%X\n", swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
 		swapfileBitmap = (size_t*) malloc(swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
@@ -270,6 +268,37 @@ namespace Virt
 	VAS* getAKernelVAS()
 	{
 		return firstVAS;
+	}
+
+	void setupPageSwapping(int megs)
+	{
+		File* f = new File("C:/Banana/SWAPFILE.SYS", kernelProcess);
+		f->unlink();
+		FileStatus st = f->open(FILE_OPEN_WRITE_NORMAL);
+		if (st != FileStatus::Success) {
+			kprintf("st = %d\n", st);
+			panic("NO PAGE SWAPPING AVAILABLE");
+		}
+
+		int br = 0;
+		int pages = megs * 256;
+		uint8_t* buff = (uint8_t*) malloc(4096 * 16);
+		memset(buff, 0, 4096 * 16);
+		pages /= 16;
+		while (pages--) {
+			st = f->write(4096 * 16, buff, &br);
+			if (st != FileStatus::Success) {
+				kprintf("Status != success = %d\n", (int) st);
+			}
+			if (br != 4096 * 16) {
+				kprintf("Br = %d\n", br);
+				panic("UH OH");
+			}
+		}
+
+		f->close();
+		rfree(buff);
+		delete f;
 	}
 }
 
