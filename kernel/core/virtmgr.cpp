@@ -600,10 +600,6 @@ void VAS::evict(size_t virt)
 
 	size_t id = Virt::allocateSwapfilePage();
 
-	if (virt == 0x1001D000) {
-		while (1);
-	}
-
 	for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
 		disks[Virt::swapfileDrive - 'A']->write(Virt::swapIDToSector(id) + i, 1, ((uint8_t*) virt) + 512 * i);
 	}
@@ -633,6 +629,10 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 
 	if (entry && ((*entry) & PAGE_ALLOCATED)) {
 		kprintf("loading page at 0x%X\n", faultAddr);
+
+		if (faultAddr == 0x1001D000) {
+			while (1);
+		}
 
 		Phys::forbidEvictions = true;
 		size_t id = (*entry) >> 11;				//we need the ID
