@@ -357,9 +357,9 @@ size_t* pf5 = 0;
 void pgFault(regs* r, void* context)
 {
 	kprintf("page fault 0x%X\n", CPU::readCR2());
-	if (currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2())) {
+	/*if (currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2())) {
 		return;
-	}
+	}*/
 	kprintf("Hard Page Fault!\n");
 
 	displayDebugInfo(r);
