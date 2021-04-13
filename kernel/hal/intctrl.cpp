@@ -361,7 +361,7 @@ void pgFault(regs* r, void* context)
 	if (currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2())) {
 		return;
 	}
-
+	kprintf("about to display debug info.\n");
 
 	displayDebugInfo(r);
 	displayProgramFault("Page fault");
