@@ -673,7 +673,6 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 
 void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 {
-	retry:
 	static int cycle = 0;
 	static int cycle2 = 64;
 	++cycle;
@@ -706,6 +705,7 @@ void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 						}
 
 						++swp;
+						kprintf("swp = %d\n", swp);
 					}
 				}
 			}
