@@ -107,7 +107,6 @@ uint8_t* findRSDP()
 
 	if (Phys::usablePages < 2048) {
 		computer->features.hasACPI = false;
-		computer->features.hasAPIC = false;
 		return 0;
 	}
 

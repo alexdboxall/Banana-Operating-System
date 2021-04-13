@@ -586,6 +586,11 @@ InterruptController* setupInterruptController()
 	}
 
 	//check if the APIC exists
+	if (ioapicDiscoveryNumber == 0) {
+		computer->features.hasAPIC = false;
+		kprintf("No IOAPICs means no APIC.\n");
+	}
+
 	bool hasAPIC = computer->features.hasAPIC;
 
 	//start a PIC (even if it is just so it gets disabled)
