@@ -253,6 +253,8 @@ namespace Virt
 			}
 			
 			f->close();
+
+			siz = swapfileLength * 512;
 		}
 
 		swapfileLength = siz / 512;
