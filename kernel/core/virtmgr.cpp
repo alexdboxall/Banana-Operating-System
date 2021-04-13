@@ -595,6 +595,7 @@ int swapBalance = 0;
 
 void VAS::evict(size_t virt)
 {
+	kprintf("evicting 0x%X\n", virt);
 	size_t id = Virt::allocateSwapfilePage();
 
 	for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
@@ -619,6 +620,8 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 
 	bool onPageBoundary = (faultAddr & 0xFFF) > 0xFE0;
 	faultAddr &= ~0xFFF;
+	kprintf("loading 0x%X\n", faultAddr);
+
 	size_t* entry = getPageTableEntry(faultAddr);
 
 	if (!faultAddr) {
