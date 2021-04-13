@@ -599,64 +599,50 @@ void VAS::evict(size_t virt)
 	kprintf("evicting page at address 0x%X\n", virt);
 
 	size_t id = Virt::allocateSwapfilePage();
-	kprintf("id = 0x%X (%d)\n", id, id);
 
 	for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
 		disks[Virt::swapfileDrive - 'A']->write(Virt::swapIDToSector(id) + i, 1, ((uint8_t*) virt) + 512 * i);
 	}
 
 	size_t* entry = getPageTableEntry(virt);
-	Phys::freePage((*entry) >> 12);				//free the physical page
+	Phys::freePage((*entry) & ~0xFFF);			//free the physical page
 	*entry &= ~PAGE_PRESENT;					//not present
 	*entry &= ~PAGE_SWAPPABLE;					//clear bit 11
 	*entry &= 0xFFFU;							//clear the address
 	*entry |= id << 11;							//put the swap ID in
-
-	kprintf("eviction done.\n");
 
 	unlockScheduler();
 }
 
 bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 {
-	kprintf("fault addr = 0x%X\n", faultAddr);
 	lockScheduler();
-	kprintf("trying to load addr 0x%X back off disk.\n", faultAddr);
 	faultAddr &= ~0xFFF;
 	size_t* entry = getPageTableEntry(faultAddr);
-	kprintf("entry = 0x%X\n", entry);
 
 	if (entry && ((*entry) & PAGE_ALLOCATED)) {
-		kprintf("it has been allocated.\n");
+		kprintf("loading page at 0x%X\n", faultAddr);
 
 		Phys::forbidEvictions = true;
 		size_t id = (*entry) >> 11;				//we need the ID
 		size_t phys = Phys::allocatePage();		//get a new physical page
 		Phys::forbidEvictions = false;
 
-		kprintf("New physical page = 0x%X\n", phys);
-
-		kprintf("*entry cur = 0x%X\n", *entry);
 		*entry &= 0xFFF;						//clear address
 		*entry |= PAGE_PRESENT;					//it is now present
 		*entry |= PAGE_SWAPPABLE;				//if it was swapped it had to be swappable we don't need to
 												//clear this as the low bit of the ID, as we want it set to 1
 		*entry |= phys;
-		kprintf("*entry new = 0x%X\n", *entry);
-
-		kprintf("faultAddr = 0x%X\n", faultAddr);
 		
 		for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
 			disks[Virt::swapfileDrive - 'A']->read(Virt::swapIDToSector(id) + i, 1, ((uint8_t*) faultAddr) + 512 * i);
 		}
-		
 		
 		Virt::freeSwapfilePage(id);
 		unlockScheduler();
 		return true;
 	}
 
-	kprintf("Not a swapped out page.\n");
 	unlockScheduler();
 	return false;
 }
@@ -664,8 +650,6 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 {
 	if (throwAwayRate == 0) throwAwayRate = 1;
-
-	kprintf("scanning for swappable pages...\n");
 
 	int swp = 0;
 	int chucks = 0;
@@ -680,9 +664,7 @@ void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 
 				if ((oldPageEntry & PAGE_SWAPPABLE) && (oldPageEntry & PAGE_ALLOCATED)) {
 					if (oldPageEntry & PAGE_PRESENT) {
-						kprintf("Swappable page at virtual address: 0x%X\n", vaddr);
 						if ((swp % throwAwayRate) == 0) {
-							kprintf("evicting!\n");
 							evict(vaddr);
 							++chucks;
 							if (chucks == wantChucks) {
@@ -691,8 +673,6 @@ void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 						}
 
 						++swp;
-					} else {
-						kprintf("Page at virtual address 0x%X resides on disk\n", vaddr);
 					}
 				}
 			}
