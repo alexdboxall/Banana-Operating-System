@@ -617,6 +617,10 @@ void VAS::evict(size_t virt)
 
 	++swapBalance;
 	kprintf("    Total on disk: %d. Evict\n", swapBalance);
+
+	//flush TLB
+	CPU::writeCR3(CPU::readCR3());
+
 	unlockScheduler();
 }
 
@@ -650,10 +654,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
 			disks[Virt::swapfileDrive - 'A']->read(Virt::swapIDToSector(id) + i, 1, ((uint8_t*) faultAddr) + 512 * i);
 		}
-		
-		if (faultAddr == 0x1000D000) {
-			while (1);
-		}
+
 		--swapBalance;
 		kprintf("    Total on disk: %d. Reload\n", swapBalance);
 
@@ -664,6 +665,9 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 			kprintf("** ON BOUNDARY! **\n");
 			tryLoadBackOffDisk(faultAddr + 4096);
 		}
+
+		//flush TLB
+		CPU::writeCR3(CPU::readCR3());
 
 		return true;
 	}
