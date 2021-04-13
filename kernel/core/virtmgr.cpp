@@ -623,6 +623,8 @@ void VAS::evict(size_t virt)
 
 bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 {
+	static int xyz = 0;
+
 	bool onPageBoundary = (faultAddr & 0xFFF) > 0xFE0;
 
 	lockScheduler();
@@ -659,7 +661,11 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 			tryLoadBackOffDisk(faultAddr + 4096);
 		}
 
-		scanForEviction(1, 1);
+		++xyz;
+		if (xyz == 2) {
+			scanForEviction(1, 1);
+			xyz = 0;
+		}
 
 		//flush TLB
 		CPU::writeCR3(CPU::readCR3());
@@ -683,20 +689,18 @@ void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 
 	int swp = 0;
 	int chucks = 0;
-	for (int iii = 0; iii < 1/*256 * 3*/; ++iii) {
-		int i = (cycle2 + iii) % (256 * 3);
+	for (int i = 0; i < 256 * 3; ++i) {
 		size_t oldEntry = pageDirectoryBase[i];
 
 		if (oldEntry & PAGE_PRESENT) {
-			for (int jjj = 0; jjj < 1024; ++jjj) {
-				int j = (cycle + jjj) % 1024;
+			for (int j = 0; j < 1024; ++j) {
 				size_t vaddr = ((size_t) i) * 0x400000 + ((size_t) j) * 0x1000;
 				size_t* oldPageEntryPtr = getPageTableEntry(vaddr);
 				size_t oldPageEntry = *oldPageEntryPtr;
 
 				if ((oldPageEntry & PAGE_SWAPPABLE) && (oldPageEntry & PAGE_ALLOCATED)) {
 					if (oldPageEntry & PAGE_PRESENT) {
-						if ((swp % throwAwayRate) == 0) {
+						if (1 || (swp % throwAwayRate) == 0) {
 							evict(vaddr);
 							++chucks;
 							if (chucks == wantChucks) {
