@@ -693,7 +693,7 @@ size_t VAS::scanForEviction()
 		}
 
 		//now we have an actual page directory, check the pages within
-		size_t* oldEntry = getPageTableEntry(vaddr);
+		size_t* oldEntry = getPageTableEntry(evictionScanner);
 		if ((*oldEntry & PAGE_SWAPPABLE) && (*oldEntry & PAGE_ALLOCATED)) {
 			if (*oldEntry & PAGE_PRESENT) {
 				evict(evictionScanner);
