@@ -237,7 +237,7 @@ namespace Virt
 			panic("CANNOT SETUP PAGEFILE.SYS");
 		}
 		FileStatus status = f->stat(&siz, &dir);
-		if (status != FileStatus::Sucess || dir || !siz || (siz & 0xFFF)) {
+		if (status != FileStatus::Success || dir || !siz || (siz & 0xFFF)) {
 			f->unlink();
 
 			kprintf("creating the swapfile.\n");

@@ -393,6 +393,8 @@ int ACPI::open(int mode, int, void*)
 		kprintf("PCI DONE.\n");
 	}
 
+	Virt::swappingSetup();
+
 	Thr::loadKernelSymbolTable("C:/Banana/System/KERNEL32.EXE");
 	
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/common.sys"), computer);
