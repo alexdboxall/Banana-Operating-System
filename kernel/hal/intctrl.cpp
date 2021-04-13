@@ -359,6 +359,7 @@ void pgFault(regs* r, void* context)
 	kprintf("Page Fault!\n");
 
 	if (currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2())) {
+		kprintf("recovered from page fault.\n");
 		return;
 	}
 	kprintf("about to display debug info.\n");

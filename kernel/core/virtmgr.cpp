@@ -665,7 +665,6 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		}
 
 		kprintf("K. ");
-
 		return true;
 	}
 
@@ -704,7 +703,7 @@ size_t VAS::scanForEviction()
 				if (doAnything || !(*oldEntry & PAGE_DIRTY)) {
 					evict(evictionScanner);
 
-					size_t ret = evictionScanner;
+					size_t ret = *oldEntry & ~0xFFF;
 					evictionScanner += 4096;		//saves a check the next time this gets called
 					return ret;
 				}
