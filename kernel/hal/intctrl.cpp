@@ -356,11 +356,12 @@ size_t* pf5 = 0;
 
 void pgFault(regs* r, void* context)
 {
+	kprintf("Page Fault!\n");
+
 	if (currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2())) {
 		return;
 	}
 
-	kprintf("Page Fault!\n");
 
 	displayDebugInfo(r);
 	displayProgramFault("Page fault");
