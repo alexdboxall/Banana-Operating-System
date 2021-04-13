@@ -99,6 +99,8 @@ int nextACPITable = 0;
 
 uint8_t* findRSDP()
 {
+	kprintf("finding RSDP\n");
+
 	if (!computer->features.hasACPI) {
 		return 0;
 	}
