@@ -600,7 +600,7 @@ void VAS::evict(size_t virt)
 
 	kprintf("evicting page at address 0x%X\n", virt);
 
-	if (faultAddr == 0x1000D000) {
+	if (virt == 0x1000D000) {
 		while (1);
 	}
 
