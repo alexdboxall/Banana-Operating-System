@@ -621,10 +621,9 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 	kprintf("trying to load addr 0x%X back off disk.\n", faultAddr);
 	faultAddr &= ~0xFFF;
 	size_t* entry = getPageTableEntry(faultAddr);
-	kprintf("got entry: 0x%X\n", *entry);
-	kprintf("it would have an ID of 0x%X\n", (*entry) >> 11);
+	kprintf("entry = 0x%X\n", entry);
 
-	if ((*entry) & PAGE_ALLOCATED) {
+	if (entry && ((*entry) & PAGE_ALLOCATED)) {
 		kprintf("it has been allocated.\n");
 
 		Phys::forbidEvictions = true;
