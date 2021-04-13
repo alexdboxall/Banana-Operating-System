@@ -229,6 +229,8 @@ namespace Virt
 		}
 	}
 
+	uint8_t blankSector[512];
+
 	void swappingSetup()
 	{
 		uint64_t siz;
@@ -247,7 +249,7 @@ namespace Virt
 			for (int i = 0; i < swapfileLength; ++i) {
 				//just fill out the pages with anything you have on you
 				int br;
-				f->write(512, (void*) swappingSetup, &br);
+				f->write(512, (void*) blankSector, &br);
 				if (br != 512) {
 					panic("CANNOT SETUP PAGEFILE.SYS (2)");
 				}

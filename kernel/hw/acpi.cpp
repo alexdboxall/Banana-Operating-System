@@ -62,7 +62,7 @@ Parts of this are based on Minux:
 59
 60 This product includes software developed by Softweyr LLC, the
 61 University of California, Berkeley, and its contributors.
-62 
+62
 */
 
 #include "core/common.hpp"
@@ -151,7 +151,7 @@ void loadACPITables(uint8_t* ptr)
 	for (int i = 0; i < nextACPITable; ++i) {
 		uint32_t* location = (uint32_t*) acpiTables[i].location;
 		uint32_t* originalLocation = location;
-		location = (uint32_t*) ((((size_t) location) & 0xFFF) | Virt::getAKernelVAS()->mapRange(((size_t) originalLocation) & ~0xFFF, Virt::allocateKernelVirtualPages(1), 1, PAGE_PRESENT | PAGE_SUPERVISOR));		
+		location = (uint32_t*) ((((size_t) location) & 0xFFF) | Virt::getAKernelVAS()->mapRange(((size_t) originalLocation) & ~0xFFF, Virt::allocateKernelVirtualPages(1), 1, PAGE_PRESENT | PAGE_SUPERVISOR));
 
 		memcpy((void*) acpiTables[i].signature, (const void*) location, 4);
 
@@ -301,7 +301,7 @@ ACPI::ACPI(): Device("ACPI")
 	scanMADT();
 }
 
- 
+
 PCIIRQAssignments ACPI::getPCIIRQAssignment(uint8_t bus, uint16_t slot, uint8_t pin)
 {
 	PCIIRQAssignments result;
@@ -396,7 +396,7 @@ int ACPI::open(int mode, int, void*)
 	Virt::swappingSetup();
 
 	Thr::loadKernelSymbolTable("C:/Banana/System/KERNEL32.EXE");
-	
+
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/common.sys"), computer);
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
 
