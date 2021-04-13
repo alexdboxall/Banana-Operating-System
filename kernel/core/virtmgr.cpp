@@ -592,6 +592,8 @@ void VAS::mapPage(size_t physicalAddr, size_t virtualAddr, int flags) {
 	pageTable[pageNumber] = physicalAddr | flags;
 }
 
+int swapBalance = 0;
+
 void VAS::evict(size_t virt)
 {
 	lockScheduler();
@@ -613,6 +615,8 @@ void VAS::evict(size_t virt)
 	*entry &= 0xFFFU;							//clear the address
 	*entry |= id << 11;							//put the swap ID in
 
+	++swapBalance;
+	kprintf("    Total on disk: %d. Evict\n", swapBalance);
 	unlockScheduler();
 }
 
@@ -645,6 +649,9 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
 			disks[Virt::swapfileDrive - 'A']->read(Virt::swapIDToSector(id) + i, 1, ((uint8_t*) faultAddr) + 512 * i);
 		}
+
+		--swapBalance;
+		kprintf("    Total on disk: %d. Evict\n", swapBalance);
 
 		Virt::freeSwapfilePage(id);
 		unlockScheduler();
