@@ -680,6 +680,8 @@ void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 		++cycle;
 	}
 
+	kprintf("%d. %d.\n", cycle2, cycle);
+
 	if (throwAwayRate == 0) throwAwayRate = 1;
 
 	int swp = 0;
