@@ -158,7 +158,7 @@ namespace Phys
 
 				if (percent > 50 && !forbidEvictions) {
 					if (currentTaskTCB && currentTaskTCB->processRelatedTo && currentTaskTCB->processRelatedTo->vas) {
-						currentTaskTCB->processRelatedTo->vas->scanForEviction(8, 4);
+						currentTaskTCB->processRelatedTo->vas->scanForEviction(4, 16);
 					}
 
 					percent = (usedPages + 0) * 100 / (usablePages + 0);
