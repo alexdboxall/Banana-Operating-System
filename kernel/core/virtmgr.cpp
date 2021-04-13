@@ -617,12 +617,12 @@ void VAS::evict(size_t virt)
 
 bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 {
-	if (!faultAddr) return false;
+	kprintf("faultaddr A = 0x%X\n", faultAddr);
 
 	lockScheduler();
 	faultAddr &= ~0xFFF;
 	size_t* entry = getPageTableEntry(faultAddr);
-	kprintf("faultaddr = 0x%X\n", faultAddr);
+	kprintf("faultaddr B = 0x%X\n", faultAddr);
 
 	if (entry && ((*entry) & PAGE_ALLOCATED)) {
 		kprintf("loading page at 0x%X\n", faultAddr);
