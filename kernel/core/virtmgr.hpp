@@ -67,9 +67,9 @@ public:
     ~VAS();
 	void setCPUSpecific(size_t phys);
 
-	void scanForEviction(int throwAwayRate, int wantChucks);
+	size_t evictionScanner = 0;
+	size_t scanForEviction();
 	bool tryLoadBackOffDisk(size_t faultAddr);
-
 	void evict(size_t virt);
 
 	size_t* getForeignPageTableEntry(bool secondSlot, size_t virt);

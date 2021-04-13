@@ -596,8 +596,6 @@ int swapBalance = 0;
 
 void VAS::evict(size_t virt)
 {
-	lockScheduler();
-
 	size_t id = Virt::allocateSwapfilePage();
 
 	for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
@@ -605,7 +603,6 @@ void VAS::evict(size_t virt)
 	}
 
 	size_t* entry = getPageTableEntry(virt);
-	Phys::freePage((*entry) & ~0xFFF);			//free the physical page
 	*entry &= ~PAGE_PRESENT;					//not present
 	*entry &= ~PAGE_SWAPPABLE;					//clear bit 11
 	*entry &= 0xFFFU;							//clear the address
@@ -617,8 +614,6 @@ void VAS::evict(size_t virt)
 	CPU::writeCR3(CPU::readCR3());
 
 	kprintf("evicting:  0x%X, %d\n", virt, swapBalance);
-
-	unlockScheduler();
 }
 
 bool VAS::tryLoadBackOffDisk(size_t faultAddr)
@@ -644,14 +639,9 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 
 	if (entry && !((*entry) & PAGE_PRESENT)) {
 		kprintf("F. ");
-
-		lockScheduler();
-		Phys::forbidEvictions = true;
 		size_t id = (*entry) >> 11;				//we need the ID
 		size_t phys = Phys::allocatePage();		//get a new physical page
-		Phys::forbidEvictions = false;
 		kprintf("G. ");
-		unlockScheduler();
 
 		*entry &= 0xFFF;						//clear address
 		*entry |= PAGE_PRESENT;					//it is now present
@@ -676,14 +666,9 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		//unlockScheduler();
 
 		if (onPageBoundary) {
-			tryLoadBackOffDisk(faultAddr + 4096);
+			panic(" ** ON BOUNDARY!!!\n");
 		}
 
-		++xyz;
-		if (xyz == 8) {
-			scanForEviction(1, 8);
-			xyz = 0;
-		}
 		return true;
 	}
 
@@ -694,50 +679,32 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 	return false;
 }
 
-void VAS::scanForEviction(int throwAwayRate, int wantChucks)
+size_t VAS::scanForEviction()
 {
-	kprintf("scanning for evictions.\n");
-	static int cycle = 0;
-	static int cycle2 = 64;
-	++cycle;
+	while (1) {
+		//first check that this page directory is present
+		if ((evictionScanner & 0x3FFFFF) == 0) {
+			size_t oldEntry = pageDirectoryBase[evictionScanner / 0x400000];
 
-	throwAwayRate = 1;
-
-	if (throwAwayRate == 0) throwAwayRate = 1;
-
-	int swp = 0;
-	int chucks = 0;
-	for (int i = 0; i < 256 * 4; ++i) {
-		size_t oldEntry = pageDirectoryBase[i];
-
-		if (oldEntry & PAGE_PRESENT) {
-			kprintf("evscan... ");
-			for (int j = 0; j < 1024; ++j) {
-				size_t vaddr = ((size_t) i) * 0x400000 + ((size_t) j) * 0x1000;
-				size_t* oldPageEntryPtr = getPageTableEntry(vaddr);
-				size_t oldPageEntry = *oldPageEntryPtr;
-
-				if ((oldPageEntry & PAGE_SWAPPABLE) && (oldPageEntry & PAGE_ALLOCATED)) {
-					if (oldPageEntry & PAGE_PRESENT) {
-						if (oldPageEntry & PAGE_DIRTY) {
-							*oldPageEntryPtr &= ~PAGE_DIRTY;
-							continue;
-						}
-
-						//kernel stacks (like the one the page fault handler uses) live here
-						if (1 || (swp % throwAwayRate) == 0) {
-							evict(vaddr);
-							++chucks;
-							if (chucks == wantChucks) {
-								return;
-							}
-						}
-
-						++swp;
-					}
-				}
+			if (!(oldEntry & PAGE_PRESENT)) {
+				evictionScanner += 0x400000;
+				continue;
 			}
 		}
+
+		//now we have an actual page directory, check the pages within
+		size_t* oldPageEntryPtr = getPageTableEntry(vaddr);
+		if ((*oldPageEntry & PAGE_SWAPPABLE) && (*oldPageEntry & PAGE_ALLOCATED)) {
+			if (*oldPageEntry & PAGE_PRESENT) {
+				evict(vaddr);
+
+				size_t ret = evictionScanner;
+				evictionScanner += 4096;		//saves a check the next time this gets called
+				return ret;
+			}
+		}
+
+		evictionScanner += 4096;
 	}
 }
 
