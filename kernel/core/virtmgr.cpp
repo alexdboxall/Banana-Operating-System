@@ -601,10 +601,9 @@ void VAS::evict(size_t virt)
 	size_t id = Virt::allocateSwapfilePage();
 	kprintf("id = 0x%X (%d)\n", id, id);
 
-	if (virt == 0x10008000) {
-		while (1);
+	for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
+		disks[Virt::swapfileDrive - 'A']->write(Virt::swapIDToSector(id) + i, 1, ((uint8_t*) virt) + 512 * i);
 	}
-	disks[Virt::swapfileDrive - 'A']->write(Virt::swapIDToSector(id), 8, (void*) virt);
 
 	size_t* entry = getPageTableEntry(virt);
 	Phys::freePage((*entry) >> 12);				//free the physical page
@@ -646,10 +645,13 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		kprintf("*entry new = 0x%X\n", *entry);
 
 		kprintf("faultAddr = 0x%X\n", faultAddr);
-		disks[Virt::swapfileDrive - 'A']->read(Virt::swapIDToSector(id), Virt::swapfileSectorsPerPage, (void*) faultAddr);
+		
+		for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
+			disks[Virt::swapfileDrive - 'A']->read(Virt::swapIDToSector(id) + i, 1, ((uint8_t*) faultAddr) + 512 * i);
+		}
+		
+		
 		Virt::freeSwapfilePage(id);
-		kprintf("loaded from disk, sector 0x%X\n", Virt::swapIDToSector(id));
-		while (1);
 		unlockScheduler();
 		return true;
 	}
