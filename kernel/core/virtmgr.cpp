@@ -690,7 +690,7 @@ void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 
 	int swp = 0;
 	int chucks = 0;
-	for (int i = 0; i < 256 * 3; ++i) {
+	for (int i = 0; i < 256 * 4; ++i) {
 		size_t oldEntry = pageDirectoryBase[i];
 
 		if (oldEntry & PAGE_PRESENT) {
