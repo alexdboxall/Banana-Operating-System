@@ -605,6 +605,7 @@ void VAS::evict(size_t virt)
 	}
 
 	size_t* entry = getPageTableEntry(virt);
+	kprintf("freeing phys = 0x%X\n", (*entry) & ~0xFFF);
 	//Phys::freePage((*entry) & ~0xFFF);			//free the physical page
 	*entry &= ~PAGE_PRESENT;					//not present
 	*entry &= ~PAGE_SWAPPABLE;					//clear bit 11
@@ -619,6 +620,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 	lockScheduler();
 	faultAddr &= ~0xFFF;
 	size_t* entry = getPageTableEntry(faultAddr);
+	kprintf("faultaddr = 0x%X\n", faultaddr);
 
 	if (entry && ((*entry) & PAGE_ALLOCATED)) {
 		kprintf("loading page at 0x%X\n", faultAddr);
