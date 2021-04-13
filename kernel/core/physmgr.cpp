@@ -160,18 +160,6 @@ namespace Phys
 					VgaText::updateRAMUsageDisplay(percent);
 				}
 
-				if (percent > 50 && !forbidEvictions) {
-					if (currentTaskTCB && currentTaskTCB->processRelatedTo && currentTaskTCB->processRelatedTo->vas) {
-						currentTaskTCB->processRelatedTo->vas->scanForEviction(4, 200);
-					}
-
-					percent = (usedPages + 0) * 100 / (usablePages + 0);
-					if (percent != oldPercent) {
-						oldPercent = percent;
-						VgaText::updateRAMUsageDisplay(percent);
-					}
-				}
-
 				return 4096 * currentPagePointer;
 			}
 
@@ -180,6 +168,11 @@ namespace Phys
 				currentPagePointer = 0;
 			}
 			if (currentPagePointer == first) {
+				size_t evict = Virt::scanForEviction();
+				if (evict) {
+					return evict;
+				}
+
 				kprintf("doing into DMA.\n");
 				size_t dma = allocateDMA(4096);
 				if (dma) {
