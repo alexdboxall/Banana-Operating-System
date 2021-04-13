@@ -62,18 +62,7 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 
 	updateTimeUsed();
 
-	if (computer->fpu) {
-		kprintf("c->f\n");
-		//computer->fpu->save(nextThreadToRun->fpuState);
-		switchToThreadASM(nextThreadToRun);
-		//computer->fpu->load(currentTaskTCB->fpuState);
-
-	} else {
-		kprintf("!c->f\n");
-		//Vm::x87Save(nextThreadToRun->emuFpuState);
-		switchToThreadASM(nextThreadToRun);
-		//Vm::x87Load(nextThreadToRun->emuFpuState);
-	}
+	switchToThreadASM(nextThreadToRun);
 }
 
 ThreadControlBlock* Process::createUserThread()
