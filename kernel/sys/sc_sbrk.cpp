@@ -26,26 +26,21 @@ namespace Sys
 	uint64_t sbrk(regs* r)
 	{
 		size_t previousBreak = currentTaskTCB->processRelatedTo->vas->sbrk;
-		kprintf("sbrk called. r->ebx = 0x%X\n", r->ebx);
 
 		if (r->ebx == 0) {
-			kprintf("r->ebx == 0, 0x%X\n", previousBreak);
 			return previousBreak;
 		}
 
 		if (((int) r->ebx) < 0) {
-			kprintf("r->ebx < 0, 0x%X\n", previousBreak);
 			return previousBreak;
 		}
 
 		if (r->ebx > 67108864) {
-			kprintf("r->ebx > 67108864, 0x%X\n", previousBreak);
 			return -1;
 		}
 
 		currentTaskTCB->processRelatedTo->vas->allocatePages((r->ebx + 4095) / 4096, PAGE_PRESENT | PAGE_WRITABLE | PAGE_USER | PAGE_ALLOCATED);
 		
-		kprintf("Returning the previous break of 0x%X\n", previousBreak);
 		return previousBreak;
 	}
 }
