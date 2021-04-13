@@ -663,9 +663,6 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 size_t VAS::scanForEviction()
 {
 	while (1) {
-		if (firstVal == evictionScanner && through) {
-			doAnything = true;
-		}
 
 		//first check that this page directory is present
 		if ((evictionScanner & 0x3FFFFF) == 0) {
@@ -681,11 +678,10 @@ size_t VAS::scanForEviction()
 		size_t* oldEntry = getPageTableEntry(evictionScanner);
 		if ((*oldEntry & PAGE_SWAPPABLE) && (*oldEntry & PAGE_ALLOCATED)) {
 			if (*oldEntry & PAGE_PRESENT) {
-					size_t ret = *oldEntry & ~0xFFF;
-					evict(evictionScanner);
-					evictionScanner += 4096;		//saves a check the next time this gets called
-					return ret;
-				}
+				size_t ret = *oldEntry & ~0xFFF;
+				evict(evictionScanner);
+				evictionScanner += 4096;		//saves a check the next time this gets called
+				return ret;
 			}
 		}
 
