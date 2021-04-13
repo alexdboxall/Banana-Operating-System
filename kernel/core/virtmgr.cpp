@@ -652,7 +652,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		}
 
 		--swapBalance;
-		kprintf("reloading: 0x%X\n", faultAddr, swapBalance);
+		kprintf("reloading: 0x%X, %d\n", faultAddr, swapBalance);
 
 		Virt::freeSwapfilePage(id);
 		unlockScheduler();
@@ -698,7 +698,7 @@ void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 				size_t* oldPageEntryPtr = getPageTableEntry(vaddr);
 				size_t oldPageEntry = *oldPageEntryPtr;
 
-				if (/*(oldPageEntry & PAGE_SWAPPABLE) && */(oldPageEntry & PAGE_ALLOCATED)) {
+				if ((oldPageEntry & PAGE_SWAPPABLE) && (oldPageEntry & PAGE_ALLOCATED)) {
 					if (oldPageEntry & PAGE_PRESENT) {
 						//kernel stacks (like the one the page fault handler uses) live here
 						if ((oldPageEntry & ~0xFFF) < 0x10000000) {
