@@ -600,12 +600,16 @@ void VAS::evict(size_t virt)
 
 	size_t id = Virt::allocateSwapfilePage();
 
+	if (virt == 0x1001D000) {
+		while (1);
+	}
+
 	for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
 		disks[Virt::swapfileDrive - 'A']->write(Virt::swapIDToSector(id) + i, 1, ((uint8_t*) virt) + 512 * i);
 	}
 
 	size_t* entry = getPageTableEntry(virt);
-	kprintf("freeing phys = 0x%X\n", (*entry) & ~0xFFF);
+	//kprintf("freeing phys = 0x%X\n", (*entry) & ~0xFFF);
 	//Phys::freePage((*entry) & ~0xFFF);			//free the physical page
 	*entry &= ~PAGE_PRESENT;					//not present
 	*entry &= ~PAGE_SWAPPABLE;					//clear bit 11
