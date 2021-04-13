@@ -698,7 +698,7 @@ void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 				size_t* oldPageEntryPtr = getPageTableEntry(vaddr);
 				size_t oldPageEntry = *oldPageEntryPtr;
 
-				if ((oldPageEntry & PAGE_SWAPPABLE) && (oldPageEntry & PAGE_ALLOCATED)) {
+				if (/*(oldPageEntry & PAGE_SWAPPABLE) && */(oldPageEntry & PAGE_ALLOCATED)) {
 					if (oldPageEntry & PAGE_PRESENT) {
 						if (1 || (swp % throwAwayRate) == 0) {
 							evict(vaddr);
