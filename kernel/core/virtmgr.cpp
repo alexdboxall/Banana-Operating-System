@@ -230,6 +230,33 @@ namespace Virt
 	}
 
 	void swappingSetup() {
+		uint64_t siz;
+		bool dir;
+		File* f = new File("C:/pagefile.sys", kernelProcess);
+		if (!f) {
+			panic("CANNOT SETUP PAGEFILE.SYS");
+		}
+		FileStatus status = f->stat(&siz, &dir);
+		if (status != FileStatus::Sucess || dir || !siz || (siz & 0xFFF)) {
+			f->unlink();
+
+			kprintf("creating the swapfile.\n");
+
+			f->open(FILE_OPEN_WRITE_NORMAL);
+			for (int i = 0; i < swapfileLength; ++i) {
+				//just fill out the pages with anything you have on you
+				int br;
+				f->write(512, (void*) swappingSetup, &br);
+				if (br != 512) {
+					panic("CANNOT SETUP PAGEFILE.SYS (2)");
+				}
+			}
+			
+			f->close();
+		}
+
+		swapfileLength = siz / 512;
+
 		kprintf("swap bitmap length = 0x%X\n", swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
 		swapfileBitmap = (size_t*) malloc(swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
 		memset(swapfileBitmap, 0, swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
