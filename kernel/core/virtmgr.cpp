@@ -616,7 +616,7 @@ void VAS::evict(size_t virt)
 	//flush TLB
 	CPU::writeCR3(CPU::readCR3());
 
-	kprintf("evicting:  0x%X\n", virt);
+	kprintf("evicting:  0x%X, %d\n", virt, swapBalance);
 
 	unlockScheduler();
 }
@@ -635,7 +635,6 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 	}
 
 	if (entry && ((*entry) & PAGE_ALLOCATED) && !((*entry) & PAGE_PRESENT)) {
-		kprintf("reloading: 0x%X\n", faultAddr);
 
 		Phys::forbidEvictions = true;
 		size_t id = (*entry) >> 11;				//we need the ID
@@ -653,6 +652,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		}
 
 		--swapBalance;
+		kprintf("reloading: 0x%X\n", faultAddr, swapBalance);
 
 		Virt::freeSwapfilePage(id);
 		unlockScheduler();
@@ -714,7 +714,6 @@ void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 						}
 
 						++swp;
-						kprintf("swp = %d\n", swp);
 					}
 				}
 			}
