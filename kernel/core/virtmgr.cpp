@@ -662,8 +662,8 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		}
 
 		++xyz;
-		if (xyz == 2) {
-			scanForEviction(1, 4);
+		if (xyz == 8) {
+			scanForEviction(1, 12);
 			xyz = 0;
 		}
 
