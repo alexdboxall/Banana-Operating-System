@@ -605,8 +605,9 @@ void VAS::evict(size_t virt)
 	}
 
 	size_t* entry = getPageTableEntry(virt);
+	kprintf("freeing this page 0x%X\n", (*entry) & ~0xFFF);
 	//kprintf("freeing phys = 0x%X\n", (*entry) & ~0xFFF);
-	//Phys::freePage((*entry) & ~0xFFF);			//free the physical page
+	Phys::freePage((*entry) & ~0xFFF);			//free the physical page
 	*entry &= ~PAGE_PRESENT;					//not present
 	*entry &= ~PAGE_SWAPPABLE;					//clear bit 11
 	*entry &= 0xFFFU;							//clear the address
