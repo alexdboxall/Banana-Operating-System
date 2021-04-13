@@ -674,11 +674,8 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 {
 	static int cycle = 0;
-	static int cycle2 = 0;
-	++cycle2;
-	if (cycle2 == 256 * 3) {
-		++cycle;
-	}
+	static int cycle2 = 64;
+	++cycle;
 
 	kprintf("%d. %d.\n", cycle2, cycle);
 
