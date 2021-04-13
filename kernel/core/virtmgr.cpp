@@ -626,8 +626,6 @@ void VAS::evict(size_t virt)
 
 bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 {
-	static uint8_t cycle = 0;
-
 	bool onPageBoundary = (faultAddr & 0xFFF) > 0xFE0;
 	kprintf("faultaddr A = 0x%X\n", faultAddr);
 
@@ -668,11 +666,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 			tryLoadBackOffDisk(faultAddr + 4096);
 		}
 
-		++cycle;
-		if (cycle == 8) {
-			scanForEviction(1, 7);
-			cycle = 0;
-		}
+		scanForEviction(1, 1);
 
 		//flush TLB
 		CPU::writeCR3(CPU::readCR3());
@@ -686,6 +680,9 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 
 void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 {
+	static int cycle = 0;
+	++cycle;
+
 	if (throwAwayRate == 0) throwAwayRate = 1;
 
 	int swp = 0;
@@ -694,7 +691,8 @@ void VAS::scanForEviction(int throwAwayRate, int wantChucks)
 		size_t oldEntry = pageDirectoryBase[i];
 
 		if (oldEntry & PAGE_PRESENT) {
-			for (int j = 0; j < 1024; ++j) {
+			for (int jjj = 0; jjj < 1024; ++jjj) {
+				int j = (cycle + jjj) % 1024;
 				size_t vaddr = ((size_t) i) * 0x400000 + ((size_t) j) * 0x1000;
 				size_t* oldPageEntryPtr = getPageTableEntry(vaddr);
 				size_t oldPageEntry = *oldPageEntryPtr;
