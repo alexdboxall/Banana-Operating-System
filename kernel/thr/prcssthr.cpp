@@ -4,7 +4,7 @@
 #include "libk/string.h"
 #include "hw/cpu.hpp"
 #include "core/kheap.hpp"
-#include "core/fpu.hpp"
+#include "hal/fpu.hpp"
 #include "core/physmgr.hpp"
 #include "thr/elf.hpp"
 #include "vm/x87em.hpp"
