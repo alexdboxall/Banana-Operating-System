@@ -612,13 +612,10 @@ void VAS::evict(size_t virt)
 
 	//flush TLB
 	CPU::writeCR3(CPU::readCR3());
-
-	kprintf("evicting:  0x%X, %d\n", virt, swapBalance);
 }
 
 bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 {
-	kprintf("Trying to reload 0x%X\n", faultAddr);
 	static int xyz = 0;
 
 	bool onPageBoundary = (faultAddr & 0xFFF) > 0xFE0;
@@ -647,7 +644,6 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		}
 
 		--swapBalance;
-		kprintf("reloading: 0x%X, %d\n", faultAddr, swapBalance);
 
 		Virt::freeSwapfilePage(id);
 
