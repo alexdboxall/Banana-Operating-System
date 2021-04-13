@@ -156,7 +156,7 @@ namespace Phys
 					VgaText::updateRAMUsageDisplay(percent);
 				}
 
-				if (percent > 50 && !forbidEvictions) {
+				if (percent > 30 && !forbidEvictions) {
 					if (currentTaskTCB && currentTaskTCB->processRelatedTo && currentTaskTCB->processRelatedTo->vas) {
 						currentTaskTCB->processRelatedTo->vas->scanForEviction(8, 4);
 					}
