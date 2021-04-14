@@ -21,11 +21,11 @@ sseDetect:          ;RETURNS A SIZE_T, 0 OR 1
     ret
 
 sseSave:            ;TAKES IN A SIZE_T
-    fxsave [esp + 8]
+    fxsave [esp + 4]        ;no ebp so plus 4
     ret
 
 sseLoad:            ;TAKES IN A SIZE_T
-    fxrstor [esp + 8]
+    fxrstor [esp + 4]        ;no ebp so plus 4
     ret
 
 sseInit:
