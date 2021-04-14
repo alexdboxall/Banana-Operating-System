@@ -3,6 +3,7 @@
 #include "core/terminal.hpp"
 #include "libk/string.h"
 #include "hw/cpu.hpp"
+#include "hw/fpu.hpp"
 #include "core/kheap.hpp"
 #include "core/physmgr.hpp"
 #include "thr/elf.hpp"
@@ -59,6 +60,7 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 	//nextThreadToRun->timeSliceRemaining = 50000000;
 
 	updateTimeUsed();
+
 	switchToThreadASM(nextThreadToRun);
 }
 
@@ -86,6 +88,7 @@ ThreadControlBlock* Process::createThread(void (*where)(void*), void* context, i
 	}
 
 	threadUsage |= (1 << threadNo);
+	threads[threadNo].fpuState = nullptr;
 	threads[threadNo].cr3 = vas->pageDirectoryBasePhysical;
 	threads[threadNo].startContext = context;
 	threads[threadNo].esp = VIRT_APP_STACK_USER_TOP - SIZE_APP_STACK_TOTAL * threadNo - STACK_LEEWAY;
@@ -130,6 +133,7 @@ void setupMultitasking(void (*where)())
 	setActiveTerminal(p->terminal);
 
 	p->threadUsage |= 1;
+	p->threads[0].fpuState = nullptr;
 	p->threads[0].cr3 = p->vas->pageDirectoryBasePhysical;
 	p->threads[0].esp = VIRT_APP_STACK_USER_TOP - STACK_LEEWAY;
 	p->threads[0].rtid = 0;

@@ -20,29 +20,36 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-char exceptionNames[][32] = {
-	"Division by zero error",
-	"Debug",
-	"Non-maskable interrupt",
-	"Breakpoint",
-	"Overflow",
-	"Bound range exceeded",
-	"Invalid opcode",
-	"Device not available",
-	"Dobule fault",
-	"Coprocessor segment",
-	"Invalid TSS",
-	"Segment not present",
-	"Stack segment fault",
-	"General protection fault",
-	"Page fault",
-	"Reserved",
-	"Floating point exception",
-	"Alignment check",
-	"Machine check",
-	"SIMD floating-point exception",
-	"Virtualisation exception",
-};
+namespace Krnl
+{
+	ThreadControlBlock* fpuOwner = nullptr;
+
+	char exceptionNames[][32] = {
+		"Division by zero error",
+		"Debug",
+		"Non-maskable interrupt",
+		"Breakpoint",
+		"Overflow",
+		"Bound range exceeded",
+		"Invalid opcode",
+		"Device not available",
+		"Dobule fault",
+		"Coprocessor segment",
+		"Invalid TSS",
+		"Segment not present",
+		"Stack segment fault",
+		"General protection fault",
+		"Page fault",
+		"Reserved",
+		"Floating point exception",
+		"Alignment check",
+		"Machine check",
+		"SIMD floating-point exception",
+		"Virtualisation exception",
+	};
+}
+
+
 
 #define ISR_DIV_BY_ZERO 0x00
 #define ISR_DEBUG 0x01
@@ -316,6 +323,27 @@ bool (*gpFaultIntercept)(regs* r) = nullptr;
 
 void x87EmulHandler(regs* r, void* context)
 {
+	size_t cr0 = CPU::readCR0();
+
+	//no emulation and task switch bit set
+	if (!(cr0 & 4) && (cr0 & 8)) {
+		//clear task switched
+		asm volatile ("clts");
+
+		//save previous state
+		if (fpuOwner) {
+			computer->fpu->save(fpuOwner->fpuState);
+		}
+
+		//check if never had state before, otherwise load state
+		if (currentTaskTCB->fpuState == nullptr) {
+			currentTaskTCB->fpuState = (uint8_t*) malloc(512);
+		} else {
+			computer->fpu->load(currentTaskTCB->fpuState);
+		}
+		return;
+	}
+
 	bool handled = Vm::x87Handler(r);
 	if (handled) {
 		return;
@@ -346,13 +374,6 @@ void gpFault(regs* r, void* context)
 
 	Thr::terminateFromIRQ();
 }
-
-size_t* pf0 = 0;
-size_t* pf1 = 0;
-size_t* pf2 = 0;
-size_t* pf3 = 0;
-size_t* pf4 = 0;
-size_t* pf5 = 0;
 
 void pgFault(regs* r, void* context)
 {
@@ -610,6 +631,8 @@ InterruptController* setupInterruptController()
 	}
 
 	computer->addChild(controller);
+
+	fpuOwner = nullptr;
 
 	controller->installISRHandler(ISR_DIV_BY_ZERO, otherISRHandler);
 	controller->installISRHandler(ISR_DEBUG, otherISRHandler);
