@@ -325,6 +325,7 @@ bool (*gpFaultIntercept)(regs* r) = nullptr;
 void x87EmulHandler(regs* r, void* context)
 {
 	size_t cr0 = CPU::readCR0();
+	bool handled;
 
 	if (currentTaskTCB->vm86Task) {
 		goto bad;
@@ -357,7 +358,7 @@ void x87EmulHandler(regs* r, void* context)
 		return;
 	}
 
-	bool handled = Vm::x87Handler(r);
+	handled = Vm::x87Handler(r);
 	if (handled) {
 		return;
 	}
