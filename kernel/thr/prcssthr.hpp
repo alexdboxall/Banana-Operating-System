@@ -58,14 +58,21 @@ struct ThreadControlBlock
 
 	int returnCodeForUseOnTerminationList;
 
-	uint16_t vm86IP;
-	uint16_t vm86CS;
-	uint16_t vm86SP;
-	uint16_t vm86SS;
+	union
+	{
+		struct
+		{
+			uint16_t vm86IP;
+			uint16_t vm86CS;
+			uint16_t vm86SP;
+			uint16_t vm86SS;
+		};
+
+		uint8_t* fpuState = nullptr;
+	};
+	
 	bool vm86VIE = false;
 	bool vm86Task = false;
-
-	uint8_t* fpuState = nullptr;
 };
 
 struct Process
