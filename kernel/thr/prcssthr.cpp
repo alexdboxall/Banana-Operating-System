@@ -3,7 +3,7 @@
 #include "core/terminal.hpp"
 #include "libk/string.h"
 #include "hw/cpu.hpp"
-#include "hw/fpu.hpp"
+#include "hal/fpu.hpp"
 #include "core/kheap.hpp"
 #include "core/physmgr.hpp"
 #include "thr/elf.hpp"
