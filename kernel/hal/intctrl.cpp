@@ -332,7 +332,7 @@ void x87EmulHandler(regs* r, void* context)
 	}
 
 	//no emulation and task switch bit set
-	if (!(cr0 & 4) && (cr0 & 8)) {
+	if (computer->fpu && (cr0 & 8)) {
 		kprintf("clutzing...\n");
 
 		//clear task switched
