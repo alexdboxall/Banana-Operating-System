@@ -636,7 +636,7 @@ InterruptController* setupInterruptController()
 
 	computer->addChild(controller);
 
-	fpuOwner = nullptr;
+	Krnl::fpuOwner = nullptr;
 
 	controller->installISRHandler(ISR_DIV_BY_ZERO, otherISRHandler);
 	controller->installISRHandler(ISR_DEBUG, otherISRHandler);
