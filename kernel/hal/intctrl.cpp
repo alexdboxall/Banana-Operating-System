@@ -327,7 +327,7 @@ void x87EmulHandler(regs* r, void* context)
 	size_t cr0 = CPU::readCR0();
 
 	//no emulation and task switch bit set
-	if (!(cr0 & 4) && (cr0 & 8)) {
+	/*if (!(cr0 & 4) && (cr0 & 8)) {
 		//clear task switched
 		asm volatile ("clts");
 
@@ -346,7 +346,7 @@ void x87EmulHandler(regs* r, void* context)
 		Krnl::fpuOwner = currentTaskTCB;
 
 		return;
-	}
+	}*/
 
 	bool handled = Vm::x87Handler(r);
 	if (handled) {
