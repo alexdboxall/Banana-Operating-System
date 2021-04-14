@@ -326,33 +326,43 @@ void x87EmulHandler(regs* r, void* context)
 {
 	size_t cr0 = CPU::readCR0();
 
+	if (currentTaskTCB->vm86Task) {
+		goto bad;
+	}
+
 	//no emulation and task switch bit set
-	/*if (!(cr0 & 4) && (cr0 & 8)) {
+	if (!(cr0 & 4) && (cr0 & 8)) {
+		kprintf("clutzing...\n");
+
 		//clear task switched
 		asm volatile ("clts");
 
 		//save previous state
 		if (Krnl::fpuOwner) {
+			kprintf("saving FPU state...\n");
 			computer->fpu->save(Krnl::fpuOwner->fpuState);
 		}
 
 		//check if never had state before, otherwise load state
 		if (currentTaskTCB->fpuState == nullptr) {
+			kprintf("allocating FPU state...\n");
 			currentTaskTCB->fpuState = (uint8_t*) malloc(512);
 		} else {
+			kprintf("loading FPU state...\n");
 			computer->fpu->load(currentTaskTCB->fpuState);
 		}
 
 		Krnl::fpuOwner = currentTaskTCB;
 
 		return;
-	}*/
+	}
 
 	bool handled = Vm::x87Handler(r);
 	if (handled) {
 		return;
 	}
 	
+bad:
 	kprintf("Device not available\n");
 
 	displayDebugInfo(r);
