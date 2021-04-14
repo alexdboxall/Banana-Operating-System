@@ -351,6 +351,7 @@ void x87EmulHandler(regs* r, void* context)
 		} else {
 			kprintf("loading FPU state...\n");
 			computer->fpu->load(currentTaskTCB->fpuState);
+			kprintf("loaded FPU state...\n");
 		}
 
 		Krnl::fpuOwner = currentTaskTCB;
