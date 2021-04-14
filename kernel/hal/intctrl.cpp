@@ -333,12 +333,12 @@ void x87EmulHandler(regs* r, void* context)
 
 	//no emulation and task switch bit set
 	if (computer->fpu && (cr0 & 8)) {
-		/*kprintf("clutzing...\n");
+		kprintf("clutzing...\n");
 
 		//clear task switched
 		asm volatile ("clts");
 
-		//save previous state
+		/*//save previous state
 		if (Krnl::fpuOwner) {
 			kprintf("saving FPU state...\n");
 			computer->fpu->save(Krnl::fpuOwner->fpuState);
@@ -353,11 +353,11 @@ void x87EmulHandler(regs* r, void* context)
 			kprintf("loading FPU state...\n");
 			computer->fpu->load(currentTaskTCB->fpuState);
 			kprintf("loaded FPU state...\n");
-		}
+		}*/
 
 		Krnl::fpuOwner = currentTaskTCB;
 
-		return;*/
+		return;
 	}
 
 	handled = Vm::x87Handler(r);
