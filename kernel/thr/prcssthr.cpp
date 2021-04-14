@@ -130,6 +130,7 @@ void setupMultitasking(void (*where)())
 	Process* p = new Process(true, "System", nullptr, nullptr);
 	kernelProcess = p;
 	kprintf("setupMultitasking. Setting active terminal to 0x%X\n", p->terminal);
+	kprintf("sizeof(ThreadControlBlock) = 0x%X\n", sizeof(ThreadControlBlock));
 	setActiveTerminal(p->terminal);
 
 	p->threadUsage |= 1;
