@@ -23,14 +23,12 @@ x87Detect:      ;RETURNS A SIZE_T, 0 OR 1
 
 x87Save:
 ;WARNING: NOTICE WE ARE NOT USING A STACK FRAME FOR THIS, DO NOT CHANGE EBP WITHOUT PUSHING IT FIRST!
-    mov eax, [esp + 8]
-    fsave [eax]
+    fsave [esp + 4]     ;only plus 4 because no EBP push
     ret
 
 x87Load:        ;TAKES IN A SIZE_T
 ;WARNING: NOTICE WE ARE NOT USING A STACK FRAME FOR THIS, DO NOT CHANGE EBP WITHOUT PUSHING IT FIRST!
-    mov eax, [esp + 8]
-    frstor [eax]
+    frstor [esp + 4]     ;only plus 4 because no EBP push
     ret
 
 x87Init:
