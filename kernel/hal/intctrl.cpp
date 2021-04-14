@@ -342,6 +342,7 @@ void x87EmulHandler(regs* r, void* context)
 		if (Krnl::fpuOwner) {
 			kprintf("saving FPU state...\n");
 			computer->fpu->save(Krnl::fpuOwner->fpuState);
+			kprintf("saved FPU state...\n");
 		}
 
 		//check if never had state before, otherwise load state
