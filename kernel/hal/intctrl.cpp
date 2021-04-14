@@ -10,6 +10,7 @@
 #include "hw/acpi.hpp"
 #include "hw/ports.hpp"
 #include "hw/cpu.hpp"
+#include "hw/fpu.hpp"
 #include "vm86/x87em.hpp"
 #include "vm86/vm8086.hpp"
 
@@ -250,7 +251,7 @@ void displayDebugInfo(regs* r)
 
 	setActiveTerminal(kernelProcess->terminal);
 
-	kernelProcess->terminal->puts(exceptionNames[r->int_no]);
+	kernelProcess->terminal->puts(Krnl::exceptionNames[r->int_no]);
 	kernelProcess->terminal->puts("\n TASK: ");
 	kernelProcess->terminal->puts(currentTaskTCB->processRelatedTo->taskname);
 	kernelProcess->terminal->puts("\n EIP: ");
@@ -331,8 +332,8 @@ void x87EmulHandler(regs* r, void* context)
 		asm volatile ("clts");
 
 		//save previous state
-		if (fpuOwner) {
-			computer->fpu->save(fpuOwner->fpuState);
+		if (Krnl::fpuOwner) {
+			computer->fpu->save(Krnl::fpuOwner->fpuState);
 		}
 
 		//check if never had state before, otherwise load state
@@ -341,6 +342,9 @@ void x87EmulHandler(regs* r, void* context)
 		} else {
 			computer->fpu->load(currentTaskTCB->fpuState);
 		}
+
+		Krnl::fpuOwner = currentTaskTCB;
+
 		return;
 	}
 
