@@ -133,6 +133,8 @@ extern "C" void (*guiMouseHandler) (int xdelta, int ydelta, int btns, int z);
 extern "C" void (*guiKeyboardHandler) (KeyboardToken kt, bool* keystates);
 extern "C" void dispatchMessage(Window* window, Message msg);
 
+#include "hal/keybrd.hpp"
+
 extern Window* active_window;
 extern "C" void handleKeyboard(KeyboardToken kt, bool* keystates)
 {
@@ -142,10 +144,14 @@ extern "C" void handleKeyboard(KeyboardToken kt, bool* keystates)
     m.window = active_window;
     m.type = kt.release ? MESSAGE_KEYUP : MESSAGE_KEYDOWN;
     m.key = kt.halScancode;
+    m.shift = keystates[(int)KeyboardSpecialKeys::Shift] | keystates[(int)KeyboardSpecialKeys::RightShift];
+    m.alt = keystates[(int)KeyboardSpecialKeys::Alt] | keystates[(int)KeyboardSpecialKeys::RightAlt];
+    m.ctrl = keystates[(int)KeyboardSpecialKeys::Ctrl] | keystates[(int)KeyboardSpecialKeys::RightCtrl];
 
     dispatchMessage((Window*) m.window, m);
 }
 
+int prevBtns = 0;
 extern "C" void handleMouse(int xdelta, int ydelta, int btns, int z)
 {
     mouse_x += xdelta;
@@ -163,6 +169,20 @@ extern "C" void handleMouse(int xdelta, int ydelta, int btns, int z)
 
     //canDoMouse = true;
     Desktop_process_mouse(desktop, mouse_x, mouse_y, buttons);
+    
+    if (active_window) {
+        if (buttons) {
+            Message m;
+            m.window = active_window;
+            m.type = prevBtns ? MESSAGE_MOUSE_DRAG : MESSAGE_LBUTTON_DOWN;
+            m.mousex = mouse_x;
+            m.mousey = mouse_y;
+
+            dispatchMessage((Window*) m.window, m);
+        }
+    }
+
+    prevBtns == btns;
 }
 
 extern "C" void debugwrite(char* t)

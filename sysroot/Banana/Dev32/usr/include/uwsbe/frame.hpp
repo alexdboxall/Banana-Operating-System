@@ -30,9 +30,18 @@ protected:
 	Frame* children[64];
 	int nextChild = 0;
 
+	Frame* parent = nullptr;
+	Frame* focusChild = nullptr;
+
 	WSBE* wsbe;
 	void gotMessage(Message msg);
 	virtual void _impl() = 0;
+
+	bool wsbeRegistered = false;
+	int wsbeX;
+	int wsbeY;
+	int wsbeW;
+	int wsbeH;
 
 public:
 	Frame();
@@ -40,7 +49,14 @@ public:
 	WSBE* getWSBE();
 
 	EventHandler keyDownHandler = nullptr;
+	EventHandler focusEnterHandler = nullptr;
+	EventHandler focusLeaveHandler = nullptr;
+	EventHandler lbuttonDownHandler = nullptr;
+	EventHandler lbuttonUpHandler = nullptr;
+	EventHandler mouseDragHandler = nullptr;
 
+	void stealFocus();
+	bool hasFocus();
 	void add(Frame* parent);
 	void repaintDesktop();
 	void processEvents();
