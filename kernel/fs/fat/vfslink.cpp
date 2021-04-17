@@ -242,7 +242,6 @@ void FAT::fixFilepath(char* path)
 	}
 }
 
-
 uint64_t FAT::getFileFirstSector(const char* filename)
 {
 	File* f = new File(filename, kernelProcess);
