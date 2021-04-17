@@ -74,6 +74,7 @@ public:
 	virtual FileStatus getlabel(LogicalDisk* disk, int diskNum, char* returnBuffer, uint32_t* serial);
 	virtual FileStatus setlabel(LogicalDisk* disk, int diskNum, char* label);
 
+	virtual uint64_t getFileFirstSector(const char* filename);
 };
 
 extern Filesystem* installedFilesystems;
@@ -88,9 +89,9 @@ protected:
 	char filepath[256];
 	uint8_t driveNo;
 
+public:
 	void* fsSpecificData;
 
-public:
 	File(const char* filename, Process* process);		//process required to obtain the trust certificates
 	~File();
 	virtual bool isAtty();

@@ -422,3 +422,7 @@ FileStatus Filesystem::chfatattr(const char* path, uint8_t andMask, uint8_t orFl
 	return FileStatus::NotSupported;
 }
 
+uint64_t Filesystem::getFileFirstSector(const char* filename)
+{
+	return 0;
+}

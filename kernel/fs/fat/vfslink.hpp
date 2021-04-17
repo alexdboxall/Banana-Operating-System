@@ -44,6 +44,7 @@ public:
 
 	bool exists(const char* file);
 
+	virtual uint64_t getFileFirstSector(const char* filename) override;
 	virtual FileStatus chfatattr(const char* path, uint8_t andMask, uint8_t orFlags) override;
 };
 

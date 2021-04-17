@@ -242,6 +242,24 @@ void FAT::fixFilepath(char* path)
 	}
 }
 
+
+uint64_t FAT::getFileFirstSector(const char* filename)
+{
+	File* f = new File(filename, kernelProcess);
+	f->open(FileOpenMode::Read);
+
+	FIL* fsData = (FIL*) f->fsSpecificData;
+
+	kprintf("sect = 0x%X\n", fsData->sect);
+	kprintf("clust = 0x%X\n", fsData->clust);
+	kprintf("dir_sect = 0x%X\n", fsData->dir_sect);
+
+	size_t retV = 0;
+
+	f->close();
+	return retV;
+}
+
 FileStatus FAT::open(const char* __fn, void** ptr, FileOpenMode mode)
 {
 	if (__fn == nullptr || ptr == nullptr) return FileStatus::InvalidArgument;
