@@ -254,7 +254,7 @@ namespace Virt
 		int br = 0;
 		int pages = megs * 256;
 		uint8_t* buff = (uint8_t*) malloc(4096 * 16);
-		memset(buff, 0, 4096 * 16);
+		memset(buff, 0xEE, 4096 * 16);
 		pages /= 16;
 		while (pages--) {
 			st = f->write(4096 * 16, buff, &br);
