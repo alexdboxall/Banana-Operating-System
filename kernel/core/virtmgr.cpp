@@ -614,8 +614,8 @@ void VAS::evict(size_t virt)
 	//flush TLB
 	CPU::writeCR3(CPU::readCR3());
 
-	kprintf("evicting:  0x%X, %d\n", virt, swapBalance);
-	kprintf("Total swaps: %d\n", twswaps++);
+	//kprintf("evicting:  0x%X, %d\n", virt, swapBalance);
+	//kprintf("Total swaps: %d\n", twswaps++);
 }
 
 bool VAS::tryLoadBackOffDisk(size_t faultAddr)
@@ -644,7 +644,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		}
 
 		--swapBalance;
-		kprintf("reloading: 0x%X, %d\n", faultAddr, swapBalance);
+		//kprintf("reloading: 0x%X, %d\n", faultAddr, swapBalance);
 
 		Virt::freeSwapfilePage(id);
 		unlockScheduler();
