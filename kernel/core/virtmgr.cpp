@@ -242,6 +242,7 @@ namespace Virt
 
 	void setupPageSwapping(int megs)
 	{
+		kprintf("setupPageSwapping.\n");
 		File* f = new File("C:/Banana/SWAPFILE.SYS", kernelProcess);
 		f->unlink();
 		FileStatus st = f->open(FILE_OPEN_WRITE_NORMAL);
