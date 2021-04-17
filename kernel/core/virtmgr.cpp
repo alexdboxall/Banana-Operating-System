@@ -230,9 +230,7 @@ namespace Virt
 	}
 
 	void swappingSetup() {
-		kprintf("swap bitmap length = 0x%X\n", swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
-		swapfileBitmap = (size_t*) malloc(swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
-		memset(swapfileBitmap, 0, swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
+
 	}
 
 	VAS* getAKernelVAS()
@@ -271,7 +269,16 @@ namespace Virt
 		rfree(buff);
 		delete f;
 
-		disks['C' - 'A']->fs->getFileFirstSector("C:/Banana/SWAPFILE.SYS");
+		uint64_t sec = disks['C' - 'A']->fs->getFileFirstSector("C:/Banana/SWAPFILE.SYS");
+
+		swapfileDrive = 'C';
+		swapfileLength = megs * 1024 / 512 * 1024;
+		swapfileSector = sec;
+		swapfileSectorsPerPage = 4096 / 512;
+		swapfileBitmap = (size_t*) malloc(swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
+		memset(swapfileBitmap, 0, swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
+
+		kprintf("swap bitmap length = 0x%X\n", swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
 	}
 }
 

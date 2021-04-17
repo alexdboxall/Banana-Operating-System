@@ -251,10 +251,8 @@ uint64_t FAT::getFileFirstSector(const char* filename)
 	FIL* fsData = (FIL*) f->fsSpecificData;
 
 	kprintf("sect = 0x%X\n", fsData->sect);
-	kprintf("clust = 0x%X\n", fsData->clust);
-	kprintf("dir_sect = 0x%X\n", fsData->dir_sect);
 
-	size_t retV = 0;
+	size_t retV = fsData->sect;
 
 	f->close();
 	return retV;
