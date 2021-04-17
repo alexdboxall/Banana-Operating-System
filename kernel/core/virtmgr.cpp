@@ -270,7 +270,7 @@ namespace Virt
 		rfree(buff);
 		delete f;
 
-		disks['C' - 'A']->fs->getFileFirstSector("C:/Banana/SWAPFILE.SYS", kernelProcess);
+		disks['C' - 'A']->fs->getFileFirstSector("C:/Banana/SWAPFILE.SYS");
 	}
 }
 
