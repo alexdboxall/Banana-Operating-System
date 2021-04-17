@@ -246,7 +246,8 @@ uint64_t FAT::getFileFirstSector(const char* filename)
 {
 	File* f = new File(filename, kernelProcess);
 	f->open(FileOpenMode::Read);
-
+	int i, br;
+	f->read(4, &i, &br);
 	FIL* fsData = (FIL*) f->fsSpecificData;
 
 	kprintf("sect = 0x%X\n", fsData->sect);
