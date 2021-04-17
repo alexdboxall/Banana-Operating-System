@@ -34,6 +34,7 @@
 #define MESSAGE_GETTEXT         25
 #define MESSAGE_FOCUS_ENTER     26
 #define MESSAGE_FOCUS_LEAVE     27
+#define MESSAGE_CURSOR_BLINK    28
 
 
 typedef struct Message

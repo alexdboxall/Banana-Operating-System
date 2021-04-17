@@ -106,6 +106,12 @@ void Desktop_process_mouse(Desktop* desktop, uint16_t mouse_x,
 	Window* old_active = active_window;
 	int changedWin = 0;
 	if (mouse_buttons && !oldMouse) {
+		if (active_window) {
+			Message m;
+			m.window = active_window;
+			m.type = MESSAGE_FOCUS_LEAVE;
+			dispatchMessage((Window*) m.window, m);
+		}
 		active_window = 0;
 		changedWin = 1;
 	}

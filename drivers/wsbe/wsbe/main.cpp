@@ -152,6 +152,7 @@ extern "C" void handleKeyboard(KeyboardToken kt, bool* keystates)
 }
 
 int prevBtns = 0;
+uint64_t lastClick = 0;
 extern "C" void handleMouse(int xdelta, int ydelta, int btns, int z)
 {
     mouse_x += xdelta;
@@ -172,17 +173,21 @@ extern "C" void handleMouse(int xdelta, int ydelta, int btns, int z)
     
     if (active_window) {
         if (buttons) {
+            bool doubleClick = (nanoSinceBoot < lastClick + 1000ULL * 1000ULL * 300ULL) && !prevBtns;
+
             Message m;
             m.window = active_window;
-            m.type = prevBtns ? MESSAGE_MOUSE_DRAG : MESSAGE_LBUTTON_DOWN;
+            m.type = doubleClick ? MESSAGE_LBUTTON_DOUBLE : (prevBtns ? MESSAGE_MOUSE_DRAG : MESSAGE_LBUTTON_DOWN);
             m.mousex = mouse_x;
             m.mousey = mouse_y;
 
             dispatchMessage((Window*) m.window, m);
+
+            lastClick = nanoSinceBoot;
         }
     }
 
-    prevBtns == btns;
+    prevBtns = btns;
 }
 
 extern "C" void debugwrite(char* t)
@@ -315,7 +320,15 @@ int main(int argc, const char* argv[])
     desktop = Desktop_new(context);
 
     while (1) {
-        blockTask(TaskState::Paused);
+        nanoSleep(1000 * 1000 * 1000);
+
+        if (active_window) {
+            Message m;
+            m.window = active_window;
+            m.type = MESSAGE_CURSOR_BLINK;
+
+            dispatchMessage((Window*) m.window, m);
+        }    
     }
 
     return 0;

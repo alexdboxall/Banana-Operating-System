@@ -53,10 +53,16 @@ public:
 	EventHandler focusLeaveHandler = nullptr;
 	EventHandler lbuttonDownHandler = nullptr;
 	EventHandler lbuttonUpHandler = nullptr;
+	EventHandler lbuttonDoubleHandler = nullptr;
 	EventHandler mouseDragHandler = nullptr;
+	EventHandler resizingHandler = nullptr;
+	EventHandler resizedHandler = nullptr;
+	EventHandler movingHandler = nullptr;
+	EventHandler movedHandler = nullptr;
+	EventHandler cursorBlinkHandler = nullptr;
 
-	void stealFocus();
-	bool hasFocus();
+	virtual void stealFocus();
+	virtual bool hasFocus();
 	void add(Frame* parent);
 	void repaintDesktop();
 	void processEvents();

@@ -593,6 +593,7 @@ void VAS::mapPage(size_t physicalAddr, size_t virtualAddr, int flags) {
 }
 
 int swapBalance = 0;
+int twswaps = 0;
 
 void VAS::evict(size_t virt)
 {
@@ -614,6 +615,7 @@ void VAS::evict(size_t virt)
 	CPU::writeCR3(CPU::readCR3());
 
 	kprintf("evicting:  0x%X, %d\n", virt, swapBalance);
+	kprintf("Total swaps: %d\n", twswaps++);
 }
 
 bool VAS::tryLoadBackOffDisk(size_t faultAddr)
@@ -663,7 +665,6 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 size_t VAS::scanForEviction()
 {
 	while (1) {
-
 		//first check that this page directory is present
 		if ((evictionScanner & 0x3FFFFF) == 0) {
 			size_t oldEntry = pageDirectoryBase[evictionScanner / 0x400000];

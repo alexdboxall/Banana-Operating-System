@@ -761,6 +761,7 @@ void Context_text_width_height(char* string, int flags, int* widthOut, int* heig
 		if (flags & TEXT_FLAG_BOLD) {
 			++width;
 		}
+		debugwritestrhx("\n.> ", character);
 		width += FontWidths[System][(int) character];
 	}
 

@@ -50,9 +50,11 @@ int main(int argc, char* argv[])
 	
 	entry = new Entry(20, 85, 280, "C:/Banana/System/");
 	entry->add(win);
+	entry->setPlaceholder("Please type a full filepath");
 
 	entry2 = new Entry(20, 110, 280, "C:/Banana/");
 	entry2->add(win);
+	entry2->setMaskCharacter('*');
 
 	entry->stealFocus();
 	win->repaintDesktop();

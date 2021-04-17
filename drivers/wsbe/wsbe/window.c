@@ -70,7 +70,20 @@ int Window_init(Window* window, int16_t x, int16_t y, uint16_t width,
 	window->repaintScript = defaultRepaintScript;
 
 	if (flags & WIN_TOPLEVELWIN) {
+
+		if (active_window) {
+			Message m;
+			m.window = active_window;
+			m.type = MESSAGE_FOCUS_LEAVE;
+			dispatchMessage((Window*) m.window, m);
+		}
+
 		active_window = window;
+
+		Message m;
+		m.window = active_window;
+		m.type = MESSAGE_FOCUS_ENTER;
+		dispatchMessage((Window*) m.window, m);
 	}
 
 	return 1;
@@ -506,7 +519,17 @@ List* Window_get_windows_below(Window* parent, Window* child)
 void Window_raise(Window* window, uint8_t do_draw)
 {
 	if (window->flags & WIN_TOPLEVELWIN) {
+		if (active_window != window && active_window) {
+			Message m;
+			m.window = active_window;
+			m.type = MESSAGE_FOCUS_LEAVE;
+			dispatchMessage((Window*) m.window, m);
+		}
 		active_window = window;
+		Message m;
+		m.window = active_window;
+		m.type = MESSAGE_FOCUS_ENTER;
+		dispatchMessage((Window*) m.window, m);
 	}
 
 	int i;
@@ -625,6 +648,13 @@ void Window_resize(Window* window, int new_w, int new_h)
 	//With the dirtied siblings redrawn, we can do the final update of
 	//the window location and paint it at that new position
 	Window_paint(window, (List*) 0, 1);
+
+	Message m;
+	m.window = window;
+	m.type = MESSAGE_RESIZING;
+	m.dispx = new_w;
+	m.dispy = new_h;
+	dispatchMessage((Window*) m.window, m);
 }
 
 //We're wrapping this guy so that we can handle any needed redraw
@@ -703,6 +733,13 @@ void Window_move(Window* window, int new_x, int new_y)
 	//With the dirtied siblings redrawn, we can do the final update of 
 	//the window location and paint it at that new position
 	Window_paint(window, (List*) 0, 1);
+
+	Message m;
+	m.window = window;
+	m.type = MESSAGE_MOVING;
+	m.dispx = new_x;
+	m.dispy = new_y;
+	dispatchMessage((Window*) m.window, m);
 }
 
 //Interface between windowing system and mouse device

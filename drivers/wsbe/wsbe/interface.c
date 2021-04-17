@@ -22,20 +22,15 @@ Message blankMessage(Window* window)
 void debugwrite(char* t);
 void dispatchMessage(Window* window, Message msg)
 {
-    debugwrite("Dispatching message");
     if (window->messageCount == WINDOW_MAX_MESSAGE) {
         return;
     }
     window->messages[window->messageCount++] = msg;
-    debugwrite("Dispatched message");
 }
 
 int getMessage(Window* window, Message* msg)
 {
-    debugwrite("Get message called");
-
     if (!window->messageCount) {
-        debugwrite("No message");
         return 0;
     }
 
@@ -43,8 +38,6 @@ int getMessage(Window* window, Message* msg)
     for (int i = 0; i < window->messageCount; ++i) {
         window->messages[i] = window->messages[i + 1];
     }
-
-    debugwrite("There was a message");
 
     return window->messageCount + 1;
 }
@@ -135,14 +128,10 @@ uint64_t sysWSBE(struct regs* r)
     } else if (r->ebx == WSBE_SET_SCRIPT) {
         struct MoreArgs* ma = (struct MoreArgs*) r->ecx;
 
-        debugwrite("WSBE_SET_SCRIPT\n");
-
         Window* win = (Window*) ma->obj;
         win->repaintScript = malloc(ma->flags + 2);
         memcpy(win->repaintScript, (const void*) r->edx, ma->flags);
         win->repaintScript[ma->flags] = OP_END;
-
-        debugwrite("End WSBE_SET_SCRIPT\n");
 
         return 0;
 
