@@ -679,8 +679,8 @@ size_t VAS::scanForEviction()
 		size_t* oldEntry = getPageTableEntry(evictionScanner);
 		if ((*oldEntry & PAGE_SWAPPABLE) && (*oldEntry & PAGE_ALLOCATED)) {
 			if (*oldEntry & PAGE_PRESENT) {
-				if (*oldEntry & PAGE_DIRTY) {
-					*oldEntry &= ~PAGE_DIRTY;
+				if (*oldEntry & PAGE_ACCESSED) {
+					*oldEntry &= ~PAGE_ACCESSED;
 				} else {
 					size_t ret = *oldEntry & ~0xFFF;
 					evict(evictionScanner);
