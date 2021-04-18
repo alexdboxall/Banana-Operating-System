@@ -18,21 +18,26 @@
 namespace Sys
 {
 	/// <summary>
-	/// Returns the pointer to the kernel process' terminal data, stored in VGA text mode 3 format.
+	/// Returns the pointer to the kernel process' terminal data, stored in VGA text mode 3 format. It also allows this current process to read from the this page.
 	/// </summary>
 	/// <param name="ebx">Does not matter yet.</param>
 	/// <param name="ecx">Does not matter yet.</param>
 	/// <param name="edx">Does not matter yet.</param>
-	/// <returns>Returns the pointer to a 4096 byte area. Accessing outside this area will cause a page fault and the program will be terminated.</returns>
+	/// <returns>Returns the pointer to a 4096 byte area. Writing to this area, or accessing outside this area will cause a page fault and the program will be terminated.</returns>
 	/// 
 	uint64_t getVGAPtr(regs* r)
 	{
 		kprintf("getVGAPtr: 0x%X\n", kernelProcess->terminal->displayData);
 		
 		size_t* entry = currentTaskTCB->processRelatedTo->vas->getPageTableEntry((size_t) kernelProcess->terminal->displayData);
-		*entry &= ~PAGE_SUPERVISOR;
-		*entry &= ~PAGE_WRITABLE;
+		kprintf("*entry = 0x%X\n", *entry);
+		*entry |= PAGE_WRITABLE;
 		*entry |= PAGE_USER;
+
+		//flush TLB
+		CPU::writeCR3(CPU::readCR3());
+
+		kprintf("*entry = 0x%X\n", *entry);
 
 		return (uint64_t) kernelProcess->terminal->displayData;
 	}
