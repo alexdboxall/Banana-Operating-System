@@ -25,6 +25,8 @@ namespace Sys
 	/// 
 	uint64_t getVGAPtr(regs* r)
 	{
+		kprintf("getVGAPtr: 0x%X\n", kernelProcess->terminal->displayData);
+
 		return (uint64_t) kernelProcess->terminal->displayData;
 	}
 }

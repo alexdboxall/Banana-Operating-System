@@ -4,6 +4,8 @@
 
 #include <uwsbe/krnllink.h>
 
+#include "D:\Users\Alex\Desktop\Banana\kernel\sys\syscalls.hpp"
+
 int CHAR_WIDTH = 8;
 int CHAR_HEIGHT = 16;
 
@@ -55,27 +57,9 @@ int main (int argc, char *argv[])
 	CHAR_WIDTH = 7;
 	CHAR_HEIGHT = 12;
 
-	vga = (uint16_t*) calloc(80 * 25 * 2, 1);
-	vga[0] = 'T' | (0x0F << 8);
-	vga[1] = 'e' | (0x0F << 8);
-	vga[2] = 's' | (0x0F << 8);
-	vga[3] = 't' | (0x0F << 8);
-	vga[80] = 'A' | (0x01 << 8);
-	vga[81] = 'B' | (0x02 << 8);
-	vga[82] = 'C' | (0x03 << 8);
-	vga[83] = 'D' | (0x04 << 8);
-	vga[84] = 'E' | (0x05 << 8);
-	vga[85] = 'F' | (0x06 << 8);
-	vga[160] = 'G' | (0x09 << 8);
-	vga[161] = 'H' | (0x0A << 8);
-	vga[162] = 'I' | (0x0B << 8);
-	vga[163] = 'J' | (0x0C << 8);
-	vga[164] = 'K' | (0x0D << 8);
-	vga[165] = 'L' | (0x0E << 8);
+	extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
 
-	vga[320] = '1' | (0x07 << 8);
-	vga[321] = '2' | (0x07 << 8);
-	vga[322] = '3' | (0x07 << 8);
+	vga = (uint16_t*) SystemCall(GetVGAPtr, 0, 0, 0);
 
 	Window* win = wsbeCreateWindow(40, 40, 80 * CHAR_WIDTH + 10, 25 + 25 * CHAR_HEIGHT + 10, WIN_TOPLEVELWIN | WIN_NORESIZING);
 	wsbeSetWindowTitle(win, "Console");
