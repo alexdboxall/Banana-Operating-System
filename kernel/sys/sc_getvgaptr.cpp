@@ -5,6 +5,8 @@
 #include "hal/timer.hpp"
 #include "hal/device.hpp"
 #include "hal/vcache.hpp"
+#include "core/virtmgr.hpp"
+#include "core/physmgr.hpp"
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -26,6 +28,11 @@ namespace Sys
 	uint64_t getVGAPtr(regs* r)
 	{
 		kprintf("getVGAPtr: 0x%X\n", kernelProcess->terminal->displayData);
+		
+		size_t* entry = currentTaskTCB->processRelatedTo->vas->getPageTableEntry((size_t) kernelProcess->terminal->displayData);
+		*entry &= ~PAGE_SUPERVISOR;
+		*entry &= ~PAGE_WRITABLE;
+		*entry |= PAGE_USER;
 
 		return (uint64_t) kernelProcess->terminal->displayData;
 	}
