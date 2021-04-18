@@ -21,7 +21,7 @@ namespace Sys
 	/// <summary>
 	/// ...
 	/// </summary>
-	/// <param name="ebx">Pointer to store 4096 byets of data, 4000 of characters, then width (4 bytes) and height (4 bytes).</param>
+	/// <param name="ebx">Pointer to store 4096 bytes of data, 4000 of characters, then width (4 bytes) and height (4 bytes). After that is the terminal's name.</param>
 	/// <param name="ecx">Does not matter yet.</param>
 	/// <param name="edx">Does not matter yet.</param>
 	/// <returns>Zero.</returns>
@@ -29,8 +29,9 @@ namespace Sys
 	uint64_t getVGAPtr(regs* r)
 	{
 		memcpy((void*) r->ebx, (const char*) currentTaskTCB->processRelatedTo->terminal->displayData, 4000);
-		*((int*) (r->ebx + 4000)) = kernelProcess->terminal->cursorX;
-		*((int*) (r->ebx + 4004)) = kernelProcess->terminal->cursorY;
+		*((int*) (r->ebx + 4000)) = currentTaskTCB->processRelatedTo->terminal->cursorX;
+		*((int*) (r->ebx + 4004)) = currentTaskTCB->processRelatedTo->terminal->cursorY;
+		strcpy((void*) (r->ebx + 4008), currentTaskTCB->processRelatedTo->terminal->name);
 		return 0;
 	}
 }
