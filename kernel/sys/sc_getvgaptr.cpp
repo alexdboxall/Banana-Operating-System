@@ -2,6 +2,7 @@
 #include "sys/syscalls.hpp"
 #include "hal/intctrl.hpp"
 #include "fs/vfs.hpp"
+#include "hw/cpu.hpp"
 #include "hal/timer.hpp"
 #include "hal/device.hpp"
 #include "hal/vcache.hpp"
