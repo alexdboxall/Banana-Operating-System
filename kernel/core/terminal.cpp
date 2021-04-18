@@ -12,6 +12,8 @@ Something not working? Check:
 #include "core/common.hpp"
 #include "core/terminal.hpp"
 #include "core/kheap.hpp"
+#include "core/virtmgr.hpp"
+#include "core/physmgr.hpp"
 #include "hal/keybrd.hpp"
 #include "hal/buzzer.hpp"
 #include "hw/ports.hpp"
@@ -618,9 +620,8 @@ int VgaText::getCursorHeight()
 
 VgaText::~VgaText()
 {
-
+	
 }
-
 
 VgaText::VgaText(const char* n)
 {
@@ -629,7 +630,9 @@ VgaText::VgaText(const char* n)
 	strcpy(name, n);
 
 	terminalDisplayHeight = bufferHeight;
-	displayData = (uint8_t*) malloc(4000);
+
+	displayData = (uint8_t*) Virt::allocateKernelVirtualPages(1);
+	Virt::getAKernelVAS()->mapPage(Phys::allocatePage(), (size_t) displayData, PAGE_PRESENT | PAGE_USER);
 	memset(displayData, 0, bufferHeight * width * 2);
 
 	setDefaultColours(VgaColour::LightGrey, VgaColour::Black);
