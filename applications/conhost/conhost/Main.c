@@ -10,7 +10,7 @@ int CHAR_WIDTH = 8;
 int CHAR_HEIGHT = 16;
 
 uint16_t* vga;
-Window* con;
+Window* cons[25];
 WsbeScript script;
 
 uint32_t vgaColours[16] = {
@@ -32,7 +32,7 @@ uint32_t vgaColours[16] = {
 	0xFFFFFF
 };
 
-void redoPaintScript()
+void redoPaintScript(bool repaint)
 {
 	extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
 	SystemCall(GetVGAPtr, (size_t) vga, 0, 0);
@@ -40,22 +40,31 @@ void redoPaintScript()
 	int cx = vga[2000];
 	int cy = vga[2002];
 
-	script = wsbeNewScript();
-	wsbeBufferFillRect(&script, 0, 0, WSBE_MATH_WIDTH_DEREF, WSBE_MATH_HEIGHT_DEREF, 0);
-
 	uint16_t* v = vga;
 	for (int y = 0; y < 25; ++y) {
+		bool repaintLine = repaint;
+
+		script = wsbeNewScript();
+		wsbeBufferFillRect(&script, 0, 0, WSBE_MATH_WIDTH_DEREF, CHAR_HEIGHT, 0);
+
 		for (int x = 0; x < 80; ++x) {
 			uint16_t ch = *v++;
 			char txt[2];
 			txt[0] = ch & 0xFF;
 			txt[1] = 0;
-			wsbeBufferDrawText(&script, x * CHAR_WIDTH, y * CHAR_HEIGHT, txt, vgaColours[(ch >> 8) & 0xF]);
-		}
-	}
 
-	wsbeSetRepaintScript(con, script);
-	wsbeDeleteScript(script);
+			wsbeBufferDrawText(&script, x * CHAR_WIDTH, 0, txt, vgaColours[(ch >> 8) & 0xF]);
+
+			if (x == cx && y == cy) {
+				wsbeBufferDrawText(&script, x * CHAR_WIDTH, 0, "_", vgaColours[(ch >> 8) & 0xF]);
+				repaintLine = true;
+			}
+		}
+
+		wsbeSetRepaintScript(cons[y], script);
+		wsbeDeleteScript(script);
+		if (repaintLine) wsbePaintWindow(cons[y]);
+	}
 }
 
 int main (int argc, char *argv[])
@@ -65,18 +74,30 @@ int main (int argc, char *argv[])
 
 	vga = (uint16_t*) malloc(4096);
 
+	extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
+	SystemCall(GetVGAPtr, (size_t) vga, 0, 0);
+
 	Window* win = wsbeCreateWindow(40, 40, 80 * CHAR_WIDTH + 10, 25 + 25 * CHAR_HEIGHT + 10, WIN_TOPLEVELWIN | WIN_NORESIZING);
-	wsbeSetWindowTitle(win, "Console");
+	wsbeSetWindowTitle(win, (const char*) (vga + 2004));
 	wsbeAddWindow(wsbeDesktopWindow(), win);
 	wsbePaintWindow(win);
 
-	con = wsbeCreateWindow(5, 30, 80 * CHAR_WIDTH, 25 * CHAR_HEIGHT, WIN_NODECORATION);
-	redoPaintScript();
-	wsbeAddWindow(win, con);
-	wsbePaintWindow(con);
+	for (int i = 0; i < 25; ++i) {
+		cons[i] = wsbeCreateWindow(5, 30 + i * CHAR_HEIGHT, 80 * CHAR_WIDTH, CHAR_HEIGHT, WIN_NODECORATION);
+		wsbeAddWindow(win, cons[i]);
+	}
+	
+	redoPaintScript(true);
+
+	extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
 
 	while (1) {
-		;
+		Message msg;
+		int count = wsbeGetMessage(win, &msg);
+		if (count && msg.type == MESSAGE_KEYDOWN) {
+			redoPaintScript(true);
+		}
+		SystemCall(Yield, 0, 0, 0);
 	}
 
 	return 0;
