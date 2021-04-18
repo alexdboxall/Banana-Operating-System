@@ -40,6 +40,7 @@ namespace Sys
 	uint64_t eject(regs* r);
 	uint64_t wsbe(regs* r);
 	uint64_t getRAMData(regs* r);
+	uint64_t getVGAPtr(regs* r);
 }
 
 int string_ends_with(const char* str, const char* suffix)
@@ -709,6 +710,7 @@ namespace Sys
 		systemCallHandlers[(int) SystemCallNumber::Eject] = Sys::eject;
 		systemCallHandlers[(int) SystemCallNumber::WSBE] = Sys::wsbe;
 		systemCallHandlers[(int) SystemCallNumber::GetRAMData] = Sys::getRAMData;
+		systemCallHandlers[(int) SystemCallNumber::GetVGAPtr] = Sys::getVGAPtr;
 	}
 
 	uint64_t systemCall(regs* r, void* context)

@@ -98,6 +98,7 @@ SystemCallNumber
 	Eject,
 	WSBE,
 	GetRAMData,
+	GetVGAPtr,
 };
 
 
