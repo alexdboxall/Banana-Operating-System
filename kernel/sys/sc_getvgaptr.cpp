@@ -28,8 +28,7 @@ namespace Sys
 	/// 
 	uint64_t getVGAPtr(regs* r)
 	{
-		kprintf("getVGAPtr: 0x%X\n", kernelProcess->terminal->displayData);
-		memcpy((void*) r->ebx, (const char*) kernelProcess->terminal->displayData, 4000);
+		memcpy((void*) r->ebx, (const char*) currentTaskTCB->processRelatedTo->terminal->displayData, 4000);
 		*((int*) (r->ebx + 4000)) = kernelProcess->terminal->cursorX;
 		*((int*) (r->ebx + 4004)) = kernelProcess->terminal->cursorY;
 		return 0;
