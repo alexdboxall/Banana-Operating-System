@@ -19,28 +19,20 @@
 namespace Sys
 {
 	/// <summary>
-	/// Returns the pointer to the kernel process' terminal data, stored in VGA text mode 3 format. It also allows this current process to read from the this page.
+	/// ...
 	/// </summary>
-	/// <param name="ebx">Does not matter yet.</param>
+	/// <param name="ebx">Pointer to store 4096 byets of data, 4000 of characters, then width (4 bytes) and height (4 bytes).</param>
 	/// <param name="ecx">Does not matter yet.</param>
 	/// <param name="edx">Does not matter yet.</param>
-	/// <returns>Returns the pointer to a 4096 byte area. Writing to this area, or accessing outside this area will cause a page fault and the program will be terminated.</returns>
+	/// <returns>Zero.</returns>
 	/// 
 	uint64_t getVGAPtr(regs* r)
 	{
 		kprintf("getVGAPtr: 0x%X\n", kernelProcess->terminal->displayData);
-		
-		size_t* entry = currentTaskTCB->processRelatedTo->vas->getPageTableEntry((size_t) kernelProcess->terminal->displayData);
-		kprintf("*entry = 0x%X\n", *entry);
-		*entry |= PAGE_WRITABLE;
-		*entry |= PAGE_USER;
-
-		//flush TLB
-		CPU::writeCR3(CPU::readCR3());
-
-		kprintf("*entry = 0x%X\n", *entry);
-
-		return (uint64_t) kernelProcess->terminal->displayData;
+		memcpy((void*) r->ebx, (const char*) kernelProcess->terminal->displayData, 4000);
+		*((int*) (r->ebx + 4000)) = kernelProcess->terminal->cursorX;
+		*((int*) (r->ebx + 4004)) = kernelProcess->terminal->cursorY;
+		return 0;
 	}
 }
 

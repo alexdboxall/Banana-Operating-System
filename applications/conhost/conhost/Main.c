@@ -34,6 +34,12 @@ uint32_t vgaColours[16] = {
 
 void redoPaintScript()
 {
+	extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
+	SystemCall(GetVGAPtr, (size_t) vga, 0, 0);
+
+	int cx = vga[2000];
+	int cy = vga[2002];
+
 	script = wsbeNewScript();
 	wsbeBufferFillRect(&script, 0, 0, WSBE_MATH_WIDTH_DEREF, WSBE_MATH_HEIGHT_DEREF, 0);
 
@@ -57,9 +63,7 @@ int main (int argc, char *argv[])
 	CHAR_WIDTH = 7;
 	CHAR_HEIGHT = 12;
 
-	extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
-
-	vga = (uint16_t*) SystemCall(GetVGAPtr, 0, 0, 0);
+	vga = (uint16_t*) malloc(4096);
 
 	Window* win = wsbeCreateWindow(40, 40, 80 * CHAR_WIDTH + 10, 25 + 25 * CHAR_HEIGHT + 10, WIN_TOPLEVELWIN | WIN_NORESIZING);
 	wsbeSetWindowTitle(win, "Console");
