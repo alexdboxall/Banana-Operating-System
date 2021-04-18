@@ -50,7 +50,7 @@ private:
 protected:
 
 public:	
-	uint8_t displayData[4000];
+	uint8_t* displayData;
 
 	int terminalDisplayHeight;
 

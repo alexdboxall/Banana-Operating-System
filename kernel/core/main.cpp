@@ -17,7 +17,7 @@
 Minimum System Requirements:
 
 	CPU:	Intel 386 or better (hopefully, 486 is the oldest tested)
-	RAM:	4 MB (12 MB to install it)
+	RAM:	6 MB (12 MB to install it)
 	HDD:	64 MB
 
 	VGA compatible video card
@@ -196,9 +196,6 @@ void setupTextMode()
 
 extern "C" void kernel_main()
 {
-	installVgaTextImplementation();
-	setupTextMode();
-
 	outb(0x3f8 + 1, 0x00);    // Disable all interrupts
 	outb(0x3f8 + 3, 0x80);    // Enable DLAB (set baud rate divisor)
 	outb(0x3f8 + 0, 0x03);    // Set divisor to 3 (lo byte) 38400 baud
@@ -208,6 +205,9 @@ extern "C" void kernel_main()
 	outb(0x3f8 + 4, 0x0B);    // IRQs enabled, RTS/DSR set
 
 	kprintf("\n\nKERNEL HAS STARTED.\n");
+
+	installVgaTextImplementation();
+	setupTextMode();
 
 	size_t highestFreeAddr = *((uint32_t*) 0x524);
 	highestFreeAddr = (highestFreeAddr + 4095) & ~0xFFF;

@@ -629,6 +629,7 @@ VgaText::VgaText(const char* n)
 	strcpy(name, n);
 
 	terminalDisplayHeight = bufferHeight;
+	displayData = (uint8_t*) malloc(4000);
 	memset(displayData, 0, bufferHeight * width * 2);
 
 	setDefaultColours(VgaColour::LightGrey, VgaColour::Black);
