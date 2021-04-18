@@ -31,7 +31,7 @@ namespace Sys
 		memcpy((void*) r->ebx, (const char*) currentTaskTCB->processRelatedTo->terminal->displayData, 4000);
 		*((int*) (r->ebx + 4000)) = currentTaskTCB->processRelatedTo->terminal->cursorX;
 		*((int*) (r->ebx + 4004)) = currentTaskTCB->processRelatedTo->terminal->cursorY;
-		strcpy((void*) (r->ebx + 4008), currentTaskTCB->processRelatedTo->terminal->name);
+		strcpy((char*) (r->ebx + 4008), currentTaskTCB->processRelatedTo->terminal->name);
 		return 0;
 	}
 }
