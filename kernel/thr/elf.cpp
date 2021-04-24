@@ -587,7 +587,7 @@ namespace Thr
 					uint32_t x;
 
 					if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum - 4) {
-						kprintf("R_386_PC32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
+						kprintf("R_386_PC32	Modifying symbol 0x%X at 0x%X to become 0x???\n", *entry, entry);
 						kprintf("addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
 						
 						if (critical) {
