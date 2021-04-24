@@ -23,6 +23,7 @@ namespace Sys
 	/// </summary>
 	/// <param name="ebx">Pointer to store 4096 bytes of data, 4000 of characters, then width (4 bytes) and height (4 bytes). After that is the terminal's name.</param>
 	/// <param name="ecx">The PID of the task.</param>
+	/// <param name="edx">If this is set to a non-zero value, the terminal will become the active terminal.</param>
 	/// <returns>0 if good, 1 if bad.</returns>
 	/// 
 	uint64_t getVGAPtr(regs* r)
@@ -33,6 +34,9 @@ namespace Sys
 		}
 
 		VgaText* terminal = prcss->terminal;
+		if (r->edx) {
+			activeTerminal = terminal;
+		}
 
 		memcpy((void*) r->ebx, (const char*) terminal->displayData, 4000);
 		*((int*) (r->ebx + 4000)) = terminal->cursorX;
