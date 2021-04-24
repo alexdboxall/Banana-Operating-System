@@ -153,18 +153,20 @@ void Floppy::driveDetection()
 		int drvA = drives >> 4;
 		int drvB = drives & 0xF;
 
-		kprintf("Drive type 0: %s\n", drvA);
-		kprintf("Drive type 1: %s\n", drvB);
+		kprintf("Drive type 0: 0x%X\n", drvA);
+		kprintf("Drive type 1: 0x%X\n", drvB);
 
 		if (drvA) {
 			FloppyDrive* dev = new FloppyDrive();
+			driveTypes[0] = (DriveType) drvA;
 			addChild(dev);
 			dev->_open(0, drvA, this);
 		}
 		if (drvA && drvB) {
 			FloppyDrive* dev = new FloppyDrive();
+			driveTypes[1] = (DriveType) drvB;
 			addChild(dev);
-			dev->_open(0, drvB, this);
+			dev->_open(1, drvB, this);
 		}
 	}
 }
@@ -328,6 +330,7 @@ retry:
 }
 
 #define DMA_LENGTH	0x4800
+size_t _TEMP_dma;
 void Floppy::dmaInit(bool write)
 {
 	/// TODO: use symbols from another driver... (add driver symbols to the kernel table)
@@ -370,6 +373,8 @@ void Floppy::dmaInit(bool write)
 	outb(0x0b, write ? 0x4a : 0x46);   // set mode (see above)
 
 	outb(0x0a, 0x02);   // unmask chan 2
+
+	_TEMP_dma = dmaBase;
 }
 
 bool Floppy::specify(int drive)
@@ -403,10 +408,13 @@ bool Floppy::select(int drive, bool state)
 
 	} else if (!selectionLock || currentSelection == -1) {
 		//only redo it all if we didn't just have it
+		kprintf("select (A).\n");
 
 		if (currentSelection != drive) {
+			kprintf("select (B).\n");
 			//someone else wants it
 			lockScheduler();
+			kprintf("select (C).\n");
 
 			//select this drive
 			uint8_t dor = readPort(FloppyReg::DOR);
@@ -414,6 +422,7 @@ bool Floppy::select(int drive, bool state)
 			dor |= drive;
 			writePort(FloppyReg::DOR, dor);
 			nanoSleep(1000 * 1000 * 80);
+			kprintf("select (D).\n");
 
 			//set the datarate
 			int8_t rate = floppyTable[(int) driveTypes[drive]].dataRate;
@@ -422,6 +431,7 @@ bool Floppy::select(int drive, bool state)
 			}
 			writePort(FloppyReg::CCR, rate);
 			unlockScheduler();
+			kprintf("select (E).\n");
 
 			//specify more drive details
 			bool success = specify(drive);
@@ -430,18 +440,25 @@ bool Floppy::select(int drive, bool state)
 				reset();
 				return false;
 			}
+			kprintf("select (F).\n");
 
 			//now calibrate the drive
 			success = drives[drive]->calibrate();
+			kprintf("select (F2).\n");
 			if (!success) {
 				kprintf("calibrate reset.\n");
 				reset();
 				return false;
 			}
+			kprintf("select (G).\n");
+
 		}
+		kprintf("select (H).\n");
 
 		selectionLock = state;
 		currentSelection = drive;
+		kprintf("select (I).\n");
+
 	}
 
 	return selectionLock && (currentSelection == drive);
@@ -528,6 +545,11 @@ bool FloppyDrive::floppyConfigure()
 	return true;
 }
 
+int FloppyDrive::open(int _num, int _type, void* _parent)
+{
+	return 0;
+}
+
 int FloppyDrive::_open(int _num, int _type, void* _parent)
 {
 	fdc = (Floppy*) _parent;
@@ -538,8 +560,13 @@ int FloppyDrive::_open(int _num, int _type, void* _parent)
 
 	sizeInKBs = ((int) floppyTable[_type].cylinders) * ((int) floppyTable[_type].sectors) * ((int) floppyTable[_type].heads) / 2;
 
-	startCache();
+	kprintf("size in KBs = %d\n", sizeInKBs);
+
+	kprintf("FloppyDrive::_open 1\n");
+	startCache();	
+	kprintf("FloppyDrive::_open 2\n");
 	createPartitionsForDisk(this);
+	kprintf("FloppyDrive::_open 3\n");
 
 	return 0;
 }
@@ -557,6 +584,7 @@ void FloppyDrive::unselect()
 void FloppyDrive::select()
 {
 	while (1) {
+		kprintf("FloppyDrive::select\n");
 		bool gotLock = fdc->select(num, true);
 		if (gotLock) return;
 		kprintf("selection locked or failed...\n");
@@ -574,16 +602,21 @@ retry:
 		unselect();
 		return false;
 	}
-
+	kprintf("seek (sel).\n");
 	select();
+	kprintf("seek (on).\n");
 	motorOn();
+	kprintf("seek (1).\n");
 
 	fdc->writeCommand(SEEK);
 	if (fdc->wasFailure()) {
+		kprintf("seek (aa).\n");
 		fdc->reset();
+		kprintf("seek (bb).\n");
 		++retries;
 		goto retry;
 	}
+	kprintf("seek (2).\n");
 
 	fdc->receivedIRQ = false;
 
@@ -593,6 +626,7 @@ retry:
 		++retries;
 		goto retry;
 	}
+	kprintf("seek (3).\n");
 
 	fdc->writeCommand(cyli);
 	if (fdc->wasFailure()) {
@@ -600,13 +634,16 @@ retry:
 		++retries;
 		goto retry;
 	}
+	kprintf("seek (4).\n");
 
 	bool gotIRQ = fdc->waitIRQ(1500);
 	if (!gotIRQ) {
+		kprintf("seek (nirq).\n");
 		fdc->reset();
 		++retries;
 		goto retry;
 	}
+	kprintf("seek (5).\n");
 
 	int st0 = 0xC0;
 	int cyl = -1;
@@ -616,9 +653,11 @@ retry:
 		++retries;
 		goto retry;
 	}
-
+	kprintf("seek (sid).\n");
 	motorOff();
+	kprintf("seek (off).\n");
 	unselect();
+	kprintf("seek (un).\n");
 
 	return true;
 }
@@ -630,11 +669,11 @@ retry:
 	if (retries >= 5) {
 		kprintf("calibrate: 5 retries, could not calibrate.\n");
 		motorOff();
-		unselect();
+		//unselect();
 		return false;
 	}
 
-	select();
+	//select();
 	motorOn();
 
 	fdc->writeCommand(RECALIBRATE);
@@ -670,32 +709,44 @@ retry:
 	}
 
 	motorOff();
-	unselect();
+	//unselect();
 	return true;
 }
 
-int FloppyDrive::doTrack(int cyl, bool write)
+int FloppyDrive::doTrack(int cyl, bool write, uint8_t* buffer)
 {
+	if (write) {
+		panic("WRITE: NEED TO COPY DATA TO DMA BUFFER");
+	}
+
 	int cmd = (write ? WRITE_DATA : READ_DATA) | 0xC0;
 	int retries = 0;
 
 retry:
+	kprintf(" retry: \n");
+
 	if (retries == 20) {
 		motorOff();
 		unselect();
 		return -2;
 	}
 
+	kprintf("About to seek.\n");
 	//seek both heads
 	if (!seek(cyl, 0)) return -1;
 	if (!seek(cyl, 1)) return -1;
+	kprintf("Seek done.\n");
 
-	motorOn();
+	motorOn();	
+	kprintf("Motor on.\n");
 	select();
+	kprintf("Selected.\n");
 
 	fdc->dmaInit(write);
+	kprintf("DMA init'd.\n");
 
 	nanoSleep(1000 * 1000 * 100);
+	kprintf("sleep done\n");
 
 	fdc->writeCommand(cmd);
 	if (fdc->wasFailure()) {
@@ -745,6 +796,8 @@ retry:
 		retries++;
 		goto retry;
 	}
+
+	fdc->receivedIRQ = false;
 	fdc->writeCommand(0xFF);
 	if (fdc->wasFailure()) {
 		fdc->reset();
@@ -752,12 +805,15 @@ retry:
 		goto retry;
 	}
 
+	kprintf("about to waitIRQ.\n");
 	bool gotIRQ = fdc->waitIRQ(1000);
 	if (!gotIRQ) {
+		kprintf("no IRQ.\n");
 		fdc->reset();
 		retries++;
 		goto retry;
 	}
+	kprintf("got IRQ.\n");
 
 	uint8_t st0, st1, st2, rcy, rhe, rse, bps;
 	st0 = fdc->readData();
@@ -810,17 +866,53 @@ retry:
 		goto retry;
 	}
 
+	kprintf("read result bytes.\n");
+
 	motorOff();
+	kprintf("motor off\n");
 	unselect();
+	kprintf("unselect.\n");
+
+	if (!write) {
+		kprintf("about to memcpy.\n");
+		memcpy(buffer, (const void*) _TEMP_dma, 0x4800);
+		kprintf("done memcpy.\n");
+	}
+
 	return 0;
 }
 
+void FloppyDrive::lbaToCHS(uint32_t lba, int* cyl, int* head, int* sector)
+{
+	int sectorsPerTrack = floppyTable[(int) fdc->driveTypes[num]].sectors;
+
+	*cyl = lba / (2 * sectorsPerTrack);
+	*head = ((lba % (2 * sectorsPerTrack)) / sectorsPerTrack);
+	*sector = ((lba % (2 * sectorsPerTrack)) % sectorsPerTrack + 1);
+}
+
+uint8_t _TEMP_trackBuffer[0x4800];
+
 int FloppyDrive::read(uint64_t lba, int count, void* ptr)
 {
-	return -3;
+	kprintf("FloppyDrive::read called.\n");
+	int cyl, head, sector;
+	lbaToCHS(lba, &cyl, &head, &sector);
+	kprintf("C 0x%X, H 0x%X, S 0x%X\n", cyl, head, sector);
+	doTrack(cyl, false, _TEMP_trackBuffer);
+	kprintf("did track.\n");
+	memcpy(ptr, _TEMP_trackBuffer + (sector - 1) * 512, 512);
+	kprintf("did memcpy.\n");
+
+	return 0;
 }
 
 int FloppyDrive::write(uint64_t lba, int count, void* ptr)
 {
 	return -3;
+}
+
+FloppyDrive::~FloppyDrive()
+{
+
 }

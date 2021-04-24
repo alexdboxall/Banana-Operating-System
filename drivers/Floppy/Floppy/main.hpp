@@ -119,9 +119,10 @@ public:
 	bool calibrate();
 	bool seek(int cyl, int head);
 
-	int doTrack(int cyl, bool write);
+	int doTrack(int cyl, bool write, uint8_t* buffer);
 
 	FloppyDrive();
+	virtual ~FloppyDrive();
 	
 	virtual int open(int _num, int, void* _parent) override;
 	int _open(int _num, int, void* _parent);
@@ -129,6 +130,8 @@ public:
 
 	virtual int read(uint64_t lba, int count, void* ptr);
 	virtual int write(uint64_t lba, int count, void* ptr);
+
+	void lbaToCHS(uint32_t lba, int* cyl, int* head, int* sector);
 
 	bool floppyConfigure();
 };
