@@ -28,10 +28,12 @@ namespace Sys
 	/// 
 	uint64_t getVGAPtr(regs* r)
 	{
-		memcpy((void*) r->ebx, (const char*) currentTaskTCB->processRelatedTo->terminal->displayData, 4000);
-		*((int*) (r->ebx + 4000)) = currentTaskTCB->processRelatedTo->terminal->cursorX;
-		*((int*) (r->ebx + 4004)) = currentTaskTCB->processRelatedTo->terminal->cursorY;
-		strcpy((char*) (r->ebx + 4008), currentTaskTCB->processRelatedTo->terminal->name);
+		VgaText* terminal = currentTaskTCB->processRelatedTo->terminal;
+
+		memcpy((void*) r->ebx, (const char*) terminal->displayData, 4000);
+		*((int*) (r->ebx + 4000)) = terminal->cursorX;
+		*((int*) (r->ebx + 4004)) = terminal->cursorY;
+		strcpy((char*) (r->ebx + 4008), terminal->name);
 		return 0;
 	}
 }

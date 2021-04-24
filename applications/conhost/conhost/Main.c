@@ -6,8 +6,8 @@
 
 #include "D:\Users\Alex\Desktop\Banana\kernel\sys\syscalls.hpp"
 
-int CHAR_WIDTH = 8;
-int CHAR_HEIGHT = 16;
+int CHAR_WIDTH = 7;
+int CHAR_HEIGHT = 12;
 
 uint16_t* vga;
 Window* cons[25];

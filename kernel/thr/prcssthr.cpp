@@ -706,6 +706,36 @@ namespace Thr
 	void terminateFromIRQ(int returnCode)
 	{
 		terminateTask(returnCode);
+	}
 
+	Process* processFromPID(int pid)
+	{
+		kprintf("finding process from PID.\n");
+
+		lockScheduler();
+		ThreadControlBlock* first = taskList.getFirstElement();
+
+		while (1) {
+			ThreadControlBlock* tcb = taskList.getFirstElement();
+			taskList.removeFirst();
+			taskList.addElement(tcb);
+
+			if (tcb->processRelatedTo->pid == pid) {
+				unlockScheduler();
+				return tcb->processRelatedTo;
+			}
+
+			if (taskList.getFirstElement() == first) {
+				break;
+			}
+		}
+
+		unlockScheduler();
+		kprintf("could not be found...\n");
+
+		return nullptr;
+
+		//taskList;
+		//LinkedList<volatile ThreadControlBlock> sleepingTaskList;
 	}
 }
