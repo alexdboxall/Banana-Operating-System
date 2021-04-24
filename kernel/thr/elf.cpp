@@ -516,7 +516,6 @@ namespace Thr
 				size_t addr = symbolTab[symbolNum].st_value;
 
 				kprintf("Symbol: %s, addr = 0x%X, pos = 0x%X, info = 0x%X\n", ((char*) stringTab) + symbolTab[symbolNum].st_name, addr, pos, info);
-				kprintf("    0x%X, 0x%X, 0x%X\n", info, (info >> 8), elf->shNum);
 				bool dynamic = false;
 				if (addr == 0) {
 					addr = getAddressOfKernelSymbol(((char*) stringTab) + symbolTab[symbolNum].st_name);
@@ -554,7 +553,7 @@ namespace Thr
 					uint32_t x;
 					if (dynamic) {
 						x = addr + *entry;
-						if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum) {
+						if (info == 0x101 || info == 0x401 || (info >> 8) < (elf->shNum > 0xC ? 0xC : elf->shNum)) {
 							if (critical) {
 								panic("RELOCATION UNHANDLED CASE 1");
 							} else {
