@@ -22,17 +22,13 @@ extern "C" {
 #include "libk/string.h"
 } 
 
+
 void start(void* _parent)
 {
 	Device* parent = (Device*) _parent;
 	Floppy* dev = new Floppy(); 
-	kprintf("ABC 1.\n");
 	parent->addChild(dev);
-	kprintf("ABC 2.\n");
-	dev->configure();
-	kprintf("ABC 3.\n");
-	dev->open(0x3F0, 0, nullptr);
-	kprintf("ABC 4.\n");
+	dev->_open(0x3F0, 0, nullptr);
 }
 
 void floppyMotorFunction(void* _fdc)
@@ -63,8 +59,6 @@ void floppyMotorFunction(void* _fdc)
 
 Floppy::Floppy(): HardDiskController("Floppy Disk Controller")
 {
-	kprintf("Floppy::Floppy()\n");
-
 	motorThread = kernelProcess->createThread(floppyMotorFunction, (void*) this, 210);
 }
 
@@ -135,11 +129,6 @@ void Floppy::writePort(FloppyReg reg, uint8_t value)
 	outb(((int) reg) + base, value);
 }
 
-void Floppy::configure()
-{
-
-}
-
 void Floppy::driveDetection()
 {
 	uint8_t drives;
@@ -158,50 +147,46 @@ void Floppy::driveDetection()
 	}
 }
 
+int Floppy::close(int, int, void*)
+{
+	return 0;
+}
+
 int Floppy::open(int baseAddr, int, void*)
 {
-	kprintf("Floppy::open 1\n");
+	return 0;
+}
 
+int Floppy::_open(int baseAddr, int, void*) {
+	
 	//store the base address
 	base = baseAddr;
-	kprintf("Floppy::open 2\n");
 
 	//claim the fix six
 	ports[noPorts].rangeStart = base;
 	ports[noPorts].rangeLength = 6;
 	ports[noPorts++].width = 0;
-	kprintf("Floppy::open 3\n");
 
 	//skip 0x3F6, then do 0x3F7
 	ports[noPorts].rangeStart = base + 7;
 	ports[noPorts].rangeLength = 1;
 	ports[noPorts++].width = 0;
-	kprintf("Floppy::open 4\n");
 
 	//blank the pointers
 	for (int i = 0; i < 4; ++i) {
 		drives[i] = nullptr;
 		motorStates[i] = MotorState::Off;
 	}
-	kprintf("Floppy::open 5\n");
 
 	//set the bits to the correct state
 	wasFailure();
-	kprintf("Floppy::open 6\n");
 
 	//reset the FDC
 	reset();
-	kprintf("Floppy::open 7\n");
 
 	//...
 	driveDetection();
-	kprintf("Floppy::open 8\n");
 
-	return 0;
-}
-
-int Floppy::close(int, int, void*)
-{
 	return 0;
 }
 
@@ -339,11 +324,6 @@ void Floppy::motor(int num, bool state)
 
 
 FloppyDrive::FloppyDrive() : PhysicalDisk("Floppy Disk Drive", 512)
-{
-
-}
-
-void FloppyDrive::configure()
 {
 
 }

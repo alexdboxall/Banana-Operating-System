@@ -116,9 +116,8 @@ public:
 
 	FloppyDrive();
 	
-	virtual void configure();
-	virtual int open(int _num, int, void* _parent);
-	virtual int close(int, int, void*);
+	virtual int open(int _num, int, void* _parent) override;
+	virtual int close(int, int, void*) override;
 
 	bool floppyConfigure();
 };
@@ -146,7 +145,7 @@ public:
 	bool needReconfigAfterReset = true;
 	bool drivePollingModeOn = true;
 
-	virtual bool wasFailure();
+	bool wasFailure();
 
 	bool lock();
 
@@ -164,9 +163,9 @@ public:
 	uint8_t readPort(FloppyReg reg);
 	void writePort(FloppyReg reg, uint8_t value);
 
-	virtual void configure();					//Configure device settings. Called the first time the device is found.
-	virtual int open(int, int, void*);			//Opens the device (init code).
-	virtual int close(int, int, void*);			//Perform other commands
+	int _open(int, int, void*);
+	int open(int, int, void*) override;
+	int close(int, int, void*) override;
 };
 
 #endif

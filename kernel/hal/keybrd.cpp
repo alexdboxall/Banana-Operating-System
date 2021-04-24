@@ -204,6 +204,12 @@ void clearInternalKeybuffer(VgaText* terminal)
 
 int readKeyboard(VgaText* terminal, char* buf, size_t count)
 {
+	if (guiKeyboardHandler) {
+		KeyboardToken kt;
+		kt.halScancode = 0;
+		guiKeyboardHandler(kt, keystates);
+	}
+
 	kprintf("readKeyboard called.\n");
 
 	asm("sti");
