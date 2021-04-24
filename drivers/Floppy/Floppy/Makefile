@@ -13,9 +13,8 @@ CC64=x86_64-banana-gcc
 LD64=x86_64-banana-ld
 
 ASFLAGS=
-CXXFLAGS=-O0
-CFLAGS=-O0
-LDFLAGS=-g -s -T D:/Users/Alex/Desktop/Banana/drivers/dlink.ld
+CXXFLAGS=
+LDFLAGS=-s -g -T D:/Users/Alex/Desktop/Banana/drivers/dlink.ld
 
 CXXOBJECTS32 = $(patsubst %.cpp, %.32, $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp) $(wildcard */*/*/*.cpp) $(wildcard **/*.cpp))
 CXXOBJECTS64 = $(patsubst %.cpp, %.64, $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp) $(wildcard */*/*/*.cpp) $(wildcard **/*.cpp))
@@ -32,13 +31,13 @@ all: build32
 build32: $(TARGET32) 
 
 $(TARGET32): $(OBJECTS32)
-	$(LD32) $(LDFLAGS) -fno-reorder-functions -shared -q -o $(OUTPUT32) $^ -Map=D:/Users/Alex/Desktop/driver32.map
+	$(LD32) $(LDFLAGS) -shared -q -o $(OUTPUT32) $^ -Map=D:/Users/Alex/Desktop/driver32.map
 
 %.32: %.cpp
-	$(CXX32) $(CXXFLAGS) -fno-reorder-functions -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel -fno-exceptions -fno-rtti
+	$(CXX32) $(CXXFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel -fno-exceptions -fno-rtti
 	
 %.32: %.c
-	$(C32) $(CFLAGS) -fno-reorder-functions -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel
+	$(C32) $(CFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel
 
 
 $(TARGET64): $(OBJECTS64)

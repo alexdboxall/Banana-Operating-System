@@ -1,5 +1,11 @@
 #include <stdint.h>
 
+void start(void* parent);
+void begin(void* a)
+{
+	start(a);
+}
+
 #include "main.hpp"
 
 #include "core/main.hpp"
@@ -16,41 +22,17 @@ extern "C" {
 #include "libk/string.h"
 } 
 
-#pragma GCC optimize ("O0")
-#pragma GCC optimize ("-fno-strict-aliasing")
-#pragma GCC optimize ("-fno-align-labels")
-#pragma GCC optimize ("-fno-align-jumps")
-#pragma GCC optimize ("-fno-align-loops")
-#pragma GCC optimize ("-fno-align-functions")
-
-void start(Device* parent);
-void begin(void* a)
+void start(void* _parent)
 {
-	start((Device*) a);
-}
-
-/*
-100000a5:	8b 45 f4             	mov    eax,DWORD PTR [ebp-0xc]
-100000a8:	8b 00                	mov    eax,DWORD PTR [eax]
-100000aa:	83 c0 24             	add    eax,0x24
-100000ad:	8b 00                	mov    eax,DWORD PTR [eax]
-100000af:	83 ec 0c             	sub    esp,0xc
-100000b2:	ff 75 f4             	push   DWORD PTR [ebp-0xc]
-100000b5:	ff d0                	call   eax
- */
-
-void start(Device* parent)
-{
+	Device* parent = (Device*) _parent;
 	Floppy* dev = new Floppy(); 
-	kprintf("dev = 0x%X\n", dev);
+	kprintf("ABC 1.\n");
 	parent->addChild(dev);
-
-	auto ptr = &Floppy::wasFailure;
-	kprintf("0x%X\n", reinterpret_cast<void*>(ptr));
-
-	dev->wasFailure();
-	//dev->configure();
-	//dev->open(0x3F0, 0, nullptr);
+	kprintf("ABC 2.\n");
+	dev->configure();
+	kprintf("ABC 3.\n");
+	dev->open(0x3F0, 0, nullptr);
+	kprintf("ABC 4.\n");
 }
 
 void floppyMotorFunction(void* _fdc)
@@ -178,33 +160,42 @@ void Floppy::driveDetection()
 
 int Floppy::open(int baseAddr, int, void*)
 {
+	kprintf("Floppy::open 1\n");
+
 	//store the base address
 	base = baseAddr;
+	kprintf("Floppy::open 2\n");
 
 	//claim the fix six
 	ports[noPorts].rangeStart = base;
 	ports[noPorts].rangeLength = 6;
 	ports[noPorts++].width = 0;
+	kprintf("Floppy::open 3\n");
 
 	//skip 0x3F6, then do 0x3F7
 	ports[noPorts].rangeStart = base + 7;
 	ports[noPorts].rangeLength = 1;
 	ports[noPorts++].width = 0;
+	kprintf("Floppy::open 4\n");
 
 	//blank the pointers
 	for (int i = 0; i < 4; ++i) {
 		drives[i] = nullptr;
 		motorStates[i] = MotorState::Off;
 	}
+	kprintf("Floppy::open 5\n");
 
 	//set the bits to the correct state
 	wasFailure();
+	kprintf("Floppy::open 6\n");
 
 	//reset the FDC
 	reset();
+	kprintf("Floppy::open 7\n");
 
 	//...
 	driveDetection();
+	kprintf("Floppy::open 8\n");
 
 	return 0;
 }
