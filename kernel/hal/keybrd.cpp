@@ -22,6 +22,7 @@ ThreadControlBlock* keyboardWaitingTaskList = nullptr;
 void sendKeyToTerminal(uint8_t code)
 {
 	activeTerminal->receiveKey(code);
+	currentTaskTCB->processRelatedTo->terminal->receiveKey(code);
 
 	if (code == (uint8_t) '\n') {
 		ThreadControlBlock* next_task;
