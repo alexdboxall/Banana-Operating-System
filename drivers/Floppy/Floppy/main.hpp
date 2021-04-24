@@ -113,11 +113,22 @@ protected:
 public:
 	void motorOn();
 	void motorOff();
+	void select();
+	void unselect();
+
+	bool calibrate();
+	bool seek(int cyl, int head);
+
+	int doTrack(int cyl, bool write);
 
 	FloppyDrive();
 	
 	virtual int open(int _num, int, void* _parent) override;
+	int _open(int _num, int, void* _parent);
 	virtual int close(int, int, void*) override;
+
+	virtual int read(uint64_t lba, int count, void* ptr);
+	virtual int write(uint64_t lba, int count, void* ptr);
 
 	bool floppyConfigure();
 };
@@ -133,11 +144,16 @@ protected:
 public:
 	Floppy();
 
+	bool receivedIRQ;
+
 	MotorState motorStates[4];
 	int motorTicks[4];
 
+	void dmaInit(bool write);
+
 	void motor(int num, bool state);
 
+	bool waitIRQ(int millisecTimeout);
 	bool lockDoesntWork = true;
 	bool triedLock = false;
 	bool _failedCommand = false;
@@ -146,8 +162,12 @@ public:
 	bool drivePollingModeOn = true;
 
 	bool wasFailure();
-
 	bool lock();
+
+	bool selectionLock = false;
+	int currentSelection = -1;
+	bool select(int drive, bool state);
+	bool specify(int drive);
 
 	bool senseInterrupt(int* st0, int* cyl);
 
