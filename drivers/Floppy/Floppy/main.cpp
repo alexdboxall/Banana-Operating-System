@@ -28,6 +28,17 @@ void begin(void* a)
 {
 	start((Device*) a);
 }
+
+/*
+100000a5:	8b 45 f4             	mov    eax,DWORD PTR [ebp-0xc]
+100000a8:	8b 00                	mov    eax,DWORD PTR [eax]
+100000aa:	83 c0 24             	add    eax,0x24
+100000ad:	8b 00                	mov    eax,DWORD PTR [eax]
+100000af:	83 ec 0c             	sub    esp,0xc
+100000b2:	ff 75 f4             	push   DWORD PTR [ebp-0xc]
+100000b5:	ff d0                	call   eax
+ */
+
 void start(Device* parent)
 {
 	Floppy* dev = new Floppy(); 
@@ -36,9 +47,6 @@ void start(Device* parent)
 
 	auto ptr = &Floppy::wasFailure;
 	kprintf("0x%X\n", reinterpret_cast<void*>(ptr));
-
-	size_t* a = (size_t*) 0;
-	kprintf("0x%X, 0x%X\n", a, *a);
 
 	dev->wasFailure();
 	//dev->configure();
