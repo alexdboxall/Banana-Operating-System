@@ -35,7 +35,7 @@ namespace Sys
 
 		VgaText* terminal = prcss->terminal;
 		if (r->edx) {
-			activeTerminal = terminal;
+			setActiveTerminal(terminal);
 		}
 
 		memcpy((void*) r->ebx, (const char*) terminal->displayData, 4000);
