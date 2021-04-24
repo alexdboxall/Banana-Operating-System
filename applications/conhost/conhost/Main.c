@@ -47,7 +47,7 @@ void redoPaintScript(bool repaint)
 		bool repaintLine = repaint;
 
 		script = wsbeNewScript();
-		wsbeBufferFillRect(&script, 0, 0, WSBE_MATH_WIDTH_DEREF, CHAR_HEIGHT, 0);
+		//wsbeBufferFillRect(&script, 0, 0, WSBE_MATH_WIDTH_DEREF, CHAR_HEIGHT, 0);
 
 		for (int x = 0; x < 80; ++x) {
 			uint16_t ch = *v++;
@@ -55,6 +55,7 @@ void redoPaintScript(bool repaint)
 			txt[0] = ch & 0xFF;
 			txt[1] = 0;
 
+			wsbeBufferFillRect(&script, x * CHAR_WIDTH, 0, CHAR_WIDTH, CHAR_HEIGHT, vgaColours[(ch >> 12) & 0xF]);
 			wsbeBufferDrawText(&script, x * CHAR_WIDTH, 0, txt, vgaColours[(ch >> 8) & 0xF]);
 
 			if (x == cx && y == cy) {
