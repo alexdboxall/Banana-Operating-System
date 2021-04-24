@@ -515,7 +515,7 @@ namespace Thr
 
 				size_t addr = symbolTab[symbolNum].st_value;
 
-				//kprintf("Symbol: %s, addr = 0x%X, pos = 0x%X, info = 0x%X\n", ((char*) stringTab) + symbolTab[symbolNum].st_name, addr, pos, info);
+				kprintf("Symbol: %s, addr = 0x%X, pos = 0x%X, info = 0x%X\n", ((char*) stringTab) + symbolTab[symbolNum].st_name, addr, pos, info);
 
 				bool dynamic = false;
 				if (addr == 0) {
@@ -587,6 +587,9 @@ namespace Thr
 					uint32_t x;
 
 					if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum - 4) {
+						kprintf("R_386_PC32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
+						kprintf("addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
+						
 						if (critical) {
 							panic("RELOCATION UNHANDLED CASE 2");
 						} else {
