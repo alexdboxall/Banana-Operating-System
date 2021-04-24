@@ -204,6 +204,8 @@ void clearInternalKeybuffer(VgaText* terminal)
 
 int readKeyboard(VgaText* terminal, char* buf, size_t count)
 {
+	kprintf("readKeyboard called.\n");
+
 	asm("sti");
 	int charsRead = 0;
 	//bool blocked = false;
