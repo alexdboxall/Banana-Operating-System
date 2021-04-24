@@ -141,8 +141,12 @@ extern "C" void handleKeyboard(KeyboardToken kt, bool* keystates)
     if (!active_window) return;
 
     Message m;
+    if (kt.halScancode == 0) {
+        m.type = MESSAGE_CONHOST_UPDATE;
+    } else {
+        m.type = kt.release ? MESSAGE_KEYUP : MESSAGE_KEYDOWN;
+    }
     m.window = active_window;
-    m.type = kt.release ? MESSAGE_KEYUP : MESSAGE_KEYDOWN;
     m.key = kt.halScancode;
     m.shift = keystates[(int)KeyboardSpecialKeys::Shift] | keystates[(int)KeyboardSpecialKeys::RightShift];
     m.alt = keystates[(int)KeyboardSpecialKeys::Alt] | keystates[(int)KeyboardSpecialKeys::RightAlt];

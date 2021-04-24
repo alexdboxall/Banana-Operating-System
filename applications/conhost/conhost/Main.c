@@ -121,7 +121,7 @@ int main (int argc, char *argv[])
 	while (1) {
 		Message msg;
 		int count = wsbeGetMessage(win, &msg);
-		if (count && msg.type == MESSAGE_KEYDOWN) {
+		if (count && (msg.type == MESSAGE_KEYDOWN || msg.type == MESSAGE_CONHOST_UPDATE)) {
 			redoPaintScript(true);
 		}
 		SystemCall(Yield, 0, 0, 0);

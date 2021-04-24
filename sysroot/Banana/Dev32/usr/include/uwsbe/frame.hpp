@@ -60,6 +60,7 @@ public:
 	EventHandler movingHandler = nullptr;
 	EventHandler movedHandler = nullptr;
 	EventHandler cursorBlinkHandler = nullptr;
+	EventHandler conhostUpdateHandler = nullptr;
 
 	virtual void stealFocus();
 	virtual bool hasFocus();

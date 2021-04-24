@@ -35,6 +35,7 @@
 #define MESSAGE_FOCUS_ENTER     26
 #define MESSAGE_FOCUS_LEAVE     27
 #define MESSAGE_CURSOR_BLINK    28
+#define MESSAGE_CONHOST_UPDATE  29
 
 
 typedef struct Message
