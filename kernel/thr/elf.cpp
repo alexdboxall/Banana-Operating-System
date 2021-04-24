@@ -578,8 +578,8 @@ namespace Thr
 							x = addr - entryPoint + relocationPoint + *entry;
 						}
 					}
-					//kprintf("R_386_32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
-					//kprintf("addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
+					kprintf("    R_386_32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
+					kprintf("    addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
 					*entry = x;
 
 				} else if (type == 2 && sizeof(size_t) == 4) {			//R_386_PC32
@@ -587,8 +587,8 @@ namespace Thr
 					uint32_t x;
 
 					if (info == 0x101 || info == 0x401 || (info >> 8) < (elf->shNum - 4 > 0xC ? 0xC : elf->shNum - 4)) {
-						//kprintf("R_386_PC32	Modifying symbol 0x%X at 0x%X to become 0x???\n", *entry, entry);
-						//kprintf("addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
+						kprintf("    R_386_PC32	Modifying symbol 0x%X at 0x%X to become 0x???\n", *entry, entry);
+						kprintf("    addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
 						
 						if (critical) {
 							panic("RELOCATION UNHANDLED CASE 2");
@@ -611,8 +611,8 @@ namespace Thr
 					} else {
 						x = addr - pos + *entry;
 					}
-					//kprintf("R_386_PC32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
-					//kprintf("addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
+					kprintf("    R_386_PC32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
+					kprintf("    addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
 					*entry = x;
 
 				} else {
