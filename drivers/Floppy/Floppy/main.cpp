@@ -33,6 +33,13 @@ void start(Device* parent)
 	Floppy* dev = new Floppy(); 
 	kprintf("dev = 0x%X\n", dev);
 	parent->addChild(dev);
+
+	auto ptr = &Floppy::wasFailure;
+	kprintf("0x%X\n", reinterpret_cast<void*>(ptr));
+
+	size_t* a = (size_t*) 0;
+	kprintf("0x%X, 0x%X\n", a, *a);
+
 	dev->wasFailure();
 	//dev->configure();
 	//dev->open(0x3F0, 0, nullptr);
