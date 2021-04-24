@@ -8,6 +8,16 @@
 #include "hal/diskctrl.hpp"
 #include "hal/diskphys.hpp"
 
+#pragma GCC optimize ("O0")
+#pragma GCC optimize ("-fno-strict-aliasing")
+#pragma GCC optimize ("-fno-align-labels")
+#pragma GCC optimize ("-fno-align-jumps")
+#pragma GCC optimize ("-fno-align-loops")
+#pragma GCC optimize ("-fno-align-functions")
+
+void begin(void* a);
+void start(Device* parent);
+
 enum class FloppyReg : int
 {
 	STATUS_A		= 0x0, 
@@ -146,7 +156,7 @@ public:
 	bool needReconfigAfterReset = true;
 	bool drivePollingModeOn = true;
 
-	bool wasFailure();
+	virtual bool wasFailure();
 
 	bool lock();
 

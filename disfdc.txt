@@ -4,853 +4,1237 @@ packages/system/32/0002/floppy.sys:     file format elf32-i386
 
 Disassembly of section .text:
 
-10000000 <floppyMotorFunction(void*)-0x29>:
-10000000:	53                   	push   ebx
-10000001:	83 ec 14             	sub    esp,0x14
-10000004:	68 a8 01 00 00       	push   0x1a8
-10000009:	e8 fc ff ff ff       	call   1000000a <floppyMotorFunction(void*)-0x1f>	1000000a: R_386_PC32	operator new(unsigned long)
-1000000e:	89 04 24             	mov    DWORD PTR [esp],eax
-10000011:	89 c3                	mov    ebx,eax
-10000013:	e8 fc ff ff ff       	call   10000014 <floppyMotorFunction(void*)-0x15>	10000014: R_386_PC32	Floppy::Floppy()
-10000018:	58                   	pop    eax
-10000019:	5a                   	pop    edx
+10000000 <start(Device*)-0x17>:
+10000000:	55                   	push   ebp
+10000001:	89 e5                	mov    ebp,esp
+10000003:	83 ec 08             	sub    esp,0x8
+10000006:	83 ec 0c             	sub    esp,0xc
+10000009:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+1000000c:	e8 fc ff ff ff       	call   1000000d <start(Device*)-0xa>	1000000d: R_386_PC32	start(Device*)
+10000011:	83 c4 10             	add    esp,0x10
+10000014:	90                   	nop
+10000015:	c9                   	leave  
+10000016:	c3                   	ret    
+
+10000017 <start(Device*)>:
+10000017:	55                   	push   ebp
+10000018:	89 e5                	mov    ebp,esp
 1000001a:	53                   	push   ebx
-1000001b:	ff 74 24 1c          	push   DWORD PTR [esp+0x1c]
-1000001f:	e8 fc ff ff ff       	call   10000020 <floppyMotorFunction(void*)-0x9>	10000020: R_386_PC32	Device::addChild(Device*)
-10000024:	83 c4 18             	add    esp,0x18
-10000027:	5b                   	pop    ebx
-10000028:	c3                   	ret    
+1000001b:	83 ec 14             	sub    esp,0x14
+1000001e:	83 ec 0c             	sub    esp,0xc
+10000021:	68 a8 01 00 00       	push   0x1a8
+10000026:	e8 fc ff ff ff       	call   10000027 <start(Device*)+0x10>	10000027: R_386_PC32	operator new(unsigned long)
+1000002b:	83 c4 10             	add    esp,0x10
+1000002e:	89 c3                	mov    ebx,eax
+10000030:	83 ec 0c             	sub    esp,0xc
+10000033:	53                   	push   ebx
+10000034:	e8 fc ff ff ff       	call   10000035 <start(Device*)+0x1e>	10000035: R_386_PC32	Floppy::Floppy()
+10000039:	83 c4 10             	add    esp,0x10
+1000003c:	89 5d f4             	mov    DWORD PTR [ebp-0xc],ebx
+1000003f:	83 ec 08             	sub    esp,0x8
+10000042:	ff 75 f4             	push   DWORD PTR [ebp-0xc]
+10000045:	68 08 0c 00 10       	push   0x10000c08	10000046: R_386_32	.text
+1000004a:	e8 fc ff ff ff       	call   1000004b <start(Device*)+0x34>	1000004b: R_386_PC32	Dbg::kprintf(char const*, ...)
+1000004f:	83 c4 10             	add    esp,0x10
+10000052:	83 ec 08             	sub    esp,0x8
+10000055:	ff 75 f4             	push   DWORD PTR [ebp-0xc]
+10000058:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+1000005b:	e8 fc ff ff ff       	call   1000005c <start(Device*)+0x45>	1000005c: R_386_PC32	Device::addChild(Device*)
+10000060:	83 c4 10             	add    esp,0x10
+10000063:	8b 45 f4             	mov    eax,DWORD PTR [ebp-0xc]
+10000066:	8b 00                	mov    eax,DWORD PTR [eax]
+10000068:	83 c0 24             	add    eax,0x24
+1000006b:	8b 00                	mov    eax,DWORD PTR [eax]
+1000006d:	83 ec 0c             	sub    esp,0xc
+10000070:	ff 75 f4             	push   DWORD PTR [ebp-0xc]
+10000073:	ff d0                	call   eax
+10000075:	83 c4 10             	add    esp,0x10
+10000078:	90                   	nop
+10000079:	8b 5d fc             	mov    ebx,DWORD PTR [ebp-0x4]
+1000007c:	c9                   	leave  
+1000007d:	c3                   	ret    
 
-10000029 <floppyMotorFunction(void*)>:
-10000029:	56                   	push   esi
-1000002a:	53                   	push   ebx
-1000002b:	51                   	push   ecx
-1000002c:	8b 5c 24 10          	mov    ebx,DWORD PTR [esp+0x10]
-10000030:	e8 fc ff ff ff       	call   10000031 <floppyMotorFunction(void*)+0x8>	10000031: R_386_PC32	unlockScheduler()
-10000035:	31 f6                	xor    esi,esi
-10000037:	52                   	push   edx
-10000038:	52                   	push   edx
-10000039:	6a 00                	push   0x0
-1000003b:	68 00 84 d7 17       	push   0x17d78400
-10000040:	e8 fc ff ff ff       	call   10000041 <floppyMotorFunction(void*)+0x18>	10000041: R_386_PC32	nanoSleep(unsigned long long)
-10000045:	83 c4 10             	add    esp,0x10
-10000048:	83 bc b3 60 01 00 00 02 	cmp    DWORD PTR [ebx+esi*4+0x160],0x2
-10000050:	75 55                	jne    100000a7 <floppyMotorFunction(void*)+0x7e>
-10000052:	8b 84 b3 70 01 00 00 	mov    eax,DWORD PTR [ebx+esi*4+0x170]
-10000059:	2d 90 01 00 00       	sub    eax,0x190
-1000005e:	89 84 b3 70 01 00 00 	mov    DWORD PTR [ebx+esi*4+0x170],eax
-10000065:	85 c0                	test   eax,eax
-10000067:	7f 3e                	jg     100000a7 <floppyMotorFunction(void*)+0x7e>
-10000069:	c7 84 b3 60 01 00 00 00 00 00 00 	mov    DWORD PTR [ebx+esi*4+0x160],0x0
-10000074:	e8 fc ff ff ff       	call   10000075 <floppyMotorFunction(void*)+0x4c>	10000075: R_386_PC32	lockScheduler()
-10000079:	50                   	push   eax
-1000007a:	50                   	push   eax
-1000007b:	6a 02                	push   0x2
-1000007d:	53                   	push   ebx
-1000007e:	e8 fc ff ff ff       	call   1000007f <floppyMotorFunction(void*)+0x56>	1000007f: R_386_PC32	Floppy::readPort(FloppyReg)
-10000083:	83 c4 0c             	add    esp,0xc
-10000086:	89 f1                	mov    ecx,esi
-10000088:	ba 10 00 00 00       	mov    edx,0x10
-1000008d:	d3 e2                	shl    edx,cl
-1000008f:	f7 d2                	not    edx
-10000091:	21 d0                	and    eax,edx
-10000093:	0f b6 c0             	movzx  eax,al
-10000096:	50                   	push   eax
-10000097:	6a 02                	push   0x2
-10000099:	53                   	push   ebx
-1000009a:	e8 fc ff ff ff       	call   1000009b <floppyMotorFunction(void*)+0x72>	1000009b: R_386_PC32	Floppy::writePort(FloppyReg, unsigned char)
-1000009f:	e8 fc ff ff ff       	call   100000a0 <floppyMotorFunction(void*)+0x77>	100000a0: R_386_PC32	unlockScheduler()
-100000a4:	83 c4 10             	add    esp,0x10
-100000a7:	46                   	inc    esi
-100000a8:	83 fe 04             	cmp    esi,0x4
-100000ab:	75 9b                	jne    10000048 <floppyMotorFunction(void*)+0x1f>
-100000ad:	eb 86                	jmp    10000035 <floppyMotorFunction(void*)+0xc>
-100000af:	90                   	nop
+1000007e <floppyMotorFunction(void*)>:
+1000007e:	55                   	push   ebp
+1000007f:	89 e5                	mov    ebp,esp
+10000081:	83 ec 18             	sub    esp,0x18
+10000084:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000087:	89 45 f0             	mov    DWORD PTR [ebp-0x10],eax
+1000008a:	e8 fc ff ff ff       	call   1000008b <floppyMotorFunction(void*)+0xd>	1000008b: R_386_PC32	unlockScheduler()
+1000008f:	83 ec 08             	sub    esp,0x8
+10000092:	6a 00                	push   0x0
+10000094:	68 00 84 d7 17       	push   0x17d78400
+10000099:	e8 fc ff ff ff       	call   1000009a <floppyMotorFunction(void*)+0x1c>	1000009a: R_386_PC32	nanoSleep(unsigned long long)
+1000009e:	83 c4 10             	add    esp,0x10
+100000a1:	c7 45 f4 00 00 00 00 	mov    DWORD PTR [ebp-0xc],0x0
+100000a8:	83 7d f4 03          	cmp    DWORD PTR [ebp-0xc],0x3
+100000ac:	7f e1                	jg     1000008f <floppyMotorFunction(void*)+0x11>
+100000ae:	8b 45 f0             	mov    eax,DWORD PTR [ebp-0x10]
+100000b1:	8b 55 f4             	mov    edx,DWORD PTR [ebp-0xc]
+100000b4:	83 c2 58             	add    edx,0x58
+100000b7:	8b 04 90             	mov    eax,DWORD PTR [eax+edx*4]
+100000ba:	83 f8 02             	cmp    eax,0x2
+100000bd:	0f 85 86 00 00 00    	jne    10000149 <floppyMotorFunction(void*)+0xcb>
+100000c3:	8b 45 f0             	mov    eax,DWORD PTR [ebp-0x10]
+100000c6:	8b 55 f4             	mov    edx,DWORD PTR [ebp-0xc]
+100000c9:	83 c2 5c             	add    edx,0x5c
+100000cc:	8b 04 90             	mov    eax,DWORD PTR [eax+edx*4]
+100000cf:	8d 88 70 fe ff ff    	lea    ecx,[eax-0x190]
+100000d5:	8b 45 f0             	mov    eax,DWORD PTR [ebp-0x10]
+100000d8:	8b 55 f4             	mov    edx,DWORD PTR [ebp-0xc]
+100000db:	83 c2 5c             	add    edx,0x5c
+100000de:	89 0c 90             	mov    DWORD PTR [eax+edx*4],ecx
+100000e1:	8b 45 f0             	mov    eax,DWORD PTR [ebp-0x10]
+100000e4:	8b 55 f4             	mov    edx,DWORD PTR [ebp-0xc]
+100000e7:	83 c2 5c             	add    edx,0x5c
+100000ea:	8b 04 90             	mov    eax,DWORD PTR [eax+edx*4]
+100000ed:	85 c0                	test   eax,eax
+100000ef:	7f 58                	jg     10000149 <floppyMotorFunction(void*)+0xcb>
+100000f1:	8b 45 f0             	mov    eax,DWORD PTR [ebp-0x10]
+100000f4:	8b 55 f4             	mov    edx,DWORD PTR [ebp-0xc]
+100000f7:	83 c2 58             	add    edx,0x58
+100000fa:	c7 04 90 00 00 00 00 	mov    DWORD PTR [eax+edx*4],0x0
+10000101:	e8 fc ff ff ff       	call   10000102 <floppyMotorFunction(void*)+0x84>	10000102: R_386_PC32	lockScheduler()
+10000106:	83 ec 08             	sub    esp,0x8
+10000109:	6a 02                	push   0x2
+1000010b:	ff 75 f0             	push   DWORD PTR [ebp-0x10]
+1000010e:	e8 fc ff ff ff       	call   1000010f <floppyMotorFunction(void*)+0x91>	1000010f: R_386_PC32	Floppy::readPort(FloppyReg)
+10000113:	83 c4 10             	add    esp,0x10
+10000116:	88 45 ef             	mov    BYTE PTR [ebp-0x11],al
+10000119:	8b 45 f4             	mov    eax,DWORD PTR [ebp-0xc]
+1000011c:	ba 10 00 00 00       	mov    edx,0x10
+10000121:	88 c1                	mov    cl,al
+10000123:	d3 e2                	shl    edx,cl
+10000125:	89 d0                	mov    eax,edx
+10000127:	f7 d0                	not    eax
+10000129:	88 c2                	mov    dl,al
+1000012b:	8a 45 ef             	mov    al,BYTE PTR [ebp-0x11]
+1000012e:	21 d0                	and    eax,edx
+10000130:	0f b6 c0             	movzx  eax,al
+10000133:	83 ec 04             	sub    esp,0x4
+10000136:	50                   	push   eax
+10000137:	6a 02                	push   0x2
+10000139:	ff 75 f0             	push   DWORD PTR [ebp-0x10]
+1000013c:	e8 fc ff ff ff       	call   1000013d <floppyMotorFunction(void*)+0xbf>	1000013d: R_386_PC32	Floppy::writePort(FloppyReg, unsigned char)
+10000141:	83 c4 10             	add    esp,0x10
+10000144:	e8 fc ff ff ff       	call   10000145 <floppyMotorFunction(void*)+0xc7>	10000145: R_386_PC32	unlockScheduler()
+10000149:	ff 45 f4             	inc    DWORD PTR [ebp-0xc]
+1000014c:	e9 57 ff ff ff       	jmp    100000a8 <floppyMotorFunction(void*)+0x2a>
+10000151:	90                   	nop
 
-100000b0 <Floppy::Floppy()>:
-100000b0:	55                   	push   ebp
-100000b1:	89 e5                	mov    ebp,esp
-100000b3:	83 ec 08             	sub    esp,0x8
-100000b6:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-100000b9:	83 ec 08             	sub    esp,0x8
-100000bc:	68 98 07 00 10       	push   0x10000798	100000bd: R_386_32	.text
-100000c1:	50                   	push   eax
-100000c2:	e8 fc ff ff ff       	call   100000c3 <Floppy::Floppy()+0x13>	100000c3: R_386_PC32	HardDiskController::HardDiskController(char const*)
-100000c7:	83 c4 10             	add    esp,0x10
-100000ca:	ba 08 00 00 00       	mov    edx,0x8	100000cb: R_386_32	vtable for Floppy
-100000cf:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-100000d2:	89 10                	mov    DWORD PTR [eax],edx
-100000d4:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-100000d7:	66 c7 80 58 01 00 00 f0 03 	mov    WORD PTR [eax+0x158],0x3f0
-100000e0:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-100000e3:	c6 80 80 01 00 00 01 	mov    BYTE PTR [eax+0x180],0x1
-100000ea:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-100000ed:	c6 80 81 01 00 00 00 	mov    BYTE PTR [eax+0x181],0x0
-100000f4:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-100000f7:	c6 80 82 01 00 00 00 	mov    BYTE PTR [eax+0x182],0x0
-100000fe:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-10000101:	c6 80 83 01 00 00 00 	mov    BYTE PTR [eax+0x183],0x0
-10000108:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-1000010b:	c6 80 84 01 00 00 01 	mov    BYTE PTR [eax+0x184],0x1
-10000112:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-10000115:	c6 80 85 01 00 00 01 	mov    BYTE PTR [eax+0x185],0x1
-1000011c:	83 ec 0c             	sub    esp,0xc
-1000011f:	68 af 07 00 10       	push   0x100007af	10000120: R_386_32	.text
-10000124:	e8 fc ff ff ff       	call   10000125 <Floppy::Floppy()+0x75>	10000125: R_386_PC32	Dbg::kprintf(char const*, ...)
-10000129:	83 c4 10             	add    esp,0x10
-1000012c:	a1 00 00 00 00       	mov    eax,ds:0x0	1000012d: R_386_32	kernelProcess
-10000131:	68 d2 00 00 00       	push   0xd2
-10000136:	ff 75 08             	push   DWORD PTR [ebp+0x8]
-10000139:	68 00 00 00 00       	push   0x0	1000013a: R_386_32	floppyMotorFunction(void*)
-1000013e:	50                   	push   eax
-1000013f:	e8 fc ff ff ff       	call   10000140 <Floppy::Floppy()+0x90>	10000140: R_386_PC32	Process::createThread(void (*)(void*), void*, int)
-10000144:	83 c4 10             	add    esp,0x10
-10000147:	89 c2                	mov    edx,eax
-10000149:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-1000014c:	89 90 5c 01 00 00    	mov    DWORD PTR [eax+0x15c],edx
-10000152:	90                   	nop
-10000153:	c9                   	leave  
-10000154:	c3                   	ret    
-10000155:	90                   	nop
+10000152 <Floppy::Floppy()>:
+10000152:	55                   	push   ebp
+10000153:	89 e5                	mov    ebp,esp
+10000155:	83 ec 08             	sub    esp,0x8
+10000158:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+1000015b:	83 ec 08             	sub    esp,0x8
+1000015e:	68 14 0c 00 10       	push   0x10000c14	1000015f: R_386_32	.text
+10000163:	50                   	push   eax
+10000164:	e8 fc ff ff ff       	call   10000165 <Floppy::Floppy()+0x13>	10000165: R_386_PC32	HardDiskController::HardDiskController(char const*)
+10000169:	83 c4 10             	add    esp,0x10
+1000016c:	ba 08 00 00 00       	mov    edx,0x8	1000016d: R_386_32	vtable for Floppy
+10000171:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000174:	89 10                	mov    DWORD PTR [eax],edx
+10000176:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000179:	66 c7 80 58 01 00 00 f0 03 	mov    WORD PTR [eax+0x158],0x3f0
+10000182:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000185:	c6 80 80 01 00 00 01 	mov    BYTE PTR [eax+0x180],0x1
+1000018c:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+1000018f:	c6 80 81 01 00 00 00 	mov    BYTE PTR [eax+0x181],0x0
+10000196:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000199:	c6 80 82 01 00 00 00 	mov    BYTE PTR [eax+0x182],0x0
+100001a0:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100001a3:	c6 80 83 01 00 00 00 	mov    BYTE PTR [eax+0x183],0x0
+100001aa:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100001ad:	c6 80 84 01 00 00 01 	mov    BYTE PTR [eax+0x184],0x1
+100001b4:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100001b7:	c6 80 85 01 00 00 01 	mov    BYTE PTR [eax+0x185],0x1
+100001be:	83 ec 0c             	sub    esp,0xc
+100001c1:	68 2b 0c 00 10       	push   0x10000c2b	100001c2: R_386_32	.text
+100001c6:	e8 fc ff ff ff       	call   100001c7 <Floppy::Floppy()+0x75>	100001c7: R_386_PC32	Dbg::kprintf(char const*, ...)
+100001cb:	83 c4 10             	add    esp,0x10
+100001ce:	a1 00 00 00 00       	mov    eax,ds:0x0	100001cf: R_386_32	kernelProcess
+100001d3:	68 d2 00 00 00       	push   0xd2
+100001d8:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+100001db:	68 00 00 00 00       	push   0x0	100001dc: R_386_32	floppyMotorFunction(void*)
+100001e0:	50                   	push   eax
+100001e1:	e8 fc ff ff ff       	call   100001e2 <Floppy::Floppy()+0x90>	100001e2: R_386_PC32	Process::createThread(void (*)(void*), void*, int)
+100001e6:	83 c4 10             	add    esp,0x10
+100001e9:	89 c2                	mov    edx,eax
+100001eb:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100001ee:	89 90 5c 01 00 00    	mov    DWORD PTR [eax+0x15c],edx
+100001f4:	90                   	nop
+100001f5:	c9                   	leave  
+100001f6:	c3                   	ret    
+100001f7:	90                   	nop
 
-10000156 <Floppy::wasFailure()>:
-10000156:	8b 54 24 04          	mov    edx,DWORD PTR [esp+0x4]
-1000015a:	8a 82 82 01 00 00    	mov    al,BYTE PTR [edx+0x182]
-10000160:	66 c7 82 82 01 00 00 00 01 	mov    WORD PTR [edx+0x182],0x100
-10000169:	c3                   	ret    
+100001f8 <Floppy::wasFailure()>:
+100001f8:	55                   	push   ebp
+100001f9:	89 e5                	mov    ebp,esp
+100001fb:	83 ec 10             	sub    esp,0x10
+100001fe:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000201:	c6 80 83 01 00 00 01 	mov    BYTE PTR [eax+0x183],0x1
+10000208:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+1000020b:	8a 80 82 01 00 00    	mov    al,BYTE PTR [eax+0x182]
+10000211:	88 45 ff             	mov    BYTE PTR [ebp-0x1],al
+10000214:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000217:	c6 80 82 01 00 00 00 	mov    BYTE PTR [eax+0x182],0x0
+1000021e:	8a 45 ff             	mov    al,BYTE PTR [ebp-0x1]
+10000221:	c9                   	leave  
+10000222:	c3                   	ret    
+10000223:	90                   	nop
 
-1000016a <Floppy::writeCommand(unsigned char)>:
-1000016a:	57                   	push   edi
-1000016b:	56                   	push   esi
-1000016c:	53                   	push   ebx
-1000016d:	8b 5c 24 10          	mov    ebx,DWORD PTR [esp+0x10]
-10000171:	8b 7c 24 14          	mov    edi,DWORD PTR [esp+0x14]
-10000175:	80 bb 82 01 00 00 00 	cmp    BYTE PTR [ebx+0x182],0x0
-1000017c:	74 10                	je     1000018e <Floppy::writeCommand(unsigned char)+0x24>
-1000017e:	83 ec 0c             	sub    esp,0xc
-10000181:	68 c1 07 00 10       	push   0x100007c1	10000182: R_386_32	.text
-10000186:	e8 fc ff ff ff       	call   10000187 <Floppy::writeCommand(unsigned char)+0x1d>	10000187: R_386_PC32	Krnl::panic(char const*)
-1000018b:	83 c4 10             	add    esp,0x10
-1000018e:	80 bb 83 01 00 00 00 	cmp    BYTE PTR [ebx+0x183],0x0
-10000195:	75 10                	jne    100001a7 <Floppy::writeCommand(unsigned char)+0x3d>
-10000197:	83 ec 0c             	sub    esp,0xc
-1000019a:	68 f1 07 00 10       	push   0x100007f1	1000019b: R_386_32	.text
-1000019f:	e8 fc ff ff ff       	call   100001a0 <Floppy::writeCommand(unsigned char)+0x36>	100001a0: R_386_PC32	Krnl::panic(char const*)
-100001a4:	83 c4 10             	add    esp,0x10
-100001a7:	66 c7 83 82 01 00 00 00 00 	mov    WORD PTR [ebx+0x182],0x0
-100001b0:	be 32 00 00 00       	mov    esi,0x32
-100001b5:	52                   	push   edx
-100001b6:	52                   	push   edx
-100001b7:	6a 00                	push   0x0
-100001b9:	68 80 96 98 00       	push   0x989680
-100001be:	e8 fc ff ff ff       	call   100001bf <Floppy::writeCommand(unsigned char)+0x55>	100001bf: R_386_PC32	nanoSleep(unsigned long long)
-100001c3:	59                   	pop    ecx
-100001c4:	58                   	pop    eax
-100001c5:	6a 04                	push   0x4
-100001c7:	53                   	push   ebx
-100001c8:	e8 fc ff ff ff       	call   100001c9 <Floppy::writeCommand(unsigned char)+0x5f>	100001c9: R_386_PC32	Floppy::readPort(FloppyReg)
-100001cd:	83 c4 10             	add    esp,0x10
-100001d0:	84 c0                	test   al,al
-100001d2:	79 18                	jns    100001ec <Floppy::writeCommand(unsigned char)+0x82>
-100001d4:	a8 40                	test   al,0x40
-100001d6:	75 14                	jne    100001ec <Floppy::writeCommand(unsigned char)+0x82>
-100001d8:	50                   	push   eax
-100001d9:	89 f8                	mov    eax,edi
-100001db:	0f b6 f8             	movzx  edi,al
-100001de:	57                   	push   edi
-100001df:	6a 05                	push   0x5
-100001e1:	53                   	push   ebx
-100001e2:	e8 fc ff ff ff       	call   100001e3 <Floppy::writeCommand(unsigned char)+0x79>	100001e3: R_386_PC32	Floppy::writePort(FloppyReg, unsigned char)
-100001e7:	83 c4 10             	add    esp,0x10
-100001ea:	eb 0a                	jmp    100001f6 <Floppy::writeCommand(unsigned char)+0x8c>
-100001ec:	4e                   	dec    esi
-100001ed:	75 c6                	jne    100001b5 <Floppy::writeCommand(unsigned char)+0x4b>
-100001ef:	c6 83 82 01 00 00 01 	mov    BYTE PTR [ebx+0x182],0x1
-100001f6:	5b                   	pop    ebx
-100001f7:	5e                   	pop    esi
-100001f8:	5f                   	pop    edi
-100001f9:	c3                   	ret    
+10000224 <Floppy::writeCommand(unsigned char)>:
+10000224:	55                   	push   ebp
+10000225:	89 e5                	mov    ebp,esp
+10000227:	83 ec 28             	sub    esp,0x28
+1000022a:	8b 45 0c             	mov    eax,DWORD PTR [ebp+0xc]
+1000022d:	88 45 e4             	mov    BYTE PTR [ebp-0x1c],al
+10000230:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000233:	8a 80 82 01 00 00    	mov    al,BYTE PTR [eax+0x182]
+10000239:	84 c0                	test   al,al
+1000023b:	74 10                	je     1000024d <Floppy::writeCommand(unsigned char)+0x29>
+1000023d:	83 ec 0c             	sub    esp,0xc
+10000240:	68 40 0c 00 10       	push   0x10000c40	10000241: R_386_32	.text
+10000245:	e8 fc ff ff ff       	call   10000246 <Floppy::writeCommand(unsigned char)+0x22>	10000246: R_386_PC32	Krnl::panic(char const*)
+1000024a:	83 c4 10             	add    esp,0x10
+1000024d:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000250:	8a 80 83 01 00 00    	mov    al,BYTE PTR [eax+0x183]
+10000256:	83 f0 01             	xor    eax,0x1
+10000259:	84 c0                	test   al,al
+1000025b:	74 10                	je     1000026d <Floppy::writeCommand(unsigned char)+0x49>
+1000025d:	83 ec 0c             	sub    esp,0xc
+10000260:	68 70 0c 00 10       	push   0x10000c70	10000261: R_386_32	.text
+10000265:	e8 fc ff ff ff       	call   10000266 <Floppy::writeCommand(unsigned char)+0x42>	10000266: R_386_PC32	Krnl::panic(char const*)
+1000026a:	83 c4 10             	add    esp,0x10
+1000026d:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000270:	c6 80 83 01 00 00 00 	mov    BYTE PTR [eax+0x183],0x0
+10000277:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+1000027a:	c6 80 82 01 00 00 00 	mov    BYTE PTR [eax+0x182],0x0
+10000281:	c7 45 f4 00 00 00 00 	mov    DWORD PTR [ebp-0xc],0x0
+10000288:	83 7d f4 31          	cmp    DWORD PTR [ebp-0xc],0x31
+1000028c:	7f 53                	jg     100002e1 <Floppy::writeCommand(unsigned char)+0xbd>
+1000028e:	83 ec 08             	sub    esp,0x8
+10000291:	6a 00                	push   0x0
+10000293:	68 80 96 98 00       	push   0x989680
+10000298:	e8 fc ff ff ff       	call   10000299 <Floppy::writeCommand(unsigned char)+0x75>	10000299: R_386_PC32	nanoSleep(unsigned long long)
+1000029d:	83 c4 10             	add    esp,0x10
+100002a0:	83 ec 08             	sub    esp,0x8
+100002a3:	6a 04                	push   0x4
+100002a5:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+100002a8:	e8 fc ff ff ff       	call   100002a9 <Floppy::writeCommand(unsigned char)+0x85>	100002a9: R_386_PC32	Floppy::readPort(FloppyReg)
+100002ad:	83 c4 10             	add    esp,0x10
+100002b0:	88 45 f3             	mov    BYTE PTR [ebp-0xd],al
+100002b3:	8a 45 f3             	mov    al,BYTE PTR [ebp-0xd]
+100002b6:	84 c0                	test   al,al
+100002b8:	79 22                	jns    100002dc <Floppy::writeCommand(unsigned char)+0xb8>
+100002ba:	0f b6 45 f3          	movzx  eax,BYTE PTR [ebp-0xd]
+100002be:	83 e0 40             	and    eax,0x40
+100002c1:	85 c0                	test   eax,eax
+100002c3:	75 17                	jne    100002dc <Floppy::writeCommand(unsigned char)+0xb8>
+100002c5:	0f b6 45 e4          	movzx  eax,BYTE PTR [ebp-0x1c]
+100002c9:	83 ec 04             	sub    esp,0x4
+100002cc:	50                   	push   eax
+100002cd:	6a 05                	push   0x5
+100002cf:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+100002d2:	e8 fc ff ff ff       	call   100002d3 <Floppy::writeCommand(unsigned char)+0xaf>	100002d3: R_386_PC32	Floppy::writePort(FloppyReg, unsigned char)
+100002d7:	83 c4 10             	add    esp,0x10
+100002da:	eb 0f                	jmp    100002eb <Floppy::writeCommand(unsigned char)+0xc7>
+100002dc:	ff 45 f4             	inc    DWORD PTR [ebp-0xc]
+100002df:	eb a7                	jmp    10000288 <Floppy::writeCommand(unsigned char)+0x64>
+100002e1:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100002e4:	c6 80 82 01 00 00 01 	mov    BYTE PTR [eax+0x182],0x1
+100002eb:	c9                   	leave  
+100002ec:	c3                   	ret    
+100002ed:	90                   	nop
 
-100001fa <Floppy::readData()>:
-100001fa:	56                   	push   esi
-100001fb:	53                   	push   ebx
-100001fc:	51                   	push   ecx
-100001fd:	8b 5c 24 10          	mov    ebx,DWORD PTR [esp+0x10]
-10000201:	80 bb 82 01 00 00 00 	cmp    BYTE PTR [ebx+0x182],0x0
-10000208:	74 10                	je     1000021a <Floppy::readData()+0x20>
-1000020a:	83 ec 0c             	sub    esp,0xc
-1000020d:	68 c1 07 00 10       	push   0x100007c1	1000020e: R_386_32	.text
-10000212:	e8 fc ff ff ff       	call   10000213 <Floppy::readData()+0x19>	10000213: R_386_PC32	Krnl::panic(char const*)
-10000217:	83 c4 10             	add    esp,0x10
-1000021a:	80 bb 83 01 00 00 00 	cmp    BYTE PTR [ebx+0x183],0x0
-10000221:	75 10                	jne    10000233 <Floppy::readData()+0x39>
-10000223:	83 ec 0c             	sub    esp,0xc
-10000226:	68 f1 07 00 10       	push   0x100007f1	10000227: R_386_32	.text
-1000022b:	e8 fc ff ff ff       	call   1000022c <Floppy::readData()+0x32>	1000022c: R_386_PC32	Krnl::panic(char const*)
-10000230:	83 c4 10             	add    esp,0x10
-10000233:	66 c7 83 82 01 00 00 00 00 	mov    WORD PTR [ebx+0x182],0x0
-1000023c:	be 32 00 00 00       	mov    esi,0x32
-10000241:	50                   	push   eax
-10000242:	50                   	push   eax
-10000243:	6a 00                	push   0x0
-10000245:	68 80 96 98 00       	push   0x989680
-1000024a:	e8 fc ff ff ff       	call   1000024b <Floppy::readData()+0x51>	1000024b: R_386_PC32	nanoSleep(unsigned long long)
-1000024f:	58                   	pop    eax
-10000250:	5a                   	pop    edx
-10000251:	6a 04                	push   0x4
-10000253:	53                   	push   ebx
-10000254:	e8 fc ff ff ff       	call   10000255 <Floppy::readData()+0x5b>	10000255: R_386_PC32	Floppy::readPort(FloppyReg)
-10000259:	83 c4 10             	add    esp,0x10
-1000025c:	84 c0                	test   al,al
-1000025e:	79 13                	jns    10000273 <Floppy::readData()+0x79>
-10000260:	a8 40                	test   al,0x40
-10000262:	74 0f                	je     10000273 <Floppy::readData()+0x79>
-10000264:	51                   	push   ecx
-10000265:	51                   	push   ecx
-10000266:	6a 05                	push   0x5
-10000268:	53                   	push   ebx
-10000269:	e8 fc ff ff ff       	call   1000026a <Floppy::readData()+0x70>	1000026a: R_386_PC32	Floppy::readPort(FloppyReg)
-1000026e:	83 c4 10             	add    esp,0x10
-10000271:	eb 0c                	jmp    1000027f <Floppy::readData()+0x85>
-10000273:	4e                   	dec    esi
-10000274:	75 cb                	jne    10000241 <Floppy::readData()+0x47>
-10000276:	c6 83 82 01 00 00 01 	mov    BYTE PTR [ebx+0x182],0x1
-1000027d:	31 c0                	xor    eax,eax
-1000027f:	5a                   	pop    edx
-10000280:	5b                   	pop    ebx
-10000281:	5e                   	pop    esi
-10000282:	c3                   	ret    
-10000283:	90                   	nop
+100002ee <Floppy::readData()>:
+100002ee:	55                   	push   ebp
+100002ef:	89 e5                	mov    ebp,esp
+100002f1:	83 ec 18             	sub    esp,0x18
+100002f4:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100002f7:	8a 80 82 01 00 00    	mov    al,BYTE PTR [eax+0x182]
+100002fd:	84 c0                	test   al,al
+100002ff:	74 10                	je     10000311 <Floppy::readData()+0x23>
+10000301:	83 ec 0c             	sub    esp,0xc
+10000304:	68 40 0c 00 10       	push   0x10000c40	10000305: R_386_32	.text
+10000309:	e8 fc ff ff ff       	call   1000030a <Floppy::readData()+0x1c>	1000030a: R_386_PC32	Krnl::panic(char const*)
+1000030e:	83 c4 10             	add    esp,0x10
+10000311:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000314:	8a 80 83 01 00 00    	mov    al,BYTE PTR [eax+0x183]
+1000031a:	83 f0 01             	xor    eax,0x1
+1000031d:	84 c0                	test   al,al
+1000031f:	74 10                	je     10000331 <Floppy::readData()+0x43>
+10000321:	83 ec 0c             	sub    esp,0xc
+10000324:	68 70 0c 00 10       	push   0x10000c70	10000325: R_386_32	.text
+10000329:	e8 fc ff ff ff       	call   1000032a <Floppy::readData()+0x3c>	1000032a: R_386_PC32	Krnl::panic(char const*)
+1000032e:	83 c4 10             	add    esp,0x10
+10000331:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000334:	c6 80 83 01 00 00 00 	mov    BYTE PTR [eax+0x183],0x0
+1000033b:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+1000033e:	c6 80 82 01 00 00 00 	mov    BYTE PTR [eax+0x182],0x0
+10000345:	c7 45 f4 00 00 00 00 	mov    DWORD PTR [ebp-0xc],0x0
+1000034c:	83 7d f4 31          	cmp    DWORD PTR [ebp-0xc],0x31
+10000350:	7f 4e                	jg     100003a0 <Floppy::readData()+0xb2>
+10000352:	83 ec 08             	sub    esp,0x8
+10000355:	6a 00                	push   0x0
+10000357:	68 80 96 98 00       	push   0x989680
+1000035c:	e8 fc ff ff ff       	call   1000035d <Floppy::readData()+0x6f>	1000035d: R_386_PC32	nanoSleep(unsigned long long)
+10000361:	83 c4 10             	add    esp,0x10
+10000364:	83 ec 08             	sub    esp,0x8
+10000367:	6a 04                	push   0x4
+10000369:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+1000036c:	e8 fc ff ff ff       	call   1000036d <Floppy::readData()+0x7f>	1000036d: R_386_PC32	Floppy::readPort(FloppyReg)
+10000371:	83 c4 10             	add    esp,0x10
+10000374:	88 45 f3             	mov    BYTE PTR [ebp-0xd],al
+10000377:	8a 45 f3             	mov    al,BYTE PTR [ebp-0xd]
+1000037a:	84 c0                	test   al,al
+1000037c:	79 1d                	jns    1000039b <Floppy::readData()+0xad>
+1000037e:	0f b6 45 f3          	movzx  eax,BYTE PTR [ebp-0xd]
+10000382:	83 e0 40             	and    eax,0x40
+10000385:	85 c0                	test   eax,eax
+10000387:	74 12                	je     1000039b <Floppy::readData()+0xad>
+10000389:	83 ec 08             	sub    esp,0x8
+1000038c:	6a 05                	push   0x5
+1000038e:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+10000391:	e8 fc ff ff ff       	call   10000392 <Floppy::readData()+0xa4>	10000392: R_386_PC32	Floppy::readPort(FloppyReg)
+10000396:	83 c4 10             	add    esp,0x10
+10000399:	eb 11                	jmp    100003ac <Floppy::readData()+0xbe>
+1000039b:	ff 45 f4             	inc    DWORD PTR [ebp-0xc]
+1000039e:	eb ac                	jmp    1000034c <Floppy::readData()+0x5e>
+100003a0:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100003a3:	c6 80 82 01 00 00 01 	mov    BYTE PTR [eax+0x182],0x1
+100003aa:	b0 00                	mov    al,0x0
+100003ac:	c9                   	leave  
+100003ad:	c3                   	ret    
 
-10000284 <Floppy::readPort(FloppyReg)>:
-10000284:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
-10000288:	8b 80 58 01 00 00    	mov    eax,DWORD PTR [eax+0x158]
-1000028e:	03 44 24 08          	add    eax,DWORD PTR [esp+0x8]
-10000292:	89 c2                	mov    edx,eax
-10000294:	ec                   	in     al,dx
-10000295:	c3                   	ret    
+100003ae <Floppy::readPort(FloppyReg)>:
+100003ae:	55                   	push   ebp
+100003af:	89 e5                	mov    ebp,esp
+100003b1:	83 ec 10             	sub    esp,0x10
+100003b4:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100003b7:	8b 80 58 01 00 00    	mov    eax,DWORD PTR [eax+0x158]
+100003bd:	8b 55 0c             	mov    edx,DWORD PTR [ebp+0xc]
+100003c0:	01 d0                	add    eax,edx
+100003c2:	0f b7 c0             	movzx  eax,ax
+100003c5:	66 89 45 fe          	mov    WORD PTR [ebp-0x2],ax
+100003c9:	66 8b 45 fe          	mov    ax,WORD PTR [ebp-0x2]
+100003cd:	89 c2                	mov    edx,eax
+100003cf:	ec                   	in     al,dx
+100003d0:	88 45 fd             	mov    BYTE PTR [ebp-0x3],al
+100003d3:	8a 45 fd             	mov    al,BYTE PTR [ebp-0x3]
+100003d6:	90                   	nop
+100003d7:	c9                   	leave  
+100003d8:	c3                   	ret    
+100003d9:	90                   	nop
 
-10000296 <Floppy::writePort(FloppyReg, unsigned char)>:
-10000296:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
-1000029a:	8b 90 58 01 00 00    	mov    edx,DWORD PTR [eax+0x158]
-100002a0:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
-100002a4:	03 54 24 08          	add    edx,DWORD PTR [esp+0x8]
-100002a8:	ee                   	out    dx,al
-100002a9:	c3                   	ret    
+100003da <Floppy::writePort(FloppyReg, unsigned char)>:
+100003da:	55                   	push   ebp
+100003db:	89 e5                	mov    ebp,esp
+100003dd:	83 ec 14             	sub    esp,0x14
+100003e0:	8b 45 10             	mov    eax,DWORD PTR [ebp+0x10]
+100003e3:	88 45 ec             	mov    BYTE PTR [ebp-0x14],al
+100003e6:	0f b6 4d ec          	movzx  ecx,BYTE PTR [ebp-0x14]
+100003ea:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100003ed:	8b 80 58 01 00 00    	mov    eax,DWORD PTR [eax+0x158]
+100003f3:	8b 55 0c             	mov    edx,DWORD PTR [ebp+0xc]
+100003f6:	01 d0                	add    eax,edx
+100003f8:	0f b7 c0             	movzx  eax,ax
+100003fb:	66 89 45 fe          	mov    WORD PTR [ebp-0x2],ax
+100003ff:	88 4d fd             	mov    BYTE PTR [ebp-0x3],cl
+10000402:	8a 45 fd             	mov    al,BYTE PTR [ebp-0x3]
+10000405:	66 8b 55 fe          	mov    dx,WORD PTR [ebp-0x2]
+10000409:	ee                   	out    dx,al
+1000040a:	90                   	nop
+1000040b:	c9                   	leave  
+1000040c:	c3                   	ret    
+1000040d:	90                   	nop
 
-100002aa <Floppy::configure()>:
-100002aa:	c3                   	ret    
-100002ab:	90                   	nop
+1000040e <Floppy::configure()>:
+1000040e:	90                   	nop
+1000040f:	c3                   	ret    
 
-100002ac <Floppy::driveDetection()>:
-100002ac:	57                   	push   edi
-100002ad:	56                   	push   esi
-100002ae:	53                   	push   ebx
-100002af:	83 ec 0c             	sub    esp,0xc
-100002b2:	68 1f 08 00 10       	push   0x1000081f	100002b3: R_386_32	.text
-100002b7:	e8 fc ff ff ff       	call   100002b8 <Floppy::driveDetection()+0xc>	100002b8: R_386_PC32	Dbg::kprintf(char const*, ...)
-100002bc:	83 c4 10             	add    esp,0x10
-100002bf:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
-100002c3:	66 81 b8 58 01 00 00 f0 03 	cmp    WORD PTR [eax+0x158],0x3f0
-100002cc:	75 59                	jne    10000327 <Floppy::driveDetection()+0x7b>
-100002ce:	50                   	push   eax
-100002cf:	50                   	push   eax
-100002d0:	6a 10                	push   0x10
-100002d2:	ff 35 00 00 00 00    	push   DWORD PTR ds:0x0	100002d4: R_386_32	Krnl::computer
-100002d8:	e8 fc ff ff ff       	call   100002d9 <Floppy::driveDetection()+0x2d>	100002d9: R_386_PC32	Computer::readCMOS(unsigned char)
-100002dd:	83 ec 0c             	sub    esp,0xc
-100002e0:	0f b6 f0             	movzx  esi,al
-100002e3:	89 e7                	mov    edi,esp
-100002e5:	89 f3                	mov    ebx,esi
-100002e7:	b9 15 00 00 00       	mov    ecx,0x15
-100002ec:	c1 fe 04             	sar    esi,0x4
-100002ef:	83 e3 0f             	and    ebx,0xf
-100002f2:	6b f6 15             	imul   esi,esi,0x15
-100002f5:	81 c6 00 00 00 00    	add    esi,0x0	100002f7: R_386_32	floppyTable
-100002fb:	f3 a4                	rep movs BYTE PTR es:[edi],BYTE PTR ds:[esi]
-100002fd:	68 39 08 00 10       	push   0x10000839	100002fe: R_386_32	.text
-10000302:	6b f3 15             	imul   esi,ebx,0x15
-10000305:	e8 fc ff ff ff       	call   10000306 <Floppy::driveDetection()+0x5a>	10000306: R_386_PC32	Dbg::kprintf(char const*, ...)
-1000030a:	81 c6 00 00 00 00    	add    esi,0x0	1000030c: R_386_32	floppyTable
-10000310:	5a                   	pop    edx
-10000311:	b9 15 00 00 00       	mov    ecx,0x15
-10000316:	89 e7                	mov    edi,esp
-10000318:	f3 a4                	rep movs BYTE PTR es:[edi],BYTE PTR ds:[esi]
-1000031a:	68 4b 08 00 10       	push   0x1000084b	1000031b: R_386_32	.text
-1000031f:	e8 fc ff ff ff       	call   10000320 <Floppy::driveDetection()+0x74>	10000320: R_386_PC32	Dbg::kprintf(char const*, ...)
-10000324:	83 c4 20             	add    esp,0x20
-10000327:	5b                   	pop    ebx
-10000328:	5e                   	pop    esi
-10000329:	5f                   	pop    edi
-1000032a:	c3                   	ret    
-1000032b:	90                   	nop
+10000410 <Floppy::driveDetection()>:
+10000410:	55                   	push   ebp
+10000411:	89 e5                	mov    ebp,esp
+10000413:	57                   	push   edi
+10000414:	56                   	push   esi
+10000415:	53                   	push   ebx
+10000416:	83 ec 1c             	sub    esp,0x1c
+10000419:	83 ec 0c             	sub    esp,0xc
+1000041c:	68 9e 0c 00 10       	push   0x10000c9e	1000041d: R_386_32	.text
+10000421:	e8 fc ff ff ff       	call   10000422 <Floppy::driveDetection()+0x12>	10000422: R_386_PC32	Dbg::kprintf(char const*, ...)
+10000426:	83 c4 10             	add    esp,0x10
+10000429:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+1000042c:	8b 80 58 01 00 00    	mov    eax,DWORD PTR [eax+0x158]
+10000432:	66 3d f0 03          	cmp    ax,0x3f0
+10000436:	0f 85 92 00 00 00    	jne    100004ce <Floppy::driveDetection()+0xbe>
+1000043c:	a1 00 00 00 00       	mov    eax,ds:0x0	1000043d: R_386_32	Krnl::computer
+10000441:	83 ec 08             	sub    esp,0x8
+10000444:	6a 10                	push   0x10
+10000446:	50                   	push   eax
+10000447:	e8 fc ff ff ff       	call   10000448 <Floppy::driveDetection()+0x38>	10000448: R_386_PC32	Computer::readCMOS(unsigned char)
+1000044c:	83 c4 10             	add    esp,0x10
+1000044f:	88 45 e7             	mov    BYTE PTR [ebp-0x19],al
+10000452:	0f b6 45 e7          	movzx  eax,BYTE PTR [ebp-0x19]
+10000456:	c1 f8 04             	sar    eax,0x4
+10000459:	89 c2                	mov    edx,eax
+1000045b:	83 ec 04             	sub    esp,0x4
+1000045e:	89 d0                	mov    eax,edx
+10000460:	c1 e0 02             	shl    eax,0x2
+10000463:	01 d0                	add    eax,edx
+10000465:	c1 e0 02             	shl    eax,0x2
+10000468:	01 d0                	add    eax,edx
+1000046a:	05 00 00 00 00       	add    eax,0x0	1000046b: R_386_32	floppyTable
+1000046f:	83 ec 18             	sub    esp,0x18
+10000472:	89 e2                	mov    edx,esp
+10000474:	89 c3                	mov    ebx,eax
+10000476:	b8 15 00 00 00       	mov    eax,0x15
+1000047b:	89 d7                	mov    edi,edx
+1000047d:	89 de                	mov    esi,ebx
+1000047f:	89 c1                	mov    ecx,eax
+10000481:	f3 a4                	rep movs BYTE PTR es:[edi],BYTE PTR ds:[esi]
+10000483:	68 b8 0c 00 10       	push   0x10000cb8	10000484: R_386_32	.text
+10000488:	e8 fc ff ff ff       	call   10000489 <Floppy::driveDetection()+0x79>	10000489: R_386_PC32	Dbg::kprintf(char const*, ...)
+1000048d:	83 c4 20             	add    esp,0x20
+10000490:	0f b6 45 e7          	movzx  eax,BYTE PTR [ebp-0x19]
+10000494:	83 e0 0f             	and    eax,0xf
+10000497:	89 c2                	mov    edx,eax
+10000499:	83 ec 04             	sub    esp,0x4
+1000049c:	89 d0                	mov    eax,edx
+1000049e:	c1 e0 02             	shl    eax,0x2
+100004a1:	01 d0                	add    eax,edx
+100004a3:	c1 e0 02             	shl    eax,0x2
+100004a6:	01 d0                	add    eax,edx
+100004a8:	05 00 00 00 00       	add    eax,0x0	100004a9: R_386_32	floppyTable
+100004ad:	83 ec 18             	sub    esp,0x18
+100004b0:	89 e2                	mov    edx,esp
+100004b2:	89 c3                	mov    ebx,eax
+100004b4:	b8 15 00 00 00       	mov    eax,0x15
+100004b9:	89 d7                	mov    edi,edx
+100004bb:	89 de                	mov    esi,ebx
+100004bd:	89 c1                	mov    ecx,eax
+100004bf:	f3 a4                	rep movs BYTE PTR es:[edi],BYTE PTR ds:[esi]
+100004c1:	68 ca 0c 00 10       	push   0x10000cca	100004c2: R_386_32	.text
+100004c6:	e8 fc ff ff ff       	call   100004c7 <Floppy::driveDetection()+0xb7>	100004c7: R_386_PC32	Dbg::kprintf(char const*, ...)
+100004cb:	83 c4 20             	add    esp,0x20
+100004ce:	90                   	nop
+100004cf:	8d 65 f4             	lea    esp,[ebp-0xc]
+100004d2:	5b                   	pop    ebx
+100004d3:	5e                   	pop    esi
+100004d4:	5f                   	pop    edi
+100004d5:	5d                   	pop    ebp
+100004d6:	c3                   	ret    
+100004d7:	90                   	nop
 
-1000032c <Floppy::open(int, int, void*)>:
-1000032c:	56                   	push   esi
-1000032d:	53                   	push   ebx
-1000032e:	50                   	push   eax
-1000032f:	8b 5c 24 10          	mov    ebx,DWORD PTR [esp+0x10]
-10000333:	8b 4c 24 14          	mov    ecx,DWORD PTR [esp+0x14]
-10000337:	0f b6 b3 c4 00 00 00 	movzx  esi,BYTE PTR [ebx+0xc4]
-1000033e:	66 89 8b 58 01 00 00 	mov    WORD PTR [ebx+0x158],cx
-10000345:	8d 04 b3             	lea    eax,[ebx+esi*4]
-10000348:	89 f2                	mov    edx,esi
-1000034a:	66 89 48 04          	mov    WORD PTR [eax+0x4],cx
-1000034e:	c6 40 06 06          	mov    BYTE PTR [eax+0x6],0x6
-10000352:	83 c2 02             	add    edx,0x2
-10000355:	80 64 b3 07 3f       	and    BYTE PTR [ebx+esi*4+0x7],0x3f
-1000035a:	83 c1 07             	add    ecx,0x7
-1000035d:	8d 46 01             	lea    eax,[esi+0x1]
-10000360:	0f b6 c0             	movzx  eax,al
-10000363:	8d 34 83             	lea    esi,[ebx+eax*4]
-10000366:	66 89 4e 04          	mov    WORD PTR [esi+0x4],cx
-1000036a:	c6 46 06 01          	mov    BYTE PTR [esi+0x6],0x1
-1000036e:	88 93 c4 00 00 00    	mov    BYTE PTR [ebx+0xc4],dl
-10000374:	80 64 83 07 3f       	and    BYTE PTR [ebx+eax*4+0x7],0x3f
-10000379:	c7 83 98 01 00 00 00 00 00 00 	mov    DWORD PTR [ebx+0x198],0x0
-10000383:	c7 83 60 01 00 00 00 00 00 00 	mov    DWORD PTR [ebx+0x160],0x0
-1000038d:	c7 83 9c 01 00 00 00 00 00 00 	mov    DWORD PTR [ebx+0x19c],0x0
-10000397:	c7 83 64 01 00 00 00 00 00 00 	mov    DWORD PTR [ebx+0x164],0x0
-100003a1:	c7 83 a0 01 00 00 00 00 00 00 	mov    DWORD PTR [ebx+0x1a0],0x0
-100003ab:	c7 83 68 01 00 00 00 00 00 00 	mov    DWORD PTR [ebx+0x168],0x0
-100003b5:	c7 83 a4 01 00 00 00 00 00 00 	mov    DWORD PTR [ebx+0x1a4],0x0
-100003bf:	c7 83 6c 01 00 00 00 00 00 00 	mov    DWORD PTR [ebx+0x16c],0x0
-100003c9:	53                   	push   ebx
-100003ca:	e8 fc ff ff ff       	call   100003cb <Floppy::open(int, int, void*)+0x9f>	100003cb: R_386_PC32	Floppy::wasFailure()
-100003cf:	52                   	push   edx
-100003d0:	52                   	push   edx
-100003d1:	53                   	push   ebx
-100003d2:	e8 fc ff ff ff       	call   100003d3 <Floppy::open(int, int, void*)+0xa7>	100003d3: R_386_PC32	Floppy::reset()
-100003d7:	89 1c 24             	mov    DWORD PTR [esp],ebx
-100003da:	e8 fc ff ff ff       	call   100003db <Floppy::open(int, int, void*)+0xaf>	100003db: R_386_PC32	Floppy::driveDetection()
-100003df:	83 c4 14             	add    esp,0x14
-100003e2:	31 c0                	xor    eax,eax
-100003e4:	5b                   	pop    ebx
-100003e5:	5e                   	pop    esi
-100003e6:	c3                   	ret    
-100003e7:	90                   	nop
+100004d8 <Floppy::open(int, int, void*)>:
+100004d8:	55                   	push   ebp
+100004d9:	89 e5                	mov    ebp,esp
+100004db:	83 ec 18             	sub    esp,0x18
+100004de:	8b 45 0c             	mov    eax,DWORD PTR [ebp+0xc]
+100004e1:	8b 55 08             	mov    edx,DWORD PTR [ebp+0x8]
+100004e4:	66 89 82 58 01 00 00 	mov    WORD PTR [edx+0x158],ax
+100004eb:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100004ee:	8a 80 c4 00 00 00    	mov    al,BYTE PTR [eax+0xc4]
+100004f4:	0f b6 c8             	movzx  ecx,al
+100004f7:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100004fa:	8b 80 58 01 00 00    	mov    eax,DWORD PTR [eax+0x158]
+10000500:	8b 55 08             	mov    edx,DWORD PTR [ebp+0x8]
+10000503:	66 89 44 8a 04       	mov    WORD PTR [edx+ecx*4+0x4],ax
+10000508:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+1000050b:	8a 80 c4 00 00 00    	mov    al,BYTE PTR [eax+0xc4]
+10000511:	0f b6 d0             	movzx  edx,al
+10000514:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000517:	c6 44 90 06 06       	mov    BYTE PTR [eax+edx*4+0x6],0x6
+1000051c:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+1000051f:	8a 80 c4 00 00 00    	mov    al,BYTE PTR [eax+0xc4]
+10000525:	8d 50 01             	lea    edx,[eax+0x1]
+10000528:	8b 4d 08             	mov    ecx,DWORD PTR [ebp+0x8]
+1000052b:	88 91 c4 00 00 00    	mov    BYTE PTR [ecx+0xc4],dl
+10000531:	0f b6 d0             	movzx  edx,al
+10000534:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000537:	8a 4c 90 07          	mov    cl,BYTE PTR [eax+edx*4+0x7]
+1000053b:	83 e1 3f             	and    ecx,0x3f
+1000053e:	88 4c 90 07          	mov    BYTE PTR [eax+edx*4+0x7],cl
+10000542:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000545:	8b 80 58 01 00 00    	mov    eax,DWORD PTR [eax+0x158]
+1000054b:	8b 55 08             	mov    edx,DWORD PTR [ebp+0x8]
+1000054e:	8a 92 c4 00 00 00    	mov    dl,BYTE PTR [edx+0xc4]
+10000554:	0f b6 ca             	movzx  ecx,dl
+10000557:	83 c0 07             	add    eax,0x7
+1000055a:	8b 55 08             	mov    edx,DWORD PTR [ebp+0x8]
+1000055d:	66 89 44 8a 04       	mov    WORD PTR [edx+ecx*4+0x4],ax
+10000562:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000565:	8a 80 c4 00 00 00    	mov    al,BYTE PTR [eax+0xc4]
+1000056b:	0f b6 d0             	movzx  edx,al
+1000056e:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000571:	c6 44 90 06 01       	mov    BYTE PTR [eax+edx*4+0x6],0x1
+10000576:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000579:	8a 80 c4 00 00 00    	mov    al,BYTE PTR [eax+0xc4]
+1000057f:	8d 50 01             	lea    edx,[eax+0x1]
+10000582:	8b 4d 08             	mov    ecx,DWORD PTR [ebp+0x8]
+10000585:	88 91 c4 00 00 00    	mov    BYTE PTR [ecx+0xc4],dl
+1000058b:	0f b6 d0             	movzx  edx,al
+1000058e:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000591:	8a 4c 90 07          	mov    cl,BYTE PTR [eax+edx*4+0x7]
+10000595:	83 e1 3f             	and    ecx,0x3f
+10000598:	88 4c 90 07          	mov    BYTE PTR [eax+edx*4+0x7],cl
+1000059c:	c7 45 f4 00 00 00 00 	mov    DWORD PTR [ebp-0xc],0x0
+100005a3:	83 7d f4 03          	cmp    DWORD PTR [ebp-0xc],0x3
+100005a7:	7f 26                	jg     100005cf <Floppy::open(int, int, void*)+0xf7>
+100005a9:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100005ac:	8b 55 f4             	mov    edx,DWORD PTR [ebp-0xc]
+100005af:	83 c2 64             	add    edx,0x64
+100005b2:	c7 44 90 08 00 00 00 00 	mov    DWORD PTR [eax+edx*4+0x8],0x0
+100005ba:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100005bd:	8b 55 f4             	mov    edx,DWORD PTR [ebp-0xc]
+100005c0:	83 c2 58             	add    edx,0x58
+100005c3:	c7 04 90 00 00 00 00 	mov    DWORD PTR [eax+edx*4],0x0
+100005ca:	ff 45 f4             	inc    DWORD PTR [ebp-0xc]
+100005cd:	eb d4                	jmp    100005a3 <Floppy::open(int, int, void*)+0xcb>
+100005cf:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100005d2:	8b 00                	mov    eax,DWORD PTR [eax]
+100005d4:	83 c0 24             	add    eax,0x24
+100005d7:	8b 00                	mov    eax,DWORD PTR [eax]
+100005d9:	83 ec 0c             	sub    esp,0xc
+100005dc:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+100005df:	ff d0                	call   eax
+100005e1:	83 c4 10             	add    esp,0x10
+100005e4:	83 ec 0c             	sub    esp,0xc
+100005e7:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+100005ea:	e8 fc ff ff ff       	call   100005eb <Floppy::open(int, int, void*)+0x113>	100005eb: R_386_PC32	Floppy::reset()
+100005ef:	83 c4 10             	add    esp,0x10
+100005f2:	83 ec 0c             	sub    esp,0xc
+100005f5:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+100005f8:	e8 fc ff ff ff       	call   100005f9 <Floppy::open(int, int, void*)+0x121>	100005f9: R_386_PC32	Floppy::driveDetection()
+100005fd:	83 c4 10             	add    esp,0x10
+10000600:	b8 00 00 00 00       	mov    eax,0x0
+10000605:	c9                   	leave  
+10000606:	c3                   	ret    
+10000607:	90                   	nop
 
-100003e8 <Floppy::close(int, int, void*)>:
-100003e8:	31 c0                	xor    eax,eax
-100003ea:	c3                   	ret    
-100003eb:	90                   	nop
+10000608 <Floppy::close(int, int, void*)>:
+10000608:	b8 00 00 00 00       	mov    eax,0x0
+1000060d:	c3                   	ret    
 
-100003ec <Floppy::senseInterrupt(int*, int*)>:
-100003ec:	53                   	push   ebx
-100003ed:	83 ec 10             	sub    esp,0x10
-100003f0:	8b 5c 24 18          	mov    ebx,DWORD PTR [esp+0x18]
-100003f4:	6a 08                	push   0x8
-100003f6:	53                   	push   ebx
-100003f7:	e8 fc ff ff ff       	call   100003f8 <Floppy::senseInterrupt(int*, int*)+0xc>	100003f8: R_386_PC32	Floppy::writeCommand(unsigned char)
-100003fc:	89 1c 24             	mov    DWORD PTR [esp],ebx
-100003ff:	e8 fc ff ff ff       	call   10000400 <Floppy::senseInterrupt(int*, int*)+0x14>	10000400: R_386_PC32	Floppy::wasFailure()
-10000404:	83 c4 10             	add    esp,0x10
-10000407:	84 c0                	test   al,al
-10000409:	74 04                	je     1000040f <Floppy::senseInterrupt(int*, int*)+0x23>
-1000040b:	31 c0                	xor    eax,eax
-1000040d:	eb 41                	jmp    10000450 <Floppy::senseInterrupt(int*, int*)+0x64>
-1000040f:	83 ec 0c             	sub    esp,0xc
-10000412:	53                   	push   ebx
-10000413:	e8 fc ff ff ff       	call   10000414 <Floppy::senseInterrupt(int*, int*)+0x28>	10000414: R_386_PC32	Floppy::readData()
-10000418:	8b 54 24 24          	mov    edx,DWORD PTR [esp+0x24]
-1000041c:	0f b6 c0             	movzx  eax,al
-1000041f:	89 02                	mov    DWORD PTR [edx],eax
-10000421:	89 1c 24             	mov    DWORD PTR [esp],ebx
-10000424:	e8 fc ff ff ff       	call   10000425 <Floppy::senseInterrupt(int*, int*)+0x39>	10000425: R_386_PC32	Floppy::wasFailure()
-10000429:	83 c4 10             	add    esp,0x10
-1000042c:	84 c0                	test   al,al
-1000042e:	75 db                	jne    1000040b <Floppy::senseInterrupt(int*, int*)+0x1f>
-10000430:	83 ec 0c             	sub    esp,0xc
-10000433:	53                   	push   ebx
-10000434:	e8 fc ff ff ff       	call   10000435 <Floppy::senseInterrupt(int*, int*)+0x49>	10000435: R_386_PC32	Floppy::readData()
-10000439:	8b 54 24 28          	mov    edx,DWORD PTR [esp+0x28]
-1000043d:	0f b6 c0             	movzx  eax,al
-10000440:	89 02                	mov    DWORD PTR [edx],eax
-10000442:	89 1c 24             	mov    DWORD PTR [esp],ebx
-10000445:	e8 fc ff ff ff       	call   10000446 <Floppy::senseInterrupt(int*, int*)+0x5a>	10000446: R_386_PC32	Floppy::wasFailure()
-1000044a:	83 c4 10             	add    esp,0x10
-1000044d:	83 f0 01             	xor    eax,0x1
-10000450:	83 c4 08             	add    esp,0x8
-10000453:	5b                   	pop    ebx
-10000454:	c3                   	ret    
-10000455:	90                   	nop
+1000060e <Floppy::senseInterrupt(int*, int*)>:
+1000060e:	55                   	push   ebp
+1000060f:	89 e5                	mov    ebp,esp
+10000611:	83 ec 08             	sub    esp,0x8
+10000614:	83 ec 08             	sub    esp,0x8
+10000617:	6a 08                	push   0x8
+10000619:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+1000061c:	e8 fc ff ff ff       	call   1000061d <Floppy::senseInterrupt(int*, int*)+0xf>	1000061d: R_386_PC32	Floppy::writeCommand(unsigned char)
+10000621:	83 c4 10             	add    esp,0x10
+10000624:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000627:	8b 00                	mov    eax,DWORD PTR [eax]
+10000629:	83 c0 24             	add    eax,0x24
+1000062c:	8b 00                	mov    eax,DWORD PTR [eax]
+1000062e:	83 ec 0c             	sub    esp,0xc
+10000631:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+10000634:	ff d0                	call   eax
+10000636:	83 c4 10             	add    esp,0x10
+10000639:	84 c0                	test   al,al
+1000063b:	74 04                	je     10000641 <Floppy::senseInterrupt(int*, int*)+0x33>
+1000063d:	b0 00                	mov    al,0x0
+1000063f:	eb 68                	jmp    100006a9 <Floppy::senseInterrupt(int*, int*)+0x9b>
+10000641:	83 ec 0c             	sub    esp,0xc
+10000644:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+10000647:	e8 fc ff ff ff       	call   10000648 <Floppy::senseInterrupt(int*, int*)+0x3a>	10000648: R_386_PC32	Floppy::readData()
+1000064c:	83 c4 10             	add    esp,0x10
+1000064f:	0f b6 d0             	movzx  edx,al
+10000652:	8b 45 0c             	mov    eax,DWORD PTR [ebp+0xc]
+10000655:	89 10                	mov    DWORD PTR [eax],edx
+10000657:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+1000065a:	8b 00                	mov    eax,DWORD PTR [eax]
+1000065c:	83 c0 24             	add    eax,0x24
+1000065f:	8b 00                	mov    eax,DWORD PTR [eax]
+10000661:	83 ec 0c             	sub    esp,0xc
+10000664:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+10000667:	ff d0                	call   eax
+10000669:	83 c4 10             	add    esp,0x10
+1000066c:	84 c0                	test   al,al
+1000066e:	74 04                	je     10000674 <Floppy::senseInterrupt(int*, int*)+0x66>
+10000670:	b0 00                	mov    al,0x0
+10000672:	eb 35                	jmp    100006a9 <Floppy::senseInterrupt(int*, int*)+0x9b>
+10000674:	83 ec 0c             	sub    esp,0xc
+10000677:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+1000067a:	e8 fc ff ff ff       	call   1000067b <Floppy::senseInterrupt(int*, int*)+0x6d>	1000067b: R_386_PC32	Floppy::readData()
+1000067f:	83 c4 10             	add    esp,0x10
+10000682:	0f b6 d0             	movzx  edx,al
+10000685:	8b 45 10             	mov    eax,DWORD PTR [ebp+0x10]
+10000688:	89 10                	mov    DWORD PTR [eax],edx
+1000068a:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+1000068d:	8b 00                	mov    eax,DWORD PTR [eax]
+1000068f:	83 c0 24             	add    eax,0x24
+10000692:	8b 00                	mov    eax,DWORD PTR [eax]
+10000694:	83 ec 0c             	sub    esp,0xc
+10000697:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+1000069a:	ff d0                	call   eax
+1000069c:	83 c4 10             	add    esp,0x10
+1000069f:	84 c0                	test   al,al
+100006a1:	74 04                	je     100006a7 <Floppy::senseInterrupt(int*, int*)+0x99>
+100006a3:	b0 00                	mov    al,0x0
+100006a5:	eb 02                	jmp    100006a9 <Floppy::senseInterrupt(int*, int*)+0x9b>
+100006a7:	b0 01                	mov    al,0x1
+100006a9:	c9                   	leave  
+100006aa:	c3                   	ret    
+100006ab:	90                   	nop
 
-10000456 <Floppy::lock()>:
-10000456:	53                   	push   ebx
-10000457:	83 ec 10             	sub    esp,0x10
-1000045a:	8b 5c 24 18          	mov    ebx,DWORD PTR [esp+0x18]
-1000045e:	6a 14                	push   0x14
-10000460:	53                   	push   ebx
-10000461:	e8 fc ff ff ff       	call   10000462 <Floppy::lock()+0xc>	10000462: R_386_PC32	Floppy::writeCommand(unsigned char)
-10000466:	89 1c 24             	mov    DWORD PTR [esp],ebx
-10000469:	e8 fc ff ff ff       	call   1000046a <Floppy::lock()+0x14>	1000046a: R_386_PC32	Floppy::wasFailure()
-1000046e:	83 c4 10             	add    esp,0x10
-10000471:	31 d2                	xor    edx,edx
-10000473:	84 c0                	test   al,al
-10000475:	75 19                	jne    10000490 <Floppy::lock()+0x3a>
-10000477:	83 ec 0c             	sub    esp,0xc
-1000047a:	53                   	push   ebx
-1000047b:	e8 fc ff ff ff       	call   1000047c <Floppy::lock()+0x26>	1000047c: R_386_PC32	Floppy::readData()
-10000480:	89 1c 24             	mov    DWORD PTR [esp],ebx
-10000483:	e8 fc ff ff ff       	call   10000484 <Floppy::lock()+0x2e>	10000484: R_386_PC32	Floppy::wasFailure()
-10000488:	83 c4 10             	add    esp,0x10
-1000048b:	83 f0 01             	xor    eax,0x1
-1000048e:	88 c2                	mov    dl,al
-10000490:	88 d0                	mov    al,dl
-10000492:	83 c4 08             	add    esp,0x8
-10000495:	5b                   	pop    ebx
-10000496:	c3                   	ret    
-10000497:	90                   	nop
+100006ac <Floppy::lock()>:
+100006ac:	55                   	push   ebp
+100006ad:	89 e5                	mov    ebp,esp
+100006af:	83 ec 08             	sub    esp,0x8
+100006b2:	83 ec 08             	sub    esp,0x8
+100006b5:	6a 14                	push   0x14
+100006b7:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+100006ba:	e8 fc ff ff ff       	call   100006bb <Floppy::lock()+0xf>	100006bb: R_386_PC32	Floppy::writeCommand(unsigned char)
+100006bf:	83 c4 10             	add    esp,0x10
+100006c2:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100006c5:	8b 00                	mov    eax,DWORD PTR [eax]
+100006c7:	83 c0 24             	add    eax,0x24
+100006ca:	8b 00                	mov    eax,DWORD PTR [eax]
+100006cc:	83 ec 0c             	sub    esp,0xc
+100006cf:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+100006d2:	ff d0                	call   eax
+100006d4:	83 c4 10             	add    esp,0x10
+100006d7:	84 c0                	test   al,al
+100006d9:	74 04                	je     100006df <Floppy::lock()+0x33>
+100006db:	b0 00                	mov    al,0x0
+100006dd:	eb 2d                	jmp    1000070c <Floppy::lock()+0x60>
+100006df:	83 ec 0c             	sub    esp,0xc
+100006e2:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+100006e5:	e8 fc ff ff ff       	call   100006e6 <Floppy::lock()+0x3a>	100006e6: R_386_PC32	Floppy::readData()
+100006ea:	83 c4 10             	add    esp,0x10
+100006ed:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100006f0:	8b 00                	mov    eax,DWORD PTR [eax]
+100006f2:	83 c0 24             	add    eax,0x24
+100006f5:	8b 00                	mov    eax,DWORD PTR [eax]
+100006f7:	83 ec 0c             	sub    esp,0xc
+100006fa:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+100006fd:	ff d0                	call   eax
+100006ff:	83 c4 10             	add    esp,0x10
+10000702:	84 c0                	test   al,al
+10000704:	74 04                	je     1000070a <Floppy::lock()+0x5e>
+10000706:	b0 00                	mov    al,0x0
+10000708:	eb 02                	jmp    1000070c <Floppy::lock()+0x60>
+1000070a:	b0 01                	mov    al,0x1
+1000070c:	c9                   	leave  
+1000070d:	c3                   	ret    
 
-10000498 <Floppy::reset()>:
-10000498:	57                   	push   edi
-10000499:	56                   	push   esi
-1000049a:	53                   	push   ebx
-1000049b:	83 ec 10             	sub    esp,0x10
-1000049e:	8b 5c 24 20          	mov    ebx,DWORD PTR [esp+0x20]
-100004a2:	6a 02                	push   0x2
-100004a4:	53                   	push   ebx
-100004a5:	e8 fc ff ff ff       	call   100004a6 <Floppy::reset()+0xe>	100004a6: R_386_PC32	Floppy::readPort(FloppyReg)
-100004aa:	6a 00                	push   0x0
-100004ac:	88 c1                	mov    cl,al
-100004ae:	6a 02                	push   0x2
-100004b0:	53                   	push   ebx
-100004b1:	e8 fc ff ff ff       	call   100004b2 <Floppy::reset()+0x1a>	100004b2: R_386_PC32	Floppy::writePort(FloppyReg, unsigned char)
-100004b6:	88 c8                	mov    al,cl
-100004b8:	83 c8 04             	or     eax,0x4
-100004bb:	0f b6 c0             	movzx  eax,al
-100004be:	50                   	push   eax
-100004bf:	6a 02                	push   0x2
-100004c1:	53                   	push   ebx
-100004c2:	e8 fc ff ff ff       	call   100004c3 <Floppy::reset()+0x2b>	100004c3: R_386_PC32	Floppy::writePort(FloppyReg, unsigned char)
-100004c7:	83 c4 20             	add    esp,0x20
-100004ca:	f6 c1 08             	test   cl,0x8
-100004cd:	74 0f                	je     100004de <Floppy::reset()+0x46>
-100004cf:	83 ec 0c             	sub    esp,0xc
-100004d2:	68 5d 08 00 10       	push   0x1000085d	100004d3: R_386_32	.text
-100004d7:	e8 fc ff ff ff       	call   100004d8 <Floppy::reset()+0x40>	100004d8: R_386_PC32	Krnl::panic(char const*)
-100004dc:	eb 10                	jmp    100004ee <Floppy::reset()+0x56>
-100004de:	83 c9 0c             	or     ecx,0xc
-100004e1:	57                   	push   edi
-100004e2:	0f b6 c9             	movzx  ecx,cl
-100004e5:	51                   	push   ecx
-100004e6:	6a 02                	push   0x2
-100004e8:	53                   	push   ebx
-100004e9:	e8 fc ff ff ff       	call   100004ea <Floppy::reset()+0x52>	100004ea: R_386_PC32	Floppy::writePort(FloppyReg, unsigned char)
-100004ee:	83 c4 10             	add    esp,0x10
-100004f1:	80 bb 85 01 00 00 00 	cmp    BYTE PTR [ebx+0x185],0x0
-100004f8:	74 51                	je     1000054b <Floppy::reset()+0xb3>
-100004fa:	56                   	push   esi
-100004fb:	8d 7c 24 10          	lea    edi,[esp+0x10]
-100004ff:	57                   	push   edi
-10000500:	8d 74 24 10          	lea    esi,[esp+0x10]
-10000504:	56                   	push   esi
-10000505:	53                   	push   ebx
-10000506:	e8 fc ff ff ff       	call   10000507 <Floppy::reset()+0x6f>	10000507: R_386_PC32	Floppy::senseInterrupt(int*, int*)
-1000050b:	83 c4 10             	add    esp,0x10
-1000050e:	84 c0                	test   al,al
-10000510:	75 09                	jne    1000051b <Floppy::reset()+0x83>
-10000512:	c6 83 85 01 00 00 00 	mov    BYTE PTR [ebx+0x185],0x0
-10000519:	eb 87                	jmp    100004a2 <Floppy::reset()+0xa>
-1000051b:	51                   	push   ecx
-1000051c:	57                   	push   edi
-1000051d:	56                   	push   esi
-1000051e:	53                   	push   ebx
-1000051f:	e8 fc ff ff ff       	call   10000520 <Floppy::reset()+0x88>	10000520: R_386_PC32	Floppy::senseInterrupt(int*, int*)
-10000524:	83 c4 10             	add    esp,0x10
-10000527:	84 c0                	test   al,al
-10000529:	74 e7                	je     10000512 <Floppy::reset()+0x7a>
-1000052b:	52                   	push   edx
-1000052c:	57                   	push   edi
-1000052d:	56                   	push   esi
-1000052e:	53                   	push   ebx
-1000052f:	e8 fc ff ff ff       	call   10000530 <Floppy::reset()+0x98>	10000530: R_386_PC32	Floppy::senseInterrupt(int*, int*)
-10000534:	83 c4 10             	add    esp,0x10
-10000537:	84 c0                	test   al,al
-10000539:	74 d7                	je     10000512 <Floppy::reset()+0x7a>
-1000053b:	50                   	push   eax
-1000053c:	57                   	push   edi
-1000053d:	56                   	push   esi
-1000053e:	53                   	push   ebx
-1000053f:	e8 fc ff ff ff       	call   10000540 <Floppy::reset()+0xa8>	10000540: R_386_PC32	Floppy::senseInterrupt(int*, int*)
-10000544:	83 c4 10             	add    esp,0x10
-10000547:	84 c0                	test   al,al
-10000549:	74 c7                	je     10000512 <Floppy::reset()+0x7a>
-1000054b:	80 bb 80 01 00 00 00 	cmp    BYTE PTR [ebx+0x180],0x0
-10000552:	75 09                	jne    1000055d <Floppy::reset()+0xc5>
-10000554:	80 bb 81 01 00 00 00 	cmp    BYTE PTR [ebx+0x181],0x0
-1000055b:	75 55                	jne    100005b2 <Floppy::reset()+0x11a>
-1000055d:	80 bb 84 01 00 00 00 	cmp    BYTE PTR [ebx+0x184],0x0
-10000564:	74 1f                	je     10000585 <Floppy::reset()+0xed>
-10000566:	31 f6                	xor    esi,esi
-10000568:	8b 84 b3 98 01 00 00 	mov    eax,DWORD PTR [ebx+esi*4+0x198]
-1000056f:	85 c0                	test   eax,eax
-10000571:	74 0c                	je     1000057f <Floppy::reset()+0xe7>
-10000573:	83 ec 0c             	sub    esp,0xc
-10000576:	50                   	push   eax
-10000577:	e8 fc ff ff ff       	call   10000578 <Floppy::reset()+0xe0>	10000578: R_386_PC32	FloppyDrive::floppyConfigure()
-1000057c:	83 c4 10             	add    esp,0x10
-1000057f:	46                   	inc    esi
-10000580:	83 fe 04             	cmp    esi,0x4
-10000583:	75 e3                	jne    10000568 <Floppy::reset()+0xd0>
-10000585:	80 bb 81 01 00 00 00 	cmp    BYTE PTR [ebx+0x181],0x0
-1000058c:	75 24                	jne    100005b2 <Floppy::reset()+0x11a>
-1000058e:	83 ec 0c             	sub    esp,0xc
-10000591:	53                   	push   ebx
-10000592:	e8 fc ff ff ff       	call   10000593 <Floppy::reset()+0xfb>	10000593: R_386_PC32	Floppy::lock()
-10000597:	83 c4 10             	add    esp,0x10
-1000059a:	83 f0 01             	xor    eax,0x1
-1000059d:	c6 83 81 01 00 00 01 	mov    BYTE PTR [ebx+0x181],0x1
-100005a4:	88 83 80 01 00 00    	mov    BYTE PTR [ebx+0x180],al
-100005aa:	84 c0                	test   al,al
-100005ac:	0f 85 f0 fe ff ff    	jne    100004a2 <Floppy::reset()+0xa>
-100005b2:	83 c4 10             	add    esp,0x10
-100005b5:	5b                   	pop    ebx
-100005b6:	5e                   	pop    esi
-100005b7:	5f                   	pop    edi
-100005b8:	c3                   	ret    
-100005b9:	90                   	nop
+1000070e <Floppy::reset()>:
+1000070e:	55                   	push   ebp
+1000070f:	89 e5                	mov    ebp,esp
+10000711:	83 ec 28             	sub    esp,0x28
+10000714:	6a 02                	push   0x2
+10000716:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+10000719:	e8 fc ff ff ff       	call   1000071a <Floppy::reset()+0xc>	1000071a: R_386_PC32	Floppy::readPort(FloppyReg)
+1000071e:	83 c4 08             	add    esp,0x8
+10000721:	88 45 ef             	mov    BYTE PTR [ebp-0x11],al
+10000724:	6a 00                	push   0x0
+10000726:	6a 02                	push   0x2
+10000728:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+1000072b:	e8 fc ff ff ff       	call   1000072c <Floppy::reset()+0x1e>	1000072c: R_386_PC32	Floppy::writePort(FloppyReg, unsigned char)
+10000730:	83 c4 0c             	add    esp,0xc
+10000733:	8a 45 ef             	mov    al,BYTE PTR [ebp-0x11]
+10000736:	83 c8 04             	or     eax,0x4
+10000739:	0f b6 c0             	movzx  eax,al
+1000073c:	50                   	push   eax
+1000073d:	6a 02                	push   0x2
+1000073f:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+10000742:	e8 fc ff ff ff       	call   10000743 <Floppy::reset()+0x35>	10000743: R_386_PC32	Floppy::writePort(FloppyReg, unsigned char)
+10000747:	83 c4 0c             	add    esp,0xc
+1000074a:	0f b6 45 ef          	movzx  eax,BYTE PTR [ebp-0x11]
+1000074e:	83 e0 08             	and    eax,0x8
+10000751:	85 c0                	test   eax,eax
+10000753:	74 12                	je     10000767 <Floppy::reset()+0x59>
+10000755:	83 ec 0c             	sub    esp,0xc
+10000758:	68 dc 0c 00 10       	push   0x10000cdc	10000759: R_386_32	.text
+1000075d:	e8 fc ff ff ff       	call   1000075e <Floppy::reset()+0x50>	1000075e: R_386_PC32	Krnl::panic(char const*)
+10000762:	83 c4 10             	add    esp,0x10
+10000765:	eb 1a                	jmp    10000781 <Floppy::reset()+0x73>
+10000767:	8a 45 ef             	mov    al,BYTE PTR [ebp-0x11]
+1000076a:	83 c8 0c             	or     eax,0xc
+1000076d:	0f b6 c0             	movzx  eax,al
+10000770:	83 ec 04             	sub    esp,0x4
+10000773:	50                   	push   eax
+10000774:	6a 02                	push   0x2
+10000776:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+10000779:	e8 fc ff ff ff       	call   1000077a <Floppy::reset()+0x6c>	1000077a: R_386_PC32	Floppy::writePort(FloppyReg, unsigned char)
+1000077e:	83 c4 10             	add    esp,0x10
+10000781:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000784:	8a 80 85 01 00 00    	mov    al,BYTE PTR [eax+0x185]
+1000078a:	84 c0                	test   al,al
+1000078c:	0f 84 8f 00 00 00    	je     10000821 <Floppy::reset()+0x113>
+10000792:	83 ec 04             	sub    esp,0x4
+10000795:	8d 45 e4             	lea    eax,[ebp-0x1c]
+10000798:	50                   	push   eax
+10000799:	8d 45 e8             	lea    eax,[ebp-0x18]
+1000079c:	50                   	push   eax
+1000079d:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+100007a0:	e8 fc ff ff ff       	call   100007a1 <Floppy::reset()+0x93>	100007a1: R_386_PC32	Floppy::senseInterrupt(int*, int*)
+100007a5:	83 c4 10             	add    esp,0x10
+100007a8:	88 45 f7             	mov    BYTE PTR [ebp-0x9],al
+100007ab:	80 7d f7 00          	cmp    BYTE PTR [ebp-0x9],0x0
+100007af:	74 19                	je     100007ca <Floppy::reset()+0xbc>
+100007b1:	83 ec 04             	sub    esp,0x4
+100007b4:	8d 45 e4             	lea    eax,[ebp-0x1c]
+100007b7:	50                   	push   eax
+100007b8:	8d 45 e8             	lea    eax,[ebp-0x18]
+100007bb:	50                   	push   eax
+100007bc:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+100007bf:	e8 fc ff ff ff       	call   100007c0 <Floppy::reset()+0xb2>	100007c0: R_386_PC32	Floppy::senseInterrupt(int*, int*)
+100007c4:	83 c4 10             	add    esp,0x10
+100007c7:	88 45 f7             	mov    BYTE PTR [ebp-0x9],al
+100007ca:	80 7d f7 00          	cmp    BYTE PTR [ebp-0x9],0x0
+100007ce:	74 19                	je     100007e9 <Floppy::reset()+0xdb>
+100007d0:	83 ec 04             	sub    esp,0x4
+100007d3:	8d 45 e4             	lea    eax,[ebp-0x1c]
+100007d6:	50                   	push   eax
+100007d7:	8d 45 e8             	lea    eax,[ebp-0x18]
+100007da:	50                   	push   eax
+100007db:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+100007de:	e8 fc ff ff ff       	call   100007df <Floppy::reset()+0xd1>	100007df: R_386_PC32	Floppy::senseInterrupt(int*, int*)
+100007e3:	83 c4 10             	add    esp,0x10
+100007e6:	88 45 f7             	mov    BYTE PTR [ebp-0x9],al
+100007e9:	80 7d f7 00          	cmp    BYTE PTR [ebp-0x9],0x0
+100007ed:	74 19                	je     10000808 <Floppy::reset()+0xfa>
+100007ef:	83 ec 04             	sub    esp,0x4
+100007f2:	8d 45 e4             	lea    eax,[ebp-0x1c]
+100007f5:	50                   	push   eax
+100007f6:	8d 45 e8             	lea    eax,[ebp-0x18]
+100007f9:	50                   	push   eax
+100007fa:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+100007fd:	e8 fc ff ff ff       	call   100007fe <Floppy::reset()+0xf0>	100007fe: R_386_PC32	Floppy::senseInterrupt(int*, int*)
+10000802:	83 c4 10             	add    esp,0x10
+10000805:	88 45 f7             	mov    BYTE PTR [ebp-0x9],al
+10000808:	8a 45 f7             	mov    al,BYTE PTR [ebp-0x9]
+1000080b:	83 f0 01             	xor    eax,0x1
+1000080e:	84 c0                	test   al,al
+10000810:	74 0f                	je     10000821 <Floppy::reset()+0x113>
+10000812:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000815:	c6 80 85 01 00 00 00 	mov    BYTE PTR [eax+0x185],0x0
+1000081c:	e9 f3 fe ff ff       	jmp    10000714 <Floppy::reset()+0x6>
+10000821:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000824:	8a 80 80 01 00 00    	mov    al,BYTE PTR [eax+0x180]
+1000082a:	84 c0                	test   al,al
+1000082c:	75 14                	jne    10000842 <Floppy::reset()+0x134>
+1000082e:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000831:	8a 80 81 01 00 00    	mov    al,BYTE PTR [eax+0x181]
+10000837:	83 f0 01             	xor    eax,0x1
+1000083a:	84 c0                	test   al,al
+1000083c:	0f 84 91 00 00 00    	je     100008d3 <Floppy::reset()+0x1c5>
+10000842:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000845:	8a 80 84 01 00 00    	mov    al,BYTE PTR [eax+0x184]
+1000084b:	84 c0                	test   al,al
+1000084d:	74 3c                	je     1000088b <Floppy::reset()+0x17d>
+1000084f:	c7 45 f0 00 00 00 00 	mov    DWORD PTR [ebp-0x10],0x0
+10000856:	83 7d f0 03          	cmp    DWORD PTR [ebp-0x10],0x3
+1000085a:	7f 2f                	jg     1000088b <Floppy::reset()+0x17d>
+1000085c:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+1000085f:	8b 55 f0             	mov    edx,DWORD PTR [ebp-0x10]
+10000862:	83 c2 64             	add    edx,0x64
+10000865:	8b 44 90 08          	mov    eax,DWORD PTR [eax+edx*4+0x8]
+10000869:	85 c0                	test   eax,eax
+1000086b:	74 19                	je     10000886 <Floppy::reset()+0x178>
+1000086d:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000870:	8b 55 f0             	mov    edx,DWORD PTR [ebp-0x10]
+10000873:	83 c2 64             	add    edx,0x64
+10000876:	8b 44 90 08          	mov    eax,DWORD PTR [eax+edx*4+0x8]
+1000087a:	83 ec 0c             	sub    esp,0xc
+1000087d:	50                   	push   eax
+1000087e:	e8 fc ff ff ff       	call   1000087f <Floppy::reset()+0x171>	1000087f: R_386_PC32	FloppyDrive::floppyConfigure()
+10000883:	83 c4 10             	add    esp,0x10
+10000886:	ff 45 f0             	inc    DWORD PTR [ebp-0x10]
+10000889:	eb cb                	jmp    10000856 <Floppy::reset()+0x148>
+1000088b:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+1000088e:	8a 80 81 01 00 00    	mov    al,BYTE PTR [eax+0x181]
+10000894:	83 f0 01             	xor    eax,0x1
+10000897:	84 c0                	test   al,al
+10000899:	74 38                	je     100008d3 <Floppy::reset()+0x1c5>
+1000089b:	83 ec 0c             	sub    esp,0xc
+1000089e:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+100008a1:	e8 fc ff ff ff       	call   100008a2 <Floppy::reset()+0x194>	100008a2: R_386_PC32	Floppy::lock()
+100008a6:	83 c4 10             	add    esp,0x10
+100008a9:	83 f0 01             	xor    eax,0x1
+100008ac:	88 c2                	mov    dl,al
+100008ae:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100008b1:	88 90 80 01 00 00    	mov    BYTE PTR [eax+0x180],dl
+100008b7:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100008ba:	c6 80 81 01 00 00 01 	mov    BYTE PTR [eax+0x181],0x1
+100008c1:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100008c4:	8a 80 80 01 00 00    	mov    al,BYTE PTR [eax+0x180]
+100008ca:	84 c0                	test   al,al
+100008cc:	74 05                	je     100008d3 <Floppy::reset()+0x1c5>
+100008ce:	e9 41 fe ff ff       	jmp    10000714 <Floppy::reset()+0x6>
+100008d3:	90                   	nop
+100008d4:	c9                   	leave  
+100008d5:	c3                   	ret    
 
-100005ba <Floppy::motor(int, bool)>:
-100005ba:	56                   	push   esi
-100005bb:	53                   	push   ebx
-100005bc:	50                   	push   eax
-100005bd:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
-100005c1:	8b 74 24 10          	mov    esi,DWORD PTR [esp+0x10]
-100005c5:	80 7c 24 18 00       	cmp    BYTE PTR [esp+0x18],0x0
-100005ca:	8d 1c 86             	lea    ebx,[esi+eax*4]
-100005cd:	8b 83 60 01 00 00    	mov    eax,DWORD PTR [ebx+0x160]
-100005d3:	74 6f                	je     10000644 <Floppy::motor(int, bool)+0x8a>
-100005d5:	85 c0                	test   eax,eax
-100005d7:	75 64                	jne    1000063d <Floppy::motor(int, bool)+0x83>
-100005d9:	e8 fc ff ff ff       	call   100005da <Floppy::motor(int, bool)+0x20>	100005da: R_386_PC32	lockScheduler()
-100005de:	50                   	push   eax
-100005df:	50                   	push   eax
-100005e0:	6a 02                	push   0x2
-100005e2:	56                   	push   esi
-100005e3:	e8 fc ff ff ff       	call   100005e4 <Floppy::motor(int, bool)+0x2a>	100005e4: R_386_PC32	Floppy::readPort(FloppyReg)
-100005e8:	83 c4 0c             	add    esp,0xc
-100005eb:	ba 10 00 00 00       	mov    edx,0x10
-100005f0:	8a 4c 24 18          	mov    cl,BYTE PTR [esp+0x18]
-100005f4:	d3 e2                	shl    edx,cl
-100005f6:	09 d0                	or     eax,edx
-100005f8:	0f b6 c0             	movzx  eax,al
-100005fb:	50                   	push   eax
-100005fc:	6a 02                	push   0x2
-100005fe:	56                   	push   esi
-100005ff:	e8 fc ff ff ff       	call   10000600 <Floppy::motor(int, bool)+0x46>	10000600: R_386_PC32	Floppy::writePort(FloppyReg, unsigned char)
-10000604:	e8 fc ff ff ff       	call   10000605 <Floppy::motor(int, bool)+0x4b>	10000605: R_386_PC32	unlockScheduler()
-10000609:	83 c4 10             	add    esp,0x10
-1000060c:	83 bb 88 01 00 00 04 	cmp    DWORD PTR [ebx+0x188],0x4
-10000613:	75 0b                	jne    10000620 <Floppy::motor(int, bool)+0x66>
-10000615:	51                   	push   ecx
-10000616:	51                   	push   ecx
-10000617:	6a 00                	push   0x0
-10000619:	68 00 a3 e1 11       	push   0x11e1a300
-1000061e:	eb 09                	jmp    10000629 <Floppy::motor(int, bool)+0x6f>
-10000620:	52                   	push   edx
-10000621:	52                   	push   edx
-10000622:	6a 00                	push   0x0
-10000624:	68 00 65 cd 1d       	push   0x1dcd6500
-10000629:	e8 fc ff ff ff       	call   1000062a <Floppy::motor(int, bool)+0x70>	1000062a: R_386_PC32	nanoSleep(unsigned long long)
-1000062e:	83 c4 10             	add    esp,0x10
-10000631:	c7 83 60 01 00 00 01 00 00 00 	mov    DWORD PTR [ebx+0x160],0x1
-1000063b:	eb 1e                	jmp    1000065b <Floppy::motor(int, bool)+0xa1>
-1000063d:	83 f8 02             	cmp    eax,0x2
-10000640:	75 19                	jne    1000065b <Floppy::motor(int, bool)+0xa1>
-10000642:	eb ed                	jmp    10000631 <Floppy::motor(int, bool)+0x77>
-10000644:	48                   	dec    eax
-10000645:	75 14                	jne    1000065b <Floppy::motor(int, bool)+0xa1>
-10000647:	c7 83 60 01 00 00 02 00 00 00 	mov    DWORD PTR [ebx+0x160],0x2
-10000651:	c7 83 70 01 00 00 c4 09 00 00 	mov    DWORD PTR [ebx+0x170],0x9c4
-1000065b:	58                   	pop    eax
-1000065c:	5b                   	pop    ebx
-1000065d:	5e                   	pop    esi
-1000065e:	c3                   	ret    
-1000065f:	90                   	nop
-10000660:	55                   	push   ebp
-10000661:	89 e5                	mov    ebp,esp
-10000663:	83 ec 08             	sub    esp,0x8
-10000666:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-10000669:	83 ec 04             	sub    esp,0x4
-1000066c:	68 00 02 00 00       	push   0x200
-10000671:	68 65 08 00 10       	push   0x10000865	10000672: R_386_32	.text
-10000676:	50                   	push   eax
-10000677:	e8 fc ff ff ff       	call   10000678 <Floppy::motor(int, bool)+0xbe>	10000678: R_386_PC32	PhysicalDisk::PhysicalDisk(char const*, int)
-1000067c:	83 c4 10             	add    esp,0x10
-1000067f:	ba 08 00 00 00       	mov    edx,0x8	10000680: R_386_32	vtable for FloppyDrive
-10000684:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-10000687:	89 10                	mov    DWORD PTR [eax],edx
-10000689:	90                   	nop
-1000068a:	c9                   	leave  
-1000068b:	c3                   	ret    
+100008d6 <Floppy::motor(int, bool)>:
+100008d6:	55                   	push   ebp
+100008d7:	89 e5                	mov    ebp,esp
+100008d9:	83 ec 28             	sub    esp,0x28
+100008dc:	8b 45 10             	mov    eax,DWORD PTR [ebp+0x10]
+100008df:	88 45 e4             	mov    BYTE PTR [ebp-0x1c],al
+100008e2:	80 7d e4 00          	cmp    BYTE PTR [ebp-0x1c],0x0
+100008e6:	0f 84 c7 00 00 00    	je     100009b3 <Floppy::motor(int, bool)+0xdd>
+100008ec:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100008ef:	8b 55 0c             	mov    edx,DWORD PTR [ebp+0xc]
+100008f2:	83 c2 58             	add    edx,0x58
+100008f5:	8b 04 90             	mov    eax,DWORD PTR [eax+edx*4]
+100008f8:	85 c0                	test   eax,eax
+100008fa:	0f 85 90 00 00 00    	jne    10000990 <Floppy::motor(int, bool)+0xba>
+10000900:	e8 fc ff ff ff       	call   10000901 <Floppy::motor(int, bool)+0x2b>	10000901: R_386_PC32	lockScheduler()
+10000905:	83 ec 08             	sub    esp,0x8
+10000908:	6a 02                	push   0x2
+1000090a:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+1000090d:	e8 fc ff ff ff       	call   1000090e <Floppy::motor(int, bool)+0x38>	1000090e: R_386_PC32	Floppy::readPort(FloppyReg)
+10000912:	83 c4 10             	add    esp,0x10
+10000915:	88 45 f7             	mov    BYTE PTR [ebp-0x9],al
+10000918:	8b 45 0c             	mov    eax,DWORD PTR [ebp+0xc]
+1000091b:	ba 10 00 00 00       	mov    edx,0x10
+10000920:	88 c1                	mov    cl,al
+10000922:	d3 e2                	shl    edx,cl
+10000924:	89 d0                	mov    eax,edx
+10000926:	88 c2                	mov    dl,al
+10000928:	8a 45 f7             	mov    al,BYTE PTR [ebp-0x9]
+1000092b:	09 d0                	or     eax,edx
+1000092d:	0f b6 c0             	movzx  eax,al
+10000930:	83 ec 04             	sub    esp,0x4
+10000933:	50                   	push   eax
+10000934:	6a 02                	push   0x2
+10000936:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+10000939:	e8 fc ff ff ff       	call   1000093a <Floppy::motor(int, bool)+0x64>	1000093a: R_386_PC32	Floppy::writePort(FloppyReg, unsigned char)
+1000093e:	83 c4 10             	add    esp,0x10
+10000941:	e8 fc ff ff ff       	call   10000942 <Floppy::motor(int, bool)+0x6c>	10000942: R_386_PC32	unlockScheduler()
+10000946:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000949:	8b 55 0c             	mov    edx,DWORD PTR [ebp+0xc]
+1000094c:	83 c2 60             	add    edx,0x60
+1000094f:	8b 44 90 08          	mov    eax,DWORD PTR [eax+edx*4+0x8]
+10000953:	83 f8 04             	cmp    eax,0x4
+10000956:	75 14                	jne    1000096c <Floppy::motor(int, bool)+0x96>
+10000958:	83 ec 08             	sub    esp,0x8
+1000095b:	6a 00                	push   0x0
+1000095d:	68 00 a3 e1 11       	push   0x11e1a300
+10000962:	e8 fc ff ff ff       	call   10000963 <Floppy::motor(int, bool)+0x8d>	10000963: R_386_PC32	nanoSleep(unsigned long long)
+10000967:	83 c4 10             	add    esp,0x10
+1000096a:	eb 12                	jmp    1000097e <Floppy::motor(int, bool)+0xa8>
+1000096c:	83 ec 08             	sub    esp,0x8
+1000096f:	6a 00                	push   0x0
+10000971:	68 00 65 cd 1d       	push   0x1dcd6500
+10000976:	e8 fc ff ff ff       	call   10000977 <Floppy::motor(int, bool)+0xa1>	10000977: R_386_PC32	nanoSleep(unsigned long long)
+1000097b:	83 c4 10             	add    esp,0x10
+1000097e:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000981:	8b 55 0c             	mov    edx,DWORD PTR [ebp+0xc]
+10000984:	83 c2 58             	add    edx,0x58
+10000987:	c7 04 90 01 00 00 00 	mov    DWORD PTR [eax+edx*4],0x1
+1000098e:	eb 54                	jmp    100009e4 <Floppy::motor(int, bool)+0x10e>
+10000990:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000993:	8b 55 0c             	mov    edx,DWORD PTR [ebp+0xc]
+10000996:	83 c2 58             	add    edx,0x58
+10000999:	8b 04 90             	mov    eax,DWORD PTR [eax+edx*4]
+1000099c:	83 f8 02             	cmp    eax,0x2
+1000099f:	75 43                	jne    100009e4 <Floppy::motor(int, bool)+0x10e>
+100009a1:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100009a4:	8b 55 0c             	mov    edx,DWORD PTR [ebp+0xc]
+100009a7:	83 c2 58             	add    edx,0x58
+100009aa:	c7 04 90 01 00 00 00 	mov    DWORD PTR [eax+edx*4],0x1
+100009b1:	eb 31                	jmp    100009e4 <Floppy::motor(int, bool)+0x10e>
+100009b3:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100009b6:	8b 55 0c             	mov    edx,DWORD PTR [ebp+0xc]
+100009b9:	83 c2 58             	add    edx,0x58
+100009bc:	8b 04 90             	mov    eax,DWORD PTR [eax+edx*4]
+100009bf:	83 f8 01             	cmp    eax,0x1
+100009c2:	75 20                	jne    100009e4 <Floppy::motor(int, bool)+0x10e>
+100009c4:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100009c7:	8b 55 0c             	mov    edx,DWORD PTR [ebp+0xc]
+100009ca:	83 c2 58             	add    edx,0x58
+100009cd:	c7 04 90 02 00 00 00 	mov    DWORD PTR [eax+edx*4],0x2
+100009d4:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100009d7:	8b 55 0c             	mov    edx,DWORD PTR [ebp+0xc]
+100009da:	83 c2 5c             	add    edx,0x5c
+100009dd:	c7 04 90 c4 09 00 00 	mov    DWORD PTR [eax+edx*4],0x9c4
+100009e4:	90                   	nop
+100009e5:	c9                   	leave  
+100009e6:	c3                   	ret    
+100009e7:	90                   	nop
+100009e8:	55                   	push   ebp
+100009e9:	89 e5                	mov    ebp,esp
+100009eb:	83 ec 08             	sub    esp,0x8
+100009ee:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100009f1:	83 ec 04             	sub    esp,0x4
+100009f4:	68 00 02 00 00       	push   0x200
+100009f9:	68 e4 0c 00 10       	push   0x10000ce4	100009fa: R_386_32	.text
+100009fe:	50                   	push   eax
+100009ff:	e8 fc ff ff ff       	call   10000a00 <Floppy::motor(int, bool)+0x12a>	10000a00: R_386_PC32	PhysicalDisk::PhysicalDisk(char const*, int)
+10000a04:	83 c4 10             	add    esp,0x10
+10000a07:	ba 08 00 00 00       	mov    edx,0x8	10000a08: R_386_32	vtable for FloppyDrive
+10000a0c:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000a0f:	89 10                	mov    DWORD PTR [eax],edx
+10000a11:	90                   	nop
+10000a12:	c9                   	leave  
+10000a13:	c3                   	ret    
 
-1000068c <FloppyDrive::configure()>:
-1000068c:	c3                   	ret    
-1000068d:	90                   	nop
-1000068e:	83 ec 10             	sub    esp,0x10
-10000691:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
-10000695:	6a 01                	push   0x1
-10000697:	ff b0 70 01 00 00    	push   DWORD PTR [eax+0x170]
-1000069d:	ff b0 6c 01 00 00    	push   DWORD PTR [eax+0x16c]
-100006a3:	e8 fc ff ff ff       	call   100006a4 <FloppyDrive::configure()+0x18>	100006a4: R_386_PC32	Floppy::motor(int, bool)
-100006a8:	83 c4 1c             	add    esp,0x1c
-100006ab:	c3                   	ret    
-100006ac:	83 ec 10             	sub    esp,0x10
-100006af:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
-100006b3:	6a 00                	push   0x0
-100006b5:	ff b0 70 01 00 00    	push   DWORD PTR [eax+0x170]
-100006bb:	ff b0 6c 01 00 00    	push   DWORD PTR [eax+0x16c]
-100006c1:	e8 fc ff ff ff       	call   100006c2 <FloppyDrive::configure()+0x36>	100006c2: R_386_PC32	Floppy::motor(int, bool)
-100006c6:	83 c4 1c             	add    esp,0x1c
-100006c9:	c3                   	ret    
+10000a14 <FloppyDrive::configure()>:
+10000a14:	90                   	nop
+10000a15:	c3                   	ret    
+10000a16:	55                   	push   ebp
+10000a17:	89 e5                	mov    ebp,esp
+10000a19:	83 ec 08             	sub    esp,0x8
+10000a1c:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000a1f:	8b 80 6c 01 00 00    	mov    eax,DWORD PTR [eax+0x16c]
+10000a25:	8b 55 08             	mov    edx,DWORD PTR [ebp+0x8]
+10000a28:	8b 92 70 01 00 00    	mov    edx,DWORD PTR [edx+0x170]
+10000a2e:	83 ec 04             	sub    esp,0x4
+10000a31:	6a 01                	push   0x1
+10000a33:	52                   	push   edx
+10000a34:	50                   	push   eax
+10000a35:	e8 fc ff ff ff       	call   10000a36 <FloppyDrive::configure()+0x22>	10000a36: R_386_PC32	Floppy::motor(int, bool)
+10000a3a:	83 c4 10             	add    esp,0x10
+10000a3d:	90                   	nop
+10000a3e:	c9                   	leave  
+10000a3f:	c3                   	ret    
+10000a40:	55                   	push   ebp
+10000a41:	89 e5                	mov    ebp,esp
+10000a43:	83 ec 08             	sub    esp,0x8
+10000a46:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000a49:	8b 80 6c 01 00 00    	mov    eax,DWORD PTR [eax+0x16c]
+10000a4f:	8b 55 08             	mov    edx,DWORD PTR [ebp+0x8]
+10000a52:	8b 92 70 01 00 00    	mov    edx,DWORD PTR [edx+0x170]
+10000a58:	83 ec 04             	sub    esp,0x4
+10000a5b:	6a 00                	push   0x0
+10000a5d:	52                   	push   edx
+10000a5e:	50                   	push   eax
+10000a5f:	e8 fc ff ff ff       	call   10000a60 <FloppyDrive::configure()+0x4c>	10000a60: R_386_PC32	Floppy::motor(int, bool)
+10000a64:	83 c4 10             	add    esp,0x10
+10000a67:	90                   	nop
+10000a68:	c9                   	leave  
+10000a69:	c3                   	ret    
 
-100006ca <FloppyDrive::floppyConfigure()>:
-100006ca:	53                   	push   ebx
-100006cb:	83 ec 10             	sub    esp,0x10
-100006ce:	8b 5c 24 18          	mov    ebx,DWORD PTR [esp+0x18]
-100006d2:	6a 13                	push   0x13
-100006d4:	ff b3 6c 01 00 00    	push   DWORD PTR [ebx+0x16c]
-100006da:	e8 fc ff ff ff       	call   100006db <FloppyDrive::floppyConfigure()+0x11>	100006db: R_386_PC32	Floppy::writeCommand(unsigned char)
-100006df:	5a                   	pop    edx
-100006e0:	ff b3 6c 01 00 00    	push   DWORD PTR [ebx+0x16c]
-100006e6:	e8 fc ff ff ff       	call   100006e7 <FloppyDrive::floppyConfigure()+0x1d>	100006e7: R_386_PC32	Floppy::wasFailure()
-100006eb:	83 c4 10             	add    esp,0x10
-100006ee:	84 c0                	test   al,al
-100006f0:	74 04                	je     100006f6 <FloppyDrive::floppyConfigure()+0x2c>
-100006f2:	31 c0                	xor    eax,eax
-100006f4:	eb 75                	jmp    1000076b <FloppyDrive::floppyConfigure()+0xa1>
-100006f6:	50                   	push   eax
-100006f7:	50                   	push   eax
-100006f8:	6a 00                	push   0x0
-100006fa:	ff b3 6c 01 00 00    	push   DWORD PTR [ebx+0x16c]
-10000700:	e8 fc ff ff ff       	call   10000701 <FloppyDrive::floppyConfigure()+0x37>	10000701: R_386_PC32	Floppy::writeCommand(unsigned char)
-10000705:	58                   	pop    eax
-10000706:	ff b3 6c 01 00 00    	push   DWORD PTR [ebx+0x16c]
-1000070c:	e8 fc ff ff ff       	call   1000070d <FloppyDrive::floppyConfigure()+0x43>	1000070d: R_386_PC32	Floppy::wasFailure()
-10000711:	83 c4 10             	add    esp,0x10
-10000714:	84 c0                	test   al,al
-10000716:	75 da                	jne    100006f2 <FloppyDrive::floppyConfigure()+0x28>
-10000718:	50                   	push   eax
-10000719:	50                   	push   eax
-1000071a:	6a 17                	push   0x17
-1000071c:	ff b3 6c 01 00 00    	push   DWORD PTR [ebx+0x16c]
-10000722:	e8 fc ff ff ff       	call   10000723 <FloppyDrive::floppyConfigure()+0x59>	10000723: R_386_PC32	Floppy::writeCommand(unsigned char)
-10000727:	58                   	pop    eax
-10000728:	ff b3 6c 01 00 00    	push   DWORD PTR [ebx+0x16c]
-1000072e:	e8 fc ff ff ff       	call   1000072f <FloppyDrive::floppyConfigure()+0x65>	1000072f: R_386_PC32	Floppy::wasFailure()
-10000733:	83 c4 10             	add    esp,0x10
-10000736:	84 c0                	test   al,al
-10000738:	75 b8                	jne    100006f2 <FloppyDrive::floppyConfigure()+0x28>
-1000073a:	50                   	push   eax
-1000073b:	50                   	push   eax
-1000073c:	6a 00                	push   0x0
-1000073e:	ff b3 6c 01 00 00    	push   DWORD PTR [ebx+0x16c]
-10000744:	e8 fc ff ff ff       	call   10000745 <FloppyDrive::floppyConfigure()+0x7b>	10000745: R_386_PC32	Floppy::writeCommand(unsigned char)
-10000749:	58                   	pop    eax
-1000074a:	ff b3 6c 01 00 00    	push   DWORD PTR [ebx+0x16c]
-10000750:	e8 fc ff ff ff       	call   10000751 <FloppyDrive::floppyConfigure()+0x87>	10000751: R_386_PC32	Floppy::wasFailure()
-10000755:	83 c4 10             	add    esp,0x10
-10000758:	84 c0                	test   al,al
-1000075a:	75 96                	jne    100006f2 <FloppyDrive::floppyConfigure()+0x28>
-1000075c:	8b 83 6c 01 00 00    	mov    eax,DWORD PTR [ebx+0x16c]
-10000762:	c6 80 85 01 00 00 00 	mov    BYTE PTR [eax+0x185],0x0
-10000769:	b0 01                	mov    al,0x1
-1000076b:	83 c4 08             	add    esp,0x8
-1000076e:	5b                   	pop    ebx
-1000076f:	c3                   	ret    
+10000a6a <FloppyDrive::floppyConfigure()>:
+10000a6a:	55                   	push   ebp
+10000a6b:	89 e5                	mov    ebp,esp
+10000a6d:	83 ec 18             	sub    esp,0x18
+10000a70:	c6 45 f7 00          	mov    BYTE PTR [ebp-0x9],0x0
+10000a74:	c6 45 f6 00          	mov    BYTE PTR [ebp-0xa],0x0
+10000a78:	c6 45 f5 01          	mov    BYTE PTR [ebp-0xb],0x1
+10000a7c:	c7 45 f0 08 00 00 00 	mov    DWORD PTR [ebp-0x10],0x8
+10000a83:	c7 45 ec 00 00 00 00 	mov    DWORD PTR [ebp-0x14],0x0
+10000a8a:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000a8d:	8b 80 6c 01 00 00    	mov    eax,DWORD PTR [eax+0x16c]
+10000a93:	83 ec 08             	sub    esp,0x8
+10000a96:	6a 13                	push   0x13
+10000a98:	50                   	push   eax
+10000a99:	e8 fc ff ff ff       	call   10000a9a <FloppyDrive::floppyConfigure()+0x30>	10000a9a: R_386_PC32	Floppy::writeCommand(unsigned char)
+10000a9e:	83 c4 10             	add    esp,0x10
+10000aa1:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000aa4:	8b 90 6c 01 00 00    	mov    edx,DWORD PTR [eax+0x16c]
+10000aaa:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000aad:	8b 80 6c 01 00 00    	mov    eax,DWORD PTR [eax+0x16c]
+10000ab3:	8b 00                	mov    eax,DWORD PTR [eax]
+10000ab5:	83 c0 24             	add    eax,0x24
+10000ab8:	8b 00                	mov    eax,DWORD PTR [eax]
+10000aba:	83 ec 0c             	sub    esp,0xc
+10000abd:	52                   	push   edx
+10000abe:	ff d0                	call   eax
+10000ac0:	83 c4 10             	add    esp,0x10
+10000ac3:	84 c0                	test   al,al
+10000ac5:	74 07                	je     10000ace <FloppyDrive::floppyConfigure()+0x64>
+10000ac7:	b0 00                	mov    al,0x0
+10000ac9:	e9 05 01 00 00       	jmp    10000bd3 <FloppyDrive::floppyConfigure()+0x169>
+10000ace:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000ad1:	8b 80 6c 01 00 00    	mov    eax,DWORD PTR [eax+0x16c]
+10000ad7:	83 ec 08             	sub    esp,0x8
+10000ada:	6a 00                	push   0x0
+10000adc:	50                   	push   eax
+10000add:	e8 fc ff ff ff       	call   10000ade <FloppyDrive::floppyConfigure()+0x74>	10000ade: R_386_PC32	Floppy::writeCommand(unsigned char)
+10000ae2:	83 c4 10             	add    esp,0x10
+10000ae5:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000ae8:	8b 90 6c 01 00 00    	mov    edx,DWORD PTR [eax+0x16c]
+10000aee:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000af1:	8b 80 6c 01 00 00    	mov    eax,DWORD PTR [eax+0x16c]
+10000af7:	8b 00                	mov    eax,DWORD PTR [eax]
+10000af9:	83 c0 24             	add    eax,0x24
+10000afc:	8b 00                	mov    eax,DWORD PTR [eax]
+10000afe:	83 ec 0c             	sub    esp,0xc
+10000b01:	52                   	push   edx
+10000b02:	ff d0                	call   eax
+10000b04:	83 c4 10             	add    esp,0x10
+10000b07:	84 c0                	test   al,al
+10000b09:	74 07                	je     10000b12 <FloppyDrive::floppyConfigure()+0xa8>
+10000b0b:	b0 00                	mov    al,0x0
+10000b0d:	e9 c1 00 00 00       	jmp    10000bd3 <FloppyDrive::floppyConfigure()+0x169>
+10000b12:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000b15:	8b 80 6c 01 00 00    	mov    eax,DWORD PTR [eax+0x16c]
+10000b1b:	0f b6 55 f7          	movzx  edx,BYTE PTR [ebp-0x9]
+10000b1f:	c1 e2 06             	shl    edx,0x6
+10000b22:	88 d1                	mov    cl,dl
+10000b24:	0f b6 55 f6          	movzx  edx,BYTE PTR [ebp-0xa]
+10000b28:	c1 e2 05             	shl    edx,0x5
+10000b2b:	09 d1                	or     ecx,edx
+10000b2d:	0f b6 55 f5          	movzx  edx,BYTE PTR [ebp-0xb]
+10000b31:	c1 e2 04             	shl    edx,0x4
+10000b34:	09 d1                	or     ecx,edx
+10000b36:	8b 55 f0             	mov    edx,DWORD PTR [ebp-0x10]
+10000b39:	4a                   	dec    edx
+10000b3a:	09 ca                	or     edx,ecx
+10000b3c:	0f b6 d2             	movzx  edx,dl
+10000b3f:	83 ec 08             	sub    esp,0x8
+10000b42:	52                   	push   edx
+10000b43:	50                   	push   eax
+10000b44:	e8 fc ff ff ff       	call   10000b45 <FloppyDrive::floppyConfigure()+0xdb>	10000b45: R_386_PC32	Floppy::writeCommand(unsigned char)
+10000b49:	83 c4 10             	add    esp,0x10
+10000b4c:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000b4f:	8b 90 6c 01 00 00    	mov    edx,DWORD PTR [eax+0x16c]
+10000b55:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000b58:	8b 80 6c 01 00 00    	mov    eax,DWORD PTR [eax+0x16c]
+10000b5e:	8b 00                	mov    eax,DWORD PTR [eax]
+10000b60:	83 c0 24             	add    eax,0x24
+10000b63:	8b 00                	mov    eax,DWORD PTR [eax]
+10000b65:	83 ec 0c             	sub    esp,0xc
+10000b68:	52                   	push   edx
+10000b69:	ff d0                	call   eax
+10000b6b:	83 c4 10             	add    esp,0x10
+10000b6e:	84 c0                	test   al,al
+10000b70:	74 04                	je     10000b76 <FloppyDrive::floppyConfigure()+0x10c>
+10000b72:	b0 00                	mov    al,0x0
+10000b74:	eb 5d                	jmp    10000bd3 <FloppyDrive::floppyConfigure()+0x169>
+10000b76:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000b79:	8b 80 6c 01 00 00    	mov    eax,DWORD PTR [eax+0x16c]
+10000b7f:	8b 55 ec             	mov    edx,DWORD PTR [ebp-0x14]
+10000b82:	0f b6 d2             	movzx  edx,dl
+10000b85:	83 ec 08             	sub    esp,0x8
+10000b88:	52                   	push   edx
+10000b89:	50                   	push   eax
+10000b8a:	e8 fc ff ff ff       	call   10000b8b <FloppyDrive::floppyConfigure()+0x121>	10000b8b: R_386_PC32	Floppy::writeCommand(unsigned char)
+10000b8f:	83 c4 10             	add    esp,0x10
+10000b92:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000b95:	8b 90 6c 01 00 00    	mov    edx,DWORD PTR [eax+0x16c]
+10000b9b:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000b9e:	8b 80 6c 01 00 00    	mov    eax,DWORD PTR [eax+0x16c]
+10000ba4:	8b 00                	mov    eax,DWORD PTR [eax]
+10000ba6:	83 c0 24             	add    eax,0x24
+10000ba9:	8b 00                	mov    eax,DWORD PTR [eax]
+10000bab:	83 ec 0c             	sub    esp,0xc
+10000bae:	52                   	push   edx
+10000baf:	ff d0                	call   eax
+10000bb1:	83 c4 10             	add    esp,0x10
+10000bb4:	84 c0                	test   al,al
+10000bb6:	74 04                	je     10000bbc <FloppyDrive::floppyConfigure()+0x152>
+10000bb8:	b0 00                	mov    al,0x0
+10000bba:	eb 17                	jmp    10000bd3 <FloppyDrive::floppyConfigure()+0x169>
+10000bbc:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000bbf:	8b 80 6c 01 00 00    	mov    eax,DWORD PTR [eax+0x16c]
+10000bc5:	8a 55 f5             	mov    dl,BYTE PTR [ebp-0xb]
+10000bc8:	83 f2 01             	xor    edx,0x1
+10000bcb:	88 90 85 01 00 00    	mov    BYTE PTR [eax+0x185],dl
+10000bd1:	b0 01                	mov    al,0x1
+10000bd3:	c9                   	leave  
+10000bd4:	c3                   	ret    
+10000bd5:	90                   	nop
 
-10000770 <FloppyDrive::open(int, int, void*)>:
-10000770:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
-10000774:	8b 54 24 10          	mov    edx,DWORD PTR [esp+0x10]
-10000778:	89 90 6c 01 00 00    	mov    DWORD PTR [eax+0x16c],edx
-1000077e:	8b 54 24 08          	mov    edx,DWORD PTR [esp+0x8]
-10000782:	89 90 70 01 00 00    	mov    DWORD PTR [eax+0x170],edx
-10000788:	31 c0                	xor    eax,eax
-1000078a:	c3                   	ret    
-1000078b:	90                   	nop
+10000bd6 <FloppyDrive::open(int, int, void*)>:
+10000bd6:	55                   	push   ebp
+10000bd7:	89 e5                	mov    ebp,esp
+10000bd9:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000bdc:	8b 55 14             	mov    edx,DWORD PTR [ebp+0x14]
+10000bdf:	89 90 6c 01 00 00    	mov    DWORD PTR [eax+0x16c],edx
+10000be5:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000be8:	8b 55 0c             	mov    edx,DWORD PTR [ebp+0xc]
+10000beb:	89 90 70 01 00 00    	mov    DWORD PTR [eax+0x170],edx
+10000bf1:	b8 00 00 00 00       	mov    eax,0x0
+10000bf6:	5d                   	pop    ebp
+10000bf7:	c3                   	ret    
 
-1000078c <FloppyDrive::close(int, int, void*)>:
-1000078c:	31 c0                	xor    eax,eax
-1000078e:	c3                   	ret    
-1000078f:	90                   	nop
-10000790:	96                   	xchg   esi,eax
-10000791:	00 00                	add    BYTE PTR [eax],al
-10000793:	00 2c 01             	add    BYTE PTR [ecx+eax*1],ch
-10000796:	00 00                	add    BYTE PTR [eax],al
-10000798:	46                   	inc    esi
-10000799:	6c                   	ins    BYTE PTR es:[edi],dx
-1000079a:	6f                   	outs   dx,DWORD PTR ds:[esi]
-1000079b:	70 70                	jo     1000080d <FloppyDrive::close(int, int, void*)+0x81>
-1000079d:	79 20                	jns    100007bf <FloppyDrive::close(int, int, void*)+0x33>
-1000079f:	44                   	inc    esp
-100007a0:	69 73 6b 20 43 6f 6e 	imul   esi,DWORD PTR [ebx+0x6b],0x6e6f4320
-100007a7:	74 72                	je     1000081b <FloppyDrive::close(int, int, void*)+0x8f>
-100007a9:	6f                   	outs   dx,DWORD PTR ds:[esi]
-100007aa:	6c                   	ins    BYTE PTR es:[edi],dx
-100007ab:	6c                   	ins    BYTE PTR es:[edi],dx
-100007ac:	65 72 00             	gs jb  100007af <FloppyDrive::close(int, int, void*)+0x23>
-100007af:	46                   	inc    esi
-100007b0:	6c                   	ins    BYTE PTR es:[edi],dx
-100007b1:	6f                   	outs   dx,DWORD PTR ds:[esi]
-100007b2:	70 70                	jo     10000824 <FloppyDrive::close(int, int, void*)+0x98>
-100007b4:	79 3a                	jns    100007f0 <FloppyDrive::close(int, int, void*)+0x64>
-100007b6:	3a 46 6c             	cmp    al,BYTE PTR [esi+0x6c]
-100007b9:	6f                   	outs   dx,DWORD PTR ds:[esi]
-100007ba:	70 70                	jo     1000082c <FloppyDrive::close(int, int, void*)+0xa0>
-100007bc:	79 28                	jns    100007e6 <FloppyDrive::close(int, int, void*)+0x5a>
-100007be:	29 0a                	sub    DWORD PTR [edx],ecx
-100007c0:	00 50 52             	add    BYTE PTR [eax+0x52],dl
-100007c3:	45                   	inc    ebp
-100007c4:	56                   	push   esi
-100007c5:	49                   	dec    ecx
-100007c6:	4f                   	dec    edi
-100007c7:	55                   	push   ebp
-100007c8:	53                   	push   ebx
-100007c9:	20 43 4f             	and    BYTE PTR [ebx+0x4f],al
-100007cc:	4d                   	dec    ebp
-100007cd:	4d                   	dec    ebp
-100007ce:	41                   	inc    ecx
-100007cf:	4e                   	dec    esi
-100007d0:	44                   	inc    esp
-100007d1:	20 46 41             	and    BYTE PTR [esi+0x41],al
-100007d4:	49                   	dec    ecx
-100007d5:	4c                   	dec    esp
-100007d6:	45                   	inc    ebp
-100007d7:	44                   	inc    esp
-100007d8:	2c 20                	sub    al,0x20
-100007da:	43                   	inc    ebx
-100007db:	41                   	inc    ecx
-100007dc:	55                   	push   ebp
-100007dd:	47                   	inc    edi
-100007de:	48                   	dec    eax
-100007df:	54                   	push   esp
-100007e0:	20 42 59             	and    BYTE PTR [edx+0x59],al
-100007e3:	20 77 72             	and    BYTE PTR [edi+0x72],dh
-100007e6:	69 74 65 43 6f 6d 6d 61 	imul   esi,DWORD PTR [ebp+eiz*2+0x43],0x616d6d6f
-100007ee:	6e                   	outs   dx,BYTE PTR ds:[esi]
-100007ef:	64 00 44 49 44       	add    BYTE PTR fs:[ecx+ecx*2+0x44],al
-100007f4:	20 4e 4f             	and    BYTE PTR [esi+0x4f],cl
-100007f7:	54                   	push   esp
-100007f8:	20 43 48             	and    BYTE PTR [ebx+0x48],al
-100007fb:	45                   	inc    ebp
-100007fc:	43                   	inc    ebx
-100007fd:	4b                   	dec    ebx
-100007fe:	20 46 4f             	and    BYTE PTR [esi+0x4f],al
-10000801:	52                   	push   edx
-10000802:	20 46 41             	and    BYTE PTR [esi+0x41],al
-10000805:	49                   	dec    ecx
-10000806:	4c                   	dec    esp
-10000807:	55                   	push   ebp
-10000808:	52                   	push   edx
-10000809:	45                   	inc    ebp
-1000080a:	20 42 45             	and    BYTE PTR [edx+0x45],al
-1000080d:	46                   	inc    esi
-1000080e:	4f                   	dec    edi
-1000080f:	52                   	push   edx
-10000810:	45                   	inc    ebp
-10000811:	20 77 72             	and    BYTE PTR [edi+0x72],dh
-10000814:	69 74 65 43 6f 6d 6d 61 	imul   esi,DWORD PTR [ebp+eiz*2+0x43],0x616d6d6f
-1000081c:	6e                   	outs   dx,BYTE PTR ds:[esi]
-1000081d:	64 00 46 6c          	add    BYTE PTR fs:[esi+0x6c],al
-10000821:	6f                   	outs   dx,DWORD PTR ds:[esi]
-10000822:	70 70                	jo     10000894 <vtable for FloppyDrive+0x1c>
-10000824:	79 3a                	jns    10000860 <FloppyDrive::close(int, int, void*)+0xd4>
-10000826:	3a 64 72 69          	cmp    ah,BYTE PTR [edx+esi*2+0x69]
-1000082a:	76 65                	jbe    10000891 <vtable for FloppyDrive+0x19>
-1000082c:	44                   	inc    esp
-1000082d:	65 74 65             	gs je  10000895 <vtable for FloppyDrive+0x1d>
-10000830:	63 74 69 6f          	arpl   WORD PTR [ecx+ebp*2+0x6f],si
-10000834:	6e                   	outs   dx,BYTE PTR ds:[esi]
-10000835:	28 29                	sub    BYTE PTR [ecx],ch
-10000837:	0a 00                	or     al,BYTE PTR [eax]
-10000839:	44                   	inc    esp
-1000083a:	72 69                	jb     100008a5 <vtable for FloppyDrive+0x2d>
-1000083c:	76 65                	jbe    100008a3 <vtable for FloppyDrive+0x2b>
-1000083e:	20 74 79 70          	and    BYTE PTR [ecx+edi*2+0x70],dh
-10000842:	65 20 30             	and    BYTE PTR gs:[eax],dh
-10000845:	3a 20                	cmp    ah,BYTE PTR [eax]
-10000847:	25 73 0a 00 44       	and    eax,0x44000a73
-1000084c:	72 69                	jb     100008b7 <vtable for Floppy+0x3>
-1000084e:	76 65                	jbe    100008b5 <vtable for Floppy+0x1>
-10000850:	20 74 79 70          	and    BYTE PTR [ecx+edi*2+0x70],dh
-10000854:	65 20 31             	and    BYTE PTR gs:[ecx],dh
-10000857:	3a 20                	cmp    ah,BYTE PTR [eax]
-10000859:	25 73 0a 00 55       	and    eax,0x55000a73
-1000085e:	4e                   	dec    esi
-1000085f:	49                   	dec    ecx
-10000860:	4d                   	dec    ebp
-10000861:	50                   	push   eax
-10000862:	4c                   	dec    esp
-10000863:	2e 00 46 6c          	add    BYTE PTR cs:[esi+0x6c],al
-10000867:	6f                   	outs   dx,DWORD PTR ds:[esi]
-10000868:	70 70                	jo     100008da <vtable for Floppy+0x26>
-1000086a:	79 20                	jns    1000088c <vtable for FloppyDrive+0x14>
-1000086c:	44                   	inc    esp
-1000086d:	69 73 6b 20 44 72 69 	imul   esi,DWORD PTR [ebx+0x6b],0x69724420
-10000874:	76 65                	jbe    100008db <vtable for Floppy+0x27>
-10000876:	00                   	.byte 0x0
-10000877:	90                   	nop
+10000bf8 <FloppyDrive::close(int, int, void*)>:
+10000bf8:	b8 00 00 00 00       	mov    eax,0x0
+10000bfd:	c3                   	ret    
+10000bfe:	66 90                	xchg   ax,ax
+10000c00:	96                   	xchg   esi,eax
+10000c01:	00 00                	add    BYTE PTR [eax],al
+10000c03:	00 2c 01             	add    BYTE PTR [ecx+eax*1],ch
+10000c06:	00 00                	add    BYTE PTR [eax],al
+10000c08:	64 65 76 20          	fs gs jbe 10000c2c <FloppyDrive::close(int, int, void*)+0x34>
+10000c0c:	3d 20 30 78 25       	cmp    eax,0x25783020
+10000c11:	58                   	pop    eax
+10000c12:	0a 00                	or     al,BYTE PTR [eax]
+10000c14:	46                   	inc    esi
+10000c15:	6c                   	ins    BYTE PTR es:[edi],dx
+10000c16:	6f                   	outs   dx,DWORD PTR ds:[esi]
+10000c17:	70 70                	jo     10000c89 <FloppyDrive::close(int, int, void*)+0x91>
+10000c19:	79 20                	jns    10000c3b <FloppyDrive::close(int, int, void*)+0x43>
+10000c1b:	44                   	inc    esp
+10000c1c:	69 73 6b 20 43 6f 6e 	imul   esi,DWORD PTR [ebx+0x6b],0x6e6f4320
+10000c23:	74 72                	je     10000c97 <FloppyDrive::close(int, int, void*)+0x9f>
+10000c25:	6f                   	outs   dx,DWORD PTR ds:[esi]
+10000c26:	6c                   	ins    BYTE PTR es:[edi],dx
+10000c27:	6c                   	ins    BYTE PTR es:[edi],dx
+10000c28:	65 72 00             	gs jb  10000c2b <FloppyDrive::close(int, int, void*)+0x33>
+10000c2b:	46                   	inc    esi
+10000c2c:	6c                   	ins    BYTE PTR es:[edi],dx
+10000c2d:	6f                   	outs   dx,DWORD PTR ds:[esi]
+10000c2e:	70 70                	jo     10000ca0 <FloppyDrive::close(int, int, void*)+0xa8>
+10000c30:	79 3a                	jns    10000c6c <FloppyDrive::close(int, int, void*)+0x74>
+10000c32:	3a 46 6c             	cmp    al,BYTE PTR [esi+0x6c]
+10000c35:	6f                   	outs   dx,DWORD PTR ds:[esi]
+10000c36:	70 70                	jo     10000ca8 <FloppyDrive::close(int, int, void*)+0xb0>
+10000c38:	79 28                	jns    10000c62 <FloppyDrive::close(int, int, void*)+0x6a>
+10000c3a:	29 0a                	sub    DWORD PTR [edx],ecx
+10000c3c:	00 00                	add    BYTE PTR [eax],al
+10000c3e:	00 00                	add    BYTE PTR [eax],al
+10000c40:	50                   	push   eax
+10000c41:	52                   	push   edx
+10000c42:	45                   	inc    ebp
+10000c43:	56                   	push   esi
+10000c44:	49                   	dec    ecx
+10000c45:	4f                   	dec    edi
+10000c46:	55                   	push   ebp
+10000c47:	53                   	push   ebx
+10000c48:	20 43 4f             	and    BYTE PTR [ebx+0x4f],al
+10000c4b:	4d                   	dec    ebp
+10000c4c:	4d                   	dec    ebp
+10000c4d:	41                   	inc    ecx
+10000c4e:	4e                   	dec    esi
+10000c4f:	44                   	inc    esp
+10000c50:	20 46 41             	and    BYTE PTR [esi+0x41],al
+10000c53:	49                   	dec    ecx
+10000c54:	4c                   	dec    esp
+10000c55:	45                   	inc    ebp
+10000c56:	44                   	inc    esp
+10000c57:	2c 20                	sub    al,0x20
+10000c59:	43                   	inc    ebx
+10000c5a:	41                   	inc    ecx
+10000c5b:	55                   	push   ebp
+10000c5c:	47                   	inc    edi
+10000c5d:	48                   	dec    eax
+10000c5e:	54                   	push   esp
+10000c5f:	20 42 59             	and    BYTE PTR [edx+0x59],al
+10000c62:	20 77 72             	and    BYTE PTR [edi+0x72],dh
+10000c65:	69 74 65 43 6f 6d 6d 61 	imul   esi,DWORD PTR [ebp+eiz*2+0x43],0x616d6d6f
+10000c6d:	6e                   	outs   dx,BYTE PTR ds:[esi]
+10000c6e:	64 00 44 49 44       	add    BYTE PTR fs:[ecx+ecx*2+0x44],al
+10000c73:	20 4e 4f             	and    BYTE PTR [esi+0x4f],cl
+10000c76:	54                   	push   esp
+10000c77:	20 43 48             	and    BYTE PTR [ebx+0x48],al
+10000c7a:	45                   	inc    ebp
+10000c7b:	43                   	inc    ebx
+10000c7c:	4b                   	dec    ebx
+10000c7d:	20 46 4f             	and    BYTE PTR [esi+0x4f],al
+10000c80:	52                   	push   edx
+10000c81:	20 46 41             	and    BYTE PTR [esi+0x41],al
+10000c84:	49                   	dec    ecx
+10000c85:	4c                   	dec    esp
+10000c86:	55                   	push   ebp
+10000c87:	52                   	push   edx
+10000c88:	45                   	inc    ebp
+10000c89:	20 42 45             	and    BYTE PTR [edx+0x45],al
+10000c8c:	46                   	inc    esi
+10000c8d:	4f                   	dec    edi
+10000c8e:	52                   	push   edx
+10000c8f:	45                   	inc    ebp
+10000c90:	20 77 72             	and    BYTE PTR [edi+0x72],dh
+10000c93:	69 74 65 43 6f 6d 6d 61 	imul   esi,DWORD PTR [ebp+eiz*2+0x43],0x616d6d6f
+10000c9b:	6e                   	outs   dx,BYTE PTR ds:[esi]
+10000c9c:	64 00 46 6c          	add    BYTE PTR fs:[esi+0x6c],al
+10000ca0:	6f                   	outs   dx,DWORD PTR ds:[esi]
+10000ca1:	70 70                	jo     10000d13 <vtable for FloppyDrive+0x1b>
+10000ca3:	79 3a                	jns    10000cdf <FloppyDrive::close(int, int, void*)+0xe7>
+10000ca5:	3a 64 72 69          	cmp    ah,BYTE PTR [edx+esi*2+0x69]
+10000ca9:	76 65                	jbe    10000d10 <vtable for FloppyDrive+0x18>
+10000cab:	44                   	inc    esp
+10000cac:	65 74 65             	gs je  10000d14 <vtable for FloppyDrive+0x1c>
+10000caf:	63 74 69 6f          	arpl   WORD PTR [ecx+ebp*2+0x6f],si
+10000cb3:	6e                   	outs   dx,BYTE PTR ds:[esi]
+10000cb4:	28 29                	sub    BYTE PTR [ecx],ch
+10000cb6:	0a 00                	or     al,BYTE PTR [eax]
+10000cb8:	44                   	inc    esp
+10000cb9:	72 69                	jb     10000d24 <vtable for FloppyDrive+0x2c>
+10000cbb:	76 65                	jbe    10000d22 <vtable for FloppyDrive+0x2a>
+10000cbd:	20 74 79 70          	and    BYTE PTR [ecx+edi*2+0x70],dh
+10000cc1:	65 20 30             	and    BYTE PTR gs:[eax],dh
+10000cc4:	3a 20                	cmp    ah,BYTE PTR [eax]
+10000cc6:	25 73 0a 00 44       	and    eax,0x44000a73
+10000ccb:	72 69                	jb     10000d36 <vtable for Floppy+0x2>
+10000ccd:	76 65                	jbe    10000d34 <vtable for Floppy>
+10000ccf:	20 74 79 70          	and    BYTE PTR [ecx+edi*2+0x70],dh
+10000cd3:	65 20 31             	and    BYTE PTR gs:[ecx],dh
+10000cd6:	3a 20                	cmp    ah,BYTE PTR [eax]
+10000cd8:	25 73 0a 00 55       	and    eax,0x55000a73
+10000cdd:	4e                   	dec    esi
+10000cde:	49                   	dec    ecx
+10000cdf:	4d                   	dec    ebp
+10000ce0:	50                   	push   eax
+10000ce1:	4c                   	dec    esp
+10000ce2:	2e 00 46 6c          	add    BYTE PTR cs:[esi+0x6c],al
+10000ce6:	6f                   	outs   dx,DWORD PTR ds:[esi]
+10000ce7:	70 70                	jo     10000d59 <vtable for Floppy+0x25>
+10000ce9:	79 20                	jns    10000d0b <vtable for FloppyDrive+0x13>
+10000ceb:	44                   	inc    esp
+10000cec:	69 73 6b 20 44 72 69 	imul   esi,DWORD PTR [ebx+0x6b],0x69724420
+10000cf3:	76 65                	jbe    10000d5a <vtable for Floppy+0x26>
+10000cf5:	00 66 90             	add    BYTE PTR [esi-0x70],ah
 
-10000878 <vtable for FloppyDrive>:
+10000cf8 <vtable for FloppyDrive>:
 	...
-	10000888: R_386_32	FloppyDrive::open(int, int, void*)
-	1000088c: R_386_32	FloppyDrive::close(int, int, void*)
-	10000890: R_386_32	Device::hibernate()
-	10000894: R_386_32	Device::wake()
-	10000898: R_386_32	Device::detect()
-	1000089c: R_386_32	Device::disableLegacy()
-	100008a0: R_386_32	Device::powerSaving(PowerSavingLevel)
-	100008a4: R_386_32	PhysicalDisk::eject()
-	100008a8: R_386_32	__cxa_pure_virtual
-	100008ac: R_386_32	__cxa_pure_virtual
-	100008b0: R_386_32	FloppyDrive::configure()
+	10000d08: R_386_32	FloppyDrive::open(int, int, void*)
+	10000d0c: R_386_32	FloppyDrive::close(int, int, void*)
+	10000d10: R_386_32	Device::hibernate()
+	10000d14: R_386_32	Device::wake()
+	10000d18: R_386_32	Device::detect()
+	10000d1c: R_386_32	Device::disableLegacy()
+	10000d20: R_386_32	Device::powerSaving(PowerSavingLevel)
+	10000d24: R_386_32	PhysicalDisk::eject()
+	10000d28: R_386_32	__cxa_pure_virtual
+	10000d2c: R_386_32	__cxa_pure_virtual
+	10000d30: R_386_32	FloppyDrive::configure()
 
-100008b4 <vtable for Floppy>:
+10000d34 <vtable for Floppy>:
 	...
-	100008bc: R_386_32	Floppy::~Floppy()
-	100008c0: R_386_32	Floppy::~Floppy()
-	100008c4: R_386_32	Floppy::open(int, int, void*)
-	100008c8: R_386_32	Floppy::close(int, int, void*)
-	100008cc: R_386_32	Device::hibernate()
-	100008d0: R_386_32	Device::wake()
-	100008d4: R_386_32	Device::detect()
-	100008d8: R_386_32	Device::disableLegacy()
-	100008dc: R_386_32	Device::powerSaving(PowerSavingLevel)
-	100008e0: R_386_32	Floppy::configure()
+	10000d3c: R_386_32	Floppy::~Floppy()
+	10000d40: R_386_32	Floppy::~Floppy()
+	10000d44: R_386_32	Floppy::open(int, int, void*)
+	10000d48: R_386_32	Floppy::close(int, int, void*)
+	10000d4c: R_386_32	Device::hibernate()
+	10000d50: R_386_32	Device::wake()
+	10000d54: R_386_32	Device::detect()
+	10000d58: R_386_32	Device::disableLegacy()
+	10000d5c: R_386_32	Device::powerSaving(PowerSavingLevel)
+	10000d60: R_386_32	Floppy::wasFailure()
+	10000d64: R_386_32	Floppy::configure()
 
 Disassembly of section .text._ZN6FloppyD2Ev:
 
-100008e4 <Floppy::~Floppy()>:
-100008e4:	55                   	push   ebp
-100008e5:	89 e5                	mov    ebp,esp
-100008e7:	83 ec 08             	sub    esp,0x8
-100008ea:	ba 08 00 00 00       	mov    edx,0x8	100008eb: R_386_32	vtable for Floppy
-100008ef:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-100008f2:	89 10                	mov    DWORD PTR [eax],edx
-100008f4:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-100008f7:	83 ec 0c             	sub    esp,0xc
-100008fa:	50                   	push   eax
-100008fb:	e8 fc ff ff ff       	call   100008fc <Floppy::~Floppy()+0x18>	100008fc: R_386_PC32	HardDiskController::~HardDiskController()
-10000900:	83 c4 10             	add    esp,0x10
-10000903:	90                   	nop
-10000904:	c9                   	leave  
-10000905:	c3                   	ret    
+10000d68 <Floppy::~Floppy()>:
+10000d68:	55                   	push   ebp
+10000d69:	89 e5                	mov    ebp,esp
+10000d6b:	83 ec 08             	sub    esp,0x8
+10000d6e:	ba 08 00 00 00       	mov    edx,0x8	10000d6f: R_386_32	vtable for Floppy
+10000d73:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000d76:	89 10                	mov    DWORD PTR [eax],edx
+10000d78:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000d7b:	83 ec 0c             	sub    esp,0xc
+10000d7e:	50                   	push   eax
+10000d7f:	e8 fc ff ff ff       	call   10000d80 <Floppy::~Floppy()+0x18>	10000d80: R_386_PC32	HardDiskController::~HardDiskController()
+10000d84:	83 c4 10             	add    esp,0x10
+10000d87:	90                   	nop
+10000d88:	c9                   	leave  
+10000d89:	c3                   	ret    
 
 Disassembly of section .text._ZN6FloppyD0Ev:
 
-10000906 <Floppy::~Floppy()>:
-10000906:	55                   	push   ebp
-10000907:	89 e5                	mov    ebp,esp
-10000909:	83 ec 08             	sub    esp,0x8
-1000090c:	83 ec 0c             	sub    esp,0xc
-1000090f:	ff 75 08             	push   DWORD PTR [ebp+0x8]
-10000912:	e8 fc ff ff ff       	call   10000913 <Floppy::~Floppy()+0xd>	10000913: R_386_PC32	Floppy::~Floppy()
-10000917:	83 c4 10             	add    esp,0x10
-1000091a:	83 ec 08             	sub    esp,0x8
-1000091d:	68 a8 01 00 00       	push   0x1a8
-10000922:	ff 75 08             	push   DWORD PTR [ebp+0x8]
-10000925:	e8 fc ff ff ff       	call   10000926 <Floppy::~Floppy()+0x20>	10000926: R_386_PC32	operator delete(void*, unsigned long)
-1000092a:	83 c4 10             	add    esp,0x10
-1000092d:	c9                   	leave  
-1000092e:	c3                   	ret    
+10000d8a <Floppy::~Floppy()>:
+10000d8a:	55                   	push   ebp
+10000d8b:	89 e5                	mov    ebp,esp
+10000d8d:	83 ec 08             	sub    esp,0x8
+10000d90:	83 ec 0c             	sub    esp,0xc
+10000d93:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+10000d96:	e8 fc ff ff ff       	call   10000d97 <Floppy::~Floppy()+0xd>	10000d97: R_386_PC32	Floppy::~Floppy()
+10000d9b:	83 c4 10             	add    esp,0x10
+10000d9e:	83 ec 08             	sub    esp,0x8
+10000da1:	68 a8 01 00 00       	push   0x1a8
+10000da6:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+10000da9:	e8 fc ff ff ff       	call   10000daa <Floppy::~Floppy()+0x20>	10000daa: R_386_PC32	operator delete(void*, unsigned long)
+10000dae:	83 c4 10             	add    esp,0x10
+10000db1:	c9                   	leave  
+10000db2:	c3                   	ret    

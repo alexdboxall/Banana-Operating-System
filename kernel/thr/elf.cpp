@@ -515,7 +515,8 @@ namespace Thr
 
 				size_t addr = symbolTab[symbolNum].st_value;
 
-				//kprintf("Symbol: %s, addr = 0x%X, pos = 0x%X, info = 0x%X\n", ((char*) stringTab) + symbolTab[symbolNum].st_name, addr, pos, info);
+				kprintf("Symbol: %s, addr = 0x%X, pos = 0x%X, info = 0x%X\n", ((char*) stringTab) + symbolTab[symbolNum].st_name, addr, pos, info);
+				
 				bool dynamic = false;
 				if (addr == 0) {
 					addr = getAddressOfKernelSymbol(((char*) stringTab) + symbolTab[symbolNum].st_name);

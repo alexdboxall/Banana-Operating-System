@@ -9,24 +9,31 @@
 #include "reg/registry.hpp"
 #include "hal/intctrl.hpp"
 #include "hw/ports.hpp"
-#include "hw/acpi.hpp"
+#include "hw/acpi.hpp" 
 #include "fs/vfs.hpp"
 
 extern "C" {
 #include "libk/string.h"
-}
+} 
 
-#pragma GCC optimize ("Os")
+#pragma GCC optimize ("O0")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
 #pragma GCC optimize ("-fno-align-jumps")
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
+void start(Device* parent);
+void begin(void* a)
+{
+	start((Device*) a);
+}
 void start(Device* parent)
 {
-	Floppy* dev = new Floppy();
+	Floppy* dev = new Floppy(); 
+	kprintf("dev = 0x%X\n", dev);
 	parent->addChild(dev);
+	dev->wasFailure();
 	//dev->configure();
 	//dev->open(0x3F0, 0, nullptr);
 }
@@ -384,3 +391,17 @@ int FloppyDrive::close(int, int, void*)
 {
 	return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
