@@ -22,13 +22,12 @@ namespace Sys
 	/// ...
 	/// </summary>
 	/// <param name="ebx">Pointer to store 4096 bytes of data, 4000 of characters, then width (4 bytes) and height (4 bytes). After that is the terminal's name.</param>
-	/// <param name="ecx">Does not matter yet.</param>
-	/// <param name="edx">Does not matter yet.</param>
+	/// <param name="ecx">The PID of the task.</param>
 	/// <returns>Zero.</returns>
 	/// 
 	uint64_t getVGAPtr(regs* r)
 	{
-		VgaText* terminal = currentTaskTCB->processRelatedTo->terminal;
+		VgaText* terminal = Thr::processFromPID(r->ecx)->terminal;
 
 		memcpy((void*) r->ebx, (const char*) terminal->displayData, 4000);
 		*((int*) (r->ebx + 4000)) = terminal->cursorX;
