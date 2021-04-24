@@ -480,7 +480,7 @@ uint64_t sysCallSpawn(regs* r)
 {
 	if (!r->edx) return 0;
 
-	Process* p = new Process((const char*) r->edx, currentTaskTCB->processRelatedTo, (char**) r->ecx);
+	Process* p = new Process((const char*) r->edx, r->ebx ? nullptr : currentTaskTCB->processRelatedTo, (char**) r->ecx);
 	if (p->failedToLoadProgram) {
 		return 0;
 	}

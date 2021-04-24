@@ -13,6 +13,8 @@ uint16_t* vga;
 Window* cons[25];
 WsbeScript script;
 
+int pid;
+
 uint32_t vgaColours[16] = {
 	0x000000,
 	0x0000AA,
@@ -35,7 +37,7 @@ uint32_t vgaColours[16] = {
 void redoPaintScript(bool repaint)
 {
 	extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
-	SystemCall(GetVGAPtr, (size_t) vga, 0, 0);
+	SystemCall(GetVGAPtr, (size_t) vga, pid, 0);
 
 	int cx = vga[2000];
 	int cy = vga[2002];
@@ -77,7 +79,7 @@ int main (int argc, char *argv[])
 	extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
 	
 	char* aaa[] = { "C:/Banana/System/command.exe", 0 };
-	int pid = SystemCall(Spawn, 0, (size_t) aaa, (size_t) aaa[0]);
+	pid = SystemCall(Spawn, 1, (size_t) aaa, (size_t) aaa[0]);
 
 	SystemCall(GetVGAPtr, (size_t) vga, pid, 0);
 
