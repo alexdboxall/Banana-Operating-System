@@ -75,7 +75,11 @@ int main (int argc, char *argv[])
 	vga = (uint16_t*) malloc(4096);
 
 	extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
-	SystemCall(GetVGAPtr, (size_t) vga, 0, 0);
+	
+	char* aaa[] = { "C:/Banana/System/command.exe", 0 };
+	int pid = SystemCall(Spawn, 0, (size_t) aaa, (size_t) aaa[0]);
+
+	SystemCall(GetVGAPtr, (size_t) vga, pid, 0);
 
 	Window* win = wsbeCreateWindow(40, 40, 80 * CHAR_WIDTH + 10, 25 + 25 * CHAR_HEIGHT + 10, WIN_TOPLEVELWIN | WIN_NORESIZING);
 	wsbeSetWindowTitle(win, (const char*) (vga + 2004));
