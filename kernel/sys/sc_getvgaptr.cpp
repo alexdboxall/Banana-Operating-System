@@ -35,5 +35,3 @@ namespace Sys
 		return 0;
 	}
 }
-
-

@@ -101,7 +101,7 @@ void ISA::doFloppy()
 {
 	uint16_t* biosDataArea = (uint16_t*) (size_t) 0x410;
 	if ((*biosDataArea) & 1) {
-		//executeDLL(loadDLL("C:/Banana/Drivers/floppy.sys"), this);
+		Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/floppy.sys"), this);
 	}
 }
 
