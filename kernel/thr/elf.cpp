@@ -585,7 +585,7 @@ namespace Thr
 					uint32_t* entry = (uint32_t*) (pos - entryPoint + relocationPoint);
 					uint32_t x;
 
-					if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum - 4) {
+					if (info == 0x101 || info == 0x401 || || (info >> 8) < (elf->shNum - 4 > 0xC ? 0xC : elf->shNum - 4)) {
 						kprintf("R_386_PC32	Modifying symbol 0x%X at 0x%X to become 0x???\n", *entry, entry);
 						kprintf("addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
 						
