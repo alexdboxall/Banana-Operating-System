@@ -713,10 +713,10 @@ namespace Thr
 		kprintf("finding process from PID.\n");
 
 		lockScheduler();
-		ThreadControlBlock* first = taskList.getFirstElement();
+		auto first = taskList.getFirstElement();
 
 		while (1) {
-			ThreadControlBlock* tcb = taskList.getFirstElement();
+			auto tcb = taskList.getFirstElement();
 			taskList.removeFirst();
 			taskList.addElement(tcb);
 
