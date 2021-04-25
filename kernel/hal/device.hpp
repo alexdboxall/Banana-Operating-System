@@ -67,6 +67,8 @@ enum class DeviceType
 	CPU,
 	SystemDevice,
 
+	Driverless,
+
 	Unknown,
 };
 
