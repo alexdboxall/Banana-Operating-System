@@ -12,6 +12,7 @@ void start(void* _parent)
 #include "sb16.hpp"
 #include "gameport.hpp"
 #include "ps2.hpp"
+#include "fdc.hpp"
 
 #include "core/common.hpp"
 #include "thr/elf.hpp"
@@ -101,7 +102,9 @@ void ISA::doFloppy()
 {
 	uint16_t* biosDataArea = (uint16_t*) (size_t) 0x410;
 	if ((*biosDataArea) & 1) {
-		Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/floppy.sys"), this);
+		Floppy* dev = new Floppy();
+		this->addChild(dev);
+		dev->_open(0x3F0, 0, nullptr);
 	}
 }
 

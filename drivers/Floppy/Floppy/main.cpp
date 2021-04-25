@@ -571,6 +571,7 @@ int FloppyDrive::_open(int _num, int _type, void* _parent)
 
 	sectorSize = 512;
 	removable = true;
+	floppy = true;
 
 	sizeInKBs = ((int) floppyTable[_type].cylinders) * ((int) floppyTable[_type].sectors) * ((int) floppyTable[_type].heads) / 2;
 
@@ -913,6 +914,9 @@ void FloppyDrive::lbaToCHS(uint32_t lba, int* cyl, int* head, int* sector)
 }
 
 uint8_t _TEMP_trackBuffer[0x4800];
+uint8_t _TEMP_cylinder0_bf[0x4800];
+bool hasCyl0Bf = false;
+int _TEMP_cyl = -1;
 
 int FloppyDrive::read(uint64_t lba, int count, void* ptr)
 {
@@ -923,13 +927,31 @@ int FloppyDrive::read(uint64_t lba, int count, void* ptr)
 	kprintf("FloppyDrive::read called.\n");
 	int cyl, head, sector;
 	lbaToCHS(lba, &cyl, &head, &sector);
+
 	kprintf("C 0x%X, H 0x%X, S 0x%X\n", cyl, head, sector);
-	doTrack(cyl, false, _TEMP_trackBuffer);
-	kprintf("read buffer here: 0x%X\n", _TEMP_trackBuffer);
-	kprintf("did track.\n");
-	memcpy(ptr, _TEMP_trackBuffer + (sector - 1) * 512, 512);
-	kprintf("did memcpy.\n");
-	kprintf("ptr = 0x%X.\n", ptr);
+
+	if (cyl == 0) {
+		if (!hasCyl0Bf) {
+			doTrack(0, false, _TEMP_cylinder0_bf);
+			hasCyl0Bf = true;
+		}
+
+	} else {
+		if (cyl != _TEMP_cyl) {
+			kprintf("reading track.\n");
+			doTrack(cyl, false, _TEMP_trackBuffer);
+			_TEMP_cyl = cyl;
+		}
+	}
+	
+
+	int sectorsPerTrack = floppyTable[(int) fdc->driveTypes[num]].sectors;
+
+	if (cyl == 0) {
+		memcpy(ptr, _TEMP_cylinder0_bf + (sector - 1) * 512 + head * sectorsPerTrack * 512, 512);
+	} else {
+		memcpy(ptr, _TEMP_trackBuffer + (sector - 1) * 512 + head * sectorsPerTrack * 512, 512);
+	}
 
 	return 0;
 }
