@@ -327,7 +327,7 @@ LinkedList<Device> getDevicesOfType(DeviceType devType)
 
 DriverlessDevice::DriverlessDevice(const char* name): Device(name)
 {
-	type = Driverless;
+	type = DeviceType::Driverless;
 }
 
 int DriverlessDevice::open(int, int, void*)
