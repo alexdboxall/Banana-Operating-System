@@ -399,13 +399,21 @@ int ACPI::open(int mode, int, void*)
 
 	Virt::setupPageSwapping(12);
 	
-	LinkedList<Device> driverless = getDevicesOfType(DeviceType::Driverless);
-	while (!driverless.isEmpty()) {
-		Device* element = driverless.getFirstElement();
-		driverless.removeFirst();
 
-		DriverlessDevice* dev = (DriverlessDevice*) element;
+	//this should be moved to its own function
+	{
+
+		LinkedList<Device> driverless = getDevicesOfType(DeviceType::Driverless);
+		while (!driverless.isEmpty()) {
+			Device* element = driverless.getFirstElement();
+			driverless.removeFirst();
+
+			DriverlessDevice* dev = (DriverlessDevice*) element;
+			kprintf("Found driverless device with name: %s\n", dev->getName());
+		}
+
 	}
+	
 
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/common.sys"), computer);
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
