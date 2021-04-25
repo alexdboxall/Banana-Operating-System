@@ -202,6 +202,8 @@ void PCI::foundDevice(PCIDeviceInfo info)
 		
 	} else {
 
+		kprintf("Found a PCI device: %d, %d\n", info.classCode, info.subClass);
+
 		//NOTE: It will be set up as a DriverlessDevice for now
 		//		When we load a driver, we need to REMOVE THE DRIVELESS DEVICE from the tree
 		//		and replace it with the drivered device
