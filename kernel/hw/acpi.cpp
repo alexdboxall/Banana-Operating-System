@@ -399,8 +399,17 @@ int ACPI::open(int mode, int, void*)
 
 	Virt::setupPageSwapping(12);
 	
+	LinkedList<Device> driverless = getDevicesOfType(DeviceType::Driverless);
+	while (!driverless.isEmpty()) {
+		Device* element = driverless.getFirstElement();
+		driverless.removeFirst();
+
+		DriverlessDevice* dev = (DriverlessDevice*) element;
+	}
+
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/common.sys"), computer);
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
+
 
 	if (computer->features.hasACPI) {
 		File* f = new File("C:/Banana/Drivers/acpica.sys", kernelProcess);
