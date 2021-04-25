@@ -141,17 +141,17 @@ void Floppy::writePort(FloppyReg reg, uint8_t value)
 
 void Floppy::driveDetection()
 {
-	uint8_t drives;
+	uint8_t drvs;
 	uint8_t extendedDrives;
 
 	kprintf("Floppy::driveDetection()\n");
 
 	//do some CMOS detection
 	if (base == 0x3F0) {
-		drives = Krnl::computer->readCMOS(0x10);
+		drvs = Krnl::computer->readCMOS(0x10);
 
-		int drvA = drives >> 4;
-		int drvB = drives & 0xF;
+		int drvA = drvs >> 4;
+		int drvB = drvs & 0xF;
 
 		kprintf("Drive type 0: 0x%X\n", drvA);
 		kprintf("Drive type 1: 0x%X\n", drvB);
@@ -159,12 +159,14 @@ void Floppy::driveDetection()
 		if (drvA) {
 			FloppyDrive* dev = new FloppyDrive();
 			driveTypes[0] = (DriveType) drvA;
+			drives[0] = dev;
 			addChild(dev);
 			dev->_open(0, drvA, this);
 		}
 		if (drvA && drvB) {
 			FloppyDrive* dev = new FloppyDrive();
 			driveTypes[1] = (DriveType) drvB;
+			drives[1] = dev;
 			addChild(dev);
 			dev->_open(1, drvB, this);
 		}
@@ -264,6 +266,8 @@ bool Floppy::waitIRQ(int millisecTimeout)
 
 void Floppy::reset()
 {
+	kprintf("void Floppy::reset()\n");
+
 retry:
 	receivedIRQ = false;
 	currentSelection = -1;
@@ -350,14 +354,6 @@ void Floppy::dmaInit(bool write)
 	a.l = (unsigned) dmaBase;
 	c.l = (unsigned) DMA_LENGTH - 1; // -1 because of DMA counting
 
-	// check that address is at most 24-bits (under 16MB)
-	// check that count is at most 16-bits (DMA limit)
-	// check that if we add count and address we don't get a carry
-	// (DMA can't deal with such a carry, this is the 64k boundary limit)
-	if ((a.l >> 24) || (c.l >> 16) || (((a.l & 0xffff) + c.l) >> 16)) {
-		panic("floppy_dma_init: static buffer problem\n");
-	}
-
 	outb(0x0a, 0x06);   // mask chan 2
 
 	outb(0x0c, 0xff);   // reset flip-flop
@@ -408,7 +404,7 @@ bool Floppy::select(int drive, bool state)
 
 	} else if (!selectionLock || currentSelection == -1) {
 		//only redo it all if we didn't just have it
-		kprintf("select (A).\n");
+		kprintf("select (A). %d\n", drive);
 
 		if (currentSelection != drive) {
 			kprintf("select (B).\n");
@@ -466,34 +462,50 @@ bool Floppy::select(int drive, bool state)
 
 void Floppy::motor(int num, bool state)
 {
+	kprintf("Floppy::motor\n");
+	kprintf("num = %d, state = %d\n", num, state);
+
 	if (state) {
+		kprintf("state.\n");
 		if (motorStates[num] == MotorState::Off) {
 			//start drive
 
+			kprintf("starting the motor.\n");
 			lockScheduler();
 			uint8_t dor = readPort(FloppyReg::DOR);
+			kprintf("dor 1 = 0x%X\n", dor);
+			kprintf("dor 2 = 0x%X\n", dor | (DOR_MOTOR_BASE << num));
 			writePort(FloppyReg::DOR, dor | (DOR_MOTOR_BASE << num));
 			unlockScheduler();
+
+			kprintf("motor again.\n");
 
 			if (driveTypes[num] == DriveType::Drv_1440) {
 				nanoSleep(1000 * 1000 * 300);
 			} else {
 				nanoSleep(1000 * 1000 * 500);
 			}
+			kprintf("motor again 2.\n");
 
 			motorStates[num] = MotorState::On;
+			kprintf("motor again 3.\n");
 
 		} else if (motorStates[num] == MotorState::Waiting) {
+			kprintf("motor again 4.\n");
 			//put back to on mode
 			motorStates[num] = MotorState::On;
 		}
 
 	} else {
+		kprintf("motor again 5.\n");
 		if (motorStates[num] == MotorState::On) {
+			kprintf("motor again 6.\n");
 			motorStates[num] = MotorState::Waiting;
 			motorTicks[num] = 2500;
 		}
 	}
+
+	kprintf("Floppy::motor done.\n");
 }
 
 
@@ -510,6 +522,7 @@ FloppyDrive::FloppyDrive() : PhysicalDisk("Floppy Disk Drive", 512)
 
 void FloppyDrive::motorOn()
 {
+	kprintf("FloppyDrive::motorOn num = %d\n", num);
 	fdc->motor(num, true);
 }
 
@@ -554,6 +567,7 @@ int FloppyDrive::_open(int _num, int _type, void* _parent)
 {
 	fdc = (Floppy*) _parent;
 	num = _num;
+	kprintf("num = %d\n", num);
 
 	sectorSize = 512;
 	removable = true;
@@ -602,9 +616,9 @@ retry:
 		unselect();
 		return false;
 	}
-	kprintf("seek (sel).\n");
+	kprintf("seek (sel) %d.\n", num);
 	select();
-	kprintf("seek (on).\n");
+	kprintf("seek (on) %d.\n", num);
 	motorOn();
 	kprintf("seek (1).\n");
 
@@ -674,7 +688,9 @@ retry:
 	}
 
 	//select();
+	kprintf("cal (on), %d\n", num);
 	motorOn();
+	kprintf("cal (0)\n");
 
 	fdc->writeCommand(RECALIBRATE);
 	if (fdc->wasFailure()) {
@@ -682,6 +698,7 @@ retry:
 		++retries;
 		goto retry;
 	}
+	kprintf("cal (1)\n");
 
 	fdc->receivedIRQ = false;
 
@@ -691,6 +708,7 @@ retry:
 		++retries;
 		goto retry;
 	}
+	kprintf("cal (2)\n");
 
 	bool gotIRQ = fdc->waitIRQ(1500);
 	if (!gotIRQ) {
@@ -698,15 +716,18 @@ retry:
 		++retries;
 		goto retry;
 	}
+	kprintf("cal (3)\n");
 
 	int st0 = 0xC0;
 	int cyl = -1;
 	bool success = fdc->senseInterrupt(&st0, &cyl);
+	kprintf("cal (4)\n");
 	if (!success) fdc->reset();
 	if (!success || cyl || !(st0 & 0x20)) {
 		++retries;
 		goto retry;
 	}
+	kprintf("cal (5)\n");
 
 	motorOff();
 	//unselect();
