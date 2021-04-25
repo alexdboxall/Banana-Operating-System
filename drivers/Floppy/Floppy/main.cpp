@@ -916,14 +916,20 @@ uint8_t _TEMP_trackBuffer[0x4800];
 
 int FloppyDrive::read(uint64_t lba, int count, void* ptr)
 {
+	if (count != 1) {
+		panic("floppy count not 1");
+	}
 	kprintf("FloppyDrive::read called.\n");
 	int cyl, head, sector;
 	lbaToCHS(lba, &cyl, &head, &sector);
 	kprintf("C 0x%X, H 0x%X, S 0x%X\n", cyl, head, sector);
 	doTrack(cyl, false, _TEMP_trackBuffer);
+	kprintf("read buffer here: 0x%X\n", _TEMP_trackBuffer);
 	kprintf("did track.\n");
 	memcpy(ptr, _TEMP_trackBuffer + (sector - 1) * 512, 512);
 	kprintf("did memcpy.\n");
+	kprintf("ptr = 0x%X.\n", ptr);
+	panic("READ BUFFERS.\n");
 
 	return 0;
 }
