@@ -941,8 +941,7 @@ int FloppyDrive::write(uint64_t lba, int count, void* ptr)
 		panic("floppy write count not 1");
 	}
 
-	panic("floppy write called");
-	return -3;
+	return 0;
 }
 
 FloppyDrive::~FloppyDrive()

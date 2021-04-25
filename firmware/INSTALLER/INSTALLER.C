@@ -75,12 +75,15 @@ bool fadeWindows1And2 = false;
 5 = restart
 */
 
+bool disclaimPart2 = false;
+
 #define PHASE_CHECK_REQ		0
 #define PHASE_PARTITION		1
 #define PHASE_FORMATTING	2
 #define PHASE_COPYING		3
 #define PHASE_FINALISING	4
 #define PHASE_DONE			5
+#define PHASE_LEGAL_1		6
 
 int installPhase = 0;
 
@@ -103,6 +106,11 @@ void drawScreen()
 	{
 		char s[] = "Checking\nsystem\nrequirements\n";
 		for (int i = 0, x = 1; s[i]; ++i) { char c = s[i]; if (c == '\n') { x = 1; ++y; } else { writeCharacter(x++, y, c, installPhase == 0 ? TCYellow : TCWhite, TCBlack); } }
+		++y;
+	}
+	{
+		char s[] = "Legal\nnotices\n";
+		for (int i = 0, x = 1; s[i]; ++i) { char c = s[i]; if (c == '\n') { x = 1; ++y; } else { writeCharacter(x++, y, c, installPhase == 6 ? TCYellow : TCWhite, TCBlack); } }
 		++y;
 	}
 	{
@@ -189,12 +197,12 @@ void windowWrite(Window* w, int x, int y, char* t)
 	}
 }
 
-void windowWriteBlue(Window* w, int x, int y, char* t)
+void windowWriteCol(Window* w, int x, int y, char* t, int col)
 {
 	bool q = (windows[0] == w || windows[1] == w) && fadeWindows1And2;
 
 	for (int j = 0; j < __strlen(t); ++j) {
-		writeCharacter(w->x + x + j + 18, w->y + y + 3, t[j], TCBlue, q ? TCLightGrey : TCWhite);
+		writeCharacter(w->x + x + j + 18, w->y + y + 3, t[j], col, q ? TCLightGrey : TCWhite);
 	}
 }
 
@@ -251,6 +259,53 @@ void ramTest2(Window* w)
 
 	windowWrite(w, 0, 12, "To continue, press ENTER");
 	windowWrite(w, 0, 13, "To cancel the installation, press ESC");
+}
+
+void disclaimer(Window* w)
+{
+	windowWriteCol(w, 0, 0, "Please read the following terms:", TCRed);
+	windowWrite(w, 0, 1, "This software is provided by the copyright holders");
+	windowWrite(w, 0, 2, "and contributors \"AS IS\" and any express or implied");
+	windowWrite(w, 0, 3, "warranties, including, but not limited to, the");
+	windowWrite(w, 0, 4, "implied warranties of merchantability and fitness for");
+	windowWrite(w, 0, 5, "a particular purpose are discliamed. In no event shall");
+	windowWrite(w, 0, 6, "the copyright owner or contributors be liable for any");
+	windowWrite(w, 0, 7, "direct, indirect, incidental, special, exemplary, or");
+	windowWrite(w, 0, 8, "consequential damages (including, but not limited to,");
+	windowWrite(w, 0, 9, "loss of data; or hardware damage; or personal injury)");
+	windowWrite(w, 0, 10, "however caused and on any theory of liability, whether");
+	windowWrite(w, 0, 11, "in contract, strict liability, or tort (including");
+	windowWrite(w, 0, 12, "negligence or otherwise) arising in any way out of the");
+	windowWrite(w, 0, 13, "use of this software, even if advised of the");
+	windowWrite(w, 0, 14, "possibility of such damage.");
+	windowWriteCol(w, 0, 16, "To install and/or use this software you must agree to ", TCBlue);
+	
+	if (disclaimPart2) {
+		windowWriteCol(w, 0, 17, "the above terms. Press ENTER to install, or ESC to quit.", TCBlue);
+	} else {
+		windowWriteCol(w, 0, 17, "the above terms.", TCBlue);
+	}
+}
+
+void disclaimer2(Window* w)
+{
+	windowWriteCol(w, 0, 0, "DANGER!", TCRed);
+	windowWrite(w, 0, 2, "This is software is to be used at the user's own risk.");
+	windowWrite(w, 0, 4, "These risks include, but are not limited to, ");
+	windowWrite(w, 0, 5, "the following:");
+	windowWriteCol(w, 0, 7,  "   - Irreversible damage to the computer's hardware", TCBlue);
+	windowWriteCol(w, 0, 8,  "   - Irreversible loss of user data", TCBlue);
+	windowWriteCol(w, 0, 9,  "   - Fire risks", TCBlue);
+	windowWriteCol(w, 0, 10, "   - Monitor failures, which could lead to fire,", TCBlue);
+	windowWriteCol(w, 0, 11, "     explosions, electrocution, or radiation.", TCBlue);
+	windowWrite(w, 0, 13, "The user must accept the risks to install and/or");
+	
+	if (disclaimPart2) {
+		windowWrite(w, 0, 14, "use this software. To accept the risks and install");
+		windowWrite(w, 0, 15, "this software, press ENTER. Otherwise, press ESC.");
+	} else {
+		windowWrite(w, 0, 14, "use this software.");
+	}
 }
 
 void lackRAM(Window* w)
@@ -1247,8 +1302,8 @@ void installHere()
 	windowWrite(&wx, 0, 5, "Press ESC to cancel, or hold shift and");
 	windowWrite(&wx, 0, 6, "press I to install.");
 
-	windowWriteBlue(&wx, 1, 8, " \"Take a gulp and take a breath");
-	windowWriteBlue(&wx, 1, 9, "   and go ahead and sign the scroll!\"");
+	windowWriteCol(&wx, 1, 8, " \"Take a gulp and take a breath", TCBlue);
+	windowWriteCol(&wx, 1, 9, "   and go ahead and sign the scroll!\"", TCBlue);
 
 	while (1) {
 		char c = blockingKeyboard();
@@ -1521,6 +1576,37 @@ void main()
 	drawScreen();
 	continueOrExit();
 
+	installPhase = PHASE_LEGAL_1;
+
+	__memcpy(w.title, " Disclaimer ", __strlen(" Disclaimer "));
+	w.x -= 3;
+	w.y -= 1;
+	w.w += 9;
+	w.h += 2;
+
+	disclaimPart2 = true;// false;
+	w.repaint = disclaimer2;
+	drawScreen();
+	sleep(2);
+	//disclaimPart2 = true;
+	//drawScreen();
+	continueOrExit();
+
+	disclaimPart2 = true;// false;
+	w.repaint = disclaimer;
+	drawScreen();
+	sleep(3);
+	//disclaimPart2 = true;
+	//drawScreen();
+	continueOrExit();
+
+	
+
+	__memcpy(w.title, "Banana Setup", __strlen("Banana Setup"));
+	w.x += 3;
+	w.y += 1;
+	w.w -= 9;
+	w.h -= 2;
 	installPhase = PHASE_PARTITION;
 
 	while (1) {

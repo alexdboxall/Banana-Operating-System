@@ -316,10 +316,15 @@ int VESA::open(int a, int b, void* c)
 	ModeInfo best = calculateBestMode();
 
 	setMode(best.number);
+ 
+	if (best.bpp == 15) ppxptr = &VESA::putpixel15;
+	if (best.bpp == 16) ppxptr = &VESA::putpixel16;
+	if (best.bpp == 24) ppxptr = &VESA::putpixel24;
+	if (best.bpp == 32) ppxptr = &VESA::putpixel32;
 	return 0;
 }
 
-uint32_t colTo15(uint32_t col)
+inline __attribute__((always_inline)) uint32_t colTo15(uint32_t col)
 {
 	uint8_t red = col >> 16;
 	uint8_t green = col >> 8;
@@ -332,7 +337,7 @@ uint32_t colTo15(uint32_t col)
 	return ((uint32_t) blue) | (((uint32_t) green) << 5) | (((uint32_t) red) << 10);
 }
 
-uint32_t colTo16(uint32_t col)
+inline __attribute__((always_inline)) uint32_t colTo16(uint32_t col)
 {
 	uint8_t red = col >> 16;
 	uint8_t green = col >> 8;
@@ -345,18 +350,29 @@ uint32_t colTo16(uint32_t col)
 	return ((uint32_t) blue) | (((uint32_t) green) << 5) | (((uint32_t) red) << 11);
 }
 
+void VESA::putpixel15(int x, int y, uint32_t colour)
+{
+	colour = colTo15(colour);
+	((uint16_t*) vram)[y * pitch + x] = colour;
+}
+
+void VESA::putpixel16(int x, int y, uint32_t colour)
+{
+	colour = colTo16(colour);
+	((uint16_t*) vram)[y * pitch + x] = colour;
+}
+
+void VESA::putpixel24(int x, int y, uint32_t colour)
+{
+
+}
+
+void VESA::putpixel32(int x, int y, uint32_t colour)
+{
+	((uint32_t*) vram)[y * pitch + x] = colour;
+}
+
 void VESA::putpixel(int x, int y, uint32_t colour)
 {
-	if (bpp == 15) {
-		colour = colTo15(colour);
-		((uint16_t*) vram)[y * pitch + x] = colour;
-
-	} else if (bpp == 16) {
-		colour = colTo16(colour);
-		((uint16_t*) vram)[y * pitch + x] = colour;
-
-	} else if (bpp == 32) {
-		((uint32_t*) vram)[y * pitch + x] = colour;
-
-	}
+	(this->*ppxptr)(x, y, colour);
 }

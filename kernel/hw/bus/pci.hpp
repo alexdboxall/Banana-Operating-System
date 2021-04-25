@@ -35,6 +35,14 @@ public:
 	void getDeviceData(uint8_t bus, uint8_t slot, uint8_t function); 
 	void foundDevice(PCIDeviceInfo info);
 
+	uint8_t readBAR8(uint32_t addr, int offset = 0);
+	uint16_t readBAR16(uint32_t addr, int offset = 0);
+	uint32_t readBAR32(uint32_t addr, int offset = 0);
+
+	void writeBAR8(uint32_t addr, uint8_t val, int offset = 0);
+	void writeBAR16(uint32_t addr, uint16_t val, int offset = 0);
+	void writeBAR32(uint32_t addr, uint32_t val, int offset = 0);
+
 	virtual void detect();						//Detect any children
 };
 #endif

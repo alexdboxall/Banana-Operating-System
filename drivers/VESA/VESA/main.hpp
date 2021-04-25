@@ -50,6 +50,13 @@ public:
 	int open(int, int, void*);
 	int close(int, int, void*);
 
+	void putpixel15(int x, int y, uint32_t colour);
+	void putpixel16(int x, int y, uint32_t colour);
+	void putpixel24(int x, int y, uint32_t colour);
+	void putpixel32(int x, int y, uint32_t colour);
+
+	void (VESA::*ppxptr)(int, int, uint32_t);
+
 	virtual void putpixel(int x, int y, uint32_t colour) override;
 };
 

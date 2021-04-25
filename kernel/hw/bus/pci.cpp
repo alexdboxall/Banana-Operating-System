@@ -25,6 +25,66 @@ int PCI::open(int a, int, void*)
 	return 0;
 }
 
+uint8_t PCI::readBAR8(uint32_t addr, int offset)
+{
+	if (addr & 1) {
+		return inb((addr & ~3) + offset);
+	} else {
+		uint8_t* ptr = (uint8_t*) ((addr & ~0xF) + offset);
+		return *ptr;
+	}
+}
+
+uint16_t PCI::readBAR16(uint32_t addr, int offset)
+{
+	if (addr & 1) {
+		return inw((addr & ~3) + offset);
+	} else {
+		uint16_t* ptr = (uint16_t*) ((addr & ~0xF) + offset);
+		return *ptr;
+	}
+}
+
+uint32_t PCI::readBAR32(uint32_t addr, int offset)
+{
+	if (addr & 1) {
+		return inl((addr & ~3) + offset);
+	} else {
+		uint32_t* ptr = (uint32_t*) ((addr & ~0xF) + offset);
+		return *ptr;
+	}
+}
+
+void PCI::writeBAR8(uint32_t addr, uint8_t val, int offset)
+{
+	if (addr & 1) {
+		outb((addr & ~3) + offset, val);
+	} else {
+		uint8_t* ptr = (uint8_t*) ((addr & ~0xF) + offset);
+		*ptr = val;
+	}
+}
+
+void PCI::writeBAR16(uint32_t addr, uint16_t val, int offset)
+{
+	if (addr & 1) {
+		outw((addr & ~3) + offset, val);
+	} else {
+		uint16_t* ptr = (uint16_t*) ((addr & ~0xF) + offset);
+		*ptr = val;
+	}
+}
+
+void PCI::writeBAR32(uint32_t addr, uint32_t val, int offset)
+{
+	if (addr & 1) {
+		outl((addr & ~3) + offset, val);
+	} else {
+		uint32_t* ptr = (uint32_t*) ((addr & ~0xF) + offset);
+		*ptr = val;
+	}
+}
+
 uint16_t PCI::getVendorID(uint8_t bus, uint8_t slot, uint8_t function)
 {
 	return pciReadWord(bus, slot, function, 0);
