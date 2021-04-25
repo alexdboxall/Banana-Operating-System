@@ -411,9 +411,26 @@ int ACPI::open(int mode, int, void*)
 			DriverlessDevice* dev = (DriverlessDevice*) element;
 			kprintf("Found driverless device with name: %s\n", dev->getName());
 
-			PCIDeviceInfo pciInfo = dev->pci.info;
-		}
+			/*
+			uint8_t classCode;
+	uint8_t subClass;
+	uint16_t vendorID;
 
+	uint8_t bus;
+	uint8_t slot;
+	uint8_t function;
+	uint8_t progIF;
+
+	uint32_t bar[6];
+
+	uint8_t interrrupt;
+	uint8_t intPIN;*/
+
+			PCIDeviceInfo pciInfo = dev->pci.info;
+			kprintf("classCode = 0x%X\n", pciInfo.classCode);
+			kprintf("subClass  = 0x%X\n", pciInfo.subClass);
+			kprintf("vendorID  = 0x%X\n", pciInfo.vendorID);
+		}
 	}
 	
 
