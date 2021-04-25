@@ -1,6 +1,7 @@
 #include "core/main.hpp"
 #include "hal/partition.hpp"
 #include "libk/string.h"
+
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
@@ -47,7 +48,6 @@ void createPartitionsForDisk(PhysicalDisk* parent)
 		//one must be bad
 		uint8_t invalidVal = (buffer[0x1BE] & 0x7F) + (buffer[0x1CE] & 0x7F) + (buffer[0x1DE] & 0x7F) + (buffer[0x1EE] & 0x7F);
 		if (invalidVal) {
-			kprintf("createPartitionsForDisk: sector size = %d, size in KBs %d\n", parent->sectorSize, parent->sizeInKBs);
 			makePartition(parent, 0, parent->sizeInKBs * 1024 / parent->sectorSize);
 			return;
 		}

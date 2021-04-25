@@ -919,6 +919,7 @@ int FloppyDrive::read(uint64_t lba, int count, void* ptr)
 	if (count != 1) {
 		panic("floppy count not 1");
 	}
+
 	kprintf("FloppyDrive::read called.\n");
 	int cyl, head, sector;
 	lbaToCHS(lba, &cyl, &head, &sector);
@@ -935,6 +936,7 @@ int FloppyDrive::read(uint64_t lba, int count, void* ptr)
 
 int FloppyDrive::write(uint64_t lba, int count, void* ptr)
 {
+	panic("floppy write called");
 	return -3;
 }
 
