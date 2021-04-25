@@ -929,7 +929,6 @@ int FloppyDrive::read(uint64_t lba, int count, void* ptr)
 	memcpy(ptr, _TEMP_trackBuffer + (sector - 1) * 512, 512);
 	kprintf("did memcpy.\n");
 	kprintf("ptr = 0x%X.\n", ptr);
-	panic("READ BUFFERS.\n");
 
 	return 0;
 }

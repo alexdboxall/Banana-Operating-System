@@ -29,7 +29,6 @@ void createPartitionsForDisk(PhysicalDisk* parent)
 {
 	//not a HDD, so no partitions
 	if (parent->sectorSize != 512) {
-		kprintf("createPartitionsForDisk: A\n");
 		makePartition(parent, 0, parent->sizeInKBs * 1024 / parent->sectorSize);
 		return;
 
@@ -39,7 +38,6 @@ void createPartitionsForDisk(PhysicalDisk* parent)
 
 		//no boot signature = no MBR
 		if (!(buffer[510] == 0x55 && buffer[511] == 0xAA)) {
-			kprintf("createPartitionsForDisk: B\n");
 			makePartition(parent, 0, parent->sizeInKBs * 1024 / parent->sectorSize);
 			return;
 		}
@@ -49,7 +47,7 @@ void createPartitionsForDisk(PhysicalDisk* parent)
 		//one must be bad
 		uint8_t invalidVal = (buffer[0x1BE] & 0x7F) + (buffer[0x1CE] & 0x7F) + (buffer[0x1DE] & 0x7F) + (buffer[0x1EE] & 0x7F);
 		if (invalidVal) {
-			kprintf("createPartitionsForDisk: C\n");
+			kprintf("createPartitionsForDisk: sector size = %d, size in KBs %d\n", parent->sectorSize, parent->sizeInKBs);
 			makePartition(parent, 0, parent->sizeInKBs * 1024 / parent->sectorSize);
 			return;
 		}
@@ -90,7 +88,6 @@ void createPartitionsForDisk(PhysicalDisk* parent)
 		//copy disk data
 		for (int i = 0; i < 4; ++i) {
 			if (size[i] && lbas[i]) {
-				kprintf("createPartitionsForDisk: D\n");
 				makePartition(parent, lbas[i], size[i]);
 			}
 		}
