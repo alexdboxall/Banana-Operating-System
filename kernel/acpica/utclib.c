@@ -317,30 +317,6 @@ memmove (
 
 #include <stdint.h>
 #include <stddef.h>
-void *
-memcpy (
-    void                    * Dest /*destination*/,
-    const void              * Src /*source*/,
-    ACPI_SIZE               Count /*num*/)
-{
-    void* originalDest = Dest;
-    //if (Count & 3) {
-        asm volatile("cld; rep movsb" :: "S"(Src), "D"(Dest), "c"(Count) : "cc", "memory");
-    //} else {
-    //    asm volatile("cld; rep movsd" :: "S"(Src), "D"(Dest), "c"(Count / 4) : "cc", "memory");
-    //}
-    return originalDest;
-
-    /*char                    *New = (char *) Dest;
-    char                    *Old = (char *) Src;
-
-    while (Count--)
-    {
-        *New++ = *Old++;
-    }
-
-    return (Dest);*/
-}
 
 
 /*******************************************************************************

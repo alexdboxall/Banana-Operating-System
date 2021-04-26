@@ -19,14 +19,13 @@
 //#pragma GCC optimize ("-fno-align-functions")
 
 extern "C" {
+#include "libk/string.h"
 #include "acpi.h"
 #include "actypes.h"
 
 #define FILE int
 	//MOST OF THESE DON'T ACTUALLY EXIST, JUST HERE TO STOP THE COMPILER COMPLAINING
 	//THAT WE DON'T HAVE THE HEADER FILE (THE DEFINITIONS ARE HIDDEN DEEP WITHIN ACPICA)
-
-	void* memcpy(void*  destination, const void*  source, size_t n);
 	void* memmove(void* destination, const void* source, size_t n);
 	char* strcpy(char*  destination, const char*  source);
 	char* strncpy(char*  destination, const char*  source, size_t n);
