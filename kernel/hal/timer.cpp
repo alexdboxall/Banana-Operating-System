@@ -75,10 +75,8 @@ void timerHandler(uint64_t nanosecs)
 
 	lockStuff();
 
-	// For each task, wake it up or put it back on the sleeping task list
-
-	ThreadControlBlock* first = (ThreadControlBlock*) sleepingTaskList.getFirstElement();
 	if (!sleepingTaskList.isEmpty()) {
+		ThreadControlBlock* first = (ThreadControlBlock*) sleepingTaskList.getFirstElement();
 		do {
 			ThreadControlBlock* curr = (ThreadControlBlock*) sleepingTaskList.getFirstElement();
 			sleepingTaskList.removeFirst();
@@ -99,14 +97,21 @@ void timerHandler(uint64_t nanosecs)
 
 	//do preemption
 	if (currentTaskTCB->timeSliceRemaining != 0 && Krnl::preemptionOn) {
+		lockScheduler();
 		if (currentTaskTCB->timeSliceRemaining <= nanosecs) {
+			schedule();
+		}
+		currentTaskTCB->timeSliceRemaining -= nanosecs;
+		unlockScheduler();
+
+		/*if (currentTaskTCB->timeSliceRemaining <= nanosecs) {
 			lockScheduler();
 			currentTaskTCB->timeSliceRemaining -= nanosecs;
 			schedule();
 			unlockScheduler();
 		} else {
 			currentTaskTCB->timeSliceRemaining -= nanosecs;
-		}
+		}*/
 	}
 
 	// Done, unlock the scheduler (and do any postponed task switches!)

@@ -186,7 +186,7 @@ static char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo)
 	static int lookupSize = 0;
 
 	if (!loadedLookupFile) {
-		File* f = new File("C:/Banana/System/PCI.LST", kernelProcess);
+		/*File* f = new File("C:/Banana/System/PCI.LST", kernelProcess);
 		f->open(FileOpenMode::Read);
 
 		uint64_t siz;
@@ -199,7 +199,7 @@ static char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo)
 		f->read(siz, lookupData, &br);
 		f->close();
 
-		lookupSize = siz;
+		lookupSize = siz;*/
 	}
 	
 	uint8_t classCode = 0;
