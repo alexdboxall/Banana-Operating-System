@@ -59,7 +59,17 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 	}
 	//nextThreadToRun->timeSliceRemaining = 50000000;
 
-	updateTimeUsed();
+	if (CPU::current()->features.hasTSC) {
+		static uint64_t currentCount = 0;
+		static uint64_t elapsed = 0;
+		static uint64_t lastCount = 0;
+
+		asm volatile ("rdtsc" : "=A"(currentCount));
+		elapsed = currentCount - lastCount;
+		lastCount = currentCount;
+
+		currentTaskTCB->timeKeeping += elapsed;
+	}
 
 	switchToThreadASM(nextThreadToRun);
 }
@@ -332,22 +342,6 @@ void schedule()
 		switchToThread(task);
 	}
 }
-
-void updateTimeUsed()
-{
-	if (!CPU::current()->features.hasTSC) return;
-
-	static uint64_t currentCount = 0;
-	static uint64_t elapsed = 0;
-	static uint64_t lastCount = 0;
-
-	asm volatile ("rdtsc" : "=A"(currentCount));
-	elapsed = currentCount - lastCount;
-	lastCount = currentCount;
-
-	currentTaskTCB->timeKeeping += elapsed;
-}
-
 void cleanupTerminatedTask(ThreadControlBlock* task)
 {
 	for (int i = 0; i < task->processRelatedTo->argc; ++i) {

@@ -18,6 +18,7 @@ public:
 	virtual int open(int, int, void*);			//Opens the device (init code).
 	virtual int close(int, int, void*);			//Perform other commands
 
+	static char* pciDetailsToFilepath(PCIDeviceInfo pciInfo);
 	void pciWriteWord(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset, uint16_t word);
 	uint16_t pciReadWord(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset);
 

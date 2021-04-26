@@ -430,6 +430,11 @@ int ACPI::open(int mode, int, void*)
 			kprintf("classCode = 0x%X\n", pciInfo.classCode);
 			kprintf("subClass  = 0x%X\n", pciInfo.subClass);
 			kprintf("vendorID  = 0x%X\n", pciInfo.vendorID);
+
+			char* filename = PCI::pciDetailsToFilepath(pciInfo);
+			if (filename) {
+				kprintf("driver: %s\n", filename);
+			}
 		}
 	}
 	

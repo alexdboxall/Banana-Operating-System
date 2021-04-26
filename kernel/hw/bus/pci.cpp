@@ -171,6 +171,50 @@ int PCI::close(int a, int b, void* c)
 	return 0;
 }
 
+/*
+PCIDeviceInfo pciInfo = dev->pci.info;
+	kprintf("classCode = 0x%X\n", pciInfo.classCode);
+	kprintf("subClass  = 0x%X\n", pciInfo.subClass);
+	kprintf("vendorID  = 0x%X\n", pciInfo.vendorID);
+
+	*/
+
+static char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo)
+{
+	static bool loadedLookupFile = false;
+	static char* lookupData = nullptr;
+	static int lookupSize = 0;
+
+	if (!loadedLookupFile) {
+		File* f = new File("C:/Banana/System/PCI.LST", kernelProcess);
+		f->open(FileOpenMode::Read);
+
+		uint64_t siz;
+		bool dir;
+		int br;
+
+		f->stat(&siz, &dir);
+
+		lookupData = (char*) malloc(siz);
+		f->read(siz, lookupData, &br);
+		f->close();
+
+		lookupSize = siz;
+	}
+	
+	uint8_t classCode = 0;
+	uint8_t subClass = 0;
+	uint16_t vendor = 0;
+	bool hasVendor = false;
+	int j = 0;
+
+	while (j < lookupSize) {
+		classCode |= lookupData[j++]
+	}
+
+	return nullptr;
+}
+
 void PCI::foundDevice(PCIDeviceInfo info)
 {
 	if (info.vendorID == 0xFFFF) return;
