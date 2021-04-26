@@ -182,9 +182,8 @@ extern "C" uint32_t hexStrToInt(const char* string);
 
 void Computer::displayFeatures()
 {
-	kprintf("HEX STRING TO INT: 0x2469  = 0x%X", hexStrToInt("2469"));
-	kprintf("HEX STRING TO INT: 0xABCD  = 0x%X", hexStrToInt("ABCD"));
-	kprintf("HEX STRING TO INT: 0x90F4A = 0x%X", hexStrToInt("90F4A"));
+	kprintf("HEX STRING TO INT: 0x12345678 = 0x%X\n", hexStrToInt("12345678"));
+	kprintf("HEX STRING TO INT: 0x9ABCDEF0 = 0x%X\n", hexStrToInt("9ABCDEF0"));
 
 	kprintf("Computer Features\n");
 	kprintf("    APIC   - %s\n", features.hasAPIC ? "Yes" : "No");
