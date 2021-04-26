@@ -251,7 +251,7 @@ char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo, char* outbuffer)
 			current[j] = 0;
 		}
 
-		if (!hasVendor || vendor == pci.vendorID) {
+		if (!hasVendor || vendor == pciInfo.vendorID) {
 			if (classCode == pciInfo.classCode && subClass == pciInfo.subClass) {
 				strcpy(outbuffer, current);
 				return outbuffer;
