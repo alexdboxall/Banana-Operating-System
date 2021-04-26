@@ -170,6 +170,67 @@ void disableIRQs();
 void enableIRQs();
 int getIRQNestingLevel();
 
+
+extern int irqDisableCounter;
+extern int postponeTaskSwitchesCounter;
+extern int taskSwitchesPostponedFlag;
+
+static inline __attribute__((always_inline)) void disableIRQs()
+{
+	asm volatile ("cli");
+	irqDisableCounter++;
+}
+
+static inline __attribute__((always_inline)) int getIRQNestingLevel()
+{
+	return irqDisableCounter;
+}
+
+static inline __attribute__((always_inline)) void enableIRQs()
+{
+	irqDisableCounter--;
+	if (irqDisableCounter == 0) {
+		asm volatile ("sti");
+	}
+}
+
+static inline __attribute__((always_inline)) void lockScheduler(void)
+{
+#ifndef SMP
+	disableIRQs();
+#endif
+}
+
+static inline __attribute__((always_inline)) void unlockScheduler(void)
+{
+#ifndef SMP
+	enableIRQs();
+#endif
+}
+
+static inline __attribute__((always_inline)) void lockStuff(void)
+{
+#ifndef SMP
+	disableIRQs();
+	postponeTaskSwitchesCounter++;
+#endif
+}
+
+static inline __attribute__((always_inline)) void unlockStuff(void)
+{
+#ifndef SMP
+	postponeTaskSwitchesCounter--;
+	if (postponeTaskSwitchesCounter == 0) {
+		if (taskSwitchesPostponedFlag != 0) {
+			taskSwitchesPostponedFlag = 0;
+			schedule();
+		}
+	}
+
+	enableIRQs();
+#endif
+}
+
 extern Process* kernelProcess;
 extern ThreadControlBlock* cleanerThread;
 extern LinkedList<volatile ThreadControlBlock> sleepingTaskList;
