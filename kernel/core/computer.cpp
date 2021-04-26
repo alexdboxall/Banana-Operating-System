@@ -178,7 +178,7 @@ void Computer::detectFeatures()
 #endif
 }
 
-extern "C" uint32_t hexStrToInt(char* string);
+extern "C" uint32_t hexStrToInt(const char* string);
 
 void Computer::displayFeatures()
 {
