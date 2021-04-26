@@ -735,6 +735,7 @@ int_common_stub:
     mov gs, ax
 
     push esp
+    cld             ; the kernel will "have a fit" if userspace has the direction flag set when we interrupt
     call int_handler
     add esp, 4
 
