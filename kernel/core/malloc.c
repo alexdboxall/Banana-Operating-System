@@ -252,6 +252,8 @@ void* mmap(void* addr, size_t length, int prot, int flags, int fd, size_t offset
 
 /* #define WIN32 */
 
+#define HAVE_MEMCPY
+
 #ifdef WIN32
 
 #define WIN32_LEAN_AND_MEAN
@@ -617,7 +619,7 @@ extern "C" {
 #else
 #if __STD_C
 void* memset(void*, int, size_t);
-void* memcpy(void*, const void*, size_t);
+//void* memcpy(void*, const void*, size_t);
 #else
 Void_t* memset();
 Void_t* memcpy();
