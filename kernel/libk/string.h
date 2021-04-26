@@ -9,13 +9,7 @@ extern "C" {
 
 	int memcmp(const void*, const void*, size_t);
 
-	void* realmemcpy(void* destination, const void* source, size_t n)
-	{
-		void* originalDest = destination;
-		asm volatile("cld; rep movsb" :: "S"(source), "D"(destination), "c"(n) : "cc", "memory");
-		return originalDest;
-	}
-
+	extern void* realmemcpy(void* destination, const void* source, size_t n);
 	static inline __attribute__((always_inline)) void* memcpy(void* destination, const void* source, size_t n)
 	{
 		return realmemcpy(destination, source, n);

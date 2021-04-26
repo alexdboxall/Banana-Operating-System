@@ -586,6 +586,12 @@ extern "C" {
 #define public_iCOMALLOc independent_comalloc
 #endif /* USE_DL_PREFIX */
 
+void* realmemcpy(void* destination, const void* source, size_t n)
+{
+    void* originalDest = destination;
+    asm volatile("cld; rep movsb" :: "S"(source), "D"(destination), "c"(n) : "cc", "memory");
+    return originalDest;
+}
 
 /*
   HAVE_MEMCPY should be defined if you are not otherwise using
