@@ -211,8 +211,8 @@ char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo)
 	while (j < lookupSize) {
 		classCode |= lookupData[j++]
 	}
-
-	return nullptr;*/
+	*/
+	return nullptr;
 }
 
 void PCI::foundDevice(PCIDeviceInfo info)

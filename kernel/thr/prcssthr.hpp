@@ -164,7 +164,6 @@ void unlockStuff(void);
 void lockStuff(void);
 void sleep(uint64_t seconds);
 void nanoSleep(uint64_t nanoseconds);
-void updateTimeUsed();
 void cleanerTaskFunction(void* context);
 int waitTask(int pid, int* wstatus, int options);
 void disableIRQs();
