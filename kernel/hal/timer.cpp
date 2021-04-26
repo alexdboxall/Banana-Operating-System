@@ -97,11 +97,11 @@ void timerHandler(uint64_t nanosecs)
 
 	//do preemption
 	if (currentTaskTCB->timeSliceRemaining != 0 && Krnl::preemptionOn) {
-		lockScheduler();
+		lockScheduler();		
+		currentTaskTCB->timeSliceRemaining -= nanosecs;
 		if (currentTaskTCB->timeSliceRemaining <= nanosecs) {
 			schedule();
 		}
-		currentTaskTCB->timeSliceRemaining -= nanosecs;
 		unlockScheduler();
 
 		/*if (currentTaskTCB->timeSliceRemaining <= nanosecs) {

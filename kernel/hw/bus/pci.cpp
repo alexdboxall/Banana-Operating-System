@@ -179,14 +179,14 @@ PCIDeviceInfo pciInfo = dev->pci.info;
 
 	*/
 
-static char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo)
+char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo)
 {
-	static bool loadedLookupFile = false;
+	/*static bool loadedLookupFile = false;
 	static char* lookupData = nullptr;
 	static int lookupSize = 0;
 
 	if (!loadedLookupFile) {
-		/*File* f = new File("C:/Banana/System/PCI.LST", kernelProcess);
+		File* f = new File("C:/Banana/System/PCI.LST", kernelProcess);
 		f->open(FileOpenMode::Read);
 
 		uint64_t siz;
@@ -199,7 +199,7 @@ static char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo)
 		f->read(siz, lookupData, &br);
 		f->close();
 
-		lookupSize = siz;*/
+		lookupSize = siz;
 	}
 	
 	uint8_t classCode = 0;
@@ -212,7 +212,7 @@ static char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo)
 		classCode |= lookupData[j++]
 	}
 
-	return nullptr;
+	return nullptr;*/
 }
 
 void PCI::foundDevice(PCIDeviceInfo info)
