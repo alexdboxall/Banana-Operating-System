@@ -324,9 +324,9 @@ memcpy (
     ACPI_SIZE               Count /*num*/)
 {
     //if (Count & 3) {
-        asm volatile("cld; rep movsb" :: "S"(Src), "D"(Dest), "c"(Count) : "esi", "edi", "ecx", "memory");
+        asm volatile("cld; rep movsb" :: "S"(Src), "D"(Dest), "c"(Count) : "cc", "memory");
     //} else {
-    //    asm volatile("cld; rep movsd" :: "S"(Src), "D"(Dest), "c"(Count / 4) : "esi", "edi", "ecx", "memory");
+    //    asm volatile("cld; rep movsd" :: "S"(Src), "D"(Dest), "c"(Count / 4) : "cc", "memory");
     //}
     return ((uint8_t*) Dest) - Count;
 
