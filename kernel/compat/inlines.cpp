@@ -1,3 +1,4 @@
+#include "core/virtmgr.hpp"
 #include "hw/cpu.hpp"
 #include "thr/prcssthr.hpp"
 
@@ -47,5 +48,5 @@ extern "C" void _Z11unlockStuffv()
 }
 
 extern "C" VAS* _ZN4Virt13getAKernelVASEv() {
-	return getAKernelVAS();
+	return Virt::getAKernelVAS();
 }
