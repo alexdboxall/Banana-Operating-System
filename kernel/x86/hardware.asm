@@ -820,4 +820,4 @@ hexStrToInt:
 global memcpy
 extern __not_memcpy
 memcpy:
-    call __not_memcpy
+    jmp __not_memcpy
