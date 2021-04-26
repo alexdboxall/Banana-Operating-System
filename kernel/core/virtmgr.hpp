@@ -19,6 +19,7 @@
 // (1 << 9) is free to use for anything you want 
 
 class VAS;
+extern VAS* firstVAS;
 
 namespace Virt
 {
@@ -38,7 +39,10 @@ namespace Virt
 	void virtualMemorySetup();
 	void swappingSetup();
 
-	VAS* getAKernelVAS();
+	static inline __attribute__((always_inline)) VAS* getAKernelVAS()
+	{
+		return firstVAS;
+	}
 
 	void setupPageSwapping(int megs);
 }

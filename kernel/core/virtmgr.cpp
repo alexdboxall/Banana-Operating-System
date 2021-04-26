@@ -233,11 +233,6 @@ namespace Virt
 
 	}
 
-	VAS* getAKernelVAS()
-	{
-		return firstVAS;
-	}
-
 	void setupPageSwapping(int megs)
 	{
 		kprintf("setupPageSwapping.\n");
