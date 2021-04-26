@@ -1,6 +1,6 @@
-#include "core/virtmgr.hpp"
 #include "hw/cpu.hpp"
 #include "thr/prcssthr.hpp"
+#include "core/virtmgr.hpp"
 
 extern "C" CPU* _ZN3CPU7currentEv()		//	CPU::current()
 {
