@@ -178,8 +178,14 @@ void Computer::detectFeatures()
 #endif
 }
 
+extern "C" uint32_t hexStrToInt(char* string);
+
 void Computer::displayFeatures()
 {
+	kprintf("HEX STRING TO INT: 0x2469  = 0x%X", hexStrToInt("2469"));
+	kprintf("HEX STRING TO INT: 0xABCD  = 0x%X", hexStrToInt("ABCD"));
+	kprintf("HEX STRING TO INT: 0x90F4A = 0x%X", hexStrToInt("90F4A"));
+
 	kprintf("Computer Features\n");
 	kprintf("    APIC   - %s\n", features.hasAPIC ? "Yes" : "No");
 	kprintf("    ACPI   - %s\n", features.hasACPI ? "Yes" : "No");
