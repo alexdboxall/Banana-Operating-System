@@ -45,3 +45,7 @@ extern "C" void _Z11unlockStuffv()
 {
 	unlockStuff();
 }
+
+extern "C" VAS* _ZN4Virt13getAKernelVASEv() {
+	return getAKernelVAS();
+}

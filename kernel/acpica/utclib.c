@@ -323,11 +323,11 @@ memcpy (
     const void              * Src /*source*/,
     ACPI_SIZE               Count /*num*/)
 {
-    if (Count & 3) {
+    /*if (Count & 3) {
         asm volatile("cld; rep movsb" :: "S"(Src), "D"(Dest), "c"(Count) : "flags", "memory");
-    } else {
+    } else {*/
         asm volatile("cld; rep movsd" :: "S"(Src), "D"(Dest), "c"(Count / 4) : "flags", "memory");
-    }
+    /*}*/
     return ((uint8_t*) Dest) - Count;
 
     /*char                    *New = (char *) Dest;
