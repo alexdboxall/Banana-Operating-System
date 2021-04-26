@@ -1,4 +1,5 @@
 #include "core/common.hpp"
+#include "fs/vfs.hpp"
 #include "hw/ports.hpp"
 #include "hw/acpi.hpp"
 #include "hw/bus/pci.hpp"
@@ -213,7 +214,7 @@ char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo, char* outbuffer)
 	int j = 0;
 	char current[256];
 
-	while (j < lookupSize) {
+	while (i < lookupSize) {
 		classCode = hexCharToInt(lookupData[i++]);
 		classCode <<= 4;
 		classCode |= hexCharToInt(lookupData[i++]);
@@ -240,12 +241,20 @@ char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo, char* outbuffer)
 		++i;
 
 		j = 0;
-		while (true) {
+		while (1) {
 			if (lookupData[i] == '\n' || i == lookupSize) {
-				if (classCode == pciInfo.classCode && subClass == pciInfo.subClass) {
-					strcpy(outbuffer, current);
-					return outbuffer;
-				}
+				i += lookupData[i] == '\n';
+				break;
+			}
+
+			current[j++] = lookupData[i++];
+			current[j] = 0;
+		}
+
+		if (!hasVendor || vendor == pci.vendorID) {
+			if (classCode == pciInfo.classCode && subClass == pciInfo.subClass) {
+				strcpy(outbuffer, current);
+				return outbuffer;
 			}
 		}
 	}
