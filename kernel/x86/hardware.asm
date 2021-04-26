@@ -816,3 +816,8 @@ hexStrToInt:
     mov eax, edx
     pop esi
     ret
+
+global memcpy
+extern __not_memcpy
+memcpy:
+    call __not_memcpy

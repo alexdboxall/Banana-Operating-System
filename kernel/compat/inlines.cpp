@@ -51,7 +51,7 @@ extern "C" VAS* _ZN4Virt13getAKernelVASEv() {
 	return Virt::getAKernelVAS();
 }
 
-extern "C" void* memcpy(void* destination, const void* source, size_t n)
+extern "C" void* __not_memcpy(void* destination, const void* source, size_t n)
 {
 	void* originalDest = destination;
 	asm volatile("cld; rep movsb" :: "S"(source), "D"(destination), "c"(n) : "cc", "memory");
