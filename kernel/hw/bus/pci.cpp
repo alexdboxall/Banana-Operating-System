@@ -197,7 +197,7 @@ asm volatile (
 
 static inline __attribute__((always_inline)) uint8_t hexCharToInt(char c)
 {
-	asm volatile("aam 0x40; aad 0x39" : "=a" (c) : "a" (c));
+	asm volatile("aam $40; aad $39" : "=a" (c) : "a" (c));
 	return c - 0x30;
 }
 
