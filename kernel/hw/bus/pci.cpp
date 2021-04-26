@@ -224,7 +224,7 @@ char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo, char* outbuffer)
 		subClass |= hexCharToInt(lookupData[i++]);
 		++i;
 
-		hasVendor = pciStr[i] != 'X';
+		hasVendor = lookupData[i] != 'X';
 		if (!hasVendor) {
 			i += 4;
 		} else {
