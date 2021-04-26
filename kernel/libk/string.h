@@ -11,8 +11,8 @@ extern "C" {
 
 	static inline __attribute__((always_inline)) void* memcpy(void* destination, const void* source, size_t n)
 	{
-		void* originalDest = Dest;
-		asm volatile("cld; rep movsb" :: "S"(Src), "D"(Dest), "c"(Count) : "cc", "memory");
+		void* originalDest = destination;
+		asm volatile("cld; rep movsb" :: "S"(source), "D"(destination), "c"(n) : "cc", "memory");
 		return originalDest;
 	}
 
