@@ -181,7 +181,25 @@ PCIDeviceInfo pciInfo = dev->pci.info;
 	*/
 
 extern "C" uint32_t hexStrToInt(const char* string);
-extern "C" uint8_t hexCharToInt(char ch);
+//extern "C" uint8_t hexCharToInt(char ch);
+
+/*
+asm volatile (
+		"int $96"  :                //assembly
+		"=d" (resD),                //output
+		"=a" (resA) :                //output
+		"a" (a),                 //input
+		"b" (b),                     //input
+		"c" (c),                     //input
+		"d" (d) :                    //input
+		"memory", "cc");            //clobbers*/
+//		asm volatile("rep movsb" : "=S" (clbr1), "=D" (clbr2), "=c" (clbr3) : "S"(source), "D"(destination), "c"(n) : "cc", "memory");
+
+static inline __attribute__((always_inline)) uint8_t hexCharToInt(char c)
+{
+	asm volatile("aam 0x40; aad 0x39" : "=a" (c) : "a" (c));
+	return c - 0x30;
+}
 
 char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo, char* outbuffer)
 {
