@@ -155,38 +155,30 @@ extern "C" void taskReturned();
 void switchToThread(ThreadControlBlock* nextThreadToRun);
 void setupMultitasking(void (*where)());
 void schedule();
-void lockScheduler(void);
-void unlockScheduler(void);
 void blockTask(enum TaskState reason);
 void blockTaskWithSchedulerLockAlreadyHeld(enum TaskState reason);
 void unblockTask(ThreadControlBlock* task);
-void unlockStuff(void);
-void lockStuff(void);
 void sleep(uint64_t seconds);
 void nanoSleep(uint64_t nanoseconds);
 void cleanerTaskFunction(void* context);
 int waitTask(int pid, int* wstatus, int options);
-void disableIRQs();
-void enableIRQs();
-int getIRQNestingLevel();
-
 
 extern int irqDisableCounter;
 extern int postponeTaskSwitchesCounter;
 extern int taskSwitchesPostponedFlag;
 
-static inline __attribute__((always_inline)) void disableIRQs()
+static inline __attribute__((always_inline)) void disableIRQs(void)
 {
 	asm volatile ("cli");
 	irqDisableCounter++;
 }
 
-static inline __attribute__((always_inline)) int getIRQNestingLevel()
+static inline __attribute__((always_inline)) int getIRQNestingLevel(void)
 {
 	return irqDisableCounter;
 }
 
-static inline __attribute__((always_inline)) void enableIRQs()
+static inline __attribute__((always_inline)) void enableIRQs(void)
 {
 	irqDisableCounter--;
 	if (irqDisableCounter == 0) {
