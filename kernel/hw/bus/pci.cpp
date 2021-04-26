@@ -179,9 +179,12 @@ PCIDeviceInfo pciInfo = dev->pci.info;
 
 	*/
 
-char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo)
+extern "C" uint32_t hexStrToInt(const char* string);
+extern "C" uint8_t hexCharToInt(char ch);
+
+char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo, char* outbuffer)
 {
-	/*static bool loadedLookupFile = false;
+	static bool loadedLookupFile = false;
 	static char* lookupData = nullptr;
 	static int lookupSize = 0;
 
@@ -201,17 +204,53 @@ char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo)
 
 		lookupSize = siz;
 	}
-	
+
 	uint8_t classCode = 0;
 	uint8_t subClass = 0;
 	uint16_t vendor = 0;
 	bool hasVendor = false;
+	int i = 0;
 	int j = 0;
+	char current[256];
 
 	while (j < lookupSize) {
-		classCode |= lookupData[j++]
+		classCode = hexCharToInt(lookupData[i++]);
+		classCode <<= 4;
+		classCode |= hexCharToInt(lookupData[i++]);
+		++i;
+
+		subClass = hexCharToInt(lookupData[i++]);
+		subClass <<= 4;
+		subClass |= hexCharToInt(lookupData[i++]);
+		++i;
+
+		hasVendor = pciStr[i] != 'X';
+		if (!hasVendor) {
+			i += 4;
+		} else {
+			vendor = hexCharToInt(lookupData[i++]);
+			vendor <<= 4;
+			vendor |= hexCharToInt(lookupData[i++]);
+			vendor <<= 4;
+			vendor |= hexCharToInt(lookupData[i++]);
+			vendor <<= 4;
+			vendor |= hexCharToInt(lookupData[i++]);
+		}
+
+		++i;
+
+		j = 0;
+		while (true) {
+			if (lookupData[i] == '\n' || i == lookupSize) {
+				if (classCode == pciInfo.classCode && subClass == pciInfo.subClass) {
+					strcpy(outbuffer, current);
+					return outbuffer;
+				}
+			}
+		}
 	}
-	*/
+	
+	*outbuffer = 0;
 	return nullptr;
 }
 

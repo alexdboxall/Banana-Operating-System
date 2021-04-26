@@ -798,6 +798,13 @@ irq23:
     push byte 55
     jmp int_common_stub
 
+global hexCharToInt:
+    mov eax, [esp + 8]
+    aam 0x40
+    aad 0x39
+    sub al, 0x30
+    ret
+
 global hexStrToInt
 hexStrToInt:
     push esi
