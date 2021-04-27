@@ -13,8 +13,12 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
+PCI* thePCI = nullptr;
+
 PCI::PCI() : Bus("PCI Bus")
 {
+	thePCI = this;
+
 	ports[noPorts].rangeStart = 0xCF8;
 	ports[noPorts].rangeLength = 8;
 	ports[noPorts++].width = 3;

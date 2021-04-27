@@ -5,7 +5,9 @@
 #include <stdint.h>
 #include "hal/bus.hpp"
 
-#ifndef JUMPER32
+class PCI;
+extern PCI* thePCI;
+
 class PCI : public Bus
 {
 private:
@@ -47,6 +49,5 @@ public:
 
 	virtual void detect();						//Detect any children
 };
-#endif
 
 #endif
