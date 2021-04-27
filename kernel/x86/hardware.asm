@@ -798,27 +798,6 @@ irq23:
     push byte 55
     jmp int_common_stub
 
-
-global hexStrToInt
-hexStrToInt:
-    push esi
-    mov esi, [esp + 8]
-    xor edx, edx
-.looping:
-    lodsb
-    test al, al
-    jz .end
-    aam 0x40
-    aad 0x39
-    sub al, 0x30
-    shl edx, 4
-    or dl, al
-    jmp short .looping
-.end:
-    mov eax, edx
-    pop esi
-    ret
-
 global memcpy
 extern __not_memcpy
 memcpy:

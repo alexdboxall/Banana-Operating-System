@@ -217,9 +217,11 @@ char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo, char* outbuffer)
 
 		f->stat(&siz, &dir);
 
-		lookupData = (char*) malloc(siz);
+		lookupData = (char*) calloc(siz + 1, 1);
 		f->read(siz, lookupData, &br);
 		f->close();
+
+		kprintf("lookup data = %s\n",)
 
 		lookupSize = siz;
 	}
