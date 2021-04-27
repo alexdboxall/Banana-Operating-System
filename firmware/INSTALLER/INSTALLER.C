@@ -287,6 +287,25 @@ void disclaimer(Window* w)
 	}
 }
 
+void disclaimer3(Window* w)
+{
+	windowWriteCol(w, 0, 0, "License Agreement", TCRed);
+	windowWrite(w, 0, 2, "This work is licensed under the Creative Commons");
+	windowWrite(w, 0, 3, "Attribution-NonCommercial-NoDerivatives 4.0");
+	windowWrite(w, 0, 4, "International License.");
+	windowWrite(w, 0, 6, "To view a copy of this license, visit");
+	windowWrite(w, 0, 7, "http://creativecommons.org/licenses/by-nc-nd/4.0/");
+	windowWrite(w, 0, 9, "Portions of this software use open source libraries");
+	windowWrite(w, 0, 10, "and code. See C:/Banana/Legal/COPYRIGHT for details.");
+	windowWrite(w, 0, 11, "This file contains no additional terms to agree to.");
+
+	windowWriteCol(w, 0, 13, "For a summary of (and not a substitute for)", TCBlue);
+	windowWriteCol(w, 0, 14, "the license, press F1.", TCBlue);
+
+	windowWriteCol(w, 0, 16, "To install and/or use this software you must agree to ", TCBlack);
+	windowWriteCol(w, 0, 17, "the above terms. Press ENTER to install, or ESC to quit.", TCBlack);
+}
+
 void disclaimer2(Window* w)
 {
 	windowWriteCol(w, 0, 0, "DANGER!", TCRed);
@@ -1600,7 +1619,10 @@ void main()
 	//drawScreen();
 	continueOrExit();
 
-	
+	w.repaint = disclaimer3;
+	drawScreen();
+	sleep(3);
+	continueOrExit();
 
 	__memcpy(w.title, "Banana Setup", __strlen("Banana Setup"));
 	w.x += 3;

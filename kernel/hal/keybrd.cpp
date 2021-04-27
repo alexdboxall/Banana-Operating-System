@@ -52,7 +52,7 @@ void startGUI(void* a)
 	unlockScheduler();
 
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/vga.sys"), computer);
-	Thr::executeDLL(Thr::loadDLL("C:/Banana/System/wsbe.sys"), computer);
+	Thr::executeDLL(Thr::loadDLL("C:/Banana/System/wsbe.dll"), computer);
 }
 
 void startGUIVESA(void* a)
@@ -60,7 +60,7 @@ void startGUIVESA(void* a)
 	unlockScheduler();
 
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/vesa.sys"), computer);
-	Thr::executeDLL(Thr::loadDLL("C:/Banana/System/wsbe.sys"), computer);
+	Thr::executeDLL(Thr::loadDLL("C:/Banana/System/wsbe.dll"), computer);
 }
 
 void sendKeyboardToken(KeyboardToken kt)

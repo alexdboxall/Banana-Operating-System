@@ -92,9 +92,14 @@ int AC97::open(int a, int b, void* c)
 
 void ac97IRQHandler(regs* r, void* context)
 {
+	kprintf("ac97IRQHandler.\n");
+
 	AC97* ac97 = (AC97*) context;
 	ac97->handleIRQ();
 }
+
+uint32_t bdlPhysAddr;
+uint32_t bdlVirtAddr;
 
 void AC97::handleIRQ()
 {
@@ -111,6 +116,25 @@ void AC97::handleIRQ()
 	thePCI->writeBAR8(nabm, pi, 0x06);
 	thePCI->writeBAR8(nabm, po, 0x16);
 	thePCI->writeBAR8(nabm, mc, 0x26);
+
+
+	uint8_t* test = (uint8_t*) bdlVirtAddr;
+	*test++ = ((bdlPhysAddr + 0x1000) >> 0) & 0xFF;
+	*test++ = ((bdlPhysAddr + 0x1000) >> 8) & 0xFF;
+	*test++ = ((bdlPhysAddr + 0x1000) >> 16) & 0xFF;
+	*test++ = ((bdlPhysAddr + 0x1000) >> 24) & 0xFF;
+	*test++ = 0x00;
+	*test++ = 0x80;
+	*test++ = 0;
+	*test++ = 0x80;
+	*test++ = ((bdlPhysAddr + 0x1000) >> 0) & 0xFF;
+	*test++ = ((bdlPhysAddr + 0x1000) >> 8) & 0xFF;
+	*test++ = ((bdlPhysAddr + 0x1000) >> 16) & 0xFF;
+	*test++ = ((bdlPhysAddr + 0x1000) >> 24) & 0xFF;
+	*test++ = 0x00;
+	*test++ = 0x80;
+	*test++ = 0;
+	*test++ = 0x80;
 }
 
 int AC97::_open(int a, int b, void* c)
@@ -156,30 +180,63 @@ int AC97::_open(int a, int b, void* c)
 
 	setVolume(15, 50);
 
-	//write physical address of BDL
-	uint32_t bdlPhysAddr = Phys::allocateContiguousPages(48);		//dummy data
-	uint32_t bdlVirtAddr = Virt::allocateKernelVirtualPages(48);
+	bdlPhysAddr = Phys::allocateContiguousPages(48);		//dummy data
+	bdlVirtAddr = Virt::allocateKernelVirtualPages(48);
 	Virt::getAKernelVAS()->mapRange(bdlPhysAddr, bdlVirtAddr, 48, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
-	kprintf("phys addr = 0x%X\n", bdlPhysAddr);
-	kprintf("virt addr = 0x%X\n", bdlVirtAddr);
-	uint8_t lastValidEntry = 0;
+	uint8_t lastValidEntry = 1;
 
 	uint8_t* test = (uint8_t*) bdlVirtAddr;
-	*test++ = ((bdlPhysAddr + 0x8000) >> 0) & 0xFF;
-	*test++ = ((bdlPhysAddr + 0x8000) >> 8) & 0xFF;
-	*test++ = ((bdlPhysAddr + 0x8000) >> 16) & 0xFF;
-	*test++ = ((bdlPhysAddr + 0x8000) >> 24) & 0xFF;
+	*test++ = ((bdlPhysAddr + 0x1000) >> 0) & 0xFF;
+	*test++ = ((bdlPhysAddr + 0x1000) >> 8) & 0xFF;
+	*test++ = ((bdlPhysAddr + 0x1000) >> 16) & 0xFF;
+	*test++ = ((bdlPhysAddr + 0x1000) >> 24) & 0xFF;
+	*test++ = 0x00;
+	*test++ = 0x80;
+	*test++ = 0;
+	*test++ = 0x80;
+	*test++ = ((bdlPhysAddr + 0x1000) >> 0) & 0xFF;
+	*test++ = ((bdlPhysAddr + 0x1000) >> 8) & 0xFF;
+	*test++ = ((bdlPhysAddr + 0x1000) >> 16) & 0xFF;
+	*test++ = ((bdlPhysAddr + 0x1000) >> 24) & 0xFF;
 	*test++ = 0x00;
 	*test++ = 0x80;
 	*test++ = 0;
 	*test++ = 0x80;
 
-	uint16_t* test2 = (uint16_t*) (bdlVirtAddr + 0x100);
-	for (int i = 0; i < 0x8000 / 2 / 20; ++i) {
+	uint16_t* test2 = (uint16_t*) (bdlVirtAddr + 0x1000);
+	uint16_t lfsr = 0;
+	for (int i = 0; i < 0x8000 / 80 / 8; ++i) {
+		for (int j = 0; j < 40; ++j) *test2++ = 0x0;
+		for (int j = 0; j < 40; ++j) *test2++ = 0x3333;
+	}
+	for (int i = 0; i < 0x8000 / 80 / 8; ++i) {
+		for (int j = 0; j < 20; ++j) *test2++ = 0x0;
+		for (int j = 0; j < 20; ++j) *test2++ = 0x3333;
+		for (int j = 0; j < 20; ++j) *test2++ = 0x0;
+		for (int j = 0; j < 20; ++j) *test2++ = 0x3333;
+	}
+	for (int i = 0; i < 0x8000 / 80 / 8; ++i) {
+		for (int j = 0; j < 40; ++j) *test2++ = 0x0;
+		for (int j = 0; j < 40; ++j) *test2++ = 0x3333;
+	}
+	for (int i = 0; i < 0x8000 / 80 / 8; ++i) {
+		for (int j = 0; j < 20; ++j) *test2++ = 0x0;
+		for (int j = 0; j < 20; ++j) *test2++ = 0x3333;
 		for (int j = 0; j < 20; ++j) *test2++ = 0x0;
 		for (int j = 0; j < 20; ++j) *test2++ = 0x3333;
 	}
 
+	//set sample rate
+	//0x2A
+	//0x2C
+	//0x32
+	thePCI->writeBAR16(nam, thePCI->readBAR16(nam, 0x2A) | 1, 0x2A);
+	nanoSleep(1000 * 1000 * 10);
+	thePCI->writeBAR16(nam, 8000, 0x2C);
+	thePCI->writeBAR16(nam, 8000, 0x32);
+	nanoSleep(1000 * 1000 * 10);
+
+	//write physical address of BDL
 	thePCI->writeBAR32(nabm, bdlPhysAddr, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_DSC_ADDR);
 	thePCI->writeBAR8(nabm, lastValidEntry, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_LAST_VALID_ENTRY);
 
@@ -189,7 +246,7 @@ int AC97::_open(int a, int b, void* c)
 	val = thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
 	kprintf("0x1B valC = 0x%X\n", val);
 	kprintf("0x1B valD = 0x%X\n", val | 0x1);
-	thePCI->writeBAR8(nabm, val | 0x1, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
+	thePCI->writeBAR8(nabm, val | 0x15, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
 
 	kprintf("interrupt = %d\n", pci.info.interrrupt);
 	kprintf("intPIN    = %d\n", pci.info.intPIN);

@@ -1,4 +1,4 @@
-OUTPUT32="D:/Users/Alex/Desktop/Banana/packages/banana/32/0001/wsbe.sys"
+OUTPUT32="D:/Users/Alex/Desktop/Banana/packages/banana/32/0001/wsbe.dll"
 OUTPUT64="D:/Users/Alex/Desktop/wsbe64.sys"
 
 AS32=i386-banana-as
