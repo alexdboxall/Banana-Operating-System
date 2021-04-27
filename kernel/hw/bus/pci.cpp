@@ -222,7 +222,7 @@ char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo, char* outbuffer)
 		f->read(siz, lookupData, &br);
 		f->close();
 
-		kprintf("lookup data = %s\n",)
+		kprintf("lookup data = %s\n", lookupData);
 
 		lookupSize = siz;
 	}
