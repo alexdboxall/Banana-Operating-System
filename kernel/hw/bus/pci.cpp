@@ -217,7 +217,8 @@ char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo, char* outbuffer)
 
 		f->stat(&siz, &dir);
 
-		lookupData = (char*) calloc(siz + 1, 1);
+		lookupData = (char*) malloc(siz + 1);
+		lookupData[siz] = 0;
 		f->read(siz, lookupData, &br);
 		f->close();
 
