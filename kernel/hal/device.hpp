@@ -133,6 +133,8 @@ public:
 	Device(const char* name = "Unknown Hardware");
 	virtual ~Device();
 
+	Device* getParent();
+
 	void addChild(Device* child);					//Called to add a new child
 	void removeAllChildren();
 

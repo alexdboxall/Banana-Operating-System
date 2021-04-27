@@ -132,6 +132,11 @@ int Device::addIRQHandler(int num, void (*handler)(regs*, void*), bool legacy, v
 	}
 }
 
+Device* Device::getParent()
+{
+	return parent;
+}
+
 void Device::removeIRQHandler(int num, void (*handler)(regs*, void*), bool legacy)
 {
 	if (this->deviceType == DeviceType::Intctrl) {

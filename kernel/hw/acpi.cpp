@@ -435,6 +435,8 @@ int ACPI::open(int mode, int, void*)
 			char* filename = PCI::pciDetailsToFilepath(pciInfo, buffer);
 			if (filename) {
 				kprintf("driver: %s\n", filename);
+
+				Thr::executeDLL(Thr::loadDLL(filename), dev);
 			}
 		}
 	}
