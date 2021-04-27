@@ -894,6 +894,7 @@ int FloppyDrive::read(uint64_t lba, int count, void* ptr)
 		_TEMP_allocated = true;
 		_TEMP_trackBuffer = (uint8_t*) malloc(0x4800);
 		_TEMP_cylinder0_bf = (uint8_t*) malloc(0x4800);
+		_TEMP_write_bf = (uint8_t*) malloc(0x4800);
 	}
 	if (count != 1) {
 		panic("floppy read count not 1");
@@ -940,11 +941,17 @@ int FloppyDrive::write(uint64_t lba, int count, void* ptr)
 		_TEMP_write_bf = (uint8_t*) malloc(0x4800);
 	}
 	if (count != 1) {
-		panic("floppy write count not 1");
+		for (int i = 0; i < count; ++i) {
+			write(lba + i, 1, ptr);
+			ptr = (void*) (((uint8_t*) ptr) + 512);
+		}
+		return 0;
 	}
 
 	int cyl, head, sector;
 	lbaToCHS(lba, &cyl, &head, &sector);
+
+	int sectorsPerTrack = floppyTable[(int) fdc->driveTypes[num]].sectors;
 
 	if (cyl == 0 && hasCyl0Bf) {
 		memcpy(_TEMP_cylinder0_bf + (sector - 1) * 512 + head * sectorsPerTrack * 512, ptr, 512);
@@ -957,7 +964,7 @@ int FloppyDrive::write(uint64_t lba, int count, void* ptr)
 	} else {
 		doTrack(cyl, false, _TEMP_write_bf);
 		memcpy(_TEMP_write_bf + (sector - 1) * 512 + head * sectorsPerTrack * 512, ptr, 512);
-		doTrack(cyl, true, _TEMP_write_br);
+		doTrack(cyl, true, _TEMP_write_bf);
 	}
 
 	return 0;
