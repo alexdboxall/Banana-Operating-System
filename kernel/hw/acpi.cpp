@@ -436,7 +436,11 @@ int ACPI::open(int mode, int, void*)
 			if (filename) {
 				kprintf("driver: %s\n", filename);
 
-				Thr::executeDLL(Thr::loadDLL(filename), dev);
+				File* f = new File(filename, kernelProcess);
+				if (f->exists()) {
+					Thr::executeDLL(Thr::loadDLL(filename), dev);
+				}
+				delete f;
 			}
 		}
 	}

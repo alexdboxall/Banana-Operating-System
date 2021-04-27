@@ -36,6 +36,7 @@ Device::~Device()
 
 void Device::findAndLoadDriver()
 {
+	kprintf("DON'T USE THIS CODE ANYMORE. Device::findAndLoadDriver()\n");
 	bool driverFound = false;
 
 	if (detectionType == DetectionType::Manual) {
@@ -51,6 +52,8 @@ void Device::findAndLoadDriver()
 	}
 
 	if (driverFound) {
+		panic("DON'T USE THIS CODE ANYMORE.");
+
 		//call start() on the driver DLL
 		//that will call	 Whatever* w = new Whatever("Fancy Hardware")
 		//NEW!! then it will return w
