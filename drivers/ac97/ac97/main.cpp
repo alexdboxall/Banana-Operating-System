@@ -101,35 +101,12 @@ uint32_t bdlVirtAddr;
 
 void AC97::handleIRQ()
 {
-	uint8_t pi, po, mc;
+	static uint8_t l = 1;
 
-	pi = thePCI->readBAR8(nabm, 0x06) & 0x1C;
-	po = thePCI->readBAR8(nabm, 0x16) & 0x1C;
-	mc = thePCI->readBAR8(nabm, 0x26) & 0x1C;
+	thePCI->writeBAR16(nabm, 0x8, 0x16);
 
-	kprintf("pi 0x%X, po 0x%X, mc 0x%X\n", pi, po, mc);
-
-	thePCI->writeBAR8(nabm, 0x1C, 0x06);
-	thePCI->writeBAR8(nabm, 0x1C, 0x16);
-	thePCI->writeBAR8(nabm, 0x1C, 0x26);
-
-	uint8_t* test = (uint8_t*) bdlVirtAddr;
-	*test++ = ((bdlPhysAddr + 0x1000) >> 0) & 0xFF;
-	*test++ = ((bdlPhysAddr + 0x1000) >> 8) & 0xFF;
-	*test++ = ((bdlPhysAddr + 0x1000) >> 16) & 0xFF;
-	*test++ = ((bdlPhysAddr + 0x1000) >> 24) & 0xFF;
-	*test++ = 0x00;
-	*test++ = 0x80;
-	*test++ = 0;
-	*test++ = 0x80;
-	*test++ = ((bdlPhysAddr + 0x1000) >> 0) & 0xFF;
-	*test++ = ((bdlPhysAddr + 0x1000) >> 8) & 0xFF;
-	*test++ = ((bdlPhysAddr + 0x1000) >> 16) & 0xFF;
-	*test++ = ((bdlPhysAddr + 0x1000) >> 24) & 0xFF;
-	*test++ = 0x00;
-	*test++ = 0x80;
-	*test++ = 0;
-	*test++ = 0x80;
+	l = (l + 1) & 1;
+	thePCI->writeBAR8(nabm, l, NABM_OFFSET_LAST_VALID_ENTRY);
 }
 
 void AC97::setSampleRate(int hertz)
