@@ -65,7 +65,7 @@ void start(Device* _dvl)
 	dev->_open(0, 0, nullptr);
 }
 
-AC97::AC97(): SoundDevice("AC97 Audio Device")
+AC97::AC97(): SoundDevice("Intel AC'97 Audio Device")
 {
 
 }
@@ -103,7 +103,7 @@ void AC97::handleIRQ()
 {
 	static uint8_t l = 1;
 
-	thePCI->writeBAR16(nabm, 0x8, 0x16);
+	thePCI->writeBAR16(nabm, 0x1C, 0x16);
 
 	//l = (l + 1) & 1;
 	//thePCI->writeBAR8(nabm, l, NABM_OFFSET_LAST_VALID_ENTRY);

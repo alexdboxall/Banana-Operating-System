@@ -235,7 +235,9 @@ char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo, char* outbuffer)
 	uint8_t classCode = 0;
 	uint8_t subClass = 0;
 	uint16_t vendor = 0;
+	uint16_t device = 0;
 	bool hasVendor = false;
+	bool hasDevice = false;
 	int i = 0;
 	int j = 0;
 	char current[256];
@@ -251,7 +253,7 @@ char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo, char* outbuffer)
 		subClass |= hexCharToInt(lookupData[i++]);
 		++i;
 
-		hasVendor = lookupData[i] != 'X';
+		hasVendor = lookupData[i] != 'V';
 		if (!hasVendor) {
 			i += 4;
 		} else {
@@ -263,7 +265,20 @@ char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo, char* outbuffer)
 			vendor <<= 4;
 			vendor |= hexCharToInt(lookupData[i++]);
 		}
+		++i;
 
+		hasDevice = lookupData[i] != 'D';
+		if (!hasDevice) {
+			i += 4;
+		} else {
+			device = hexCharToInt(lookupData[i++]);
+			device <<= 4;
+			device |= hexCharToInt(lookupData[i++]);
+			device <<= 4;
+			device |= hexCharToInt(lookupData[i++]);
+			device <<= 4;
+			device |= hexCharToInt(lookupData[i++]);
+		}
 		++i;
 
 		j = 0;
@@ -278,9 +293,11 @@ char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo, char* outbuffer)
 		}
 
 		if (!hasVendor || vendor == pciInfo.vendorID) {
-			if (classCode == pciInfo.classCode && subClass == pciInfo.subClass) {
-				strcpy(outbuffer, current);
-				return outbuffer;
+			if (!hasDevice || device == pciInfo.deviceID) {
+				if (classCode == pciInfo.classCode && subClass == pciInfo.subClass) {
+					strcpy(outbuffer, current);
+					return outbuffer;
+				}
 			}
 		}
 	}
@@ -319,9 +336,7 @@ void PCI::foundDevice(PCIDeviceInfo info)
 		dev->open(0, 0, nullptr);
 		
 	} else {
-
-		kprintf("Found a PCI device: %d, %d\n", info.classCode, info.subClass);
-		kprintf("info.deviceID = 0x%X\n", pciReadWord(info.bus, info.slot, info.function, 2));
+		kprintf("Found a PCI device: %d, %d, 0x%X, 0x%X\n", info.classCode, info.subClass, info.vendorID, info.deviceID);
 
 		//NOTE: It will be set up as a DriverlessDevice for now
 		//		When we load a driver, we need to REMOVE THE DRIVELESS DEVICE from the tree
@@ -372,6 +387,7 @@ void PCI::getDeviceData(uint8_t bus, uint8_t slot, uint8_t function)
 	info.function = function;
 	info.classCode = (classCode >> 8);
 	info.subClass = (classCode & 0xFF);
+	info.deviceID = pciReadWord(info.bus, info.slot, info.function, 2);
 	info.progIF = getProgIF(bus, slot, function);
 	info.vendorID = getVendorID(bus, slot, function);
 	info.interrrupt = intno;
