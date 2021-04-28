@@ -141,11 +141,15 @@ void ac97IRQHandler(regs* r, void* context)
 uint32_t bdlPhysAddr;
 uint32_t bdlVirtAddr;
 
-float tempBuffer[65536];
-float outputBuffer[65536];
+float* tempBuffer = nullptr;
+float* outputBuffer = nullptr;
 
 void AC97::handleIRQ()
 {
+	if (tempBuffer == nullptr) {
+		tempBuffer = (float*) malloc(65536);
+		outputBuffer = (float*) malloc(65536);
+	}
 	static uint8_t l = 3;
 
 	thePCI->writeBAR16(nabm, 0x1C, 0x16);
@@ -153,9 +157,12 @@ void AC97::handleIRQ()
 	l = (l + 1) & 31;
 	thePCI->writeBAR8(nabm, l, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_LAST_VALID_ENTRY);
 
-	int samplesGot = getAudio(65536, tempBuffer, outputBuffer);
+	kprintf("reading samples to 0x%X and 0x%X...\n", tempBuffer, outputBuffer);
+	int samplesGot = getAudio(4096, tempBuffer, outputBuffer);
+	kprintf("%d samples got.\n", samplesGot);
 
 	uint16_t* dma = (uint16_t*) (bdlVirtAddr + 0x1000 + 0x8000 * 2 * 2 * ((l + 2) & 31));
+	kprintf("the destination address is 0x%X\n", dma);
 	floatTo16(outputBuffer, dma, samplesGot);
 }
 
@@ -210,17 +217,17 @@ int AC97::_open(int a, int b, void* c)
 
 	setVolume(15, 50);
 
-	bdlPhysAddr = Phys::allocateContiguousPages(48);		//dummy data
-	bdlVirtAddr = Virt::allocateKernelVirtualPages(48);
-	Virt::getAKernelVAS()->mapRange(bdlPhysAddr, bdlVirtAddr, 48, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
+	bdlPhysAddr = Phys::allocateContiguousPages(410);		//dummy data
+	bdlVirtAddr = Virt::allocateKernelVirtualPages(410);
+	Virt::getAKernelVAS()->mapRange(bdlPhysAddr, bdlVirtAddr, 410, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
 	uint8_t lastValidEntry = 4;
 
 	uint8_t* test = (uint8_t*) bdlVirtAddr;
 	for (int i = 0; i < 32; ++i) {
-		*test++ = ((bdlPhysAddr + 0x1000) >> 0) & 0xFF;
-		*test++ = ((bdlPhysAddr + 0x1000) >> 8) & 0xFF;
-		*test++ = ((bdlPhysAddr + 0x1000) >> 16) & 0xFF;
-		*test++ = ((bdlPhysAddr + 0x1000) >> 24) & 0xFF;
+		*test++ = ((bdlPhysAddr + 0x1000 + 0x8000 * 2 * 2 * i) >> 0) & 0xFF;
+		*test++ = ((bdlPhysAddr + 0x1000 + 0x8000 * 2 * 2 * i) >> 8) & 0xFF;
+		*test++ = ((bdlPhysAddr + 0x1000 + 0x8000 * 2 * 2 * i) >> 16) & 0xFF;
+		*test++ = ((bdlPhysAddr + 0x1000 + 0x8000 * 2 * 2 * i) >> 24) & 0xFF;
 		*test++ = 0x00;
 		*test++ = 0x80;
 		*test++ = 0;
