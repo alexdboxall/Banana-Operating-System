@@ -79,7 +79,6 @@ typedef struct PCIDeviceInfo
 	uint8_t classCode;
 	uint8_t subClass;
 	uint16_t vendorID;
-	uint16_t deviceID;
 
 	uint8_t bus;
 	uint8_t slot;
@@ -90,6 +89,8 @@ typedef struct PCIDeviceInfo
 
 	uint8_t interrrupt;
 	uint8_t intPIN;
+
+	uint16_t deviceID;
 
 } PCIDeviceInfo;
 
