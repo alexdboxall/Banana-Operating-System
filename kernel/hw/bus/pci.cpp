@@ -387,7 +387,7 @@ void PCI::getDeviceData(uint8_t bus, uint8_t slot, uint8_t function)
 	info.function = function;
 	info.classCode = (classCode >> 8);
 	info.subClass = (classCode & 0xFF);
-	//info.deviceID = pciReadWord(info.bus, info.slot, info.function, 2);
+	info.deviceID = pciReadWord(info.bus, info.slot, info.function, 2);
 	info.progIF = getProgIF(bus, slot, function);
 	info.vendorID = getVendorID(bus, slot, function);
 	info.interrrupt = intno;
