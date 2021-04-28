@@ -32,6 +32,7 @@ public:
 	virtual ~AC97();
 
 	void handleIRQ();
+	void setSampleRate(int hertz);
 	void setVolume(int leftPercent, int rightPercent);
 
 	int open(int a, int b, void* c);

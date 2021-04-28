@@ -92,8 +92,6 @@ int AC97::open(int a, int b, void* c)
 
 void ac97IRQHandler(regs* r, void* context)
 {
-	kprintf("ac97IRQHandler.\n");
-
 	AC97* ac97 = (AC97*) context;
 	ac97->handleIRQ();
 }
@@ -103,8 +101,6 @@ uint32_t bdlVirtAddr;
 
 void AC97::handleIRQ()
 {
-	kprintf("GOT AC97 IRQ.\n");
-
 	uint8_t pi, po, mc;
 
 	pi = thePCI->readBAR8(nabm, 0x06) & 0x1C;
@@ -116,7 +112,6 @@ void AC97::handleIRQ()
 	thePCI->writeBAR8(nabm, pi, 0x06);
 	thePCI->writeBAR8(nabm, po, 0x16);
 	thePCI->writeBAR8(nabm, mc, 0x26);
-
 
 	uint8_t* test = (uint8_t*) bdlVirtAddr;
 	*test++ = ((bdlPhysAddr + 0x1000) >> 0) & 0xFF;
@@ -137,11 +132,21 @@ void AC97::handleIRQ()
 	*test++ = 0x80;
 }
 
+void AC97::setSampleRate(int hertz)
+{
+	thePCI->writeBAR16(nam, thePCI->readBAR16(nam, 0x2A) | 1, 0x2A);
+	nanoSleep(1000 * 1000 * 10);
+	thePCI->writeBAR16(nam, hertz, 0x2C);
+	thePCI->writeBAR16(nam, hertz, 0x32);
+	nanoSleep(1000 * 1000 * 10);
+}
+
 int AC97::_open(int a, int b, void* c)
 {
 	nam = pci.info.bar[0];
 	nabm = pci.info.bar[1];
 
+	//register ports
 	if (nam & 1) {
 		ports[noPorts].rangeStart = nam & ~3;
 		ports[noPorts].rangeLength = 0x40;
@@ -154,13 +159,14 @@ int AC97::_open(int a, int b, void* c)
 	}
 
 	//set bit 0 and bit 2 in the PCI command register
-
 	uint16_t w = thePCI->pciReadWord(pci.info.bus, pci.info.slot, pci.info.function, 0x4);
 	thePCI->pciWriteWord(pci.info.bus, pci.info.slot, pci.info.function, 0x4, w | 5);
 
+	//do a reset
 	thePCI->writeBAR32(nabm, 0x3, NABM_GLOBAL_CTL);
 	thePCI->writeBAR16(nam, 0x55AA, NAM_RESET);
 
+	//check capabilities
 	uint32_t capabilities = thePCI->readBAR32(nabm, NABM_GLOBAL_STS);
 	kprintf("AC97 channels: %d\n", 2 + 2 * ((capabilities >> 20) & 3));
 	if (((capabilities >> 22) & 3) == 1) {
@@ -169,10 +175,7 @@ int AC97::_open(int a, int b, void* c)
 
 	//reset output channel
 	uint8_t val = thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
-	kprintf("0x1B valA = 0x%X\n", val);
-	val |= 0x2;
-	kprintf("0x1B valB = 0x%X\n", val);
-	thePCI->writeBAR8(nabm, val, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
+	thePCI->writeBAR8(nabm, val | 2, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
 	nanoSleep(1000 * 1000 * 250);
 	if (thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT) & 2) {
 		kprintf("Bit could not be cleared.\n");
@@ -226,15 +229,7 @@ int AC97::_open(int a, int b, void* c)
 		for (int j = 0; j < 20; ++j) *test2++ = 0x3333;
 	}
 
-	//set sample rate
-	//0x2A
-	//0x2C
-	//0x32
-	thePCI->writeBAR16(nam, thePCI->readBAR16(nam, 0x2A) | 1, 0x2A);
-	nanoSleep(1000 * 1000 * 10);
-	thePCI->writeBAR16(nam, 8000, 0x2C);
-	thePCI->writeBAR16(nam, 8000, 0x32);
-	nanoSleep(1000 * 1000 * 10);
+	setSampleRate(8000);
 
 	//write physical address of BDL
 	thePCI->writeBAR32(nabm, bdlPhysAddr, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_DSC_ADDR);
@@ -244,12 +239,7 @@ int AC97::_open(int a, int b, void* c)
 
 	//start transfer
 	val = thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
-	kprintf("0x1B valC = 0x%X\n", val);
-	kprintf("0x1B valD = 0x%X\n", val | 0x1);
 	thePCI->writeBAR8(nabm, val | 0x15, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
-
-	kprintf("interrupt = %d\n", pci.info.interrrupt);
-	kprintf("intPIN    = %d\n", pci.info.intPIN);
 
 	return 0;
 }
