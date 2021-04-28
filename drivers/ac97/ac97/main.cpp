@@ -105,8 +105,8 @@ void AC97::handleIRQ()
 
 	thePCI->writeBAR16(nabm, 0x8, 0x16);
 
-	l = (l + 1) & 1;
-	thePCI->writeBAR8(nabm, l, NABM_OFFSET_LAST_VALID_ENTRY);
+	//l = (l + 1) & 1;
+	//thePCI->writeBAR8(nabm, l, NABM_OFFSET_LAST_VALID_ENTRY);
 }
 
 void AC97::setSampleRate(int hertz)
@@ -163,25 +163,19 @@ int AC97::_open(int a, int b, void* c)
 	bdlPhysAddr = Phys::allocateContiguousPages(48);		//dummy data
 	bdlVirtAddr = Virt::allocateKernelVirtualPages(48);
 	Virt::getAKernelVAS()->mapRange(bdlPhysAddr, bdlVirtAddr, 48, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
-	uint8_t lastValidEntry = 1;
+	uint8_t lastValidEntry = 31;
 
 	uint8_t* test = (uint8_t*) bdlVirtAddr;
-	*test++ = ((bdlPhysAddr + 0x1000) >> 0) & 0xFF;
-	*test++ = ((bdlPhysAddr + 0x1000) >> 8) & 0xFF;
-	*test++ = ((bdlPhysAddr + 0x1000) >> 16) & 0xFF;
-	*test++ = ((bdlPhysAddr + 0x1000) >> 24) & 0xFF;
-	*test++ = 0x00;
-	*test++ = 0x80;
-	*test++ = 0;
-	*test++ = 0x80;
-	*test++ = ((bdlPhysAddr + 0x1000) >> 0) & 0xFF;
-	*test++ = ((bdlPhysAddr + 0x1000) >> 8) & 0xFF;
-	*test++ = ((bdlPhysAddr + 0x1000) >> 16) & 0xFF;
-	*test++ = ((bdlPhysAddr + 0x1000) >> 24) & 0xFF;
-	*test++ = 0x00;
-	*test++ = 0x80;
-	*test++ = 0;
-	*test++ = 0x80;
+	for (int i = 0; i < 32; ++i) {
+		*test++ = ((bdlPhysAddr + 0x1000) >> 0) & 0xFF;
+		*test++ = ((bdlPhysAddr + 0x1000) >> 8) & 0xFF;
+		*test++ = ((bdlPhysAddr + 0x1000) >> 16) & 0xFF;
+		*test++ = ((bdlPhysAddr + 0x1000) >> 24) & 0xFF;
+		*test++ = 0x00;
+		*test++ = 0x80;
+		*test++ = 0;
+		*test++ = 0x80;
+	}
 
 	uint16_t* test2 = (uint16_t*) (bdlVirtAddr + 0x1000);
 	uint16_t lfsr = 0;
