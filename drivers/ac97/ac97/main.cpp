@@ -75,11 +75,13 @@ void start(Device* _dvl)
 
 	while (1) {
 		int bytesRead = 0;
+		kprintf("reading...\n");
 		FileStatus st = f->read(4096, buf, &bytesRead);
 		if (bytesRead == 0 || st != FileStatus::Success) {
 			kprintf("SONG SHOULD BE DONE.\n");
 			return;
 		}
+		kprintf("read...\n");
 
 		lockScheduler();
 		schedule();
@@ -88,14 +90,20 @@ void start(Device* _dvl)
 		while (c->getBufferUsed() + bytesRead >= c->getBufferSize()) {
 			sleep(1);
 		}
+		kprintf("A...\n");
 
 		c->buffer8(buf, bytesRead);
+		kprintf("B...\n");
 
 		if (!playedYet) {
 			dev->addChannel(c);
-			c->play();
+			kprintf("C...\n");
+			//c->play();
+			kprintf("D...\n");
 			playedYet = true;
 		}
+
+		kprintf("E...\n");
 	}
 }
 

@@ -139,6 +139,12 @@ int SoundChannel::unbuffer(float* output, int outSampleRate, int maxOut)
 	return data.output_frames_gen;
 }
 
+int SoundChannel::buffer16(uint16_t* data, int samples)
+{
+	panic("UNIMPL. SoundChannel::buffer16");
+	return 0;
+}
+
 int SoundChannel::buffer8(uint8_t* data, int len)
 {
 	int done = 0;
