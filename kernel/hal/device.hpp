@@ -90,6 +90,8 @@ typedef struct PCIDeviceInfo
 	uint8_t interrrupt;
 	uint8_t intPIN;
 
+	uint16_t deviceID;
+
 } PCIDeviceInfo;
 
 class Device
