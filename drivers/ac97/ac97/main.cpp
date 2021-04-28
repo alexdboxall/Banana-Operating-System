@@ -109,9 +109,9 @@ void AC97::handleIRQ()
 
 	kprintf("pi 0x%X, po 0x%X, mc 0x%X\n", pi, po, mc);
 
-	thePCI->writeBAR8(nabm, pi, 0x06);
-	thePCI->writeBAR8(nabm, po, 0x16);
-	thePCI->writeBAR8(nabm, mc, 0x26);
+	thePCI->writeBAR8(nabm, 0x1C, 0x06);
+	thePCI->writeBAR8(nabm, 0x1C, 0x16);
+	thePCI->writeBAR8(nabm, 0x1C, 0x26);
 
 	uint8_t* test = (uint8_t*) bdlVirtAddr;
 	*test++ = ((bdlPhysAddr + 0x1000) >> 0) & 0xFF;
