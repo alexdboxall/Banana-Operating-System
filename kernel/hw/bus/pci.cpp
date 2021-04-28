@@ -293,12 +293,12 @@ char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo, char* outbuffer)
 		}
 
 		if (!hasVendor || vendor == pciInfo.vendorID) {
-			//if (!hasDevice || device == pciInfo.deviceID) {
+			if (!hasDevice || device == pciInfo.deviceID) {
 				if (classCode == pciInfo.classCode && subClass == pciInfo.subClass) {
 					strcpy(outbuffer, current);
 					return outbuffer;
 				}
-			//}
+			}
 		}
 	}
 	
