@@ -32,6 +32,7 @@ public:
 	int getAudio(int samples, float* tempBuffer, float* outputBuffer);
 
 	void floatTo8(float* in, uint8_t* out, int len);
+	void floatTo16(float* in, uint16_t* out, int len);
 
 	virtual int getNumHwChannels() = 0;
 	virtual void beginPlayback(int sampleRate, int bits) = 0;

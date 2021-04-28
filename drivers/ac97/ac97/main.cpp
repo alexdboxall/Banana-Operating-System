@@ -19,6 +19,7 @@ void begin(void* b)
 #include "hw/bus/pci.hpp"
 #include "hw/acpi.hpp"
 #include "fs/vfs.hpp"
+#include "hal/sound/sndhw.hpp"
 
 #define NAM_RESET				0x00
 #define NAM_MASTER_VOL			0x02
@@ -54,6 +55,7 @@ extern "C" {
 #include "libk/string.h"
 }
 
+uint8_t buf[4096];
 void start(Device* _dvl)
 {
 	Device* driverless = _dvl;
@@ -63,6 +65,38 @@ void start(Device* _dvl)
 	parent->addChild(dev);
 	dev->preOpenPCI(driverless->pci.info);
 	dev->_open(0, 0, nullptr);
+
+	SoundChannel* c = new SoundChannel(8000, 16, 90);
+
+	File* f = new File("C:/ac97test.wav", kernelProcess);
+	f->open(FileOpenMode::Read);
+
+	bool playedYet = false;
+
+	while (1) {
+		int bytesRead = 0;
+		FileStatus st = f->read(4096, buf, &bytesRead);
+		if (bytesRead == 0 || st != FileStatus::Success) {
+			kprintf("SONG SHOULD BE DONE.\n");
+			return;
+		}
+
+		lockScheduler();
+		schedule();
+		unlockScheduler();
+
+		while (c->getBufferUsed() + bytesRead >= c->getBufferSize()) {
+			sleep(1);
+		}
+
+		c->buffer8(buf, bytesRead);
+
+		if (!playedYet) {
+			dev->addChannel(c);
+			c->play();
+			playedYet = true;
+		}
+	}
 }
 
 AC97::AC97(): SoundDevice("Intel AC'97 Audio Device")
@@ -99,14 +133,22 @@ void ac97IRQHandler(regs* r, void* context)
 uint32_t bdlPhysAddr;
 uint32_t bdlVirtAddr;
 
+float tempBuffer[65536];
+float outputBuffer[65536];
+
 void AC97::handleIRQ()
 {
-	static uint8_t l = 1;
+	static uint8_t l = 3;
 
 	thePCI->writeBAR16(nabm, 0x1C, 0x16);
 
-	//l = (l + 1) & 1;
-	//thePCI->writeBAR8(nabm, l, NABM_OFFSET_LAST_VALID_ENTRY);
+	l = (l + 1) & 31;
+	thePCI->writeBAR8(nabm, l, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_LAST_VALID_ENTRY);
+
+	int samplesGot = getAudio(65536, tempBuffer, outputBuffer);
+
+	uint16_t* dma = (uint16_t*) (bdlVirtAddr + 0x1000 + 0x8000 * 2 * 2 * ((l + 2) & 31));
+	floatTo16(outputBuffer, dma, samplesGot);
 }
 
 void AC97::setSampleRate(int hertz)
@@ -163,7 +205,7 @@ int AC97::_open(int a, int b, void* c)
 	bdlPhysAddr = Phys::allocateContiguousPages(48);		//dummy data
 	bdlVirtAddr = Virt::allocateKernelVirtualPages(48);
 	Virt::getAKernelVAS()->mapRange(bdlPhysAddr, bdlVirtAddr, 48, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
-	uint8_t lastValidEntry = 31;
+	uint8_t lastValidEntry = 4;
 
 	uint8_t* test = (uint8_t*) bdlVirtAddr;
 	for (int i = 0; i < 32; ++i) {
@@ -181,23 +223,23 @@ int AC97::_open(int a, int b, void* c)
 	uint16_t lfsr = 0;
 	for (int i = 0; i < 0x8000 / 80 / 8; ++i) {
 		for (int j = 0; j < 40; ++j) *test2++ = 0x0;
-		for (int j = 0; j < 40; ++j) *test2++ = 0x3333;
+		for (int j = 0; j < 40; ++j) *test2++ = 0x2222;
 	}
 	for (int i = 0; i < 0x8000 / 80 / 8; ++i) {
 		for (int j = 0; j < 20; ++j) *test2++ = 0x0;
-		for (int j = 0; j < 20; ++j) *test2++ = 0x3333;
+		for (int j = 0; j < 20; ++j) *test2++ = 0x2222;
 		for (int j = 0; j < 20; ++j) *test2++ = 0x0;
-		for (int j = 0; j < 20; ++j) *test2++ = 0x3333;
+		for (int j = 0; j < 20; ++j) *test2++ = 0x2222;
 	}
 	for (int i = 0; i < 0x8000 / 80 / 8; ++i) {
 		for (int j = 0; j < 40; ++j) *test2++ = 0x0;
-		for (int j = 0; j < 40; ++j) *test2++ = 0x3333;
+		for (int j = 0; j < 40; ++j) *test2++ = 0x2222;
 	}
 	for (int i = 0; i < 0x8000 / 80 / 8; ++i) {
 		for (int j = 0; j < 20; ++j) *test2++ = 0x0;
-		for (int j = 0; j < 20; ++j) *test2++ = 0x3333;
+		for (int j = 0; j < 20; ++j) *test2++ = 0x2222;
 		for (int j = 0; j < 20; ++j) *test2++ = 0x0;
-		for (int j = 0; j < 20; ++j) *test2++ = 0x3333;
+		for (int j = 0; j < 20; ++j) *test2++ = 0x2222;
 	}
 
 	setSampleRate(8000);

@@ -74,6 +74,20 @@ void SoundDevice::removeChannel(int id)
 	}
 }
 
+void SoundDevice::floatTo16(float* in, uint16_t* out, int len)
+{
+	for (int i = 0; i < len; ++i) {
+		float scaledValue = (((float) in[i]) + 1.0) / 2.0 * 32767.0;
+		if (scaledValue >= 32767.0) {
+			out[i] = 32767;
+		} else if (scaledValue <= 0.0) {
+			out[i] = 0;
+		} else {
+			out[i] = (short) lrintf(scaledValue);
+		}
+	}
+}
+
 void SoundDevice::floatTo8(float* in, uint8_t* out, int len)
 {
 	for (int i = 0; i < len; ++i) {
