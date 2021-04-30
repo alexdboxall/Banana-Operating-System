@@ -65,6 +65,7 @@ void start(Device* _dvl)
 	parent->addChild(dev);
 	dev->preOpenPCI(driverless->pci.info);
 	dev->_open(0, 0, nullptr);
+	return;
 
 	SoundChannel* c = new SoundChannel(8000, 16, 90);
 
@@ -150,20 +151,24 @@ void AC97::handleIRQ()
 		tempBuffer = (float*) malloc(65536);
 		outputBuffer = (float*) malloc(65536);
 	}
-	static uint8_t l = 3;
 
 	thePCI->writeBAR16(nabm, 0x1C, 0x16);
 
-	l = (l + 1) & 31;
-	thePCI->writeBAR8(nabm, l, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_LAST_VALID_ENTRY);
+	uint16_t index = thePCI->readBAR16(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_CUR_ENTRY_VAL);
+	uint8_t civ = index & 0xFF;
+	uint8_t lvi = (index >> 8);
+	if (lvi == civ) {
+		lvi = (civ - 1) & 0x1F;
+		thePCI->writeBAR8(nabm, lvi, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_LAST_VALID_ENTRY);
+	}
 
-	kprintf("reading samples to 0x%X and 0x%X...\n", tempBuffer, outputBuffer);
+	/*kprintf("reading samples to 0x%X and 0x%X...\n", tempBuffer, outputBuffer);
 	int samplesGot = getAudio(4096, tempBuffer, outputBuffer);
 	kprintf("%d samples got.\n", samplesGot);
 
 	uint16_t* dma = (uint16_t*) (bdlVirtAddr + 0x1000 + 0x8000 * 2 * 2 * ((l + 2) & 31));
 	kprintf("the destination address is 0x%X\n", dma);
-	floatTo16(outputBuffer, dma, samplesGot);
+	floatTo16(outputBuffer, dma, samplesGot);*/
 }
 
 void AC97::setSampleRate(int hertz)
