@@ -65,9 +65,8 @@ void start(Device* _dvl)
 	parent->addChild(dev);
 	dev->preOpenPCI(driverless->pci.info);
 	dev->_open(0, 0, nullptr);
-	return;
 
-	SoundChannel* c = new SoundChannel(8000, 16, 90);
+	/*SoundChannel* c = new SoundChannel(8000, 16, 90);
 
 	File* f = new File("C:/ac97test.wav", kernelProcess);
 	f->open(FileOpenMode::Read);
@@ -105,7 +104,7 @@ void start(Device* _dvl)
 		}
 
 		kprintf("E...\n");
-	}
+	}*/
 }
 
 AC97::AC97(): SoundDevice("Intel AC'97 Audio Device")
@@ -142,16 +141,8 @@ void ac97IRQHandler(regs* r, void* context)
 uint32_t bdlPhysAddr;
 uint32_t bdlVirtAddr;
 
-float* tempBuffer = nullptr;
-float* outputBuffer = nullptr;
-
 void AC97::handleIRQ()
 {
-	if (tempBuffer == nullptr) {
-		tempBuffer = (float*) malloc(65536);
-		outputBuffer = (float*) malloc(65536);
-	}
-
 	thePCI->writeBAR16(nabm, 0x1C, 0x16);
 
 	uint16_t index = thePCI->readBAR16(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_CUR_ENTRY_VAL);
@@ -222,51 +213,45 @@ int AC97::_open(int a, int b, void* c)
 
 	setVolume(15, 50);
 
-	bdlPhysAddr = Phys::allocateContiguousPages(410);		//dummy data
-	bdlVirtAddr = Virt::allocateKernelVirtualPages(410);
-	Virt::getAKernelVAS()->mapRange(bdlPhysAddr, bdlVirtAddr, 410, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
-	uint8_t lastValidEntry = 4;
+	//allocate BDL
+	bdlPhys = Phys::allocatePage();		
+	bdlVirt = Virt::allocateKernelVirtualPages(1);
+	Virt::getAKernelVAS()->mapRange(bdlPhysAddr, bdlVirtAddr, 1, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
 
-	uint8_t* test = (uint8_t*) bdlVirtAddr;
-	for (int i = 0; i < 32; ++i) {
-		*test++ = ((bdlPhysAddr + 0x1000 + 0x8000 * 2 * 2 * i) >> 0) & 0xFF;
-		*test++ = ((bdlPhysAddr + 0x1000 + 0x8000 * 2 * 2 * i) >> 8) & 0xFF;
-		*test++ = ((bdlPhysAddr + 0x1000 + 0x8000 * 2 * 2 * i) >> 16) & 0xFF;
-		*test++ = ((bdlPhysAddr + 0x1000 + 0x8000 * 2 * 2 * i) >> 24) & 0xFF;
-		*test++ = 0x00;
-		*test++ = 0x80;
-		*test++ = 0;
-		*test++ = 0x80;
-	}
+	//allocate buffers
+	uint32_t* ptr = (uint32_t*) bdlVirt;
+	for (int i = 0; i < 3; ++i) {
+		int size;
 
-	uint16_t* test2 = (uint16_t*) (bdlVirtAddr + 0x1000);
-	uint16_t lfsr = 0;
-	for (int i = 0; i < 0x8000 / 80 / 8; ++i) {
-		for (int j = 0; j < 40; ++j) *test2++ = 0x0;
-		for (int j = 0; j < 40; ++j) *test2++ = 0x2222;
-	}
-	for (int i = 0; i < 0x8000 / 80 / 8; ++i) {
-		for (int j = 0; j < 20; ++j) *test2++ = 0x0;
-		for (int j = 0; j < 20; ++j) *test2++ = 0x2222;
-		for (int j = 0; j < 20; ++j) *test2++ = 0x0;
-		for (int j = 0; j < 20; ++j) *test2++ = 0x2222;
-	}
-	for (int i = 0; i < 0x8000 / 80 / 8; ++i) {
-		for (int j = 0; j < 40; ++j) *test2++ = 0x0;
-		for (int j = 0; j < 40; ++j) *test2++ = 0x2222;
-	}
-	for (int i = 0; i < 0x8000 / 80 / 8; ++i) {
-		for (int j = 0; j < 20; ++j) *test2++ = 0x0;
-		for (int j = 0; j < 20; ++j) *test2++ = 0x2222;
-		for (int j = 0; j < 20; ++j) *test2++ = 0x0;
-		for (int j = 0; j < 20; ++j) *test2++ = 0x2222;
+		buffPhys[i] = Phys::allocateContiguousPages(size);
+		buffVirt[i] = Virt::allocateKernelVirtualPages(size);
+		Virt::getAKernelVAS()->mapRange(buffPhys[i], buffVirt[i], size, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
+
+		memset((void*) buffVirt[i], 0, size);
 	}
 
+	//fill BDL
+	ptr[0] = buffPhys[0];
+	ptr[1] = 65535 | (1 << 31);
+	ptr[2] = buffPhys[1];
+	ptr[3] = 65535 | (1 << 31);
+	ptr[4] = buffPhys[2];
+	ptr[5] = 65535 | (1 << 31);
+
+	//fill buffers
+	for (int i = 0; i < 3; ++i) {
+		uint16_t* data = (uint16_t*) buffVirt[i];
+		for (int j = 0; j < 65535; ++j) {
+			*data = (j >> 6) & 1 ? 0x2222 : 0x0000;
+		}
+	}
+	
+	//set sample rate
 	setSampleRate(8000);
 
 	//write physical address of BDL
-	thePCI->writeBAR32(nabm, bdlPhysAddr, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_DSC_ADDR);
-	thePCI->writeBAR8(nabm, lastValidEntry, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_LAST_VALID_ENTRY);
+	thePCI->writeBAR32(nabm, bdlPhys, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_DSC_ADDR);
+	thePCI->writeBAR8(nabm, 3, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_LAST_VALID_ENTRY);
 
 	interrupt = addIRQHandler(pci.info.interrrupt, ac97IRQHandler, true, (void*) this);
 

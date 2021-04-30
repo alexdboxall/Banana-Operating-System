@@ -27,6 +27,12 @@ protected:
 	size_t nam;
 	size_t nabm;
 
+	size_t bdlVirt;
+	size_t bdlPhys;
+
+	size_t buffVirt[3];
+	size_t buffPhys[3];
+
 public:
 	AC97();
 	virtual ~AC97();
