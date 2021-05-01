@@ -152,7 +152,7 @@ void AC97::handleIRQ()
 
 	uint16_t* data = (uint16_t*) buffVirt[lvi];
 	int br;
-	f->read(0x10000, data, &br);
+	//f->read(0x10000, data, &br);
 
 	/*kprintf("reading samples to 0x%X and 0x%X...\n", tempBuffer, outputBuffer);
 	int samplesGot = getAudio(4096, tempBuffer, outputBuffer);

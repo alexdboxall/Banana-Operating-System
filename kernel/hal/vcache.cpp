@@ -114,7 +114,7 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 		writeWriteBuffer();
 	}
 
-	if (0 && count == 1 && !disk->removable) {
+	if (count == 1 && !disk->removable) {
 		if (!(readCacheValid && (lba & ~(READ_BUFFER_BLOCK_SIZE - 1)) == readCacheLBA)) {
 
 			readCacheValid = true;
