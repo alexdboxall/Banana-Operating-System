@@ -128,7 +128,7 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 		}
 
 		uint8_t* src = readCacheBuffer + (lba & (READ_BUFFER_BLOCK_SIZE - 1)) * disk->sectorSize;
-		uint8_t* dest = ptr;
+		uint8_t* dest = (uint8_t*) ptr;
 		for (int i = 0; i < disk->sectorSize; ++i) {
 			*dest++ = *src++;
 		}
