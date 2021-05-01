@@ -141,8 +141,27 @@ int SoundChannel::unbuffer(float* output, int outSampleRate, int maxOut)
 
 int SoundChannel::buffer16(uint16_t* data, int samples)
 {
-	panic("UNIMPL. SoundChannel::buffer16");
-	return 0;
+	int done = 0;
+
+	if (buffUsed == buffSize) {
+		return 0;
+	}
+
+	const float f = 1.0 / (1.0 * 0x8000);
+
+	int i = 0;
+	for (; i < len; ++i) {
+		buff[buffUsed++] = ((float) data[i]) * f;
+
+		++done;
+
+		if (buffUsed == buffSize) {
+			//buffer full
+			return i + 1;
+		}
+	}
+
+	return i;
 }
 
 int SoundChannel::buffer8(uint8_t* data, int len)

@@ -55,7 +55,7 @@ extern "C" {
 #include "libk/string.h"
 }
 
-uint8_t buf[4096];
+uint16_t buf[4096];
 
 float* tempBuffer;
 float* oBuffer;
@@ -76,21 +76,19 @@ void start(Device* _dvl)
 	dev->_open(0, 0, nullptr);
 
 	SoundChannel* c = new SoundChannel(8000, 16, 90);
+	dev->addChannel(c);
+	c->play();
 
 	File* f = new File("C:/ac97test.wav", kernelProcess);
 	f->open(FileOpenMode::Read);
 
-	bool playedYet = false;
-
 	while (1) {
 		int bytesRead = 0;
-		kprintf("reading...\n");
 		FileStatus st = f->read(4096, buf, &bytesRead);
 		if (bytesRead == 0 || st != FileStatus::Success) {
 			kprintf("SONG SHOULD BE DONE.\n");
 			return;
 		}
-		kprintf("read...\n");
 
 		lockScheduler();
 		schedule();
@@ -99,20 +97,8 @@ void start(Device* _dvl)
 		while (c->getBufferUsed() + bytesRead >= c->getBufferSize()) {
 			sleep(1);
 		}
-		kprintf("A...\n");
 
-		c->buffer8(buf, bytesRead);
-		kprintf("B...\n");
-
-		if (!playedYet) {
-			dev->addChannel(c);
-			kprintf("C...\n");
-			//c->play();
-			kprintf("D...\n");
-			playedYet = true;
-		}
-
-		kprintf("E...\n");
+		c->buffer16(buf, bytesRead);
 	}
 }
 
