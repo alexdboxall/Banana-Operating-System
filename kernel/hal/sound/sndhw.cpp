@@ -119,6 +119,7 @@ int SoundDevice::getAudio(int samples, float* tempBuffer, float* outputBuffer)
 
 			int samplesGot = channels[i]->unbuffer(tempBuffer, currentSampleRate, samples / numChannels);
 
+			kprintf("Got %d samples from channel %d.\n", samplesGot, i);
 			for (int j = 0; j < samplesGot; ++j) {
 				outputBuffer[j * numChannels + i] += (tempBuffer[j] * vol) / ((float) numChannels);
 			}
