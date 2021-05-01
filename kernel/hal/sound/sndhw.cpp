@@ -128,5 +128,5 @@ int SoundDevice::getAudio(int samples, float* tempBuffer, float* outputBuffer)
 		}
 	}
 
-	return minSamplesGot;
+	return totalSamplesGot;
 }

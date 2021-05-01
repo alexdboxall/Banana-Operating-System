@@ -75,11 +75,14 @@ void start(Device* _dvl)
 	dev->preOpenPCI(driverless->pci.info);
 	dev->_open(0, 0, nullptr);
 
-	SoundChannel* c = new SoundChannel(8000, 16, 90);
-	dev->addChannel(c);
-	c->play();
+	SoundChannel* left = new SoundChannel(8000, 16, 90);
+	SoundChannel* rght = new SoundChannel(8000, 16, -90);
+	dev->addChannel(left);
+	dev->addChannel(rght);
+	left->play();
+	rght->play();
 
-	File* f = new File("C:/ac97test.wav", kernelProcess);
+	File* f = new File("C:/mono.wav", kernelProcess);
 	f->open(FileOpenMode::Read);
 
 	while (1) {
@@ -94,11 +97,12 @@ void start(Device* _dvl)
 		schedule();
 		unlockScheduler();
 
-		while (c->getBufferUsed() + bytesRead >= c->getBufferSize()) {
+		while (left->getBufferUsed() + bytesRead >= left->getBufferSize()) {
 			sleep(1);
 		}
 
-		c->buffer16(buf, bytesRead);
+		left->buffer16(buf, bytesRead);
+		rght->buffer16(buf, bytesRead);
 	}
 }
 
