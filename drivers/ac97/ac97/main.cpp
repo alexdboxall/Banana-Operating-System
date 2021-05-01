@@ -141,7 +141,6 @@ void ac97IRQHandler(regs* r, void* context)
 void AC97::handleIRQ()
 {
 	kprintf("AC97 IRQ\n");
-	thePCI->writeBAR16(nabm, 0x1C, 0x16);
 
 	uint8_t civ = thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_CUR_ENTRY_VAL);
 	uint8_t lvi = thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_LAST_VALID_ENTRY);
@@ -149,6 +148,7 @@ void AC97::handleIRQ()
 	lvi = (civ - 1) & 0x1F;
 	kprintf("NEW LVI = 0x%X\n", lvi);
 	thePCI->writeBAR8(nabm, lvi, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_LAST_VALID_ENTRY);
+
 
 	uint16_t* data = (uint16_t*) buffVirt[lvi];
 	int br;
@@ -161,6 +161,9 @@ void AC97::handleIRQ()
 	uint16_t* dma = (uint16_t*) (bdlVirtAddr + 0x1000 + 0x8000 * 2 * 2 * ((l + 2) & 31));
 	kprintf("the destination address is 0x%X\n", dma);
 	floatTo16(outputBuffer, dma, samplesGot);*/
+
+	thePCI->writeBAR16(nabm, 0x1C, 0x16);
+
 }
 
 void AC97::setSampleRate(int hertz)
