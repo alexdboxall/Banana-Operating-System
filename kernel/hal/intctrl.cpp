@@ -394,9 +394,9 @@ void gpFault(regs* r, void* context)
 
 void pgFault(regs* r, void* context)
 {
-	if (currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2())) {
+	/*if (currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2())) {
 		return;
-	}
+	}*/
 
 	kprintf("Page Fault!\n");
 
