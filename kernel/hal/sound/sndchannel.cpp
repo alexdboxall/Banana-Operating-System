@@ -150,7 +150,7 @@ int SoundChannel::buffer16(uint16_t* data, int samples)
 	const float f = 1.0 / (1.0 * 0x8000);
 
 	int i = 0;
-	for (; i < len; ++i) {
+	for (; i < samples; ++i) {
 		buff[buffUsed++] = ((float) data[i]) * f;
 
 		++done;
