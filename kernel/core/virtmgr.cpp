@@ -625,6 +625,8 @@ void VAS::evict(size_t virt)
 
 bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 {
+	kprintf("VAS::tryLoadBackOffDisk 0x%X\n", faultAddr);
+
 	bool onPageBoundary = (faultAddr & 0xFFF) > 0xFE0;
 
 	faultAddr &= ~0xFFF;

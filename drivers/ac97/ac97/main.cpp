@@ -55,7 +55,7 @@ extern "C" {
 #include "libk/string.h"
 }
 
-uint8_t buf[4096];
+//uint8_t buf[4096];
 void start(Device* _dvl)
 {
 	Device* driverless = _dvl;
@@ -138,20 +138,21 @@ void ac97IRQHandler(regs* r, void* context)
 	ac97->handleIRQ();
 }
 
-uint32_t bdlPhysAddr;
-uint32_t bdlVirtAddr;
-
 void AC97::handleIRQ()
 {
+	kprintf("AC97 IRQ\n");
 	thePCI->writeBAR16(nabm, 0x1C, 0x16);
 
-	uint16_t index = thePCI->readBAR16(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_CUR_ENTRY_VAL);
-	uint8_t civ = index & 0xFF;
-	uint8_t lvi = (index >> 8);
-	if (lvi == civ) {
-		lvi = (civ - 1) & 0x1F;
-		thePCI->writeBAR8(nabm, lvi, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_LAST_VALID_ENTRY);
-	}
+	uint8_t civ = thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_CUR_ENTRY_VAL);
+	uint8_t lvi = thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_LAST_VALID_ENTRY);
+	kprintf("CIV = 0x%X, LVI = 0x%X\n", civ, lvi);
+	lvi = (civ - 1) & 0x1F;
+	kprintf("NEW LVI = 0x%X\n", lvi);
+	thePCI->writeBAR8(nabm, lvi, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_LAST_VALID_ENTRY);
+
+	uint16_t* data = (uint16_t*) buffVirt[lvi];
+	int br;
+	f->read(0x10000, data, &br);
 
 	/*kprintf("reading samples to 0x%X and 0x%X...\n", tempBuffer, outputBuffer);
 	int samplesGot = getAudio(4096, tempBuffer, outputBuffer);
@@ -214,36 +215,49 @@ int AC97::_open(int a, int b, void* c)
 	setVolume(15, 50);
 
 	//allocate BDL
-	bdlPhys = Phys::allocatePage();		
+	bdlPhys = Phys::allocateContiguousPages(1);
 	bdlVirt = Virt::allocateKernelVirtualPages(1);
-	Virt::getAKernelVAS()->mapRange(bdlPhysAddr, bdlVirtAddr, 1, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
+
+	kprintf("bdl at phys 0x%X and virt 0x%X\n", bdlPhys, bdlVirt);
+	Virt::getAKernelVAS()->mapRange(bdlPhys, bdlVirt, 1, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
 
 	//allocate buffers
-	uint32_t* ptr = (uint32_t*) bdlVirt;
 	for (int i = 0; i < 3; ++i) {
-		int size;
+		int pages = 65536 * 2 / 4096;
 
-		buffPhys[i] = Phys::allocateContiguousPages(size);
-		buffVirt[i] = Virt::allocateKernelVirtualPages(size);
-		Virt::getAKernelVAS()->mapRange(buffPhys[i], buffVirt[i], size, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
+		buffPhys[i] = Phys::allocateContiguousPages(pages);
+		buffVirt[i] = Virt::allocateKernelVirtualPages(pages);
+		kprintf("buffer at phys 0x%X and virt 0x%X\n", buffPhys[i], buffVirt[i]);
+		Virt::getAKernelVAS()->mapRange(buffPhys[i], buffVirt[i], pages, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
 
-		memset((void*) buffVirt[i], 0, size);
+		memset((void*) buffVirt[i], 0, pages * 4096);
 	}
 
 	//fill BDL
+	uint32_t* ptr = (uint32_t*) bdlVirt;
 	ptr[0] = buffPhys[0];
-	ptr[1] = 65535 | (1 << 31);
+	ptr[1] = 0x80000000U | 0x8000U;
 	ptr[2] = buffPhys[1];
-	ptr[3] = 65535 | (1 << 31);
+	ptr[3] = 0x80000000U | 0x8000U;
 	ptr[4] = buffPhys[2];
-	ptr[5] = 65535 | (1 << 31);
+	ptr[5] = 0x80000000U | 0x8000U;
 
 	//fill buffers
+	/*
 	for (int i = 0; i < 3; ++i) {
 		uint16_t* data = (uint16_t*) buffVirt[i];
 		for (int j = 0; j < 65535; ++j) {
-			*data = (j >> 6) & 1 ? 0x2222 : 0x0000;
+			*data++ = (j >> (4 + i)) & 1 ? 0x2222 : 0x0000;
 		}
+	}*/
+
+	f = new File("C:/ac97test.wav", kernelProcess);
+	f->open(FileOpenMode::Read);
+
+	for (int i = 0; i < 3; ++i) {
+		uint16_t* data = (uint16_t*) buffVirt[i];
+		int br;
+		f->read(0x10000, data, &br);
 	}
 	
 	//set sample rate
@@ -253,6 +267,7 @@ int AC97::_open(int a, int b, void* c)
 	thePCI->writeBAR32(nabm, bdlPhys, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_DSC_ADDR);
 	thePCI->writeBAR8(nabm, 3, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_LAST_VALID_ENTRY);
 
+	kprintf("interrupt = %d\n", pci.info.interrrupt);
 	interrupt = addIRQHandler(pci.info.interrrupt, ac97IRQHandler, true, (void*) this);
 
 	//start transfer

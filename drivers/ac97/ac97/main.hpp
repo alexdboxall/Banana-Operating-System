@@ -30,6 +30,8 @@ protected:
 	size_t bdlVirt;
 	size_t bdlPhys;
 
+	File* f;
+
 	size_t buffVirt[3];
 	size_t buffPhys[3];
 
