@@ -140,19 +140,14 @@ void ac97IRQHandler(regs* r, void* context)
 
 void AC97::handleIRQ()
 {
-	kprintf("AC97 IRQ\n");
-
 	uint8_t civ = thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_CUR_ENTRY_VAL);
 	uint8_t lvi = thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_LAST_VALID_ENTRY);
-	kprintf("CIV = 0x%X, LVI = 0x%X\n", civ, lvi);
-	lvi = (civ - 1) & 0x1F;
-	kprintf("NEW LVI = 0x%X\n", lvi);
+	lvi = lvi;
 	thePCI->writeBAR8(nabm, lvi, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_LAST_VALID_ENTRY);
 
-
-	uint16_t* data = (uint16_t*) buffVirt[lvi];
+	uint16_t* data = (uint16_t*) buffVirt[civ - 1];
 	int br;
-	//f->read(0x10000, data, &br);
+	f->read(0x10000, data, &br);
 
 	/*kprintf("reading samples to 0x%X and 0x%X...\n", tempBuffer, outputBuffer);
 	int samplesGot = getAudio(4096, tempBuffer, outputBuffer);
@@ -163,7 +158,6 @@ void AC97::handleIRQ()
 	floatTo16(outputBuffer, dma, samplesGot);*/
 
 	thePCI->writeBAR16(nabm, 0x1C, 0x16);
-
 }
 
 void AC97::setSampleRate(int hertz)
