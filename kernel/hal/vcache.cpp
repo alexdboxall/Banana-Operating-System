@@ -127,8 +127,11 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 			disk->read((lba & ~(READ_BUFFER_BLOCK_SIZE - 1)), READ_BUFFER_BLOCK_SIZE, readCacheBuffer);
 		}
 
-		asm volatile ("cld");
-		memcpy(ptr, readCacheBuffer + (lba & (READ_BUFFER_BLOCK_SIZE - 1)) * disk->sectorSize, disk->sectorSize);
+		uint8_t* src = readCacheBuffer + (lba & (READ_BUFFER_BLOCK_SIZE - 1)) * disk->sectorSize;
+		uint8_t* dest = ptr;
+		for (int i = 0; i < disk->sectorSize; ++i) {
+			*dest++ = *src++;
+		}
 
 	} else {
 		invalidateReadBuffer();
