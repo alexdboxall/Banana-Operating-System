@@ -108,41 +108,41 @@ int SoundDevice::getAudio(int samples, float* tempBuffer, float* outputBuffer)
 
 	int minSamplesGot = samples;
 
-	kprintf("A.\n");
-	kprintf("The output buffer is at 0x%X\n", outputBuffer);
-	kprintf("0x%X samples makes 0x%X bytes.\n", samples, sizeof(float) * samples);
+	//kprintf("A.\n");
+	kprintf("    the output buffer is at 0x%X\n", outputBuffer);
+	kprintf("    0x%X samples makes 0x%X bytes.\n", samples, sizeof(float) * samples);
 	memset(outputBuffer, 0, sizeof(float) * samples);
-	kprintf("B.\n");
+	//kprintf("B.\n");
 
 	for (int i = 0; i < SOUND_DEVICE_MAX_VIRTUAL_CHANNELS; ++i) {
-		kprintf("C.\n");
+		//kprintf("C.\n");
 		if (channels[i] != nullptr && !channels[i]->paused() && channels[i]->getVolume()) {
-			kprintf("D.\n");
+			//kprintf("D.\n");
 			float vol = ((float) channels[i]->getVolume()) / 100.0;
-			kprintf("E.\n");
+			//kprintf("E.\n");
 
 			int samplesGot = channels[i]->unbuffer(tempBuffer, currentSampleRate, samples);
-			kprintf("F.\n");
+			//kprintf("F.\n");
 
 			for (int j = 0; j < samplesGot; ++j) {
-				kprintf("G.\n");
+				//kprintf("G.\n");
 				outputBuffer[j] += (tempBuffer[j] * vol) / ((float) numChannels);
-				kprintf("H.\n");
+				//kprintf("H.\n");
 			}
-			kprintf("I.\n");
+			//kprintf("I.\n");
 
 			if (samplesGot < minSamplesGot) {
-				kprintf("J.\n");
+				//kprintf("J.\n");
 				minSamplesGot = samplesGot;
 			}
 
-			kprintf("K.\n");
+			//kprintf("K.\n");
 		}
 
-		kprintf("L.\n");
+		//kprintf("L.\n");
 	}
 
-	kprintf("M.\n");
+	//kprintf("M.\n");
 
 	return minSamplesGot;
 }

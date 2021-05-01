@@ -56,13 +56,19 @@ extern "C" {
 }
 
 uint8_t buf[4096];
-float tempBuffer[65536];
-float outputBuffer[65536];
+
+float* tempBuffer;
+float* oBuffer;
 
 void start(Device* _dvl)
 {
 	Device* driverless = _dvl;
 	Device* parent = driverless->getParent();
+
+	tempBuffer = (float*) malloc(65536 * sizeof(float));
+	kprintf("temp buffer is at 0x%X\n", tempBuffer);
+	oBuffer = (float*) malloc(65536 * sizeof(float));
+	kprintf("out buffer is at 0x%X\n", oBuffer);
 
 	AC97* dev = new AC97();
 	parent->addChild(dev);
@@ -153,12 +159,12 @@ void AC97::handleIRQ()
 	//f->read(0x10000, data, &br);*/
 
 	kprintf("reading samples to 0x%X...\n", tempBuffer);
-	kprintf("and some more to 0x%X...\n", outputBuffer);
-	int samplesGot = getAudio(65535, tempBuffer, outputBuffer);
+	kprintf("and some more to 0x%X...\n", oBuffer);
+	int samplesGot = getAudio(65535, tempBuffer, oBuffer);
 	kprintf("%d samples got.\n", samplesGot);
 
 	uint16_t* dma = (uint16_t*) buffVirt[civ - 1];
-	floatTo16(outputBuffer, dma, samplesGot);
+	floatTo16(oBuffer, dma, samplesGot);
 	thePCI->writeBAR16(nabm, 0x1C, 0x16);
 }
 
