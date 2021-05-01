@@ -55,7 +55,7 @@ extern "C" {
 #include "libk/string.h"
 }
 
-uint16_t buf[4096];
+int16_t buf[4096];
 
 float* tempBuffer;
 float* oBuffer;
@@ -150,7 +150,7 @@ void AC97::handleIRQ()
 
 	int samplesGot = getAudio(65535, tempBuffer, oBuffer);
 
-	uint16_t* dma = (uint16_t*) buffVirt[civ - 1];
+	int16_t* dma = (int16_t*) buffVirt[civ - 1];
 	floatTo16(oBuffer, dma, samplesGot);
 
 	thePCI->writeBAR16(nabm, 0x1C, 0x16);

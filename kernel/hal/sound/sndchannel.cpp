@@ -139,7 +139,7 @@ int SoundChannel::unbuffer(float* output, int outSampleRate, int maxOut)
 	return data.output_frames_gen;
 }
 
-int SoundChannel::buffer16(uint16_t* data, int samples)
+int SoundChannel::buffer16(int16_t* data, int samples)
 {
 	int done = 0;
 

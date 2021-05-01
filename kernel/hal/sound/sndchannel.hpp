@@ -33,7 +33,7 @@ public:
 	int unbuffer(float* output, int sampleRate, int maxOut);
 
 	int buffer8(uint8_t* data, int len);
-	int buffer16(uint16_t* data, int samples);
+	int buffer16(int16_t* data, int samples);
 
 	void setVolume(int vol);	//as a percentage
 	int getVolume();
