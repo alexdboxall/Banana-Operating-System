@@ -120,7 +120,8 @@ int SoundDevice::getAudio(int samples, float* tempBuffer, float* outputBuffer)
 
 			kprintf("Got %d samples from channel %d.\n", samplesGot, i);
 			for (int j = 0; j < samplesGot; ++j) {
-				outputBuffer[j * numChannels + i] = tempBuffer[j];
+				kprintf("%d: %d = %d\n", chnum, j * numChannels + chnum, j);
+				outputBuffer[j * numChannels + chnum] = tempBuffer[j];
 			}
 
 			totalSamplesGot += samplesGot;
