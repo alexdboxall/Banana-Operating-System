@@ -107,9 +107,9 @@ void SoundDevice::floatTo8(float* in, uint8_t* out, int len)
 int SoundDevice::getAudio(int samples, float* tempBuffer, float* outputBuffer)
 {
 	float test[] = { 0.0, -1.0, 1.0, 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0 };
-	uint16_t test16[32];
+	uint8_t test16[32];
 
-	floatTo16(test, test16, sizeof(test) / sizeof(float));
+	floatTo8(test, test16, sizeof(test) / sizeof(float));
 	for (int i = 0; i < sizeof(test) / sizeof(float); ++i) {
 		kprintf("test16 = 0x%X\n", test16[i]);
 	}
