@@ -147,7 +147,7 @@ void AC97::handleIRQ()
 
 	uint16_t* data = (uint16_t*) buffVirt[civ - 1];
 	int br;
-	f->read(0x10000, data, &br);
+	//f->read(0x10000, data, &br);
 
 	/*kprintf("reading samples to 0x%X and 0x%X...\n", tempBuffer, outputBuffer);
 	int samplesGot = getAudio(4096, tempBuffer, outputBuffer);
@@ -240,22 +240,20 @@ int AC97::_open(int a, int b, void* c)
 	ptr[5] = 0x80000000U | 0x8000U;
 
 	//fill buffers
-	/*
 	for (int i = 0; i < 3; ++i) {
 		uint16_t* data = (uint16_t*) buffVirt[i];
 		for (int j = 0; j < 65535; ++j) {
-			*data++ = (j >> (4 + i)) & 1 ? 0x2222 : 0x0000;
+			*data++ = 0;	//(j >> (4 + i)) & 1 ? 0x2222 : 0x0000;
 		}
-	}*/
+	}
 
-	f = new File("C:/ac97test.wav", kernelProcess);
+	/*f = new File("C:/ac97test.wav", kernelProcess);
 	f->open(FileOpenMode::Read);
-
 	for (int i = 0; i < 3; ++i) {
 		uint16_t* data = (uint16_t*) buffVirt[i];
 		int br;
 		f->read(0x10000, data, &br);
-	}
+	}*/
 	
 	//set sample rate
 	setSampleRate(8000);
