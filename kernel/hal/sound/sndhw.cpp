@@ -109,6 +109,8 @@ int SoundDevice::getAudio(int samples, float* tempBuffer, float* outputBuffer)
 	int minSamplesGot = samples;
 
 	kprintf("A.\n");
+	kprintf("The output buffer is at 0x%X\n", outputBuffer);
+	kprintf("0x%X samples makes 0x%X bytes.\n", samples, sizeof(float) * samples);
 	memset(outputBuffer, 0, sizeof(float) * samples);
 	kprintf("B.\n");
 
