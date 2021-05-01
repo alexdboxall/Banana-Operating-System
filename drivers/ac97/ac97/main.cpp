@@ -55,7 +55,10 @@ extern "C" {
 #include "libk/string.h"
 }
 
-//uint8_t buf[4096];
+uint8_t buf[4096];
+float tempBuffer[65536];
+float outputBuffer[65536];
+
 void start(Device* _dvl)
 {
 	Device* driverless = _dvl;
@@ -66,7 +69,7 @@ void start(Device* _dvl)
 	dev->preOpenPCI(driverless->pci.info);
 	dev->_open(0, 0, nullptr);
 
-	/*SoundChannel* c = new SoundChannel(8000, 16, 90);
+	SoundChannel* c = new SoundChannel(8000, 16, 90);
 
 	File* f = new File("C:/ac97test.wav", kernelProcess);
 	f->open(FileOpenMode::Read);
@@ -104,7 +107,7 @@ void start(Device* _dvl)
 		}
 
 		kprintf("E...\n");
-	}*/
+	}
 }
 
 AC97::AC97(): SoundDevice("Intel AC'97 Audio Device")
@@ -145,18 +148,17 @@ void AC97::handleIRQ()
 	lvi = lvi;
 	thePCI->writeBAR8(nabm, lvi, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_LAST_VALID_ENTRY);
 
-	uint16_t* data = (uint16_t*) buffVirt[civ - 1];
+	/*uint16_t* data = (uint16_t*) buffVirt[civ - 1];
 	int br;
-	//f->read(0x10000, data, &br);
+	//f->read(0x10000, data, &br);*/
 
-	/*kprintf("reading samples to 0x%X and 0x%X...\n", tempBuffer, outputBuffer);
-	int samplesGot = getAudio(4096, tempBuffer, outputBuffer);
+	kprintf("reading samples to 0x%X...\n", tempBuffer);
+	kprintf("and some more to 0x%X...\n", outputBuffer);
+	int samplesGot = getAudio(65535, tempBuffer, outputBuffer);
 	kprintf("%d samples got.\n", samplesGot);
 
-	uint16_t* dma = (uint16_t*) (bdlVirtAddr + 0x1000 + 0x8000 * 2 * 2 * ((l + 2) & 31));
-	kprintf("the destination address is 0x%X\n", dma);
-	floatTo16(outputBuffer, dma, samplesGot);*/
-
+	uint16_t* dma = (uint16_t*) buffVirt[civ - 1];
+	floatTo16(outputBuffer, dma, samplesGot);
 	thePCI->writeBAR16(nabm, 0x1C, 0x16);
 }
 

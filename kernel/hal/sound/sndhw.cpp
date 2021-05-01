@@ -104,25 +104,43 @@ void SoundDevice::floatTo8(float* in, uint8_t* out, int len)
 
 int SoundDevice::getAudio(int samples, float* tempBuffer, float* outputBuffer)
 {
+	kprintf("SoundDevice::getAudio\n");
+
 	int minSamplesGot = samples;
 
+	kprintf("A.\n");
 	memset(outputBuffer, 0, sizeof(float) * samples);
+	kprintf("B.\n");
 
 	for (int i = 0; i < SOUND_DEVICE_MAX_VIRTUAL_CHANNELS; ++i) {
+		kprintf("C.\n");
 		if (channels[i] != nullptr && !channels[i]->paused() && channels[i]->getVolume()) {
+			kprintf("D.\n");
 			float vol = ((float) channels[i]->getVolume()) / 100.0;
+			kprintf("E.\n");
 
 			int samplesGot = channels[i]->unbuffer(tempBuffer, currentSampleRate, samples);
+			kprintf("F.\n");
 
 			for (int j = 0; j < samplesGot; ++j) {
+				kprintf("G.\n");
 				outputBuffer[j] += (tempBuffer[j] * vol) / ((float) numChannels);
+				kprintf("H.\n");
 			}
+			kprintf("I.\n");
 
 			if (samplesGot < minSamplesGot) {
+				kprintf("J.\n");
 				minSamplesGot = samplesGot;
 			}
+
+			kprintf("K.\n");
 		}
+
+		kprintf("L.\n");
 	}
+
+	kprintf("M.\n");
 
 	return minSamplesGot;
 }
