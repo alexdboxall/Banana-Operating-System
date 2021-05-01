@@ -76,6 +76,8 @@ void SoundDevice::removeChannel(int id)
 
 void SoundDevice::floatTo16(float* in, uint16_t* out, int len)
 {
+	//+1.0 -> 32767
+	//-1.0 -> 0
 	for (int i = 0; i < len; ++i) {
 		float scaledValue = (((float) in[i]) + 1.0) / 2.0 * 32767.0;
 		if (scaledValue >= 32767.0) {
@@ -104,6 +106,14 @@ void SoundDevice::floatTo8(float* in, uint8_t* out, int len)
 
 int SoundDevice::getAudio(int samples, float* tempBuffer, float* outputBuffer)
 {
+	float test[] = { 0.0, -1.0, 1.0, 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0 };
+	uint16_t test16[32];
+
+	floatTo16(test, test16, sizeof(test) / sizeof(float));
+	for (int i = 0; i < sizeof(test) / sizeof(float); ++i) {
+		kprintf("test16 = 0x%X\n", test16[i]);
+	}
+
 	kprintf("SoundDevice::getAudio\n");
 
 	int totalSamplesGot = 0;
@@ -120,7 +130,6 @@ int SoundDevice::getAudio(int samples, float* tempBuffer, float* outputBuffer)
 
 			kprintf("Got %d samples from channel %d.\n", samplesGot, i);
 			for (int j = 0; j < samplesGot; ++j) {
-				kprintf("%d: %d = %d\n", chnum, j * numChannels + chnum, j);
 				outputBuffer[j * numChannels + chnum] = tempBuffer[j];
 			}
 
