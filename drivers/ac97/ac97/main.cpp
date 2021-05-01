@@ -144,16 +144,10 @@ void AC97::handleIRQ()
 	int br;
 	//f->read(0x10000, data, &br);*/
 
-	int samplesGot = getAudio(65535 / 2, tempBuffer, oBuffer);
+	int samplesGot = getAudio(65535, tempBuffer, oBuffer);
 
 	uint16_t* dma = (uint16_t*) buffVirt[civ - 1];
-
-	uint16_t* a = (uint16_t*) oBuffer;
-	for (int i = 0; i < samplesGot / 2; ++i) {
-		*a++ = *dma;
-		*a++ = *dma++;
-	}
-	//floatTo16(oBuffer, dma, samplesGot);
+	floatTo16(oBuffer, dma, samplesGot);
 
 	thePCI->writeBAR16(nabm, 0x1C, 0x16);
 }
