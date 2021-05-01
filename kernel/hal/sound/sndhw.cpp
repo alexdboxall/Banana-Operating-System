@@ -112,19 +112,19 @@ int SoundDevice::getAudio(int samples, float* tempBuffer, float* outputBuffer)
 	kprintf("    0x%X samples makes 0x%X bytes.\n", samples, sizeof(float) * samples);
 	memset(outputBuffer, 0, sizeof(float) * samples);
 
+	int chnum = 0;
 	for (int i = 0; i < SOUND_DEVICE_MAX_VIRTUAL_CHANNELS; ++i) {
 		kprintf("C.\n");
-		if (channels[i] != nullptr && !channels[i]->paused() && channels[i]->getVolume()) {
-			float vol = ((float) channels[i]->getVolume()) / 100.0;
-
+		if (channels[i] != nullptr /*&& !channels[i]->paused() && channels[i]->getVolume()*/) {
 			int samplesGot = channels[i]->unbuffer(tempBuffer, currentSampleRate, samples / numChannels);
 
 			kprintf("Got %d samples from channel %d.\n", samplesGot, i);
 			for (int j = 0; j < samplesGot; ++j) {
-				outputBuffer[j * numChannels + i] += (tempBuffer[j] * vol) / ((float) numChannels);
+				outputBuffer[j * numChannels + i] = tempBuffer[j];
 			}
 
 			totalSamplesGot += samplesGot;
+			++chnum;
 		}
 	}
 
