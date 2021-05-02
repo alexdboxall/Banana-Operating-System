@@ -34,10 +34,6 @@ public:
 	void floatTo8(float* in, uint8_t* out, int len);
 	void floatTo16(float* in, int16_t* out, int len);
 
-	void beginPlayback(int sampleRate, int bits);
-	void stopPlayback();
-	int getNumHwChannels();
-
 	virtual void beginPlayback(int sampleRate, int bits) = 0;
 	virtual void stopPlayback() = 0;
 	virtual int getNumHwChannels() = 0;
