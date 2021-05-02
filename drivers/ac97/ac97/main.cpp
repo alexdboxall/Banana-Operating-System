@@ -66,9 +66,7 @@ void start(Device* _dvl)
 	Device* parent = driverless->getParent();
 
 	tempBuffer = (float*) malloc(65536 * sizeof(float));
-	kprintf("temp buffer is at 0x%X\n", tempBuffer);
 	oBuffer = (float*) malloc(65536 * sizeof(float));
-	kprintf("out buffer is at 0x%X\n", oBuffer);
 
 	AC97* dev = new AC97();
 	parent->addChild(dev);

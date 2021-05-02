@@ -76,8 +76,6 @@ void SoundDevice::removeChannel(int id)
 
 void SoundDevice::floatTo16(float* in, int16_t* out, int len)
 {
-	//+1.0 -> 32767
-	//-1.0 -> 0
 	for (int i = 0; i < len; ++i) {
 		float scaledValue = (((float) in[i]) + 1.0) / 2.0 * 32767.0;
 		if (scaledValue >= 32767.0) {
@@ -116,7 +114,6 @@ int SoundDevice::getAudio(int samples, float* tempBuffer, float* outputBuffer)
 
 	int chnum = 0;
 	for (int i = 0; i < SOUND_DEVICE_MAX_VIRTUAL_CHANNELS; ++i) {
-		kprintf("C.\n");
 		if (channels[i] != nullptr /*&& !channels[i]->paused() && channels[i]->getVolume()*/) {
 			int samplesGot = channels[i]->unbuffer(tempBuffer, currentSampleRate, samples / numChannels);
 
