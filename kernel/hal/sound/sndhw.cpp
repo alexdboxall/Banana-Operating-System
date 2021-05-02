@@ -115,11 +115,12 @@ int SoundDevice::getAudio(int samples, float* tempBuffer, float* outputBuffer)
 	int chnum = 0;
 	for (int i = 0; i < SOUND_DEVICE_MAX_VIRTUAL_CHANNELS; ++i) {
 		if (channels[i] != nullptr /*&& !channels[i]->paused() && channels[i]->getVolume()*/) {
-			int samplesGot = channels[i]->unbuffer(tempBuffer, currentSampleRate, samples);
+			int samplesGot = channels[i]->unbuffer(tempBuffer, currentSampleRate, samples / numChannels);
 
 			kprintf("Buffer used: 0x%X\n", channels[i]->getBufferUsed());
+			kprintf("Buffer size: 0x%X\n", channels[i]->getBufferSize());
 
-			kprintf("Got %d samples (wanted %d) from channel %d.\n", samplesGot, samples, i);
+			kprintf("Got %d samples (wanted %d) from channel %d.\n", samplesGot, samples / numChannels, i);
 			for (int j = 0; j < samplesGot; ++j) {
 				outputBuffer[j * numChannels + chnum] = tempBuffer[j];
 			}

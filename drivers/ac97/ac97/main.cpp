@@ -96,7 +96,7 @@ void start(Device* _dvl)
 		unlockScheduler();
 
 		while (left->getBufferUsed() + bytesRead >= left->getBufferSize()) {
-			sleep(1);
+			nanoSleep(1000 * 1000 * 300);
 		}
 
 		left->buffer16(buf, bytesRead);
