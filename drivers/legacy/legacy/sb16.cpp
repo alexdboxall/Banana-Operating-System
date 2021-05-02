@@ -76,6 +76,7 @@ void sb16Demo(void* s)
 		FileStatus st = f->read(4096, buf, &bytesRead);
 		if (bytesRead == 0 || st != FileStatus::Success) {
 			kprintf("SONG SHOULD BE DONE.\n");
+			dev->stopPlayback();
 			return;
 		}
 
@@ -91,7 +92,7 @@ void sb16Demo(void* s)
 
 		if (!playedYet) {
 			dev->addChannel(c);
-			c->play();
+			dev->beginPlayback(8000, 8);
 			playedYet = true;
 		}
 	}
