@@ -142,15 +142,20 @@ int SoundDevice::getAudio(int samples, float* tempBuffer, float* outputBuffer)
 
 void SoundDevice::beginPlayback(int sampleRate, int bits)
 {
+	kprintf("SoundDevice::beginPlayback 1\n");
 	__beginPlayback(sampleRate, bits);
+	kprintf("SoundDevice::beginPlayback 2\n");
 }
 
 void SoundDevice::stopPlayback()
 {
+	kprintf("SoundDevice::stopPlayback 1\n");
 	__stopPlayback();
+	kprintf("SoundDevice::stopPlayback 2\n");
 }
 
 int SoundDevice::getNumHwChannels()
 {
+	kprintf("SoundDevice::getNumHwChannels\n");
 	return __getNumHwChannels();
 }

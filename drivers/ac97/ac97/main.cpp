@@ -273,12 +273,18 @@ int AC97::close(int a, int b, void* c)
 
 void AC97::__beginPlayback(int sampleRate, int bits)
 {
+	kprintf("AC97::__beginPlayback Beginning playback...\n");
+
 	//set sample rate
 	setSampleRate(sampleRate);
+
+	kprintf("AC97::__beginPlayback Sample rate was set...\n");
 
 	//start transfer
 	uint8_t val = thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
 	thePCI->writeBAR8(nabm, val | 0x15, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
+
+	kprintf("AC97::__beginPlayback Transfer started...\n");
 }
 
 void AC97::__stopPlayback()
