@@ -130,8 +130,6 @@ int SoundDevice::getAudio(int samples, float* tempBuffer, float* outputBuffer)
 			totalSamplesGot += samplesGot;
 			kprintf("total sample got: %d\n", totalSamplesGot);
 			++chnum;
-
-			break;
 		}
 	}
 
