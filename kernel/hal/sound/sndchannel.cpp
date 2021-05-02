@@ -20,8 +20,6 @@ float lookupTable8[256];
 
 SoundChannel::SoundChannel(int _sampleRate, int _bits, int _direction, int _buffSize)
 {
-	pause();
-
 	sampleRate = _sampleRate;
 	bits = _bits;
 	direction = _direction;
