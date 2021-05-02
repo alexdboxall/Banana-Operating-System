@@ -112,10 +112,6 @@ int SoundDevice::getAudio(int samples, float* tempBuffer, float* outputBuffer)
 	kprintf("    0x%X samples makes 0x%X bytes.\n", samples, sizeof(float) * samples);
 	memset(outputBuffer, 0, sizeof(float) * samples);
 
-	for (int i = 0; i < samples; ++i) {
-		outputBuffer[i] = (i >> 5) & 1 ? 0x2222 : 0000;
-	}
-
 	int chnum = 0;
 	for (int i = 0; i < SOUND_DEVICE_MAX_VIRTUAL_CHANNELS; ++i) {
 		if (channels[i] != nullptr /*&& !channels[i]->paused() && channels[i]->getVolume()*/) {
@@ -138,24 +134,4 @@ int SoundDevice::getAudio(int samples, float* tempBuffer, float* outputBuffer)
 	}
 
 	return totalSamplesGot;
-}
-
-void SoundDevice::beginPlayback(int sampleRate, int bits)
-{
-	kprintf("SoundDevice::beginPlayback 1\n");
-	__beginPlayback(sampleRate, bits);
-	kprintf("SoundDevice::beginPlayback 2\n");
-}
-
-void SoundDevice::stopPlayback()
-{
-	kprintf("SoundDevice::stopPlayback 1\n");
-	__stopPlayback();
-	kprintf("SoundDevice::stopPlayback 2\n");
-}
-
-int SoundDevice::getNumHwChannels()
-{
-	kprintf("SoundDevice::getNumHwChannels\n");
-	return __getNumHwChannels();
 }

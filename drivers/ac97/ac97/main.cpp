@@ -275,18 +275,18 @@ int AC97::close(int a, int b, void* c)
 }
 
 
-void AC97::__beginPlayback(int sampleRate, int bits)
+void AC97::beginPlayback(int sampleRate, int bits)
 {
 
 }
 
-void AC97::__stopPlayback()
+void AC97::stopPlayback()
 {
-	uint8_t val = thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
-	thePCI->writeBAR8(nabm, val & ~0x1F, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
+	//uint8_t val = thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
+	//thePCI->writeBAR8(nabm, val & ~0x1F, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
 }
 
-int AC97::__getNumHwChannels()
+int AC97::getNumHwChannels()
 {
 	return 2;
 }
