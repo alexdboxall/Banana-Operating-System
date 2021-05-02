@@ -121,7 +121,6 @@ int SoundChannel::buffer16(int16_t* data, int samples)
 
 	int i = 0;
 	for (; i < samples; ++i) {
-		kprintf("buffer16 buffUsed = %d\n", buffUsed);
 		buff[buffUsed++] = ((float) data[i]) * f;
 
 		++done;
