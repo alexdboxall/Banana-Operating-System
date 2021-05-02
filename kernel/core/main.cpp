@@ -5,6 +5,7 @@
 #include "dbg/kconsole.hpp"
 #include "core/computer.hpp"
 #include "hw/ports.hpp"
+
 #pragma GCC optimize ("O0")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
@@ -56,32 +57,12 @@ extern "C" void callGlobalConstructors();
 extern VAS* firstVAS;
 extern void installVgaTextImplementation();
 
-extern size_t VGA_TEXT_MODE_ADDRESS;
-
 #pragma GCC optimize ("O2")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
 #pragma GCC optimize ("-fno-align-jumps")
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
-
-void setupTextMode()
-{
-	extern bool vgamono;
-	if (((*((uint16_t*) 0x410)) & 0x30) == 0x30) {
-		VGA_TEXT_MODE_ADDRESS -= 0x8000;
-		vgamono = true;
-	}
-
-	/*textModeImplementation.disableBlink = hwTextMode_disableBlink;
-	textModeImplementation.loadInData = hwTextMode_loadInData;
-	textModeImplementation.loadInTitle = hwTextMode_loadInTitle;
-	textModeImplementation.scrollScreen = hwTextMode_scrollScreen;
-	textModeImplementation.showCursor = hwTextMode_showCursor;
-	textModeImplementation.update = hwTextMode_update;
-	textModeImplementation.updateCursor = hwTextMode_updateCursor;
-	textModeImplementation.writeCharacter = hwTextMode_writeCharacter;*/
-}
 
 extern "C" void kernel_main()
 {
@@ -96,7 +77,6 @@ extern "C" void kernel_main()
 	kprintf("\n\nKERNEL HAS STARTED.\n");
 
 	installVgaTextImplementation();
-	setupTextMode();
 
 	size_t highestFreeAddr = *((uint32_t*) 0x524);
 	highestFreeAddr = (highestFreeAddr + 4095) & ~0xFFF;
