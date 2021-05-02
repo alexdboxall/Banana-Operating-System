@@ -69,24 +69,6 @@ memmove(
 
 #include <stdint.h>
 #include <stddef.h>
-void*
-memcpy(
-    void* destination,
-    const void* source,
-    ACPI_SIZE               num)
-{
-    const void* osource = source;
-    void* odest = destination;
-    ACPI_SIZE leftover = num - ((num >> 2) << 2);
-    ACPI_SIZE bytesdone = num - leftover;
-    asm volatile(@"cld ; rep movsd" :: @"S"(source), @"D"(destination), @"c"(num >> 2) : @"flags", @"memory");
-
-    for (ACPI_SIZE i = 0; i < leftover; ++i) {
-        *(((uint8_t*) odest) + bytesdone + i) = *(((uint8_t*) osource) + bytesdone + i);
-    }
-
-    return odest;
-}
 
 
 void*
@@ -607,6 +589,13 @@ void begin(void* a)
         usertask = new Process("C:/Banana/System/command.exe", nullptr, argv);
     } else {
         usertask = new Process("C:/Banana/System/command.exe");
+
+        int autogui = Reg::readIntWithDefault((char*) "system", (char*) "@shell:autogui", 0);
+
+        extern void startGUIVESA(void* a);
+        if (autogui) {
+            startGUIVESA(nullptr);
+        }
     }
     setActiveTerminal(usertask->terminal);
 

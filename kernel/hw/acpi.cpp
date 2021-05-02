@@ -74,6 +74,7 @@ Parts of this are based on Minux:
 #include "hw/ports.hpp"
 #include "hw/bus/pci.hpp"
 #include "hw/bus/isa.hpp"
+#include "reg/registry.hpp"
 
 uint8_t processorID[MAX_IOAPICS];
 uint8_t matchingAPICID[MAX_IOAPICS];
@@ -397,7 +398,8 @@ int ACPI::open(int mode, int, void*)
 
 	Thr::loadKernelSymbolTable("C:/Banana/System/KERNEL32.EXE");
 
-	Virt::setupPageSwapping(12);
+	int megabytes = Reg::readIntWithDefault((char*) "system", (char*) "@memory:swapfile", 12);
+	Virt::setupPageSwapping(megabytes);
 	
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/bios.sys"), computer);
 
