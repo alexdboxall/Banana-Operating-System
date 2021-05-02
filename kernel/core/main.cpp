@@ -20,7 +20,8 @@ Minimum System Requirements:
 	RAM:	6 MB (12 MB to install it)
 	HDD:	64 MB
 
-	VGA compatible video card
+	VGA (or EGA) compatible video card;
+	VGA (or EGA) compatible, or MDA monitor;
 	USB or PS/2 keyboard
 
 	If the computer was made in the 90s, you'll be fine
@@ -184,14 +185,14 @@ void setupTextMode()
 		vgamono = true;
 	}
 
-	textModeImplementation.disableBlink = hwTextMode_disableBlink;
+	/*textModeImplementation.disableBlink = hwTextMode_disableBlink;
 	textModeImplementation.loadInData = hwTextMode_loadInData;
 	textModeImplementation.loadInTitle = hwTextMode_loadInTitle;
 	textModeImplementation.scrollScreen = hwTextMode_scrollScreen;
 	textModeImplementation.showCursor = hwTextMode_showCursor;
 	textModeImplementation.update = hwTextMode_update;
 	textModeImplementation.updateCursor = hwTextMode_updateCursor;
-	textModeImplementation.writeCharacter = hwTextMode_writeCharacter;
+	textModeImplementation.writeCharacter = hwTextMode_writeCharacter;*/
 }
 
 extern "C" void kernel_main()

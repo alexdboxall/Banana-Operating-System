@@ -88,8 +88,13 @@ int VGAVideo::open(int a, int b, void* c)
 		mono = true;
 	}
 
-	biosMode = mono ? 0x11 : 0x12;
-	//biosMode = mono ? 0x06 : 0x0E;
+	/*biosMode = mono ? 0x11 : 0x12;		//VGA modes
+	width = 640;
+	height = 480;*/
+
+	biosMode = mono ? 0x0F : 0x10;		//EGA modes
+	width = 640;
+	height = 350;
 
 	vramBase = biosMode == 0x06 ? 0xB8000 : 0xA0000;
 
@@ -100,18 +105,15 @@ int VGAVideo::open(int a, int b, void* c)
 	volatile uint8_t * volatile vram = (volatile uint8_t * volatile) (VIRT_LOW_MEGS + vramBase);
 
 	setPlane(0);
-	memset((void*) vram, 0, 640 * 480 / 8);
+	memset((void*) vram, 0, width * height / 8);
 	if (!mono) {
 		setPlane(1);
-		memset((void*) vram, 0, 640 * 480 / 8);
+		memset((void*) vram, 0, width * height / 8);
 		setPlane(2);
-		memset((void*) vram, 0, 640 * 480 / 8);
+		memset((void*) vram, 0, width * height / 8);
 		setPlane(3);
-		memset((void*) vram, 0, 640 * 480 / 8);
+		memset((void*) vram, 0, width * height / 8);
 	}
-
-	width = 640;
-	height = 480;
 
 	return 0;
 } 

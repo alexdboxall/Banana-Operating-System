@@ -73,14 +73,16 @@ void start(Device* _dvl)
 	dev->preOpenPCI(driverless->pci.info);
 	dev->_open(0, 0, nullptr);
 
-	SoundChannel* left = new SoundChannel(8000, 16, 90, 133000);
-	SoundChannel* rght = new SoundChannel(8000, 16, -90, 133000);
+	return;
+
+	SoundChannel* left = new SoundChannel(8000, 16, 90, 133000 * 2);
+	SoundChannel* rght = new SoundChannel(8000, 16, -90, 133000 * 2);
 	dev->addChannel(left);
 	dev->addChannel(rght);
 	kprintf("About to begin playback...\n");
 	kprintf("Playback has begun!\n");
 
-	File* f = new File("C:/fugue.wav", kernelProcess);
+	File* f = new File("C:/mono.wav", kernelProcess);
 	f->open(FileOpenMode::Read);
 
 	while (1) {
