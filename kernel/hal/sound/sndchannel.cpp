@@ -36,6 +36,7 @@ SoundChannel::SoundChannel(int _sampleRate, int _bits, int _direction, int _buff
 
 	int error;
 	conv = src_new(SRC_LINEAR, 1, &error);
+	kprintf("Conv has been setup.\n");
 	if (error) {
 		panic("TODO: SOUND CHANNEL ERROR");
 	}
@@ -84,11 +85,14 @@ int SoundChannel::unbuffer(float* output, int outSampleRate, int maxOut)
 	SRC_DATA data;
 	kprintf("A.\n");
 
+	kprintf("buffUsed = %d\n", buffUsed);
+	kprintf("maxOut = %d\n", maxOut);
+
 	data.data_in = buff;
 	data.input_frames = buffUsed;
 	data.output_frames = maxOut;
 	data.data_out = output;
-	data.src_ratio = ((float) outSampleRate) / ((float) sampleRate) / speed;
+	data.src_ratio = ((float) outSampleRate) / ((float) sampleRate)/* / speed*/;
 	data.end_of_input = 0;
 
 	kprintf("B.\n");
@@ -117,6 +121,7 @@ int SoundChannel::buffer16(int16_t* data, int samples)
 
 	int i = 0;
 	for (; i < samples; ++i) {
+		kprintf("buffer16 buffUsed = %d\n", buffUsed);
 		buff[buffUsed++] = ((float) data[i]) * f;
 
 		++done;
