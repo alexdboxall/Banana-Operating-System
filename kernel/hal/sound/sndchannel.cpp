@@ -98,6 +98,7 @@ int SoundChannel::unbuffer(float* output, int outSampleRate, int maxOut)
 
 	buffUsed -= data.input_frames_used;
 	kprintf("D.\n");
+	kprintf("buff size = %d, input frames used %d, buff = 0x%X\n", buffSize, data.input_frames_used, buff);
 	kprintf("dest = 0x%X, src = 0x%X, size = 0x%X\n", buff, buff + data.input_frames_used, (buffSize - data.input_frames_used) * sizeof(float));
 	memmove(buff, buff + data.input_frames_used, (buffSize - data.input_frames_used) * sizeof(float));
 	kprintf("E.\n");
