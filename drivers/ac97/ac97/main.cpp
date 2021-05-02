@@ -73,6 +73,8 @@ void start(Device* _dvl)
 	dev->preOpenPCI(driverless->pci.info);
 	dev->_open(0, 0, nullptr);
 
+	return;
+
 	SoundChannel* left = new SoundChannel(8000, 16, 90, 133000);
 	SoundChannel* rght = new SoundChannel(8000, 16, -90, 133000);
 	dev->addChannel(left);

@@ -118,18 +118,20 @@ int SoundDevice::getAudio(int samples, float* tempBuffer, float* outputBuffer)
 			kprintf("Buffer size: 0x%X\n", channels[i]->getBufferSize());
 			kprintf("Pre  buffer used: 0x%X\n", channels[i]->getBufferUsed());
 			
-			int samplesGot = channels[i]->unbuffer(tempBuffer, currentSampleRate, samples / numChannels);
+			int samplesGot = channels[i]->unbuffer(tempBuffer, currentSampleRate, samples/* / numChannels*/);
 			kprintf("Post buffer used: 0x%X\n", channels[i]->getBufferUsed());
 
-			kprintf("Got %d samples (wanted %d) from channel %d.\n", samplesGot, samples / numChannels, i);
+			kprintf("Got %d samples (wanted %d) from channel %d.\n", samplesGot, samples/* / numChannels*/, i);
 			for (int j = 0; j < samplesGot; ++j) {
-				outputBuffer[j * numChannels + chnum] = tempBuffer[j];
+				outputBuffer[j/* * numChannels + chnum*/] = tempBuffer[j];
 			}
 
 			kprintf("got %d samples, ", samplesGot);
 			totalSamplesGot += samplesGot;
 			kprintf("total sample got: %d\n", totalSamplesGot);
 			++chnum;
+
+			break;
 		}
 	}
 
