@@ -80,7 +80,7 @@ void start(Device* _dvl)
 	left->play();
 	rght->play();
 
-	File* f = new File("C:/mono.wav", kernelProcess);
+	File* f = new File("C:/fugue.wav", kernelProcess);
 	f->open(FileOpenMode::Read);
 
 	while (1) {
@@ -146,7 +146,8 @@ void AC97::handleIRQ()
 	int br;
 	//f->read(0x10000, data, &br);*/
 
-	int samplesGot = getAudio(65535, tempBuffer, oBuffer);
+	int samplesGot = getAudio(65534, tempBuffer, oBuffer);
+	kprintf("Got %d samples.\n", samplesGot);
 
 	int16_t* dma = (int16_t*) buffVirt[civ - 1];
 	floatTo16(oBuffer, dma, samplesGot);

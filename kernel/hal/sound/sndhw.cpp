@@ -117,7 +117,7 @@ int SoundDevice::getAudio(int samples, float* tempBuffer, float* outputBuffer)
 		if (channels[i] != nullptr /*&& !channels[i]->paused() && channels[i]->getVolume()*/) {
 			int samplesGot = channels[i]->unbuffer(tempBuffer, currentSampleRate, samples / numChannels);
 
-			kprintf("Got %d samples from channel %d.\n", samplesGot, i);
+			kprintf("Got %d samples (wanted %d) from channel %d.\n", samplesGot, samples / numChannels, i);
 			for (int j = 0; j < samplesGot; ++j) {
 				outputBuffer[j * numChannels + chnum] = tempBuffer[j];
 			}
