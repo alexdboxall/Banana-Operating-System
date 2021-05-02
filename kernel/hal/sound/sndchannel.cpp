@@ -83,10 +83,6 @@ int SoundChannel::getBufferSize()
 int SoundChannel::unbuffer(float* output, int outSampleRate, int maxOut)
 {
 	SRC_DATA data;
-	kprintf("A.\n");
-
-	kprintf("buffUsed = %d\n", buffUsed);
-	kprintf("maxOut = %d\n", maxOut);
 
 	data.data_in = buff;
 	data.input_frames = buffUsed;
@@ -95,17 +91,9 @@ int SoundChannel::unbuffer(float* output, int outSampleRate, int maxOut)
 	data.src_ratio = ((float) outSampleRate) / ((float) sampleRate)/* / speed*/;
 	data.end_of_input = 0;
 
-	kprintf("B.\n");
-
 	src_process(conv, &data);
-	kprintf("C.\n");
-
 	buffUsed -= data.input_frames_used;
-	kprintf("D.\n");
-	kprintf("buff size = %d, input frames used %d, buff = 0x%X\n", buffSize, data.input_frames_used, buff);
-	kprintf("dest = 0x%X, src = 0x%X, size = 0x%X\n", buff, buff + data.input_frames_used, (buffSize - data.input_frames_used) * sizeof(float));
 	memmove(buff, buff + data.input_frames_used, (buffSize - data.input_frames_used) * sizeof(float));
-	kprintf("E.\n");
 	return data.output_frames_gen;
 }
 
