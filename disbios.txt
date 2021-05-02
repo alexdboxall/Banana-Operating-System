@@ -2939,3 +2939,737 @@ Disassembly of section .text._ZN4BIOSD0Ev:
 10000822:	83 c4 10             	add    esp,0x10
 10000825:	c9                   	leave  
 10000826:	c3                   	ret    
+
+packages/system/32/0002/bios.sys:     file format elf32-i386
+
+
+Disassembly of section .text:
+
+10000000 <start()-0xe>:
+10000000:	55                   	push   ebp
+10000001:	89 e5                	mov    ebp,esp
+10000003:	83 ec 08             	sub    esp,0x8
+10000006:	e8 fc ff ff ff       	call   10000007 <start()-0x7>	10000007: R_386_PC32	start()
+1000000b:	90                   	nop
+1000000c:	c9                   	leave  
+1000000d:	c3                   	ret    
+
+1000000e <start()>:
+1000000e:	55                   	push   ebp
+1000000f:	89 e5                	mov    ebp,esp
+10000011:	53                   	push   ebx
+10000012:	83 ec 14             	sub    esp,0x14
+10000015:	c7 45 f0 58 01 00 00 	mov    DWORD PTR [ebp-0x10],0x158
+1000001c:	83 ec 0c             	sub    esp,0xc
+1000001f:	ff 75 f0             	push   DWORD PTR [ebp-0x10]
+10000022:	e8 fc ff ff ff       	call   10000023 <start()+0x15>	10000023: R_386_PC32	malloc
+10000027:	83 c4 10             	add    esp,0x10
+1000002a:	89 c3                	mov    ebx,eax
+1000002c:	83 ec 0c             	sub    esp,0xc
+1000002f:	53                   	push   ebx
+10000030:	e8 fc ff ff ff       	call   10000031 <start()+0x23>	10000031: R_386_PC32	BIOS::BIOS()
+10000035:	83 c4 10             	add    esp,0x10
+10000038:	89 5d f4             	mov    DWORD PTR [ebp-0xc],ebx
+1000003b:	a1 00 00 00 00       	mov    eax,ds:0x0	1000003c: R_386_32	Krnl::computer
+10000040:	83 ec 08             	sub    esp,0x8
+10000043:	ff 75 f4             	push   DWORD PTR [ebp-0xc]
+10000046:	50                   	push   eax
+10000047:	e8 fc ff ff ff       	call   10000048 <start()+0x3a>	10000048: R_386_PC32	Device::addChild(Device*)
+1000004c:	83 c4 10             	add    esp,0x10
+1000004f:	6a 00                	push   0x0
+10000051:	6a 00                	push   0x0
+10000053:	6a 00                	push   0x0
+10000055:	ff 75 f4             	push   DWORD PTR [ebp-0xc]
+10000058:	e8 fc ff ff ff       	call   10000059 <start()+0x4b>	10000059: R_386_PC32	BIOS::open_(int, int, void*)
+1000005d:	83 c4 10             	add    esp,0x10
+10000060:	90                   	nop
+10000061:	8b 5d fc             	mov    ebx,DWORD PTR [ebp-0x4]
+10000064:	c9                   	leave  
+10000065:	c3                   	ret    
+
+10000066 <hwTextMode_loadInData(VgaText*)>:
+10000066:	55                   	push   ebp
+10000067:	89 e5                	mov    ebp,esp
+10000069:	83 ec 10             	sub    esp,0x10
+1000006c:	a1 00 00 00 00       	mov    eax,ds:0x0	1000006d: R_386_32	VGA_TEXT_MODE_ADDRESS
+10000071:	89 45 fc             	mov    DWORD PTR [ebp-0x4],eax
+10000074:	81 45 fc a0 00 00 00 	add    DWORD PTR [ebp-0x4],0xa0
+1000007b:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+1000007e:	8b 40 0c             	mov    eax,DWORD PTR [eax+0xc]
+10000081:	89 45 f8             	mov    DWORD PTR [ebp-0x8],eax
+10000084:	c7 45 f4 00 00 00 00 	mov    DWORD PTR [ebp-0xc],0x0
+1000008b:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+1000008e:	8b 40 10             	mov    eax,DWORD PTR [eax+0x10]
+10000091:	39 45 f4             	cmp    DWORD PTR [ebp-0xc],eax
+10000094:	7d 2f                	jge    100000c5 <hwTextMode_loadInData(VgaText*)+0x5f>
+10000096:	c7 45 f0 00 00 00 00 	mov    DWORD PTR [ebp-0x10],0x0
+1000009d:	83 7d f0 4f          	cmp    DWORD PTR [ebp-0x10],0x4f
+100000a1:	7f 1d                	jg     100000c0 <hwTextMode_loadInData(VgaText*)+0x5a>
+100000a3:	8b 45 f8             	mov    eax,DWORD PTR [ebp-0x8]
+100000a6:	8d 50 02             	lea    edx,[eax+0x2]
+100000a9:	89 55 f8             	mov    DWORD PTR [ebp-0x8],edx
+100000ac:	8b 55 fc             	mov    edx,DWORD PTR [ebp-0x4]
+100000af:	8d 4a 02             	lea    ecx,[edx+0x2]
+100000b2:	89 4d fc             	mov    DWORD PTR [ebp-0x4],ecx
+100000b5:	66 8b 00             	mov    ax,WORD PTR [eax]
+100000b8:	66 89 02             	mov    WORD PTR [edx],ax
+100000bb:	ff 45 f0             	inc    DWORD PTR [ebp-0x10]
+100000be:	eb dd                	jmp    1000009d <hwTextMode_loadInData(VgaText*)+0x37>
+100000c0:	ff 45 f4             	inc    DWORD PTR [ebp-0xc]
+100000c3:	eb c6                	jmp    1000008b <hwTextMode_loadInData(VgaText*)+0x25>
+100000c5:	90                   	nop
+100000c6:	c9                   	leave  
+100000c7:	c3                   	ret    
+
+100000c8 <hwTextMode_loadInTitle(VgaText*, char*)>:
+100000c8:	55                   	push   ebp
+100000c9:	89 e5                	mov    ebp,esp
+100000cb:	83 ec 10             	sub    esp,0x10
+100000ce:	a0 00 00 00 00       	mov    al,ds:0x0	100000cf: R_386_32	vgamono
+100000d3:	84 c0                	test   al,al
+100000d5:	74 14                	je     100000eb <hwTextMode_loadInTitle(VgaText*, char*)+0x23>
+100000d7:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100000da:	c7 40 3c 02 00 00 00 	mov    DWORD PTR [eax+0x3c],0x2
+100000e1:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100000e4:	c7 40 38 00 00 00 00 	mov    DWORD PTR [eax+0x38],0x0
+100000eb:	a1 00 00 00 00       	mov    eax,ds:0x0	100000ec: R_386_32	VGA_TEXT_MODE_ADDRESS
+100000f0:	89 45 fc             	mov    DWORD PTR [ebp-0x4],eax
+100000f3:	c7 45 f8 00 00 00 00 	mov    DWORD PTR [ebp-0x8],0x0
+100000fa:	83 7d f8 4f          	cmp    DWORD PTR [ebp-0x8],0x4f
+100000fe:	7f 3f                	jg     1000013f <hwTextMode_loadInTitle(VgaText*, char*)+0x77>
+10000100:	8b 55 f8             	mov    edx,DWORD PTR [ebp-0x8]
+10000103:	8b 45 0c             	mov    eax,DWORD PTR [ebp+0xc]
+10000106:	01 d0                	add    eax,edx
+10000108:	8a 00                	mov    al,BYTE PTR [eax]
+1000010a:	0f b6 c0             	movzx  eax,al
+1000010d:	8b 55 08             	mov    edx,DWORD PTR [ebp+0x8]
+10000110:	8b 52 3c             	mov    edx,DWORD PTR [edx+0x3c]
+10000113:	0f b7 d2             	movzx  edx,dx
+10000116:	89 d1                	mov    ecx,edx
+10000118:	83 e1 0f             	and    ecx,0xf
+1000011b:	8b 55 08             	mov    edx,DWORD PTR [ebp+0x8]
+1000011e:	8b 52 38             	mov    edx,DWORD PTR [edx+0x38]
+10000121:	c1 e2 04             	shl    edx,0x4
+10000124:	0f b6 d2             	movzx  edx,dl
+10000127:	09 ca                	or     edx,ecx
+10000129:	c1 e2 08             	shl    edx,0x8
+1000012c:	09 c2                	or     edx,eax
+1000012e:	8b 45 fc             	mov    eax,DWORD PTR [ebp-0x4]
+10000131:	8d 48 02             	lea    ecx,[eax+0x2]
+10000134:	89 4d fc             	mov    DWORD PTR [ebp-0x4],ecx
+10000137:	66 89 10             	mov    WORD PTR [eax],dx
+1000013a:	ff 45 f8             	inc    DWORD PTR [ebp-0x8]
+1000013d:	eb bb                	jmp    100000fa <hwTextMode_loadInTitle(VgaText*, char*)+0x32>
+1000013f:	90                   	nop
+10000140:	c9                   	leave  
+10000141:	c3                   	ret    
+
+10000142 <hwTextMode_scrollScreen(VgaText*)>:
+10000142:	55                   	push   ebp
+10000143:	89 e5                	mov    ebp,esp
+10000145:	53                   	push   ebx
+10000146:	83 ec 14             	sub    esp,0x14
+10000149:	a0 00 00 00 00       	mov    al,ds:0x0	1000014a: R_386_32	vgamono
+1000014e:	84 c0                	test   al,al
+10000150:	74 14                	je     10000166 <hwTextMode_scrollScreen(VgaText*)+0x24>
+10000152:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000155:	c7 40 34 02 00 00 00 	mov    DWORD PTR [eax+0x34],0x2
+1000015c:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+1000015f:	c7 40 30 00 00 00 00 	mov    DWORD PTR [eax+0x30],0x0
+10000166:	a1 00 00 00 00       	mov    eax,ds:0x0	10000167: R_386_32	VGA_TEXT_MODE_ADDRESS
+1000016b:	89 45 ec             	mov    DWORD PTR [ebp-0x14],eax
+1000016e:	c7 45 f4 02 00 00 00 	mov    DWORD PTR [ebp-0xc],0x2
+10000175:	83 7d f4 18          	cmp    DWORD PTR [ebp-0xc],0x18
+10000179:	0f 8f cf 00 00 00    	jg     1000024e <hwTextMode_scrollScreen(VgaText*)+0x10c>
+1000017f:	c7 45 f0 00 00 00 00 	mov    DWORD PTR [ebp-0x10],0x0
+10000186:	81 7d f0 9f 00 00 00 	cmp    DWORD PTR [ebp-0x10],0x9f
+1000018d:	0f 8f b3 00 00 00    	jg     10000246 <hwTextMode_scrollScreen(VgaText*)+0x104>
+10000193:	8b 55 f4             	mov    edx,DWORD PTR [ebp-0xc]
+10000196:	89 d0                	mov    eax,edx
+10000198:	c1 e0 02             	shl    eax,0x2
+1000019b:	01 d0                	add    eax,edx
+1000019d:	c1 e0 05             	shl    eax,0x5
+100001a0:	89 c2                	mov    edx,eax
+100001a2:	8b 45 f0             	mov    eax,DWORD PTR [ebp-0x10]
+100001a5:	01 d0                	add    eax,edx
+100001a7:	89 c2                	mov    edx,eax
+100001a9:	8b 45 ec             	mov    eax,DWORD PTR [ebp-0x14]
+100001ac:	8d 0c 02             	lea    ecx,[edx+eax*1]
+100001af:	8b 55 f4             	mov    edx,DWORD PTR [ebp-0xc]
+100001b2:	89 d0                	mov    eax,edx
+100001b4:	c1 e0 02             	shl    eax,0x2
+100001b7:	01 d0                	add    eax,edx
+100001b9:	c1 e0 05             	shl    eax,0x5
+100001bc:	89 c2                	mov    edx,eax
+100001be:	8b 45 f0             	mov    eax,DWORD PTR [ebp-0x10]
+100001c1:	01 d0                	add    eax,edx
+100001c3:	8d 90 60 ff ff ff    	lea    edx,[eax-0xa0]
+100001c9:	8b 45 ec             	mov    eax,DWORD PTR [ebp-0x14]
+100001cc:	01 c2                	add    edx,eax
+100001ce:	8a 01                	mov    al,BYTE PTR [ecx]
+100001d0:	88 02                	mov    BYTE PTR [edx],al
+100001d2:	83 7d f4 18          	cmp    DWORD PTR [ebp-0xc],0x18
+100001d6:	75 66                	jne    1000023e <hwTextMode_scrollScreen(VgaText*)+0xfc>
+100001d8:	8b 45 f0             	mov    eax,DWORD PTR [ebp-0x10]
+100001db:	83 e0 01             	and    eax,0x1
+100001de:	85 c0                	test   eax,eax
+100001e0:	74 3e                	je     10000220 <hwTextMode_scrollScreen(VgaText*)+0xde>
+100001e2:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100001e5:	8b 40 30             	mov    eax,DWORD PTR [eax+0x30]
+100001e8:	0f b6 c8             	movzx  ecx,al
+100001eb:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100001ee:	8b 40 34             	mov    eax,DWORD PTR [eax+0x34]
+100001f1:	0f b6 d0             	movzx  edx,al
+100001f4:	8b 5d f4             	mov    ebx,DWORD PTR [ebp-0xc]
+100001f7:	89 d8                	mov    eax,ebx
+100001f9:	c1 e0 02             	shl    eax,0x2
+100001fc:	01 d8                	add    eax,ebx
+100001fe:	c1 e0 05             	shl    eax,0x5
+10000201:	89 c3                	mov    ebx,eax
+10000203:	8b 45 f0             	mov    eax,DWORD PTR [ebp-0x10]
+10000206:	01 d8                	add    eax,ebx
+10000208:	89 c3                	mov    ebx,eax
+1000020a:	8b 45 ec             	mov    eax,DWORD PTR [ebp-0x14]
+1000020d:	01 c3                	add    ebx,eax
+1000020f:	83 ec 08             	sub    esp,0x8
+10000212:	51                   	push   ecx
+10000213:	52                   	push   edx
+10000214:	e8 fc ff ff ff       	call   10000215 <hwTextMode_scrollScreen(VgaText*)+0xd3>	10000215: R_386_PC32	VgaText::combineColours(unsigned char, unsigned char)
+10000219:	83 c4 10             	add    esp,0x10
+1000021c:	88 03                	mov    BYTE PTR [ebx],al
+1000021e:	eb 1e                	jmp    1000023e <hwTextMode_scrollScreen(VgaText*)+0xfc>
+10000220:	8b 55 f4             	mov    edx,DWORD PTR [ebp-0xc]
+10000223:	89 d0                	mov    eax,edx
+10000225:	c1 e0 02             	shl    eax,0x2
+10000228:	01 d0                	add    eax,edx
+1000022a:	c1 e0 05             	shl    eax,0x5
+1000022d:	89 c2                	mov    edx,eax
+1000022f:	8b 45 f0             	mov    eax,DWORD PTR [ebp-0x10]
+10000232:	01 d0                	add    eax,edx
+10000234:	89 c2                	mov    edx,eax
+10000236:	8b 45 ec             	mov    eax,DWORD PTR [ebp-0x14]
+10000239:	01 d0                	add    eax,edx
+1000023b:	c6 00 20             	mov    BYTE PTR [eax],0x20
+1000023e:	ff 45 f0             	inc    DWORD PTR [ebp-0x10]
+10000241:	e9 40 ff ff ff       	jmp    10000186 <hwTextMode_scrollScreen(VgaText*)+0x44>
+10000246:	ff 45 f4             	inc    DWORD PTR [ebp-0xc]
+10000249:	e9 27 ff ff ff       	jmp    10000175 <hwTextMode_scrollScreen(VgaText*)+0x33>
+1000024e:	90                   	nop
+1000024f:	8b 5d fc             	mov    ebx,DWORD PTR [ebp-0x4]
+10000252:	c9                   	leave  
+10000253:	c3                   	ret    
+
+10000254 <hwTextMode_writeCharacter(VgaText*, char, VgaColour, VgaColour, int, int)>:
+10000254:	55                   	push   ebp
+10000255:	89 e5                	mov    ebp,esp
+10000257:	83 ec 28             	sub    esp,0x28
+1000025a:	8b 45 0c             	mov    eax,DWORD PTR [ebp+0xc]
+1000025d:	88 45 e4             	mov    BYTE PTR [ebp-0x1c],al
+10000260:	a0 00 00 00 00       	mov    al,ds:0x0	10000261: R_386_32	vgamono
+10000265:	84 c0                	test   al,al
+10000267:	74 0e                	je     10000277 <hwTextMode_writeCharacter(VgaText*, char, VgaColour, VgaColour, int, int)+0x23>
+10000269:	c7 45 10 02 00 00 00 	mov    DWORD PTR [ebp+0x10],0x2
+10000270:	c7 45 14 00 00 00 00 	mov    DWORD PTR [ebp+0x14],0x0
+10000277:	8b 45 14             	mov    eax,DWORD PTR [ebp+0x14]
+1000027a:	0f b6 d0             	movzx  edx,al
+1000027d:	8b 45 10             	mov    eax,DWORD PTR [ebp+0x10]
+10000280:	0f b6 c0             	movzx  eax,al
+10000283:	83 ec 08             	sub    esp,0x8
+10000286:	52                   	push   edx
+10000287:	50                   	push   eax
+10000288:	e8 fc ff ff ff       	call   10000289 <hwTextMode_writeCharacter(VgaText*, char, VgaColour, VgaColour, int, int)+0x35>	10000289: R_386_PC32	VgaText::combineColours(unsigned char, unsigned char)
+1000028d:	83 c4 10             	add    esp,0x10
+10000290:	0f b6 d0             	movzx  edx,al
+10000293:	0f be 45 e4          	movsx  eax,BYTE PTR [ebp-0x1c]
+10000297:	83 ec 08             	sub    esp,0x8
+1000029a:	52                   	push   edx
+1000029b:	50                   	push   eax
+1000029c:	e8 fc ff ff ff       	call   1000029d <hwTextMode_writeCharacter(VgaText*, char, VgaColour, VgaColour, int, int)+0x49>	1000029d: R_386_PC32	VgaText::combineCharAndColour(char, unsigned char)
+100002a1:	83 c4 10             	add    esp,0x10
+100002a4:	66 89 45 f6          	mov    WORD PTR [ebp-0xa],ax
+100002a8:	a1 00 00 00 00       	mov    eax,ds:0x0	100002a9: R_386_32	VGA_TEXT_MODE_ADDRESS
+100002ad:	89 45 f0             	mov    DWORD PTR [ebp-0x10],eax
+100002b0:	a0 00 00 00 00       	mov    al,ds:0x0	100002b1: R_386_32	vgamono
+100002b5:	84 c0                	test   al,al
+100002b7:	74 0c                	je     100002c5 <hwTextMode_writeCharacter(VgaText*, char, VgaColour, VgaColour, int, int)+0x71>
+100002b9:	66 0f be 45 e4       	movsx  ax,BYTE PTR [ebp-0x1c]
+100002be:	80 cc 02             	or     ah,0x2
+100002c1:	66 89 45 f6          	mov    WORD PTR [ebp-0xa],ax
+100002c5:	8b 55 1c             	mov    edx,DWORD PTR [ebp+0x1c]
+100002c8:	89 d0                	mov    eax,edx
+100002ca:	c1 e0 02             	shl    eax,0x2
+100002cd:	01 d0                	add    eax,edx
+100002cf:	c1 e0 04             	shl    eax,0x4
+100002d2:	89 c2                	mov    edx,eax
+100002d4:	8b 45 18             	mov    eax,DWORD PTR [ebp+0x18]
+100002d7:	8d 0c 02             	lea    ecx,[edx+eax*1]
+100002da:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100002dd:	8b 40 10             	mov    eax,DWORD PTR [eax+0x10]
+100002e0:	ba 19 00 00 00       	mov    edx,0x19
+100002e5:	29 c2                	sub    edx,eax
+100002e7:	89 d0                	mov    eax,edx
+100002e9:	c1 e0 02             	shl    eax,0x2
+100002ec:	01 d0                	add    eax,edx
+100002ee:	c1 e0 04             	shl    eax,0x4
+100002f1:	01 c8                	add    eax,ecx
+100002f3:	01 c0                	add    eax,eax
+100002f5:	01 45 f0             	add    DWORD PTR [ebp-0x10],eax
+100002f8:	8b 55 f0             	mov    edx,DWORD PTR [ebp-0x10]
+100002fb:	66 8b 45 f6          	mov    ax,WORD PTR [ebp-0xa]
+100002ff:	66 89 02             	mov    WORD PTR [edx],ax
+10000302:	90                   	nop
+10000303:	c9                   	leave  
+10000304:	c3                   	ret    
+
+10000305 <hwTextMode_showCursor(VgaText*, bool)>:
+10000305:	55                   	push   ebp
+10000306:	89 e5                	mov    ebp,esp
+10000308:	83 ec 24             	sub    esp,0x24
+1000030b:	8b 45 0c             	mov    eax,DWORD PTR [ebp+0xc]
+1000030e:	88 45 dc             	mov    BYTE PTR [ebp-0x24],al
+10000311:	a0 00 00 00 00       	mov    al,ds:0x0	10000312: R_386_32	vgamono
+10000316:	84 c0                	test   al,al
+10000318:	0f 85 bd 00 00 00    	jne    100003db <hwTextMode_showCursor(VgaText*, bool)+0xd6>
+1000031e:	80 7d dc 00          	cmp    BYTE PTR [ebp-0x24],0x0
+10000322:	0f 84 8d 00 00 00    	je     100003b5 <hwTextMode_showCursor(VgaText*, bool)+0xb0>
+10000328:	66 c7 45 ea d4 03    	mov    WORD PTR [ebp-0x16],0x3d4
+1000032e:	c6 45 e9 0a          	mov    BYTE PTR [ebp-0x17],0xa
+10000332:	8a 45 e9             	mov    al,BYTE PTR [ebp-0x17]
+10000335:	66 8b 55 ea          	mov    dx,WORD PTR [ebp-0x16]
+10000339:	ee                   	out    dx,al
+1000033a:	66 c7 45 ee d5 03    	mov    WORD PTR [ebp-0x12],0x3d5
+10000340:	66 8b 45 ee          	mov    ax,WORD PTR [ebp-0x12]
+10000344:	89 c2                	mov    edx,eax
+10000346:	ec                   	in     al,dx
+10000347:	88 45 ed             	mov    BYTE PTR [ebp-0x13],al
+1000034a:	8a 45 ed             	mov    al,BYTE PTR [ebp-0x13]
+1000034d:	83 e0 c0             	and    eax,0xffffffc0
+10000350:	88 c2                	mov    dl,al
+10000352:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000355:	8b 40 1c             	mov    eax,DWORD PTR [eax+0x1c]
+10000358:	b1 0f                	mov    cl,0xf
+1000035a:	29 c1                	sub    ecx,eax
+1000035c:	88 c8                	mov    al,cl
+1000035e:	09 d0                	or     eax,edx
+10000360:	0f b6 c0             	movzx  eax,al
+10000363:	66 c7 45 f2 d5 03    	mov    WORD PTR [ebp-0xe],0x3d5
+10000369:	88 45 f1             	mov    BYTE PTR [ebp-0xf],al
+1000036c:	8a 45 f1             	mov    al,BYTE PTR [ebp-0xf]
+1000036f:	66 8b 55 f2          	mov    dx,WORD PTR [ebp-0xe]
+10000373:	ee                   	out    dx,al
+10000374:	66 c7 45 f6 d4 03    	mov    WORD PTR [ebp-0xa],0x3d4
+1000037a:	c6 45 f5 0b          	mov    BYTE PTR [ebp-0xb],0xb
+1000037e:	8a 45 f5             	mov    al,BYTE PTR [ebp-0xb]
+10000381:	66 8b 55 f6          	mov    dx,WORD PTR [ebp-0xa]
+10000385:	ee                   	out    dx,al
+10000386:	66 c7 45 fa d5 03    	mov    WORD PTR [ebp-0x6],0x3d5
+1000038c:	66 8b 45 fa          	mov    ax,WORD PTR [ebp-0x6]
+10000390:	89 c2                	mov    edx,eax
+10000392:	ec                   	in     al,dx
+10000393:	88 45 f9             	mov    BYTE PTR [ebp-0x7],al
+10000396:	8a 45 f9             	mov    al,BYTE PTR [ebp-0x7]
+10000399:	83 e0 e0             	and    eax,0xffffffe0
+1000039c:	83 c8 0f             	or     eax,0xf
+1000039f:	0f b6 c0             	movzx  eax,al
+100003a2:	66 c7 45 fe d5 03    	mov    WORD PTR [ebp-0x2],0x3d5
+100003a8:	88 45 fd             	mov    BYTE PTR [ebp-0x3],al
+100003ab:	8a 45 fd             	mov    al,BYTE PTR [ebp-0x3]
+100003ae:	66 8b 55 fe          	mov    dx,WORD PTR [ebp-0x2]
+100003b2:	ee                   	out    dx,al
+100003b3:	eb 27                	jmp    100003dc <hwTextMode_showCursor(VgaText*, bool)+0xd7>
+100003b5:	66 c7 45 e2 d4 03    	mov    WORD PTR [ebp-0x1e],0x3d4
+100003bb:	c6 45 e1 0a          	mov    BYTE PTR [ebp-0x1f],0xa
+100003bf:	8a 45 e1             	mov    al,BYTE PTR [ebp-0x1f]
+100003c2:	66 8b 55 e2          	mov    dx,WORD PTR [ebp-0x1e]
+100003c6:	ee                   	out    dx,al
+100003c7:	66 c7 45 e6 d5 03    	mov    WORD PTR [ebp-0x1a],0x3d5
+100003cd:	c6 45 e5 20          	mov    BYTE PTR [ebp-0x1b],0x20
+100003d1:	8a 45 e5             	mov    al,BYTE PTR [ebp-0x1b]
+100003d4:	66 8b 55 e6          	mov    dx,WORD PTR [ebp-0x1a]
+100003d8:	ee                   	out    dx,al
+100003d9:	eb 01                	jmp    100003dc <hwTextMode_showCursor(VgaText*, bool)+0xd7>
+100003db:	90                   	nop
+100003dc:	c9                   	leave  
+100003dd:	c3                   	ret    
+
+100003de <hwTextMode_update(VgaText*)>:
+100003de:	90                   	nop
+100003df:	c3                   	ret    
+
+100003e0 <hwTextMode_updateCursor(VgaText*)>:
+100003e0:	55                   	push   ebp
+100003e1:	89 e5                	mov    ebp,esp
+100003e3:	53                   	push   ebx
+100003e4:	83 ec 20             	sub    esp,0x20
+100003e7:	a0 00 00 00 00       	mov    al,ds:0x0	100003e8: R_386_32	vgamono
+100003ec:	84 c0                	test   al,al
+100003ee:	0f 85 87 00 00 00    	jne    1000047b <hwTextMode_updateCursor(VgaText*)+0x9b>
+100003f4:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100003f7:	8b 40 14             	mov    eax,DWORD PTR [eax+0x14]
+100003fa:	89 c1                	mov    ecx,eax
+100003fc:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100003ff:	8b 50 18             	mov    edx,DWORD PTR [eax+0x18]
+10000402:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000405:	8b 40 10             	mov    eax,DWORD PTR [eax+0x10]
+10000408:	bb 19 00 00 00       	mov    ebx,0x19
+1000040d:	29 c3                	sub    ebx,eax
+1000040f:	89 d8                	mov    eax,ebx
+10000411:	01 d0                	add    eax,edx
+10000413:	89 c2                	mov    edx,eax
+10000415:	89 d0                	mov    eax,edx
+10000417:	c1 e0 02             	shl    eax,0x2
+1000041a:	01 d0                	add    eax,edx
+1000041c:	c1 e0 04             	shl    eax,0x4
+1000041f:	01 c8                	add    eax,ecx
+10000421:	66 89 45 fa          	mov    WORD PTR [ebp-0x6],ax
+10000425:	66 c7 45 ec d4 03    	mov    WORD PTR [ebp-0x14],0x3d4
+1000042b:	c6 45 eb 0f          	mov    BYTE PTR [ebp-0x15],0xf
+1000042f:	8a 45 eb             	mov    al,BYTE PTR [ebp-0x15]
+10000432:	8b 55 ec             	mov    edx,DWORD PTR [ebp-0x14]
+10000435:	ee                   	out    dx,al
+10000436:	66 8b 45 fa          	mov    ax,WORD PTR [ebp-0x6]
+1000043a:	0f b6 c0             	movzx  eax,al
+1000043d:	66 c7 45 f0 d5 03    	mov    WORD PTR [ebp-0x10],0x3d5
+10000443:	88 45 ef             	mov    BYTE PTR [ebp-0x11],al
+10000446:	8a 45 ef             	mov    al,BYTE PTR [ebp-0x11]
+10000449:	8b 55 f0             	mov    edx,DWORD PTR [ebp-0x10]
+1000044c:	ee                   	out    dx,al
+1000044d:	66 c7 45 f4 d4 03    	mov    WORD PTR [ebp-0xc],0x3d4
+10000453:	c6 45 f3 0e          	mov    BYTE PTR [ebp-0xd],0xe
+10000457:	8a 45 f3             	mov    al,BYTE PTR [ebp-0xd]
+1000045a:	8b 55 f4             	mov    edx,DWORD PTR [ebp-0xc]
+1000045d:	ee                   	out    dx,al
+1000045e:	66 8b 45 fa          	mov    ax,WORD PTR [ebp-0x6]
+10000462:	66 c1 e8 08          	shr    ax,0x8
+10000466:	0f b6 c0             	movzx  eax,al
+10000469:	66 c7 45 f8 d5 03    	mov    WORD PTR [ebp-0x8],0x3d5
+1000046f:	88 45 f7             	mov    BYTE PTR [ebp-0x9],al
+10000472:	8a 45 f7             	mov    al,BYTE PTR [ebp-0x9]
+10000475:	8b 55 f8             	mov    edx,DWORD PTR [ebp-0x8]
+10000478:	ee                   	out    dx,al
+10000479:	eb 01                	jmp    1000047c <hwTextMode_updateCursor(VgaText*)+0x9c>
+1000047b:	90                   	nop
+1000047c:	83 c4 20             	add    esp,0x20
+1000047f:	5b                   	pop    ebx
+10000480:	5d                   	pop    ebp
+10000481:	c3                   	ret    
+
+10000482 <hwTextMode_disableBlink(VgaText*, bool)>:
+10000482:	55                   	push   ebp
+10000483:	89 e5                	mov    ebp,esp
+10000485:	83 ec 24             	sub    esp,0x24
+10000488:	8b 45 0c             	mov    eax,DWORD PTR [ebp+0xc]
+1000048b:	88 45 dc             	mov    BYTE PTR [ebp-0x24],al
+1000048e:	a0 00 00 00 00       	mov    al,ds:0x0	1000048f: R_386_32	vgamono
+10000493:	84 c0                	test   al,al
+10000495:	0f 85 a8 00 00 00    	jne    10000543 <hwTextMode_disableBlink(VgaText*, bool)+0xc1>
+1000049b:	8a 45 dc             	mov    al,BYTE PTR [ebp-0x24]
+1000049e:	83 f0 01             	xor    eax,0x1
+100004a1:	84 c0                	test   al,al
+100004a3:	74 4e                	je     100004f3 <hwTextMode_disableBlink(VgaText*, bool)+0x71>
+100004a5:	66 c7 45 f2 da 03    	mov    WORD PTR [ebp-0xe],0x3da
+100004ab:	66 8b 45 f2          	mov    ax,WORD PTR [ebp-0xe]
+100004af:	89 c2                	mov    edx,eax
+100004b1:	ec                   	in     al,dx
+100004b2:	88 45 f1             	mov    BYTE PTR [ebp-0xf],al
+100004b5:	66 c7 45 f6 c0 03    	mov    WORD PTR [ebp-0xa],0x3c0
+100004bb:	c6 45 f5 30          	mov    BYTE PTR [ebp-0xb],0x30
+100004bf:	8a 45 f5             	mov    al,BYTE PTR [ebp-0xb]
+100004c2:	66 8b 55 f6          	mov    dx,WORD PTR [ebp-0xa]
+100004c6:	ee                   	out    dx,al
+100004c7:	66 c7 45 fa c1 03    	mov    WORD PTR [ebp-0x6],0x3c1
+100004cd:	66 8b 45 fa          	mov    ax,WORD PTR [ebp-0x6]
+100004d1:	89 c2                	mov    edx,eax
+100004d3:	ec                   	in     al,dx
+100004d4:	88 45 f9             	mov    BYTE PTR [ebp-0x7],al
+100004d7:	8a 45 f9             	mov    al,BYTE PTR [ebp-0x7]
+100004da:	83 c8 08             	or     eax,0x8
+100004dd:	0f b6 c0             	movzx  eax,al
+100004e0:	66 c7 45 fe c0 03    	mov    WORD PTR [ebp-0x2],0x3c0
+100004e6:	88 45 fd             	mov    BYTE PTR [ebp-0x3],al
+100004e9:	8a 45 fd             	mov    al,BYTE PTR [ebp-0x3]
+100004ec:	66 8b 55 fe          	mov    dx,WORD PTR [ebp-0x2]
+100004f0:	ee                   	out    dx,al
+100004f1:	eb 51                	jmp    10000544 <hwTextMode_disableBlink(VgaText*, bool)+0xc2>
+100004f3:	66 c7 45 e2 da 03    	mov    WORD PTR [ebp-0x1e],0x3da
+100004f9:	66 8b 45 e2          	mov    ax,WORD PTR [ebp-0x1e]
+100004fd:	89 c2                	mov    edx,eax
+100004ff:	ec                   	in     al,dx
+10000500:	88 45 e1             	mov    BYTE PTR [ebp-0x1f],al
+10000503:	66 c7 45 e6 c0 03    	mov    WORD PTR [ebp-0x1a],0x3c0
+10000509:	c6 45 e5 30          	mov    BYTE PTR [ebp-0x1b],0x30
+1000050d:	8a 45 e5             	mov    al,BYTE PTR [ebp-0x1b]
+10000510:	66 8b 55 e6          	mov    dx,WORD PTR [ebp-0x1a]
+10000514:	ee                   	out    dx,al
+10000515:	66 c7 45 ea c1 03    	mov    WORD PTR [ebp-0x16],0x3c1
+1000051b:	66 8b 45 ea          	mov    ax,WORD PTR [ebp-0x16]
+1000051f:	89 c2                	mov    edx,eax
+10000521:	ec                   	in     al,dx
+10000522:	88 45 e9             	mov    BYTE PTR [ebp-0x17],al
+10000525:	8a 45 e9             	mov    al,BYTE PTR [ebp-0x17]
+10000528:	0f b6 c0             	movzx  eax,al
+1000052b:	25 f7 00 00 00       	and    eax,0xf7
+10000530:	66 c7 45 ee c0 03    	mov    WORD PTR [ebp-0x12],0x3c0
+10000536:	88 45 ed             	mov    BYTE PTR [ebp-0x13],al
+10000539:	8a 45 ed             	mov    al,BYTE PTR [ebp-0x13]
+1000053c:	66 8b 55 ee          	mov    dx,WORD PTR [ebp-0x12]
+10000540:	ee                   	out    dx,al
+10000541:	eb 01                	jmp    10000544 <hwTextMode_disableBlink(VgaText*, bool)+0xc2>
+10000543:	90                   	nop
+10000544:	c9                   	leave  
+10000545:	c3                   	ret    
+
+10000546 <setupTextMode()>:
+10000546:	b8 10 04 00 00       	mov    eax,0x410
+1000054b:	66 8b 00             	mov    ax,WORD PTR [eax]
+1000054e:	0f b7 c0             	movzx  eax,ax
+10000551:	83 e0 30             	and    eax,0x30
+10000554:	83 f8 30             	cmp    eax,0x30
+10000557:	75 16                	jne    1000056f <setupTextMode()+0x29>
+10000559:	a1 00 00 00 00       	mov    eax,ds:0x0	1000055a: R_386_32	VGA_TEXT_MODE_ADDRESS
+1000055e:	2d 00 80 00 00       	sub    eax,0x8000
+10000563:	a3 00 00 00 00       	mov    ds:0x0,eax	10000564: R_386_32	VGA_TEXT_MODE_ADDRESS
+10000568:	c6 05 00 00 00 00 01 	mov    BYTE PTR ds:0x0,0x1	1000056a: R_386_32	vgamono
+1000056f:	c7 05 18 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x18,0x0	10000571: R_386_32	textModeImplementation
+	10000575: R_386_32	hwTextMode_disableBlink(VgaText*, bool)
+10000579:	c7 05 04 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x4,0x0	1000057b: R_386_32	textModeImplementation
+	1000057f: R_386_32	hwTextMode_loadInData(VgaText*)
+10000583:	c7 05 00 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x0,0x0	10000585: R_386_32	textModeImplementation
+	10000589: R_386_32	hwTextMode_loadInTitle(VgaText*, char*)
+1000058d:	c7 05 0c 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0xc,0x0	1000058f: R_386_32	textModeImplementation
+	10000593: R_386_32	hwTextMode_scrollScreen(VgaText*)
+10000597:	c7 05 14 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x14,0x0	10000599: R_386_32	textModeImplementation
+	1000059d: R_386_32	hwTextMode_showCursor(VgaText*, bool)
+100005a1:	c7 05 08 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x8,0x0	100005a3: R_386_32	textModeImplementation
+	100005a7: R_386_32	hwTextMode_update(VgaText*)
+100005ab:	c7 05 10 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x10,0x0	100005ad: R_386_32	textModeImplementation
+	100005b1: R_386_32	hwTextMode_updateCursor(VgaText*)
+100005b5:	c7 05 1c 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x1c,0x0	100005b7: R_386_32	textModeImplementation
+	100005bb: R_386_32	hwTextMode_writeCharacter(VgaText*, char, VgaColour, VgaColour, int, int)
+100005bf:	90                   	nop
+100005c0:	c3                   	ret    
+100005c1:	90                   	nop
+
+100005c2 <BIOS::BIOS()>:
+100005c2:	55                   	push   ebp
+100005c3:	89 e5                	mov    ebp,esp
+100005c5:	83 ec 08             	sub    esp,0x8
+100005c8:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100005cb:	83 ec 08             	sub    esp,0x8
+100005ce:	68 a4 07 00 10       	push   0x100007a4	100005cf: R_386_32	.text
+100005d3:	50                   	push   eax
+100005d4:	e8 fc ff ff ff       	call   100005d5 <BIOS::BIOS()+0x13>	100005d5: R_386_PC32	Device::Device(char const*)
+100005d9:	83 c4 10             	add    esp,0x10
+100005dc:	ba 08 00 00 00       	mov    edx,0x8	100005dd: R_386_32	vtable for BIOS
+100005e1:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100005e4:	89 10                	mov    DWORD PTR [eax],edx
+100005e6:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100005e9:	8a 80 c5 00 00 00    	mov    al,BYTE PTR [eax+0xc5]
+100005ef:	0f b6 d0             	movzx  edx,al
+100005f2:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100005f5:	83 c2 08             	add    edx,0x8
+100005f8:	c7 44 d0 04 00 04 00 00 	mov    DWORD PTR [eax+edx*8+0x4],0x400
+10000600:	8a 4c d0 08          	mov    cl,BYTE PTR [eax+edx*8+0x8]
+10000604:	83 e1 00             	and    ecx,0x0
+10000607:	88 4c d0 08          	mov    BYTE PTR [eax+edx*8+0x8],cl
+1000060b:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+1000060e:	8a 80 c5 00 00 00    	mov    al,BYTE PTR [eax+0xc5]
+10000614:	8d 50 01             	lea    edx,[eax+0x1]
+10000617:	8b 4d 08             	mov    ecx,DWORD PTR [ebp+0x8]
+1000061a:	88 91 c5 00 00 00    	mov    BYTE PTR [ecx+0xc5],dl
+10000620:	0f b6 d0             	movzx  edx,al
+10000623:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000626:	83 c2 08             	add    edx,0x8
+10000629:	8b 4c d0 08          	mov    ecx,DWORD PTR [eax+edx*8+0x8]
+1000062d:	0f b6 c9             	movzx  ecx,cl
+10000630:	81 c9 00 00 01 00    	or     ecx,0x10000
+10000636:	89 4c d0 08          	mov    DWORD PTR [eax+edx*8+0x8],ecx
+1000063a:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+1000063d:	8a 80 c5 00 00 00    	mov    al,BYTE PTR [eax+0xc5]
+10000643:	0f b6 d0             	movzx  edx,al
+10000646:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000649:	83 c2 08             	add    edx,0x8
+1000064c:	c7 44 d0 04 00 00 0c 00 	mov    DWORD PTR [eax+edx*8+0x4],0xc0000
+10000654:	8a 4c d0 08          	mov    cl,BYTE PTR [eax+edx*8+0x8]
+10000658:	83 e1 00             	and    ecx,0x0
+1000065b:	88 4c d0 08          	mov    BYTE PTR [eax+edx*8+0x8],cl
+1000065f:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000662:	8a 80 c5 00 00 00    	mov    al,BYTE PTR [eax+0xc5]
+10000668:	8d 50 01             	lea    edx,[eax+0x1]
+1000066b:	8b 4d 08             	mov    ecx,DWORD PTR [ebp+0x8]
+1000066e:	88 91 c5 00 00 00    	mov    BYTE PTR [ecx+0xc5],dl
+10000674:	0f b6 d0             	movzx  edx,al
+10000677:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+1000067a:	83 c2 08             	add    edx,0x8
+1000067d:	8b 4c d0 08          	mov    ecx,DWORD PTR [eax+edx*8+0x8]
+10000681:	0f b6 c9             	movzx  ecx,cl
+10000684:	81 c9 00 00 00 04    	or     ecx,0x4000000
+1000068a:	89 4c d0 08          	mov    DWORD PTR [eax+edx*8+0x8],ecx
+1000068e:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000691:	8a 80 c5 00 00 00    	mov    al,BYTE PTR [eax+0xc5]
+10000697:	0f b6 d0             	movzx  edx,al
+1000069a:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+1000069d:	83 c2 08             	add    edx,0x8
+100006a0:	c7 44 d0 04 00 00 08 00 	mov    DWORD PTR [eax+edx*8+0x4],0x80000
+100006a8:	8a 4c d0 08          	mov    cl,BYTE PTR [eax+edx*8+0x8]
+100006ac:	83 e1 00             	and    ecx,0x0
+100006af:	88 4c d0 08          	mov    BYTE PTR [eax+edx*8+0x8],cl
+100006b3:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100006b6:	8a 80 c5 00 00 00    	mov    al,BYTE PTR [eax+0xc5]
+100006bc:	8d 50 01             	lea    edx,[eax+0x1]
+100006bf:	8b 4d 08             	mov    ecx,DWORD PTR [ebp+0x8]
+100006c2:	88 91 c5 00 00 00    	mov    BYTE PTR [ecx+0xc5],dl
+100006c8:	0f b6 d0             	movzx  edx,al
+100006cb:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100006ce:	83 c2 08             	add    edx,0x8
+100006d1:	8b 4c d0 08          	mov    ecx,DWORD PTR [eax+edx*8+0x8]
+100006d5:	0f b6 c9             	movzx  ecx,cl
+100006d8:	81 c9 00 00 00 02    	or     ecx,0x2000000
+100006de:	89 4c d0 08          	mov    DWORD PTR [eax+edx*8+0x8],ecx
+100006e2:	90                   	nop
+100006e3:	c9                   	leave  
+100006e4:	c3                   	ret    
+100006e5:	90                   	nop
+
+100006e6 <BIOS::open_(int, int, void*)>:
+100006e6:	55                   	push   ebp
+100006e7:	89 e5                	mov    ebp,esp
+100006e9:	83 ec 08             	sub    esp,0x8
+100006ec:	e8 fc ff ff ff       	call   100006ed <BIOS::open_(int, int, void*)+0x7>	100006ed: R_386_PC32	setupTextMode()
+100006f1:	b8 00 00 00 00       	mov    eax,0x0
+100006f6:	c9                   	leave  
+100006f7:	c3                   	ret    
+
+100006f8 <BIOS::open(int, int, void*)>:
+100006f8:	b8 00 00 00 00       	mov    eax,0x0
+100006fd:	c3                   	ret    
+
+100006fe <BIOS::close(int, int, void*)>:
+100006fe:	b8 00 00 00 00       	mov    eax,0x0
+10000703:	c3                   	ret    
+10000704:	13 05 00 00 24 05    	adc    eax,DWORD PTR ds:0x5240000
+1000070a:	00 00                	add    BYTE PTR [eax],al
+1000070c:	00 06                	add    BYTE PTR [esi],al
+1000070e:	00 00                	add    BYTE PTR [eax],al
+10000710:	00 00                	add    BYTE PTR [eax],al
+10000712:	01 00                	add    DWORD PTR [eax],eax
+10000714:	00 00                	add    BYTE PTR [eax],al
+10000716:	02 00                	add    al,BYTE PTR [eax]
+10000718:	00 00                	add    BYTE PTR [eax],al
+1000071a:	04 00                	add    al,0x0
+1000071c:	00 00                	add    BYTE PTR [eax],al
+1000071e:	06                   	push   es
+1000071f:	00 00                	add    BYTE PTR [eax],al
+10000721:	00 10                	add    BYTE PTR [eax],dl
+10000723:	00 00                	add    BYTE PTR [eax],al
+10000725:	10 00                	adc    BYTE PTR [eax],al
+10000727:	00 00                	add    BYTE PTR [eax],al
+10000729:	00 00                	add    BYTE PTR [eax],al
+1000072b:	c0 00 00             	rol    BYTE PTR [eax],0x0
+1000072e:	00 c2                	add    dl,al
+10000730:	00 00                	add    BYTE PTR [eax],al
+10000732:	40                   	inc    eax
+10000733:	c2 00 00             	ret    0x0
+10000736:	80 c2 00             	add    dl,0x0
+10000739:	00 c0                	add    al,al
+1000073b:	c2 00 00             	ret    0x0
+1000073e:	01 c2                	add    edx,eax
+10000740:	00 00                	add    BYTE PTR [eax],al
+10000742:	01 00                	add    DWORD PTR [eax],eax
+10000744:	00 00                	add    BYTE PTR [eax],al
+10000746:	06                   	push   es
+10000747:	c2 00 00             	ret    0x0
+1000074a:	02 00                	add    al,BYTE PTR [eax]
+1000074c:	00 10                	add    BYTE PTR [eax],dl
+1000074e:	00 c2                	add    dl,al
+10000750:	00 00                	add    BYTE PTR [eax],al
+10000752:	02 c2                	add    al,dl
+10000754:	00 00                	add    BYTE PTR [eax],al
+10000756:	02 00                	add    al,BYTE PTR [eax]
+10000758:	00 00                	add    BYTE PTR [eax],al
+1000075a:	04 c2                	add    al,0xc2
+1000075c:	00 80 00 00 00 06    	add    BYTE PTR [eax+0x6000000],al
+10000762:	00 c2                	add    dl,al
+10000764:	13 05 00 c2 24 05    	adc    eax,DWORD PTR ds:0x524c200
+1000076a:	00 c2                	add    dl,al
+1000076c:	00 00                	add    BYTE PTR [eax],al
+1000076e:	18 00                	sbb    BYTE PTR [eax],al
+10000770:	00 00                	add    BYTE PTR [eax],al
+10000772:	08 00                	or     BYTE PTR [eax],al
+10000774:	00 00                	add    BYTE PTR [eax],al
+10000776:	20 00                	and    BYTE PTR [eax],al
+10000778:	00 00                	add    BYTE PTR [eax],al
+1000077a:	00 10                	add    BYTE PTR [eax],dl
+1000077c:	00 00                	add    BYTE PTR [eax],al
+1000077e:	00 02                	add    BYTE PTR [edx],al
+10000780:	00 00                	add    BYTE PTR [eax],al
+10000782:	e8 01 00 00 00       	call   10000788 <BIOS::close(int, int, void*)+0x8a>
+10000787:	c8 ff ff ff          	enter  0xffff,0xff
+1000078b:	ef                   	out    dx,eax
+1000078c:	00 00                	add    BYTE PTR [eax],al
+1000078e:	00 f0                	add    al,dh
+10000790:	00 00                	add    BYTE PTR [eax],al
+10000792:	c0 ff 00             	sar    bh,0x0
+10000795:	00 10                	add    BYTE PTR [eax],dl
+10000797:	c2 00 40             	ret    0x4000
+1000079a:	48                   	dec    eax
+1000079b:	c2 96 00             	ret    0x96
+1000079e:	00 00                	add    BYTE PTR [eax],al
+100007a0:	2c 01                	sub    al,0x1
+100007a2:	00 00                	add    BYTE PTR [eax],al
+100007a4:	4c                   	dec    esp
+100007a5:	65 67 61             	gs addr16 popa 
+100007a8:	63 79 20             	arpl   WORD PTR [ecx+0x20],di
+100007ab:	42                   	inc    edx
+100007ac:	49                   	dec    ecx
+100007ad:	4f                   	dec    edi
+100007ae:	53                   	push   ebx
+	...
+
+100007b0 <vtable for BIOS>:
+	...
+	100007b8: R_386_32	BIOS::~BIOS()
+	100007bc: R_386_32	BIOS::~BIOS()
+	100007c0: R_386_32	BIOS::open(int, int, void*)
+	100007c4: R_386_32	BIOS::close(int, int, void*)
+	100007c8: R_386_32	Device::hibernate()
+	100007cc: R_386_32	Device::wake()
+	100007d0: R_386_32	Device::detect()
+	100007d4: R_386_32	Device::disableLegacy()
+	100007d8: R_386_32	Device::powerSaving(PowerSavingLevel)
+
+Disassembly of section .text._ZN4BIOSD2Ev:
+
+100007dc <BIOS::~BIOS()>:
+100007dc:	55                   	push   ebp
+100007dd:	89 e5                	mov    ebp,esp
+100007df:	83 ec 08             	sub    esp,0x8
+100007e2:	ba 08 00 00 00       	mov    edx,0x8	100007e3: R_386_32	vtable for BIOS
+100007e7:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100007ea:	89 10                	mov    DWORD PTR [eax],edx
+100007ec:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100007ef:	83 ec 0c             	sub    esp,0xc
+100007f2:	50                   	push   eax
+100007f3:	e8 fc ff ff ff       	call   100007f4 <BIOS::~BIOS()+0x18>	100007f4: R_386_PC32	Device::~Device()
+100007f8:	83 c4 10             	add    esp,0x10
+100007fb:	90                   	nop
+100007fc:	c9                   	leave  
+100007fd:	c3                   	ret    
+
+Disassembly of section .text._ZN4BIOSD0Ev:
+
+100007fe <BIOS::~BIOS()>:
+100007fe:	55                   	push   ebp
+100007ff:	89 e5                	mov    ebp,esp
+10000801:	83 ec 08             	sub    esp,0x8
+10000804:	83 ec 0c             	sub    esp,0xc
+10000807:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+1000080a:	e8 fc ff ff ff       	call   1000080b <BIOS::~BIOS()+0xd>	1000080b: R_386_PC32	BIOS::~BIOS()
+1000080f:	83 c4 10             	add    esp,0x10
+10000812:	83 ec 08             	sub    esp,0x8
+10000815:	68 58 01 00 00       	push   0x158
+1000081a:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+1000081d:	e8 fc ff ff ff       	call   1000081e <BIOS::~BIOS()+0x20>	1000081e: R_386_PC32	operator delete(void*, unsigned long)
+10000822:	83 c4 10             	add    esp,0x10
+10000825:	c9                   	leave  
+10000826:	c3                   	ret    

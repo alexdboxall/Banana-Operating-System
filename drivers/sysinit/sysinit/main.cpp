@@ -571,7 +571,7 @@ void begin(void* a)
         //firstRun();
 
     } else {
-        if (Reg::readBoolWithDefault("shell", "@misc:playJingle", true)) {
+        if (Reg::readBoolWithDefault("shell", "playJingle", true)) {
             //kernelProcess->createThread(playJingle);
         }        
 
@@ -589,17 +589,18 @@ void begin(void* a)
         usertask = new Process("C:/Banana/System/command.exe", nullptr, argv);
     } else {
         usertask = new Process("C:/Banana/System/command.exe");
-
-        int autogui = Reg::readIntWithDefault((char*) "system", (char*) "@shell:autogui", 0);
-
-        extern void startGUIVESA(void* a);
-        if (autogui) {
-            startGUIVESA(nullptr);
-        }
     }
     setActiveTerminal(usertask->terminal);
 
     usertask->createUserThread();
+
+    int autogui = Reg::readIntWithDefault((char*) "shell", (char*) "autogui", 0);
+
+    extern void startGUIVESA(void* a);
+    if (autogui) {
+        kprintf("AUTO GUI.\n");
+        startGUIVESA(nullptr);
+    }
 
     int wstatus;
     waitTask(usertask->pid, &wstatus, 0);
