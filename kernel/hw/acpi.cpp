@@ -399,6 +399,7 @@ int ACPI::open(int mode, int, void*)
 
 	Virt::setupPageSwapping(12);
 	
+	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/bios.sys"), computer);
 
 	//this should be moved to its own function
 	{
@@ -444,11 +445,9 @@ int ACPI::open(int mode, int, void*)
 			}
 		}
 	}
-	
 
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/common.sys"), computer);
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
-
 
 	if (computer->features.hasACPI) {
 		File* f = new File("C:/Banana/Drivers/acpica.sys", kernelProcess);
