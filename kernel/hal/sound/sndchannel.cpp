@@ -21,8 +21,6 @@ float lookupTable8[256];
 SoundChannel::SoundChannel(int _sampleRate, int _bits, int _direction, int _buffSize)
 {
 	pause();
-	setVolume(80);
-	setSpeed(1.0);
 
 	sampleRate = _sampleRate;
 	bits = _bits;
@@ -61,43 +59,6 @@ SoundChannel::SoundChannel(int _sampleRate, int _bits, int _direction, int _buff
 SoundChannel::~SoundChannel()
 {
 	free(buff);
-}
-
-void SoundChannel::setSpeed(float multi)
-{
-	speed = multi;
-}
-
-float SoundChannel::getSpeed()
-{
-	return speed;
-}
-
-void SoundChannel::setVolume(int v)
-{
-	if (v < 0) v = 0;
-	if (v > 100) v = 100;
-	volume = v;
-}
-
-int SoundChannel::getVolume()
-{
-	return volume;
-}
-
-void SoundChannel::pause()
-{
-	isPaused = true;
-}
-
-void SoundChannel::play()
-{
-	isPaused = false;
-}
-
-bool SoundChannel::paused()
-{
-	return isPaused;
 }
 
 int SoundChannel::getSampleRate()

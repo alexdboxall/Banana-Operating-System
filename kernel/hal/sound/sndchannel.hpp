@@ -35,18 +35,8 @@ public:
 	int buffer8(uint8_t* data, int len);
 	int buffer16(int16_t* data, int samples);
 
-	void setVolume(int vol);	//as a percentage
-	int getVolume();
-
-	void setSpeed(float multi);
-	float getSpeed();
-
 	int getBufferUsed();
 	int getBufferSize();
-
-	void pause();
-	void play();
-	bool paused();
 
 	int getSampleRate();
 	int getBits();
