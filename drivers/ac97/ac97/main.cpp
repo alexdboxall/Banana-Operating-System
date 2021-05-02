@@ -269,7 +269,7 @@ int AC97::close(int a, int b, void* c)
 }
 
 
-void AC97::beginPlayback(int sampleRate, int bits)
+void AC97::__beginPlayback(int sampleRate, int bits)
 {
 	//set sample rate
 	setSampleRate(sampleRate);
@@ -279,13 +279,13 @@ void AC97::beginPlayback(int sampleRate, int bits)
 	thePCI->writeBAR8(nabm, val | 0x15, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
 }
 
-void AC97::stopPlayback()
+void AC97::__stopPlayback()
 {
 	uint8_t val = thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
 	thePCI->writeBAR8(nabm, val & ~0x1F, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
 }
 
-int AC97::getNumHwChannels()
+int AC97::__getNumHwChannels()
 {
 	return 2;
 }

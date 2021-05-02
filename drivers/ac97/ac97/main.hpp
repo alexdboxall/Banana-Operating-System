@@ -47,9 +47,9 @@ public:
 	int _open(int a, int b, void* c);
 	int close(int a, int b, void* c);
 
-	virtual void beginPlayback(int sampleRate, int bits) override;
-	virtual int getNumHwChannels() override;
-	virtual void stopPlayback() override;
+	virtual void __beginPlayback(int sampleRate, int bits) override;
+	virtual int __getNumHwChannels() override;
+	virtual void __stopPlayback() override;
 };
 
 #endif

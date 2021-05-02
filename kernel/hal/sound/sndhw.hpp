@@ -12,6 +12,9 @@
 class SoundDevice : public Device
 {
 private:
+	virtual void __beginPlayback(int sampleRate, int bits) = 0;
+	virtual void __stopPlayback() = 0;
+	virtual int __getNumHwChannels() = 0;
 
 protected:
 	int numChannels;
@@ -34,9 +37,10 @@ public:
 	void floatTo8(float* in, uint8_t* out, int len);
 	void floatTo16(float* in, int16_t* out, int len);
 
-	virtual int getNumHwChannels() = 0;
-	virtual void beginPlayback(int sampleRate, int bits) = 0;
-	virtual void stopPlayback() = 0;
+	
+	void beginPlayback(int sampleRate, int bits);
+	void stopPlayback();
+	int getNumHwChannels();
 };
 
 #endif

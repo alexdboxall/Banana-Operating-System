@@ -13,7 +13,7 @@ extern "C" {
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-SoundDevice::SoundDevice(const char* name) : Device(name)
+SoundDevice::SoundDevice(const char* name): Device(name)
 {
 	deviceType = DeviceType::Audio;
 	numChannels = 0;
@@ -121,7 +121,7 @@ int SoundDevice::getAudio(int samples, float* tempBuffer, float* outputBuffer)
 		if (channels[i] != nullptr /*&& !channels[i]->paused() && channels[i]->getVolume()*/) {
 			kprintf("Buffer size: 0x%X\n", channels[i]->getBufferSize());
 			kprintf("Pre  buffer used: 0x%X\n", channels[i]->getBufferUsed());
-			
+
 			int samplesGot = channels[i]->unbuffer(tempBuffer, currentSampleRate, samples / numChannels);
 			kprintf("Post buffer used: 0x%X\n", channels[i]->getBufferUsed());
 
@@ -138,4 +138,19 @@ int SoundDevice::getAudio(int samples, float* tempBuffer, float* outputBuffer)
 	}
 
 	return totalSamplesGot;
+}
+
+void SoundDevice::beginPlayback(int sampleRate, int bits)
+{
+	__beginPlayback(sampleRate, bits);
+}
+
+void SoundDevice::stopPlayback()
+{
+	__stopPlayback();
+}
+
+int SoundDevice::getNumHwChannels()
+{
+	return __getNumHwChannels();
 }
