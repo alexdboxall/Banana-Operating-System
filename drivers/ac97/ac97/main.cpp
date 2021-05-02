@@ -146,7 +146,7 @@ void AC97::handleIRQ()
 	int br;
 	//f->read(0x10000, data, &br);*/
 
-	int samplesGot = getAudio(65534, tempBuffer, oBuffer);
+	int samplesGot = getAudio(65536 / 4, tempBuffer, oBuffer);
 	kprintf("Got %d samples.\n", samplesGot);
 
 	int16_t* dma = (int16_t*) buffVirt[civ - 1];
@@ -228,11 +228,11 @@ int AC97::_open(int a, int b, void* c)
 	//fill BDL
 	uint32_t* ptr = (uint32_t*) bdlVirt;
 	ptr[0] = buffPhys[0];
-	ptr[1] = 0x80000000U | 0x8000U;
+	ptr[1] = 0x80000000U | 0x4000U;
 	ptr[2] = buffPhys[1];
-	ptr[3] = 0x80000000U | 0x8000U;
+	ptr[3] = 0x80000000U | 0x4000U;
 	ptr[4] = buffPhys[2];
-	ptr[5] = 0x80000000U | 0x8000U;
+	ptr[5] = 0x80000000U | 0x4000U;
 
 	//fill buffers
 	for (int i = 0; i < 3; ++i) {
