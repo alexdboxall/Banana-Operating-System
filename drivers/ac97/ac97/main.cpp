@@ -154,6 +154,10 @@ void AC97::handleIRQ()
 	int16_t* dma = (int16_t*) buffVirt[civ - 1];
 	floatTo16(oBuffer, dma, samplesGot);
 
+	for (int i = 0; i < 65534; ++i) {
+		kprintf("%d: 0x%X\n", i, *(dma + i));
+	}
+
 	thePCI->writeBAR16(nabm, 0x1C, 0x16);
 }
 
