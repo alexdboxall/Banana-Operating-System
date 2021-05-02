@@ -78,7 +78,6 @@ void start(Device* _dvl)
 	dev->addChannel(left);
 	dev->addChannel(rght);
 	kprintf("About to begin playback...\n");
-	dev->beginPlayback(8000, 16);
 	kprintf("Playback has begun!\n");
 
 	File* f = new File("C:/fugue.wav", kernelProcess);

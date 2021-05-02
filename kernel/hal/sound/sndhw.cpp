@@ -54,7 +54,7 @@ int SoundDevice::addChannel(SoundChannel* ch)
 	if (numChannels == 0) {
 		currentSampleRate = ch->getSampleRate();
 		currentBits = ch->getBits();
-		//beginPlayback(currentSampleRate, currentBits);
+		beginPlayback(currentSampleRate, currentBits);
 	}
 
 	++numChannels;
