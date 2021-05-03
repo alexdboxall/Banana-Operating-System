@@ -407,7 +407,7 @@ int ACPI::open(int mode, int, void*)
 	int megabytes = Reg::readIntWithDefault((char*) "system", (char*) "@memory:swapfile", 12);
 	Virt::setupPageSwapping(megabytes);
 	
-	Krnl::setBootMessage("Loading drivers...");
+	Krnl::setBootMessage("Loading device drivers...");
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/bios.sys"), computer);
 
 	//this should be moved to its own function
