@@ -81,16 +81,16 @@ extern "C" void kernel_main()
 	installVgaTextImplementation();
 
 	uint16_t* b = (uint16_t*) 0xC20B8000;
-	int x = 10;
+	int x = 0;
 	int y = 5;
-	int addx = 0;
+	int addx = 10;
 	for (int i = 0; titleScreen[i]; ++i) {
 		if (titleScreen[x + 53] == 0xDB && titleScreen[x + 52] != 0xDB) ++addx;
 		if (titleScreen[i] == '\r') continue;
 		if (titleScreen[i] == '\n') {
-			x = 10;
+			x = 0;
 			++y;
-			addx = 0;
+			addx = 10;
 		} else {
 			*(b + y * 80 + x + addx) = ((uint16_t) titleScreen[i]) | 0x0E00;
 			++x;
