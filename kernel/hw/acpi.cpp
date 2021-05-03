@@ -388,6 +388,8 @@ void ACPI::detectPCI()
 	kprintf("PCI: %d\n", pciDetected ? ((int) !pciAccessMech1) + 1 : 0);
 
 	if (pciDetected) {
+		Krnl::setBootMessage("Scanning PCI bus...");
+
 		PCI* pci = new PCI();
 		addChild(pci);
 		pci->open(pciAccessMech1 ? 1 : 2, 0, nullptr);
@@ -398,11 +400,14 @@ int ACPI::open(int mode, int, void*)
 {
 	detectPCI();
 
+	Krnl::setBootMessage("Loading kernel symbol table...");
 	Thr::loadKernelSymbolTable("C:/Banana/System/KERNEL32.EXE");
 
+	Krnl::setBootMessage("Allocating the swapfile...");
 	int megabytes = Reg::readIntWithDefault((char*) "system", (char*) "@memory:swapfile", 12);
 	Virt::setupPageSwapping(megabytes);
 	
+	Krnl::setBootMessage("Loading drivers...");
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/bios.sys"), computer);
 
 	//this should be moved to its own function
@@ -432,6 +437,7 @@ int ACPI::open(int mode, int, void*)
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
 
 	if (computer->features.hasACPI) {
+		Krnl::setBootMessage("Loading the ACPICA driver...");
 		File* f = new File("C:/Banana/Drivers/acpica.sys", kernelProcess);
 		if (f && f->exists()) {
 			Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/acpica.sys"), this);

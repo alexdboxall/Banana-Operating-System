@@ -300,7 +300,7 @@ namespace Krnl
 		Krnl::loadSystemEnv();
 		User::loadClockSettings(Reg::readIntWithDefault((char*) "country", (char*) "timezone", 58));
 		
-		Krnl::setBootMessage("Loading device drivers...");
+		Krnl::setBootMessage("Loading more device drivers...");
 		computer->root->loadDriversForAll();
 
 		Krnl::setBootMessage("Configuring processors...");
