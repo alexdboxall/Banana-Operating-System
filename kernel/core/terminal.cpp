@@ -139,8 +139,6 @@ void VgaText::updateTitle()
 	if (implementation.loadInTitle) {
 		implementation.loadInTitle(this, title);
 	}
-
-	updateDiskUsage();
 }
 
 void VgaText::load()
