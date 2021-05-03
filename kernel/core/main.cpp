@@ -90,6 +90,7 @@ extern "C" void kernel_main()
 		if (titleScreen[i] == '\n') {
 			x = 10;
 			++y;
+			addx = 0;
 		} else {
 			*(b + y * 80 + x + addx) = ((uint16_t) titleScreen[i]) | 0x0E00;
 			++x;
