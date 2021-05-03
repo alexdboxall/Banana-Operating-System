@@ -388,7 +388,7 @@ void ACPI::detectPCI()
 	kprintf("PCI: %d\n", pciDetected ? ((int) !pciAccessMech1) + 1 : 0);
 
 	if (pciDetected) {
-		Krnl::setBootMessage("Scanning PCI bus...");
+		Krnl::setBootMessage("Scanning the PCI bus...");
 
 		PCI* pci = new PCI();
 		addChild(pci);
