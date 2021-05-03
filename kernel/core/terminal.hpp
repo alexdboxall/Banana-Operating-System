@@ -133,7 +133,6 @@ public:
     void putchar(char c);
     void puts(const char* c, enum VgaColour fg, enum VgaColour bg);
     void puts(const char* c);
-	void putx(uint32_t num);
     void clearScreen();
     
     int getCursorX();
@@ -151,9 +150,6 @@ public:
     
     void setCursorHeight (int h);
     int getCursorHeight();
-
-	static void updateDiskUsage();
-	static void updateRAMUsageDisplay(int percent);
 
     void scrollScreen();
 	void receiveKey(uint8_t key);

@@ -544,46 +544,6 @@ void VgaText::incrementCursor(bool update)
 	if (update) updateCursor();
 }
 
-void VgaText::updateRAMUsageDisplay(int percent)
-{
-	uint16_t* p = (uint16_t*) 0xC20B8000;
-	p += 75;
-
-	*p++ = combineCharAndColour(percent / 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
-	*p++ = combineCharAndColour(percent % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
-	*p++ = combineCharAndColour('%', combineColours((uint8_t) 0, (uint8_t) 15));
-}
-
-void VgaText::putx(uint32_t num)
-{
-	char table[] = "0123456789ABCDEF";
-
-	for (int i = 0; i < 8; ++i) {
-		putchar(table[(num & 0xF0000000U) >> 28]);
-		num <<= 4;
-	}
-}
-
-void VgaText::updateDiskUsage()
-{
-	uint16_t* p = (uint16_t*) 0xC20B8000;
-	p += 63;
-	extern int ataSectorsRead;
-	extern int ataSectorsWritten;
-
-	*p++ = combineCharAndColour((ataSectorsRead / 10000) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
-	*p++ = combineCharAndColour((ataSectorsRead / 1000) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
-	*p++ = combineCharAndColour((ataSectorsRead / 100) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
-	*p++ = combineCharAndColour((ataSectorsRead / 10) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
-	*p++ = combineCharAndColour((ataSectorsRead / 1) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
-	p++;
-	*p++ = combineCharAndColour((ataSectorsWritten / 10000) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
-	*p++ = combineCharAndColour((ataSectorsWritten / 1000) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
-	*p++ = combineCharAndColour((ataSectorsWritten / 100) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
-	*p++ = combineCharAndColour((ataSectorsWritten / 10) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
-	*p++ = combineCharAndColour((ataSectorsWritten / 1) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
-}
-
 void VgaText::decrementCursor(bool update)
 {
 	if (cursorX != 0) {

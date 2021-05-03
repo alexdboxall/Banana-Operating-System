@@ -232,12 +232,6 @@ int ATA::read(uint64_t lba, int count, void* buffer)
 		return (int) DiskError::Failure;
 	}
 
-#ifdef KERNEL_DEBUG
-	//update debug information
-	ataSectorsRead += count;
-	VgaText::updateDiskUsage();
-#endif
-
 	return (int) DiskError::Success;
 }
 
@@ -258,12 +252,6 @@ int ATA::write(uint64_t lba, int count, void* buffer)
 	if (err) {
 		return (int) DiskError::Failure;
 	}
-
-#ifdef KERNEL_DEBUG
-	//update debug information
-	ataSectorsWritten += count;
-	VgaText::updateDiskUsage();
-#endif
 
 	return (int) DiskError::Success;
 }
