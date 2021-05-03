@@ -83,14 +83,14 @@ extern "C" void kernel_main()
 	uint16_t* b = (uint16_t*) 0xC20B8000;
 	int x = 0;
 	int y = 5;
-	int addx = 10;
+	int addx = 9;
 	for (int i = 0; titleScreen[i]; ++i) {
-		if (titleScreen[x + 53] == 0xDB && titleScreen[x + 52] != 0xDB) ++addx;
+		if (titleScreen[x + 55] == 0xDB && titleScreen[x + 54] != 0xDB) ++addx;
 		if (titleScreen[i] == '\r') continue;
 		if (titleScreen[i] == '\n') {
 			x = 0;
 			++y;
-			addx = 10;
+			addx = 9;
 		} else {
 			*(b + y * 80 + x + addx) = ((uint16_t) titleScreen[i]) | 0x0E00;
 			++x;
