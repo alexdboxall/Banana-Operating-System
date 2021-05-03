@@ -141,6 +141,16 @@ void VgaText::updateTitle()
 	}
 }
 
+void VgaText::putx(uint32_t num)
+{
+	char table[] = "0123456789ABCDEF";
+
+	for (int i = 0; i < 8; ++i) {
+		putchar(table[(num & 0xF0000000U) >> 28]);
+		num <<= 4;
+	}
+}
+
 void VgaText::load()
 {
 	char title[80];

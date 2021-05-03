@@ -133,6 +133,7 @@ public:
     void putchar(char c);
     void puts(const char* c, enum VgaColour fg, enum VgaColour bg);
     void puts(const char* c);
+	void putx(uint32_t num);
     void clearScreen();
     
     int getCursorX();
