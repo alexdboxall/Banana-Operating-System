@@ -14,6 +14,11 @@ class Clock;
 extern "C" void kernel_main();
 extern void firstTask();
 
+namespace Krnl
+{
+	void setBootMessage(const char* msg);
+}
+
 class Computer : public Device
 {
 private:

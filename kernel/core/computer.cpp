@@ -65,6 +65,8 @@ void Computer::setBootMessage(const char* message)
 
 int Computer::open(int a, int b, void* vas)
 {
+	Krnl::setBootMessage("Detecting processor information...");
+
 	VgaText::hiddenOut = false;
 
 	if (!(sysBootSettings & 4)) {
@@ -78,6 +80,8 @@ int Computer::open(int a, int b, void* vas)
 	displayFeatures();
 	enableNMI();
 
+	Krnl::setBootMessage("Configuring processors...");
+
 	cpu[0] = new CPU();
 	addChild(cpu[0]);
 	cpu[0]->open(0, 0, vas);		//FIRST ARG IS CPU NUMBER
@@ -88,6 +92,7 @@ int Computer::open(int a, int b, void* vas)
 		fpu->open(0, 0, nullptr);
 	}
 
+	Krnl::setBootMessage("Setting up multitasking...");
 	setupMultitasking(Krnl::firstTask);
 	return -1;
 }
@@ -273,6 +278,8 @@ namespace Krnl
 	{
 		asm("sti");
 
+		Krnl::setBootMessage("Starting core threads...");
+
 		//setup up the core processes and threads we need
 		Process* idleProcess = new Process(true, "Idle Process", kernelProcess);
 		idleProcess->createThread(idleFunction, nullptr, 255);
@@ -281,16 +288,25 @@ namespace Krnl
 
 		schedulingOn = true;
 
+		Krnl::setBootMessage("Initialising system components...");
 		Vm::initialise8086();
 		Fs::initVFS();
+
+		Krnl::setBootMessage("Loading device drivers...");
 		computer->root->open(0, 0, nullptr);
+
+		Krnl::setBootMessage("Initialising system components...");
 		Sys::loadSyscalls();
 		Krnl::loadSystemEnv();
 		User::loadClockSettings(Reg::readIntWithDefault((char*) "country", (char*) "timezone", 58));
+		
+		Krnl::setBootMessage("Loading device drivers...");
 		computer->root->loadDriversForAll();
 
+		Krnl::setBootMessage("Configuring processors...");
 		Krnl::startCPUs();
 
+		Krnl::setBootMessage("Getting ready...");
 		Thr::executeDLL(Thr::loadDLL("C:/Banana/System/system.dll"), computer);
 
 		while (1) {

@@ -69,7 +69,7 @@ namespace Krnl
 	void setBootMessage(const char* msg)
 	{
 		uint16_t vgatext[79];
-		memset((void*) vgatext, 0, 0);
+		memset((void*) vgatext, 0, sizeof(vgatext));
 		int xstart = (80 - strlen(msg)) / 2;
 		for (int i = 0; msg[i]; ++i) {
 			vgatext[xstart + i] = ((uint16_t) msg[i]) | 0x0F00;
@@ -114,7 +114,7 @@ extern "C" void kernel_main()
 		}
 	}
 
-	Krnl::setBootMessage("Starting the kernel...");
+	Krnl::setBootMessage("Starting the memory manager...");
 
 	sysBootSettings = *((uint32_t*) 0x500);
 	Phys::physicalMemorySetup(((*((uint32_t*) 0x524)) + 4095) & ~0xFFF);		//cryptic one-liner
