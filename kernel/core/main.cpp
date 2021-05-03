@@ -85,7 +85,7 @@ extern "C" void kernel_main()
 	int y = 5;
 	int addx = 9;
 	for (int i = 0; titleScreen[i]; ++i) {
-		if (titleScreen[x + 55] == 0xDB && titleScreen[x + 54] != 0xDB) ++addx;
+		if (titleScreen[x + 54] == 0xDB && titleScreen[x + 53] != 0xDB) ++addx;
 		if (titleScreen[i] == '\r') continue;
 		if (titleScreen[i] == '\n') {
 			x = 0;
