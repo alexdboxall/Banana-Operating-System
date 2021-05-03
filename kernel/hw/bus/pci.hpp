@@ -48,6 +48,10 @@ public:
 	void writeBAR32(uint32_t addr, uint32_t val, int offset = 0);
 
 	virtual void detect();						//Detect any children
+
+	uint16_t legacyMechanism(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset);
+
+	int mechanism = 1;
 };
 
 #endif

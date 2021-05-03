@@ -42,8 +42,6 @@ struct VgaTextImplementation
 	void (*writeCharacter)(VgaText* terminal, char c, enum VgaColour fg, enum VgaColour bg, int x, int y);
 };
 
-extern bool vgamono;
-
 class VgaText : public UnixFile {
 private:
     

@@ -88,13 +88,13 @@ int VGAVideo::open(int a, int b, void* c)
 		mono = true;
 	}
 
-	/*biosMode = mono ? 0x11 : 0x12;		//VGA modes
+	biosMode = mono ? 0x11 : 0x12;		//VGA modes
 	width = 640;
-	height = 480;*/
+	height = 480;
 
-	biosMode = mono ? 0x0F : 0x10;		//EGA modes
+	/*biosMode = mono ? 0x0F : 0x10;		//EGA modes
 	width = 640;
-	height = 350;
+	height = 350;*/
 
 	vramBase = biosMode == 0x06 ? 0xB8000 : 0xA0000;
 

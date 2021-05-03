@@ -78,36 +78,17 @@ extern "C" void kernel_main()
 
 	installVgaTextImplementation();
 
-	size_t highestFreeAddr = *((uint32_t*) 0x524);
-	highestFreeAddr = (highestFreeAddr + 4095) & ~0xFFF;
-	
-	Phys::physicalMemorySetup(highestFreeAddr);
+	sysBootSettings = *((uint32_t*) 0x500);
+	Phys::physicalMemorySetup(((*((uint32_t*) 0x524)) + 4095) & ~0xFFF);		//cryptic one-liner
 	Virt::virtualMemorySetup();
 
-	uint32_t* dp = (uint32_t*) 0x500;
-	uint32_t da = *dp++;
-	uint32_t db = *dp++;
-
-	if (da != db || (da & 0x348) != 0x300) {
-		panic("");
-	}
-
-	sysBootSettings = da;
 	{
 		VAS v;
 		firstVAS = &v;
 
-		//needs memory to be set up before calling
 		callGlobalConstructors();
-		kprintf("global constructors called.\n");
-
-		Virt::swappingSetup();
 
 		computer = new Computer();
-		kprintf("computer at 0x%X.\n", computer);
-
 		computer->open(0, 0, nullptr);
 	}
-
-	panic("SCOPE ENDED IN KERNEL MAIN");
 }

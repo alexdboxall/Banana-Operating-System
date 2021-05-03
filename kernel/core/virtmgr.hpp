@@ -37,7 +37,6 @@ namespace Virt
 	size_t allocateKernelVirtualPages(int pages);
 
 	void virtualMemorySetup();
-	void swappingSetup();
 
 	static inline __attribute__((always_inline)) VAS* getAKernelVAS()
 	{

@@ -229,10 +229,6 @@ namespace Virt
 		}
 	}
 
-	void swappingSetup() {
-
-	}
-
 	void setupPageSwapping(int megs)
 	{
 		kprintf("setupPageSwapping.\n");

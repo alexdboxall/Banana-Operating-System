@@ -24,8 +24,9 @@ PCI::PCI() : Bus("PCI Bus")
 	ports[noPorts++].width = 3;
 }
 
-int PCI::open(int a, int, void*)
+int PCI::open(int _mechanism, int, void*)
 {
+	mechanism = _mechanism;
 	detect();
 	return 0;
 }
@@ -134,42 +135,81 @@ uint32_t PCI::getBARAddress(uint8_t barNo, uint8_t bus, uint8_t slot, uint8_t fu
 	return (pciReadWord(bus, slot, function, 0x12 + barNo * 4) << 16) | pciReadWord(bus, slot, function, 0x10 + barNo * 4);
 }
 
+uint16_t PCI::legacyMechanism(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset)
+{
+	//enable and specify function number
+	outb(0xCF8, 0xF0 | (func << 1));
+
+	//set the forwarding register
+	outb(0xCFA, bus);
+
+	return 0xC000 | (slot << 8) | (offset & ~3);
+}
+
 uint16_t PCI::pciReadWord(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset)
 {
-	uint32_t address;
-	uint32_t lbus = bus;
-	uint32_t lslot = slot;
-	uint32_t lfunc = func;
+	if (mechanism == 1) {
+		uint32_t address;
+		uint32_t lbus = bus;
+		uint32_t lslot = slot;
+		uint32_t lfunc = func;
 
-	address = (uint32_t) ((lbus << 16) | (lslot << 11) |
-		(lfunc << 8) | (offset & 0xfc) | ((uint32_t) 0x80000000));
+		address = (uint32_t) ((lbus << 16) | (lslot << 11) |
+							  (lfunc << 8) | (offset & 0xfc) | ((uint32_t) 0x80000000));
 
-	outl(0xCF8, address);
-	return (uint16_t) ((inl(0xCFC) >> ((offset & 2) * 8)) & 0xFFFF);
+		outl(0xCF8, address);
+		return (uint16_t) ((inl(0xCFC) >> ((offset & 2) * 8)) & 0xFFFF);
+	
+	} else if (mechanism == 2) {
+		uint16_t port = legacyMechanism(bus, slot, func, offset);
+		return (uint16_t) ((inl(port) >> ((offset & 2) * 8)) & 0xFFFF);
+
+	} else {
+		panic("WTF?!");
+	}
 }
 
 void PCI::pciWriteWord(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset, uint16_t word)
 {
-	uint32_t address;
-	uint32_t lbus = bus;
-	uint32_t lslot = slot;
-	uint32_t lfunc = func;
+	if (mechanism == 1) {
+		uint32_t address;
+		uint32_t lbus = bus;
+		uint32_t lslot = slot;
+		uint32_t lfunc = func;
 
-	address = (uint32_t) ((lbus << 16) | (lslot << 11) |
-		(lfunc << 8) | (offset & 0xfc) | ((uint32_t) 0x80000000));
+		address = (uint32_t) ((lbus << 16) | (lslot << 11) |
+							  (lfunc << 8) | (offset & 0xfc) | ((uint32_t) 0x80000000));
 
-	outl(0xCF8, address);
-	uint32_t dword = inl(0xCFC);
-	if (offset & 0b10) {
-		dword &= 0x00FFFF;
-		dword |= ((uint32_t) word) << 16;
+		outl(0xCF8, address);
+		uint32_t dword = inl(0xCFC);
+		if (offset & 0b10) {
+			dword &= 0xFFFF;
+			dword |= ((uint32_t) word) << 16;
+		} else {
+			dword &= 0xFFFF0000;
+			dword |= word;
+		}
+
+		outl(0xCF8, address);
+		outl(0xCFC, dword);
+
+	} else if (mechanism == 2) {
+		uint16_t port = legacyMechanism(bus, slot, func, offset);
+		uint32_t dword = inl(port);
+
+		if (port & 0b10) {
+			dword &= 0xFFFF;
+			dword |= ((uint32_t) word) << 16;
+		} else {
+			dword &= 0xFFFF0000;
+			dword |= word;
+		}
+
+		outl(port, dword);
+
 	} else {
-		dword &= 0xFFFF0000;
-		dword |= word;
+		panic("WTF?!");
 	}
-
-	outl(0xCF8, address);
-	outl(0xCFC, dword);
 }
 
 int PCI::close(int a, int b, void* c)
@@ -177,28 +217,9 @@ int PCI::close(int a, int b, void* c)
 	return 0;
 }
 
-/*
-PCIDeviceInfo pciInfo = dev->pci.info;
-	kprintf("classCode = 0x%X\n", pciInfo.classCode);
-	kprintf("subClass  = 0x%X\n", pciInfo.subClass);
-	kprintf("vendorID  = 0x%X\n", pciInfo.vendorID);
-
-	*/
 
 extern "C" uint32_t hexStrToInt(const char* string);
 //extern "C" uint8_t hexCharToInt(char ch);
-
-/*
-asm volatile (
-		"int $96"  :                //assembly
-		"=d" (resD),                //output
-		"=a" (resA) :                //output
-		"a" (a),                 //input
-		"b" (b),                     //input
-		"c" (c),                     //input
-		"d" (d) :                    //input
-		"memory", "cc");            //clobbers*/
-//		asm volatile("rep movsb" : "=S" (clbr1), "=D" (clbr2), "=c" (clbr3) : "S"(source), "D"(destination), "c"(n) : "cc", "memory");
 
 static inline __attribute__((always_inline)) uint8_t hexCharToInt(char c)
 {

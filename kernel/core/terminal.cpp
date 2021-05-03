@@ -544,12 +544,9 @@ void VgaText::incrementCursor(bool update)
 	if (update) updateCursor();
 }
 
-bool vgamono = false;
-size_t VGA_TEXT_MODE_ADDRESS = 0xC20B8000;
-
 void VgaText::updateRAMUsageDisplay(int percent)
 {
-	uint16_t* p = (uint16_t*) VGA_TEXT_MODE_ADDRESS;
+	uint16_t* p = (uint16_t*) 0xC20B8000;
 	p += 75;
 
 	*p++ = combineCharAndColour(percent / 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
@@ -569,7 +566,7 @@ void VgaText::putx(uint32_t num)
 
 void VgaText::updateDiskUsage()
 {
-	uint16_t* p = (uint16_t*) VGA_TEXT_MODE_ADDRESS;
+	uint16_t* p = (uint16_t*) 0xC20B8000;
 	p += 63;
 	extern int ataSectorsRead;
 	extern int ataSectorsWritten;

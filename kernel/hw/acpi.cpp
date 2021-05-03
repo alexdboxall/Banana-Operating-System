@@ -344,19 +344,14 @@ ACPI_STATUS ACPI::setScreenBrightnessLevel(ACPI_HANDLE screenObj, int level)
 	//return acpicaSetBrightness(screenObj, level);
 }
 
-
-
-extern "C" size_t manualPCIProbe();
-
-int ACPI::open(int mode, int, void*)
+void ACPI::detectPCI()
 {
-	pciDetected = false;
-	pciAccessMech1 = false;
+	bool pciDetected = false;
+	bool pciAccessMech1 = false;
 
 	if (computer->features.hasACPI) {
 		void* table = (void*) findDataTable(RSDTpointer, (char*) "MCFG");
 		if (table) {
-			kprintf("GOT MCFG table.\n");
 			pciDetected = true;
 			pciAccessMech1 = true;
 		}
@@ -366,24 +361,25 @@ int ACPI::open(int mode, int, void*)
 	if (*biosPCIDetect == 1) {
 		pciDetected = true;
 		pciAccessMech1 = true;
-		kprintf("BIOS 1\n");
 
 	} else if (*biosPCIDetect == 2) {
 		pciDetected = true;
-		kprintf("BIOS 2\n");
+		if (pciAccessMech1) {
+			panic("TODO: ASK USER: PCI MECHANSIM CONFLICT");
+		}
 	}
 
 	if (!pciDetected) {
-		kprintf("MANUAL PROBE\n");
 		size_t detected = manualPCIProbe();
 		if (detected == 1) {
 			pciDetected = true;
 			pciAccessMech1 = true;
-			kprintf("MANUAL 1\n");
 
 		} else if (detected == 2) {
 			pciDetected = true;
-			kprintf("MANUAL 2\n");
+			if (pciAccessMech1) {
+				panic("TODO: ASK USER: PCI MECHANSIM CONFLICT");
+			}
 		}
 	}
 
@@ -392,9 +388,15 @@ int ACPI::open(int mode, int, void*)
 	if (pciDetected) {
 		PCI* pci = new PCI();
 		addChild(pci);
-		pci->open(0, 0, nullptr);
-		kprintf("PCI DONE.\n");
+		pci->open(pciAccessMech1 ? 1 : 2, 0, nullptr);
 	}
+}
+
+extern "C" size_t manualPCIProbe();
+
+int ACPI::open(int mode, int, void*)
+{
+	detectPCI();
 
 	Thr::loadKernelSymbolTable("C:/Banana/System/KERNEL32.EXE");
 
@@ -405,40 +407,18 @@ int ACPI::open(int mode, int, void*)
 
 	//this should be moved to its own function
 	{
-
 		LinkedList<Device> driverless = getDevicesOfType(DeviceType::Driverless);
 		while (!driverless.isEmpty()) {
 			Device* element = driverless.getFirstElement();
 			driverless.removeFirst();
 
 			DriverlessDevice* dev = (DriverlessDevice*) element;
-			kprintf("Found driverless device with name: %s\n", dev->getName());
-
-			/*
-			uint8_t classCode;
-	uint8_t subClass;
-	uint16_t vendorID;
-
-	uint8_t bus;
-	uint8_t slot;
-	uint8_t function;
-	uint8_t progIF;
-
-	uint32_t bar[6];
-
-	uint8_t interrrupt;
-	uint8_t intPIN;*/
 
 			PCIDeviceInfo pciInfo = dev->pci.info;
-			kprintf("classCode = 0x%X\n", pciInfo.classCode);
-			kprintf("subClass  = 0x%X\n", pciInfo.subClass);
-			kprintf("vendorID  = 0x%X\n", pciInfo.vendorID);
 
 			char buffer[256];
 			char* filename = PCI::pciDetailsToFilepath(pciInfo, buffer);
 			if (filename) {
-				kprintf("driver: %s\n", filename);
-
 				File* f = new File(filename, kernelProcess);
 				if (f->exists()) {
 					Thr::executeDLL(Thr::loadDLL(filename), dev);

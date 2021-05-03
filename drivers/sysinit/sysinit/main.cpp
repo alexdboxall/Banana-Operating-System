@@ -594,13 +594,16 @@ void begin(void* a)
 
     usertask->createUserThread();
 
-    int autogui = Reg::readIntWithDefault((char*) "shell", (char*) "autogui", 0);
+    if (!firstTime) {
+        int autogui = Reg::readIntWithDefault((char*) "shell", (char*) "autogui", 0);
 
-    extern void startGUIVESA(void* a);
-    if (autogui) {
-        kprintf("AUTO GUI.\n");
-        startGUIVESA(nullptr);
+        extern void startGUIVESA(void* a);
+        if (autogui) {
+            kprintf("AUTO GUI.\n");
+            startGUIVESA(nullptr);
+        }
     }
+    
 
     int wstatus;
     waitTask(usertask->pid, &wstatus, 0);
