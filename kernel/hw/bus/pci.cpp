@@ -169,6 +169,7 @@ uint16_t PCI::pciReadWord(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offse
 
 	} else {
 		panic("WTF?!");
+		return 0;
 	}
 }
 
@@ -212,6 +213,7 @@ void PCI::pciWriteWord(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset, 
 
 	} else {
 		panic("WTF?!");
+		return 0;
 	}
 }
 
