@@ -137,6 +137,9 @@ uint32_t PCI::getBARAddress(uint8_t barNo, uint8_t bus, uint8_t slot, uint8_t fu
 
 uint16_t PCI::legacyMechanism(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset)
 {
+	if (func >= 8)	panic("TODO: HANDLE BETTER. PCI MECHANSIM #2 FAILURE 1");
+	if (slot >= 16) panic("TODO: HANDLE BETTER. PCI MECHANSIM #2 FAILURE 2");
+
 	//enable and specify function number
 	outb(0xCF8, 0xF0 | (func << 1));
 

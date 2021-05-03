@@ -344,6 +344,8 @@ ACPI_STATUS ACPI::setScreenBrightnessLevel(ACPI_HANDLE screenObj, int level)
 	//return acpicaSetBrightness(screenObj, level);
 }
 
+extern "C" size_t manualPCIProbe();
+
 void ACPI::detectPCI()
 {
 	bool pciDetected = false;
@@ -391,8 +393,6 @@ void ACPI::detectPCI()
 		pci->open(pciAccessMech1 ? 1 : 2, 0, nullptr);
 	}
 }
-
-extern "C" size_t manualPCIProbe();
 
 int ACPI::open(int mode, int, void*)
 {
