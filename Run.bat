@@ -18,10 +18,12 @@ rm diswsbe.txt
 rm disvesa.txt
 rm disvga.txt
 rm discmd.txt
+rm disega.txt
 objdump -drwC -Mintel packages/banana/32/0002/acpica.sys >> disacpica.txt
 objdump -drwC -Mintel packages/system/32/0002/legacy.sys >> dislegacy.txt
 objdump -drwC -Mintel packages/banana/32/0001/wsbe.sys >> diswsbe.txt
 objdump -drwC -Mintel packages/banana/32/0002/vga.sys >> disvga.txt
+objdump -drwC -Mintel packages/banana/32/0002/egavga.sys >> disega.txt
 objdump -drwC -Mintel packages/banana/32/0002/vesa.sys >> disvesa.txt
 objdump -drwC -Mintel packages/system/32/0002/bios.sys >> disbios.txt
 objdump -drwC -Mintel packages/system/32/0001/command.exe >> discmd.txt
