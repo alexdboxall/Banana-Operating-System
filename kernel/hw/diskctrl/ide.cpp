@@ -131,11 +131,18 @@ int IDE::open(int a, int, void*)
 		channels[0].ctrl = isaprobe.probeBaseA + 0x206;
 		channels[1].base = isaprobe.probeBaseB;
 		channels[1].ctrl = isaprobe.probeBaseB + 0x206;
+
+		kprintf("ch[0].base = 0x%X\n", channels[0].base);
+		kprintf("ch[0].ctrl = 0x%X\n", channels[0].ctrl);
+		kprintf("ch[1].base = 0x%X\n", channels[1].base);
+		kprintf("ch[1].ctrl = 0x%X\n", channels[1].ctrl);
+
 		legacyIRQs = true;
 	}
 
 	for (int i = 0; i < 2; ++i) {
 		if ((channels[i].ctrl & 0xF) == 0x8) {
+			kprintf("fiddling...\n");
 			channels[i].ctrl -= 2;
 		}
 	}
