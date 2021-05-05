@@ -17,6 +17,14 @@
 #define REG_GFX_ADDR		0x3CE
 #define REG_GFX_DATA		0x3CF
 
+#define REG_ATTRIB_ADDR_READ	0x3C0
+#define REG_ATTRIB_ADDR_WRITE	0x3C0
+#define REG_ATTRIB_DATA_READ	0x3C1
+#define REG_ATTRIB_DATA_WRITE	0x3C0
+
+#define REG_EXT_INPUT_STATUS_1_MONO		0x3BA
+#define REG_EXT_INPUT_STATUS_1_COLOUR	0x3DA
+
 enum class GfxReg: int
 {
 	SetReset = 0x00,
@@ -115,7 +123,13 @@ private:
 
 protected:
 	bool ioAddressSelect = false;
+	bool gotColour = true;
 
+	bool hasUndocumentedFlopFlopStatus = false;
+	void detectUndocumentedCRTC24();
+	bool getUndocumentedCRTC24Bit();
+
+	uint8_t accessAttrib(int offsetReg, uint8_t writeVal, bool write);
 	uint8_t accessSeqGfxCRTC(int offsetReg, int addrReg, int dataReg, uint8_t writeVal, bool write);
 
 	uint8_t readRegister(GfxReg reg);
@@ -137,6 +151,8 @@ protected:
 
 public:
 	EGAVGA();
+
+	void init();
 
 	virtual int open(int, int, void*);			//Opens the device (init code).
 	virtual int close(int, int, void*);			//Perform other commands

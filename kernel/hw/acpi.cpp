@@ -387,6 +387,9 @@ void ACPI::detectPCI()
 
 	kprintf("PCI: %d\n", pciDetected ? ((int) !pciAccessMech1) + 1 : 0);
 
+	kprintf("DEBUG: SKIPPING PCI...");
+	Krnl::setBootMessage("DEBUG: SKIPPING PCI...");
+	return;
 	if (pciDetected) {
 		Krnl::setBootMessage("Scanning the PCI bus...");
 
