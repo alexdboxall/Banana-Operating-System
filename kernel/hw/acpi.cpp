@@ -75,6 +75,7 @@ Parts of this are based on Minux:
 #include "hw/bus/pci.hpp"
 #include "hw/bus/isa.hpp"
 #include "reg/registry.hpp"
+#include "hw/diskctrl/ide.hpp"
 
 uint8_t processorID[MAX_IOAPICS];
 uint8_t matchingAPICID[MAX_IOAPICS];
