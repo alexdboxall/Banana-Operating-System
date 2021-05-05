@@ -132,11 +132,6 @@ int IDE::open(int a, int, void*)
 		channels[1].base = isaprobe.probeBaseB;
 		channels[1].ctrl = isaprobe.probeBaseB + 0x206;
 
-		kprintf("ch[0].base = 0x%X\n", channels[0].base);
-		kprintf("ch[0].ctrl = 0x%X\n", channels[0].ctrl);
-		kprintf("ch[1].base = 0x%X\n", channels[1].base);
-		kprintf("ch[1].ctrl = 0x%X\n", channels[1].ctrl);
-
 		legacyIRQs = true;
 	}
 
@@ -146,6 +141,11 @@ int IDE::open(int a, int, void*)
 			channels[i].ctrl -= 2;
 		}
 	}
+
+	kprintf("ch[0].base = 0x%X\n", channels[0].base);
+	kprintf("ch[0].ctrl = 0x%X\n", channels[0].ctrl);
+	kprintf("ch[1].base = 0x%X\n", channels[1].base);
+	kprintf("ch[1].ctrl = 0x%X\n", channels[1].ctrl);
 
 	ports[noPorts].rangeStart = channels[0].base;
 	ports[noPorts].rangeLength = 8;
