@@ -22,6 +22,8 @@ namespace Krnl
 		asm("cli");
 		kernelInPanic = true;
 
+		Krnl::setBootMessage(message);
+
 		VgaText::hiddenOut = false;
 
 		kprintf("\nFATAL SYSTEM ERROR: %s\n", message);
