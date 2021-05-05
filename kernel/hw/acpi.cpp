@@ -388,14 +388,23 @@ void ACPI::detectPCI()
 	kprintf("PCI: %d\n", pciDetected ? ((int) !pciAccessMech1) + 1 : 0);
 
 	kprintf("DEBUG: SKIPPING PCI...");
-	Krnl::setBootMessage("DEBUG: SKIPPING PCI...");
-	return;
-	if (pciDetected) {
+	if (0 && pciDetected) {
 		Krnl::setBootMessage("Scanning the PCI bus...");
 
 		PCI* pci = new PCI();
 		addChild(pci);
 		pci->open(pciAccessMech1 ? 1 : 2, 0, nullptr);
+	
+	} else {
+		kprintf("NO PCI...\n");
+		Krnl::setBootMessage("Probing ISA ports...");
+
+		IDE* dev = new IDE();
+		addChild(dev);
+		dev->detectionType = DetectionType::ISAProbe;
+		dev->isaprobe->probeBaseA = 0x1F0;
+		dev->isaprobe->probeBaseB = 0x170;
+		dev->open(0, 0, nullptr);
 	}
 }
 

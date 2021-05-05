@@ -128,6 +128,13 @@ public:
 			char namespaceName[30];
 			char pnpID[14];
 		} acpi;
+
+		struct
+		{
+			uint16_t probeBaseA;
+			uint16_t probeBaseB;
+
+		} isaprobe;
 	};
 
 	Device* next;		//used for linked list enumeration

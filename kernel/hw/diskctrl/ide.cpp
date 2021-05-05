@@ -126,10 +126,11 @@ int IDE::open(int a, int, void*)
 		}
 
 	} else {
-		channels[0].base = 0x1F0;
-		channels[0].ctrl = 0x3F6;
-		channels[1].base = 0x170;
-		channels[1].ctrl = 0x376;
+		kprintf("IDE was probed.\n");
+		channels[0].base = isaprobe.probeBaseA;
+		channels[0].ctrl = isaprobe.probeBaseA + 0x206;
+		channels[1].base = isaprobe.probeBaseB;
+		channels[1].ctrl = isaprobe.probeBaseB + 0x206;
 		legacyIRQs = true;
 	}
 
