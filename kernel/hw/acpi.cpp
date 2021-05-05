@@ -386,10 +386,7 @@ void ACPI::detectPCI()
 		}
 	}
 
-	kprintf("PCI: %d\n", pciDetected ? ((int) !pciAccessMech1) + 1 : 0);
-
-	kprintf("DEBUG: SKIPPING PCI...");
-	if (0 && pciDetected) {
+	if (pciDetected) {
 		Krnl::setBootMessage("Scanning the PCI bus...");
 
 		PCI* pci = new PCI();
@@ -399,8 +396,6 @@ void ACPI::detectPCI()
 	} else {
 		kprintf("NO PCI...\n");
 		Krnl::setBootMessage("Probing ISA ports...");
-
-
 
 		IDE* dev = new IDE();
 		addChild(dev);
@@ -495,7 +490,6 @@ int ACPI::close(int mode, int b, void* c)
 	}
 
 	if (mode == 0) {
-		kprintf("ACPI::close\n");
 		if (systemShutdownFunction) {
 			systemShutdownFunction();
 		}
