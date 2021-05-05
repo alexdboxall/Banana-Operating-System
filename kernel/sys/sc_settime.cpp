@@ -37,8 +37,6 @@ namespace Sys
 
 		int year = r->edx & 0xFFFF;
 
-		kprintf("setTime: %d/%d/%d %d:%d:%d\n", day, month, year, hours, minutes, seconds);
-
 		datetime_t dt;
 		dt.day = day;
 		dt.month = month;
@@ -49,7 +47,6 @@ namespace Sys
 
 		uint64_t secs = datetimeToSeconds(dt);
 		datetime_t d2 = secondsToDatetime(secs);
-		kprintf("setTime2 %d/%d/%d %d:%d:%d\n", d2.day, d2.month, d2.year, d2.hour, d2.minute, d2.second);
 
 		return !computer->clock->setTimeInDatetimeLocal(dt);
 	}

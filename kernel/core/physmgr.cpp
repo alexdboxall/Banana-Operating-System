@@ -152,7 +152,6 @@ namespace Phys
 					return evict;
 				}
 
-				kprintf("doing into DMA.\n");
 				size_t dma = allocateDMA(4096);
 				if (dma) {
 					return dma;
@@ -240,8 +239,7 @@ namespace Phys
 			uint64_t top = bottom + length;
 			uint64_t type = *(((uint32_t*) ramTable) + 4);
 
-
-			kprintf("Memory range: 0x%X -> 0x%X (%d)\n", (uint32_t) bottom, (uint32_t) top, (uint32_t) type);
+			//("Memory range: 0x%X -> 0x%X (%d)\n", (uint32_t) bottom, (uint32_t) top, (uint32_t) type);
 
 			//check that the high bits are clear
 			if ((bottom >> 32) || (top >> 32)) {
@@ -271,7 +269,7 @@ namespace Phys
 					length = top - bottom;
 				}
 
-				kprintf("Allowing range to be used: 0x%X -> 0x%X\n", (uint32_t) bottom, (uint32_t) top);
+				//kprintf("Allowing range to be used: 0x%X -> 0x%X\n", (uint32_t) bottom, (uint32_t) top);
 
 				//allow it to be used
 				allowSegmentToBeUsed(bottom, top);

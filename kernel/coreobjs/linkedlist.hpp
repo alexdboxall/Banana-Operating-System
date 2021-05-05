@@ -20,7 +20,8 @@ public:
 		first = nullptr;
 		last = nullptr;
 		debugLength = 0;
-		kprintf("L.L. CONSTRUCTOR CALLED\n");
+		
+		//kprintf("L.L. CONSTRUCTOR CALLED\n");
 	}
 
 	~LinkedList()

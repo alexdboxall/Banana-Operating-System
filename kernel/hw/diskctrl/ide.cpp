@@ -126,7 +126,6 @@ int IDE::open(int a, int, void*)
 		}
 
 	} else {
-		kprintf("IDE was probed.\n");
 		channels[0].base = isaprobe.probeBaseA;
 		channels[0].ctrl = isaprobe.probeBaseA + 0x206;
 		channels[1].base = isaprobe.probeBaseB;
@@ -171,12 +170,10 @@ int IDE::open(int a, int, void*)
 	enableIRQs(1, false);
 
 	if (legacyIRQs) {
-		kprintf("Installing IDE IRQs 14, 15\n");
 		interrupt = addIRQHandler(14, ideChannel0IRQHandler, true, this);
 		interrupt2 = addIRQHandler(15, ideChannel1IRQHandler, true, this);
 	} else {
 		interrupt2 = 15;
-		kprintf("Installing IDE IRQs %d, %d\n", interrupt, interrupt2);
 		addIRQHandler(interrupt, ideChannel0IRQHandler, false, this);
 		addIRQHandler(interrupt2, ideChannel1IRQHandler, false, this);
 	}
@@ -296,53 +293,40 @@ uint8_t IDE::printError(uint8_t channel, uint8_t drive, uint8_t err)
 
 	kprintf("IDE ERROR: ");
 	if (err == 1) {
-		kprintf("- Device Fault\n     ");
 		err = 19;
 
 	} else if (err == 2) {
 		unsigned char st = read(devices[drive].channel, ATA_REG_ERROR);
 		if (st & ATA_ER_AMNF) {
-			kprintf("- No Address Mark Found\n     ");
 			err = 7;
 		}
 		if (st & ATA_ER_TK0NF) {
-			kprintf("- No Media or Media Error\n     ");
 			err = 3;
 		}
 		if (st & ATA_ER_ABRT) {
-			kprintf("- Command Aborted\n     ");
 			err = 20;
 		}
 		if (st & ATA_ER_MCR) {
-			kprintf("- No Media or Media Error\n     ");
 			err = 3;
 		}
 		if (st & ATA_ER_IDNF) {
-			kprintf("- ID mark not Found\n     ");
 			err = 21;
 		}
 		if (st & ATA_ER_MC) {
-			kprintf("- No Media or Media Error\n     ");
 			err = 3;
 		}
 		if (st & ATA_ER_UNC) {
-			kprintf("- Uncorrectable Data Error\n     ");
 			err = 22;
 		}
 		if (st & ATA_ER_BBK) {
-			kprintf("- Bad Sectors\n     ");
 			err = 13;
 		}
 
 	} else if (err == 3) { 
-		kprintf("- Reads Nothing\n     ");
 		err = 23;
 	} else if (err == 4) { 
-		kprintf("- Write Protected\n     ");
 		err = 8; 
 	}
-
-	kprintf("\n(%d) END OF ERROR DATA.\n", err);
 
 	return err;
 }
@@ -359,7 +343,6 @@ uint8_t IDE::polling(uint8_t channel, uint32_t advanced_check)
 	while (1) {
 		statusReg = read(channel, ATA_REG_ALTSTATUS);
 		if (statusReg & ATA_SR_ERR) {
-			kprintf("Uh oh... ATA_SR_ERR\n");
 			return 2;
 		}
 		if (statusReg & ATA_SR_DF) {
@@ -475,13 +458,11 @@ void IDE::detect()
 			devices[deviceCount].hasLBA = devices[deviceCount].capabilities & 0x200;
 
 			if (type == IDE_ATA && devices[deviceCount].size) {
-				kprintf("ATA device on channel %d, drive %d. size = %d\n", i, j, devices[deviceCount].size);
 				ATA* dev = new ATA();
 				addChild(dev);
 				dev->open(0, deviceCount, this);
 
 			} else if (type == IDE_ATAPI) {
-				kprintf("ATAPI device on channel %d, drive %d. size = %d\n", i, j, devices[deviceCount].size);
 				ATAPI* dev = new ATAPI();
 				addChild(dev);
 				dev->open(0, deviceCount, this);

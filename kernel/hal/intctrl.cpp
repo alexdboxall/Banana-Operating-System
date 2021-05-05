@@ -126,7 +126,7 @@ void InterruptController::installISRHandler(int num, void (*handler)(regs*, void
 		}
 	}
 
-	panic("[intctrl] Could not install ISR handler, too many already!");
+	panic("[intctrl] A!");
 }
 
 int InterruptController::installIRQHandler(int num, void (*handler)(regs*, void*), bool legacy, void* context)
@@ -135,7 +135,7 @@ int InterruptController::installIRQHandler(int num, void (*handler)(regs*, void*
 		if (num < 16) {
 			num = legacyIRQRemaps[num];
 		} else {
-			panic("[installIRQHandler] Legacy IRQ with number 16 or higher");
+			panic("[intctrl] B!");
 		}
 	}
 
@@ -152,7 +152,7 @@ int InterruptController::installIRQHandler(int num, void (*handler)(regs*, void*
 		}
 	}
 
-	panic("[intctrl] Could not install IRQ handler, too many already!");
+	panic("[intctrl] C!");
 	return -1;
 }
 
@@ -172,7 +172,7 @@ void InterruptController::clearAllHandlers(int num, bool legacy)
 		if (num < 16) {
 			num = legacyIRQRemaps[num];
 		} else {
-			panic("[uninstallIRQHandler] Legacy IRQ with number 16 or higher");
+			panic("[intctrl] D!");
 		}
 	}
 
@@ -189,7 +189,7 @@ void InterruptController::uninstallIRQHandler(int num, void (*handler)(regs*, vo
 		if (num < 16) {
 			num = legacyIRQRemaps[num];
 		} else {
-			panic("[uninstallIRQHandler] Legacy IRQ with number 16 or higher");
+			panic("[intctrl] E!");
 		}
 	}
 
@@ -626,7 +626,6 @@ InterruptController* setupInterruptController()
 	//check if the APIC exists
 	if (ioapicDiscoveryNumber == 0) {
 		computer->features.hasAPIC = false;
-		kprintf("No IOAPICs means no APIC.\n");
 	}
 
 	bool hasAPIC = computer->features.hasAPIC;

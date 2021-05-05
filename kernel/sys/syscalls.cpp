@@ -75,8 +75,6 @@ uint64_t sysCallOpen(regs* r)
 
 	if (string_ends_with((const char*) r->edx, "/con") || string_ends_with((const char*) r->edx, "\\con") || !strcmp((const char*) r->edx, "con") || string_ends_with(fname, "/con")) {
 		*((uint64_t*) r->ebx) = RESERVED_FD_CON;
-		kprintf("con fd = 0x%X\n", (uint32_t) (*((uint64_t*) r->ebx)));
-		kprintf("opened con!\n");
 		return 0;
 	}
 	if (string_ends_with((const char*) r->edx, "/nul") || string_ends_with((const char*) r->edx, "\\nul") || !strcmp((const char*) r->edx, "nul") || string_ends_with(fname, "/nul")) {
@@ -131,7 +129,6 @@ uint64_t sysCallSeek(regs* r)
 	if (r->ebx <= 2) {
 		return -1;
 	} else if (r->ebx > RESERVED_FD_START) {
-		kprintf("Seeking special file. %d\n", r->ebx);
 		return -1;
 	} else {
 		file = getFromFileDescriptor(r->ebx);
@@ -153,7 +150,6 @@ uint64_t sysCallTell(regs* r)
 	if (r->ebx <= 2) {
 		return -1;
 	} else if (r->ebx > RESERVED_FD_START) {
-		kprintf("Telling special file. %d\n", r->ebx);
 		*((uint64_t*) r->ecx) = 0;
 		return 0;
 	} else {
@@ -177,7 +173,6 @@ uint64_t sysCallSizeFromFilename(regs* r)
 	if (r->ebx <= 2) {
 		return -1;
 	} else if (r->ebx > RESERVED_FD_START) {
-		kprintf("Statting special file. %d\n", r->ebx);
 		*((uint64_t*) r->ecx) = 0;
 		return 0;
 	} else {
@@ -203,7 +198,6 @@ uint64_t sysCallSize(regs* r)
 	if (r->ebx <= 2) {
 		return -1;
 	} else if (r->ebx > RESERVED_FD_START) {
-		kprintf("Statting special file. %d\n", r->ebx);
 		*((uint64_t*) r->ecx) = 0;
 		return 0;
 	} else {
@@ -227,13 +221,10 @@ uint64_t sysCallClose(regs* r)
 	if (r->ebx <= 2) {
 		return -1;
 	} else if (r->ebx == RESERVED_FD_CON) {
-		kprintf("closing con.\n");
 		return 0;
 	} else if (r->ebx == RESERVED_FD_NUL) {
-		kprintf("closing nul.\n");
 		return 0;
 	} else if (r->ebx > RESERVED_FD_START) {
-		kprintf("Closing non-con/nul special file. %d\n", r->ebx);
 		return -1;
 	} else {
 		file = getFromFileDescriptor(r->ebx);
@@ -275,7 +266,6 @@ uint64_t sysCallReadDir(regs* r)
 	if (r->ecx <= 2) {
 		return 1;
 	} else if (r->ebx > RESERVED_FD_START) {
-		kprintf("Readdir special file (oops!). %d\n", r->ebx);
 		return -1;
 	} else {
 		file = getFromFileDescriptor(r->ecx);
@@ -332,7 +322,6 @@ uint64_t sysCallCloseDir(regs* r)
 	if (r->ebx <= 2) {
 		return -1;
 	} else if (r->ebx > RESERVED_FD_START) {
-		kprintf("Closedir special file (oops!). %d\n", r->ebx);
 		return -1;
 	} else {
 		file = getFromFileDescriptor(r->ebx);
@@ -359,7 +348,6 @@ uint64_t sysCallNotImpl(regs* r)
 	panic("UNIMPLEMENTED SYSTEM CALL");
 	return -1;
 }
-
 
 uint64_t sysCallRmdir(regs* r)
 {
@@ -393,7 +381,6 @@ uint64_t sysCallUnlink(regs* r)
 
 uint64_t sysCallGetArgc(regs* r)
 {
-	kprintf("argc = %d\n", currentTaskTCB->processRelatedTo->argc);
 	return currentTaskTCB->processRelatedTo->argc;
 }
 
@@ -480,8 +467,6 @@ uint64_t sysCallSpawn(regs* r)
 {
 	if (!r->edx) return 0;
 
-	kprintf("spawning: %s\n", (const char*) r->edx);
-
 	Process* p = new Process((const char*) r->edx, r->ebx ? nullptr : currentTaskTCB->processRelatedTo, (char**) r->ecx);
 	if (p->failedToLoadProgram) {
 		return 0;
@@ -493,13 +478,9 @@ uint64_t sysCallSpawn(regs* r)
 
 uint64_t sysCallGetEnv(regs* r)
 {
-	kprintf("getenv.\n");
 	char* addr = (char*) r->edx;
-	kprintf("addr = 0x%X\n", addr);
 	int num = r->ebx;
-	kprintf("num = %d\n", num);
 	int count = Krnl::getProcessTotalEnvCount(currentTaskTCB->processRelatedTo);
-	kprintf("count = %d\n", count);
 
 	if (num >= count) {
 		if (addr) {
@@ -507,22 +488,16 @@ uint64_t sysCallGetEnv(regs* r)
 		}
 		return 0;
 	}
-	kprintf("A\n");
 
 	EnvVar ev = Krnl::getProcessEnvPair(currentTaskTCB->processRelatedTo, num);
-	kprintf("B\n");
 	if (r->ecx == 0) {
-		kprintf("len = %d\n", strlen(ev.key) + strlen(ev.value) + 1);
 		return strlen(ev.key) + strlen(ev.value) + 1;
 	}
-	kprintf("C\n");
 
 	*addr = 0;
 	strcpy(addr, ev.key);
 	strcat(addr, "=");
 	strcat(addr, ev.value);
-
-	kprintf("D\n");
 
 	return 0;
 }
@@ -606,7 +581,6 @@ uint64_t sysSetFatAttrib(regs* r)
 uint64_t sysPanic(regs* r)
 {
 	panic((char*) r->edx);
-	panic("COULDN'T PANIC");
 	return 1;
 }
 

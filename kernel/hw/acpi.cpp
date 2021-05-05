@@ -101,8 +101,6 @@ int nextACPITable = 0;
 
 uint8_t* findRSDP()
 {
-	kprintf("finding RSDP\n");
-
 	if (!computer->features.hasACPI) {
 		return 0;
 	}
@@ -214,7 +212,6 @@ uint8_t* findDataTable(uint8_t* ptr, char name[])
 		}
 	}
 
-	kprintf("NO DATA TABLE FOUND NAMED %s. %cSDT TABLE USED\n", name, usingXSDT ? 'X' : 'R');
 	return 0;
 }
 
@@ -286,8 +283,6 @@ void scanMADT()
 			uint32_t lintNum = a->data[pointingTo++];
 
 			apicNMIInfo[nextAPICNMI++] = processorID | (flags << 8) | (lintNum << 24);
-
-			kprintf("processor ID (0xFF = all) = 0x%X\nflags = 0x%X\nLINT# = 0x%X\n", processorID, flags, lintNum);
 
 		} else if (type == 5) {
 			pointingTo += 10;

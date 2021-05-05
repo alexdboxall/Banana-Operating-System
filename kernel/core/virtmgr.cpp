@@ -215,9 +215,6 @@ namespace Virt
 			setPageState(i, VirtPageState::Unusable);
 		}
 
-		kprintf("KHEAP START = 0x%X\n", start * 4096);
-		kprintf("KHEAP END   = 0x%X\n", end * 4096);
-
 		for (int i = start; i < end; ++i) {
 			setPageState(i, VirtPageState::Free);
 		}
@@ -231,12 +228,10 @@ namespace Virt
 
 	void setupPageSwapping(int megs)
 	{
-		kprintf("setupPageSwapping.\n");
 		File* f = new File("C:/Banana/SWAPFILE.SYS", kernelProcess);
 		f->unlink();
 		FileStatus st = f->open(FILE_OPEN_WRITE_NORMAL);
 		if (st != FileStatus::Success) {
-			kprintf("st = %d\n", st);
 			panic("NO PAGE SWAPPING AVAILABLE");
 		}
 
@@ -248,10 +243,9 @@ namespace Virt
 		while (pages--) {
 			st = f->write(4096 * 16, buff, &br);
 			if (st != FileStatus::Success) {
-				kprintf("Status != success = %d\n", (int) st);
+				panic("UH OH");
 			}
 			if (br != 4096 * 16) {
-				kprintf("Br = %d\n", br);
 				panic("UH OH");
 			}
 		}
@@ -268,8 +262,6 @@ namespace Virt
 		swapfileSectorsPerPage = 4096 / 512;
 		swapfileBitmap = (size_t*) malloc(swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
 		memset(swapfileBitmap, 0, swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
-
-		kprintf("swap bitmap length = 0x%X\n", swapfileLength / swapfileSectorsPerPage / (sizeof(size_t) * 8));
 	}
 }
 

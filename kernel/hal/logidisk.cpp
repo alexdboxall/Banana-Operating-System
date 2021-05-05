@@ -87,13 +87,11 @@ bool LogicalDisk::mount()
 	fs = nullptr;
 	while (conductor) {
 		extern int getIRQNestingLevel();
-		kprintf("trymount 1 INT STATE = %d\n", getIRQNestingLevel());
 		if (conductor->tryMount(this, mounted - 'A')) {
 			fs = conductor;
 			return true;
 		}
-		kprintf("trymount 2 INT STATE = %d\n", getIRQNestingLevel());
-
+		
 		conductor = conductor->next;
 	}
 

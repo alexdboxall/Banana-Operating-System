@@ -210,8 +210,6 @@ int readKeyboard(VgaText* terminal, char* buf, size_t count)
 		guiKeyboardHandler(kt, keystates);
 	}
 
-	kprintf("readKeyboard called.\n");
-
 	asm("sti");
 	int charsRead = 0;
 	//bool blocked = false;

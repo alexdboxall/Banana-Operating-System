@@ -74,7 +74,6 @@ void PCI::writeBAR8(uint32_t addr, uint8_t val, int offset)
 void PCI::writeBAR16(uint32_t addr, uint16_t val, int offset)
 {
 	if (addr & 1) {
-		kprintf("PCI::outw(0x%X, 0x%X)\n", (addr & ~3) + offset, val);
 		outw((addr & ~3) + offset, val);
 	} else {
 		uint16_t* ptr = (uint16_t*) ((addr & ~0xF) + offset);
@@ -251,8 +250,6 @@ char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo, char* outbuffer)
 		lookupData[siz] = 0;
 		f->read(siz, lookupData, &br);
 		f->close();
-
-		kprintf("lookup data = %s\n", lookupData);
 
 		lookupSize = siz;
 	}

@@ -28,6 +28,5 @@ PhysicalDisk::~PhysicalDisk()
 
 int PhysicalDisk::eject()
 {
-	kprintf("Eject called on non-removable medium.\n");
 	return -1;
 }

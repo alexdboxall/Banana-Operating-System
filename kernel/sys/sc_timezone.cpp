@@ -25,7 +25,7 @@ namespace Sys
 	{
 		if (r->ecx == 0) {
 			//get timezone
-			kprintf("TODO: unimplemented, sc_timezone.cpp: get the timezone\n");
+			kprintf("TODO: Sys::timezone\n");
 			return -1;
 
 		} else {

@@ -36,7 +36,7 @@ SoundChannel::SoundChannel(int _sampleRate, int _bits, int _direction, int _buff
 
 	int error;
 	conv = src_new(SRC_LINEAR, 1, &error);
-	kprintf("Conv has been setup.\n");
+
 	if (error) {
 		panic("TODO: SOUND CHANNEL ERROR");
 	}

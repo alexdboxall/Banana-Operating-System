@@ -167,10 +167,8 @@ FileStatus FAT::format(LogicalDisk* disk, int diskNum, const char* typestr, int 
 	if (res == FR_OK) {
 		return FileStatus::Success;
 	} else if (res == FR_MKFS_ABORTED) {
-		kprintf("MKFS aborted before it could start.\n");
 		return FileStatus::FormatDidntStart;
 	} else {
-		kprintf("MKFS failure %d.\n", (int) res);
 		return FileStatus::Failure;
 	}
 }
@@ -249,8 +247,6 @@ uint64_t FAT::getFileFirstSector(const char* filename)
 	int i, br;
 	f->read(4, &i, &br);
 	FIL* fsData = (FIL*) f->fsSpecificData;
-
-	kprintf("sect = 0x%X\n", fsData->sect);
 
 	size_t retV = fsData->sect;
 

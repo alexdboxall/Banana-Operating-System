@@ -74,7 +74,6 @@ void EnvVarContainer::loadFrom(const char* filename, const char* defaultN)
 
 			memset(e.value, 0, linePtr - equSpot + 4);
 			memcpy(e.value, line + equSpot, strlen(line + equSpot));
-			kprintf("e.value = %s\n", e.value);
 
 			count++;
 			if (!envarr) {
@@ -96,8 +95,6 @@ void EnvVarContainer::loadFrom(const char* filename, const char* defaultN)
 		}
 
 	} while (br);
-
-	kprintf("loaded %d system environment variables...\n", count);
 }
 
 void EnvVarContainer::__loadSystem()
@@ -227,7 +224,6 @@ namespace Krnl
 				return prcss->env->envarr[num];
 
 			} else if (num < prcss->env->count + systemEnv->count) {
-				kprintf("got env %d -> '%s'\n", num, systemEnv->envarr[num - prcss->env->count].value);
 				return systemEnv->envarr[num - prcss->env->count];
 			}
 

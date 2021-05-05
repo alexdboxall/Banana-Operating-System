@@ -59,7 +59,5 @@ int TSS::setup(size_t esp, size_t eip)
 	gdtEntry = CPU::current()->gdt.addEntry(tssEnt);
 	CPU::current()->gdt.flush();
 
-	kprintf("Setup TSS, GDT entry is 0x%X\n", gdtEntry);
-
 	return gdtEntry;
 }

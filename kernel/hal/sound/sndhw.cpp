@@ -104,31 +104,20 @@ void SoundDevice::floatTo8(float* in, uint8_t* out, int len)
 
 int SoundDevice::getAudio(int samples, float* tempBuffer, float* outputBuffer)
 {
-	kprintf("SoundDevice::getAudio\n");
-
 	int totalSamplesGot = 0;
 
-	kprintf("    the output buffer is at 0x%X\n", outputBuffer);
-	kprintf("    0x%X samples makes 0x%X bytes.\n", samples, sizeof(float) * samples);
 	memset(outputBuffer, 0, sizeof(float) * samples);
 
 	int chnum = 0;
 	for (int i = 0; i < SOUND_DEVICE_MAX_VIRTUAL_CHANNELS; ++i) {
 		if (channels[i] != nullptr /*&& !channels[i]->paused() && channels[i]->getVolume()*/) {
-			kprintf("Buffer size: 0x%X\n", channels[i]->getBufferSize());
-			kprintf("Pre  buffer used: 0x%X\n", channels[i]->getBufferUsed());
-
 			int samplesGot = channels[i]->unbuffer(tempBuffer, currentSampleRate, samples / numChannels);
-			kprintf("Post buffer used: 0x%X\n", channels[i]->getBufferUsed());
 
-			kprintf("Got %d samples (wanted %d) from channel %d.\n", samplesGot, samples / numChannels, i);
 			for (int j = 0; j < samplesGot; ++j) {
 				outputBuffer[j * numChannels + chnum] = tempBuffer[j];
 			}
 
-			kprintf("got %d samples, ", samplesGot);
 			totalSamplesGot += samplesGot;
-			kprintf("total sample got: %d\n", totalSamplesGot);
 			++chnum;
 		}
 	}

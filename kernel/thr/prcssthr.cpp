@@ -141,8 +141,6 @@ void setupMultitasking(void (*where)())
 
 	Process* p = new Process(true, "System", nullptr, nullptr);
 	kernelProcess = p;
-	kprintf("setupMultitasking. Setting active terminal to 0x%X\n", p->terminal);
-	kprintf("sizeof(ThreadControlBlock) = 0x%X\n", sizeof(ThreadControlBlock));
 	setActiveTerminal(p->terminal);
 
 	p->threadUsage |= 1;
@@ -345,10 +343,8 @@ void cleanupTerminatedTask(ThreadControlBlock* task)
 		}
 
 		delete task->processRelatedTo->vas;
-		kprintf("Deleted VAS.\n");
 	}
 
-	kprintf("sizeof(Process) = %d\n", sizeof(Process));
 	if (!task->vm86Task) {
 		//delete task;
 	}
@@ -403,9 +399,7 @@ void cleanerTaskFunction(void* context)
 		while (!terminatedTaskList.isEmpty()) {
 			task = (ThreadControlBlock*) terminatedTaskList.getFirstElement();
 			terminatedTaskList.removeFirst();
-			kprintf("Starting to clean up...\n");
 			cleanupTerminatedTask(task);
-			kprintf("Done cleaning up.\n");
 		}
 		unlockScheduler();
 		unlockStuff();
@@ -418,32 +412,23 @@ void terminateTask(int returnCode)
 	extern int postponeTaskSwitchesCounter;
 	extern int taskSwitchesPostponedFlag;
 
-	kprintf("terminate task called. A (%s)\n", currentTaskTCB->processRelatedTo->taskname);
-
 	// Note: Can do any harmless stuff here (close files, free memory in user-space, ...) but there's none of that yet
 
 	// Put this task on the terminated task list
 	lockStuff();
 	lockScheduler();
-	kprintf("terminate task called. B\n");
 
 	currentTaskTCB->returnCodeForUseOnTerminationList = returnCode;
 	currentTaskTCB->next;
 	terminatedTaskList.addElement(currentTaskTCB);
 	currentTaskTCB->state = TaskState::Terminated;
-	kprintf("terminate task called. C\n");
 
 	// Block this task (note: task switch will be postponed until scheduler lock is released)
 
 	if (cleanerThread) {
-		kprintf("terminate task called. D\n");
-
 		// Make sure the cleaner task isn't paused
 		weNeedTheCleanerToNotBlock = true;
 		unblockTask(cleanerThread);
-
-		kprintf("terminate task called. E\n");
-
 
 	} else {
 		kprintf("CLEANER CALLED BEFORE STARTED");
@@ -451,8 +436,6 @@ void terminateTask(int returnCode)
 
 	unlockScheduler();
 	unlockStuff();
-
-	kprintf("terminate task called. F\n");
 
 	while (1) {
 		lockScheduler();
@@ -464,11 +447,9 @@ void terminateTask(int returnCode)
 //required to avoid some nasty race conditions
 void blockTaskWithSchedulerLockAlreadyHeld(enum TaskState reason)
 {
-	kprintf("blockTaskWithSchedulerLockAlreadyHeld in  -> %d\n", getIRQNestingLevel());
 	currentTaskTCB->state = reason;
 	schedule();
 	unlockScheduler();
-	kprintf("blockTaskWithSchedulerLockAlreadyHeld out -> %d\n", getIRQNestingLevel());
 }
 
 void blockTask(enum TaskState reason)
@@ -484,12 +465,10 @@ void unblockTask(ThreadControlBlock* task)
 	lockScheduler();
 
 	if (task->state == TaskState::ReadyToRun) {
-		kprintf("Trying to unblock task, but it wasn't blocked. State was ReadyToRun\n");
-		kprintf("Could cause quite catastrophic errors (e.g. this task goes missing), especially if\nthe task is just about to block.");
+		kprintf("THIS MIGHT BE BAD (A)\n");
 
 	} else if (task->state == TaskState::Running) {
-		kprintf("Trying to unblock task, but it wasn't blocked. State is Running\n");
-		kprintf("Could cause quite catastrophic errors (e.g. this task goes missing), especially if\nthe task is just about to block.");
+		kprintf("THIS MIGHT BE BAD (B)\n");
 
 	} else {
 		ThreadControlBlock* f = (ThreadControlBlock*) taskList.getFirstElement();
@@ -640,8 +619,6 @@ namespace Thr
 
 	Process* processFromPID(int pid)
 	{
-		kprintf("finding process from PID.\n");
-
 		lockScheduler();
 		auto first = taskList.getFirstElement();
 
@@ -661,7 +638,6 @@ namespace Thr
 		}
 
 		unlockScheduler();
-		kprintf("could not be found...\n");
 
 		return nullptr;
 

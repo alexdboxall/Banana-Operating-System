@@ -175,7 +175,6 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 	if (__fn == nullptr || ptr == nullptr) return FileStatus::InvalidArgument;
 
 	if (mode != FileOpenMode::Read) {
-		kprintf("write protect error on ISO9660 open.\n");
 		return FileStatus::WriteProtect;
 	}
 
@@ -373,7 +372,6 @@ FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 	int dir;
 	bool res = getFileData((char*) __fn, &lbaO, &lenO, __fn[0], &dir);
 	if (!res || !dir) {
-		kprintf("Error. res = %d, dir = %d\n", res, dir);
 		file->error = true;
 		return FileStatus::Failure;
 	}

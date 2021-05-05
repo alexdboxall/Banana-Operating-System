@@ -43,8 +43,6 @@ SATABus::SATABus() : HardDiskController("Advanced Host Controller Interface")
 	AHCI_BASE_VIRT = Virt::allocateKernelVirtualPages(80);
 
 	Virt::getAKernelVAS()->mapRange(AHCI_BASE_PHYS, AHCI_BASE_VIRT, 80, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
-
-	kprintf("AHCI BASE at 0x%X phys, 0x%X virt\n", AHCI_BASE_PHYS, AHCI_BASE_VIRT);
 }
 
 int SATABus::open(int, int, void*)
@@ -88,7 +86,6 @@ void SATABus::probePort(HBA_MEM* abar)
 		if (pi & 1) {
 			int dt = checkType(&abar->ports[i]);
 			if (dt == AHCI_DEV_SATA) {
-				kprintf("SATA drive at port %d\n", i);
 				portRebase(&abar->ports[i], i);
 
 				SATA* dev = new SATA();
@@ -96,7 +93,6 @@ void SATABus::probePort(HBA_MEM* abar)
 				dev->open(i, 0, this);
 
 			} else if (dt == AHCI_DEV_SATAPI) {
-				kprintf("SATAPI drive at port %d\n", i);
 				portRebase(&abar->ports[i], i);
 
 				SATAPI* dev = new SATAPI();
@@ -104,15 +100,12 @@ void SATABus::probePort(HBA_MEM* abar)
 				dev->open(i, 0, this);
 
 			} else if (dt == AHCI_DEV_SATA) {
-				kprintf("SEMB drive at port %d\n", i);
 				portRebase(&abar->ports[i], i);
 
 			} else if (dt == AHCI_DEV_SATA) {
-				kprintf("PM drive at port %d\n", i);
 				portRebase(&abar->ports[i], i);
 
 			} else {
-				kprintf("No drive at port %d\n", i);
 			}
 		}
 

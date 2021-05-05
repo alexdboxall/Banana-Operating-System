@@ -387,7 +387,7 @@ int CPU::open(int num, int b, void* vas_)
 
 void CPU::displayFeatures()
 {
-	kprintf("CPU %d Features\n", cpuNum);
+	/*kprintf("CPU %d Features\n", cpuNum);
 	kprintf("    Vendor : %s\n", vendorIDString);
 	kprintf("    Family : %d\n", familyID);
 	kprintf("    Model  : %d\n", model);
@@ -406,7 +406,7 @@ void CPU::displayFeatures()
 	kprintf("    CR8          - %s\n", features.hasCR8 ? "Yes" : "No");
 	kprintf("    Sysenter     - %s\n", features.hasSysenter ? "Yes" : "No");
 	kprintf("    Syscall      - %s\n", features.hasSyscall ? "Yes" : "No");
-	kprintf("    TPAUSE       - %s\n", features.hasTPAUSE ? "Yes" : "No");
+	kprintf("    TPAUSE       - %s\n", features.hasTPAUSE ? "Yes" : "No");*/
 }
 
 extern "C" size_t is486();
