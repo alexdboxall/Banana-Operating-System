@@ -82,23 +82,13 @@ void setActiveTerminal(VgaText* terminal)
 		return;
 	}
 
-	kprintf("setActiveTerminal 0x%X\n", terminal);
-
 	if (activeTerminal) {
 		activeTerminal->updateCursor();
 	}
 
 	activeTerminal = terminal;
-	kprintf("active terminal now = 0x%X\n", activeTerminal);
-
 	//reload the cursor for this terminal
 	terminal->setCursor(terminal->cursorX, terminal->cursorY);
-
-	//reload blink
-	terminal->disableBlink(terminal->isBlinkDisabled());
-
-	//reload cursor height
-	terminal->setCursorHeight(terminal->getCursorHeight());
 
 	if (!terminal->scrollLock) {
 		terminal->scrollPoint = 0;
@@ -293,28 +283,6 @@ void VgaText::updateCursor()
 			implementation.updateCursor(this);
 		}
 	}
-}
-
-void VgaText::showCursor(bool show)
-{
-	if (this == activeTerminal) {
-		if (implementation.showCursor) {
-			//implementation.showCursor(this, show);
-		}
-	}
-
-	cursorEnabled = show;
-}
-
-void VgaText::disableBlink(bool v)
-{
-	if (this == activeTerminal) {
-		if (implementation.disableBlink) {
-			implementation.disableBlink(this, v);
-		}
-	}
-
-	blinkEnabled = !v;
 }
 
 // END HARDWARE SPECIFIC
@@ -561,28 +529,6 @@ void VgaText::decrementCursor(bool update)
 	if (update) updateCursor();
 }
 
-bool VgaText::isShowingCursor()
-{
-	return cursorEnabled;
-}
-
-bool VgaText::isBlinkDisabled()
-{
-	return !blinkEnabled;
-}
-
-void VgaText::setCursorHeight(int h)
-{
-	cursorHeight = h;
-
-	showCursor(cursorEnabled);      //refresh cursor
-}
-
-int VgaText::getCursorHeight()
-{
-	return cursorHeight;
-}
-
 VgaText::~VgaText()
 {
 	
@@ -601,10 +547,7 @@ VgaText::VgaText(const char* n)
 	memset(displayData, 0, bufferHeight * width * 2);
 
 	setDefaultColours(VgaColour::LightGrey, VgaColour::Black);
-	setCursorHeight(2);
 	setCursor(0, 0);
-	showCursor(true);
-	disableBlink(true);
 	clearScreen();
 	scrollLock = false;
 

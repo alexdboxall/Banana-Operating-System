@@ -143,14 +143,6 @@ public:
     void setCursor (int x, int y);
     void incrementCursor (bool update = true);
     void decrementCursor (bool update = true);
-    
-    void showCursor (bool w = true);
-    void disableBlink (bool v = true);
-    bool isShowingCursor();
-    bool isBlinkDisabled();
-    
-    void setCursorHeight (int h);
-    int getCursorHeight();
 
     void scrollScreen();
 	void receiveKey(uint8_t key);

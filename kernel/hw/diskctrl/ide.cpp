@@ -137,15 +137,9 @@ int IDE::open(int a, int, void*)
 
 	for (int i = 0; i < 2; ++i) {
 		if ((channels[i].ctrl & 0xF) == 0x8) {
-			kprintf("fiddling...\n");
 			channels[i].ctrl -= 2;
 		}
 	}
-
-	kprintf("ch[0].base = 0x%X\n", channels[0].base);
-	kprintf("ch[0].ctrl = 0x%X\n", channels[0].ctrl);
-	kprintf("ch[1].base = 0x%X\n", channels[1].base);
-	kprintf("ch[1].ctrl = 0x%X\n", channels[1].ctrl);
 
 	ports[noPorts].rangeStart = channels[0].base;
 	ports[noPorts].rangeLength = 8;

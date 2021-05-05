@@ -400,6 +400,8 @@ void ACPI::detectPCI()
 		kprintf("NO PCI...\n");
 		Krnl::setBootMessage("Probing ISA ports...");
 
+
+
 		IDE* dev = new IDE();
 		addChild(dev);
 		dev->detectionType = DetectionType::ISAProbe;
