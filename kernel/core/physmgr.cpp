@@ -220,6 +220,7 @@ namespace Phys
 	{
 		memset(dmaUsage, 0, sizeof(dmaUsage));
 		highestUsedAddr = ((uint32_t) (highestUsedAddr / 4096)) * 4096 + 4096;
+		kprintf("highestUsedAddr = 0x%X\n", highestUsedAddr);
 
 		for (int i = 0; i < SIZE_PHYS_PAGE_BITMAP * 8; ++i) {
 			setPageState(i, STATE_ALLOCATED);

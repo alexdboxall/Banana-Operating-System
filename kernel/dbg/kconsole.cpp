@@ -13,16 +13,12 @@
 
 namespace Dbg
 {
-
 	void logs(char* a, VgaText* terminal);
 
 	char* stringifyxWithBase(uint32_t i, char b[], int base)
 	{
-		char const digit[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+		char const digit[] = "0123456789ABCDEF";
 
-		if (base > 62) {
-			base = 62;
-		}
 		char* p = b;
 		uint32_t shifter = i;
 		do { //Move to where representation ends
@@ -73,8 +69,7 @@ namespace Dbg
 				case 'c': logc(va_arg(list, int)); break;
 				case 's': logs(va_arg(list, char*)); break;
 
-				case 'd':
-				case 'h': logWriteInt(va_arg(list, signed)); break;
+				case 'd': logWriteInt(va_arg(list, signed)); break;
 
 				case 'x':
 				case 'X': logWriteIntBase(va_arg(list, unsigned), 16); break;
@@ -82,8 +77,6 @@ namespace Dbg
 				case 'l':
 				case 'L': logWriteIntBase(va_arg(list, unsigned long long), 16); break;
 
-				case 'b':
-				case 'w':
 				case 'u': logWriteInt(va_arg(list, unsigned)); break;
 
 				default: logc('%'); logc(format[i]); break;
