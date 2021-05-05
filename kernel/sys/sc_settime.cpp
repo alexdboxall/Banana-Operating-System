@@ -45,9 +45,6 @@ namespace Sys
 		dt.minute = minutes;
 		dt.hour = hours;
 
-		uint64_t secs = datetimeToSeconds(dt);
-		datetime_t d2 = secondsToDatetime(secs);
-
 		return !computer->clock->setTimeInDatetimeLocal(dt);
 	}
 }
