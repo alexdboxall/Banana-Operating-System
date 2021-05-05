@@ -403,8 +403,8 @@ void ACPI::detectPCI()
 		IDE* dev = new IDE();
 		addChild(dev);
 		dev->detectionType = DetectionType::ISAProbe;
-		dev->isaprobe->probeBaseA = 0x1F0;
-		dev->isaprobe->probeBaseB = 0x170;
+		dev->isaprobe.probeBaseA = 0x1F0;
+		dev->isaprobe.probeBaseB = 0x170;
 		dev->open(0, 0, nullptr);
 	}
 }
