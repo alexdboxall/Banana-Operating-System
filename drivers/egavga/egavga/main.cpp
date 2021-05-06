@@ -113,24 +113,31 @@ uint8_t EGAVGA::readRegister(SeqReg reg)
 uint8_t EGAVGA::accessAttrib(int offsetReg, uint8_t writeVal, bool write)
 {
 	lockScheduler();
+	while (isVBLANK());
+	waitVBLANK();
 
 	if (hasUndocumentedFlopFlopStatus && !getUndocumentedCRTC24Bit()) {
 		//the flip-flop is already clear
 
 	} else {
 		//clear the flip-flop
+		kprintf("Clearing flip-flop.\n");
 		(void) readRegister(ExtReg::InputStatus1);
 	}
-	
+
 	//get old contents
 	uint8_t oldAddr = vinb(REG_ATTRIB_ADDR_READ);
+	kprintf("Old addr = 0x%X\n", oldAddr);
 
 	//set register we want
+	kprintf("Writing offset 0x%X\n", offsetReg);
 	voutb(REG_ATTRIB_ADDR_WRITE, offsetReg);
 
 	//perform read/write
 	uint8_t oldData = vinb(REG_ATTRIB_DATA_READ);
+	kprintf("Old data = 0x%X\n", oldData);
 	if (write) {
+		kprintf("attrib write.\n");
 		voutb(REG_ATTRIB_DATA_WRITE, writeVal);
 	}
 	voutb(REG_ATTRIB_ADDR_WRITE, oldAddr);
@@ -164,6 +171,7 @@ uint8_t EGAVGA::readRegister(ColReg reg)
 uint8_t EGAVGA::readRegister(ExtReg reg)
 {
 	if (reg == ExtReg::InputStatus1) {
+		kprintf("INB from 0x%X\n", gotColour ? REG_EXT_INPUT_STATUS_1_COLOUR : REG_EXT_INPUT_STATUS_1_MONO);
 		return vinb(gotColour ? REG_EXT_INPUT_STATUS_1_COLOUR : REG_EXT_INPUT_STATUS_1_MONO);
 
 	} else {
@@ -248,6 +256,16 @@ end:
 	unlockScheduler();
 }
 
+bool EGAVGA::isVBLANK()
+{
+	return readRegister(ExtReg::InputStatus1) & REG_EXT_INPUT_STATUS_1_BIT_VRETRACE;
+}
+
+void EGAVGA::waitVBLANK()
+{
+	while (!isVBLANK());
+}
+
 void EGAVGA::init()
 {
 	/*
@@ -257,7 +275,13 @@ void EGAVGA::init()
 	
 	*/
 
-	detectUndocumentedCRTC24();
+	//detectUndocumentedCRTC24();
 
-	
+	return;
+	kprintf("PALETTE 0: 0x%X\n", readRegister(AttribReg::Palette0));
+	kprintf("PALETTE 1: 0x%X\n", readRegister(AttribReg::Palette1));
+	kprintf("PALETTE 2: 0x%X\n", readRegister(AttribReg::Palette2));
+	kprintf("PALETTE 3: 0x%X\n", readRegister(AttribReg::Palette3));
+
+	while (1);
 }

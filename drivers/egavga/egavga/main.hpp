@@ -25,6 +25,8 @@
 #define REG_EXT_INPUT_STATUS_1_MONO		0x3BA
 #define REG_EXT_INPUT_STATUS_1_COLOUR	0x3DA
 
+#define REG_EXT_INPUT_STATUS_1_BIT_VRETRACE		8
+
 enum class GfxReg: int
 {
 	SetReset = 0x00,
@@ -148,6 +150,9 @@ protected:
 
 	uint8_t vinb(uint16_t port);
 	void voutb(uint16_t port, uint8_t val);
+
+	void waitVBLANK();
+	bool isVBLANK();
 
 public:
 	EGAVGA();

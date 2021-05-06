@@ -12,13 +12,13 @@
 #include "fs/vfs.hpp"
 #include "vm86/vm8086.hpp"
 
-extern "C" { 
-	#include "libk/string.h"
+extern "C" {
+#include "libk/string.h"
 }
 
 
 void start(void* parent)
-{	
+{
 	Device* rootDevice = (Device*) parent;
 
 	VGAVideo* dev = new VGAVideo();
@@ -102,7 +102,7 @@ int VGAVideo::open(int a, int b, void* c)
 	Vm::finish8086();
 	kprintf("Set to video mode %d\n", biosMode);
 
-	volatile uint8_t * volatile vram = (volatile uint8_t * volatile) (VIRT_LOW_MEGS + vramBase);
+	volatile uint8_t* volatile vram = (volatile uint8_t* volatile) (VIRT_LOW_MEGS + vramBase);
 
 	setPlane(0);
 	memset((void*) vram, 0, width * height / 8);
@@ -116,7 +116,7 @@ int VGAVideo::open(int a, int b, void* c)
 	}
 
 	return 0;
-} 
+}
 
 uint8_t dither16Data[512][2] = {
 {0, 0},
@@ -649,11 +649,11 @@ int monoPixelLookup(int source, int x, int y)
 		return 1;
 	}
 
-	int zeroToFour = (R + R + G + G + G + B) / 4;
+	int zeroToFour = (R + R + G + G + G + B);
 
 	uint32_t num = 0b111111111110101010000000;
 
-	return (((num >> (zeroToFour << 2)) >> pix) & 1);
+	return (((num >> (zeroToFour)) >> pix) & 1);
 }
 
 static inline __attribute__((always_inline)) uint8_t mergeColours(uint8_t cols[8], int plane)
@@ -670,11 +670,6 @@ static inline __attribute__((always_inline)) uint8_t mergeColours(uint8_t cols[8
 #define MAX_BITBLIT_BLOCKS 100
 void VGAVideo::bitblit(int sx, int sy, int x, int y, int w, int h, int pitch, uint32_t* data)
 {
-	if (!(biosMode == 0x11 || biosMode == 0x12)) {
-		Video::bitblit(sx, sy, x, y, w, h, pitch, data);
-		return;
-	}
-
 	//static so it doesn't go on the stack, so that EBP offsets will fit in one byte, reducing code size
 	static uint8_t cols[MAX_BITBLIT_BLOCKS * 8];
 	int baseoffset = sy * width;
@@ -696,7 +691,7 @@ void VGAVideo::bitblit(int sx, int sy, int x, int y, int w, int h, int pitch, ui
 						cols[i] = pixelLookup(*database++, sy + i);
 					}
 				}
-				
+
 				uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + vramBase + ((baseoffset + tempx) >> 3));
 				for (int k = 0; k < (mono ? 1 : 4); ++k) {
 					FAST_PLANE_SWITCH(k);
@@ -720,11 +715,6 @@ void VGAVideo::bitblit(int sx, int sy, int x, int y, int w, int h, int pitch, ui
 
 void VGAVideo::putrect(int __x, int __y, int maxx, int maxy, uint32_t colour)
 {
-	if (!(biosMode == 0x11 || biosMode == 0x12)) {
-		Video::putrect(__x, __y, maxx, maxy, colour);
-		return;
-	}
-
 	uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + vramBase);
 	int col1 = pixelLookup(colour, 0);
 	int col2 = pixelLookup(colour, 1);
@@ -821,23 +811,7 @@ void VGAVideo::putpixel(int x, int y, uint32_t colour)
 {
 	uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + vramBase);
 	int bit = 7 - (x & 7);
-	int addr;
-	
-	if (biosMode == 0x6) {
-		//if (y & 1) return;
-		//y >>= 1;
-		addr = ((y>>1) * width + x) >> 3;
-		if (y & 1) {
-			addr += 0x2000;
-		}
-
-	} else if (biosMode == 0xE) {
-		//if (y & 1) return;
-		//y >>= 1;
-		addr = (y * width + x) >> 3;
-	} else {
-		addr = (y * width + x) >> 3;
-	}
+	int addr = (y * width + x) >> 3;
 
 	int px;
 	if (mono) {

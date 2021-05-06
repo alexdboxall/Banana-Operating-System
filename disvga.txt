@@ -46,9 +46,9 @@ Disassembly of section .text:
 
 1000006a <VGAVideo::setPlane(int)>:
 1000006a:	8b 4c 24 08          	mov    ecx,DWORD PTR [esp+0x8]
-1000006e:	39 0d 00 0e 00 10    	cmp    DWORD PTR ds:0x10000e00,ecx	10000070: R_386_32	.data
+1000006e:	39 0d 40 0d 00 10    	cmp    DWORD PTR ds:0x10000d40,ecx	10000070: R_386_32	.data
 10000074:	74 2b                	je     100000a1 <VGAVideo::setPlane(int)+0x37>
-10000076:	89 0d 00 0e 00 10    	mov    DWORD PTR ds:0x10000e00,ecx	10000078: R_386_32	.data
+10000076:	89 0d 40 0d 00 10    	mov    DWORD PTR ds:0x10000d40,ecx	10000078: R_386_32	.data
 1000007c:	b0 04                	mov    al,0x4
 1000007e:	ba ce 03 00 00       	mov    edx,0x3ce
 10000083:	ee                   	out    dx,al
@@ -70,7 +70,7 @@ Disassembly of section .text:
 100000a5:	83 ec 08             	sub    esp,0x8
 100000a8:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
 100000ab:	83 ec 08             	sub    esp,0x8
-100000ae:	68 68 0d 00 10       	push   0x10000d68	100000af: R_386_32	.text
+100000ae:	68 a8 0c 00 10       	push   0x10000ca8	100000af: R_386_32	.text
 100000b3:	50                   	push   eax
 100000b4:	e8 fc ff ff ff       	call   100000b5 <VGAVideo::VGAVideo()+0x13>	100000b5: R_386_PC32	Video::Video(char const*)
 100000b9:	83 c4 10             	add    esp,0x10
@@ -116,13 +116,13 @@ Disassembly of section .text:
 10000149:	50                   	push   eax
 1000014a:	68 90 00 00 00       	push   0x90
 1000014f:	6a 00                	push   0x0
-10000151:	68 74 0d 00 10       	push   0x10000d74	10000152: R_386_32	.text
+10000151:	68 b4 0c 00 10       	push   0x10000cb4	10000152: R_386_32	.text
 10000156:	e8 fc ff ff ff       	call   10000157 <VGAVideo::open(int, int, void*)+0x67>	10000157: R_386_PC32	Vm::start8086(char const*, unsigned short, unsigned short, unsigned short, unsigned short)
 1000015b:	83 c4 20             	add    esp,0x20
 1000015e:	e8 fc ff ff ff       	call   1000015f <VGAVideo::open(int, int, void*)+0x6f>	1000015f: R_386_PC32	Vm::finish8086()
 10000163:	83 ec 08             	sub    esp,0x8
 10000166:	ff b3 68 01 00 00    	push   DWORD PTR [ebx+0x168]
-1000016c:	68 8d 0d 00 10       	push   0x10000d8d	1000016d: R_386_32	.text
+1000016c:	68 cd 0c 00 10       	push   0x10000ccd	1000016d: R_386_32	.text
 10000171:	e8 fc ff ff ff       	call   10000172 <VGAVideo::open(int, int, void*)+0x82>	10000172: R_386_PC32	Dbg::kprintf(char const*, ...)
 10000176:	8b 83 64 01 00 00    	mov    eax,DWORD PTR [ebx+0x164]
 1000017c:	2d 00 00 00 3e       	sub    eax,0x3e000000
@@ -216,949 +216,889 @@ Disassembly of section .text:
 1000027c <monoPixelLookup(int, int, int)>:
 1000027c:	56                   	push   esi
 1000027d:	53                   	push   ebx
-1000027e:	8b 54 24 0c          	mov    edx,DWORD PTR [esp+0xc]
+1000027e:	8b 5c 24 0c          	mov    ebx,DWORD PTR [esp+0xc]
 10000282:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
 10000286:	8b 4c 24 10          	mov    ecx,DWORD PTR [esp+0x10]
-1000028a:	89 d3                	mov    ebx,edx
+1000028a:	89 da                	mov    edx,ebx
 1000028c:	01 c1                	add    ecx,eax
-1000028e:	c1 fb 0e             	sar    ebx,0xe
+1000028e:	c1 fa 0e             	sar    edx,0xe
 10000291:	83 e1 01             	and    ecx,0x1
 10000294:	01 c0                	add    eax,eax
-10000296:	83 e3 03             	and    ebx,0x3
+10000296:	83 e2 03             	and    edx,0x3
 10000299:	83 e0 02             	and    eax,0x2
-1000029c:	09 c8                	or     eax,ecx
-1000029e:	89 d1                	mov    ecx,edx
-100002a0:	c1 f9 06             	sar    ecx,0x6
-100002a3:	89 ce                	mov    esi,ecx
-100002a5:	89 d1                	mov    ecx,edx
-100002a7:	83 e6 03             	and    esi,0x3
-100002aa:	c1 f9 16             	sar    ecx,0x16
-100002ad:	83 e1 03             	and    ecx,0x3
-100002b0:	81 fa bb bb bb 00    	cmp    edx,0xbbbbbb
-100002b6:	74 1e                	je     100002d6 <monoPixelLookup(int, int, int)+0x5a>
-100002b8:	8d 14 0b             	lea    edx,[ebx+ecx*1]
-100002bb:	8d 0c 53             	lea    ecx,[ebx+edx*2]
-100002be:	ba 80 ea ff 00       	mov    edx,0xffea80
-100002c3:	01 f1                	add    ecx,esi
-100002c5:	5b                   	pop    ebx
-100002c6:	83 e1 fc             	and    ecx,0xfffffffc
-100002c9:	5e                   	pop    esi
-100002ca:	d3 ea                	shr    edx,cl
-100002cc:	88 c1                	mov    cl,al
-100002ce:	d3 ea                	shr    edx,cl
-100002d0:	89 d0                	mov    eax,edx
-100002d2:	83 e0 01             	and    eax,0x1
-100002d5:	c3                   	ret    
-100002d6:	b8 01 00 00 00       	mov    eax,0x1
-100002db:	5b                   	pop    ebx
-100002dc:	5e                   	pop    esi
-100002dd:	c3                   	ret    
+1000029c:	89 de                	mov    esi,ebx
+1000029e:	09 c8                	or     eax,ecx
+100002a0:	c1 fe 16             	sar    esi,0x16
+100002a3:	89 d9                	mov    ecx,ebx
+100002a5:	83 e6 03             	and    esi,0x3
+100002a8:	c1 f9 06             	sar    ecx,0x6
+100002ab:	83 e1 03             	and    ecx,0x3
+100002ae:	81 fb bb bb bb 00    	cmp    ebx,0xbbbbbb
+100002b4:	74 1b                	je     100002d1 <monoPixelLookup(int, int, int)+0x55>
+100002b6:	8d 1c 32             	lea    ebx,[edx+esi*1]
+100002b9:	8d 14 5a             	lea    edx,[edx+ebx*2]
+100002bc:	5b                   	pop    ebx
+100002bd:	01 d1                	add    ecx,edx
+100002bf:	5e                   	pop    esi
+100002c0:	ba 80 ea ff 00       	mov    edx,0xffea80
+100002c5:	d3 ea                	shr    edx,cl
+100002c7:	88 c1                	mov    cl,al
+100002c9:	d3 ea                	shr    edx,cl
+100002cb:	89 d0                	mov    eax,edx
+100002cd:	83 e0 01             	and    eax,0x1
+100002d0:	c3                   	ret    
+100002d1:	b8 01 00 00 00       	mov    eax,0x1
+100002d6:	5b                   	pop    ebx
+100002d7:	5e                   	pop    esi
+100002d8:	c3                   	ret    
+100002d9:	90                   	nop
 
-100002de <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)>:
-100002de:	57                   	push   edi
-100002df:	56                   	push   esi
-100002e0:	53                   	push   ebx
-100002e1:	83 ec 40             	sub    esp,0x40
-100002e4:	8b 7c 24 50          	mov    edi,DWORD PTR [esp+0x50]
-100002e8:	8b 44 24 54          	mov    eax,DWORD PTR [esp+0x54]
-100002ec:	8b 4c 24 70          	mov    ecx,DWORD PTR [esp+0x70]
-100002f0:	89 44 24 38          	mov    DWORD PTR [esp+0x38],eax
-100002f4:	89 4c 24 08          	mov    DWORD PTR [esp+0x8],ecx
-100002f8:	8b 44 24 58          	mov    eax,DWORD PTR [esp+0x58]
-100002fc:	8b 8f 68 01 00 00    	mov    ecx,DWORD PTR [edi+0x168]
-10000302:	89 44 24 18          	mov    DWORD PTR [esp+0x18],eax
-10000306:	89 4c 24 0c          	mov    DWORD PTR [esp+0xc],ecx
-1000030a:	8b 44 24 5c          	mov    eax,DWORD PTR [esp+0x5c]
-1000030e:	83 e9 11             	sub    ecx,0x11
-10000311:	89 44 24 3c          	mov    DWORD PTR [esp+0x3c],eax
-10000315:	89 7c 24 20          	mov    DWORD PTR [esp+0x20],edi
-10000319:	8b 44 24 64          	mov    eax,DWORD PTR [esp+0x64]
-1000031d:	8b 74 24 60          	mov    esi,DWORD PTR [esp+0x60]
-10000321:	89 44 24 1c          	mov    DWORD PTR [esp+0x1c],eax
-10000325:	8b 54 24 6c          	mov    edx,DWORD PTR [esp+0x6c]
-10000329:	8b 44 24 68          	mov    eax,DWORD PTR [esp+0x68]
-1000032d:	83 f9 01             	cmp    ecx,0x1
-10000330:	0f 87 80 02 00 00    	ja     100005b6 <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x2d8>
-10000336:	89 fb                	mov    ebx,edi
-10000338:	8b 7c 24 18          	mov    edi,DWORD PTR [esp+0x18]
-1000033c:	8b 8b 58 01 00 00    	mov    ecx,DWORD PTR [ebx+0x158]
-10000342:	0f af cf             	imul   ecx,edi
-10000345:	85 c0                	test   eax,eax
-10000347:	89 4c 24 28          	mov    DWORD PTR [esp+0x28],ecx
-1000034b:	0f 8e 13 02 00 00    	jle    10000564 <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x286>
-10000351:	8b 4c 24 1c          	mov    ecx,DWORD PTR [esp+0x1c]
-10000355:	85 c9                	test   ecx,ecx
-10000357:	0f 8e 07 02 00 00    	jle    10000564 <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x286>
-1000035d:	8d 0c 95 00 00 00 00 	lea    ecx,[edx*4+0x0]
-10000364:	01 f8                	add    eax,edi
-10000366:	89 4c 24 34          	mov    DWORD PTR [esp+0x34],ecx
-1000036a:	0f af d6             	imul   edx,esi
-1000036d:	8b 4c 24 08          	mov    ecx,DWORD PTR [esp+0x8]
-10000371:	03 54 24 3c          	add    edx,DWORD PTR [esp+0x3c]
-10000375:	89 44 24 30          	mov    DWORD PTR [esp+0x30],eax
-10000379:	8d 0c 91             	lea    ecx,[ecx+edx*4]
-1000037c:	89 4c 24 2c          	mov    DWORD PTR [esp+0x2c],ecx
-10000380:	8b 44 24 2c          	mov    eax,DWORD PTR [esp+0x2c]
-10000384:	c7 44 24 10 00 00 00 00 	mov    DWORD PTR [esp+0x10],0x0
-1000038c:	89 44 24 08          	mov    DWORD PTR [esp+0x8],eax
-10000390:	8b 44 24 38          	mov    eax,DWORD PTR [esp+0x38]
-10000394:	89 44 24 14          	mov    DWORD PTR [esp+0x14],eax
-10000398:	eb 3c                	jmp    100003d6 <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0xf8>
-1000039a:	8b 7c 24 08          	mov    edi,DWORD PTR [esp+0x8]
-1000039e:	8b 4c 24 14          	mov    ecx,DWORD PTR [esp+0x14]
-100003a2:	8b 54 24 20          	mov    edx,DWORD PTR [esp+0x20]
-100003a6:	8d 77 04             	lea    esi,[edi+0x4]
-100003a9:	8b 02                	mov    eax,DWORD PTR [edx]
-100003ab:	8d 59 01             	lea    ebx,[ecx+0x1]
-100003ae:	ff 37                	push   DWORD PTR [edi]
-100003b0:	ff 74 24 1c          	push   DWORD PTR [esp+0x1c]
-100003b4:	51                   	push   ecx
-100003b5:	52                   	push   edx
-100003b6:	ff 50 24             	call   DWORD PTR [eax+0x24]
-100003b9:	ff 44 24 20          	inc    DWORD PTR [esp+0x20]
-100003bd:	83 c4 10             	add    esp,0x10
-100003c0:	8b 7c 24 10          	mov    edi,DWORD PTR [esp+0x10]
-100003c4:	89 74 24 08          	mov    DWORD PTR [esp+0x8],esi
-100003c8:	89 5c 24 14          	mov    DWORD PTR [esp+0x14],ebx
-100003cc:	39 7c 24 1c          	cmp    DWORD PTR [esp+0x1c],edi
-100003d0:	0f 8e 66 01 00 00    	jle    1000053c <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x25e>
-100003d6:	8b 44 24 1c          	mov    eax,DWORD PTR [esp+0x1c]
-100003da:	2b 44 24 10          	sub    eax,DWORD PTR [esp+0x10]
-100003de:	c1 f8 03             	sar    eax,0x3
-100003e1:	74 b7                	je     1000039a <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0xbc>
-100003e3:	f6 44 24 14 07       	test   BYTE PTR [esp+0x14],0x7
-100003e8:	75 b0                	jne    1000039a <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0xbc>
-100003ea:	89 44 24 0c          	mov    DWORD PTR [esp+0xc],eax
-100003ee:	83 f8 64             	cmp    eax,0x64
-100003f1:	7e 08                	jle    100003fb <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x11d>
-100003f3:	c7 44 24 0c 64 00 00 00 	mov    DWORD PTR [esp+0xc],0x64
-100003fb:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
-100003ff:	8d 34 c5 00 00 00 00 	lea    esi,[eax*8+0x0]
-10000406:	8b 44 24 20          	mov    eax,DWORD PTR [esp+0x20]
-1000040a:	80 b8 61 01 00 00 00 	cmp    BYTE PTR [eax+0x161],0x0
-10000411:	0f 84 54 01 00 00    	je     1000056b <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x28d>
-10000417:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
-1000041b:	8b 4c 24 3c          	mov    ecx,DWORD PTR [esp+0x3c]
-1000041f:	31 ff                	xor    edi,edi
-10000421:	8d 1c 08             	lea    ebx,[eax+ecx*1]
-10000424:	83 44 24 08 04       	add    DWORD PTR [esp+0x8],0x4
-10000429:	8b 4c 24 08          	mov    ecx,DWORD PTR [esp+0x8]
-1000042d:	50                   	push   eax
-1000042e:	8d 04 3b             	lea    eax,[ebx+edi*1]
-10000431:	ff 74 24 1c          	push   DWORD PTR [esp+0x1c]
-10000435:	47                   	inc    edi
-10000436:	50                   	push   eax
-10000437:	ff 71 fc             	push   DWORD PTR [ecx-0x4]
-1000043a:	e8 fc ff ff ff       	call   1000043b <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x15d>	1000043b: R_386_PC32	monoPixelLookup(int, int, int)
-1000043f:	83 c4 10             	add    esp,0x10
-10000442:	88 87 9f 12 00 10    	mov    BYTE PTR [edi+0x1000129f],al	10000444: R_386_32	.bss
-10000448:	39 f7                	cmp    edi,esi
-1000044a:	7c d8                	jl     10000424 <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x146>
-1000044c:	8b 4c 24 20          	mov    ecx,DWORD PTR [esp+0x20]
-10000450:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
-10000454:	8b 91 64 01 00 00    	mov    edx,DWORD PTR [ecx+0x164]
-1000045a:	03 44 24 28          	add    eax,DWORD PTR [esp+0x28]
-1000045e:	31 c9                	xor    ecx,ecx
-10000460:	c1 f8 03             	sar    eax,0x3
-10000463:	8d bc 10 00 00 00 c2 	lea    edi,[eax+edx*1-0x3e000000]
-1000046a:	8b 74 24 20          	mov    esi,DWORD PTR [esp+0x20]
-1000046e:	80 be 61 01 00 00 01 	cmp    BYTE PTR [esi+0x161],0x1
-10000475:	19 c0                	sbb    eax,eax
-10000477:	83 e0 03             	and    eax,0x3
-1000047a:	40                   	inc    eax
-1000047b:	39 c1                	cmp    ecx,eax
-1000047d:	0f 8d 9c 00 00 00    	jge    1000051f <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x241>
-10000483:	83 ec 08             	sub    esp,0x8
-10000486:	51                   	push   ecx
-10000487:	89 4c 24 30          	mov    DWORD PTR [esp+0x30],ecx
-1000048b:	56                   	push   esi
-1000048c:	be 01 00 00 00       	mov    esi,0x1
-10000491:	e8 fc ff ff ff       	call   10000492 <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x1b4>	10000492: R_386_PC32	VGAVideo::setPlane(int)
-10000496:	8b 4c 24 34          	mov    ecx,DWORD PTR [esp+0x34]
-1000049a:	31 c0                	xor    eax,eax
-1000049c:	d3 e6                	shl    esi,cl
-1000049e:	83 c4 10             	add    esp,0x10
-100004a1:	0f b6 14 c5 a0 12 00 10 	movzx  edx,BYTE PTR [eax*8+0x100012a0]	100004a5: R_386_32	.bss
-100004a9:	0f b6 1c c5 a1 12 00 10 	movzx  ebx,BYTE PTR [eax*8+0x100012a1]	100004ad: R_386_32	.bss
-100004b1:	21 f2                	and    edx,esi
-100004b3:	21 f3                	and    ebx,esi
-100004b5:	01 d2                	add    edx,edx
-100004b7:	09 d3                	or     ebx,edx
-100004b9:	0f b6 14 c5 a2 12 00 10 	movzx  edx,BYTE PTR [eax*8+0x100012a2]	100004bd: R_386_32	.bss
-100004c1:	01 db                	add    ebx,ebx
-100004c3:	21 f2                	and    edx,esi
-100004c5:	09 da                	or     edx,ebx
-100004c7:	0f b6 1c c5 a3 12 00 10 	movzx  ebx,BYTE PTR [eax*8+0x100012a3]	100004cb: R_386_32	.bss
-100004cf:	01 d2                	add    edx,edx
-100004d1:	21 f3                	and    ebx,esi
-100004d3:	09 d3                	or     ebx,edx
-100004d5:	0f b6 14 c5 a4 12 00 10 	movzx  edx,BYTE PTR [eax*8+0x100012a4]	100004d9: R_386_32	.bss
-100004dd:	01 db                	add    ebx,ebx
-100004df:	21 f2                	and    edx,esi
-100004e1:	09 da                	or     edx,ebx
-100004e3:	0f b6 1c c5 a5 12 00 10 	movzx  ebx,BYTE PTR [eax*8+0x100012a5]	100004e7: R_386_32	.bss
-100004eb:	01 d2                	add    edx,edx
-100004ed:	21 f3                	and    ebx,esi
-100004ef:	09 d3                	or     ebx,edx
-100004f1:	0f b6 14 c5 a6 12 00 10 	movzx  edx,BYTE PTR [eax*8+0x100012a6]	100004f5: R_386_32	.bss
-100004f9:	01 db                	add    ebx,ebx
-100004fb:	21 f2                	and    edx,esi
-100004fd:	09 da                	or     edx,ebx
-100004ff:	0f b6 1c c5 a7 12 00 10 	movzx  ebx,BYTE PTR [eax*8+0x100012a7]	10000503: R_386_32	.bss
-10000507:	01 d2                	add    edx,edx
-10000509:	21 f3                	and    ebx,esi
-1000050b:	09 da                	or     edx,ebx
-1000050d:	d3 ea                	shr    edx,cl
-1000050f:	88 14 07             	mov    BYTE PTR [edi+eax*1],dl
-10000512:	40                   	inc    eax
-10000513:	39 44 24 0c          	cmp    DWORD PTR [esp+0xc],eax
-10000517:	75 88                	jne    100004a1 <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x1c3>
-10000519:	41                   	inc    ecx
-1000051a:	e9 4b ff ff ff       	jmp    1000046a <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x18c>
-1000051f:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
-10000523:	c1 e0 03             	shl    eax,0x3
-10000526:	01 44 24 10          	add    DWORD PTR [esp+0x10],eax
-1000052a:	01 44 24 14          	add    DWORD PTR [esp+0x14],eax
-1000052e:	8b 7c 24 10          	mov    edi,DWORD PTR [esp+0x10]
-10000532:	39 7c 24 1c          	cmp    DWORD PTR [esp+0x1c],edi
-10000536:	0f 8f 9a fe ff ff    	jg     100003d6 <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0xf8>
-1000053c:	ff 44 24 18          	inc    DWORD PTR [esp+0x18]
-10000540:	8b 4c 24 20          	mov    ecx,DWORD PTR [esp+0x20]
-10000544:	8b 44 24 18          	mov    eax,DWORD PTR [esp+0x18]
-10000548:	8b 89 58 01 00 00    	mov    ecx,DWORD PTR [ecx+0x158]
-1000054e:	8b 7c 24 34          	mov    edi,DWORD PTR [esp+0x34]
-10000552:	01 4c 24 28          	add    DWORD PTR [esp+0x28],ecx
-10000556:	01 7c 24 2c          	add    DWORD PTR [esp+0x2c],edi
-1000055a:	3b 44 24 30          	cmp    eax,DWORD PTR [esp+0x30]
-1000055e:	0f 85 1c fe ff ff    	jne    10000380 <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0xa2>
-10000564:	83 c4 40             	add    esp,0x40
-10000567:	5b                   	pop    ebx
-10000568:	5e                   	pop    esi
-10000569:	5f                   	pop    edi
-1000056a:	c3                   	ret    
-1000056b:	31 c9                	xor    ecx,ecx
-1000056d:	83 44 24 08 04       	add    DWORD PTR [esp+0x8],0x4
-10000572:	8b 44 24 08          	mov    eax,DWORD PTR [esp+0x8]
-10000576:	8b 40 fc             	mov    eax,DWORD PTR [eax-0x4]
-10000579:	89 c3                	mov    ebx,eax
-1000057b:	89 c2                	mov    edx,eax
-1000057d:	c1 fb 15             	sar    ebx,0x15
-10000580:	c1 fa 0a             	sar    edx,0xa
-10000583:	83 e3 07             	and    ebx,0x7
-10000586:	83 e2 38             	and    edx,0x38
-10000589:	09 d3                	or     ebx,edx
-1000058b:	8d 14 00             	lea    edx,[eax+eax*1]
-1000058e:	8b 44 24 18          	mov    eax,DWORD PTR [esp+0x18]
-10000592:	81 e2 c0 01 00 00    	and    edx,0x1c0
-10000598:	01 c8                	add    eax,ecx
-1000059a:	09 da                	or     edx,ebx
-1000059c:	83 e0 01             	and    eax,0x1
-1000059f:	41                   	inc    ecx
-100005a0:	8a 84 50 00 00 00 00 	mov    al,BYTE PTR [eax+edx*2+0x0]	100005a3: R_386_32	dither16Data
-100005a7:	88 81 9f 12 00 10    	mov    BYTE PTR [ecx+0x1000129f],al	100005a9: R_386_32	.bss
-100005ad:	39 f1                	cmp    ecx,esi
-100005af:	7c bc                	jl     1000056d <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x28f>
-100005b1:	e9 96 fe ff ff       	jmp    1000044c <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x16e>
-100005b6:	83 c4 40             	add    esp,0x40
-100005b9:	5b                   	pop    ebx
-100005ba:	5e                   	pop    esi
-100005bb:	5f                   	pop    edi
-100005bc:	e9 fc ff ff ff       	jmp    100005bd <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x2df>	100005bd: R_386_PC32	Video::bitblit(int, int, int, int, int, int, int, unsigned int*)
-100005c1:	90                   	nop
+100002da <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)>:
+100002da:	57                   	push   edi
+100002db:	56                   	push   esi
+100002dc:	53                   	push   ebx
+100002dd:	83 ec 30             	sub    esp,0x30
+100002e0:	8b 4c 24 58          	mov    ecx,DWORD PTR [esp+0x58]
+100002e4:	8b 74 24 40          	mov    esi,DWORD PTR [esp+0x40]
+100002e8:	8b 7c 24 48          	mov    edi,DWORD PTR [esp+0x48]
+100002ec:	8b 44 24 5c          	mov    eax,DWORD PTR [esp+0x5c]
+100002f0:	0f af be 58 01 00 00 	imul   edi,DWORD PTR [esi+0x158]
+100002f7:	85 c9                	test   ecx,ecx
+100002f9:	89 7c 24 20          	mov    DWORD PTR [esp+0x20],edi
+100002fd:	0f 8e 18 02 00 00    	jle    1000051b <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x241>
+10000303:	8b 5c 24 54          	mov    ebx,DWORD PTR [esp+0x54]
+10000307:	85 db                	test   ebx,ebx
+10000309:	0f 8e 0c 02 00 00    	jle    1000051b <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x241>
+1000030f:	8d 3c 85 00 00 00 00 	lea    edi,[eax*4+0x0]
+10000316:	8b 54 24 60          	mov    edx,DWORD PTR [esp+0x60]
+1000031a:	0f af 44 24 50       	imul   eax,DWORD PTR [esp+0x50]
+1000031f:	03 4c 24 48          	add    ecx,DWORD PTR [esp+0x48]
+10000323:	03 44 24 4c          	add    eax,DWORD PTR [esp+0x4c]
+10000327:	89 7c 24 2c          	mov    DWORD PTR [esp+0x2c],edi
+1000032b:	8d 04 82             	lea    eax,[edx+eax*4]
+1000032e:	89 4c 24 28          	mov    DWORD PTR [esp+0x28],ecx
+10000332:	89 44 24 24          	mov    DWORD PTR [esp+0x24],eax
+10000336:	8b 44 24 24          	mov    eax,DWORD PTR [esp+0x24]
+1000033a:	c7 44 24 14 00 00 00 00 	mov    DWORD PTR [esp+0x14],0x0
+10000342:	89 44 24 0c          	mov    DWORD PTR [esp+0xc],eax
+10000346:	8b 44 24 44          	mov    eax,DWORD PTR [esp+0x44]
+1000034a:	89 44 24 18          	mov    DWORD PTR [esp+0x18],eax
+1000034e:	eb 3f                	jmp    1000038f <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0xb5>
+10000350:	8b 7c 24 0c          	mov    edi,DWORD PTR [esp+0xc]
+10000354:	8b 4c 24 18          	mov    ecx,DWORD PTR [esp+0x18]
+10000358:	8b 44 24 40          	mov    eax,DWORD PTR [esp+0x40]
+1000035c:	8d 59 01             	lea    ebx,[ecx+0x1]
+1000035f:	8b 00                	mov    eax,DWORD PTR [eax]
+10000361:	8d 77 04             	lea    esi,[edi+0x4]
+10000364:	ff 37                	push   DWORD PTR [edi]
+10000366:	ff 74 24 4c          	push   DWORD PTR [esp+0x4c]
+1000036a:	51                   	push   ecx
+1000036b:	ff 74 24 4c          	push   DWORD PTR [esp+0x4c]
+1000036f:	ff 50 24             	call   DWORD PTR [eax+0x24]
+10000372:	ff 44 24 24          	inc    DWORD PTR [esp+0x24]
+10000376:	83 c4 10             	add    esp,0x10
+10000379:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
+1000037d:	89 74 24 0c          	mov    DWORD PTR [esp+0xc],esi
+10000381:	89 5c 24 18          	mov    DWORD PTR [esp+0x18],ebx
+10000385:	39 44 24 54          	cmp    DWORD PTR [esp+0x54],eax
+10000389:	0f 8e 64 01 00 00    	jle    100004f3 <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x219>
+1000038f:	8b 44 24 54          	mov    eax,DWORD PTR [esp+0x54]
+10000393:	2b 44 24 14          	sub    eax,DWORD PTR [esp+0x14]
+10000397:	c1 f8 03             	sar    eax,0x3
+1000039a:	74 b4                	je     10000350 <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x76>
+1000039c:	f6 44 24 18 07       	test   BYTE PTR [esp+0x18],0x7
+100003a1:	75 ad                	jne    10000350 <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x76>
+100003a3:	89 44 24 10          	mov    DWORD PTR [esp+0x10],eax
+100003a7:	83 f8 64             	cmp    eax,0x64
+100003aa:	7e 08                	jle    100003b4 <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0xda>
+100003ac:	c7 44 24 10 64 00 00 00 	mov    DWORD PTR [esp+0x10],0x64
+100003b4:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
+100003b8:	8d 34 c5 00 00 00 00 	lea    esi,[eax*8+0x0]
+100003bf:	8b 44 24 40          	mov    eax,DWORD PTR [esp+0x40]
+100003c3:	80 b8 61 01 00 00 00 	cmp    BYTE PTR [eax+0x161],0x0
+100003ca:	0f 84 52 01 00 00    	je     10000522 <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x248>
+100003d0:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
+100003d4:	8b 4c 24 4c          	mov    ecx,DWORD PTR [esp+0x4c]
+100003d8:	31 ff                	xor    edi,edi
+100003da:	8d 1c 08             	lea    ebx,[eax+ecx*1]
+100003dd:	83 44 24 0c 04       	add    DWORD PTR [esp+0xc],0x4
+100003e2:	8d 04 3b             	lea    eax,[ebx+edi*1]
+100003e5:	8b 4c 24 0c          	mov    ecx,DWORD PTR [esp+0xc]
+100003e9:	47                   	inc    edi
+100003ea:	ff 74 24 48          	push   DWORD PTR [esp+0x48]
+100003ee:	50                   	push   eax
+100003ef:	ff 71 fc             	push   DWORD PTR [ecx-0x4]
+100003f2:	e8 fc ff ff ff       	call   100003f3 <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x119>	100003f3: R_386_PC32	monoPixelLookup(int, int, int)
+100003f7:	83 c4 0c             	add    esp,0xc
+100003fa:	88 87 df 11 00 10    	mov    BYTE PTR [edi+0x100011df],al	100003fc: R_386_32	.bss
+10000400:	39 f7                	cmp    edi,esi
+10000402:	7c d9                	jl     100003dd <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x103>
+10000404:	8b 4c 24 40          	mov    ecx,DWORD PTR [esp+0x40]
+10000408:	8b 44 24 18          	mov    eax,DWORD PTR [esp+0x18]
+1000040c:	8b 91 64 01 00 00    	mov    edx,DWORD PTR [ecx+0x164]
+10000412:	03 44 24 20          	add    eax,DWORD PTR [esp+0x20]
+10000416:	31 c9                	xor    ecx,ecx
+10000418:	c1 f8 03             	sar    eax,0x3
+1000041b:	8d bc 10 00 00 00 c2 	lea    edi,[eax+edx*1-0x3e000000]
+10000422:	8b 44 24 40          	mov    eax,DWORD PTR [esp+0x40]
+10000426:	80 b8 61 01 00 00 01 	cmp    BYTE PTR [eax+0x161],0x1
+1000042d:	19 c0                	sbb    eax,eax
+1000042f:	83 e0 03             	and    eax,0x3
+10000432:	40                   	inc    eax
+10000433:	39 c1                	cmp    ecx,eax
+10000435:	0f 8d 9b 00 00 00    	jge    100004d6 <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x1fc>
+1000043b:	51                   	push   ecx
+1000043c:	be 01 00 00 00       	mov    esi,0x1
+10000441:	89 4c 24 20          	mov    DWORD PTR [esp+0x20],ecx
+10000445:	ff 74 24 44          	push   DWORD PTR [esp+0x44]
+10000449:	e8 fc ff ff ff       	call   1000044a <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x170>	1000044a: R_386_PC32	VGAVideo::setPlane(int)
+1000044e:	8b 4c 24 24          	mov    ecx,DWORD PTR [esp+0x24]
+10000452:	58                   	pop    eax
+10000453:	d3 e6                	shl    esi,cl
+10000455:	5a                   	pop    edx
+10000456:	31 c0                	xor    eax,eax
+10000458:	0f b6 14 c5 e0 11 00 10 	movzx  edx,BYTE PTR [eax*8+0x100011e0]	1000045c: R_386_32	.bss
+10000460:	0f b6 1c c5 e1 11 00 10 	movzx  ebx,BYTE PTR [eax*8+0x100011e1]	10000464: R_386_32	.bss
+10000468:	21 f2                	and    edx,esi
+1000046a:	21 f3                	and    ebx,esi
+1000046c:	01 d2                	add    edx,edx
+1000046e:	09 d3                	or     ebx,edx
+10000470:	0f b6 14 c5 e2 11 00 10 	movzx  edx,BYTE PTR [eax*8+0x100011e2]	10000474: R_386_32	.bss
+10000478:	01 db                	add    ebx,ebx
+1000047a:	21 f2                	and    edx,esi
+1000047c:	09 da                	or     edx,ebx
+1000047e:	0f b6 1c c5 e3 11 00 10 	movzx  ebx,BYTE PTR [eax*8+0x100011e3]	10000482: R_386_32	.bss
+10000486:	01 d2                	add    edx,edx
+10000488:	21 f3                	and    ebx,esi
+1000048a:	09 d3                	or     ebx,edx
+1000048c:	0f b6 14 c5 e4 11 00 10 	movzx  edx,BYTE PTR [eax*8+0x100011e4]	10000490: R_386_32	.bss
+10000494:	01 db                	add    ebx,ebx
+10000496:	21 f2                	and    edx,esi
+10000498:	09 da                	or     edx,ebx
+1000049a:	0f b6 1c c5 e5 11 00 10 	movzx  ebx,BYTE PTR [eax*8+0x100011e5]	1000049e: R_386_32	.bss
+100004a2:	01 d2                	add    edx,edx
+100004a4:	21 f3                	and    ebx,esi
+100004a6:	09 d3                	or     ebx,edx
+100004a8:	0f b6 14 c5 e6 11 00 10 	movzx  edx,BYTE PTR [eax*8+0x100011e6]	100004ac: R_386_32	.bss
+100004b0:	01 db                	add    ebx,ebx
+100004b2:	21 f2                	and    edx,esi
+100004b4:	09 da                	or     edx,ebx
+100004b6:	0f b6 1c c5 e7 11 00 10 	movzx  ebx,BYTE PTR [eax*8+0x100011e7]	100004ba: R_386_32	.bss
+100004be:	01 d2                	add    edx,edx
+100004c0:	21 f3                	and    ebx,esi
+100004c2:	09 da                	or     edx,ebx
+100004c4:	d3 ea                	shr    edx,cl
+100004c6:	88 14 07             	mov    BYTE PTR [edi+eax*1],dl
+100004c9:	40                   	inc    eax
+100004ca:	39 44 24 10          	cmp    DWORD PTR [esp+0x10],eax
+100004ce:	75 88                	jne    10000458 <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x17e>
+100004d0:	41                   	inc    ecx
+100004d1:	e9 4c ff ff ff       	jmp    10000422 <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x148>
+100004d6:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
+100004da:	c1 e0 03             	shl    eax,0x3
+100004dd:	01 44 24 14          	add    DWORD PTR [esp+0x14],eax
+100004e1:	01 44 24 18          	add    DWORD PTR [esp+0x18],eax
+100004e5:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
+100004e9:	39 44 24 54          	cmp    DWORD PTR [esp+0x54],eax
+100004ed:	0f 8f 9c fe ff ff    	jg     1000038f <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0xb5>
+100004f3:	ff 44 24 48          	inc    DWORD PTR [esp+0x48]
+100004f7:	8b 7c 24 40          	mov    edi,DWORD PTR [esp+0x40]
+100004fb:	8b 4c 24 2c          	mov    ecx,DWORD PTR [esp+0x2c]
+100004ff:	8b bf 58 01 00 00    	mov    edi,DWORD PTR [edi+0x158]
+10000505:	01 4c 24 24          	add    DWORD PTR [esp+0x24],ecx
+10000509:	01 7c 24 20          	add    DWORD PTR [esp+0x20],edi
+1000050d:	8b 44 24 28          	mov    eax,DWORD PTR [esp+0x28]
+10000511:	39 44 24 48          	cmp    DWORD PTR [esp+0x48],eax
+10000515:	0f 85 1b fe ff ff    	jne    10000336 <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x5c>
+1000051b:	83 c4 30             	add    esp,0x30
+1000051e:	5b                   	pop    ebx
+1000051f:	5e                   	pop    esi
+10000520:	5f                   	pop    edi
+10000521:	c3                   	ret    
+10000522:	31 c9                	xor    ecx,ecx
+10000524:	83 44 24 0c 04       	add    DWORD PTR [esp+0xc],0x4
+10000529:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
+1000052d:	8b 40 fc             	mov    eax,DWORD PTR [eax-0x4]
+10000530:	89 c3                	mov    ebx,eax
+10000532:	89 c2                	mov    edx,eax
+10000534:	c1 fb 15             	sar    ebx,0x15
+10000537:	c1 fa 0a             	sar    edx,0xa
+1000053a:	83 e3 07             	and    ebx,0x7
+1000053d:	83 e2 38             	and    edx,0x38
+10000540:	09 d3                	or     ebx,edx
+10000542:	8d 14 00             	lea    edx,[eax+eax*1]
+10000545:	8b 44 24 48          	mov    eax,DWORD PTR [esp+0x48]
+10000549:	81 e2 c0 01 00 00    	and    edx,0x1c0
+1000054f:	01 c8                	add    eax,ecx
+10000551:	09 da                	or     edx,ebx
+10000553:	83 e0 01             	and    eax,0x1
+10000556:	41                   	inc    ecx
+10000557:	8a 84 50 00 00 00 00 	mov    al,BYTE PTR [eax+edx*2+0x0]	1000055a: R_386_32	dither16Data
+1000055e:	88 81 df 11 00 10    	mov    BYTE PTR [ecx+0x100011df],al	10000560: R_386_32	.bss
+10000564:	39 f1                	cmp    ecx,esi
+10000566:	7c bc                	jl     10000524 <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x24a>
+10000568:	e9 97 fe ff ff       	jmp    10000404 <VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)+0x12a>
+1000056d:	90                   	nop
 
-100005c2 <VGAVideo::putrect(int, int, int, int, unsigned int)>:
-100005c2:	57                   	push   edi
-100005c3:	56                   	push   esi
-100005c4:	53                   	push   ebx
-100005c5:	83 ec 50             	sub    esp,0x50
-100005c8:	8b 74 24 60          	mov    esi,DWORD PTR [esp+0x60]
-100005cc:	8b 44 24 64          	mov    eax,DWORD PTR [esp+0x64]
-100005d0:	89 74 24 04          	mov    DWORD PTR [esp+0x4],esi
-100005d4:	89 44 24 14          	mov    DWORD PTR [esp+0x14],eax
-100005d8:	8b 4c 24 6c          	mov    ecx,DWORD PTR [esp+0x6c]
-100005dc:	8b 44 24 68          	mov    eax,DWORD PTR [esp+0x68]
-100005e0:	89 44 24 28          	mov    DWORD PTR [esp+0x28],eax
-100005e4:	8b 44 24 70          	mov    eax,DWORD PTR [esp+0x70]
-100005e8:	89 44 24 48          	mov    DWORD PTR [esp+0x48],eax
-100005ec:	8b 44 24 74          	mov    eax,DWORD PTR [esp+0x74]
-100005f0:	89 44 24 18          	mov    DWORD PTR [esp+0x18],eax
-100005f4:	8b 86 68 01 00 00    	mov    eax,DWORD PTR [esi+0x168]
-100005fa:	83 e8 11             	sub    eax,0x11
-100005fd:	83 f8 01             	cmp    eax,0x1
-10000600:	0f 87 3d 05 00 00    	ja     10000b43 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x581>
-10000606:	8b 7c 24 18          	mov    edi,DWORD PTR [esp+0x18]
-1000060a:	8b 86 64 01 00 00    	mov    eax,DWORD PTR [esi+0x164]
-10000610:	8b 74 24 28          	mov    esi,DWORD PTR [esp+0x28]
-10000614:	2d 00 00 00 3e       	sub    eax,0x3e000000
-10000619:	03 74 24 48          	add    esi,DWORD PTR [esp+0x48]
-1000061d:	89 44 24 08          	mov    DWORD PTR [esp+0x8],eax
-10000621:	89 74 24 0c          	mov    DWORD PTR [esp+0xc],esi
-10000625:	89 f8                	mov    eax,edi
-10000627:	c1 f8 15             	sar    eax,0x15
-1000062a:	83 e0 07             	and    eax,0x7
-1000062d:	89 c2                	mov    edx,eax
-1000062f:	89 f8                	mov    eax,edi
-10000631:	c1 f8 0a             	sar    eax,0xa
-10000634:	83 e0 38             	and    eax,0x38
-10000637:	09 d0                	or     eax,edx
-10000639:	89 fa                	mov    edx,edi
-1000063b:	01 fa                	add    edx,edi
-1000063d:	81 e2 c0 01 00 00    	and    edx,0x1c0
-10000643:	09 d0                	or     eax,edx
-10000645:	0f b6 bc 00 00 00 00 00 	movzx  edi,BYTE PTR [eax+eax*1+0x0]	10000649: R_386_32	dither16Data
-1000064d:	0f b6 84 00 01 00 00 00 	movzx  eax,BYTE PTR [eax+eax*1+0x1]	10000651: R_386_32	dither16Data
-10000655:	89 7c 24 10          	mov    DWORD PTR [esp+0x10],edi
-10000659:	89 44 24 1c          	mov    DWORD PTR [esp+0x1c],eax
-1000065d:	8b 7c 24 14          	mov    edi,DWORD PTR [esp+0x14]
-10000661:	89 c8                	mov    eax,ecx
-10000663:	01 f8                	add    eax,edi
-10000665:	89 44 24 3c          	mov    DWORD PTR [esp+0x3c],eax
-10000669:	39 c7                	cmp    edi,eax
-1000066b:	0f 8d a6 00 00 00    	jge    10000717 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x155>
-10000671:	8b 74 24 14          	mov    esi,DWORD PTR [esp+0x14]
-10000675:	8b 7c 24 3c          	mov    edi,DWORD PTR [esp+0x3c]
-10000679:	8b 44 24 28          	mov    eax,DWORD PTR [esp+0x28]
-1000067d:	29 f7                	sub    edi,esi
-1000067f:	8b 5c 24 04          	mov    ebx,DWORD PTR [esp+0x4]
-10000683:	89 7c 24 4c          	mov    DWORD PTR [esp+0x4c],edi
-10000687:	0f af 83 58 01 00 00 	imul   eax,DWORD PTR [ebx+0x158]
-1000068e:	01 f0                	add    eax,esi
-10000690:	c1 f8 03             	sar    eax,0x3
-10000693:	c1 ff 03             	sar    edi,0x3
-10000696:	89 44 24 30          	mov    DWORD PTR [esp+0x30],eax
-1000069a:	89 7c 24 44          	mov    DWORD PTR [esp+0x44],edi
-1000069e:	74 0d                	je     100006ad <VGAVideo::putrect(int, int, int, int, unsigned int)+0xeb>
-100006a0:	83 e6 07             	and    esi,0x7
-100006a3:	89 74 24 38          	mov    DWORD PTR [esp+0x38],esi
-100006a7:	0f 84 fa 01 00 00    	je     100008a7 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x2e5>
-100006ad:	8b 44 24 28          	mov    eax,DWORD PTR [esp+0x28]
-100006b1:	03 44 24 14          	add    eax,DWORD PTR [esp+0x14]
-100006b5:	a8 01                	test   al,0x1
-100006b7:	0f 84 d5 01 00 00    	je     10000892 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x2d0>
-100006bd:	8b 44 24 1c          	mov    eax,DWORD PTR [esp+0x1c]
-100006c1:	89 44 24 40          	mov    DWORD PTR [esp+0x40],eax
-100006c5:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
-100006c9:	89 44 24 38          	mov    DWORD PTR [esp+0x38],eax
-100006cd:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
-100006d1:	80 b8 61 01 00 00 00 	cmp    BYTE PTR [eax+0x161],0x0
-100006d8:	74 44                	je     1000071e <VGAVideo::putrect(int, int, int, int, unsigned int)+0x15c>
-100006da:	8b 44 24 28          	mov    eax,DWORD PTR [esp+0x28]
-100006de:	8b 7c 24 0c          	mov    edi,DWORD PTR [esp+0xc]
-100006e2:	39 f8                	cmp    eax,edi
-100006e4:	7d 1f                	jge    10000705 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x143>
-100006e6:	89 c3                	mov    ebx,eax
-100006e8:	8b 74 24 04          	mov    esi,DWORD PTR [esp+0x4]
-100006ec:	8b 06                	mov    eax,DWORD PTR [esi]
-100006ee:	ff 74 24 18          	push   DWORD PTR [esp+0x18]
-100006f2:	53                   	push   ebx
-100006f3:	43                   	inc    ebx
-100006f4:	ff 74 24 1c          	push   DWORD PTR [esp+0x1c]
-100006f8:	56                   	push   esi
-100006f9:	ff 50 24             	call   DWORD PTR [eax+0x24]
-100006fc:	83 c4 10             	add    esp,0x10
-100006ff:	39 5c 24 0c          	cmp    DWORD PTR [esp+0xc],ebx
-10000703:	75 e3                	jne    100006e8 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x126>
-10000705:	ff 44 24 14          	inc    DWORD PTR [esp+0x14]
-10000709:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
-1000070d:	39 44 24 3c          	cmp    DWORD PTR [esp+0x3c],eax
-10000711:	0f 8f 5a ff ff ff    	jg     10000671 <VGAVideo::putrect(int, int, int, int, unsigned int)+0xaf>
-10000717:	83 c4 50             	add    esp,0x50
-1000071a:	5b                   	pop    ebx
-1000071b:	5e                   	pop    esi
-1000071c:	5f                   	pop    edi
-1000071d:	c3                   	ret    
-1000071e:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
-10000722:	c7 44 24 20 00 00 00 00 	mov    DWORD PTR [esp+0x20],0x0
-1000072a:	f7 d0                	not    eax
-1000072c:	83 e0 07             	and    eax,0x7
-1000072f:	89 c7                	mov    edi,eax
-10000731:	89 44 24 2c          	mov    DWORD PTR [esp+0x2c],eax
-10000735:	89 f9                	mov    ecx,edi
-10000737:	b8 fe ff ff ff       	mov    eax,0xfffffffe
-1000073c:	d3 c0                	rol    eax,cl
-1000073e:	89 44 24 34          	mov    DWORD PTR [esp+0x34],eax
-10000742:	83 ec 08             	sub    esp,0x8
-10000745:	ff 74 24 28          	push   DWORD PTR [esp+0x28]
-10000749:	ff 74 24 10          	push   DWORD PTR [esp+0x10]
-1000074d:	e8 fc ff ff ff       	call   1000074e <VGAVideo::putrect(int, int, int, int, unsigned int)+0x18c>	1000074e: R_386_PC32	VGAVideo::setPlane(int)
-10000752:	83 c4 10             	add    esp,0x10
-10000755:	8b 7c 24 10          	mov    edi,DWORD PTR [esp+0x10]
-10000759:	39 7c 24 1c          	cmp    DWORD PTR [esp+0x1c],edi
-1000075d:	0f 84 c0 00 00 00    	je     10000823 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x261>
-10000763:	8a 4c 24 20          	mov    cl,BYTE PTR [esp+0x20]
-10000767:	8b 74 24 40          	mov    esi,DWORD PTR [esp+0x40]
-1000076b:	8b 54 24 28          	mov    edx,DWORD PTR [esp+0x28]
-1000076f:	d3 fe                	sar    esi,cl
-10000771:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
-10000775:	83 e6 01             	and    esi,0x1
-10000778:	8a 4c 24 2c          	mov    cl,BYTE PTR [esp+0x2c]
-1000077c:	d3 e6                	shl    esi,cl
-1000077e:	39 c2                	cmp    edx,eax
-10000780:	0f 8d a4 03 00 00    	jge    10000b2a <VGAVideo::putrect(int, int, int, int, unsigned int)+0x568>
-10000786:	8a 44 24 34          	mov    al,BYTE PTR [esp+0x34]
-1000078a:	8b 4c 24 30          	mov    ecx,DWORD PTR [esp+0x30]
-1000078e:	89 c7                	mov    edi,eax
-10000790:	8b 44 24 08          	mov    eax,DWORD PTR [esp+0x8]
-10000794:	83 c2 02             	add    edx,0x2
-10000797:	8d 1c 08             	lea    ebx,[eax+ecx*1]
-1000079a:	89 f8                	mov    eax,edi
-1000079c:	22 03                	and    al,BYTE PTR [ebx]
-1000079e:	09 f0                	or     eax,esi
-100007a0:	88 03                	mov    BYTE PTR [ebx],al
-100007a2:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
-100007a6:	8b 80 58 01 00 00    	mov    eax,DWORD PTR [eax+0x158]
-100007ac:	89 c3                	mov    ebx,eax
-100007ae:	c1 fb 02             	sar    ebx,0x2
-100007b1:	01 d9                	add    ecx,ebx
-100007b3:	39 54 24 0c          	cmp    DWORD PTR [esp+0xc],edx
-100007b7:	7f d7                	jg     10000790 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x1ce>
-100007b9:	c1 f8 03             	sar    eax,0x3
-100007bc:	8a 4c 24 20          	mov    cl,BYTE PTR [esp+0x20]
-100007c0:	03 44 24 30          	add    eax,DWORD PTR [esp+0x30]
-100007c4:	8b 74 24 38          	mov    esi,DWORD PTR [esp+0x38]
-100007c8:	8b 7c 24 28          	mov    edi,DWORD PTR [esp+0x28]
-100007cc:	d3 fe                	sar    esi,cl
-100007ce:	8a 4c 24 2c          	mov    cl,BYTE PTR [esp+0x2c]
-100007d2:	83 e6 01             	and    esi,0x1
-100007d5:	d3 e6                	shl    esi,cl
-100007d7:	8d 4f 01             	lea    ecx,[edi+0x1]
-100007da:	83 7c 24 48 01       	cmp    DWORD PTR [esp+0x48],0x1
-100007df:	7e 2c                	jle    1000080d <VGAVideo::putrect(int, int, int, int, unsigned int)+0x24b>
-100007e1:	8a 5c 24 34          	mov    bl,BYTE PTR [esp+0x34]
-100007e5:	89 df                	mov    edi,ebx
-100007e7:	8b 5c 24 08          	mov    ebx,DWORD PTR [esp+0x8]
-100007eb:	89 fa                	mov    edx,edi
-100007ed:	01 c3                	add    ebx,eax
-100007ef:	83 c1 02             	add    ecx,0x2
-100007f2:	22 13                	and    dl,BYTE PTR [ebx]
-100007f4:	09 f2                	or     edx,esi
-100007f6:	88 13                	mov    BYTE PTR [ebx],dl
-100007f8:	8b 5c 24 04          	mov    ebx,DWORD PTR [esp+0x4]
-100007fc:	8b 93 58 01 00 00    	mov    edx,DWORD PTR [ebx+0x158]
-10000802:	c1 fa 02             	sar    edx,0x2
-10000805:	01 d0                	add    eax,edx
-10000807:	39 4c 24 0c          	cmp    DWORD PTR [esp+0xc],ecx
-1000080b:	7f da                	jg     100007e7 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x225>
-1000080d:	ff 44 24 20          	inc    DWORD PTR [esp+0x20]
-10000811:	8b 44 24 20          	mov    eax,DWORD PTR [esp+0x20]
-10000815:	83 f8 04             	cmp    eax,0x4
-10000818:	0f 85 24 ff ff ff    	jne    10000742 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x180>
-1000081e:	e9 e2 fe ff ff       	jmp    10000705 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x143>
-10000823:	8a 4c 24 20          	mov    cl,BYTE PTR [esp+0x20]
-10000827:	8b 44 24 1c          	mov    eax,DWORD PTR [esp+0x1c]
-1000082b:	8b 74 24 0c          	mov    esi,DWORD PTR [esp+0xc]
-1000082f:	d3 f8                	sar    eax,cl
-10000831:	8a 4c 24 2c          	mov    cl,BYTE PTR [esp+0x2c]
-10000835:	83 e0 01             	and    eax,0x1
-10000838:	d3 e0                	shl    eax,cl
-1000083a:	39 74 24 28          	cmp    DWORD PTR [esp+0x28],esi
-1000083e:	7d cd                	jge    1000080d <VGAVideo::putrect(int, int, int, int, unsigned int)+0x24b>
-10000840:	89 c7                	mov    edi,eax
-10000842:	0f b6 74 24 34       	movzx  esi,BYTE PTR [esp+0x34]
-10000847:	8b 54 24 28          	mov    edx,DWORD PTR [esp+0x28]
-1000084b:	8b 4c 24 30          	mov    ecx,DWORD PTR [esp+0x30]
-1000084f:	8b 44 24 08          	mov    eax,DWORD PTR [esp+0x8]
-10000853:	42                   	inc    edx
-10000854:	8d 1c 08             	lea    ebx,[eax+ecx*1]
-10000857:	89 f0                	mov    eax,esi
-10000859:	22 03                	and    al,BYTE PTR [ebx]
-1000085b:	88 44 24 24          	mov    BYTE PTR [esp+0x24],al
-1000085f:	89 f8                	mov    eax,edi
-10000861:	0b 44 24 24          	or     eax,DWORD PTR [esp+0x24]
-10000865:	88 03                	mov    BYTE PTR [ebx],al
-10000867:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
-1000086b:	8b 80 58 01 00 00    	mov    eax,DWORD PTR [eax+0x158]
-10000871:	c1 f8 03             	sar    eax,0x3
-10000874:	01 c1                	add    ecx,eax
-10000876:	39 54 24 0c          	cmp    DWORD PTR [esp+0xc],edx
-1000087a:	75 d3                	jne    1000084f <VGAVideo::putrect(int, int, int, int, unsigned int)+0x28d>
-1000087c:	ff 44 24 20          	inc    DWORD PTR [esp+0x20]
-10000880:	8b 44 24 20          	mov    eax,DWORD PTR [esp+0x20]
-10000884:	83 f8 04             	cmp    eax,0x4
-10000887:	0f 85 b5 fe ff ff    	jne    10000742 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x180>
-1000088d:	e9 73 fe ff ff       	jmp    10000705 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x143>
-10000892:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
-10000896:	89 44 24 40          	mov    DWORD PTR [esp+0x40],eax
-1000089a:	8b 44 24 1c          	mov    eax,DWORD PTR [esp+0x1c]
-1000089e:	89 44 24 38          	mov    DWORD PTR [esp+0x38],eax
-100008a2:	e9 26 fe ff ff       	jmp    100006cd <VGAVideo::putrect(int, int, int, int, unsigned int)+0x10b>
-100008a7:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
-100008ab:	83 e0 01             	and    eax,0x1
-100008ae:	89 44 24 40          	mov    DWORD PTR [esp+0x40],eax
-100008b2:	8b 74 24 04          	mov    esi,DWORD PTR [esp+0x4]
-100008b6:	8b 7c 24 38          	mov    edi,DWORD PTR [esp+0x38]
-100008ba:	80 be 61 01 00 00 01 	cmp    BYTE PTR [esi+0x161],0x1
-100008c1:	19 c0                	sbb    eax,eax
-100008c3:	83 e0 03             	and    eax,0x3
-100008c6:	40                   	inc    eax
-100008c7:	39 c7                	cmp    edi,eax
-100008c9:	0f 8d 31 02 00 00    	jge    10000b00 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x53e>
-100008cf:	83 ec 08             	sub    esp,0x8
-100008d2:	57                   	push   edi
-100008d3:	56                   	push   esi
-100008d4:	e8 fc ff ff ff       	call   100008d5 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x313>	100008d5: R_386_PC32	VGAVideo::setPlane(int)
-100008d9:	83 c4 10             	add    esp,0x10
-100008dc:	80 be 61 01 00 00 00 	cmp    BYTE PTR [esi+0x161],0x0
-100008e3:	0f 84 55 01 00 00    	je     10000a3e <VGAVideo::putrect(int, int, int, int, unsigned int)+0x47c>
-100008e9:	89 f9                	mov    ecx,edi
-100008eb:	b8 01 00 00 00       	mov    eax,0x1
-100008f0:	8b 7c 24 44          	mov    edi,DWORD PTR [esp+0x44]
-100008f4:	d3 e0                	shl    eax,cl
-100008f6:	89 44 24 24          	mov    DWORD PTR [esp+0x24],eax
-100008fa:	8b 44 24 30          	mov    eax,DWORD PTR [esp+0x30]
-100008fe:	01 c7                	add    edi,eax
-10000900:	89 44 24 2c          	mov    DWORD PTR [esp+0x2c],eax
-10000904:	89 7c 24 34          	mov    DWORD PTR [esp+0x34],edi
-10000908:	8b 74 24 28          	mov    esi,DWORD PTR [esp+0x28]
-1000090c:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
-10000910:	8b 5c 24 2c          	mov    ebx,DWORD PTR [esp+0x2c]
-10000914:	39 c6                	cmp    esi,eax
-10000916:	0f 8d 07 01 00 00    	jge    10000a23 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x461>
-1000091c:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
-10000920:	8b 4c 24 40          	mov    ecx,DWORD PTR [esp+0x40]
-10000924:	40                   	inc    eax
-10000925:	85 c9                	test   ecx,ecx
-10000927:	89 44 24 20          	mov    DWORD PTR [esp+0x20],eax
-1000092b:	0f 85 9d 00 00 00    	jne    100009ce <VGAVideo::putrect(int, int, int, int, unsigned int)+0x40c>
-10000931:	eb 2a                	jmp    1000095d <VGAVideo::putrect(int, int, int, int, unsigned int)+0x39b>
-10000933:	85 c0                	test   eax,eax
-10000935:	b9 aa 00 00 00       	mov    ecx,0xaa
-1000093a:	8b 44 24 08          	mov    eax,DWORD PTR [esp+0x8]
-1000093e:	74 6c                	je     100009ac <VGAVideo::putrect(int, int, int, int, unsigned int)+0x3ea>
-10000940:	88 0c 18             	mov    BYTE PTR [eax+ebx*1],cl
-10000943:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
-10000947:	46                   	inc    esi
-10000948:	8b 80 58 01 00 00    	mov    eax,DWORD PTR [eax+0x158]
-1000094e:	c1 f8 03             	sar    eax,0x3
-10000951:	01 c3                	add    ebx,eax
-10000953:	39 74 24 0c          	cmp    DWORD PTR [esp+0xc],esi
-10000957:	0f 84 c6 00 00 00    	je     10000a23 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x461>
-1000095d:	52                   	push   edx
-1000095e:	56                   	push   esi
-1000095f:	ff 74 24 1c          	push   DWORD PTR [esp+0x1c]
-10000963:	8b 7c 24 24          	mov    edi,DWORD PTR [esp+0x24]
-10000967:	57                   	push   edi
-10000968:	e8 fc ff ff ff       	call   10000969 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x3a7>	10000969: R_386_PC32	monoPixelLookup(int, int, int)
-1000096d:	83 c4 0c             	add    esp,0xc
-10000970:	89 44 24 14          	mov    DWORD PTR [esp+0x14],eax
-10000974:	56                   	push   esi
-10000975:	ff 74 24 28          	push   DWORD PTR [esp+0x28]
-10000979:	57                   	push   edi
-1000097a:	e8 fc ff ff ff       	call   1000097b <VGAVideo::putrect(int, int, int, int, unsigned int)+0x3b9>	1000097b: R_386_PC32	monoPixelLookup(int, int, int)
-1000097f:	83 c4 10             	add    esp,0x10
-10000982:	89 c7                	mov    edi,eax
-10000984:	8b 4c 24 24          	mov    ecx,DWORD PTR [esp+0x24]
-10000988:	89 44 24 1c          	mov    DWORD PTR [esp+0x1c],eax
-1000098c:	8b 54 24 10          	mov    edx,DWORD PTR [esp+0x10]
-10000990:	21 ca                	and    edx,ecx
-10000992:	21 f9                	and    ecx,edi
-10000994:	89 d0                	mov    eax,edx
-10000996:	89 ca                	mov    edx,ecx
-10000998:	74 99                	je     10000933 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x371>
-1000099a:	85 c0                	test   eax,eax
-1000099c:	b9 ff 00 00 00       	mov    ecx,0xff
-100009a1:	ba 55 00 00 00       	mov    edx,0x55
-100009a6:	8b 44 24 08          	mov    eax,DWORD PTR [esp+0x8]
-100009aa:	75 94                	jne    10000940 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x37e>
-100009ac:	88 14 18             	mov    BYTE PTR [eax+ebx*1],dl
-100009af:	eb 92                	jmp    10000943 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x381>
-100009b1:	8b 44 24 08          	mov    eax,DWORD PTR [esp+0x8]
-100009b5:	88 14 18             	mov    BYTE PTR [eax+ebx*1],dl
-100009b8:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
-100009bc:	46                   	inc    esi
-100009bd:	8b 80 58 01 00 00    	mov    eax,DWORD PTR [eax+0x158]
-100009c3:	c1 f8 03             	sar    eax,0x3
-100009c6:	01 c3                	add    ebx,eax
-100009c8:	39 74 24 0c          	cmp    DWORD PTR [esp+0xc],esi
-100009cc:	74 55                	je     10000a23 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x461>
-100009ce:	50                   	push   eax
-100009cf:	56                   	push   esi
-100009d0:	ff 74 24 1c          	push   DWORD PTR [esp+0x1c]
-100009d4:	8b 7c 24 24          	mov    edi,DWORD PTR [esp+0x24]
-100009d8:	57                   	push   edi
-100009d9:	e8 fc ff ff ff       	call   100009da <VGAVideo::putrect(int, int, int, int, unsigned int)+0x418>	100009da: R_386_PC32	monoPixelLookup(int, int, int)
-100009de:	83 c4 0c             	add    esp,0xc
-100009e1:	89 44 24 14          	mov    DWORD PTR [esp+0x14],eax
-100009e5:	56                   	push   esi
-100009e6:	ff 74 24 28          	push   DWORD PTR [esp+0x28]
-100009ea:	57                   	push   edi
-100009eb:	e8 fc ff ff ff       	call   100009ec <VGAVideo::putrect(int, int, int, int, unsigned int)+0x42a>	100009ec: R_386_PC32	monoPixelLookup(int, int, int)
-100009f0:	83 c4 10             	add    esp,0x10
-100009f3:	89 c7                	mov    edi,eax
-100009f5:	8b 4c 24 24          	mov    ecx,DWORD PTR [esp+0x24]
-100009f9:	89 44 24 1c          	mov    DWORD PTR [esp+0x1c],eax
-100009fd:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
-10000a01:	21 c8                	and    eax,ecx
-10000a03:	83 f8 01             	cmp    eax,0x1
-10000a06:	19 d2                	sbb    edx,edx
-10000a08:	f7 d2                	not    edx
-10000a0a:	83 e2 55             	and    edx,0x55
-10000a0d:	83 f8 01             	cmp    eax,0x1
-10000a10:	19 c0                	sbb    eax,eax
-10000a12:	83 e0 ab             	and    eax,0xffffffab
-10000a15:	48                   	dec    eax
-10000a16:	85 cf                	test   edi,ecx
-10000a18:	74 97                	je     100009b1 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x3ef>
-10000a1a:	8b 7c 24 08          	mov    edi,DWORD PTR [esp+0x8]
-10000a1e:	88 04 1f             	mov    BYTE PTR [edi+ebx*1],al
-10000a21:	eb 95                	jmp    100009b8 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x3f6>
-10000a23:	ff 44 24 2c          	inc    DWORD PTR [esp+0x2c]
-10000a27:	8b 44 24 2c          	mov    eax,DWORD PTR [esp+0x2c]
-10000a2b:	39 44 24 34          	cmp    DWORD PTR [esp+0x34],eax
-10000a2f:	0f 85 d3 fe ff ff    	jne    10000908 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x346>
-10000a35:	ff 44 24 38          	inc    DWORD PTR [esp+0x38]
-10000a39:	e9 74 fe ff ff       	jmp    100008b2 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x2f0>
-10000a3e:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
-10000a42:	8a 4c 24 38          	mov    cl,BYTE PTR [esp+0x38]
-10000a46:	d3 f8                	sar    eax,cl
-10000a48:	a8 01                	test   al,0x1
-10000a4a:	0f 84 8f 00 00 00    	je     10000adf <VGAVideo::putrect(int, int, int, int, unsigned int)+0x51d>
-10000a50:	8b 44 24 1c          	mov    eax,DWORD PTR [esp+0x1c]
-10000a54:	d3 f8                	sar    eax,cl
-10000a56:	83 e0 01             	and    eax,0x1
-10000a59:	83 f8 01             	cmp    eax,0x1
-10000a5c:	19 ff                	sbb    edi,edi
-10000a5e:	89 f9                	mov    ecx,edi
-10000a60:	89 f8                	mov    eax,edi
-10000a62:	83 e1 56             	and    ecx,0x56
-10000a65:	83 e0 ab             	and    eax,0xffffffab
-10000a68:	49                   	dec    ecx
-10000a69:	05 ff 00 00 00       	add    eax,0xff
-10000a6e:	88 4c 24 24          	mov    BYTE PTR [esp+0x24],cl
-10000a72:	89 44 24 20          	mov    DWORD PTR [esp+0x20],eax
-10000a76:	8b 44 24 28          	mov    eax,DWORD PTR [esp+0x28]
-10000a7a:	8b 7c 24 0c          	mov    edi,DWORD PTR [esp+0xc]
-10000a7e:	39 f8                	cmp    eax,edi
-10000a80:	7d b3                	jge    10000a35 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x473>
-10000a82:	8b 54 24 30          	mov    edx,DWORD PTR [esp+0x30]
-10000a86:	8b 5c 24 44          	mov    ebx,DWORD PTR [esp+0x44]
-10000a8a:	89 d6                	mov    esi,edx
-10000a8c:	01 d3                	add    ebx,edx
-10000a8e:	89 5c 24 2c          	mov    DWORD PTR [esp+0x2c],ebx
-10000a92:	8b 5c 24 14          	mov    ebx,DWORD PTR [esp+0x14]
-10000a96:	01 d8                	add    eax,ebx
-10000a98:	01 fb                	add    ebx,edi
-10000a9a:	89 44 24 34          	mov    DWORD PTR [esp+0x34],eax
-10000a9e:	89 f2                	mov    edx,esi
-10000aa0:	8b 44 24 34          	mov    eax,DWORD PTR [esp+0x34]
-10000aa4:	eb 1b                	jmp    10000ac1 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x4ff>
-10000aa6:	8a 4c 24 20          	mov    cl,BYTE PTR [esp+0x20]
-10000aaa:	88 0c 17             	mov    BYTE PTR [edi+edx*1],cl
-10000aad:	40                   	inc    eax
-10000aae:	8b 7c 24 04          	mov    edi,DWORD PTR [esp+0x4]
-10000ab2:	8b 8f 58 01 00 00    	mov    ecx,DWORD PTR [edi+0x158]
-10000ab8:	c1 f9 03             	sar    ecx,0x3
-10000abb:	01 ca                	add    edx,ecx
-10000abd:	39 c3                	cmp    ebx,eax
-10000abf:	74 0e                	je     10000acf <VGAVideo::putrect(int, int, int, int, unsigned int)+0x50d>
-10000ac1:	8b 7c 24 08          	mov    edi,DWORD PTR [esp+0x8]
-10000ac5:	a8 01                	test   al,0x1
-10000ac7:	74 dd                	je     10000aa6 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x4e4>
-10000ac9:	8a 4c 24 24          	mov    cl,BYTE PTR [esp+0x24]
-10000acd:	eb db                	jmp    10000aaa <VGAVideo::putrect(int, int, int, int, unsigned int)+0x4e8>
-10000acf:	46                   	inc    esi
-10000ad0:	39 74 24 2c          	cmp    DWORD PTR [esp+0x2c],esi
-10000ad4:	75 c8                	jne    10000a9e <VGAVideo::putrect(int, int, int, int, unsigned int)+0x4dc>
-10000ad6:	ff 44 24 38          	inc    DWORD PTR [esp+0x38]
-10000ada:	e9 d3 fd ff ff       	jmp    100008b2 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x2f0>
-10000adf:	8b 74 24 1c          	mov    esi,DWORD PTR [esp+0x1c]
-10000ae3:	d3 fe                	sar    esi,cl
-10000ae5:	83 e6 01             	and    esi,0x1
-10000ae8:	89 74 24 20          	mov    DWORD PTR [esp+0x20],esi
-10000aec:	74 4b                	je     10000b39 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x577>
-10000aee:	c6 44 24 24 aa       	mov    BYTE PTR [esp+0x24],0xaa
-10000af3:	c7 44 24 20 55 00 00 00 	mov    DWORD PTR [esp+0x20],0x55
-10000afb:	e9 76 ff ff ff       	jmp    10000a76 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x4b4>
-10000b00:	8b 7c 24 14          	mov    edi,DWORD PTR [esp+0x14]
-10000b04:	8b 44 24 4c          	mov    eax,DWORD PTR [esp+0x4c]
-10000b08:	83 e0 f8             	and    eax,0xfffffff8
-10000b0b:	8d 44 07 ff          	lea    eax,[edi+eax*1-0x1]
-10000b0f:	89 44 24 14          	mov    DWORD PTR [esp+0x14],eax
-10000b13:	ff 44 24 14          	inc    DWORD PTR [esp+0x14]
-10000b17:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
-10000b1b:	39 44 24 3c          	cmp    DWORD PTR [esp+0x3c],eax
-10000b1f:	0f 8f 4c fb ff ff    	jg     10000671 <VGAVideo::putrect(int, int, int, int, unsigned int)+0xaf>
-10000b25:	e9 ed fb ff ff       	jmp    10000717 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x155>
-10000b2a:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
-10000b2e:	8b 80 58 01 00 00    	mov    eax,DWORD PTR [eax+0x158]
-10000b34:	e9 80 fc ff ff       	jmp    100007b9 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x1f7>
-10000b39:	c6 44 24 24 00       	mov    BYTE PTR [esp+0x24],0x0
-10000b3e:	e9 33 ff ff ff       	jmp    10000a76 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x4b4>
-10000b43:	83 c4 50             	add    esp,0x50
-10000b46:	5b                   	pop    ebx
-10000b47:	5e                   	pop    esi
-10000b48:	5f                   	pop    edi
-10000b49:	e9 fc ff ff ff       	jmp    10000b4a <VGAVideo::putrect(int, int, int, int, unsigned int)+0x588>	10000b4a: R_386_PC32	Video::putrect(int, int, int, int, unsigned int)
+1000056e <VGAVideo::putrect(int, int, int, int, unsigned int)>:
+1000056e:	57                   	push   edi
+1000056f:	56                   	push   esi
+10000570:	53                   	push   ebx
+10000571:	83 ec 40             	sub    esp,0x40
+10000574:	8b 44 24 50          	mov    eax,DWORD PTR [esp+0x50]
+10000578:	8b 80 64 01 00 00    	mov    eax,DWORD PTR [eax+0x164]
+1000057e:	2d 00 00 00 3e       	sub    eax,0x3e000000
+10000583:	89 44 24 08          	mov    DWORD PTR [esp+0x8],eax
+10000587:	8b 44 24 64          	mov    eax,DWORD PTR [esp+0x64]
+1000058b:	c1 f8 15             	sar    eax,0x15
+1000058e:	83 e0 07             	and    eax,0x7
+10000591:	89 c2                	mov    edx,eax
+10000593:	8b 44 24 64          	mov    eax,DWORD PTR [esp+0x64]
+10000597:	c1 f8 0a             	sar    eax,0xa
+1000059a:	83 e0 38             	and    eax,0x38
+1000059d:	09 d0                	or     eax,edx
+1000059f:	8b 54 24 64          	mov    edx,DWORD PTR [esp+0x64]
+100005a3:	01 d2                	add    edx,edx
+100005a5:	81 e2 c0 01 00 00    	and    edx,0x1c0
+100005ab:	09 d0                	or     eax,edx
+100005ad:	0f b6 bc 00 00 00 00 00 	movzx  edi,BYTE PTR [eax+eax*1+0x0]	100005b1: R_386_32	dither16Data
+100005b5:	0f b6 84 00 01 00 00 00 	movzx  eax,BYTE PTR [eax+eax*1+0x1]	100005b9: R_386_32	dither16Data
+100005bd:	89 7c 24 10          	mov    DWORD PTR [esp+0x10],edi
+100005c1:	89 44 24 14          	mov    DWORD PTR [esp+0x14],eax
+100005c5:	8b 7c 24 60          	mov    edi,DWORD PTR [esp+0x60]
+100005c9:	8b 44 24 5c          	mov    eax,DWORD PTR [esp+0x5c]
+100005cd:	03 7c 24 58          	add    edi,DWORD PTR [esp+0x58]
+100005d1:	03 44 24 54          	add    eax,DWORD PTR [esp+0x54]
+100005d5:	89 7c 24 0c          	mov    DWORD PTR [esp+0xc],edi
+100005d9:	89 44 24 30          	mov    DWORD PTR [esp+0x30],eax
+100005dd:	39 44 24 54          	cmp    DWORD PTR [esp+0x54],eax
+100005e1:	0f 8d ad 00 00 00    	jge    10000694 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x126>
+100005e7:	8b 7c 24 30          	mov    edi,DWORD PTR [esp+0x30]
+100005eb:	8b 44 24 58          	mov    eax,DWORD PTR [esp+0x58]
+100005ef:	2b 7c 24 54          	sub    edi,DWORD PTR [esp+0x54]
+100005f3:	8b 74 24 50          	mov    esi,DWORD PTR [esp+0x50]
+100005f7:	89 7c 24 3c          	mov    DWORD PTR [esp+0x3c],edi
+100005fb:	0f af 86 58 01 00 00 	imul   eax,DWORD PTR [esi+0x158]
+10000602:	03 44 24 54          	add    eax,DWORD PTR [esp+0x54]
+10000606:	c1 f8 03             	sar    eax,0x3
+10000609:	c1 ff 03             	sar    edi,0x3
+1000060c:	89 44 24 24          	mov    DWORD PTR [esp+0x24],eax
+10000610:	89 7c 24 38          	mov    DWORD PTR [esp+0x38],edi
+10000614:	74 11                	je     10000627 <VGAVideo::putrect(int, int, int, int, unsigned int)+0xb9>
+10000616:	8b 44 24 54          	mov    eax,DWORD PTR [esp+0x54]
+1000061a:	83 e0 07             	and    eax,0x7
+1000061d:	89 44 24 2c          	mov    DWORD PTR [esp+0x2c],eax
+10000621:	0f 84 ff 01 00 00    	je     10000826 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x2b8>
+10000627:	8b 44 24 58          	mov    eax,DWORD PTR [esp+0x58]
+1000062b:	03 44 24 54          	add    eax,DWORD PTR [esp+0x54]
+1000062f:	a8 01                	test   al,0x1
+10000631:	0f 84 da 01 00 00    	je     10000811 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x2a3>
+10000637:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
+1000063b:	89 44 24 34          	mov    DWORD PTR [esp+0x34],eax
+1000063f:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
+10000643:	89 44 24 2c          	mov    DWORD PTR [esp+0x2c],eax
+10000647:	8b 44 24 50          	mov    eax,DWORD PTR [esp+0x50]
+1000064b:	80 b8 61 01 00 00 00 	cmp    BYTE PTR [eax+0x161],0x0
+10000652:	74 47                	je     1000069b <VGAVideo::putrect(int, int, int, int, unsigned int)+0x12d>
+10000654:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
+10000658:	39 44 24 58          	cmp    DWORD PTR [esp+0x58],eax
+1000065c:	7d 24                	jge    10000682 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x114>
+1000065e:	8b 5c 24 58          	mov    ebx,DWORD PTR [esp+0x58]
+10000662:	8b 44 24 50          	mov    eax,DWORD PTR [esp+0x50]
+10000666:	8b 00                	mov    eax,DWORD PTR [eax]
+10000668:	ff 74 24 64          	push   DWORD PTR [esp+0x64]
+1000066c:	53                   	push   ebx
+1000066d:	43                   	inc    ebx
+1000066e:	ff 74 24 5c          	push   DWORD PTR [esp+0x5c]
+10000672:	ff 74 24 5c          	push   DWORD PTR [esp+0x5c]
+10000676:	ff 50 24             	call   DWORD PTR [eax+0x24]
+10000679:	83 c4 10             	add    esp,0x10
+1000067c:	39 5c 24 0c          	cmp    DWORD PTR [esp+0xc],ebx
+10000680:	75 e0                	jne    10000662 <VGAVideo::putrect(int, int, int, int, unsigned int)+0xf4>
+10000682:	ff 44 24 54          	inc    DWORD PTR [esp+0x54]
+10000686:	8b 44 24 30          	mov    eax,DWORD PTR [esp+0x30]
+1000068a:	3b 44 24 54          	cmp    eax,DWORD PTR [esp+0x54]
+1000068e:	0f 8f 53 ff ff ff    	jg     100005e7 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x79>
+10000694:	83 c4 40             	add    esp,0x40
+10000697:	5b                   	pop    ebx
+10000698:	5e                   	pop    esi
+10000699:	5f                   	pop    edi
+1000069a:	c3                   	ret    
+1000069b:	8b 44 24 54          	mov    eax,DWORD PTR [esp+0x54]
+1000069f:	c7 44 24 18 00 00 00 00 	mov    DWORD PTR [esp+0x18],0x0
+100006a7:	f7 d0                	not    eax
+100006a9:	83 e0 07             	and    eax,0x7
+100006ac:	89 c7                	mov    edi,eax
+100006ae:	89 44 24 20          	mov    DWORD PTR [esp+0x20],eax
+100006b2:	89 f9                	mov    ecx,edi
+100006b4:	b8 fe ff ff ff       	mov    eax,0xfffffffe
+100006b9:	d3 c0                	rol    eax,cl
+100006bb:	89 44 24 28          	mov    DWORD PTR [esp+0x28],eax
+100006bf:	83 ec 08             	sub    esp,0x8
+100006c2:	ff 74 24 20          	push   DWORD PTR [esp+0x20]
+100006c6:	ff 74 24 5c          	push   DWORD PTR [esp+0x5c]
+100006ca:	e8 fc ff ff ff       	call   100006cb <VGAVideo::putrect(int, int, int, int, unsigned int)+0x15d>	100006cb: R_386_PC32	VGAVideo::setPlane(int)
+100006cf:	83 c4 10             	add    esp,0x10
+100006d2:	8b 7c 24 10          	mov    edi,DWORD PTR [esp+0x10]
+100006d6:	39 7c 24 14          	cmp    DWORD PTR [esp+0x14],edi
+100006da:	0f 84 c2 00 00 00    	je     100007a2 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x234>
+100006e0:	8a 4c 24 18          	mov    cl,BYTE PTR [esp+0x18]
+100006e4:	8b 74 24 34          	mov    esi,DWORD PTR [esp+0x34]
+100006e8:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
+100006ec:	d3 fe                	sar    esi,cl
+100006ee:	8a 4c 24 20          	mov    cl,BYTE PTR [esp+0x20]
+100006f2:	83 e6 01             	and    esi,0x1
+100006f5:	d3 e6                	shl    esi,cl
+100006f7:	39 44 24 58          	cmp    DWORD PTR [esp+0x58],eax
+100006fb:	0f 8d aa 03 00 00    	jge    10000aab <VGAVideo::putrect(int, int, int, int, unsigned int)+0x53d>
+10000701:	8a 44 24 28          	mov    al,BYTE PTR [esp+0x28]
+10000705:	8b 54 24 58          	mov    edx,DWORD PTR [esp+0x58]
+10000709:	89 c7                	mov    edi,eax
+1000070b:	8b 4c 24 24          	mov    ecx,DWORD PTR [esp+0x24]
+1000070f:	8b 44 24 08          	mov    eax,DWORD PTR [esp+0x8]
+10000713:	83 c2 02             	add    edx,0x2
+10000716:	8d 1c 08             	lea    ebx,[eax+ecx*1]
+10000719:	89 f8                	mov    eax,edi
+1000071b:	22 03                	and    al,BYTE PTR [ebx]
+1000071d:	09 f0                	or     eax,esi
+1000071f:	88 03                	mov    BYTE PTR [ebx],al
+10000721:	8b 44 24 50          	mov    eax,DWORD PTR [esp+0x50]
+10000725:	8b 80 58 01 00 00    	mov    eax,DWORD PTR [eax+0x158]
+1000072b:	89 c3                	mov    ebx,eax
+1000072d:	c1 fb 02             	sar    ebx,0x2
+10000730:	01 d9                	add    ecx,ebx
+10000732:	39 54 24 0c          	cmp    DWORD PTR [esp+0xc],edx
+10000736:	7f d7                	jg     1000070f <VGAVideo::putrect(int, int, int, int, unsigned int)+0x1a1>
+10000738:	c1 f8 03             	sar    eax,0x3
+1000073b:	8a 4c 24 18          	mov    cl,BYTE PTR [esp+0x18]
+1000073f:	03 44 24 24          	add    eax,DWORD PTR [esp+0x24]
+10000743:	8b 74 24 2c          	mov    esi,DWORD PTR [esp+0x2c]
+10000747:	8b 7c 24 58          	mov    edi,DWORD PTR [esp+0x58]
+1000074b:	d3 fe                	sar    esi,cl
+1000074d:	8a 4c 24 20          	mov    cl,BYTE PTR [esp+0x20]
+10000751:	83 e6 01             	and    esi,0x1
+10000754:	d3 e6                	shl    esi,cl
+10000756:	8d 4f 01             	lea    ecx,[edi+0x1]
+10000759:	83 7c 24 60 01       	cmp    DWORD PTR [esp+0x60],0x1
+1000075e:	7e 2c                	jle    1000078c <VGAVideo::putrect(int, int, int, int, unsigned int)+0x21e>
+10000760:	8a 5c 24 28          	mov    bl,BYTE PTR [esp+0x28]
+10000764:	89 df                	mov    edi,ebx
+10000766:	8b 5c 24 08          	mov    ebx,DWORD PTR [esp+0x8]
+1000076a:	89 fa                	mov    edx,edi
+1000076c:	01 c3                	add    ebx,eax
+1000076e:	83 c1 02             	add    ecx,0x2
+10000771:	22 13                	and    dl,BYTE PTR [ebx]
+10000773:	09 f2                	or     edx,esi
+10000775:	88 13                	mov    BYTE PTR [ebx],dl
+10000777:	8b 5c 24 50          	mov    ebx,DWORD PTR [esp+0x50]
+1000077b:	8b 93 58 01 00 00    	mov    edx,DWORD PTR [ebx+0x158]
+10000781:	c1 fa 02             	sar    edx,0x2
+10000784:	01 d0                	add    eax,edx
+10000786:	39 4c 24 0c          	cmp    DWORD PTR [esp+0xc],ecx
+1000078a:	7f da                	jg     10000766 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x1f8>
+1000078c:	ff 44 24 18          	inc    DWORD PTR [esp+0x18]
+10000790:	8b 44 24 18          	mov    eax,DWORD PTR [esp+0x18]
+10000794:	83 f8 04             	cmp    eax,0x4
+10000797:	0f 85 22 ff ff ff    	jne    100006bf <VGAVideo::putrect(int, int, int, int, unsigned int)+0x151>
+1000079d:	e9 e0 fe ff ff       	jmp    10000682 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x114>
+100007a2:	8a 4c 24 18          	mov    cl,BYTE PTR [esp+0x18]
+100007a6:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
+100007aa:	8b 7c 24 0c          	mov    edi,DWORD PTR [esp+0xc]
+100007ae:	d3 f8                	sar    eax,cl
+100007b0:	8a 4c 24 20          	mov    cl,BYTE PTR [esp+0x20]
+100007b4:	83 e0 01             	and    eax,0x1
+100007b7:	d3 e0                	shl    eax,cl
+100007b9:	39 7c 24 58          	cmp    DWORD PTR [esp+0x58],edi
+100007bd:	7d cd                	jge    1000078c <VGAVideo::putrect(int, int, int, int, unsigned int)+0x21e>
+100007bf:	89 c7                	mov    edi,eax
+100007c1:	0f b6 74 24 28       	movzx  esi,BYTE PTR [esp+0x28]
+100007c6:	8b 54 24 58          	mov    edx,DWORD PTR [esp+0x58]
+100007ca:	8b 4c 24 24          	mov    ecx,DWORD PTR [esp+0x24]
+100007ce:	8b 44 24 08          	mov    eax,DWORD PTR [esp+0x8]
+100007d2:	42                   	inc    edx
+100007d3:	8d 1c 08             	lea    ebx,[eax+ecx*1]
+100007d6:	89 f0                	mov    eax,esi
+100007d8:	22 03                	and    al,BYTE PTR [ebx]
+100007da:	88 44 24 1c          	mov    BYTE PTR [esp+0x1c],al
+100007de:	89 f8                	mov    eax,edi
+100007e0:	0b 44 24 1c          	or     eax,DWORD PTR [esp+0x1c]
+100007e4:	88 03                	mov    BYTE PTR [ebx],al
+100007e6:	8b 44 24 50          	mov    eax,DWORD PTR [esp+0x50]
+100007ea:	8b 80 58 01 00 00    	mov    eax,DWORD PTR [eax+0x158]
+100007f0:	c1 f8 03             	sar    eax,0x3
+100007f3:	01 c1                	add    ecx,eax
+100007f5:	39 54 24 0c          	cmp    DWORD PTR [esp+0xc],edx
+100007f9:	75 d3                	jne    100007ce <VGAVideo::putrect(int, int, int, int, unsigned int)+0x260>
+100007fb:	ff 44 24 18          	inc    DWORD PTR [esp+0x18]
+100007ff:	8b 44 24 18          	mov    eax,DWORD PTR [esp+0x18]
+10000803:	83 f8 04             	cmp    eax,0x4
+10000806:	0f 85 b3 fe ff ff    	jne    100006bf <VGAVideo::putrect(int, int, int, int, unsigned int)+0x151>
+1000080c:	e9 71 fe ff ff       	jmp    10000682 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x114>
+10000811:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
+10000815:	89 44 24 34          	mov    DWORD PTR [esp+0x34],eax
+10000819:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
+1000081d:	89 44 24 2c          	mov    DWORD PTR [esp+0x2c],eax
+10000821:	e9 21 fe ff ff       	jmp    10000647 <VGAVideo::putrect(int, int, int, int, unsigned int)+0xd9>
+10000826:	8b 44 24 54          	mov    eax,DWORD PTR [esp+0x54]
+1000082a:	83 e0 01             	and    eax,0x1
+1000082d:	89 44 24 34          	mov    DWORD PTR [esp+0x34],eax
+10000831:	8b 44 24 50          	mov    eax,DWORD PTR [esp+0x50]
+10000835:	8b 7c 24 2c          	mov    edi,DWORD PTR [esp+0x2c]
+10000839:	80 b8 61 01 00 00 01 	cmp    BYTE PTR [eax+0x161],0x1
+10000840:	19 c0                	sbb    eax,eax
+10000842:	83 e0 03             	and    eax,0x3
+10000845:	40                   	inc    eax
+10000846:	39 c7                	cmp    edi,eax
+10000848:	0f 8d 33 02 00 00    	jge    10000a81 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x513>
+1000084e:	57                   	push   edi
+1000084f:	ff 74 24 54          	push   DWORD PTR [esp+0x54]
+10000853:	e8 fc ff ff ff       	call   10000854 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x2e6>	10000854: R_386_PC32	VGAVideo::setPlane(int)
+10000858:	5a                   	pop    edx
+10000859:	59                   	pop    ecx
+1000085a:	8b 44 24 50          	mov    eax,DWORD PTR [esp+0x50]
+1000085e:	80 b8 61 01 00 00 00 	cmp    BYTE PTR [eax+0x161],0x0
+10000865:	0f 84 59 01 00 00    	je     100009c4 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x456>
+1000086b:	89 f9                	mov    ecx,edi
+1000086d:	b8 01 00 00 00       	mov    eax,0x1
+10000872:	8b 7c 24 38          	mov    edi,DWORD PTR [esp+0x38]
+10000876:	d3 e0                	shl    eax,cl
+10000878:	89 44 24 1c          	mov    DWORD PTR [esp+0x1c],eax
+1000087c:	8b 44 24 24          	mov    eax,DWORD PTR [esp+0x24]
+10000880:	01 c7                	add    edi,eax
+10000882:	89 44 24 20          	mov    DWORD PTR [esp+0x20],eax
+10000886:	89 7c 24 28          	mov    DWORD PTR [esp+0x28],edi
+1000088a:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
+1000088e:	8b 5c 24 20          	mov    ebx,DWORD PTR [esp+0x20]
+10000892:	39 44 24 58          	cmp    DWORD PTR [esp+0x58],eax
+10000896:	0f 8d 0d 01 00 00    	jge    100009a9 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x43b>
+1000089c:	8b 44 24 54          	mov    eax,DWORD PTR [esp+0x54]
+100008a0:	8b 74 24 58          	mov    esi,DWORD PTR [esp+0x58]
+100008a4:	40                   	inc    eax
+100008a5:	89 44 24 18          	mov    DWORD PTR [esp+0x18],eax
+100008a9:	8b 44 24 34          	mov    eax,DWORD PTR [esp+0x34]
+100008ad:	85 c0                	test   eax,eax
+100008af:	0f 85 9e 00 00 00    	jne    10000953 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x3e5>
+100008b5:	eb 2a                	jmp    100008e1 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x373>
+100008b7:	85 c0                	test   eax,eax
+100008b9:	b9 aa 00 00 00       	mov    ecx,0xaa
+100008be:	8b 44 24 08          	mov    eax,DWORD PTR [esp+0x8]
+100008c2:	74 6d                	je     10000931 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x3c3>
+100008c4:	88 0c 18             	mov    BYTE PTR [eax+ebx*1],cl
+100008c7:	8b 44 24 50          	mov    eax,DWORD PTR [esp+0x50]
+100008cb:	46                   	inc    esi
+100008cc:	8b 80 58 01 00 00    	mov    eax,DWORD PTR [eax+0x158]
+100008d2:	c1 f8 03             	sar    eax,0x3
+100008d5:	01 c3                	add    ebx,eax
+100008d7:	39 74 24 0c          	cmp    DWORD PTR [esp+0xc],esi
+100008db:	0f 84 c8 00 00 00    	je     100009a9 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x43b>
+100008e1:	56                   	push   esi
+100008e2:	ff 74 24 58          	push   DWORD PTR [esp+0x58]
+100008e6:	ff 74 24 6c          	push   DWORD PTR [esp+0x6c]
+100008ea:	e8 fc ff ff ff       	call   100008eb <VGAVideo::putrect(int, int, int, int, unsigned int)+0x37d>	100008eb: R_386_PC32	monoPixelLookup(int, int, int)
+100008ef:	83 c4 0c             	add    esp,0xc
+100008f2:	89 44 24 10          	mov    DWORD PTR [esp+0x10],eax
+100008f6:	56                   	push   esi
+100008f7:	ff 74 24 1c          	push   DWORD PTR [esp+0x1c]
+100008fb:	ff 74 24 6c          	push   DWORD PTR [esp+0x6c]
+100008ff:	e8 fc ff ff ff       	call   10000900 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x392>	10000900: R_386_PC32	monoPixelLookup(int, int, int)
+10000904:	83 c4 0c             	add    esp,0xc
+10000907:	89 c7                	mov    edi,eax
+10000909:	8b 4c 24 1c          	mov    ecx,DWORD PTR [esp+0x1c]
+1000090d:	89 44 24 14          	mov    DWORD PTR [esp+0x14],eax
+10000911:	8b 54 24 10          	mov    edx,DWORD PTR [esp+0x10]
+10000915:	21 ca                	and    edx,ecx
+10000917:	21 f9                	and    ecx,edi
+10000919:	89 d0                	mov    eax,edx
+1000091b:	89 ca                	mov    edx,ecx
+1000091d:	74 98                	je     100008b7 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x349>
+1000091f:	85 c0                	test   eax,eax
+10000921:	b9 ff 00 00 00       	mov    ecx,0xff
+10000926:	ba 55 00 00 00       	mov    edx,0x55
+1000092b:	8b 44 24 08          	mov    eax,DWORD PTR [esp+0x8]
+1000092f:	75 93                	jne    100008c4 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x356>
+10000931:	88 14 18             	mov    BYTE PTR [eax+ebx*1],dl
+10000934:	eb 91                	jmp    100008c7 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x359>
+10000936:	8b 44 24 08          	mov    eax,DWORD PTR [esp+0x8]
+1000093a:	88 14 18             	mov    BYTE PTR [eax+ebx*1],dl
+1000093d:	8b 44 24 50          	mov    eax,DWORD PTR [esp+0x50]
+10000941:	46                   	inc    esi
+10000942:	8b 80 58 01 00 00    	mov    eax,DWORD PTR [eax+0x158]
+10000948:	c1 f8 03             	sar    eax,0x3
+1000094b:	01 c3                	add    ebx,eax
+1000094d:	39 74 24 0c          	cmp    DWORD PTR [esp+0xc],esi
+10000951:	74 56                	je     100009a9 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x43b>
+10000953:	56                   	push   esi
+10000954:	ff 74 24 58          	push   DWORD PTR [esp+0x58]
+10000958:	ff 74 24 6c          	push   DWORD PTR [esp+0x6c]
+1000095c:	e8 fc ff ff ff       	call   1000095d <VGAVideo::putrect(int, int, int, int, unsigned int)+0x3ef>	1000095d: R_386_PC32	monoPixelLookup(int, int, int)
+10000961:	83 c4 0c             	add    esp,0xc
+10000964:	89 44 24 10          	mov    DWORD PTR [esp+0x10],eax
+10000968:	56                   	push   esi
+10000969:	ff 74 24 1c          	push   DWORD PTR [esp+0x1c]
+1000096d:	ff 74 24 6c          	push   DWORD PTR [esp+0x6c]
+10000971:	e8 fc ff ff ff       	call   10000972 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x404>	10000972: R_386_PC32	monoPixelLookup(int, int, int)
+10000976:	83 c4 0c             	add    esp,0xc
+10000979:	89 c7                	mov    edi,eax
+1000097b:	8b 4c 24 1c          	mov    ecx,DWORD PTR [esp+0x1c]
+1000097f:	89 44 24 14          	mov    DWORD PTR [esp+0x14],eax
+10000983:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
+10000987:	21 c8                	and    eax,ecx
+10000989:	83 f8 01             	cmp    eax,0x1
+1000098c:	19 d2                	sbb    edx,edx
+1000098e:	f7 d2                	not    edx
+10000990:	83 e2 55             	and    edx,0x55
+10000993:	83 f8 01             	cmp    eax,0x1
+10000996:	19 c0                	sbb    eax,eax
+10000998:	83 e0 ab             	and    eax,0xffffffab
+1000099b:	48                   	dec    eax
+1000099c:	85 cf                	test   edi,ecx
+1000099e:	74 96                	je     10000936 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x3c8>
+100009a0:	8b 7c 24 08          	mov    edi,DWORD PTR [esp+0x8]
+100009a4:	88 04 1f             	mov    BYTE PTR [edi+ebx*1],al
+100009a7:	eb 94                	jmp    1000093d <VGAVideo::putrect(int, int, int, int, unsigned int)+0x3cf>
+100009a9:	ff 44 24 20          	inc    DWORD PTR [esp+0x20]
+100009ad:	8b 44 24 20          	mov    eax,DWORD PTR [esp+0x20]
+100009b1:	39 44 24 28          	cmp    DWORD PTR [esp+0x28],eax
+100009b5:	0f 85 cf fe ff ff    	jne    1000088a <VGAVideo::putrect(int, int, int, int, unsigned int)+0x31c>
+100009bb:	ff 44 24 2c          	inc    DWORD PTR [esp+0x2c]
+100009bf:	e9 6d fe ff ff       	jmp    10000831 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x2c3>
+100009c4:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
+100009c8:	8a 4c 24 2c          	mov    cl,BYTE PTR [esp+0x2c]
+100009cc:	d3 f8                	sar    eax,cl
+100009ce:	a8 01                	test   al,0x1
+100009d0:	0f 84 92 00 00 00    	je     10000a68 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x4fa>
+100009d6:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
+100009da:	d3 f8                	sar    eax,cl
+100009dc:	83 e0 01             	and    eax,0x1
+100009df:	83 f8 01             	cmp    eax,0x1
+100009e2:	19 ff                	sbb    edi,edi
+100009e4:	89 f9                	mov    ecx,edi
+100009e6:	89 f8                	mov    eax,edi
+100009e8:	83 e1 56             	and    ecx,0x56
+100009eb:	83 e0 ab             	and    eax,0xffffffab
+100009ee:	49                   	dec    ecx
+100009ef:	05 ff 00 00 00       	add    eax,0xff
+100009f4:	88 4c 24 1c          	mov    BYTE PTR [esp+0x1c],cl
+100009f8:	89 44 24 18          	mov    DWORD PTR [esp+0x18],eax
+100009fc:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
+10000a00:	39 44 24 58          	cmp    DWORD PTR [esp+0x58],eax
+10000a04:	7d b5                	jge    100009bb <VGAVideo::putrect(int, int, int, int, unsigned int)+0x44d>
+10000a06:	8b 5c 24 24          	mov    ebx,DWORD PTR [esp+0x24]
+10000a0a:	8b 7c 24 38          	mov    edi,DWORD PTR [esp+0x38]
+10000a0e:	89 de                	mov    esi,ebx
+10000a10:	01 df                	add    edi,ebx
+10000a12:	8b 5c 24 54          	mov    ebx,DWORD PTR [esp+0x54]
+10000a16:	89 7c 24 20          	mov    DWORD PTR [esp+0x20],edi
+10000a1a:	8b 7c 24 58          	mov    edi,DWORD PTR [esp+0x58]
+10000a1e:	01 df                	add    edi,ebx
+10000a20:	8d 1c 03             	lea    ebx,[ebx+eax*1]
+10000a23:	89 7c 24 28          	mov    DWORD PTR [esp+0x28],edi
+10000a27:	89 f2                	mov    edx,esi
+10000a29:	8b 44 24 28          	mov    eax,DWORD PTR [esp+0x28]
+10000a2d:	eb 1b                	jmp    10000a4a <VGAVideo::putrect(int, int, int, int, unsigned int)+0x4dc>
+10000a2f:	8a 4c 24 18          	mov    cl,BYTE PTR [esp+0x18]
+10000a33:	88 0c 17             	mov    BYTE PTR [edi+edx*1],cl
+10000a36:	40                   	inc    eax
+10000a37:	8b 7c 24 50          	mov    edi,DWORD PTR [esp+0x50]
+10000a3b:	8b 8f 58 01 00 00    	mov    ecx,DWORD PTR [edi+0x158]
+10000a41:	c1 f9 03             	sar    ecx,0x3
+10000a44:	01 ca                	add    edx,ecx
+10000a46:	39 c3                	cmp    ebx,eax
+10000a48:	74 0e                	je     10000a58 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x4ea>
+10000a4a:	8b 7c 24 08          	mov    edi,DWORD PTR [esp+0x8]
+10000a4e:	a8 01                	test   al,0x1
+10000a50:	74 dd                	je     10000a2f <VGAVideo::putrect(int, int, int, int, unsigned int)+0x4c1>
+10000a52:	8a 4c 24 1c          	mov    cl,BYTE PTR [esp+0x1c]
+10000a56:	eb db                	jmp    10000a33 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x4c5>
+10000a58:	46                   	inc    esi
+10000a59:	39 74 24 20          	cmp    DWORD PTR [esp+0x20],esi
+10000a5d:	75 c8                	jne    10000a27 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x4b9>
+10000a5f:	ff 44 24 2c          	inc    DWORD PTR [esp+0x2c]
+10000a63:	e9 c9 fd ff ff       	jmp    10000831 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x2c3>
+10000a68:	8b 74 24 14          	mov    esi,DWORD PTR [esp+0x14]
+10000a6c:	d3 fe                	sar    esi,cl
+10000a6e:	83 e6 01             	and    esi,0x1
+10000a71:	89 74 24 18          	mov    DWORD PTR [esp+0x18],esi
+10000a75:	75 43                	jne    10000aba <VGAVideo::putrect(int, int, int, int, unsigned int)+0x54c>
+10000a77:	c6 44 24 1c 00       	mov    BYTE PTR [esp+0x1c],0x0
+10000a7c:	e9 7b ff ff ff       	jmp    100009fc <VGAVideo::putrect(int, int, int, int, unsigned int)+0x48e>
+10000a81:	8b 7c 24 54          	mov    edi,DWORD PTR [esp+0x54]
+10000a85:	8b 44 24 3c          	mov    eax,DWORD PTR [esp+0x3c]
+10000a89:	83 e0 f8             	and    eax,0xfffffff8
+10000a8c:	8d 44 07 ff          	lea    eax,[edi+eax*1-0x1]
+10000a90:	89 44 24 54          	mov    DWORD PTR [esp+0x54],eax
+10000a94:	8b 44 24 30          	mov    eax,DWORD PTR [esp+0x30]
+10000a98:	ff 44 24 54          	inc    DWORD PTR [esp+0x54]
+10000a9c:	3b 44 24 54          	cmp    eax,DWORD PTR [esp+0x54]
+10000aa0:	0f 8f 41 fb ff ff    	jg     100005e7 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x79>
+10000aa6:	e9 e9 fb ff ff       	jmp    10000694 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x126>
+10000aab:	8b 44 24 50          	mov    eax,DWORD PTR [esp+0x50]
+10000aaf:	8b 80 58 01 00 00    	mov    eax,DWORD PTR [eax+0x158]
+10000ab5:	e9 7e fc ff ff       	jmp    10000738 <VGAVideo::putrect(int, int, int, int, unsigned int)+0x1ca>
+10000aba:	c6 44 24 1c aa       	mov    BYTE PTR [esp+0x1c],0xaa
+10000abf:	c7 44 24 18 55 00 00 00 	mov    DWORD PTR [esp+0x18],0x55
+10000ac7:	e9 30 ff ff ff       	jmp    100009fc <VGAVideo::putrect(int, int, int, int, unsigned int)+0x48e>
 
-10000b4e <VGAVideo::putpixel(int, int, unsigned int)>:
-10000b4e:	57                   	push   edi
-10000b4f:	56                   	push   esi
-10000b50:	53                   	push   ebx
-10000b51:	83 ec 14             	sub    esp,0x14
-10000b54:	8b 74 24 24          	mov    esi,DWORD PTR [esp+0x24]
-10000b58:	8b 5c 24 28          	mov    ebx,DWORD PTR [esp+0x28]
-10000b5c:	8b 86 64 01 00 00    	mov    eax,DWORD PTR [esi+0x164]
-10000b62:	8b 7c 24 30          	mov    edi,DWORD PTR [esp+0x30]
-10000b66:	2d 00 00 00 3e       	sub    eax,0x3e000000
-10000b6b:	89 44 24 0c          	mov    DWORD PTR [esp+0xc],eax
-10000b6f:	89 d8                	mov    eax,ebx
-10000b71:	f7 d0                	not    eax
-10000b73:	83 e0 07             	and    eax,0x7
-10000b76:	83 be 68 01 00 00 06 	cmp    DWORD PTR [esi+0x168],0x6
-10000b7d:	89 44 24 04          	mov    DWORD PTR [esp+0x4],eax
-10000b81:	8b 86 58 01 00 00    	mov    eax,DWORD PTR [esi+0x158]
-10000b87:	0f 84 c2 00 00 00    	je     10000c4f <VGAVideo::putpixel(int, int, unsigned int)+0x101>
-10000b8d:	0f af 44 24 2c       	imul   eax,DWORD PTR [esp+0x2c]
-10000b92:	01 d8                	add    eax,ebx
-10000b94:	c1 f8 03             	sar    eax,0x3
-10000b97:	89 44 24 08          	mov    DWORD PTR [esp+0x8],eax
-10000b9b:	8a 96 61 01 00 00    	mov    dl,BYTE PTR [esi+0x161]
-10000ba1:	84 d2                	test   dl,dl
-10000ba3:	74 75                	je     10000c1a <VGAVideo::putpixel(int, int, unsigned int)+0xcc>
-10000ba5:	88 54 24 10          	mov    BYTE PTR [esp+0x10],dl
-10000ba9:	ff 74 24 2c          	push   DWORD PTR [esp+0x2c]
-10000bad:	53                   	push   ebx
-10000bae:	57                   	push   edi
-10000baf:	e8 fc ff ff ff       	call   10000bb0 <VGAVideo::putpixel(int, int, unsigned int)+0x62>	10000bb0: R_386_PC32	monoPixelLookup(int, int, int)
-10000bb4:	83 c4 0c             	add    esp,0xc
-10000bb7:	89 04 24             	mov    DWORD PTR [esp],eax
-10000bba:	8a 54 24 10          	mov    dl,BYTE PTR [esp+0x10]
-10000bbe:	b8 fe ff ff ff       	mov    eax,0xfffffffe
-10000bc3:	8a 4c 24 04          	mov    cl,BYTE PTR [esp+0x4]
-10000bc7:	31 db                	xor    ebx,ebx
-10000bc9:	d3 c0                	rol    eax,cl
-10000bcb:	84 d2                	test   dl,dl
-10000bcd:	89 44 24 10          	mov    DWORD PTR [esp+0x10],eax
-10000bd1:	74 3b                	je     10000c0e <VGAVideo::putpixel(int, int, unsigned int)+0xc0>
-10000bd3:	85 db                	test   ebx,ebx
-10000bd5:	75 3c                	jne    10000c13 <VGAVideo::putpixel(int, int, unsigned int)+0xc5>
-10000bd7:	53                   	push   ebx
-10000bd8:	43                   	inc    ebx
-10000bd9:	56                   	push   esi
-10000bda:	e8 fc ff ff ff       	call   10000bdb <VGAVideo::putpixel(int, int, unsigned int)+0x8d>	10000bdb: R_386_PC32	VGAVideo::setPlane(int)
-10000bdf:	8b 54 24 08          	mov    edx,DWORD PTR [esp+0x8]
-10000be3:	8b 7c 24 14          	mov    edi,DWORD PTR [esp+0x14]
-10000be7:	8a 44 24 18          	mov    al,BYTE PTR [esp+0x18]
-10000beb:	03 7c 24 10          	add    edi,DWORD PTR [esp+0x10]
-10000bef:	8a 4c 24 0c          	mov    cl,BYTE PTR [esp+0xc]
-10000bf3:	22 07                	and    al,BYTE PTR [edi]
-10000bf5:	d1 7c 24 08          	sar    DWORD PTR [esp+0x8],1
-10000bf9:	83 e2 01             	and    edx,0x1
-10000bfc:	d3 e2                	shl    edx,cl
-10000bfe:	09 d0                	or     eax,edx
-10000c00:	88 07                	mov    BYTE PTR [edi],al
-10000c02:	8a 96 61 01 00 00    	mov    dl,BYTE PTR [esi+0x161]
-10000c08:	58                   	pop    eax
-10000c09:	84 d2                	test   dl,dl
-10000c0b:	59                   	pop    ecx
-10000c0c:	75 c5                	jne    10000bd3 <VGAVideo::putpixel(int, int, unsigned int)+0x85>
-10000c0e:	83 fb 04             	cmp    ebx,0x4
-10000c11:	75 c4                	jne    10000bd7 <VGAVideo::putpixel(int, int, unsigned int)+0x89>
-10000c13:	83 c4 14             	add    esp,0x14
-10000c16:	5b                   	pop    ebx
-10000c17:	5e                   	pop    esi
-10000c18:	5f                   	pop    edi
-10000c19:	c3                   	ret    
-10000c1a:	89 f9                	mov    ecx,edi
-10000c1c:	89 f8                	mov    eax,edi
-10000c1e:	c1 f9 15             	sar    ecx,0x15
-10000c21:	c1 f8 0a             	sar    eax,0xa
-10000c24:	83 e1 07             	and    ecx,0x7
-10000c27:	83 e0 38             	and    eax,0x38
-10000c2a:	09 c1                	or     ecx,eax
-10000c2c:	8d 04 3f             	lea    eax,[edi+edi*1]
-10000c2f:	25 c0 01 00 00       	and    eax,0x1c0
-10000c34:	09 c8                	or     eax,ecx
-10000c36:	8b 4c 24 2c          	mov    ecx,DWORD PTR [esp+0x2c]
-10000c3a:	01 d9                	add    ecx,ebx
-10000c3c:	83 e1 01             	and    ecx,0x1
-10000c3f:	0f b6 84 41 00 00 00 00 	movzx  eax,BYTE PTR [ecx+eax*2+0x0]	10000c43: R_386_32	dither16Data
-10000c47:	89 04 24             	mov    DWORD PTR [esp],eax
-10000c4a:	e9 6f ff ff ff       	jmp    10000bbe <VGAVideo::putpixel(int, int, unsigned int)+0x70>
-10000c4f:	8b 54 24 2c          	mov    edx,DWORD PTR [esp+0x2c]
-10000c53:	d1 fa                	sar    edx,1
-10000c55:	0f af c2             	imul   eax,edx
-10000c58:	01 d8                	add    eax,ebx
-10000c5a:	c1 f8 03             	sar    eax,0x3
-10000c5d:	f6 44 24 2c 01       	test   BYTE PTR [esp+0x2c],0x1
-10000c62:	89 44 24 08          	mov    DWORD PTR [esp+0x8],eax
-10000c66:	0f 84 2f ff ff ff    	je     10000b9b <VGAVideo::putpixel(int, int, unsigned int)+0x4d>
-10000c6c:	05 00 20 00 00       	add    eax,0x2000
-10000c71:	89 44 24 08          	mov    DWORD PTR [esp+0x8],eax
-10000c75:	e9 21 ff ff ff       	jmp    10000b9b <VGAVideo::putpixel(int, int, unsigned int)+0x4d>
+10000acc <VGAVideo::putpixel(int, int, unsigned int)>:
+10000acc:	57                   	push   edi
+10000acd:	56                   	push   esi
+10000ace:	53                   	push   ebx
+10000acf:	83 ec 0c             	sub    esp,0xc
+10000ad2:	8b 74 24 1c          	mov    esi,DWORD PTR [esp+0x1c]
+10000ad6:	8b 5c 24 20          	mov    ebx,DWORD PTR [esp+0x20]
+10000ada:	8b 8e 64 01 00 00    	mov    ecx,DWORD PTR [esi+0x164]
+10000ae0:	89 da                	mov    edx,ebx
+10000ae2:	8b 7c 24 24          	mov    edi,DWORD PTR [esp+0x24]
+10000ae6:	f7 d2                	not    edx
+10000ae8:	0f af be 58 01 00 00 	imul   edi,DWORD PTR [esi+0x158]
+10000aef:	83 e2 07             	and    edx,0x7
+10000af2:	8b 44 24 28          	mov    eax,DWORD PTR [esp+0x28]
+10000af6:	89 54 24 04          	mov    DWORD PTR [esp+0x4],edx
+10000afa:	89 fa                	mov    edx,edi
+10000afc:	01 da                	add    edx,ebx
+10000afe:	c1 fa 03             	sar    edx,0x3
+10000b01:	8d bc 11 00 00 00 c2 	lea    edi,[ecx+edx*1-0x3e000000]
+10000b08:	ba fe ff ff ff       	mov    edx,0xfffffffe
+10000b0d:	8a 4c 24 04          	mov    cl,BYTE PTR [esp+0x4]
+10000b11:	d3 c2                	rol    edx,cl
+10000b13:	80 be 61 01 00 00 00 	cmp    BYTE PTR [esi+0x161],0x0
+10000b1a:	88 54 24 0b          	mov    BYTE PTR [esp+0xb],dl
+10000b1e:	75 62                	jne    10000b82 <VGAVideo::putpixel(int, int, unsigned int)+0xb6>
+10000b20:	89 c1                	mov    ecx,eax
+10000b22:	89 c2                	mov    edx,eax
+10000b24:	c1 f9 15             	sar    ecx,0x15
+10000b27:	c1 fa 0a             	sar    edx,0xa
+10000b2a:	83 e1 07             	and    ecx,0x7
+10000b2d:	83 e2 38             	and    edx,0x38
+10000b30:	03 5c 24 24          	add    ebx,DWORD PTR [esp+0x24]
+10000b34:	09 ca                	or     edx,ecx
+10000b36:	83 e3 01             	and    ebx,0x1
+10000b39:	8d 0c 00             	lea    ecx,[eax+eax*1]
+10000b3c:	81 e1 c0 01 00 00    	and    ecx,0x1c0
+10000b42:	09 ca                	or     edx,ecx
+10000b44:	0f b6 84 53 00 00 00 00 	movzx  eax,BYTE PTR [ebx+edx*2+0x0]	10000b48: R_386_32	dither16Data
+10000b4c:	31 db                	xor    ebx,ebx
+10000b4e:	89 04 24             	mov    DWORD PTR [esp],eax
+10000b51:	53                   	push   ebx
+10000b52:	43                   	inc    ebx
+10000b53:	56                   	push   esi
+10000b54:	e8 fc ff ff ff       	call   10000b55 <VGAVideo::putpixel(int, int, unsigned int)+0x89>	10000b55: R_386_PC32	VGAVideo::setPlane(int)
+10000b59:	8b 54 24 08          	mov    edx,DWORD PTR [esp+0x8]
+10000b5d:	8a 44 24 13          	mov    al,BYTE PTR [esp+0x13]
+10000b61:	8a 4c 24 0c          	mov    cl,BYTE PTR [esp+0xc]
+10000b65:	22 07                	and    al,BYTE PTR [edi]
+10000b67:	d1 7c 24 08          	sar    DWORD PTR [esp+0x8],1
+10000b6b:	83 e2 01             	and    edx,0x1
+10000b6e:	d3 e2                	shl    edx,cl
+10000b70:	09 d0                	or     eax,edx
+10000b72:	83 fb 04             	cmp    ebx,0x4
+10000b75:	88 07                	mov    BYTE PTR [edi],al
+10000b77:	58                   	pop    eax
+10000b78:	5a                   	pop    edx
+10000b79:	75 d6                	jne    10000b51 <VGAVideo::putpixel(int, int, unsigned int)+0x85>
+10000b7b:	83 c4 0c             	add    esp,0xc
+10000b7e:	5b                   	pop    ebx
+10000b7f:	5e                   	pop    esi
+10000b80:	5f                   	pop    edi
+10000b81:	c3                   	ret    
+10000b82:	89 14 24             	mov    DWORD PTR [esp],edx
+10000b85:	ff 74 24 24          	push   DWORD PTR [esp+0x24]
+10000b89:	53                   	push   ebx
+10000b8a:	50                   	push   eax
+10000b8b:	e8 fc ff ff ff       	call   10000b8c <VGAVideo::putpixel(int, int, unsigned int)+0xc0>	10000b8c: R_386_PC32	monoPixelLookup(int, int, int)
+10000b90:	83 c4 0c             	add    esp,0xc
+10000b93:	89 c3                	mov    ebx,eax
+10000b95:	6a 00                	push   0x0
+10000b97:	83 e3 01             	and    ebx,0x1
+10000b9a:	56                   	push   esi
+10000b9b:	e8 fc ff ff ff       	call   10000b9c <VGAVideo::putpixel(int, int, unsigned int)+0xd0>	10000b9c: R_386_PC32	VGAVideo::setPlane(int)
+10000ba0:	8b 54 24 08          	mov    edx,DWORD PTR [esp+0x8]
+10000ba4:	8a 4c 24 0c          	mov    cl,BYTE PTR [esp+0xc]
+10000ba8:	22 17                	and    dl,BYTE PTR [edi]
+10000baa:	d3 e3                	shl    ebx,cl
+10000bac:	09 da                	or     edx,ebx
+10000bae:	88 17                	mov    BYTE PTR [edi],dl
+10000bb0:	59                   	pop    ecx
+10000bb1:	5b                   	pop    ebx
+10000bb2:	83 c4 0c             	add    esp,0xc
+10000bb5:	5b                   	pop    ebx
+10000bb6:	5e                   	pop    esi
+10000bb7:	5f                   	pop    edi
+10000bb8:	c3                   	ret    
+10000bb9:	90                   	nop
 
-10000c7a <VGAVideo::~VGAVideo()>:
-10000c7a:	55                   	push   ebp
-10000c7b:	89 e5                	mov    ebp,esp
-10000c7d:	83 ec 08             	sub    esp,0x8
-10000c80:	ba 08 00 00 00       	mov    edx,0x8	10000c81: R_386_32	vtable for VGAVideo
-10000c85:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-10000c88:	89 10                	mov    DWORD PTR [eax],edx
-10000c8a:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-10000c8d:	83 ec 0c             	sub    esp,0xc
-10000c90:	50                   	push   eax
-10000c91:	e8 fc ff ff ff       	call   10000c92 <VGAVideo::~VGAVideo()+0x18>	10000c92: R_386_PC32	Video::~Video()
-10000c96:	83 c4 10             	add    esp,0x10
-10000c99:	90                   	nop
-10000c9a:	c9                   	leave  
-10000c9b:	c3                   	ret    
+10000bba <VGAVideo::~VGAVideo()>:
+10000bba:	55                   	push   ebp
+10000bbb:	89 e5                	mov    ebp,esp
+10000bbd:	83 ec 08             	sub    esp,0x8
+10000bc0:	ba 08 00 00 00       	mov    edx,0x8	10000bc1: R_386_32	vtable for VGAVideo
+10000bc5:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000bc8:	89 10                	mov    DWORD PTR [eax],edx
+10000bca:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000bcd:	83 ec 0c             	sub    esp,0xc
+10000bd0:	50                   	push   eax
+10000bd1:	e8 fc ff ff ff       	call   10000bd2 <VGAVideo::~VGAVideo()+0x18>	10000bd2: R_386_PC32	Video::~Video()
+10000bd6:	83 c4 10             	add    esp,0x10
+10000bd9:	90                   	nop
+10000bda:	c9                   	leave  
+10000bdb:	c3                   	ret    
 
-10000c9c <VGAVideo::~VGAVideo()>:
-10000c9c:	55                   	push   ebp
-10000c9d:	89 e5                	mov    ebp,esp
-10000c9f:	83 ec 08             	sub    esp,0x8
-10000ca2:	83 ec 0c             	sub    esp,0xc
-10000ca5:	ff 75 08             	push   DWORD PTR [ebp+0x8]
-10000ca8:	e8 fc ff ff ff       	call   10000ca9 <VGAVideo::~VGAVideo()+0xd>	10000ca9: R_386_PC32	VGAVideo::~VGAVideo()
-10000cad:	83 c4 10             	add    esp,0x10
-10000cb0:	83 ec 08             	sub    esp,0x8
-10000cb3:	68 6c 01 00 00       	push   0x16c
-10000cb8:	ff 75 08             	push   DWORD PTR [ebp+0x8]
-10000cbb:	e8 fc ff ff ff       	call   10000cbc <VGAVideo::~VGAVideo()+0x20>	10000cbc: R_386_PC32	operator delete(void*, unsigned long)
-10000cc0:	83 c4 10             	add    esp,0x10
-10000cc3:	c9                   	leave  
-10000cc4:	c3                   	ret    
-10000cc5:	66 90                	xchg   ax,ax
-10000cc7:	90                   	nop
+10000bdc <VGAVideo::~VGAVideo()>:
+10000bdc:	55                   	push   ebp
+10000bdd:	89 e5                	mov    ebp,esp
+10000bdf:	83 ec 08             	sub    esp,0x8
+10000be2:	83 ec 0c             	sub    esp,0xc
+10000be5:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+10000be8:	e8 fc ff ff ff       	call   10000be9 <VGAVideo::~VGAVideo()+0xd>	10000be9: R_386_PC32	VGAVideo::~VGAVideo()
+10000bed:	83 c4 10             	add    esp,0x10
+10000bf0:	83 ec 08             	sub    esp,0x8
+10000bf3:	68 6c 01 00 00       	push   0x16c
+10000bf8:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+10000bfb:	e8 fc ff ff ff       	call   10000bfc <VGAVideo::~VGAVideo()+0x20>	10000bfc: R_386_PC32	operator delete(void*, unsigned long)
+10000c00:	83 c4 10             	add    esp,0x10
+10000c03:	c9                   	leave  
+10000c04:	c3                   	ret    
+10000c05:	66 90                	xchg   ax,ax
+10000c07:	90                   	nop
 
-10000cc8 <PHYS_RAM_TABLE_SIZE>:
-10000cc8:	13 05 00 00                                         ....
+10000c08 <PHYS_RAM_TABLE_SIZE>:
+10000c08:	13 05 00 00                                         ....
 
-10000ccc <PHYS_HIGHEST_UNUSED_ADDRESS>:
-10000ccc:	24 05 00 00                                         $...
+10000c0c <PHYS_HIGHEST_UNUSED_ADDRESS>:
+10000c0c:	24 05 00 00                                         $...
 
-10000cd0 <PHYS_RAM_TABLE>:
-10000cd0:	00 06 00 00                                         ....
+10000c10 <PHYS_RAM_TABLE>:
+10000c10:	00 06 00 00                                         ....
 
-10000cd4 <PHYS_DMA_MEMORY_1>:
-10000cd4:	00 00 01 00                                         ....
+10000c14 <PHYS_DMA_MEMORY_1>:
+10000c14:	00 00 01 00                                         ....
 
-10000cd8 <PHYS_PHYS_PAGE_BITMAP>:
-10000cd8:	00 00 02 00                                         ....
+10000c18 <PHYS_PHYS_PAGE_BITMAP>:
+10000c18:	00 00 02 00                                         ....
 
-10000cdc <PHYS_VIRT_PAGE_BITMAP>:
-10000cdc:	00 00 04 00                                         ....
+10000c1c <PHYS_VIRT_PAGE_BITMAP>:
+10000c1c:	00 00 04 00                                         ....
 
-10000ce0 <PHYS_DMA_MEMORY_2>:
-10000ce0:	00 00 06 00                                         ....
+10000c20 <PHYS_DMA_MEMORY_2>:
+10000c20:	00 00 06 00                                         ....
 
-10000ce4 <PHYS_ALLOCED_VIRT_PAGES>:
-10000ce4:	00 00 10 00                                         ....
+10000c24 <PHYS_ALLOCED_VIRT_PAGES>:
+10000c24:	00 00 10 00                                         ....
 
-10000ce8 <PHYS_KRNL_PAGE_DIRECTORY>:
-10000ce8:	00 10 00 00                                         ....
+10000c28 <PHYS_KRNL_PAGE_DIRECTORY>:
+10000c28:	00 10 00 00                                         ....
 
-10000cec <VIRT_KERNEL_BASE>:
-10000cec:	00 00 00 c0                                         ....
+10000c2c <VIRT_KERNEL_BASE>:
+10000c2c:	00 00 00 c0                                         ....
 
-10000cf0 <VIRT_LOW_MEGS>:
-10000cf0:	00 00 00 c2                                         ....
+10000c30 <VIRT_LOW_MEGS>:
+10000c30:	00 00 00 c2                                         ....
 
-10000cf4 <VIRT_CPU_SPECIFIC>:
-10000cf4:	00 00 40 c2                                         ..@.
+10000c34 <VIRT_CPU_SPECIFIC>:
+10000c34:	00 00 40 c2                                         ..@.
 
-10000cf8 <VIRT_RECURSIVE_SPOT_1>:
-10000cf8:	00 00 80 c2                                         ....
+10000c38 <VIRT_RECURSIVE_SPOT_1>:
+10000c38:	00 00 80 c2                                         ....
 
-10000cfc <VIRT_RECURSIVE_SPOT_2>:
-10000cfc:	00 00 c0 c2                                         ....
+10000c3c <VIRT_RECURSIVE_SPOT_2>:
+10000c3c:	00 00 c0 c2                                         ....
 
-10000d00 <VIRT_DMA_MEMORY_1>:
-10000d00:	00 00 01 c2                                         ....
+10000c40 <VIRT_DMA_MEMORY_1>:
+10000c40:	00 00 01 c2                                         ....
 
-10000d04 <SIZE_DMA_MEMORY_1>:
-10000d04:	00 00 01 00                                         ....
+10000c44 <SIZE_DMA_MEMORY_1>:
+10000c44:	00 00 01 00                                         ....
 
-10000d08 <VIRT_DMA_MEMORY_2>:
-10000d08:	00 00 06 c2                                         ....
+10000c48 <VIRT_DMA_MEMORY_2>:
+10000c48:	00 00 06 c2                                         ....
 
-10000d0c <SIZE_DMA_MEMORY_2>:
-10000d0c:	00 00 02 00                                         ....
+10000c4c <SIZE_DMA_MEMORY_2>:
+10000c4c:	00 00 02 00                                         ....
 
-10000d10 <VIRT_KRNL_PAGE_DIRECTORY>:
-10000d10:	00 10 00 c2                                         ....
+10000c50 <VIRT_KRNL_PAGE_DIRECTORY>:
+10000c50:	00 10 00 c2                                         ....
 
-10000d14 <VIRT_PHYS_PAGE_BITMAP>:
-10000d14:	00 00 02 c2                                         ....
+10000c54 <VIRT_PHYS_PAGE_BITMAP>:
+10000c54:	00 00 02 c2                                         ....
 
-10000d18 <SIZE_PHYS_PAGE_BITMAP>:
-10000d18:	00 00 02 00                                         ....
+10000c58 <SIZE_PHYS_PAGE_BITMAP>:
+10000c58:	00 00 02 00                                         ....
 
-10000d1c <VIRT_VIRT_PAGE_BITMAP>:
-10000d1c:	00 00 04 c2                                         ....
+10000c5c <VIRT_VIRT_PAGE_BITMAP>:
+10000c5c:	00 00 04 c2                                         ....
 
-10000d20 <SIZE_VIRT_PAGE_BITMAP>:
-10000d20:	00 80 00 00                                         ....
+10000c60 <SIZE_VIRT_PAGE_BITMAP>:
+10000c60:	00 80 00 00                                         ....
 
-10000d24 <VIRT_RAM_TABLE>:
-10000d24:	00 06 00 c2                                         ....
+10000c64 <VIRT_RAM_TABLE>:
+10000c64:	00 06 00 c2                                         ....
 
-10000d28 <VIRT_RAM_TABLE_SIZE>:
-10000d28:	13 05 00 c2                                         ....
+10000c68 <VIRT_RAM_TABLE_SIZE>:
+10000c68:	13 05 00 c2                                         ....
 
-10000d2c <VIRT_HIGHEST_UNUSED_ADDRESS>:
-10000d2c:	24 05 00 c2                                         $...
+10000c6c <VIRT_HIGHEST_UNUSED_ADDRESS>:
+10000c6c:	24 05 00 c2                                         $...
 
-10000d30 <SIZE_APP_STACK_USER>:
-10000d30:	00 00 18 00                                         ....
+10000c70 <SIZE_APP_STACK_USER>:
+10000c70:	00 00 18 00                                         ....
 
-10000d34 <SIZE_APP_STACK_KRNL>:
-10000d34:	00 00 08 00                                         ....
+10000c74 <SIZE_APP_STACK_KRNL>:
+10000c74:	00 00 08 00                                         ....
 
-10000d38 <SIZE_APP_STACK_TOTAL>:
-10000d38:	00 00 20 00                                         .. .
+10000c78 <SIZE_APP_STACK_TOTAL>:
+10000c78:	00 00 20 00                                         .. .
 
-10000d3c <VIRT_APP_DATA>:
-10000d3c:	00 00 00 10                                         ....
+10000c7c <VIRT_APP_DATA>:
+10000c7c:	00 00 00 10                                         ....
 
-10000d40 <VIRT_APP_STACK_USER_TOP>:
-10000d40:	00 00 00 02                                         ....
+10000c80 <VIRT_APP_STACK_USER_TOP>:
+10000c80:	00 00 00 02                                         ....
 
-10000d44 <VIRT_APP_STACK_KRNL_TOP>:
-10000d44:	00 00 e8 01                                         ....
+10000c84 <VIRT_APP_STACK_KRNL_TOP>:
+10000c84:	00 00 e8 01                                         ....
 
-10000d48 <VIRT_HEAP_MIN>:
-10000d48:	00 00 00 c8                                         ....
+10000c88 <VIRT_HEAP_MIN>:
+10000c88:	00 00 00 c8                                         ....
 
-10000d4c <VIRT_HEAP_MAX>:
-10000d4c:	ff ff ff ef                                         ....
+10000c8c <VIRT_HEAP_MAX>:
+10000c8c:	ff ff ff ef                                         ....
 
-10000d50 <VIRT_SBRK_MIN>:
-10000d50:	00 00 00 f0                                         ....
+10000c90 <VIRT_SBRK_MIN>:
+10000c90:	00 00 00 f0                                         ....
 
-10000d54 <VIRT_SBRK_MAX>:
-10000d54:	00 00 c0 ff                                         ....
+10000c94 <VIRT_SBRK_MAX>:
+10000c94:	00 00 c0 ff                                         ....
 
-10000d58 <VIRT_ALLOCED_VIRT_PAGES>:
-10000d58:	00 00 10 c2                                         ....
+10000c98 <VIRT_ALLOCED_VIRT_PAGES>:
+10000c98:	00 00 10 c2                                         ....
 
-10000d5c <VIRT_ACPI_DRIVER>:
-10000d5c:	00 40 48 c2                                         .@H.
+10000c9c <VIRT_ACPI_DRIVER>:
+10000c9c:	00 40 48 c2                                         .@H.
 
-10000d60 <TERMINAL_KEYBUFFER_IN_SIZE>:
-10000d60:	96 00 00 00                                         ....
+10000ca0 <TERMINAL_KEYBUFFER_IN_SIZE>:
+10000ca0:	96 00 00 00                                         ....
 
-10000d64 <TERMINAL_KEYBUFFER_OUT_SIZE>:
-10000d64:	2c 01 00 00 56 47 41 20 44 69 73 70 6c 61 79 00     ,...VGA Display.
-10000d74:	43 3a 2f 42 61 6e 61 6e 61 2f 53 79 73 74 65 6d     C:/Banana/System
-10000d84:	2f 56 47 41 2e 43 4f 4d 00 53 65 74 20 74 6f 20     /VGA.COM.Set to 
-10000d94:	76 69 64 65 6f 20 6d 6f 64 65 20 25 64 0a 00 90     video mode %d...
+10000ca4 <TERMINAL_KEYBUFFER_OUT_SIZE>:
+10000ca4:	2c 01 00 00 56 47 41 20 44 69 73 70 6c 61 79 00     ,...VGA Display.
+10000cb4:	43 3a 2f 42 61 6e 61 6e 61 2f 53 79 73 74 65 6d     C:/Banana/System
+10000cc4:	2f 56 47 41 2e 43 4f 4d 00 53 65 74 20 74 6f 20     /VGA.COM.Set to 
+10000cd4:	76 69 64 65 6f 20 6d 6f 64 65 20 25 64 0a 00 90     video mode %d...
 
-10000da4 <vtable for VGAVideo>:
+10000ce4 <vtable for VGAVideo>:
 	...
-	10000dac: R_386_32	VGAVideo::~VGAVideo()
-	10000db0: R_386_32	VGAVideo::~VGAVideo()
-	10000db4: R_386_32	VGAVideo::open(int, int, void*)
-	10000db8: R_386_32	VGAVideo::close(int, int, void*)
-	10000dbc: R_386_32	Device::hibernate()
-	10000dc0: R_386_32	Device::wake()
-	10000dc4: R_386_32	Device::detect()
-	10000dc8: R_386_32	Device::disableLegacy()
-	10000dcc: R_386_32	Device::powerSaving(PowerSavingLevel)
-	10000dd0: R_386_32	VGAVideo::putpixel(int, int, unsigned int)
-	10000dd4: R_386_32	VGAVideo::putrect(int, int, int, int, unsigned int)
-	10000dd8: R_386_32	Video::putTGA(int, int, unsigned char*, int)
-	10000ddc: R_386_32	Video::drawCursor(int, int, unsigned char*, int)
-	10000de0: R_386_32	VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)
-	10000de4: R_386_32	Video::blit(unsigned int*, int, int, int, int)
-	10000de8: R_386_32	Video::clearScreen(unsigned int)
+	10000cec: R_386_32	VGAVideo::~VGAVideo()
+	10000cf0: R_386_32	VGAVideo::~VGAVideo()
+	10000cf4: R_386_32	VGAVideo::open(int, int, void*)
+	10000cf8: R_386_32	VGAVideo::close(int, int, void*)
+	10000cfc: R_386_32	Device::hibernate()
+	10000d00: R_386_32	Device::wake()
+	10000d04: R_386_32	Device::detect()
+	10000d08: R_386_32	Device::disableLegacy()
+	10000d0c: R_386_32	Device::powerSaving(PowerSavingLevel)
+	10000d10: R_386_32	VGAVideo::putpixel(int, int, unsigned int)
+	10000d14: R_386_32	VGAVideo::putrect(int, int, int, int, unsigned int)
+	10000d18: R_386_32	Video::putTGA(int, int, unsigned char*, int)
+	10000d1c: R_386_32	Video::drawCursor(int, int, unsigned char*, int)
+	10000d20: R_386_32	VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)
+	10000d24: R_386_32	Video::blit(unsigned int*, int, int, int, int)
+	10000d28: R_386_32	Video::clearScreen(unsigned int)

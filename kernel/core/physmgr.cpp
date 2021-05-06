@@ -2,6 +2,7 @@
 #include "core/common.hpp"
 #include "core/terminal.hpp"
 #include "hal/vcache.hpp"		//cache purging
+
 #pragma GCC optimize ("O2")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
