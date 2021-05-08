@@ -551,6 +551,9 @@ void VAS::mapForeignPage(bool secondSlot, VAS* other, size_t physicalAddr, size_
 }
 
 void VAS::mapPage(size_t physicalAddr, size_t virtualAddr, int flags) {
+	if (flags & PAGE_SWAPPABLE) {
+		kprintf("mapping swappable page.\n");
+	}
 	if (virtualAddr < VIRT_KERNEL_BASE) {
 		size_t cr3;
 		asm volatile ("mov %%cr3, %0" : "=r"(cr3));
