@@ -543,7 +543,7 @@ VgaText::VgaText(const char* n)
 	terminalDisplayHeight = bufferHeight;
 
 	displayData = (uint8_t*) Virt::allocateKernelVirtualPages(1);
-	Virt::getAKernelVAS()->mapPage(Phys::allocatePage(), (size_t) displayData, PAGE_PRESENT | PAGE_USER);
+	Virt::getAKernelVAS()->mapPage(Phys::allocatePage(), (size_t) displayData, PAGE_PRESENT | PAGE_USER | PAGE_ALLOCATED | PAGE_SWAPPABLE);
 	memset(displayData, 0, bufferHeight * width * 2);
 
 	setDefaultColours(VgaColour::LightGrey, VgaColour::Black);
