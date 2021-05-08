@@ -683,6 +683,7 @@ size_t VAS::scanForEviction()
 		//now we have an actual page directory, check the pages within
 		size_t* oldEntry = getPageTableEntry(evictionScanner);
 		if ((*oldEntry & PAGE_SWAPPABLE)/* && (*oldEntry & PAGE_ALLOCATED)*/) {
+			kprintf("swappable...\n");
 			if (*oldEntry & PAGE_PRESENT) {
 				if (*oldEntry & PAGE_ACCESSED) {
 					*oldEntry &= ~PAGE_ACCESSED;
