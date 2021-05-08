@@ -248,7 +248,7 @@ namespace Phys
 			uint64_t top = bottom + length;
 			uint64_t type = *(((uint32_t*) ramTable) + 4);
 
-			("Memory range: 0x%X -> 0x%X (%d)\n", (uint32_t) bottom, (uint32_t) top, (uint32_t) type);
+			kprintf("Memory range: 0x%X -> 0x%X (%d)\n", (uint32_t) bottom, (uint32_t) top, (uint32_t) type);
 
 			//check that the high bits are clear
 			if ((bottom >> 32) || (top >> 32)) {
