@@ -442,7 +442,7 @@ VAS::VAS(bool kernel) {
 		enableIRQs();
 	}
 
-	size_t* thisPage = getAKernelVAS()->getPageTableEntry(((size_t) this) & ~0xFFF);
+	size_t* thisPage = Virt::getAKernelVAS()->getPageTableEntry(((size_t) this) & ~0xFFF);
 	*thisPage &= ~PAGE_SWAPPABLE;			//swapping out a VAS object is a bad idea
 }
 
