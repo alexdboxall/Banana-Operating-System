@@ -53,6 +53,7 @@ namespace Phys
 						dmaUsage[start + j] = 1;
 					}
 
+					kprintf("returning DMA memory!\n");
 					if (startSeg < SIZE_DMA_MEMORY_1 / 65536) {
 						return VIRT_DMA_MEMORY_1 + start * DMA_BLOCK_SIZE;
 					} else {
@@ -114,6 +115,8 @@ namespace Phys
 
 	void freePage(size_t address)
 	{
+		kprintf("Freeing page 0x%X\n", address);
+
 		if (address < PHYS_DMA_MEMORY_2 + SIZE_DMA_MEMORY_2) {
 			freeDMA(address, 4096);
 			return;
