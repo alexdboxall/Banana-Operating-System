@@ -674,22 +674,12 @@ size_t VAS::scanForEviction()
 {
 	int runs = 0;
 	while (1) {
-		kprintf("ev scanner @ 0x%X\n", evictionScanner);
-
 		//first check that this page directory is present
 		if ((evictionScanner & 0x3FFFFF) == 0) {
 			size_t oldEntry = pageDirectoryBase[evictionScanner / 0x400000];
 
 			if (!(oldEntry & PAGE_PRESENT)) {
 				evictionScanner += 0x400000;
-
-				if (evictionScanner >= 0xFF000000U) {
-					evictionScanner = 0;
-					++runs;
-					if (runs == 4) {
-						panic("NO MORE SWAPPABLE PAGES! OUT OF MEMORY!");
-					}
-				}
 				continue;
 			}
 		}
@@ -710,7 +700,7 @@ size_t VAS::scanForEviction()
 		}
 
 		evictionScanner += 4096;
-		if (evictionScanner >= 0xFFC00000U) {
+		if (evictionScanner >= 0xFF000000U) {
 			evictionScanner = 0;
 			++runs;
 			if (runs == 4) {
