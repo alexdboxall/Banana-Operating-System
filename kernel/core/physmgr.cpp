@@ -299,5 +299,9 @@ namespace Phys
 				usablePages++;
 			}
 		}
+
+		for (int i = 0xC8000000U / 0x1000; i < 0xCF000000U / 0x1000; ++i) {
+			kprintf("0x%X: %d\n", i, getPageState(i));
+		}
 	}
 }
