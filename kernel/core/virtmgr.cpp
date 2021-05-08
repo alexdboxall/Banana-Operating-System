@@ -674,6 +674,8 @@ size_t VAS::scanForEviction()
 {
 	int runs = 0;
 	while (1) {
+		kprintf("ev scanner @ 0x%X\n", evictionScanner);
+
 		//first check that this page directory is present
 		if ((evictionScanner & 0x3FFFFF) == 0) {
 			size_t oldEntry = pageDirectoryBase[evictionScanner / 0x400000];
