@@ -597,6 +597,7 @@ void VAS::evict(size_t virt)
 	}
 
 	size_t* entry = getPageTableEntry(virt);
+	size_t physAddr = *entry & ~0xFFF;
 	*entry &= ~PAGE_PRESENT;					//not present
 	*entry &= ~PAGE_SWAPPABLE;					//clear bit 11
 	*entry &= 0xFFFU;							//clear the address
@@ -604,10 +605,12 @@ void VAS::evict(size_t virt)
 
 	++swapBalance;
 
+	Phys::freePage(physAddr);
+
 	//flush TLB
 	CPU::writeCR3(CPU::readCR3());
 
-	kprintf("evicting:  0x%X, %d\n", virt, swapBalance);
+	kprintf("evicting phys 0x%X, virt 0x%X, swap balance %d\n", physAddr, virt, swapBalance);
 	kprintf("Total swaps: %d\n", twswaps++);
 }
 
@@ -628,7 +631,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		size_t id = (*entry) >> 11;				//we need the ID
 		kprintf("ID = 0x%X\n", id);
 		size_t phys = Phys::allocatePage();		//get a new physical page
-		kprintf("phys = 0x%X\n", phys);
+		kprintf("tryload phys = 0x%X\n", phys);
 
 		*entry &= 0xFFF;						//clear address
 		*entry |= PAGE_PRESENT;					//it is now present
@@ -671,7 +674,6 @@ size_t VAS::scanForEviction()
 
 			if (!(oldEntry & PAGE_PRESENT)) {
 				evictionScanner += 0x400000;
-				kprintf("continuing early...\n");
 				continue;
 			}
 		}
