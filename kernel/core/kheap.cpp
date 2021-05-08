@@ -28,7 +28,7 @@ extern "C" void* sbrk(ptrdiff_t increment)
 		size_t oldbrk = brk;
 		int pages = (increment + 4095) / 4096;
 		for (int i = 0; i < pages; ++i) {
-			Virt::getAKernelVAS()->mapPage(Phys::allocatePage(), brk, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_SUPERVISOR | PAGE_SWAPPABLE);
+			Virt::getAKernelVAS()->mapPage(Phys::allocatePage(), brk, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_SUPERVISOR);
 			
 			if (invlpg) {
 				asm volatile ("invlpg (%0)" : : "b"((void*) (brk)) : "memory");

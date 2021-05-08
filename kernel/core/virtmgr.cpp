@@ -354,10 +354,6 @@ VAS::VAS()
 	supervisorVAS = true;
 	specialFirstVAS = true;
 	pageDirectoryBase = (size_t*) VIRT_KRNL_PAGE_DIRECTORY;
-
-	size_t* thisPage = this->getPageTableEntry(((size_t) this) & ~0xFFF);
-	kprintf("MARKING PAGE 0x%X NON-SWAPPABLE AS VAS OBJECT LIVES HERE.\n", ((size_t) this) & ~0xFFF);
-	*thisPage &= ~PAGE_SWAPPABLE;			//swapping out a VAS object is a bad idea
 }
 
 VAS::~VAS()
@@ -445,10 +441,6 @@ VAS::VAS(bool kernel) {
 		mapPage((*getPageTableEntry(CPU::current()->idt.getPointerToInvalidOpcodeEntryForF00F())) & ~0xFFF, CPU::current()->idt.getPointerToInvalidOpcodeEntryForF00F() & ~0xFFF, PAGE_PRESENT | PAGE_SUPERVISOR | PAGE_CACHE_DISABLE);
 		enableIRQs();
 	}
-
-	size_t* thisPage = Virt::getAKernelVAS()->getPageTableEntry(((size_t) this) & ~0xFFF);
-	kprintf("MARKING PAGE 0x%X NON-SWAPPABLE AS VAS OBJECT LIVES HERE.\n", ((size_t) this) & ~0xFFF);
-	*thisPage &= ~PAGE_SWAPPABLE;			//swapping out a VAS object is a bad idea
 }
 
 size_t VAS::mapRange(size_t physicalAddr, size_t virtualAddr, int pages, int flags)
@@ -680,6 +672,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 
 size_t VAS::scanForEviction()
 {
+	int runs = 0;
 	while (1) {
 		//first check that this page directory is present
 		if ((evictionScanner & 0x3FFFFF) == 0) {
@@ -709,6 +702,10 @@ size_t VAS::scanForEviction()
 		evictionScanner += 4096;
 		if (evictionScanner >= 0xFFC00000U) {
 			evictionScanner = 0;
+			++runs;
+			if (runs == 4) {
+				panic("NO MORE SWAPPABLE PAGES! OUT OF MEMORY!");
+			}
 		}
 	}
 }
