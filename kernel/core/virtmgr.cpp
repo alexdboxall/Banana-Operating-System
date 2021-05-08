@@ -626,6 +626,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 	if (entry && ((*entry) & PAGE_ALLOCATED) && !((*entry) & PAGE_PRESENT)) {
 
 		size_t id = (*entry) >> 11;				//we need the ID
+		kprintf("ID = 0x%X\n", id);
 		size_t phys = Phys::allocatePage();		//get a new physical page
 		kprintf("phys = 0x%X\n", phys);
 
@@ -693,7 +694,6 @@ size_t VAS::scanForEviction()
 		evictionScanner += 4096;
 		if (evictionScanner >= 0xFFC00000U) {
 			evictionScanner = 0;
-			kprintf("looping back...\n");
 		}
 	}
 }
