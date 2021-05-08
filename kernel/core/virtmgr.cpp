@@ -664,13 +664,15 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 size_t VAS::scanForEviction()
 {
 	while (1) {
-		kprintf("eviction scan...\n");
+		kprintf("eviction scan... 0x%X\n", evictionScanner);
+
 		//first check that this page directory is present
 		if ((evictionScanner & 0x3FFFFF) == 0) {
 			size_t oldEntry = pageDirectoryBase[evictionScanner / 0x400000];
 
 			if (!(oldEntry & PAGE_PRESENT)) {
 				evictionScanner += 0x400000;
+				kprintf("continuing early...\n");
 				continue;
 			}
 		}
@@ -682,6 +684,7 @@ size_t VAS::scanForEviction()
 				if (*oldEntry & PAGE_ACCESSED) {
 					*oldEntry &= ~PAGE_ACCESSED;
 				} else {
+					kprintf("evicting...\n");
 					size_t ret = *oldEntry & ~0xFFF;
 					evict(evictionScanner);
 					evictionScanner += 4096;		//saves a check the next time this gets called
