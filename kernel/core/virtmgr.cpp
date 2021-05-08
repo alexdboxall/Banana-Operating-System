@@ -613,10 +613,12 @@ void VAS::evict(size_t virt)
 
 bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 {
+	kprintf("fault addr = 0x%x\n", faultAddr);
 	bool onPageBoundary = (faultAddr & 0xFFF) > 0xFE0;
 
 	faultAddr &= ~0xFFF;
 	size_t* entry = getPageTableEntry(faultAddr);
+	kprintf("entry = 0x%X\n", *entry);
 	if (!faultAddr) {
 		return false;
 	}
@@ -625,6 +627,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 
 		size_t id = (*entry) >> 11;				//we need the ID
 		size_t phys = Phys::allocatePage();		//get a new physical page
+		kprintf("phys = 0x%X\n", phys);
 
 		*entry &= 0xFFF;						//clear address
 		*entry |= PAGE_PRESENT;					//it is now present
@@ -632,6 +635,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 												//clear this as the low bit of the ID, as we want it set to 1
 		*entry |= phys;
 		
+		kprintf("disk things...\n");
 		for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
 			disks[Virt::swapfileDrive - 'A']->read(Virt::swapIDToSector(id) + i, 1, ((uint8_t*) faultAddr) + 512 * i);
 		}
