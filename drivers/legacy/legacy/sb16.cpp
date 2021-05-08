@@ -54,14 +54,15 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-uint8_t buf[4096];
-uint8_t buf2[4096];
+/*uint8_t buf[4096];
+uint8_t buf2[4096];*/
 
 char egFile[] = "C:/gumshoe.wav";
 void sb16Demo(void* s)
 {
 	unlockScheduler();
 
+	/*
 	SoundBlaster16* dev = (SoundBlaster16*) s;
 
 	SoundChannel* c = new SoundChannel(8000, 8, 90);
@@ -95,7 +96,7 @@ void sb16Demo(void* s)
 			dev->beginPlayback(8000, 8);
 			playedYet = true;
 		}
-	}
+	}*/
 
 	terminateTask(0);
 }
