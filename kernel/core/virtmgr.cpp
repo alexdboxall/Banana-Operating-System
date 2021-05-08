@@ -597,11 +597,13 @@ void VAS::evict(size_t virt)
 	}
 
 	size_t* entry = getPageTableEntry(virt);
+	kprintf("evicting flags A = 0x%X\n", *entry);
 	size_t physAddr = *entry & ~0xFFF;
 	*entry &= ~PAGE_PRESENT;					//not present
 	*entry &= ~PAGE_SWAPPABLE;					//clear bit 11
 	*entry &= 0xFFFU;							//clear the address
 	*entry |= id << 11;							//put the swap ID in
+	kprintf("evicting flags B = 0x%X\n", *entry);
 
 	++swapBalance;
 
@@ -638,7 +640,8 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		*entry |= PAGE_SWAPPABLE;				//if it was swapped it had to be swappable we don't need to
 												//clear this as the low bit of the ID, as we want it set to 1
 		*entry |= phys;
-		
+		kprintf("reloading flags = 0x%X\n", *entry);
+
 		kprintf("disk things...\n");
 		for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
 			disks[Virt::swapfileDrive - 'A']->read(Virt::swapIDToSector(id) + i, 1, ((uint8_t*) faultAddr) + 512 * i);
@@ -722,6 +725,7 @@ extern "C" void mapVASFirstTime()
 	//NEW: 128KB user stack
 	for (int i = 0; i < 32; ++i) {
 		kprintf("user stack at 0x%X\n", VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL);
+		kprintf("flags = 0x%X\n", PAGE_PRESENT | PAGE_ALLOCATED | PAGE_WRITABLE | (vas->supervisorVAS ? PAGE_SUPERVISOR : PAGE_USER));
 		vas->mapRange(Phys::allocatePage(), VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL, 1, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_WRITABLE | (vas->supervisorVAS ? PAGE_SUPERVISOR : PAGE_USER));
 	}
 
