@@ -728,7 +728,10 @@ extern "C" void mapVASFirstTime()
 		kprintf("flags = 0x%X\n", PAGE_PRESENT | PAGE_ALLOCATED | PAGE_WRITABLE | (vas->supervisorVAS ? PAGE_SUPERVISOR : PAGE_USER));
 		size_t physp = Phys::allocatePage();
 		kprintf("phys page going to is 0x%X\n", physp);
-		vas->mapRange(physp, VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL, 1, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_WRITABLE | (vas->supervisorVAS ? PAGE_SUPERVISOR : PAGE_USER));
+		vas->mapRange(physp, VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL, 1, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_SWAPPABLE | PAGE_WRITABLE | (vas->supervisorVAS ? PAGE_SUPERVISOR : PAGE_USER));
+	
+		size_t* entry = vas->getPageTableEntry(page * 4096);
+		kprintf("*e = 0x%X\n", *e);
 	}
 
 	CPU::writeCR3(CPU::readCR3());
