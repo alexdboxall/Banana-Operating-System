@@ -278,7 +278,7 @@ namespace Phys
 					length = top - bottom;
 				}
 
-				//kprintf("Allowing range to be used: 0x%X -> 0x%X\n", (uint32_t) bottom, (uint32_t) top);
+				kprintf("Allowing range to be used: 0x%X -> 0x%X\n", (uint32_t) bottom, (uint32_t) top);
 
 				//allow it to be used
 				allowSegmentToBeUsed(bottom, top);
