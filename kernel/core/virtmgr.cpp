@@ -681,7 +681,7 @@ size_t VAS::scanForEviction()
 			if (!(oldEntry & PAGE_PRESENT)) {
 				evictionScanner += 0x400000;
 
-				if (evictionScanner >= 0xFFC00000U) {
+				if (evictionScanner >= 0xFF000000U) {
 					evictionScanner = 0;
 					++runs;
 					if (runs == 4) {
