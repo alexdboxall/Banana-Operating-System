@@ -354,19 +354,6 @@ VAS::VAS()
 	supervisorVAS = true;
 	specialFirstVAS = true;
 	pageDirectoryBase = (size_t*) VIRT_KRNL_PAGE_DIRECTORY;
-
-	size_t low  = 0xc00086daU;
-	size_t high = 0xc000e411U;
-
-	low = (low + 4095) & ~0xFFF;
-	high &= ~0xFFF;
-
-	for (size_t i = low; i < high; i += 0x1000) {
-		size_t* entry = getPageTableEntry(i * 0x1000);
-		kprintf("VIRT 0x%X, PHYS 0x%X is now swappable.\n", i * 0x1000, *entry & ~0xFFF);
-		*entry |= PAGE_SWAPPABLE;
-		*entry |= PAGE_ALLOCATED;
-	}
 }
 
 VAS::~VAS()
@@ -421,6 +408,26 @@ VAS::VAS(VAS* old)
 
 VAS::VAS(bool kernel) {
 	supervisorVAS = kernel;
+
+	static bool doneKernelSwaps = false;
+
+	if (!kernel && !doneKernelSwaps) {
+		size_t low = 0xc00086daU;
+		size_t high = 0xc000e411U;
+
+		low = (low + 4095) & ~0xFFF;
+		high &= ~0xFFF;
+
+		for (size_t i = low; i < high; i += 0x1000) {
+			kprintf("VIRT 0x%X, PHYS 0x%X is now swappable.\n", i * 0x1000, *entry & ~0xFFF);
+
+			size_t* entry = getPageTableEntry(i * 0x1000);
+			*entry |= PAGE_SWAPPABLE;
+			*entry |= PAGE_ALLOCATED;
+		}
+
+		doneKernelSwaps = true;
+	}
 
 	pageDirectoryBasePhysical = Phys::allocatePage();
 
