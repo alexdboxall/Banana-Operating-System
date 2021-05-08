@@ -229,8 +229,9 @@ namespace Virt
 	void setupPageSwapping(int megs)
 	{
 		File* f = new File("C:/Banana/SWAPFILE.SYS", kernelProcess);
-		FileStatus st = f->open(FILE_OPEN_WRITE_NORMAL);
+		FileStatus st = f->open(FILE_OPEN_READ);
 		if (st != FileStatus::Success) {
+			kprintf("Couldn't open old swapfile...\n");
 			f->unlink();
 			st = f->open(FILE_OPEN_WRITE_NORMAL);
 			if (st != FileStatus::Success) {
@@ -243,6 +244,11 @@ namespace Virt
 		f->stat(&siz, &dr);
 		kprintf("setupPageSwapping old size = 0x%X\n", (uint32_t) siz);
 		if (siz != megs * 1024 * 1024) {
+			f->close();
+			st = f->open(FILE_OPEN_WRITE_NORMAL);
+			if (st != FileStatus::Success) {
+				panic("NO PAGE SWAPPING AVAILABLE");
+			}
 			int br = 0;
 			int pages = megs * 256;
 			uint8_t* buff = (uint8_t*) malloc(4096 * 16);
