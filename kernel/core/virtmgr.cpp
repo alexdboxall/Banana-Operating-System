@@ -642,6 +642,8 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		*entry |= phys;
 		kprintf("reloading flags = 0x%X\n", *entry);
 
+		kprintf("Cr3 = 0x%X, vas = 0x%X\n", CPU::readCR3(), this);
+
 		kprintf("disk things...\n");
 		for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
 			disks[Virt::swapfileDrive - 'A']->read(Virt::swapIDToSector(id) + i, 1, ((uint8_t*) faultAddr) + 512 * i);
@@ -732,6 +734,7 @@ extern "C" void mapVASFirstTime()
 	
 		size_t* e = vas->getPageTableEntry(VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL);
 		kprintf("*e = 0x%X\n", *e);
+		kprintf("Cr3 = 0x%X, vas = 0x%X\n", CPU::readCR3(), vas);
 	}
 
 	CPU::writeCR3(CPU::readCR3());
