@@ -732,7 +732,7 @@ namespace Thr
 		for (size_t i = 0; i < (siz + 4095) / 4096; ++i) {
 			size_t* ptentry = Virt::getAKernelVAS()->getPageTableEntry(addr + i * 4096);
 			if (!(*ptentry & (PAGE_ACCESSED | PAGE_DIRTY))) {
-				Phys::freePage(addr + i * 4096);
+				Phys::freePage(*ptentry & ~0xFFF);
 			}
 		}
 
