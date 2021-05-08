@@ -519,17 +519,19 @@ List* Window_get_windows_below(Window* parent, Window* child)
 void Window_raise(Window* window, uint8_t do_draw)
 {
 	if (window->flags & WIN_TOPLEVELWIN) {
-		if (active_window != window && active_window) {
+		if (active_window != window) {
+			if (active_window) {
+				Message m;
+				m.window = active_window;
+				m.type = MESSAGE_FOCUS_LEAVE;
+				dispatchMessage((Window*) m.window, m);
+			}
+			active_window = window;
 			Message m;
 			m.window = active_window;
-			m.type = MESSAGE_FOCUS_LEAVE;
+			m.type = MESSAGE_FOCUS_ENTER;
 			dispatchMessage((Window*) m.window, m);
 		}
-		active_window = window;
-		Message m;
-		m.window = active_window;
-		m.type = MESSAGE_FOCUS_ENTER;
-		dispatchMessage((Window*) m.window, m);
 	}
 
 	int i;
@@ -717,7 +719,8 @@ void Window_move(Window* window, int new_x, int new_y)
 	//And we'll repaint all of them using the dirty rects
 	//(removing them from the list as we go for convenience)
 	while (dirty_windows->count) {
-		Window_paint((Window*) List_remove_at(dirty_windows, 0), dirty_list, 1);
+		Window* thewin = (Window*) List_remove_at(dirty_windows, 0);
+		Window_paint(thewin, dirty_list, 1);
 	}
 
 	//The one thing that might still be dirty is the parent we're inside of
@@ -732,6 +735,7 @@ void Window_move(Window* window, int new_x, int new_y)
 
 	//With the dirtied siblings redrawn, we can do the final update of 
 	//the window location and paint it at that new position
+	
 	Window_paint(window, (List*) 0, 1);
 
 	Message m;
@@ -935,6 +939,7 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
 	if (window->drag_child) {
 		if (window->dragType == DRAG_TYPE_MOVE) {
 			Window_move(window->drag_child, mouse_x - window->drag_off_x, mouse_y - window->drag_off_y);
+
 		} else if (window->dragType == DRAG_TYPE_RESIZE_ALL) {
 			Window_resize(window->drag_child, mouse_x - window->drag_off_x, mouse_y - window->drag_off_y);
 		} else if (window->dragType == DRAG_TYPE_RESIZE_HZ) {

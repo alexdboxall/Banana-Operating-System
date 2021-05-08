@@ -70,7 +70,7 @@ Disassembly of section .text:
 100000a5:	83 ec 08             	sub    esp,0x8
 100000a8:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
 100000ab:	83 ec 08             	sub    esp,0x8
-100000ae:	68 a8 0c 00 10       	push   0x10000ca8	100000af: R_386_32	.text
+100000ae:	68 ac 0c 00 10       	push   0x10000cac	100000af: R_386_32	.text
 100000b3:	50                   	push   eax
 100000b4:	e8 fc ff ff ff       	call   100000b5 <VGAVideo::VGAVideo()+0x13>	100000b5: R_386_PC32	Video::Video(char const*)
 100000b9:	83 c4 10             	add    esp,0x10
@@ -116,13 +116,13 @@ Disassembly of section .text:
 10000149:	50                   	push   eax
 1000014a:	68 90 00 00 00       	push   0x90
 1000014f:	6a 00                	push   0x0
-10000151:	68 b4 0c 00 10       	push   0x10000cb4	10000152: R_386_32	.text
+10000151:	68 b8 0c 00 10       	push   0x10000cb8	10000152: R_386_32	.text
 10000156:	e8 fc ff ff ff       	call   10000157 <VGAVideo::open(int, int, void*)+0x67>	10000157: R_386_PC32	Vm::start8086(char const*, unsigned short, unsigned short, unsigned short, unsigned short)
 1000015b:	83 c4 20             	add    esp,0x20
 1000015e:	e8 fc ff ff ff       	call   1000015f <VGAVideo::open(int, int, void*)+0x6f>	1000015f: R_386_PC32	Vm::finish8086()
 10000163:	83 ec 08             	sub    esp,0x8
 10000166:	ff b3 68 01 00 00    	push   DWORD PTR [ebx+0x168]
-1000016c:	68 cd 0c 00 10       	push   0x10000ccd	1000016d: R_386_32	.text
+1000016c:	68 d1 0c 00 10       	push   0x10000cd1	1000016d: R_386_32	.text
 10000171:	e8 fc ff ff ff       	call   10000172 <VGAVideo::open(int, int, void*)+0x82>	10000172: R_386_PC32	Dbg::kprintf(char const*, ...)
 10000176:	8b 83 64 01 00 00    	mov    eax,DWORD PTR [ebx+0x164]
 1000017c:	2d 00 00 00 3e       	sub    eax,0x3e000000
@@ -843,262 +843,257 @@ Disassembly of section .text:
 10000acc:	57                   	push   edi
 10000acd:	56                   	push   esi
 10000ace:	53                   	push   ebx
-10000acf:	83 ec 0c             	sub    esp,0xc
-10000ad2:	8b 74 24 1c          	mov    esi,DWORD PTR [esp+0x1c]
-10000ad6:	8b 5c 24 20          	mov    ebx,DWORD PTR [esp+0x20]
-10000ada:	8b 8e 64 01 00 00    	mov    ecx,DWORD PTR [esi+0x164]
-10000ae0:	89 da                	mov    edx,ebx
-10000ae2:	8b 7c 24 24          	mov    edi,DWORD PTR [esp+0x24]
-10000ae6:	f7 d2                	not    edx
-10000ae8:	0f af be 58 01 00 00 	imul   edi,DWORD PTR [esi+0x158]
-10000aef:	83 e2 07             	and    edx,0x7
-10000af2:	8b 44 24 28          	mov    eax,DWORD PTR [esp+0x28]
-10000af6:	89 54 24 04          	mov    DWORD PTR [esp+0x4],edx
-10000afa:	89 fa                	mov    edx,edi
-10000afc:	01 da                	add    edx,ebx
-10000afe:	c1 fa 03             	sar    edx,0x3
-10000b01:	8d bc 11 00 00 00 c2 	lea    edi,[ecx+edx*1-0x3e000000]
-10000b08:	ba fe ff ff ff       	mov    edx,0xfffffffe
-10000b0d:	8a 4c 24 04          	mov    cl,BYTE PTR [esp+0x4]
-10000b11:	d3 c2                	rol    edx,cl
-10000b13:	80 be 61 01 00 00 00 	cmp    BYTE PTR [esi+0x161],0x0
-10000b1a:	88 54 24 0b          	mov    BYTE PTR [esp+0xb],dl
-10000b1e:	75 62                	jne    10000b82 <VGAVideo::putpixel(int, int, unsigned int)+0xb6>
-10000b20:	89 c1                	mov    ecx,eax
-10000b22:	89 c2                	mov    edx,eax
-10000b24:	c1 f9 15             	sar    ecx,0x15
-10000b27:	c1 fa 0a             	sar    edx,0xa
-10000b2a:	83 e1 07             	and    ecx,0x7
-10000b2d:	83 e2 38             	and    edx,0x38
-10000b30:	03 5c 24 24          	add    ebx,DWORD PTR [esp+0x24]
-10000b34:	09 ca                	or     edx,ecx
-10000b36:	83 e3 01             	and    ebx,0x1
-10000b39:	8d 0c 00             	lea    ecx,[eax+eax*1]
-10000b3c:	81 e1 c0 01 00 00    	and    ecx,0x1c0
-10000b42:	09 ca                	or     edx,ecx
-10000b44:	0f b6 84 53 00 00 00 00 	movzx  eax,BYTE PTR [ebx+edx*2+0x0]	10000b48: R_386_32	dither16Data
-10000b4c:	31 db                	xor    ebx,ebx
-10000b4e:	89 04 24             	mov    DWORD PTR [esp],eax
-10000b51:	53                   	push   ebx
-10000b52:	43                   	inc    ebx
-10000b53:	56                   	push   esi
-10000b54:	e8 fc ff ff ff       	call   10000b55 <VGAVideo::putpixel(int, int, unsigned int)+0x89>	10000b55: R_386_PC32	VGAVideo::setPlane(int)
-10000b59:	8b 54 24 08          	mov    edx,DWORD PTR [esp+0x8]
-10000b5d:	8a 44 24 13          	mov    al,BYTE PTR [esp+0x13]
-10000b61:	8a 4c 24 0c          	mov    cl,BYTE PTR [esp+0xc]
-10000b65:	22 07                	and    al,BYTE PTR [edi]
-10000b67:	d1 7c 24 08          	sar    DWORD PTR [esp+0x8],1
-10000b6b:	83 e2 01             	and    edx,0x1
-10000b6e:	d3 e2                	shl    edx,cl
-10000b70:	09 d0                	or     eax,edx
-10000b72:	83 fb 04             	cmp    ebx,0x4
-10000b75:	88 07                	mov    BYTE PTR [edi],al
-10000b77:	58                   	pop    eax
-10000b78:	5a                   	pop    edx
-10000b79:	75 d6                	jne    10000b51 <VGAVideo::putpixel(int, int, unsigned int)+0x85>
-10000b7b:	83 c4 0c             	add    esp,0xc
-10000b7e:	5b                   	pop    ebx
-10000b7f:	5e                   	pop    esi
-10000b80:	5f                   	pop    edi
-10000b81:	c3                   	ret    
-10000b82:	89 14 24             	mov    DWORD PTR [esp],edx
-10000b85:	ff 74 24 24          	push   DWORD PTR [esp+0x24]
-10000b89:	53                   	push   ebx
-10000b8a:	50                   	push   eax
-10000b8b:	e8 fc ff ff ff       	call   10000b8c <VGAVideo::putpixel(int, int, unsigned int)+0xc0>	10000b8c: R_386_PC32	monoPixelLookup(int, int, int)
-10000b90:	83 c4 0c             	add    esp,0xc
-10000b93:	89 c3                	mov    ebx,eax
-10000b95:	6a 00                	push   0x0
-10000b97:	83 e3 01             	and    ebx,0x1
-10000b9a:	56                   	push   esi
-10000b9b:	e8 fc ff ff ff       	call   10000b9c <VGAVideo::putpixel(int, int, unsigned int)+0xd0>	10000b9c: R_386_PC32	VGAVideo::setPlane(int)
-10000ba0:	8b 54 24 08          	mov    edx,DWORD PTR [esp+0x8]
-10000ba4:	8a 4c 24 0c          	mov    cl,BYTE PTR [esp+0xc]
-10000ba8:	22 17                	and    dl,BYTE PTR [edi]
-10000baa:	d3 e3                	shl    ebx,cl
-10000bac:	09 da                	or     edx,ebx
-10000bae:	88 17                	mov    BYTE PTR [edi],dl
-10000bb0:	59                   	pop    ecx
-10000bb1:	5b                   	pop    ebx
-10000bb2:	83 c4 0c             	add    esp,0xc
-10000bb5:	5b                   	pop    ebx
-10000bb6:	5e                   	pop    esi
-10000bb7:	5f                   	pop    edi
-10000bb8:	c3                   	ret    
-10000bb9:	90                   	nop
+10000acf:	83 ec 14             	sub    esp,0x14
+10000ad2:	8b 74 24 24          	mov    esi,DWORD PTR [esp+0x24]
+10000ad6:	8b 5c 24 28          	mov    ebx,DWORD PTR [esp+0x28]
+10000ada:	8b 86 64 01 00 00    	mov    eax,DWORD PTR [esi+0x164]
+10000ae0:	8a 96 61 01 00 00    	mov    dl,BYTE PTR [esi+0x161]
+10000ae6:	2d 00 00 00 3e       	sub    eax,0x3e000000
+10000aeb:	8b 7c 24 30          	mov    edi,DWORD PTR [esp+0x30]
+10000aef:	89 44 24 08          	mov    DWORD PTR [esp+0x8],eax
+10000af3:	89 d8                	mov    eax,ebx
+10000af5:	f7 d0                	not    eax
+10000af7:	83 e0 07             	and    eax,0x7
+10000afa:	89 44 24 04          	mov    DWORD PTR [esp+0x4],eax
+10000afe:	8b 44 24 2c          	mov    eax,DWORD PTR [esp+0x2c]
+10000b02:	0f af 86 58 01 00 00 	imul   eax,DWORD PTR [esi+0x158]
+10000b09:	01 d8                	add    eax,ebx
+10000b0b:	c1 f8 03             	sar    eax,0x3
+10000b0e:	84 d2                	test   dl,dl
+10000b10:	89 44 24 0c          	mov    DWORD PTR [esp+0xc],eax
+10000b14:	74 75                	je     10000b8b <VGAVideo::putpixel(int, int, unsigned int)+0xbf>
+10000b16:	88 54 24 10          	mov    BYTE PTR [esp+0x10],dl
+10000b1a:	ff 74 24 2c          	push   DWORD PTR [esp+0x2c]
+10000b1e:	53                   	push   ebx
+10000b1f:	57                   	push   edi
+10000b20:	e8 fc ff ff ff       	call   10000b21 <VGAVideo::putpixel(int, int, unsigned int)+0x55>	10000b21: R_386_PC32	monoPixelLookup(int, int, int)
+10000b25:	83 c4 0c             	add    esp,0xc
+10000b28:	89 04 24             	mov    DWORD PTR [esp],eax
+10000b2b:	8a 54 24 10          	mov    dl,BYTE PTR [esp+0x10]
+10000b2f:	b8 fe ff ff ff       	mov    eax,0xfffffffe
+10000b34:	8a 4c 24 04          	mov    cl,BYTE PTR [esp+0x4]
+10000b38:	31 db                	xor    ebx,ebx
+10000b3a:	d3 c0                	rol    eax,cl
+10000b3c:	84 d2                	test   dl,dl
+10000b3e:	89 44 24 10          	mov    DWORD PTR [esp+0x10],eax
+10000b42:	74 3b                	je     10000b7f <VGAVideo::putpixel(int, int, unsigned int)+0xb3>
+10000b44:	85 db                	test   ebx,ebx
+10000b46:	75 3c                	jne    10000b84 <VGAVideo::putpixel(int, int, unsigned int)+0xb8>
+10000b48:	53                   	push   ebx
+10000b49:	43                   	inc    ebx
+10000b4a:	56                   	push   esi
+10000b4b:	e8 fc ff ff ff       	call   10000b4c <VGAVideo::putpixel(int, int, unsigned int)+0x80>	10000b4c: R_386_PC32	VGAVideo::setPlane(int)
+10000b50:	8b 54 24 08          	mov    edx,DWORD PTR [esp+0x8]
+10000b54:	8b 7c 24 10          	mov    edi,DWORD PTR [esp+0x10]
+10000b58:	8a 44 24 18          	mov    al,BYTE PTR [esp+0x18]
+10000b5c:	03 7c 24 14          	add    edi,DWORD PTR [esp+0x14]
+10000b60:	8a 4c 24 0c          	mov    cl,BYTE PTR [esp+0xc]
+10000b64:	22 07                	and    al,BYTE PTR [edi]
+10000b66:	d1 7c 24 08          	sar    DWORD PTR [esp+0x8],1
+10000b6a:	83 e2 01             	and    edx,0x1
+10000b6d:	d3 e2                	shl    edx,cl
+10000b6f:	09 d0                	or     eax,edx
+10000b71:	88 07                	mov    BYTE PTR [edi],al
+10000b73:	8a 96 61 01 00 00    	mov    dl,BYTE PTR [esi+0x161]
+10000b79:	58                   	pop    eax
+10000b7a:	84 d2                	test   dl,dl
+10000b7c:	59                   	pop    ecx
+10000b7d:	75 c5                	jne    10000b44 <VGAVideo::putpixel(int, int, unsigned int)+0x78>
+10000b7f:	83 fb 04             	cmp    ebx,0x4
+10000b82:	75 c4                	jne    10000b48 <VGAVideo::putpixel(int, int, unsigned int)+0x7c>
+10000b84:	83 c4 14             	add    esp,0x14
+10000b87:	5b                   	pop    ebx
+10000b88:	5e                   	pop    esi
+10000b89:	5f                   	pop    edi
+10000b8a:	c3                   	ret    
+10000b8b:	89 f9                	mov    ecx,edi
+10000b8d:	89 f8                	mov    eax,edi
+10000b8f:	c1 f9 15             	sar    ecx,0x15
+10000b92:	c1 f8 0a             	sar    eax,0xa
+10000b95:	83 e1 07             	and    ecx,0x7
+10000b98:	83 e0 38             	and    eax,0x38
+10000b9b:	09 c1                	or     ecx,eax
+10000b9d:	8d 04 3f             	lea    eax,[edi+edi*1]
+10000ba0:	25 c0 01 00 00       	and    eax,0x1c0
+10000ba5:	09 c8                	or     eax,ecx
+10000ba7:	8b 4c 24 2c          	mov    ecx,DWORD PTR [esp+0x2c]
+10000bab:	01 d9                	add    ecx,ebx
+10000bad:	83 e1 01             	and    ecx,0x1
+10000bb0:	0f b6 84 41 00 00 00 00 	movzx  eax,BYTE PTR [ecx+eax*2+0x0]	10000bb4: R_386_32	dither16Data
+10000bb8:	89 04 24             	mov    DWORD PTR [esp],eax
+10000bbb:	e9 6f ff ff ff       	jmp    10000b2f <VGAVideo::putpixel(int, int, unsigned int)+0x63>
 
-10000bba <VGAVideo::~VGAVideo()>:
-10000bba:	55                   	push   ebp
-10000bbb:	89 e5                	mov    ebp,esp
-10000bbd:	83 ec 08             	sub    esp,0x8
-10000bc0:	ba 08 00 00 00       	mov    edx,0x8	10000bc1: R_386_32	vtable for VGAVideo
-10000bc5:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-10000bc8:	89 10                	mov    DWORD PTR [eax],edx
-10000bca:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-10000bcd:	83 ec 0c             	sub    esp,0xc
-10000bd0:	50                   	push   eax
-10000bd1:	e8 fc ff ff ff       	call   10000bd2 <VGAVideo::~VGAVideo()+0x18>	10000bd2: R_386_PC32	Video::~Video()
-10000bd6:	83 c4 10             	add    esp,0x10
-10000bd9:	90                   	nop
-10000bda:	c9                   	leave  
-10000bdb:	c3                   	ret    
+10000bc0 <VGAVideo::~VGAVideo()>:
+10000bc0:	55                   	push   ebp
+10000bc1:	89 e5                	mov    ebp,esp
+10000bc3:	83 ec 08             	sub    esp,0x8
+10000bc6:	ba 08 00 00 00       	mov    edx,0x8	10000bc7: R_386_32	vtable for VGAVideo
+10000bcb:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000bce:	89 10                	mov    DWORD PTR [eax],edx
+10000bd0:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000bd3:	83 ec 0c             	sub    esp,0xc
+10000bd6:	50                   	push   eax
+10000bd7:	e8 fc ff ff ff       	call   10000bd8 <VGAVideo::~VGAVideo()+0x18>	10000bd8: R_386_PC32	Video::~Video()
+10000bdc:	83 c4 10             	add    esp,0x10
+10000bdf:	90                   	nop
+10000be0:	c9                   	leave  
+10000be1:	c3                   	ret    
 
-10000bdc <VGAVideo::~VGAVideo()>:
-10000bdc:	55                   	push   ebp
-10000bdd:	89 e5                	mov    ebp,esp
-10000bdf:	83 ec 08             	sub    esp,0x8
-10000be2:	83 ec 0c             	sub    esp,0xc
-10000be5:	ff 75 08             	push   DWORD PTR [ebp+0x8]
-10000be8:	e8 fc ff ff ff       	call   10000be9 <VGAVideo::~VGAVideo()+0xd>	10000be9: R_386_PC32	VGAVideo::~VGAVideo()
-10000bed:	83 c4 10             	add    esp,0x10
-10000bf0:	83 ec 08             	sub    esp,0x8
-10000bf3:	68 6c 01 00 00       	push   0x16c
-10000bf8:	ff 75 08             	push   DWORD PTR [ebp+0x8]
-10000bfb:	e8 fc ff ff ff       	call   10000bfc <VGAVideo::~VGAVideo()+0x20>	10000bfc: R_386_PC32	operator delete(void*, unsigned long)
-10000c00:	83 c4 10             	add    esp,0x10
-10000c03:	c9                   	leave  
-10000c04:	c3                   	ret    
-10000c05:	66 90                	xchg   ax,ax
-10000c07:	90                   	nop
+10000be2 <VGAVideo::~VGAVideo()>:
+10000be2:	55                   	push   ebp
+10000be3:	89 e5                	mov    ebp,esp
+10000be5:	83 ec 08             	sub    esp,0x8
+10000be8:	83 ec 0c             	sub    esp,0xc
+10000beb:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+10000bee:	e8 fc ff ff ff       	call   10000bef <VGAVideo::~VGAVideo()+0xd>	10000bef: R_386_PC32	VGAVideo::~VGAVideo()
+10000bf3:	83 c4 10             	add    esp,0x10
+10000bf6:	83 ec 08             	sub    esp,0x8
+10000bf9:	68 6c 01 00 00       	push   0x16c
+10000bfe:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+10000c01:	e8 fc ff ff ff       	call   10000c02 <VGAVideo::~VGAVideo()+0x20>	10000c02: R_386_PC32	operator delete(void*, unsigned long)
+10000c06:	83 c4 10             	add    esp,0x10
+10000c09:	c9                   	leave  
+10000c0a:	c3                   	ret    
+10000c0b:	90                   	nop
 
-10000c08 <PHYS_RAM_TABLE_SIZE>:
-10000c08:	13 05 00 00                                         ....
+10000c0c <PHYS_RAM_TABLE_SIZE>:
+10000c0c:	13 05 00 00                                         ....
 
-10000c0c <PHYS_HIGHEST_UNUSED_ADDRESS>:
-10000c0c:	24 05 00 00                                         $...
+10000c10 <PHYS_HIGHEST_UNUSED_ADDRESS>:
+10000c10:	24 05 00 00                                         $...
 
-10000c10 <PHYS_RAM_TABLE>:
-10000c10:	00 06 00 00                                         ....
+10000c14 <PHYS_RAM_TABLE>:
+10000c14:	00 06 00 00                                         ....
 
-10000c14 <PHYS_DMA_MEMORY_1>:
-10000c14:	00 00 01 00                                         ....
+10000c18 <PHYS_DMA_MEMORY_1>:
+10000c18:	00 00 01 00                                         ....
 
-10000c18 <PHYS_PHYS_PAGE_BITMAP>:
-10000c18:	00 00 02 00                                         ....
+10000c1c <PHYS_PHYS_PAGE_BITMAP>:
+10000c1c:	00 00 02 00                                         ....
 
-10000c1c <PHYS_VIRT_PAGE_BITMAP>:
-10000c1c:	00 00 04 00                                         ....
+10000c20 <PHYS_VIRT_PAGE_BITMAP>:
+10000c20:	00 00 04 00                                         ....
 
-10000c20 <PHYS_DMA_MEMORY_2>:
-10000c20:	00 00 06 00                                         ....
+10000c24 <PHYS_DMA_MEMORY_2>:
+10000c24:	00 00 06 00                                         ....
 
-10000c24 <PHYS_ALLOCED_VIRT_PAGES>:
-10000c24:	00 00 10 00                                         ....
+10000c28 <PHYS_ALLOCED_VIRT_PAGES>:
+10000c28:	00 00 10 00                                         ....
 
-10000c28 <PHYS_KRNL_PAGE_DIRECTORY>:
-10000c28:	00 10 00 00                                         ....
+10000c2c <PHYS_KRNL_PAGE_DIRECTORY>:
+10000c2c:	00 10 00 00                                         ....
 
-10000c2c <VIRT_KERNEL_BASE>:
-10000c2c:	00 00 00 c0                                         ....
+10000c30 <VIRT_KERNEL_BASE>:
+10000c30:	00 00 00 c0                                         ....
 
-10000c30 <VIRT_LOW_MEGS>:
-10000c30:	00 00 00 c2                                         ....
+10000c34 <VIRT_LOW_MEGS>:
+10000c34:	00 00 00 c2                                         ....
 
-10000c34 <VIRT_CPU_SPECIFIC>:
-10000c34:	00 00 40 c2                                         ..@.
+10000c38 <VIRT_CPU_SPECIFIC>:
+10000c38:	00 00 40 c2                                         ..@.
 
-10000c38 <VIRT_RECURSIVE_SPOT_1>:
-10000c38:	00 00 80 c2                                         ....
+10000c3c <VIRT_RECURSIVE_SPOT_1>:
+10000c3c:	00 00 80 c2                                         ....
 
-10000c3c <VIRT_RECURSIVE_SPOT_2>:
-10000c3c:	00 00 c0 c2                                         ....
+10000c40 <VIRT_RECURSIVE_SPOT_2>:
+10000c40:	00 00 c0 c2                                         ....
 
-10000c40 <VIRT_DMA_MEMORY_1>:
-10000c40:	00 00 01 c2                                         ....
+10000c44 <VIRT_DMA_MEMORY_1>:
+10000c44:	00 00 01 c2                                         ....
 
-10000c44 <SIZE_DMA_MEMORY_1>:
-10000c44:	00 00 01 00                                         ....
+10000c48 <SIZE_DMA_MEMORY_1>:
+10000c48:	00 00 01 00                                         ....
 
-10000c48 <VIRT_DMA_MEMORY_2>:
-10000c48:	00 00 06 c2                                         ....
+10000c4c <VIRT_DMA_MEMORY_2>:
+10000c4c:	00 00 06 c2                                         ....
 
-10000c4c <SIZE_DMA_MEMORY_2>:
-10000c4c:	00 00 02 00                                         ....
+10000c50 <SIZE_DMA_MEMORY_2>:
+10000c50:	00 00 02 00                                         ....
 
-10000c50 <VIRT_KRNL_PAGE_DIRECTORY>:
-10000c50:	00 10 00 c2                                         ....
+10000c54 <VIRT_KRNL_PAGE_DIRECTORY>:
+10000c54:	00 10 00 c2                                         ....
 
-10000c54 <VIRT_PHYS_PAGE_BITMAP>:
-10000c54:	00 00 02 c2                                         ....
+10000c58 <VIRT_PHYS_PAGE_BITMAP>:
+10000c58:	00 00 02 c2                                         ....
 
-10000c58 <SIZE_PHYS_PAGE_BITMAP>:
-10000c58:	00 00 02 00                                         ....
+10000c5c <SIZE_PHYS_PAGE_BITMAP>:
+10000c5c:	00 00 02 00                                         ....
 
-10000c5c <VIRT_VIRT_PAGE_BITMAP>:
-10000c5c:	00 00 04 c2                                         ....
+10000c60 <VIRT_VIRT_PAGE_BITMAP>:
+10000c60:	00 00 04 c2                                         ....
 
-10000c60 <SIZE_VIRT_PAGE_BITMAP>:
-10000c60:	00 80 00 00                                         ....
+10000c64 <SIZE_VIRT_PAGE_BITMAP>:
+10000c64:	00 80 00 00                                         ....
 
-10000c64 <VIRT_RAM_TABLE>:
-10000c64:	00 06 00 c2                                         ....
+10000c68 <VIRT_RAM_TABLE>:
+10000c68:	00 06 00 c2                                         ....
 
-10000c68 <VIRT_RAM_TABLE_SIZE>:
-10000c68:	13 05 00 c2                                         ....
+10000c6c <VIRT_RAM_TABLE_SIZE>:
+10000c6c:	13 05 00 c2                                         ....
 
-10000c6c <VIRT_HIGHEST_UNUSED_ADDRESS>:
-10000c6c:	24 05 00 c2                                         $...
+10000c70 <VIRT_HIGHEST_UNUSED_ADDRESS>:
+10000c70:	24 05 00 c2                                         $...
 
-10000c70 <SIZE_APP_STACK_USER>:
-10000c70:	00 00 18 00                                         ....
+10000c74 <SIZE_APP_STACK_USER>:
+10000c74:	00 00 18 00                                         ....
 
-10000c74 <SIZE_APP_STACK_KRNL>:
-10000c74:	00 00 08 00                                         ....
+10000c78 <SIZE_APP_STACK_KRNL>:
+10000c78:	00 00 08 00                                         ....
 
-10000c78 <SIZE_APP_STACK_TOTAL>:
-10000c78:	00 00 20 00                                         .. .
+10000c7c <SIZE_APP_STACK_TOTAL>:
+10000c7c:	00 00 20 00                                         .. .
 
-10000c7c <VIRT_APP_DATA>:
-10000c7c:	00 00 00 10                                         ....
+10000c80 <VIRT_APP_DATA>:
+10000c80:	00 00 00 10                                         ....
 
-10000c80 <VIRT_APP_STACK_USER_TOP>:
-10000c80:	00 00 00 02                                         ....
+10000c84 <VIRT_APP_STACK_USER_TOP>:
+10000c84:	00 00 00 02                                         ....
 
-10000c84 <VIRT_APP_STACK_KRNL_TOP>:
-10000c84:	00 00 e8 01                                         ....
+10000c88 <VIRT_APP_STACK_KRNL_TOP>:
+10000c88:	00 00 e8 01                                         ....
 
-10000c88 <VIRT_HEAP_MIN>:
-10000c88:	00 00 00 c8                                         ....
+10000c8c <VIRT_HEAP_MIN>:
+10000c8c:	00 00 00 c8                                         ....
 
-10000c8c <VIRT_HEAP_MAX>:
-10000c8c:	ff ff ff ef                                         ....
+10000c90 <VIRT_HEAP_MAX>:
+10000c90:	ff ff ff ef                                         ....
 
-10000c90 <VIRT_SBRK_MIN>:
-10000c90:	00 00 00 f0                                         ....
+10000c94 <VIRT_SBRK_MIN>:
+10000c94:	00 00 00 f0                                         ....
 
-10000c94 <VIRT_SBRK_MAX>:
-10000c94:	00 00 c0 ff                                         ....
+10000c98 <VIRT_SBRK_MAX>:
+10000c98:	00 00 c0 ff                                         ....
 
-10000c98 <VIRT_ALLOCED_VIRT_PAGES>:
-10000c98:	00 00 10 c2                                         ....
+10000c9c <VIRT_ALLOCED_VIRT_PAGES>:
+10000c9c:	00 00 10 c2                                         ....
 
-10000c9c <VIRT_ACPI_DRIVER>:
-10000c9c:	00 40 48 c2                                         .@H.
+10000ca0 <VIRT_ACPI_DRIVER>:
+10000ca0:	00 40 48 c2                                         .@H.
 
-10000ca0 <TERMINAL_KEYBUFFER_IN_SIZE>:
-10000ca0:	96 00 00 00                                         ....
+10000ca4 <TERMINAL_KEYBUFFER_IN_SIZE>:
+10000ca4:	96 00 00 00                                         ....
 
-10000ca4 <TERMINAL_KEYBUFFER_OUT_SIZE>:
-10000ca4:	2c 01 00 00 56 47 41 20 44 69 73 70 6c 61 79 00     ,...VGA Display.
-10000cb4:	43 3a 2f 42 61 6e 61 6e 61 2f 53 79 73 74 65 6d     C:/Banana/System
-10000cc4:	2f 56 47 41 2e 43 4f 4d 00 53 65 74 20 74 6f 20     /VGA.COM.Set to 
-10000cd4:	76 69 64 65 6f 20 6d 6f 64 65 20 25 64 0a 00 90     video mode %d...
+10000ca8 <TERMINAL_KEYBUFFER_OUT_SIZE>:
+10000ca8:	2c 01 00 00 56 47 41 20 44 69 73 70 6c 61 79 00     ,...VGA Display.
+10000cb8:	43 3a 2f 42 61 6e 61 6e 61 2f 53 79 73 74 65 6d     C:/Banana/System
+10000cc8:	2f 56 47 41 2e 43 4f 4d 00 53 65 74 20 74 6f 20     /VGA.COM.Set to 
+10000cd8:	76 69 64 65 6f 20 6d 6f 64 65 20 25 64 0a 00 90     video mode %d...
 
-10000ce4 <vtable for VGAVideo>:
+10000ce8 <vtable for VGAVideo>:
 	...
-	10000cec: R_386_32	VGAVideo::~VGAVideo()
 	10000cf0: R_386_32	VGAVideo::~VGAVideo()
-	10000cf4: R_386_32	VGAVideo::open(int, int, void*)
-	10000cf8: R_386_32	VGAVideo::close(int, int, void*)
-	10000cfc: R_386_32	Device::hibernate()
-	10000d00: R_386_32	Device::wake()
-	10000d04: R_386_32	Device::detect()
-	10000d08: R_386_32	Device::disableLegacy()
-	10000d0c: R_386_32	Device::powerSaving(PowerSavingLevel)
-	10000d10: R_386_32	VGAVideo::putpixel(int, int, unsigned int)
-	10000d14: R_386_32	VGAVideo::putrect(int, int, int, int, unsigned int)
-	10000d18: R_386_32	Video::putTGA(int, int, unsigned char*, int)
-	10000d1c: R_386_32	Video::drawCursor(int, int, unsigned char*, int)
-	10000d20: R_386_32	VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)
-	10000d24: R_386_32	Video::blit(unsigned int*, int, int, int, int)
-	10000d28: R_386_32	Video::clearScreen(unsigned int)
+	10000cf4: R_386_32	VGAVideo::~VGAVideo()
+	10000cf8: R_386_32	VGAVideo::open(int, int, void*)
+	10000cfc: R_386_32	VGAVideo::close(int, int, void*)
+	10000d00: R_386_32	Device::hibernate()
+	10000d04: R_386_32	Device::wake()
+	10000d08: R_386_32	Device::detect()
+	10000d0c: R_386_32	Device::disableLegacy()
+	10000d10: R_386_32	Device::powerSaving(PowerSavingLevel)
+	10000d14: R_386_32	VGAVideo::putpixel(int, int, unsigned int)
+	10000d18: R_386_32	VGAVideo::putrect(int, int, int, int, unsigned int)
+	10000d1c: R_386_32	Video::putTGA(int, int, unsigned char*, int)
+	10000d20: R_386_32	Video::drawCursor(int, int, unsigned char*, int)
+	10000d24: R_386_32	VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)
+	10000d28: R_386_32	Video::blit(unsigned int*, int, int, int, int)
+	10000d2c: R_386_32	Video::clearScreen(unsigned int)

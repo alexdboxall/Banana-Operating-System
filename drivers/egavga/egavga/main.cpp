@@ -174,6 +174,9 @@ uint8_t EGAVGA::readRegister(ExtReg reg)
 		kprintf("INB from 0x%X\n", gotColour ? REG_EXT_INPUT_STATUS_1_COLOUR : REG_EXT_INPUT_STATUS_1_MONO);
 		return vinb(gotColour ? REG_EXT_INPUT_STATUS_1_COLOUR : REG_EXT_INPUT_STATUS_1_MONO);
 
+	} else if (reg == ExtReg::MiscOutput) {
+		return vinb(REG_EXT_MISC_OUTPUT_READ);
+
 	} else {
 		panic("EGAVGA::readRegister NOT IMPLEMENTED");
 		return 0xFE;
@@ -213,6 +216,9 @@ void EGAVGA::writeRegister(ExtReg reg, uint8_t val)
 {
 	if (reg == ExtReg::InputStatus1) {
 		panic("Cannot write to ExtReg::InputStatus1");
+	
+	} else if (reg == ExtReg::MiscOutput) {
+		voutb(REG_EXT_MISC_OUTPUT_WRITE, val);
 
 	} else {
 		panic("EGAVGA::readRegister NOT IMPLEMENTED");
@@ -268,6 +274,8 @@ void EGAVGA::waitVBLANK()
 
 void EGAVGA::init()
 {
+	return;
+
 	/*
 	TODO:
 	bool ioAddressSelect = false;
@@ -275,9 +283,12 @@ void EGAVGA::init()
 	
 	*/
 
+
+	writeRegister(ExtReg::MiscOutput, readRegister(ExtReg::MiscOutput) | REG_EXT_MISC_OUTPUT_BIT_IO_ADDR_SELECT);
+	ioAddressSelect = true;
+
 	//detectUndocumentedCRTC24();
 
-	return;
 	kprintf("PALETTE 0: 0x%X\n", readRegister(AttribReg::Palette0));
 	kprintf("PALETTE 1: 0x%X\n", readRegister(AttribReg::Palette1));
 	kprintf("PALETTE 2: 0x%X\n", readRegister(AttribReg::Palette2));
