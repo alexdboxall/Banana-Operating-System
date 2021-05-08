@@ -714,12 +714,14 @@ extern "C" void mapVASFirstTime()
 
 	//24KB kernel (interrupt handler) stack
 	for (int i = 0; i < 6; ++i) {
+		kprintf("kernel (IRQ) stack at 0x%X\n", VIRT_APP_STACK_KRNL_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL);
 		vas->mapRange(Phys::allocatePage(), VIRT_APP_STACK_KRNL_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL, 1, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_WRITABLE | PAGE_SUPERVISOR);
 	}
 
 	//OLD: 8KB user (or kernel mode task) stack
 	//NEW: 128KB user stack
 	for (int i = 0; i < 32; ++i) {
+		kprintf("user stack at 0x%X\n", VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL);
 		vas->mapRange(Phys::allocatePage(), VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL, 1, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_WRITABLE | (vas->supervisorVAS ? PAGE_SUPERVISOR : PAGE_USER));
 	}
 
