@@ -441,6 +441,9 @@ VAS::VAS(bool kernel) {
 		mapPage((*getPageTableEntry(CPU::current()->idt.getPointerToInvalidOpcodeEntryForF00F())) & ~0xFFF, CPU::current()->idt.getPointerToInvalidOpcodeEntryForF00F() & ~0xFFF, PAGE_PRESENT | PAGE_SUPERVISOR | PAGE_CACHE_DISABLE);
 		enableIRQs();
 	}
+
+	size_t* thisPage = getAKernelVAS()->getPageTableEntry(((size_t) this) & ~0xFFF);
+	*thisPage &= ~PAGE_SWAPPABLE;			//swapping out a VAS object is a bad idea
 }
 
 size_t VAS::mapRange(size_t physicalAddr, size_t virtualAddr, int pages, int flags)

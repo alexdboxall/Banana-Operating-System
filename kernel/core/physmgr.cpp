@@ -297,14 +297,9 @@ namespace Phys
 
 		if (1) {
 			for (int i = 0x140000 / 0x1000; i < 0x180000 / 0x1000; ++i) {
-				kprintf("Setting page 0x%X to free.\n", i);
 				setPageState(i, STATE_FREE);
 				usablePages++;
 			}
-		}
-
-		for (int i = 0xC8000000U / 0x1000; i < 0xC9000000U / 0x1000; ++i) {
-			kprintf("0x%X: %d\n", i, getPageState(i));
 		}
 	}
 }
