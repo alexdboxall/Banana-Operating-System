@@ -551,9 +551,6 @@ void VAS::mapForeignPage(bool secondSlot, VAS* other, size_t physicalAddr, size_
 }
 
 void VAS::mapPage(size_t physicalAddr, size_t virtualAddr, int flags) {
-	if (flags & PAGE_SWAPPABLE) {
-		kprintf("mapping swappable page.\n");
-	}
 	if (virtualAddr < VIRT_KERNEL_BASE) {
 		size_t cr3;
 		asm volatile ("mov %%cr3, %0" : "=r"(cr3));
@@ -667,8 +664,6 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 size_t VAS::scanForEviction()
 {
 	while (1) {
-		kprintf("eviction scan... 0x%X\n", evictionScanner);
-
 		//first check that this page directory is present
 		if ((evictionScanner & 0x3FFFFF) == 0) {
 			size_t oldEntry = pageDirectoryBase[evictionScanner / 0x400000];
@@ -683,12 +678,10 @@ size_t VAS::scanForEviction()
 		//now we have an actual page directory, check the pages within
 		size_t* oldEntry = getPageTableEntry(evictionScanner);
 		if ((*oldEntry & PAGE_SWAPPABLE)/* && (*oldEntry & PAGE_ALLOCATED)*/) {
-			kprintf("swappable...\n");
 			if (*oldEntry & PAGE_PRESENT) {
 				if (*oldEntry & PAGE_ACCESSED) {
 					*oldEntry &= ~PAGE_ACCESSED;
 				} else {
-					kprintf("evicting...\n");
 					size_t ret = *oldEntry & ~0xFFF;
 					evict(evictionScanner);
 					evictionScanner += 4096;		//saves a check the next time this gets called
