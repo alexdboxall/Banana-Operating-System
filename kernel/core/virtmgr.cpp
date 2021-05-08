@@ -621,7 +621,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		return false;
 	}
 
-	if (entry && /*((*entry) & PAGE_ALLOCATED) &&*/ !((*entry) & PAGE_PRESENT)) {
+	if (entry && ((*entry) & PAGE_ALLOCATED) && !((*entry) & PAGE_PRESENT)) {
 
 		size_t id = (*entry) >> 11;				//we need the ID
 		size_t phys = Phys::allocatePage();		//get a new physical page
@@ -640,6 +640,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		kprintf("reloading: 0x%X, %d\n", faultAddr, swapBalance);
 
 		Virt::freeSwapfilePage(id);
+		kprintf("freed swapfile page.\n");
 		unlockScheduler();
 
 		if (onPageBoundary) {
@@ -648,6 +649,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 
 		//flush TLB
 		CPU::writeCR3(CPU::readCR3());
+		kprintf("TLB flushed.\n");
 
 		return true;
 	}
