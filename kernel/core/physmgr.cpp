@@ -148,7 +148,7 @@ namespace Phys
 			}
 
 			++currentPagePointer;
-			if (currentPagePointer == 1024 * 1024) {
+			if (currentPagePointer == 1024 * 1024 / 2) {		//@@@ TODO: DEBUG: ONLY ALLOW 2GB OF RAM FOR DEBUG
 				currentPagePointer = 0;
 			}
 			if (currentPagePointer == first) {
