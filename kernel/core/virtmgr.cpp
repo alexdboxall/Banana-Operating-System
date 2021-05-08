@@ -730,7 +730,7 @@ extern "C" void mapVASFirstTime()
 		kprintf("phys page going to is 0x%X\n", physp);
 		vas->mapRange(physp, VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL, 1, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_SWAPPABLE | PAGE_WRITABLE | (vas->supervisorVAS ? PAGE_SUPERVISOR : PAGE_USER));
 	
-		size_t* e = vas->getPageTableEntry(page * 4096);
+		size_t* e = vas->getPageTableEntry(VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL);
 		kprintf("*e = 0x%X\n", *e);
 	}
 
