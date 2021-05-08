@@ -356,7 +356,7 @@ VAS::VAS()
 	pageDirectoryBase = (size_t*) VIRT_KRNL_PAGE_DIRECTORY;
 
 	size_t* thisPage = this->getPageTableEntry(((size_t) this) & ~0xFFF);
-	kprintf("MARKING PAGE 0x% NON-SWAPPABLE AS VAS OBJECT LIVES HERE.\n", ((size_t) this) & ~0xFFF);
+	kprintf("MARKING PAGE 0x%X NON-SWAPPABLE AS VAS OBJECT LIVES HERE.\n", ((size_t) this) & ~0xFFF);
 	*thisPage &= ~PAGE_SWAPPABLE;			//swapping out a VAS object is a bad idea
 }
 
@@ -447,7 +447,7 @@ VAS::VAS(bool kernel) {
 	}
 
 	size_t* thisPage = Virt::getAKernelVAS()->getPageTableEntry(((size_t) this) & ~0xFFF);
-	kprintf("MARKING PAGE 0x% NON-SWAPPABLE AS VAS OBJECT LIVES HERE.\n", ((size_t) this) & ~0xFFF);
+	kprintf("MARKING PAGE 0x%X NON-SWAPPABLE AS VAS OBJECT LIVES HERE.\n", ((size_t) this) & ~0xFFF);
 	*thisPage &= ~PAGE_SWAPPABLE;			//swapping out a VAS object is a bad idea
 }
 
