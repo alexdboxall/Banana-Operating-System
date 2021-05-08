@@ -1,8 +1,8 @@
 #include "../firmware.h"
 
 #define MAIN_DISK_MEGABYTES 64
-#define MAIN_DISK_FIRST_SECTOR 0x3F
 
+#define MAIN_DISK_FIRST_SECTOR 0x41
 #define FLOPPY_DISK_FIRST_SECTOR 33
 
 void main();

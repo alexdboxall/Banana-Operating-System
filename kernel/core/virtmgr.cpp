@@ -621,7 +621,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		return false;
 	}
 
-	if (entry && ((*entry) & PAGE_ALLOCATED) && !((*entry) & PAGE_PRESENT)) {
+	if (entry && /*((*entry) & PAGE_ALLOCATED) &&*/ !((*entry) & PAGE_PRESENT)) {
 
 		size_t id = (*entry) >> 11;				//we need the ID
 		size_t phys = Phys::allocatePage();		//get a new physical page
@@ -670,7 +670,7 @@ size_t VAS::scanForEviction()
 
 		//now we have an actual page directory, check the pages within
 		size_t* oldEntry = getPageTableEntry(evictionScanner);
-		if ((*oldEntry & PAGE_SWAPPABLE) && (*oldEntry & PAGE_ALLOCATED)) {
+		if ((*oldEntry & PAGE_SWAPPABLE)/* && (*oldEntry & PAGE_ALLOCATED)*/) {
 			if (*oldEntry & PAGE_PRESENT) {
 				if (*oldEntry & PAGE_ACCESSED) {
 					*oldEntry &= ~PAGE_ACCESSED;
