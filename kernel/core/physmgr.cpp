@@ -22,6 +22,8 @@ namespace Phys
 
 	size_t allocateDMA(size_t size)
 	{
+		kprintf("DMA allocating stuff...\n");
+
 		int blocks = (size + DMA_BLOCK_SIZE - 1) / DMA_BLOCK_SIZE;
 
 		int start = 0;
@@ -68,6 +70,7 @@ namespace Phys
 
 	void freeDMA(size_t addr, size_t size)
 	{
+		kprintf("DMA freeing stuff...\n");
 		int blocks = (size + DMA_BLOCK_SIZE - 1) / DMA_BLOCK_SIZE;
 
 		if (addr >= VIRT_DMA_MEMORY_2) {
@@ -148,7 +151,7 @@ namespace Phys
 			}
 
 			++currentPagePointer;
-			if (currentPagePointer == 1024 * 1024 / 2) {		//@@@ TODO: DEBUG: ONLY ALLOW 2GB OF RAM FOR DEBUG
+			if (currentPagePointer == 1024 * 1024) {
 				currentPagePointer = 0;
 			}
 			if (currentPagePointer == first) {
@@ -300,7 +303,7 @@ namespace Phys
 			}
 		}
 
-		for (int i = 0xC8000000U / 0x1000; i < 0xCF000000U / 0x1000; ++i) {
+		for (int i = 0xC8000000U / 0x1000; i < 0xC9000000U / 0x1000; ++i) {
 			kprintf("0x%X: %d\n", i, getPageState(i));
 		}
 	}
