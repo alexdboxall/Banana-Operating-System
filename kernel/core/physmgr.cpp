@@ -140,7 +140,7 @@ namespace Phys
 			if (getPageState(currentPagePointer) == STATE_FREE) {
 				setPageState(currentPagePointer, STATE_ALLOCATED);
 				++usedPages;
-				kprintf("allocated page %d / %d.\n", usedPages, usablePages);
+				kprintf("allocated page %d / %d. 0x%X\n", usedPages, usablePages, 4096 * currentPagePointer);
 				return 4096 * currentPagePointer;
 			}
 
