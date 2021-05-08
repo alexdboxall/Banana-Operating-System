@@ -140,6 +140,7 @@ namespace Phys
 			if (getPageState(currentPagePointer) == STATE_FREE) {
 				setPageState(currentPagePointer, STATE_ALLOCATED);
 				++usedPages;
+				kprintf("allocated page %d / %d.\n", usedPages, usablePages);
 				return 4096 * currentPagePointer;
 			}
 
@@ -148,6 +149,8 @@ namespace Phys
 				currentPagePointer = 0;
 			}
 			if (currentPagePointer == first) {
+				kprintf("scanning for eviction.\n");
+
 				size_t evict = currentTaskTCB->processRelatedTo->vas->scanForEviction();
 				if (evict) {
 					return evict;
