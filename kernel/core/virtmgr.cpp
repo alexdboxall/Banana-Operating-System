@@ -241,7 +241,8 @@ namespace Virt
 		uint64_t siz;
 		bool dr;
 		f->stat(&siz, &dr);
-		if (siz * 1024 * 1024 != megs) {
+		kprintf("setupPageSwapping old size = 0x%X\n", (uint32_t) siz);
+		if (siz != megs * 1024 * 1024) {
 			int br = 0;
 			int pages = megs * 256;
 			uint8_t* buff = (uint8_t*) malloc(4096 * 16);
@@ -744,7 +745,7 @@ extern "C" void mapVASFirstTime()
 		kprintf("flags = 0x%X\n", PAGE_PRESENT | PAGE_ALLOCATED | PAGE_WRITABLE | (vas->supervisorVAS ? PAGE_SUPERVISOR : PAGE_USER));
 		size_t physp = Phys::allocatePage();
 		kprintf("phys page going to is 0x%X\n", physp);
-		vas->mapRange(physp, VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL, 1, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_SWAPPABLE | PAGE_WRITABLE | (vas->supervisorVAS ? PAGE_SUPERVISOR : PAGE_USER));
+		vas->mapRange(physp, VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL, 1, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_WRITABLE | (vas->supervisorVAS ? PAGE_SUPERVISOR : PAGE_USER));
 	
 		size_t* e = vas->getPageTableEntry(VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL);
 		kprintf("*e = 0x%X\n", *e);
