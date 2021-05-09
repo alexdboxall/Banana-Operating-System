@@ -579,6 +579,7 @@ void Semaphore::acquire()
 		}
 		lastWaitingTask = (ThreadControlBlock*) currentTaskTCB;
 
+		kprintf("blocking on Semaphore::acquire");
 		blockTask(TaskState::WaitingForLock);
 	}
 

@@ -64,7 +64,7 @@ void VCache::writeWriteBuffer()
 int VCache::write(uint64_t lba, int count, void* ptr)
 {
 	kprintf("vcache::write A.\n");
-	//mutex->acquire();
+	mutex->acquire();
 	kprintf("vcache::write B.\n");
 
 	if (readCacheValid) {
@@ -102,17 +102,15 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 	}
 	kprintf("vcache::write D.\n");
 
-	//mutex->release();
+	mutex->release();
 	kprintf("vcache::write E.\n");
 
 	return 0;
 }
 
-uint8_t testBuffer[512 * READ_BUFFER_MAX_SECTORS];
-
 int VCache::read(uint64_t lba, int count, void* ptr)
 {
-	//mutex->acquire();
+	mutex->acquire();
 
 	//NOTE: this is very inefficient, we should check if it is in the cache
 	//		and if it is, just memcpy the data
@@ -140,6 +138,6 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 		disk->read(lba, count, ptr);
 	}
 
-	//mutex->release();
+	mutex->release();
 	return 0;
 }
