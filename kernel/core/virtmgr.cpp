@@ -606,9 +606,12 @@ int twswaps = 0;
 
 void VAS::evict(size_t virt)
 {
+	kprintf("Allocating swapfile page...\n");
 	size_t id = Virt::allocateSwapfilePage();
+	kprintf("Allocated 0x%X\n", id);
 
 	for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
+		kprintf("writing sector 0x%X\n", Virt::swapIDToSector(id) + i);
 		disks[Virt::swapfileDrive - 'A']->write(Virt::swapIDToSector(id) + i, 1, ((uint8_t*) virt) + 512 * i);
 	}
 
@@ -700,7 +703,7 @@ size_t VAS::scanForEviction()
 			}
 		}
 
-		kprintf("scanning for eviction... 0x%X\n", evictionScanner);
+		//kprintf("scanning for eviction... 0x%X\n", evictionScanner);
 
 		//now we have an actual page directory, check the pages within
 		size_t* oldEntry = getPageTableEntry(evictionScanner);
