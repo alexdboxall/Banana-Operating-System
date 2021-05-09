@@ -63,14 +63,12 @@ void VCache::writeWriteBuffer()
 
 int VCache::write(uint64_t lba, int count, void* ptr)
 {
-	kprintf("vcache::write A.\n");
 	mutex->acquire();
-	kprintf("vcache::write B.\n");
+	kprintf("          ACQUIRED DISK MUTEX\n");
 
 	if (readCacheValid) {
 		invalidateReadBuffer();
 	}
-	kprintf("vcache::write C.\n");
 
 	if (writeCacheValid && lba == writeCacheLBA + ((uint64_t) writeCacheSectors) && count == 1) {
 		//add to cache
@@ -100,17 +98,16 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 			disk->write(lba, count, ptr);
 		}
 	}
-	kprintf("vcache::write D.\n");
 
+	kprintf("          RELEASING DISK MUTEX\n");
 	mutex->release();
-	kprintf("vcache::write E.\n");
-
 	return 0;
 }
 
 int VCache::read(uint64_t lba, int count, void* ptr)
 {
 	mutex->acquire();
+	kprintf("          ACQUIRED DISK MUTEX\n");
 
 	//NOTE: this is very inefficient, we should check if it is in the cache
 	//		and if it is, just memcpy the data
@@ -138,6 +135,7 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 		disk->read(lba, count, ptr);
 	}
 
+	kprintf("          RELEASED DISK MUTEX\n");
 	mutex->release();
 	return 0;
 }
