@@ -55,27 +55,15 @@
 #define FF_USE_EXPAND	1
 /* This option switches f_expand function. (0:Disable or 1:Enable) */
 
-#ifdef JUMPER32
 #define FF_USE_CHMOD	1
-#else
-#define FF_USE_CHMOD	1
-#endif
 /* This option switches attribute manipulation functions, f_chmod() and f_utime().
 /  (0:Disable or 1:Enable) Also FF_FS_READONLY needs to be 0 to enable this option. */
 
-#ifdef JUMPER32
 #define FF_USE_LABEL	1
-#else
-#define FF_USE_LABEL	1
-#endif
 /* This option switches volume label functions, f_getlabel() and f_setlabel().
 /  (0:Disable or 1:Enable) */
 
-#ifdef JUMPER32
-#define FF_USE_FORWARD	0
-#else
 #define FF_USE_FORWARD	1
-#endif
 /* This option switches f_forward() function. (0:Disable or 1:Enable) */
 
 
