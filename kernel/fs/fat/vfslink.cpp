@@ -240,13 +240,20 @@ void FAT::fixFilepath(char* path)
 	}
 }
 
-uint64_t FAT::getFileFirstSector(const char* filename)
+uint64_t FAT::allocateSwapfile(const char* filename, int megs)
 {
-	File* f = new File(filename, kernelProcess);
-	f->open(FileOpenMode::Read);
+	char buff[1024];
 	int i, br;
-	f->read(4, &i, &br);
+	File* f = new File(filename, kernelProcess);
+	f->open(FILE_OPEN_WRITE_NORMAL);
+	f->write(1024, buff, &br);
 	FIL* fsData = (FIL*) f->fsSpecificData;
+	f_expand(fsDataA, megs * 1024 * 1024, 1);
+	f->close();
+
+	f->open(FileOpenMode::Read);
+	f->read(4, &i, &br);
+	fsData = (FIL*) f->fsSpecificData;
 
 	size_t retV = fsData->sect;
 

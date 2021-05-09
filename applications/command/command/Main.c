@@ -938,10 +938,10 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 		}
 
 	} else if (!strcasecmp(argv[0], "ram")) {
-		extern "C" uint64_t SystemCall(size_t, size_t, size_t, size_t);
+		extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
 		uint32_t r = SystemCall(GetRAMData, 0, 0, 0);
 
-		uint32_t totalPages = r & 0xFFFFFF;
+		uint64_t totalPages = r & 0xFFFFFF;
 		int percent = (r >> 24);
 
 		uint64_t usedPages = totalPages;
@@ -949,9 +949,9 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 		usedPages /= 200;
 
 		if (totalPages > 1024 * 1024) {
-			fprintf(out, "%d of %d MB used. (%d%% used)\n", usedPages / 1024 * 4, totalPages / 1024 * 4, percent / 2);
+			fprintf(out, "%d of %d MB used. (%d%% used)\n", (uint32_t) (usedPages / 1024 * 4), (uint32_t) (totalPages / 1024 * 4), percent / 2);
 		} else {
-			fprintf(out, "%d of %d KB used. (%d%% used)\n", usedPages * 4, totalPages * 4, percent / 2);
+			fprintf(out, "%d of %d KB used. (%d%% used)\n", (uint32_t) (usedPages * 4), (uint32_t) (totalPages * 4), percent / 2);
 		}
 
 	} else if (!strcasecmp(argv[0], "ver")) {

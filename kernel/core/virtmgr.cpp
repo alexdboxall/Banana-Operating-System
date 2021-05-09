@@ -228,49 +228,7 @@ namespace Virt
 
 	void setupPageSwapping(int megs)
 	{
-		File* f = new File("C:/Banana/SWAPFILE.SYS", kernelProcess);
-		FileStatus st = f->open(FILE_OPEN_READ);
-		if (st != FileStatus::Success) {
-			kprintf("Couldn't open old swapfile...\n");
-			f->unlink();
-			st = f->open(FILE_OPEN_WRITE_NORMAL);
-			if (st != FileStatus::Success) {
-				panic("NO PAGE SWAPPING AVAILABLE");
-			}
-		}
-
-		uint64_t siz;
-		bool dr;
-		f->stat(&siz, &dr);
-		kprintf("setupPageSwapping old size = 0x%X\n", (uint32_t) siz);
-		if (siz != megs * 1024 * 1024) {
-			f->close();
-			st = f->open(FILE_OPEN_WRITE_NORMAL);
-			if (st != FileStatus::Success) {
-				panic("NO PAGE SWAPPING AVAILABLE");
-			}
-			int br = 0;
-			int pages = megs * 256;
-			uint8_t* buff = (uint8_t*) malloc(4096 * 16);
-			memset(buff, 0xEE, 4096 * 16);
-			pages /= 16;
-			while (pages--) {
-				st = f->write(4096 * 16, buff, &br);
-				if (st != FileStatus::Success) {
-					panic("UH OH");
-				}
-				if (br != 4096 * 16) {
-					panic("UH OH");
-				}
-			}
-
-			rfree(buff);
-		}
-
-		f->close();
-		delete f;
-
-		uint64_t sec = disks['C' - 'A']->fs->getFileFirstSector("C:/Banana/SWAPFILE.SYS");
+		uint64_t sec = disks['C' - 'A']->fs->allocateSwapfile("C:/Banana/SWAPFILE.SYS", megs);
 
 		swapfileDrive = 'C';
 		swapfileLength = megs * 1024 / 512 * 1024;

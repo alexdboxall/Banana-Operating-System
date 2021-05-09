@@ -74,7 +74,7 @@ public:
 	virtual FileStatus getlabel(LogicalDisk* disk, int diskNum, char* returnBuffer, uint32_t* serial);
 	virtual FileStatus setlabel(LogicalDisk* disk, int diskNum, char* label);
 
-	virtual uint64_t getFileFirstSector(const char* filename);
+	virtual uint64_t allocateSwapfile(const char* filename, int megs);
 };
 
 extern Filesystem* installedFilesystems;

@@ -253,7 +253,7 @@ void ramTest1(Window* w)
 char ramStr[7];
 void ramTest2(Window* w)
 {
-	windowWrite(w, 0, 0, "On your system there is: ");
+	windowWrite(w, 0, 0, "On your system there are: ");
 	windowWrite(w, 0, 2, ramStr);
 	windowWrite(w, 0, 4, "megabytes of RAM installed.");
 
