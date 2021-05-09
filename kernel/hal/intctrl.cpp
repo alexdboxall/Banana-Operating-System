@@ -394,7 +394,7 @@ void gpFault(regs* r, void* context)
 
 void pgFault(regs* r, void* context)
 {
-	kprintf("pgFault.\n");
+	kprintf("pgFault. EIP = 0x%X\n", r->eip);
 	if (currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2())) {
 		return;
 	}
