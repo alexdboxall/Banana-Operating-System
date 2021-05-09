@@ -246,9 +246,12 @@ uint64_t FAT::allocateSwapfile(const char* filename, int megs)
 	int i, br;
 	File* f = new File(filename, kernelProcess);
 	f->open(FILE_OPEN_WRITE_NORMAL);
-	f->write(1024, buff, &br);
 	FIL* fsData = (FIL*) f->fsSpecificData;
-	f_expand(fsDataA, megs * 1024 * 1024, 1);
+	f_expand(fsData, megs * 1024 * 1024, 1);
+	f->write(1024, buff, &br);
+	f->write(1024, buff, &br);
+	f->write(1024, buff, &br);
+	f->write(1024, buff, &br);
 	f->close();
 
 	f->open(FileOpenMode::Read);
