@@ -95,6 +95,7 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 
 		//otherwise, just write it
 		} else {
+			kprintf(" --> Write count %d to 0x%X\n", count, ptr);
 			disk->write(lba, count, ptr);
 		}
 	}
@@ -132,6 +133,7 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 
 	} else {
 		invalidateReadBuffer();
+		kprintf(" --> Read count %d to 0x%X\n", count, ptr);
 		disk->read(lba, count, ptr);
 	}
 
