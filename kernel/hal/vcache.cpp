@@ -64,7 +64,7 @@ void VCache::writeWriteBuffer()
 int VCache::write(uint64_t lba, int count, void* ptr)
 {
 	kprintf("vcache::write A.\n");
-	mutex->acquire();
+	//mutex->acquire();
 	kprintf("vcache::write B.\n");
 
 	if (readCacheValid) {
@@ -102,7 +102,7 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 	}
 	kprintf("vcache::write D.\n");
 
-	mutex->release();
+	//mutex->release();
 	kprintf("vcache::write E.\n");
 
 	return 0;
