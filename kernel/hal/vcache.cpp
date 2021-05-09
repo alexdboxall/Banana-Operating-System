@@ -74,6 +74,7 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 
 	if (writeCacheValid && lba == writeCacheLBA + ((uint64_t) writeCacheSectors) && count == 1) {
 		//add to cache
+		kprintf(" --> Adding to cache\n");
 		memcpy(writeCacheBuffer + writeCacheSectors * disk->sectorSize, ptr, disk->sectorSize);
 		++writeCacheSectors;
 
@@ -93,6 +94,7 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 			writeCacheLBA = lba;
 			writeCacheSectors = count;
 			writeCacheValid = true;
+			kprintf(" --> Write (B) count %d to 0x%X\n", 1, ptr);
 			memcpy(writeCacheBuffer, ptr, disk->sectorSize);
 
 		//otherwise, just write it
