@@ -560,6 +560,8 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 			}
 		}
 
+
+
 	} else if (!strcasecmp(argv[0], "dir")) {
 		struct dirent* ent;
 		DIR* dir;
@@ -935,6 +937,23 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 			fprintf(stderr, "The file(s) could not be copied.\n");
 		}
 
+	} else if (!strcasecmp(argv[0], "ram")) {
+		extern "C" uint64_t SystemCall(size_t, size_t, size_t, size_t);
+		uint32_t r = SystemCall(GetRAMData, 0, 0, 0);
+
+		uint32_t totalPages = r & 0xFFFFFF;
+		int percent = (r >> 24);
+
+		uint64_t usedPages = totalPages;
+		usedPages *= percent;
+		usedPages /= 200;
+
+		if (totalPages > 1024 * 1024) {
+			fprintf(out, "%d of %d MB used. (%d%% used)\n", usedPages / 1024 * 4, totalPages / 1024 * 4, percent / 2);
+		} else {
+			fprintf(out, "%d of %d KB used. (%d%% used)\n", usedPages * 4, totalPages * 4, percent / 2);
+		}
+
 	} else if (!strcasecmp(argv[0], "ver")) {
 		fprintf(out, "%s\n", VERSION_STRING);
 
@@ -979,7 +998,7 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 		} else if (res == -2) {
 			fprintf(stderr, "Not a drive.\n");
 			return -1;
-		}  else if (res != 0) {
+		} else if (res != 0) {
 			fprintf(stderr, "The drive cannot eject the disk.\n");
 			return -1;
 		}
@@ -1056,33 +1075,33 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 			joinedargs[1] = ' ';
 		}
 
-		te_variable vars[] = { 
-			{"a", &mathVars[0]}, 
-			{"b", &mathVars[1]}, 
-			{"c", &mathVars[2]}, 
-			{"d", &mathVars[3]}, 
-			{"e", &mathVars[4]}, 
-			{"f", &mathVars[5]}, 
-			{"g", &mathVars[6]}, 
-			{"h", &mathVars[7]}, 
-			{"i", &mathVars[8]}, 
-			{"j", &mathVars[9]}, 
-			{"k", &mathVars[10]}, 
-			{"l", &mathVars[11]}, 
-			{"m", &mathVars[12]}, 
-			{"n", &mathVars[13]}, 
-			{"o", &mathVars[14]}, 
-			{"p", &mathVars[15]}, 
-			{"q", &mathVars[16]}, 
-			{"r", &mathVars[17]}, 
-			{"s", &mathVars[18]}, 
-			{"t", &mathVars[19]}, 
-			{"u", &mathVars[20]}, 
-			{"v", &mathVars[21]}, 
-			{"w", &mathVars[22]}, 
-			{"x", &mathVars[23]}, 
-			{"y", &mathVars[24]}, 
-			{"z", &mathVars[25]}, 
+		te_variable vars[] = {
+			{"a", &mathVars[0]},
+			{"b", &mathVars[1]},
+			{"c", &mathVars[2]},
+			{"d", &mathVars[3]},
+			{"e", &mathVars[4]},
+			{"f", &mathVars[5]},
+			{"g", &mathVars[6]},
+			{"h", &mathVars[7]},
+			{"i", &mathVars[8]},
+			{"j", &mathVars[9]},
+			{"k", &mathVars[10]},
+			{"l", &mathVars[11]},
+			{"m", &mathVars[12]},
+			{"n", &mathVars[13]},
+			{"o", &mathVars[14]},
+			{"p", &mathVars[15]},
+			{"q", &mathVars[16]},
+			{"r", &mathVars[17]},
+			{"s", &mathVars[18]},
+			{"t", &mathVars[19]},
+			{"u", &mathVars[20]},
+			{"v", &mathVars[21]},
+			{"w", &mathVars[22]},
+			{"x", &mathVars[23]},
+			{"y", &mathVars[24]},
+			{"z", &mathVars[25]},
 		};
 
 		/*int error = 0;
@@ -1195,7 +1214,7 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 		for (uint16_t i = 0; i < count; ++i) {
 			VESAModeInfo info;
 			fread(&info, sizeof(info), 1, f);
-			
+
 			printf("0x%X: %dx%dx%d (pitch = %d)\n", info.number, info.width, info.height, info.bpp, info.pitch);
 
 			if ((i & 15) == 15) {
@@ -1321,7 +1340,7 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 				int c = getchar();
 				if (c != '\n') while ((c = getchar()) != '\n' && c != EOF) {}
 			}
-			
+
 			++lineNum;
 		}
 
@@ -1399,7 +1418,7 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 		timeinfo = localtime(&rawtime);
 
 		char days[7][10] = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
-		
+
 		fprintf(out, "%s %d/%d/%d %d:%02d:%02d\n", days[timeinfo->tm_wday], timeinfo->tm_mday, timeinfo->tm_mon + 1, timeinfo->tm_year + 1900, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
 
 	} else if (!strcasecmp(argv[0], "attrib")) {
@@ -1592,7 +1611,7 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 			fprintf(stderr, "Executable filepath required.\n");
 			return -1;
 		}
-		
+
 		bool waitForChild = true;
 		if (!strcmp(argv[0], "+")) {
 			waitForChild = false;
@@ -1848,10 +1867,10 @@ void runBatchFile(char* filename, int batchNesting)
 	fclose(f);
 }
 
-int main (int argc, char *argv[])
+int main(int argc, char* argv[])
 {
 	extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
-	
+
 	for (int i = 0; i < 26; ++i) {
 		mathVars[i] = 0;
 	}
@@ -1866,7 +1885,7 @@ int main (int argc, char *argv[])
 
 	Label labels[64];
 	memset(labels, 0, 64 * sizeof(Label));
-	
+
 	bool firstLoop = true;
 
 	while (1) {
@@ -1884,7 +1903,7 @@ int main (int argc, char *argv[])
 					strcat(command, argv[i]);
 				}
 			}
-			
+
 		} else {
 			fgets(command, 255, stdin);
 		}

@@ -17,11 +17,11 @@ namespace Sys
 	/// <summary>
 	/// Returns the total amount of RAM and the current amount of RAM available.
 	/// </summary>
-	/// <returns>Returns the amount of 4KiB pages the system has in the low 3 bytes, and the percentage used in the high byte.</returns>
+	/// <returns>Returns the amount of 4KiB pages the system has in the low 3 bytes, and the twice the percentage used in the high byte.</returns>
 	/// 
 	uint64_t getRAMData(regs* r)
 	{
-		int percent = Phys::usedPages * 100 / Phys::usablePages;
+		int percent = Phys::usedPages * 200 / Phys::usablePages;
 		return Phys::usablePages | (percent << 24);
 	}
 }
