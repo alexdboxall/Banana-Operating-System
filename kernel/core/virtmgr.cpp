@@ -700,6 +700,8 @@ size_t VAS::scanForEviction()
 			}
 		}
 
+		kprintf("scanning for eviction... 0x%X\n", evictionScanner);
+
 		//now we have an actual page directory, check the pages within
 		size_t* oldEntry = getPageTableEntry(evictionScanner);
 		if ((*oldEntry & PAGE_SWAPPABLE)/* && (*oldEntry & PAGE_ALLOCATED)*/) {
@@ -708,7 +710,9 @@ size_t VAS::scanForEviction()
 					*oldEntry &= ~PAGE_ACCESSED;
 				} else {
 					size_t ret = *oldEntry & ~0xFFF;
+					kprintf("will evict... 0x%X\n", evictionScanner);
 					evict(evictionScanner);
+					kprintf("did evict... 0x%X\n", evictionScanner);
 					evictionScanner += 4096;		//saves a check the next time this gets called
 					return ret;
 				}
