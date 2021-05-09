@@ -63,11 +63,14 @@ void VCache::writeWriteBuffer()
 
 int VCache::write(uint64_t lba, int count, void* ptr)
 {
+	kprintf("vcache::write A.\n");
 	mutex->acquire();
+	kprintf("vcache::write B.\n");
 
 	if (readCacheValid) {
 		invalidateReadBuffer();
 	}
+	kprintf("vcache::write C.\n");
 
 	if (writeCacheValid && lba == writeCacheLBA + ((uint64_t) writeCacheSectors) && count == 1) {
 		//add to cache
@@ -97,8 +100,11 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 			disk->write(lba, count, ptr);
 		}
 	}
+	kprintf("vcache::write D.\n");
 
 	mutex->release();
+	kprintf("vcache::write E.\n");
+
 	return 0;
 }
 
