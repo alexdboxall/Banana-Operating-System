@@ -112,7 +112,7 @@ uint8_t testBuffer[512 * READ_BUFFER_MAX_SECTORS];
 
 int VCache::read(uint64_t lba, int count, void* ptr)
 {
-	mutex->acquire();
+	//mutex->acquire();
 
 	//NOTE: this is very inefficient, we should check if it is in the cache
 	//		and if it is, just memcpy the data
@@ -140,6 +140,6 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 		disk->read(lba, count, ptr);
 	}
 
-	mutex->release();
+	//mutex->release();
 	return 0;
 }
