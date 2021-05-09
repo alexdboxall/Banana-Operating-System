@@ -250,9 +250,6 @@ uint64_t FAT::allocateSwapfile(const char* filename, int megs)
 	FIL* fsData = (FIL*) f->fsSpecificData;
 	f_expand(fsData, megs * 1024 * 1024, 1);
 	f->write(1024, buff, &br);
-	f->write(1024, buff, &br);
-	f->write(1024, buff, &br);
-	f->write(1024, buff, &br);
 	f->close();
 
 	f->open(FileOpenMode::Read);

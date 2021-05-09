@@ -72,12 +72,16 @@ int Computer::open(int a, int b, void* vas)
 	if (!(sysBootSettings & 4)) {
 		VgaText::hiddenOut = true;
 	}
-	
+
+	Krnl::setBootMessage("Create device tree...");
 	root = new ACPI();
 	addChild(root);
 
+	Krnl::setBootMessage("Detecting computer features...");
 	detectFeatures();
+	Krnl::setBootMessage("Displaying computer features...");
 	displayFeatures();
+	Krnl::setBootMessage("Enabling NMIs...");
 	enableNMI();
 
 	Krnl::setBootMessage("Configuring processors...");
@@ -86,6 +90,7 @@ int Computer::open(int a, int b, void* vas)
 	addChild(cpu[0]);
 	cpu[0]->open(0, 0, vas);		//FIRST ARG IS CPU NUMBER
 	
+	Krnl::setBootMessage("Detecting numerical coprocessors...");
 	fpu = setupFPU();
 	if (fpu) {
 		addChild(fpu);
@@ -276,6 +281,7 @@ namespace Krnl
 {
 	void firstTask()
 	{
+		Krnl::setBootMessage("Enabling interrupts...");
 		asm("sti");
 
 		Krnl::setBootMessage("Starting core threads...");

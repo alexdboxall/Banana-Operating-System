@@ -357,29 +357,40 @@ int CPU::open(int num, int b, void* vas_)
 {
 	cpuNum = num;
 
+	Krnl::setBootMessage("Setting up GDT...");
 	gdt.setup();
+	Krnl::setBootMessage("Setting up TSS...");
 	tss.setup(0xDEADBEEF);
+	Krnl::setBootMessage("Setting up TSS 2...");
 	tss.flush();
+	Krnl::setBootMessage("Setting up IDT...");
 	idt.setup();
-
+	Krnl::setBootMessage("Setting up debug registers...");
 	writeDR7(0x400);
 
+	Krnl::setBootMessage("Setting up CPU specific paging...");
 	cpuSpecificData = (CPUSpecificData*) VIRT_CPU_SPECIFIC;
 
 	cpuSpecificPhysAddr = (CPUSpecificData*) Phys::allocatePage();
 	cpuSpecificPhysAddr->cpuNumber = num;
 	cpuSpecificPhysAddr->cpuPointer = this;
 
+	Krnl::setBootMessage("Still setting up CPU specific paging...");
 	VAS* vas = (VAS*) vas_;
 	vas->setCPUSpecific((size_t) cpuSpecificPhysAddr);
 	
+	Krnl::setBootMessage("Detecting CPU specific features...");
 	//here so APIC can be disabled on dodgy K5 CPUs
 	detectFeatures();
 
+	Krnl::setBootMessage("Configuring interrupt controller...");
 	intCtrl = setupInterruptController();
+	Krnl::setBootMessage("Setting up system timer...");
 	timer = setupTimer(sysBootSettings & 16 ? 30 : 100);
 
+	Krnl::setBootMessage("Setting up CPU features...");
 	setupFeatures();
+	Krnl::setBootMessage("Displaying CPU features...");
 	displayFeatures();
 
 	return 0;
