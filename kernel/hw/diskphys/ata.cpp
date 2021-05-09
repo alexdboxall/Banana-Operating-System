@@ -52,7 +52,9 @@ bool ATA::readyForCommand()
 #define MODE_LBA48	2
 
 int ATA::access(uint64_t lba, int count, void* buffer, bool write)
-{	
+{
+	kprintf("ATA::access\n");
+
 	uint8_t lbaIO[6];
 	uint8_t lbaMode;
 	uint8_t head;
@@ -147,13 +149,18 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 	//send the command
 	ide->write(channel, ATA_REG_COMMAND, command);
 
+	kprintf("a ");
+
 	//for each sector
 	int ogcount = count;
 	while (count--) {
 		uint16_t* buffer16 = (uint16_t*) buffer;
+		kprintf("b ");
 
 		//wait for the device to be ready
 		uint8_t err = ide->polling(channel, 1);
+		kprintf("c ");
+
 		if (err) {
 			ide->printError(channel, drive, err);
 			kprintf("ata error\n");
@@ -162,10 +169,11 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 		//read/write data
 		if (write) {
+			kprintf("d ");
 			for (int i = 0; i < 256; ++i) {
 				outw(ide->getBase(channel), *buffer16++);
 			}
-
+			kprintf("e ");
 		} else {
 			asm("cld; rep insw" : : "c"(256), "d"(ide->getBase(channel)), "D"(buffer16) : "flags", "memory");
 		}
@@ -174,7 +182,9 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 	}
 
 	if (write) {
+		kprintf("f ");
 		flush(lbaMode == MODE_LBA48);
+		kprintf("g ");
 	}
 
 	return 0;
@@ -237,6 +247,8 @@ int ATA::read(uint64_t lba, int count, void* buffer)
 
 int ATA::write(uint64_t lba, int count, void* buffer)
 {
+	kprintf("ATA::write\n");
+
 	//check for sane values
 	if (count > 255 || count <= 0) {
 		return (int) DiskError::BadSectorCount;

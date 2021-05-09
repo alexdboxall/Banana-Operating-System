@@ -612,6 +612,8 @@ void VAS::evict(size_t virt)
 
 	for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
 		kprintf("writing sector 0x%X\n", Virt::swapIDToSector(id) + i);
+		kprintf("disk at 0x%X\n", disks[Virt::swapfileDrive - 'A']);
+		kprintf("buffer = 0x%X\n", ((uint8_t*) virt) + 512 * i);
 		disks[Virt::swapfileDrive - 'A']->write(Virt::swapIDToSector(id) + i, 1, ((uint8_t*) virt) + 512 * i);
 	}
 
