@@ -76,7 +76,7 @@ int Computer::open(int a, int b, void* vas)
 	kprintf("sizeof device = 0x%X\n", sizeof(Device));
 	kprintf("sizeof file = 0x%X\n", sizeof(File));
 	kprintf("sizeof vas = 0x%X\n", sizeof(VAS));
-
+	kprintf("\n --- TEST --- \n\n");
 	Krnl::setBootMessage("Creating device tree A...");
 	root = new ACPI();
 	Krnl::setBootMessage("Creating device tree B...");
