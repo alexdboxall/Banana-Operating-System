@@ -184,8 +184,11 @@ uint8_t* findRSDT(uint8_t* ptr)
 	struct XSDT* xsdt = (struct XSDT*) a.XsdtAddress;
 	struct RSDT* rsdt = (struct RSDT*) a.firstPart.RsdtAddress;
 
+	kprintf("PHYS: RSDT = 0x%X, XSDT = 0x%X\n", rsdt, xsdt);
+
 	xsdt = (struct XSDT*) ((((size_t) xsdt) & 0xFFF) | Virt::getAKernelVAS()->mapRange(((size_t) xsdt) & ~0xFFF, Virt::allocateKernelVirtualPages(2), 2, PAGE_PRESENT | PAGE_SUPERVISOR));
 	rsdt = (struct RSDT*) ((((size_t) rsdt) & 0xFFF) | Virt::getAKernelVAS()->mapRange(((size_t) rsdt) & ~0xFFF, Virt::allocateKernelVirtualPages(2), 2, PAGE_PRESENT | PAGE_SUPERVISOR));
+	kprintf("VIRT: RSDT = 0x%X, XSDT = 0x%X\n", rsdt, xsdt);
 
 	if (rev == 0) {
 		usingXSDT = 0;
@@ -215,8 +218,12 @@ uint8_t* findDataTable(uint8_t* ptr, char name[])
 	return 0;
 }
 
+extern uint32_t sysBootSettings;
 void scanMADT()
 {
+	if (sysBootSettings & 1024) {
+		features.hasACPI = false;
+	}
 	if (!computer->features.hasACPI) {
 		return;
 	}

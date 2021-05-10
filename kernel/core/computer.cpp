@@ -73,7 +73,7 @@ int Computer::open(int a, int b, void* vas)
 		VgaText::hiddenOut = true;
 	}
 
-	Krnl::setBootMessage("Create device tree...");
+	Krnl::setBootMessage("Creating device tree...");
 	root = new ACPI();
 	addChild(root);
 
