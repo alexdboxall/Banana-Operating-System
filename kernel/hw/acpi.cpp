@@ -222,7 +222,7 @@ extern uint32_t sysBootSettings;
 void scanMADT()
 {
 	if (sysBootSettings & 1024) {
-		features.hasACPI = false;
+		computer->features.hasACPI = false;
 	}
 	if (!computer->features.hasACPI) {
 		return;
