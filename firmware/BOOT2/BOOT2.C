@@ -439,6 +439,8 @@ void main()
 		blockingKeyboard();
 	}
 
+	writeString("\n Starting Banana...");
+
 	//zero out memory
 	uint64_t* ramTable = 0x600;
 	for (int i = 0; i < count; ++i) {

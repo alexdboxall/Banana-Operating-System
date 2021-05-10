@@ -1141,7 +1141,7 @@ void realInstall()
 	uint64_t imageLba = MAIN_DISK_FIRST_SECTOR;
 	uint64_t imageLen;
 
-	for (int i = 0; i < 10; ++i) {
+	for (int i = 0; i < 7; ++i) {
 		read2KSectorFromInstallMedia(imageLba, bf);
 		millisleep(500);
 	}
@@ -1606,7 +1606,7 @@ void main()
 	disclaimPart2 = true;// false;
 	w.repaint = disclaimer2;
 	drawScreen();
-	sleep(2);
+	sleep(1);
 	//disclaimPart2 = true;
 	//drawScreen();
 	continueOrExit();
@@ -1614,14 +1614,14 @@ void main()
 	disclaimPart2 = true;// false;
 	w.repaint = disclaimer;
 	drawScreen();
-	sleep(3);
+	sleep(2);
 	//disclaimPart2 = true;
 	//drawScreen();
 	continueOrExit();
 
 	w.repaint = disclaimer3;
 	drawScreen();
-	sleep(3);
+	sleep(2);
 	continueOrExit();
 
 	__memcpy(w.title, "Banana Setup", __strlen("Banana Setup"));
