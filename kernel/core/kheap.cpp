@@ -26,6 +26,7 @@ extern "C" void* sbrk(ptrdiff_t increment)
 
 	} else {
 		kprintf("A...\n");
+		kprintf("A2...\n");
 		kprintf("CPU::current  = 0x%X", CPU::current());
 		kprintf("...->features = 0x%X", CPU::current()->features);
 		bool invlpg = CPU::current()->features.hasINVLPG;
