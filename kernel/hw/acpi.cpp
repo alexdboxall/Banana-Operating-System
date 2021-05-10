@@ -101,6 +101,8 @@ int nextACPITable = 0;
 
 uint8_t* findRSDP()
 {
+	Krnl::setBootMessage("Finding RSDP...");
+
 	if (!computer->features.hasACPI) {
 		return 0;
 	}
@@ -109,14 +111,18 @@ uint8_t* findRSDP()
 		computer->features.hasACPI = false;
 		return 0;
 	}
+	Krnl::setBootMessage("Actually finding RSDP...");
 
 	uint8_t* ptr = (uint8_t*) (size_t) (VIRT_LOW_MEGS + 0x0);
 
 	for (; ptr < (uint8_t*) (size_t) (VIRT_LOW_MEGS + 0xFFFFF); ptr += 16) {
 		if (!memcmp((char*) ptr, "RSD PTR ", 8)) {
+			Krnl::setBootMessage("Found RSDP...");
+
 			return ptr;
 		}
 	}
+	Krnl::setBootMessage("Didn't find RSDP...");
 
 	return 0;
 }
@@ -171,15 +177,20 @@ void loadACPITables(uint8_t* ptr)
 
 uint8_t* findRSDT(uint8_t* ptr)
 {
+	Krnl::setBootMessage("Finding RSDP A...");
+
 	if (!computer->features.hasACPI) {
 		return 0;
 	}
+	Krnl::setBootMessage("Finding RSDP B...");
 
 	struct RSDPDescriptor20 a;
 	memcpy(&a, ptr, sizeof(a));
+	Krnl::setBootMessage("Finding RSDP C...");
 
 	uint8_t rev = a.firstPart.Revision;
 	uint8_t* ret = 0;
+	Krnl::setBootMessage("Finding RSDP D...");
 
 	struct XSDT* xsdt = (struct XSDT*) a.XsdtAddress;
 	struct RSDT* rsdt = (struct RSDT*) a.firstPart.RsdtAddress;
@@ -233,6 +244,7 @@ void scanMADT()
 		computer->features.hasACPI = false;
 		return;
 	}
+	Krnl::setBootMessage("Finding RSDT...");
 
 	RSDTpointer = findRSDT(RSDPpointer);
 	if (!RSDTpointer) {
@@ -240,6 +252,7 @@ void scanMADT()
 		return;
 	}
 
+	Krnl::setBootMessage("Loading other tables...");
 	loadACPITables(RSDTpointer);
 
 	struct MADTHeader* a = (struct MADTHeader*) findDataTable(RSDTpointer, (char*) "APIC");
