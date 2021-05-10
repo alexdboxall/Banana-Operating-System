@@ -145,7 +145,7 @@ void main()
 			writeString(" [M] - Force Monochrome               ");
 			writeString(forceMonochrome ? " enabled\n" : " disabled\n");
 
-			writeString(" [T] - Slow down the system timer     ");
+			writeString(" [T] - Older computer optimisations   ");
 			writeString(slowDownClock ? " enabled\n" : " disabled\n");
 
 			writeString("\n [Z] - Save these settings as defaults\n");
