@@ -232,12 +232,15 @@ uint8_t* findDataTable(uint8_t* ptr, char name[])
 extern uint32_t sysBootSettings;
 void scanMADT()
 {
+	Krnl::setBootMessage("SCAN MADT...");
+
 	if (sysBootSettings & 1024) {
 		computer->features.hasACPI = false;
 	}
 	if (!computer->features.hasACPI) {
 		return;
 	}
+	Krnl::setBootMessage("Finding RSDT A...");
 
 	RSDPpointer = findRSDP();
 	if (!RSDPpointer) {
@@ -317,6 +320,7 @@ void scanMADT()
 
 ACPI::ACPI(): Device("ACPI")
 {
+	Krnl::setBootMessage("ACPI::ACPI...");
 	scanMADT();
 }
 

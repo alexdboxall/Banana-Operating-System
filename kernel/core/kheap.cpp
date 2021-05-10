@@ -14,6 +14,8 @@
 
 extern "C" void* sbrk(ptrdiff_t increment)
 {
+	kprintf("KERNEL SBRK called with 0x%X\n", increment);
+
 	static size_t brk = VIRT_SBRK_MIN;
 	if (increment == 0) {
 		return (void*) brk;
@@ -23,33 +25,54 @@ extern "C" void* sbrk(ptrdiff_t increment)
 		return (void*) -1;
 
 	} else {
+		kprintf("A...\n");
+
 		bool invlpg = CPU::current()->features.hasINVLPG;
-		
+		kprintf("B...\n");
+
 		size_t oldbrk = brk;
 		int pages = (increment + 4095) / 4096;
+		kprintf("C...\n");
 		for (int i = 0; i < pages; ++i) {
+			kprintf("D...\n");
 			Virt::getAKernelVAS()->mapPage(Phys::allocatePage(), brk, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_SUPERVISOR);
-			
+			kprintf("E...\n");
+
 			if (invlpg) {
+				kprintf("F...\n");
 				asm volatile ("invlpg (%0)" : : "b"((void*) (brk)) : "memory");
 			}
-			
+			kprintf("G...\n");
+
 			brk += 4096;
 		}
-		
+		kprintf("H...\n");
+
 		if (!invlpg) {
+			kprintf("I...\n");
 			CPU::writeCR3(CPU::readCR3());
+			kprintf("J...\n");
+
 		} else {
+			kprintf("K...\n");
 			//invalidate the recursive structure
 			size_t invaddrLow = (0xFFC00000 + ((oldbrk / 0x400) & ~0xFFF));
 			size_t invaddrHigh = (0xFFC00000 + (((oldbrk + pages * 4096) / 0x400) & ~0xFFF));
+			kprintf("L...\n");
 
 			while (invaddrLow <= invaddrHigh) {
+				kprintf("M...\n");
+
 				asm volatile ("invlpg (%0)" : : "b"((void*) invaddrLow) : "memory");
 				invaddrLow += 4096;
+				kprintf("N...\n");
+
 			}
+			kprintf("O...\n");
+
 		}
-		
+		kprintf("P...\n");
+
 		return (void*) oldbrk;
 	}
 }
