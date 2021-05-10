@@ -439,7 +439,9 @@ void main()
 		blockingKeyboard();
 	}
 
+	setFgCol(TCLightGrey);
 	writeString("\n Starting Banana...");
+	setFgCol(TCBlack);
 
 	//zero out memory
 	uint64_t* ramTable = 0x600;
