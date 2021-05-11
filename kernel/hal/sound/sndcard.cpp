@@ -65,8 +65,8 @@ int SoundCard::getSamples16(int max, int16_t* buffer)
 	}
 
 	if (maxGot == 0 && playing) {
-		kprintf("stopping playback.\n");
-		stopPlayback();
+		//kprintf("stopping playback.\n");
+		//stopPlayback();
 	}
 
 	return maxGot;
