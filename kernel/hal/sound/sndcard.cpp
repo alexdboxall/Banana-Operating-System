@@ -49,7 +49,7 @@ int SoundCard::getSamples16(int max, int16_t* buffer)
 	memset(buffer, 0, max * sizeof(int32_t));
 
 	for (int i = 0; i < SOUND_DEVICE_MAX_VIRTUAL_CHANNELS; ++i) {
-		if (channels[i] != nullptr && !channels[i].paused) {
+		if (channels[i] != nullptr && !channels[i]->paused) {
 			int got = channels[i]->unbufferAndAdd16(max, buffer, this);
 			if (got > maxGot) {
 				maxGot = got;
@@ -73,7 +73,7 @@ int SoundCard::getSamples32(int max, int32_t* buffer)
 	memset(buffer, 0, max * sizeof(int32_t));
 
 	for (int i = 0; i < SOUND_DEVICE_MAX_VIRTUAL_CHANNELS; ++i) {
-		if (channels[i] != nullptr && !channels[i].paused) {
+		if (channels[i] != nullptr && !channels[i]->paused) {
 			int got = channels[i]->unbufferAndAdd32(max, buffer, this);
 			if (got > maxGot) {
 				maxGot = got;
