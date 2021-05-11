@@ -18,8 +18,6 @@ protected:
 
 	int32_t* buff = nullptr;
 	int buffSize;
-
-	int buffStart;
 	int buffUsed;
 
 	bool paused = true;

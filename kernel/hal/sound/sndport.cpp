@@ -29,7 +29,6 @@ SoundPort::SoundPort(int _sampleRate, int _bits, int _channels, int _buffSize)
 
 	buffSize = _buffSize;
 
-	buffStart = 0;
 	buffUsed = 0;
 	buff = (int32_t*) malloc(buffSize * sizeof(int32_t));
 }
@@ -124,6 +123,7 @@ int SoundPort::unbufferAndAdd16(int max, int16_t* buffer, SoundCard* card)
 
 	kprintf("sound port had %d, now has %d. (amount was %d)\n", buffUsed, buffUsed - amount, amount);
 
+	kprintf("moving %d bytes from 0x%X to 0x%X\n", (buffSize - amount) * sizeof(int32_t), buff + amount, buff);
 	memmove(buff, buff + amount, (buffSize - amount) * sizeof(int32_t));
 	buffUsed -= amount;
 	return amount;

@@ -79,31 +79,34 @@ void playThread(void* __)
 
 	SoundCard* card = (SoundCard*) __;
 
-	SoundPort* port = new SoundPort(8000, 16, 2, 65536 * 3);
-	card->configureRates(8000, 16, 2);
-	card->addChannel(port);
-	card->beginPlayback();
+	SoundPort* port = new SoundPort(8000, 16, 2, 65536 * 6);
+	bool started = false;
 
-	File* f = new File("C:/fugue.wav", kernelProcess);
+	File* f = new File("C:/fuguestereo.wav", kernelProcess);
 	f->open(FileOpenMode::Read);
 
 	while (1) {
 		int bytesRead = 0;
-		FileStatus st = f->read(4096, buf, &bytesRead);
+		FileStatus st = f->read(4096 * 2, buf, &bytesRead);
 
 		if (bytesRead == 0 || st != FileStatus::Success) {
 			kprintf("SONG SHOULD BE DONE.\n");
 			break;
 		}
 
-		lockScheduler();
-		schedule();
-		unlockScheduler();
-
 		kprintf("buffer has %d samples in it.\n", port->getBufferUsed());
 
 		while (port->getBufferUsed() + bytesRead * 3 >= port->getBufferSize()) {
-			nanoSleep(1000 * 1000 * 300);
+			if (!started) {
+				card->configureRates(8000, 16, 2);
+				card->addChannel(port);
+				port->unpause();
+				card->beginPlayback();
+				started = true;
+			}
+			lockScheduler();
+			schedule();
+			unlockScheduler();
 		}
 
 		port->buffer16(buf, bytesRead / 2);
@@ -164,7 +167,7 @@ void AC97::handleIRQ()
 	floatTo16(oBuffer, dma, samplesGot);
 	kprintf("STATUS = 0x%X\n", thePCI->readBAR16(nabm, 0x16));*/
 
-	int16_t* dma = (int16_t*) buffVirt[((civ + 2) % 3)];
+	int16_t* dma = (int16_t*) buffVirt[((civ + 1) % 3)];
 	int sgot = getSamples16(65534, dma);
 	kprintf("we got %d samples to 0x%X\n", sgot, dma);
 
