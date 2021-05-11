@@ -71,7 +71,7 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 		asm volatile ("" : "=m" (*abc) : "r" (*abc));
 	}
 
-	mutex->acquire();
+	//mutex->acquire();
 	kprintf("          ACQUIRED DISK MUTEX - write\n");
 
 	if (readCacheValid) {
@@ -111,7 +111,7 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 	}
 
 	kprintf("          RELEASING DISK MUTEX\n");
-	mutex->release();
+	//mutex->release();
 	return 0;
 }
 
@@ -123,7 +123,7 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 		asm volatile ("" : "=m" (*abc) : "r" (*abc));
 	}
 
-	mutex->acquire();
+	//mutex->acquire();
 	kprintf("          ACQUIRED DISK MUTEX - read\n");
 
 	//NOTE: this is very inefficient, we should check if it is in the cache
@@ -154,6 +154,6 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 	}
 
 	kprintf("          RELEASED DISK MUTEX\n");
-	mutex->release();
+	//mutex->release();
 	return 0;
 }
