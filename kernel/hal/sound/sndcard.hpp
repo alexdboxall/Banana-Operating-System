@@ -8,11 +8,15 @@
 
 #define SOUND_DEVICE_MAX_VIRTUAL_CHANNELS 32
 
+class SoundPort;
+
 class SoundCard : public Device
 {
 private:
 
 protected:
+	friend class SoundPort;
+
 	SoundPort* channels[SOUND_DEVICE_MAX_VIRTUAL_CHANNELS];
 	bool playing = false;
 
