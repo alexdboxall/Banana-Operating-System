@@ -46,7 +46,7 @@ bool SoundCard::configureRates(int sampleRate, int bits, int channels)
 int SoundCard::getSamples16(int max, int16_t* buffer)
 {
 	int maxGot = 0;
-	memset(buffer, 0, max * sizeof(int32_t));
+	memset(buffer, 0, max * sizeof(int16_t));
 
 	for (int i = 0; i < SOUND_DEVICE_MAX_VIRTUAL_CHANNELS; ++i) {
 		if (channels[i] != nullptr && !channels[i]->paused) {

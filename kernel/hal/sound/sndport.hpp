@@ -3,14 +3,15 @@
 
 #include <stdint.h>
 
+class SoundCard;
+
 class SoundPort
 {
-	class SoundCard;
-	friend class SoundCard;
-
 private:
 
 protected:
+	friend class SoundCard;
+
 	int sampleRate;
 	int bits;
 	int channels;
