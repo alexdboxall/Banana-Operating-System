@@ -45,13 +45,15 @@ bool SoundCard::configureRates(int sampleRate, int bits, int channels)
 
 int SoundCard::getSamples16(int max, int16_t* buffer)
 {
-	kprintf("gettint samples to here: 0x%X\n");
+	kprintf("getting samples to here: 0x%X\n");
 
 	int maxGot = 0;
 	memset(buffer, 0, max * sizeof(int16_t));
 	kprintf("cleared %d bytes.\n", max * sizeof(int16_t));
 
 	for (int i = 0; i < SOUND_DEVICE_MAX_VIRTUAL_CHANNELS; ++i) {
+		kprintf("Checking channel %d...\n", i);
+		kprintf("It is at 0x%X...\n", channels[i]);
 		if (channels[i] != nullptr && !channels[i]->paused) {
 			kprintf("channel %d has sound.\n", channels[i]);
 			int got = channels[i]->unbufferAndAdd16(max, buffer, this);
