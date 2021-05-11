@@ -1,4 +1,5 @@
 #include "hal/sound/sndport.hpp"
+#include "hal/sound/sndcard.hpp"
 #include "core/common.hpp"
 #include "core/kheap.hpp"
 #include "hal/device.hpp"
