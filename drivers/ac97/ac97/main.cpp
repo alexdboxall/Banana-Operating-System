@@ -167,11 +167,12 @@ void AC97::handleIRQ()
 
 	int samplesGot = getAudio(65534, tempBuffer, oBuffer);
 	kprintf("samples got = %d\n", samplesGot);
-	int16_t* dma = (int16_t*) buffVirt[((civ + 1) % 3)];
-	if (handles < 2) {
-		kprintf("actually writing data to buffer number %d\n", ((civ + 1) % 3));
-		floatTo16(oBuffer, dma, samplesGot);
-	}
+	int16_t* dma = (int16_t*) buffVirt[((civ + 2) % 3)];
+	kprintf("actually writing data to buffer number %d\n", ((civ + 2) % 3));
+	++v;
+	++v;
+	*v = (((civ + 2) % 3) + '0') | 0xF000;
+	floatTo16(oBuffer, dma, samplesGot);
 	kprintf("STATUS = 0x%X\n", thePCI->readBAR16(nabm, 0x16));
 
 	thePCI->writeBAR16(nabm, 0x1C, 0x16);
