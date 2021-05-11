@@ -67,8 +67,8 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 {
 	//get all touchy-feely (aka. ensure the buffer is in actual RAM, not the swapfile)
 	for (int i = 0; i < count; ++i) {
-		unsigned int* ptr = (unsigned int*) (((uint8_t*) ptr) + i * disk->sectorSize);
-		asm volatile ("" : "=m" (*ptr) : "r" (*ptr));
+		unsigned int* abc = (unsigned int*) (((uint8_t*) ptr) + i * disk->sectorSize);
+		asm volatile ("" : "=m" (*abc) : "r" (*abc));
 	}
 
 	mutex->acquire();
@@ -119,8 +119,8 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 {	
 	//get all touchy-feely (aka. ensure the buffer is in actual RAM, not the swapfile)
 	for (int i = 0; i < count; ++i) {
-		unsigned int* ptr = (unsigned int*) (((uint8_t*) ptr) + i * disk->sectorSize);
-		asm volatile ("" : "=m" (*ptr) : "r" (*ptr));
+		unsigned int* abc = (unsigned int*) (((uint8_t*) ptr) + i * disk->sectorSize);
+		asm volatile ("" : "=m" (*abc) : "r" (*abc));
 	}
 
 	mutex->acquire();
