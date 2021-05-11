@@ -220,10 +220,10 @@ UINT32 acpiDynamicIrqCallback(ACPI_RESOURCE* resource, void* context)
 
 	if (resource->Type == ACPI_RESOURCE_TYPE_IRQ) {
 		ACPI_RESOURCE_IRQ* irq = &resource->Data.Irq;
-		panic("DEBUG. acpica.sys acpiDynamicIrqCallback");
-		lockScheduler();
+		//panic("DEBUG. acpica.sys acpiDynamicIrqCallback");
+		//lockScheduler();
 		acpi->registerPCIIRQAssignment(pciRootBus, table->Address >> 16, table->Pin, irq->Interrupts[table->SourceIndex]);
-		unlockScheduler();
+		//unlockScheduler();
 
 	} else if (resource->Type == ACPI_RESOURCE_TYPE_EXTENDED_IRQ) {
 		ACPI_RESOURCE_EXTENDED_IRQ* xirq = &resource->Data.ExtendedIrq;

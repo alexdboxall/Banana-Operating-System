@@ -96,7 +96,7 @@ void main()
 	setupAbstractionLibrary();
 
 	setFgCol(TCLightGrey);
-	writeString("\n Starting Banana...");
+	writeString("\n  Starting Banana...");
 	setFgCol(TCBlack);
 	clearScreenToColour(TCBlack);
 	millisleep(750);
