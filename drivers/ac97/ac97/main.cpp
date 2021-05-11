@@ -80,6 +80,7 @@ void playThread(void* __)
 	SoundCard* card = (SoundCard*) __;
 
 	SoundPort* port = new SoundPort(8000, 16, 2);
+	card->configureRates(8000, 16, 2);
 	card->addChannel(port);
 
 	File* f = new File("C:/fugue.wav", kernelProcess);
