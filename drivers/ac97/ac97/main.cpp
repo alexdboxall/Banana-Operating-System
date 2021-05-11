@@ -60,6 +60,7 @@ int16_t buf[4096];
 float* tempBuffer;
 float* oBuffer;
 
+void playThread(void* __);
 void start(Device* _dvl)
 {
 	Device* driverless = _dvl;
@@ -73,7 +74,14 @@ void start(Device* _dvl)
 	dev->preOpenPCI(driverless->pci.info);
 	dev->_open(0, 0, nullptr);
 
-	return;
+	kernelProcess->createThread(playThread, dev, 30);
+
+}
+
+void playThread(void* __)
+{
+	SoundDevice* dev = (SoundDevice*) __;
+	unlockScheduler();
 
 	SoundChannel* left = new SoundChannel(8000, 16, 90, 133000 * 2);
 	SoundChannel* rght = new SoundChannel(8000, 16, -90, 133000 * 2);
@@ -92,7 +100,7 @@ void start(Device* _dvl)
 		if (bytesRead == 0 || st != FileStatus::Success) {
 			kprintf("SONG SHOULD BE DONE.\n");
 			dev->stopPlayback();
-			return;
+			break;
 		}
 
 		lockScheduler();
@@ -106,6 +114,8 @@ void start(Device* _dvl)
 		left->buffer16(buf, bytesRead / 2);
 		rght->buffer16(buf, bytesRead / 2);
 	}
+
+	terminateTask(0);
 }
 
 AC97::AC97(): SoundDevice("Intel AC'97 Audio Device")
@@ -146,12 +156,7 @@ void AC97::handleIRQ()
 	lvi = lvi;
 	thePCI->writeBAR8(nabm, lvi, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_LAST_VALID_ENTRY);
 
-	/*uint16_t* data = (uint16_t*) buffVirt[civ - 1];
-	int br;
-	//f->read(0x10000, data, &br);*/
-
 	int samplesGot = getAudio(65534, tempBuffer, oBuffer);
-	kprintf("Got %d samples.\n", samplesGot);
 
 	int16_t* dma = (int16_t*) buffVirt[civ - 1];
 	floatTo16(oBuffer, dma, samplesGot);
@@ -245,14 +250,6 @@ int AC97::_open(int a, int b, void* c)
 			*data++ = 0;	//(j >> (4 + i)) & 1 ? 0x2222 : 0x0000;
 		}
 	}
-
-	/*f = new File("C:/ac97test.wav", kernelProcess);
-	f->open(FileOpenMode::Read);
-	for (int i = 0; i < 3; ++i) {
-		uint16_t* data = (uint16_t*) buffVirt[i];
-		int br;
-		f->read(0x10000, data, &br);
-	}*/
 	
 	//set sample rate
 	setSampleRate(8000);
