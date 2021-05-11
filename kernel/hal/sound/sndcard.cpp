@@ -55,7 +55,7 @@ int SoundCard::getSamples16(int max, int16_t* buffer)
 		kprintf("Checking channel %d...\n", i);
 		kprintf("It is at 0x%X...\n", channels[i]);
 		if (channels[i] != nullptr && !channels[i]->paused) {
-			kprintf("channel %d has sound.\n", channels[i]);
+			kprintf("channel %d has sound.\n", i);
 			int got = channels[i]->unbufferAndAdd16(max, buffer, this);
 			kprintf("we got %d from that channel.\n", got);
 			if (got > maxGot) {
@@ -65,8 +65,8 @@ int SoundCard::getSamples16(int max, int16_t* buffer)
 	}
 
 	if (maxGot == 0 && playing) {
+		kprintf("stopping playback.\n");
 		stopPlayback();
-
 	}
 
 	return maxGot;
