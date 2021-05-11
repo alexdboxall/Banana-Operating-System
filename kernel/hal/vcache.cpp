@@ -65,6 +65,11 @@ void VCache::writeWriteBuffer()
 
 int VCache::write(uint64_t lba, int count, void* ptr)
 {
+	//get all touchy-feely (aka. ensure the buffer is in actual RAM, not the swapfile)
+	for (int i = 0; i < count; ++i) {
+		volatile uint8_t x = *(((volatile uint8_t* volatile) (ptr)) + i * disk->sectorSize);
+	}
+
 	mutex->acquire();
 	kprintf("          ACQUIRED DISK MUTEX - write\n");
 
@@ -110,7 +115,12 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 }
 
 int VCache::read(uint64_t lba, int count, void* ptr)
-{
+{	
+	//get all touchy-feely (aka. ensure the buffer is in actual RAM, not the swapfile)
+	for (int i = 0; i < count; ++i) {
+		volatile uint8_t x = *(((volatile uint8_t* volatile) (ptr)) + i * disk->sectorSize);
+	}
+
 	mutex->acquire();
 	kprintf("          ACQUIRED DISK MUTEX - read\n");
 

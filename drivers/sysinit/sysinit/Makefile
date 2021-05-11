@@ -37,12 +37,10 @@ $(TARGET32): $(OBJECTS32)
 	$(LD32) $(LDFLAGS) -shared -q -o $(OUTPUT32) $^ -Map=D:/Users/Alex/Desktop/driver32.map
 
 %.32: %.cpp
-	$(DFIX) $^
-	$(CXX32) $(CXXFLAGS) -c $^x -o $@ -ID:/Users/Alex/Desktop/Banana/kernel -fno-exceptions -fno-rtti
+	$(CXX32) $(CXXFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel -fno-exceptions -fno-rtti
 	
 %.32: %.c
-	$(DFIX) $^
-	$(C32) $(CFLAGS) -c $^x -o $@ -ID:/Users/Alex/Desktop/Banana/kernel
+	$(C32) $(CFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel
 
 
 $(TARGET64): $(OBJECTS64)
