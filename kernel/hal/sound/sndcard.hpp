@@ -16,7 +16,13 @@ protected:
 	SoundPort* channels[SOUND_DEVICE_MAX_VIRTUAL_CHANNELS];
 	bool playing = false;
 
+	int currentBits = 0;
+	int currentSampleRate = 0;
+	int currentChannels = 0;
+
 public:
+	bool configureRates(int sampleRate, int bits, int channels);
+
 	SoundCard(const char* name);
 	virtual ~SoundCard();
 
@@ -26,7 +32,7 @@ public:
 	int addChannel(SoundPort* ch);
 	void removeChannel(int id);
 
-	virtual void beginPlayback(int sampleRate, int bits);
+	virtual void beginPlayback();
 	virtual void stopPlayback();
 };
 

@@ -30,6 +30,19 @@ SoundCard::~SoundCard()
 	
 }
 
+bool SoundCard::configureRates(int sampleRate, int bits, int channels)
+{
+	if (!playing) {
+		currentSampleRate = sampleRate;
+		currentBits = bits;
+		currentChannels = channels;
+		return true;
+
+	} else {
+		return false;
+	}
+}
+
 int SoundCard::getSamples16(int max, int16_t* buffer)
 {
 	int maxGot = 0;
@@ -37,7 +50,7 @@ int SoundCard::getSamples16(int max, int16_t* buffer)
 
 	for (int i = 0; i < SOUND_DEVICE_MAX_VIRTUAL_CHANNELS; ++i) {
 		if (channels[i] != nullptr && !channels[i].paused) {
-			int got = channels[i]->unbufferAndAdd16(max, buffer);
+			int got = channels[i]->unbufferAndAdd16(max, buffer, this);
 			if (got > maxGot) {
 				maxGot = got;
 			}
@@ -61,7 +74,7 @@ int SoundCard::getSamples32(int max, int32_t* buffer)
 
 	for (int i = 0; i < SOUND_DEVICE_MAX_VIRTUAL_CHANNELS; ++i) {
 		if (channels[i] != nullptr && !channels[i].paused) {
-			int got = channels[i]->unbufferAndAdd32(max, buffer);
+			int got = channels[i]->unbufferAndAdd32(max, buffer, this);
 			if (got > maxGot) {
 				maxGot = got;
 			}
@@ -81,11 +94,12 @@ int SoundCard::getSamples32(int max, int32_t* buffer)
 int SoundCard::addChannel(SoundPort* ch)
 {
 	int id = -1;
-
+	int numChs = 0;
 	for (int i = 0; i < SOUND_DEVICE_MAX_VIRTUAL_CHANNELS; ++i) {
 		if (channels[i] == nullptr) {
 			id = i;
-			break;
+		} else {
+			++numChs;
 		}
 	}
 
@@ -95,6 +109,9 @@ int SoundCard::addChannel(SoundPort* ch)
 	}
 
 	channels[id] = ch;
+	if (numChs == 0) {
+
+	}
 	return id;
 }
 
@@ -103,7 +120,7 @@ void SoundCard::removeChannel(int id)
 	channels[id] = nullptr;
 }
 
-void SoundCard::beginPlayback(int sampleRate, int bits)
+void SoundCard::beginPlayback()
 {
 	panic("PSEDUO-PURE VIRTUAL SoundCard::beginPlayback CALLED");
 }

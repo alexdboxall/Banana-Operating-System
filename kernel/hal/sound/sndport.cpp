@@ -16,7 +16,7 @@ extern "C" {
 }
 
 
-SoundPort::SoundPort(int _sampleRate, int _bits, int _channels, int bufferSize = -1)
+SoundPort::SoundPort(int _sampleRate, int _bits, int _channels, int _buffSize = -1)
 {
 	sampleRate = _sampleRate;
 	bits = _bits;
@@ -94,8 +94,18 @@ int SoundPort::buffer32(int32_t* data, int samples)
 	return i;
 }
 
-int SoundPort::unbufferAndAdd16(int max, int16_t* buffer)
+int SoundPort::unbufferAndAdd16(int max, int16_t* buffer, SoundCard* card)
 {
+	if (sampleRate != card->currentSampleRate) {
+		panic("TODO 16! Convert sample rates!");
+	}
+	if (bits != card->currentBits) {
+		panic("TODO 16! Convert bit rates!");
+	}
+	if (channels != card->currentChannels) {
+		panic("TODO 16! Convert bit rates!");
+	}
+
 	int amount = buffUsed > max ? max : buffUsed;
 	for (int i = 0; i < amount; ++i) {
 		buffer[i] += buff[i] / 0x8000;
@@ -106,8 +116,18 @@ int SoundPort::unbufferAndAdd16(int max, int16_t* buffer)
 	return amount;
 }
 
-int SoundPort::unbufferAndAdd32(int max, int32_t* buffer)
+int SoundPort::unbufferAndAdd32(int max, int32_t* buffer, SoundCard* card)
 {
+	if (sampleRate != card->currentSampleRate) {
+		panic("TODO 32! Convert sample rates!");
+	}
+	if (bits != card->currentBits) {
+		panic("TODO 32! Convert bit rates!");
+	}
+	if (channels != card->currentChannels) {
+		panic("TODO 32! Convert bit rates!");
+	}
+
 	int amount = buffUsed > max ? max : buffUsed;
 	for (int i = 0; i < amount; ++i) {
 		buffer[i] += buff[i];
