@@ -90,7 +90,7 @@ void playThread(void* __)
 	kprintf("About to begin playback...\n");
 	kprintf("Playback has begun!\n");
 
-	File* f = new File("C:/mono.wav", kernelProcess);
+	File* f = new File("C:/fugue.wav", kernelProcess);
 	f->open(FileOpenMode::Read);
 
 	while (1) {
@@ -106,6 +106,8 @@ void playThread(void* __)
 		lockScheduler();
 		schedule();
 		unlockScheduler();
+
+		kprintf("buffer has %d bytes in it.\n", left->getBufferUsed());
 
 		while (left->getBufferUsed() + bytesRead >= left->getBufferSize()) {
 			nanoSleep(1000 * 1000 * 300);
@@ -153,26 +155,27 @@ int handles = 0;
 void AC97::handleIRQ()
 {
 	kprintf("AC97 IRQ.\n");
-
-	if (handles == 2) {
-		thePCI->writeBAR16(nabm, 0x1C, 0x16);
-		return;
-	}
-	++handles;
-
 	uint8_t civ = thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_CUR_ENTRY_VAL);
 	uint8_t lvi = thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_LAST_VALID_ENTRY);
 	lvi = lvi;
-	kprintf("currently on '%d'. civ - 1 = %d\n", civ, civ - 1);
+	kprintf("currently on '%d'. civ - 1 = %d, civ + 1 = %d\n", civ, civ - 1, ((civ + 1) % 3));
+	kprintf("lvi =  %d\n", lvi);
 	thePCI->writeBAR8(nabm, lvi, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_LAST_VALID_ENTRY);
 
-	int samplesGot = getAudio(65534, tempBuffer, oBuffer);
+	uint16_t* v = (uint16_t*) (0xC20B8000);
+	*v = (civ + '0') | 0xF000;
 
+	int samplesGot = getAudio(65534, tempBuffer, oBuffer);
+	kprintf("samples got = %d\n", samplesGot);
 	int16_t* dma = (int16_t*) buffVirt[((civ + 1) % 3)];
-	floatTo16(oBuffer, dma, samplesGot / 2);
+	if (handles < 2) {
+		kprintf("actually writing data to buffer number %d\n", ((civ + 1) % 3));
+		floatTo16(oBuffer, dma, samplesGot);
+	}
+	kprintf("STATUS = 0x%X\n", thePCI->readBAR16(nabm, 0x16));
 
 	thePCI->writeBAR16(nabm, 0x1C, 0x16);
-
+	++handles;
 }
 
 void AC97::setSampleRate(int hertz)
@@ -274,7 +277,9 @@ int AC97::_open(int a, int b, void* c)
 
 	//start transfer
 	val = thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
-	thePCI->writeBAR8(nabm, val | 0x15, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
+	val = (val & ~0x1F) | 0x1D;
+	kprintf("VAL = 0x%X\n", val);
+	thePCI->writeBAR8(nabm, val, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
 
 	return 0;
 }
