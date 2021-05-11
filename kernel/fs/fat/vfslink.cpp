@@ -248,10 +248,12 @@ uint64_t FAT::allocateSwapfile(const char* filename, int megs)
 	uint64_t siz;
 	bool dir;
 	f->stat(&siz, &dir);
+	FIL* fsData;
+
 	if (megs * 1024 * 1024 != siz) {
 		f->unlink();
 		f->open(FILE_OPEN_WRITE_NORMAL);
-		FIL* fsData = (FIL*) f->fsSpecificData;
+		fsData = (FIL*) f->fsSpecificData;
 		f_expand(fsData, megs * 1024 * 1024, 1);
 		f->write(1024, buff, &br);
 		f->close();
