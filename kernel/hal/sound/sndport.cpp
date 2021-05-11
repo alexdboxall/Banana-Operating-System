@@ -122,6 +122,8 @@ int SoundPort::unbufferAndAdd16(int max, int16_t* buffer, SoundCard* card)
 		buffer[i] += buff[i] / 0x8000;
 	}
 
+	kprintf("sound port had %d, now has %d. (amount was %d)\n", buffUsed, buffUsed - amount, amount);
+
 	memmove(buff, buff + amount, (buffSize - amount) * sizeof(int32_t));
 	buffUsed -= amount;
 	return amount;

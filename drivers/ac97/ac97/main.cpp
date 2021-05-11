@@ -79,9 +79,10 @@ void playThread(void* __)
 
 	SoundCard* card = (SoundCard*) __;
 
-	SoundPort* port = new SoundPort(8000, 16, 2);
+	SoundPort* port = new SoundPort(8000, 16, 2, 65536 * 3);
 	card->configureRates(8000, 16, 2);
 	card->addChannel(port);
+	card->beginPlayback();
 
 	File* f = new File("C:/fugue.wav", kernelProcess);
 	f->open(FileOpenMode::Read);
@@ -153,9 +154,6 @@ void AC97::handleIRQ()
 	kprintf("lvi =  %d\n", lvi);
 	thePCI->writeBAR8(nabm, lvi, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_LAST_VALID_ENTRY);
 
-	uint16_t* v = (uint16_t*) (0xC20B8000);
-	*v = (civ + '0') | 0xF000;
-
 	/*int samplesGot = getAudio(65534, tempBuffer, oBuffer);
 	kprintf("samples got = %d\n", samplesGot);
 	int16_t* dma = (int16_t*) buffVirt[((civ + 2) % 3)];
@@ -167,7 +165,8 @@ void AC97::handleIRQ()
 	kprintf("STATUS = 0x%X\n", thePCI->readBAR16(nabm, 0x16));*/
 
 	int16_t* dma = (int16_t*) buffVirt[((civ + 2) % 3)];
-	getSamples16(65534, dma);
+	int sgot = getSamples16(65534, dma);
+	kprintf("we got %d samples to 0x%X\n", sgot, dma);
 
 	thePCI->writeBAR16(nabm, 0x1C, 0x16);
 	++handles;
@@ -278,6 +277,8 @@ int AC97::close(int a, int b, void* c)
 
 void AC97::beginPlayback()
 {
+	kprintf("beginning playback...\n");
+
 	//set sample rate
 	setSampleRate(currentSampleRate);
 
@@ -294,10 +295,14 @@ void AC97::beginPlayback()
 	val = (val & ~0x1F) | 0x1D;
 	kprintf("VAL = 0x%X\n", val);
 	thePCI->writeBAR8(nabm, val, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
+
+	playing = true;
 }
 
 void AC97::stopPlayback()
 {
 	uint8_t val = thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
 	thePCI->writeBAR8(nabm, val & ~0x1F, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
+
+	playing = false;
 }
