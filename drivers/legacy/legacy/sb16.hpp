@@ -1,4 +1,6 @@
 
+#if 0
+
 #ifndef _SB16HPP_
 #define _SB16HPP_
 
@@ -57,6 +59,10 @@ public:
 	void resetDSP();
 	void turnSpeakerOn(bool on = true);
 };
+
+
+#endif
+
 
 
 #endif

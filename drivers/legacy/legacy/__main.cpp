@@ -63,7 +63,7 @@ void ISA::doSoundblaster()
 {
 	return;
 
-	outb(0x226, 1);
+	/*outb(0x226, 1);
 	nanoSleep(1000 * 1000 * 3);
 	outb(0x226, 0);
 
@@ -78,7 +78,7 @@ void ISA::doSoundblaster()
 
 	} else {
 		//panic("Soundblaster is *NOT* supported!! :(");
-	}
+	}*/
 }
 
 void ISA::doSerial()

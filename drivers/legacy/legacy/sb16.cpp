@@ -1,4 +1,6 @@
 
+#if 0
+
 #include <stdint.h>
 #include <stddef.h>
 
@@ -355,3 +357,4 @@ int SoundBlaster16::close(int, int, void*)
 	return 0;
 }
 
+#endif

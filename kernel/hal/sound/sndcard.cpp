@@ -1,5 +1,5 @@
 #include "core/main.hpp"
-#include "hal/sound/sndhw.hpp"
+#include "hal/sound/sndcard.hpp"
 #include "core/common.hpp"
 #include "core/kheap.hpp"
 extern "C" {
