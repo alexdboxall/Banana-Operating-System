@@ -95,6 +95,8 @@ void main()
 {
 	setupAbstractionLibrary();
 
+	setFgCol(TCLightGrey);
+	writeString("\n Starting Banana...");
 	setFgCol(TCBlack);
 	clearScreenToColour(TCBlack);
 	millisleep(750);
@@ -433,15 +435,10 @@ void main()
 	uint32_t data = getBootData();
 	
 	uint16_t count = getRAMMap((void*) 0x600);
-	clearScreen();
 	if (fulldebug) {
 		writeString("\nPRESS ANY KEY");
 		blockingKeyboard();
 	}
-
-	setFgCol(TCLightGrey);
-	writeString("\n Starting Banana...");
-	setFgCol(TCBlack);
 
 	//zero out memory
 	uint64_t* ramTable = 0x600;
