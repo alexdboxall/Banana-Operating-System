@@ -17,7 +17,7 @@ extern "C" {
 }
 
 
-SoundPort::SoundPort(int _sampleRate, int _bits, int _channels, int _buffSize = -1)
+SoundPort::SoundPort(int _sampleRate, int _bits, int _channels, int _buffSize)
 {
 	sampleRate = _sampleRate;
 	bits = _bits;
