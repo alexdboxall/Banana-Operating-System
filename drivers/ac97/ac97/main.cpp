@@ -66,8 +66,8 @@ void start(Device* _dvl)
 	Device* driverless = _dvl;
 	Device* parent = driverless->getParent();
 
-	tempBuffer = (float*) malloc(2 * 65536 * sizeof(float));
-	oBuffer = (float*) malloc(2 * 65536 * sizeof(float));
+	tempBuffer = (float*) malloc(65536 * sizeof(float));
+	oBuffer = (float*) malloc(65536 * sizeof(float));
 
 	AC97* dev = new AC97();
 	parent->addChild(dev);
