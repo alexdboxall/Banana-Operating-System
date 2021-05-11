@@ -118,7 +118,7 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 {	
 	//get all touchy-feely (aka. ensure the buffer is in actual RAM, not the swapfile)
 	for (int i = 0; i < count; ++i) {
-		auto x = *(((volatile uint8_t* volatile) ptr) + i * disk->sectorSize);
+		auto x = *(((volatile uint8_t*) ptr) + i * disk->sectorSize);
 	}
 
 	mutex->acquire();
