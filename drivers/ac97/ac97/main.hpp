@@ -11,7 +11,7 @@
 #include "hal/intctrl.hpp"
 #include "hw/ports.hpp"
 #include "hw/acpi.hpp"
-#include "hal/sound/sndhw.hpp"
+#include "hal/sound/sndcard.hpp"
 #include "fs/vfs.hpp"
 
 extern "C" {
@@ -19,7 +19,7 @@ extern "C" {
 #include "libk/math.h"
 }
 
-class AC97: public SoundDevice
+class AC97: public SoundCard
 {
 private:
 
@@ -47,8 +47,7 @@ public:
 	int _open(int a, int b, void* c);
 	int close(int a, int b, void* c);
 
-	virtual void beginPlayback(int sampleRate, int bits) override;
-	virtual int getNumHwChannels() override;
+	virtual void beginPlayback() override;
 	virtual void stopPlayback() override;
 };
 

@@ -19,7 +19,8 @@ void begin(void* b)
 #include "hw/bus/pci.hpp"
 #include "hw/acpi.hpp"
 #include "fs/vfs.hpp"
-#include "hal/sound/sndhw.hpp"
+#include "hal/sound/sndport.hpp"
+#include "hal/sound/sndcard.hpp"
 
 #define NAM_RESET				0x00
 #define NAM_MASTER_VOL			0x02
@@ -57,17 +58,11 @@ extern "C" {
 
 int16_t buf[4096];
 
-float* tempBuffer;
-float* oBuffer;
-
 void playThread(void* __);
 void start(Device* _dvl)
 {
 	Device* driverless = _dvl;
 	Device* parent = driverless->getParent();
-
-	tempBuffer = (float*) malloc(65536 * sizeof(float));
-	oBuffer = (float*) malloc(65536 * sizeof(float));
 
 	AC97* dev = new AC97();
 	parent->addChild(dev);
@@ -80,15 +75,12 @@ void start(Device* _dvl)
 
 void playThread(void* __)
 {
-	SoundDevice* dev = (SoundDevice*) __;
 	unlockScheduler();
 
-	SoundChannel* left = new SoundChannel(8000, 16, 90, 133000 * 2);
-	SoundChannel* rght = new SoundChannel(8000, 16, -90, 133000 * 2);
-	dev->addChannel(left);
-	dev->addChannel(rght);
-	kprintf("About to begin playback...\n");
-	kprintf("Playback has begun!\n");
+	SoundCard* card = (SoundCard*) __;
+
+	SoundPort* port = new SoundPort(8000, 16, 2);
+	card->addChannel(port);
 
 	File* f = new File("C:/fugue.wav", kernelProcess);
 	f->open(FileOpenMode::Read);
@@ -99,7 +91,6 @@ void playThread(void* __)
 
 		if (bytesRead == 0 || st != FileStatus::Success) {
 			kprintf("SONG SHOULD BE DONE.\n");
-			dev->stopPlayback();
 			break;
 		}
 
@@ -107,20 +98,19 @@ void playThread(void* __)
 		schedule();
 		unlockScheduler();
 
-		kprintf("buffer has %d samples in it.\n", left->getBufferUsed());
+		kprintf("buffer has %d samples in it.\n", port->getBufferUsed());
 
-		while (left->getBufferUsed() + bytesRead / 2 >= left->getBufferSize()) {
+		while (port->getBufferUsed() + bytesRead * 3 >= port->getBufferSize()) {
 			nanoSleep(1000 * 1000 * 300);
 		}
 
-		left->buffer16(buf, bytesRead / 2);
-		rght->buffer16(buf, bytesRead / 2);
+		port->buffer16(buf, bytesRead / 2);
 	}
 
 	terminateTask(0);
 }
 
-AC97::AC97(): SoundDevice("Intel AC'97 Audio Device")
+AC97::AC97(): SoundCard("Intel AC'97 Audio Device")
 {
 
 }
@@ -165,7 +155,7 @@ void AC97::handleIRQ()
 	uint16_t* v = (uint16_t*) (0xC20B8000);
 	*v = (civ + '0') | 0xF000;
 
-	int samplesGot = getAudio(65534, tempBuffer, oBuffer);
+	/*int samplesGot = getAudio(65534, tempBuffer, oBuffer);
 	kprintf("samples got = %d\n", samplesGot);
 	int16_t* dma = (int16_t*) buffVirt[((civ + 2) % 3)];
 	kprintf("actually writing data to buffer number %d\n", ((civ + 2) % 3));
@@ -173,7 +163,10 @@ void AC97::handleIRQ()
 	++v;
 	*v = (((civ + 2) % 3) + '0') | 0xF000;
 	floatTo16(oBuffer, dma, samplesGot);
-	kprintf("STATUS = 0x%X\n", thePCI->readBAR16(nabm, 0x16));
+	kprintf("STATUS = 0x%X\n", thePCI->readBAR16(nabm, 0x16));*/
+
+	int16_t* dma = (int16_t*) buffVirt[((civ + 2) % 3)];
+	getSamples16(65534, dma);
 
 	thePCI->writeBAR16(nabm, 0x1C, 0x16);
 	++handles;
@@ -265,9 +258,6 @@ int AC97::_open(int a, int b, void* c)
 			*data++ = (j >> (4 + i)) & 1 ? 0x2222 : 0x0000;
 		}
 	}
-	
-	//set sample rate
-	setSampleRate(8000);
 
 	//write physical address of BDL
 	thePCI->writeBAR32(nabm, bdlPhys, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_DSC_ADDR);
@@ -275,12 +265,6 @@ int AC97::_open(int a, int b, void* c)
 
 	kprintf("interrupt = %d\n", pci.info.interrrupt);
 	interrupt = addIRQHandler(pci.info.interrrupt, ac97IRQHandler, true, (void*) this);
-
-	//start transfer
-	val = thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
-	val = (val & ~0x1F) | 0x1D;
-	kprintf("VAL = 0x%X\n", val);
-	thePCI->writeBAR8(nabm, val, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
 
 	return 0;
 }
@@ -291,18 +275,28 @@ int AC97::close(int a, int b, void* c)
 }
 
 
-void AC97::beginPlayback(int sampleRate, int bits)
+void AC97::beginPlayback()
 {
+	//set sample rate
+	setSampleRate(currentSampleRate);
 
+	if (currentBits != 16) {
+		panic("AC97::beginPlayback bits != 16 NOT SUPPORTED!");
+	}
+
+	if (currentChannels != 2) {
+		panic("AC97::beginPlayback channels != 2 NOT SUPPORTED!");
+	}
+
+	//start transfer
+	uint8_t val = thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
+	val = (val & ~0x1F) | 0x1D;
+	kprintf("VAL = 0x%X\n", val);
+	thePCI->writeBAR8(nabm, val, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
 }
 
 void AC97::stopPlayback()
 {
-	//uint8_t val = thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
-	//thePCI->writeBAR8(nabm, val & ~0x1F, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
-}
-
-int AC97::getNumHwChannels()
-{
-	return 2;
+	uint8_t val = thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
+	thePCI->writeBAR8(nabm, val & ~0x1F, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
 }

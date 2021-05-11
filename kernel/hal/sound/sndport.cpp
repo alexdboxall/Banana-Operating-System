@@ -53,6 +53,16 @@ void SoundPort::pause()
 	paused = true;
 }
 
+int SoundPort::getBufferUsed()
+{
+	return buffUsed;
+}
+
+int SoundPort::getBufferSize()
+{
+	return buffSize;
+}
+
 int SoundPort::buffer16(int16_t* data, int samples)
 {
 	if (buffUsed == buffSize) {
