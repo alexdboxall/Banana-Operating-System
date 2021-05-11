@@ -25,7 +25,7 @@ SoundChannel::SoundChannel(int _sampleRate, int _bits, int _direction, int _buff
 	direction = _direction;
 
 	if (_buffSize == -1) {
-		_buffSize = sampleRate * bits / 4 + 4000;
+		_buffSize = sampleRate * 2 / 4 + 4000;
 	}
 
 	buffSize = _buffSize;

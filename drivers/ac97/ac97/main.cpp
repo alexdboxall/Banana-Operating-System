@@ -107,9 +107,9 @@ void playThread(void* __)
 		schedule();
 		unlockScheduler();
 
-		kprintf("buffer has %d bytes in it.\n", left->getBufferUsed());
+		kprintf("buffer has %d samples in it.\n", left->getBufferUsed());
 
-		while (left->getBufferUsed() + bytesRead >= left->getBufferSize()) {
+		while (left->getBufferUsed() + bytesRead / 2 >= left->getBufferSize()) {
 			nanoSleep(1000 * 1000 * 300);
 		}
 
