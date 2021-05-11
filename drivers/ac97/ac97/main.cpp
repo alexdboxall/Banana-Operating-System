@@ -168,7 +168,7 @@ void AC97::handleIRQ()
 	kprintf("STATUS = 0x%X\n", thePCI->readBAR16(nabm, 0x16));*/
 
 	int16_t* dma = (int16_t*) buffVirt[((civ + 1) % 3)];
-	int sgot = getSamples16(65534, dma);
+	int sgot = getSamples16(65534 / 2, dma);
 	kprintf("we got %d samples to 0x%X\n", sgot, dma);
 
 	thePCI->writeBAR16(nabm, 0x1C, 0x16);
