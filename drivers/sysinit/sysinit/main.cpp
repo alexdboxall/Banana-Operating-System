@@ -650,15 +650,196 @@ void createUser(const char* name)
     copytree("C:/Banana/Registry/DefaultUser", path);
 }
 
+VgaText* term;
+void drawBootScreen()
+{
+    term->setDefaultBgColour(VgaColour::Cyan);
+    term->setDefaultFgColour(VgaColour::Black);
+    term->clearScreen();
+    term->setTitle("");
+    term->setTitleColour(VgaColour::Black);
+    term->setTitleTextColour(VgaColour::Black);
+
+    for (int y = 0; y < 25; ++y) {
+        term->setCursor(0, y);
+        for (int x = 0; x < 16; ++x) {
+            term->putchar(' ', VgaColour::Black, VgaColour::Black);
+        }
+    }
+    term->setCursor(1, 0);
+    term->puts("Checking\n system\n requirements\n\n Legal\n notices\n\n Choosing a\n partition\n\n Formatting\n\n Copying files\n\n Restarting\n your computer\n\n", VgaColour::White, VgaColour::Black);
+    term->puts(" Finalising the\n installation", VgaColour::Yellow, VgaColour::Black);
+    term->setDefaultBgColour(VgaColour::White);
+    term->setDefaultFgColour(VgaColour::Black);
+}
+
+void drawBasicWindow(int wx, int wy, int ww, int wh, const char* wtitle)
+{
+    for (int y = 0; y < wh; ++y) {
+        term->setCursor(wx, wy + y);
+        for (int x = 0; x < ww; ++x) {
+            term->putchar(' ', VgaColour::White, VgaColour::White);
+        }
+    }
+
+    term->setCursor(wx, wy);
+    for (int x = 0; x < ww; ++x) {
+        term->putchar(' ', VgaColour::Blue, VgaColour::Blue);
+    }
+
+    term->setCursor(wx + 1, wy + wh);
+    for (int x = 0; x < ww; ++x) {
+        term->putchar(' ', VgaColour::Teal, VgaColour::Teal);
+    }
+
+    for (int x = wy; x < wy + wh; ++x) {
+        term->setCursor(ww + wx, 1 + x);
+        term->putchar(' ', VgaColour::Teal, VgaColour::Teal);
+
+        if (x != wy + wh - 1) {
+            term->setCursor(wx, 1 + x);
+            term->putchar('\xDD', VgaColour::Black, VgaColour::White);
+        }
+    }
+
+    int g = (ww - strlen(wtitle)) / 2 - 1;
+    term->setCursor(wx + g, wy);
+    for (int j = 0; j < strlen(wtitle); ++j) {
+        term->putchar(wtitle[j], VgaColour::White, VgaColour::Blue);
+    }
+}
+
+#include "hal/keybrd.hpp"
+
+extern void (*guiKeyboardHandler) (KeyboardToken kt, bool* keystates);
+volatile char installKey = 0;
+void bootInstallKeybrd(KeyboardToken kt, bool* keystates)
+{
+    if (kt.release) return;
+    installKey = kt.halScancode;
+}
+
+void bootInstallTasks(int done)
+{
+    term->setCursor(24, 4);
+    term->puts("Please wait while the install finishes.");
+
+    term->setCursor(26, 6);
+    term->puts(done == 0 ? "\x10 " : "  ");
+    term->puts("Allocating the swapfile", done >= 0 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
+
+    term->setCursor(26, 7);
+    term->puts(done == 1 ? "\x10 " : "  ");
+    term->puts("Updating the registry", done >= 0 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
+    
+    term->setCursor(26, 8);
+    term->puts(done == 2 ? "\x10 " : "  ");
+    term->puts("Backing up system files", done >= 1 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
+
+    term->setCursor(26, 9);
+    term->puts(done == 3 ? "\x10 " : "  ");
+    term->puts("Decompressing packages", done >= 2 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
+
+    term->setCursor(26, 10);
+    term->puts(done == 4 ? "\x10 " : "  ");
+    term->puts("Installing packages", done >= 3 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
+}
+
 void firstRun()
 {
+    guiKeyboardHandler = bootInstallKeybrd;
+
 	Krnl::setBootMessage("Setting up the system for the first time");
 
+    VgaText::hiddenOut = false;
+
+    activeTerminal->puts("\n\n\n\n\n\n");
+    kernelProcess->terminal->puts("\n\n\n\n\n\n");
+
+    term = new VgaText("Test");
+    setActiveTerminal(term);
+    drawBootScreen();
+
+    char currName[48] = "Alex";
+    char currComp[48] = "Testing Comp";
+
+    int sel = 0;
+    drawBasicWindow(22, 2, 50, 13, "Banana Setup");
+    term->setCursor(24, 4); term->puts("Please enter your details. Press TAB to switch");
+    term->setCursor(24, 5); term->puts("between fields.");
+    term->setCursor(24, 7); term->puts("Name");
+    term->setCursor(24, 9); term->puts("Company");
+
+    while (1) {
+        term->setCursor(33, 7);
+        term->puts("                         ", VgaColour::Black, VgaColour::LightGrey);
+        term->puts(sel == 0 ? "  \x11" : "   ", VgaColour::Black, VgaColour::White);
+        term->setCursorX(33);
+        term->puts(currName, VgaColour::Black, VgaColour::LightGrey);
+
+        term->setCursor(33, 9);
+        term->puts("                         ", VgaColour::Black, VgaColour::LightGrey);
+        term->puts(sel == 1 ? "  \x11" : "   ", VgaColour::Black, VgaColour::White);
+        term->setCursorX(33);
+        term->puts(currComp, VgaColour::Black, VgaColour::LightGrey);
+
+        term->setCursor(24, 11);
+        term->puts(sel == 2 ? "Press ENTER" : "           ", VgaColour::DarkGrey, VgaColour::White);
+      
+        term->setCursor(50, 11);
+        if (sel != 2) term->puts("   OK   ", VgaColour::White, VgaColour::DarkGrey);
+        else          term->puts("   OK   ", VgaColour::White, VgaColour::Blue);
+        term->puts(sel == 2 ? "  \x11" : "   ", VgaColour::Black, VgaColour::White);
+
+        if (sel == 0) term->setCursor(33 + strlen(currName), 7);
+        if (sel == 1) term->setCursor(33 + strlen(currComp), 9);
+        if (sel == 2) term->setCursor(0, 0);
+
+        while (installKey == 0);
+        if (installKey == '\t' || installKey == '\n') {
+            if (sel == 2) {
+                installKey = 0;
+                break;
+            }
+            sel += 1;
+            if (sel == 3) sel = 0;
+
+        } else if (installKey >= 32 && installKey < 127) {
+            char ss[2];
+            ss[0] = installKey;
+            ss[1] = 0;
+            if (sel == 0 && strlen(currName) < 24) strcat(currName, ss);
+            if (sel == 1 && strlen(currComp) < 24) strcat(currComp, ss);
+
+        } else if (installKey == '\b') {
+            if (sel == 0 && strlen(currName)) currName[strlen(currName) - 1] = 0;
+            if (sel == 1 && strlen(currComp)) currComp[strlen(currComp) - 1] = 0;
+        }
+
+        installKey = 0;
+    }
+    
+    drawBootScreen();
+    drawBasicWindow(22, 2, 50, 13, "Finalising Installation");
+
+    bootInstallTasks(0);
+    int megabytes = Reg::readIntWithDefault((char*) "system", (char*) "@memory:swapfile", 12);
+    Virt::setupPageSwapping(megabytes);
+
+    bootInstallTasks(1);
 	rmtree("C:/Banana/Registry/System");
 	rmtree("C:/Banana/Registry/User");
 	mkdir("C:/Banana/Registry/System", 0700);
 	mkdir("C:/Banana/Registry/User", 0700);
 	copytree("C:/Banana/Registry/DefaultSystem", "C:/Banana/Registry/System");
+
+    bootInstallTasks(0);
+    backupTree("C:/Banana/Drivers/", 0xDDDD);
+    backupTree("C:/Banana/System/", 0xEEEE);
+    backupTree("C:/Banana/Registry/", 0xFFFF);
+
+    while (installKey == 0);
+    installKey = 0;
 }
 
 void loadExtensions()
@@ -684,18 +865,10 @@ void begin(void* a)
     delete f;
 
     if (firstTime) {
-        kprintf("THIS IS THE FIRST RUN!!!\n");
         firstRun();
 
     } else {
         loadExtensions();
-    }
-
-    if (!firstTime) {
-        Krnl::setBootMessage("Backing up core files...");
-        /*backupTree("C:/Banana/Drivers/", 0xDDDD);
-        backupTree("C:/Banana/System/", 0xEEEE);
-        backupTree("C:/Banana/Registry/", 0xFFFF);*/
     }
 
     VgaText::hiddenOut = false;

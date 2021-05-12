@@ -432,9 +432,21 @@ int ACPI::open(int mode, int, void*)
 	Krnl::setBootMessage("Loading kernel symbol table...");
 	Thr::loadKernelSymbolTable("C:/Banana/System/KERNEL32.EXE");
 
-	Krnl::setBootMessage("Allocating the swapfile...");
-	int megabytes = Reg::readIntWithDefault((char*) "system", (char*) "@memory:swapfile", 12);
-	Virt::setupPageSwapping(megabytes);
+	bool firstTime = false;
+	File* f = new File("C:/Banana/System/setupisd.one", kernelProcess);
+	FileStatus fs = f->open(FileOpenMode::Read);
+	if (fs == FileStatus::Success) {
+		f->close();
+	} else {
+		firstTime = true;
+	}
+	delete f;
+
+	if (!firstTime) {
+		Krnl::setBootMessage("Allocating the swapfile...");
+		int megabytes = Reg::readIntWithDefault((char*) "system", (char*) "@memory:swapfile", 12);
+		Virt::setupPageSwapping(megabytes);
+	}
 	
 	Krnl::setBootMessage("Loading device drivers...");
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/bios.sys"), computer);

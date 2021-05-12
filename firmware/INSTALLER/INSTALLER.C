@@ -129,15 +129,16 @@ void drawScreen()
 		++y;
 	}
 	{
-		char s[] = "Finalising the\ninstallation\n";
-		for (int i = 0, x = 1; s[i]; ++i) { char c = s[i]; if (c == '\n') { x = 1; ++y; } else { writeCharacter(x++, y, c, installPhase == 4 ? TCYellow : TCWhite, TCBlack); } }
-		++y;
-	}
-	{
-		char s[] = "Restarting\nyour computer";
+		char s[] = "Restarting\nyour computer\n";
 		for (int i = 0, x = 1; s[i]; ++i) { char c = s[i]; if (c == '\n') { x = 1; ++y; } else { writeCharacter(x++, y, c, installPhase == 5 ? TCYellow : TCWhite, TCBlack); } }
 		++y;
 	}
+	{
+		char s[] = "Finalising the\ninstallation\n";
+		for (int i = 0, x = 1; s[i]; ++i) { char c = s[i]; if (c == '\n') { x = 1; ++y; } else { writeCharacter(x++, y, c, installPhase == 123 ? TCYellow : TCWhite, TCBlack); } }
+		++y;
+	}
+	
 
 	for (int y = 1; y < 25; ++y) {
 		for (int x = 16; x < 80; ++x) {
