@@ -23,7 +23,7 @@ namespace Sys
 		schedule();
 		unlockScheduler();
 
-		return nanoSinceBoot >> 23 ^ ((nanoSinceBoot & 7777) << 7);
+		return milliTenthsSinceBoot >> 17 ^ ((milliTenthsSinceBoot & 7777) << 7);
 	}
 }
 
