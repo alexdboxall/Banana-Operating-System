@@ -79,7 +79,7 @@ extern "C" {
         int16_t restoreY;
         bool fullscreen;
 
-        uint64_t nanoLastClicked;
+        uint32_t nanoLastClicked;
 
         int currentMouse;
 

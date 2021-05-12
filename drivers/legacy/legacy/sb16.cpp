@@ -107,7 +107,7 @@ char badVer[] = "BAD Soundblaster version, got 0x%X\n";
 void SoundBlaster16::resetDSP()
 {
 	outb(DSP_RESET, 1);
-	nanoSleep(1000 * 1000 * 3);
+	milliTenthSleep(30);
 	outb(DSP_RESET, 0);
 
 	uint8_t x = inb(DSP_READ);

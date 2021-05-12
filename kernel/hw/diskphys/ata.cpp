@@ -37,7 +37,7 @@ bool ATA::readyForCommand()
 	while (ide->read(channel, ATA_REG_ALTSTATUS) & (ATA_SR_BSY | ATA_SR_DRQ)) {
 		++timeout;
 		if (timeout >= 100) {
-			nanoSleep(1000 * 1000);
+			milliTenthSleep(10);
 		}
 		if (timeout == 2000) {
 			return false;

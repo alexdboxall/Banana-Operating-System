@@ -64,7 +64,7 @@ void ISA::doSoundblaster()
 	return;
 
 	/*outb(0x226, 1);
-	nanoSleep(1000 * 1000 * 3);
+	milliTenthSleep(30);
 	outb(0x226, 0);
 
 	if (inb(0x22A) == 0xAA) {

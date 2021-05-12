@@ -111,12 +111,12 @@ void RTC::completeRTCRefresh()
 	unsigned char last_year;
 	unsigned char registerB;
 
-	extern uint64_t nanoSinceBoot;
+	extern uint32_t milliTenthsSinceBoot;
 
-	uint64_t startTime = nanoSinceBoot;
+	uint32_t startTime = milliTenthsSinceBoot;
 	while (get_update_in_progress_flag()) {
 		//wait until it becomes set
-		if (nanoSinceBoot > startTime + (uint64_t) (2000 * 1000 * 1000)) {
+		if (milliTenthsSinceBoot > startTime + 20000) {
 			//if the system is broken enough that this fails, we
 			//may as well just read it
 			break;
@@ -137,10 +137,10 @@ void RTC::completeRTCRefresh()
 		last_month = month;
 		last_year = year;
 
-		startTime = nanoSinceBoot;
+		startTime = milliTenthsSinceBoot;
 		while (get_update_in_progress_flag()) {
 			//wait until it becomes set
-			if (nanoSinceBoot > startTime + (uint64_t) (2000 * 1000 * 1000)) {
+			if (nanoSinceBoot > startTime + 20000) {
 				//if the system is broken enough that this fails, we
 				//may as well just read it
 				break;

@@ -408,7 +408,7 @@ void IDE::detect()
 				}
 				++timeout;
 				if (timeout >= 280) {
-					nanoSleep(1000 * 1000 * 5);
+					milliTenthSleep(50);
 				}
 				if (timeout == 300) {
 					err = 1;
@@ -429,7 +429,7 @@ void IDE::detect()
 				}
 
 				write(i, ATA_REG_COMMAND, ATA_CMD_IDENTIFY_PACKET);
-				nanoSleep(1000 * 1000);
+				milliTenthSleep(10);
 			}
 
 			uint8_t ideBuf[512];

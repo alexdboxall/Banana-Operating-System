@@ -41,7 +41,7 @@ void floppyMotorFunction(void* _fdc)
 	unlockScheduler();
 
 	while (1) {
-		nanoSleep(1000 * 1000 * 400);
+		milliTenthSleep(4000);
 
 		for (int i = 0; i < 4; ++i) {
 			if (fdc->motorStates[i] == MotorState::Waiting) {
@@ -93,7 +93,7 @@ void Floppy::writeCommand(uint8_t cmd)
 	_failedCommand = false;
 
 	for (int i = 0; i < 50; i++) {
-		nanoSleep(1000 * 1000 * 10);
+		milliTenthSleep(100);
 		uint8_t msr = readPort(FloppyReg::MSR);
 		if ((msr & MSR_RQM) && !(msr & MSR_DIO)) {
 			Floppy::writePort(FloppyReg::FIFO, cmd);
@@ -117,7 +117,7 @@ uint8_t Floppy::readData()
 	_failedCommand = false;
 
 	for (int i = 0; i < 50; i++) {
-		nanoSleep(1000 * 1000 * 10);
+		milliTenthSleep(10000);
 		uint8_t msr = readPort(FloppyReg::MSR);
 		if ((msr & MSR_RQM) && (msr & MSR_DIO)) {
 			return Floppy::readPort(FloppyReg::FIFO);
@@ -255,7 +255,7 @@ bool Floppy::waitIRQ(int millisecTimeout)
 {
 	int timeout = 0;
 	while (!receivedIRQ) {
-		nanoSleep(1000 * 1000 * 50);
+		milliTenthSleep(500);
 		timeout += 50;
 		if (timeout >= millisecTimeout) {
 			break;
@@ -417,7 +417,7 @@ bool Floppy::select(int drive, bool state)
 			dor &= ~3;
 			dor |= drive;
 			writePort(FloppyReg::DOR, dor);
-			nanoSleep(1000 * 1000 * 80);
+			milliTenthSleep(800);
 			kprintf("select (D).\n");
 
 			//set the datarate
@@ -481,9 +481,9 @@ void Floppy::motor(int num, bool state)
 			kprintf("motor again.\n");
 
 			if (driveTypes[num] == DriveType::Drv_1440) {
-				nanoSleep(1000 * 1000 * 300);
+				milliTenthSleep(3000);
 			} else {
-				nanoSleep(1000 * 1000 * 500);
+				milliTenthSleep(5000);
 			}
 			kprintf("motor again 2.\n");
 
@@ -603,7 +603,7 @@ void FloppyDrive::select()
 		bool gotLock = fdc->select(num, true);
 		if (gotLock) return;
 		kprintf("selection locked or failed...\n");
-		nanoSleep(1000 * 1000 * 150);
+		milliTenthSleep(1500);
 	}
 }
 
@@ -767,7 +767,7 @@ retry:
 	fdc->dmaInit(write);
 	kprintf("DMA init'd.\n");
 
-	nanoSleep(1000 * 1000 * 100);
+	milliTenthSleep(1000);
 	kprintf("sleep done\n");
 
 	fdc->writeCommand(cmd);

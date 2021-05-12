@@ -459,7 +459,7 @@ uint64_t sysCallUSleep(regs* r)
 
 	uint64_t micro = low | high << 32;
 
-	nanoSleep(micro * 1000);
+	milliTenthSleep(micro / 100);
 	return 0;
 }
 

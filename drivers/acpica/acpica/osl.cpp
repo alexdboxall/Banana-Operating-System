@@ -208,7 +208,7 @@ extern "C" {
 
 	UINT64 AcpiOsGetTimer(void)
 	{
-		return nanoSinceBoot / 100;
+		return milliTenthsSinceBoot * 1000;
 	}
 
 	void AcpiOsWaitEventsComplete(void)
@@ -413,13 +413,13 @@ extern "C" {
 
 	void AcpiOsSleep(UINT64 Milliseconds)
 	{
-		nanoSleep(Milliseconds * 1000 * 1000);
+		milliTenthSleep(Milliseconds * 10);
 	}
 
 	void AcpiOsStall(UINT32 Microseconds)
 	{
-		uint64_t end = nanoSinceBoot + ((UINT64) Microseconds * 1000);
-		while (nanoSinceBoot < end) {
+		uint64_t end = milliTenthsSinceBoot + Microseconds / 100 + 1;
+		while (milliTenthsSinceBoot < end) {
 
 		}
 	}
@@ -455,10 +455,10 @@ extern "C" {
 		if (Timeout == 0xFFFF) {
 			((Semaphore*) Handle)->acquire();
 		} else {
-			uint64_t startNano = nanoSinceBoot;
-			uint64_t extra = ((uint64_t) Timeout) * 1000ULL * 1000ULL;
+			uint32_t startNano = milliTenthsSinceBoot;
+			uint32_t extra = ((uint32_t) Timeout) * 10;
 
-			while (nanoSinceBoot < startNano + extra) {
+			while (milliTenthsSinceBoot < startNano + extra) {
 				bool success = ((Semaphore*) Handle)->tryAcquire();
 				if (success) return AE_OK;
 			}

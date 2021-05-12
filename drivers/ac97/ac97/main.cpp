@@ -170,10 +170,10 @@ void AC97::handleIRQ()
 void AC97::setSampleRate(int hertz)
 {
 	thePCI->writeBAR16(nam, thePCI->readBAR16(nam, 0x2A) | 1, 0x2A);
-	nanoSleep(1000 * 1000 * 10);
+	milliTenthSleep(100);
 	thePCI->writeBAR16(nam, hertz, 0x2C);
 	thePCI->writeBAR16(nam, hertz, 0x32);
-	nanoSleep(1000 * 1000 * 10);
+	milliTenthSleep(100);
 }
 
 int AC97::_open(int a, int b, void* c)
@@ -211,7 +211,7 @@ int AC97::_open(int a, int b, void* c)
 	//reset output channel
 	uint8_t val = thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
 	thePCI->writeBAR8(nabm, val | 2, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
-	nanoSleep(1000 * 1000 * 250);
+	milliTenthSleep(2500);
 	if (thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT) & 2) {
 		kprintf("Bit could not be cleared.\n");
 	}

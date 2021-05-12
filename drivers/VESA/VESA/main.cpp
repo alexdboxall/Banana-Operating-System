@@ -74,7 +74,7 @@ ModeInfo VESA::getModeStruct(int mode)
 		addr += outBytes;
 		kprintf("Got %d bytes back... total %d\n", outBytes, totalGot);
 		if (totalGot == 12) break;
-		nanoSleep(1000 * 1000);
+		milliTenthSleep(10);
 	}
 	Vm::finish8086();
 	modeInfo.number = ogmode;
@@ -94,7 +94,7 @@ void VESA::setMode(int mode)
 		totalGot += outBytes;
 		addr += outBytes;
 		if (totalGot == 12) break;
-		nanoSleep(1000 * 1000);
+		milliTenthSleep(10);
 	}
 	Vm::finish8086();
 	modeInfo.number = ogmode;
@@ -249,7 +249,7 @@ ModeInfo VESA::calculateBestMode()
 	while (1) {
 		int outBytes = Vm::getOutput8086(addr);
 		if (outBytes) break;
-		nanoSleep(1000 * 1000 * 10);
+		milliTenthSleep(100);
 	}
 
 	uint8_t* ptr = (uint8_t*) 0x900;

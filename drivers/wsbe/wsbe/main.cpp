@@ -71,9 +71,9 @@ extern "C" void screenputpixel(int x, int y, uint32_t color)
     screen->putpixel(x, y, color);
 }
 
-extern "C" uint64_t getNanoSinceBoot()
+extern "C" uint32_t getNanoSinceBoot()
 {
-    return nanoSinceBoot;
+    return milliTenthsSinceBoot;
 }
 
 void loadCursors()
@@ -177,7 +177,7 @@ extern "C" void handleMouse(int xdelta, int ydelta, int btns, int z)
     
     if (active_window) {
         if (buttons) {
-            bool doubleClick = (nanoSinceBoot < lastClick + 1000ULL * 1000ULL * 300ULL) && !prevBtns;
+            bool doubleClick = (milliTenthsSinceBoot < lastClick + 3000) && !prevBtns;
 
             Message m;
             m.window = active_window;
@@ -187,7 +187,7 @@ extern "C" void handleMouse(int xdelta, int ydelta, int btns, int z)
 
             dispatchMessage((Window*) m.window, m);
 
-            lastClick = nanoSinceBoot;
+            lastClick = milliTenthsSinceBoot;
         }
     }
 
@@ -324,7 +324,7 @@ int main(int argc, const char* argv[])
     desktop = Desktop_new(context);
 
     while (1) {
-        nanoSleep(1000 * 1000 * 1000);
+        milliTenthSleep(10000);
 
         if (active_window) {
             Message m;

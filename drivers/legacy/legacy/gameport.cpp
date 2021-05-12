@@ -54,13 +54,13 @@ void Gameport::calibration(int id)
 	}
 
 	readRaw(id);
-	nanoSleep(1000 * 1000);
+	milliTenthSleep(10);
 	JoystickData j1 = readRaw(id);
-	nanoSleep(1000 * 1000);
+	milliTenthSleep(10);
 	JoystickData j2 = readRaw(id);
-	nanoSleep(1000 * 1000);
+	milliTenthSleep(10);
 	JoystickData j3 = readRaw(id);
-	nanoSleep(1000 * 1000);
+	milliTenthSleep(10);
 	readRaw(id);
 
 	int meanX = (j1.internalData[0] + j2.internalData[0] + j3.internalData[0]) / 3;
