@@ -652,38 +652,18 @@ void createUser(const char* name)
 
 void firstRun()
 {
-	computer->setBootMessage("Setting up the system for the first time");
+	Krnl::setBootMessage("Setting up the system for the first time");
 
 	rmtree("C:/Banana/Registry/System");
 	rmtree("C:/Banana/Registry/User");
 	mkdir("C:/Banana/Registry/System", 0700);
 	mkdir("C:/Banana/Registry/User", 0700);
 	copytree("C:/Banana/Registry/DefaultSystem", "C:/Banana/Registry/System");
-
-    createUser("Alex");
 }
 
 void loadExtensions()
 {
     Krnl::setBootMessage("Loading extensions...");
-}
-
-void playJingle(void* context)
-{
-    unlockScheduler();
-
-    systemBuzzer->beep(131, 400);
-    systemBuzzer->beep(175, 400);
-    systemBuzzer->beep(247, 400);
-    systemBuzzer->beep(330, 400);
-    systemBuzzer->beep(440, 400);
-    systemBuzzer->beep(587, 400);
-    systemBuzzer->beep(784, 400);
-    systemBuzzer->beep(698, 400);
-    systemBuzzer->beep(659, 800);
-    systemBuzzer->stop();
-
-    terminateTask(0);
 }
 
 void begin(void* a)
@@ -705,13 +685,9 @@ void begin(void* a)
 
     if (firstTime) {
         kprintf("THIS IS THE FIRST RUN!!!\n");
-        //firstRun();
+        firstRun();
 
     } else {
-        if (Reg::readBoolWithDefault("shell", "playJingle", true)) {
-            //kernelProcess->createThread(playJingle);
-        }        
-
         loadExtensions();
     }
 
