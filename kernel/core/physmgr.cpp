@@ -160,23 +160,19 @@ namespace Phys
 				static bool fiftyFifty = false;
 				fiftyFifty ^= true;
 
-				if (fiftyFifty) {
-					size_t dma = allocateDMA(4096);
-					if (dma) {
-						kprintf("allocated DMA memory instead.\n");
-						return dma;
-					}
-				}
-				
-				kprintf("NO DMA (or 50/50), so scanning for eviction.\n");
-
 				size_t evict = currentTaskTCB->processRelatedTo->vas->scanForEviction();
 				if (evict) {
 					setPageState(evict / 4096, STATE_ALLOCATED);
 					return evict;
 				}
 
-				panic("OUT OF MEMORY");
+				size_t dma = allocateDMA(4096);
+				if (dma) {
+					kprintf("allocated DMA memory instead.\n");
+					return dma;
+				}
+
+				panic("NO MORE SWAPPABLE PAGES OR DMA! OUT OF MEMORY!");
 			}
 		}
 	}
@@ -310,5 +306,14 @@ namespace Phys
 				usablePages++;
 			}
 		}
+
+		//holes in the memory map
+		setPageState(5, STATE_FREE);
+		setPageState(6, STATE_FREE);
+		setPageState(7, STATE_FREE);
+		usablePages += 3;
+
+		//DMA RAM
+		usablePages += (128 + 64) / 4;
 	}
 }

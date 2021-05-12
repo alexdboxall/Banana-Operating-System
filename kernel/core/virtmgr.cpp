@@ -683,8 +683,8 @@ size_t VAS::scanForEviction()
 		if (evictionScanner >= 0xFF000000U) {
 			evictionScanner = 0;
 			++runs;
-			if (runs == 4) {
-				panic("NO MORE SWAPPABLE PAGES! OUT OF MEMORY!");
+			if (runs == 3) {
+				return 0; 
 			}
 		}
 	}
