@@ -731,18 +731,18 @@ void bootInstallTasks(int done)
     term->setCursor(26, 10);
     term->puts(done == 1 ? "\x10 " : "  ");
     term->puts("Updating the registry", done >= 1 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
-    
-    term->setCursor(26, 11);
-    term->puts(done == 2 ? "\x10 " : "  ");
-    term->puts("Backing up system files", done >= 2 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
 
     term->setCursor(26, 12);
-    term->puts(done == 3 ? "\x10 " : "  ");
-    term->puts("Creating user account", done >= 3 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
+    term->puts(done == 2 ? "\x10 " : "  ");
+    term->puts("Creating user account", done >= 2 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
 
     term->setCursor(26, 13);
+    term->puts(done == 3 ? "\x10 " : "  ");
+    term->puts("Installing packages", done >= 3 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
+
+    term->setCursor(26, 11);
     term->puts(done == 4 ? "\x10 " : "  ");
-    term->puts("Installing packages", done >= 4 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
+    term->puts("Backing up system files", done >= 4 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
 
     term->setCursor(26, 14);
     term->puts(done == 5 ? "\x10 " : "  ");
@@ -838,14 +838,9 @@ void firstRun()
 	copytree("C:/Banana/Registry/DefaultSystem", "C:/Banana/Registry/System");
 
     bootInstallTasks(2);
-    backupTree("C:/Banana/Drivers/", 0xDDDD);
-    backupTree("C:/Banana/System/", 0xEEEE);
-    backupTree("C:/Banana/Registry/", 0xFFFF);
-
-    bootInstallTasks(3);
     createUser(currName);
 
-    bootInstallTasks(4);
+    bootInstallTasks(3);
     VgaText::hiddenOut = true;
 }
 
@@ -891,7 +886,7 @@ void begin(void* a)
         setActiveTerminal(term);
         drawBootScreen();
         drawBasicWindow(22, 5, 50, 13, "Finalising Installation");
-        bootInstallTasks(4);
+        bootInstallTasks(3);
         VgaText::hiddenOut = true;
 
         while (1) {
@@ -907,10 +902,22 @@ void begin(void* a)
             sleep(1);
         }
 
+        //I think a lot of RAM needs to be freed here...
+        {
+            //give the cleaner task some time to clear out stuff
+            sleep(2);
+        }
+
         VgaText::hiddenOut = false;
         setActiveTerminal(term);
         drawBootScreen();
         drawBasicWindow(22, 5, 50, 13, "Finalising Installation");
+        bootInstallTasks(4);
+
+        backupTree("C:/Banana/Drivers/", 0xDDDD);
+        backupTree("C:/Banana/System/", 0xEEEE);
+        backupTree("C:/Banana/Registry/", 0xFFFF);
+
         bootInstallTasks(5);
 
         //finishing touches go here
