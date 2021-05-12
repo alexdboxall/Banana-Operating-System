@@ -730,19 +730,19 @@ void bootInstallTasks(int done)
 
     term->setCursor(26, 7);
     term->puts(done == 1 ? "\x10 " : "  ");
-    term->puts("Updating the registry", done >= 0 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
+    term->puts("Updating the registry", done >= 1 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
     
     term->setCursor(26, 8);
     term->puts(done == 2 ? "\x10 " : "  ");
-    term->puts("Backing up system files", done >= 1 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
+    term->puts("Backing up system files", done >= 2 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
 
     term->setCursor(26, 9);
     term->puts(done == 3 ? "\x10 " : "  ");
-    term->puts("Decompressing packages", done >= 2 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
+    term->puts("Decompressing packages", done >= 3 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
 
     term->setCursor(26, 10);
     term->puts(done == 4 ? "\x10 " : "  ");
-    term->puts("Installing packages", done >= 3 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
+    term->puts("Installing packages", done >= 4 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
 }
 
 void firstRun()
@@ -833,11 +833,12 @@ void firstRun()
 	mkdir("C:/Banana/Registry/User", 0700);
 	copytree("C:/Banana/Registry/DefaultSystem", "C:/Banana/Registry/System");
 
-    bootInstallTasks(0);
+    bootInstallTasks(2);
     backupTree("C:/Banana/Drivers/", 0xDDDD);
     backupTree("C:/Banana/System/", 0xEEEE);
     backupTree("C:/Banana/Registry/", 0xFFFF);
 
+    bootInstallTasks(3);
     while (installKey == 0);
     installKey = 0;
 }
