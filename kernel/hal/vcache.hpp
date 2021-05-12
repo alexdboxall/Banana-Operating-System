@@ -38,10 +38,10 @@ protected:
 	bool increaseNextTime = false;
 	int READ_BUFFER_BLOCK_SIZE = 4;
 
+public:	
 	void writeWriteBuffer();		//what a stupid name
 	void invalidateReadBuffer();
 
-public:	
 	VCache(PhysicalDisk* disk);
 	virtual ~VCache();
 

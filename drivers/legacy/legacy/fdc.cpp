@@ -894,8 +894,14 @@ int _TEMP_cyl = -1;
 
 int FloppyDrive::eject()
 {
+	cache->writeWriteBuffer();
+	cache->invalidateReadBuffer();
+
 	hasCyl0Bf = false;
 	_TEMP_cyl = -1;
+	memset(_TEMP_trackBuffer, 0, 0x4800);
+	memset(_TEMP_cylinder0_bf, 0, 0x4800);
+	memset(_TEMP_write_bf, 0, 0x4800);
 	
 	char d[] = "Caches have been purged.\n";
 	int dd;
