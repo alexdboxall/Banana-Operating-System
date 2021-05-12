@@ -122,7 +122,8 @@ namespace Phys
 	{
 		kprintf("Freeing page 0x%X\n", address);
 
-		if (address < PHYS_DMA_MEMORY_2 + SIZE_DMA_MEMORY_2) {
+		if ((address >= PHYS_DMA_MEMORY_1 && address < PHYS_DMA_MEMORY_1 + SIZE_DMA_MEMORY_1) || (address >= PHYS_DMA_MEMORY_2 && address < PHYS_DMA_MEMORY_2 + SIZE_DMA_MEMORY_2)) {
+			kprintf("freeing 'DMA' at 0x%X\n", address);
 			freeDMA(address, 4096);
 			return;
 		}
@@ -160,16 +161,21 @@ namespace Phys
 				static bool fiftyFifty = false;
 				fiftyFifty ^= true;
 
+				if (fiftyFifty) {
+					size_t dma = allocateDMA(4096);
+					if (dma) {
+						kprintf("allocated DMA memory instead.\n");
+						kprintf("allocated page %d / %d. 0x%X\n", usedPages, usablePages, dma);
+						return dma;
+					}
+				}
+
+				kprintf("No DMA or 50/50, so evicting...\n");
+
 				size_t evict = currentTaskTCB->processRelatedTo->vas->scanForEviction();
 				if (evict) {
 					setPageState(evict / 4096, STATE_ALLOCATED);
 					return evict;
-				}
-
-				size_t dma = allocateDMA(4096);
-				if (dma) {
-					kprintf("allocated DMA memory instead.\n");
-					return dma;
 				}
 
 				panic("NO MORE SWAPPABLE PAGES OR DMA! OUT OF MEMORY!");
