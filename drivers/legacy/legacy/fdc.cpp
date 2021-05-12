@@ -890,6 +890,19 @@ bool _TEMP_allocated = false;
 bool hasCyl0Bf = false;
 int _TEMP_cyl = -1;
 
+#include "core/terminal.hpp"
+
+int FloppyDrive::eject()
+{
+	hasCyl0Bf = false;
+	_TEMP_cyl = -1;
+	
+	char d[] = "Caches have been purged.\n";
+	int dd;
+	activeTerminal->write(sizeof(d), d, &dd);
+	return 0;
+}
+
 int FloppyDrive::read(uint64_t lba, int count, void* ptr)
 {
 	if (!_TEMP_allocated) {

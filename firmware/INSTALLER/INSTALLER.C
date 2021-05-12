@@ -206,6 +206,21 @@ void windowWriteCol(Window* w, int x, int y, char* t, int col)
 	}
 }
 
+void licenseSummaryRepaint(Window* w)
+{
+	windowWriteCol(w, 0, 0, "This is a summary of the license, not a", TCRed);
+	windowWriteCol(w, 0, 1, "substitute for it.", TCRed);
+	windowWrite(w, 0, 3, "You are free to share, copy and redistribute this");
+	windowWrite(w, 0, 4, "software in any medium or format, so long as you");
+	windowWrite(w, 0, 5, "follow the license terms:");
+	windowWriteCol(w, 0, 7, "You must give appropriate credit, and provide a", TCBlue);
+	windowWriteCol(w, 0, 8, "link to the license. You may not use this", TCBlue);
+	windowWriteCol(w, 0, 9, "software for commerical purposes. If you remix,", TCBlue);
+	windowWriteCol(w, 0, 10, "transform, or build upon this software, you cannot", TCBlue);
+	windowWriteCol(w, 0, 11, "distribute the modified material. No warranties.", TCBlue);
+	windowWrite(w, 0, 13, "Press ENTER to close");
+}
+
 void reallyQuitRepaint(Window* w)
 {
 	windowWrite(w, 0, 0, "To quit   setup, press ENTER");
@@ -300,7 +315,7 @@ void disclaimer3(Window* w)
 	windowWrite(w, 0, 11, "This file contains no additional terms to agree to.");
 
 	windowWriteCol(w, 0, 13, "For a summary of (and not a substitute for)", TCBlue);
-	windowWriteCol(w, 0, 14, "the license, press F1.", TCBlue);
+	windowWriteCol(w, 0, 14, "the license, press S.", TCBlue);
 
 	windowWriteCol(w, 0, 16, "To install and/or use this software you must agree to ", TCBlack);
 	windowWriteCol(w, 0, 17, "the above terms. Press ENTER to install, or ESC to quit.", TCBlack);
@@ -546,6 +561,30 @@ void exitInstall()
 	while (1);
 }
 
+void licenseSummary()
+{
+	fadeWindows1And2 = true;
+
+	Window wx;
+	wx.x = 5;
+	wx.y = 3;
+	wx.w = 54;
+	wx.h = 17;
+	wx.repaint = licenseSummaryRepaint;
+	__memcpy(wx.title, "   License Summary ", __strlen("   License Summary "));
+	windows[EXIT_POPUP] = &wx;
+	drawScreen();
+
+	while (1) {
+		char c = blockingKeyboard();
+		if (c == '\n' || c == '\e') {
+			fadeWindows1And2 = false;
+			windows[EXIT_POPUP] = 0;
+			drawScreen();
+			return;
+		}
+	}
+}
 
 void reallyQuit() {
 	fadeWindows1And2 = true;
@@ -1609,6 +1648,7 @@ void main()
 	sleep(1);
 	//disclaimPart2 = true;
 	//drawScreen();
+	while (nonBlockingKeyboard()) blockingKeyboard();
 	continueOrExit();
 
 	disclaimPart2 = true;// false;
@@ -1617,12 +1657,24 @@ void main()
 	sleep(2);
 	//disclaimPart2 = true;
 	//drawScreen();
+	while (nonBlockingKeyboard()) blockingKeyboard();
 	continueOrExit();
+	while (nonBlockingKeyboard()) blockingKeyboard();
 
 	w.repaint = disclaimer3;
 	drawScreen();
-	sleep(2);
-	continueOrExit();
+	millisleep(500);
+	while (1) {
+		char c = blockingKeyboard();
+
+		if (c == '\n') {
+			break;
+		} else if (c == '\e') {
+			reallyQuit();
+		} else if (c == 's' || c == 'S') {
+			licenseSummary();
+		}
+	}
 
 	__memcpy(w.title, "Banana Setup", __strlen("Banana Setup"));
 	w.x += 3;

@@ -553,13 +553,13 @@ uint64_t sysFormatDisk(regs* r)
 
 uint64_t sysSetDiskVolumeLabel(regs* r)
 {
-	if (r->ebx > 25 || !disks[r->ebx] || !r->edx) return -2;
+	if (r->ebx > 25 || !disks[r->ebx] || !r->edx || !disks[r->ebx]->fs) return -2;
 	return (int) disks[r->ebx]->fs->setlabel(disks[r->ebx], r->ebx, (char*) r->edx);
 }
 
 uint64_t sysGetDiskVolumeLabel(regs* r)
 {
-	if (r->ebx > 25 || !disks[r->ebx] || !r->edx || !r->ecx) return -2;
+	if (r->ebx > 25 || !disks[r->ebx] || !r->edx || !r->ecx || !disks[r->ebx]->fs) return -2;
 	return (int) disks[r->ebx]->fs->getlabel(disks[r->ebx], r->ebx, (char*) r->edx, (uint32_t*) r->ecx);
 }
 

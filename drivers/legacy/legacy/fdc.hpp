@@ -109,6 +109,8 @@ public:
 	void select();
 	void unselect();
 
+	virtual int eject() override;		//clears caches
+
 	bool calibrate();
 	bool seek(int cyl, int head);
 
