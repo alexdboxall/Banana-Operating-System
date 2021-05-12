@@ -49,6 +49,8 @@ void floppyMotorFunction(void* _fdc)
 				if (fdc->motorTicks[i] <= 0) {
 					fdc->motorStates[i] = MotorState::Off;
 
+					kprintf("Turning off the floppy motor...\n");
+
 					lockScheduler();
 					uint8_t dor = fdc->readPort(FloppyReg::DOR);
 					fdc->writePort(FloppyReg::DOR, dor & ~(DOR_MOTOR_BASE << i));

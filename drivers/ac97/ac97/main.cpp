@@ -159,16 +159,6 @@ void AC97::handleIRQ()
 	kprintf("lvi =  %d\n", lvi);
 	thePCI->writeBAR8(nabm, lvi, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_LAST_VALID_ENTRY);
 
-	/*int samplesGot = getAudio(65534, tempBuffer, oBuffer);
-	kprintf("samples got = %d\n", samplesGot);
-	int16_t* dma = (int16_t*) buffVirt[((civ + 2) % 3)];
-	kprintf("actually writing data to buffer number %d\n", ((civ + 2) % 3));
-	++v;
-	++v;
-	*v = (((civ + 2) % 3) + '0') | 0xF000;
-	floatTo16(oBuffer, dma, samplesGot);
-	kprintf("STATUS = 0x%X\n", thePCI->readBAR16(nabm, 0x16));*/
-
 	int16_t* dma = (int16_t*) buffVirt[((civ + 2) % 3)];
 	int sgot = getSamples16(0x8001, dma);
 	kprintf("we got %d samples to 0x%X\n", sgot, dma);
