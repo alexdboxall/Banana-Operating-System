@@ -717,16 +717,17 @@ void begin(void* a)
 
     if (!firstTime) {
         Krnl::setBootMessage("Backing up core files...");
-        backupTree("C:/Banana/Drivers/", 0xDDDD);
+        /*backupTree("C:/Banana/Drivers/", 0xDDDD);
         backupTree("C:/Banana/System/", 0xEEEE);
-        backupTree("C:/Banana/Registry/", 0xFFFF);
+        backupTree("C:/Banana/Registry/", 0xFFFF);*/
     }
 
     VgaText::hiddenOut = false;
     Krnl::preemptionOn = true;
 
     Process* usertask;
-    
+    Krnl::setBootMessage("Starting shell...");
+
     if (firstTime) {
         createUser("Alex");
         char* argv[] = { "C:/Banana/System/command.exe", "call", "C:/Banana/System/init.bat", 0 };
