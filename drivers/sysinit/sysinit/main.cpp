@@ -732,15 +732,15 @@ void bootInstallTasks(int done)
     term->puts(done == 1 ? "\x10 " : "  ");
     term->puts("Updating the registry", done >= 1 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
 
-    term->setCursor(26, 12);
+    term->setCursor(26, 11);
     term->puts(done == 2 ? "\x10 " : "  ");
     term->puts("Creating user account", done >= 2 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
 
-    term->setCursor(26, 13);
+    term->setCursor(26, 12);
     term->puts(done == 3 ? "\x10 " : "  ");
     term->puts("Installing packages", done >= 3 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
 
-    term->setCursor(26, 11);
+    term->setCursor(26, 13);
     term->puts(done == 4 ? "\x10 " : "  ");
     term->puts("Backing up system files", done >= 4 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
 
