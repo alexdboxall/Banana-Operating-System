@@ -280,9 +280,7 @@ UINT32 acpiWalkCallback(ACPI_HANDLE object, UINT32 nestingLevel, void* context, 
 	name[4] = 0;
 	kprintf("acpiWalkCallback name = %s\n", name);
 
-	if ((info->Flags & ACPI_PCI_ROOT_BRIDGE) && name[0] == 'P') {
-		acpi->pciDetected = true;
-		
+	if ((info->Flags & ACPI_PCI_ROOT_BRIDGE) && name[0] == 'P') {		
 		ACPI_BUFFER prtbuf;
 		prtbuf.Length = ACPI_ALLOCATE_BUFFER;
 		prtbuf.Pointer = nullptr;

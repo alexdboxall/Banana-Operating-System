@@ -55,6 +55,7 @@ namespace Phys
 						dmaUsage[start + j] = 1;
 					}
 
+					usedPages += (size + 4095) / 4096;
 					kprintf("returning DMA memory!\n");
 					if (startSeg < SIZE_DMA_MEMORY_1 / 65536) {
 						return VIRT_DMA_MEMORY_1 + start * DMA_BLOCK_SIZE;
@@ -72,6 +73,7 @@ namespace Phys
 	{
 		kprintf("DMA freeing stuff...\n");
 		int blocks = (size + DMA_BLOCK_SIZE - 1) / DMA_BLOCK_SIZE;
+		usedPages -= (size + 4095) / 4096;
 
 		if (addr >= VIRT_DMA_MEMORY_2) {
 			addr -= VIRT_DMA_MEMORY_2;
@@ -155,7 +157,18 @@ namespace Phys
 				currentPagePointer = 0;
 			}
 			if (currentPagePointer == first) {
-				kprintf("scanning for eviction.\n");
+				static bool fiftyFifty = false;
+				fiftyFifty ^= true;
+
+				if (fiftyFifty) {
+					size_t dma = allocateDMA(4096);
+					if (dma) {
+						kprintf("allocated DMA memory instead.\n");
+						return dma;
+					}
+				}
+				
+				kprintf("NO DMA (or 50/50), so scanning for eviction.\n");
 
 				size_t evict = currentTaskTCB->processRelatedTo->vas->scanForEviction();
 				if (evict) {
@@ -163,10 +176,6 @@ namespace Phys
 					return evict;
 				}
 
-				size_t dma = allocateDMA(4096);
-				if (dma) {
-					return dma;
-				}
 				panic("OUT OF MEMORY");
 			}
 		}
