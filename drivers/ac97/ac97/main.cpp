@@ -237,7 +237,7 @@ int AC97::_open(int a, int b, void* c)
 
 	//allocate buffers
 	for (int i = 0; i < 3; ++i) {
-		int pages = 65536 * 2 / 4096;
+		int pages = 40960 * 2 / 4096;
 
 		buffPhys[i] = Phys::allocateContiguousPages(pages);
 		buffVirt[i] = Virt::allocateKernelVirtualPages(pages);
