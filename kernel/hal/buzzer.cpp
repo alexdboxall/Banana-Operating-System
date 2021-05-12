@@ -27,7 +27,7 @@ void beepThread(void* v)
 	unlockScheduler();
 	
 	Buzzer* buzzer = (Buzzer*) v;
-	nanoSleep(1000ULL * 1000ULL * (uint64_t) buzzer->timeToSleepInThread);
+	milliSleep(buzzer->timeToSleepInThread);
 	buzzer->stop();
 
 	blockTask(TaskState::Terminated);

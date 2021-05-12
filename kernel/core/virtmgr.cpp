@@ -131,7 +131,7 @@ namespace Virt
 
 	void freeKernelVirtualPages(size_t address)
 	{
-		uint64_t page = address / 4096;
+		size_t page = address / 4096;
 		bool first = true;
 
 		while (1) {

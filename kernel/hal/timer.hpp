@@ -21,8 +21,8 @@ public:
 };
 
 Timer* setupTimer(int hz);
-void timerHandler(uint64_t nanosecs);
+void timerHandler(uint32_t milliTenths);
 
-extern uint64_t nanoSinceBoot;
+extern uint32_t milliTenthsSinceBoot;
 
 #endif

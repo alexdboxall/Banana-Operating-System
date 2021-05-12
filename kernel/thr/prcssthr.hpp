@@ -40,7 +40,7 @@ struct ThreadControlBlock
 	volatile ThreadControlBlock* volatile prev = nullptr;
 	volatile ThreadControlBlock* volatile nextForNonSchedulingThings = nullptr;
 
-	volatile uint64_t sleepExpiry;
+	volatile uint32_t sleepExpiry;
 	int forkret;
 
 	size_t timeSliceRemaining;
@@ -158,8 +158,8 @@ void schedule();
 void blockTask(enum TaskState reason);
 void blockTaskWithSchedulerLockAlreadyHeld(enum TaskState reason);
 void unblockTask(ThreadControlBlock* task);
-void sleep(uint64_t seconds);
-void nanoSleep(uint64_t nanoseconds);
+void sleep(uint32_t seconds);
+void milliTenthSleep(uint32_t mtenth);
 void cleanerTaskFunction(void* context);
 int waitTask(int pid, int* wstatus, int options);
 

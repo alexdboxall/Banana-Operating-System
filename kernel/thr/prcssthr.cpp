@@ -486,9 +486,9 @@ void unblockTask(ThreadControlBlock* task)
 	unlockScheduler();
 }
 
-void nanoSleepUntil(uint64_t when)
+void milliTenthSleepUntil(uint32_t when)
 {
-	if (when < nanoSinceBoot) {
+	if (when < milliTenthsSinceBoot) {
 		return;
 	}
 
@@ -501,14 +501,14 @@ void nanoSleepUntil(uint64_t when)
 }
 
 
-void nanoSleep(uint64_t nanoseconds)
+void milliTenthSleep(uint32_t mtens)
 {
-	nanoSleepUntil(nanoSinceBoot + nanoseconds);
+	milliTenthSleepUntil(milliTenthsSinceBoot + mtens);
 }
 
-void sleep(uint64_t seconds)
+void sleep(uint32_t seconds)
 {
-	nanoSleep(seconds * 1000000000ULL);
+	milliTenthSleep(seconds * 10000);
 }
 
 extern "C" void taskReturned()

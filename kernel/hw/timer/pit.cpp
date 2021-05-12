@@ -8,7 +8,7 @@ int pitFreq = 0;
 
 void pitHandler(regs* r, void* context)
 {
-	timerHandler(1000000000ULL / (uint64_t) pitFreq);
+	timerHandler(100000 / pitFreq);
 }
 
 PIT::PIT() : Timer("Programmable Interrupt Timer")

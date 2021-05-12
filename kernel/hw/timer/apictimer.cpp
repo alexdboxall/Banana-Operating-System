@@ -15,7 +15,7 @@
 
 void apicTimerHandler(regs* r, void* context)
 {
-	timerHandler(1000000000ULL / (uint64_t)(*((int*) context)));
+	timerHandler(10000 / (*((uint32_t*) context)));
 }
 
 APICTimer::APICTimer() : Timer("APIC Timer")
@@ -45,11 +45,11 @@ void APICTimer::write(int hz)
 
 	uint32_t base = reinterpret_cast<APIC*>(CPU::current()->intCtrl)->getBase();
 
-	uint64_t oldticks = nanoSinceBoot;
+	uint32_t oldticks = milliTenthsSinceBoot;
 	*((uint32_t*) ((uint8_t*) (size_t) base + APIC_REGISTER_TIMER_DIV)) = 0x3;
 	*((uint32_t*) ((uint8_t*) (size_t) base + APIC_REGISTER_TIMER_INITCNT)) = 0xFFFFFFFF;
 	asm volatile ("sti");
-	while (nanoSinceBoot < oldticks + 1000 * 1000 * 1000);
+	while (milliTenthsSinceBoot < oldticks + 10000);
 	// 1/5 of a second should have passed
 
 	*((uint32_t*) ((uint8_t*) (size_t) base + APIC_REGISTER_LVT_TIMER)) = APIC_REGISTER_LVT_MASKED;	//APIC timer is OFF!

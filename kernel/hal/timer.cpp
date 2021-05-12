@@ -13,7 +13,7 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-uint64_t nanoSinceBoot = 0;
+uint32_t milliTenthsSinceBoot = 0;
 
 Timer::Timer(const char* name) : Device(name)
 {
@@ -64,9 +64,9 @@ Timer* setupTimer(int hz)
 	return nullptr;
 }
 
-void timerHandler(uint64_t nanosecs)
+void timerHandler(uint32_t milliTenths)
 {
-	nanoSinceBoot += nanosecs;
+	milliTenthsSinceBoot += milliTenths;
 
 	if (!Krnl::schedulingOn) return;
 
