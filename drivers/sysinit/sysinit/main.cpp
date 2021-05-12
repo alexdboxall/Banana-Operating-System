@@ -720,7 +720,7 @@ void bootInstallKeybrd(KeyboardToken kt, bool* keystates)
 }
 
 void bootInstallTasks(int done)
-{
+{ 
     term->setCursor(24, 7);
     term->puts("Please wait while the install finishes.");
 

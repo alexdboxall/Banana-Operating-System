@@ -68,8 +68,8 @@ CFLAGS32 = -c -m32 -DTHIRTYTWOBIT $(CFLAGSCOMMON) -fvisibility=hidden
 #C code has visibility hidden so that all of the ACPICA stuff doesn't clog it up
 
 CXXFLAGS32 = -c -m32 -DTHIRTYTWOBIT $(CFLAGSCOMMON) -fno-exceptions -fno-rtti -fvisibility=protected $(ACPI) $(OPTIMISATIONS)
-LDFLAGS32 = -lkgcc -lsoftfp -L$(SOURCEDIR) -L$(SOURCEDIR)/libk -lm32 -ffreestanding $(LD_OPTIMISE_LEVEL) -nostdlib -flto -Wl,-Map=kernel32.map 
-#-Wl,--gc-sections
+LDFLAGS32 = -lkgcc -L$(SOURCEDIR) -L$(SOURCEDIR)/libk -lm32 -ffreestanding $(LD_OPTIMISE_LEVEL) -nostdlib -flto -Wl,-Map=kernel32.map 
+#-lsoftfp
 
 COBJECTS32 = $(patsubst %.c, %.32, $(wildcard *.c) $(wildcard */*.c) $(wildcard */*/*.c) $(wildcard */*/*/*.c) $(wildcard **/*.c))
 CNOACPI32 = $(patsubst %.c, %.32, $(wildcard *.c) acpica/utclib.c $(wildcard [b-z]*/*.c) $(wildcard [b-z]*/*/*.c) $(wildcard */*/*/*.c))
