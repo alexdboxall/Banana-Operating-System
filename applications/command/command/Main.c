@@ -1126,7 +1126,7 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 	} else if (!strcasecmp(argv[0], "vol")) {
 		char drive = 'C';
 
-		if (argc == 2) {
+		if (argc == 2 || argc == 3) {
 			if (strlen(argv[1]) == 1) drive = argv[1][0];
 			else if (strlen(argv[1]) == 2 && argv[1][1] == ':') drive = argv[1][0];
 			else if (strlen(argv[1]) == 3 && argv[1][1] == ':' && argv[1][2] == '/') drive = argv[1][0];
@@ -1144,10 +1144,24 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 		extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
 		char labelbuf[50];
 		memset(labelbuf, 0, 50);
-		uint32_t serial;
-		int res = SystemCall(GetDiskVolumeLabel, drive - 'A', &serial, labelbuf);
+		if (argc == 3) {
+			strcpy(labelbuf, argv[2]);
+			int res = SystemCall(SetDiskVolumeLabel, drive - 'A', 0, labelbuf);
+			if (res) {
+				fprintf(out, "Could not set volume label.\n");
+			}
+		} else {
+			uint32_t serial;
+			int res = SystemCall(GetDiskVolumeLabel, drive - 'A', &serial, labelbuf);
+			if (res == 0) {
+				fprintf(out, "Volume label of %c: is %s\nVolume serial number is %04X-%04X\n", drive, labelbuf, serial >> 16, serial & 0xFFFF);
+			} else {
+				fprintf(out, "Could not get volume label.\n");
+			}
+		}
 
-		fprintf(out, "Volume label of %c: is %s\nVolume serial number is %04X-%04X\n", drive, labelbuf, serial >> 16, serial & 0xFFFF);
+		
+		
 
 	} else if (!strcasecmp(argv[0], "install")) {
 		extern int installmain(int argc, char* argv[]);
