@@ -49,15 +49,14 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 	if (nextThreadToRun->priority == 255) {
 		nextThreadToRun->timeSliceRemaining = 0;
 	} else {
-		//70 ms - 0.13ms/priority
+		//51 ms - 0.05ms/priority
 
 		//RANGE:
-		//Priority 0  : 58ms
-		//Priority 128: 51ms
-		//Priority 254: 42ms
-		nextThreadToRun->timeSliceRemaining += (900 - nextThreadToRun->priority) << 16;
+		//Priority 0  : 51ms	(old was 58ms)
+		//Priority 128: 45ms	(old was 51ms)
+		//Priority 254: 38ms	(old was 42ms)
+		nextThreadToRun->timeSliceRemaining += (1024 - nextThreadToRun->priority) >> 1;
 	}
-	//nextThreadToRun->timeSliceRemaining = 50000000;
 
 	if (CPU::current()->features.hasTSC) {
 		static uint64_t currentCount = 0;

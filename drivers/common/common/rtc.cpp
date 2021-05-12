@@ -140,7 +140,7 @@ void RTC::completeRTCRefresh()
 		startTime = milliTenthsSinceBoot;
 		while (get_update_in_progress_flag()) {
 			//wait until it becomes set
-			if (nanoSinceBoot > startTime + 20000) {
+			if (milliTenthsSinceBoot > startTime + 20000) {
 				//if the system is broken enough that this fails, we
 				//may as well just read it
 				break;
