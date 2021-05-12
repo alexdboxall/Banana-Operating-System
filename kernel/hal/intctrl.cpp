@@ -425,7 +425,6 @@ void otherISRHandler(regs* r, void* context)
 #pragma GCC diagnostic push
 #pragma GCC optimize ("O0")
 
-extern "C" void voodooXADD(size_t, int, int);
 
 void opcodeFault(regs* r, void* context)
 {
@@ -475,68 +474,6 @@ void opcodeFault(regs* r, void* context)
 		hasNonLockPrefix = true;
 		eip++;
 		r->eip++;
-	}
-
-	//XADD
-	if (eip[0] == 0x0F && (eip[1] == 0xC2 || eip[1] == 0xC3)) {
-		kprintf("XADD HANDLER.\n");
-		r->eip++;
-		eip++;
-
-		*eip -= 2;
-
-		int instrLen;
-		bool regOnly;
-		uint8_t regNum;
-
-		//get the instruction length
-		CPU::decodeAddress(r, &instrLen, &regOnly, &regNum);
-
-		int trueLength = instrLen + (r->eip - originalEIP);
-		int opcodeStart = (r->eip - originalEIP) - 1;			//the 0xF starts here
-
-		r->eip = originalEIP;
-		voodooXADD((size_t) r, trueLength, opcodeStart);
-		r->eip = originalEIP + trueLength;
-		return;
-	}
-
-	//BSWAP		introduced with i486
-	if (eip[0] == 0x0F && eip[1] >= 0xC8 && eip[1] <= 0xCF) {
-		uint32_t in;
-		uint8_t base = eip[1] - 0xC8;
-
-		if (base == 0) in = r->eax;
-		else if (base == 1) in = r->ecx;
-		else if (base == 2) in = r->edx;
-		else if (base == 3) in = r->ebx;
-		else if (base == 4) in = r->useresp;
-		else if (base == 5) in = r->ebp;
-		else if (base == 6) in = r->esi;
-		else if (base == 7) in = r->edi;
-
-		if (has66Prefix) {
-			//undefined behavior
-
-			in &= ~0xFFFF;
-			in |= 0xDEAD;
-
-		} else {
-
-			in = (in << 24) | ((in << 8) & 0x00FF0000) | ((in >> 8) & 0x0000FF00) | (in >> 24);
-		}
-
-		if (base == 0) r->eax = in;
-		else if (base == 1) r->ecx = in;
-		else if (base == 2) r->edx = in;
-		else if (base == 3) r->ebx = in;
-		else if (base == 4) r->useresp = in;
-		else if (base == 5) r->ebp = in;
-		else if (base == 6) r->esi = in;
-		else if (base == 7) r->edi = in;
-
-		r->eip += 2;
-		return;
 	}
 
 	//CMPXHG8B	introduced with Pentium
