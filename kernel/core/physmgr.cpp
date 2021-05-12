@@ -18,7 +18,7 @@ namespace Phys
 	//SHOULD BE A MULTIPLE OF 4096
 #define DMA_BLOCK_SIZE 4096
 
-	uint8_t dmaUsage[(SIZE_DMA_MEMORY_1 + SIZE_DMA_MEMORY_2) / DMA_BLOCK_SIZE];
+	uint8_t dmaUsage[(SIZE_DMA_MEMORY_1/* + SIZE_DMA_MEMORY_2*/) / DMA_BLOCK_SIZE];
 
 	size_t allocateDMA(size_t size)
 	{
@@ -60,6 +60,7 @@ namespace Phys
 					if (startSeg < SIZE_DMA_MEMORY_1 / 65536) {
 						return VIRT_DMA_MEMORY_1 + start * DMA_BLOCK_SIZE;
 					} else {
+						panic("UH OH! physmgr.cpp!");
 						return VIRT_DMA_MEMORY_2 + (start - SIZE_DMA_MEMORY_1 / DMA_BLOCK_SIZE) * DMA_BLOCK_SIZE;
 					}
 				}
@@ -75,16 +76,16 @@ namespace Phys
 		int blocks = (size + DMA_BLOCK_SIZE - 1) / DMA_BLOCK_SIZE;
 		usedPages -= (size + 4095) / 4096;
 
-		if (addr >= VIRT_DMA_MEMORY_2) {
+		/*if (addr >= VIRT_DMA_MEMORY_2) {
 			addr -= VIRT_DMA_MEMORY_2;
 			addr /= DMA_BLOCK_SIZE;
 			addr += SIZE_DMA_MEMORY_1 / DMA_BLOCK_SIZE;
 
-		} else {
+		} else {*/
 			addr -= VIRT_DMA_MEMORY_1;
 			addr /= DMA_BLOCK_SIZE;
 
-		}
+		/*}*/
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Warray-bounds"
@@ -122,7 +123,7 @@ namespace Phys
 	{
 		kprintf("Freeing page 0x%X\n", address);
 
-		if ((address >= PHYS_DMA_MEMORY_1 && address < PHYS_DMA_MEMORY_1 + SIZE_DMA_MEMORY_1) || (address >= PHYS_DMA_MEMORY_2 && address < PHYS_DMA_MEMORY_2 + SIZE_DMA_MEMORY_2)) {
+		if ((address >= PHYS_DMA_MEMORY_1 && address < PHYS_DMA_MEMORY_1 + SIZE_DMA_MEMORY_1)/* || (address >= PHYS_DMA_MEMORY_2 && address < PHYS_DMA_MEMORY_2 + SIZE_DMA_MEMORY_2)*/) {
 			kprintf("freeing 'DMA' at 0x%X\n", address);
 			freeDMA(address, 4096);
 			return;
@@ -319,7 +320,10 @@ namespace Phys
 		setPageState(7, STATE_FREE);
 		usablePages += 3;
 
-		//DMA RAM
-		usablePages += (128 + 64) / 4;
+		//used to be DMA RAM
+		for (int i = 0; i < 32; ++i) {
+			setPageState(0x60 + i, STATE_FREE);
+		}
+		usablePages += 32;
 	}
 }
