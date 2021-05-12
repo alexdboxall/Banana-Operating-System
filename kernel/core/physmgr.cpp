@@ -162,12 +162,12 @@ namespace Phys
 				fiftyFifty ^= true;
 
 				if (fiftyFifty) {
-					size_t dma = allocateDMA(4096);
+					/*size_t dma = allocateDMA(4096);
 					if (dma) {
 						kprintf("allocated DMA memory instead.\n");
 						kprintf("allocated page %d / %d. 0x%X\n", usedPages, usablePages, dma);
 						return dma;
-					}
+					}*/
 				}
 
 				kprintf("No DMA or 50/50, so evicting...\n");
