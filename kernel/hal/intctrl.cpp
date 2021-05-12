@@ -440,7 +440,6 @@ void opcodeFault(regs* r, void* context)
 
 	//lock prefix
 	bool hasNonLockPrefix = false;
-	bool has66Prefix = false;
 
 	size_t originalEIP = r->eip;
 
@@ -455,7 +454,6 @@ void opcodeFault(regs* r, void* context)
 
 	} else if (eip[0] == 0x66) {						//operand size
 		hasNonLockPrefix = true;
-		has66Prefix = true;
 		eip++;
 		r->eip++;
 
