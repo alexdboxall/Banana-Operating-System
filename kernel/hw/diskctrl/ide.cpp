@@ -37,8 +37,8 @@ bool IDE::waitInterrupt(uint8_t channel)
 			//return true;
 		}
 
-		if ((timeout & 4) == 0 && timeout > 50) nanoSleep(1000 * 1000 * 10);		//10ms but may be longer (other tasks will run)
-		if (timeout >= 60) {														//25ms but may be much longer (other tasks will run)
+		if ((timeout & 4) == 0 && timeout > 50) milliTenthSleep(100);		//10ms but may be longer (other tasks will run)
+		if (timeout >= 60) {												//25ms but may be much longer (other tasks will run)
 			return false;
 		}
 		++timeout;
