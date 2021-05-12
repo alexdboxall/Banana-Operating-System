@@ -20,16 +20,24 @@ extern "C" {
 
 void start(void* parent)
 {
-	Device* rootDevice = (Device*) parent;
+	if (parent == (void*) 0xDEADBEEF) {
+		VESA* dev = new VESA();
+		dev->getModes();
 
-	VESA* dev = new VESA();
+	} else {
+		Device* rootDevice = (Device*) parent;
 
-	rootDevice->addChild(dev);
+		VESA* dev = new VESA();
 
-	dev->open(0, 0, nullptr);
+		rootDevice->addChild(dev);
 
-	extern Video* screen;
-	screen = dev;
+		dev->open(0, 0, nullptr);
+
+		extern Video* screen;
+		screen = dev;
+	}
+
+	
 }
 
 

@@ -721,28 +721,32 @@ void bootInstallKeybrd(KeyboardToken kt, bool* keystates)
 
 void bootInstallTasks(int done)
 {
-    term->setCursor(24, 4);
+    term->setCursor(24, 7);
     term->puts("Please wait while the install finishes.");
 
-    term->setCursor(26, 6);
+    term->setCursor(26, 9);
     term->puts(done == 0 ? "\x10 " : "  ");
     term->puts("Allocating the swapfile", done >= 0 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
 
-    term->setCursor(26, 7);
+    term->setCursor(26, 10);
     term->puts(done == 1 ? "\x10 " : "  ");
     term->puts("Updating the registry", done >= 1 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
     
-    term->setCursor(26, 8);
+    term->setCursor(26, 11);
     term->puts(done == 2 ? "\x10 " : "  ");
     term->puts("Backing up system files", done >= 2 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
 
-    term->setCursor(26, 9);
+    term->setCursor(26, 12);
     term->puts(done == 3 ? "\x10 " : "  ");
-    term->puts("Decompressing packages", done >= 3 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
+    term->puts("Creating user account", done >= 3 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
 
-    term->setCursor(26, 10);
+    term->setCursor(26, 13);
     term->puts(done == 4 ? "\x10 " : "  ");
     term->puts("Installing packages", done >= 4 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
+
+    term->setCursor(26, 14);
+    term->puts(done == 5 ? "\x10 " : "  ");
+    term->puts("Finishing touches", done >= 5 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
 }
 
 void firstRun()
@@ -761,7 +765,7 @@ void firstRun()
     drawBootScreen();
 
     char currName[48] = "Alex";
-    char currComp[48] = "Testing Comp";
+    char currComp[48] = "";
 
     int sel = 0;
     drawBasicWindow(22, 2, 50, 13, "Banana Setup");
@@ -820,7 +824,7 @@ void firstRun()
     }
     
     drawBootScreen();
-    drawBasicWindow(22, 2, 50, 13, "Finalising Installation");
+    drawBasicWindow(22, 5, 50, 13, "Finalising Installation");
 
     bootInstallTasks(0);
     int megabytes = Reg::readIntWithDefault((char*) "system", (char*) "@memory:swapfile", 12);
@@ -839,8 +843,10 @@ void firstRun()
     backupTree("C:/Banana/Registry/", 0xFFFF);
 
     bootInstallTasks(3);
-    while (installKey == 0);
-    installKey = 0;
+    createUser(currName);
+
+    bootInstallTasks(4);
+    VgaText::hiddenOut = true;
 }
 
 void loadExtensions()
@@ -872,24 +878,68 @@ void begin(void* a)
         loadExtensions();
     }
 
-    VgaText::hiddenOut = false;
     Krnl::preemptionOn = true;
 
     Process* usertask;
-    Krnl::setBootMessage("Starting shell...");
 
     if (firstTime) {
-        createUser("Alex");
         char* argv[] = { "C:/Banana/System/command.exe", "call", "C:/Banana/System/init.bat", 0 };
         usertask = new Process("C:/Banana/System/command.exe", nullptr, argv);
+        usertask->createUserThread();
+
+        VgaText::hiddenOut = false;
+        setActiveTerminal(term);
+        drawBootScreen();
+        drawBasicWindow(22, 5, 50, 13, "Finalising Installation");
+        bootInstallTasks(4);
+        VgaText::hiddenOut = true;
+
+        while (1) {
+            File* f = new File("C:/DE.BUG", kernelProcess);
+            FileStatus fs = f->open(FileOpenMode::Read);
+            if (fs == FileStatus::Success) {
+                f->close();
+                f->unlink();
+                delete f;
+                break;
+            }               
+            delete f;
+            sleep(1);
+        }
+
+        VgaText::hiddenOut = false;
+        setActiveTerminal(term);
+        drawBootScreen();
+        drawBasicWindow(22, 5, 50, 13, "Finalising Installation");
+        bootInstallTasks(5);
+
+        //finishing touches go here
+
+        setActiveTerminal(term);
+        drawBootScreen();
+        drawBasicWindow(22, 5, 50, 13, "Finalising Installation");
+        term->setCursor(24, 7);
+        term->puts("The installation has been completed.\n");
+        term->setCursor(24, 9);
+        term->puts("Please press ENTER to restart your computer");
+        term->setCursor(24, 10);
+        term->puts("and start Banana.");
+
+        installKey = 0;
+        while (installKey == 0);
+        installKey = 0;
+
+        term->setCursor(24, 11);
+
+        computer->close(1, 0, nullptr);
+        term->puts("PLEASE MANUALLY RESTART YOUR COMPUTER", VgaColour::Red, VgaColour::White);
+
     } else {
+        VgaText::hiddenOut = false;
         usertask = new Process("C:/Banana/System/command.exe");
-    }
-    setActiveTerminal(usertask->terminal);
+        setActiveTerminal(usertask->terminal);
+        usertask->createUserThread();
 
-    usertask->createUserThread();
-
-    if (!firstTime) {
         int autogui = Reg::readIntWithDefault((char*) "shell", (char*) "autogui", 0);
 
         extern void startGUIVESA(void* a);
@@ -897,11 +947,12 @@ void begin(void* a)
             kprintf("AUTO GUI.\n");
             startGUIVESA(nullptr);
         }
-    }
-    
 
-    int wstatus;
-    waitTask(usertask->pid, &wstatus, 0);
+        int wstatus;
+        waitTask(usertask->pid, &wstatus, 0);
+    }
 
     computer->close(0, 0, nullptr);
+    panic("TURN OFF PC");
+    while (1);
 }
