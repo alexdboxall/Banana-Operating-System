@@ -801,7 +801,7 @@ void firstRun()
 
         while (installKey == 0);
         if (installKey == '\t' || installKey == '\n') {
-            if (sel == 2) {
+            if (sel == 2 && installKey == '\n') {
                 installKey = 0;
                 break;
             }
