@@ -337,7 +337,10 @@ namespace Phys
 
 		for (int i = 0; i < 100000; ++i) {
 			if (i * 0x1000 > 0x400000) {
-				setPageState(i, STATE_ALLOCATED);
+				if (getPageState(i) == STATE_FREE) {
+					setPageState(i, STATE_ALLOCATED);
+					--usablePages;
+				}
 			}
 		}
 	}
