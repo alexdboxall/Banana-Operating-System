@@ -60,12 +60,16 @@ namespace Phys
 					if (startSeg < SIZE_DMA_MEMORY_1 / 65536) {
 						return VIRT_DMA_MEMORY_1 + start * DMA_BLOCK_SIZE;
 					} else {
-						panic("UH OH! physmgr.cpp!");
-						return VIRT_DMA_MEMORY_2 + (start - SIZE_DMA_MEMORY_1 / DMA_BLOCK_SIZE) * DMA_BLOCK_SIZE;
+						kprintf("A.\n");
+						panic("UH OH! NO MORE DMA RAM! physmgr.cpp!");
+						//return VIRT_DMA_MEMORY_2 + (start - SIZE_DMA_MEMORY_1 / DMA_BLOCK_SIZE) * DMA_BLOCK_SIZE;
 					}
 				}
 			}
 		}
+
+		kprintf("B.\n");
+		panic("UH OH! NO MORE DMA RAM! physmgr.cpp!");
 
 		return 0;
 	}
@@ -308,7 +312,12 @@ namespace Phys
 		}
 
 		if (1) {
-			for (int i = 0x140000 / 0x1000; i < 0x180000 / 0x1000; ++i) {
+			for (int i = 0x140000 / 0x1000; i < 0x1C0000 / 0x1000; ++i) {
+				setPageState(i, STATE_FREE);
+				usablePages++;
+			}
+
+			for (int i = 0x1D0000 / 0x1000; i < 0x1E0000 / 0x1000; ++i) {
 				setPageState(i, STATE_FREE);
 				usablePages++;
 			}
