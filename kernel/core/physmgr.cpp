@@ -334,14 +334,5 @@ namespace Phys
 			setPageState(0x60 + i, STATE_FREE);
 		}
 		usablePages += 32;
-
-		for (int i = 0; i < 100000; ++i) {
-			if (i * 0x1000 > 1024 * 1024 * 3 + 640 * 1024) {
-				if (getPageState(i) == STATE_FREE) {
-					setPageState(i, STATE_ALLOCATED);
-					--usablePages;
-				}
-			}
-		}
 	}
 }
