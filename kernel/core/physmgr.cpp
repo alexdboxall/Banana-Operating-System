@@ -311,18 +311,6 @@ namespace Phys
 			ramTable += 3;	//24 bytes / uint64_t = 3
 		}
 
-		if (1) {
-			for (int i = 0x140000 / 0x1000; i < 0x1C0000 / 0x1000; ++i) {
-				setPageState(i, STATE_FREE);
-				usablePages++;
-			}
-
-			for (int i = 0x1D0000 / 0x1000; i < 0x1E0000 / 0x1000; ++i) {
-				setPageState(i, STATE_FREE);
-				usablePages++;
-			}
-		}
-
 		//holes in the memory map
 		setPageState(5, STATE_FREE);
 		setPageState(6, STATE_FREE);
@@ -334,5 +322,17 @@ namespace Phys
 			setPageState(0x60 + i, STATE_FREE);
 		}
 		usablePages += 32;
+
+		if (1) {
+			for (int i = 0x140000 / 0x1000; i < 0x1C0000 / 0x1000 && usablePages < 1024; ++i) {
+				setPageState(i, STATE_FREE);
+				usablePages++;
+			}
+
+			for (int i = 0x1D0000 / 0x1000; i < 0x1E0000 / 0x1000 && usablePages < 2048; ++i) {
+				setPageState(i, STATE_FREE);
+				usablePages++;
+			}
+		}
 	}
 }

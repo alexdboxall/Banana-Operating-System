@@ -715,6 +715,10 @@ extern void (*guiKeyboardHandler) (KeyboardToken kt, bool* keystates);
 volatile char installKey = 0;
 void bootInstallKeybrd(KeyboardToken kt, bool* keystates)
 {
+    if (kt.release && kt.halScancode == '\t') {
+        installKey = 255;
+        return;
+    }
     if (kt.release) return;
     installKey = kt.halScancode;
 }
@@ -789,6 +793,8 @@ void firstRun()
 
         term->setCursor(24, 11);
         term->puts(sel == 2 ? "Press ENTER" : "           ", VgaColour::DarkGrey, VgaColour::White);
+        term->setCursor(24, 12);
+        term->puts(sel == 2 ? "to submit" : "           ", VgaColour::DarkGrey, VgaColour::White);
       
         term->setCursor(50, 11);
         if (sel != 2) term->puts("   OK   ", VgaColour::White, VgaColour::DarkGrey);
@@ -818,6 +824,13 @@ void firstRun()
         } else if (installKey == '\b') {
             if (sel == 0 && strlen(currName)) currName[strlen(currName) - 1] = 0;
             if (sel == 1 && strlen(currComp)) currComp[strlen(currComp) - 1] = 0;
+        
+        } else if (installKey == 255) {
+            // Shift + TAB
+            sel--;
+            if (sel == -1) {
+                sel = 2;
+            }
         }
 
         installKey = 0;
