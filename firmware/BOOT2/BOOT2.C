@@ -431,6 +431,7 @@ void main()
 
 		} while (key != '1' && key != '2');
 	}
+	clearScreen();
 	if (fulldebug) {
 		writeString("\nPRESS ANY KEY (B)");
 		blockingKeyboard();
