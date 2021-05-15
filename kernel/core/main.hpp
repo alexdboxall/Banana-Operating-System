@@ -10,7 +10,7 @@
 
 #define KDEBUG_PAUSE(msg) if (sysBootSettings & 2048) {\
 Krnl::setBootMessage(msg);\
-if (!(forceVGA & 128)) {\
+if (!(sysBootSettings & 128)) {\
 	while (1) {\
 		uint8_t a = inb(0x60); \
 		if (a == 0x5A || a == 0x1C) break; \
