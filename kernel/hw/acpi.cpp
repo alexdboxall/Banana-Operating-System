@@ -408,12 +408,10 @@ void ACPI::detectPCI()
 	if (pciDetected) {
 		Krnl::setBootMessage("Scanning the PCI bus...");
 
-		if (mechanism == 1) {
+		if (pciAccessMech1) {
 			KDEBUG_PAUSE("PCI MECHANSIM 1 (THE NORMAL ONE)");
-		} else if (mechansim == 2) {
+		} else if (!pciAccessMech1) {
 			KDEBUG_PAUSE("PCI MECHANSIM 2 (THE ANCIENT ONE)");
-		} else {
-			KDEBUG_PAUSE("PCI MECHANSIM ? (UH OH...)");
 		}
 
 		PCI* pci = new PCI();	
