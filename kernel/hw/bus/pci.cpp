@@ -461,8 +461,11 @@ void PCI::getDeviceData(uint8_t bus, uint8_t slot, uint8_t function)
 	}
 	KDEBUG_PAUSE("BA");
 
+	char barn[6];
+	strcpy(barn, "BAR0");
 	for (int i = 0; i < 6; ++i) {
-		KDEBUG_PAUSE("BARS");
+		KDEBUG_PAUSE(barn);
+		barn[3]++;
 		info.bar[i] = getBARAddress(i, bus, slot, function);
 	}
 	info.bus = bus;
@@ -505,7 +508,10 @@ void PCI::checkDevice(uint8_t bus, uint8_t device)
 		/* It is a multi-function device, so check remaining functions */
 		KDEBUG_PAUSE("multifunc");
 		for (function = 1; function < 8; function++) {
-			KDEBUG_PAUSE("fn");
+			char nfn[5];
+			strcpy(nfn, "0fn");
+			nfn[0] = '0' + function;
+			KDEBUG_PAUSE(nfn);
 			if (getVendorID(bus, device, function) != 0xFFFF) {
 				KDEBUG_PAUSE("-fn-");
 				getDeviceData(bus, device, function);
