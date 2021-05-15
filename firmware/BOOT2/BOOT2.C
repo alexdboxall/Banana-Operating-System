@@ -116,7 +116,7 @@ void main()
 	if (key == '7' || key == '8') {
 		if (key == '8') {
 			fulldebug = true;
-			writeString(" PRESS ENTER");
+			writeString(" PRESS ENTER (A)");
 			while (1) {
 				char key = blockingKeyboard();
 				if (key == '\n') {
@@ -431,12 +431,18 @@ void main()
 
 		} while (key != '1' && key != '2');
 	}
-
+	if (fulldebug) {
+		writeString("\nPRESS ANY KEY (B)");
+		blockingKeyboard();
+	}
 	uint32_t data = getBootData();
-	
+	if (fulldebug) {
+		writeString("\nPRESS ANY KEY (C)");
+		blockingKeyboard();
+	}
 	uint16_t count = getRAMMap((void*) 0x600);
 	if (fulldebug) {
-		writeString("\nPRESS ANY KEY");
+		writeString("\nPRESS ANY KEY (D)");
 		blockingKeyboard();
 	}
 
@@ -457,11 +463,20 @@ void main()
 
 		ramTable += 3;
 	}
-
+	if (fulldebug) {
+		writeString("\nPRESS ANY KEY (E)");
+		blockingKeyboard();
+	}
 	readFATFromHDD("BANANA     /SYSTEM     /KERNEL32EXE", (void*) KERNEL_SOURCE);
-
+	if (fulldebug) {
+		writeString("\nPRESS ANY KEY (F)");
+		blockingKeyboard();
+	}
 	loadKernel32();
-
+	if (fulldebug) {
+		writeString("\nPRESS ANY KEY (G)");
+		blockingKeyboard();
+	}
 	count = getRAMMap((void*) 0x600);
 	*((uint16_t*) 0x513) = count;
 	*((uint32_t*) 0x524) = highestFreeAddress;
@@ -469,7 +484,7 @@ void main()
 	*((uint32_t*) 0x504) = data;
 	clearScreen();
 	if (fulldebug) {
-		writeString("\nPRESS ANY KEY");
+		writeString("\nPRESS ANY KEY (H)");
 		blockingKeyboard();
 	}
 
@@ -477,13 +492,19 @@ void main()
 	for (int i = 0; i < 1024; ++i) {
 		directoryPointer[i] = 6;
 	}
-	
+	if (fulldebug) {
+		writeString("\nPRESS ANY KEY (I)");
+		blockingKeyboard();
+	}
 	//ID MAP FIRST 4MB
 	uint32_t* pt3 = (uint32_t*) 0x3000;
 	for (int i = 0; i < 1024; ++i) {
 		pt3[i] = (i * 0x1000) | 7;
 	}
-
+	if (fulldebug) {
+		writeString("\nPRESS ANY KEY (J)");
+		blockingKeyboard();
+	}
 	//MAP KERNEL ENTIRE AREA
 	uint32_t* kpt = (uint32_t*) 0x100000;
 	uint32_t dest = 0xC0000000;
@@ -495,28 +516,44 @@ void main()
 		}
 		dest += 4096;
 	}
-
+	if (fulldebug) {
+		writeString("\nPRESS ANY KEY (K)");
+		blockingKeyboard();
+	}
 	//MAP FIRST FOUR MBs
 	uint32_t* pt4 = (uint32_t*) 0x4000;
 	for (int i = 0; i < 1024; ++i) {
 		pt4[i] = (i * 0x1000) | 7;
 	}
-
+	if (fulldebug) {
+		writeString("\nPRESS ANY KEY (L)");
+		blockingKeyboard();
+	}
 	//POINT TO KERNEL MAPPINGS
 	int j = 0;
 	for (int i = 768; i < 1024; ++i, ++j) {
 		directoryPointer[i] = (0x100000 + j * 4096) | 7;
 	}
-
+	if (fulldebug) {
+		writeString("\nPRESS ANY KEY (M)");
+		blockingKeyboard();
+	}
 	directoryPointer[0] = 0x3007;			//ID mapped
 	directoryPointer[0xC20 / 4] = 0x4007;	//map in low 4 MBs
 	directoryPointer[0xFFF / 4] = 0x1007;	//map to itself
-
+	if (fulldebug) {
+		writeString("\nPRESS ANY KEY (N)");
+		blockingKeyboard();
+	}
 	regs_t in;
 	abstractionCall(ACPagingSetup, in);	
-
+	if (fulldebug) {
+		writeString("\nPRESS ANY KEY (O)");
+		blockingKeyboard();
+	}
 	executeFrom(0xC0000000);
-
+	
+	writeString("\nOH DEAR...");
 	while (1);
 
 	// 0x4841594E;
