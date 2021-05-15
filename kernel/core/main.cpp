@@ -98,11 +98,11 @@ extern "C" void kernel_main()
 		Krnl::setBootMessage("KERNEL HAS STARTED. PRESS ENTER");
 		while (1) {
 			uint8_t a = inb(0x60);
-			if (a) break;
+			if (a == 0x5A || a == 0x1C) break;
 		}
 		while (1) {
 			uint8_t a = inb(0x60);
-			if (!a) break;
+			if (!(a == 0x5A || a == 0x1C)) break;
 		}
 	}
 
