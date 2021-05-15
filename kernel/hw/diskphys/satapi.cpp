@@ -111,6 +111,7 @@ int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, uint64_t lba, uint1
 
 	port->ci = 1 << slot;	// Issue command
 
+	int times = 0;
 	// Wait for completion
 	while (1) {
 		// In some longer duration reads, it may be helpful to spin on the DPS bit 
@@ -120,6 +121,24 @@ int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, uint64_t lba, uint1
 		if (port->is & HBA_PxIS_TFES)	// Task file error
 		{
 			kprintf("satapi disk error\n");
+			return 1;
+		}
+	
+		++times;
+		if (times > 1000 && times < 1010) {
+			milliTenthSleep(200);
+		}
+		if (times > 2000 && times < 2010) {
+			milliTenthSleep(600);
+		}
+		if (times > 3000 && times < 3010) {
+			milliTenthSleep(1500);
+		}
+		if (times > 7000 && times < 7010) {
+			milliTenthSleep(2500);
+		}
+		if (times > 10000) {
+			kprintf("SATAPI time out...\n");
 			return 1;
 		}
 	}

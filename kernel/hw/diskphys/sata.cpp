@@ -155,6 +155,7 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 	port->ci = 1 << slot;	// Issue command
 	KDEBUG_PAUSE("SATA::access 12");
 
+	int times = 0;
 	// Wait for completion
 	while (1) {
 		// In some longer duration reads, it may be helpful to spin on the DPS bit 
@@ -164,7 +165,25 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 		if (port->is & HBA_PxIS_TFES)	// Task file error
 		{
 			panic("Read disk error\n");
-			return FALSE;
+			return 1;
+		}
+
+		++times;
+		if (times > 1000 && times < 1010) {
+			milliTenthSleep(200);
+		}
+		if (times > 2000 && times < 2010) {
+			milliTenthSleep(600);
+		}
+		if (times > 3000 && times < 3010) {
+			milliTenthSleep(1500);
+		}
+		if (times > 7000 && times < 7010) {
+			milliTenthSleep(2500);
+		}
+		if (times > 10000) {
+			kprintf("SATA time out...\n");
+			return 1;
 		}
 	}
 	KDEBUG_PAUSE("SATA::access 13");

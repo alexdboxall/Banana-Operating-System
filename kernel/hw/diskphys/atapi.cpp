@@ -107,10 +107,10 @@ bool ATAPI::readyForCommand()
 	int timeout = 0;
 	while (ide->read(channel, ATA_REG_ALTSTATUS) & (ATA_SR_BSY | ATA_SR_DRQ)) {
 		++timeout;
-		if (timeout >= 100) {
-			milliTenthSleep(10);
+		if (timeout >= 1440) {
+			milliTenthSleep(350);
 		}
-		if (timeout == 2000) {
+		if (timeout == 1500) {
 			return false;
 		}
 	}
