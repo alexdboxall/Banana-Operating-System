@@ -84,6 +84,9 @@ uint8_t titleScreen[] = { 0xDB, 0xDB, 0xDB, 0xDB, 0xDB, 0xDB, 0xBB, 0x20, 0x20, 
 
 extern "C" void kernel_main()
 {
+	sysBootSettings = *((uint32_t*) 0x500);
+	KDEBUG_PAUSE("KERNEL_MAIN CALLED");
+
 	outb(0x3f8 + 1, 0x00);    // Disable all interrupts
 	outb(0x3f8 + 3, 0x80);    // Enable DLAB (set baud rate divisor)
 	outb(0x3f8 + 0, 0x03);    // Set divisor to 3 (lo byte) 38400 baud
@@ -92,13 +95,10 @@ extern "C" void kernel_main()
 	outb(0x3f8 + 2, 0xC7);    // Enable FIFO, clear them, with 14-byte threshold
 	outb(0x3f8 + 4, 0x0B);    // IRQs enabled, RTS/DSR set
 
-	sysBootSettings = *((uint32_t*) 0x500);
-
 	kprintf("\n\nKERNEL HAS STARTED.\n");
-
-	KDEBUG_PAUSE("KERNEL HAS STARTED. PRESS ENTER");
-
+	KDEBUG_PAUSE("KERNEL STARTED");
 	installVgaTextImplementation();
+	KDEBUG_PAUSE("INSTALLED VGATEXT");
 
 	uint16_t* b = (uint16_t*) 0xC20B8000;
 	int x = 0;
@@ -116,19 +116,26 @@ extern "C" void kernel_main()
 			++x;
 		}
 	}
+	KDEBUG_PAUSE("DREW SCREEN");
 
 	Krnl::setBootMessage("Starting the memory manager...");
 
 	Phys::physicalMemorySetup(((*((uint32_t*) 0x524)) + 4095) & ~0xFFF);		//cryptic one-liner
+	KDEBUG_PAUSE("PHYS SETUP");
 	Virt::virtualMemorySetup();
+	KDEBUG_PAUSE("VIRT SETUP");
 
 	{
 		VAS v;
 		firstVAS = &v;
+		KDEBUG_PAUSE("VAS SETUP");
 
 		callGlobalConstructors();
+		KDEBUG_PAUSE("CONSTRUCTORS SETUP");
 
 		computer = new Computer();
+		KDEBUG_PAUSE("new Computer()");
+
 		computer->open(0, 0, nullptr);
 	}
 }

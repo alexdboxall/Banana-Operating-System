@@ -13039,7 +13039,7 @@ c00098be:	c1 fd 0c             	sar    ebp,0xc
 c00098c1:	bb 00 00 00 00       	mov    ebx,0x0
 c00098c6:	8b 35 b0 62 02 c0    	mov    esi,DWORD PTR ds:0xc00262b0
 c00098cc:	8b 3d f8 53 02 c0    	mov    edi,DWORD PTR ds:0xc00253f8
-c00098d2:	e8 5a 05 00 00       	call   c0009e31 <Phys::allocatePage()>
+c00098d2:	e8 59 05 00 00       	call   c0009e30 <Phys::allocatePage()>
 c00098d7:	68 01 04 00 00       	push   0x401
 c00098dc:	57                   	push   edi
 c00098dd:	50                   	push   eax
@@ -13210,672 +13210,674 @@ c0009a88:	c3                   	ret
 
 c0009a89 <kernel_main>:
 c0009a89:	57                   	push   edi
-c0009a8a:	bf f9 03 00 00       	mov    edi,0x3f9
-c0009a8f:	56                   	push   esi
-c0009a90:	89 fa                	mov    edx,edi
-c0009a92:	53                   	push   ebx
-c0009a93:	31 f6                	xor    esi,esi
-c0009a95:	83 ec 2c             	sub    esp,0x2c
-c0009a98:	89 f0                	mov    eax,esi
-c0009a9a:	ee                   	out    dx,al
-c0009a9b:	bb fb 03 00 00       	mov    ebx,0x3fb
-c0009aa0:	b0 80                	mov    al,0x80
-c0009aa2:	89 da                	mov    edx,ebx
-c0009aa4:	ee                   	out    dx,al
-c0009aa5:	b1 03                	mov    cl,0x3
-c0009aa7:	ba f8 03 00 00       	mov    edx,0x3f8
-c0009aac:	88 c8                	mov    al,cl
-c0009aae:	ee                   	out    dx,al
-c0009aaf:	89 f0                	mov    eax,esi
-c0009ab1:	89 fa                	mov    edx,edi
-c0009ab3:	ee                   	out    dx,al
-c0009ab4:	88 c8                	mov    al,cl
-c0009ab6:	89 da                	mov    edx,ebx
-c0009ab8:	ee                   	out    dx,al
-c0009ab9:	b0 c7                	mov    al,0xc7
-c0009abb:	ba fa 03 00 00       	mov    edx,0x3fa
-c0009ac0:	ee                   	out    dx,al
-c0009ac1:	b0 0b                	mov    al,0xb
-c0009ac3:	ba fc 03 00 00       	mov    edx,0x3fc
-c0009ac8:	ee                   	out    dx,al
-c0009ac9:	68 94 27 02 c0       	push   0xc0022794
-c0009ace:	e8 98 2f 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
-c0009ad3:	83 c4 10             	add    esp,0x10
-c0009ad6:	f6 05 a1 61 02 c0 08 	test   BYTE PTR ds:0xc00261a1,0x8
-c0009add:	0f 85 fd 00 00 00    	jne    c0009be0 <kernel_main+0x157>
-c0009ae3:	e8 9e 0a 00 00       	call   c000a586 <installVgaTextImplementation()>
-c0009ae8:	0f b6 05 00 54 02 c0 	movzx  eax,BYTE PTR ds:0xc0025400
-c0009aef:	84 c0                	test   al,al
-c0009af1:	74 6c                	je     c0009b5f <kernel_main+0xd6>
-c0009af3:	31 db                	xor    ebx,ebx
-c0009af5:	bf 0a 00 00 00       	mov    edi,0xa
-c0009afa:	be 05 00 00 00       	mov    esi,0x5
-c0009aff:	31 c9                	xor    ecx,ecx
-c0009b01:	eb 2a                	jmp    c0009b2d <kernel_main+0xa4>
-c0009b03:	3c 0d                	cmp    al,0xd
-c0009b05:	74 1a                	je     c0009b21 <kernel_main+0x98>
-c0009b07:	3c 0a                	cmp    al,0xa
-c0009b09:	74 40                	je     c0009b4b <kernel_main+0xc2>
-c0009b0b:	8d 14 b6             	lea    edx,[esi+esi*4]
-c0009b0e:	80 cc 0e             	or     ah,0xe
-c0009b11:	c1 e2 04             	shl    edx,0x4
-c0009b14:	01 ca                	add    edx,ecx
-c0009b16:	41                   	inc    ecx
-c0009b17:	01 fa                	add    edx,edi
-c0009b19:	66 89 84 12 00 80 0b c2 	mov    WORD PTR [edx+edx*1-0x3df48000],ax
-c0009b21:	43                   	inc    ebx
-c0009b22:	0f b6 83 00 54 02 c0 	movzx  eax,BYTE PTR [ebx-0x3ffdac00]
-c0009b29:	84 c0                	test   al,al
-c0009b2b:	74 32                	je     c0009b5f <kernel_main+0xd6>
-c0009b2d:	80 b9 36 54 02 c0 db 	cmp    BYTE PTR [ecx-0x3ffdabca],0xdb
-c0009b34:	75 cd                	jne    c0009b03 <kernel_main+0x7a>
-c0009b36:	0f b6 91 35 54 02 c0 	movzx  edx,BYTE PTR [ecx-0x3ffdabcb]
-c0009b3d:	83 e2 fe             	and    edx,0xfffffffe
-c0009b40:	81 fa ba 00 00 00    	cmp    edx,0xba
-c0009b46:	75 bb                	jne    c0009b03 <kernel_main+0x7a>
-c0009b48:	47                   	inc    edi
-c0009b49:	eb b8                	jmp    c0009b03 <kernel_main+0x7a>
-c0009b4b:	43                   	inc    ebx
-c0009b4c:	46                   	inc    esi
-c0009b4d:	31 c9                	xor    ecx,ecx
-c0009b4f:	0f b6 83 00 54 02 c0 	movzx  eax,BYTE PTR [ebx-0x3ffdac00]
-c0009b56:	bf 0a 00 00 00       	mov    edi,0xa
-c0009b5b:	84 c0                	test   al,al
-c0009b5d:	75 ce                	jne    c0009b2d <kernel_main+0xa4>
-c0009b5f:	83 ec 0c             	sub    esp,0xc
-c0009b62:	68 cc 27 02 c0       	push   0xc00227cc
-c0009b67:	e8 b1 fe ff ff       	call   c0009a1d <Krnl::setBootMessage(char const*)>
-c0009b6c:	a1 00 05 00 00       	mov    eax,ds:0x500
-c0009b71:	a3 a0 61 02 c0       	mov    ds:0xc00261a0,eax
-c0009b76:	a1 24 05 00 00       	mov    eax,ds:0x524
-c0009b7b:	05 ff 0f 00 00       	add    eax,0xfff
-c0009b80:	25 00 f0 ff ff       	and    eax,0xfffff000
-c0009b85:	89 04 24             	mov    DWORD PTR [esp],eax
-c0009b88:	e8 23 04 00 00       	call   c0009fb0 <Phys::physicalMemorySetup(unsigned int)>
-c0009b8d:	e8 72 1d 00 00       	call   c000b904 <Virt::virtualMemorySetup()>
-c0009b92:	58                   	pop    eax
-c0009b93:	8d 5c 24 18          	lea    ebx,[esp+0x18]
-c0009b97:	53                   	push   ebx
-c0009b98:	e8 23 1e 00 00       	call   c000b9c0 <VAS::VAS()>
-c0009b9d:	89 1d b0 62 02 c0    	mov    DWORD PTR ds:0xc00262b0,ebx
-c0009ba3:	e8 78 64 ff ff       	call   c0000020 <callGlobalConstructors>
-c0009ba8:	c7 04 24 ec 01 00 00 	mov    DWORD PTR [esp],0x1ec
-c0009baf:	e8 0f fe ff ff       	call   c00099c3 <malloc>
-c0009bb4:	89 04 24             	mov    DWORD PTR [esp],eax
-c0009bb7:	89 c6                	mov    esi,eax
-c0009bb9:	e8 fc ef ff ff       	call   c0008bba <Computer::Computer()>
-c0009bbe:	6a 00                	push   0x0
-c0009bc0:	89 35 88 61 02 c0    	mov    DWORD PTR ds:0xc0026188,esi
-c0009bc6:	6a 00                	push   0x0
-c0009bc8:	6a 00                	push   0x0
-c0009bca:	56                   	push   esi
-c0009bcb:	e8 f6 f3 ff ff       	call   c0008fc6 <Computer::open(int, int, void*)>
-c0009bd0:	83 c4 14             	add    esp,0x14
-c0009bd3:	53                   	push   ebx
-c0009bd4:	e8 97 20 00 00       	call   c000bc70 <VAS::~VAS()>
-c0009bd9:	83 c4 30             	add    esp,0x30
-c0009bdc:	5b                   	pop    ebx
-c0009bdd:	5e                   	pop    esi
-c0009bde:	5f                   	pop    edi
-c0009bdf:	c3                   	ret    
-c0009be0:	83 ec 0c             	sub    esp,0xc
-c0009be3:	68 ac 27 02 c0       	push   0xc00227ac
-c0009be8:	e8 30 fe ff ff       	call   c0009a1d <Krnl::setBootMessage(char const*)>
-c0009bed:	83 c4 10             	add    esp,0x10
-c0009bf0:	eb 04                	jmp    c0009bf6 <kernel_main+0x16d>
-c0009bf2:	3c 1c                	cmp    al,0x1c
-c0009bf4:	74 06                	je     c0009bfc <kernel_main+0x173>
-c0009bf6:	e4 60                	in     al,0x60
-c0009bf8:	3c 5a                	cmp    al,0x5a
-c0009bfa:	75 f6                	jne    c0009bf2 <kernel_main+0x169>
-c0009bfc:	e4 60                	in     al,0x60
-c0009bfe:	3c 5a                	cmp    al,0x5a
-c0009c00:	74 fa                	je     c0009bfc <kernel_main+0x173>
-c0009c02:	3c 1c                	cmp    al,0x1c
-c0009c04:	74 f6                	je     c0009bfc <kernel_main+0x173>
-c0009c06:	e9 d8 fe ff ff       	jmp    c0009ae3 <kernel_main+0x5a>
+c0009a8a:	56                   	push   esi
+c0009a8b:	53                   	push   ebx
+c0009a8c:	83 ec 20             	sub    esp,0x20
+c0009a8f:	a1 00 05 00 00       	mov    eax,ds:0x500
+c0009a94:	a3 a0 61 02 c0       	mov    ds:0xc00261a0,eax
+c0009a99:	f6 c4 08             	test   ah,0x8
+c0009a9c:	0f 85 3d 01 00 00    	jne    c0009bdf <kernel_main+0x156>
+c0009aa2:	31 f6                	xor    esi,esi
+c0009aa4:	bf f9 03 00 00       	mov    edi,0x3f9
+c0009aa9:	89 f0                	mov    eax,esi
+c0009aab:	89 fa                	mov    edx,edi
+c0009aad:	ee                   	out    dx,al
+c0009aae:	bb fb 03 00 00       	mov    ebx,0x3fb
+c0009ab3:	b0 80                	mov    al,0x80
+c0009ab5:	89 da                	mov    edx,ebx
+c0009ab7:	ee                   	out    dx,al
+c0009ab8:	b1 03                	mov    cl,0x3
+c0009aba:	ba f8 03 00 00       	mov    edx,0x3f8
+c0009abf:	88 c8                	mov    al,cl
+c0009ac1:	ee                   	out    dx,al
+c0009ac2:	89 f0                	mov    eax,esi
+c0009ac4:	89 fa                	mov    edx,edi
+c0009ac6:	ee                   	out    dx,al
+c0009ac7:	88 c8                	mov    al,cl
+c0009ac9:	89 da                	mov    edx,ebx
+c0009acb:	ee                   	out    dx,al
+c0009acc:	b0 c7                	mov    al,0xc7
+c0009ace:	ba fa 03 00 00       	mov    edx,0x3fa
+c0009ad3:	ee                   	out    dx,al
+c0009ad4:	b0 0b                	mov    al,0xb
+c0009ad6:	ba fc 03 00 00       	mov    edx,0x3fc
+c0009adb:	ee                   	out    dx,al
+c0009adc:	83 ec 0c             	sub    esp,0xc
+c0009adf:	68 d3 27 02 c0       	push   0xc00227d3
+c0009ae4:	e8 82 2f 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
+c0009ae9:	e8 98 0a 00 00       	call   c000a586 <installVgaTextImplementation()>
+c0009aee:	0f b6 05 00 54 02 c0 	movzx  eax,BYTE PTR ds:0xc0025400
+c0009af5:	83 c4 10             	add    esp,0x10
+c0009af8:	84 c0                	test   al,al
+c0009afa:	74 6c                	je     c0009b68 <kernel_main+0xdf>
+c0009afc:	31 db                	xor    ebx,ebx
+c0009afe:	bf 0a 00 00 00       	mov    edi,0xa
+c0009b03:	be 05 00 00 00       	mov    esi,0x5
+c0009b08:	31 c9                	xor    ecx,ecx
+c0009b0a:	eb 2a                	jmp    c0009b36 <kernel_main+0xad>
+c0009b0c:	3c 0d                	cmp    al,0xd
+c0009b0e:	74 1a                	je     c0009b2a <kernel_main+0xa1>
+c0009b10:	3c 0a                	cmp    al,0xa
+c0009b12:	74 40                	je     c0009b54 <kernel_main+0xcb>
+c0009b14:	8d 14 b6             	lea    edx,[esi+esi*4]
+c0009b17:	80 cc 0e             	or     ah,0xe
+c0009b1a:	c1 e2 04             	shl    edx,0x4
+c0009b1d:	01 ca                	add    edx,ecx
+c0009b1f:	41                   	inc    ecx
+c0009b20:	01 fa                	add    edx,edi
+c0009b22:	66 89 84 12 00 80 0b c2 	mov    WORD PTR [edx+edx*1-0x3df48000],ax
+c0009b2a:	43                   	inc    ebx
+c0009b2b:	0f b6 83 00 54 02 c0 	movzx  eax,BYTE PTR [ebx-0x3ffdac00]
+c0009b32:	84 c0                	test   al,al
+c0009b34:	74 32                	je     c0009b68 <kernel_main+0xdf>
+c0009b36:	80 b9 36 54 02 c0 db 	cmp    BYTE PTR [ecx-0x3ffdabca],0xdb
+c0009b3d:	75 cd                	jne    c0009b0c <kernel_main+0x83>
+c0009b3f:	0f b6 91 35 54 02 c0 	movzx  edx,BYTE PTR [ecx-0x3ffdabcb]
+c0009b46:	83 e2 fe             	and    edx,0xfffffffe
+c0009b49:	81 fa ba 00 00 00    	cmp    edx,0xba
+c0009b4f:	75 bb                	jne    c0009b0c <kernel_main+0x83>
+c0009b51:	47                   	inc    edi
+c0009b52:	eb b8                	jmp    c0009b0c <kernel_main+0x83>
+c0009b54:	43                   	inc    ebx
+c0009b55:	46                   	inc    esi
+c0009b56:	31 c9                	xor    ecx,ecx
+c0009b58:	0f b6 83 00 54 02 c0 	movzx  eax,BYTE PTR [ebx-0x3ffdac00]
+c0009b5f:	bf 0a 00 00 00       	mov    edi,0xa
+c0009b64:	84 c0                	test   al,al
+c0009b66:	75 ce                	jne    c0009b36 <kernel_main+0xad>
+c0009b68:	83 ec 0c             	sub    esp,0xc
+c0009b6b:	68 b4 27 02 c0       	push   0xc00227b4
+c0009b70:	e8 a8 fe ff ff       	call   c0009a1d <Krnl::setBootMessage(char const*)>
+c0009b75:	a1 24 05 00 00       	mov    eax,ds:0x524
+c0009b7a:	05 ff 0f 00 00       	add    eax,0xfff
+c0009b7f:	25 00 f0 ff ff       	and    eax,0xfffff000
+c0009b84:	89 04 24             	mov    DWORD PTR [esp],eax
+c0009b87:	e8 23 04 00 00       	call   c0009faf <Phys::physicalMemorySetup(unsigned int)>
+c0009b8c:	e8 73 1d 00 00       	call   c000b904 <Virt::virtualMemorySetup()>
+c0009b91:	58                   	pop    eax
+c0009b92:	8d 5c 24 18          	lea    ebx,[esp+0x18]
+c0009b96:	53                   	push   ebx
+c0009b97:	e8 24 1e 00 00       	call   c000b9c0 <VAS::VAS()>
+c0009b9c:	89 1d b0 62 02 c0    	mov    DWORD PTR ds:0xc00262b0,ebx
+c0009ba2:	e8 79 64 ff ff       	call   c0000020 <callGlobalConstructors>
+c0009ba7:	c7 04 24 ec 01 00 00 	mov    DWORD PTR [esp],0x1ec
+c0009bae:	e8 10 fe ff ff       	call   c00099c3 <malloc>
+c0009bb3:	89 04 24             	mov    DWORD PTR [esp],eax
+c0009bb6:	89 c6                	mov    esi,eax
+c0009bb8:	e8 fd ef ff ff       	call   c0008bba <Computer::Computer()>
+c0009bbd:	6a 00                	push   0x0
+c0009bbf:	89 35 88 61 02 c0    	mov    DWORD PTR ds:0xc0026188,esi
+c0009bc5:	6a 00                	push   0x0
+c0009bc7:	6a 00                	push   0x0
+c0009bc9:	56                   	push   esi
+c0009bca:	e8 f7 f3 ff ff       	call   c0008fc6 <Computer::open(int, int, void*)>
+c0009bcf:	83 c4 14             	add    esp,0x14
+c0009bd2:	53                   	push   ebx
+c0009bd3:	e8 98 20 00 00       	call   c000bc70 <VAS::~VAS()>
+c0009bd8:	83 c4 30             	add    esp,0x30
+c0009bdb:	5b                   	pop    ebx
+c0009bdc:	5e                   	pop    esi
+c0009bdd:	5f                   	pop    edi
+c0009bde:	c3                   	ret    
+c0009bdf:	83 ec 0c             	sub    esp,0xc
+c0009be2:	68 94 27 02 c0       	push   0xc0022794
+c0009be7:	e8 31 fe ff ff       	call   c0009a1d <Krnl::setBootMessage(char const*)>
+c0009bec:	83 c4 10             	add    esp,0x10
+c0009bef:	eb 04                	jmp    c0009bf5 <kernel_main+0x16c>
+c0009bf1:	3c 1c                	cmp    al,0x1c
+c0009bf3:	74 06                	je     c0009bfb <kernel_main+0x172>
+c0009bf5:	e4 60                	in     al,0x60
+c0009bf7:	3c 5a                	cmp    al,0x5a
+c0009bf9:	75 f6                	jne    c0009bf1 <kernel_main+0x168>
+c0009bfb:	e4 60                	in     al,0x60
+c0009bfd:	3c 5a                	cmp    al,0x5a
+c0009bff:	74 fa                	je     c0009bfb <kernel_main+0x172>
+c0009c01:	3c 1c                	cmp    al,0x1c
+c0009c03:	74 f6                	je     c0009bfb <kernel_main+0x172>
+c0009c05:	e9 98 fe ff ff       	jmp    c0009aa2 <kernel_main+0x19>
 
-c0009c0b <Phys::allocateDMA(unsigned long)>:
-c0009c0b:	55                   	push   ebp
-c0009c0c:	31 ed                	xor    ebp,ebp
-c0009c0e:	57                   	push   edi
-c0009c0f:	56                   	push   esi
-c0009c10:	53                   	push   ebx
-c0009c11:	31 db                	xor    ebx,ebx
-c0009c13:	83 ec 28             	sub    esp,0x28
-c0009c16:	68 eb 27 02 c0       	push   0xc00227eb
-c0009c1b:	e8 4b 2e 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
-c0009c20:	8b 44 24 40          	mov    eax,DWORD PTR [esp+0x40]
-c0009c24:	83 c4 10             	add    esp,0x10
-c0009c27:	8d b8 ff 0f 00 00    	lea    edi,[eax+0xfff]
-c0009c2d:	c7 44 24 08 00 00 00 00 	mov    DWORD PTR [esp+0x8],0x0
-c0009c35:	c1 ef 0c             	shr    edi,0xc
-c0009c38:	31 c0                	xor    eax,eax
-c0009c3a:	eb 19                	jmp    c0009c55 <Phys::allocateDMA(unsigned long)+0x4a>
-c0009c3c:	85 c0                	test   eax,eax
-c0009c3e:	75 06                	jne    c0009c46 <Phys::allocateDMA(unsigned long)+0x3b>
-c0009c40:	89 5c 24 08          	mov    DWORD PTR [esp+0x8],ebx
-c0009c44:	89 dd                	mov    ebp,ebx
-c0009c46:	8d 70 01             	lea    esi,[eax+0x1]
-c0009c49:	39 f7                	cmp    edi,esi
-c0009c4b:	74 3f                	je     c0009c8c <Phys::allocateDMA(unsigned long)+0x81>
-c0009c4d:	89 f0                	mov    eax,esi
-c0009c4f:	43                   	inc    ebx
-c0009c50:	83 fb 0f             	cmp    ebx,0xf
-c0009c53:	7f 11                	jg     c0009c66 <Phys::allocateDMA(unsigned long)+0x5b>
-c0009c55:	80 bb bc 61 02 c0 00 	cmp    BYTE PTR [ebx-0x3ffd9e44],0x0
-c0009c5c:	74 de                	je     c0009c3c <Phys::allocateDMA(unsigned long)+0x31>
-c0009c5e:	31 c0                	xor    eax,eax
-c0009c60:	43                   	inc    ebx
-c0009c61:	83 fb 0f             	cmp    ebx,0xf
-c0009c64:	7e ef                	jle    c0009c55 <Phys::allocateDMA(unsigned long)+0x4a>
-c0009c66:	83 ec 0c             	sub    esp,0xc
-c0009c69:	68 1f 28 02 c0       	push   0xc002281f
-c0009c6e:	e8 f8 2d 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
-c0009c73:	c7 04 24 dc 28 02 c0 	mov    DWORD PTR [esp],0xc00228dc
-c0009c7a:	e8 8c a6 00 00       	call   c001430b <Krnl::panic(char const*)>
-c0009c7f:	83 c4 10             	add    esp,0x10
-c0009c82:	31 c0                	xor    eax,eax
-c0009c84:	83 c4 1c             	add    esp,0x1c
-c0009c87:	5b                   	pop    ebx
-c0009c88:	5e                   	pop    esi
-c0009c89:	5f                   	pop    edi
-c0009c8a:	5d                   	pop    ebp
-c0009c8b:	c3                   	ret    
-c0009c8c:	89 e9                	mov    ecx,ebp
-c0009c8e:	c1 f9 04             	sar    ecx,0x4
-c0009c91:	89 4c 24 0c          	mov    DWORD PTR [esp+0xc],ecx
-c0009c95:	8d 4c 3d 00          	lea    ecx,[ebp+edi*1+0x0]
-c0009c99:	89 ca                	mov    edx,ecx
-c0009c9b:	4a                   	dec    edx
-c0009c9c:	79 03                	jns    c0009ca1 <Phys::allocateDMA(unsigned long)+0x96>
-c0009c9e:	8d 51 0e             	lea    edx,[ecx+0xe]
-c0009ca1:	c1 fa 04             	sar    edx,0x4
-c0009ca4:	39 54 24 0c          	cmp    DWORD PTR [esp+0xc],edx
-c0009ca8:	74 08                	je     c0009cb2 <Phys::allocateDMA(unsigned long)+0xa7>
-c0009caa:	8b 5c 24 08          	mov    ebx,DWORD PTR [esp+0x8]
-c0009cae:	31 c0                	xor    eax,eax
-c0009cb0:	eb ae                	jmp    c0009c60 <Phys::allocateDMA(unsigned long)+0x55>
-c0009cb2:	85 f6                	test   esi,esi
-c0009cb4:	74 15                	je     c0009ccb <Phys::allocateDMA(unsigned long)+0xc0>
-c0009cb6:	8d 95 bc 61 02 c0    	lea    edx,[ebp-0x3ffd9e44]
-c0009cbc:	8d 84 05 bd 61 02 c0 	lea    eax,[ebp+eax*1-0x3ffd9e43]
-c0009cc3:	c6 02 01             	mov    BYTE PTR [edx],0x1
-c0009cc6:	42                   	inc    edx
-c0009cc7:	39 d0                	cmp    eax,edx
-c0009cc9:	75 f8                	jne    c0009cc3 <Phys::allocateDMA(unsigned long)+0xb8>
-c0009ccb:	83 ec 0c             	sub    esp,0xc
-c0009cce:	01 3d b4 61 02 c0    	add    DWORD PTR ds:0xc00261b4,edi
-c0009cd4:	68 04 28 02 c0       	push   0xc0022804
-c0009cd9:	e8 8d 2d 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
-c0009cde:	83 c4 10             	add    esp,0x10
-c0009ce1:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
-c0009ce5:	85 c0                	test   eax,eax
-c0009ce7:	74 23                	je     c0009d0c <Phys::allocateDMA(unsigned long)+0x101>
-c0009ce9:	83 ec 0c             	sub    esp,0xc
-c0009cec:	68 1b 28 02 c0       	push   0xc002281b
-c0009cf1:	e8 75 2d 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
-c0009cf6:	c7 04 24 dc 28 02 c0 	mov    DWORD PTR [esp],0xc00228dc
-c0009cfd:	e8 09 a6 00 00       	call   c001430b <Krnl::panic(char const*)>
-c0009d02:	83 c4 10             	add    esp,0x10
-c0009d05:	89 f0                	mov    eax,esi
-c0009d07:	e9 43 ff ff ff       	jmp    c0009c4f <Phys::allocateDMA(unsigned long)+0x44>
-c0009d0c:	c1 e5 0c             	shl    ebp,0xc
-c0009d0f:	8d 85 00 00 01 c2    	lea    eax,[ebp-0x3dff0000]
-c0009d15:	e9 6a ff ff ff       	jmp    c0009c84 <Phys::allocateDMA(unsigned long)+0x79>
+c0009c0a <Phys::allocateDMA(unsigned long)>:
+c0009c0a:	55                   	push   ebp
+c0009c0b:	31 ed                	xor    ebp,ebp
+c0009c0d:	57                   	push   edi
+c0009c0e:	56                   	push   esi
+c0009c0f:	53                   	push   ebx
+c0009c10:	31 db                	xor    ebx,ebx
+c0009c12:	83 ec 28             	sub    esp,0x28
+c0009c15:	68 ea 27 02 c0       	push   0xc00227ea
+c0009c1a:	e8 4c 2e 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
+c0009c1f:	8b 44 24 40          	mov    eax,DWORD PTR [esp+0x40]
+c0009c23:	83 c4 10             	add    esp,0x10
+c0009c26:	8d b8 ff 0f 00 00    	lea    edi,[eax+0xfff]
+c0009c2c:	c7 44 24 08 00 00 00 00 	mov    DWORD PTR [esp+0x8],0x0
+c0009c34:	c1 ef 0c             	shr    edi,0xc
+c0009c37:	31 c0                	xor    eax,eax
+c0009c39:	eb 19                	jmp    c0009c54 <Phys::allocateDMA(unsigned long)+0x4a>
+c0009c3b:	85 c0                	test   eax,eax
+c0009c3d:	75 06                	jne    c0009c45 <Phys::allocateDMA(unsigned long)+0x3b>
+c0009c3f:	89 5c 24 08          	mov    DWORD PTR [esp+0x8],ebx
+c0009c43:	89 dd                	mov    ebp,ebx
+c0009c45:	8d 70 01             	lea    esi,[eax+0x1]
+c0009c48:	39 f7                	cmp    edi,esi
+c0009c4a:	74 3f                	je     c0009c8b <Phys::allocateDMA(unsigned long)+0x81>
+c0009c4c:	89 f0                	mov    eax,esi
+c0009c4e:	43                   	inc    ebx
+c0009c4f:	83 fb 0f             	cmp    ebx,0xf
+c0009c52:	7f 11                	jg     c0009c65 <Phys::allocateDMA(unsigned long)+0x5b>
+c0009c54:	80 bb bc 61 02 c0 00 	cmp    BYTE PTR [ebx-0x3ffd9e44],0x0
+c0009c5b:	74 de                	je     c0009c3b <Phys::allocateDMA(unsigned long)+0x31>
+c0009c5d:	31 c0                	xor    eax,eax
+c0009c5f:	43                   	inc    ebx
+c0009c60:	83 fb 0f             	cmp    ebx,0xf
+c0009c63:	7e ef                	jle    c0009c54 <Phys::allocateDMA(unsigned long)+0x4a>
+c0009c65:	83 ec 0c             	sub    esp,0xc
+c0009c68:	68 1e 28 02 c0       	push   0xc002281e
+c0009c6d:	e8 f9 2d 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
+c0009c72:	c7 04 24 d8 28 02 c0 	mov    DWORD PTR [esp],0xc00228d8
+c0009c79:	e8 8d a6 00 00       	call   c001430b <Krnl::panic(char const*)>
+c0009c7e:	83 c4 10             	add    esp,0x10
+c0009c81:	31 c0                	xor    eax,eax
+c0009c83:	83 c4 1c             	add    esp,0x1c
+c0009c86:	5b                   	pop    ebx
+c0009c87:	5e                   	pop    esi
+c0009c88:	5f                   	pop    edi
+c0009c89:	5d                   	pop    ebp
+c0009c8a:	c3                   	ret    
+c0009c8b:	89 e9                	mov    ecx,ebp
+c0009c8d:	c1 f9 04             	sar    ecx,0x4
+c0009c90:	89 4c 24 0c          	mov    DWORD PTR [esp+0xc],ecx
+c0009c94:	8d 4c 3d 00          	lea    ecx,[ebp+edi*1+0x0]
+c0009c98:	89 ca                	mov    edx,ecx
+c0009c9a:	4a                   	dec    edx
+c0009c9b:	79 03                	jns    c0009ca0 <Phys::allocateDMA(unsigned long)+0x96>
+c0009c9d:	8d 51 0e             	lea    edx,[ecx+0xe]
+c0009ca0:	c1 fa 04             	sar    edx,0x4
+c0009ca3:	39 54 24 0c          	cmp    DWORD PTR [esp+0xc],edx
+c0009ca7:	74 08                	je     c0009cb1 <Phys::allocateDMA(unsigned long)+0xa7>
+c0009ca9:	8b 5c 24 08          	mov    ebx,DWORD PTR [esp+0x8]
+c0009cad:	31 c0                	xor    eax,eax
+c0009caf:	eb ae                	jmp    c0009c5f <Phys::allocateDMA(unsigned long)+0x55>
+c0009cb1:	85 f6                	test   esi,esi
+c0009cb3:	74 15                	je     c0009cca <Phys::allocateDMA(unsigned long)+0xc0>
+c0009cb5:	8d 95 bc 61 02 c0    	lea    edx,[ebp-0x3ffd9e44]
+c0009cbb:	8d 84 05 bd 61 02 c0 	lea    eax,[ebp+eax*1-0x3ffd9e43]
+c0009cc2:	c6 02 01             	mov    BYTE PTR [edx],0x1
+c0009cc5:	42                   	inc    edx
+c0009cc6:	39 d0                	cmp    eax,edx
+c0009cc8:	75 f8                	jne    c0009cc2 <Phys::allocateDMA(unsigned long)+0xb8>
+c0009cca:	83 ec 0c             	sub    esp,0xc
+c0009ccd:	01 3d b4 61 02 c0    	add    DWORD PTR ds:0xc00261b4,edi
+c0009cd3:	68 03 28 02 c0       	push   0xc0022803
+c0009cd8:	e8 8e 2d 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
+c0009cdd:	83 c4 10             	add    esp,0x10
+c0009ce0:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
+c0009ce4:	85 c0                	test   eax,eax
+c0009ce6:	74 23                	je     c0009d0b <Phys::allocateDMA(unsigned long)+0x101>
+c0009ce8:	83 ec 0c             	sub    esp,0xc
+c0009ceb:	68 1a 28 02 c0       	push   0xc002281a
+c0009cf0:	e8 76 2d 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
+c0009cf5:	c7 04 24 d8 28 02 c0 	mov    DWORD PTR [esp],0xc00228d8
+c0009cfc:	e8 0a a6 00 00       	call   c001430b <Krnl::panic(char const*)>
+c0009d01:	83 c4 10             	add    esp,0x10
+c0009d04:	89 f0                	mov    eax,esi
+c0009d06:	e9 43 ff ff ff       	jmp    c0009c4e <Phys::allocateDMA(unsigned long)+0x44>
+c0009d0b:	c1 e5 0c             	shl    ebp,0xc
+c0009d0e:	8d 85 00 00 01 c2    	lea    eax,[ebp-0x3dff0000]
+c0009d14:	e9 6a ff ff ff       	jmp    c0009c83 <Phys::allocateDMA(unsigned long)+0x79>
 
-c0009d1a <Phys::freeDMA(unsigned long, unsigned long)>:
-c0009d1a:	83 ec 18             	sub    esp,0x18
-c0009d1d:	68 23 28 02 c0       	push   0xc0022823
-c0009d22:	e8 44 2d 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
-c0009d27:	8b 44 24 24          	mov    eax,DWORD PTR [esp+0x24]
-c0009d2b:	8d 90 ff 0f 00 00    	lea    edx,[eax+0xfff]
-c0009d31:	8b 44 24 20          	mov    eax,DWORD PTR [esp+0x20]
-c0009d35:	c1 ea 0c             	shr    edx,0xc
-c0009d38:	05 00 00 ff 3d       	add    eax,0x3dff0000
-c0009d3d:	29 15 b4 61 02 c0    	sub    DWORD PTR ds:0xc00261b4,edx
-c0009d43:	c1 e8 0c             	shr    eax,0xc
-c0009d46:	83 c4 10             	add    esp,0x10
-c0009d49:	85 d2                	test   edx,edx
-c0009d4b:	74 0f                	je     c0009d5c <Phys::freeDMA(unsigned long, unsigned long)+0x42>
-c0009d4d:	05 bc 61 02 c0       	add    eax,0xc00261bc
-c0009d52:	01 c2                	add    edx,eax
-c0009d54:	c6 00 00             	mov    BYTE PTR [eax],0x0
-c0009d57:	40                   	inc    eax
-c0009d58:	39 d0                	cmp    eax,edx
-c0009d5a:	75 f8                	jne    c0009d54 <Phys::freeDMA(unsigned long, unsigned long)+0x3a>
-c0009d5c:	83 c4 0c             	add    esp,0xc
-c0009d5f:	c3                   	ret    
+c0009d19 <Phys::freeDMA(unsigned long, unsigned long)>:
+c0009d19:	83 ec 18             	sub    esp,0x18
+c0009d1c:	68 22 28 02 c0       	push   0xc0022822
+c0009d21:	e8 45 2d 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
+c0009d26:	8b 44 24 24          	mov    eax,DWORD PTR [esp+0x24]
+c0009d2a:	8d 90 ff 0f 00 00    	lea    edx,[eax+0xfff]
+c0009d30:	8b 44 24 20          	mov    eax,DWORD PTR [esp+0x20]
+c0009d34:	c1 ea 0c             	shr    edx,0xc
+c0009d37:	05 00 00 ff 3d       	add    eax,0x3dff0000
+c0009d3c:	29 15 b4 61 02 c0    	sub    DWORD PTR ds:0xc00261b4,edx
+c0009d42:	c1 e8 0c             	shr    eax,0xc
+c0009d45:	83 c4 10             	add    esp,0x10
+c0009d48:	85 d2                	test   edx,edx
+c0009d4a:	74 0f                	je     c0009d5b <Phys::freeDMA(unsigned long, unsigned long)+0x42>
+c0009d4c:	05 bc 61 02 c0       	add    eax,0xc00261bc
+c0009d51:	01 c2                	add    edx,eax
+c0009d53:	c6 00 00             	mov    BYTE PTR [eax],0x0
+c0009d56:	40                   	inc    eax
+c0009d57:	39 d0                	cmp    eax,edx
+c0009d59:	75 f8                	jne    c0009d53 <Phys::freeDMA(unsigned long, unsigned long)+0x3a>
+c0009d5b:	83 c4 0c             	add    esp,0xc
+c0009d5e:	c3                   	ret    
 
-c0009d60 <Phys::setPageState(unsigned long, bool)>:
-c0009d60:	56                   	push   esi
-c0009d61:	ba 01 00 00 00       	mov    edx,0x1
-c0009d66:	53                   	push   ebx
-c0009d67:	8b 35 44 55 02 c0    	mov    esi,DWORD PTR ds:0xc0025544
-c0009d6d:	8b 5c 24 10          	mov    ebx,DWORD PTR [esp+0x10]
-c0009d71:	8b 4c 24 0c          	mov    ecx,DWORD PTR [esp+0xc]
-c0009d75:	89 c8                	mov    eax,ecx
-c0009d77:	83 e1 07             	and    ecx,0x7
-c0009d7a:	c1 e8 03             	shr    eax,0x3
-c0009d7d:	d3 e3                	shl    ebx,cl
-c0009d7f:	01 c6                	add    esi,eax
-c0009d81:	d3 e2                	shl    edx,cl
-c0009d83:	f7 d2                	not    edx
-c0009d85:	20 16                	and    BYTE PTR [esi],dl
-c0009d87:	03 05 44 55 02 c0    	add    eax,DWORD PTR ds:0xc0025544
-c0009d8d:	08 18                	or     BYTE PTR [eax],bl
-c0009d8f:	5b                   	pop    ebx
-c0009d90:	5e                   	pop    esi
-c0009d91:	c3                   	ret    
+c0009d5f <Phys::setPageState(unsigned long, bool)>:
+c0009d5f:	56                   	push   esi
+c0009d60:	ba 01 00 00 00       	mov    edx,0x1
+c0009d65:	53                   	push   ebx
+c0009d66:	8b 35 44 55 02 c0    	mov    esi,DWORD PTR ds:0xc0025544
+c0009d6c:	8b 5c 24 10          	mov    ebx,DWORD PTR [esp+0x10]
+c0009d70:	8b 4c 24 0c          	mov    ecx,DWORD PTR [esp+0xc]
+c0009d74:	89 c8                	mov    eax,ecx
+c0009d76:	83 e1 07             	and    ecx,0x7
+c0009d79:	c1 e8 03             	shr    eax,0x3
+c0009d7c:	d3 e3                	shl    ebx,cl
+c0009d7e:	01 c6                	add    esi,eax
+c0009d80:	d3 e2                	shl    edx,cl
+c0009d82:	f7 d2                	not    edx
+c0009d84:	20 16                	and    BYTE PTR [esi],dl
+c0009d86:	03 05 44 55 02 c0    	add    eax,DWORD PTR ds:0xc0025544
+c0009d8c:	08 18                	or     BYTE PTR [eax],bl
+c0009d8e:	5b                   	pop    ebx
+c0009d8f:	5e                   	pop    esi
+c0009d90:	c3                   	ret    
 
-c0009d92 <Phys::getPageState(unsigned long)>:
-c0009d92:	8b 4c 24 04          	mov    ecx,DWORD PTR [esp+0x4]
-c0009d96:	8b 15 44 55 02 c0    	mov    edx,DWORD PTR ds:0xc0025544
-c0009d9c:	89 c8                	mov    eax,ecx
-c0009d9e:	83 e1 07             	and    ecx,0x7
-c0009da1:	c1 e8 03             	shr    eax,0x3
-c0009da4:	0f b6 04 02          	movzx  eax,BYTE PTR [edx+eax*1]
-c0009da8:	d3 f8                	sar    eax,cl
-c0009daa:	83 e0 01             	and    eax,0x1
-c0009dad:	c3                   	ret    
+c0009d91 <Phys::getPageState(unsigned long)>:
+c0009d91:	8b 4c 24 04          	mov    ecx,DWORD PTR [esp+0x4]
+c0009d95:	8b 15 44 55 02 c0    	mov    edx,DWORD PTR ds:0xc0025544
+c0009d9b:	89 c8                	mov    eax,ecx
+c0009d9d:	83 e1 07             	and    ecx,0x7
+c0009da0:	c1 e8 03             	shr    eax,0x3
+c0009da3:	0f b6 04 02          	movzx  eax,BYTE PTR [edx+eax*1]
+c0009da7:	d3 f8                	sar    eax,cl
+c0009da9:	83 e0 01             	and    eax,0x1
+c0009dac:	c3                   	ret    
 
-c0009dae <Phys::freePage(unsigned long)>:
-c0009dae:	53                   	push   ebx
-c0009daf:	83 ec 10             	sub    esp,0x10
-c0009db2:	8b 5c 24 18          	mov    ebx,DWORD PTR [esp+0x18]
-c0009db6:	53                   	push   ebx
-c0009db7:	68 39 28 02 c0       	push   0xc0022839
-c0009dbc:	e8 aa 2c 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
-c0009dc1:	8d 83 00 00 ff ff    	lea    eax,[ebx-0x10000]
-c0009dc7:	83 c4 10             	add    esp,0x10
-c0009dca:	3d ff ff 00 00       	cmp    eax,0xffff
-c0009dcf:	76 3d                	jbe    c0009e0e <Phys::freePage(unsigned long)+0x60>
-c0009dd1:	83 ec 0c             	sub    esp,0xc
-c0009dd4:	c1 eb 0c             	shr    ebx,0xc
-c0009dd7:	53                   	push   ebx
-c0009dd8:	e8 b5 ff ff ff       	call   c0009d92 <Phys::getPageState(unsigned long)>
-c0009ddd:	83 c4 10             	add    esp,0x10
-c0009de0:	84 c0                	test   al,al
-c0009de2:	74 19                	je     c0009dfd <Phys::freePage(unsigned long)+0x4f>
-c0009de4:	83 ec 08             	sub    esp,0x8
-c0009de7:	ff 0d b4 61 02 c0    	dec    DWORD PTR ds:0xc00261b4
-c0009ded:	6a 00                	push   0x0
-c0009def:	53                   	push   ebx
-c0009df0:	e8 6b ff ff ff       	call   c0009d60 <Phys::setPageState(unsigned long, bool)>
-c0009df5:	83 c4 10             	add    esp,0x10
-c0009df8:	83 c4 08             	add    esp,0x8
-c0009dfb:	5b                   	pop    ebx
-c0009dfc:	c3                   	ret    
-c0009dfd:	c7 44 24 10 63 28 02 c0 	mov    DWORD PTR [esp+0x10],0xc0022863
-c0009e05:	83 c4 08             	add    esp,0x8
-c0009e08:	5b                   	pop    ebx
-c0009e09:	e9 fd a4 00 00       	jmp    c001430b <Krnl::panic(char const*)>
-c0009e0e:	83 ec 08             	sub    esp,0x8
-c0009e11:	53                   	push   ebx
-c0009e12:	68 4c 28 02 c0       	push   0xc002284c
-c0009e17:	e8 4f 2c 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
-c0009e1c:	58                   	pop    eax
-c0009e1d:	5a                   	pop    edx
-c0009e1e:	68 00 10 00 00       	push   0x1000
-c0009e23:	53                   	push   ebx
-c0009e24:	e8 f1 fe ff ff       	call   c0009d1a <Phys::freeDMA(unsigned long, unsigned long)>
-c0009e29:	83 c4 10             	add    esp,0x10
-c0009e2c:	83 c4 08             	add    esp,0x8
-c0009e2f:	5b                   	pop    ebx
-c0009e30:	c3                   	ret    
+c0009dad <Phys::freePage(unsigned long)>:
+c0009dad:	53                   	push   ebx
+c0009dae:	83 ec 10             	sub    esp,0x10
+c0009db1:	8b 5c 24 18          	mov    ebx,DWORD PTR [esp+0x18]
+c0009db5:	53                   	push   ebx
+c0009db6:	68 38 28 02 c0       	push   0xc0022838
+c0009dbb:	e8 ab 2c 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
+c0009dc0:	8d 83 00 00 ff ff    	lea    eax,[ebx-0x10000]
+c0009dc6:	83 c4 10             	add    esp,0x10
+c0009dc9:	3d ff ff 00 00       	cmp    eax,0xffff
+c0009dce:	76 3d                	jbe    c0009e0d <Phys::freePage(unsigned long)+0x60>
+c0009dd0:	83 ec 0c             	sub    esp,0xc
+c0009dd3:	c1 eb 0c             	shr    ebx,0xc
+c0009dd6:	53                   	push   ebx
+c0009dd7:	e8 b5 ff ff ff       	call   c0009d91 <Phys::getPageState(unsigned long)>
+c0009ddc:	83 c4 10             	add    esp,0x10
+c0009ddf:	84 c0                	test   al,al
+c0009de1:	74 19                	je     c0009dfc <Phys::freePage(unsigned long)+0x4f>
+c0009de3:	83 ec 08             	sub    esp,0x8
+c0009de6:	ff 0d b4 61 02 c0    	dec    DWORD PTR ds:0xc00261b4
+c0009dec:	6a 00                	push   0x0
+c0009dee:	53                   	push   ebx
+c0009def:	e8 6b ff ff ff       	call   c0009d5f <Phys::setPageState(unsigned long, bool)>
+c0009df4:	83 c4 10             	add    esp,0x10
+c0009df7:	83 c4 08             	add    esp,0x8
+c0009dfa:	5b                   	pop    ebx
+c0009dfb:	c3                   	ret    
+c0009dfc:	c7 44 24 10 62 28 02 c0 	mov    DWORD PTR [esp+0x10],0xc0022862
+c0009e04:	83 c4 08             	add    esp,0x8
+c0009e07:	5b                   	pop    ebx
+c0009e08:	e9 fe a4 00 00       	jmp    c001430b <Krnl::panic(char const*)>
+c0009e0d:	83 ec 08             	sub    esp,0x8
+c0009e10:	53                   	push   ebx
+c0009e11:	68 4b 28 02 c0       	push   0xc002284b
+c0009e16:	e8 50 2c 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
+c0009e1b:	58                   	pop    eax
+c0009e1c:	5a                   	pop    edx
+c0009e1d:	68 00 10 00 00       	push   0x1000
+c0009e22:	53                   	push   ebx
+c0009e23:	e8 f1 fe ff ff       	call   c0009d19 <Phys::freeDMA(unsigned long, unsigned long)>
+c0009e28:	83 c4 10             	add    esp,0x10
+c0009e2b:	83 c4 08             	add    esp,0x8
+c0009e2e:	5b                   	pop    ebx
+c0009e2f:	c3                   	ret    
 
-c0009e31 <Phys::allocatePage()>:
-c0009e31:	56                   	push   esi
-c0009e32:	53                   	push   ebx
-c0009e33:	83 ec 14             	sub    esp,0x14
-c0009e36:	8b 35 a8 61 02 c0    	mov    esi,DWORD PTR ds:0xc00261a8
-c0009e3c:	89 f3                	mov    ebx,esi
-c0009e3e:	eb 0a                	jmp    c0009e4a <Phys::allocatePage()+0x19>
-c0009e40:	89 1d a8 61 02 c0    	mov    DWORD PTR ds:0xc00261a8,ebx
-c0009e46:	39 de                	cmp    esi,ebx
-c0009e48:	74 24                	je     c0009e6e <Phys::allocatePage()+0x3d>
-c0009e4a:	53                   	push   ebx
-c0009e4b:	e8 42 ff ff ff       	call   c0009d92 <Phys::getPageState(unsigned long)>
-c0009e50:	5a                   	pop    edx
-c0009e51:	84 c0                	test   al,al
-c0009e53:	74 69                	je     c0009ebe <Phys::allocatePage()+0x8d>
-c0009e55:	43                   	inc    ebx
-c0009e56:	81 fb 00 00 10 00    	cmp    ebx,0x100000
-c0009e5c:	75 e2                	jne    c0009e40 <Phys::allocatePage()+0xf>
-c0009e5e:	31 db                	xor    ebx,ebx
-c0009e60:	c7 05 a8 61 02 c0 00 00 00 00 	mov    DWORD PTR ds:0xc00261a8,0x0
-c0009e6a:	39 de                	cmp    esi,ebx
-c0009e6c:	75 dc                	jne    c0009e4a <Phys::allocatePage()+0x19>
-c0009e6e:	83 ec 0c             	sub    esp,0xc
-c0009e71:	80 35 cc 61 02 c0 01 	xor    BYTE PTR ds:0xc00261cc,0x1
-c0009e78:	68 04 29 02 c0       	push   0xc0022904
-c0009e7d:	e8 e9 2b 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
-c0009e82:	58                   	pop    eax
-c0009e83:	a1 00 20 00 c2       	mov    eax,ds:0xc2002000
-c0009e88:	8b 40 3c             	mov    eax,DWORD PTR [eax+0x3c]
-c0009e8b:	ff b0 12 05 00 00    	push   DWORD PTR [eax+0x512]
-c0009e91:	e8 64 28 00 00       	call   c000c6fa <VAS::scanForEviction()>
-c0009e96:	83 c4 10             	add    esp,0x10
-c0009e99:	85 c0                	test   eax,eax
-c0009e9b:	75 62                	jne    c0009eff <Phys::allocatePage()+0xce>
-c0009e9d:	83 ec 0c             	sub    esp,0xc
-c0009ea0:	68 28 29 02 c0       	push   0xc0022928
-c0009ea5:	e8 61 a4 00 00       	call   c001430b <Krnl::panic(char const*)>
-c0009eaa:	83 c4 10             	add    esp,0x10
-c0009ead:	8b 1d a8 61 02 c0    	mov    ebx,DWORD PTR ds:0xc00261a8
-c0009eb3:	53                   	push   ebx
-c0009eb4:	e8 d9 fe ff ff       	call   c0009d92 <Phys::getPageState(unsigned long)>
-c0009eb9:	5a                   	pop    edx
-c0009eba:	84 c0                	test   al,al
-c0009ebc:	75 97                	jne    c0009e55 <Phys::allocatePage()+0x24>
-c0009ebe:	6a 01                	push   0x1
-c0009ec0:	53                   	push   ebx
-c0009ec1:	e8 9a fe ff ff       	call   c0009d60 <Phys::setPageState(unsigned long, bool)>
-c0009ec6:	5a                   	pop    edx
-c0009ec7:	a1 b4 61 02 c0       	mov    eax,ds:0xc00261b4
-c0009ecc:	59                   	pop    ecx
-c0009ecd:	40                   	inc    eax
-c0009ece:	8b 15 a8 61 02 c0    	mov    edx,DWORD PTR ds:0xc00261a8
-c0009ed4:	a3 b4 61 02 c0       	mov    ds:0xc00261b4,eax
-c0009ed9:	c1 e2 0c             	shl    edx,0xc
-c0009edc:	52                   	push   edx
-c0009edd:	ff 35 b8 61 02 c0    	push   DWORD PTR ds:0xc00261b8
-c0009ee3:	50                   	push   eax
-c0009ee4:	68 79 28 02 c0       	push   0xc0022879
-c0009ee9:	e8 7d 2b 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
-c0009eee:	a1 a8 61 02 c0       	mov    eax,ds:0xc00261a8
-c0009ef3:	83 c4 10             	add    esp,0x10
-c0009ef6:	c1 e0 0c             	shl    eax,0xc
-c0009ef9:	83 c4 14             	add    esp,0x14
-c0009efc:	5b                   	pop    ebx
-c0009efd:	5e                   	pop    esi
-c0009efe:	c3                   	ret    
-c0009eff:	83 ec 08             	sub    esp,0x8
-c0009f02:	89 c2                	mov    edx,eax
-c0009f04:	6a 01                	push   0x1
-c0009f06:	c1 ea 0c             	shr    edx,0xc
-c0009f09:	89 44 24 18          	mov    DWORD PTR [esp+0x18],eax
-c0009f0d:	52                   	push   edx
-c0009f0e:	e8 4d fe ff ff       	call   c0009d60 <Phys::setPageState(unsigned long, bool)>
-c0009f13:	83 c4 10             	add    esp,0x10
-c0009f16:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
-c0009f1a:	eb dd                	jmp    c0009ef9 <Phys::allocatePage()+0xc8>
+c0009e30 <Phys::allocatePage()>:
+c0009e30:	56                   	push   esi
+c0009e31:	53                   	push   ebx
+c0009e32:	83 ec 14             	sub    esp,0x14
+c0009e35:	8b 35 a8 61 02 c0    	mov    esi,DWORD PTR ds:0xc00261a8
+c0009e3b:	89 f3                	mov    ebx,esi
+c0009e3d:	eb 0a                	jmp    c0009e49 <Phys::allocatePage()+0x19>
+c0009e3f:	89 1d a8 61 02 c0    	mov    DWORD PTR ds:0xc00261a8,ebx
+c0009e45:	39 de                	cmp    esi,ebx
+c0009e47:	74 24                	je     c0009e6d <Phys::allocatePage()+0x3d>
+c0009e49:	53                   	push   ebx
+c0009e4a:	e8 42 ff ff ff       	call   c0009d91 <Phys::getPageState(unsigned long)>
+c0009e4f:	5a                   	pop    edx
+c0009e50:	84 c0                	test   al,al
+c0009e52:	74 69                	je     c0009ebd <Phys::allocatePage()+0x8d>
+c0009e54:	43                   	inc    ebx
+c0009e55:	81 fb 00 00 10 00    	cmp    ebx,0x100000
+c0009e5b:	75 e2                	jne    c0009e3f <Phys::allocatePage()+0xf>
+c0009e5d:	31 db                	xor    ebx,ebx
+c0009e5f:	c7 05 a8 61 02 c0 00 00 00 00 	mov    DWORD PTR ds:0xc00261a8,0x0
+c0009e69:	39 de                	cmp    esi,ebx
+c0009e6b:	75 dc                	jne    c0009e49 <Phys::allocatePage()+0x19>
+c0009e6d:	83 ec 0c             	sub    esp,0xc
+c0009e70:	80 35 cc 61 02 c0 01 	xor    BYTE PTR ds:0xc00261cc,0x1
+c0009e77:	68 00 29 02 c0       	push   0xc0022900
+c0009e7c:	e8 ea 2b 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
+c0009e81:	58                   	pop    eax
+c0009e82:	a1 00 20 00 c2       	mov    eax,ds:0xc2002000
+c0009e87:	8b 40 3c             	mov    eax,DWORD PTR [eax+0x3c]
+c0009e8a:	ff b0 12 05 00 00    	push   DWORD PTR [eax+0x512]
+c0009e90:	e8 65 28 00 00       	call   c000c6fa <VAS::scanForEviction()>
+c0009e95:	83 c4 10             	add    esp,0x10
+c0009e98:	85 c0                	test   eax,eax
+c0009e9a:	75 62                	jne    c0009efe <Phys::allocatePage()+0xce>
+c0009e9c:	83 ec 0c             	sub    esp,0xc
+c0009e9f:	68 24 29 02 c0       	push   0xc0022924
+c0009ea4:	e8 62 a4 00 00       	call   c001430b <Krnl::panic(char const*)>
+c0009ea9:	83 c4 10             	add    esp,0x10
+c0009eac:	8b 1d a8 61 02 c0    	mov    ebx,DWORD PTR ds:0xc00261a8
+c0009eb2:	53                   	push   ebx
+c0009eb3:	e8 d9 fe ff ff       	call   c0009d91 <Phys::getPageState(unsigned long)>
+c0009eb8:	5a                   	pop    edx
+c0009eb9:	84 c0                	test   al,al
+c0009ebb:	75 97                	jne    c0009e54 <Phys::allocatePage()+0x24>
+c0009ebd:	6a 01                	push   0x1
+c0009ebf:	53                   	push   ebx
+c0009ec0:	e8 9a fe ff ff       	call   c0009d5f <Phys::setPageState(unsigned long, bool)>
+c0009ec5:	5a                   	pop    edx
+c0009ec6:	a1 b4 61 02 c0       	mov    eax,ds:0xc00261b4
+c0009ecb:	59                   	pop    ecx
+c0009ecc:	40                   	inc    eax
+c0009ecd:	8b 15 a8 61 02 c0    	mov    edx,DWORD PTR ds:0xc00261a8
+c0009ed3:	a3 b4 61 02 c0       	mov    ds:0xc00261b4,eax
+c0009ed8:	c1 e2 0c             	shl    edx,0xc
+c0009edb:	52                   	push   edx
+c0009edc:	ff 35 b8 61 02 c0    	push   DWORD PTR ds:0xc00261b8
+c0009ee2:	50                   	push   eax
+c0009ee3:	68 78 28 02 c0       	push   0xc0022878
+c0009ee8:	e8 7e 2b 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
+c0009eed:	a1 a8 61 02 c0       	mov    eax,ds:0xc00261a8
+c0009ef2:	83 c4 10             	add    esp,0x10
+c0009ef5:	c1 e0 0c             	shl    eax,0xc
+c0009ef8:	83 c4 14             	add    esp,0x14
+c0009efb:	5b                   	pop    ebx
+c0009efc:	5e                   	pop    esi
+c0009efd:	c3                   	ret    
+c0009efe:	83 ec 08             	sub    esp,0x8
+c0009f01:	89 c2                	mov    edx,eax
+c0009f03:	6a 01                	push   0x1
+c0009f05:	c1 ea 0c             	shr    edx,0xc
+c0009f08:	89 44 24 18          	mov    DWORD PTR [esp+0x18],eax
+c0009f0c:	52                   	push   edx
+c0009f0d:	e8 4d fe ff ff       	call   c0009d5f <Phys::setPageState(unsigned long, bool)>
+c0009f12:	83 c4 10             	add    esp,0x10
+c0009f15:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
+c0009f19:	eb dd                	jmp    c0009ef8 <Phys::allocatePage()+0xc8>
 
-c0009f1c <Phys::allocateContiguousPages(int)>:
-c0009f1c:	57                   	push   edi
-c0009f1d:	56                   	push   esi
-c0009f1e:	53                   	push   ebx
-c0009f1f:	8b 74 24 10          	mov    esi,DWORD PTR [esp+0x10]
-c0009f23:	fa                   	cli    
-c0009f24:	ff 05 48 76 02 c0    	inc    DWORD PTR ds:0xc0027648
-c0009f2a:	31 db                	xor    ebx,ebx
-c0009f2c:	85 db                	test   ebx,ebx
-c0009f2e:	75 11                	jne    c0009f41 <Phys::allocateContiguousPages(int)+0x25>
-c0009f30:	e8 fc fe ff ff       	call   c0009e31 <Phys::allocatePage()>
-c0009f35:	83 fe 01             	cmp    esi,0x1
-c0009f38:	89 c7                	mov    edi,eax
-c0009f3a:	74 21                	je     c0009f5d <Phys::allocateContiguousPages(int)+0x41>
-c0009f3c:	bb 01 00 00 00       	mov    ebx,0x1
-c0009f41:	e8 eb fe ff ff       	call   c0009e31 <Phys::allocatePage()>
-c0009f46:	89 da                	mov    edx,ebx
-c0009f48:	c1 e2 0c             	shl    edx,0xc
-c0009f4b:	01 fa                	add    edx,edi
-c0009f4d:	39 c2                	cmp    edx,eax
-c0009f4f:	74 20                	je     c0009f71 <Phys::allocateContiguousPages(int)+0x55>
-c0009f51:	bb 01 00 00 00       	mov    ebx,0x1
-c0009f56:	89 c7                	mov    edi,eax
-c0009f58:	83 fe 01             	cmp    esi,0x1
-c0009f5b:	75 e4                	jne    c0009f41 <Phys::allocateContiguousPages(int)+0x25>
-c0009f5d:	a1 48 76 02 c0       	mov    eax,ds:0xc0027648
-c0009f62:	48                   	dec    eax
-c0009f63:	a3 48 76 02 c0       	mov    ds:0xc0027648,eax
-c0009f68:	75 01                	jne    c0009f6b <Phys::allocateContiguousPages(int)+0x4f>
-c0009f6a:	fb                   	sti    
-c0009f6b:	89 f8                	mov    eax,edi
-c0009f6d:	5b                   	pop    ebx
-c0009f6e:	5e                   	pop    esi
-c0009f6f:	5f                   	pop    edi
-c0009f70:	c3                   	ret    
-c0009f71:	43                   	inc    ebx
-c0009f72:	39 f3                	cmp    ebx,esi
-c0009f74:	75 b6                	jne    c0009f2c <Phys::allocateContiguousPages(int)+0x10>
-c0009f76:	eb e5                	jmp    c0009f5d <Phys::allocateContiguousPages(int)+0x41>
+c0009f1b <Phys::allocateContiguousPages(int)>:
+c0009f1b:	57                   	push   edi
+c0009f1c:	56                   	push   esi
+c0009f1d:	53                   	push   ebx
+c0009f1e:	8b 74 24 10          	mov    esi,DWORD PTR [esp+0x10]
+c0009f22:	fa                   	cli    
+c0009f23:	ff 05 48 76 02 c0    	inc    DWORD PTR ds:0xc0027648
+c0009f29:	31 db                	xor    ebx,ebx
+c0009f2b:	85 db                	test   ebx,ebx
+c0009f2d:	75 11                	jne    c0009f40 <Phys::allocateContiguousPages(int)+0x25>
+c0009f2f:	e8 fc fe ff ff       	call   c0009e30 <Phys::allocatePage()>
+c0009f34:	83 fe 01             	cmp    esi,0x1
+c0009f37:	89 c7                	mov    edi,eax
+c0009f39:	74 21                	je     c0009f5c <Phys::allocateContiguousPages(int)+0x41>
+c0009f3b:	bb 01 00 00 00       	mov    ebx,0x1
+c0009f40:	e8 eb fe ff ff       	call   c0009e30 <Phys::allocatePage()>
+c0009f45:	89 da                	mov    edx,ebx
+c0009f47:	c1 e2 0c             	shl    edx,0xc
+c0009f4a:	01 fa                	add    edx,edi
+c0009f4c:	39 c2                	cmp    edx,eax
+c0009f4e:	74 20                	je     c0009f70 <Phys::allocateContiguousPages(int)+0x55>
+c0009f50:	bb 01 00 00 00       	mov    ebx,0x1
+c0009f55:	89 c7                	mov    edi,eax
+c0009f57:	83 fe 01             	cmp    esi,0x1
+c0009f5a:	75 e4                	jne    c0009f40 <Phys::allocateContiguousPages(int)+0x25>
+c0009f5c:	a1 48 76 02 c0       	mov    eax,ds:0xc0027648
+c0009f61:	48                   	dec    eax
+c0009f62:	a3 48 76 02 c0       	mov    ds:0xc0027648,eax
+c0009f67:	75 01                	jne    c0009f6a <Phys::allocateContiguousPages(int)+0x4f>
+c0009f69:	fb                   	sti    
+c0009f6a:	89 f8                	mov    eax,edi
+c0009f6c:	5b                   	pop    ebx
+c0009f6d:	5e                   	pop    esi
+c0009f6e:	5f                   	pop    edi
+c0009f6f:	c3                   	ret    
+c0009f70:	43                   	inc    ebx
+c0009f71:	39 f3                	cmp    ebx,esi
+c0009f73:	75 b6                	jne    c0009f2b <Phys::allocateContiguousPages(int)+0x10>
+c0009f75:	eb e5                	jmp    c0009f5c <Phys::allocateContiguousPages(int)+0x41>
 
-c0009f78 <Phys::allowSegmentToBeUsed(unsigned long, unsigned long)>:
-c0009f78:	56                   	push   esi
-c0009f79:	53                   	push   ebx
-c0009f7a:	8b 5c 24 10          	mov    ebx,DWORD PTR [esp+0x10]
-c0009f7e:	39 1d ac 61 02 c0    	cmp    DWORD PTR ds:0xc00261ac,ebx
-c0009f84:	73 06                	jae    c0009f8c <Phys::allowSegmentToBeUsed(unsigned long, unsigned long)+0x14>
-c0009f86:	89 1d ac 61 02 c0    	mov    DWORD PTR ds:0xc00261ac,ebx
-c0009f8c:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
-c0009f90:	c1 eb 0c             	shr    ebx,0xc
-c0009f93:	c1 e8 0c             	shr    eax,0xc
-c0009f96:	39 d8                	cmp    eax,ebx
-c0009f98:	73 13                	jae    c0009fad <Phys::allowSegmentToBeUsed(unsigned long, unsigned long)+0x35>
-c0009f9a:	6a 00                	push   0x0
-c0009f9c:	8d 70 01             	lea    esi,[eax+0x1]
-c0009f9f:	50                   	push   eax
-c0009fa0:	e8 bb fd ff ff       	call   c0009d60 <Phys::setPageState(unsigned long, bool)>
-c0009fa5:	5a                   	pop    edx
-c0009fa6:	89 f0                	mov    eax,esi
-c0009fa8:	59                   	pop    ecx
-c0009fa9:	39 f3                	cmp    ebx,esi
-c0009fab:	75 ed                	jne    c0009f9a <Phys::allowSegmentToBeUsed(unsigned long, unsigned long)+0x22>
-c0009fad:	5b                   	pop    ebx
-c0009fae:	5e                   	pop    esi
-c0009faf:	c3                   	ret    
+c0009f77 <Phys::allowSegmentToBeUsed(unsigned long, unsigned long)>:
+c0009f77:	56                   	push   esi
+c0009f78:	53                   	push   ebx
+c0009f79:	8b 5c 24 10          	mov    ebx,DWORD PTR [esp+0x10]
+c0009f7d:	39 1d ac 61 02 c0    	cmp    DWORD PTR ds:0xc00261ac,ebx
+c0009f83:	73 06                	jae    c0009f8b <Phys::allowSegmentToBeUsed(unsigned long, unsigned long)+0x14>
+c0009f85:	89 1d ac 61 02 c0    	mov    DWORD PTR ds:0xc00261ac,ebx
+c0009f8b:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
+c0009f8f:	c1 eb 0c             	shr    ebx,0xc
+c0009f92:	c1 e8 0c             	shr    eax,0xc
+c0009f95:	39 d8                	cmp    eax,ebx
+c0009f97:	73 13                	jae    c0009fac <Phys::allowSegmentToBeUsed(unsigned long, unsigned long)+0x35>
+c0009f99:	6a 00                	push   0x0
+c0009f9b:	8d 70 01             	lea    esi,[eax+0x1]
+c0009f9e:	50                   	push   eax
+c0009f9f:	e8 bb fd ff ff       	call   c0009d5f <Phys::setPageState(unsigned long, bool)>
+c0009fa4:	5a                   	pop    edx
+c0009fa5:	89 f0                	mov    eax,esi
+c0009fa7:	59                   	pop    ecx
+c0009fa8:	39 f3                	cmp    ebx,esi
+c0009faa:	75 ed                	jne    c0009f99 <Phys::allowSegmentToBeUsed(unsigned long, unsigned long)+0x22>
+c0009fac:	5b                   	pop    ebx
+c0009fad:	5e                   	pop    esi
+c0009fae:	c3                   	ret    
 
-c0009fb0 <Phys::physicalMemorySetup(unsigned int)>:
-c0009fb0:	55                   	push   ebp
-c0009fb1:	57                   	push   edi
-c0009fb2:	56                   	push   esi
-c0009fb3:	53                   	push   ebx
-c0009fb4:	31 db                	xor    ebx,ebx
-c0009fb6:	83 ec 40             	sub    esp,0x40
-c0009fb9:	6a 10                	push   0x10
-c0009fbb:	6a 00                	push   0x0
-c0009fbd:	68 bc 61 02 c0       	push   0xc00261bc
-c0009fc2:	e8 bd 66 ff ff       	call   c0000684 <memset>
-c0009fc7:	8b 44 24 60          	mov    eax,DWORD PTR [esp+0x60]
-c0009fcb:	25 00 f0 ff ff       	and    eax,0xfffff000
-c0009fd0:	05 00 10 00 00       	add    eax,0x1000
-c0009fd5:	89 44 24 34          	mov    DWORD PTR [esp+0x34],eax
-c0009fd9:	5a                   	pop    edx
-c0009fda:	59                   	pop    ecx
-c0009fdb:	50                   	push   eax
-c0009fdc:	68 97 28 02 c0       	push   0xc0022897
-c0009fe1:	e8 85 2a 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
-c0009fe6:	83 c4 10             	add    esp,0x10
-c0009fe9:	83 ec 08             	sub    esp,0x8
-c0009fec:	6a 01                	push   0x1
-c0009fee:	53                   	push   ebx
-c0009fef:	43                   	inc    ebx
-c0009ff0:	e8 6b fd ff ff       	call   c0009d60 <Phys::setPageState(unsigned long, bool)>
-c0009ff5:	83 c4 10             	add    esp,0x10
-c0009ff8:	81 fb 00 00 10 00    	cmp    ebx,0x100000
-c0009ffe:	75 e9                	jne    c0009fe9 <Phys::physicalMemorySetup(unsigned int)+0x39>
-c000a000:	0f b7 05 13 05 00 c2 	movzx  eax,WORD PTR ds:0xc2000513
-c000a007:	66 85 c0             	test   ax,ax
-c000a00a:	0f 84 8e 01 00 00    	je     c000a19e <Phys::physicalMemorySetup(unsigned int)+0x1ee>
-c000a010:	89 44 24 20          	mov    DWORD PTR [esp+0x20],eax
-c000a014:	c7 44 24 14 00 00 00 00 	mov    DWORD PTR [esp+0x14],0x0
-c000a01c:	8b 44 24 24          	mov    eax,DWORD PTR [esp+0x24]
-c000a020:	bb 00 06 00 c2       	mov    ebx,0xc2000600
-c000a025:	89 44 24 28          	mov    DWORD PTR [esp+0x28],eax
-c000a029:	c7 44 24 2c 00 00 00 00 	mov    DWORD PTR [esp+0x2c],0x0
-c000a031:	eb 15                	jmp    c000a048 <Phys::physicalMemorySetup(unsigned int)+0x98>
-c000a033:	ff 44 24 14          	inc    DWORD PTR [esp+0x14]
-c000a037:	83 c3 18             	add    ebx,0x18
-c000a03a:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
-c000a03e:	3b 44 24 20          	cmp    eax,DWORD PTR [esp+0x20]
-c000a042:	0f 84 66 01 00 00    	je     c000a1ae <Phys::physicalMemorySetup(unsigned int)+0x1fe>
-c000a048:	8b 7b 04             	mov    edi,DWORD PTR [ebx+0x4]
-c000a04b:	8b 43 08             	mov    eax,DWORD PTR [ebx+0x8]
-c000a04e:	8b 53 0c             	mov    edx,DWORD PTR [ebx+0xc]
-c000a051:	89 44 24 18          	mov    DWORD PTR [esp+0x18],eax
-c000a055:	89 54 24 1c          	mov    DWORD PTR [esp+0x1c],edx
-c000a059:	8b 33                	mov    esi,DWORD PTR [ebx]
-c000a05b:	8b 6b 10             	mov    ebp,DWORD PTR [ebx+0x10]
-c000a05e:	01 f0                	add    eax,esi
-c000a060:	55                   	push   ebp
-c000a061:	11 fa                	adc    edx,edi
-c000a063:	89 44 24 0c          	mov    DWORD PTR [esp+0xc],eax
-c000a067:	89 54 24 10          	mov    DWORD PTR [esp+0x10],edx
-c000a06b:	ff 74 24 0c          	push   DWORD PTR [esp+0xc]
-c000a06f:	56                   	push   esi
-c000a070:	68 58 29 02 c0       	push   0xc0022958
-c000a075:	e8 f1 29 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
-c000a07a:	8b 44 24 1c          	mov    eax,DWORD PTR [esp+0x1c]
-c000a07e:	83 c4 10             	add    esp,0x10
-c000a081:	09 f8                	or     eax,edi
-c000a083:	0f 85 25 01 00 00    	jne    c000a1ae <Phys::physicalMemorySetup(unsigned int)+0x1fe>
-c000a089:	4d                   	dec    ebp
-c000a08a:	75 a7                	jne    c000a033 <Phys::physicalMemorySetup(unsigned int)+0x83>
-c000a08c:	ba 00 00 08 00       	mov    edx,0x80000
-c000a091:	89 c1                	mov    ecx,eax
-c000a093:	39 f2                	cmp    edx,esi
-c000a095:	19 f9                	sbb    ecx,edi
-c000a097:	0f 82 a7 00 00 00    	jb     c000a144 <Phys::physicalMemorySetup(unsigned int)+0x194>
-c000a09d:	3b 54 24 08          	cmp    edx,DWORD PTR [esp+0x8]
-c000a0a1:	89 c1                	mov    ecx,eax
-c000a0a3:	1b 4c 24 0c          	sbb    ecx,DWORD PTR [esp+0xc]
-c000a0a7:	0f 83 97 00 00 00    	jae    c000a144 <Phys::physicalMemorySetup(unsigned int)+0x194>
-c000a0ad:	ba 00 00 0a 00       	mov    edx,0xa0000
-c000a0b2:	8b 7c 24 08          	mov    edi,DWORD PTR [esp+0x8]
-c000a0b6:	8b 6c 24 0c          	mov    ebp,DWORD PTR [esp+0xc]
-c000a0ba:	39 fa                	cmp    edx,edi
-c000a0bc:	19 e8                	sbb    eax,ebp
-c000a0be:	0f 82 a5 01 00 00    	jb     c000a269 <Phys::physicalMemorySetup(unsigned int)+0x2b9>
-c000a0c4:	8b 7c 24 08          	mov    edi,DWORD PTR [esp+0x8]
-c000a0c8:	8b 6c 24 0c          	mov    ebp,DWORD PTR [esp+0xc]
-c000a0cc:	81 c7 00 00 f8 ff    	add    edi,0xfff80000
-c000a0d2:	ba ff 1f 00 00       	mov    edx,0x1fff
-c000a0d7:	83 d5 ff             	adc    ebp,0xffffffff
-c000a0da:	89 7c 24 18          	mov    DWORD PTR [esp+0x18],edi
-c000a0de:	31 c0                	xor    eax,eax
-c000a0e0:	89 6c 24 1c          	mov    DWORD PTR [esp+0x1c],ebp
-c000a0e4:	39 fa                	cmp    edx,edi
-c000a0e6:	89 c1                	mov    ecx,eax
-c000a0e8:	19 e9                	sbb    ecx,ebp
-c000a0ea:	0f 83 43 ff ff ff    	jae    c000a033 <Phys::physicalMemorySetup(unsigned int)+0x83>
-c000a0f0:	be 00 00 08 00       	mov    esi,0x80000
-c000a0f5:	57                   	push   edi
-c000a0f6:	8b 7c 24 0c          	mov    edi,DWORD PTR [esp+0xc]
-c000a0fa:	57                   	push   edi
-c000a0fb:	56                   	push   esi
-c000a0fc:	68 7c 29 02 c0       	push   0xc002297c
-c000a101:	e8 65 29 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
-c000a106:	5d                   	pop    ebp
-c000a107:	58                   	pop    eax
-c000a108:	57                   	push   edi
-c000a109:	56                   	push   esi
-c000a10a:	e8 69 fe ff ff       	call   c0009f78 <Phys::allowSegmentToBeUsed(unsigned long, unsigned long)>
-c000a10f:	8b 54 24 2c          	mov    edx,DWORD PTR [esp+0x2c]
-c000a113:	8b 44 24 28          	mov    eax,DWORD PTR [esp+0x28]
-c000a117:	83 c4 0c             	add    esp,0xc
-c000a11a:	0f ac d0 0c          	shrd   eax,edx,0xc
-c000a11e:	03 05 b8 61 02 c0    	add    eax,DWORD PTR ds:0xc00261b8
-c000a124:	8d 14 85 00 00 00 00 	lea    edx,[eax*4+0x0]
-c000a12b:	a3 b8 61 02 c0       	mov    ds:0xc00261b8,eax
-c000a130:	52                   	push   edx
-c000a131:	50                   	push   eax
-c000a132:	68 bd 28 02 c0       	push   0xc00228bd
-c000a137:	e8 2f 29 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
-c000a13c:	83 c4 10             	add    esp,0x10
-c000a13f:	e9 ef fe ff ff       	jmp    c000a033 <Phys::physicalMemorySetup(unsigned int)+0x83>
-c000a144:	8b 6c 24 24          	mov    ebp,DWORD PTR [esp+0x24]
-c000a148:	8b 54 24 08          	mov    edx,DWORD PTR [esp+0x8]
-c000a14c:	8b 4c 24 0c          	mov    ecx,DWORD PTR [esp+0xc]
-c000a150:	39 ea                	cmp    edx,ebp
-c000a152:	1b 4c 24 2c          	sbb    ecx,DWORD PTR [esp+0x2c]
-c000a156:	0f 82 d7 fe ff ff    	jb     c000a033 <Phys::physicalMemorySetup(unsigned int)+0x83>
-c000a15c:	ba ff 1f 00 00       	mov    edx,0x1fff
-c000a161:	3b 54 24 18          	cmp    edx,DWORD PTR [esp+0x18]
-c000a165:	1b 44 24 1c          	sbb    eax,DWORD PTR [esp+0x1c]
-c000a169:	0f 83 c4 fe ff ff    	jae    c000a033 <Phys::physicalMemorySetup(unsigned int)+0x83>
-c000a16f:	39 ee                	cmp    esi,ebp
-c000a171:	89 f8                	mov    eax,edi
-c000a173:	1b 44 24 2c          	sbb    eax,DWORD PTR [esp+0x2c]
-c000a177:	0f 83 78 ff ff ff    	jae    c000a0f5 <Phys::physicalMemorySetup(unsigned int)+0x145>
-c000a17d:	8b 44 24 08          	mov    eax,DWORD PTR [esp+0x8]
-c000a181:	8b 54 24 0c          	mov    edx,DWORD PTR [esp+0xc]
-c000a185:	2b 44 24 28          	sub    eax,DWORD PTR [esp+0x28]
-c000a189:	8b 74 24 24          	mov    esi,DWORD PTR [esp+0x24]
-c000a18d:	1b 54 24 2c          	sbb    edx,DWORD PTR [esp+0x2c]
-c000a191:	89 44 24 18          	mov    DWORD PTR [esp+0x18],eax
-c000a195:	89 54 24 1c          	mov    DWORD PTR [esp+0x1c],edx
-c000a199:	e9 57 ff ff ff       	jmp    c000a0f5 <Phys::physicalMemorySetup(unsigned int)+0x145>
-c000a19e:	83 ec 0c             	sub    esp,0xc
-c000a1a1:	68 af 28 02 c0       	push   0xc00228af
-c000a1a6:	e8 60 a1 00 00       	call   c001430b <Krnl::panic(char const*)>
-c000a1ab:	83 c4 10             	add    esp,0x10
-c000a1ae:	83 ec 08             	sub    esp,0x8
-c000a1b1:	6a 00                	push   0x0
-c000a1b3:	6a 05                	push   0x5
-c000a1b5:	e8 a6 fb ff ff       	call   c0009d60 <Phys::setPageState(unsigned long, bool)>
-c000a1ba:	58                   	pop    eax
-c000a1bb:	5a                   	pop    edx
-c000a1bc:	6a 00                	push   0x0
-c000a1be:	6a 06                	push   0x6
-c000a1c0:	e8 9b fb ff ff       	call   c0009d60 <Phys::setPageState(unsigned long, bool)>
-c000a1c5:	59                   	pop    ecx
-c000a1c6:	5b                   	pop    ebx
-c000a1c7:	bb 60 00 00 00       	mov    ebx,0x60
-c000a1cc:	6a 00                	push   0x0
-c000a1ce:	6a 07                	push   0x7
-c000a1d0:	e8 8b fb ff ff       	call   c0009d60 <Phys::setPageState(unsigned long, bool)>
-c000a1d5:	83 05 b8 61 02 c0 03 	add    DWORD PTR ds:0xc00261b8,0x3
-c000a1dc:	83 c4 10             	add    esp,0x10
-c000a1df:	83 ec 08             	sub    esp,0x8
-c000a1e2:	6a 00                	push   0x0
-c000a1e4:	53                   	push   ebx
-c000a1e5:	43                   	inc    ebx
-c000a1e6:	e8 75 fb ff ff       	call   c0009d60 <Phys::setPageState(unsigned long, bool)>
-c000a1eb:	83 c4 10             	add    esp,0x10
-c000a1ee:	81 fb 80 00 00 00    	cmp    ebx,0x80
-c000a1f4:	75 e9                	jne    c000a1df <Phys::physicalMemorySetup(unsigned int)+0x22f>
-c000a1f6:	a1 b8 61 02 c0       	mov    eax,ds:0xc00261b8
-c000a1fb:	bb 40 01 00 00       	mov    ebx,0x140
-c000a200:	83 c0 20             	add    eax,0x20
-c000a203:	a3 b8 61 02 c0       	mov    ds:0xc00261b8,eax
-c000a208:	eb 22                	jmp    c000a22c <Phys::physicalMemorySetup(unsigned int)+0x27c>
-c000a20a:	83 ec 08             	sub    esp,0x8
-c000a20d:	6a 00                	push   0x0
-c000a20f:	53                   	push   ebx
-c000a210:	43                   	inc    ebx
-c000a211:	e8 4a fb ff ff       	call   c0009d60 <Phys::setPageState(unsigned long, bool)>
-c000a216:	a1 b8 61 02 c0       	mov    eax,ds:0xc00261b8
-c000a21b:	83 c4 10             	add    esp,0x10
-c000a21e:	40                   	inc    eax
-c000a21f:	81 fb c0 01 00 00    	cmp    ebx,0x1c0
-c000a225:	a3 b8 61 02 c0       	mov    ds:0xc00261b8,eax
-c000a22a:	74 07                	je     c000a233 <Phys::physicalMemorySetup(unsigned int)+0x283>
-c000a22c:	3d ff 03 00 00       	cmp    eax,0x3ff
-c000a231:	7e d7                	jle    c000a20a <Phys::physicalMemorySetup(unsigned int)+0x25a>
-c000a233:	bb d0 01 00 00       	mov    ebx,0x1d0
-c000a238:	3d ff 07 00 00       	cmp    eax,0x7ff
-c000a23d:	7f 22                	jg     c000a261 <Phys::physicalMemorySetup(unsigned int)+0x2b1>
-c000a23f:	83 ec 08             	sub    esp,0x8
-c000a242:	6a 00                	push   0x0
-c000a244:	53                   	push   ebx
-c000a245:	43                   	inc    ebx
-c000a246:	e8 15 fb ff ff       	call   c0009d60 <Phys::setPageState(unsigned long, bool)>
-c000a24b:	a1 b8 61 02 c0       	mov    eax,ds:0xc00261b8
-c000a250:	83 c4 10             	add    esp,0x10
-c000a253:	40                   	inc    eax
-c000a254:	81 fb e0 01 00 00    	cmp    ebx,0x1e0
-c000a25a:	a3 b8 61 02 c0       	mov    ds:0xc00261b8,eax
-c000a25f:	75 d7                	jne    c000a238 <Phys::physicalMemorySetup(unsigned int)+0x288>
-c000a261:	83 c4 3c             	add    esp,0x3c
-c000a264:	5b                   	pop    ebx
-c000a265:	5e                   	pop    esi
-c000a266:	5f                   	pop    edi
-c000a267:	5d                   	pop    ebp
-c000a268:	c3                   	ret    
-c000a269:	c7 44 24 08 00 00 0a 00 	mov    DWORD PTR [esp+0x8],0xa0000
-c000a271:	c7 44 24 0c 00 00 00 00 	mov    DWORD PTR [esp+0xc],0x0
-c000a279:	e9 46 fe ff ff       	jmp    c000a0c4 <Phys::physicalMemorySetup(unsigned int)+0x114>
+c0009faf <Phys::physicalMemorySetup(unsigned int)>:
+c0009faf:	55                   	push   ebp
+c0009fb0:	57                   	push   edi
+c0009fb1:	56                   	push   esi
+c0009fb2:	53                   	push   ebx
+c0009fb3:	31 db                	xor    ebx,ebx
+c0009fb5:	83 ec 40             	sub    esp,0x40
+c0009fb8:	6a 10                	push   0x10
+c0009fba:	6a 00                	push   0x0
+c0009fbc:	68 bc 61 02 c0       	push   0xc00261bc
+c0009fc1:	e8 be 66 ff ff       	call   c0000684 <memset>
+c0009fc6:	8b 44 24 60          	mov    eax,DWORD PTR [esp+0x60]
+c0009fca:	25 00 f0 ff ff       	and    eax,0xfffff000
+c0009fcf:	05 00 10 00 00       	add    eax,0x1000
+c0009fd4:	89 44 24 34          	mov    DWORD PTR [esp+0x34],eax
+c0009fd8:	5a                   	pop    edx
+c0009fd9:	59                   	pop    ecx
+c0009fda:	50                   	push   eax
+c0009fdb:	68 96 28 02 c0       	push   0xc0022896
+c0009fe0:	e8 86 2a 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
+c0009fe5:	83 c4 10             	add    esp,0x10
+c0009fe8:	83 ec 08             	sub    esp,0x8
+c0009feb:	6a 01                	push   0x1
+c0009fed:	53                   	push   ebx
+c0009fee:	43                   	inc    ebx
+c0009fef:	e8 6b fd ff ff       	call   c0009d5f <Phys::setPageState(unsigned long, bool)>
+c0009ff4:	83 c4 10             	add    esp,0x10
+c0009ff7:	81 fb 00 00 10 00    	cmp    ebx,0x100000
+c0009ffd:	75 e9                	jne    c0009fe8 <Phys::physicalMemorySetup(unsigned int)+0x39>
+c0009fff:	0f b7 05 13 05 00 c2 	movzx  eax,WORD PTR ds:0xc2000513
+c000a006:	66 85 c0             	test   ax,ax
+c000a009:	0f 84 8e 01 00 00    	je     c000a19d <Phys::physicalMemorySetup(unsigned int)+0x1ee>
+c000a00f:	89 44 24 20          	mov    DWORD PTR [esp+0x20],eax
+c000a013:	c7 44 24 14 00 00 00 00 	mov    DWORD PTR [esp+0x14],0x0
+c000a01b:	8b 44 24 24          	mov    eax,DWORD PTR [esp+0x24]
+c000a01f:	bb 00 06 00 c2       	mov    ebx,0xc2000600
+c000a024:	89 44 24 28          	mov    DWORD PTR [esp+0x28],eax
+c000a028:	c7 44 24 2c 00 00 00 00 	mov    DWORD PTR [esp+0x2c],0x0
+c000a030:	eb 15                	jmp    c000a047 <Phys::physicalMemorySetup(unsigned int)+0x98>
+c000a032:	ff 44 24 14          	inc    DWORD PTR [esp+0x14]
+c000a036:	83 c3 18             	add    ebx,0x18
+c000a039:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
+c000a03d:	3b 44 24 20          	cmp    eax,DWORD PTR [esp+0x20]
+c000a041:	0f 84 66 01 00 00    	je     c000a1ad <Phys::physicalMemorySetup(unsigned int)+0x1fe>
+c000a047:	8b 7b 04             	mov    edi,DWORD PTR [ebx+0x4]
+c000a04a:	8b 43 08             	mov    eax,DWORD PTR [ebx+0x8]
+c000a04d:	8b 53 0c             	mov    edx,DWORD PTR [ebx+0xc]
+c000a050:	89 44 24 18          	mov    DWORD PTR [esp+0x18],eax
+c000a054:	89 54 24 1c          	mov    DWORD PTR [esp+0x1c],edx
+c000a058:	8b 33                	mov    esi,DWORD PTR [ebx]
+c000a05a:	8b 6b 10             	mov    ebp,DWORD PTR [ebx+0x10]
+c000a05d:	01 f0                	add    eax,esi
+c000a05f:	55                   	push   ebp
+c000a060:	11 fa                	adc    edx,edi
+c000a062:	89 44 24 0c          	mov    DWORD PTR [esp+0xc],eax
+c000a066:	89 54 24 10          	mov    DWORD PTR [esp+0x10],edx
+c000a06a:	ff 74 24 0c          	push   DWORD PTR [esp+0xc]
+c000a06e:	56                   	push   esi
+c000a06f:	68 54 29 02 c0       	push   0xc0022954
+c000a074:	e8 f2 29 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
+c000a079:	8b 44 24 1c          	mov    eax,DWORD PTR [esp+0x1c]
+c000a07d:	83 c4 10             	add    esp,0x10
+c000a080:	09 f8                	or     eax,edi
+c000a082:	0f 85 25 01 00 00    	jne    c000a1ad <Phys::physicalMemorySetup(unsigned int)+0x1fe>
+c000a088:	4d                   	dec    ebp
+c000a089:	75 a7                	jne    c000a032 <Phys::physicalMemorySetup(unsigned int)+0x83>
+c000a08b:	ba 00 00 08 00       	mov    edx,0x80000
+c000a090:	89 c1                	mov    ecx,eax
+c000a092:	39 f2                	cmp    edx,esi
+c000a094:	19 f9                	sbb    ecx,edi
+c000a096:	0f 82 a7 00 00 00    	jb     c000a143 <Phys::physicalMemorySetup(unsigned int)+0x194>
+c000a09c:	3b 54 24 08          	cmp    edx,DWORD PTR [esp+0x8]
+c000a0a0:	89 c1                	mov    ecx,eax
+c000a0a2:	1b 4c 24 0c          	sbb    ecx,DWORD PTR [esp+0xc]
+c000a0a6:	0f 83 97 00 00 00    	jae    c000a143 <Phys::physicalMemorySetup(unsigned int)+0x194>
+c000a0ac:	ba 00 00 0a 00       	mov    edx,0xa0000
+c000a0b1:	8b 7c 24 08          	mov    edi,DWORD PTR [esp+0x8]
+c000a0b5:	8b 6c 24 0c          	mov    ebp,DWORD PTR [esp+0xc]
+c000a0b9:	39 fa                	cmp    edx,edi
+c000a0bb:	19 e8                	sbb    eax,ebp
+c000a0bd:	0f 82 a5 01 00 00    	jb     c000a268 <Phys::physicalMemorySetup(unsigned int)+0x2b9>
+c000a0c3:	8b 7c 24 08          	mov    edi,DWORD PTR [esp+0x8]
+c000a0c7:	8b 6c 24 0c          	mov    ebp,DWORD PTR [esp+0xc]
+c000a0cb:	81 c7 00 00 f8 ff    	add    edi,0xfff80000
+c000a0d1:	ba ff 1f 00 00       	mov    edx,0x1fff
+c000a0d6:	83 d5 ff             	adc    ebp,0xffffffff
+c000a0d9:	89 7c 24 18          	mov    DWORD PTR [esp+0x18],edi
+c000a0dd:	31 c0                	xor    eax,eax
+c000a0df:	89 6c 24 1c          	mov    DWORD PTR [esp+0x1c],ebp
+c000a0e3:	39 fa                	cmp    edx,edi
+c000a0e5:	89 c1                	mov    ecx,eax
+c000a0e7:	19 e9                	sbb    ecx,ebp
+c000a0e9:	0f 83 43 ff ff ff    	jae    c000a032 <Phys::physicalMemorySetup(unsigned int)+0x83>
+c000a0ef:	be 00 00 08 00       	mov    esi,0x80000
+c000a0f4:	57                   	push   edi
+c000a0f5:	8b 7c 24 0c          	mov    edi,DWORD PTR [esp+0xc]
+c000a0f9:	57                   	push   edi
+c000a0fa:	56                   	push   esi
+c000a0fb:	68 78 29 02 c0       	push   0xc0022978
+c000a100:	e8 66 29 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
+c000a105:	5d                   	pop    ebp
+c000a106:	58                   	pop    eax
+c000a107:	57                   	push   edi
+c000a108:	56                   	push   esi
+c000a109:	e8 69 fe ff ff       	call   c0009f77 <Phys::allowSegmentToBeUsed(unsigned long, unsigned long)>
+c000a10e:	8b 54 24 2c          	mov    edx,DWORD PTR [esp+0x2c]
+c000a112:	8b 44 24 28          	mov    eax,DWORD PTR [esp+0x28]
+c000a116:	83 c4 0c             	add    esp,0xc
+c000a119:	0f ac d0 0c          	shrd   eax,edx,0xc
+c000a11d:	03 05 b8 61 02 c0    	add    eax,DWORD PTR ds:0xc00261b8
+c000a123:	8d 14 85 00 00 00 00 	lea    edx,[eax*4+0x0]
+c000a12a:	a3 b8 61 02 c0       	mov    ds:0xc00261b8,eax
+c000a12f:	52                   	push   edx
+c000a130:	50                   	push   eax
+c000a131:	68 bc 28 02 c0       	push   0xc00228bc
+c000a136:	e8 30 29 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
+c000a13b:	83 c4 10             	add    esp,0x10
+c000a13e:	e9 ef fe ff ff       	jmp    c000a032 <Phys::physicalMemorySetup(unsigned int)+0x83>
+c000a143:	8b 6c 24 24          	mov    ebp,DWORD PTR [esp+0x24]
+c000a147:	8b 54 24 08          	mov    edx,DWORD PTR [esp+0x8]
+c000a14b:	8b 4c 24 0c          	mov    ecx,DWORD PTR [esp+0xc]
+c000a14f:	39 ea                	cmp    edx,ebp
+c000a151:	1b 4c 24 2c          	sbb    ecx,DWORD PTR [esp+0x2c]
+c000a155:	0f 82 d7 fe ff ff    	jb     c000a032 <Phys::physicalMemorySetup(unsigned int)+0x83>
+c000a15b:	ba ff 1f 00 00       	mov    edx,0x1fff
+c000a160:	3b 54 24 18          	cmp    edx,DWORD PTR [esp+0x18]
+c000a164:	1b 44 24 1c          	sbb    eax,DWORD PTR [esp+0x1c]
+c000a168:	0f 83 c4 fe ff ff    	jae    c000a032 <Phys::physicalMemorySetup(unsigned int)+0x83>
+c000a16e:	39 ee                	cmp    esi,ebp
+c000a170:	89 f8                	mov    eax,edi
+c000a172:	1b 44 24 2c          	sbb    eax,DWORD PTR [esp+0x2c]
+c000a176:	0f 83 78 ff ff ff    	jae    c000a0f4 <Phys::physicalMemorySetup(unsigned int)+0x145>
+c000a17c:	8b 44 24 08          	mov    eax,DWORD PTR [esp+0x8]
+c000a180:	8b 54 24 0c          	mov    edx,DWORD PTR [esp+0xc]
+c000a184:	2b 44 24 28          	sub    eax,DWORD PTR [esp+0x28]
+c000a188:	8b 74 24 24          	mov    esi,DWORD PTR [esp+0x24]
+c000a18c:	1b 54 24 2c          	sbb    edx,DWORD PTR [esp+0x2c]
+c000a190:	89 44 24 18          	mov    DWORD PTR [esp+0x18],eax
+c000a194:	89 54 24 1c          	mov    DWORD PTR [esp+0x1c],edx
+c000a198:	e9 57 ff ff ff       	jmp    c000a0f4 <Phys::physicalMemorySetup(unsigned int)+0x145>
+c000a19d:	83 ec 0c             	sub    esp,0xc
+c000a1a0:	68 ae 28 02 c0       	push   0xc00228ae
+c000a1a5:	e8 61 a1 00 00       	call   c001430b <Krnl::panic(char const*)>
+c000a1aa:	83 c4 10             	add    esp,0x10
+c000a1ad:	83 ec 08             	sub    esp,0x8
+c000a1b0:	6a 00                	push   0x0
+c000a1b2:	6a 05                	push   0x5
+c000a1b4:	e8 a6 fb ff ff       	call   c0009d5f <Phys::setPageState(unsigned long, bool)>
+c000a1b9:	58                   	pop    eax
+c000a1ba:	5a                   	pop    edx
+c000a1bb:	6a 00                	push   0x0
+c000a1bd:	6a 06                	push   0x6
+c000a1bf:	e8 9b fb ff ff       	call   c0009d5f <Phys::setPageState(unsigned long, bool)>
+c000a1c4:	59                   	pop    ecx
+c000a1c5:	5b                   	pop    ebx
+c000a1c6:	bb 60 00 00 00       	mov    ebx,0x60
+c000a1cb:	6a 00                	push   0x0
+c000a1cd:	6a 07                	push   0x7
+c000a1cf:	e8 8b fb ff ff       	call   c0009d5f <Phys::setPageState(unsigned long, bool)>
+c000a1d4:	83 05 b8 61 02 c0 03 	add    DWORD PTR ds:0xc00261b8,0x3
+c000a1db:	83 c4 10             	add    esp,0x10
+c000a1de:	83 ec 08             	sub    esp,0x8
+c000a1e1:	6a 00                	push   0x0
+c000a1e3:	53                   	push   ebx
+c000a1e4:	43                   	inc    ebx
+c000a1e5:	e8 75 fb ff ff       	call   c0009d5f <Phys::setPageState(unsigned long, bool)>
+c000a1ea:	83 c4 10             	add    esp,0x10
+c000a1ed:	81 fb 80 00 00 00    	cmp    ebx,0x80
+c000a1f3:	75 e9                	jne    c000a1de <Phys::physicalMemorySetup(unsigned int)+0x22f>
+c000a1f5:	a1 b8 61 02 c0       	mov    eax,ds:0xc00261b8
+c000a1fa:	bb 40 01 00 00       	mov    ebx,0x140
+c000a1ff:	83 c0 20             	add    eax,0x20
+c000a202:	a3 b8 61 02 c0       	mov    ds:0xc00261b8,eax
+c000a207:	eb 22                	jmp    c000a22b <Phys::physicalMemorySetup(unsigned int)+0x27c>
+c000a209:	83 ec 08             	sub    esp,0x8
+c000a20c:	6a 00                	push   0x0
+c000a20e:	53                   	push   ebx
+c000a20f:	43                   	inc    ebx
+c000a210:	e8 4a fb ff ff       	call   c0009d5f <Phys::setPageState(unsigned long, bool)>
+c000a215:	a1 b8 61 02 c0       	mov    eax,ds:0xc00261b8
+c000a21a:	83 c4 10             	add    esp,0x10
+c000a21d:	40                   	inc    eax
+c000a21e:	81 fb c0 01 00 00    	cmp    ebx,0x1c0
+c000a224:	a3 b8 61 02 c0       	mov    ds:0xc00261b8,eax
+c000a229:	74 07                	je     c000a232 <Phys::physicalMemorySetup(unsigned int)+0x283>
+c000a22b:	3d ff 03 00 00       	cmp    eax,0x3ff
+c000a230:	7e d7                	jle    c000a209 <Phys::physicalMemorySetup(unsigned int)+0x25a>
+c000a232:	bb d0 01 00 00       	mov    ebx,0x1d0
+c000a237:	3d ff 07 00 00       	cmp    eax,0x7ff
+c000a23c:	7f 22                	jg     c000a260 <Phys::physicalMemorySetup(unsigned int)+0x2b1>
+c000a23e:	83 ec 08             	sub    esp,0x8
+c000a241:	6a 00                	push   0x0
+c000a243:	53                   	push   ebx
+c000a244:	43                   	inc    ebx
+c000a245:	e8 15 fb ff ff       	call   c0009d5f <Phys::setPageState(unsigned long, bool)>
+c000a24a:	a1 b8 61 02 c0       	mov    eax,ds:0xc00261b8
+c000a24f:	83 c4 10             	add    esp,0x10
+c000a252:	40                   	inc    eax
+c000a253:	81 fb e0 01 00 00    	cmp    ebx,0x1e0
+c000a259:	a3 b8 61 02 c0       	mov    ds:0xc00261b8,eax
+c000a25e:	75 d7                	jne    c000a237 <Phys::physicalMemorySetup(unsigned int)+0x288>
+c000a260:	83 c4 3c             	add    esp,0x3c
+c000a263:	5b                   	pop    ebx
+c000a264:	5e                   	pop    esi
+c000a265:	5f                   	pop    edi
+c000a266:	5d                   	pop    ebp
+c000a267:	c3                   	ret    
+c000a268:	c7 44 24 08 00 00 0a 00 	mov    DWORD PTR [esp+0x8],0xa0000
+c000a270:	c7 44 24 0c 00 00 00 00 	mov    DWORD PTR [esp+0xc],0x0
+c000a278:	e9 46 fe ff ff       	jmp    c000a0c3 <Phys::physicalMemorySetup(unsigned int)+0x114>
+c000a27d:	90                   	nop
 
 c000a27e <Pipe::isAtty()>:
 c000a27e:	31 c0                	xor    eax,eax
@@ -13884,7 +13886,7 @@ c000a281:	90                   	nop
 
 c000a282 <Pipe::~Pipe()>:
 c000a282:	83 ec 0c             	sub    esp,0xc
-c000a285:	ba e8 29 02 c0       	mov    edx,0xc00229e8
+c000a285:	ba e4 29 02 c0       	mov    edx,0xc00229e4
 c000a28a:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
 c000a28e:	89 10                	mov    DWORD PTR [eax],edx
 c000a290:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
@@ -13994,7 +13996,7 @@ c000a39c:	89 43 10             	mov    DWORD PTR [ebx+0x10],eax
 c000a39f:	83 7c 24 40 00       	cmp    DWORD PTR [esp+0x40],0x0
 c000a3a4:	75 10                	jne    c000a3b6 <Pipe::read(unsigned long long, void*, int*)+0xe8>
 c000a3a6:	83 ec 0c             	sub    esp,0xc
-c000a3a9:	68 a5 29 02 c0       	push   0xc00229a5
+c000a3a9:	68 a1 29 02 c0       	push   0xc00229a1
 c000a3ae:	e8 58 9f 00 00       	call   c001430b <Krnl::panic(char const*)>
 c000a3b3:	83 c4 10             	add    esp,0x10
 c000a3b6:	8b 44 24 40          	mov    eax,DWORD PTR [esp+0x40]
@@ -14070,7 +14072,7 @@ c000a45d:	01 55 14             	add    DWORD PTR [ebp+0x14],edx
 c000a460:	83 7c 24 40 00       	cmp    DWORD PTR [esp+0x40],0x0
 c000a465:	75 10                	jne    c000a477 <Pipe::write(unsigned long long, void*, int*)+0xad>
 c000a467:	83 ec 0c             	sub    esp,0xc
-c000a46a:	68 c1 29 02 c0       	push   0xc00229c1
+c000a46a:	68 bd 29 02 c0       	push   0xc00229bd
 c000a46f:	e8 97 9e 00 00       	call   c001430b <Krnl::panic(char const*)>
 c000a474:	83 c4 10             	add    esp,0x10
 c000a477:	8b 44 24 40          	mov    eax,DWORD PTR [esp+0x40]
@@ -14092,7 +14094,7 @@ c000a494:	6a 00                	push   0x0
 c000a496:	50                   	push   eax
 c000a497:	e8 66 0e 00 00       	call   c000b302 <UnixFile::UnixFile(int)>
 c000a49c:	83 c4 10             	add    esp,0x10
-c000a49f:	ba e8 29 02 c0       	mov    edx,0xc00229e8
+c000a49f:	ba e4 29 02 c0       	mov    edx,0xc00229e4
 c000a4a4:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
 c000a4a8:	89 10                	mov    DWORD PTR [eax],edx
 c000a4aa:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
@@ -14124,7 +14126,7 @@ c000a4f5:	90                   	nop
 
 c000a4f6 <VgaText::~VgaText()>:
 c000a4f6:	83 ec 0c             	sub    esp,0xc
-c000a4f9:	ba 70 2a 02 c0       	mov    edx,0xc0022a70
+c000a4f9:	ba 6c 2a 02 c0       	mov    edx,0xc0022a6c
 c000a4fe:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
 c000a502:	89 10                	mov    DWORD PTR [eax],edx
 c000a504:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
@@ -14501,7 +14503,7 @@ c000a874:	83 ec 08             	sub    esp,0x8
 c000a877:	8b 5c 24 10          	mov    ebx,DWORD PTR [esp+0x10]
 c000a87b:	85 db                	test   ebx,ebx
 c000a87d:	75 11                	jne    c000a890 <setActiveTerminal(VgaText*)+0x1d>
-c000a87f:	c7 44 24 10 fc 29 02 c0 	mov    DWORD PTR [esp+0x10],0xc00229fc
+c000a87f:	c7 44 24 10 f8 29 02 c0 	mov    DWORD PTR [esp+0x10],0xc00229f8
 c000a887:	83 c4 08             	add    esp,0x8
 c000a88a:	5b                   	pop    ebx
 c000a88b:	e9 7b 9a 00 00       	jmp    c001430b <Krnl::panic(char const*)>
@@ -14963,7 +14965,7 @@ c000ad3a <VgaText::putx(unsigned int)>:
 c000ad3a:	57                   	push   edi
 c000ad3b:	b9 11 00 00 00       	mov    ecx,0x11
 c000ad40:	56                   	push   esi
-c000ad41:	be 0a 2a 02 c0       	mov    esi,0xc0022a0a
+c000ad41:	be 06 2a 02 c0       	mov    esi,0xc0022a06
 c000ad46:	53                   	push   ebx
 c000ad47:	83 ec 20             	sub    esp,0x20
 c000ad4a:	8b 5c 24 34          	mov    ebx,DWORD PTR [esp+0x34]
@@ -15018,7 +15020,7 @@ c000adb0:	6a 00                	push   0x0
 c000adb2:	50                   	push   eax
 c000adb3:	e8 4a 05 00 00       	call   c000b302 <UnixFile::UnixFile(int)>
 c000adb8:	83 c4 10             	add    esp,0x10
-c000adbb:	ba 70 2a 02 c0       	mov    edx,0xc0022a70
+c000adbb:	ba 6c 2a 02 c0       	mov    edx,0xc0022a6c
 c000adc0:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
 c000adc4:	89 10                	mov    DWORD PTR [eax],edx
 c000adc6:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
@@ -15066,7 +15068,7 @@ c000ae6c:	8b 1d b0 62 02 c0    	mov    ebx,DWORD PTR ds:0xc00262b0
 c000ae72:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
 c000ae76:	8b 40 0c             	mov    eax,DWORD PTR [eax+0xc]
 c000ae79:	89 c6                	mov    esi,eax
-c000ae7b:	e8 b1 ef ff ff       	call   c0009e31 <Phys::allocatePage()>
+c000ae7b:	e8 b0 ef ff ff       	call   c0009e30 <Phys::allocatePage()>
 c000ae80:	68 05 0c 00 00       	push   0xc05
 c000ae85:	56                   	push   esi
 c000ae86:	50                   	push   eax
@@ -15180,7 +15182,7 @@ c000afc1:	8d 44 05 04          	lea    eax,[ebp+eax*1+0x4]
 c000afc5:	3d 2c 01 00 00       	cmp    eax,0x12c
 c000afca:	76 10                	jbe    c000afdc <VgaText::receiveKey(unsigned char)+0xb8>
 c000afcc:	83 ec 0c             	sub    esp,0xc
-c000afcf:	68 1b 2a 02 c0       	push   0xc0022a1b
+c000afcf:	68 17 2a 02 c0       	push   0xc0022a17
 c000afd4:	e8 32 93 00 00       	call   c001430b <Krnl::panic(char const*)>
 c000afd9:	83 c4 10             	add    esp,0x10
 c000afdc:	50                   	push   eax
@@ -15480,7 +15482,7 @@ c000b301:	c3                   	ret
 c000b302 <UnixFile::UnixFile(int)>:
 c000b302:	53                   	push   ebx
 c000b303:	83 ec 28             	sub    esp,0x28
-c000b306:	ba 38 2b 02 c0       	mov    edx,0xc0022b38
+c000b306:	ba 34 2b 02 c0       	mov    edx,0xc0022b34
 c000b30b:	8b 44 24 30          	mov    eax,DWORD PTR [esp+0x30]
 c000b30f:	89 10                	mov    DWORD PTR [eax],edx
 c000b311:	81 7c 24 34 ff fe ff 0f 	cmp    DWORD PTR [esp+0x34],0xffffeff
@@ -15597,7 +15599,7 @@ c000b4bc:	ff 74 24 1c          	push   DWORD PTR [esp+0x1c]
 c000b4c0:	50                   	push   eax
 c000b4c1:	e8 3c fe ff ff       	call   c000b302 <UnixFile::UnixFile(int)>
 c000b4c6:	83 c4 10             	add    esp,0x10
-c000b4c9:	ba 54 2b 02 c0       	mov    edx,0xc0022b54
+c000b4c9:	ba 50 2b 02 c0       	mov    edx,0xc0022b50
 c000b4ce:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
 c000b4d2:	89 10                	mov    DWORD PTR [eax],edx
 c000b4d4:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
@@ -15609,7 +15611,7 @@ c000b4e3:	c3                   	ret
 
 c000b4e4 <UnixFile::~UnixFile()>:
 c000b4e4:	83 ec 1c             	sub    esp,0x1c
-c000b4e7:	ba 38 2b 02 c0       	mov    edx,0xc0022b38
+c000b4e7:	ba 34 2b 02 c0       	mov    edx,0xc0022b34
 c000b4ec:	8b 44 24 20          	mov    eax,DWORD PTR [esp+0x20]
 c000b4f0:	89 10                	mov    DWORD PTR [eax],edx
 c000b4f2:	8b 44 24 20          	mov    eax,DWORD PTR [esp+0x20]
@@ -15642,7 +15644,7 @@ c000b55a:	0f 94 c0             	sete   al
 c000b55d:	84 c0                	test   al,al
 c000b55f:	74 a7                	je     c000b508 <UnixFile::~UnixFile()+0x24>
 c000b561:	83 ec 0c             	sub    esp,0xc
-c000b564:	68 10 2b 02 c0       	push   0xc0022b10
+c000b564:	68 0c 2b 02 c0       	push   0xc0022b0c
 c000b569:	e8 9d 8d 00 00       	call   c001430b <Krnl::panic(char const*)>
 c000b56e:	83 c4 10             	add    esp,0x10
 c000b571:	eb 95                	jmp    c000b508 <UnixFile::~UnixFile()+0x24>
@@ -15670,7 +15672,7 @@ c000b5a3:	90                   	nop
 
 c000b5a4 <ReservedFilename::~ReservedFilename()>:
 c000b5a4:	83 ec 0c             	sub    esp,0xc
-c000b5a7:	ba 54 2b 02 c0       	mov    edx,0xc0022b54
+c000b5a7:	ba 50 2b 02 c0       	mov    edx,0xc0022b50
 c000b5ac:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
 c000b5b0:	89 10                	mov    DWORD PTR [eax],edx
 c000b5b2:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
@@ -15854,7 +15856,7 @@ c000b7ad:	77 cf                	ja     c000b77e <Virt::allocateKernelVirtualPage
 c000b7af:	89 3d c4 55 02 c0    	mov    DWORD PTR ds:0xc00255c4,edi
 c000b7b5:	eb a8                	jmp    c000b75f <Virt::allocateKernelVirtualPages(int)+0x1a>
 c000b7b7:	83 ec 0c             	sub    esp,0xc
-c000b7ba:	68 68 2b 02 c0       	push   0xc0022b68
+c000b7ba:	68 64 2b 02 c0       	push   0xc0022b64
 c000b7bf:	e8 47 8b 00 00       	call   c001430b <Krnl::panic(char const*)>
 c000b7c4:	8b 3d c4 55 02 c0    	mov    edi,DWORD PTR ds:0xc00255c4
 c000b7ca:	83 c4 10             	add    esp,0x10
@@ -15972,7 +15974,7 @@ c000b8cc:	41                   	inc    ecx
 c000b8cd:	39 c8                	cmp    eax,ecx
 c000b8cf:	77 e9                	ja     c000b8ba <Virt::allocateSwapfilePage()+0x34>
 c000b8d1:	83 ec 0c             	sub    esp,0xc
-c000b8d4:	68 20 2d 02 c0       	push   0xc0022d20
+c000b8d4:	68 1c 2d 02 c0       	push   0xc0022d1c
 c000b8d9:	e8 2d 8a 00 00       	call   c001430b <Krnl::panic(char const*)>
 c000b8de:	83 c4 10             	add    esp,0x10
 c000b8e1:	31 c9                	xor    ecx,ecx
@@ -16037,7 +16039,7 @@ c000b95c:	8b 80 70 01 00 00    	mov    eax,DWORD PTR [eax+0x170]
 c000b962:	8b 10                	mov    edx,DWORD PTR [eax]
 c000b964:	53                   	push   ebx
 c000b965:	c1 e3 0b             	shl    ebx,0xb
-c000b968:	68 37 2d 02 c0       	push   0xc0022d37
+c000b968:	68 33 2d 02 c0       	push   0xc0022d33
 c000b96d:	50                   	push   eax
 c000b96e:	ff 52 5c             	call   DWORD PTR [edx+0x5c]
 c000b971:	89 1d d0 55 02 c0    	mov    DWORD PTR ds:0xc00255d0,ebx
@@ -16086,7 +16088,7 @@ c000ba03:	c7 40 04 00 00 00 00 	mov    DWORD PTR [eax+0x4],0x0
 c000ba0a:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
 c000ba0e:	c7 40 08 00 00 00 00 	mov    DWORD PTR [eax+0x8],0x0
 c000ba15:	83 ec 0c             	sub    esp,0xc
-c000ba18:	68 88 2b 02 c0       	push   0xc0022b88
+c000ba18:	68 84 2b 02 c0       	push   0xc0022b84
 c000ba1d:	e8 e9 88 00 00       	call   c001430b <Krnl::panic(char const*)>
 c000ba22:	83 c4 10             	add    esp,0x10
 c000ba25:	90                   	nop
@@ -16156,7 +16158,7 @@ c000bad4:	84 c0                	test   al,al
 c000bad6:	88 44 24 0f          	mov    BYTE PTR [esp+0xf],al
 c000bada:	75 ad                	jne    c000ba89 <Virt::freeKernelVirtualPages(unsigned long)+0x14>
 c000badc:	83 ec 0c             	sub    esp,0xc
-c000badf:	68 4e 2d 02 c0       	push   0xc0022d4e
+c000badf:	68 4a 2d 02 c0       	push   0xc0022d4a
 c000bae4:	e8 22 88 00 00       	call   c001430b <Krnl::panic(char const*)>
 c000bae9:	58                   	pop    eax
 c000baea:	5a                   	pop    edx
@@ -16172,7 +16174,7 @@ c000bb05:	88 54 24 0f          	mov    BYTE PTR [esp+0xf],dl
 c000bb09:	25 00 f0 ff ff       	and    eax,0xfffff000
 c000bb0e:	83 ec 0c             	sub    esp,0xc
 c000bb11:	50                   	push   eax
-c000bb12:	e8 97 e2 ff ff       	call   c0009dae <Phys::freePage(unsigned long)>
+c000bb12:	e8 96 e2 ff ff       	call   c0009dad <Phys::freePage(unsigned long)>
 c000bb17:	83 c4 10             	add    esp,0x10
 c000bb1a:	8a 54 24 0f          	mov    dl,BYTE PTR [esp+0xf]
 c000bb1e:	80 fa 04             	cmp    dl,0x4
@@ -16180,7 +16182,7 @@ c000bb21:	75 88                	jne    c000baab <Virt::freeKernelVirtualPages(un
 c000bb23:	89 f0                	mov    eax,esi
 c000bb25:	84 c0                	test   al,al
 c000bb27:	75 47                	jne    c000bb70 <Virt::freeKernelVirtualPages(unsigned long)+0xfb>
-c000bb29:	c7 44 24 20 ac 2b 02 c0 	mov    DWORD PTR [esp+0x20],0xc0022bac
+c000bb29:	c7 44 24 20 a8 2b 02 c0 	mov    DWORD PTR [esp+0x20],0xc0022ba8
 c000bb31:	83 c4 10             	add    esp,0x10
 c000bb34:	5b                   	pop    ebx
 c000bb35:	5e                   	pop    esi
@@ -16190,7 +16192,7 @@ c000bb3c:	89 f0                	mov    eax,esi
 c000bb3e:	84 c0                	test   al,al
 c000bb40:	75 15                	jne    c000bb57 <Virt::freeKernelVirtualPages(unsigned long)+0xe2>
 c000bb42:	83 ec 0c             	sub    esp,0xc
-c000bb45:	68 6a 2d 02 c0       	push   0xc0022d6a
+c000bb45:	68 66 2d 02 c0       	push   0xc0022d66
 c000bb4a:	e8 bc 87 00 00       	call   c001430b <Krnl::panic(char const*)>
 c000bb4f:	83 c4 10             	add    esp,0x10
 c000bb52:	e9 6e ff ff ff       	jmp    c000bac5 <Virt::freeKernelVirtualPages(unsigned long)+0x50>
@@ -16213,7 +16215,7 @@ c000bb81:	5b                   	pop    ebx
 c000bb82:	5e                   	pop    esi
 c000bb83:	5f                   	pop    edi
 c000bb84:	c3                   	ret    
-c000bb85:	c7 44 24 20 86 2d 02 c0 	mov    DWORD PTR [esp+0x20],0xc0022d86
+c000bb85:	c7 44 24 20 82 2d 02 c0 	mov    DWORD PTR [esp+0x20],0xc0022d82
 c000bb8d:	83 c4 10             	add    esp,0x10
 c000bb90:	5b                   	pop    ebx
 c000bb91:	5e                   	pop    esi
@@ -16227,7 +16229,7 @@ c000bba0:	80 78 01 00          	cmp    BYTE PTR [eax+0x1],0x0
 c000bba4:	74 09                	je     c000bbaf <VAS::freeAllocatedPages(unsigned long)+0x17>
 c000bba6:	89 54 24 04          	mov    DWORD PTR [esp+0x4],edx
 c000bbaa:	e9 c6 fe ff ff       	jmp    c000ba75 <Virt::freeKernelVirtualPages(unsigned long)>
-c000bbaf:	c7 44 24 04 d0 2b 02 c0 	mov    DWORD PTR [esp+0x4],0xc0022bd0
+c000bbaf:	c7 44 24 04 cc 2b 02 c0 	mov    DWORD PTR [esp+0x4],0xc0022bcc
 c000bbb7:	e9 af 0e 00 00       	jmp    c000ca6b <Dbg::kprintf(char const*, ...)>
 
 c000bbbc <VAS::virtualToPhysical(unsigned long)>:
@@ -16364,7 +16366,7 @@ c000bd44:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
 c000bd48:	25 00 f0 ff ff       	and    eax,0xfffff000
 c000bd4d:	83 ec 0c             	sub    esp,0xc
 c000bd50:	50                   	push   eax
-c000bd51:	e8 58 e0 ff ff       	call   c0009dae <Phys::freePage(unsigned long)>
+c000bd51:	e8 57 e0 ff ff       	call   c0009dad <Phys::freePage(unsigned long)>
 c000bd56:	83 c4 10             	add    esp,0x10
 c000bd59:	ff 44 24 1c          	inc    DWORD PTR [esp+0x1c]
 c000bd5d:	ff 44 24 14          	inc    DWORD PTR [esp+0x14]
@@ -16376,7 +16378,7 @@ c000bd6e:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
 c000bd72:	25 00 f0 ff ff       	and    eax,0xfffff000
 c000bd77:	83 ec 0c             	sub    esp,0xc
 c000bd7a:	50                   	push   eax
-c000bd7b:	e8 2e e0 ff ff       	call   c0009dae <Phys::freePage(unsigned long)>
+c000bd7b:	e8 2d e0 ff ff       	call   c0009dad <Phys::freePage(unsigned long)>
 c000bd80:	83 c4 10             	add    esp,0x10
 c000bd83:	ff 44 24 1c          	inc    DWORD PTR [esp+0x1c]
 c000bd87:	ff 44 24 18          	inc    DWORD PTR [esp+0x18]
@@ -16391,14 +16393,14 @@ c000bda3:	8b 44 24 30          	mov    eax,DWORD PTR [esp+0x30]
 c000bda7:	8b 40 10             	mov    eax,DWORD PTR [eax+0x10]
 c000bdaa:	83 ec 0c             	sub    esp,0xc
 c000bdad:	50                   	push   eax
-c000bdae:	e8 fb df ff ff       	call   c0009dae <Phys::freePage(unsigned long)>
+c000bdae:	e8 fa df ff ff       	call   c0009dad <Phys::freePage(unsigned long)>
 c000bdb3:	83 c4 10             	add    esp,0x10
 c000bdb6:	ff 44 24 1c          	inc    DWORD PTR [esp+0x1c]
 c000bdba:	8b 44 24 1c          	mov    eax,DWORD PTR [esp+0x1c]
 c000bdbe:	c1 e0 02             	shl    eax,0x2
 c000bdc1:	83 ec 08             	sub    esp,0x8
 c000bdc4:	50                   	push   eax
-c000bdc5:	68 f4 2b 02 c0       	push   0xc0022bf4
+c000bdc5:	68 f0 2b 02 c0       	push   0xc0022bf0
 c000bdca:	e8 9c 0c 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
 c000bdcf:	83 c4 10             	add    esp,0x10
 c000bdd2:	a1 48 76 02 c0       	mov    eax,ds:0xc0027648
@@ -16449,7 +16451,7 @@ c000be4f:	5f                   	pop    edi
 c000be50:	5d                   	pop    ebp
 c000be51:	c3                   	ret    
 c000be52:	83 ec 0c             	sub    esp,0xc
-c000be55:	68 14 2c 02 c0       	push   0xc0022c14
+c000be55:	68 10 2c 02 c0       	push   0xc0022c10
 c000be5a:	e8 0c 0c 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
 c000be5f:	83 c4 10             	add    esp,0x10
 c000be62:	8b 44 24 34          	mov    eax,DWORD PTR [esp+0x34]
@@ -16457,12 +16459,12 @@ c000be66:	09 d8                	or     eax,ebx
 c000be68:	a9 ff 0f 00 00       	test   eax,0xfff
 c000be6d:	74 a9                	je     c000be18 <VAS::mapPage(unsigned long, unsigned long, int)+0x2c>
 c000be6f:	83 ec 0c             	sub    esp,0xc
-c000be72:	68 7c 2c 02 c0       	push   0xc0022c7c
+c000be72:	68 78 2c 02 c0       	push   0xc0022c78
 c000be77:	e8 8f 84 00 00       	call   c001430b <Krnl::panic(char const*)>
 c000be7c:	83 c4 10             	add    esp,0x10
 c000be7f:	eb 97                	jmp    c000be18 <VAS::mapPage(unsigned long, unsigned long, int)+0x2c>
 c000be81:	89 54 24 0c          	mov    DWORD PTR [esp+0xc],edx
-c000be85:	e8 a7 df ff ff       	call   c0009e31 <Phys::allocatePage()>
+c000be85:	e8 a6 df ff ff       	call   c0009e30 <Phys::allocatePage()>
 c000be8a:	83 ec 0c             	sub    esp,0xc
 c000be8d:	89 c5                	mov    ebp,eax
 c000be8f:	8b 0d b0 62 02 c0    	mov    ecx,DWORD PTR ds:0xc00262b0
@@ -16521,7 +16523,7 @@ c000bf3e:	7e 33                	jle    c000bf73 <VAS::allocatePages(int, int)+0x
 c000bf40:	8b 6c 24 38          	mov    ebp,DWORD PTR [esp+0x38]
 c000bf44:	8b 5c 24 0c          	mov    ebx,DWORD PTR [esp+0xc]
 c000bf48:	81 cd 00 04 00 00    	or     ebp,0x400
-c000bf4e:	e8 de de ff ff       	call   c0009e31 <Phys::allocatePage()>
+c000bf4e:	e8 dd de ff ff       	call   c0009e30 <Phys::allocatePage()>
 c000bf53:	55                   	push   ebp
 c000bf54:	53                   	push   ebx
 c000bf55:	50                   	push   eax
@@ -16566,7 +16568,7 @@ c000bfc8:	5f                   	pop    edi
 c000bfc9:	5d                   	pop    ebp
 c000bfca:	c3                   	ret    
 c000bfcb:	83 ec 0c             	sub    esp,0xc
-c000bfce:	68 a0 2c 02 c0       	push   0xc0022ca0
+c000bfce:	68 9c 2c 02 c0       	push   0xc0022c9c
 c000bfd3:	e8 33 83 00 00       	call   c001430b <Krnl::panic(char const*)>
 c000bfd8:	8b 47 04             	mov    eax,DWORD PTR [edi+0x4]
 c000bfdb:	89 44 24 1c          	mov    DWORD PTR [esp+0x1c],eax
@@ -16588,7 +16590,7 @@ c000c015:	8b 5c 24 0c          	mov    ebx,DWORD PTR [esp+0xc]
 c000c019:	c1 e5 0c             	shl    ebp,0xc
 c000c01c:	81 ce 00 04 00 00    	or     esi,0x400
 c000c022:	01 dd                	add    ebp,ebx
-c000c024:	e8 08 de ff ff       	call   c0009e31 <Phys::allocatePage()>
+c000c024:	e8 07 de ff ff       	call   c0009e30 <Phys::allocatePage()>
 c000c029:	56                   	push   esi
 c000c02a:	53                   	push   ebx
 c000c02b:	50                   	push   eax
@@ -16756,13 +16758,13 @@ c000c20e:	5d                   	pop    ebp
 c000c20f:	c3                   	ret    
 c000c210:	89 54 24 08          	mov    DWORD PTR [esp+0x8],edx
 c000c214:	83 ec 0c             	sub    esp,0xc
-c000c217:	68 cc 2c 02 c0       	push   0xc0022ccc
+c000c217:	68 c8 2c 02 c0       	push   0xc0022cc8
 c000c21c:	e8 ea 80 00 00       	call   c001430b <Krnl::panic(char const*)>
 c000c221:	83 c4 10             	add    esp,0x10
 c000c224:	8b 54 24 08          	mov    edx,DWORD PTR [esp+0x8]
 c000c228:	eb 9c                	jmp    c000c1c6 <VAS::mapForeignPage(bool, VAS*, unsigned long, unsigned long, int)+0x1e>
 c000c22a:	89 54 24 0c          	mov    DWORD PTR [esp+0xc],edx
-c000c22e:	e8 fe db ff ff       	call   c0009e31 <Phys::allocatePage()>
+c000c22e:	e8 fd db ff ff       	call   c0009e30 <Phys::allocatePage()>
 c000c233:	83 ec 0c             	sub    esp,0xc
 c000c236:	89 c5                	mov    ebp,eax
 c000c238:	8b 0d b0 62 02 c0    	mov    ecx,DWORD PTR ds:0xc00262b0
@@ -16804,7 +16806,7 @@ c000c2b1:	c7 40 08 00 00 00 00 	mov    DWORD PTR [eax+0x8],0x0
 c000c2b8:	8b 44 24 30          	mov    eax,DWORD PTR [esp+0x30]
 c000c2bc:	8a 54 24 0c          	mov    dl,BYTE PTR [esp+0xc]
 c000c2c0:	88 50 01             	mov    BYTE PTR [eax+0x1],dl
-c000c2c3:	e8 69 db ff ff       	call   c0009e31 <Phys::allocatePage()>
+c000c2c3:	e8 68 db ff ff       	call   c0009e30 <Phys::allocatePage()>
 c000c2c8:	89 c2                	mov    edx,eax
 c000c2ca:	8b 44 24 30          	mov    eax,DWORD PTR [esp+0x30]
 c000c2ce:	89 50 10             	mov    DWORD PTR [eax+0x10],edx
@@ -16921,7 +16923,7 @@ c000c462:	50                   	push   eax
 c000c463:	e8 4a 1d 00 00       	call   c000e1b2 <Device::getName()>
 c000c468:	83 c4 10             	add    esp,0x10
 c000c46b:	83 ec 08             	sub    esp,0x8
-c000c46e:	68 a0 2d 02 c0       	push   0xc0022da0
+c000c46e:	68 9c 2d 02 c0       	push   0xc0022d9c
 c000c473:	50                   	push   eax
 c000c474:	e8 53 43 ff ff       	call   c00007cc <strcmp>
 c000c479:	83 c4 10             	add    esp,0x10
@@ -17020,16 +17022,16 @@ c000c596:	09 d7                	or     edi,edx
 c000c598:	89 38                	mov    DWORD PTR [eax],edi
 c000c59a:	89 1c 24             	mov    DWORD PTR [esp],ebx
 c000c59d:	ff 05 a8 62 02 c0    	inc    DWORD PTR ds:0xc00262a8
-c000c5a3:	e8 06 d8 ff ff       	call   c0009dae <Phys::freePage(unsigned long)>
+c000c5a3:	e8 05 d8 ff ff       	call   c0009dad <Phys::freePage(unsigned long)>
 c000c5a8:	0f 20 d8             	mov    eax,cr3
 c000c5ab:	0f 22 d8             	mov    cr3,eax
 c000c5ae:	ff 35 a8 62 02 c0    	push   DWORD PTR ds:0xc00262a8
 c000c5b4:	55                   	push   ebp
 c000c5b5:	53                   	push   ebx
-c000c5b6:	68 f0 2c 02 c0       	push   0xc0022cf0
+c000c5b6:	68 ec 2c 02 c0       	push   0xc0022cec
 c000c5bb:	e8 ab 04 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
 c000c5c0:	a1 a4 62 02 c0       	mov    eax,ds:0xc00262a4
-c000c5c5:	c7 44 24 50 ae 2d 02 c0 	mov    DWORD PTR [esp+0x50],0xc0022dae
+c000c5c5:	c7 44 24 50 aa 2d 02 c0 	mov    DWORD PTR [esp+0x50],0xc0022daa
 c000c5cd:	8d 50 01             	lea    edx,[eax+0x1]
 c000c5d0:	89 44 24 54          	mov    DWORD PTR [esp+0x54],eax
 c000c5d4:	89 15 a4 62 02 c0    	mov    DWORD PTR ds:0xc00262a4,edx
@@ -17047,7 +17049,7 @@ c000c5e8:	56                   	push   esi
 c000c5e9:	53                   	push   ebx
 c000c5ea:	83 ec 14             	sub    esp,0x14
 c000c5ed:	ff 74 24 2c          	push   DWORD PTR [esp+0x2c]
-c000c5f1:	68 bf 2d 02 c0       	push   0xc0022dbf
+c000c5f1:	68 bb 2d 02 c0       	push   0xc0022dbb
 c000c5f6:	e8 70 04 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
 c000c5fb:	83 c4 10             	add    esp,0x10
 c000c5fe:	8b 6c 24 24          	mov    ebp,DWORD PTR [esp+0x24]
@@ -17071,7 +17073,7 @@ c000c630:	5e                   	pop    esi
 c000c631:	5f                   	pop    edi
 c000c632:	5d                   	pop    ebp
 c000c633:	c3                   	ret    
-c000c634:	e8 f8 d7 ff ff       	call   c0009e31 <Phys::allocatePage()>
+c000c634:	e8 f7 d7 ff ff       	call   c0009e30 <Phys::allocatePage()>
 c000c639:	c1 ef 0b             	shr    edi,0xb
 c000c63c:	8b 13                	mov    edx,DWORD PTR [ebx]
 c000c63e:	81 e2 ff 0f 00 00    	and    edx,0xfff
@@ -17106,7 +17108,7 @@ c000c69b:	52                   	push   edx
 c000c69c:	a3 a8 62 02 c0       	mov    ds:0xc00262a8,eax
 c000c6a1:	50                   	push   eax
 c000c6a2:	55                   	push   ebp
-c000c6a3:	68 d2 2d 02 c0       	push   0xc0022dd2
+c000c6a3:	68 ce 2d 02 c0       	push   0xc0022dce
 c000c6a8:	e8 be 03 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
 c000c6ad:	89 3c 24             	mov    DWORD PTR [esp],edi
 c000c6b0:	e8 a1 f1 ff ff       	call   c000b856 <Virt::freeSwapfilePage(unsigned long)>
@@ -17127,7 +17129,7 @@ c000c6df:	e9 48 ff ff ff       	jmp    c000c62c <VAS::tryLoadBackOffDisk(unsigne
 c000c6e4:	fb                   	sti    
 c000c6e5:	eb e0                	jmp    c000c6c7 <VAS::tryLoadBackOffDisk(unsigned long)+0xe1>
 c000c6e7:	83 ec 0c             	sub    esp,0xc
-c000c6ea:	68 e7 2d 02 c0       	push   0xc0022de7
+c000c6ea:	68 e3 2d 02 c0       	push   0xc0022de3
 c000c6ef:	e8 77 03 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
 c000c6f4:	83 c4 10             	add    esp,0x10
 c000c6f7:	eb de                	jmp    c000c6d7 <VAS::tryLoadBackOffDisk(unsigned long)+0xf1>
@@ -17193,7 +17195,7 @@ c000c793:	89 d0                	mov    eax,edx
 c000c795:	25 00 f0 ff ff       	and    eax,0xfffff000
 c000c79a:	89 44 24 14          	mov    DWORD PTR [esp+0x14],eax
 c000c79e:	53                   	push   ebx
-c000c79f:	68 f7 2d 02 c0       	push   0xc0022df7
+c000c79f:	68 f3 2d 02 c0       	push   0xc0022df3
 c000c7a4:	e8 c2 02 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
 c000c7a9:	58                   	pop    eax
 c000c7aa:	5a                   	pop    edx
@@ -17203,7 +17205,7 @@ c000c7af:	e8 62 fd ff ff       	call   c000c516 <VAS::evict(unsigned long)>
 c000c7b4:	59                   	pop    ecx
 c000c7b5:	5b                   	pop    ebx
 c000c7b6:	ff 76 08             	push   DWORD PTR [esi+0x8]
-c000c7b9:	68 0b 2e 02 c0       	push   0xc0022e0b
+c000c7b9:	68 07 2e 02 c0       	push   0xc0022e07
 c000c7be:	e8 a8 02 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
 c000c7c3:	81 46 08 00 10 00 00 	add    DWORD PTR [esi+0x8],0x1000
 c000c7ca:	83 c4 10             	add    esp,0x10
@@ -17234,9 +17236,9 @@ c000c807:	29 eb                	sub    ebx,ebp
 c000c809:	29 ef                	sub    edi,ebp
 c000c80b:	83 ec 08             	sub    esp,0x8
 c000c80e:	53                   	push   ebx
-c000c80f:	68 37 2e 02 c0       	push   0xc0022e37
+c000c80f:	68 33 2e 02 c0       	push   0xc0022e33
 c000c814:	e8 52 02 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
-c000c819:	e8 13 d6 ff ff       	call   c0009e31 <Phys::allocatePage()>
+c000c819:	e8 12 d6 ff ff       	call   c0009e30 <Phys::allocatePage()>
 c000c81e:	c7 04 24 03 04 00 00 	mov    DWORD PTR [esp],0x403
 c000c825:	6a 01                	push   0x1
 c000c827:	53                   	push   ebx
@@ -17253,7 +17255,7 @@ c000c846:	29 eb                	sub    ebx,ebp
 c000c848:	29 ef                	sub    edi,ebp
 c000c84a:	83 ec 08             	sub    esp,0x8
 c000c84d:	53                   	push   ebx
-c000c84e:	68 53 2e 02 c0       	push   0xc0022e53
+c000c84e:	68 4f 2e 02 c0       	push   0xc0022e4f
 c000c853:	e8 13 02 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
 c000c858:	58                   	pop    eax
 c000c859:	80 7e 01 01          	cmp    BYTE PTR [esi+0x1],0x1
@@ -17262,14 +17264,14 @@ c000c85e:	19 c0                	sbb    eax,eax
 c000c860:	83 e0 04             	and    eax,0x4
 c000c863:	05 03 04 00 00       	add    eax,0x403
 c000c868:	50                   	push   eax
-c000c869:	68 67 2e 02 c0       	push   0xc0022e67
+c000c869:	68 63 2e 02 c0       	push   0xc0022e63
 c000c86e:	e8 f8 01 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
-c000c873:	e8 b9 d5 ff ff       	call   c0009e31 <Phys::allocatePage()>
+c000c873:	e8 b8 d5 ff ff       	call   c0009e30 <Phys::allocatePage()>
 c000c878:	59                   	pop    ecx
 c000c879:	89 c5                	mov    ebp,eax
 c000c87b:	58                   	pop    eax
 c000c87c:	55                   	push   ebp
-c000c87d:	68 75 2e 02 c0       	push   0xc0022e75
+c000c87d:	68 71 2e 02 c0       	push   0xc0022e71
 c000c882:	e8 e4 01 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
 c000c887:	80 7e 01 01          	cmp    BYTE PTR [esi+0x1],0x1
 c000c88b:	19 d2                	sbb    edx,edx
@@ -17288,14 +17290,14 @@ c000c8a8:	e8 a9 f1 ff ff       	call   c000ba56 <VAS::getPageTableEntry(unsigned
 c000c8ad:	5a                   	pop    edx
 c000c8ae:	59                   	pop    ecx
 c000c8af:	ff 30                	push   DWORD PTR [eax]
-c000c8b1:	68 91 2e 02 c0       	push   0xc0022e91
+c000c8b1:	68 8d 2e 02 c0       	push   0xc0022e8d
 c000c8b6:	e8 b0 01 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
 c000c8bb:	0f 20 d8             	mov    eax,cr3
 c000c8be:	83 c4 0c             	add    esp,0xc
 c000c8c1:	81 eb 00 10 00 00    	sub    ebx,0x1000
 c000c8c7:	56                   	push   esi
 c000c8c8:	50                   	push   eax
-c000c8c9:	68 9c 2e 02 c0       	push   0xc0022e9c
+c000c8c9:	68 98 2e 02 c0       	push   0xc0022e98
 c000c8ce:	e8 98 01 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
 c000c8d3:	83 c4 10             	add    esp,0x10
 c000c8d6:	39 df                	cmp    edi,ebx
@@ -17309,7 +17311,7 @@ c000c8e9:	5f                   	pop    edi
 c000c8ea:	5d                   	pop    ebp
 c000c8eb:	c3                   	ret    
 c000c8ec:	83 ec 0c             	sub    esp,0xc
-c000c8ef:	68 1e 2e 02 c0       	push   0xc0022e1e
+c000c8ef:	68 1a 2e 02 c0       	push   0xc0022e1a
 c000c8f4:	e8 72 01 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
 c000c8f9:	83 c4 10             	add    esp,0x10
 c000c8fc:	83 c4 0c             	add    esp,0xc
@@ -17330,25 +17332,25 @@ c000c908 <__stack_chk_fail>:
 c000c908:	55                   	push   ebp
 c000c909:	89 e5                	mov    ebp,esp
 c000c90b:	83 ec 14             	sub    esp,0x14
-c000c90e:	68 b4 2e 02 c0       	push   0xc0022eb4
+c000c90e:	68 b0 2e 02 c0       	push   0xc0022eb0
 c000c913:	e8 53 01 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
 c000c918:	58                   	pop    eax
 c000c919:	5a                   	pop    edx
 c000c91a:	ff 75 04             	push   DWORD PTR [ebp+0x4]
-c000c91d:	68 04 2f 02 c0       	push   0xc0022f04
+c000c91d:	68 00 2f 02 c0       	push   0xc0022f00
 c000c922:	e8 44 01 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
 c000c927:	59                   	pop    ecx
 c000c928:	58                   	pop    eax
 c000c929:	8b 45 00             	mov    eax,DWORD PTR [ebp+0x0]
 c000c92c:	ff 70 04             	push   DWORD PTR [eax+0x4]
-c000c92f:	68 04 2f 02 c0       	push   0xc0022f04
+c000c92f:	68 00 2f 02 c0       	push   0xc0022f00
 c000c934:	e8 32 01 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
 c000c939:	5a                   	pop    edx
 c000c93a:	8b 45 00             	mov    eax,DWORD PTR [ebp+0x0]
 c000c93d:	59                   	pop    ecx
 c000c93e:	8b 00                	mov    eax,DWORD PTR [eax]
 c000c940:	ff 70 04             	push   DWORD PTR [eax+0x4]
-c000c943:	68 04 2f 02 c0       	push   0xc0022f04
+c000c943:	68 00 2f 02 c0       	push   0xc0022f00
 c000c948:	e8 1e 01 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
 c000c94d:	5a                   	pop    edx
 c000c94e:	8b 45 00             	mov    eax,DWORD PTR [ebp+0x0]
@@ -17356,9 +17358,9 @@ c000c951:	59                   	pop    ecx
 c000c952:	8b 00                	mov    eax,DWORD PTR [eax]
 c000c954:	8b 00                	mov    eax,DWORD PTR [eax]
 c000c956:	ff 70 04             	push   DWORD PTR [eax+0x4]
-c000c959:	68 04 2f 02 c0       	push   0xc0022f04
+c000c959:	68 00 2f 02 c0       	push   0xc0022f00
 c000c95e:	e8 08 01 00 00       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
-c000c963:	c7 04 24 0c 2f 02 c0 	mov    DWORD PTR [esp],0xc0022f0c
+c000c963:	c7 04 24 08 2f 02 c0 	mov    DWORD PTR [esp],0xc0022f08
 c000c96a:	e8 9c 79 00 00       	call   c001430b <Krnl::panic(char const*)>
 c000c96f:	83 c4 10             	add    esp,0x10
 c000c972:	c9                   	leave  
@@ -17366,7 +17368,7 @@ c000c973:	c3                   	ret
 
 c000c974 <__cxa_pure_virtual>:
 c000c974:	83 ec 18             	sub    esp,0x18
-c000c977:	68 24 2f 02 c0       	push   0xc0022f24
+c000c977:	68 20 2f 02 c0       	push   0xc0022f20
 c000c97c:	e8 8a 79 00 00       	call   c001430b <Krnl::panic(char const*)>
 c000c981:	83 c4 1c             	add    esp,0x1c
 c000c984:	c3                   	ret    
@@ -17388,7 +17390,7 @@ c000c999:	55                   	push   ebp
 c000c99a:	b9 11 00 00 00       	mov    ecx,0x11
 c000c99f:	57                   	push   edi
 c000c9a0:	56                   	push   esi
-c000c9a1:	be 0a 2a 02 c0       	mov    esi,0xc0022a0a
+c000c9a1:	be 06 2a 02 c0       	mov    esi,0xc0022a06
 c000c9a6:	53                   	push   ebx
 c000c9a7:	83 ec 20             	sub    esp,0x20
 c000c9aa:	8b 6c 24 34          	mov    ebp,DWORD PTR [esp+0x34]
@@ -17510,7 +17512,7 @@ c000caaa:	83 e8 25             	sub    eax,0x25
 c000caad:	3c 53                	cmp    al,0x53
 c000caaf:	0f 87 c9 00 00 00    	ja     c000cb7e <Dbg::kprintf(char const*, ...)+0x113>
 c000cab5:	0f b6 c0             	movzx  eax,al
-c000cab8:	ff 24 85 38 2f 02 c0 	jmp    DWORD PTR [eax*4-0x3ffdd0c8]
+c000cab8:	ff 24 85 34 2f 02 c0 	jmp    DWORD PTR [eax*4-0x3ffdd0cc]
 c000cabf:	8b 4c 24 04          	mov    ecx,DWORD PTR [esp+0x4]
 c000cac3:	89 c8                	mov    eax,ecx
 c000cac5:	83 c1 04             	add    ecx,0x4
@@ -17721,7 +17723,7 @@ c000cce5:	90                   	nop
 
 c000cce6 <File::~File()>:
 c000cce6:	83 ec 0c             	sub    esp,0xc
-c000cce9:	ba f8 30 02 c0       	mov    edx,0xc00230f8
+c000cce9:	ba f4 30 02 c0       	mov    edx,0xc00230f4
 c000ccee:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
 c000ccf2:	89 10                	mov    DWORD PTR [eax],edx
 c000ccf4:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
@@ -17750,7 +17752,7 @@ c000cd33:	c3                   	ret
 
 c000cd34 <Directory::~Directory()>:
 c000cd34:	83 ec 0c             	sub    esp,0xc
-c000cd37:	ba 14 31 02 c0       	mov    edx,0xc0023114
+c000cd37:	ba 10 31 02 c0       	mov    edx,0xc0023110
 c000cd3c:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
 c000cd40:	89 10                	mov    DWORD PTR [eax],edx
 c000cd42:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
@@ -17778,7 +17780,7 @@ c000cd7e:	83 c4 0c             	add    esp,0xc
 c000cd81:	c3                   	ret    
 
 c000cd82 <Filesystem::Filesystem()>:
-c000cd82:	ba 90 30 02 c0       	mov    edx,0xc0023090
+c000cd82:	ba 8c 30 02 c0       	mov    edx,0xc002308c
 c000cd87:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
 c000cd8b:	89 10                	mov    DWORD PTR [eax],edx
 c000cd8d:	8b 15 b4 62 02 c0    	mov    edx,DWORD PTR ds:0xc00262b4
@@ -17791,7 +17793,7 @@ c000cda4:	c3                   	ret
 c000cda5:	90                   	nop
 
 c000cda6 <Filesystem::~Filesystem()>:
-c000cda6:	ba 90 30 02 c0       	mov    edx,0xc0023090
+c000cda6:	ba 8c 30 02 c0       	mov    edx,0xc002308c
 c000cdab:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
 c000cdaf:	89 10                	mov    DWORD PTR [eax],edx
 c000cdb1:	90                   	nop
@@ -18006,7 +18008,7 @@ c000cfe0:	6a 00                	push   0x0
 c000cfe2:	50                   	push   eax
 c000cfe3:	e8 1a e3 ff ff       	call   c000b302 <UnixFile::UnixFile(int)>
 c000cfe8:	83 c4 10             	add    esp,0x10
-c000cfeb:	ba f8 30 02 c0       	mov    edx,0xc00230f8
+c000cfeb:	ba f4 30 02 c0       	mov    edx,0xc00230f4
 c000cff0:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
 c000cff4:	89 10                	mov    DWORD PTR [eax],edx
 c000cff6:	8b 44 24 18          	mov    eax,DWORD PTR [esp+0x18]
@@ -18433,7 +18435,7 @@ c000d48c:	6a 00                	push   0x0
 c000d48e:	50                   	push   eax
 c000d48f:	e8 6e de ff ff       	call   c000b302 <UnixFile::UnixFile(int)>
 c000d494:	83 c4 10             	add    esp,0x10
-c000d497:	ba 14 31 02 c0       	mov    edx,0xc0023114
+c000d497:	ba 10 31 02 c0       	mov    edx,0xc0023110
 c000d49c:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
 c000d4a0:	89 10                	mov    DWORD PTR [eax],edx
 c000d4a2:	8b 44 24 18          	mov    eax,DWORD PTR [esp+0x18]
@@ -18668,7 +18670,7 @@ c000d722:	ff 74 24 1c          	push   DWORD PTR [esp+0x1c]
 c000d726:	50                   	push   eax
 c000d727:	e8 8a 09 00 00       	call   c000e0b6 <Device::Device(char const*)>
 c000d72c:	83 c4 10             	add    esp,0x10
-c000d72f:	ba 30 31 02 c0       	mov    edx,0xc0023130
+c000d72f:	ba 2c 31 02 c0       	mov    edx,0xc002312c
 c000d734:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
 c000d738:	89 10                	mov    DWORD PTR [eax],edx
 c000d73a:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
@@ -18681,7 +18683,7 @@ c000d74e:	66 90                	xchg   ax,ax
 
 c000d750 <Bus::~Bus()>:
 c000d750:	83 ec 0c             	sub    esp,0xc
-c000d753:	ba 30 31 02 c0       	mov    edx,0xc0023130
+c000d753:	ba 2c 31 02 c0       	mov    edx,0xc002312c
 c000d758:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
 c000d75c:	89 10                	mov    DWORD PTR [eax],edx
 c000d75e:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
@@ -18717,7 +18719,7 @@ c000d7aa:	ff 74 24 1c          	push   DWORD PTR [esp+0x1c]
 c000d7ae:	50                   	push   eax
 c000d7af:	e8 02 09 00 00       	call   c000e0b6 <Device::Device(char const*)>
 c000d7b4:	83 c4 10             	add    esp,0x10
-c000d7b7:	ba 5c 31 02 c0       	mov    edx,0xc002315c
+c000d7b7:	ba 58 31 02 c0       	mov    edx,0xc0023158
 c000d7bc:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
 c000d7c0:	89 10                	mov    DWORD PTR [eax],edx
 c000d7c2:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
@@ -18731,7 +18733,7 @@ c000d7e3:	90                   	nop
 
 c000d7e4 <Buzzer::~Buzzer()>:
 c000d7e4:	83 ec 0c             	sub    esp,0xc
-c000d7e7:	ba 5c 31 02 c0       	mov    edx,0xc002315c
+c000d7e7:	ba 58 31 02 c0       	mov    edx,0xc0023158
 c000d7ec:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
 c000d7f0:	89 10                	mov    DWORD PTR [eax],edx
 c000d7f2:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
@@ -18838,7 +18840,7 @@ c000d8fd:	e8 c1 c0 ff ff       	call   c00099c3 <malloc>
 c000d902:	83 c4 0c             	add    esp,0xc
 c000d905:	89 c3                	mov    ebx,eax
 c000d907:	ff 35 70 76 02 c0    	push   DWORD PTR ds:0xc0027670
-c000d90d:	68 84 31 02 c0       	push   0xc0023184
+c000d90d:	68 80 31 02 c0       	push   0xc0023180
 c000d912:	50                   	push   eax
 c000d913:	e8 be f6 ff ff       	call   c000cfd6 <File::File(char const*, Process*)>
 c000d918:	58                   	pop    eax
@@ -18870,7 +18872,7 @@ c000d950:	ff 74 24 1c          	push   DWORD PTR [esp+0x1c]
 c000d954:	50                   	push   eax
 c000d955:	e8 5c 07 00 00       	call   c000e0b6 <Device::Device(char const*)>
 c000d95a:	83 c4 10             	add    esp,0x10
-c000d95d:	ba ac 31 02 c0       	mov    edx,0xc00231ac
+c000d95d:	ba a8 31 02 c0       	mov    edx,0xc00231a8
 c000d962:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
 c000d966:	89 10                	mov    DWORD PTR [eax],edx
 c000d968:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
@@ -18882,7 +18884,7 @@ c000d97b:	90                   	nop
 
 c000d97c <Clock::~Clock()>:
 c000d97c:	83 ec 0c             	sub    esp,0xc
-c000d97f:	ba ac 31 02 c0       	mov    edx,0xc00231ac
+c000d97f:	ba a8 31 02 c0       	mov    edx,0xc00231a8
 c000d984:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
 c000d988:	89 10                	mov    DWORD PTR [eax],edx
 c000d98a:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
@@ -26767,7 +26769,7 @@ c0013945:	0f 23 f8             	mov    db7,eax
 c0013948:	c7 04 24 3d 3f 02 c0 	mov    DWORD PTR [esp],0xc0023f3d
 c001394f:	e8 c9 60 ff ff       	call   c0009a1d <Krnl::setBootMessage(char const*)>
 c0013954:	c7 83 70 01 00 00 00 00 40 c2 	mov    DWORD PTR [ebx+0x170],0xc2400000
-c001395e:	e8 ce 64 ff ff       	call   c0009e31 <Phys::allocatePage()>
+c001395e:	e8 cd 64 ff ff       	call   c0009e30 <Phys::allocatePage()>
 c0013963:	89 83 6c 01 00 00    	mov    DWORD PTR [ebx+0x16c],eax
 c0013969:	89 30                	mov    DWORD PTR [eax],esi
 c001396b:	8b 83 6c 01 00 00    	mov    eax,DWORD PTR [ebx+0x16c]
@@ -30731,7 +30733,7 @@ c001668d:	31 c0                	xor    eax,eax
 c001668f:	e9 68 01 00 00       	jmp    c00167fc <Thr::allocateMemoryForTask(Process*, File*, unsigned long, unsigned long, unsigned long)+0x29f>
 c0016694:	fa                   	cli    
 c0016695:	ff 05 48 76 02 c0    	inc    DWORD PTR ds:0xc0027648
-c001669b:	e8 91 37 ff ff       	call   c0009e31 <Phys::allocatePage()>
+c001669b:	e8 90 37 ff ff       	call   c0009e30 <Phys::allocatePage()>
 c00166a0:	6a 07                	push   0x7
 c00166a2:	89 c7                	mov    edi,eax
 c00166a4:	55                   	push   ebp
@@ -30791,7 +30793,7 @@ c0016776:	01 de                	add    esi,ebx
 c0016778:	83 c4 10             	add    esp,0x10
 c001677b:	39 de                	cmp    esi,ebx
 c001677d:	74 61                	je     c00167e0 <Thr::allocateMemoryForTask(Process*, File*, unsigned long, unsigned long, unsigned long)+0x283>
-c001677f:	e8 ad 36 ff ff       	call   c0009e31 <Phys::allocatePage()>
+c001677f:	e8 ac 36 ff ff       	call   c0009e30 <Phys::allocatePage()>
 c0016784:	6a 07                	push   0x7
 c0016786:	89 c7                	mov    edi,eax
 c0016788:	55                   	push   ebp
@@ -32027,7 +32029,7 @@ c001760e:	59                   	pop    ecx
 c001760f:	89 c3                	mov    ebx,eax
 c0017611:	5d                   	pop    ebp
 c0017612:	50                   	push   eax
-c0017613:	68 a2 28 02 c0       	push   0xc00228a2
+c0017613:	68 a1 28 02 c0       	push   0xc00228a1
 c0017618:	e8 4e 54 ff ff       	call   c000ca6b <Dbg::kprintf(char const*, ...)>
 c001761d:	89 34 24             	mov    DWORD PTR [esp],esi
 c0017620:	e8 7b 90 fe ff       	call   c00006a0 <strlen>
@@ -32080,7 +32082,7 @@ c00176c1:	75 11                	jne    c00176d4 <Thr::loadDLL(char const*, bool)
 c00176c3:	83 ec 0c             	sub    esp,0xc
 c00176c6:	25 00 f0 ff ff       	and    eax,0xfffff000
 c00176cb:	50                   	push   eax
-c00176cc:	e8 dd 26 ff ff       	call   c0009dae <Phys::freePage(unsigned long)>
+c00176cc:	e8 dc 26 ff ff       	call   c0009dad <Phys::freePage(unsigned long)>
 c00176d1:	83 c4 10             	add    esp,0x10
 c00176d4:	45                   	inc    ebp
 c00176d5:	8b 44 24 18          	mov    eax,DWORD PTR [esp+0x18]
@@ -41112,7 +41114,7 @@ c001e16d:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
 c001e171:	89 10                	mov    DWORD PTR [eax],edx
 c001e173:	83 ec 0c             	sub    esp,0xc
 c001e176:	6a 50                	push   0x50
-c001e178:	e8 9f bd fe ff       	call   c0009f1c <Phys::allocateContiguousPages(int)>
+c001e178:	e8 9e bd fe ff       	call   c0009f1b <Phys::allocateContiguousPages(int)>
 c001e17d:	83 c4 10             	add    esp,0x10
 c001e180:	89 c2                	mov    edx,eax
 c001e182:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
@@ -42452,11 +42454,11 @@ c001f109:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
 c001f10d:	c7 83 64 01 00 00 00 00 00 00 	mov    DWORD PTR [ebx+0x164],0x0
 c001f117:	89 83 6c 01 00 00    	mov    DWORD PTR [ebx+0x16c],eax
 c001f11d:	c6 83 68 01 00 00 00 	mov    BYTE PTR [ebx+0x168],0x0
-c001f124:	e8 08 ad fe ff       	call   c0009e31 <Phys::allocatePage()>
+c001f124:	e8 07 ad fe ff       	call   c0009e30 <Phys::allocatePage()>
 c001f129:	89 c6                	mov    esi,eax
 c001f12b:	89 83 74 01 00 00    	mov    DWORD PTR [ebx+0x174],eax
 c001f131:	81 c6 00 10 00 00    	add    esi,0x1000
-c001f137:	e8 f5 ac fe ff       	call   c0009e31 <Phys::allocatePage()>
+c001f137:	e8 f4 ac fe ff       	call   c0009e30 <Phys::allocatePage()>
 c001f13c:	39 c6                	cmp    esi,eax
 c001f13e:	74 10                	je     c001f150 <SATA::open(int, int, void*)+0x6c>
 c001f140:	83 ec 0c             	sub    esp,0xc
@@ -43076,11 +43078,11 @@ c001f8b3:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
 c001f8b7:	c7 83 5c 01 00 00 00 08 00 00 	mov    DWORD PTR [ebx+0x15c],0x800
 c001f8c1:	89 83 6c 01 00 00    	mov    DWORD PTR [ebx+0x16c],eax
 c001f8c7:	c6 83 68 01 00 00 01 	mov    BYTE PTR [ebx+0x168],0x1
-c001f8ce:	e8 5e a5 fe ff       	call   c0009e31 <Phys::allocatePage()>
+c001f8ce:	e8 5d a5 fe ff       	call   c0009e30 <Phys::allocatePage()>
 c001f8d3:	89 c6                	mov    esi,eax
 c001f8d5:	89 83 78 01 00 00    	mov    DWORD PTR [ebx+0x178],eax
 c001f8db:	81 c6 00 10 00 00    	add    esi,0x1000
-c001f8e1:	e8 4b a5 fe ff       	call   c0009e31 <Phys::allocatePage()>
+c001f8e1:	e8 4a a5 fe ff       	call   c0009e30 <Phys::allocatePage()>
 c001f8e6:	39 c6                	cmp    esi,eax
 c001f8e8:	74 10                	je     c001f8fa <SATAPI::open(int, int, void*)+0x6c>
 c001f8ea:	83 ec 0c             	sub    esp,0xc
@@ -45432,7 +45434,7 @@ c002119c:	83 ec 0c             	sub    esp,0xc
 c002119f:	83 7c 24 14 00       	cmp    DWORD PTR [esp+0x14],0x0
 c00211a4:	75 10                	jne    c00211b6 <LinkedList<UnixFile>::addElement(UnixFile*)+0x1a>
 c00211a6:	83 ec 0c             	sub    esp,0xc
-c00211a9:	68 84 2a 02 c0       	push   0xc0022a84
+c00211a9:	68 80 2a 02 c0       	push   0xc0022a80
 c00211ae:	e8 58 31 ff ff       	call   c001430b <Krnl::panic(char const*)>
 c00211b3:	83 c4 10             	add    esp,0x10
 c00211b6:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
@@ -45476,12 +45478,12 @@ c0021230:	8b 40 08             	mov    eax,DWORD PTR [eax+0x8]
 c0021233:	85 c0                	test   eax,eax
 c0021235:	74 22                	je     c0021259 <LinkedList<UnixFile>::addElement(UnixFile*)+0xbd>
 c0021237:	83 ec 0c             	sub    esp,0xc
-c002123a:	68 a6 2a 02 c0       	push   0xc0022aa6
+c002123a:	68 a2 2a 02 c0       	push   0xc0022aa2
 c002123f:	e8 c7 30 ff ff       	call   c001430b <Krnl::panic(char const*)>
 c0021244:	83 c4 10             	add    esp,0x10
 c0021247:	eb 10                	jmp    c0021259 <LinkedList<UnixFile>::addElement(UnixFile*)+0xbd>
 c0021249:	83 ec 0c             	sub    esp,0xc
-c002124c:	68 b0 2a 02 c0       	push   0xc0022ab0
+c002124c:	68 ac 2a 02 c0       	push   0xc0022aac
 c0021251:	e8 b5 30 ff ff       	call   c001430b <Krnl::panic(char const*)>
 c0021256:	83 c4 10             	add    esp,0x10
 c0021259:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
@@ -45509,7 +45511,7 @@ c002127f:	8b 00                	mov    eax,DWORD PTR [eax]
 c0021281:	85 c0                	test   eax,eax
 c0021283:	75 12                	jne    c0021297 <LinkedList<UnixFile>::removeFirst()+0x1f>
 c0021285:	83 ec 0c             	sub    esp,0xc
-c0021288:	68 bc 2a 02 c0       	push   0xc0022abc
+c0021288:	68 b8 2a 02 c0       	push   0xc0022ab8
 c002128d:	e8 79 30 ff ff       	call   c001430b <Krnl::panic(char const*)>
 c0021292:	83 c4 10             	add    esp,0x10
 c0021295:	eb 7e                	jmp    c0021315 <LinkedList<UnixFile>::removeFirst()+0x9d>
@@ -45519,7 +45521,7 @@ c002129e:	8b 40 08             	mov    eax,DWORD PTR [eax+0x8]
 c00212a1:	85 c0                	test   eax,eax
 c00212a3:	74 10                	je     c00212b5 <LinkedList<UnixFile>::removeFirst()+0x3d>
 c00212a5:	83 ec 0c             	sub    esp,0xc
-c00212a8:	68 07 2b 02 c0       	push   0xc0022b07
+c00212a8:	68 03 2b 02 c0       	push   0xc0022b03
 c00212ad:	e8 59 30 ff ff       	call   c001430b <Krnl::panic(char const*)>
 c00212b2:	83 c4 10             	add    esp,0x10
 c00212b5:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
@@ -45536,7 +45538,7 @@ c00212db:	8b 40 08             	mov    eax,DWORD PTR [eax+0x8]
 c00212de:	83 f8 01             	cmp    eax,0x1
 c00212e1:	74 21                	je     c0021304 <LinkedList<UnixFile>::removeFirst()+0x8c>
 c00212e3:	83 ec 0c             	sub    esp,0xc
-c00212e6:	68 e0 2a 02 c0       	push   0xc0022ae0
+c00212e6:	68 dc 2a 02 c0       	push   0xc0022adc
 c00212eb:	e8 1b 30 ff ff       	call   c001430b <Krnl::panic(char const*)>
 c00212f0:	83 c4 10             	add    esp,0x10
 c00212f3:	eb 0f                	jmp    c0021304 <LinkedList<UnixFile>::removeFirst()+0x8c>
@@ -45596,7 +45598,7 @@ c0021366:	83 ec 0c             	sub    esp,0xc
 c0021369:	83 7c 24 14 00       	cmp    DWORD PTR [esp+0x14],0x0
 c002136e:	75 10                	jne    c0021380 <LinkedList<Device>::addElement(Device*)+0x1a>
 c0021370:	83 ec 0c             	sub    esp,0xc
-c0021373:	68 84 2a 02 c0       	push   0xc0022a84
+c0021373:	68 80 2a 02 c0       	push   0xc0022a80
 c0021378:	e8 8e 2f ff ff       	call   c001430b <Krnl::panic(char const*)>
 c002137d:	83 c4 10             	add    esp,0x10
 c0021380:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
@@ -45640,12 +45642,12 @@ c0021403:	8b 40 08             	mov    eax,DWORD PTR [eax+0x8]
 c0021406:	85 c0                	test   eax,eax
 c0021408:	74 22                	je     c002142c <LinkedList<Device>::addElement(Device*)+0xc6>
 c002140a:	83 ec 0c             	sub    esp,0xc
-c002140d:	68 a6 2a 02 c0       	push   0xc0022aa6
+c002140d:	68 a2 2a 02 c0       	push   0xc0022aa2
 c0021412:	e8 f4 2e ff ff       	call   c001430b <Krnl::panic(char const*)>
 c0021417:	83 c4 10             	add    esp,0x10
 c002141a:	eb 10                	jmp    c002142c <LinkedList<Device>::addElement(Device*)+0xc6>
 c002141c:	83 ec 0c             	sub    esp,0xc
-c002141f:	68 b0 2a 02 c0       	push   0xc0022ab0
+c002141f:	68 ac 2a 02 c0       	push   0xc0022aac
 c0021424:	e8 e2 2e ff ff       	call   c001430b <Krnl::panic(char const*)>
 c0021429:	83 c4 10             	add    esp,0x10
 c002142c:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
@@ -45708,7 +45710,7 @@ c00214af:	8b 00                	mov    eax,DWORD PTR [eax]
 c00214b1:	85 c0                	test   eax,eax
 c00214b3:	75 17                	jne    c00214cc <LinkedList<ThreadControlBlock volatile>::removeFirst()+0x24>
 c00214b5:	83 ec 0c             	sub    esp,0xc
-c00214b8:	68 bc 2a 02 c0       	push   0xc0022abc
+c00214b8:	68 b8 2a 02 c0       	push   0xc0022ab8
 c00214bd:	e8 49 2e ff ff       	call   c001430b <Krnl::panic(char const*)>
 c00214c2:	83 c4 10             	add    esp,0x10
 c00214c5:	e9 92 00 00 00       	jmp    c002155c <LinkedList<ThreadControlBlock volatile>::removeFirst()+0xb4>
@@ -45721,7 +45723,7 @@ c00214d8:	0f 95 c0             	setne  al
 c00214db:	84 c0                	test   al,al
 c00214dd:	74 11                	je     c00214f0 <LinkedList<ThreadControlBlock volatile>::removeFirst()+0x48>
 c00214df:	83 ec 0c             	sub    esp,0xc
-c00214e2:	68 07 2b 02 c0       	push   0xc0022b07
+c00214e2:	68 03 2b 02 c0       	push   0xc0022b03
 c00214e7:	e8 1f 2e ff ff       	call   c001430b <Krnl::panic(char const*)>
 c00214ec:	83 c4 10             	add    esp,0x10
 c00214ef:	90                   	nop
@@ -45741,7 +45743,7 @@ c002151b:	8b 40 08             	mov    eax,DWORD PTR [eax+0x8]
 c002151e:	83 f8 01             	cmp    eax,0x1
 c0021521:	74 25                	je     c0021548 <LinkedList<ThreadControlBlock volatile>::removeFirst()+0xa0>
 c0021523:	83 ec 0c             	sub    esp,0xc
-c0021526:	68 e0 2a 02 c0       	push   0xc0022ae0
+c0021526:	68 dc 2a 02 c0       	push   0xc0022adc
 c002152b:	e8 db 2d ff ff       	call   c001430b <Krnl::panic(char const*)>
 c0021530:	83 c4 10             	add    esp,0x10
 c0021533:	eb 13                	jmp    c0021548 <LinkedList<ThreadControlBlock volatile>::removeFirst()+0xa0>
@@ -45768,7 +45770,7 @@ c0021560:	83 ec 0c             	sub    esp,0xc
 c0021563:	83 7c 24 14 00       	cmp    DWORD PTR [esp+0x14],0x0
 c0021568:	75 12                	jne    c002157c <LinkedList<ThreadControlBlock volatile>::addElement(ThreadControlBlock volatile*)+0x1c>
 c002156a:	83 ec 0c             	sub    esp,0xc
-c002156d:	68 84 2a 02 c0       	push   0xc0022a84
+c002156d:	68 80 2a 02 c0       	push   0xc0022a80
 c0021572:	e8 94 2d ff ff       	call   c001430b <Krnl::panic(char const*)>
 c0021577:	83 c4 10             	add    esp,0x10
 c002157a:	66 90                	xchg   ax,ax
@@ -45814,13 +45816,13 @@ c00215f8:	8b 40 08             	mov    eax,DWORD PTR [eax+0x8]
 c00215fb:	85 c0                	test   eax,eax
 c00215fd:	74 25                	je     c0021624 <LinkedList<ThreadControlBlock volatile>::addElement(ThreadControlBlock volatile*)+0xc4>
 c00215ff:	83 ec 0c             	sub    esp,0xc
-c0021602:	68 a6 2a 02 c0       	push   0xc0022aa6
+c0021602:	68 a2 2a 02 c0       	push   0xc0022aa2
 c0021607:	e8 ff 2c ff ff       	call   c001430b <Krnl::panic(char const*)>
 c002160c:	83 c4 10             	add    esp,0x10
 c002160f:	eb 13                	jmp    c0021624 <LinkedList<ThreadControlBlock volatile>::addElement(ThreadControlBlock volatile*)+0xc4>
 c0021611:	8d 76 00             	lea    esi,[esi+0x0]
 c0021614:	83 ec 0c             	sub    esp,0xc
-c0021617:	68 b0 2a 02 c0       	push   0xc0022ab0
+c0021617:	68 ac 2a 02 c0       	push   0xc0022aac
 c002161c:	e8 ea 2c ff ff       	call   c001430b <Krnl::panic(char const*)>
 c0021621:	83 c4 10             	add    esp,0x10
 c0021624:	8b 44 24 10          	mov    eax,DWORD PTR [esp+0x10]
@@ -45903,7 +45905,7 @@ c00216bb:	8b 00                	mov    eax,DWORD PTR [eax]
 c00216bd:	85 c0                	test   eax,eax
 c00216bf:	75 17                	jne    c00216d8 <LinkedList<Device>::removeFirst()+0x24>
 c00216c1:	83 ec 0c             	sub    esp,0xc
-c00216c4:	68 bc 2a 02 c0       	push   0xc0022abc
+c00216c4:	68 b8 2a 02 c0       	push   0xc0022ab8
 c00216c9:	e8 3d 2c ff ff       	call   c001430b <Krnl::panic(char const*)>
 c00216ce:	83 c4 10             	add    esp,0x10
 c00216d1:	e9 92 00 00 00       	jmp    c0021768 <LinkedList<Device>::removeFirst()+0xb4>
@@ -45914,7 +45916,7 @@ c00216df:	8b 80 48 01 00 00    	mov    eax,DWORD PTR [eax+0x148]
 c00216e5:	85 c0                	test   eax,eax
 c00216e7:	74 13                	je     c00216fc <LinkedList<Device>::removeFirst()+0x48>
 c00216e9:	83 ec 0c             	sub    esp,0xc
-c00216ec:	68 07 2b 02 c0       	push   0xc0022b07
+c00216ec:	68 03 2b 02 c0       	push   0xc0022b03
 c00216f1:	e8 15 2c ff ff       	call   c001430b <Krnl::panic(char const*)>
 c00216f6:	83 c4 10             	add    esp,0x10
 c00216f9:	8d 76 00             	lea    esi,[esi+0x0]
@@ -45932,7 +45934,7 @@ c0021725:	8b 40 08             	mov    eax,DWORD PTR [eax+0x8]
 c0021728:	83 f8 01             	cmp    eax,0x1
 c002172b:	74 27                	je     c0021754 <LinkedList<Device>::removeFirst()+0xa0>
 c002172d:	83 ec 0c             	sub    esp,0xc
-c0021730:	68 e0 2a 02 c0       	push   0xc0022ae0
+c0021730:	68 dc 2a 02 c0       	push   0xc0022adc
 c0021735:	e8 d1 2b ff ff       	call   c001430b <Krnl::panic(char const*)>
 c002173a:	83 c4 10             	add    esp,0x10
 c002173d:	eb 15                	jmp    c0021754 <LinkedList<Device>::removeFirst()+0xa0>
