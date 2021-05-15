@@ -409,9 +409,9 @@ void ACPI::detectPCI()
 		Krnl::setBootMessage("Scanning the PCI bus...");
 
 		if (pciAccessMech1) {
-			KDEBUG_PAUSE("PCI MECHANSIM 1 (THE NORMAL ONE)");
+			KDEBUG_PAUSE("PCI MECHANISM 1 (THE NORMAL ONE)");
 		} else if (!pciAccessMech1) {
-			KDEBUG_PAUSE("PCI MECHANSIM 2 (THE ANCIENT ONE)");
+			KDEBUG_PAUSE("PCI MECHANISM 2 (THE ANCIENT ONE)");
 		}
 
 		PCI* pci = new PCI();	
