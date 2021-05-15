@@ -251,7 +251,14 @@ void SATAPI::detectMedia()
 
 	//send it
 	uint8_t senseData[18];
-	sendPacket(packet, 18, false, (uint16_t*) senseData, 1);
+	res = sendPacket(packet, 18, false, (uint16_t*) senseData, 1);
+	if (res == 1) {
+		//drive not ready, probably no disk
+		if (diskIn) {
+			diskRemoved();
+			return;
+		}
+	}
 
 	//check there is actually error data
 	if ((senseData[0] & 0x7F) != 0x70) {
@@ -285,7 +292,9 @@ int SATAPI::eject()
 	sendPacket(packet, 2, false, nullptr, 0);
 
 	//acknowledge the removed disk
-	diskRemoved();
+	if (diskIn) {
+		diskRemoved();
+	}
 
 	return 0;
 }

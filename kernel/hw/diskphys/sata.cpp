@@ -168,7 +168,7 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 			return 1;
 		}
 
-		++times;
+		/*++times;
 		if (times > 1000 && times < 1010) {
 			milliTenthSleep(200);
 		}
@@ -184,7 +184,7 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 		if (times > 10000) {
 			kprintf("SATA time out...\n");
 			return 1;
-		}
+		}*/
 	}
 	KDEBUG_PAUSE("SATA::access 13");
 
