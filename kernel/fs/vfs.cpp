@@ -188,6 +188,10 @@ File::File(const char* filename, Process* process) : UnixFile()
 
 	this->driveNo = this->filepath[0] - 'A';
 	fileOpen = false;
+
+	if (disks[driveNo]->fs == nullptr) {
+		disks[driveNo]->mount();
+	}
 }
 
 File::~File()
