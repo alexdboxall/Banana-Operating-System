@@ -113,20 +113,10 @@ void SATABus::probePort(HBA_MEM* abar)
 				KDEBUG_PAUSE("SATABus::probePort E");
 
 			} else if (dt == AHCI_DEV_SATAPI) {
-				KDEBUG_PAUSE("SATABus::probePort F");
-
 				portRebase(&abar->ports[i], i);
-				KDEBUG_PAUSE("SATABus::probePort G");
-
 				SATAPI* dev = new SATAPI();
-				KDEBUG_PAUSE("SATABus::probePort H");
-
 				addChild(dev);
-				KDEBUG_PAUSE("SATABus::probePort I");
-
 				dev->open(i, 0, this);
-				KDEBUG_PAUSE("SATABus::probePort J");
-
 
 			} else if (dt == AHCI_DEV_SATA) {
 				portRebase(&abar->ports[i], i);

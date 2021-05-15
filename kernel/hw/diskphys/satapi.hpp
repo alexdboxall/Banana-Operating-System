@@ -20,6 +20,8 @@ protected:
 	void diskRemoved();
 	void diskInserted();
 
+	LogicalDisk* logi;
+
 public:
 	SATAPI();
 

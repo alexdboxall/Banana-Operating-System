@@ -37,6 +37,8 @@ void SATAPI::diskRemoved()
 {
 	kprintf("SATAPI: Disk removed.\n");
 	diskIn = false;
+
+	logi->unmount();
 }
 
 void SATAPI::diskInserted()
@@ -44,8 +46,7 @@ void SATAPI::diskInserted()
 	kprintf("SATAPI: Disk inserted.\n");
 	diskIn = true;
 
-	startCache();
-	createPartitionsForDisk(this);
+	logi->mount();
 }
 
 int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, uint64_t lba, uint16_t* data, int count)
@@ -125,16 +126,16 @@ int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, uint64_t lba, uint1
 		}
 	
 		++times;
-		if (times > 1000 && times < 1010) {
+		if (times > 1000 && times < 1015) {
 			milliTenthSleep(200);
 		}
-		if (times > 2000 && times < 2010) {
+		if (times > 2000 && times < 2015) {
 			milliTenthSleep(600);
 		}
-		if (times > 3000 && times < 3010) {
+		if (times > 3000 && times < 3015) {
 			milliTenthSleep(1500);
 		}
-		if (times > 7000 && times < 7010) {
+		if (times > 7000 && times < 7015) {
 			milliTenthSleep(2500);
 		}
 		if (times > 10000) {
@@ -179,6 +180,11 @@ int SATAPI::open(int _deviceNum, int b, void* _ide)
 	Virt::getAKernelVAS()->mapPage(sataPhysAddr, sataVirtAddr, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
 
 	//detect if disk is in
+	LogicalDisk* ld = new LogicalDisk("SATAPI CD-ROM", this, 0, 0x7FFFFFFF);		//parititon with basically no size limit
+	char letter = ld->assignDriveLetter();
+	this->addChild(ld);
+	logi = ld;
+	startCache();
 	diskIn = false;
 	detectMedia();
 
@@ -229,7 +235,14 @@ void SATAPI::detectMedia()
 	memset(packet, 0, 12);
 
 	//send it
-	sendPacket(packet, 0, false, nullptr, 0);
+	int res = sendPacket(packet, 0, false, nullptr, 0);
+	if (res == 1) {
+		//drive not ready, probably no disk
+		if (diskIn) {
+			diskRemoved();
+			return;
+		}
+	}
 
 	//create a REQUEST SENSE packet
 	memset(packet, 0, 12);
