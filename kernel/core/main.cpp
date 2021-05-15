@@ -92,19 +92,11 @@ extern "C" void kernel_main()
 	outb(0x3f8 + 2, 0xC7);    // Enable FIFO, clear them, with 14-byte threshold
 	outb(0x3f8 + 4, 0x0B);    // IRQs enabled, RTS/DSR set
 
+	sysBootSettings = *((uint32_t*) 0x500);
+
 	kprintf("\n\nKERNEL HAS STARTED.\n");
 
-	if (sysBootSettings & 2048) {
-		Krnl::setBootMessage("KERNEL HAS STARTED. PRESS ENTER");
-		while (1) {
-			uint8_t a = inb(0x60);
-			if (a == 0x5A || a == 0x1C) break;
-		}
-		while (1) {
-			uint8_t a = inb(0x60);
-			if (!(a == 0x5A || a == 0x1C)) break;
-		}
-	}
+	KDEBUG_PAUSE("KERNEL HAS STARTED. PRESS ENTER");
 
 	installVgaTextImplementation();
 
@@ -127,7 +119,6 @@ extern "C" void kernel_main()
 
 	Krnl::setBootMessage("Starting the memory manager...");
 
-	sysBootSettings = *((uint32_t*) 0x500);
 	Phys::physicalMemorySetup(((*((uint32_t*) 0x524)) + 4095) & ~0xFFF);		//cryptic one-liner
 	Virt::virtualMemorySetup();
 
