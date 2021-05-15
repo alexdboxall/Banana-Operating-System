@@ -546,12 +546,9 @@ void main()
 		writeString("\nPRESS ANY KEY (N)");
 		blockingKeyboard();
 	}
+
 	regs_t in;
 	abstractionCall(ACPagingSetup, in);	
-	if (fulldebug) {
-		writeString("\nPRESS ANY KEY (O)");
-		blockingKeyboard();
-	}
 	executeFrom(0xC0000000);
 	
 	writeString("\nOH DEAR...");
