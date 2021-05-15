@@ -77,6 +77,14 @@ void sb16Demo(void* __)
 			break;
 		}
 
+		while (started && port->getBufferUsed() + bytesRead * 3 >= port->getBufferSize()) {
+			lockScheduler();
+			schedule();
+			unlockScheduler();
+		}
+
+		port->buffer16(buf, bytesRead / 2);
+
 		if (!started) {
 			card->configureRates(22050, 16, 2);
 			card->addChannel(port);
@@ -84,14 +92,6 @@ void sb16Demo(void* __)
 			card->beginPlayback();
 			started = true;
 		}
-
-		while (port->getBufferUsed() + bytesRead * 3 >= port->getBufferSize()) {
-			lockScheduler();
-			schedule();
-			unlockScheduler();
-		}
-
-		port->buffer16(buf, bytesRead / 2);
 	}
 
 	terminateTask(0);
@@ -288,6 +288,7 @@ int SoundBlaster16::_open(int, int, void*)
 	kprintf("soundblaster 16 - B.\n");
 
 	kprintf("soundblaster: DMA channel 5 has address of 0x%X\n", dmaChannel16->getAddress());
+	kprintf("soundblaster: DMA channel 5 has address of 0x%X\n", dma16Addr);
 	kprintf("soundblaster: DMA channel 5 has ch. num. of 0x%X\n", dmaChannel16->getChannelNum());
 
 	//reset the DSP
@@ -319,6 +320,7 @@ int SoundBlaster16::_open(int, int, void*)
 	//read the current soundblaster channel so we can save the 16 bit DMA channel
 	DSPOut(DSP_MIXER, MIXER_SET_DMA);
 	uint8_t currentDMA = inb(DSP_MIXER_DATA);
+	kprintf("SB16: current DMA register = 0x%x\n", currentDMA);
 
 	//set the soundblaster's DMA channel
 	DSPOut(DSP_MIXER, MIXER_SET_DMA);
@@ -340,8 +342,10 @@ void SoundBlaster16::onInterrupt()
 	static bool bufferB = true;
 
 	if (currentBits == 16) {
+		kprintf("on irq, dma16Addr = 0x%X, 5::addr = 0x%X\n", dma16Addr, dmaChannel16->getAddress());
 		int16_t* dma = (int16_t*) (dma16Addr + (!bufferB ? (DMA_SIZE / 2) : 0));
-		
+		kprintf("write location = 0x%X\n", dma);
+
 		int wordsGot = getSamples16(DMA_SIZE / 4, dma);
 		if (wordsGot == 0) {
 			turnSpeakerOn(false);

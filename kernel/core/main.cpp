@@ -94,6 +94,18 @@ extern "C" void kernel_main()
 
 	kprintf("\n\nKERNEL HAS STARTED.\n");
 
+	if (sysBootSettings & 2048) {
+		Krnl::setBootMessage("KERNEL HAS STARTED. PRESS ENTER");
+		while (1) {
+			uint8_t a = inb(0x60);
+			if (a) break;
+		}
+		while (1) {
+			uint8_t a = inb(0x60);
+			if (!a) break;
+		}
+	}
+
 	installVgaTextImplementation();
 
 	uint16_t* b = (uint16_t*) 0xC20B8000;

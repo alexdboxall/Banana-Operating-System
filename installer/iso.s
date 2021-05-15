@@ -306,7 +306,7 @@ BootFromCD:
 	;jc itsAFake		;it it failed, it is fake
 	jmp notFake
 
-copyprotectMsg db 0xA, 0xD, " Copying software is illegal. Please destroy the Banana installation disk.", 0xA, 0xA, 0xD, " ** YOU ARE A CRIMINAL **", 0
+copyprotectMsg db 0xA, 0xD, " DRM failed. ", 0
 itsAFake:
 	call ResetScreen
 	mov si, copyprotectMsg
@@ -390,32 +390,9 @@ notFake:
 	mov fs, ax
 	mov gs, ax
 
-	call ResetScreen
-
-	mov si, Title - D_OFFSET
-	call puts
-
-	mov si, WelcomeP1 - D_OFFSET
-	call puts
-
-	mov si, WelcomeP2 - D_OFFSET
-	call puts
-
 	call FlushKeybuffer
-
-.AwaitKeyPress:
-	;xor ax, ax
-	;int 0x16
-
-	;cmp ah, 0x1C	;ENTER
 	jmp Stage3
-	;cmp ah, 0x01	;ESC			;0x3D	;F3
-	;je shutdown
-	;cmp ah, 0x20	;'D'
-	;je Stage8
-	;cmp ah, 0x86	;F12
-	;je Stage8
-	jmp .AwaitKeyPress
+
 
 putsslow:
 mov [putsslowcount - D_OFFSET], byte 0
@@ -550,10 +527,8 @@ getSizeOfDisk:
 Stage3:
 	call ResetScreen
 	mov si, Stage3Msg - D_OFFSET
-	call puts
 
 	mov si, FirstHDDMsg - D_OFFSET
-	;call puts
 
 JumpBacktoStage3Loop:
 	call FlushKeybuffer
@@ -565,7 +540,9 @@ JumpBacktoStage3Loop:
 	cmp ah, 0x1C
 	;je Stage4
 	cmp ah, 0x0F
+
 	jmp Stage5
+
 	cmp ah, 0x01
 	je partviewr;shutdown
 	
