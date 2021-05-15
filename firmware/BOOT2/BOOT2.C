@@ -455,7 +455,7 @@ void main()
 		uint64_t top = bottom + length;
 		uint64_t type = *(((uint32_t*) ramTable) + 4);
 
-		if (type == 1 && bottom >= 0x100000) {
+		if (type == 1 && bottom >= 0x100000 && !(top >> 32)) {
 			uint32_t* p = (uint32_t*) bottom;
 			for (uint64_t k = 0; k < length; k += 4) {
 				*p++ = 0;
