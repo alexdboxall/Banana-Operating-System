@@ -388,8 +388,10 @@ int CPU::open(int num, int b, void* vas_)
 	Krnl::setBootMessage("Setting up system timer...");
 	timer = setupTimer(sysBootSettings & 16 ? 30 : 100);
 
-	Krnl::setBootMessage("Setting up CPU features...");
-	setupFeatures();
+	if (sysBootSettings & 32) {
+		Krnl::setBootMessage("Setting up CPU features...");
+		setupFeatures();
+	}
 	Krnl::setBootMessage("Displaying CPU features...");
 	displayFeatures();
 
@@ -740,12 +742,12 @@ void CPU::setupFeatures()
 {
 	if (features.hasSMEP) {
 		kprintf("SMEP on.\n");
-		setupSMEP();
+		//setupSMEP();
 	}
 
 	if (features.hasSMAP) {
 		kprintf("SMAP on.\n");
-		setupSMAP();
+		//setupSMAP();
 	}
 
 	if (features.hasUMIP) {
@@ -774,7 +776,7 @@ void CPU::setupFeatures()
 	}
 	
 	if (features.hasMTRR) {
-		kprintf("MTTR on.\n");
+		kprintf("MTRR on.\n");
 		setupMTRR();
 	}
 }
