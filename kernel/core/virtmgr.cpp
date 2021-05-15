@@ -564,22 +564,18 @@ int twswaps = 0;
 
 void VAS::evict(size_t virt)
 {
-	kprintf("Allocating swapfile page...\n");
 	size_t id = Virt::allocateSwapfilePage();
-	kprintf("Allocated 0x%X\n", id);
 
 	for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
 		disks[Virt::swapfileDrive - 'A']->write(Virt::swapIDToSector(id) + i, 1, ((uint8_t*) virt) + 512 * i);
 	}
 
 	size_t* entry = getPageTableEntry(virt);
-	kprintf("evicting flags A = 0x%X\n", *entry);
 	size_t physAddr = *entry & ~0xFFF;
 	*entry &= ~PAGE_PRESENT;					//not present
 	*entry &= ~PAGE_SWAPPABLE;					//clear bit 11
 	*entry &= 0xFFFU;							//clear the address
 	*entry |= id << 11;							//put the swap ID in
-	kprintf("evicting flags B = 0x%X\n", *entry);
 
 	++swapBalance;
 
@@ -599,7 +595,6 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 
 	faultAddr &= ~0xFFF;
 	size_t* entry = getPageTableEntry(faultAddr);
-	kprintf("entry = 0x%X\n", *entry);
 	if (!faultAddr) {
 		return false;
 	}
@@ -607,20 +602,15 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 	if (entry && /*((*entry) & PAGE_ALLOCATED) &&*/ !((*entry) & PAGE_PRESENT)) {
 
 		size_t id = (*entry) >> 11;				//we need the ID
-		kprintf("ID = 0x%X\n", id);
 		size_t phys = Phys::allocatePage();		//get a new physical page
-		kprintf("tryload phys = 0x%X\n", phys);
 
 		*entry &= 0xFFF;						//clear address
 		*entry |= PAGE_PRESENT;					//it is now present
 		*entry |= PAGE_SWAPPABLE;				//if it was swapped it had to be swappable we don't need to
 												//clear this as the low bit of the ID, as we want it set to 1
 		*entry |= phys;
-		kprintf("reloading flags = 0x%X\n", *entry);
 
-		kprintf("Cr3 = 0x%X, vas = 0x%X\n", CPU::readCR3(), this);
 
-		kprintf("disk things...\n");
 		for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
 			disks[Virt::swapfileDrive - 'A']->read(Virt::swapIDToSector(id) + i, 1, ((uint8_t*) faultAddr) + 512 * i);
 		}
@@ -629,7 +619,6 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		kprintf("reloading: 0x%X, %d\n", faultAddr, swapBalance);
 
 		Virt::freeSwapfilePage(id);
-		kprintf("freed swapfile page.\n");
 		unlockScheduler();
 
 		if (onPageBoundary) {
@@ -638,7 +627,6 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 
 		//flush TLB
 		CPU::writeCR3(CPU::readCR3());
-		kprintf("TLB flushed.\n");
 
 		return true;
 	}

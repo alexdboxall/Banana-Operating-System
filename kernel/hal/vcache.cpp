@@ -54,8 +54,6 @@ void VCache::invalidateReadBuffer()
 
 void VCache::writeWriteBuffer()
 {
-	kprintf(" --> Write buffer count %d to 0x%X\n", writeCacheSectors, writeCacheBuffer);
-
 	disk->write(writeCacheLBA, writeCacheSectors, writeCacheBuffer);
 
 	writeCacheLBA = 0;
@@ -72,7 +70,6 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 	}
 
 	//mutex->acquire();
-	kprintf("          ACQUIRED DISK MUTEX - write\n");
 
 	if (readCacheValid) {
 		invalidateReadBuffer();
@@ -80,7 +77,6 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 
 	if (writeCacheValid && lba == writeCacheLBA + ((uint64_t) writeCacheSectors) && count == 1) {
 		//add to cache
-		kprintf(" --> Adding to cache\n");
 		memcpy(writeCacheBuffer + writeCacheSectors * disk->sectorSize, ptr, disk->sectorSize);
 		++writeCacheSectors;
 
@@ -100,17 +96,14 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 			writeCacheLBA = lba;
 			writeCacheSectors = count;
 			writeCacheValid = true;
-			kprintf(" --> Write (B) count %d to 0x%X\n", 1, ptr);
 			memcpy(writeCacheBuffer, ptr, disk->sectorSize);
 
 		//otherwise, just write it
 		} else {
-			kprintf(" --> Write count %d to 0x%X\n", count, ptr);
 			disk->write(lba, count, ptr);
 		}
 	}
 
-	kprintf("          RELEASING DISK MUTEX\n");
 	//mutex->release();
 	return 0;
 }
@@ -124,7 +117,6 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 	}
 
 	//mutex->acquire();
-	kprintf("          ACQUIRED DISK MUTEX - read\n");
 
 	//NOTE: this is very inefficient, we should check if it is in the cache
 	//		and if it is, just memcpy the data
@@ -149,11 +141,9 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 
 	} else {
 		invalidateReadBuffer();
-		kprintf(" --> Read count %d to 0x%X\n", count, ptr);
 		disk->read(lba, count, ptr);
 	}
 
-	kprintf("          RELEASED DISK MUTEX\n");
 	//mutex->release();
 	return 0;
 }

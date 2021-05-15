@@ -741,12 +741,12 @@ void CPU::prohibitUsermodeDataAccess()
 void CPU::setupFeatures()
 {
 	if (features.hasSMEP) {
-		kprintf("SMEP on.\n");
+		//kprintf("SMEP on.\n");
 		//setupSMEP();
 	}
 
 	if (features.hasSMAP) {
-		kprintf("SMAP on.\n");
+		//kprintf("SMAP on.\n");
 		//setupSMAP();
 	}
 
