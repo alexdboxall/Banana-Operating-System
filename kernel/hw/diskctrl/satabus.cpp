@@ -71,7 +71,7 @@ int SATABus::findCmdslot(HBA_PORT* port)
 	KDEBUG_PAUSE("SATABus::findCmdslot B");
 
 	for (int i = 0; i < cmdslots; i++) {
-		char zxc[12];
+		char zxc[34];
 		strcpy(zxc, "00 SATABus::findCmdslot C");
 		zxc[0] = (i / 10) % 10 + '0';
 		zxc[1] = (i / 1) % 10 + '0';
