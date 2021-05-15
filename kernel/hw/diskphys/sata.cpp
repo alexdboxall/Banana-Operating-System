@@ -186,6 +186,8 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 int SATA::read(uint64_t lba, int count, void* buffer)
 {
+	KDEBUG_PAUSE("SATA::read 1");
+
 	//check for sane values
 	if (count > 255 || count <= 0) {
 		return (int) DiskError::BadSectorCount;
@@ -193,9 +195,11 @@ int SATA::read(uint64_t lba, int count, void* buffer)
 	if (buffer == nullptr) {
 		return (int) DiskError::BadBuffer;
 	}
+	KDEBUG_PAUSE("SATA::read 2");
 
 	//perform the read operation
 	int err = access(lba, count, buffer, false);
+	KDEBUG_PAUSE("SATA::read 3");
 
 	//error checking
 	if (err) {
@@ -207,6 +211,8 @@ int SATA::read(uint64_t lba, int count, void* buffer)
 
 int SATA::write(uint64_t lba, int count, void* buffer)
 {
+	KDEBUG_PAUSE("SATA::write 1");
+
 	//check for sane values
 	if (count > 255 || count <= 0) {
 		return (int) DiskError::BadSectorCount;
@@ -214,6 +220,7 @@ int SATA::write(uint64_t lba, int count, void* buffer)
 	if (buffer == nullptr) {
 		return (int) DiskError::BadBuffer;
 	}
+	KDEBUG_PAUSE("SATA::write 2");
 
 	//perform the read operation
 	//int err = access(lba, count, buffer, true);
@@ -224,6 +231,7 @@ int SATA::write(uint64_t lba, int count, void* buffer)
 		access(lba++, 1, bf, true);
 		bf += 512;
 	}
+	KDEBUG_PAUSE("SATA::write 3");
 
 	//error checking
 	if (err) {

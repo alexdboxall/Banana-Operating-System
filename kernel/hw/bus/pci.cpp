@@ -340,17 +340,12 @@ char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo, char* outbuffer)
 
 void PCI::foundDevice(PCIDeviceInfo info)
 {
-	KDEBUG_PAUSE("FOUND A DEVICE?");
-
 	if (info.vendorID == 0xFFFF) return;
 	KDEBUG_PAUSE("FOUND A DEVICE!");
 
 	if ((info.classCode == 0x06) && (info.subClass == 0x04)) {
-		KDEBUG_PAUSE("BCD? A");
 		uint8_t secondaryBus = getSecondaryBus(info.bus, info.slot, info.function);
-		KDEBUG_PAUSE("BCD? B");
 		checkBus(secondaryBus);
-		KDEBUG_PAUSE("BCD? C");
 		return;
 	}
 	
@@ -388,13 +383,9 @@ void PCI::foundDevice(PCIDeviceInfo info)
 		//NOTE: It will be set up as a DriverlessDevice for now
 		//		When we load a driver, we need to REMOVE THE DRIVELESS DEVICE from the tree
 		//		and replace it with the drivered device
-		KDEBUG_PAUSE("XYZ? A");
 		DriverlessDevice* dev = new DriverlessDevice("PCI device without driver");
-		KDEBUG_PAUSE("XYZ? B");
 		addChild(dev);
-		KDEBUG_PAUSE("XYZ? C");
 		dev->preOpenPCI(info);
-		KDEBUG_PAUSE("XYZ? D");
 	}
 }
 
@@ -418,20 +409,17 @@ void PCI::getDeviceData(uint8_t bus, uint8_t slot, uint8_t function)
 	if (headerType != 0) {
 		return;
 	}
-	KDEBUG_PAUSE("BAAAA");
 
 	uint16_t classCode = getClassCode(bus, slot, function);
 	uint8_t intno = getInterruptNumber(bus, slot, function);
 
 	PCIDeviceInfo info;
-	KDEBUG_PAUSE("BAAA");
 
 	uint32_t intPIN = pciReadWord(bus, slot, function, 0x3C);
 	intPIN >>= 8;
 	intPIN &= 0xFF;
 
 	info.intPIN = intPIN;
-	KDEBUG_PAUSE("BAA");
 
 	if (computer->root->nextPCIIRQAssignment) {
 		for (int i = 0; i < computer->root->nextPCIIRQAssignment; ++i) {
@@ -451,21 +439,13 @@ void PCI::getDeviceData(uint8_t bus, uint8_t slot, uint8_t function)
 
 			if (slot == computer->root->pciIRQAssignments[i].slot && intPIN == computer->root->pciIRQAssignments[i].pin) {
 				kprintf("TODO: PIC::getDeviceData check bus!\n");
-				KDEBUG_PAUSE("A");
 				intno = computer->root->pciIRQAssignments[i].interrupt;
-				KDEBUG_PAUSE("B");
-
 				kprintf("Slot %d, Pin %d -> IRQ %d\n", slot, intPIN, intno);
 			}
 		}
 	}
-	KDEBUG_PAUSE("BA");
 
-	char barn[6];
-	strcpy(barn, "BAR0");
 	for (int i = 0; i < 6; ++i) {
-		KDEBUG_PAUSE(barn);
-		barn[3]++;
 		info.bar[i] = getBARAddress(i, bus, slot, function);
 	}
 	info.bus = bus;
@@ -477,45 +457,23 @@ void PCI::getDeviceData(uint8_t bus, uint8_t slot, uint8_t function)
 	info.progIF = getProgIF(bus, slot, function);
 	info.vendorID = getVendorID(bus, slot, function);
 	info.interrrupt = intno;
-	KDEBUG_PAUSE("BB");
 
 	foundDevice(info);
-	KDEBUG_PAUSE("BC");
-
 }
 
 void PCI::checkDevice(uint8_t bus, uint8_t device)
 {
-	char q[32];
-	strcpy(q, "000 00 CHECK DEVICE. B");
-	q[0] = (bus / 100) % 10 + '0';
-	q[1] = (bus / 10) % 10 + '0';
-	q[2] = (bus / 1) % 10 + '0';
-	q[4] = (device / 10) % 10 + '0';
-	q[5] = (device / 1) % 10 + '0';
-	KDEBUG_PAUSE(q);
-
 	uint8_t function = 0;
 	uint16_t vendorID = getVendorID(bus, device, function);
-	KDEBUG_PAUSE("--");
 	getDeviceData(bus, device, function);
-	KDEBUG_PAUSE("--.");
 
 	uint8_t headerType = getHeaderType(bus, device, function);
-	KDEBUG_PAUSE("--wq");
 
 	if ((headerType & 0x80) != 0) {
 		/* It is a multi-function device, so check remaining functions */
-		KDEBUG_PAUSE("multifunc");
 		for (function = 1; function < 8; function++) {
-			char nfn[5];
-			strcpy(nfn, "0fn");
-			nfn[0] = '0' + function;
-			KDEBUG_PAUSE(nfn);
 			if (getVendorID(bus, device, function) != 0xFFFF) {
-				KDEBUG_PAUSE("-fn-");
 				getDeviceData(bus, device, function);
-				KDEBUG_PAUSE("fn--fn");
 			}
 		}
 	}
@@ -523,20 +481,7 @@ void PCI::checkDevice(uint8_t bus, uint8_t device)
 
 void PCI::checkBus(uint8_t bus)
 {
-	char p[32];
-	strcpy(p, "000 CHECK BUS.");
-	p[0] = (bus / 100) % 10 + '0';
-	p[1] = (bus / 10) % 10 + '0';
-	p[2] = (bus / 1) % 10 + '0';
-	KDEBUG_PAUSE(p);
-
 	for (uint8_t device = 0; device < 32; device++) {
-		char q[32];
-		strcpy(q, "00 CHECK DEVICE. A");
-		q[0] = (device / 10) % 10 + '0';
-		q[1] = (device / 1) % 10 + '0';
-		KDEBUG_PAUSE(q);
-
 		checkDevice(bus, device);
 	}
 }
@@ -546,23 +491,15 @@ void PCI::detect()
 	uint8_t function;
 	uint8_t bus;
 
-	KDEBUG_PAUSE("PCI A.");
 
 	uint16_t headerType = getHeaderType(0, 0, 0);
-	KDEBUG_PAUSE("PCI A.");
 
 	if ((headerType & 0x80) == 0) {
-		KDEBUG_PAUSE("SINGLE");
 		// Single PCI host controller
 		checkBus(0);
 	} else {
-		KDEBUG_PAUSE("MULTIPLE");
 		// Multiple PCI host controllers
-		char p[7];
-		strcpy(p, "0 PCI.");
 		for (function = 0; function < 8; function++) {
-			KDEBUG_PAUSE(p);
-			p[0]++;
 			if (getVendorID(0, 0, function) != 0xFFFF) break;
 			bus = function;
 			checkBus(bus);
