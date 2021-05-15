@@ -287,6 +287,9 @@ int SoundBlaster16::_open(int, int, void*)
 	dma16Addr = dmaChannel16->getAddress();
 	kprintf("soundblaster 16 - B.\n");
 
+	kprintf("soundblaster: DMA channel 5 has address of 0x%X\n", dmaChannel16->getAddress());
+	kprintf("soundblaster: DMA channel 5 has ch. num. of 0x%X\n", dmaChannel16->getChannelNum());
+
 	//reset the DSP
 	resetDSP();
 	turnSpeakerOn(true);
