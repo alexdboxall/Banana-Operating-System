@@ -207,7 +207,7 @@ if exist Banana/qemuinhibit.txt (
     echo a
 ) else (
 rem "C:/Program Files/QEMU/qemu-system-i386" -L "C:\Program Files\qemu" 
-    qemu-system-i386 -soundhw pcspk,sb16,ac97 -vga std -cpu 486 -serial file:log3.txt -m 8 -fda mikeos.flp -rtc base=utc -d guest_errors,cpu_reset -monitor stdio -cdrom D:/Users/Alex/Desktop/banana-os/Installer/BANANA.ISO -drive file="banana-os/newimage.img",id=abcdefg,if=none -device ich9-ahci,id=ahci -device ide-drive,drive=abcdefg,bus=ahci.0  
+    qemu-system-i386 -soundhw pcspk,sb16 -vga std -cpu 486 -serial file:log3.txt -m 8 -fda mikeos.flp -rtc base=utc -d guest_errors,cpu_reset -monitor stdio -cdrom D:/Users/Alex/Desktop/banana-os/Installer/BANANA.ISO -drive file="banana-os/newimage.img",id=abcdefg,if=none -device ich9-ahci,id=ahci -device ide-drive,drive=abcdefg,bus=ahci.0  
 rem  -cdrom D:/Users/Alex/Desktop/Banana/Installer/BANANA.ISO -drive file="banana-os/newimage.img",id=abcdefg,if=none -device ich9-ahci,id=ahci -device ide-drive,drive=abcdefg,bus=ahci.0 
 rem 
 	rem -hda "banana-os/newimage.img"

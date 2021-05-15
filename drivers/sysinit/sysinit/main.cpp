@@ -16,6 +16,7 @@ void beginx(void* a)
 #include "reg/registry.hpp"
 #include "thr/prcssthr.hpp"
 #include "hal/buzzer.hpp"
+#include "hal/clock.hpp"
 #include "fs/vfs.hpp"
 
 //MAIN SCRIPT
@@ -715,11 +716,19 @@ extern void (*guiKeyboardHandler) (KeyboardToken kt, bool* keystates);
 volatile char installKey = 0;
 void bootInstallKeybrd(KeyboardToken kt, bool* keystates)
 {
-    if (kt.release && kt.halScancode == '\t') {
-        installKey = 255;
+    if (keystates[(int) KeyboardSpecialKeys::Shift] && kt.halScancode == '\t') {
+        installKey = 127;
         return;
     }
     if (kt.release) return;
+    if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::Left) { 
+        installKey = 3; 
+        return; 
+    }
+    if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::Right) {
+        installKey = 4; 
+        return;
+    }
     installKey = kt.halScancode;
 }
 
@@ -813,6 +822,7 @@ void firstRun()
             }
             sel += 1;
             if (sel == 3) sel = 0;
+            milliTenthSleep(12000);
 
         } else if (installKey >= 32 && installKey < 127) {
             char ss[2];
@@ -825,16 +835,145 @@ void firstRun()
             if (sel == 0 && strlen(currName)) currName[strlen(currName) - 1] = 0;
             if (sel == 1 && strlen(currComp)) currComp[strlen(currComp) - 1] = 0;
         
-        } else if (installKey == 255) {
+        } else if (installKey == 127) {
             // Shift + TAB
             sel--;
             if (sel == -1) {
                 sel = 2;
             }
+            milliTenthSleep(12000);
         }
 
         installKey = 0;
     }
+
+    installKey = 0;
+    milliTenthSleep(9000);
+    installKey = 0;
+
+    drawBootScreen();
+    drawBasicWindow(22, 2, 50, 13, "Date and Time");
+
+    datetime_t dt = computer->clock->timeInDatetimeUTC();
+
+    char dateTime[64];
+    strcpy(dateTime, "14/05/2021 18:55:00");
+    dateTime[0] = dt.day / 10 + '0';
+    dateTime[1] = dt.day % 10 + '0';
+    dateTime[3] = (dt.month + 0) / 10 + '0';
+    dateTime[4] = (dt.month + 0) % 10 + '0';
+    dateTime[6] = ((dt.year + 0) / 1000) % 10 + '0';
+    dateTime[7] = ((dt.year + 0) / 100) % 10 + '0';
+    dateTime[8] = ((dt.year + 0) / 10) % 10 + '0';
+    dateTime[9] = ((dt.year + 0) / 1) % 10 + '0';
+    dateTime[11] = dt.hour / 10 + '0';
+    dateTime[12] = dt.hour % 10 + '0';
+    dateTime[14] = dt.minute / 10 + '0';
+    dateTime[15] = dt.minute % 10 + '0';
+    dateTime[17] = dt.second / 10 + '0';
+    dateTime[18] = dt.second % 10 + '0';
+
+    int timePtr = 0;
+
+    term->setCursor(24, 4); term->puts("Please enter the current date and time,");
+    term->setCursor(24, 5); term->puts("and then press ENTER.");
+    term->setCursor(26, 8); term->puts("DD/MM/YYYY HH:MM:SS", VgaColour::LightGrey, VgaColour::White);
+    while (1) {
+        term->setCursor(26, 7); term->puts(dateTime);
+        term->setCursor(26 + timePtr, 7);
+        term->putchar(dateTime[timePtr], VgaColour::White, VgaColour::Black);
+        
+        int hr = (dateTime[11] - '0') * 10 + (dateTime[12] - '0');
+        int hr12 = hr % 12;
+        if (hr12 == 0) hr12 = 12;
+        int mi = (dateTime[14] - '0') * 10 + (dateTime[15] - '0');
+
+        char xyz[16];
+        memset(xyz, 0, 16);
+        int abc = 0;
+        xyz[abc++] = '(';
+        xyz[abc++] = hr12 / 10 + '0';
+        xyz[abc++] = hr12 % 10 + '0';
+        xyz[abc++] = ':';
+        xyz[abc++] = mi / 10 + '0';
+        xyz[abc++] = mi % 10 + '0';
+        xyz[abc++] = ' ';
+        xyz[abc++] = hr >= 12 ? 'P' : 'A';
+        xyz[abc++] = 'M';
+        xyz[abc++] = ')';
+        term->setCursor(26 + strlen(dateTime) + 4, 7); term->puts(xyz);
+
+        term->setCursor(26 + timePtr, 7);
+
+        while (installKey == 0);
+        if (installKey == 3 || installKey == '\b') {
+            do {
+                --timePtr;
+                if (timePtr == -1) timePtr = strlen(dateTime) - 1;
+            } while (dateTime[timePtr] == ' ' || dateTime[timePtr] == '/' || dateTime[timePtr] == ':');
+
+        } else if ((installKey >= '0' && installKey <= '9') || installKey == ' ' || installKey == 4) {
+            if (installKey >= '0' && installKey <= '9') {
+                if (timePtr == 0 && installKey >= '4') {
+                    dateTime[timePtr++] = '0';
+                    dateTime[timePtr] = installKey;
+
+                } else if (timePtr == 3 && installKey >= '2') {
+                    dateTime[timePtr++] = '0';
+                    dateTime[timePtr] = installKey;
+
+                } else if (timePtr == 11 && installKey >= '3') {
+                    dateTime[timePtr++] = '0';
+                    dateTime[timePtr] = installKey;
+
+                } else if (timePtr == 14 && installKey >= '6') {
+                    dateTime[timePtr++] = '0';
+                    dateTime[timePtr] = installKey;
+
+                } else if (timePtr == 17 && installKey >= '6') {
+                    dateTime[timePtr++] = '0';
+                    dateTime[timePtr] = installKey;
+
+                } else {
+                    dateTime[timePtr] = installKey;
+                }
+            }
+            do  {
+                ++timePtr;
+                if (timePtr >= strlen(dateTime)) timePtr = 0;
+            } while (dateTime[timePtr] == ' ' || dateTime[timePtr] == '/' || dateTime[timePtr] == ':');
+        
+        } else if (installKey == '\n') {
+            int dd = (dateTime[0] - '0') * 10 + (dateTime[1] - '0');
+            int mm = (dateTime[3] - '0') * 10 + (dateTime[4] - '0');
+            int yy = (dateTime[6] - '0') * 1000 + (dateTime[7] - '0') * 100 + \
+                     (dateTime[8] - '0') * 10   + (dateTime[9] - '0');
+
+            int hh = (dateTime[11] - '0') * 10 + (dateTime[12] - '0');
+            int ii = (dateTime[14] - '0') * 10 + (dateTime[15] - '0');
+            int ss = (dateTime[17] - '0') * 10 + (dateTime[18] - '0');
+
+            bool leap = ((yy & 3) == 0 && ((yy % 25) != 0 || (yy & 15) == 0));
+
+            if (dd > 31) timePtr = 0;
+            else if (dd > 30 && (mm == 2 || mm == 4 || mm == 6 || mm == 9 || mm == 11)) timePtr = 0;
+            else if (dd == 29 && mm == 2 && !leap) timePtr = 0;
+            else if (dd == 0) timePtr = 0;
+            else if (mm > 12 || mm == 0) timePtr = 3;
+            else if (yy > 2999 || yy < 1970) timePtr = 6;
+            else if (hh >= 24) timePtr = 11;
+            else if (ii >= 60) timePtr = 14;
+            else if (ss >= 60) timePtr = 17;
+            else {
+                // TODO: actually set the time
+                break;
+            }
+        }
+
+        milliTenthSleep(3000);
+        installKey = 0;
+    }
+
     
     drawBootScreen();
     drawBasicWindow(22, 5, 50, 13, "Finalising Installation");

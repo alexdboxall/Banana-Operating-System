@@ -739,34 +739,42 @@ void CPU::prohibitUsermodeDataAccess()
 void CPU::setupFeatures()
 {
 	if (features.hasSMEP) {
+		kprintf("SMEP on.\n");
 		setupSMEP();
 	}
 
 	if (features.hasSMAP) {
+		kprintf("SMAP on.\n");
 		setupSMAP();
 	}
 
 	if (features.hasUMIP) {
+		kprintf("UMIP on.\n");
 		setupUMIP();
 	}
 
 	if (features.hasTSC) {
+		kprintf("TSC on.\n");
 		setupTSC();
 	}
 	
 	if (features.hasPSE) {
+		kprintf("PSE on.\n");
 		setupLargePages();
 	}
 	
 	if (features.hasGlobalPages) {
+		kprintf("GLOBAL PAGES on.\n");
 		setupGlobalPages();
 	}
 
 	if (features.hasPAT) {
+		kprintf("PAT on.\n");
 		setupPAT();
 	}
 	
 	if (features.hasMTRR) {
+		kprintf("MTTR on.\n");
 		setupMTRR();
 	}
 }

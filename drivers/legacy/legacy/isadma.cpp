@@ -209,8 +209,14 @@ void DMAChannel::start()
 	outb(dma16 ? DMA_FLIP_FLOP_16 : DMA_FLIP_FLOP_8, 0);
 
 	//write the address
-	outb(addrReg, (addr >> 0) & 0xFF);		//low
-	outb(addrReg, (addr >> 8) & 0xFF);		//high
+	if (dma16) {
+		outb(addrReg, (addr >> 1) & 0xFF);		//low
+		outb(addrReg, (addr >> 9) & 0xFF);		//high
+
+	} else {
+		outb(addrReg, (addr >> 0) & 0xFF);		//low
+		outb(addrReg, (addr >> 8) & 0xFF);		//high
+	}
 
 	//reset the flip-flop again writing any value
 	outb(dma16 ? DMA_FLIP_FLOP_16 : DMA_FLIP_FLOP_8, 0);
@@ -242,7 +248,7 @@ void DMAChannel::stop()
 
 void DMAChannel::mask(bool m)
 {
-	outb(dma16 ? DMA_SINGLE_MASK_16 : DMA_SINGLE_MASK_8, num | (m ? 4 : 0));
+	outb(dma16 ? DMA_SINGLE_MASK_16 : DMA_SINGLE_MASK_8, (num & 3) | (m ? 4 : 0));
 }
 
 void DMAChannel::unmask()

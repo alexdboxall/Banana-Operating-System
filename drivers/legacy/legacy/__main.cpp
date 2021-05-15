@@ -61,9 +61,7 @@ void ISA::doSpeaker()
 
 void ISA::doSoundblaster()
 {
-	return;
-
-	/*outb(0x226, 1);
+	outb(0x226, 1);
 	milliTenthSleep(30);
 	outb(0x226, 0);
 
@@ -71,14 +69,17 @@ void ISA::doSoundblaster()
 		//panic("Soundblaster IS SUPPORTED!! :)");
 		SoundBlaster16* sb = new SoundBlaster16();
 		addChild(sb);
-		sb->open(0, 0, nullptr);
+		sb->_open(0, 0, nullptr);
 
-		extern void sb16Demo(void*);
-		kernelProcess->createThread(sb16Demo, (void*) sb, 111);
+		File* f = new File("C:/Banana/System/setupisd.one", kernelProcess);
+		if (f->exists()) {
+			extern void sb16Demo(void*);
+			kernelProcess->createThread(sb16Demo, (void*) sb, 111);
+		}
 
 	} else {
 		//panic("Soundblaster is *NOT* supported!! :(");
-	}*/
+	}
 }
 
 void ISA::doSerial()

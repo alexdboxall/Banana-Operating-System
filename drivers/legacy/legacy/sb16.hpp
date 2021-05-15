@@ -1,6 +1,4 @@
 
-#if 0
-
 #ifndef _SB16HPP_
 #define _SB16HPP_
 
@@ -14,7 +12,7 @@
 #include "hal/intctrl.hpp"
 #include "hw/ports.hpp"
 #include "hw/acpi.hpp"
-#include "hal/sound/sndhw.hpp"
+#include "hal/sound/sndcard.hpp"
 #include "fs/vfs.hpp"
 
 extern "C" {
@@ -22,7 +20,7 @@ extern "C" {
 #include "libk/math.h"
 }
 
-class SoundBlaster16: public SoundDevice
+class SoundBlaster16: public SoundCard
 {
 private:
 
@@ -30,15 +28,10 @@ protected:
 
 public:
 	DMAChannel* dmaChannel;
-
-	int hertz = 8000;
-	int bits = 8;
-	bool stereo = true;
-	bool sign = false;
-
-	bool justPressedPlay = false;
+	DMAChannel* dmaChannel16;
 
 	uint32_t dmaAddr;
+	uint32_t dma16Addr;
 
 	SoundBlaster16();
 
@@ -46,12 +39,12 @@ public:
 
 	uint8_t dspVersion = 0;
 
-	virtual int getNumHwChannels();
-	virtual void beginPlayback(int sampleRate, int bits);
-	virtual void stopPlayback();
+	int open(int a, int b, void* c);
+	int _open(int a, int b, void* c);
+	int close(int a, int b, void* c);
 
-	virtual int open(int, int, void*);			//Opens the device (init code).
-	virtual int close(int, int, void*);			//Perform other commands
+	virtual void beginPlayback() override;
+	virtual void stopPlayback() override;
 
 	void onInterrupt();
 
@@ -59,10 +52,6 @@ public:
 	void resetDSP();
 	void turnSpeakerOn(bool on = true);
 };
-
-
-#endif
-
 
 
 #endif

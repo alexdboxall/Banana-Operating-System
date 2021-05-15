@@ -1,6 +1,4 @@
 
-#if 0
-
 #include <stdint.h>
 #include <stddef.h>
 
@@ -56,49 +54,45 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-/*uint8_t buf[4096];
-uint8_t buf2[4096];*/
+int16_t buf[4096];
 
-char egFile[] = "C:/gumshoe.wav";
-void sb16Demo(void* s)
+void sb16Demo(void* __)
 {
 	unlockScheduler();
 
-	/*
-	SoundBlaster16* dev = (SoundBlaster16*) s;
+	SoundCard* card = (SoundCard*) __;
 
-	SoundChannel* c = new SoundChannel(8000, 8, 90);
+	SoundPort* port = new SoundPort(22050, 16, 2, 65536);
+	bool started = false;
 
-	File* f = new File(egFile, kernelProcess);
+	File* f = new File("C:/Banana/Audio/win98snd.wav", kernelProcess);
 	f->open(FileOpenMode::Read);
-
-	bool playedYet = false;
 
 	while (1) {
 		int bytesRead = 0;
-		FileStatus st = f->read(4096, buf, &bytesRead);
+		FileStatus st = f->read(4096 * 2, buf, &bytesRead);
+
 		if (bytesRead == 0 || st != FileStatus::Success) {
 			kprintf("SONG SHOULD BE DONE.\n");
-			dev->stopPlayback();
-			return;
+			break;
 		}
 
-		lockScheduler();
-		schedule();
-		unlockScheduler();
-
-		while (c->getBufferUsed() + bytesRead >= c->getBufferSize()) {
-			sleep(1);
+		if (!started) {
+			card->configureRates(22050, 16, 2);
+			card->addChannel(port);
+			port->unpause();
+			card->beginPlayback();
+			started = true;
 		}
 
-		c->buffer8(buf, bytesRead);
-
-		if (!playedYet) {
-			dev->addChannel(c);
-			dev->beginPlayback(8000, 8);
-			playedYet = true;
+		while (port->getBufferUsed() + bytesRead * 3 >= port->getBufferSize()) {
+			lockScheduler();
+			schedule();
+			unlockScheduler();
 		}
-	}*/
+
+		port->buffer16(buf, bytesRead / 2);
+	}
 
 	terminateTask(0);
 }
@@ -133,33 +127,24 @@ void SoundBlaster16::turnSpeakerOn(bool on)
 {
 	DSPOut(DSP_WRITE, on ? WRITE_SPEAKER_ON : WRITE_SPEAKER_OFF);
 	if (!on) {
-		DSPOut(DSP_WRITE, WRITE_STOP_CHANNEL_8);
+		DSPOut(DSP_WRITE, currentBits == 16 ? WRITE_STOP_CHANNEL_16 : WRITE_STOP_CHANNEL_8);
 		DSPOut(DSP_WRITE, WRITE_SPEAKER_OFF);
 	}
 }
 
-float* tempBuffer = nullptr;
-float* outputBuffer = nullptr;
-
-char sb16name[] = "SoundBlaster 16";
-SoundBlaster16::SoundBlaster16(): SoundDevice(sb16name)
+SoundBlaster16::SoundBlaster16(): SoundCard("SoundBlaster 16")
 {
 	ports[noPorts].rangeStart = 0x220;
 	ports[noPorts].rangeLength = 16;
 	ports[noPorts++].width = 0;
-
-	if (tempBuffer == nullptr) {
-		tempBuffer = (float*) malloc(DMA_SIZE / 2 * sizeof(float));
-		outputBuffer = (float*) malloc(DMA_SIZE / 2 * sizeof(float));
-	}
 }
 
 void SoundBlaster16::handleIRQ()
 {
-	int bits = currentBits;
-
-	if (bits == 8) {
+	kprintf("SB16 IRQ.\n");
+	if (currentBits == 8) {
 		inb(DSP_ACKINT8);
+
 	} else {
 		outb(DSP_MIXER, 0x82);
 		uint8_t intStatus = inb(DSP_MIXER_DATA);
@@ -176,32 +161,42 @@ void sb16Handler(regs* r, void* context)
 	reinterpret_cast<SoundBlaster16*>(context)->handleIRQ();
 }
 
-int SoundBlaster16::getNumHwChannels()
+void SoundBlaster16::beginPlayback()
 {
-	return 1;
-}
+	bool stereo = currentChannels == 2;
+	bool sign = true;
 
-void SoundBlaster16::beginPlayback(int sampleRate, int _bits)
-{
 	//we need to turn the speaker on
 	turnSpeakerOn(true);
 
-	//write sample rate
-	uint8_t timeConstant = 256 - (1000000 / ((stereo ? 2 : 1) * hertz));
-	DSPOut(DSP_WRITE, WRITE_SET_TIME_CONSTANT);
-	DSPOut(DSP_WRITE, timeConstant);
+	if (currentBits == 16) {
+		DSPOut(DSP_WRITE, 0x41);
+		DSPOut(DSP_WRITE, (currentSampleRate >> 8) & 0xFF);
+		DSPOut(DSP_WRITE, (currentSampleRate >> 0) & 0xFF);
 
-	//get ready to play
-	DSPOut(DSP_WRITE, WRITE_PLAY_SOUND_8);
-	DSPOut(DSP_WRITE, ((int) stereo << 5) | ((int) sign << 4));
-	DSPOut(DSP_WRITE, (DMA_SIZE / 2 - 1) & 0xFF);
-	DSPOut(DSP_WRITE, ((DMA_SIZE / 2 - 1) >> 8) & 0xFF);		//play 1/2 buffer before interrupt
+		DSPOut(DSP_WRITE, 0xB6);  
+		DSPOut(DSP_WRITE, ((int) stereo << 5) | 0x10);
+		DSPOut(DSP_WRITE, (DMA_SIZE / 4 - 1) & 0xFF);
+		DSPOut(DSP_WRITE, ((DMA_SIZE / 4 - 1) >> 8) & 0xFF);
 
-	//start the first segment of playback
-	DSPOut(DSP_WRITE, 0x48);
-	DSPOut(DSP_WRITE, (DMA_SIZE / 2 - 1) & 0xFF);
-	DSPOut(DSP_WRITE, ((DMA_SIZE / 2 - 1) >> 8) & 0xFF);
-	DSPOut(DSP_WRITE, 0x1C);
+	} else {
+		//write sample rate
+		uint8_t timeConstant = 256 - (1000000 / ((currentBits == 16 ? 2 : 1) * (stereo ? 2 : 1) * currentSampleRate));
+		DSPOut(DSP_WRITE, WRITE_SET_TIME_CONSTANT);
+		DSPOut(DSP_WRITE, timeConstant);
+
+		//get ready to play
+		DSPOut(DSP_WRITE, currentBits == 16 ? WRITE_PLAY_SOUND_16 : WRITE_PLAY_SOUND_8);
+		DSPOut(DSP_WRITE, ((int) stereo << 5) | ((int) sign << 4));
+		DSPOut(DSP_WRITE, (DMA_SIZE / 2 - 1) & 0xFF);
+		DSPOut(DSP_WRITE, ((DMA_SIZE / 2 - 1) >> 8) & 0xFF);		//play 1/2 buffer before interrupt
+
+		//start the first segment of playback
+		DSPOut(DSP_WRITE, 0x48);
+		DSPOut(DSP_WRITE, (DMA_SIZE / 2 - 1) & 0xFF);
+		DSPOut(DSP_WRITE, ((DMA_SIZE / 2 - 1) >> 8) & 0xFF);
+		DSPOut(DSP_WRITE, 0x1C);
+	}
 }
 
 void SoundBlaster16::stopPlayback()
@@ -214,12 +209,11 @@ char noirq[] = "SB16 READONLY IRQ PROBLEM";
 char baddma[] = "SOUNDBLASTER INVL. DMA CHANNEL";
 int SoundBlaster16::open(int, int, void*)
 {
-	sign = true;
-	stereo = false;
+	return 0;
+}
 
-	hertz = 8000;// sampleRate;
-	bits = 8;// _bits;
-
+int SoundBlaster16::_open(int, int, void*)
+{
 	bool readonly = false;
 	//check for readonly bytes 0x80 and 0x81
 	{
@@ -276,11 +270,22 @@ int SoundBlaster16::open(int, int, void*)
 		}
 	}
 
+	kprintf("soundblaster 16.\n");
 	//program the DMA
-	dmaChannel->allocateAddressAndSet(DMA_SIZE);
+	/*dmaChannel->allocateAddressAndSet(DMA_SIZE);
 	dmaChannel->setMode(0x59);
 	dmaChannel->start();
-	dmaAddr = dmaChannel->getAddress();
+	dmaAddr = dmaChannel->getAddress();*/
+
+	dmaChannel16 = isaDMAController->tryLockChannel(5);
+	if (dmaChannel16 == nullptr) {
+		panic("CAN'T GET DMA CHANNEL 5!");
+	}
+	dmaChannel16->allocateAddressAndSet(DMA_SIZE / 2);
+	dmaChannel16->setMode(0x59);
+	dmaChannel16->start();
+	dma16Addr = dmaChannel16->getAddress();
+	kprintf("soundblaster 16 - B.\n");
 
 	//reset the DSP
 	resetDSP();
@@ -331,19 +336,37 @@ void SoundBlaster16::onInterrupt()
 {
 	static bool bufferB = true;
 
-	int samplesGot = getAudio(DMA_SIZE / 2, tempBuffer, outputBuffer);
+	if (currentBits == 16) {
+		int16_t* dma = (int16_t*) (dma16Addr + (!bufferB ? (DMA_SIZE / 2) : 0));
+		
+		int wordsGot = getSamples16(DMA_SIZE / 4, dma);
+		if (wordsGot == 0) {
+			turnSpeakerOn(false);
+			
+		} else if (wordsGot < DMA_SIZE / 4) {
+			kprintf("hello world B!\n");
 
-	uint8_t* dma = (uint8_t*) dmaAddr + (!bufferB ? (DMA_SIZE / 2) : 0);
-	floatTo8(outputBuffer, dma, samplesGot);
+			DSPOut(DSP_WRITE, 0xB0);
+			DSPOut(DSP_WRITE, ((int) (currentChannels == 2 ? 1 : 0) << 5) | 0x10);
+			DSPOut(DSP_WRITE, (wordsGot - 1) & 0xFF);
+			DSPOut(DSP_WRITE, ((wordsGot - 1) >> 8) & 0xFF);
+		}
 
-	if (samplesGot == 0) {
-		turnSpeakerOn(false);
+	} else {
+		uint8_t* dma = (uint8_t*) (dmaAddr) + (!bufferB ? (DMA_SIZE / 2) : 0);
 
-	} else if (samplesGot < DMA_SIZE / 2) {
-		DSPOut(DSP_WRITE, 0x24);
-		DSPOut(DSP_WRITE, (samplesGot - 1) & 0xFF);
-		DSPOut(DSP_WRITE, ((samplesGot - 1) >> 8) & 0xFF);
+		/*int samplesGot = ?;
+		* 
+		if (samplesGot == 0) {
+			turnSpeakerOn(false);
+
+		} else if (samplesGot < DMA_SIZE / 2) {
+			DSPOut(DSP_WRITE, 0x24);
+			DSPOut(DSP_WRITE, (samplesGot - 1) & 0xFF);
+			DSPOut(DSP_WRITE, ((samplesGot - 1) >> 8) & 0xFF);
+		}*/
 	}
+	
 
 	bufferB ^= 1;
 }
@@ -356,5 +379,3 @@ int SoundBlaster16::close(int, int, void*)
 	}
 	return 0;
 }
-
-#endif
