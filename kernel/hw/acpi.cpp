@@ -408,10 +408,21 @@ void ACPI::detectPCI()
 	if (pciDetected) {
 		Krnl::setBootMessage("Scanning the PCI bus...");
 
-		PCI* pci = new PCI();
+		if (mechanism == 1) {
+			KDEBUG_PAUSE("PCI MECHANSIM 1 (THE NORMAL ONE)");
+		} else if (mechansim == 2) {
+			KDEBUG_PAUSE("PCI MECHANSIM 2 (THE ANCIENT ONE)");
+		} else {
+			KDEBUG_PAUSE("PCI MECHANSIM ? (UH OH...)");
+		}
+
+		PCI* pci = new PCI();	
+		KDEBUG_PAUSE("PCI 1");
 		addChild(pci);
+		KDEBUG_PAUSE("PCI 2");
 		pci->open(pciAccessMech1 ? 1 : 2, 0, nullptr);
-	
+		KDEBUG_PAUSE("PCI 3");
+
 	} else {
 		kprintf("NO PCI...\n");
 		Krnl::setBootMessage("Probing ISA ports...");

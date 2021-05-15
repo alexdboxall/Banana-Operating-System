@@ -370,6 +370,16 @@ void PCI::foundDevice(PCIDeviceInfo info)
 
 void PCI::getDeviceData(uint8_t bus, uint8_t slot, uint8_t function)
 {
+	char q[32];
+	strcpy(q, "000 00 00 GET DEVICE DATA.");
+	q[0] = (bus / 100) % 10 + '0';
+	q[1] = (bus / 10) % 10 + '0';
+	q[2] = (bus / 1) % 10 + '0';
+	q[4] = (slot / 10) % 10 + '0';
+	q[5] = (slot / 1) % 10 + '0';
+	q[7] = (function / 10) % 10 + '0';
+	q[8] = (function / 1) % 10 + '0';
+
 	uint32_t headerType = pciReadWord(bus, slot, function, 0xC);
 	headerType >>= 16;
 	headerType &= 0xFF;
@@ -391,6 +401,19 @@ void PCI::getDeviceData(uint8_t bus, uint8_t slot, uint8_t function)
 
 	if (computer->root->nextPCIIRQAssignment) {
 		for (int i = 0; i < computer->root->nextPCIIRQAssignment; ++i) {
+
+			char q[32];
+			strcpy(q, "000 00 00 00 GET DEVICE DATA - IRQ ASSIGNMENT.");
+			q[0] = (bus / 100) % 10 + '0';
+			q[1] = (bus / 10) % 10 + '0';
+			q[2] = (bus / 1) % 10 + '0';
+			q[4] = (slot / 10) % 10 + '0';
+			q[5] = (slot / 1) % 10 + '0';
+			q[7] = (function / 10) % 10 + '0';
+			q[8] = (function / 1) % 10 + '0';
+			q[10] = (i / 10) % 10 + '0';
+			q[11] = (i / 1) % 10 + '0';
+
 			if (slot == computer->root->pciIRQAssignments[i].slot && intPIN == computer->root->pciIRQAssignments[i].pin) {
 				kprintf("TODO: PIC::getDeviceData check bus!\n");
 				intno = computer->root->pciIRQAssignments[i].interrupt;
@@ -436,7 +459,20 @@ void PCI::checkDevice(uint8_t bus, uint8_t device)
 
 void PCI::checkBus(uint8_t bus)
 {
+	char p[32];
+	strcpy(p, "000 CHECK BUS.");
+	p[0] = (bus / 100) % 10 + '0';
+	p[1] = (bus / 10) % 10 + '0';
+	p[2] = (bus / 1) % 10 + '0';
+	Krnl::setBootMessage(p);
+
 	for (uint8_t device = 0; device < 32; device++) {
+		char q[32];
+		strcpy(q, "00 CHECK DEVICE.");
+		q[0] = (bus / 10) % 10 + '0';
+		q[1] = (bus / 1) % 10 + '0';
+
+		Krnl::setBootMessage(q); 
 		checkDevice(bus, device);
 	}
 }
@@ -446,14 +482,21 @@ void PCI::detect()
 	uint8_t function;
 	uint8_t bus;
 
+	Krnl::setBootMessage("PCI A.");
+
 	uint16_t headerType = getHeaderType(0, 0, 0);
+	Krnl::setBootMessage("PCI A.");
 
 	if ((headerType & 0x80) == 0) {
 		// Single PCI host controller
 		checkBus(0);
 	} else {
 		// Multiple PCI host controllers
+		char p[7];
+		strcpy(p, "0 PCI.");
 		for (function = 0; function < 8; function++) {
+			Krnl::setBootMessage(p);
+			p[0]++;
 			if (getVendorID(0, 0, function) != 0xFFFF) break;
 			bus = function;
 			checkBus(bus);
