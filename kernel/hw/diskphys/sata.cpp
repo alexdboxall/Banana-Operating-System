@@ -38,12 +38,15 @@ SATA::SATA() : PhysicalDisk("SATA Hard Drive", 512)
 
 int SATA::open(int _deviceNum, int b, void* _ide)
 {
+	KDEBUG_PAUSE("SATA::open 1");
+
 	//save parameters
 	sbus = (SATABus*) _ide;
 	deviceNum = _deviceNum;
 	sectorSize = 512;
 	sizeInKBs = 64 * 1024;
 	removable = false;
+	KDEBUG_PAUSE("SATA::open 2");
 
 	//allocate 2 contiguous pages
 	sataPhysAddr = Phys::allocatePage();
@@ -55,27 +58,35 @@ int SATA::open(int _deviceNum, int b, void* _ide)
 		}
 		prev = got;
 	}
+	KDEBUG_PAUSE("SATA::open 3");
 
 	sataVirtAddr = Virt::allocateKernelVirtualPages(2);
 	Virt::getAKernelVAS()->mapPage(sataPhysAddr, sataVirtAddr, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
+	KDEBUG_PAUSE("SATA::open 4");
 
 	//set up logical disks
 	startCache();
+	KDEBUG_PAUSE("SATA::open 5");
 	createPartitionsForDisk(this);
+	KDEBUG_PAUSE("SATA::open 6");
 
 	return 0;
 }
 
 int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 {
+	KDEBUG_PAUSE("SATA::access 1");
+
 	if (count > 16) {
 		panic("SATA::access with > 16. SATA::read/write should prevent.");
 	}
+	KDEBUG_PAUSE("SATA::access 2");
 
 	uint32_t startl = lba & 0xFFFFFFFF;
 	uint32_t starth = lba >> 32;
 
 	SATABus::HBA_PORT* port = &sbus->abar->ports[deviceNum];
+	KDEBUG_PAUSE("SATA::access 3");
 
 	port->is = (uint32_t) -1;
 	int spin = 0;
@@ -83,10 +94,12 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 	if (slot == -1) {
 		return 1;
 	}
+	KDEBUG_PAUSE("SATA::access 4");
 
 	if (write) {
 		memcpy((void*) sataVirtAddr, buffer, 512 * count);
 	}
+	KDEBUG_PAUSE("SATA::access 5");
 
 	uint8_t* spot = (uint8_t*) (((size_t) port->clb) - sbus->AHCI_BASE_PHYS + sbus->AHCI_BASE_VIRT);
 	SATABus::HBA_CMD_HEADER* cmdheader = (SATABus::HBA_CMD_HEADER*) spot;
@@ -94,11 +107,13 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 	cmdheader->cfl = sizeof(SATABus::FIS_REG_H2D) / sizeof(uint32_t);
 	cmdheader->w = write;			// Read from device
 	cmdheader->prdtl = 1;			// PRDT entries count
+	KDEBUG_PAUSE("SATA::access 6");
 
 	spot = (uint8_t*) (((size_t) cmdheader->ctba) - sbus->AHCI_BASE_PHYS + sbus->AHCI_BASE_VIRT);
 	SATABus::HBA_CMD_TBL* cmdtbl = (SATABus::HBA_CMD_TBL*) spot;
 	memset(cmdtbl, 0, sizeof(SATABus::HBA_CMD_TBL) +
 		   (cmdheader->prdtl - 1) * sizeof(SATABus::HBA_PRDT_ENTRY));
+	KDEBUG_PAUSE("SATA::access 7");
 
 	cmdtbl->prdt_entry[0].dba = sataPhysAddr;		//data base address
 	cmdtbl->prdt_entry[0].dbc = 512 * count - 1;	// 512 bytes per sector
@@ -106,6 +121,7 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 	// Setup command
 	SATABus::FIS_REG_H2D* cmdfis = (SATABus::FIS_REG_H2D*) (&cmdtbl->cfis);
+	KDEBUG_PAUSE("SATA::access 8");
 
 	cmdfis->fis_type = SATABus::FIS_TYPE_REG_H2D;
 	cmdfis->c = 1;	// Command
@@ -122,17 +138,22 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 	cmdfis->countl = count & 0xFF;
 	cmdfis->counth = (count >> 8) & 0xFF;
+	KDEBUG_PAUSE("SATA::access 9");
 
 	// The below loop waits until the port is no longer busy before issuing a new command
 	while ((port->tfd & (ATA_DEV_BUSY | ATA_DEV_DRQ)) && spin < 1000000) {
 		spin++;
 	}
+	KDEBUG_PAUSE("SATA::access 10");
+
 	if (spin == 1000000) {
 		panic("Port is hung\n");
 		return 1;
 	}
+	KDEBUG_PAUSE("SATA::access 11");
 
 	port->ci = 1 << slot;	// Issue command
+	KDEBUG_PAUSE("SATA::access 12");
 
 	// Wait for completion
 	while (1) {
@@ -146,16 +167,20 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 			return FALSE;
 		}
 	}
+	KDEBUG_PAUSE("SATA::access 13");
 
 	// Check again
 	if (port->is & HBA_PxIS_TFES) {
 		panic("Read disk error\n");
 		return 1;
 	}
+	KDEBUG_PAUSE("SATA::access 14");
 
 	if (!write) {
 		memcpy(buffer, (const void*) sataVirtAddr, 512 * count);
 	}
+	KDEBUG_PAUSE("SATA::access 15");
+
 	return 0;
 }
 
