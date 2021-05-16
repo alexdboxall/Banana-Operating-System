@@ -85,7 +85,6 @@ int SATABus::findCmdslot(HBA_PORT* port)
 	}
 	KDEBUG_PAUSE("SATABus::findCmdslot E");
 
-	panic("Cannot find free command list entry\n");
 	return -1;
 }
 
