@@ -166,6 +166,9 @@ void ATAPI::diskRemoved()
 	kprintf("unmounting...\n");
 	logi->unmount();
 	kprintf("unmounted...\n");
+
+	cache->writeWriteBuffer();
+	cache->invalidateReadBuffer();
 }
 
 void ATAPI::diskInserted()

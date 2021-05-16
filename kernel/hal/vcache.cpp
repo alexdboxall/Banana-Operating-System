@@ -54,7 +54,9 @@ void VCache::invalidateReadBuffer()
 
 void VCache::writeWriteBuffer()
 {
-	disk->write(writeCacheLBA, writeCacheSectors, writeCacheBuffer);
+	if (writeCacheValid) {
+		disk->write(writeCacheLBA, writeCacheSectors, writeCacheBuffer);
+	}
 
 	writeCacheLBA = 0;
 	writeCacheValid = false;

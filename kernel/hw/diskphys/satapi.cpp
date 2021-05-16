@@ -41,6 +41,9 @@ void SATAPI::diskRemoved()
 	kprintf("unmounting...\n");
 	logi->unmount();
 	kprintf("unmounted...\n");
+
+	cache->writeWriteBuffer();
+	cache->invalidateReadBuffer();
 }
 
 void SATAPI::diskInserted()
