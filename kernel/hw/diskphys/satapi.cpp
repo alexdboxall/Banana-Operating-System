@@ -205,15 +205,6 @@ int SATAPI::open(int _deviceNum, int b, void* _ide)
 int SATAPI::read(uint64_t lba, int count, void* buffer)
 {
 	kprintf("SATAPI::read A.\n");
-	//check that there is a disk and it hasn't changed
-	if (!diskIn) {
-		detectMedia();
-		if (!diskIn) {
-			kprintf("SATAPI::read C!\n");
-			return (int) DiskError::NotReady;
-		}
-	}
-	kprintf("SATAPI::read B.\n");
 
 	if (count > 4) {
 		panic("UNIMPLEMENTED SATAPI::read with count > 4");
@@ -227,8 +218,14 @@ int SATAPI::read(uint64_t lba, int count, void* buffer)
 	packet[5] = (lba >> 0) & 0xFF;
 	packet[9] = count;
 
+	int fail = sendPacket(packet, 2048 * count, lba, (uint16_t*) buffer, count);
+
+	if (fail) {
+		detectMedia();
+	}
+
 	//send the packet
-	return sendPacket(packet, 2048 * count, lba, (uint16_t*) buffer, count);
+	return fail
 }
 
 int SATAPI::write(uint64_t lba, int count, void* buffer)
@@ -246,9 +243,6 @@ void SATAPI::detectMedia()
 {
 	kprintf("detecting media...\n");
 
-	bool retried = false;
-retry:
-
 	//create a TEST UNIT READY packet
 	uint8_t packet[12];
 	memset(packet, 0, 12);
@@ -257,10 +251,6 @@ retry:
 	int res = sendPacket(packet, 0, false, nullptr, 0);
 	if (res == 1) {
 		kprintf("err 1...\n");
-		if (!retried) {
-			retried = true;
-			goto retry;
-		}
 		//drive not ready, probably no disk
 		if (diskIn) {
 			diskRemoved();
