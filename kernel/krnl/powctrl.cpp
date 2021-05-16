@@ -23,10 +23,10 @@ namespace Krnl
 
 		while (1) {
 			powCtrlOnBattery = false;
-
-			int displayOffThreshold = powCtrlOnBattery ? batterySecsBeforeDisplayOff : poweredSecsBeforeDisplayOff;
-			int diskOffThreshold = powCtrlOnBattery ? batterySecsBeforeDiskOff : poweredSecsBeforeDiskOff;
-			int sleepOffThreshold = powCtrlOnBattery ? batterySecsBeforeSleep : poweredSecsBeforeSleep;
+			
+			int displayOffThreshold = powCtrlOnBattery ? currentPowerSettings.batterySecsBeforeDisplayOff : currentPowerSettings.poweredSecsBeforeDisplayOff;
+			int diskOffThreshold = powCtrlOnBattery ? currentPowerSettings.batterySecsBeforeDiskOff : currentPowerSettings.poweredSecsBeforeDiskOff;
+			int sleepOffThreshold = powCtrlOnBattery ? currentPowerSettings.batterySecsBeforeSleep : currentPowerSettings.poweredSecsBeforeSleep;
 
 			sleep(10);
 			secondsSinceLastUserIO += 10;

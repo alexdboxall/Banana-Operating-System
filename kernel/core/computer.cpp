@@ -326,6 +326,7 @@ namespace Krnl
 		Krnl::setBootMessage("Initialising system components...");
 		Sys::loadSyscalls();
 		Krnl::loadSystemEnv();
+		Krnl::setupPowerManager();
 		User::loadClockSettings(Reg::readIntWithDefault((char*) "country", (char*) "timezone", 58));
 		
 		Krnl::setBootMessage("Loading more device drivers...");
