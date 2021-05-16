@@ -822,7 +822,7 @@ void firstRun()
             }
             sel += 1;
             if (sel == 3) sel = 0;
-            milliTenthSleep(3000);
+            milliTenthSleep(1111);
 
         } else if (installKey >= 32 && installKey < 127) {
             char ss[2];
@@ -841,7 +841,7 @@ void firstRun()
             if (sel == -1) {
                 sel = 2;
             }
-            milliTenthSleep(1800);
+            milliTenthSleep(1111);
         }
 
         installKey = 0;
