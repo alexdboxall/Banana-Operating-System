@@ -45,8 +45,6 @@ void SATAPI::diskInserted()
 {
 	kprintf("SATAPI: Disk inserted.\n");
 	diskIn = true;
-
-	logi->mount();
 }
 
 int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, uint64_t lba, uint16_t* data, int count)
