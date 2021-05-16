@@ -159,6 +159,9 @@ FileStatus ISO9660::format(LogicalDisk* disk, int disknum, const char* type, int
 
 bool ISO9660::tryMount(LogicalDisk* disk, int diskNum)
 {
+	recentSector = 0xDEADBEEF;
+	char recentDriveletter = '0';
+
 	char bf[2048];
 	readSectorFromCDROM(16, (uint8_t*) bf, diskNum + 'A');
 	if (bf[1] != 'C') return false;

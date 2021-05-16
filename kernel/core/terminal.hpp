@@ -5,8 +5,8 @@
 #include <stdint.h>
 #include "core/unixfile.hpp"
 
-constexpr int TERMINAL_KEYBUFFER_IN_SIZE = 150;
-constexpr int TERMINAL_KEYBUFFER_OUT_SIZE = 300;
+constexpr int TERMINAL_KEYBUFFER_IN_SIZE = 48;
+constexpr int TERMINAL_KEYBUFFER_OUT_SIZE = 128;
 
 enum class VgaColour
 {
