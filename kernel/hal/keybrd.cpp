@@ -1,4 +1,5 @@
 #include "core/common.hpp"
+#include "krnl/powctrl.hpp"
 #include "hal/keybrd.hpp"
 #include "hal/device.hpp"
 #include "core/terminal.hpp"
