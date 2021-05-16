@@ -45,15 +45,21 @@ uint8_t recentBuffer[2048];
 uint32_t recentSector = 0;
 char recentDriveletter = '0';
 
-void readSectorFromCDROM(uint32_t sector, uint8_t* data, char driveletter)
+int readSectorFromCDROM(uint32_t sector, uint8_t* data, char driveletter)
 {
 	if (sector != recentSector || recentDriveletter != driveletter) {
-		recentSector = sector;
-		recentDriveletter = driveletter;
-		disks[driveletter - 'A']->read(sector, 1, recentBuffer);
+		int fail = disks[driveletter - 'A']->read(sector, 1, recentBuffer);
+		if (!fail) {
+			recentSector = sector;
+			recentDriveletter = driveletter;
+		} else {
+			memset(data, 0, 2048);
+			return 1;
+		}
 	}
 
 	memcpy(data, recentBuffer, 2048);
+	return 0;
 }
 
 bool readRoot(uint32_t* lbaOut, uint32_t* lenOut, char driveletter)
@@ -163,7 +169,8 @@ bool ISO9660::tryMount(LogicalDisk* disk, int diskNum)
 	char recentDriveletter = '0';
 
 	char bf[2048];
-	readSectorFromCDROM(16, (uint8_t*) bf, diskNum + 'A');
+	int res = readSectorFromCDROM(16, (uint8_t*) bf, diskNum + 'A');
+	if (res) return false;
 	if (bf[1] != 'C') return false;
 	if (bf[2] != 'D') return false;
 	if (bf[3] != '0') return false;
