@@ -33,6 +33,10 @@ protected:
 public:
 	int close(int a, int b, void* c);
 
+	void shutdown();
+	void restart();
+	void sleep();
+
 	void setBootMessage(const char* message);
 
 	void setDiskActivityLight(int disk, bool state);

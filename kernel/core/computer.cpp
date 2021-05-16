@@ -268,6 +268,21 @@ int Computer::close(int a, int b, void* c)
 	return root->close(a, 9999, c);
 }
 
+void Computer::shutdown()
+{
+	close(0, 0, 0);
+}
+
+void Computer::restart()
+{
+	close(1, 0, 0);
+}
+
+void Computer::sleep()
+{
+	root->sleep();
+}
+
 bool Computer::nmiEnabled()
 {
 	return nmi;
