@@ -45,13 +45,23 @@ void SATAPI::diskRemoved()
 	cache->writeWriteBuffer();
 	cache->invalidateReadBuffer();
 
-	sbus->portRebase(&sbus->abar->ports[deviceNum], deviceNum);
 }
 
 void SATAPI::diskInserted()
-{
+{	//sbus->portRebase(&sbus->abar->ports[deviceNum], deviceNum);
+
+
 	kprintf("SATAPI: Disk inserted.\n");
 	diskIn = true;
+
+	//eject the disk
+	uint8_t packet[12] = { ATAPI_CMD_EJECT, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 };
+	sendPacket(packet, 2, false, nullptr, 0);
+
+	//acknowledge the removed disk
+	if (diskIn) {
+		diskRemoved();
+	}
 }
 
 int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, uint64_t lba, uint16_t* data, int count)
