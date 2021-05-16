@@ -183,6 +183,7 @@ int SATAPI::open(int _deviceNum, int b, void* _ide)
 	//detect if disk is in
 	LogicalDisk* ld = new LogicalDisk("SATAPI CD-ROM", this, 0, 0x7FFFFFFF);		//parititon with basically no size limit
 	char letter = ld->assignDriveLetter();
+	kprintf("letter = %c\n", letter);
 	this->addChild(ld);
 	logi = ld;
 	startCache();
