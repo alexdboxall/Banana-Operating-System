@@ -44,6 +44,8 @@ void SATAPI::diskRemoved()
 
 	cache->writeWriteBuffer();
 	cache->invalidateReadBuffer();
+
+	sbus->portRebase(&sbus->abar->ports[i], i);
 }
 
 void SATAPI::diskInserted()
@@ -240,6 +242,9 @@ void SATAPI::detectMedia()
 {
 	kprintf("detecting media...\n");
 
+	bool retried = false;
+retry:
+
 	//create a TEST UNIT READY packet
 	uint8_t packet[12];
 	memset(packet, 0, 12);
@@ -248,7 +253,10 @@ void SATAPI::detectMedia()
 	int res = sendPacket(packet, 0, false, nullptr, 0);
 	if (res == 1) {
 		kprintf("err 1...\n");
-
+		if (!retried) {
+			retried = true;
+			goto retry;
+		}
 		//drive not ready, probably no disk
 		if (diskIn) {
 			diskRemoved();

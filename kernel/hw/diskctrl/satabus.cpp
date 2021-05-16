@@ -65,25 +65,15 @@ void SATABus::detect()
 
 int SATABus::findCmdslot(HBA_PORT* port)
 {
-	KDEBUG_PAUSE("SATABus::findCmdslot A");
 	uint32_t slots = (port->sact | port->ci);
 	int cmdslots = (abar->cap & 0x0f00) >> 8; // Bit 8-12
-	KDEBUG_PAUSE("SATABus::findCmdslot B");
 
 	for (int i = 0; i < cmdslots; i++) {
-		char zxc[34];
-		strcpy(zxc, "00 SATABus::findCmdslot C");
-		zxc[0] = (i / 10) % 10 + '0';
-		zxc[1] = (i / 1) % 10 + '0';
-		KDEBUG_PAUSE(zxc);
-
 		if ((slots & 1) == 0) {
-			KDEBUG_PAUSE("SATABus::findCmdslot D");
 			return i;
 		}
 		slots >>= 1;
 	}
-	KDEBUG_PAUSE("SATABus::findCmdslot E");
 
 	return -1;
 }
