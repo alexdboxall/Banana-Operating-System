@@ -45,7 +45,7 @@ void SATAPI::diskRemoved()
 	cache->writeWriteBuffer();
 	cache->invalidateReadBuffer();
 
-	sbus->portRebase(&sbus->abar->ports[deviceNum], i);
+	sbus->portRebase(&sbus->abar->ports[deviceNum], deviceNum);
 }
 
 void SATAPI::diskInserted()
