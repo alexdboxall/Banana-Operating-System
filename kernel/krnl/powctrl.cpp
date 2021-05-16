@@ -12,6 +12,10 @@
 
 namespace Krnl
 {
+	int secondsSinceLastUserIO;
+	PowerSettings currentPowerSettings;
+	bool powCtrlOnBattery;
+
 	void changePowerSettings(PowerSettings settings)
 	{
 		currentPowerSettings = settings;

@@ -30,9 +30,9 @@ namespace Krnl
 		int batterySecsBeforeSleep;
 	};
 
-	int secondsSinceLastUserIO;
-	PowerSettings currentPowerSettings;
-	bool powCtrlOnBattery;
+	extern int secondsSinceLastUserIO;
+	extern PowerSettings currentPowerSettings;
+	extern bool powCtrlOnBattery;
 
 	void changePowerSettings(PowerSettings settings);
 	void setupPowerManager();
