@@ -89,6 +89,7 @@ bool LogicalDisk::mount()
 	fs = nullptr;
 	while (conductor) {
 		extern int getIRQNestingLevel();
+		kprintf("looking at a filesystem...\n");
 		if (conductor->tryMount(this, mounted - 'A')) {
 			kprintf("found a fs to mount to.\n");
 			fs = conductor;

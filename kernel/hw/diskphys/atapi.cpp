@@ -134,6 +134,12 @@ int ATAPI::open(int __a, int _ideDeviceNum, void* _ide)
 	ide->write(channel, ATA_REG_CONTROL, 0);
 
 	//detect if disk is in
+	LogicalDisk* ld = new LogicalDisk("ATAPI CD-ROM", this, 0, 0x7FFFFFFF);		//parititon with basically no size limit
+	char letter = ld->assignDriveLetter();
+	kprintf("letter = %c\n", letter);
+	this->addChild(ld);
+	logi = ld;
+	startCache();
 	diskIn = false;
 	detectMedia();
 
@@ -156,15 +162,16 @@ void ATAPI::diskRemoved()
 {
 	kprintf("ATAPI: Disk removed.\n");
 	diskIn = false;
+
+	kprintf("unmounting...\n");
+	logi->unmount();
+	kprintf("unmounted...\n");
 }
 
 void ATAPI::diskInserted()
 {
 	kprintf("ATAPI: Disk inserted.\n");
 	diskIn = true;
-
-	startCache();
-	createPartitionsForDisk(this);
 }
 
 void ATAPI::detectMedia()
