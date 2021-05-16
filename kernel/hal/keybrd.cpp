@@ -66,6 +66,8 @@ void startGUIVESA(void* a)
 
 void sendKeyboardToken(KeyboardToken kt)
 {
+	Krnl::userIOReceived();
+
 	keystates[kt.halScancode] = !kt.release;
 	//userUsedKeyboardOrMouse();
 

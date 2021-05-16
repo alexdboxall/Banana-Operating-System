@@ -12,7 +12,7 @@ namespace Krnl
 		Nothing,
 		Sleep,
 		Shutdown,
-		TurnOffDisplay,
+		DisplayOff,
 	};
 
 	struct PowerSettings
