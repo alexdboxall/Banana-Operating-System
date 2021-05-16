@@ -26,7 +26,7 @@ namespace Krnl
 		unlockScheduler();
 
 		while (1) {
-			kprintf("Power thread: %d\n", powerThread);
+			kprintf("secs: %d\n", secondsSinceLastUserIO);
 			
 			powCtrlOnBattery = false;
 			
