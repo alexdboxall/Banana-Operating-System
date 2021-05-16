@@ -225,7 +225,7 @@ int SATAPI::read(uint64_t lba, int count, void* buffer)
 	}
 
 	//send the packet
-	return fail
+	return fail;
 }
 
 int SATAPI::write(uint64_t lba, int count, void* buffer)
