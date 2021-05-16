@@ -841,7 +841,7 @@ void firstRun()
             if (sel == -1) {
                 sel = 2;
             }
-            milliTenthSleep(3000);
+            milliTenthSleep(1800);
         }
 
         installKey = 0;
@@ -970,7 +970,7 @@ void firstRun()
             }
         }
 
-        milliTenthSleep(3000);
+        milliTenthSleep(1800);
         installKey = 0;
     }
 

@@ -190,7 +190,9 @@ File::File(const char* filename, Process* process) : UnixFile()
 	fileOpen = false;
 
 	if (disks[driveNo]->fs == nullptr) {
+		kprintf("new File() called. trying to mount...\n");
 		disks[driveNo]->mount();
+		kprintf("mounted...\n");
 	}
 }
 

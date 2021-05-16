@@ -38,7 +38,9 @@ void SATAPI::diskRemoved()
 	kprintf("SATAPI: Disk removed.\n");
 	diskIn = false;
 
+	kprintf("unmounting...\n");
 	logi->unmount();
+	kprintf("unmounted...\n");
 }
 
 void SATAPI::diskInserted()
@@ -228,6 +230,8 @@ int SATAPI::close(int a, int b, void* c)
 
 void SATAPI::detectMedia()
 {
+	kprintf("detecting media...\n");
+
 	//create a TEST UNIT READY packet
 	uint8_t packet[12];
 	memset(packet, 0, 12);
@@ -235,6 +239,8 @@ void SATAPI::detectMedia()
 	//send it
 	int res = sendPacket(packet, 0, false, nullptr, 0);
 	if (res == 1) {
+		kprintf("err 1...\n");
+
 		//drive not ready, probably no disk
 		if (diskIn) {
 			diskRemoved();
@@ -251,6 +257,8 @@ void SATAPI::detectMedia()
 	uint8_t senseData[18];
 	res = sendPacket(packet, 18, false, (uint16_t*) senseData, 1);
 	if (res == 1) {
+		kprintf("err 2...\n");
+
 		//drive not ready, probably no disk
 		if (diskIn) {
 			diskRemoved();
@@ -260,6 +268,8 @@ void SATAPI::detectMedia()
 
 	//check there is actually error data
 	if ((senseData[0] & 0x7F) != 0x70) {
+		kprintf("in 1...\n");
+
 		if (!diskIn) {
 			diskInserted();
 		}
@@ -271,12 +281,14 @@ void SATAPI::detectMedia()
 
 	//check for NO MEDIA
 	if (senseKey == 0x02 && additionalSenseCode == 0x3A) {
+		kprintf("in 2...\n");
 		if (diskIn) {
 			diskRemoved();
 		}
 
 		//check for success (meaning there is a disk)
 	} else if (senseKey == 0x00) {
+		kprintf("out 1...\n");
 		if (!diskIn) {
 			diskInserted();
 		}

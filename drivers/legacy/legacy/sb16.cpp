@@ -127,6 +127,7 @@ void SoundBlaster16::turnSpeakerOn(bool on)
 {
 	if (!on) {
 		DSPOut(DSP_WRITE, currentBits == 16 ? WRITE_STOP_CHANNEL_16 : WRITE_STOP_CHANNEL_8);
+		DSPOut(DSP_WRITE, currentBits == 16 ? 0xD9 : 0xDA);
 		DSPOut(DSP_WRITE, WRITE_SPEAKER_OFF);
 	} else {
 		DSPOut(DSP_WRITE, WRITE_SPEAKER_ON);
