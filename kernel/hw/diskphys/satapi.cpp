@@ -51,6 +51,7 @@ void SATAPI::diskInserted()
 
 int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, uint64_t lba, uint16_t* data, int count)
 {
+	kprintf("sending satapi packet...\n");
 	SATABus::HBA_PORT* port = &sbus->abar->ports[deviceNum];
 
 	port->is = (uint32_t) -1;
@@ -193,13 +194,16 @@ int SATAPI::open(int _deviceNum, int b, void* _ide)
 
 int SATAPI::read(uint64_t lba, int count, void* buffer)
 {
+	kprintf("SATAPI::read A.\n");
 	//check that there is a disk and it hasn't changed
 	if (!diskIn) {
 		detectMedia();
 		if (!diskIn) {
+			kprintf("SATAPI::read C!\n");
 			return (int) DiskError::NotReady;
 		}
 	}
+	kprintf("SATAPI::read B.\n");
 
 	if (count > 4) {
 		panic("UNIMPLEMENTED SATAPI::read with count > 4");
