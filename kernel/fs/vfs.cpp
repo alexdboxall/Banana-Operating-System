@@ -48,7 +48,7 @@ namespace Fs
 		if (strlen(tmpbuffer) <= 2 || (strlen(tmpbuffer) == 3 && tmpbuffer[2] == '/')) {
 			int diskNo = tmpbuffer[0] - 'A';
 
-			if (disks[diskNo]->fs == nullptr) {
+			if (disks[diskNo] && disks[diskNo]->fs == nullptr) {
 				kprintf("setcwd() called. trying to mount...\n");
 				disks[diskNo]->mount();
 				kprintf("mounted...\n");
@@ -195,7 +195,7 @@ File::File(const char* filename, Process* process) : UnixFile()
 	this->driveNo = this->filepath[0] - 'A';
 	fileOpen = false;
 
-	if (disks[driveNo]->fs == nullptr) {
+	if (disks[driveNo] && disks[driveNo]->fs == nullptr) {
 		kprintf("new File() called. trying to mount...\n");
 		disks[driveNo]->mount();
 		kprintf("mounted...\n");
@@ -321,7 +321,7 @@ Directory::Directory(const char* filename, Process* process) : UnixFile()
 	this->driveNo = this->filepath[0] - 'A';
 	fileOpen = false;
 
-	if (disks[driveNo]->fs == nullptr) {
+	if (disks[driveNo] && disks[driveNo]->fs == nullptr) {
 		kprintf("new Directory() called. trying to mount...\n");
 		disks[driveNo]->mount();
 		kprintf("mounted...\n");

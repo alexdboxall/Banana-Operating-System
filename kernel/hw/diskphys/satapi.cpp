@@ -48,8 +48,8 @@ void SATAPI::diskRemoved()
 }
 
 void SATAPI::diskInserted()
-{	//sbus->portRebase(&sbus->abar->ports[deviceNum], deviceNum);
-
+{	
+	//sbus->portRebase(&sbus->abar->ports[deviceNum], deviceNum);
 
 	kprintf("SATAPI: Disk inserted.\n");
 	diskIn = true;
