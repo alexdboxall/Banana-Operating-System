@@ -55,12 +55,36 @@ namespace Krnl
 		secondsSinceLastUserIO = 0;
 	}
 
+	void handlePowerButton()
+	{
+		if (currentPowerSettings.powerButton == PowerButtonOption::Shutdown) {
+			computer->shutdown();
+
+		} else if (currentPowerSettings.powerButton == PowerButtonOption::Sleep) {
+			computer->sleep();
+		}
+	}
+
+	void handleSleepButton()
+	{
+		if (currentPowerSettings.sleepButton == PowerButtonOption::Shutdown) {
+			computer->shutdown();
+
+		} else if (currentPowerSettings.sleepButton == PowerButtonOption::Sleep) {
+			computer->sleep();
+		}
+	}
+
 	void setupPowerManager()
 	{
 		secondsSinceLastUserIO = 0;
 		powCtrlOnBattery = false;
 
 		kernelProcess->createThread(powerThread, nullptr, 240);
+
+		currentPowerSettings.powerButton = PowerButtonOption::Shutdown;
+		currentPowerSettings.sleepButton = PowerButtonOption::Sleep;
+		currentPowerSettings.lidClosed = PowerButtonOption::DisplayOff;
 
 		currentPowerSettings.poweredSecsBeforeDisplayOff = 0;		//none
 		currentPowerSettings.batterySecsBeforeDisplayOff = 0;		//none

@@ -38,6 +38,9 @@ namespace Krnl
 	void setupPowerManager();
 	void userIOReceived();
 	void powCtrlSetPowerState(bool battery);
+
+	void handlePowerButton();
+	void handleSleepButton();
 }
 
 #endif

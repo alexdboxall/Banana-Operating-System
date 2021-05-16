@@ -13,6 +13,7 @@
 #include "fs/vfs.hpp"
 #include "core/common.hpp"
 #include "core/virtmgr.hpp"
+#include "krnl/powctrl.hpp"
 #include "thr/elf.hpp"
 #include "core/physmgr.hpp"
 #include "hw/acpi.hpp"
@@ -35,12 +36,12 @@ void begin(void* s)
 void acpiGlobalEventHandler(uint32_t type, ACPI_HANDLE device, uint32_t number, void* context)
 {
 	if (type == ACPI_EVENT_TYPE_FIXED && number == ACPI_EVENT_POWER_BUTTON) {
-		computer->close(0, 0, nullptr);
+		Krnl::handlePowerButton();
+		//computer->close(0, 0, nullptr);
 		//handleShutdownButton();
 	}
 	if (type == ACPI_EVENT_TYPE_FIXED && number == ACPI_EVENT_SLEEP_BUTTON) {
-
-		//handleSleepButton();
+		Krnl::handleSleepButton();
 	}
 }
 
