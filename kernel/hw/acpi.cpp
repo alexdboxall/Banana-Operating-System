@@ -518,7 +518,9 @@ void (*systemSleepFunction)();
 
 void ACPI::sleep()
 {
+	kprintf("ACPI::sleep\n");
 	if (systemSleepFunction) {
+		kprintf("have systemSleepFunction\n");
 		systemSleepFunction();
 	}
 }

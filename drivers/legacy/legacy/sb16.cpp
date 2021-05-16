@@ -125,10 +125,11 @@ void SoundBlaster16::DSPOut(uint16_t port, uint8_t val)
 
 void SoundBlaster16::turnSpeakerOn(bool on)
 {
-	DSPOut(DSP_WRITE, on ? WRITE_SPEAKER_ON : WRITE_SPEAKER_OFF);
 	if (!on) {
 		DSPOut(DSP_WRITE, currentBits == 16 ? WRITE_STOP_CHANNEL_16 : WRITE_STOP_CHANNEL_8);
 		DSPOut(DSP_WRITE, WRITE_SPEAKER_OFF);
+	} else {
+		DSPOut(DSP_WRITE, WRITE_SPEAKER_ON);
 	}
 }
 
@@ -348,6 +349,7 @@ void SoundBlaster16::onInterrupt()
 
 		int wordsGot = getSamples16(DMA_SIZE / 4, dma);
 		if (wordsGot == 0) {
+			kprintf("hello world A!\n");
 			turnSpeakerOn(false);
 			
 		} else if (wordsGot < DMA_SIZE / 4) {

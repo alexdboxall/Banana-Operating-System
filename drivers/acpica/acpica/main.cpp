@@ -354,6 +354,8 @@ ACPI_STATUS acpicaSetBrightness(ACPI_HANDLE screenObj, int level)
 
 void acpicaSleep()
 {
+	kprintf("acpicaSleep.\n");
+
 	//go to sleep
 	AcpiEnterSleepStatePrep(2);
 	AcpiEnterSleepState(2);

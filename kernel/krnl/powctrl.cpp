@@ -26,11 +26,15 @@ namespace Krnl
 		unlockScheduler();
 
 		while (1) {
+			kprintf("Power thread: %d\n", powerThread);
+			
 			powCtrlOnBattery = false;
 			
 			int displayOffThreshold = powCtrlOnBattery ? currentPowerSettings.batterySecsBeforeDisplayOff : currentPowerSettings.poweredSecsBeforeDisplayOff;
 			int diskOffThreshold = powCtrlOnBattery ? currentPowerSettings.batterySecsBeforeDiskOff : currentPowerSettings.poweredSecsBeforeDiskOff;
-			int sleepOffThreshold = powCtrlOnBattery ? currentPowerSettings.batterySecsBeforeSleep : currentPowerSettings.poweredSecsBeforeSleep;
+			int sleepThreshold = powCtrlOnBattery ? currentPowerSettings.batterySecsBeforeSleep : currentPowerSettings.poweredSecsBeforeSleep;
+
+			kprintf("sleepOffThreshold = %d\n", sleepThreshold);
 
 			sleep(10);
 			secondsSinceLastUserIO += 10;
@@ -43,8 +47,9 @@ namespace Krnl
 				//turn the disk drives off
 			}
 
-			if (secondsSinceLastUserIO > sleepOffThreshold && sleepOffThreshold) {
+			if (secondsSinceLastUserIO > sleepThreshold && sleepThreshold) {
 				//go to sleep
+				kprintf("sleeping...\n");
 				computer->sleep();
 			}
 		}
