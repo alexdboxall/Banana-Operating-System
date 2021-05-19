@@ -207,8 +207,8 @@ int SATAPI::read(uint64_t lba, int count, void* buffer)
 	}
 
 	//start the unit
-	uint8_t packet[12] = { ATAPI_CMD_EJECT, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 };
-	sendPacket(packet, 2, false, nullptr, 0);
+	uint8_t packet2[12] = { ATAPI_CMD_EJECT, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 };
+	sendPacket(packet2, 2, false, nullptr, 0);
 
 	//create the packet
 	uint8_t packet[12] = { ATAPI_CMD_READ, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
