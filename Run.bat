@@ -14,14 +14,15 @@ D:
 cd D:/Users/Alex/Desktop/Banana
 rm disacpica.txt
 rm dislegacy.txt
-rm diswsbe.txt
+rm disclipdraw.txt
 rm disvesa.txt
 rm disvga.txt
 rm discmd.txt
+rm disbios.txt
 rm disega.txt
 objdump -drwC -Mintel packages/banana/32/0002/acpica.sys >> disacpica.txt
 objdump -drwC -Mintel packages/system/32/0002/legacy.sys >> dislegacy.txt
-objdump -drwC -Mintel packages/banana/32/0001/wsbe.dll >> diswsbe.txt
+objdump -drwC -Mintel packages/banana/32/0001/clipdraw.dll >> disclipdraw.txt
 objdump -drwC -Mintel packages/banana/32/0002/vga.sys >> disvga.txt
 objdump -drwC -Mintel packages/banana/32/0002/egavga.sys >> disega.txt
 objdump -drwC -Mintel packages/banana/32/0002/vesa.sys >> disvesa.txt
