@@ -44,9 +44,9 @@ void GDO::update()
 				temp_rect->right - temp_rect->left + 1,
 				temp_rect->bottom - temp_rect->top + 1);
 
-		context->fillRect(temp_rect->left, temp_rect->top,
+		context->drawRect(temp_rect->left, temp_rect->top,
 						  temp_rect->right - temp_rect->left + 1,
-						  temp_rect->bottom - temp_rect->top + 1, 0x0000FF * i);
+						  temp_rect->bottom - temp_rect->top + 1, 0xFF0000);
 	}
 }
 

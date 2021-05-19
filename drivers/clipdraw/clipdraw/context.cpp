@@ -120,12 +120,12 @@ void Context::clearClipRects()
     kprintf("Cleared. length = %d\n", clip_rects->length());
 }
 
-void Context::drawRect(int x, int y, int width, int height, uint32_t color)
+void Context::drawRect(int x, int y, int w, int h, uint32_t color)
 {
-    drawHorizontalLine(x, y, width, color); //top
-    drawVerticalLine(x, y + 1, height - 2, color); //left 
-    drawHorizontalLine(x, y + height - 1, width, color); //bottom
-    drawVerticalLine(x + width - 1, y + 1, height - 2, color); //right
+    drawHorizontalLine(x, y, w, color);                 //top
+    drawVerticalLine(x, y + 1, h - 2, color);           //left 
+    drawHorizontalLine(x, y + h - 1, w, color);         //bottom
+    drawVerticalLine(x + w - 1, y + 1, h - 2, color);   //right
 }
 
 void Context::drawHorizontalLine(int x, int y, int length, uint32_t colour)
@@ -165,18 +165,22 @@ void Context::clippedRect(int x, int y, int width, int height, CRect* clip_area,
     }*/
 }
 
-void Context::clippedRect(int x, int y, int width, int height, CRect* clip_area, uint32_t colour)
+void Context::clippedRect(int x, int y, int w, int h, CRect* clip_area, uint32_t colour)
 {
     int curX;
-    int maxX = x + width;
-    int maxY = y + height;
+    int maxX = x + w;
+    int maxY = y + h;
 
     if (x < clip_area->left) x = clip_area->left;
     if (y < clip_area->top) y = clip_area->top;
     if (maxX > clip_area->right + 1) maxX = clip_area->right + 1;
     if (maxY > clip_area->bottom + 1) maxY = clip_area->bottom + 1;
 
-    screen->putrect(x, y, maxX, maxY, colour);
+    w = maxX - x;
+    h = maxY - y;
+
+    kprintf("clipped %d, %d, %d, %d\n", x, y, w, h);
+    screen->putrect(x, y, w, h, colour);
 }
 
 
