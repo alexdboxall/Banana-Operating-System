@@ -46,7 +46,7 @@ x87Init:
     clts                ;clear task switched bit
 
     ;allow interrupts for div by zero and invalid operands
-    fldcw [value_37A]   ; writes 0x37a, both division by zero and invalid operands cause exceptions.
+    ;fldcw [value_37A]   ; writes 0x37a, both division by zero and invalid operands cause exceptions.
 
     ret
 
