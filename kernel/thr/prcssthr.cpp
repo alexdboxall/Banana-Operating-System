@@ -77,8 +77,10 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 		if (!currentTaskTCB->fpuState) {
 			currentTaskTCB->fpuState = (uint8_t*) malloc(256);
 		}
+		lockScheduler();
 		kprintf("saving to FPU state: 0x%X\n", currentTaskTCB->fpuState);
 		computer->fpu->save(currentTaskTCB->fpuState);
+		unlockScheduler();
 		kprintf("state saved.\n");
 	}
 	kprintf("ctxt switch A.\n");
