@@ -324,6 +324,7 @@ bool (*gpFaultIntercept)(regs* r) = nullptr;
 
 void x87EmulHandler(regs* r, void* context)
 {
+	kprintf("x87 EMUL HANDLER CALLED.\n");
 	size_t cr0 = CPU::readCR0();
 	bool handled;
 
