@@ -169,13 +169,17 @@ void setupTextMode()
 	}
 
 	File* f = new File("C:/Banana/System/BIOSBSOD.COM", currentTaskTCB->processRelatedTo);
-	f->open(FileOpenMode::Read);
+	FileStatus fs = f->open(FileOpenMode::Read);
+	if (fs != FileStatus::Success) {
+		panic("WHOA...");
+	}
 	int br;
 	uint64_t siz;
 	bool dir;
 	biosbsodLen = siz;
 	f->stat(&siz, &dir);
 	f->read(siz, biosbsod, &br);
+	kprintf("br = %d\n", &br);
 	f->close();
 
 	Krnl::biosPanicHandler = bringBackToTextMode;
