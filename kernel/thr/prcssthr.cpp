@@ -76,6 +76,7 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 		if (!currentTaskTCB->fpuState) {
 			currentTaskTCB->fpuState = (uint8_t*) malloc(256);
 		}
+		kprintf("saving to FPU state: 0x%X\n", currentTaskTCB->fpuState);
 		computer->fpu->save(currentTaskTCB->fpuState);
 	}
 
@@ -83,7 +84,9 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 
 	if (computer->fpu) {
 		if (currentTaskTCB->fpuState) {
+			kprintf("loading FPU state: 0x%X\n", currentTaskTCB->fpuState);
 			computer->fpu->load(currentTaskTCB->fpuState);
+			kprintf("loaded FPU state: 0x%X\n", currentTaskTCB->fpuState);
 		}
 	}
 

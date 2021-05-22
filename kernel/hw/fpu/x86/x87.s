@@ -25,7 +25,7 @@ x87Save:
 ;WARNING: NOTICE WE ARE NOT USING A STACK FRAME FOR THIS, DO NOT CHANGE EBP WITHOUT PUSHING IT FIRST!
     push ebp
     mov ebp, esp
-    fsave [ebp + 8]     ;only plus 4 because no EBP push
+    fnsave [ebp + 8]     ;only plus 4 because no EBP push
     leave
     ret
 
