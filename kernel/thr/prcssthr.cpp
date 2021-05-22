@@ -72,7 +72,20 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 
 	// SAVE FPU
 
+	if (computer->fpu) {
+		if (!currentTaskTCB->fpuState) {
+			currentTaskTCB->fpuState = malloc(256);
+		}
+		computer->fpu->save(currentTaskTCB->fpuState);
+	}
+
 	switchToThreadASM(nextThreadToRun);
+
+	if (computer->fpu) {
+		if (currentTaskTCB->fpuState) {
+			computer->fpu->load(currentTaskTCB->fpuState);
+		}
+	}
 
 	// LOAD FPU
 
