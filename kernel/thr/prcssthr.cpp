@@ -70,7 +70,12 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 		currentTaskTCB->timeKeeping += elapsed;
 	}
 
+	// SAVE FPU
+
 	switchToThreadASM(nextThreadToRun);
+
+	// LOAD FPU
+
 }
 
 ThreadControlBlock* Process::createUserThread()

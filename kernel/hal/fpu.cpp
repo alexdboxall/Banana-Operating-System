@@ -26,7 +26,7 @@ FPU::~FPU()
 
 FPU* setupFPU() {
 
-	if (computer->features.hasAVX) {
+	/*if (computer->features.hasAVX) {
 		return (FPU*) new AVX();
 	}
 
@@ -36,7 +36,7 @@ FPU* setupFPU() {
 
 	if (computer->features.hasMMX) {
 		return (FPU*) new MMX();
-	}
+	}*/
 
 	if (computer->features.hasx87) {
 		return (FPU*) new x87();
