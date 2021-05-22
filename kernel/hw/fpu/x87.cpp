@@ -39,8 +39,13 @@ bool x87::available() {
 }
 
 void x87::save(void* ptr) {
+    volatile size_t temp = 0;
+    asm volatile("movl %0,%%esp": "rm" (temp));
+    kprintf("ESP = 0x%X\n", temp);
     kprintf("x87 FPU SAVE 1 : cr0 = 0x%X.\n", CPU::current()->readCR0());
     x87Save((size_t) ptr);
+    asm volatile("movl %0,%%esp": "rm" (temp));
+    kprintf("ESP = 0x%X\n", temp);
     kprintf("x87 FPU SAVE 2.\n");
 }
 
