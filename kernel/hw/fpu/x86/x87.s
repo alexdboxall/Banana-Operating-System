@@ -10,7 +10,7 @@ value_37F dw 0x37F
 value_37E dw 0x37E
 value_37A dw 0x37A
 
-x87Detect:      ;RETURNS A SIZE_T, 0 OR 1
+x87Detect:              ;RETURNS A SIZE_T, 0 OR 1
     mov eax, 0x1
     cpuid
     test edx, 1<<0
