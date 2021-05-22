@@ -151,8 +151,12 @@ namespace Vm {
 	bool start8086FromBuffer(uint8_t* buffer, int siz, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss);
 }
 
+#include <hw/cpu.hpp>
 void bringBackToTextMode()
 {
+	CPU::current()->writeCR3(kernelProcess->vas->pageDirectoryBasePhysical);
+	kernelProcess->vas->mapRange(0x0, 0x0, 256, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
+
 	kprintf("Dropping back to text mode!\n");
 	Vm::start8086FromBuffer(biosbsod, biosbsodLen, 0x0000, 0x90, 0, 0);
 	Vm::finish8086();
@@ -161,6 +165,8 @@ void bringBackToTextMode()
 
 #include <fs/vfs.hpp>
 
+extern Process* kernelProcess;
+
 void setupTextMode()
 {
 	if (((*((uint16_t*) 0x410)) & 0x30) == 0x30) {
@@ -168,7 +174,7 @@ void setupTextMode()
 		vgamono = true;
 	}
 
-	File* f = new File("C:/Banana/System/BIOSBSOD.COM", currentTaskTCB->processRelatedTo);
+	File* f = new File("C:/Banana/System/BIOSBSOD.COM", kernelProcess);
 	FileStatus fs = f->open(FileOpenMode::Read);
 	if (fs != FileStatus::Success) {
 		panic("WHOA...");

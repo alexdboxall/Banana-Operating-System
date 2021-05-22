@@ -448,424 +448,438 @@ Disassembly of section .text:
 100004ee <bringBackToTextMode()>:
 100004ee:	55                   	push   ebp
 100004ef:	89 e5                	mov    ebp,esp
-100004f1:	83 ec 08             	sub    esp,0x8
-100004f4:	83 ec 0c             	sub    esp,0xc
-100004f7:	68 b4 08 00 10       	push   0x100008b4	100004f8: R_386_32	.text
-100004fc:	e8 fc ff ff ff       	call   100004fd <bringBackToTextMode()+0xf>	100004fd: R_386_PC32	Dbg::kprintf(char const*, ...)
-10000501:	83 c4 10             	add    esp,0x10
-10000504:	a1 00 00 00 00       	mov    eax,ds:0x0	10000505: R_386_32	biosbsodLen
-10000509:	83 ec 08             	sub    esp,0x8
-1000050c:	6a 00                	push   0x0
-1000050e:	6a 00                	push   0x0
-10000510:	68 90 00 00 00       	push   0x90
-10000515:	6a 00                	push   0x0
-10000517:	50                   	push   eax
-10000518:	68 00 00 00 00       	push   0x0	10000519: R_386_32	biosbsod
-1000051d:	e8 fc ff ff ff       	call   1000051e <bringBackToTextMode()+0x30>	1000051e: R_386_PC32	Vm::start8086FromBuffer(unsigned char*, int, unsigned short, unsigned short, unsigned short, unsigned short)
-10000522:	83 c4 20             	add    esp,0x20
-10000525:	e8 fc ff ff ff       	call   10000526 <bringBackToTextMode()+0x38>	10000526: R_386_PC32	Vm::finish8086()
-1000052a:	83 ec 0c             	sub    esp,0xc
-1000052d:	68 d1 08 00 10       	push   0x100008d1	1000052e: R_386_32	.text
-10000532:	e8 fc ff ff ff       	call   10000533 <bringBackToTextMode()+0x45>	10000533: R_386_PC32	Dbg::kprintf(char const*, ...)
-10000537:	83 c4 10             	add    esp,0x10
-1000053a:	90                   	nop
-1000053b:	c9                   	leave  
-1000053c:	c3                   	ret    
+100004f1:	83 ec 18             	sub    esp,0x18
+100004f4:	a1 00 00 00 00       	mov    eax,ds:0x0	100004f5: R_386_32	kernelProcess
+100004f9:	8b 80 12 05 00 00    	mov    eax,DWORD PTR [eax+0x512]
+100004ff:	8b 40 10             	mov    eax,DWORD PTR [eax+0x10]
+10000502:	89 45 f4             	mov    DWORD PTR [ebp-0xc],eax
+10000505:	8b 45 f4             	mov    eax,DWORD PTR [ebp-0xc]
+10000508:	0f 22 d8             	mov    cr3,eax
+1000050b:	a1 00 00 00 00       	mov    eax,ds:0x0	1000050c: R_386_32	kernelProcess
+10000510:	8b 80 12 05 00 00    	mov    eax,DWORD PTR [eax+0x512]
+10000516:	83 ec 0c             	sub    esp,0xc
+10000519:	6a 07                	push   0x7
+1000051b:	68 00 01 00 00       	push   0x100
+10000520:	6a 00                	push   0x0
+10000522:	6a 00                	push   0x0
+10000524:	50                   	push   eax
+10000525:	e8 fc ff ff ff       	call   10000526 <bringBackToTextMode()+0x38>	10000526: R_386_PC32	VAS::mapRange(unsigned long, unsigned long, int, int)
+1000052a:	83 c4 20             	add    esp,0x20
+1000052d:	83 ec 0c             	sub    esp,0xc
+10000530:	68 e8 08 00 10       	push   0x100008e8	10000531: R_386_32	.text
+10000535:	e8 fc ff ff ff       	call   10000536 <bringBackToTextMode()+0x48>	10000536: R_386_PC32	Dbg::kprintf(char const*, ...)
+1000053a:	83 c4 10             	add    esp,0x10
+1000053d:	a1 00 00 00 00       	mov    eax,ds:0x0	1000053e: R_386_32	biosbsodLen
+10000542:	83 ec 08             	sub    esp,0x8
+10000545:	6a 00                	push   0x0
+10000547:	6a 00                	push   0x0
+10000549:	68 90 00 00 00       	push   0x90
+1000054e:	6a 00                	push   0x0
+10000550:	50                   	push   eax
+10000551:	68 00 00 00 00       	push   0x0	10000552: R_386_32	biosbsod
+10000556:	e8 fc ff ff ff       	call   10000557 <bringBackToTextMode()+0x69>	10000557: R_386_PC32	Vm::start8086FromBuffer(unsigned char*, int, unsigned short, unsigned short, unsigned short, unsigned short)
+1000055b:	83 c4 20             	add    esp,0x20
+1000055e:	e8 fc ff ff ff       	call   1000055f <bringBackToTextMode()+0x71>	1000055f: R_386_PC32	Vm::finish8086()
+10000563:	83 ec 0c             	sub    esp,0xc
+10000566:	68 05 09 00 10       	push   0x10000905	10000567: R_386_32	.text
+1000056b:	e8 fc ff ff ff       	call   1000056c <bringBackToTextMode()+0x7e>	1000056c: R_386_PC32	Dbg::kprintf(char const*, ...)
+10000570:	83 c4 10             	add    esp,0x10
+10000573:	90                   	nop
+10000574:	c9                   	leave  
+10000575:	c3                   	ret    
 
-1000053d <setupTextMode()>:
-1000053d:	55                   	push   ebp
-1000053e:	89 e5                	mov    ebp,esp
-10000540:	53                   	push   ebx
-10000541:	83 ec 24             	sub    esp,0x24
-10000544:	b8 10 04 00 00       	mov    eax,0x410
-10000549:	66 8b 00             	mov    ax,WORD PTR [eax]
-1000054c:	0f b7 c0             	movzx  eax,ax
-1000054f:	83 e0 30             	and    eax,0x30
-10000552:	83 f8 30             	cmp    eax,0x30
-10000555:	75 16                	jne    1000056d <setupTextMode()+0x30>
-10000557:	a1 00 00 00 00       	mov    eax,ds:0x0	10000558: R_386_32	VGA_TEXT_MODE_ADDRESS
-1000055c:	2d 00 80 00 00       	sub    eax,0x8000
-10000561:	a3 00 00 00 00       	mov    ds:0x0,eax	10000562: R_386_32	VGA_TEXT_MODE_ADDRESS
-10000566:	c6 05 00 00 00 00 01 	mov    BYTE PTR ds:0x0,0x1	10000568: R_386_32	vgamono
-1000056d:	c7 45 ec 14 01 00 00 	mov    DWORD PTR [ebp-0x14],0x114
-10000574:	83 ec 0c             	sub    esp,0xc
-10000577:	ff 75 ec             	push   DWORD PTR [ebp-0x14]
-1000057a:	e8 fc ff ff ff       	call   1000057b <setupTextMode()+0x3e>	1000057b: R_386_PC32	malloc
-1000057f:	83 c4 10             	add    esp,0x10
-10000582:	89 c3                	mov    ebx,eax
-10000584:	b8 00 20 00 c2       	mov    eax,0xc2002000
-10000589:	8b 00                	mov    eax,DWORD PTR [eax]
-1000058b:	8b 40 3c             	mov    eax,DWORD PTR [eax+0x3c]
-1000058e:	83 ec 04             	sub    esp,0x4
-10000591:	50                   	push   eax
-10000592:	68 ea 08 00 10       	push   0x100008ea	10000593: R_386_32	.text
-10000597:	53                   	push   ebx
-10000598:	e8 fc ff ff ff       	call   10000599 <setupTextMode()+0x5c>	10000599: R_386_PC32	File::File(char const*, Process*)
-1000059d:	83 c4 10             	add    esp,0x10
-100005a0:	89 5d f4             	mov    DWORD PTR [ebp-0xc],ebx
-100005a3:	83 ec 08             	sub    esp,0x8
-100005a6:	6a 01                	push   0x1
-100005a8:	ff 75 f4             	push   DWORD PTR [ebp-0xc]
-100005ab:	e8 fc ff ff ff       	call   100005ac <setupTextMode()+0x6f>	100005ac: R_386_PC32	File::open(FileOpenMode)
-100005b0:	83 c4 10             	add    esp,0x10
-100005b3:	89 45 f0             	mov    DWORD PTR [ebp-0x10],eax
-100005b6:	83 7d f0 00          	cmp    DWORD PTR [ebp-0x10],0x0
-100005ba:	74 10                	je     100005cc <setupTextMode()+0x8f>
-100005bc:	83 ec 0c             	sub    esp,0xc
-100005bf:	68 08 09 00 10       	push   0x10000908	100005c0: R_386_32	.text
-100005c4:	e8 fc ff ff ff       	call   100005c5 <setupTextMode()+0x88>	100005c5: R_386_PC32	Krnl::panic(char const*)
-100005c9:	83 c4 10             	add    esp,0x10
-100005cc:	8b 45 e0             	mov    eax,DWORD PTR [ebp-0x20]
-100005cf:	8b 55 e4             	mov    edx,DWORD PTR [ebp-0x1c]
-100005d2:	a3 00 00 00 00       	mov    ds:0x0,eax	100005d3: R_386_32	biosbsodLen
-100005d7:	83 ec 04             	sub    esp,0x4
-100005da:	8d 45 df             	lea    eax,[ebp-0x21]
-100005dd:	50                   	push   eax
-100005de:	8d 45 e0             	lea    eax,[ebp-0x20]
-100005e1:	50                   	push   eax
-100005e2:	ff 75 f4             	push   DWORD PTR [ebp-0xc]
-100005e5:	e8 fc ff ff ff       	call   100005e6 <setupTextMode()+0xa9>	100005e6: R_386_PC32	File::stat(unsigned long long*, bool*)
-100005ea:	83 c4 10             	add    esp,0x10
-100005ed:	8b 45 f4             	mov    eax,DWORD PTR [ebp-0xc]
-100005f0:	8b 00                	mov    eax,DWORD PTR [eax]
-100005f2:	83 c0 0c             	add    eax,0xc
-100005f5:	8b 08                	mov    ecx,DWORD PTR [eax]
-100005f7:	8b 45 e0             	mov    eax,DWORD PTR [ebp-0x20]
-100005fa:	8b 55 e4             	mov    edx,DWORD PTR [ebp-0x1c]
-100005fd:	83 ec 0c             	sub    esp,0xc
-10000600:	8d 5d e8             	lea    ebx,[ebp-0x18]
-10000603:	53                   	push   ebx
-10000604:	68 00 00 00 00       	push   0x0	10000605: R_386_32	biosbsod
-10000609:	52                   	push   edx
-1000060a:	50                   	push   eax
-1000060b:	ff 75 f4             	push   DWORD PTR [ebp-0xc]
-1000060e:	ff d1                	call   ecx
-10000610:	83 c4 20             	add    esp,0x20
-10000613:	8b 45 e8             	mov    eax,DWORD PTR [ebp-0x18]
-10000616:	83 ec 08             	sub    esp,0x8
-10000619:	50                   	push   eax
-1000061a:	68 10 09 00 10       	push   0x10000910	1000061b: R_386_32	.text
-1000061f:	e8 fc ff ff ff       	call   10000620 <setupTextMode()+0xe3>	10000620: R_386_PC32	Dbg::kprintf(char const*, ...)
-10000624:	83 c4 10             	add    esp,0x10
-10000627:	83 ec 0c             	sub    esp,0xc
-1000062a:	ff 75 f4             	push   DWORD PTR [ebp-0xc]
-1000062d:	e8 fc ff ff ff       	call   1000062e <setupTextMode()+0xf1>	1000062e: R_386_PC32	File::close()
-10000632:	83 c4 10             	add    esp,0x10
-10000635:	c7 05 00 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x0,0x0	10000637: R_386_32	Krnl::biosPanicHandler
-	1000063b: R_386_32	bringBackToTextMode()
-1000063f:	c7 05 18 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x18,0x0	10000641: R_386_32	textModeImplementation
-	10000645: R_386_32	hwTextMode_disableBlink(VgaText*, bool)
-10000649:	c7 05 04 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x4,0x0	1000064b: R_386_32	textModeImplementation
-	1000064f: R_386_32	hwTextMode_loadInData(VgaText*)
-10000653:	c7 05 00 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x0,0x0	10000655: R_386_32	textModeImplementation
-	10000659: R_386_32	hwTextMode_loadInTitle(VgaText*, char*)
-1000065d:	c7 05 0c 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0xc,0x0	1000065f: R_386_32	textModeImplementation
-	10000663: R_386_32	hwTextMode_scrollScreen(VgaText*)
-10000667:	c7 05 14 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x14,0x0	10000669: R_386_32	textModeImplementation
-	1000066d: R_386_32	hwTextMode_showCursor(VgaText*, bool)
-10000671:	c7 05 08 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x8,0x0	10000673: R_386_32	textModeImplementation
-	10000677: R_386_32	hwTextMode_update(VgaText*)
-1000067b:	c7 05 10 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x10,0x0	1000067d: R_386_32	textModeImplementation
-	10000681: R_386_32	hwTextMode_updateCursor(VgaText*)
-10000685:	c7 05 1c 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x1c,0x0	10000687: R_386_32	textModeImplementation
-	1000068b: R_386_32	hwTextMode_writeCharacter(VgaText*, char, VgaColour, VgaColour, int, int)
-1000068f:	90                   	nop
-10000690:	8b 5d fc             	mov    ebx,DWORD PTR [ebp-0x4]
-10000693:	c9                   	leave  
-10000694:	c3                   	ret    
-10000695:	90                   	nop
+10000576 <setupTextMode()>:
+10000576:	55                   	push   ebp
+10000577:	89 e5                	mov    ebp,esp
+10000579:	53                   	push   ebx
+1000057a:	83 ec 24             	sub    esp,0x24
+1000057d:	b8 10 04 00 00       	mov    eax,0x410
+10000582:	66 8b 00             	mov    ax,WORD PTR [eax]
+10000585:	0f b7 c0             	movzx  eax,ax
+10000588:	83 e0 30             	and    eax,0x30
+1000058b:	83 f8 30             	cmp    eax,0x30
+1000058e:	75 16                	jne    100005a6 <setupTextMode()+0x30>
+10000590:	a1 00 00 00 00       	mov    eax,ds:0x0	10000591: R_386_32	VGA_TEXT_MODE_ADDRESS
+10000595:	2d 00 80 00 00       	sub    eax,0x8000
+1000059a:	a3 00 00 00 00       	mov    ds:0x0,eax	1000059b: R_386_32	VGA_TEXT_MODE_ADDRESS
+1000059f:	c6 05 00 00 00 00 01 	mov    BYTE PTR ds:0x0,0x1	100005a1: R_386_32	vgamono
+100005a6:	c7 45 ec 14 01 00 00 	mov    DWORD PTR [ebp-0x14],0x114
+100005ad:	83 ec 0c             	sub    esp,0xc
+100005b0:	ff 75 ec             	push   DWORD PTR [ebp-0x14]
+100005b3:	e8 fc ff ff ff       	call   100005b4 <setupTextMode()+0x3e>	100005b4: R_386_PC32	malloc
+100005b8:	83 c4 10             	add    esp,0x10
+100005bb:	89 c3                	mov    ebx,eax
+100005bd:	a1 00 00 00 00       	mov    eax,ds:0x0	100005be: R_386_32	kernelProcess
+100005c2:	83 ec 04             	sub    esp,0x4
+100005c5:	50                   	push   eax
+100005c6:	68 1e 09 00 10       	push   0x1000091e	100005c7: R_386_32	.text
+100005cb:	53                   	push   ebx
+100005cc:	e8 fc ff ff ff       	call   100005cd <setupTextMode()+0x57>	100005cd: R_386_PC32	File::File(char const*, Process*)
+100005d1:	83 c4 10             	add    esp,0x10
+100005d4:	89 5d f4             	mov    DWORD PTR [ebp-0xc],ebx
+100005d7:	83 ec 08             	sub    esp,0x8
+100005da:	6a 01                	push   0x1
+100005dc:	ff 75 f4             	push   DWORD PTR [ebp-0xc]
+100005df:	e8 fc ff ff ff       	call   100005e0 <setupTextMode()+0x6a>	100005e0: R_386_PC32	File::open(FileOpenMode)
+100005e4:	83 c4 10             	add    esp,0x10
+100005e7:	89 45 f0             	mov    DWORD PTR [ebp-0x10],eax
+100005ea:	83 7d f0 00          	cmp    DWORD PTR [ebp-0x10],0x0
+100005ee:	74 10                	je     10000600 <setupTextMode()+0x8a>
+100005f0:	83 ec 0c             	sub    esp,0xc
+100005f3:	68 3c 09 00 10       	push   0x1000093c	100005f4: R_386_32	.text
+100005f8:	e8 fc ff ff ff       	call   100005f9 <setupTextMode()+0x83>	100005f9: R_386_PC32	Krnl::panic(char const*)
+100005fd:	83 c4 10             	add    esp,0x10
+10000600:	8b 45 e0             	mov    eax,DWORD PTR [ebp-0x20]
+10000603:	8b 55 e4             	mov    edx,DWORD PTR [ebp-0x1c]
+10000606:	a3 00 00 00 00       	mov    ds:0x0,eax	10000607: R_386_32	biosbsodLen
+1000060b:	83 ec 04             	sub    esp,0x4
+1000060e:	8d 45 df             	lea    eax,[ebp-0x21]
+10000611:	50                   	push   eax
+10000612:	8d 45 e0             	lea    eax,[ebp-0x20]
+10000615:	50                   	push   eax
+10000616:	ff 75 f4             	push   DWORD PTR [ebp-0xc]
+10000619:	e8 fc ff ff ff       	call   1000061a <setupTextMode()+0xa4>	1000061a: R_386_PC32	File::stat(unsigned long long*, bool*)
+1000061e:	83 c4 10             	add    esp,0x10
+10000621:	8b 45 f4             	mov    eax,DWORD PTR [ebp-0xc]
+10000624:	8b 00                	mov    eax,DWORD PTR [eax]
+10000626:	83 c0 0c             	add    eax,0xc
+10000629:	8b 08                	mov    ecx,DWORD PTR [eax]
+1000062b:	8b 45 e0             	mov    eax,DWORD PTR [ebp-0x20]
+1000062e:	8b 55 e4             	mov    edx,DWORD PTR [ebp-0x1c]
+10000631:	83 ec 0c             	sub    esp,0xc
+10000634:	8d 5d e8             	lea    ebx,[ebp-0x18]
+10000637:	53                   	push   ebx
+10000638:	68 00 00 00 00       	push   0x0	10000639: R_386_32	biosbsod
+1000063d:	52                   	push   edx
+1000063e:	50                   	push   eax
+1000063f:	ff 75 f4             	push   DWORD PTR [ebp-0xc]
+10000642:	ff d1                	call   ecx
+10000644:	83 c4 20             	add    esp,0x20
+10000647:	8b 45 e8             	mov    eax,DWORD PTR [ebp-0x18]
+1000064a:	83 ec 08             	sub    esp,0x8
+1000064d:	50                   	push   eax
+1000064e:	68 44 09 00 10       	push   0x10000944	1000064f: R_386_32	.text
+10000653:	e8 fc ff ff ff       	call   10000654 <setupTextMode()+0xde>	10000654: R_386_PC32	Dbg::kprintf(char const*, ...)
+10000658:	83 c4 10             	add    esp,0x10
+1000065b:	83 ec 0c             	sub    esp,0xc
+1000065e:	ff 75 f4             	push   DWORD PTR [ebp-0xc]
+10000661:	e8 fc ff ff ff       	call   10000662 <setupTextMode()+0xec>	10000662: R_386_PC32	File::close()
+10000666:	83 c4 10             	add    esp,0x10
+10000669:	c7 05 00 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x0,0x0	1000066b: R_386_32	Krnl::biosPanicHandler
+	1000066f: R_386_32	bringBackToTextMode()
+10000673:	c7 05 18 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x18,0x0	10000675: R_386_32	textModeImplementation
+	10000679: R_386_32	hwTextMode_disableBlink(VgaText*, bool)
+1000067d:	c7 05 04 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x4,0x0	1000067f: R_386_32	textModeImplementation
+	10000683: R_386_32	hwTextMode_loadInData(VgaText*)
+10000687:	c7 05 00 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x0,0x0	10000689: R_386_32	textModeImplementation
+	1000068d: R_386_32	hwTextMode_loadInTitle(VgaText*, char*)
+10000691:	c7 05 0c 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0xc,0x0	10000693: R_386_32	textModeImplementation
+	10000697: R_386_32	hwTextMode_scrollScreen(VgaText*)
+1000069b:	c7 05 14 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x14,0x0	1000069d: R_386_32	textModeImplementation
+	100006a1: R_386_32	hwTextMode_showCursor(VgaText*, bool)
+100006a5:	c7 05 08 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x8,0x0	100006a7: R_386_32	textModeImplementation
+	100006ab: R_386_32	hwTextMode_update(VgaText*)
+100006af:	c7 05 10 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x10,0x0	100006b1: R_386_32	textModeImplementation
+	100006b5: R_386_32	hwTextMode_updateCursor(VgaText*)
+100006b9:	c7 05 1c 00 00 00 00 00 00 00 	mov    DWORD PTR ds:0x1c,0x0	100006bb: R_386_32	textModeImplementation
+	100006bf: R_386_32	hwTextMode_writeCharacter(VgaText*, char, VgaColour, VgaColour, int, int)
+100006c3:	90                   	nop
+100006c4:	8b 5d fc             	mov    ebx,DWORD PTR [ebp-0x4]
+100006c7:	c9                   	leave  
+100006c8:	c3                   	ret    
+100006c9:	90                   	nop
 
-10000696 <BIOS::BIOS()>:
-10000696:	55                   	push   ebp
-10000697:	89 e5                	mov    ebp,esp
-10000699:	83 ec 08             	sub    esp,0x8
-1000069c:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-1000069f:	83 ec 08             	sub    esp,0x8
-100006a2:	68 19 09 00 10       	push   0x10000919	100006a3: R_386_32	.text
-100006a7:	50                   	push   eax
-100006a8:	e8 fc ff ff ff       	call   100006a9 <BIOS::BIOS()+0x13>	100006a9: R_386_PC32	Device::Device(char const*)
-100006ad:	83 c4 10             	add    esp,0x10
-100006b0:	ba 08 00 00 00       	mov    edx,0x8	100006b1: R_386_32	vtable for BIOS
-100006b5:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-100006b8:	89 10                	mov    DWORD PTR [eax],edx
-100006ba:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-100006bd:	8a 80 c5 00 00 00    	mov    al,BYTE PTR [eax+0xc5]
-100006c3:	0f b6 d0             	movzx  edx,al
-100006c6:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-100006c9:	83 c2 08             	add    edx,0x8
-100006cc:	c7 44 d0 04 00 04 00 00 	mov    DWORD PTR [eax+edx*8+0x4],0x400
-100006d4:	8a 4c d0 08          	mov    cl,BYTE PTR [eax+edx*8+0x8]
-100006d8:	83 e1 00             	and    ecx,0x0
-100006db:	88 4c d0 08          	mov    BYTE PTR [eax+edx*8+0x8],cl
-100006df:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-100006e2:	8a 80 c5 00 00 00    	mov    al,BYTE PTR [eax+0xc5]
-100006e8:	8d 50 01             	lea    edx,[eax+0x1]
-100006eb:	8b 4d 08             	mov    ecx,DWORD PTR [ebp+0x8]
-100006ee:	88 91 c5 00 00 00    	mov    BYTE PTR [ecx+0xc5],dl
-100006f4:	0f b6 d0             	movzx  edx,al
-100006f7:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-100006fa:	83 c2 08             	add    edx,0x8
-100006fd:	8b 4c d0 08          	mov    ecx,DWORD PTR [eax+edx*8+0x8]
-10000701:	0f b6 c9             	movzx  ecx,cl
-10000704:	81 c9 00 00 01 00    	or     ecx,0x10000
-1000070a:	89 4c d0 08          	mov    DWORD PTR [eax+edx*8+0x8],ecx
-1000070e:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-10000711:	8a 80 c5 00 00 00    	mov    al,BYTE PTR [eax+0xc5]
-10000717:	0f b6 d0             	movzx  edx,al
-1000071a:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-1000071d:	83 c2 08             	add    edx,0x8
-10000720:	c7 44 d0 04 00 00 0c 00 	mov    DWORD PTR [eax+edx*8+0x4],0xc0000
-10000728:	8a 4c d0 08          	mov    cl,BYTE PTR [eax+edx*8+0x8]
-1000072c:	83 e1 00             	and    ecx,0x0
-1000072f:	88 4c d0 08          	mov    BYTE PTR [eax+edx*8+0x8],cl
-10000733:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-10000736:	8a 80 c5 00 00 00    	mov    al,BYTE PTR [eax+0xc5]
-1000073c:	8d 50 01             	lea    edx,[eax+0x1]
-1000073f:	8b 4d 08             	mov    ecx,DWORD PTR [ebp+0x8]
-10000742:	88 91 c5 00 00 00    	mov    BYTE PTR [ecx+0xc5],dl
-10000748:	0f b6 d0             	movzx  edx,al
-1000074b:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-1000074e:	83 c2 08             	add    edx,0x8
-10000751:	8b 4c d0 08          	mov    ecx,DWORD PTR [eax+edx*8+0x8]
-10000755:	0f b6 c9             	movzx  ecx,cl
-10000758:	81 c9 00 00 00 04    	or     ecx,0x4000000
-1000075e:	89 4c d0 08          	mov    DWORD PTR [eax+edx*8+0x8],ecx
-10000762:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-10000765:	8a 80 c5 00 00 00    	mov    al,BYTE PTR [eax+0xc5]
-1000076b:	0f b6 d0             	movzx  edx,al
-1000076e:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-10000771:	83 c2 08             	add    edx,0x8
-10000774:	c7 44 d0 04 00 00 08 00 	mov    DWORD PTR [eax+edx*8+0x4],0x80000
-1000077c:	8a 4c d0 08          	mov    cl,BYTE PTR [eax+edx*8+0x8]
-10000780:	83 e1 00             	and    ecx,0x0
-10000783:	88 4c d0 08          	mov    BYTE PTR [eax+edx*8+0x8],cl
-10000787:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-1000078a:	8a 80 c5 00 00 00    	mov    al,BYTE PTR [eax+0xc5]
-10000790:	8d 50 01             	lea    edx,[eax+0x1]
-10000793:	8b 4d 08             	mov    ecx,DWORD PTR [ebp+0x8]
-10000796:	88 91 c5 00 00 00    	mov    BYTE PTR [ecx+0xc5],dl
-1000079c:	0f b6 d0             	movzx  edx,al
-1000079f:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-100007a2:	83 c2 08             	add    edx,0x8
-100007a5:	8b 4c d0 08          	mov    ecx,DWORD PTR [eax+edx*8+0x8]
-100007a9:	0f b6 c9             	movzx  ecx,cl
-100007ac:	81 c9 00 00 00 02    	or     ecx,0x2000000
-100007b2:	89 4c d0 08          	mov    DWORD PTR [eax+edx*8+0x8],ecx
-100007b6:	90                   	nop
-100007b7:	c9                   	leave  
-100007b8:	c3                   	ret    
+100006ca <BIOS::BIOS()>:
+100006ca:	55                   	push   ebp
+100006cb:	89 e5                	mov    ebp,esp
+100006cd:	83 ec 08             	sub    esp,0x8
+100006d0:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100006d3:	83 ec 08             	sub    esp,0x8
+100006d6:	68 4d 09 00 10       	push   0x1000094d	100006d7: R_386_32	.text
+100006db:	50                   	push   eax
+100006dc:	e8 fc ff ff ff       	call   100006dd <BIOS::BIOS()+0x13>	100006dd: R_386_PC32	Device::Device(char const*)
+100006e1:	83 c4 10             	add    esp,0x10
+100006e4:	ba 08 00 00 00       	mov    edx,0x8	100006e5: R_386_32	vtable for BIOS
+100006e9:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100006ec:	89 10                	mov    DWORD PTR [eax],edx
+100006ee:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100006f1:	8a 80 c5 00 00 00    	mov    al,BYTE PTR [eax+0xc5]
+100006f7:	0f b6 d0             	movzx  edx,al
+100006fa:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100006fd:	83 c2 08             	add    edx,0x8
+10000700:	c7 44 d0 04 00 04 00 00 	mov    DWORD PTR [eax+edx*8+0x4],0x400
+10000708:	8a 4c d0 08          	mov    cl,BYTE PTR [eax+edx*8+0x8]
+1000070c:	83 e1 00             	and    ecx,0x0
+1000070f:	88 4c d0 08          	mov    BYTE PTR [eax+edx*8+0x8],cl
+10000713:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000716:	8a 80 c5 00 00 00    	mov    al,BYTE PTR [eax+0xc5]
+1000071c:	8d 50 01             	lea    edx,[eax+0x1]
+1000071f:	8b 4d 08             	mov    ecx,DWORD PTR [ebp+0x8]
+10000722:	88 91 c5 00 00 00    	mov    BYTE PTR [ecx+0xc5],dl
+10000728:	0f b6 d0             	movzx  edx,al
+1000072b:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+1000072e:	83 c2 08             	add    edx,0x8
+10000731:	8b 4c d0 08          	mov    ecx,DWORD PTR [eax+edx*8+0x8]
+10000735:	0f b6 c9             	movzx  ecx,cl
+10000738:	81 c9 00 00 01 00    	or     ecx,0x10000
+1000073e:	89 4c d0 08          	mov    DWORD PTR [eax+edx*8+0x8],ecx
+10000742:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000745:	8a 80 c5 00 00 00    	mov    al,BYTE PTR [eax+0xc5]
+1000074b:	0f b6 d0             	movzx  edx,al
+1000074e:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000751:	83 c2 08             	add    edx,0x8
+10000754:	c7 44 d0 04 00 00 0c 00 	mov    DWORD PTR [eax+edx*8+0x4],0xc0000
+1000075c:	8a 4c d0 08          	mov    cl,BYTE PTR [eax+edx*8+0x8]
+10000760:	83 e1 00             	and    ecx,0x0
+10000763:	88 4c d0 08          	mov    BYTE PTR [eax+edx*8+0x8],cl
+10000767:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+1000076a:	8a 80 c5 00 00 00    	mov    al,BYTE PTR [eax+0xc5]
+10000770:	8d 50 01             	lea    edx,[eax+0x1]
+10000773:	8b 4d 08             	mov    ecx,DWORD PTR [ebp+0x8]
+10000776:	88 91 c5 00 00 00    	mov    BYTE PTR [ecx+0xc5],dl
+1000077c:	0f b6 d0             	movzx  edx,al
+1000077f:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000782:	83 c2 08             	add    edx,0x8
+10000785:	8b 4c d0 08          	mov    ecx,DWORD PTR [eax+edx*8+0x8]
+10000789:	0f b6 c9             	movzx  ecx,cl
+1000078c:	81 c9 00 00 00 04    	or     ecx,0x4000000
+10000792:	89 4c d0 08          	mov    DWORD PTR [eax+edx*8+0x8],ecx
+10000796:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000799:	8a 80 c5 00 00 00    	mov    al,BYTE PTR [eax+0xc5]
+1000079f:	0f b6 d0             	movzx  edx,al
+100007a2:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100007a5:	83 c2 08             	add    edx,0x8
+100007a8:	c7 44 d0 04 00 00 08 00 	mov    DWORD PTR [eax+edx*8+0x4],0x80000
+100007b0:	8a 4c d0 08          	mov    cl,BYTE PTR [eax+edx*8+0x8]
+100007b4:	83 e1 00             	and    ecx,0x0
+100007b7:	88 4c d0 08          	mov    BYTE PTR [eax+edx*8+0x8],cl
+100007bb:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100007be:	8a 80 c5 00 00 00    	mov    al,BYTE PTR [eax+0xc5]
+100007c4:	8d 50 01             	lea    edx,[eax+0x1]
+100007c7:	8b 4d 08             	mov    ecx,DWORD PTR [ebp+0x8]
+100007ca:	88 91 c5 00 00 00    	mov    BYTE PTR [ecx+0xc5],dl
+100007d0:	0f b6 d0             	movzx  edx,al
+100007d3:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+100007d6:	83 c2 08             	add    edx,0x8
+100007d9:	8b 4c d0 08          	mov    ecx,DWORD PTR [eax+edx*8+0x8]
+100007dd:	0f b6 c9             	movzx  ecx,cl
+100007e0:	81 c9 00 00 00 02    	or     ecx,0x2000000
+100007e6:	89 4c d0 08          	mov    DWORD PTR [eax+edx*8+0x8],ecx
+100007ea:	90                   	nop
+100007eb:	c9                   	leave  
+100007ec:	c3                   	ret    
 
-100007b9 <start()>:
-100007b9:	55                   	push   ebp
-100007ba:	89 e5                	mov    ebp,esp
-100007bc:	53                   	push   ebx
-100007bd:	83 ec 14             	sub    esp,0x14
-100007c0:	c7 45 f0 58 01 00 00 	mov    DWORD PTR [ebp-0x10],0x158
-100007c7:	83 ec 0c             	sub    esp,0xc
-100007ca:	ff 75 f0             	push   DWORD PTR [ebp-0x10]
-100007cd:	e8 fc ff ff ff       	call   100007ce <start()+0x15>	100007ce: R_386_PC32	malloc
-100007d2:	83 c4 10             	add    esp,0x10
-100007d5:	89 c3                	mov    ebx,eax
-100007d7:	83 ec 0c             	sub    esp,0xc
-100007da:	53                   	push   ebx
-100007db:	e8 fc ff ff ff       	call   100007dc <start()+0x23>	100007dc: R_386_PC32	BIOS::BIOS()
-100007e0:	83 c4 10             	add    esp,0x10
-100007e3:	89 5d f4             	mov    DWORD PTR [ebp-0xc],ebx
-100007e6:	a1 00 00 00 00       	mov    eax,ds:0x0	100007e7: R_386_32	Krnl::computer
-100007eb:	83 ec 08             	sub    esp,0x8
-100007ee:	ff 75 f4             	push   DWORD PTR [ebp-0xc]
-100007f1:	50                   	push   eax
-100007f2:	e8 fc ff ff ff       	call   100007f3 <start()+0x3a>	100007f3: R_386_PC32	Device::addChild(Device*)
-100007f7:	83 c4 10             	add    esp,0x10
-100007fa:	e8 fc ff ff ff       	call   100007fb <start()+0x42>	100007fb: R_386_PC32	setupTextMode()
-100007ff:	90                   	nop
-10000800:	8b 5d fc             	mov    ebx,DWORD PTR [ebp-0x4]
-10000803:	c9                   	leave  
-10000804:	c3                   	ret    
-10000805:	90                   	nop
+100007ed <start()>:
+100007ed:	55                   	push   ebp
+100007ee:	89 e5                	mov    ebp,esp
+100007f0:	53                   	push   ebx
+100007f1:	83 ec 14             	sub    esp,0x14
+100007f4:	c7 45 f0 58 01 00 00 	mov    DWORD PTR [ebp-0x10],0x158
+100007fb:	83 ec 0c             	sub    esp,0xc
+100007fe:	ff 75 f0             	push   DWORD PTR [ebp-0x10]
+10000801:	e8 fc ff ff ff       	call   10000802 <start()+0x15>	10000802: R_386_PC32	malloc
+10000806:	83 c4 10             	add    esp,0x10
+10000809:	89 c3                	mov    ebx,eax
+1000080b:	83 ec 0c             	sub    esp,0xc
+1000080e:	53                   	push   ebx
+1000080f:	e8 fc ff ff ff       	call   10000810 <start()+0x23>	10000810: R_386_PC32	BIOS::BIOS()
+10000814:	83 c4 10             	add    esp,0x10
+10000817:	89 5d f4             	mov    DWORD PTR [ebp-0xc],ebx
+1000081a:	a1 00 00 00 00       	mov    eax,ds:0x0	1000081b: R_386_32	Krnl::computer
+1000081f:	83 ec 08             	sub    esp,0x8
+10000822:	ff 75 f4             	push   DWORD PTR [ebp-0xc]
+10000825:	50                   	push   eax
+10000826:	e8 fc ff ff ff       	call   10000827 <start()+0x3a>	10000827: R_386_PC32	Device::addChild(Device*)
+1000082b:	83 c4 10             	add    esp,0x10
+1000082e:	e8 fc ff ff ff       	call   1000082f <start()+0x42>	1000082f: R_386_PC32	setupTextMode()
+10000833:	90                   	nop
+10000834:	8b 5d fc             	mov    ebx,DWORD PTR [ebp-0x4]
+10000837:	c9                   	leave  
+10000838:	c3                   	ret    
+10000839:	90                   	nop
 
-10000806 <BIOS::open(int, int, void*)>:
-10000806:	b8 00 00 00 00       	mov    eax,0x0
-1000080b:	c3                   	ret    
+1000083a <BIOS::open(int, int, void*)>:
+1000083a:	b8 00 00 00 00       	mov    eax,0x0
+1000083f:	c3                   	ret    
 
-1000080c <BIOS::close(int, int, void*)>:
-1000080c:	b8 00 00 00 00       	mov    eax,0x0
-10000811:	c3                   	ret    
-10000812:	66 90                	xchg   ax,ax
-10000814:	13 05 00 00 24 05    	adc    eax,DWORD PTR ds:0x5240000
-1000081a:	00 00                	add    BYTE PTR [eax],al
-1000081c:	00 06                	add    BYTE PTR [esi],al
-1000081e:	00 00                	add    BYTE PTR [eax],al
-10000820:	00 00                	add    BYTE PTR [eax],al
-10000822:	01 00                	add    DWORD PTR [eax],eax
-10000824:	00 00                	add    BYTE PTR [eax],al
-10000826:	02 00                	add    al,BYTE PTR [eax]
-10000828:	00 00                	add    BYTE PTR [eax],al
-1000082a:	04 00                	add    al,0x0
-1000082c:	00 00                	add    BYTE PTR [eax],al
-1000082e:	06                   	push   es
-1000082f:	00 00                	add    BYTE PTR [eax],al
-10000831:	00 10                	add    BYTE PTR [eax],dl
-10000833:	00 00                	add    BYTE PTR [eax],al
-10000835:	10 00                	adc    BYTE PTR [eax],al
-10000837:	00 00                	add    BYTE PTR [eax],al
-10000839:	00 00                	add    BYTE PTR [eax],al
-1000083b:	c0 00 00             	rol    BYTE PTR [eax],0x0
-1000083e:	00 c2                	add    dl,al
-10000840:	00 00                	add    BYTE PTR [eax],al
-10000842:	40                   	inc    eax
-10000843:	c2 00 00             	ret    0x0
-10000846:	80 c2 00             	add    dl,0x0
-10000849:	00 c0                	add    al,al
-1000084b:	c2 00 00             	ret    0x0
-1000084e:	01 c2                	add    edx,eax
-10000850:	00 00                	add    BYTE PTR [eax],al
-10000852:	01 00                	add    DWORD PTR [eax],eax
+10000840 <BIOS::close(int, int, void*)>:
+10000840:	b8 00 00 00 00       	mov    eax,0x0
+10000845:	c3                   	ret    
+10000846:	66 90                	xchg   ax,ax
+10000848:	13 05 00 00 24 05    	adc    eax,DWORD PTR ds:0x5240000
+1000084e:	00 00                	add    BYTE PTR [eax],al
+10000850:	00 06                	add    BYTE PTR [esi],al
+10000852:	00 00                	add    BYTE PTR [eax],al
 10000854:	00 00                	add    BYTE PTR [eax],al
-10000856:	06                   	push   es
-10000857:	c2 00 00             	ret    0x0
+10000856:	01 00                	add    DWORD PTR [eax],eax
+10000858:	00 00                	add    BYTE PTR [eax],al
 1000085a:	02 00                	add    al,BYTE PTR [eax]
-1000085c:	00 10                	add    BYTE PTR [eax],dl
-1000085e:	00 c2                	add    dl,al
+1000085c:	00 00                	add    BYTE PTR [eax],al
+1000085e:	04 00                	add    al,0x0
 10000860:	00 00                	add    BYTE PTR [eax],al
-10000862:	02 c2                	add    al,dl
-10000864:	00 00                	add    BYTE PTR [eax],al
-10000866:	02 00                	add    al,BYTE PTR [eax]
-10000868:	00 00                	add    BYTE PTR [eax],al
-1000086a:	04 c2                	add    al,0xc2
-1000086c:	00 80 00 00 00 06    	add    BYTE PTR [eax+0x6000000],al
+10000862:	06                   	push   es
+10000863:	00 00                	add    BYTE PTR [eax],al
+10000865:	00 10                	add    BYTE PTR [eax],dl
+10000867:	00 00                	add    BYTE PTR [eax],al
+10000869:	10 00                	adc    BYTE PTR [eax],al
+1000086b:	00 00                	add    BYTE PTR [eax],al
+1000086d:	00 00                	add    BYTE PTR [eax],al
+1000086f:	c0 00 00             	rol    BYTE PTR [eax],0x0
 10000872:	00 c2                	add    dl,al
-10000874:	13 05 00 c2 24 05    	adc    eax,DWORD PTR ds:0x524c200
-1000087a:	00 c2                	add    dl,al
-1000087c:	00 00                	add    BYTE PTR [eax],al
-1000087e:	18 00                	sbb    BYTE PTR [eax],al
-10000880:	00 00                	add    BYTE PTR [eax],al
-10000882:	08 00                	or     BYTE PTR [eax],al
+10000874:	00 00                	add    BYTE PTR [eax],al
+10000876:	40                   	inc    eax
+10000877:	c2 00 00             	ret    0x0
+1000087a:	80 c2 00             	add    dl,0x0
+1000087d:	00 c0                	add    al,al
+1000087f:	c2 00 00             	ret    0x0
+10000882:	01 c2                	add    edx,eax
 10000884:	00 00                	add    BYTE PTR [eax],al
-10000886:	20 00                	and    BYTE PTR [eax],al
+10000886:	01 00                	add    DWORD PTR [eax],eax
 10000888:	00 00                	add    BYTE PTR [eax],al
-1000088a:	00 10                	add    BYTE PTR [eax],dl
-1000088c:	00 00                	add    BYTE PTR [eax],al
-1000088e:	00 02                	add    BYTE PTR [edx],al
-10000890:	00 00                	add    BYTE PTR [eax],al
-10000892:	e8 01 00 00 00       	call   10000898 <BIOS::close(int, int, void*)+0x8c>
-10000897:	c8 ff ff ff          	enter  0xffff,0xff
-1000089b:	ef                   	out    dx,eax
+1000088a:	06                   	push   es
+1000088b:	c2 00 00             	ret    0x0
+1000088e:	02 00                	add    al,BYTE PTR [eax]
+10000890:	00 10                	add    BYTE PTR [eax],dl
+10000892:	00 c2                	add    dl,al
+10000894:	00 00                	add    BYTE PTR [eax],al
+10000896:	02 c2                	add    al,dl
+10000898:	00 00                	add    BYTE PTR [eax],al
+1000089a:	02 00                	add    al,BYTE PTR [eax]
 1000089c:	00 00                	add    BYTE PTR [eax],al
-1000089e:	00 f0                	add    al,dh
-100008a0:	00 00                	add    BYTE PTR [eax],al
-100008a2:	c0 ff 00             	sar    bh,0x0
-100008a5:	00 10                	add    BYTE PTR [eax],dl
-100008a7:	c2 00 40             	ret    0x4000
-100008aa:	48                   	dec    eax
-100008ab:	c2 30 00             	ret    0x30
-100008ae:	00 00                	add    BYTE PTR [eax],al
-100008b0:	80 00 00             	add    BYTE PTR [eax],0x0
-100008b3:	00 44 72 6f          	add    BYTE PTR [edx+esi*2+0x6f],al
-100008b7:	70 70                	jo     10000929 <vtable for BIOS+0x1>
-100008b9:	69 6e 67 20 62 61 63 	imul   ebp,DWORD PTR [esi+0x67],0x63616220
-100008c0:	6b 20 74             	imul   esp,DWORD PTR [eax],0x74
-100008c3:	6f                   	outs   dx,DWORD PTR ds:[esi]
-100008c4:	20 74 65 78          	and    BYTE PTR [ebp+eiz*2+0x78],dh
-100008c8:	74 20                	je     100008ea <BIOS::close(int, int, void*)+0xde>
-100008ca:	6d                   	ins    DWORD PTR es:[edi],dx
-100008cb:	6f                   	outs   dx,DWORD PTR ds:[esi]
-100008cc:	64 65 21 0a          	fs and DWORD PTR gs:[edx],ecx
-100008d0:	00 49 6e             	add    BYTE PTR [ecx+0x6e],cl
-100008d3:	20 74 65 78          	and    BYTE PTR [ebp+eiz*2+0x78],dh
-100008d7:	74 20                	je     100008f9 <BIOS::close(int, int, void*)+0xed>
-100008d9:	6d                   	ins    DWORD PTR es:[edi],dx
-100008da:	6f                   	outs   dx,DWORD PTR ds:[esi]
-100008db:	64 65 20 68 6f       	fs and BYTE PTR gs:[eax+0x6f],ch
-100008e0:	70 65                	jo     10000947 <vtable for BIOS+0x1f>
-100008e2:	66 75 6c             	data16 jne 10000951 <vtable for BIOS+0x29>
-100008e5:	6c                   	ins    BYTE PTR es:[edi],dx
-100008e6:	79 21                	jns    10000909 <BIOS::close(int, int, void*)+0xfd>
-100008e8:	0a 00                	or     al,BYTE PTR [eax]
-100008ea:	43                   	inc    ebx
-100008eb:	3a 2f                	cmp    ch,BYTE PTR [edi]
-100008ed:	42                   	inc    edx
-100008ee:	61                   	popa   
-100008ef:	6e                   	outs   dx,BYTE PTR ds:[esi]
-100008f0:	61                   	popa   
-100008f1:	6e                   	outs   dx,BYTE PTR ds:[esi]
-100008f2:	61                   	popa   
-100008f3:	2f                   	das    
-100008f4:	53                   	push   ebx
-100008f5:	79 73                	jns    1000096a <BIOS::~BIOS()+0x16>
-100008f7:	74 65                	je     1000095e <BIOS::~BIOS()+0xa>
-100008f9:	6d                   	ins    DWORD PTR es:[edi],dx
-100008fa:	2f                   	das    
-100008fb:	42                   	inc    edx
-100008fc:	49                   	dec    ecx
-100008fd:	4f                   	dec    edi
-100008fe:	53                   	push   ebx
-100008ff:	42                   	inc    edx
-10000900:	53                   	push   ebx
-10000901:	4f                   	dec    edi
-10000902:	44                   	inc    esp
-10000903:	2e 43                	cs inc ebx
-10000905:	4f                   	dec    edi
-10000906:	4d                   	dec    ebp
-10000907:	00 57 48             	add    BYTE PTR [edi+0x48],dl
-1000090a:	4f                   	dec    edi
-1000090b:	41                   	inc    ecx
-1000090c:	2e 2e 2e 00 62 72    	cs cs add BYTE PTR cs:[edx+0x72],ah
-10000912:	20 3d 20 25 64 0a    	and    BYTE PTR ds:0xa642520,bh
-10000918:	00 4c 65 67          	add    BYTE PTR [ebp+eiz*2+0x67],cl
-1000091c:	61                   	popa   
-1000091d:	63 79 20             	arpl   WORD PTR [ecx+0x20],di
-10000920:	42                   	inc    edx
-10000921:	49                   	dec    ecx
-10000922:	4f                   	dec    edi
-10000923:	53                   	push   ebx
-10000924:	00 66 90             	add    BYTE PTR [esi-0x70],ah
-10000927:	90                   	nop
+1000089e:	04 c2                	add    al,0xc2
+100008a0:	00 80 00 00 00 06    	add    BYTE PTR [eax+0x6000000],al
+100008a6:	00 c2                	add    dl,al
+100008a8:	13 05 00 c2 24 05    	adc    eax,DWORD PTR ds:0x524c200
+100008ae:	00 c2                	add    dl,al
+100008b0:	00 00                	add    BYTE PTR [eax],al
+100008b2:	18 00                	sbb    BYTE PTR [eax],al
+100008b4:	00 00                	add    BYTE PTR [eax],al
+100008b6:	08 00                	or     BYTE PTR [eax],al
+100008b8:	00 00                	add    BYTE PTR [eax],al
+100008ba:	20 00                	and    BYTE PTR [eax],al
+100008bc:	00 00                	add    BYTE PTR [eax],al
+100008be:	00 10                	add    BYTE PTR [eax],dl
+100008c0:	00 00                	add    BYTE PTR [eax],al
+100008c2:	00 02                	add    BYTE PTR [edx],al
+100008c4:	00 00                	add    BYTE PTR [eax],al
+100008c6:	e8 01 00 00 00       	call   100008cc <BIOS::close(int, int, void*)+0x8c>
+100008cb:	c8 ff ff ff          	enter  0xffff,0xff
+100008cf:	ef                   	out    dx,eax
+100008d0:	00 00                	add    BYTE PTR [eax],al
+100008d2:	00 f0                	add    al,dh
+100008d4:	00 00                	add    BYTE PTR [eax],al
+100008d6:	c0 ff 00             	sar    bh,0x0
+100008d9:	00 10                	add    BYTE PTR [eax],dl
+100008db:	c2 00 40             	ret    0x4000
+100008de:	48                   	dec    eax
+100008df:	c2 30 00             	ret    0x30
+100008e2:	00 00                	add    BYTE PTR [eax],al
+100008e4:	80 00 00             	add    BYTE PTR [eax],0x0
+100008e7:	00 44 72 6f          	add    BYTE PTR [edx+esi*2+0x6f],al
+100008eb:	70 70                	jo     1000095d <vtable for BIOS+0x1>
+100008ed:	69 6e 67 20 62 61 63 	imul   ebp,DWORD PTR [esi+0x67],0x63616220
+100008f4:	6b 20 74             	imul   esp,DWORD PTR [eax],0x74
+100008f7:	6f                   	outs   dx,DWORD PTR ds:[esi]
+100008f8:	20 74 65 78          	and    BYTE PTR [ebp+eiz*2+0x78],dh
+100008fc:	74 20                	je     1000091e <BIOS::close(int, int, void*)+0xde>
+100008fe:	6d                   	ins    DWORD PTR es:[edi],dx
+100008ff:	6f                   	outs   dx,DWORD PTR ds:[esi]
+10000900:	64 65 21 0a          	fs and DWORD PTR gs:[edx],ecx
+10000904:	00 49 6e             	add    BYTE PTR [ecx+0x6e],cl
+10000907:	20 74 65 78          	and    BYTE PTR [ebp+eiz*2+0x78],dh
+1000090b:	74 20                	je     1000092d <BIOS::close(int, int, void*)+0xed>
+1000090d:	6d                   	ins    DWORD PTR es:[edi],dx
+1000090e:	6f                   	outs   dx,DWORD PTR ds:[esi]
+1000090f:	64 65 20 68 6f       	fs and BYTE PTR gs:[eax+0x6f],ch
+10000914:	70 65                	jo     1000097b <vtable for BIOS+0x1f>
+10000916:	66 75 6c             	data16 jne 10000985 <vtable for BIOS+0x29>
+10000919:	6c                   	ins    BYTE PTR es:[edi],dx
+1000091a:	79 21                	jns    1000093d <BIOS::close(int, int, void*)+0xfd>
+1000091c:	0a 00                	or     al,BYTE PTR [eax]
+1000091e:	43                   	inc    ebx
+1000091f:	3a 2f                	cmp    ch,BYTE PTR [edi]
+10000921:	42                   	inc    edx
+10000922:	61                   	popa   
+10000923:	6e                   	outs   dx,BYTE PTR ds:[esi]
+10000924:	61                   	popa   
+10000925:	6e                   	outs   dx,BYTE PTR ds:[esi]
+10000926:	61                   	popa   
+10000927:	2f                   	das    
+10000928:	53                   	push   ebx
+10000929:	79 73                	jns    1000099e <BIOS::~BIOS()+0x16>
+1000092b:	74 65                	je     10000992 <BIOS::~BIOS()+0xa>
+1000092d:	6d                   	ins    DWORD PTR es:[edi],dx
+1000092e:	2f                   	das    
+1000092f:	42                   	inc    edx
+10000930:	49                   	dec    ecx
+10000931:	4f                   	dec    edi
+10000932:	53                   	push   ebx
+10000933:	42                   	inc    edx
+10000934:	53                   	push   ebx
+10000935:	4f                   	dec    edi
+10000936:	44                   	inc    esp
+10000937:	2e 43                	cs inc ebx
+10000939:	4f                   	dec    edi
+1000093a:	4d                   	dec    ebp
+1000093b:	00 57 48             	add    BYTE PTR [edi+0x48],dl
+1000093e:	4f                   	dec    edi
+1000093f:	41                   	inc    ecx
+10000940:	2e 2e 2e 00 62 72    	cs cs add BYTE PTR cs:[edx+0x72],ah
+10000946:	20 3d 20 25 64 0a    	and    BYTE PTR ds:0xa642520,bh
+1000094c:	00 4c 65 67          	add    BYTE PTR [ebp+eiz*2+0x67],cl
+10000950:	61                   	popa   
+10000951:	63 79 20             	arpl   WORD PTR [ecx+0x20],di
+10000954:	42                   	inc    edx
+10000955:	49                   	dec    ecx
+10000956:	4f                   	dec    edi
+10000957:	53                   	push   ebx
+10000958:	00 66 90             	add    BYTE PTR [esi-0x70],ah
+1000095b:	90                   	nop
 
-10000928 <vtable for BIOS>:
+1000095c <vtable for BIOS>:
 	...
-	10000930: R_386_32	BIOS::~BIOS()
-	10000934: R_386_32	BIOS::~BIOS()
-	10000938: R_386_32	BIOS::open(int, int, void*)
-	1000093c: R_386_32	BIOS::close(int, int, void*)
-	10000940: R_386_32	Device::hibernate()
-	10000944: R_386_32	Device::wake()
-	10000948: R_386_32	Device::detect()
-	1000094c: R_386_32	Device::disableLegacy()
-	10000950: R_386_32	Device::powerSaving(PowerSavingLevel)
+	10000964: R_386_32	BIOS::~BIOS()
+	10000968: R_386_32	BIOS::~BIOS()
+	1000096c: R_386_32	BIOS::open(int, int, void*)
+	10000970: R_386_32	BIOS::close(int, int, void*)
+	10000974: R_386_32	Device::hibernate()
+	10000978: R_386_32	Device::wake()
+	1000097c: R_386_32	Device::detect()
+	10000980: R_386_32	Device::disableLegacy()
+	10000984: R_386_32	Device::powerSaving(PowerSavingLevel)
 
 Disassembly of section .text._ZN4BIOSD2Ev:
 
-10000954 <BIOS::~BIOS()>:
-10000954:	55                   	push   ebp
-10000955:	89 e5                	mov    ebp,esp
-10000957:	83 ec 08             	sub    esp,0x8
-1000095a:	ba 08 00 00 00       	mov    edx,0x8	1000095b: R_386_32	vtable for BIOS
-1000095f:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-10000962:	89 10                	mov    DWORD PTR [eax],edx
-10000964:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
-10000967:	83 ec 0c             	sub    esp,0xc
-1000096a:	50                   	push   eax
-1000096b:	e8 fc ff ff ff       	call   1000096c <BIOS::~BIOS()+0x18>	1000096c: R_386_PC32	Device::~Device()
-10000970:	83 c4 10             	add    esp,0x10
-10000973:	90                   	nop
-10000974:	c9                   	leave  
-10000975:	c3                   	ret    
+10000988 <BIOS::~BIOS()>:
+10000988:	55                   	push   ebp
+10000989:	89 e5                	mov    ebp,esp
+1000098b:	83 ec 08             	sub    esp,0x8
+1000098e:	ba 08 00 00 00       	mov    edx,0x8	1000098f: R_386_32	vtable for BIOS
+10000993:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+10000996:	89 10                	mov    DWORD PTR [eax],edx
+10000998:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+1000099b:	83 ec 0c             	sub    esp,0xc
+1000099e:	50                   	push   eax
+1000099f:	e8 fc ff ff ff       	call   100009a0 <BIOS::~BIOS()+0x18>	100009a0: R_386_PC32	Device::~Device()
+100009a4:	83 c4 10             	add    esp,0x10
+100009a7:	90                   	nop
+100009a8:	c9                   	leave  
+100009a9:	c3                   	ret    
 
 Disassembly of section .text._ZN4BIOSD0Ev:
 
-10000976 <BIOS::~BIOS()>:
-10000976:	55                   	push   ebp
-10000977:	89 e5                	mov    ebp,esp
-10000979:	83 ec 08             	sub    esp,0x8
-1000097c:	83 ec 0c             	sub    esp,0xc
-1000097f:	ff 75 08             	push   DWORD PTR [ebp+0x8]
-10000982:	e8 fc ff ff ff       	call   10000983 <BIOS::~BIOS()+0xd>	10000983: R_386_PC32	BIOS::~BIOS()
-10000987:	83 c4 10             	add    esp,0x10
-1000098a:	83 ec 08             	sub    esp,0x8
-1000098d:	68 58 01 00 00       	push   0x158
-10000992:	ff 75 08             	push   DWORD PTR [ebp+0x8]
-10000995:	e8 fc ff ff ff       	call   10000996 <BIOS::~BIOS()+0x20>	10000996: R_386_PC32	operator delete(void*, unsigned long)
-1000099a:	83 c4 10             	add    esp,0x10
-1000099d:	c9                   	leave  
-1000099e:	c3                   	ret    
+100009aa <BIOS::~BIOS()>:
+100009aa:	55                   	push   ebp
+100009ab:	89 e5                	mov    ebp,esp
+100009ad:	83 ec 08             	sub    esp,0x8
+100009b0:	83 ec 0c             	sub    esp,0xc
+100009b3:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+100009b6:	e8 fc ff ff ff       	call   100009b7 <BIOS::~BIOS()+0xd>	100009b7: R_386_PC32	BIOS::~BIOS()
+100009bb:	83 c4 10             	add    esp,0x10
+100009be:	83 ec 08             	sub    esp,0x8
+100009c1:	68 58 01 00 00       	push   0x158
+100009c6:	ff 75 08             	push   DWORD PTR [ebp+0x8]
+100009c9:	e8 fc ff ff ff       	call   100009ca <BIOS::~BIOS()+0x20>	100009ca: R_386_PC32	operator delete(void*, unsigned long)
+100009ce:	83 c4 10             	add    esp,0x10
+100009d1:	c9                   	leave  
+100009d2:	c3                   	ret    

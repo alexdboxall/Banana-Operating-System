@@ -31,10 +31,49 @@ extern "C" {
 #include "ellipse.hpp"
 #include "rootrgn.hpp"
 
+namespace Krnl
+{
+	void (*guiPanicHandler)(char*);
+}
+
+/*
+setActiveTerminal(kernelProcess->terminal);
+
+		//give it those classic colours
+		kernelProcess->terminal->setDefaultColours(VgaColour::White, VgaColour::Blue);
+		kernelProcess->terminal->clearScreen();
+
+		//print error message
+		kernelProcess->terminal->puts("\n      FATAL SYSTEM ERROR\n\n");
+		kernelProcess->terminal->puts("      A problem has occured and Banana cannot continue.\n\n");
+		kernelProcess->terminal->puts("          ");
+		kernelProcess->terminal->puts(message);
+		kernelProcess->terminal->puts("\n\n");
+
+		char* drvName = Thr::getDriverNameFromAddress((size_t) __builtin_return_address(0));
+		if (drvName) {
+			kernelProcess->terminal->puts("      The currently executing driver was:\n\n");
+			kernelProcess->terminal->puts("          ");
+			kernelProcess->terminal->puts(drvName);
+		} else {
+			kernelProcess->terminal->puts("      The currently executing task was:\n\n");
+			kernelProcess->terminal->puts("          ");
+			kernelProcess->terminal->puts(currentTaskTCB->processRelatedTo->taskname);
+		}
+*/
+
+void clipdrawPanicHandler(char* msg)
+{
+	extern Video* screen;
+
+	screen->putrect(0, 0, screen->getWidth(), screen->getHeight(), 0x0000AA);
+}
 
 void start(void* s)
 {
 	extern Video* screen;
+
+	Krnl::guiPanicHandler = clipdrawPanicHandler;
 
 	kprintf("CLIPDRAW STARTED.\n");
 	legacyFontInit();
