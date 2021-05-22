@@ -420,6 +420,7 @@ void CPU::displayFeatures()
 	kprintf("    Sysenter     - %s\n", features.hasSysenter ? "Yes" : "No");
 	kprintf("    Syscall      - %s\n", features.hasSyscall ? "Yes" : "No");
 	kprintf("    TPAUSE       - %s\n", features.hasTPAUSE ? "Yes" : "No");
+	kprintf("    onboardFPU   - %s\n", features.onboardFPU ? "Yes" : "No");
 }
 
 extern "C" size_t is486();
@@ -655,6 +656,10 @@ void CPU::detectFeatures()
 				features.onboardFPU = hasLegacyFPU();
 			}
 		}
+	}
+
+	if (!features.onboardFPU) {
+		features.onboardFPU = hasLegacyFPU();
 	}
 
 	opcodeDetectionMode = false;
