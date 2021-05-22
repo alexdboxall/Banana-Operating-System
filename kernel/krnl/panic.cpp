@@ -24,11 +24,11 @@ namespace Krnl
 
 		kprintf("\nFATAL SYSTEM ERROR: %s\n", message);
 
-		Krnl::setBootMessage(message);
+		/*Krnl::setBootMessage(message);
 
 		if (guiPanicHandler) {
 			guiPanicHandler((char*) message);
-		}
+		}*/
 
 		VgaText::hiddenOut = false;
 

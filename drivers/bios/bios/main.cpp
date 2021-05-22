@@ -142,53 +142,12 @@ void hwTextMode_disableBlink(VgaText* terminal, bool disable)
 	}
 }
 
-#include <vm86/vm8086.hpp>
-
-uint8_t biosbsod[1024];
-int biosbsodLen; 
-
-namespace Vm {
-	bool start8086FromBuffer(uint8_t* buffer, int siz, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss);
-}
-
-#include <hw/cpu.hpp>
-void bringBackToTextMode()
-{
-	CPU::current()->writeCR3(kernelProcess->vas->pageDirectoryBasePhysical);
-	kernelProcess->vas->mapRange(0x0, 0x0, 256, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
-
-	kprintf("Dropping back to text mode!\n");
-	Vm::start8086FromBuffer(biosbsod, biosbsodLen, 0x0000, 0x90, 0, 0);
-	Vm::finish8086();
-	kprintf("In text mode hopefully!\n");
-}
-
-#include <fs/vfs.hpp>
-
-extern Process* kernelProcess;
-
 void setupTextMode()
 {
 	if (((*((uint16_t*) 0x410)) & 0x30) == 0x30) {
 		VGA_TEXT_MODE_ADDRESS -= 0x8000;
 		vgamono = true;
 	}
-
-	File* f = new File("C:/Banana/System/BIOSBSOD.COM", kernelProcess);
-	FileStatus fs = f->open(FileOpenMode::Read);
-	if (fs != FileStatus::Success) {
-		panic("WHOA...");
-	}
-	int br;
-	uint64_t siz;
-	bool dir;
-	biosbsodLen = siz;
-	f->stat(&siz, &dir);
-	f->read(siz, biosbsod, &br);
-	kprintf("br = %d\n", br);
-	f->close();
-
-	Krnl::biosPanicHandler = bringBackToTextMode;
 
 	textModeImplementation.disableBlink = hwTextMode_disableBlink;
 	textModeImplementation.loadInData = hwTextMode_loadInData;
