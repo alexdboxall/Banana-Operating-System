@@ -10,6 +10,7 @@
 #pragma GCC optimize ("-fno-align-jumps")
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
+#include "core/terminal.hpp"
 
 namespace Krnl
 {
@@ -31,6 +32,8 @@ namespace Krnl
 		}*/
 
 		VgaText::hiddenOut = false;
+
+		kernelProcess->terminal = new VgaText("A");
 
 		setActiveTerminal(kernelProcess->terminal);
 
