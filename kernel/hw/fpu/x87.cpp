@@ -34,7 +34,7 @@ bool x87::available() {
 }
 
 void x87::save(void* ptr) {
-    kprintf("x87 FPU SAVE 1.\n");
+    kprintf("x87 FPU SAVE 1 : cr0 = 0x%X.\n", CPU::current()->readCR3());
     x87Save((size_t) ptr);
     kprintf("x87 FPU SAVE 2.\n");
 }
