@@ -428,6 +428,8 @@ void otherISRHandler(regs* r, void* context)
 
 void opcodeFault(regs* r, void* context)
 {
+	kprintf("OPFAULT 0x%X\n", r->eip);
+
 	if (CPU::current()->opcodeDetectionMode) {
 		kprintf("Opcode detection: invalid opcode.\n");
 		r->eip += 25;
