@@ -71,6 +71,7 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 	}
 
 	// SAVE FPU
+	kprintf("ctxt switch @.\n");
 
 	if (computer->fpu) {
 		if (!currentTaskTCB->fpuState) {
@@ -78,10 +79,11 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 		}
 		kprintf("saving to FPU state: 0x%X\n", currentTaskTCB->fpuState);
 		computer->fpu->save(currentTaskTCB->fpuState);
+		kprintf("state saved.\n");
 	}
-
+	kprintf("ctxt switch A.\n");
 	switchToThreadASM(nextThreadToRun);
-
+	kprintf("ctxt switch B.\n");
 	if (computer->fpu) {
 		if (currentTaskTCB->fpuState) {
 			kprintf("loading FPU state: 0x%X\n", currentTaskTCB->fpuState);
@@ -89,6 +91,7 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 			kprintf("loaded FPU state: 0x%X\n", currentTaskTCB->fpuState);
 		}
 	}
+	kprintf("ctxt switch C.\n");
 
 	// LOAD FPU
 
