@@ -37,7 +37,7 @@ x87Load:        ;TAKES IN A SIZE_T
     ret
 
 x87Init:
-    finit
+    fninit
     mov eax, cr0
     and ax, 0xFFFB        ;clear coprocessor emulation CR0.EM
     or ax, 0x22           ;set coprocessor monitoring  CR0.MP + numeric errors (CRO.NE)
