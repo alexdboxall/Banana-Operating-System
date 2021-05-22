@@ -1,5 +1,6 @@
 #include "core/main.hpp"
 #include "hw/ports.hpp"
+#include "hw/cpu.hpp"
 #include "hw/acpi.hpp"
 #include "hw/fpu/x87.hpp"
 #include <stdint.h>
