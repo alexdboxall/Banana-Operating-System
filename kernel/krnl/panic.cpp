@@ -25,21 +25,21 @@ namespace Krnl
 
 		kprintf("\nFATAL SYSTEM ERROR: %s\n", message);
 
-		Krnl::setBootMessage(message);
+		//Krnl::setBootMessage(message);
 
 		/*if (guiPanicHandler) {
 			guiPanicHandler((char*) message);
 		}*/
 
-		VgaText::hiddenOut = false;
-
-		setActiveTerminal(kernelProcess->terminal);
+		//VgaText::hiddenOut = false;
 
 		//give it those classic colours
-		kernelProcess->terminal->setDefaultColours(VgaColour::White, VgaColour::Blue);
-		kernelProcess->terminal->clearScreen();
-		kernelProcess->terminal->setTitle((char*) "");
-		kernelProcess->terminal->setDefaultColours(VgaColour::White, VgaColour::Blue);
+		activeTerminal->setDefaultColours(VgaColour::White, VgaColour::Blue);
+		activeTerminal->terminal->clearScreen();
+		activeTerminal->terminal->setTitle((char*) "");
+		activeTerminal->terminal->setDefaultColours(VgaColour::White, VgaColour::Blue);
+
+		while (1);
 
 		//print error message
 		kernelProcess->terminal->puts("\n      FATAL SYSTEM ERROR\n\n");
