@@ -21,7 +21,7 @@ namespace Krnl
 
 	void panic(const char* message) {
 		asm("cli");
-		kernelInPanic = true;
+		//kernelInPanic = true;
 
 		kprintf("\nFATAL SYSTEM ERROR: %s\n", message);
 

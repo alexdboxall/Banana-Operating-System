@@ -179,7 +179,7 @@ void setupTextMode()
 	biosbsodLen = siz;
 	f->stat(&siz, &dir);
 	f->read(siz, biosbsod, &br);
-	kprintf("br = %d\n", &br);
+	kprintf("br = %d\n", br);
 	f->close();
 
 	Krnl::biosPanicHandler = bringBackToTextMode;
