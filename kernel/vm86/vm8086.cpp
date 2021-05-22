@@ -120,6 +120,37 @@ namespace Vm
 		return x;
 	}
 
+	bool start8086FromBuffer(uint8_t* buffer, int siz, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss)
+	{
+		while (1) {
+			lockScheduler();
+			if (vmReady) {
+				break;
+			}
+			schedule();
+			unlockScheduler();
+		}
+
+		//scheduler still locked here
+
+		vm86Thread->vm86IP = ip;
+		vm86Thread->vm86CS = cs;
+		vm86Thread->vm86SP = sp;
+		vm86Thread->vm86SS = ss;
+		vm86Thread->vm86Task = true;
+
+		vmToHostCommsPtr = 0;
+		memset(vmToHostComms, 0, 32);
+
+		memcpy((void*) (size_t) realToLinear(cs, ip), buffer, siz);
+
+		vmReady = false;
+		unlockScheduler();
+		unblockTask(vm86Thread);
+
+		return true;
+	}
+
 	bool start8086(const char* filename, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss)
 	{
 		while (1) {
