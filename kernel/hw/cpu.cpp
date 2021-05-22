@@ -662,6 +662,10 @@ void CPU::detectFeatures()
 		features.onboardFPU = hasLegacyFPU();
 	}
 
+	if (features.onboardFPU) {
+		computer->features.hasx87 = true;
+	}
+
 	opcodeDetectionMode = false;
 }
 
