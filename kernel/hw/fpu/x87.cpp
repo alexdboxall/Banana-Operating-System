@@ -5,6 +5,10 @@
 #include "hw/fpu/x87.hpp"
 #include <stdint.h>
 
+#pragma GCC optimize ("O0")
+#pragma GCC optimize ("-fno-strict-aliasing")
+#pragma GCC optimize ("-fno-omit-frame-pointer")
+
 extern "C" size_t x87Detect();
 extern "C" void x87Init();
 extern "C" void x87Save(size_t ptr);

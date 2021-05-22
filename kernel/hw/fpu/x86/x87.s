@@ -25,17 +25,15 @@ x87Save:
 ;WARNING: NOTICE WE ARE NOT USING A STACK FRAME FOR THIS, DO NOT CHANGE EBP WITHOUT PUSHING IT FIRST!
     push ebp
     mov ebp, esp
-    mov eax, [ebp + 8]
-    jmp $
     fnsave [ebp + 8]     ;only plus 4 because no EBP push
-    leave
+    pop ebp
     ret
 
 x87Load:        ;TAKES IN A SIZE_T
     push ebp
     mov ebp, esp
     frstor [ebp + 8]     ;only plus 4 because no EBP push
-    leave
+    pop ebp
     ret
 
 x87Init:
