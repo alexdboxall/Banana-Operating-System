@@ -33,8 +33,6 @@ namespace Krnl
 
 		VgaText::hiddenOut = false;
 
-		kernelProcess->terminal = new VgaText("A");
-
 		setActiveTerminal(kernelProcess->terminal);
 
 		//give it those classic colours
