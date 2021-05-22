@@ -75,7 +75,7 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 
 	if (computer->fpu && !currentTaskTCB->vm86Task) {
 		if (!currentTaskTCB->fpuState) {
-			currentTaskTCB->fpuState = (uint8_t*) malloc(256);
+			currentTaskTCB->fpuState = (uint8_t*) malloc(512);
 		}
 		lockScheduler();
 		kprintf("saving to FPU state: 0x%X\n", currentTaskTCB->fpuState);
