@@ -21,7 +21,7 @@ Rectangle::Rectangle(int x, int y, int w, int h, Brush* brush, Context* ctxt): G
 	contextDrawFunc = rectPtnDrawFunc;
 }
 
-Rectangle::Rectangle(int x, int y, int w, int h, uint32_t col, Context* ctxt) : GDO(GDOType::Rectangle, ctxt)
+Rectangle::Rectangle(int x, int y, int w, int h, uint32_t col, Context* ctxt): GDO(GDOType::Rectangle, ctxt)
 {
 	dataShape.x = x;
 	dataShape.y = y;

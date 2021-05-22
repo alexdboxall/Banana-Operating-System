@@ -15,18 +15,27 @@ namespace Krnl
 {
 	bool kernelInPanic = false;
 
-	void (*guiPanicHandler)();
+	void (*guiPanicHandler)() = nullptr;
+	void (*biosPanicHandler)() = nullptr;
 	void (*guiProgramFaultHandler)();
 
 	void panic(const char* message) {
 		asm("cli");
 		kernelInPanic = true;
 
+		kprintf("\nFATAL SYSTEM ERROR: %s\n", message);
+
 		Krnl::setBootMessage(message);
 
-		VgaText::hiddenOut = false;
+		if (biosPanicHandler) {
+			biosPanicHandler();
+		}
 
-		kprintf("\nFATAL SYSTEM ERROR: %s\n", message);
+		if (guiPanicHandler) {
+			guiPanicHandler();
+		}
+
+		VgaText::hiddenOut = false;
 
 		setActiveTerminal(kernelProcess->terminal);
 
@@ -40,10 +49,6 @@ namespace Krnl
 		kernelProcess->terminal->puts("          ");
 		kernelProcess->terminal->puts(message);
 		kernelProcess->terminal->puts("\n\n");
-
-		if (guiPanicHandler) {
-			guiPanicHandler();
-		}
 
 		char* drvName = Thr::getDriverNameFromAddress((size_t) __builtin_return_address(0));
 		if (drvName) {

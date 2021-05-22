@@ -186,8 +186,6 @@ public:
 
     void insertAtTail(T item)
     {
-        kprintf("inserting at tail.\n");
-
         ListItem<T>* temp = new ListItem<T>;
         temp->value = item;
 

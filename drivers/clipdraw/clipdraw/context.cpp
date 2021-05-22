@@ -1,5 +1,10 @@
 #include "context.hpp"
 
+#include <core/kheap.hpp>
+extern "C" {
+	#include <libk/string.h>
+}
+
 CRect::CRect()
 {
 
@@ -7,240 +12,559 @@ CRect::CRect()
 
 CRect::CRect(int t, int l, int b, int r)
 {
-    top = t;
-    left = l;
-    bottom = b;
-    right = r;
+	top = t;
+	left = l;
+	bottom = b;
+	right = r;
+}
+
+CRect* CRect::intersect(CRect* rect_b)
+{
+	CRect* rect_a = this;
+	CRect* result_rect;
+
+	if (!(rect_a->left <= rect_b->right &&
+		rect_a->right >= rect_b->left &&
+		rect_a->top <= rect_b->bottom &&
+		rect_a->bottom >= rect_b->top)) {
+		return nullptr;
+	}
+
+	result_rect = new CRect(rect_a->top, rect_a->left, rect_a->bottom, rect_a->right);
+
+	if (rect_b->left >= result_rect->left && rect_b->left <= result_rect->right) {
+		result_rect->left = rect_b->left;
+	}
+
+	if (rect_b->top >= result_rect->top && rect_b->top <= result_rect->bottom) {
+		result_rect->top = rect_b->top;
+	}
+
+	if (rect_b->right >= result_rect->left && rect_b->right <= result_rect->right) {
+		result_rect->right = rect_b->right;
+	}
+
+	if (rect_b->bottom >= result_rect->top && rect_b->bottom <= result_rect->bottom) {
+		result_rect->bottom = rect_b->bottom;
+	}
+
+	return result_rect;
 }
 
 List<CRect*>* CRect::split(CRect* cutting_rect)
 {
-    CRect* subject_rect = this;
+	CRect* subject_rect = this;
 
-    List<CRect*>* output_rects = new List<CRect*>;
+	List<CRect*>* output_rects = new List<CRect*>;
 
-    CRect subject_copy;
-    subject_copy.top = subject_rect->top;
-    subject_copy.left = subject_rect->left;
-    subject_copy.bottom = subject_rect->bottom;
-    subject_copy.right = subject_rect->right;
+	CRect subject_copy;
+	subject_copy.top = subject_rect->top;
+	subject_copy.left = subject_rect->left;
+	subject_copy.bottom = subject_rect->bottom;
+	subject_copy.right = subject_rect->right;
 
-    CRect* temp_rect;
+	CRect* temp_rect;
 
-    if (cutting_rect->left >= subject_copy.left && cutting_rect->left <= subject_copy.right) {
-        temp_rect = new CRect(subject_copy.top, subject_copy.left,
-                              subject_copy.bottom, cutting_rect->left - 1);
+	if (cutting_rect->left >= subject_copy.left && cutting_rect->left <= subject_copy.right) {
+		temp_rect = new CRect(subject_copy.top, subject_copy.left,
+							  subject_copy.bottom, cutting_rect->left - 1);
 
-        output_rects->insertAtTail(temp_rect);
-        subject_copy.left = cutting_rect->left;
-    }
+		output_rects->insertAtTail(temp_rect);
+		subject_copy.left = cutting_rect->left;
+	}
 
-    if (cutting_rect->top >= subject_copy.top && cutting_rect->top <= subject_copy.bottom) {
-        temp_rect = new CRect(subject_copy.top, subject_copy.left,
-                              cutting_rect->top - 1, subject_copy.right);
+	if (cutting_rect->top >= subject_copy.top && cutting_rect->top <= subject_copy.bottom) {
+		temp_rect = new CRect(subject_copy.top, subject_copy.left,
+							  cutting_rect->top - 1, subject_copy.right);
 
-        output_rects->insertAtTail(temp_rect);
-        subject_copy.top = cutting_rect->top;
-    }
+		output_rects->insertAtTail(temp_rect);
+		subject_copy.top = cutting_rect->top;
+	}
 
-    if (cutting_rect->right >= subject_copy.left && cutting_rect->right <= subject_copy.right) {
-        temp_rect = new CRect(subject_copy.top, cutting_rect->right + 1,
-                              subject_copy.bottom, subject_copy.right);
+	if (cutting_rect->right >= subject_copy.left && cutting_rect->right <= subject_copy.right) {
+		temp_rect = new CRect(subject_copy.top, cutting_rect->right + 1,
+							  subject_copy.bottom, subject_copy.right);
 
-        output_rects->insertAtTail(temp_rect);
-        subject_copy.right = cutting_rect->right;
-    }
+		output_rects->insertAtTail(temp_rect);
+		subject_copy.right = cutting_rect->right;
+	}
 
-    if (cutting_rect->bottom >= subject_copy.top && cutting_rect->bottom <= subject_copy.bottom) {
-        temp_rect = new CRect(cutting_rect->bottom + 1, subject_copy.left,
-                              subject_copy.bottom, subject_copy.right);
+	if (cutting_rect->bottom >= subject_copy.top && cutting_rect->bottom <= subject_copy.bottom) {
+		temp_rect = new CRect(cutting_rect->bottom + 1, subject_copy.left,
+							  subject_copy.bottom, subject_copy.right);
 
-        output_rects->insertAtTail(temp_rect);
-        subject_copy.bottom = cutting_rect->bottom;
-    }
+		output_rects->insertAtTail(temp_rect);
+		subject_copy.bottom = cutting_rect->bottom;
+	}
 
-    return output_rects;
+	return output_rects;
 }
 
 void Context::subClipRect(CRect* added_rect)
 {
-    Context* context = this;
-    int i, j;
-    CRect* cur_rect;
-    List<CRect*>* split_rects;
+	clippingOn = true;
 
-    for (i = 0; i < context->clip_rects->length(); ) {
-        cur_rect = context->clip_rects->getDesiredElement(i)->getValue();
+	Context* context = this;
+	int i, j;
+	CRect* cur_rect;
+	List<CRect*>* split_rects;
 
-        if (!(cur_rect->left <= added_rect->right &&
-            cur_rect->right >= added_rect->left &&
-            cur_rect->top <= added_rect->bottom &&
-            cur_rect->bottom >= added_rect->top)) {
-            i++;
-            continue;
-        }
+	for (i = 0; i < context->clip_rects->length(); ) {
+		cur_rect = context->clip_rects->getDesiredElement(i)->getValue();
 
-        context->clip_rects->deleteNode(context->clip_rects->getDesiredElement(i));
-        split_rects = cur_rect->split(added_rect);
-        delete cur_rect;
+		if (!(cur_rect->left <= added_rect->right &&
+			cur_rect->right >= added_rect->left &&
+			cur_rect->top <= added_rect->bottom &&
+			cur_rect->bottom >= added_rect->top)) {
+			i++;
+			continue;
+		}
 
-        while (split_rects->length()) {
-            cur_rect = split_rects->getHead()->getValue();
-            split_rects->deleteHead();
-            context->clip_rects->insertAtTail(cur_rect);
-        }
+		context->clip_rects->deleteNode(context->clip_rects->getDesiredElement(i));
+		split_rects = cur_rect->split(added_rect);
+		delete cur_rect;
 
-        delete split_rects;
+		while (split_rects->length()) {
+			cur_rect = split_rects->getHead()->getValue();
+			split_rects->deleteHead();
+			context->clip_rects->insertAtTail(cur_rect);
+		}
 
-        i = 0;
-    }
+		delete split_rects;
+
+		i = 0;
+	}
+}
+
+void Context::intersectClipRect(CRect* rect)
+{
+	clippingOn = true;
+
+	int i;
+	List<CRect*>* output_rects = new List<CRect*>;
+	CRect* current_rect;
+	CRect* intersect_rect;
+
+	for (i = 0; i < clip_rects->length(); i++) {
+		current_rect = clip_rects->getDesiredElement(i)->getValue();
+		intersect_rect = current_rect->intersect(rect);
+
+		if (intersect_rect) {
+			output_rects->insertAtTail(intersect_rect);
+		}
+	}
+
+	while (clip_rects->length()) {
+		clip_rects->deleteTail();
+	}
+	delete clip_rects;
+
+	clip_rects = output_rects;
+	delete rect;
 }
 
 void Context::addClipRect(CRect* added_rect)
 {
-    subClipRect(added_rect);
-    clip_rects->insertAtTail(added_rect);
+	subClipRect(added_rect);
+	clip_rects->insertAtTail(added_rect);
 }
 
 Context::Context(Video* scr)
 {
-    screen = scr;
-    width = screen->getWidth();
-    height = screen->getHeight();
-    clip_rects = new List<CRect*>;
+	screen = scr;
+	width = screen->getWidth();
+	height = screen->getHeight();
+	clip_rects = new List<CRect*>;
+	clippingOn = false;
 }
 
 void Context::clearClipRects()
 {
-    kprintf("clearing clip rects.\n");
-    while (clip_rects->length()) {
-        delete clip_rects->getHead()->getValue();
-        clip_rects->deleteHead();
-    }
-    kprintf("Cleared. length = %d\n", clip_rects->length());
+	clippingOn = false;
+
+	while (clip_rects->length()) {
+		delete clip_rects->getHead()->getValue();
+		clip_rects->deleteHead();
+	}
 }
 
 void Context::drawRect(int x, int y, int w, int h, uint32_t color)
 {
-    drawHorizontalLine(x, y, w, color);                 //top
-    drawVerticalLine(x, y + 1, h - 2, color);           //left 
-    drawHorizontalLine(x, y + h - 1, w, color);         //bottom
-    drawVerticalLine(x + w - 1, y + 1, h - 2, color);   //right
+	drawHorizontalLine(x, y, w, color);                 //top
+	drawVerticalLine(x, y + 1, h - 2, color);           //left 
+	drawHorizontalLine(x, y + h - 1, w, color);         //bottom
+	drawVerticalLine(x + w - 1, y + 1, h - 2, color);   //right
 }
 
 void Context::drawHorizontalLine(int x, int y, int length, uint32_t colour)
 {
-    fillRect(x, y, length, 1, colour);
+	fillRect(x, y, length, 1, colour);
 }
 
 void Context::drawVerticalLine(int x, int y, int length, uint32_t colour)
 {
-    fillRect(x, y, 1, length, colour);
+	fillRect(x, y, 1, length, colour);
 }
 
-void Context::clippedRect(int x, int y, int width, int height, CRect* clip_area, Brush* brush)
+void Context::clippedRect(int x, int y, int w, int h, CRect* clip_area, Brush* brush)
 {
-    /*int curX;
-    int maxX = x + width;
-    int maxY = y + height;
+	int curX;
+	int maxX = x + w;
+	int maxY = y + h;
 
-    if (x < clip_area->left) x = clip_area->left;
-    if (y < clip_area->top) y = clip_area->top;
-    if (maxX > clip_area->right + 1) maxX = clip_area->right + 1;
-    if (maxY > clip_area->bottom + 1) maxY = clip_area->bottom + 1;
+	x += transX;
+	y += transY;
 
-    for (int yy = y; yy < y + height; ++yy) {
-        uint8_t pattern = brush->pattern[(yy - y + brush->originY) % brush->height];
+	int ox = x;
+	int oy = y;
 
-        for (int xx = x; xx < x + width; ++xx) {
-            bool bit = pattern & (1 << ((xx - x + brush->originX) % brush->width));
+	maxX += transX;
+	maxY += transY;
 
-            if (bit) {
-                screen->putpixel(xx, yy, brush->fg);
+	if (x < clip_area->left) x = clip_area->left;
+	if (y < clip_area->top) y = clip_area->top;
+	if (maxX > clip_area->right + 1) maxX = clip_area->right + 1;
+	if (maxY > clip_area->bottom + 1) maxY = clip_area->bottom + 1;
 
-            } else if (brush->bg != 0xFFFFFFFF) {
-                screen->putpixel(xx, yy, brush->bg);
-            }
-        }
-    }*/
+	w = maxX - x;
+	h = maxY - y;
+
+	for (int yy = y; yy < y + h; ++yy) {
+		uint8_t pattern = brush->pattern[(yy - oy + brush->originY) % brush->height];
+
+		for (int xx = x; xx < x + w; ++xx) {
+			bool bit = pattern & (1 << ((xx - ox + brush->originX) % brush->width));
+
+			if (bit) {
+				screen->putpixel(xx, yy, brush->fg);
+
+			} else if (brush->bg != 0xFFFFFFFF) {
+				screen->putpixel(xx, yy, brush->bg);
+			}
+		}
+	}
+}
+
+uint32_t palette256[256];
+
+void Context::clippedBitmap8(uint8_t* data, int x, int y, int w, int h, CRect* bound_rect)
+{
+	x += transX;
+	y += transY;
+
+	int offX = 0;
+	int offY = 0;
+	int countX = w;
+	int countY = h;
+
+	if (x > bound_rect->right || (x + w) <= bound_rect->left ||
+		y > bound_rect->bottom || (y + h) <= bound_rect->top) {
+		return;
+	}
+
+	if (x < bound_rect->left) {
+		offX = bound_rect->left - x;
+	}
+
+	if ((x + w) > bound_rect->right) {
+		countX = bound_rect->right - x + 1;
+	}
+
+	if (y < bound_rect->top) {
+		offY = bound_rect->top - y;
+	}
+
+	if ((y + h) > bound_rect->bottom) {
+		countY = bound_rect->bottom - y + 1;
+	}
+
+	for (int fontY = offY; fontY < countY; fontY++) {
+		for (int fontX = offX; fontX < countX; fontX++) {
+			uint32_t col = palette256[data[fontY * w + fontX]];
+			if (col != 0xFFFFFFFF) {
+				screen->putpixel(fontX + x, fontY + y, col);
+			}
+		}
+	}
+}
+
+void Context::clippedBitmap1(uint8_t* data, int x, int y, int w, int h, CRect* bound_rect, uint32_t colour)
+{
+	x += transX;
+	y += transY;
+
+	int offX = 0;
+	int offY = 0;
+	int countX = w;
+	int countY = h;
+
+	if (x > bound_rect->right || (x + w) <= bound_rect->left ||
+		y > bound_rect->bottom || (y + h) <= bound_rect->top) {
+		return;
+	}
+
+	if (x < bound_rect->left) {
+		offX = bound_rect->left - x;
+	}
+
+	if ((x + w) > bound_rect->right) {
+		countX = bound_rect->right - x + 1;
+	}
+
+	if (y < bound_rect->top) {
+		offY = bound_rect->top - y;
+	}
+
+	if ((y + h) > bound_rect->bottom) {
+		countY = bound_rect->bottom - y + 1;
+	}
+
+	uint8_t shift_line = 0;
+
+	for (int fontY = offY; fontY < countY; fontY++) {
+		shift_line = data[fontY];
+		shift_line <<= offX;
+
+		for (int fontX = offX; fontX < countX; fontX++) {
+			if (shift_line & 0x80) {
+				screen->putpixel(fontX + x, fontY + y, colour);
+			}
+
+			shift_line <<= 1;
+		}
+	}
+}
+
+void Context::drawBitmap8(uint8_t* data, int x, int y, int w, int h)
+{
+	int i;
+	CRect* clip_area;
+	CRect screen_area;
+
+	if (clip_rects->length()) {
+		for (i = 0; i < clip_rects->length(); i++) {
+			clip_area = clip_rects->getDesiredElement(i)->getValue();
+			clippedBitmap8(data, x, y, w, h, clip_area);
+		}
+
+	} else {
+		if (!clippingOn) {
+			screen_area.top = 0;
+			screen_area.left = 0;
+			screen_area.bottom = height - 1;
+			screen_area.right = width - 1;
+			clippedBitmap8(data, x, y, w, h, &screen_area);
+		}
+	}
+}
+
+void Context::drawBitmap1(uint8_t* data, int x, int y, int w, int h, uint32_t colour)
+{
+	int i;
+	CRect* clip_area;
+	CRect screen_area;
+
+	if (clip_rects->length()) {
+		for (i = 0; i < clip_rects->length(); i++) {
+			clip_area = clip_rects->getDesiredElement(i)->getValue();
+			clippedBitmap1(data, x, y, w, h, clip_area, colour);
+		}
+
+	} else {
+		if (!clippingOn) {
+			screen_area.top = 0;
+			screen_area.left = 0;
+			screen_area.bottom = height - 1;
+			screen_area.right = width - 1;
+			clippedBitmap1(data, x, y, w, h, &screen_area, colour);
+		}
+	}
+}
+
+#define drawPoint(x,y) buffer[(y) * x1 + (x)] = 0xFF;
+#define drawRow(x,y,l) for (int a = 0; a < (l); ++a) buffer[(y) * x1 + (x) + a] = 0xFF;
+
+void drawEllipse(uint8_t* buffer, int originx, int originy, int width, int height, bool fill)
+{
+	
+}
+
+void Context::clippedEllipse(bool fill, int x, int y, int w, int h, CRect* clip_area, uint32_t colour)
+{
+	uint8_t* ellipseBuffer = (uint8_t*) malloc(w * h);
+	memset(ellipseBuffer, 0, w * h);
+
+	drawEllipse(ellipseBuffer, x + w / 2, y + h / 2, w, h, fill);
+
+	uint32_t col00 = palette256[0];
+	uint32_t colFF = palette256[255];
+
+	palette256[0x00] = 0xFFFFFFFF;
+	palette256[0xFF] = colour;
+
+	drawBitmap8(ellipseBuffer, x, y, w, h);
+
+	palette256[0x00] = col00;
+	palette256[0xFF] = colFF;
+
+	free(ellipseBuffer);
+}
+
+void Context::clippedEllipse(bool fill, int x, int y, int w, int h, CRect* clip_area, Brush* brush)
+{
+	clippedEllipse(fill, x, y, w, h, clip_area, 0xFF0000);
 }
 
 void Context::clippedRect(int x, int y, int w, int h, CRect* clip_area, uint32_t colour)
 {
-    int curX;
-    int maxX = x + w;
-    int maxY = y + h;
+	int curX;
+	int maxX = x + w;
+	int maxY = y + h;
 
-    if (x < clip_area->left) x = clip_area->left;
-    if (y < clip_area->top) y = clip_area->top;
-    if (maxX > clip_area->right + 1) maxX = clip_area->right + 1;
-    if (maxY > clip_area->bottom + 1) maxY = clip_area->bottom + 1;
+	x += transX;
+	y += transY;
+	maxX += transX;
+	maxY += transY;
 
-    w = maxX - x;
-    h = maxY - y;
+	if (x < clip_area->left) x = clip_area->left;
+	if (y < clip_area->top) y = clip_area->top;
+	if (maxX > clip_area->right + 1) maxX = clip_area->right + 1;
+	if (maxY > clip_area->bottom + 1) maxY = clip_area->bottom + 1;
 
-    kprintf("clipped %d, %d, %d, %d\n", x, y, w, h);
-    screen->putrect(x, y, w, h, colour);
+	w = maxX - x;
+	h = maxY - y;
+
+	screen->putrect(x, y, w, h, colour);
 }
 
-
-void Context::fillRect(int x, int y, int width, int height, Brush* brush)
+void Context::fillRect(int x, int y, int w, int h, Brush* brush)
 {
-    return;
+	int max_x = x + w;
+	int max_y = y + h;
+	int i;
+	CRect* clip_area;
+	CRect screen_area;
 
-    /*int start_x, cur_x, cur_y, end_x, end_y;
-    int max_x = x + width;
-    int max_y = y + height;
-    int i;
-    CRect* clip_area;
-    CRect screen_area;
+	if (max_x > width) max_x = width;
+	if (max_y > height) max_y = height;
+	if (x < 0) x = 0;
+	if (y < 0) y = 0;
 
-    if (clip_rects->length()) {
-        for (i = 0; i < clip_rects->length(); i++) {
-            clip_area = clip_rects->getDesiredElement(i)->getValue();
-            clippedRect(x, y, width, height, clip_area, brush);
-        }
+	w = max_x - x;
+	h = max_y - y;
 
-    } else {
-        screen_area.top = 0;
-        screen_area.left = 0;
-        screen_area.bottom = height - 1;
-        screen_area.right = width - 1;
-        clippedRect(x, y, width, height, &screen_area, brush);
-    }*/
+	if (clip_rects->length()) {
+		for (i = 0; i < clip_rects->length(); i++) {
+			clip_area = clip_rects->getDesiredElement(i)->getValue();
+			clippedRect(x, y, w, h, clip_area, brush);
+		}
+
+	} else {
+		if (!clippingOn) {
+			screen_area.top = 0;
+			screen_area.left = 0;
+			screen_area.bottom = height - 1;
+			screen_area.right = width - 1;
+			clippedRect(x, y, w, h, &screen_area, brush);
+		}
+	}
 }
 
 void Context::fillRect(int x, int y, int w, int h, uint32_t colour)
 {
-    int max_x = x + w;
-    int max_y = y + h;
-    int i;
-    CRect* clip_area;
-    CRect screen_area;
+	int max_x = x + w;
+	int max_y = y + h;
+	int i;
+	CRect* clip_area;
+	CRect screen_area;
 
-    if (max_x > width) max_x = width;
-    if (max_y > height) max_y = height;
-    if (x < 0) x = 0;
-    if (y < 0) y = 0;
+	if (max_x > width) max_x = width;
+	if (max_y > height) max_y = height;
+	if (x < 0) x = 0;
+	if (y < 0) y = 0;
 
-    w = max_x - x;
-    h = max_y - y;
+	w = max_x - x;
+	h = max_y - y;
 
-    if (clip_rects->length()) {
-        for (i = 0; i < clip_rects->length(); i++) {
-            kprintf("fillrect found cliprect. %d\n", i);
-            clip_area = clip_rects->getDesiredElement(i)->getValue();
-            kprintf("--> %d, %d, %d, %d\n", clip_area->top, clip_area->bottom, clip_area->left, clip_area->right);
-            clippedRect(x, y, w, h, clip_area, colour);
-        }
+	if (clip_rects->length()) {
+		for (i = 0; i < clip_rects->length(); i++) {
+			clip_area = clip_rects->getDesiredElement(i)->getValue();
+			clippedRect(x, y, w, h, clip_area, colour);
+		}
 
-    } else {
-        screen_area.top = 0;
-        screen_area.left = 0;
-        screen_area.bottom = height - 1;
-        screen_area.right = width - 1;
-        clippedRect(x, y, w, h, &screen_area, colour);
-    }
+	} else {
+		if (!clippingOn) {
+			screen_area.top = 0;
+			screen_area.left = 0;
+			screen_area.bottom = height - 1;
+			screen_area.right = width - 1;
+			clippedRect(x, y, w, h, &screen_area, colour);
+		}
+	}
+}
 
-    kprintf("...\n\n");
+void Context::ellipse(bool fill, int x, int y, int w, int h, uint32_t colour)
+{
+	int max_x = x + w;
+	int max_y = y + h;
+	int i;
+	CRect* clip_area;
+	CRect screen_area;
+
+	if (max_x > width) max_x = width;
+	if (max_y > height) max_y = height;
+	if (x < 0) x = 0;
+	if (y < 0) y = 0;
+
+	w = max_x - x;
+	h = max_y - y;
+
+	if (clip_rects->length()) {
+		for (i = 0; i < clip_rects->length(); i++) {
+			clip_area = clip_rects->getDesiredElement(i)->getValue();
+			clippedEllipse(fill, x, y, w, h, clip_area, colour);
+		}
+
+	} else {
+		if (!clippingOn) {
+			screen_area.top = 0;
+			screen_area.left = 0;
+			screen_area.bottom = height - 1;
+			screen_area.right = width - 1;
+			clippedEllipse(fill, x, y, w, h, clip_area, colour);
+		}
+	}
+}
+
+void Context::ellipse(bool fill, int x, int y, int w, int h, Brush* brush)
+{
+	int max_x = x + w;
+	int max_y = y + h;
+	int i;
+	CRect* clip_area;
+	CRect screen_area;
+
+	if (max_x > width) max_x = width;
+	if (max_y > height) max_y = height;
+	if (x < 0) x = 0;
+	if (y < 0) y = 0;
+
+	w = max_x - x;
+	h = max_y - y;
+
+	if (clip_rects->length()) {
+		for (i = 0; i < clip_rects->length(); i++) {
+			clip_area = clip_rects->getDesiredElement(i)->getValue();
+			clippedEllipse(fill, x, y, w, h, clip_area, brush);
+		}
+
+	} else {
+		if (!clippingOn) {
+			screen_area.top = 0;
+			screen_area.left = 0;
+			screen_area.bottom = height - 1;
+			screen_area.right = width - 1;
+			clippedEllipse(fill, x, y, w, h, clip_area, brush);
+		}
+	}
 }

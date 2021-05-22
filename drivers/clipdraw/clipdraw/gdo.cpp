@@ -5,48 +5,96 @@ extern "C" {
 	#include <libk/string.h>
 }
 
-void GDO::update()
+#include "region.hpp"
+
+void GDO::update(List<CRect*>* dirtyRegions, bool paintChildren)
 {
 	if (type != GDOType::Region) {
-		panic("GDO::update on non-region");
-		return;
-	}
+		panic("UPDATE CALLED ON NON-REGION");
 
-	context->fillRect(0, 0, context->width, context->height, 0x2267FE);
-	context->clearClipRects();
+	} else {
+		int i, screen_x, screen_y, child_screen_x, child_screen_y;
+		Region* current_child;
+		CRect* temp_rect;
+		Region* window = (Region*) this;
 
-	resetNext();
-	while (hasNext()) {
-		GDO* obj = getNext();
+		if (!context) return;
 
-		if (obj && obj->type == GDOType::Region) {
-			kprintf("RRRR: %d, %d, %d, %d\n", obj->dataRegion.y, \
-					obj->dataRegion.x, \
-					obj->dataRegion.y + obj->dataRegion.h - 1, \
-					obj->dataRegion.x + obj->dataRegion.w - 1);
+		window->applyBoundClipping(0, dirtyRegions);
 
-			context->addClipRect(new CRect(\
-								 obj->dataRegion.y, \
-								 obj->dataRegion.x, \
-								 obj->dataRegion.y + obj->dataRegion.h - 1, \
-								 obj->dataRegion.x + obj->dataRegion.w - 1));
+		screen_x = window->screenX();
+		screen_y = window->screenY();
+
+		context->clippingOn = false;
+
+		window->resetNext();
+		while (window->hasNext()) {
+			auto next = window->getNext();
+
+			if (next->type == GDOType::Region) {
+				current_child = (Region*) next;
+
+				child_screen_x = current_child->screenX();
+				child_screen_y = current_child->screenY();
+
+				temp_rect = new CRect(child_screen_y, child_screen_x,
+									 child_screen_y + current_child->dataRegion.h - 1,
+									 child_screen_x + current_child->dataRegion.w - 1);
+				context->subClipRect(temp_rect);
+				delete temp_rect;
+			}
 		}
 
-		/*if (obj && obj->contextDrawFunc) {
-			obj->contextDrawFunc(obj);
-		}*/
-	}
+		context->transX = screen_x;
+		context->transY = screen_y;
 
-	for (int i = 0; i < context->clip_rects->length(); ++i) {
-		CRect* temp_rect = context->clip_rects->getDesiredElement(i)->getValue();
+		//context->clippingOn = false;
 
-		kprintf("RECT: %d, %d, %d, %d\n", temp_rect->left, temp_rect->top,
-				temp_rect->right - temp_rect->left + 1,
-				temp_rect->bottom - temp_rect->top + 1);
+		window->resetNext();
+		while (window->hasNext()) {
+			GDO* next = window->getNext();
+			if (next->type != GDOType::Region) {
+				if (next->contextDrawFunc) {
+					next->contextDrawFunc(next);
+				}
+			}
+		}
 
-		context->drawRect(temp_rect->left, temp_rect->top,
-						  temp_rect->right - temp_rect->left + 1,
-						  temp_rect->bottom - temp_rect->top + 1, 0xFF0000);
+		context->clearClipRects();
+		context->transX = 0;
+		context->transY = 0;
+
+		if (paintChildren) {
+			window->resetNext();
+			while (window->hasNext()) {
+				GDO* next = window->getNext();
+				if (next->type == GDOType::Region) {
+					Region* currentChild = ((Region*) next);
+
+					if (dirtyRegions) {
+						int j = 0;
+						for (; j < dirtyRegions->length(); ++j) {
+							temp_rect = dirtyRegions->getDesiredElement(j)->getValue();
+							int screen_x = currentChild->screenX();
+							int screen_y = currentChild->screenY();
+
+							if (temp_rect->left <= (screen_x + currentChild->dataRegion.w - 1) &&
+								temp_rect->right >= screen_x &&
+								temp_rect->top <= (screen_y + currentChild->dataRegion.h - 1) &&
+								temp_rect->bottom >= screen_y) {
+								break;
+							}
+						}
+
+						if (j == dirtyRegions->length()) {
+							continue;
+						}
+					}
+
+					currentChild->update(dirtyRegions, 1);
+				}
+			}
+		}
 	}
 }
 
@@ -63,12 +111,13 @@ GDO::GDO(GDOType t, Context* ctxt)
 	contextDrawFunc = nullptr;
 
 	if (type == GDOType::Region) {
+		kprintf("allocating the child dim.\n");
 		dataRegion.iter = 0;
-		dataRegion.childDim = (GDO***) malloc(sizeof(GDO**) * GDO_CHILD_DIM_LEN);
+		childDim = (GDO***) malloc(sizeof(GDO**) * GDO_CHILD_DIM_LEN);
+		kprintf("childDim = 0x%X\n", childDim);
 		for (int i = 0; i < GDO_CHILD_DIM_LEN; ++i) {
-			dataRegion.childDim[i] = nullptr;
+			childDim[i] = nullptr;
 		}
-
 	}
 }
 
@@ -83,7 +132,7 @@ bool GDO::hasNext()
 	while (temp < GDO_CHILD_DIM_LEN * GDO_CHILD_DIM_LEN) {
 		GDO* ch = getChild(temp++);
 		if (ch) return true;
-	}
+	}	
 	return false;
 }
 
@@ -99,7 +148,10 @@ GDO* GDO::getNext()
 GDO* GDO::getChild(int index)
 {
 	if (index >= GDO_CHILD_DIM_LEN * GDO_CHILD_DIM_LEN) return nullptr;
-	GDO** dim = dataRegion.childDim[(unsigned) index / GDO_CHILD_DIM_LEN];
+	if (!childDim) {
+		panic("NO CHILD DIM");
+	}
+	GDO** dim = childDim[(unsigned) index / GDO_CHILD_DIM_LEN];
 	if (!dim) {
 		return nullptr;
 	}
@@ -115,11 +167,45 @@ int GDO::indexOf(GDO* obj)
 	return -1;
 }
 
+int GDO::screenX()
+{
+	if (type != GDOType::Region) {
+		kprintf("GDO::screenX on non-region");
+	}
+	if (parent) {
+		if (parent->type != GDOType::Region) {
+			panic("pre-emptive GDO::screenX on non-region");
+		}
+		return dataRegion.x + parent->screenX();
+	}
+	return dataRegion.x;
+}
+
+int GDO::screenY()
+{
+	if (type != GDOType::Region) {
+		kprintf("GDO::screenY on non-region");
+	}
+	if (parent) {
+		if (parent->type != GDOType::Region) {
+			panic("pre-emptive GDO::screenY on non-region");
+		}
+		return dataRegion.y + parent->screenY();
+	}
+	return dataRegion.y;
+}
+
 int GDO::addChild(GDO* obj)
 {
+	if (type != GDOType::Region) {
+		panic("GDO::addChild on non-region");
+		return 0;
+	}
+	obj->parent = this;
+
 	int notDim = -1;
 	for (int i = 0; i < GDO_CHILD_DIM_LEN; ++i) {
-		GDO** dim = dataRegion.childDim[i];
+		GDO** dim = childDim[i];
 		if (dim) {
 			for (int j = 0; j < GDO_CHILD_DIM_LEN; ++j) {
 				if (!dim[j]) {
@@ -128,16 +214,17 @@ int GDO::addChild(GDO* obj)
 				}
 			}
 
-		} else {
+		} else if (notDim == -1) {
 			notDim = i;
 		}
 	}
 
-	if (notDim) {
+	if (notDim != -1) {
 		//create a new dim
-		dataRegion.childDim[notDim] = (GDO**) malloc(sizeof(GDO*) * GDO_CHILD_DIM_LEN);		//MUST BE calloc!
-		memset(dataRegion.childDim[notDim], 0, sizeof(GDO*) * GDO_CHILD_DIM_LEN);
-		dataRegion.childDim[notDim][0] = obj;
+		kprintf("CREATING A NEW DIM AT %d\n", notDim);
+		childDim[notDim] = (GDO**) malloc(sizeof(GDO*) * GDO_CHILD_DIM_LEN);		//MUST BE calloc!
+		memset(childDim[notDim], 0, sizeof(GDO*) * GDO_CHILD_DIM_LEN);
+		childDim[notDim][0] = obj;
 		return notDim * GDO_CHILD_DIM_LEN;
 	}
 
@@ -147,8 +234,12 @@ int GDO::addChild(GDO* obj)
 
 bool GDO::removeChild(int index)
 {
+	if (type != GDOType::Region) {
+		panic("GDO::removeChild on non-region");
+		return false;
+	}
 	if (index >= GDO_CHILD_DIM_LEN * GDO_CHILD_DIM_LEN) return false;
-	GDO** dim = dataRegion.childDim[(unsigned) index / GDO_CHILD_DIM_LEN];
+	GDO** dim = childDim[(unsigned) index / GDO_CHILD_DIM_LEN];
 	if (!dim) {
 		return false;
 	}

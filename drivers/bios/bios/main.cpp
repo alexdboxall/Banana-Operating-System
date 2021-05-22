@@ -23,6 +23,11 @@ extern "C" {
 	#include "libk/string.h"
 }
 
+namespace Krnl
+{
+	extern void (*biosPanicHandler)();
+}
+
 bool vgamono = false;
 size_t VGA_TEXT_MODE_ADDRESS = 0xC20B8000;
 
@@ -137,6 +142,12 @@ void hwTextMode_disableBlink(VgaText* terminal, bool disable)
 	}
 }
 
+#include <vm86/vm8086.hpp>
+void bringBackToTextMode()
+{
+	Vm::start8086("C:/Banana/System/BIOSBSOD.COM", 0x0000, 0x90, 0, 0);
+	Vm::finish8086();
+}
 
 void setupTextMode()
 {
@@ -144,6 +155,8 @@ void setupTextMode()
 		VGA_TEXT_MODE_ADDRESS -= 0x8000;
 		vgamono = true;
 	}
+
+	Krnl::biosPanicHandler = bringBackToTextMode;
 
 	textModeImplementation.disableBlink = hwTextMode_disableBlink;
 	textModeImplementation.loadInData = hwTextMode_loadInData;

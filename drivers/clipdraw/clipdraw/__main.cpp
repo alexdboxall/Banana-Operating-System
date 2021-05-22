@@ -26,15 +26,27 @@ extern "C" {
 #include "gdo.hpp"
 #include "region.hpp"
 #include "rect.hpp"
+#include "cursor.hpp"
+#include "lgcyfont.hpp"
+#include "ellipse.hpp"
+#include "rootrgn.hpp"
 
 
 void start(void* s)
 {
-	kprintf("CLIPDRAW STARTED.\n");
 	extern Video* screen;
+
+	kprintf("CLIPDRAW STARTED.\n");
+	legacyFontInit();
+	setupCursor();
 
 	Context* ctxt = new Context(screen);
 	Region* window = new Region(0, 0, ctxt->width, ctxt->height, ctxt);
+	window->parent = nullptr;
+	rootRgn.region = window;
+
+	Rectangle* rect = new Rectangle(0, 0, ctxt->width, ctxt->height, 0x00AAAA, ctxt);
+	window->addChild(rect);
 
 	Brush* b1 = new Brush(BrushType::HatchForwardDiagonal);
 	Brush* b2 = new Brush(BrushType::HatchBackwardDiagonal);
@@ -49,10 +61,8 @@ void start(void* s)
 	Brush* bB = new Brush(BrushType::StockWhite);
 	Brush* bC = new Brush(BrushType::DitherDouble);
 
-	/*Rectangle* rect = new Rectangle(0, 0, ctxt->width, ctxt->height, 0x008080, ctxt);
-	window->addChild(rect);*/
 	
-	/*window->addChild(new Rectangle(50, 50, 100, 100, b1, ctxt));
+	window->addChild(new Rectangle(50, 50, 100, 100, b1, ctxt));
 	window->addChild(new Rectangle(200, 50, 100, 100, b2, ctxt));
 	window->addChild(new Rectangle(350, 50, 100, 100, b3, ctxt));
 	window->addChild(new Rectangle(500, 50, 100, 100, bA, ctxt));
@@ -65,13 +75,48 @@ void start(void* s)
 	window->addChild(new Rectangle(50, 350, 100, 100, b7, ctxt));
 	window->addChild(new Rectangle(200, 350, 100, 100, b8, ctxt));
 	window->addChild(new Rectangle(350, 350, 100, 100, b9, ctxt));
-	window->addChild(new Rectangle(500, 350, 100, 100, bC, ctxt));*/
+	window->addChild(new Rectangle(500, 350, 100, 100, bC, ctxt));
 
-	window->addChild(new Region(10, 10, 300, 200, ctxt));
-	//window->addChild(new Region(100, 150, 40, 300, ctxt));
-	window->addChild(new Region(200, 100, 200, 300, ctxt));
+	Region* rgn1 = new Region(10, 10, 300, 200, ctxt);
+	window->addChild(rgn1);
+	rgn1->addChild(new Rectangle(0, 0, 300, 200, 0x0000FF, rgn1->context));
 
-	window->update();
+	Brush* bz = new Brush(BrushType::HatchDiagonalCross);
+	bz->bg = 0x00FF00;
+	Brush* by = new Brush(BrushType::HatchBackwardDiagonal);
+	by->bg = 0xFF8800;
+
+	Region* rgn2 = new Region(50, 50, 200, 120, rgn1->context);
+	rgn1->addChild(rgn2);
+	rgn2->addChild(new Rectangle(0, 0, 70, 70, bz, rgn2->context));
+	rgn2->addChild(new Rectangle(100, 20, 85, 70, by, rgn2->context));
+
+	window->addChild(new LegacyTextObject(getLegacyFont(LegacyFontType::System), \
+					 "The System font!", 50, 450, 0, ctxt));
+
+	window->addChild(new LegacyTextObject(getLegacyFont(LegacyFontType::Serif), \
+					 "Times New Roman!", 150, 450, 0, ctxt));
+	
+	window->addChild(new LegacyTextObject(getLegacyFont(LegacyFontType::Comic), \
+					 "Comic Sans! :)", 260, 450, 0, ctxt));
+
+	window->addChild(new LegacyTextObject(getLegacyFont(LegacyFontType::SansSerif), \
+					 "Arial is so boring...", 350, 450, 0, ctxt));
+	
+
+	window->addChild(new LegacyTextObject(getLegacyFont(LegacyFontType::Mono), \
+					 "Courier for programming...", 450, 450, 0, ctxt));
+
+	window->addChild(new LegacyTextObject(getLegacyFont(LegacyFontType::Mono2), \
+					 "Courier for programming...", 450, 465, 0, ctxt));
+	
+
+	//window->addChild(new Region(100, 150, 400, 300, ctxt));
+	//window->addChild(new Region(200, 100, 200, 300, ctxt));
+
+	window->update(nullptr, 1);
+	startMouse();
+	processMouse(300, 200, 0);
 
 	while (1) {
 		blockTask(TaskState::Paused);

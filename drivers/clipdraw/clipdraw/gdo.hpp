@@ -1,6 +1,11 @@
 #pragma once
 
 #include <stdint.h>
+#include <thr/prcssthr.hpp>
+
+#include "list.hpp"
+
+extern Process* kernelProcess;
 
 #define GDO_CHILD_DIM_LEN			16		//a power of 2 speeds things up because the compiler can shift instead of divide
 
@@ -8,20 +13,27 @@ enum class GDOType : uint8_t
 {
 	Region,
 	Rectangle,
-
+	LegacyText,
+	Ellipse,
 };
+
+typedef int LegacyFont;
 
 struct GDOList;
 struct GDOListNode;
 struct Context;
+struct CRect;
 
 struct GDO
 {
 	GDOType type;
 	Context* context;
+	GDO* parent;
+	GDO*** childDim;
 
-	union
+	struct
 	{
+		//X,Y,W,H need to be lined up
 		struct
 		{
 			int x;
@@ -29,7 +41,19 @@ struct GDO
 			int w;
 			int h;
 
-			GDO*** childDim;
+			char* text;
+			uint32_t colour;
+			LegacyFont font;
+
+		} dataLegacyText;
+
+		struct
+		{
+			int x;
+			int y;
+			int w;
+			int h;
+
 			int iter;
 		} dataRegion;
 
@@ -54,8 +78,11 @@ struct GDO
 	bool hasNext();
 	GDO* getNext();
 
+	int screenX();
+	int screenY();
+
 	void (*contextDrawFunc)(GDO*);
-	void update();
+	void update(List<CRect*>* dirtyRegions, bool paintChildren);
 
 	GDO(GDOType type, Context* ctxt);
 	~GDO();
