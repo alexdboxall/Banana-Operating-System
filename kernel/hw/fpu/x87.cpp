@@ -52,7 +52,7 @@ void x87::save(void* ptr) {
     x87Save((size_t) ptr);
 
     //kprintf("ESP = 0x%X\n", __builtin_frame_address(0));
-    asm("mov %%rsp, %0" : "=rm" (sp));
+    asm("mov %%esp, %0" : "=rm" (sp));
     kprintf("ESP = 0x%X\n", sp);
 
     kprintf("x87 FPU SAVE 2.\n");
