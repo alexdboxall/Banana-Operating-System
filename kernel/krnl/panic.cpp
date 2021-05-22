@@ -24,9 +24,9 @@ namespace Krnl
 
 		kprintf("\nFATAL SYSTEM ERROR: %s\n", message);
 
-		/*Krnl::setBootMessage(message);
+		Krnl::setBootMessage(message);
 
-		if (guiPanicHandler) {
+		/*if (guiPanicHandler) {
 			guiPanicHandler((char*) message);
 		}*/
 
