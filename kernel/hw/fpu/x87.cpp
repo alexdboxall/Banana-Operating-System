@@ -9,6 +9,9 @@
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-omit-frame-pointer")
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wframe-address"
+
 extern "C" size_t x87Detect();
 extern "C" void x87Init();
 extern "C" void x87Save(size_t ptr);
@@ -39,13 +42,11 @@ bool x87::available() {
 }
 
 void x87::save(void* ptr) {
-    volatile size_t temp = 0;
-    asm volatile("movl %0,%%esp": "rm" (temp));
-    kprintf("ESP = 0x%X\n", temp);
+    kprintf("ESP = 0x%X\n", __builtin_frame_address(0));
     kprintf("x87 FPU SAVE 1 : cr0 = 0x%X.\n", CPU::current()->readCR0());
     x87Save((size_t) ptr);
-    asm volatile("movl %0,%%esp": "rm" (temp));
-    kprintf("ESP = 0x%X\n", temp);
+    kprintf("ESP = 0x%X\n", __builtin_frame_address(0));
+
     kprintf("x87 FPU SAVE 2.\n");
 }
 
@@ -54,3 +55,5 @@ void x87::load(void* ptr) {
     x87Load((size_t) ptr);
     kprintf("x87 FPU LOAD 2.\n");
 }
+
+#pragma GCC diagnostic pop
