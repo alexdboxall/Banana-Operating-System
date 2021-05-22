@@ -39,30 +39,28 @@ namespace Krnl
 		activeTerminal->setTitle((char*) "");
 		activeTerminal->setDefaultColours(VgaColour::White, VgaColour::Blue);
 
-		while (1);
-
 		//print error message
-		kernelProcess->terminal->puts("\n      FATAL SYSTEM ERROR\n\n");
-		kernelProcess->terminal->puts("      A problem has occured and Banana cannot continue.\n\n");
-		kernelProcess->terminal->puts("          ");
-		kernelProcess->terminal->puts(message);
-		kernelProcess->terminal->puts("\n\n");
+		activeTerminal->puts("\n      FATAL SYSTEM ERROR\n\n");
+		activeTerminal->puts("      A problem has occured and Banana cannot continue.\n\n");
+		activeTerminal->puts("          ");
+		activeTerminal->puts(message);
+		activeTerminal->puts("\n\n");
 
 		char* drvName = Thr::getDriverNameFromAddress((size_t) __builtin_return_address(0));
 		if (drvName) {
-			kernelProcess->terminal->puts("      The currently executing driver was:\n\n");
-			kernelProcess->terminal->puts("          ");
-			kernelProcess->terminal->puts(drvName);
+			activeTerminal->puts("      The currently executing driver was:\n\n");
+			activeTerminal->puts("          ");
+			activeTerminal->puts(drvName);
 		} else {
-			kernelProcess->terminal->puts("      The currently executing task was:\n\n");
-			kernelProcess->terminal->puts("          ");
-			kernelProcess->terminal->puts(currentTaskTCB->processRelatedTo->taskname);
+			activeTerminal->puts("      The currently executing task was:\n\n");
+			activeTerminal->puts("          ");
+			activeTerminal->puts(currentTaskTCB->processRelatedTo->taskname);
 		}
 
-		kernelProcess->terminal->puts("\n\n\n");
-		kernelProcess->terminal->puts("      Please restart your computer or press RETURN. If this\n");
-		kernelProcess->terminal->puts("      screen appears again, hold the 7 key on startup and disable\n");
-		kernelProcess->terminal->puts("      APIC and ACPI.\n\n\n");
+		activeTerminal->puts("\n\n\n");
+		activeTerminal->puts("      Please restart your computer or press RETURN. If this\n");
+		activeTerminal->puts("      screen appears again, hold the 7 key on startup and disable\n");
+		activeTerminal->puts("      APIC and ACPI.\n\n\n");
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wframe-address"
@@ -70,21 +68,21 @@ namespace Krnl
 		kprintf("1: 0x%X\n", __builtin_return_address(1));
 		kprintf("2: 0x%X\n", __builtin_return_address(2));
 
-		kernelProcess->terminal->puts("      Technical information:\n        ");
-		kernelProcess->terminal->puts("    CR0: ");
-		kernelProcess->terminal->putx(CPU::readCR0());
-		kernelProcess->terminal->puts("    CR2: ");
-		kernelProcess->terminal->putx(CPU::readCR2());
-		kernelProcess->terminal->puts("\n            CR3: ");
-		kernelProcess->terminal->putx(CPU::readCR3());
-		kernelProcess->terminal->puts("    CR4: ");
-		kernelProcess->terminal->putx(CPU::readCR4());
-		kernelProcess->terminal->puts("\n            Callers: ");
-		kernelProcess->terminal->putx((size_t) __builtin_return_address(0));
-		kernelProcess->terminal->puts(", ");
-		kernelProcess->terminal->putx((size_t) __builtin_return_address(1));
-		kernelProcess->terminal->puts(", ");
-		kernelProcess->terminal->putx((size_t) __builtin_return_address(2));
+		activeTerminal->puts("      Technical information:\n        ");
+		activeTerminal->puts("    CR0: ");
+		activeTerminal->putx(CPU::readCR0());
+		activeTerminal->puts("    CR2: ");
+		activeTerminal->putx(CPU::readCR2());
+		activeTerminal->puts("\n            CR3: ");
+		activeTerminal->putx(CPU::readCR3());
+		activeTerminal->puts("    CR4: ");
+		activeTerminal->putx(CPU::readCR4());
+		activeTerminal->puts("\n            Callers: ");
+		activeTerminal->putx((size_t) __builtin_return_address(0));
+		activeTerminal->puts(", ");
+		activeTerminal->putx((size_t) __builtin_return_address(1));
+		activeTerminal->puts(", ");
+		activeTerminal->putx((size_t) __builtin_return_address(2));
 
 #pragma GCC diagnostic pop
 
