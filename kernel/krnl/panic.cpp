@@ -28,7 +28,9 @@ namespace Krnl
 		Krnl::setBootMessage(message);
 
 		if (biosPanicHandler) {
+			kprintf("biosPanicHandler: 0x%X\n", biosPanicHandler);
 			biosPanicHandler();
+			kprintf("...\n");
 		}
 
 		if (guiPanicHandler) {

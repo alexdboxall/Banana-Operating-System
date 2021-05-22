@@ -145,8 +145,10 @@ void hwTextMode_disableBlink(VgaText* terminal, bool disable)
 #include <vm86/vm8086.hpp>
 void bringBackToTextMode()
 {
+	kprintf("Dropping back to text mode!\n");
 	Vm::start8086("C:/Banana/System/BIOSBSOD.COM", 0x0000, 0x90, 0, 0);
 	Vm::finish8086();
+	kprintf("In text mode hopefully!\n");
 }
 
 void setupTextMode()
