@@ -62,18 +62,9 @@ setActiveTerminal(kernelProcess->terminal);
 		}
 */
 
-void clipdrawPanicHandler(char* msg)
-{
-	extern Video* screen;
-
-	screen->putrect(0, 0, screen->getWidth(), screen->getHeight(), 0x0000AA);
-}
-
 void start(void* s)
 {
 	extern Video* screen;
-
-	Krnl::guiPanicHandler = clipdrawPanicHandler;
 
 	kprintf("CLIPDRAW STARTED.\n");
 	legacyFontInit();
