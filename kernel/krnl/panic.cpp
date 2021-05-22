@@ -62,6 +62,8 @@ namespace Krnl
 		activeTerminal->puts("      screen appears again, hold the 7 key on startup and disable\n");
 		activeTerminal->puts("      APIC and ACPI.\n\n\n");
 
+		while (1);
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wframe-address"
 		kprintf("0: 0x%X\n", __builtin_return_address(0));
