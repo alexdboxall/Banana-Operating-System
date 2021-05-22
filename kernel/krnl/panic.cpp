@@ -35,9 +35,9 @@ namespace Krnl
 
 		//give it those classic colours
 		activeTerminal->setDefaultColours(VgaColour::White, VgaColour::Blue);
-		activeTerminal->terminal->clearScreen();
-		activeTerminal->terminal->setTitle((char*) "");
-		activeTerminal->terminal->setDefaultColours(VgaColour::White, VgaColour::Blue);
+		activeTerminal->clearScreen();
+		activeTerminal->setTitle((char*) "");
+		activeTerminal->setDefaultColours(VgaColour::White, VgaColour::Blue);
 
 		while (1);
 
