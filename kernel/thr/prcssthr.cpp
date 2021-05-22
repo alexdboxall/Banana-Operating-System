@@ -74,7 +74,7 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 
 	if (computer->fpu) {
 		if (!currentTaskTCB->fpuState) {
-			currentTaskTCB->fpuState = (void*) malloc(256);
+			currentTaskTCB->fpuState = (uint8_t*) malloc(256);
 		}
 		computer->fpu->save(currentTaskTCB->fpuState);
 	}
