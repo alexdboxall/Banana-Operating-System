@@ -23,10 +23,8 @@ x87::x87() : FPU("x87 FPU")
 
 }
 
-
 int x87::open(int num, int a, void* v)
 {
-    kprintf("x87 FPU INIT.\n");
     x87Init();
     return 0;
 }
@@ -42,15 +40,11 @@ bool x87::available() {
 }
 
 void x87::save(void* ptr) {
-    kprintf("x87 FPU SAVE 1 : cr0 = 0x%X.\n", CPU::current()->readCR0());
     x87Save((size_t) ptr);
-    kprintf("x87 FPU SAVE 2.\n");
 }
 
 void x87::load(void* ptr) {
-    kprintf("x87 FPU LOAD 1.\n");
     x87Load((size_t) ptr);
-    kprintf("x87 FPU LOAD 2.\n");
 }
 
 #pragma GCC diagnostic pop
