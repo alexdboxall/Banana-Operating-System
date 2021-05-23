@@ -37,18 +37,24 @@ x87Load:        ;TAKES IN A SIZE_T
     ret
 
 x87Init:
-    fninit
     mov eax, cr0
     and ax, 0xFFFB        ;clear coprocessor emulation CR0.EM
     or ax, 0x22           ;set coprocessor monitoring  CR0.MP + numeric errors (CRO.NE)
     mov cr0, eax
 
+    fninit
+
     clts                ;clear task switched bit
 
     ;allow interrupts for div by zero and invalid operands
-    fldcw [value_37A]   ; writes 0x37a, both division by zero and invalid operands cause exceptions.
+    ;fldcw [value_37A]   ; writes 0x37a, both division by zero and invalid operands cause exceptions.
+
+    fnsave [fpuSaveArea]
 
     ret
 
 x87Close:
     ret
+
+align 16
+fpuSaveArea times 512 db 0
