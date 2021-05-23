@@ -15,6 +15,7 @@
 #include "hal/mouse.hpp"
 
 extern "C" void realmodeBSOD();
+extern VAS* panicVAS;
 
 namespace Krnl
 {
@@ -32,7 +33,6 @@ namespace Krnl
 		//Krnl::setBootMessage(message);
 
 		if (guiMouseHandler) {
-			extern VAS* panicVAS;
 
 			CPU::current()->writeCR3(panicVAS->pageDirectoryBasePhysical);
 			((void (*)(void))0x5000)();
