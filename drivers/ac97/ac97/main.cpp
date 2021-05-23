@@ -61,6 +61,8 @@ int16_t buf[4096];
 void playThread(void* __);
 void start(Device* _dvl)
 {
+	Krnl::setBootMessage("Starting AC97 driver...");
+
 	Device* driverless = _dvl;
 	Device* parent = driverless->getParent();
 

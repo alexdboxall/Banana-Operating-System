@@ -30,6 +30,8 @@ void realstart(void* _parent)
 	Device* parent = (Device*) _parent;
 
 	if (systemBuzzer == nullptr) {
+		Krnl::setBootMessage("Starting speaker driver...");
+
 		systemBuzzer = new Beep();
 		systemBuzzer->detectionType = DetectionType::ISAProbe;
 		parent->addChild(systemBuzzer);
@@ -39,6 +41,8 @@ void realstart(void* _parent)
 	computer->clock = nullptr;
 
 	if (computer->clock == nullptr) {
+		Krnl::setBootMessage("Starting RTC driver...");
+
 		RTC* rtc = new RTC();
 		rtc->detectionType = DetectionType::ISAProbe;
 		parent->addChild(rtc);
