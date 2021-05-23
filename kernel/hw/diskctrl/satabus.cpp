@@ -63,7 +63,7 @@ int SATABus::open(int, int, void*)
 			milliTenthSleep(1);
 		}
 	}
-	*/
+	
 	kprintf("About to reset...\n");
 
 	//now reset the thing
@@ -83,6 +83,7 @@ int SATABus::open(int, int, void*)
 	//enable IRQs
 	abar->ghc |= (1 << 1);
 	abar->ghc |= (1 << 31);
+	*/
 
 	probePort(abar);
 
