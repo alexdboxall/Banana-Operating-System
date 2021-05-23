@@ -20,12 +20,14 @@ sseDetect:          ;RETURNS A SIZE_T, 0 OR 1
     xor eax, eax
     ret
 
-sseSave:            ;TAKES IN A SIZE_T
-    fxsave [esp + 4]        ;no ebp so plus 4
+sseSave:
+    mov eax, [esp + 4]
+    fxsave [eax]        ;no ebp so plus 4
     ret
 
-sseLoad:            ;TAKES IN A SIZE_T
-    fxrstor [esp + 4]        ;no ebp so plus 4
+sseLoad:            
+    mov eax, [esp + 4]
+    fxrstor [eax]        ;no ebp so plus 4
     ret
 
 sseInit:

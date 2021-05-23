@@ -350,7 +350,7 @@ void x87EmulHandler(regs* r, void* context)
 		//check if never had state before, otherwise load state
 		if (currentTaskTCB->fpuState == nullptr) {
 			kprintf("allocating FPU state...\n");
-			currentTaskTCB->fpuState = (uint8_t*) malloc(512);
+			currentTaskTCB->fpuState = (uint8_t*) malloc(512 + 64);
 		} else {
 			kprintf("loading FPU state...\n");
 			size_t a = (size_t) currentTaskTCB->fpuState;
