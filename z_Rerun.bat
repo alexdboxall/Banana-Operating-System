@@ -1,4 +1,5 @@
 D:
 cd D:/Users/Alex/Desktop
-qemu-system-i386 -vga std -cpu 486 -serial file:log3.txt -m 4 -rtc base=utc -soundhw pcspk,sb16 -d guest_errors,cpu_reset -monitor stdio -cdrom D:/Users/Alex/Desktop/Banana/Installer/BANANA.ISO -drive file="banana-os/newimage.img",id=abcdefg,if=none -device ich9-ahci,id=ahci -device ide-drive,drive=abcdefg,bus=ahci.0 
+
+"C:/Program Files/QEMU/qemu-system-i386" -M q35 -vga std -cpu 486 -serial file:log3.txt -m 16 -rtc base=utc -soundhw pcspk,sb16 -d guest_errors,cpu_reset -monitor stdio -cdrom D:/Users/Alex/Desktop/Banana/Installer/BANANA.ISO -hda banana-os/newimage.img
 pause

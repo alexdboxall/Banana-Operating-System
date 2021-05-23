@@ -155,6 +155,8 @@ int IDE::open(int a, int, void*)
 	ports[noPorts].rangeStart = channels[1].ctrl;
 	ports[noPorts].rangeLength = 1;
 	ports[noPorts++].width = 0;
+	
+	kprintf("bus mastering (IDE) = 0x%X\n", hannels[0].busMastering);
 
 	if (channels[0].busMastering) {
 		ports[noPorts].rangeStart = channels[0].busMastering;
