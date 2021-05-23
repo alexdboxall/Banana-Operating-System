@@ -332,6 +332,11 @@ void x87EmulHandler(regs* r, void* context)
 		goto bad;
 	}
 
+	if (sysBootSettings & 16384) {
+		asm volatile ("clts");
+		return;
+	}
+
 	//no emulation and task switch bit set
 	if (computer->fpu && (cr0 & 8)) {
 		kprintf("clutzing...\n");

@@ -23,6 +23,7 @@ bool disableACPICompletely = false;
 bool forceMonochrome = false;
 bool vm86Debug = false;
 bool floppyDrvEnable = true;
+bool noFPUSaveLoad = false;
 
 uint32_t getBootData()
 {
@@ -41,6 +42,7 @@ uint32_t getBootData()
 	data |= forceMonochrome ? 2048 : 0;
 	data |= vm86Debug ? 4096 : 0;
 	data |= floppyDrvEnable ? 8192 : 0;
+	data |= noFPUSaveLoad ? 16384 : 0;
 
 	return data;
 }
@@ -75,6 +77,7 @@ void setBootData(uint32_t in)
 	disableACPICompletely = in & 1024 ? 1 : 0;
 	forceMonochrome = in & 2048 ? 1 : 0;
 	floppyDrvEnable = in & 8192 ? 1 : 0;
+	noFPUSaveLoad = in & 16384 ? 1 : 0;
 }
 
 void xxoutb(uint16_t port, uint8_t val)
@@ -163,7 +166,10 @@ void main()
 				writeString(" Extra options enabled. Press ENTER to cancel.\n");
 			}
 			if (vm86Debug) {
-				writeString(" VM8086 debug on. To disable, press L twice\n");
+				writeString(" VM8086 debug on. To disable, press K twice\n");
+			}
+			if (noFPUSaveLoad) {
+				writeString(" FPU will not be saved. To disable, press K twice\n");
 			}
 
 			key = blockingKeyboard();
@@ -202,12 +208,16 @@ void main()
 			case 'k':
 				showLogs ^= 1;
 				if (!showLogs) {
+					noFPUSaveLoad = false;
 					vm86Debug = false;
 				}
 				break;
 			case 'V':
 			case 'v':
 				forceVGA ^= 1;
+				break;
+			case 'X':
+				noFPUSaveLoad = true;
 				break;
 			case 'T':
 			case 't':
