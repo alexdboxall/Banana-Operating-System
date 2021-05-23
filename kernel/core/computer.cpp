@@ -98,6 +98,8 @@ int Computer::open(int a, int b, void* vas)
 	addChild(cpu[0]);
 	cpu[0]->open(0, 0, vas);		//FIRST ARG IS CPU NUMBER
 	
+	Krnl::initRNG();
+
 	Krnl::setBootMessage("Detecting numerical coprocessors...");
 	fpu = setupFPU();
 	if (fpu) {

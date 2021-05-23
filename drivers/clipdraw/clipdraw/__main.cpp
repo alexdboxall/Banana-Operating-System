@@ -36,32 +36,6 @@ namespace Krnl
 	void (*guiPanicHandler)(char*);
 }
 
-/*
-setActiveTerminal(kernelProcess->terminal);
-
-		//give it those classic colours
-		kernelProcess->terminal->setDefaultColours(VgaColour::White, VgaColour::Blue);
-		kernelProcess->terminal->clearScreen();
-
-		//print error message
-		kernelProcess->terminal->puts("\n      FATAL SYSTEM ERROR\n\n");
-		kernelProcess->terminal->puts("      A problem has occured and Banana cannot continue.\n\n");
-		kernelProcess->terminal->puts("          ");
-		kernelProcess->terminal->puts(message);
-		kernelProcess->terminal->puts("\n\n");
-
-		char* drvName = Thr::getDriverNameFromAddress((size_t) __builtin_return_address(0));
-		if (drvName) {
-			kernelProcess->terminal->puts("      The currently executing driver was:\n\n");
-			kernelProcess->terminal->puts("          ");
-			kernelProcess->terminal->puts(drvName);
-		} else {
-			kernelProcess->terminal->puts("      The currently executing task was:\n\n");
-			kernelProcess->terminal->puts("          ");
-			kernelProcess->terminal->puts(currentTaskTCB->processRelatedTo->taskname);
-		}
-*/
-
 void start(void* s)
 {
 	extern Video* screen;

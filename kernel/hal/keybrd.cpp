@@ -69,14 +69,9 @@ void sendKeyboardToken(KeyboardToken kt)
 	Krnl::userIOReceived();
 
 	keystates[kt.halScancode] = !kt.release;
-	//userUsedKeyboardOrMouse();
 
 	if (guiKeyboardHandler) {
 		guiKeyboardHandler(kt, keystates);
-	}
-
-	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::Delete && keystates[(uint16_t) KeyboardSpecialKeys::Ctrl] && keystates[(uint16_t) KeyboardSpecialKeys::Alt]) {
-		//sleepMode();
 	}
 
 	bool keypadNum = false;

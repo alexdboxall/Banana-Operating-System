@@ -106,6 +106,21 @@ is486:
 	xor eax, eax
 	ret
 
+
+global getRDRAND
+
+getRDRAND:
+    mov ecx, 100
+retry:
+    rdrand eax
+    jc .done
+    loop retry
+.fail:
+    xor eax, eax
+    ret
+.done:
+    ret
+
 global detectCPUID
 
 detectCPUID:
