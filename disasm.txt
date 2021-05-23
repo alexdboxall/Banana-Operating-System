@@ -45607,7 +45607,7 @@ c00219bb:	c3                   	ret
 
 c00219bc <MMX::open(int, int, void*)>:
 c00219bc:	83 ec 0c             	sub    esp,0xc
-c00219bf:	e8 6d 11 00 00       	call   c0022b31 <x87Init>
+c00219bf:	e8 6c 11 00 00       	call   c0022b30 <x87Init>
 c00219c4:	b8 00 00 00 00       	mov    eax,0x0
 c00219c9:	83 c4 0c             	add    esp,0xc
 c00219cc:	c3                   	ret    
@@ -45616,7 +45616,7 @@ c00219ce:	66 90                	xchg   ax,ax
 
 c00219d0 <MMX::close(int, int, void*)>:
 c00219d0:	83 ec 0c             	sub    esp,0xc
-c00219d3:	e8 72 11 00 00       	call   c0022b4a <x87Close>
+c00219d3:	e8 71 11 00 00       	call   c0022b49 <x87Close>
 c00219d8:	b8 00 00 00 00       	mov    eax,0x0
 c00219dd:	83 c4 0c             	add    esp,0xc
 c00219e0:	c3                   	ret    
@@ -45639,7 +45639,7 @@ c00219fc:	83 ec 0c             	sub    esp,0xc
 c00219ff:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
 c0021a03:	83 ec 0c             	sub    esp,0xc
 c0021a06:	50                   	push   eax
-c0021a07:	e8 20 11 00 00       	call   c0022b2c <x87Load>
+c0021a07:	e8 1f 11 00 00       	call   c0022b2b <x87Load>
 c0021a0c:	83 c4 10             	add    esp,0x10
 c0021a0f:	90                   	nop
 c0021a10:	83 c4 0c             	add    esp,0xc
@@ -45735,7 +45735,7 @@ c0021ade:	83 ec 0c             	sub    esp,0xc
 c0021ae1:	68 28 7c 02 c0       	push   0xc0027c28
 c0021ae6:	e8 54 b5 fe ff       	call   c000d03f <Dbg::kprintf(char const*, ...)>
 c0021aeb:	83 c4 10             	add    esp,0x10
-c0021aee:	e8 3e 10 00 00       	call   c0022b31 <x87Init>
+c0021aee:	e8 3d 10 00 00       	call   c0022b30 <x87Init>
 c0021af3:	b8 00 00 00 00       	mov    eax,0x0
 c0021af8:	c9                   	leave  
 c0021af9:	c3                   	ret    
@@ -45744,7 +45744,7 @@ c0021afa <x87::close(int, int, void*)>:
 c0021afa:	55                   	push   ebp
 c0021afb:	89 e5                	mov    ebp,esp
 c0021afd:	83 ec 08             	sub    esp,0x8
-c0021b00:	e8 45 10 00 00       	call   c0022b4a <x87Close>
+c0021b00:	e8 44 10 00 00       	call   c0022b49 <x87Close>
 c0021b05:	b8 00 00 00 00       	mov    eax,0x0
 c0021b0a:	c9                   	leave  
 c0021b0b:	c3                   	ret    
@@ -45795,7 +45795,7 @@ c0021b73:	83 c4 10             	add    esp,0x10
 c0021b76:	8b 45 0c             	mov    eax,DWORD PTR [ebp+0xc]
 c0021b79:	83 ec 0c             	sub    esp,0xc
 c0021b7c:	50                   	push   eax
-c0021b7d:	e8 aa 0f 00 00       	call   c0022b2c <x87Load>
+c0021b7d:	e8 a9 0f 00 00       	call   c0022b2b <x87Load>
 c0021b82:	83 c4 10             	add    esp,0x10
 c0021b85:	83 ec 0c             	sub    esp,0xc
 c0021b88:	68 77 7c 02 c0       	push   0xc0027c77
@@ -47107,7 +47107,7 @@ c0022ade:	0f ae 4c 24 04       	fxrstor [esp+0x4]
 c0022ae3:	c3                   	ret    
 
 c0022ae4 <sseInit>:
-c0022ae4:	e8 48 00 00 00       	call   c0022b31 <x87Init>
+c0022ae4:	e8 47 00 00 00       	call   c0022b30 <x87Init>
 c0022ae9:	0f 20 e0             	mov    eax,cr4
 c0022aec:	66 0d 00 06          	or     ax,0x600
 c0022af0:	0f 22 e0             	mov    cr4,eax
@@ -47146,28 +47146,30 @@ c0022b20:	c3                   	ret
 c0022b21 <x87Save>:
 c0022b21:	55                   	push   ebp
 c0022b22:	89 e5                	mov    ebp,esp
-c0022b24:	dd 35 51 2b 02 c0    	fnsave ds:0xc0022b51
-c0022b2a:	5d                   	pop    ebp
-c0022b2b:	c3                   	ret    
+c0022b24:	8b 45 08             	mov    eax,DWORD PTR [ebp+0x8]
+c0022b27:	dd 30                	fnsave [eax]
+c0022b29:	5d                   	pop    ebp
+c0022b2a:	c3                   	ret    
 
-c0022b2c <x87Load>:
-c0022b2c:	55                   	push   ebp
-c0022b2d:	89 e5                	mov    ebp,esp
-c0022b2f:	5d                   	pop    ebp
-c0022b30:	c3                   	ret    
+c0022b2b <x87Load>:
+c0022b2b:	55                   	push   ebp
+c0022b2c:	89 e5                	mov    ebp,esp
+c0022b2e:	5d                   	pop    ebp
+c0022b2f:	c3                   	ret    
 
-c0022b31 <x87Init>:
-c0022b31:	0f 20 c0             	mov    eax,cr0
-c0022b34:	66 25 fb ff          	and    ax,0xfffb
-c0022b38:	66 0d 22 00          	or     ax,0x22
-c0022b3c:	0f 22 c0             	mov    cr0,eax
-c0022b3f:	db e3                	fninit 
-c0022b41:	0f 06                	clts   
-c0022b43:	dd 35 51 2b 02 c0    	fnsave ds:0xc0022b51
+c0022b30 <x87Init>:
+c0022b30:	0f 20 c0             	mov    eax,cr0
+c0022b33:	66 25 fb ff          	and    ax,0xfffb
+c0022b37:	66 0d 22 00          	or     ax,0x22
+c0022b3b:	0f 22 c0             	mov    cr0,eax
+c0022b3e:	db e3                	fninit 
+c0022b40:	0f 06                	clts   
+c0022b42:	dd 35 51 2b 02 c0    	fnsave ds:0xc0022b51
+c0022b48:	c3                   	ret    
+
+c0022b49 <x87Close>:
 c0022b49:	c3                   	ret    
-
-c0022b4a <x87Close>:
-c0022b4a:	c3                   	ret    
+c0022b4a:	90                   	nop
 c0022b4b:	90                   	nop
 c0022b4c:	90                   	nop
 c0022b4d:	90                   	nop

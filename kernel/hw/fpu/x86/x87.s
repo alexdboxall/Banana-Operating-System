@@ -25,7 +25,6 @@ x87Save:
 ;WARNING: NOTICE WE ARE NOT USING A STACK FRAME FOR THIS, DO NOT CHANGE EBP WITHOUT PUSHING IT FIRST!
     push ebp
     mov ebp, esp
-    ;fnsave [ebp + 8]     ;only plus 4 because no EBP push
     mov eax, [ebp + 8]
     fnsave [eax]
     pop ebp
@@ -34,7 +33,8 @@ x87Save:
 x87Load:        ;TAKES IN A SIZE_T
     push ebp
     mov ebp, esp
-    ;frstor [ebp + 8]     ;only plus 4 because no EBP push
+    mov eax, [ebp + 8]
+    frstor [eax]
     pop ebp
     ret
 
@@ -49,15 +49,9 @@ x87Init:
     clts                ;clear task switched bit
 
     ;allow interrupts for div by zero and invalid operands
-    ;fldcw [value_37A]   ; writes 0x37a, both division by zero and invalid operands cause exceptions.
-
-    fnsave [fpuSaveArea]
+    fldcw [value_37A]   ; writes 0x37a, both division by zero and invalid operands cause exceptions.
 
     ret
 
 x87Close:
     ret
-
-align 16
-db 0
-fpuSaveArea times 512 db 0
