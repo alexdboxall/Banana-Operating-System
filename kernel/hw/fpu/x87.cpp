@@ -42,27 +42,8 @@ bool x87::available() {
 }
 
 void x87::save(void* ptr) {
-
-    asm volatile (
-        "fnsave %[fctx]"
-        : [fctx] "=m" (ptr)
-        );
-
-    return;
-
-    //kprintf("ESP = 0x%X\n", __builtin_frame_address(0));
-    size_t sp;
-    asm("mov %%esp, %0" : "=rm" (sp));
-    kprintf("ESP = 0x%X\n", sp);
-
     kprintf("x87 FPU SAVE 1 : cr0 = 0x%X.\n", CPU::current()->readCR0());
-
     x87Save((size_t) ptr);
-
-    //kprintf("ESP = 0x%X\n", __builtin_frame_address(0));
-    asm("mov %%esp, %0" : "=rm" (sp));
-    kprintf("ESP = 0x%X\n", sp);
-
     kprintf("x87 FPU SAVE 2.\n");
 }
 
