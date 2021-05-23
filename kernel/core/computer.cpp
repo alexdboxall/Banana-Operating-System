@@ -15,6 +15,7 @@
 #include "fs/vfs.hpp"
 #include "vm86/vm8086.hpp"
 #include "krnl/powctrl.hpp"
+#include "krnl/rand.hpp"
 
 #pragma GCC optimize ("O2")
 #pragma GCC optimize ("-fno-strict-aliasing")
