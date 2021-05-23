@@ -22,7 +22,7 @@ bool enableHWSecurity = true;
 bool disableACPICompletely = false;
 bool forceMonochrome = false;
 bool vm86Debug = false;
-bool floppyDrvEnable = false;
+bool floppyDrvEnable = true;
 
 uint32_t getBootData()
 {
