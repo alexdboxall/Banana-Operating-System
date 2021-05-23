@@ -341,8 +341,9 @@ void x87EmulHandler(regs* r, void* context)
 
 		//save previous state
 		if (Krnl::fpuOwner) {
+			kprintf("saving old state.\n");
 			size_t a = (size_t) Krnl::fpuOwner->fpuState;
-			a = (a + 63) & 0x3F;
+			a = (a + 63) & ~0x3F;
 			computer->fpu->save((void*) a);
 		}
 
@@ -353,7 +354,7 @@ void x87EmulHandler(regs* r, void* context)
 		} else {
 			kprintf("loading FPU state...\n");
 			size_t a = (size_t) currentTaskTCB->fpuState;
-			a = (a + 63) & 0x3F;
+			a = (a + 63) & ~0x3F;
 			computer->fpu->load((void*) a);
 			kprintf("loaded FPU state...\n");
 		}
