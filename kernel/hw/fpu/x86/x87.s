@@ -26,6 +26,7 @@ x87Save:
     push ebp
     mov ebp, esp
     ;fnsave [ebp + 8]     ;only plus 4 because no EBP push
+    fnsave [fpuSaveArea]
     pop ebp
     ret
 
