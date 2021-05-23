@@ -112,7 +112,7 @@ void start(void* s)
 					 "Courier for programming...", 450, 450, 0, ctxt));
 
 	window->addChild(new LegacyTextObject(getLegacyFont(LegacyFontType::Mono2), \
-					 "Courier for programming...", 450, 465, 0, ctxt));
+					 "PUT MOUSE IN TOP RIGHT CORNER TO TEST BSOD", 350, 465, 0, ctxt));
 	
 
 	//window->addChild(new Region(100, 150, 400, 300, ctxt));

@@ -16,4 +16,6 @@ public:
 	virtual ~Mouse();
 };
 
+extern void (*guiMouseHandler) (int xdelta, int ydelta, int buttons, int z);
+
 #endif

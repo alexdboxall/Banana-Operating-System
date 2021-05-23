@@ -12,6 +12,10 @@
 #pragma GCC optimize ("-fno-align-functions")
 #include "core/terminal.hpp"
 
+#include "hal/mouse.hpp"
+
+extern "C" void realmodeBSOD();
+
 namespace Krnl
 {
 	bool kernelInPanic = false;
@@ -27,9 +31,9 @@ namespace Krnl
 
 		//Krnl::setBootMessage(message);
 
-		/*if (guiPanicHandler) {
-			guiPanicHandler((char*) message);
-		}*/
+		if (guiMouseHandler) {
+			realmodeBSOD();
+		}
 
 		//VgaText::hiddenOut = false;
 

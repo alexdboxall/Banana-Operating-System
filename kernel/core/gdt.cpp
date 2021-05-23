@@ -91,10 +91,20 @@ void GDT::setup()
 	GDTEntry userData = data;
 	userData.priv = 3;
 
+	GDTEntry code16 = code;
+	code16.size = 0;
+	code16.gran = 0;
+
+	GDTEntry data16 = data;
+	data16.size = 0;
+	data16.gran = 0;
+
 	addEntry(null);
-	addEntry(code);
-	addEntry(data);
-	addEntry(userCode);
-	addEntry(userData);
+	addEntry(code);			//0x08
+	addEntry(data);			//0x10		
+	addEntry(userCode);		//0x18
+	addEntry(userData);		//0x20
+	addEntry(code16);		//0x28
+	addEntry(data16);		//0x30
 	flush();
 }

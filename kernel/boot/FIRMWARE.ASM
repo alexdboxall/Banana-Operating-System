@@ -470,7 +470,7 @@ PAGING_SETUP:
 
 	mov eax, cr0
 	or eax, (1 << 31)		;enable paging
-	and eax, ~(1 << 16)		;disable write protect
+	and eax, ~(1 << 16)		;disa ble write protect
 	mov cr0, eax
 	ret
 
