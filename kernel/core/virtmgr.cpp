@@ -331,11 +331,8 @@ VAS::VAS()
 	specialFirstVAS = true;
 	pageDirectoryBase = (size_t*) VIRT_KRNL_PAGE_DIRECTORY;
 
-	size_t cr3 = CPU::readCR3();
 	panicVAS = new VAS(true);
-	CPU::writeCR3(panicVAS->pageDirectoryBasePhysical);
 	panicVAS->mapRange(0, 0, 256, PAGE_PRESENT | PAGE_SUPERVISOR);
-	CPU::writeCR3(cr3);
 }
 
 VAS::~VAS()
