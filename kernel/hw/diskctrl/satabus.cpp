@@ -50,9 +50,8 @@ int SATABus::open(int, int, void*)
 	abar = (HBA_MEM*) (size_t) pci.info.bar[5];
 	kprintf("SATA ABAR = 0x%X\n", abar);
 
+	//perform BIOS/OS handoff
 	if (abar->cap2 & 1) {
-		//perform BIOS/OS handoff
-
 		kprintf("BIOS/OS handoff supported.\n");
 
 		abar->bohc |= 2;		//ask for ownership
@@ -65,8 +64,9 @@ int SATABus::open(int, int, void*)
 		}
 	}
 
-	//now reset the thing
+	kprintf("About to reset...\n");
 
+	//now reset the thing
 	abar->ghc |= 1;
 	int timeout = 0;
 	while (abar->ghc & 1) {
@@ -77,6 +77,12 @@ int SATABus::open(int, int, void*)
 			break;
 		}
 	}
+
+	kprintf("SATA was reset...\n");
+
+	//enable IRQs
+	abar->ghc |= (1 << 1);
+	abar->ghc |= (1 << 31);
 
 	probePort(abar);
 
