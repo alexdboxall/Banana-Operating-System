@@ -18,6 +18,17 @@ extern "C" void realmodeBSOD();
 
 namespace Krnl
 {
+	uint8_t biosBsod16[] = "\
+\xFA\x0F\x20\xC0\x25\xFF\xFF\xFF\
+\x7F\x0F\x22\xC0\xEA\x00\x09\x00\
+\x00\x28\x00\xB8\x20\x00\x8E\xD8\
+\x8E\xC0\x8E\xE0\x8E\xE8\x8E\xD0\
+\xBC\x00\x70\x0F\x20\xC0\x24\xFE\
+\x0F\x22\xC0\xEA\x30\x09\x00\x00\
+\xFA\xB8\x00\x00\x8E\xD8\x8E\xC0\
+\x8E\xE0\x8E\xE8\x8E\xD0\xBC\x00\
+\x80\xB8\x03\x00\xCD\x10";
+
 	bool kernelInPanic = false;
 
 	void (*guiPanicHandler)(char*) = nullptr;
@@ -32,6 +43,9 @@ namespace Krnl
 		//Krnl::setBootMessage(message);
 
 		//VgaText::hiddenOut = false;
+
+		memcpy((void*) 0x900, biosBsod16, sizeof(biosBsod16));
+		((void*)()0x900)();
 
 		//give it those classic colours
 		activeTerminal->setDefaultColours(VgaColour::White, VgaColour::Blue);
