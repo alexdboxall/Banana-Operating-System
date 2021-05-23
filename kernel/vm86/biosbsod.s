@@ -1,4 +1,4 @@
-org 0x900
+org 0x2000
 bits 32
 
 cli
@@ -17,7 +17,7 @@ prot16:
 	mov gs,ax
 	mov ss,ax
 
-	mov sp, 0x7000
+	mov sp, 0x7E00
 
 	mov eax,cr0 ; 8.9.2. Step 2.
 	and al,0xFE	

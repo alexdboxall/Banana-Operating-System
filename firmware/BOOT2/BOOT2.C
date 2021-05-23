@@ -488,6 +488,9 @@ void main()
 		writeString("\nPRESS ANY KEY (E)");
 		blockingKeyboard();
 	}
+
+	readFATFromHDD("BANANA     /SYSTEM     /BIOSBSODCOM", (void*) (0x2000));
+
 	readFATFromHDD("BANANA     /SYSTEM     /KERNEL32EXE", (void*) KERNEL_SOURCE);
 	if (fulldebug) {
 		writeString("\nPRESS ANY KEY (F)");
