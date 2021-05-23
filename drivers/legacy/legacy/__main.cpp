@@ -105,13 +105,15 @@ void ISA::doGameport()
 
 void ISA::doFloppy()
 {
-	Krnl::setBootMessage("Starting floppy driver...");
+	if (sysBootSettings & 8192) {
+		Krnl::setBootMessage("Starting floppy driver...");
 
-	uint16_t* biosDataArea = (uint16_t*) (size_t) 0x410;
-	if ((*biosDataArea) & 1) {
-		Floppy* dev = new Floppy();
-		this->addChild(dev);
-		dev->_open(0x3F0, 0, nullptr);
+		uint16_t* biosDataArea = (uint16_t*) (size_t) 0x410;
+		if ((*biosDataArea) & 1) {
+			Floppy* dev = new Floppy();
+			this->addChild(dev);
+			dev->_open(0x3F0, 0, nullptr);
+		}
 	}
 }
 

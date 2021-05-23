@@ -22,6 +22,7 @@ bool enableHWSecurity = true;
 bool disableACPICompletely = false;
 bool forceMonochrome = false;
 bool vm86Debug = false;
+bool floppyDrvEnable = false;
 
 uint32_t getBootData()
 {
@@ -39,6 +40,7 @@ uint32_t getBootData()
 	data |= disableACPICompletely ? 1024 : 0;
 	data |= forceMonochrome ? 2048 : 0;
 	data |= vm86Debug ? 4096 : 0;
+	data |= floppyDrvEnable ? 8192 : 0;
 
 	return data;
 }
@@ -72,6 +74,7 @@ void setBootData(uint32_t in)
 	forceVGA = in & 128 ? 1 : 0;
 	disableACPICompletely = in & 1024 ? 1 : 0;
 	forceMonochrome = in & 2048 ? 1 : 0;
+	floppyDrvEnable = in & 8192 ? 1 : 0;
 }
 
 void xxoutb(uint16_t port, uint8_t val)
@@ -150,6 +153,9 @@ void main()
 			writeString(" [T] - Older computer optimisations   ");
 			writeString(slowDownClock ? " enabled\n" : " disabled\n");
 
+			writeString(" [F] - Floppy disk driver             ");
+			writeString(floppyDrvEnable ? " enabled\n" : " disabled\n");
+
 			writeString("\n [Z] - Save these settings as defaults\n");
 
 			writeString("\n\n\n");
@@ -210,6 +216,10 @@ void main()
 			case 'H':
 			case 'h':
 				enableHWSecurity ^= 1;
+				break;
+			case 'F':
+			case 'f':
+				floppyDrvEnable ^= 1;
 				break;
 			case 'A':
 			case 'a':
