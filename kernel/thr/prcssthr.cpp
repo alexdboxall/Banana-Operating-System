@@ -70,35 +70,7 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 		currentTaskTCB->timeKeeping += elapsed;
 	}
 
-	// SAVE FPU
-	kprintf("ctxt switch @.\n");
-
-	if (computer->fpu && !currentTaskTCB->vm86Task) {
-		if (!currentTaskTCB->fpuState) {
-			size_t addr = (size_t) malloc(1024);
-			addr = (addr + 15) & ~0xF;
-			currentTaskTCB->fpuState = (uint8_t*) addr;
-		}
-		lockScheduler();
-		kprintf("saving to FPU state: 0x%X\n", currentTaskTCB->fpuState);
-		computer->fpu->save(currentTaskTCB->fpuState);
-		unlockScheduler();
-		kprintf("state saved.\n");
-	}
-	kprintf("ctxt switch A.\n");
 	switchToThreadASM(nextThreadToRun);
-	kprintf("ctxt switch B.\n");
-	if (computer->fpu && !currentTaskTCB->vm86Task) {
-		if (currentTaskTCB->fpuState) {
-			kprintf("loading FPU state: 0x%X\n", currentTaskTCB->fpuState);
-			computer->fpu->load(currentTaskTCB->fpuState);
-			kprintf("loaded FPU state: 0x%X\n", currentTaskTCB->fpuState);
-		}
-	}
-	kprintf("ctxt switch C.\n");
-
-	// LOAD FPU
-
 }
 
 ThreadControlBlock* Process::createUserThread()

@@ -339,11 +339,11 @@ void x87EmulHandler(regs* r, void* context)
 		//clear task switched
 		asm volatile ("clts");
 
-		/*//save previous state
+		//save previous state
 		if (Krnl::fpuOwner) {
-			kprintf("saving FPU state...\n");
-			computer->fpu->save(Krnl::fpuOwner->fpuState);
-			kprintf("saved FPU state...\n");
+			size_t a = (size_t) Krnl::fpuOwner->fpuState;
+			a = (a + 63) & 0x3F;
+			computer->fpu->save((void*) a);
 		}
 
 		//check if never had state before, otherwise load state
@@ -352,9 +352,11 @@ void x87EmulHandler(regs* r, void* context)
 			currentTaskTCB->fpuState = (uint8_t*) malloc(512);
 		} else {
 			kprintf("loading FPU state...\n");
-			computer->fpu->load(currentTaskTCB->fpuState);
+			size_t a = (size_t) currentTaskTCB->fpuState;
+			a = (a + 63) & 0x3F;
+			computer->fpu->load((void*) a);
 			kprintf("loaded FPU state...\n");
-		}*/
+		}
 
 		Krnl::fpuOwner = currentTaskTCB;
 
@@ -374,6 +376,25 @@ bad:
 
 	Thr::terminateFromIRQ();
 }
+
+
+/*
+		if (computer->fpu && !currentTaskTCB->vm86Task) {
+		if (!currentTaskTCB->fpuState) {
+			size_t addr = (size_t) malloc(1024);
+			addr = (addr + 15) & ~0xF;
+			currentTaskTCB->fpuState = (uint8_t*) addr;
+		}
+		lockScheduler();
+		computer->fpu->save(currentTaskTCB->fpuState);
+		unlockScheduler();
+	}
+	switchToThreadASM(nextThreadToRun);
+	if (computer->fpu && !currentTaskTCB->vm86Task) {
+		if (currentTaskTCB->fpuState) {
+			computer->fpu->load(currentTaskTCB->fpuState);
+		}
+	}*/
 
 void gpFault(regs* r, void* context)
 {

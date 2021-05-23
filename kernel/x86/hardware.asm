@@ -213,9 +213,9 @@ commonThreadSwitch:
 	je .doneVAS						;to save time, skip reloading if not needed
 	mov cr3, eax					;change it if needed
 .doneVAS:
-    ;mov eax, cr0
-    ;or al, 8                        ;set task switched bit
-    ;mov cr0, eax
+    mov eax, cr0
+    or al, 8                        ;set task switched bit
+    mov cr0, eax
 
 	test edx, edx
 	jne .firstTime
