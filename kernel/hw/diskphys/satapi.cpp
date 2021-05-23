@@ -112,7 +112,7 @@ int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, uint64_t lba, uint1
 		spin++;
 	}
 	if (spin == 1000000) {
-		panic("Port is hung\n");
+		kprintf("Port is hung SATAPI\n");
 		return 1;
 	}
 

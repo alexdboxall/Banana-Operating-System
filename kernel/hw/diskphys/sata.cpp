@@ -147,7 +147,7 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 	KDEBUG_PAUSE("SATA::access 10");
 
 	if (spin == 1000000) {
-		panic("Port is hung\n");
+		kprintf("Port is hung\n");
 		return 1;
 	}
 	KDEBUG_PAUSE("SATA::access 11");
@@ -164,7 +164,7 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 			break;
 		if (port->is & HBA_PxIS_TFES)	// Task file error
 		{
-			panic("Read disk error\n");
+			kprintf("Read disk error\n");
 			return 1;
 		}
 
@@ -190,7 +190,7 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 	// Check again
 	if (port->is & HBA_PxIS_TFES) {
-		panic("Read disk error\n");
+		kprintf("Read disk error\n");
 		return 1;
 	}
 	KDEBUG_PAUSE("SATA::access 14");
