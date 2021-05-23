@@ -6,6 +6,8 @@ global avxLoad
 global avxInit
 global avxClose
 
+extern sseInit
+
 avxDetect:          ;RETURNS A SIZE_T, 0 OR 1
     mov eax, 0x1
     cpuid
@@ -32,6 +34,7 @@ avxSave:            ;TAKES IN A SIZE_T
 
     mov ebx, [esp + 4 + 8]
     xsave [ebx]
+
     pop edx
     pop ebx
     ret

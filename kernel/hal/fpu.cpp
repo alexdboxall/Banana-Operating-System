@@ -28,7 +28,7 @@ FPU* setupFPU() {
 
 	kprintf("CALLED SETUP FPU.\n");
 
-	/*if (computer->features.hasAVX) {
+	if (computer->features.hasAVX) {
 		return (FPU*) new AVX();
 	}
 
@@ -38,7 +38,7 @@ FPU* setupFPU() {
 
 	if (computer->features.hasMMX) {
 		return (FPU*) new MMX();
-	}*/
+	}
 
 	if (computer->features.hasx87) {
 		kprintf("Has x87!\n");
