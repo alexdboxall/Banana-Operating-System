@@ -45,7 +45,7 @@ namespace Krnl
 		//VgaText::hiddenOut = false;
 
 		memcpy((void*) 0x900, biosBsod16, sizeof(biosBsod16));
-		((void*)()0x900)();
+		((void (*)(void))0x900)();
 
 		//give it those classic colours
 		activeTerminal->setDefaultColours(VgaColour::White, VgaColour::Blue);
