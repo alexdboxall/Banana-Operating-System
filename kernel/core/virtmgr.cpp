@@ -328,8 +328,6 @@ VAS::VAS()
 	supervisorVAS = true;
 	specialFirstVAS = true;
 	pageDirectoryBase = (size_t*) VIRT_KRNL_PAGE_DIRECTORY;
-
-	mapPage(0x2000, 0x2000, PAGE_PRESENT | PAGE_SUPERVISOR);
 }
 
 VAS::~VAS()
@@ -417,8 +415,6 @@ VAS::VAS(bool kernel) {
 		mapPage((*getPageTableEntry(CPU::current()->idt.getPointerToInvalidOpcodeEntryForF00F())) & ~0xFFF, CPU::current()->idt.getPointerToInvalidOpcodeEntryForF00F() & ~0xFFF, PAGE_PRESENT | PAGE_SUPERVISOR | PAGE_CACHE_DISABLE);
 		enableIRQs();
 	}
-
-	mapPage(0x2000, 0x2000, PAGE_PRESENT | PAGE_SUPERVISOR);
 }
 
 size_t VAS::mapRange(size_t physicalAddr, size_t virtualAddr, int pages, int flags)
