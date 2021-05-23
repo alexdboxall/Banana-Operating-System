@@ -31,9 +31,11 @@ namespace Krnl
 
 		//Krnl::setBootMessage(message);
 
-		CPU::current()->writeCR3(kernelProcess->vas->pageDirectoryBasePhysical);
-		((void (*)(void))0x2000)();
-
+		if (guiMouseHandler) {
+			CPU::current()->writeCR3(kernelProcess->vas->pageDirectoryBasePhysical);
+			((void (*)(void))0x5000)();
+		}
+		
 		//VgaText::hiddenOut = false;
 
 		//give it those classic colours

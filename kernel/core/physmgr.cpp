@@ -312,10 +312,9 @@ namespace Phys
 		}
 
 		//holes in the memory map
-		setPageState(5, STATE_FREE);
 		setPageState(6, STATE_FREE);
 		setPageState(7, STATE_FREE);
-		usablePages += 3;
+		usablePages += 2;
 
 		//used to be DMA RAM
 		for (int i = 0; i < 32; ++i) {

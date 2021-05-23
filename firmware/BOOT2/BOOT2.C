@@ -489,7 +489,7 @@ void main()
 		blockingKeyboard();
 	}
 
-	readFATFromHDD("BANANA     /SYSTEM     /BIOSBSODCOM", (void*) (0x2000));
+	readFATFromHDD("BANANA     /SYSTEM     /BIOSBSODCOM", (void*) (0x5000));
 
 	readFATFromHDD("BANANA     /SYSTEM     /KERNEL32EXE", (void*) KERNEL_SOURCE);
 	if (fulldebug) {

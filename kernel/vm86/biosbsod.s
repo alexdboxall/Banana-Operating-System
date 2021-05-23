@@ -1,4 +1,4 @@
-org 0x2000
+org 0x5000
 bits 32
 
 cli
