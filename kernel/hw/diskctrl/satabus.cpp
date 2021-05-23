@@ -49,6 +49,35 @@ int SATABus::open(int, int, void*)
 {
 	abar = (HBA_MEM*) (size_t) pci.info.bar[5];
 	kprintf("SATA ABAR = 0x%X\n", abar);
+
+	if (abar->cap2 & 1) {
+		//perform BIOS/OS handoff
+
+		kprintf("BIOS/OS handoff supported.\n");
+
+		abar->bohc |= 2;		//ask for ownership
+		for (int i = 0; i < 100; ++i) {
+			if ((abar->bohc & 2) && !(abar->bohc & 1)) {
+				kprintf("we got AHCI ownership!\n");
+				break;
+			}
+			milliTenthSleep(1);
+		}
+	}
+
+	//now reset the thing
+
+	abar->ghc |= 1;
+	int timeout = 0;
+	while (abar->ghc & 1) {
+		milliTenthSleep(10);
+		++timeout;
+		if (timeout == 300) {
+			kprintf("AHCI reset timeout...\n");
+			break;
+		}
+	}
+
 	probePort(abar);
 
 	return 0;
