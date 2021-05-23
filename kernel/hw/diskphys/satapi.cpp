@@ -35,6 +35,8 @@ SATAPI::SATAPI(): PhysicalDisk("SATAPI Disk", 2048)
 
 void SATAPI::diskRemoved()
 {
+	return;
+
 	kprintf("SATAPI: Disk removed.\n");
 	diskIn = false;
 
