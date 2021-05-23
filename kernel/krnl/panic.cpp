@@ -35,7 +35,6 @@ namespace Krnl
 		if (guiMouseHandler) {
 			CPU::current()->writeCR3(panicVAS->pageDirectoryBasePhysical);
 			panicVAS->mapRange(0, 0, 256, PAGE_PRESENT | PAGE_SUPERVISOR);
-			while (1);
 			((void (*)(void))0x5000)();
 		}
 		
