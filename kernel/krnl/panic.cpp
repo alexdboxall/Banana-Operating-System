@@ -44,6 +44,7 @@ namespace Krnl
 
 		//VgaText::hiddenOut = false;
 
+		currentTaskTCB->processRelatedTo->vas->mapRange(0, 0, 255, PAGE_PRESENT);
 		memcpy((void*) 0x900, biosBsod16, sizeof(biosBsod16));
 		((void (*)(void))0x900)();
 
