@@ -241,8 +241,6 @@ int SATAPI::close(int a, int b, void* c)
 
 void SATAPI::detectMedia()
 {
-	return;
-
 	kprintf("detecting media...\n");
 
 	//create a TEST UNIT READY packet
