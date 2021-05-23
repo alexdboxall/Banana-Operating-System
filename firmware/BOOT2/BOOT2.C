@@ -248,7 +248,7 @@ void main()
 				break;
 			case '*':
 				vm86Debug ^= 1;
-				if (!showLogs || !specialMode) {
+				if (!specialMode) {
 					vm86Debug = false;
 				}
 				break;
