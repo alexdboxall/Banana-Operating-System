@@ -49,7 +49,9 @@ x87Init:
     ;allow interrupts for div by zero and invalid operands
     ;fldcw [value_37A]   ; writes 0x37a, both division by zero and invalid operands cause exceptions.
 
-    fnsave [fpuSaveArea]
+    mov eax, fpuSaveArea
+    fnsave [eax]
+    jmp $
 
     ret
 
