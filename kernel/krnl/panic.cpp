@@ -32,7 +32,9 @@ namespace Krnl
 		//Krnl::setBootMessage(message);
 
 		if (guiMouseHandler) {
-			CPU::current()->writeCR3(kernelProcess->vas->pageDirectoryBasePhysical);
+			extern VAS* panicVAS;
+
+			CPU::current()->writeCR3(panicVAS->pageDirectoryBasePhysical);
 			((void (*)(void))0x5000)();
 		}
 		
