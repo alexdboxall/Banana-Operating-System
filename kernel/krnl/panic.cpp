@@ -31,10 +31,6 @@ namespace Krnl
 
 		//Krnl::setBootMessage(message);
 
-		if (guiMouseHandler) {
-			realmodeBSOD();
-		}
-
 		//VgaText::hiddenOut = false;
 
 		//give it those classic colours
