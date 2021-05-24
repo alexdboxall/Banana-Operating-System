@@ -24,29 +24,13 @@ struct regs
 extern "C" uint64_t int_handler(struct regs* r);
 extern "C" void Subhandler(struct regs* r, void* context);
 
-class InterruptController : public Device
-{
-private:
-
-protected:
-	friend uint64_t int_handler(struct regs* r);
-	friend void Subhandler(struct regs* rgs, void* context);
-
-	void (*handlers[256][4])(regs* r, void* context);
-	void* contexts[256][4];
-
-public:
-	InterruptController(const char* name);
-	virtual void installISRHandler(int num, void (*handler)(regs*, void*), void* context = 0);
-	virtual int installIRQHandler(int num, void (*handler)(regs*, void*), bool legacy, void* context = 0);
-	virtual void uninstallISRHandler(int num, void (*handler)(regs*, void*));
-	virtual void uninstallIRQHandler(int num, void (*handler)(regs*, void*), bool legacy);
-	virtual void clearAllHandlers(int num, bool legacy);
-	virtual void disable() = 0;
-	virtual ~InterruptController();
-
-	int convertLegacyIRQNumber(int num);
-};
+void setupINTS();
+void installISRHandler(int num, void (*handler)(regs*, void*), void* context = 0);
+int installIRQHandler(int num, void (*handler)(regs*, void*), bool legacy, void* context = 0);
+void uninstallISRHandler(int num, void (*handler)(regs*, void*));
+void uninstallIRQHandler(int num, void (*handler)(regs*, void*), bool legacy);
+void clearAllHandlers(int num, bool legacy);
+int convertLegacyIRQNumber(int num);
 
 InterruptController* setupInterruptController();
 

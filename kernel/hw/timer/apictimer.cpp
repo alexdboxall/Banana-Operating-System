@@ -29,8 +29,8 @@ int APICTimer::open(int hz, int _irqNum, void*)
 	write(hz);
 
 	//set the memory range
-	memory[noMems].rangeStart = reinterpret_cast<APIC*>(CPU::current()->intCtrl)->getBase() + 0x300;
-	memory[noMems++].rangeLength = 0x100;
+	//memory[noMems].rangeStart = reinterpret_cast<APIC*>(CPU::current()->intCtrl)->getBase() + 0x300;
+	//memory[noMems++].rangeLength = 0x100;
 
 	//install it as a legacy handler just to keep it on the same number as the PIT was
 	irqNum = _irqNum;
@@ -41,9 +41,11 @@ int APICTimer::open(int hz, int _irqNum, void*)
 
 void APICTimer::write(int hz)
 {
+	panic("APICTime::write");
+
 	frequency = hz;
 
-	uint32_t base = reinterpret_cast<APIC*>(CPU::current()->intCtrl)->getBase();
+	/*uint32_t base = reinterpret_cast<APIC*>(CPU::current()->intCtrl)->getBase();
 
 	uint32_t oldticks = milliTenthsSinceBoot;
 	*((uint32_t*) ((uint8_t*) (size_t) base + APIC_REGISTER_TIMER_DIV)) = 0x3;
@@ -59,7 +61,7 @@ void APICTimer::write(int hz)
 
 	*((uint32_t*) ((uint8_t*) (size_t) base + APIC_REGISTER_LVT_TIMER)) = irqNum | APIC_REGISTER_LVT_TIMER_MODE_PERIODIC;
 	*((uint32_t*) ((uint8_t*) (size_t) base + APIC_REGISTER_TIMER_DIV)) = 0x3;
-	*((uint32_t*) ((uint8_t*) (size_t) base + APIC_REGISTER_TIMER_INITCNT)) = ticksInTimerHertz;
+	*((uint32_t*) ((uint8_t*) (size_t) base + APIC_REGISTER_TIMER_INITCNT)) = ticksInTimerHertz;*/
 }
 
 int APICTimer::close(int a, int b, void* c)

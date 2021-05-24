@@ -19,16 +19,15 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-#define likely(x)       __builtin_expect(!!(x), 1)
-#define unlikely(x)     __builtin_expect(!!(x), 0)
+void (*INT_handlers[256][4])(regs* r, void* context);
+void* INT_contexts[256][4];
 
 extern "C" uint64_t int_handler(struct regs* r)
 {
 	while (Krnl::kernelInPanic) {
-		asm("cli; hlt");
+		Hal::disableIRQs();
+		Hal::stallProcessor();
 	}
-
-	InterruptController* intCtrl = CPU::current()->intCtrl;
 
 	int num = r->int_no;
 
@@ -39,13 +38,13 @@ extern "C" uint64_t int_handler(struct regs* r)
 		Hal::endOfInterrupt(num - 32);
 	}
 
-	auto handleList = intCtrl->handlers[num];
-	auto contextList = intCtrl->contexts[num];
+	auto handleList = INT_handlers[num];
+	auto contextList = INT_contexts[num];
 
 	//call handler if it exists
 	for (int i = 0; i < 4; ++i) {
 		if (handleList[i]) {
-			if (unlikely(r->int_no == 96)) {
+			if (r->int_no == 96) {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcast-function-type"
 				return reinterpret_cast<uint64_t(*)(regs*, void*)>(handleList[i])(r, contextList[i]);		//this has got to be the world's worst line of code, ever
@@ -59,13 +58,13 @@ extern "C" uint64_t int_handler(struct regs* r)
 	return 0;
 }
 
-void InterruptController::installISRHandler(int num, void (*handler)(regs*, void*), void* context)
+void installISRHandler(int num, void (*handler)(regs*, void*), void* context)
 {
 	for (int i = 0; i < 4; ++i) {
-		if (handlers[num][i] == nullptr) {
+		if (INT_handlers[num][i] == nullptr) {
 			//set handler
-			handlers[num][i] = handler;
-			contexts[num][i] = context;
+			INT_handlers[num][i] = handler;
+			INT_contexts[num][i] = context;
 			return;
 		}
 	}
@@ -73,13 +72,41 @@ void InterruptController::installISRHandler(int num, void (*handler)(regs*, void
 	panic("[intctrl] A!");
 }
 
-int InterruptController::installIRQHandler(int num, void (*handler)(regs*, void*), bool legacy, void* context)
+int installIRQHandler(int num, void (*handler)(regs*, void*), bool legacy, void* context)
 {
-	if (legacy && this->getName()[0] == 'A') {
-		if (num < 16) {
-			num = legacyIRQRemaps[num];
-		} else {
-			panic("[intctrl] B!");
+	if (computer->features.hasAPIC) {
+		bool levelTriggered = false;
+		bool activeLow = false;
+
+		if (legacy) {
+			if (num < 16) {
+				num = legacyIRQRemaps[num];
+				if (legacyIRQFlags[num] & 2) {
+					activeLow = true;
+				}
+				if (legacyIRQFlags[num] & 8) {
+					levelTriggered = false;
+				}
+			} else {
+				panic("[installIRQHandler] Legacy IRQ with number 16 or higher");
+			}
+		}
+
+		//redirect the 'num'th of the IO APIC (0 - 23) to the IRQ on the local system (number + 32)
+
+		//which one do we use? the first one where handlesGSIWithNumber(num) returns true;
+
+		bool found = false;
+		kprintf("System has %d IOAPICs\n", noOfIOAPICs);
+		for (int i = 0; i < noOfIOAPICs; ++i) {
+			if (ioapics[i]->handlesGSIWithNumber(num)) {
+				ioapics[i]->redirect(num, CPU::getNumber(), num + 32, levelTriggered, activeLow);
+				found = true;
+				break;
+			}
+		}
+		if (!found) {
+			panic("[apic] OOPS!");
 		}
 	}
 
@@ -96,23 +123,23 @@ int InterruptController::installIRQHandler(int num, void (*handler)(regs*, void*
 		}
 	}
 
-	panic("[intctrl] C!");
+	panic("can't install IRQ handler, too many!");
 	return -1;
 }
 
-void InterruptController::uninstallISRHandler(int num, void (*handler)(regs*, void*))
+void uninstallISRHandler(int num, void (*handler)(regs*, void*))
 {
 	for (int i = 0; i < 4; ++i) {
 		if (handler == handlers[num][i]) {
-			handlers[num][i] = nullptr;
-			contexts[num][i] = nullptr;
+			INT_handlers[num][i] = nullptr;
+			INT_contexts[num][i] = nullptr;
 		}
 	}
 }
 
-void InterruptController::clearAllHandlers(int num, bool legacy)
+void clearAllHandlers(int num, bool legacy)
 {
-	if (legacy && this->getName()[0] == 'A') {
+	if (legacy && computer->features.hasAPIC) {
 		if (num < 16) {
 			num = legacyIRQRemaps[num];
 		} else {
@@ -127,9 +154,9 @@ void InterruptController::clearAllHandlers(int num, bool legacy)
 	}
 }
 
-void InterruptController::uninstallIRQHandler(int num, void (*handler)(regs*, void*), bool legacy)
+void uninstallIRQHandler(int num, void (*handler)(regs*, void*), bool legacy)
 {
-	if (legacy && this->getName()[0] == 'A') {
+	if (legacy && computer->features.hasAPIC) {
 		if (num < 16) {
 			num = legacyIRQRemaps[num];
 		} else {
@@ -139,34 +166,26 @@ void InterruptController::uninstallIRQHandler(int num, void (*handler)(regs*, vo
 
 	num += 32;
 	for (int i = 0; i < 4; ++i) {
-		if (handler == handlers[num][i]) {
-			handlers[num][i] = nullptr;
-			contexts[num][i] = nullptr;
+		if (handler == INT_handlers[num][i]) {
+			INT_handlers[num][i] = nullptr;
+			INT_contexts[num][i] = nullptr;
 		}
 	}
 }
 
-InterruptController::InterruptController(const char* name): Device(name)
-{
-	deviceType = DeviceType::Intctrl;
-
+void setupINTS() {
 	//set all handlers to null so they don't get called
 	for (int i = 0; i < 256; ++i) {
 		for (int j = 0; j < 4; ++j) {
-			handlers[i][j] = nullptr;
-			contexts[i][j] = nullptr;		//not needed, but just to keep a consistant startup state
+			INT_handlers[i][j] = nullptr;
+			INT_contexts[i][j] = nullptr;		//not needed, but just to keep a consistant startup state
 		}
 	}
 }
 
-InterruptController::~InterruptController()
+int convertLegacyIRQNumber(int num)
 {
-	//should have a virtual destructor
-}
-
-int InterruptController::convertLegacyIRQNumber(int num)
-{
-	if (this->getName()[0] == 'A') {
+	if (computer->features.hasAPIC) {
 		if (num < 16) {
 			num = legacyIRQRemaps[num];
 		} else {

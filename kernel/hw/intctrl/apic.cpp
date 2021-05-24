@@ -49,55 +49,7 @@ void APIC::disable()
 
 int APIC::installIRQHandler(int num, void (*handler)(regs*, void*), bool legacy, void* context)
 {
-	bool levelTriggered = false;
-	bool activeLow = false;
-
-	if (legacy) {
-		if (num < 16) {
-			num = legacyIRQRemaps[num];
-			if (legacyIRQFlags[num] & 2) {
-				activeLow = true;
-			}
-			if (legacyIRQFlags[num] & 8) {
-				levelTriggered = false;
-			}
-		} else {
-			panic("[installIRQHandler] Legacy IRQ with number 16 or higher");
-		}
-	}
-
-	//redirect the 'num'th of the IO APIC (0 - 23) to the IRQ on the local system (number + 32)
 	
-	//which one do we use? the first one where handlesGSIWithNumber(num) returns true;
-
-	bool found = false;
-	kprintf("System has %d IOAPICs\n", noOfIOAPICs);
-	for (int i = 0; i < noOfIOAPICs; ++i) {
-		if (ioapics[i]->handlesGSIWithNumber(num)) {
-			ioapics[i]->redirect(num, CPU::getNumber(), num + 32, levelTriggered, activeLow);
-			found = true;
-			break;
-		}
-	}
-	if (!found) {
-		panic("[apic] OOPS!");
-	}
-
-	//IRQs start at 32
-	num += 32;
-	
-	for (int i = 0; i < 4; ++i) {
-		if (handlers[num][i] == nullptr) {
-			//set handler
-			handlers[num][i] = handler;
-			contexts[num][i] = context;
-
-			return num - 32;
-		}
-	}
-
-	panic("[apic] Could not install IRQ handler, too many already!");
-	return -1;
 }
 
 //this local APIC stuff

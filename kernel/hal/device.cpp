@@ -53,58 +53,6 @@ void Device::findAndLoadDriver()
 
 	if (driverFound) {
 		panic("DON'T USE THIS CODE ANYMORE.");
-
-		//call start() on the driver DLL
-		//that will call	 Whatever* w = new Whatever("Fancy Hardware")
-		//NEW!! then it will return w
-
-		Device* newDevice = nullptr;		//the return value
-		
-		if (!parent) {
-			panic("TRIED TO LOAD DRIVER FOR THE ROOT (COMPUTER)");
-		}
-
-		DeviceNode* conductor = parent->children;
-
-		while (conductor->next) {
-			if (conductor->child == this) {
-				lockScheduler();
-
-				conductor->child = newDevice;					//replace ourselves with the new one
-				newDevice->parent = this->parent;				//the new device doesn't have a parent yet
-
-				newDevice->detectionType = detectionType;
-				newDevice->acpi = acpi;
-				newDevice->pci = pci;
-				if (newDevice->dmaChannel == -1) newDevice->dmaChannel = dmaChannel;
-				if (newDevice->interrupt == -1) newDevice->interrupt = interrupt;
-
-				newDevice->next = this->next;
-
-				if (newDevice->noMems == 0) {
-					newDevice->noMems = noMems;
-					for (int i = 0; i < noMems; ++i) {
-						newDevice->memory[i] = memory[i];
-					}
-				}
-
-				if (newDevice->noPorts == 0)
-				{
-					newDevice->noPorts = noPorts;
-					for (int i = 0; i < noPorts; ++i) {
-						newDevice->ports[i] = ports[i];
-					}
-				}
-
-				unlockScheduler();
-
-				newDevice->open(0, 0, nullptr);
-
-				delete this;			//suicide
-				return;
-			}
-			conductor = conductor->next;
-		}
 	}
 }
 
@@ -125,14 +73,7 @@ void Device::preOpenACPI(ACPI_HANDLE h, char* namespaceName, char* pnpID)
 
 int Device::addIRQHandler(int num, void (*handler)(regs*, void*), bool legacy, void* context)
 {
-	if (this->deviceType == DeviceType::Intctrl) {
-		InterruptController* intc = reinterpret_cast<InterruptController*>(this);
-			
-		return intc->installIRQHandler(num, handler, legacy, context);
-
-	} else {
-		return CPU::current()->intCtrl->installIRQHandler(num, handler, legacy, context);
-	}
+	installIRQHandler(num, handler, legacy, context);
 }
 
 Device* Device::getParent()
@@ -142,12 +83,7 @@ Device* Device::getParent()
 
 void Device::removeIRQHandler(int num, void (*handler)(regs*, void*), bool legacy)
 {
-	if (this->deviceType == DeviceType::Intctrl) {
-		(reinterpret_cast<InterruptController*>(this))->uninstallIRQHandler(num, handler, legacy);
-
-	} else {
-		CPU::current()->intCtrl->uninstallIRQHandler(num, handler, legacy);
-	}
+	uninstallIRQHandler(num, handler, legacy);
 }
 
 

@@ -429,6 +429,7 @@ void x87EmulHandler(regs* r, void* context)
 	Thr::terminateFromIRQ();
 }
 
+extern void setupINTS();
 
 namespace Hal
 {
@@ -509,6 +510,8 @@ namespace Hal
 
 			return controller;
 		}*/
+
+		setupINTS();
 
 		//check if the APIC exists
 		if (ioapicDiscoveryNumber == 0) {

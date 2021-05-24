@@ -135,7 +135,6 @@ public:
 	TSS tss;
 	uint16_t doubleFaultSelector;
 
-	InterruptController* intCtrl;
 	Timer* timer;
 
 	CPU();
