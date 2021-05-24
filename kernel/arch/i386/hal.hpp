@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stddef.h>
 
 #define INLINE inline __attribute__((always_inline)) 
 
