@@ -338,7 +338,7 @@ void x87EmulHandler(regs* r, void* context)
 	}
 
 	//no emulation and task switch bit set
-	if (computer->fpu && (cr0 & 8)) {
+	if (cr0 & 8) {
 		kprintf("clutzing...\n");
 
 		//clear task switched
@@ -346,26 +346,18 @@ void x87EmulHandler(regs* r, void* context)
 
 		//save previous state
 		if (Krnl::fpuOwner) {
-			kprintf("saving old state.\n");
-			size_t a = (size_t) Krnl::fpuOwner->fpuState;
-			a = (a + 63) & ~0x3F;
-			computer->fpu->save((void*) a);
+			Hal::saveCoprocessor(Krnl::fpuOwner->fpuState);
 		}
 
 		//check if never had state before, otherwise load state
 		if (currentTaskTCB->fpuState == nullptr) {
-			kprintf("allocating FPU state...\n");
-			currentTaskTCB->fpuState = (uint8_t*) malloc(512 + 64);
+			currentTaskTCB->fpuState = Hal::allocateCoprocessorState();
+
 		} else {
-			kprintf("loading FPU state...\n");
-			size_t a = (size_t) currentTaskTCB->fpuState;
-			a = (a + 63) & ~0x3F;
-			computer->fpu->load((void*) a);
-			kprintf("loaded FPU state...\n");
+			Hal:loadCoprocessor(Krnl::fpuOwner->fpuState);
 		}
 
 		Krnl::fpuOwner = currentTaskTCB;
-
 		return;
 	}
 
@@ -382,25 +374,6 @@ bad:
 
 	Thr::terminateFromIRQ();
 }
-
-
-/*
-		if (computer->fpu && !currentTaskTCB->vm86Task) {
-		if (!currentTaskTCB->fpuState) {
-			size_t addr = (size_t) malloc(1024);
-			addr = (addr + 15) & ~0xF;
-			currentTaskTCB->fpuState = (uint8_t*) addr;
-		}
-		lockScheduler();
-		computer->fpu->save(currentTaskTCB->fpuState);
-		unlockScheduler();
-	}
-	switchToThreadASM(nextThreadToRun);
-	if (computer->fpu && !currentTaskTCB->vm86Task) {
-		if (currentTaskTCB->fpuState) {
-			computer->fpu->load(currentTaskTCB->fpuState);
-		}
-	}*/
 
 void gpFault(regs* r, void* context)
 {

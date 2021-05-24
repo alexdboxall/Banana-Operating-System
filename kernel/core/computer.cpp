@@ -6,7 +6,6 @@
 #include "core/idle.hpp"
 #include "reg/registry.hpp"
 #include "hw/acpi.hpp"
-#include "hal/fpu.hpp"
 #include "hal/clock.hpp"
 #include "hw/cpu.hpp"
 #include "hw/smp.hpp"
@@ -90,11 +89,7 @@ int Computer::open(int a, int b, void* vas)
 	cpu[0]->open(0, 0, vas);		//FIRST ARG IS CPU NUMBER
 	
 	Krnl::setBootMessage("Detecting numerical coprocessors...");
-	fpu = setupFPU();
-	if (fpu) {
-		addChild(fpu);
-		fpu->open(0, 0, nullptr);
-	}
+	Hal::initialiseCoprocessor();
 
 	Krnl::setBootMessage("Setting up multitasking...");
 	setupMultitasking(Krnl::firstTask);

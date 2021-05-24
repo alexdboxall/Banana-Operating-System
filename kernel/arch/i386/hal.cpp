@@ -10,8 +10,78 @@
 
 uint64_t(*_i386_HAL_tscFunction)();
 
+extern "C" int  avxDetect();
+extern "C" void avxSave(size_t);
+extern "C" void avxLoad(size_t);
+extern "C" void avxInit();
+
+extern "C" int  sseDetect();
+extern "C" void sseSave(size_t);
+extern "C" void sseLoad(size_t);
+extern "C" void sseInit();
+
+extern "C" int  x87Detect();
+extern "C" void x87Save(size_t);
+extern "C" void x87Load(size_t);
+extern "C" void x87Init();
+
 namespace Hal
 {
+	void (*coproSaveFunc)(size_t);
+	void (*coproLoadFunc)(size_t);
+
+	void noCopro (size_t a)
+	{
+
+	}
+
+	void initialiseCoprocessor()
+	{
+		if (avxDetect()) {
+			coproSaveFunc = avxSave;
+			coproLoadFunc = avxLoad;
+			avxInit();
+			return;
+		}
+
+		if (sseDetect()) {
+			coproSaveFunc = sseSave;
+			coproLoadFunc = sseLoad;
+			sseInit();
+			return;
+		}
+
+		if (x87Detect()) {
+			coproSaveFunc = x87Save;
+			coproLoadFunc = x87Load;
+			x87Init();
+			return;
+		}
+
+		coproSaveFunc = noCopro;
+		coproLoadFunc = noCopro;
+
+		coproType = COPRO_NONE;
+		CPU::current()->writeCR0(CPU::current()->readCR0() | 4);
+	}
+
+	void* allocateCoprocessorState()
+	{
+		return malloc(512 + 64);
+	}
+
+	void saveCoprocessor(void* buf)
+	{
+		size_t addr = (((size_t) buf) + 63) & ~0x3F;
+		coproSaveFunc(addr);
+	}
+
+	void loadCoprocessor(void* buf)
+	{
+		size_t addr = (((size_t) buf) + 63) & ~0x3F;
+		coproLoadFunc(addr);
+	}
+
 	uint64_t noTSC()
 	{
 		return 0;

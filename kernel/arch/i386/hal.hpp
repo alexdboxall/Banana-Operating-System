@@ -7,6 +7,11 @@ namespace Hal
 {
 	void initialise();
 
+	void initialiseCoprocessor();
+	void* allocateCoprocessorState();
+	void saveCoprocessor(void*);
+	void loadCoprocessor(void*);
+
 	INLINE void panic(const char* message)
 	{
 		Krnl::panic(message);
