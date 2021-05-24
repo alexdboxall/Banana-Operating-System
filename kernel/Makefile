@@ -71,12 +71,10 @@ CXXFLAGS32 = -c -m32 -DTHIRTYTWOBIT $(CFLAGSCOMMON) -fno-exceptions -fno-rtti -f
 LDFLAGS32 = -lkgcc -lsoftfp -L$(SOURCEDIR) -L$(SOURCEDIR)/libk -lm32 -ffreestanding $(LD_OPTIMISE_LEVEL) -nostdlib -flto -Wl,-Map=kernel32.map 
 
 COBJECTS32 = $(patsubst %.c, %.32, $(wildcard *.c) $(wildcard */*.c) $(wildcard */*/*.c) $(wildcard */*/*/*.c) $(wildcard **/*.c))
-CNOACPI32 = $(patsubst %.c, %.32, $(wildcard *.c) acpica/utclib.c $(wildcard [b-z]*/*.c) $(wildcard [b-z]*/*/*.c) $(wildcard */*/*/*.c))
 CXXOBJECTS32 = $(patsubst %.cpp, %.32, $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp) $(wildcard */*/*/*.cpp) $(wildcard **/*.cpp))
 ASMOBJECTS32 = $(patsubst %.s, %.32, $(wildcard hw/*/x86/*.s) $(wildcard hw/*/x86/*/*.s) $(wildcard hw/*/*/x86/*.s)) $(wildcard hw/*/*/x86/*/*.s)
 
 OBJECTS32 = $(COBJECTS32) $(CXXOBJECTS32) $(ASMOBJECTS32)
-OBJECTSNOACPI32 = $(CNOACPI32) $(CXXOBJECTS32) $(ASMOBJECTS32)
 
 EXTRAFILES32 := $(SOURCEDIR)/morenasm.32
 

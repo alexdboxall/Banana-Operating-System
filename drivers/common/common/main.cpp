@@ -29,15 +29,6 @@ void realstart(void* _parent)
 {
 	Device* parent = (Device*) _parent;
 
-	if (systemBuzzer == nullptr) {
-		Krnl::setBootMessage("Starting speaker driver...");
-
-		systemBuzzer = new Beep();
-		systemBuzzer->detectionType = DetectionType::ISAProbe;
-		parent->addChild(systemBuzzer);
-		systemBuzzer->open(0, 0, nullptr);
-	}
-
 	computer->clock = nullptr;
 
 	if (computer->clock == nullptr) {

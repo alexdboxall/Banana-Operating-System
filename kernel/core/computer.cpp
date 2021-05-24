@@ -15,7 +15,7 @@
 #include "fs/vfs.hpp"
 #include "vm86/vm8086.hpp"
 #include "krnl/powctrl.hpp"
-#include "krnl/rand.hpp"
+#include "krnl/hal.hpp"
 
 #pragma GCC optimize ("O2")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -75,22 +75,12 @@ int Computer::open(int a, int b, void* vas)
 		VgaText::hiddenOut = true;
 	}
 
-	kprintf("sizeof device = 0x%X\n", sizeof(Device));
-	kprintf("sizeof file = 0x%X\n", sizeof(File));
-	kprintf("sizeof vas = 0x%X\n", sizeof(VAS));
-	kprintf("sizeof process = 0x%X\n", sizeof(Process));
-	kprintf("sizeof thread = 0x%X\n", sizeof(ThreadControlBlock));
-	kprintf("\n --- TEST --- \n\n");
-	Krnl::setBootMessage("Creating device tree A...");
+	Krnl::setBootMessage("Creating device tree...");
 	root = new ACPI();
-	Krnl::setBootMessage("Creating device tree B...");
 	addChild(root);
 
-	Krnl::setBootMessage("Detecting computer features...");
 	detectFeatures();
-	Krnl::setBootMessage("Displaying computer features...");
 	displayFeatures();
-	Krnl::setBootMessage("Enabling NMIs...");
 	enableNMI();
 
 	Krnl::setBootMessage("Configuring processors...");
@@ -99,8 +89,6 @@ int Computer::open(int a, int b, void* vas)
 	addChild(cpu[0]);
 	cpu[0]->open(0, 0, vas);		//FIRST ARG IS CPU NUMBER
 	
-	Krnl::initRNG();
-
 	Krnl::setBootMessage("Detecting numerical coprocessors...");
 	fpu = setupFPU();
 	if (fpu) {
