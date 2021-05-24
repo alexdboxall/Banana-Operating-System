@@ -112,7 +112,7 @@ void PIC::remap()
 
 void PIC::eoi(uint8_t irqNum)
 {
-	Hal::endOfInterrupt(irqNum);
+
 }
 
 int PIC::open(int, int, void*)

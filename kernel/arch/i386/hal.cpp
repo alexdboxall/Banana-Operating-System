@@ -169,6 +169,7 @@ namespace Hal
 		return ret;
 	}
 
+	bool apic = false;
 	void initialise()
 	{
 		if (CPU::current()->features.hasTSC) {
@@ -177,6 +178,8 @@ namespace Hal
 		}  else {
 			_i386_HAL_tscFunction = noTSC;
 		}
+
+		apic = computer->features.hasAPIC;
 	}
 
 	void makeBeep(int hertz)
@@ -207,10 +210,12 @@ namespace Hal
 		return 0;
 	}
 
-	bool apic = false;
 	void endOfInterrupt(int irqNum)
 	{
 		if (apic) {
+			uint64_t ret = computer->rdmsr(IA32_APIC_BASE_MSR);
+			uint32_t* ptr = (uint32_t*) (size_t) ((ret & 0xfffff000) + 0xb0);
+			*ptr = 1;
 
 		} else {
 			picEOI(irqNum);

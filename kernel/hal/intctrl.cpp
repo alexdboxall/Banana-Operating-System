@@ -90,7 +90,7 @@ extern "C" uint64_t int_handler(struct regs* r)
 	//this is done now because the handler could cause a task switch, which
 	//would mean the EOI never gets called, and so the system basically locks up
 	if (num >= 32 && num < 32 + 24) {
-		intCtrl->eoi(num - 32);
+		Hal::endOfInterrupt(num - 32);
 	}
 
 	auto handleList = intCtrl->handlers[num];

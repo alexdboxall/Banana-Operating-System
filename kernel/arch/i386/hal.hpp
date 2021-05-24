@@ -75,7 +75,7 @@ namespace Hal
 
 	uint32_t getRand();
 
-	void endOfInterrupt();
+	void endOfInterrupt(int);
 
 	void restart();
 	void shutdown();

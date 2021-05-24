@@ -103,8 +103,7 @@ int APIC::installIRQHandler(int num, void (*handler)(regs*, void*), bool legacy,
 //this local APIC stuff
 void APIC::eoi(uint8_t irqNum)
 {
-	uint32_t* ptr = (uint32_t*) (size_t) (getBase() + 0xb0);
-	*ptr = 1;
+	
 }
 
 //this local APIC stuff

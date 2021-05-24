@@ -87,6 +87,8 @@ int Computer::open(int a, int b, void* vas)
 	cpu[0] = new CPU();
 	addChild(cpu[0]);
 	cpu[0]->open(0, 0, vas);		//FIRST ARG IS CPU NUMBER
+
+	Hal::initialise();
 	
 	Krnl::setBootMessage("Detecting numerical coprocessors...");
 	Hal::initialiseCoprocessor();
