@@ -1,5 +1,6 @@
 #include "arch/i386/hal.hpp"
 #include <hw/cpu.hpp>
+#include "vm86/x87em.hpp"
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -25,6 +26,63 @@ extern "C" void x87Save(size_t);
 extern "C" void x87Load(size_t);
 extern "C" void x87Init();
 
+void _i386_saveCoprocessor(void* buf)
+{
+	size_t addr = (((size_t) buf) + 63) & ~0x3F;
+	coproSaveFunc(addr);
+}
+
+void _i386_loadCoprocessor(void* buf)
+{
+	size_t addr = (((size_t) buf) + 63) & ~0x3F;
+	coproLoadFunc(addr);
+}
+
+void x87EmulHandler(regs* r, void* context)
+{
+	size_t cr0 = CPU::readCR0();
+	bool handled;
+
+	if (currentTaskTCB->vm86Task) {
+		goto bad;
+	}
+
+	if (cr0 & 8) {
+		//clear task switched
+		asm volatile ("clts");
+
+		//save previous state
+		if (Krnl::fpuOwner) {
+			_i386_saveCoprocessor(Krnl::fpuOwner->fpuState);
+		}
+
+		//check if never had state before, otherwise load state
+		if (currentTaskTCB->fpuState == nullptr) {
+			currentTaskTCB->fpuState = malloc(512 + 64);
+
+		} else {
+			Hal::loadCoprocessor(Krnl::fpuOwner->fpuState);
+		}
+
+		Krnl::fpuOwner = currentTaskTCB;
+		return;
+	}
+
+	handled = Vm::x87Handler(r);
+	if (handled) {
+		return;
+	}
+
+bad:
+	kprintf("Device not available\n");
+
+	displayDebugInfo(r);
+	displayProgramFault("Device not available");
+
+	Thr::terminateFromIRQ();
+}
+
+
 namespace Hal
 {
 	void (*coproSaveFunc)(size_t);
@@ -37,6 +95,8 @@ namespace Hal
 
 	void initialiseCoprocessor()
 	{
+		controller->installISRHandler(ISR_DEVICE_NOT_AVAILABLE, x87EmulHandler);
+
 		if (avxDetect()) {
 			coproSaveFunc = avxSave;
 			coproLoadFunc = avxLoad;
@@ -68,18 +128,6 @@ namespace Hal
 	void* allocateCoprocessorState()
 	{
 		return malloc(512 + 64);
-	}
-
-	void saveCoprocessor(void* buf)
-	{
-		size_t addr = (((size_t) buf) + 63) & ~0x3F;
-		coproSaveFunc(addr);
-	}
-
-	void loadCoprocessor(void* buf)
-	{
-		size_t addr = (((size_t) buf) + 63) & ~0x3F;
-		coproLoadFunc(addr);
 	}
 
 	uint64_t noTSC()

@@ -3,7 +3,6 @@
 #include "core/terminal.hpp"
 #include "libk/string.h"
 #include "hw/cpu.hpp"
-#include "hal/fpu.hpp"
 #include "core/kheap.hpp"
 #include "core/physmgr.hpp"
 #include "thr/elf.hpp"
@@ -70,7 +69,9 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 		currentTaskTCB->timeKeeping += elapsed;
 	}
 
+	Hal::saveCoprocessor(currentTaskTCB->fpuState);
 	switchToThreadASM(nextThreadToRun);
+	Hal::loadCoprocessor(currentTaskTCB->fpuState);
 }
 
 ThreadControlBlock* Process::createUserThread()
@@ -98,7 +99,7 @@ ThreadControlBlock* Process::createThread(void (*where)(void*), void* context, i
 
 	threadUsage |= (1 << threadNo);
 	if (!threads[threadNo].vm86Task) {
-		threads[threadNo].fpuState = nullptr;
+		threads[threadNo].fpuState = Hal::allocateCoprocessorState();
 	}
 	threads[threadNo].cr3 = vas->pageDirectoryBasePhysical;
 	threads[threadNo].startContext = context;
@@ -143,7 +144,7 @@ void setupMultitasking(void (*where)())
 	setActiveTerminal(p->terminal);
 
 	p->threadUsage |= 1;
-	p->threads[0].fpuState = nullptr;
+	p->threads[0].fpuState = Hal::allocateCoprocessorState();
 	p->threads[0].cr3 = p->vas->pageDirectoryBasePhysical;
 	p->threads[0].esp = VIRT_APP_STACK_USER_TOP - STACK_LEEWAY;
 	p->threads[0].rtid = 0;

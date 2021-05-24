@@ -10,7 +10,6 @@
 #include "hw/acpi.hpp"
 #include "krnl/hal.hpp"
 #include "hw/cpu.hpp"
-#include "vm86/x87em.hpp"
 #include "vm86/vm8086.hpp"
 
 #pragma GCC optimize ("O2")
@@ -321,59 +320,6 @@ void displayProgramFault(const char* text)
 
 bool (*gpFaultIntercept)(regs* r) = nullptr;
 
-void x87EmulHandler(regs* r, void* context)
-{
-	kprintf("x87 EMUL HANDLER CALLED.\n");
-	size_t cr0 = CPU::readCR0();
-	bool handled;
-
-	if (currentTaskTCB->vm86Task) {
-		goto bad;
-	}
-
-	if (sysBootSettings & 16384) {
-		asm volatile ("clts");
-		return;
-	}
-
-	//no emulation and task switch bit set
-	if (cr0 & 8) {
-		kprintf("clutzing...\n");
-
-		//clear task switched
-		asm volatile ("clts");
-
-		//save previous state
-		if (Krnl::fpuOwner) {
-			Hal::saveCoprocessor(Krnl::fpuOwner->fpuState);
-		}
-
-		//check if never had state before, otherwise load state
-		if (currentTaskTCB->fpuState == nullptr) {
-			currentTaskTCB->fpuState = Hal::allocateCoprocessorState();
-
-		} else {
-			Hal::loadCoprocessor(Krnl::fpuOwner->fpuState);
-		}
-
-		Krnl::fpuOwner = currentTaskTCB;
-		return;
-	}
-
-	handled = Vm::x87Handler(r);
-	if (handled) {
-		return;
-	}
-	
-bad:
-	kprintf("Device not available\n");
-
-	displayDebugInfo(r);
-	displayProgramFault("Device not available");
-
-	Thr::terminateFromIRQ();
-}
-
 void gpFault(regs* r, void* context)
 {
 	gpFaultIntercept = Vm::faultHandler;
@@ -595,7 +541,6 @@ InterruptController* setupInterruptController()
 	controller->installISRHandler(ISR_OVERFLOW, otherISRHandler);
 	controller->installISRHandler(ISR_BOUNDS, otherISRHandler);
 	controller->installISRHandler(ISR_INVALID_OPCODE, opcodeFault);
-	controller->installISRHandler(ISR_DEVICE_NOT_AVAILABLE, x87EmulHandler);
 	controller->installISRHandler(ISR_DOUBLE_FAULT, doubleFault);
 	controller->installISRHandler(ISR_COPROCESSOR_SEGMENT_OVERRUN, otherISRHandler);
 	controller->installISRHandler(ISR_INVALID_TSS, otherISRHandler);

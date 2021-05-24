@@ -8,9 +8,21 @@ namespace Hal
 	void initialise();
 
 	void initialiseCoprocessor();
-	void* allocateCoprocessorState();
-	void saveCoprocessor(void*);
-	void loadCoprocessor(void*);
+
+	INLINE void* allocateCoprocessorState()
+	{
+		return nullptr;
+	}
+		
+	INLINE void saveCoprocessor(void*)
+	{
+
+	}
+
+	INLINE void loadCoprocessor(void*)
+	{
+
+	}
 
 	INLINE void panic(const char* message)
 	{
