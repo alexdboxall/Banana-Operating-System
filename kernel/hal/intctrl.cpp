@@ -10,7 +10,6 @@
 #include "hw/acpi.hpp"
 #include "krnl/hal.hpp"
 #include "hw/cpu.hpp"
-#include "hal/fpu.hpp"
 #include "vm86/x87em.hpp"
 #include "vm86/vm8086.hpp"
 
