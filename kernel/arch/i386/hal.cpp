@@ -567,7 +567,7 @@ namespace Hal
 
 			RTC* rtc = new RTC();
 			rtc->detectionType = DetectionType::ISAProbe;
-			parent->addChild(rtc);
+			computer->addChild(rtc);
 			rtc->open(0, 0, nullptr);
 
 			computer->clock = rtc;

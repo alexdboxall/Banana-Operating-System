@@ -483,7 +483,6 @@ int ACPI::open(int mode, int, void*)
 		}
 	}
 
-	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/common.sys"), computer);
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
 
 	if (computer->features.hasACPI) {
