@@ -32,7 +32,7 @@ namespace Krnl
 			Hal::stopBeep();
 
 		} else {
-			kernelProcess->createThread(beepThread, millisecs, 230);
+			kernelProcess->createThread(beepThread, (void*) millisecs, 230);
 		}
 	}
 }
