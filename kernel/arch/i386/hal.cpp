@@ -561,7 +561,7 @@ namespace Hal
 		controller->installISRHandler(96, reinterpret_cast<void(*)(regs*, void*)>(Sys::systemCall));
 #pragma GCC diagnostic pop
 
-		return controller;
+		computer->cpu[0]->intCtrl = controller;
 	}
 
 	void makeBeep(int hertz)
