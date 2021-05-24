@@ -15,8 +15,18 @@ bool IOAPICsSetupYet = false;
 IOAPIC* ioapics[8];
 int noOfIOAPICs;
 
-APIC::APIC(): InterruptController("Advanced Programmable Interrupt Controller")
+//this local APIC stuff
+uint32_t apicGetBase()
 {
+	if (!computer->features.hasMSR) {
+		return 0;
+	}
+	
+	uint64_t ret = computer->rdmsr(IA32_APIC_BASE_MSR);
+	return (ret & 0xfffff000);
+}
+
+void apicOpen() {
 	if (!IOAPICsSetupYet) {
 		//start the IO APICs
 
@@ -33,37 +43,11 @@ APIC::APIC(): InterruptController("Advanced Programmable Interrupt Controller")
 
 		IOAPICsSetupYet = true;
 	}
-}
 
-void APIC::io_wait()
-{
-	asm volatile ("jmp 1f\n\t"
-				  "1:jmp 2f\n\t"
-				  "2:");
-}
-
-int APIC::installIRQHandler(int num, void (*handler)(regs*, void*), bool legacy, void* context)
-{
-	
-}
-
-//this local APIC stuff
-uint32_t APIC::getBase()
-{
-	if (!computer->features.hasMSR) {
-		return 0;
-	}
-	
-	uint64_t ret = computer->rdmsr(IA32_APIC_BASE_MSR);
-	return (ret & 0xfffff000);
-}
-
-int APIC::open(int, int, void*)
-{
-	memory[noMems].rangeStart = getBase();
+	memory[noMems].rangeStart = apicGetBase();
 	memory[noMems++].rangeLength = 0x100;
 
-	uint32_t* ptr = (uint32_t*) (size_t) (getBase() + 0xf0);
+	uint32_t* ptr = (uint32_t*) (size_t) (apicGetBase() + 0xf0);
 
 	//get current register data
 	uint32_t val = *ptr;
@@ -84,7 +68,7 @@ int APIC::open(int, int, void*)
 		uint8_t lint = (apicNMIInfo[i] >> 24) & 0xFF;
 
 		if (processorID == 0xFF/* || processorID == thisAPIC*/) {
-			uint32_t* ptr = (uint32_t*) (size_t) (getBase() + (lint == 1 ? 0x360 : 0x350));
+			uint32_t* ptr = (uint32_t*) (size_t) (apicGetBase() + (lint == 1 ? 0x360 : 0x350));
 
 			uint32_t data = *ptr;
 			data &= ~0xFF;
@@ -96,10 +80,6 @@ int APIC::open(int, int, void*)
 	return 0;
 }
 
-int APIC::close(int, int, void*)
-{
-	return 0;
-}
 
 IOAPIC::IOAPIC() : Device("IO APIC") {
 	

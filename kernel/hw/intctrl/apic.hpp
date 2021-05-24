@@ -42,21 +42,6 @@ public:
 extern IOAPIC* ioapics[8];
 extern int noOfIOAPICs;
 
-class APIC: public InterruptController
-{
-private:
-
-protected:
-	void io_wait();
-
-public:
-	uint32_t getBase();
-
-	APIC();
-
-	int open(int, int, void*);
-	int close(int, int, void*);
-};
-
+void apicOpen();
 
 #endif
