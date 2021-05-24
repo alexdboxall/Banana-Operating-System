@@ -55,7 +55,6 @@ public:
 	uint32_t getBase();
 
 	APIC();
-	void eoi(uint8_t irqNum) override;
 	void disable() override;
 
 	int open(int, int, void*);

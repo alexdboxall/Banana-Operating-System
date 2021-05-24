@@ -101,12 +101,6 @@ int APIC::installIRQHandler(int num, void (*handler)(regs*, void*), bool legacy,
 }
 
 //this local APIC stuff
-void APIC::eoi(uint8_t irqNum)
-{
-	
-}
-
-//this local APIC stuff
 uint32_t APIC::getBase()
 {
 	if (!computer->features.hasMSR) {

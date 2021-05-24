@@ -42,7 +42,6 @@ public:
 	virtual void uninstallISRHandler(int num, void (*handler)(regs*, void*));
 	virtual void uninstallIRQHandler(int num, void (*handler)(regs*, void*), bool legacy);
 	virtual void clearAllHandlers(int num, bool legacy);
-	virtual void eoi(uint8_t irqNum) = 0;
 	virtual void disable() = 0;
 	virtual ~InterruptController();
 

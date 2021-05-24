@@ -110,11 +110,6 @@ void PIC::remap()
 	outb(PIC2_DATA, a2);
 }
 
-void PIC::eoi(uint8_t irqNum)
-{
-
-}
-
 int PIC::open(int, int, void*)
 {
 	//do not mask any IRQs

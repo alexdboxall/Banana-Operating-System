@@ -16,7 +16,6 @@ public:
 	PIC();
 
 	uint16_t getIRQReg(int ocw3);
-	void eoi (uint8_t irqNum) override;
 	void remap();
 	void disable() override;
 
