@@ -44,9 +44,6 @@ void apicOpen() {
 		IOAPICsSetupYet = true;
 	}
 
-	memory[noMems].rangeStart = apicGetBase();
-	memory[noMems++].rangeLength = 0x100;
-
 	uint32_t* ptr = (uint32_t*) (size_t) (apicGetBase() + 0xf0);
 
 	//get current register data
@@ -76,8 +73,6 @@ void apicOpen() {
 			*ptr = data;
 		}
 	}
-
-	return 0;
 }
 
 
