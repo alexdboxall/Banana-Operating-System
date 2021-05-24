@@ -1,6 +1,13 @@
 #include <arch/i386/pic.hpp>
 #include <krnl/hal.hpp>
 
+void picIoWait()
+{
+	asm volatile ("jmp 1f\n\t"
+				  "1:jmp 2f\n\t"
+				  "2:");
+}
+
 void picDisable()
 {
 	//this disables the PIC
@@ -28,30 +35,30 @@ void picRemap()
 
 	// starts the initialization sequence (in cascade mode)
 	outb(PIC1_COMMAND, ICW1_INIT | ICW1_ICW4);
-	ioWait();
+	picIoWait();
 	outb(PIC2_COMMAND, ICW1_INIT | ICW1_ICW4);
-	ioWait();
+	picIoWait();
 
 	// ICW2: Master PIC vector offset
 	outb(PIC1_DATA, offset1);
-	ioWait();
+	picIoWait();
 
 	// ICW2: Slave PIC vector offset
 	outb(PIC2_DATA, offset2);
-	ioWait();
+	picIoWait();
 
 	// ICW3: tell Master PIC that there is a slave PIC at IRQ2 (0000 0100)
 	outb(PIC1_DATA, 4);
-	ioWait();
+	picIoWait();
 
 	// ICW3: tell Slave PIC its cascade identity (0000 0010)
 	outb(PIC2_DATA, 2);
-	ioWait();
+	picIoWait();
 
 	outb(PIC1_DATA, ICW4_8086);
-	ioWait();
+	picIoWait();
 	outb(PIC2_DATA, ICW4_8086);
-	ioWait();
+	picIoWait();
 
 	//restore saved masks.
 	outb(PIC1_DATA, a1);
