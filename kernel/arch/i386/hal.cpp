@@ -2,6 +2,7 @@
 #include <hw/cpu.hpp>
 #include "vm86/x87em.hpp"
 #include <krnl/panic.hpp>
+#include <thr/prcssthr.hpp>
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
