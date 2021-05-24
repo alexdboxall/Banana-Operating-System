@@ -36,200 +36,6 @@ size_t lastD = 0;
 #define CPUID_VENDOR_MICROSOFT_HV "Microsoft Hv"
 #define CPUID_VENDOR_PARALLELS    " lrpepyh vr"
 
-char cpuNameList[42][16] = {
-	"i486 DX",		//0
-	"i486 SX",		//1
-	"i486 DX2",		//2
-	"i486 SL",		//3
-	"i486 SX2",		//4
-	"i486 DX4",		//5
-	"Pentium",		//6
-	"Pentium MMX",	//7
-	"Quark",		//8
-	"Pentium Pro",	//9
-	"Pentium II",	//10
-	"Pentium III",	//11
-	"Pentium M",	//12
-	"Core",			//13
-	"Core 2",		//14
-	"Nehalem",		//15
-	"Bonnell",		//16
-	"Westmere",		//17
-	"Sandy Bridge",	//18
-	"Silvermont",	//19
-	"Ivy Bridge",	//20
-	"Haswell",		//21
-	"Broadwell",	//22
-	"Knights Corner",//23
-	"Pentium 4",	//24
-	"Nocona",		//25
-	"Am486",		//26
-	"Am5x86",		//27
-	"K5",			//28
-	"K6",			//29
-	"K6-2",			//30
-	"K6-3",			//31
-	"K7",			//32
-	"K8",			//33
-	"K10",			//34
-	"Bobcat",		//35
-	"Bulldozer",	//36
-	"Piledriver",	//37
-	"Steamroller",	//38
-	"Jaguar",		//39
-	"Jaguar (Puma)",//40
-};
-
-char* CPU::lookupAMDName(uint8_t a, uint8_t b)
-{
-	if (a == 0x04) {
-		if (b == 0x03) return cpuNameList[26];
-		if (b == 0x07) return cpuNameList[26];
-		if (b == 0x08) return cpuNameList[26];
-		if (b == 0x09) return cpuNameList[26];
-		if (b == 0x0A) return cpuNameList[26];
-		if (b == 0x0E) return cpuNameList[27];
-		if (b == 0x0F) return cpuNameList[27];
-	}
-	
-	if (a == 0x05) {
-		if (b == 0x00) return cpuNameList[28];
-		if (b == 0x01) return cpuNameList[28];
-		if (b == 0x02) return cpuNameList[28];
-		if (b == 0x03) return cpuNameList[28];
-		if (b == 0x06) return cpuNameList[29];
-		if (b == 0x07) return cpuNameList[29];
-		if (b == 0x08) return cpuNameList[30];
-		if (b == 0x09) return cpuNameList[31];
-		if (b == 0x0D) return cpuNameList[31];
-	}
-
-	if (a == 0x06) {
-		if (b == 0x01) return cpuNameList[32];
-		if (b == 0x02) return cpuNameList[32];
-		if (b == 0x03) return cpuNameList[32];
-		if (b == 0x04) return cpuNameList[32];
-		if (b == 0x06) return cpuNameList[32];
-		if (b == 0x07) return cpuNameList[32];
-		if (b == 0x08) return cpuNameList[32];
-		if (b == 0x0A) return cpuNameList[32];
-	}
-	
-
-	for (int i = 0; i < 0xD0; ++i) {
-		if (a == 0x0F && b == i) return cpuNameList[33];
-	}
-
-	if (a == 0x10) {
-		if (b == 0x02) return cpuNameList[34];
-		if (b == 0x04) return cpuNameList[34];
-		if (b == 0x05) return cpuNameList[34];
-		if (b == 0x06) return cpuNameList[34];
-		if (b == 0x08) return cpuNameList[34];
-		if (b == 0x09) return cpuNameList[34];
-		if (b == 0x0A) return cpuNameList[34];
-	}
-	
-
-	if (a == 0x11 && b == 0x03) return cpuNameList[33];
-
-	if (a == 0x12 && b == 0x01) return cpuNameList[34];
-
-	if (a == 0x14 && b == 0x01) return cpuNameList[35];
-	if (a == 0x14 && b == 0x02) return cpuNameList[35];
-
-	if (a == 0x15) {
-		if (b == 0x01) return cpuNameList[36];
-		if (b == 0x02) return cpuNameList[37];
-		if (b == 0x10) return cpuNameList[37];
-		if (b == 0x13) return cpuNameList[37];
-		if (b == 0x30) return cpuNameList[38];
-	}
-
-
-	if (a == 0x16 && b == 0x00) return cpuNameList[39];
-	if (a == 0x16 && b == 0x30) return cpuNameList[40];
-
-	return (char*) "CPU";
-}
-
-char* CPU::lookupIntelName(uint8_t a, uint8_t b)
-{
-	if (a == 0x04) {
-		if (b == 0x00) return cpuNameList[0];
-		if (b == 0x01) return cpuNameList[0];
-		if (b == 0x02) return cpuNameList[1];
-		if (b == 0x03) return cpuNameList[2];
-		if (b == 0x04) return cpuNameList[3];
-		if (b == 0x05) return cpuNameList[4];
-		if (b == 0x07) return cpuNameList[2];
-		if (b == 0x08) return cpuNameList[5];
-		if (b == 0x09) return cpuNameList[5];
-	}
-	
-	if (a == 0x05) {
-		if (b == 0x01) return cpuNameList[6];
-		if (b == 0x02) return cpuNameList[6];
-		if (b == 0x03) return cpuNameList[6];
-		if (b == 0x04) return cpuNameList[7];
-		if (b == 0x07) return cpuNameList[6];
-		if (b == 0x08) return cpuNameList[7];
-		if (b == 0x09) return cpuNameList[8];
-	}
-
-	if (a == 0x06) {
-		if (b == 0x01) return cpuNameList[9];
-		if (b == 0x03) return cpuNameList[10];
-		if (b == 0x05) return cpuNameList[10];
-		if (b == 0x06) return cpuNameList[10];
-		if (b == 0x07) return cpuNameList[11];
-		if (b == 0x08) return cpuNameList[11];
-		if (b == 0x09) return cpuNameList[12];
-		if (b == 0x0A) return cpuNameList[11];
-		if (b == 0x0B) return cpuNameList[11];
-		if (b == 0x0D) return cpuNameList[12];
-		if (b == 0x0E) return cpuNameList[13];
-		if (b == 0x0F) return cpuNameList[14];
-		if (b == 0x15) return cpuNameList[12];
-		if (b == 0x16) return cpuNameList[14];
-		if (b == 0x17) return cpuNameList[14];
-		if (b == 0x1A) return cpuNameList[15];
-		if (b == 0x1C) return cpuNameList[16];
-		if (b == 0x1D) return cpuNameList[14];
-		if (b == 0x25) return cpuNameList[17];
-		if (b == 0x26) return cpuNameList[16];
-		if (b == 0x27) return cpuNameList[16];
-		if (b == 0x2A) return cpuNameList[18];
-		if (b == 0x2C) return cpuNameList[17];
-		if (b == 0x2D) return cpuNameList[18];
-		if (b == 0x2E) return cpuNameList[15];
-		if (b == 0x2F) return cpuNameList[17];
-		if (b == 0x35) return cpuNameList[16];
-		if (b == 0x36) return cpuNameList[16];
-		if (b == 0x37) return cpuNameList[19];
-		if (b == 0x3A) return cpuNameList[20];
-		if (b == 0x3C) return cpuNameList[21];
-		if (b == 0x3D) return cpuNameList[22];
-		if (b == 0x3E) return cpuNameList[20];
-		if (b == 0x3F) return cpuNameList[21];
-		if (b == 0x45) return cpuNameList[21];
-		if (b == 0x46) return cpuNameList[21];
-		if (b == 0x4A) return cpuNameList[19];
-		if (b == 0x4D) return cpuNameList[19];
-	}
-
-	if (a == 0x0B && b == 0x01) return cpuNameList[23];
-
-	if (a == 0x0F && b == 0x00) return cpuNameList[24];
-	if (a == 0x0F && b == 0x01) return cpuNameList[24];
-	if (a == 0x0F && b == 0x02) return cpuNameList[24];
-	if (a == 0x0F && b == 0x03) return cpuNameList[25];
-	if (a == 0x0F && b == 0x04) return cpuNameList[25];
-	if (a == 0x0F && b == 0x06) return cpuNameList[25];
-
-	return (char*) "CPU";
-}
-
 
 void CPU::AMD_K6_writeback(int family, int model, int stepping)
 {
@@ -357,25 +163,18 @@ int CPU::open(int num, int b, void* vas_)
 {
 	cpuNum = num;
 
-	Krnl::setBootMessage("Setting up GDT...");
 	gdt.setup();
-	Krnl::setBootMessage("Setting up TSS...");
 	tss.setup(0xDEADBEEF);
-	Krnl::setBootMessage("Setting up TSS 2...");
 	tss.flush();
-	Krnl::setBootMessage("Setting up IDT...");
 	idt.setup();
-	Krnl::setBootMessage("Setting up debug registers...");
 	writeDR7(0x400);
 
-	Krnl::setBootMessage("Setting up CPU specific paging...");
 	cpuSpecificData = (CPUSpecificData*) VIRT_CPU_SPECIFIC;
 
 	cpuSpecificPhysAddr = (CPUSpecificData*) Phys::allocatePage();
 	cpuSpecificPhysAddr->cpuNumber = num;
 	cpuSpecificPhysAddr->cpuPointer = this;
 
-	Krnl::setBootMessage("Still setting up CPU specific paging...");
 	VAS* vas = (VAS*) vas_;
 	vas->setCPUSpecific((size_t) cpuSpecificPhysAddr);
 	
@@ -401,7 +200,7 @@ int CPU::open(int num, int b, void* vas_)
 
 void CPU::displayFeatures()
 {
-	kprintf("CPU %d Features\n", cpuNum);
+	/*kprintf("CPU %d Features\n", cpuNum);
 	kprintf("    Vendor : %s\n", vendorIDString);
 	kprintf("    Family : %d\n", familyID);
 	kprintf("    Model  : %d\n", model);
@@ -421,7 +220,7 @@ void CPU::displayFeatures()
 	kprintf("    Sysenter     - %s\n", features.hasSysenter ? "Yes" : "No");
 	kprintf("    Syscall      - %s\n", features.hasSyscall ? "Yes" : "No");
 	kprintf("    TPAUSE       - %s\n", features.hasTPAUSE ? "Yes" : "No");
-	kprintf("    onboardFPU   - %s\n", features.onboardFPU ? "Yes" : "No");
+	kprintf("    onboardFPU   - %s\n", features.onboardFPU ? "Yes" : "No");*/
 }
 
 extern "C" size_t is486();
@@ -522,7 +321,7 @@ void CPU::detectFeatures()
 		}
 
 		if (vendor == CPUVendor::Intel) {
-			char n[32];
+			/*char n[32];
 			strcpy(n, "Intel ");
 			strcat(n, lookupIntelName(familyID, model));
 			setName(n);
@@ -531,10 +330,10 @@ void CPU::detectFeatures()
 				//the Pentium Pro has some dodgy CPUID bits
 				features.hasSyscall = false;
 				features.hasSysenter = false;
-			}
+			}*/
 
 		} else if (vendor == CPUVendor::AMD) {
-			char n[32];
+			/*char n[32];
 			strcpy(n, "AMD ");
 			strcat(n, lookupAMDName(familyID, model));
 			setName(n);
@@ -550,10 +349,10 @@ void CPU::detectFeatures()
 			//K6 optimisations
 			if (familyID == 5) {
 				AMD_K6_writeback(familyID, model, steppingID);
-			}
+			}*/
 
 		} else if (vendor == CPUVendor::Centaur || vendor == CPUVendor::VIA || vendor == CPUVendor::Cyrix) {
-			if (familyID == 5) {
+			/*if (familyID == 5) {
 				if (model == 4) setName("Centaur WinChip C6");
 				else if (model == 8) setName("Centaur WinChip 2");
 				else if (model == 9) setName("Centaur WinChip 3");
@@ -592,9 +391,9 @@ void CPU::detectFeatures()
 				if (vendor == CPUVendor::Centaur) setName("Centaur CPU");
 				else if (vendor == CPUVendor::VIA) setName("VIA CPU");
 				else if (vendor == CPUVendor::Cyrix) setName("Cyrix CPU");
-			}
+			}*/
 
-		} else if (vendor == CPUVendor::Nexgen) {
+		}/* else if (vendor == CPUVendor::Nexgen) {
 			setName("Nexgen CPU");
 
 		} else if (vendor == CPUVendor::NSC) {
@@ -617,8 +416,8 @@ void CPU::detectFeatures()
 
 		} else if (vendor == CPUVendor::VirtualMachine) {
 			setName("Virtual Machine CPU");
-
-		} else {
+			
+		}*/ else {
 			setName("Unknown CPU");
 
 		}
@@ -630,7 +429,7 @@ void CPU::detectFeatures()
 		vendor = CPUVendor::Intel;
 
 		if (is486()) {
-			setName("Intel i486");
+			//setName("Intel i486");
 			features.hasINVLPG = 1;
 			features.hasINVD = 1;
 			features.hasWBINVD = 1;
@@ -644,7 +443,7 @@ void CPU::detectFeatures()
 			}
 
 		} else {
-			setName("Intel i386");
+			//setName("Intel i386");
 			features.hasINVLPG = 0;
 			features.hasINVD = 0;
 			features.hasWBINVD = 0;
