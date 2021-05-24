@@ -130,7 +130,7 @@ int installIRQHandler(int num, void (*handler)(regs*, void*), bool legacy, void*
 void uninstallISRHandler(int num, void (*handler)(regs*, void*))
 {
 	for (int i = 0; i < 4; ++i) {
-		if (handler == handlers[num][i]) {
+		if (handler == INT_handlers[num][i]) {
 			INT_handlers[num][i] = nullptr;
 			INT_contexts[num][i] = nullptr;
 		}
