@@ -1,4 +1,5 @@
 #include "arch/i386/hal.hpp"
+#include "arch/i386/pic.hpp"
 #include <hw/cpu.hpp>
 #include "vm86/x87em.hpp"
 #include <krnl/panic.hpp>
@@ -206,7 +207,15 @@ namespace Hal
 		return 0;
 	}
 
-	void endOfInterrupt();
+	bool apic = false;
+	void endOfInterrupt(int irqNum)
+	{
+		if (apic) {
+
+		} else {
+			picEOI(irqNum);
+		}
+	}
 
 	void restart();
 	void shutdown();

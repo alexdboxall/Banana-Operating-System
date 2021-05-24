@@ -2,6 +2,8 @@
 #include "krnl/hal.hpp"
 #include "core/main.hpp"
 #include "hal/intctrl.hpp"
+#include "krnl/hal.hpp"
+
 #pragma GCC optimize ("O0")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
@@ -110,29 +112,7 @@ void PIC::remap()
 
 void PIC::eoi(uint8_t irqNum)
 {
-	if (irqNum == 7) {
-		uint16_t isr = getIRQReg(PIC_READ_ISR);
-		if (!(isr & (1 << 7))) {
-			//spurious IRQ
-			return;
-		}
-	}
-
-	if (irqNum == 15) {
-		uint16_t isr = getIRQReg(PIC_READ_ISR);
-		if (!(isr & (1 << 15))) {
-			//spurious, master still needs to know about it though
-			outb(PIC1_COMMAND, PIC_EOI);
-			return;
-		}
-	}
-
-	//acknowledge interrupt
-	if (irqNum >= 8) {
-		outb(PIC2_COMMAND, PIC_EOI);
-	}
-
-	outb(PIC1_COMMAND, PIC_EOI);
+	Hal::endOfInterrupt(irqNum);
 }
 
 int PIC::open(int, int, void*)
