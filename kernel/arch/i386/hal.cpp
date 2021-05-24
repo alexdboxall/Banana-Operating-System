@@ -73,7 +73,7 @@ void x87EmulHandler(regs* r, void* context)
 	kprintf("x87EmulHandler\n");
 
 	if (currentTaskTCB->vm86Task) {
-		goto bad;
+		panic("VM86 CANNOT USE FPU");
 	}
 
 	size_t cr0 = CPU::readCR0();
@@ -104,14 +104,11 @@ void x87EmulHandler(regs* r, void* context)
 		return;
 	}
 
-	bool handled = Vm::x87Handler(r);
-	if (handled) {
+	if (Vm::x87Handler(r)) {
 		return;
 	}
 
-bad:
 	kprintf("Device not available\n");
-
 	Thr::terminateFromIRQ();
 }
 
