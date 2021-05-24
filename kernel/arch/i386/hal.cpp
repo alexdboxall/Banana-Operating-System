@@ -79,24 +79,19 @@ void x87EmulHandler(regs* r, void* context)
 	size_t cr0 = CPU::readCR0();
 
 	if (cr0 & 8) {
-		kprintf("clts\n");
-
 		//clear task switched
 		asm volatile ("clts");
 
 		//save previous state
 		if (fpuOwner) {
-			kprintf("saving FPU state.\n");
 			i386SaveCoprocessor(fpuOwner->fpuState);
 		}
 
 		//check if never had state before, otherwise load state
 		if (currentTaskTCB->fpuState == nullptr) {
-			kprintf("allocing FPU state.\n");
 			currentTaskTCB->fpuState = malloc(512 + 64);
 
 		} else {
-			kprintf("loading FPU state.\n");
 			i386LoadCoprocessor(fpuOwner->fpuState);
 		}
 
