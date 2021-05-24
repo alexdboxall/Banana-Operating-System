@@ -72,7 +72,7 @@ LDFLAGS32 = -lkgcc -lsoftfp -L$(SOURCEDIR) -L$(SOURCEDIR)/libk -lm32 -ffreestand
 
 COBJECTS32 = $(patsubst %.c, %.32, $(wildcard *.c) $(wildcard */*.c) $(wildcard */*/*.c) $(wildcard */*/*/*.c) $(wildcard **/*.c))
 CXXOBJECTS32 = $(patsubst %.cpp, %.32, $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp) $(wildcard */*/*/*.cpp) $(wildcard **/*.cpp))
-ASMOBJECTS32 = $(patsubst %.s, %.32, $(wildcard hw/*/x86/*.s) $(wildcard hw/*/x86/*/*.s) $(wildcard hw/*/*/x86/*.s)) $(wildcard hw/*/*/x86/*/*.s)
+ASMOBJECTS32 = $(patsubst %.s, %.32, $(wildcard arch/*.s) $(wildcard arch/*/*.s) $(wildcard arch/*/*/*.s)) $(wildcard arch/*/*/*/*.s)
 
 OBJECTS32 = $(COBJECTS32) $(CXXOBJECTS32) $(ASMOBJECTS32)
 
