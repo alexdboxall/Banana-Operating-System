@@ -19,36 +19,6 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-namespace Krnl
-{
-	ThreadControlBlock* fpuOwner = nullptr;
-
-	char exceptionNames[][32] = {
-		"Division by zero error",
-		"Debug",
-		"Non-maskable interrupt",
-		"Breakpoint",
-		"Overflow",
-		"Bound range exceeded",
-		"Invalid opcode",
-		"Device not available",
-		"Dobule fault",
-		"Coprocessor segment",
-		"Invalid TSS",
-		"Segment not present",
-		"Stack segment fault",
-		"General protection fault",
-		"Page fault",
-		"Reserved",
-		"Floating point exception",
-		"Alignment check",
-		"Machine check",
-		"SIMD floating-point exception",
-		"Virtualisation exception",
-	};
-}
-
-
 #define likely(x)       __builtin_expect(!!(x), 1)
 #define unlikely(x)     __builtin_expect(!!(x), 0)
 
@@ -193,7 +163,6 @@ InterruptController::~InterruptController()
 {
 	//should have a virtual destructor
 }
-
 
 int InterruptController::convertLegacyIRQNumber(int num)
 {

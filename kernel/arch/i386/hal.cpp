@@ -5,8 +5,19 @@
 #include <krnl/panic.hpp>
 #include <thr/prcssthr.hpp>
 
+#include "core/common.hpp"
+#include "krnl/panic.hpp"
+#include "sys/syscalls.hpp"
+#include "thr/prcssthr.hpp"
+#include "thr/elf.hpp"
+#include "hal/intctrl.hpp"
 #include "hw/intctrl/pic.hpp"
 #include "hw/intctrl/apic.hpp"
+#include "hal/device.hpp"
+#include "hw/acpi.hpp"
+#include "krnl/hal.hpp"
+#include "hw/cpu.hpp"
+#include "vm86/vm8086.hpp"
 
 #define ISR_DIV_BY_ZERO 0x00
 #define ISR_DEBUG 0x01
@@ -33,6 +44,34 @@
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wframe-address"
+
+
+namespace Krnl
+{
+	char exceptionNames[][32] = {
+		"Division by zero error",
+		"Debug",
+		"Non-maskable interrupt",
+		"Breakpoint",
+		"Overflow",
+		"Bound range exceeded",
+		"Invalid opcode",
+		"Device not available",
+		"Dobule fault",
+		"Coprocessor segment",
+		"Invalid TSS",
+		"Segment not present",
+		"Stack segment fault",
+		"General protection fault",
+		"Page fault",
+		"Reserved",
+		"Floating point exception",
+		"Alignment check",
+		"Machine check",
+		"SIMD floating-point exception",
+		"Virtualisation exception",
+	};
+}
 
 void displayDebugInfo(regs* r)
 {
