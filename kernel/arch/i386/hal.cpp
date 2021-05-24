@@ -153,11 +153,6 @@ namespace Hal
 		Krnl::panic(message);
 	}
 
-	void* allocateCoprocessorState()
-	{
-		return malloc(512 + 64);
-	}
-
 	uint64_t noTSC()
 	{
 		return 0;
