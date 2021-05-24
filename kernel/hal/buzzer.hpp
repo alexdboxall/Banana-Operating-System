@@ -6,24 +6,9 @@
 #include <stddef.h>
 #include "hal/device.hpp"
 
-class Buzzer : public Device
-{
-private:
-
-protected:
-
-public:
-	int timeToSleepInThread = 0;
-
-	Buzzer(const char* name);
-	virtual ~Buzzer();
-
+namespace Krnl {
 	void beep(int hertz, int millisecs, bool blocking = true);
 	void stop();
-
-	virtual void start(int hertz) = 0;
-};
-
-extern Buzzer* systemBuzzer;
+}
 
 #endif

@@ -2,6 +2,7 @@
 #include "hal/device.hpp"
 #include "hal/buzzer.hpp"
 #include "thr/prcssthr.hpp"
+#include "krnl/hal.hpp"
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -10,42 +11,39 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-Buzzer* systemBuzzer = nullptr;
-
-Buzzer::Buzzer(const char* name) : Device(name)
-{
-	deviceType = DeviceType::Buzzer;
-}
-
-Buzzer::~Buzzer()
-{
-
-}
-
 void beepThread(void* v)
 {
 	unlockScheduler();
+
+	uint32_t a = (uint32_t) v;
+
+	int hertz = a & 0xFFFF;
+	int milli = a >> 16;
 	
-	Buzzer* buzzer = (Buzzer*) v;
-	milliTenthSleep(buzzer->timeToSleepInThread * 10);
-	buzzer->stop();
+	Hal::makeBeep(hertz);
+	milliTenthSleep(milli * 10);
+	Hal::stopBeep();
 
 	blockTask(TaskState::Terminated);
 }
 
-void Buzzer::beep(int hertz, int millisecs, bool blocking)
+namespace Krnl
 {
-	start(hertz);
-	if (blocking) {
-		milliTenthSleep(10 * millisecs);
-		stop();
-	} else {
-		timeToSleepInThread = millisecs;
-		kernelProcess->createThread(beepThread, this, 230);
+	void beep(int hertz, int millisecs, bool blocking)
+	{
+		start(hertz);
+		if (blocking) {
+			milliTenthSleep(10 * millisecs);
+			stop();
+		} else {
+			uint32_t a = hertz;
+			a |= millisecs << 16;
+			kernelProcess->createThread(beepThread, a, 230);
+		}
 	}
-}
 
-void Buzzer::stop()
-{
-	start(0);
+	void stop()
+	{
+		start(0);
+	}
 }
