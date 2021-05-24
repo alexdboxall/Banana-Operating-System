@@ -385,6 +385,9 @@ int CPU::open(int num, int b, void* vas_)
 
 	Krnl::setBootMessage("Configuring interrupt controller...");
 	intCtrl = setupInterruptController();
+
+	Hal::initialise();
+
 	Krnl::setBootMessage("Setting up system timer...");
 	timer = setupTimer(sysBootSettings & 16 ? 30 : 100);
 
