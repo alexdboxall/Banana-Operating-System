@@ -4,6 +4,7 @@
 #include "libk/string.h"
 #include "hw/cpu.hpp"
 #include "core/kheap.hpp"
+#include "krnl/hal.hpp"
 #include "core/physmgr.hpp"
 #include "thr/elf.hpp"
 
