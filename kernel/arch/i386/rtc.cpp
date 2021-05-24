@@ -1,4 +1,4 @@
-#include "rtc.hpp"
+#include "arch/i386/rtc.hpp"
 #include "core/computer.hpp"
 #include "thr/prcssthr.hpp"
 #include "core/common.hpp"

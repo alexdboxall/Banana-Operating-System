@@ -1,5 +1,7 @@
 #include "arch/i386/hal.hpp"
 #include "arch/i386/pic.hpp"
+#include "arch/i386/rtc.hpp"
+
 #include <hw/cpu.hpp>
 #include "vm86/x87em.hpp"
 #include <krnl/panic.hpp>
@@ -554,6 +556,22 @@ namespace Hal
 #pragma GCC diagnostic ignored "-Wcast-function-type"
 		installISRHandler(96, reinterpret_cast<void(*)(regs*, void*)>(Sys::systemCall));
 #pragma GCC diagnostic pop
+
+
+
+
+		computer->clock = nullptr;
+
+		if (computer->clock == nullptr) {
+			Krnl::setBootMessage("Starting RTC driver...");
+
+			RTC* rtc = new RTC();
+			rtc->detectionType = DetectionType::ISAProbe;
+			parent->addChild(rtc);
+			rtc->open(0, 0, nullptr);
+
+			computer->clock = rtc;
+		}
 	}
 
 	void makeBeep(int hertz)
