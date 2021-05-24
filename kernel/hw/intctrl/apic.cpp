@@ -42,11 +42,6 @@ void APIC::io_wait()
 				  "2:");
 }
 
-void APIC::disable()
-{
-
-}
-
 int APIC::installIRQHandler(int num, void (*handler)(regs*, void*), bool legacy, void* context)
 {
 	
@@ -103,7 +98,6 @@ int APIC::open(int, int, void*)
 
 int APIC::close(int, int, void*)
 {
-	disable();
 	return 0;
 }
 

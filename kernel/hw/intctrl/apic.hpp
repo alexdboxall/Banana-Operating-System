@@ -50,12 +50,9 @@ protected:
 	void io_wait();
 
 public:
-	int installIRQHandler(int num, void (*handler)(regs*, void*), bool legacy, void* context = 0) override;
-
 	uint32_t getBase();
 
 	APIC();
-	void disable() override;
 
 	int open(int, int, void*);
 	int close(int, int, void*);

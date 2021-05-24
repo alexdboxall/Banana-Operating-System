@@ -17,7 +17,6 @@ public:
 
 	uint16_t getIRQReg(int ocw3);
 	void remap();
-	void disable() override;
 
 	int open(int, int, void*);
 	int close(int, int, void*);
