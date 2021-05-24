@@ -210,6 +210,8 @@ namespace Hal
 		return 0;
 	}
 
+#define IA32_APIC_BASE_MSR 0x1B
+
 	void endOfInterrupt(int irqNum)
 	{
 		if (apic) {
