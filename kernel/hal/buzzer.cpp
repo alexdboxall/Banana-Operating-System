@@ -35,9 +35,4 @@ namespace Krnl
 			kernelProcess->createThread(beepThread, millisecs, 230);
 		}
 	}
-
-	void stop()
-	{
-		start(0);
-	}
 }

@@ -8,7 +8,6 @@
 
 namespace Krnl {
 	void beep(int hertz, int millisecs, bool blocking = true);
-	void stop();
 }
 
 #endif
