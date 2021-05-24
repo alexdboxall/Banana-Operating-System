@@ -5,6 +5,9 @@
 #include <krnl/panic.hpp>
 #include <thr/prcssthr.hpp>
 
+#include "hw/intctrl/pic.hpp"
+#include "hw/intctrl/apic.hpp"
+
 #define ISR_DIV_BY_ZERO 0x00
 #define ISR_DEBUG 0x01
 #define ISR_NMI 0x02
@@ -27,6 +30,285 @@
 #define ISR_SIMD_EXCEPTION 0x13
 #define ISR_VIRTULIZATION_EXCEPTION 0x14
 #define ISR_SECURITY_EXCEPTION 0x1E
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wframe-address"
+
+void displayDebugInfo(regs* r)
+{
+	size_t cr0;
+	asm volatile ("mov %%cr0, %0" : "=r"(cr0));
+	size_t cr2;
+	asm volatile ("mov %%cr2, %0" : "=r"(cr2));
+	size_t cr3;
+	asm volatile ("mov %%cr3, %0" : "=r"(cr3));
+	size_t cr4;
+	asm volatile ("mov %%cr4, %0" : "=r"(cr4));
+
+	kprintf("EAX: 0x%X\n", r->eax);
+	kprintf("EBX: 0x%X\n", r->ebx);
+	kprintf("ECX: 0x%X\n", r->ecx);
+	kprintf("EDX: 0x%X\n", r->edx);
+	kprintf("ESI: 0x%X\n", r->esi);
+	kprintf("EDI: 0x%X\n", r->edi);
+	kprintf("ESP: 0x%X\n", r->esp);
+	kprintf("EBP: 0x%X\n", r->ebp);
+	kprintf("USERESP: 0x%X\n", r->useresp);
+	kprintf("EIP: 0x%X\n", r->eip);
+	kprintf("ERR: 0x%X\n", r->err_code);
+
+	kprintf("CR2: 0x%X\n", (uint32_t) cr2);
+	kprintf("CR3: 0x%X\n", cr3);
+
+	setActiveTerminal(kernelProcess->terminal);
+
+	kernelProcess->terminal->puts(Krnl::exceptionNames[r->int_no]);
+	kernelProcess->terminal->puts("\n TASK: ");
+	kernelProcess->terminal->puts(currentTaskTCB->processRelatedTo->taskname);
+	kernelProcess->terminal->puts("\n EIP: ");
+	kernelProcess->terminal->putx(r->eip);
+	kernelProcess->terminal->puts("\n ESP: ");
+	kernelProcess->terminal->putx(r->esp);
+	kernelProcess->terminal->puts("\nUESP: ");
+	kernelProcess->terminal->putx(r->useresp);
+	kernelProcess->terminal->puts("\n  CS: ");
+	kernelProcess->terminal->putx(r->cs);
+	kernelProcess->terminal->puts("\n ERR: ");
+	kernelProcess->terminal->putx((uint32_t) r->err_code);
+	kernelProcess->terminal->puts("\n EFL: ");
+	kernelProcess->terminal->putx((uint32_t) r->eflags);
+	kernelProcess->terminal->puts("\n\n CR0: ");
+	kernelProcess->terminal->putx((uint32_t) cr0);
+	kernelProcess->terminal->puts("\n CR2: ");
+	kernelProcess->terminal->putx((uint32_t) cr2);
+	kernelProcess->terminal->puts("\n CR3: ");
+	kernelProcess->terminal->putx((uint32_t) cr3);
+	kernelProcess->terminal->puts("\n CR4: ");
+	kernelProcess->terminal->putx((uint32_t) cr4);
+
+	kernelProcess->terminal->puts("\n\n DR0: ");
+	kernelProcess->terminal->putx((uint32_t) CPU::readDR0());
+	kernelProcess->terminal->puts("\n DR1: ");
+	kernelProcess->terminal->putx((uint32_t) CPU::readDR1());
+	kernelProcess->terminal->puts("\n DR2: ");
+	kernelProcess->terminal->putx((uint32_t) CPU::readDR2());
+	kernelProcess->terminal->puts("\n DR3: ");
+	kernelProcess->terminal->putx((uint32_t) CPU::readDR3());
+	kernelProcess->terminal->puts("\n DR6: ");
+	kernelProcess->terminal->putx((uint32_t) CPU::readDR6());
+	kernelProcess->terminal->puts("\n DR7: ");
+	kernelProcess->terminal->putx((uint32_t) CPU::readDR7());
+
+	char* drvName = Thr::getDriverNameFromAddress((size_t) r->eip);
+	if (drvName) {
+		kprintf("\n DRIVER: %s\n", drvName);
+		kernelProcess->terminal->puts("\n\n DRIVER: ");
+		kernelProcess->terminal->puts(drvName);
+		kernelProcess->terminal->puts("\n\n OFFSET: ");
+		kernelProcess->terminal->putx((uint32_t) Thr::getDriverOffsetFromAddress((size_t) r->eip));
+		kprintf("\n OFFSET: 0x%X\n", drvName);
+	}
+
+	asm("cli;hlt;");
+	while (1);
+
+	kprintf("'0x%X'\n", __builtin_return_address(1));
+	kprintf("'0x%X'\n", __builtin_return_address(2));
+	kprintf("'0x%X'\n", __builtin_return_address(3));
+
+	kernelProcess->terminal->puts("\n 1: ");
+	kernelProcess->terminal->putx((uint32_t) __builtin_return_address(1));
+	kernelProcess->terminal->puts("\n 2: ");
+	kernelProcess->terminal->putx((uint32_t) __builtin_return_address(2));
+	kernelProcess->terminal->puts("\n 3: ");
+	kernelProcess->terminal->putx((uint32_t) __builtin_return_address(3));
+}
+
+void displayProgramFault(const char* text)
+{
+	if (currentTaskTCB->processRelatedTo->terminal) {
+		currentTaskTCB->processRelatedTo->terminal->puts(text, VgaColour::White, VgaColour::Maroon);
+	}
+}
+
+bool (*gpFaultIntercept)(regs* r) = nullptr;
+
+void gpFault(regs* r, void* context)
+{
+	gpFaultIntercept = Vm::faultHandler;
+	if (gpFaultIntercept) {
+		bool handled = gpFaultIntercept(r);
+		if (handled) {
+			return;
+		}
+	}
+
+	kprintf("General Protection Fault!\n");
+
+	displayDebugInfo(r);
+	displayProgramFault("General protection fault");
+
+	Thr::terminateFromIRQ();
+}
+
+void pgFault(regs* r, void* context)
+{
+	kprintf("pgFault. EIP = 0x%X\n", r->eip);
+	if (currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2())) {
+		return;
+	}
+
+	kprintf("Page Fault!\n");
+
+	displayDebugInfo(r);
+	displayProgramFault("Page fault");
+
+	Thr::terminateFromIRQ();
+}
+
+void nmiHandler(regs* r, void* context)
+{
+	computer->handleNMI();
+}
+
+void otherISRHandler(regs* r, void* context)
+{
+	kprintf("UNHANDLED EXCEPTION 0x%X/%d\n", r->int_no, r->int_no);
+
+	displayDebugInfo(r);
+	displayProgramFault("Unhandled exception - CHECK KERNEL LOGS");
+
+	Thr::terminateFromIRQ();
+}
+
+#pragma GCC diagnostic push
+#pragma GCC optimize ("O0")
+
+
+void opcodeFault(regs* r, void* context)
+{
+	kprintf("OPFAULT 0x%X\n", r->eip);
+
+	if (CPU::current()->opcodeDetectionMode) {
+		kprintf("Opcode detection: invalid opcode.\n");
+		r->eip += 25;
+		return;
+	}
+
+	//emulate instructions added to the 486 and Pentium
+
+	uint8_t* eip = (uint8_t*) r->eip;
+
+	//lock prefix
+	bool hasNonLockPrefix = false;
+
+	size_t originalEIP = r->eip;
+
+	if (eip[0] == 0xF0) {
+		eip++;
+		r->eip++;
+
+	} else if (eip[0] == 0xF2 || eip[0] == 0xF3) {
+		hasNonLockPrefix = true;
+		eip++;
+		r->eip++;
+
+	} else if (eip[0] == 0x66) {						//operand size
+		hasNonLockPrefix = true;
+		eip++;
+		r->eip++;
+
+	} else if (eip[0] == 0x67) {						//address size
+		hasNonLockPrefix = true;
+		eip++;
+		r->eip++;
+
+	} else if (eip[0] == 0x2E || eip[0] == 0x3E) {		//branch prediction, CS/DS override
+		hasNonLockPrefix = true;
+		eip++;
+		r->eip++;
+
+	} else if (eip[0] == 0x36 || eip[0] == 0x26 || \
+			   eip[0] == 0x64 || eip[0] == 0x65) {		//segment overrides
+		hasNonLockPrefix = true;
+		eip++;
+		r->eip++;
+	}
+
+	//CMPXHG8B	introduced with Pentium
+	if (eip[0] == 0x0F && eip[1] == 0xC7) {
+		eip++;			//CPU::decodeAddress only allows one byte before the MOD/RM byte
+		r->eip++;		//ditto
+
+		int instrLen;
+		bool regOnly;
+		uint8_t middleDigit;
+
+		//get the memory address
+		uint64_t* ptr = (uint64_t*) CPU::decodeAddress(r, &instrLen, &regOnly, &middleDigit);
+
+		if (!regOnly && middleDigit == 1 && !hasNonLockPrefix) {
+			//get the pseudo-64 bit regs
+			uint64_t edxeax = r->edx;
+			edxeax <<= 32;
+			edxeax |= (uint64_t) r->eax;
+
+			uint64_t ecxebx = r->ecx;
+			ecxebx <<= 32;
+			ecxebx |= (uint64_t) r->ebx;
+
+			lockScheduler();
+			if (*ptr == edxeax) {
+				//if equal, load ECX:EBX to memory
+				*ptr = ecxebx;
+
+				//set the zero flag
+				r->eflags |= 0x0040;
+
+			} else {
+				//otherwise, load memory to EDX:EAX
+				edxeax = *ptr;
+				r->eax = (edxeax & 0xFFFFFFFFU);
+				r->edx = edxeax >> 32;
+
+				//clear the zero flag
+				r->eflags &= ~0x0040;
+			}
+			unlockScheduler();
+
+			//change EIP
+			r->eip += instrLen;
+
+			kprintf("Handled CMPXCHG8B\n");
+			//don't terminate the program
+			return;
+
+		} else {
+			//you're not allowed register encodings,
+			//in fact, this is what caused the F00F bug on early Pentiums!
+
+			//and the middle digit needs to be 1 for this instruction
+		}
+	}
+
+	kprintf("Invalid Opcode!\n");
+	kprintf("OPCODE vm86: 0x%X (then 0x%X %X %X)\n", *((uint8_t*) (0 + r->eip + r->cs * 16)), *((uint8_t*) (1 + r->eip + r->cs * 16)), *((uint8_t*) (2 + r->eip + r->cs * 16)), *((uint8_t*) (3 + r->eip + r->cs * 16)));
+	kprintf("OPCODE i386: 0x%X (then 0x%X %X %X)\n", *((uint8_t*) (0 + r->eip)), *((uint8_t*) (1 + r->eip)), *((uint8_t*) (2 + r->eip)), *((uint8_t*) (3 + r->eip)));
+
+	displayDebugInfo(r);
+	displayProgramFault("Opcode fault");
+
+	Thr::terminateFromIRQ();
+}
+#pragma GCC diagnostic pop
+
+#pragma GCC diagnostic pop
+
+void doubleFault(regs* r, void* context)
+{
+	panic("DOUBLE FAULT");
+}
+
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
