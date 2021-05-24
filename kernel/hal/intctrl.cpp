@@ -49,30 +49,6 @@ namespace Krnl
 }
 
 
-
-#define ISR_DIV_BY_ZERO 0x00
-#define ISR_DEBUG 0x01
-#define ISR_NMI 0x02
-#define ISR_BREAKPOINT 0x03
-#define ISR_OVERFLOW 0x04
-#define ISR_BOUNDS 0x05
-#define ISR_INVALID_OPCODE 0x06
-#define ISR_DEVICE_NOT_AVAILABLE 0x07
-#define ISR_DOUBLE_FAULT 0x08
-#define ISR_COPROCESSOR_SEGMENT_OVERRUN 0x09
-#define ISR_INVALID_TSS 0x0A
-#define ISR_SEGMENT_NOT_PRESENT 0x0B
-#define ISR_STACK_SEGMENT 0x0C
-#define ISR_GENERAL_PROTECTION 0x0D
-#define ISR_PAGE_FAULT 0x0E
-#define ISR_RESERVED 0x0F
-#define ISR_FPU_EXCEPTION 0x10
-#define ISR_ALIGNMENT_CHECK 0x11
-#define ISR_MACHINE_CHECK 0x12
-#define ISR_SIMD_EXCEPTION 0x13
-#define ISR_VIRTULIZATION_EXCEPTION 0x14
-#define ISR_SECURITY_EXCEPTION 0x1E
-
 #define likely(x)       __builtin_expect(!!(x), 1)
 #define unlikely(x)     __builtin_expect(!!(x), 0)
 
@@ -494,74 +470,6 @@ void opcodeFault(regs* r, void* context)
 void doubleFault(regs* r, void* context)
 {
 	panic("DOUBLE FAULT");
-}
-
-InterruptController* setupInterruptController()
-{
-	if (CPU::getNumber() != 0) {
-		//start an APIC
-		InterruptController* controller = new APIC();
-		controller->open(0, 0, nullptr);
-		computer->addChild(controller);
-
-		return controller;
-	}
-
-	//check if the APIC exists
-	if (ioapicDiscoveryNumber == 0) {
-		computer->features.hasAPIC = false;
-	}
-
-	bool hasAPIC = computer->features.hasAPIC;
-
-	//start a PIC (even if it is just so it gets disabled)
-	InterruptController* controller = new PIC();
-	controller->open(0, 0, nullptr);
-
-	if (hasAPIC) {
-		//disable the PIC
-		controller->close(0, 0, nullptr);
-
-		//delete the PIC
-		delete controller;
-
-		//start an APIC
-		controller = new APIC();
-		controller->open(0, 0, nullptr);
-	}
-
-	computer->addChild(controller);
-
-	Krnl::fpuOwner = nullptr;
-
-	controller->installISRHandler(ISR_DIV_BY_ZERO, otherISRHandler);
-	controller->installISRHandler(ISR_DEBUG, otherISRHandler);
-	controller->installISRHandler(ISR_NMI, nmiHandler);
-	controller->installISRHandler(ISR_BREAKPOINT, otherISRHandler);
-	controller->installISRHandler(ISR_OVERFLOW, otherISRHandler);
-	controller->installISRHandler(ISR_BOUNDS, otherISRHandler);
-	controller->installISRHandler(ISR_INVALID_OPCODE, opcodeFault);
-	controller->installISRHandler(ISR_DOUBLE_FAULT, doubleFault);
-	controller->installISRHandler(ISR_COPROCESSOR_SEGMENT_OVERRUN, otherISRHandler);
-	controller->installISRHandler(ISR_INVALID_TSS, otherISRHandler);
-	controller->installISRHandler(ISR_SEGMENT_NOT_PRESENT, otherISRHandler);
-	controller->installISRHandler(ISR_STACK_SEGMENT, otherISRHandler);
-	controller->installISRHandler(ISR_GENERAL_PROTECTION, gpFault);
-	controller->installISRHandler(ISR_PAGE_FAULT, pgFault);
-	controller->installISRHandler(ISR_RESERVED, otherISRHandler);
-	controller->installISRHandler(ISR_FPU_EXCEPTION, otherISRHandler);
-	controller->installISRHandler(ISR_ALIGNMENT_CHECK, otherISRHandler);
-	controller->installISRHandler(ISR_MACHINE_CHECK, otherISRHandler);
-	controller->installISRHandler(ISR_SIMD_EXCEPTION, otherISRHandler);
-	controller->installISRHandler(ISR_VIRTULIZATION_EXCEPTION, otherISRHandler);
-	controller->installISRHandler(ISR_SECURITY_EXCEPTION, otherISRHandler);
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wcast-function-type"
-	controller->installISRHandler(96, reinterpret_cast<void(*)(regs*, void*)>(Sys::systemCall));
-#pragma GCC diagnostic pop
-
-	return controller;
 }
 
 int InterruptController::convertLegacyIRQNumber(int num)

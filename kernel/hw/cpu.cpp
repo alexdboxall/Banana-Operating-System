@@ -383,9 +383,7 @@ int CPU::open(int num, int b, void* vas_)
 	//here so APIC can be disabled on dodgy K5 CPUs
 	detectFeatures();
 
-	Krnl::setBootMessage("Configuring interrupt controller...");
-	intCtrl = setupInterruptController();
-
+	Krnl::setBootMessage("Starting the HAL...");
 	Hal::initialise();
 
 	Krnl::setBootMessage("Setting up system timer...");
