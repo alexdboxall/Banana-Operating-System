@@ -505,7 +505,7 @@ namespace Hal
 		/*if (CPU::getNumber() != 0) {
 			//start an APIC
 			InterruptController* controller = new APIC();
-			controller->open(0, 0, nullptr);
+			open(0, 0, nullptr);
 			computer->addChild(controller);
 
 			return controller;
@@ -528,34 +528,32 @@ namespace Hal
 			apicOpen();
 		}
 
-		controller->installISRHandler(ISR_DIV_BY_ZERO, otherISRHandler);
-		controller->installISRHandler(ISR_DEBUG, otherISRHandler);
-		controller->installISRHandler(ISR_NMI, nmiHandler);
-		controller->installISRHandler(ISR_BREAKPOINT, otherISRHandler);
-		controller->installISRHandler(ISR_OVERFLOW, otherISRHandler);
-		controller->installISRHandler(ISR_BOUNDS, otherISRHandler);
-		controller->installISRHandler(ISR_INVALID_OPCODE, opcodeFault);
-		controller->installISRHandler(ISR_DOUBLE_FAULT, doubleFault);
-		controller->installISRHandler(ISR_COPROCESSOR_SEGMENT_OVERRUN, otherISRHandler);
-		controller->installISRHandler(ISR_INVALID_TSS, otherISRHandler);
-		controller->installISRHandler(ISR_SEGMENT_NOT_PRESENT, otherISRHandler);
-		controller->installISRHandler(ISR_STACK_SEGMENT, otherISRHandler);
-		controller->installISRHandler(ISR_GENERAL_PROTECTION, gpFault);
-		controller->installISRHandler(ISR_PAGE_FAULT, pgFault);
-		controller->installISRHandler(ISR_RESERVED, otherISRHandler);
-		controller->installISRHandler(ISR_FPU_EXCEPTION, otherISRHandler);
-		controller->installISRHandler(ISR_ALIGNMENT_CHECK, otherISRHandler);
-		controller->installISRHandler(ISR_MACHINE_CHECK, otherISRHandler);
-		controller->installISRHandler(ISR_SIMD_EXCEPTION, otherISRHandler);
-		controller->installISRHandler(ISR_VIRTULIZATION_EXCEPTION, otherISRHandler);
-		controller->installISRHandler(ISR_SECURITY_EXCEPTION, otherISRHandler);
+		installISRHandler(ISR_DIV_BY_ZERO, otherISRHandler);
+		installISRHandler(ISR_DEBUG, otherISRHandler);
+		installISRHandler(ISR_NMI, nmiHandler);
+		installISRHandler(ISR_BREAKPOINT, otherISRHandler);
+		installISRHandler(ISR_OVERFLOW, otherISRHandler);
+		installISRHandler(ISR_BOUNDS, otherISRHandler);
+		installISRHandler(ISR_INVALID_OPCODE, opcodeFault);
+		installISRHandler(ISR_DOUBLE_FAULT, doubleFault);
+		installISRHandler(ISR_COPROCESSOR_SEGMENT_OVERRUN, otherISRHandler);
+		installISRHandler(ISR_INVALID_TSS, otherISRHandler);
+		installISRHandler(ISR_SEGMENT_NOT_PRESENT, otherISRHandler);
+		installISRHandler(ISR_STACK_SEGMENT, otherISRHandler);
+		installISRHandler(ISR_GENERAL_PROTECTION, gpFault);
+		installISRHandler(ISR_PAGE_FAULT, pgFault);
+		installISRHandler(ISR_RESERVED, otherISRHandler);
+		installISRHandler(ISR_FPU_EXCEPTION, otherISRHandler);
+		installISRHandler(ISR_ALIGNMENT_CHECK, otherISRHandler);
+		installISRHandler(ISR_MACHINE_CHECK, otherISRHandler);
+		installISRHandler(ISR_SIMD_EXCEPTION, otherISRHandler);
+		installISRHandler(ISR_VIRTULIZATION_EXCEPTION, otherISRHandler);
+		installISRHandler(ISR_SECURITY_EXCEPTION, otherISRHandler);
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcast-function-type"
-		controller->installISRHandler(96, reinterpret_cast<void(*)(regs*, void*)>(Sys::systemCall));
+		installISRHandler(96, reinterpret_cast<void(*)(regs*, void*)>(Sys::systemCall));
 #pragma GCC diagnostic pop
-
-		computer->cpu[0]->intCtrl = controller;
 	}
 
 	void makeBeep(int hertz)
