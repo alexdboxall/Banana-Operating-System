@@ -15,13 +15,7 @@ void beepThread(void* v)
 {
 	unlockScheduler();
 
-	uint32_t a = (uint32_t) v;
-
-	int hertz = a & 0xFFFF;
-	int milli = a >> 16;
-	
-	Hal::makeBeep(hertz);
-	milliTenthSleep(milli * 10);
+	milliTenthSleep(((int) v) * 10);
 	Hal::stopBeep();
 
 	blockTask(TaskState::Terminated);
@@ -31,14 +25,14 @@ namespace Krnl
 {
 	void beep(int hertz, int millisecs, bool blocking)
 	{
-		start(hertz);
+		Hal::makeBeep(hertz);
+
 		if (blocking) {
 			milliTenthSleep(10 * millisecs);
-			stop();
+			Hal::stopBeep();
+
 		} else {
-			uint32_t a = hertz;
-			a |= millisecs << 16;
-			kernelProcess->createThread(beepThread, a, 230);
+			kernelProcess->createThread(beepThread, millisecs, 230);
 		}
 	}
 
