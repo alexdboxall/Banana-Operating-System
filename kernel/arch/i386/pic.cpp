@@ -22,8 +22,11 @@ uint16_t picGetIRQReg(int ocw3)
 	return (inb(PIC2_COMMAND) << 8) | inb(PIC1_COMMAND);
 }
 
-void picRemap()
+void picOpen()
 {
+	outb(PIC1_DATA, 0x00);
+	outb(PIC2_DATA, 0x00);
+
 	//remaps interrupts 0-15 to 32-47 to avoid conflicts
 
 	int offset1 = 32;		//first 8 IRQs start at 32 (to 39)

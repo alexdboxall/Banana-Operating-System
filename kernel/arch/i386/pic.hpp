@@ -26,7 +26,7 @@
 #define ICW4_BUF_MASTER	0x0C		/* Buffered mode/master */
 #define ICW4_SFNM		0x10		/* Special fully nested (not) */
 
-void picRemap();
+void picOpen();
 void picDisable();
 uint16_t picGetIRQReg(int ocw3);
 void picEOI(int irqNum);

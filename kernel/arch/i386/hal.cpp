@@ -518,21 +518,17 @@ namespace Hal
 		apic = computer->features.hasAPIC;
 
 		InterruptController* controller = new PIC();
-		controller->open(0, 0, nullptr);
+		
+		picOpen();
 
 		if (apic) {
-			//disable the PIC
-			controller->close(0, 0, nullptr);
+			picDisable();
 
-			//delete the PIC
 			delete controller;
 
-			//start an APIC
 			controller = new APIC();
 			controller->open(0, 0, nullptr);
 		}
-
-		computer->addChild(controller);
 
 		controller->installISRHandler(ISR_DIV_BY_ZERO, otherISRHandler);
 		controller->installISRHandler(ISR_DEBUG, otherISRHandler);
