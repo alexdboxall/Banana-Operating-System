@@ -4,6 +4,29 @@
 #include <krnl/panic.hpp>
 #include <thr/prcssthr.hpp>
 
+#define ISR_DIV_BY_ZERO 0x00
+#define ISR_DEBUG 0x01
+#define ISR_NMI 0x02
+#define ISR_BREAKPOINT 0x03
+#define ISR_OVERFLOW 0x04
+#define ISR_BOUNDS 0x05
+#define ISR_INVALID_OPCODE 0x06
+#define ISR_DEVICE_NOT_AVAILABLE 0x07
+#define ISR_DOUBLE_FAULT 0x08
+#define ISR_COPROCESSOR_SEGMENT_OVERRUN 0x09
+#define ISR_INVALID_TSS 0x0A
+#define ISR_SEGMENT_NOT_PRESENT 0x0B
+#define ISR_STACK_SEGMENT 0x0C
+#define ISR_GENERAL_PROTECTION 0x0D
+#define ISR_PAGE_FAULT 0x0E
+#define ISR_RESERVED 0x0F
+#define ISR_FPU_EXCEPTION 0x10
+#define ISR_ALIGNMENT_CHECK 0x11
+#define ISR_MACHINE_CHECK 0x12
+#define ISR_SIMD_EXCEPTION 0x13
+#define ISR_VIRTULIZATION_EXCEPTION 0x14
+#define ISR_SECURITY_EXCEPTION 0x1E
+
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
@@ -83,9 +106,6 @@ void x87EmulHandler(regs* r, void* context)
 bad:
 	kprintf("Device not available\n");
 
-	displayDebugInfo(r);
-	displayProgramFault("Device not available");
-
 	Thr::terminateFromIRQ();
 }
 
@@ -99,7 +119,7 @@ namespace Hal
 
 	void initialiseCoprocessor()
 	{
-		controller->installISRHandler(ISR_DEVICE_NOT_AVAILABLE, x87EmulHandler);
+		CPU::current()->intCtrl->installISRHandler(ISR_DEVICE_NOT_AVAILABLE, x87EmulHandler);
 
 		if (avxDetect()) {
 			coproSaveFunc = avxSave;
@@ -125,7 +145,6 @@ namespace Hal
 		coproSaveFunc = noCopro;
 		coproLoadFunc = noCopro;
 
-		coproType = COPRO_NONE;
 		CPU::current()->writeCR0(CPU::current()->readCR0() | 4);
 	}
 
