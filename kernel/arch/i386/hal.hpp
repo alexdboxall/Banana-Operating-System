@@ -7,7 +7,7 @@ namespace Hal
 {
 	void initialise();
 
-	INLINE void panic(char* message)
+	INLINE void panic(const char* message)
 	{
 		Krnl::panic(message);
 	}
@@ -62,13 +62,13 @@ namespace Hal
 	void shutdown();
 	void sleep();
 
-	INLINE void systemIdle()
-	{
-		stallProcessor();
-	}
-
 	INLINE void stallProcessor()
 	{
 		asm volatile ("hlt");
+	}
+
+	INLINE void systemIdle()
+	{
+		Hal::stallProcessor();
 	}
 };
