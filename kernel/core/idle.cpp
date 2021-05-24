@@ -1,6 +1,7 @@
 #include "core/idle.hpp"
 #include "thr/prcssthr.hpp"
 #include "core/computer.hpp"
+#include "krnl/hal.hpp"
 #include "hw/cpu.hpp"
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -23,20 +24,16 @@ extern "C" void doTPAUSE();
 void idleFunction(void* context)
 {
 	unlockScheduler();
+	
+	while (1) {
+		Hal::systemIdle();
+		idleCommon();
+	}
 
-	if (CPU::current()->features.hasTPAUSE && computer->features.hasMSR) {
 		//set mode, no timeout and 
-		uint64_t msr = computer->rdmsr(0xE1);
+		/*uint64_t msr = computer->rdmsr(0xE1);
 		computer->wrmsr(0xE1, msr & 2);	//only keep bit 1 as it is reserved
 		while (1) {
-			doTPAUSE();
-			idleCommon();
-		}
-
-	} else {
-		while (1) {
-			asm volatile("sti; hlt");
-			idleCommon();
-		}
-	}
+		doTPAUSE();
+		idleCommon();*/
 }

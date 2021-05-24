@@ -169,7 +169,7 @@ extern int taskSwitchesPostponedFlag;
 
 static inline __attribute__((always_inline)) void disableIRQs(void)
 {
-	asm volatile ("cli");
+	Hal::disableIRQs();
 	irqDisableCounter++;
 }
 
@@ -182,7 +182,7 @@ static inline __attribute__((always_inline)) void enableIRQs(void)
 {
 	irqDisableCounter--;
 	if (irqDisableCounter == 0) {
-		asm volatile ("sti");
+		Hal::enableIRQs();
 	}
 }
 

@@ -532,7 +532,7 @@ void VAS::mapPage(size_t physicalAddr, size_t virtualAddr, int flags) {
 	if (virtualAddr < VIRT_KERNEL_BASE) {
 		size_t cr3;
 		asm volatile ("mov %%cr3, %0" : "=r"(cr3));
-		if (cr3 != (size_t) pageDirectoryBasePhysical) {
+		if (CPU::current()->readCR3() != (size_t) pageDirectoryBasePhysical) {
 			kprintf("\n\nFATAL 'WARNING':\n    CANNOT MAP NON-KERNEL IN NON-CURRENT VAS.\n    THIS COULD BE A *FATAL ERROR*.\n");
 			//panic("CANNOT MAP NON-KERNEL IN NON-CURRENT VAS");
 		}

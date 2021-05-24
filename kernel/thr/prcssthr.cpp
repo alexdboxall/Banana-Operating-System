@@ -58,17 +58,16 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 		nextThreadToRun->timeSliceRemaining += (1024 - nextThreadToRun->priority) >> 1;
 	}
 
-	if (CPU::current()->features.hasTSC) {
-		static uint64_t currentCount = 0;
-		static uint64_t elapsed = 0;
-		static uint64_t lastCount = 0;
 
-		asm volatile ("rdtsc" : "=A"(currentCount));
-		elapsed = currentCount - lastCount;
-		lastCount = currentCount;
+	static uint64_t currentCount = 0;
+	static uint64_t elapsed = 0;
+	static uint64_t lastCount = 0;
 
-		currentTaskTCB->timeKeeping += elapsed;
-	}
+	currentCount = Hal::readTimestampCounter();
+	elapsed = currentCount - lastCount;
+	lastCount = currentCount;
+
+	currentTaskTCB->timeKeeping += elapsed;
 
 	Hal::saveCoprocessor(currentTaskTCB->fpuState);
 	switchToThreadASM(nextThreadToRun);
