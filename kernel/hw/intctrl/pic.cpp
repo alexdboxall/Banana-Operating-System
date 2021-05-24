@@ -18,6 +18,7 @@ void PIC::disable()
 
 uint16_t PIC::getIRQReg(int ocw3)
 {
+	return 0;
 }
 
 void PIC::remap()
