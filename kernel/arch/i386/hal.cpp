@@ -441,7 +441,7 @@ namespace Hal
 	void initialiseCoprocessor()
 	{
 		fpuOwner = nullptr;
-		CPU::current()->intCtrl->installISRHandler(ISR_DEVICE_NOT_AVAILABLE, x87EmulHandler);
+		installISRHandler(ISR_DEVICE_NOT_AVAILABLE, x87EmulHandler);
 
 		if (avxDetect()) {
 			kprintf("AVX.\n");
