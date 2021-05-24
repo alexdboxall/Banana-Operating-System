@@ -1,6 +1,4 @@
 #include <stdint.h>
-#include <krnl/panic.hpp>
-#include <hw/cpu.hpp>
 
 #define INLINE inline __attribute__((always_inline)) 
 
@@ -22,13 +20,13 @@ namespace Hal
 
 	INLINE void loadCoprocessor(void*)
 	{
-		CPU::writeCR0(CPU::readCR0() | 8);
+		size_t cr0;
+		asm volatile ("mov %%cr0, %0" : "=r"(cr0));
+		cr0 |= 8;
+		asm volatile ("mov %0, %%cr0" :: "r"(cr0));
 	}
 
-	INLINE void panic(const char* message)
-	{
-		Krnl::panic(message);
-	}
+	void panic(const char* message);
 
 	INLINE void enableIRQs()
 	{

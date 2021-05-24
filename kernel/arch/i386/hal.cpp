@@ -1,6 +1,7 @@
 #include "arch/i386/hal.hpp"
 #include <hw/cpu.hpp>
 #include "vm86/x87em.hpp"
+#include <krnl/panic.hpp>
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -123,6 +124,11 @@ namespace Hal
 
 		coproType = COPRO_NONE;
 		CPU::current()->writeCR0(CPU::current()->readCR0() | 4);
+	}
+
+	void panic(const char* message)
+	{
+		Krnl::panic(message);
 	}
 
 	void* allocateCoprocessorState()
