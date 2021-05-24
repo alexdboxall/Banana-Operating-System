@@ -28,6 +28,9 @@ extern "C" void x87Save(size_t);
 extern "C" void x87Load(size_t);
 extern "C" void x87Init();
 
+void (*coproSaveFunc)(size_t);
+void (*coproLoadFunc)(size_t);
+
 void _i386_saveCoprocessor(void* buf)
 {
 	size_t addr = (((size_t) buf) + 63) & ~0x3F;
@@ -39,6 +42,8 @@ void _i386_loadCoprocessor(void* buf)
 	size_t addr = (((size_t) buf) + 63) & ~0x3F;
 	coproLoadFunc(addr);
 }
+
+ThreadControlBlock* fpuOwner = nullptr;
 
 void x87EmulHandler(regs* r, void* context)
 {
@@ -54,8 +59,8 @@ void x87EmulHandler(regs* r, void* context)
 		asm volatile ("clts");
 
 		//save previous state
-		if (Krnl::fpuOwner) {
-			_i386_saveCoprocessor(Krnl::fpuOwner->fpuState);
+		if (fpuOwner) {
+			_i386_saveCoprocessor(fpuOwner->fpuState);
 		}
 
 		//check if never had state before, otherwise load state
@@ -63,10 +68,10 @@ void x87EmulHandler(regs* r, void* context)
 			currentTaskTCB->fpuState = malloc(512 + 64);
 
 		} else {
-			Hal::loadCoprocessor(Krnl::fpuOwner->fpuState);
+			Hal::loadCoprocessor(fpuOwner->fpuState);
 		}
 
-		Krnl::fpuOwner = currentTaskTCB;
+		fpuOwner = currentTaskTCB;
 		return;
 	}
 
@@ -87,9 +92,6 @@ bad:
 
 namespace Hal
 {
-	void (*coproSaveFunc)(size_t);
-	void (*coproLoadFunc)(size_t);
-
 	void noCopro (size_t a)
 	{
 
