@@ -29,7 +29,6 @@ void installISRHandler(int num, void (*handler)(regs*, void*), void* context = 0
 int installIRQHandler(int num, void (*handler)(regs*, void*), bool legacy, void* context = 0);
 void uninstallISRHandler(int num, void (*handler)(regs*, void*));
 void uninstallIRQHandler(int num, void (*handler)(regs*, void*), bool legacy);
-void clearAllHandlers(int num, bool legacy);
 int convertLegacyIRQNumber(int num);
 
 InterruptController* setupInterruptController();

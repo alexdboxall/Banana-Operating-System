@@ -114,10 +114,10 @@ int installIRQHandler(int num, void (*handler)(regs*, void*), bool legacy, void*
 	num += 32;
 
 	for (int i = 0; i < 4; ++i) {
-		if (handlers[num][i] == nullptr) {
+		if (INT_handlers[num][i] == nullptr) {
 			//set handler
-			handlers[num][i] = handler;
-			contexts[num][i] = context;
+			INT_handlers[num][i] = handler;
+			INT_contexts[num][i] = context;
 
 			return num - 32;
 		}
@@ -134,23 +134,6 @@ void uninstallISRHandler(int num, void (*handler)(regs*, void*))
 			INT_handlers[num][i] = nullptr;
 			INT_contexts[num][i] = nullptr;
 		}
-	}
-}
-
-void clearAllHandlers(int num, bool legacy)
-{
-	if (legacy && computer->features.hasAPIC) {
-		if (num < 16) {
-			num = legacyIRQRemaps[num];
-		} else {
-			panic("[intctrl] D!");
-		}
-	}
-
-	num += 32;
-	for (int i = 0; i < 4; ++i) {
-		handlers[num][i] = nullptr;
-		contexts[num][i] = nullptr;
 	}
 }
 
