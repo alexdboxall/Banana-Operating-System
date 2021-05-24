@@ -353,7 +353,7 @@ void x87EmulHandler(regs* r, void* context)
 			currentTaskTCB->fpuState = Hal::allocateCoprocessorState();
 
 		} else {
-			Hal:loadCoprocessor(Krnl::fpuOwner->fpuState);
+			Hal::loadCoprocessor(Krnl::fpuOwner->fpuState);
 		}
 
 		Krnl::fpuOwner = currentTaskTCB;

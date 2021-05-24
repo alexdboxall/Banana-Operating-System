@@ -68,7 +68,7 @@ struct ThreadControlBlock
 			uint16_t vm86SS;
 		};
 
-		uint8_t* fpuState = nullptr;
+		void* fpuState = nullptr;
 	};
 	
 	bool vm86VIE = false;
