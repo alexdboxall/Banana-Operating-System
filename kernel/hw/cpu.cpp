@@ -1,5 +1,5 @@
 #include "hw/cpu.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "core/virtmgr.hpp"
 #include "core/physmgr.hpp"
 #pragma GCC optimize ("Os")

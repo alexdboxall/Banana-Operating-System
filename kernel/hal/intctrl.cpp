@@ -8,7 +8,7 @@
 #include "hw/intctrl/apic.hpp"
 #include "hal/device.hpp"
 #include "hw/acpi.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "hw/cpu.hpp"
 #include "hal/fpu.hpp"
 #include "vm86/x87em.hpp"

@@ -1,6 +1,5 @@
 #include "arch/i386/hal.hpp"
 #include <hw/cpu.hpp>
-#include <hw/ports.hpp>
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")

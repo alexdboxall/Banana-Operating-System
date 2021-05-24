@@ -1,6 +1,6 @@
 #include "core/common.hpp"
 #include "fs/vfs.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
 #include "hw/bus/pci.hpp"
 #include "hw/diskctrl/ide.hpp"

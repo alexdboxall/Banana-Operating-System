@@ -1,6 +1,6 @@
 #include "vm86/vm8086.hpp"
 #include "fs/vfs.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "thr/prcssthr.hpp"
 #include "hal/intctrl.hpp"
 #include "hw/cpu.hpp"

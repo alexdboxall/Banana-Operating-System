@@ -16,7 +16,7 @@ Something not working? Check:
 #include "core/physmgr.hpp"
 #include "hal/keybrd.hpp"
 #include "hal/buzzer.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "fs/vfs.hpp"
 #include "libk/string.h"
 #pragma GCC optimize ("Os")

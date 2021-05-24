@@ -71,7 +71,7 @@ Parts of this are based on Minux:
 #include "core/physmgr.hpp"
 #include "hw/acpi.hpp"
 #include "hw/cpu.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "hw/bus/pci.hpp"
 #include "hw/bus/isa.hpp"
 #include "reg/registry.hpp"

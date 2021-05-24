@@ -3,7 +3,7 @@
 #include "core/virtmgr.hpp"
 #include "thr/prcssthr.hpp"
 #include "hw/diskctrl/satabus.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
 #include "hw/diskphys/sata.hpp"
 #include "hw/diskphys/satapi.hpp"

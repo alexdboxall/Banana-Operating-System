@@ -1,6 +1,6 @@
 #include "hw/diskphys/ata.hpp"
 #include "hw/diskctrl/ide.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
 #include "core/common.hpp"
 #include "thr/prcssthr.hpp"

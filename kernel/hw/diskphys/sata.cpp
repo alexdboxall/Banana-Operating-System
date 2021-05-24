@@ -2,7 +2,7 @@
 #include "hw/diskphys/ata.hpp"
 #include "hw/diskctrl/ide.hpp"
 #include "hw/diskctrl/satabus.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
 #include "core/physmgr.hpp"
 #include "core/virtmgr.hpp"

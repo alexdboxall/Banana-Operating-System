@@ -1,5 +1,4 @@
 #include "core/main.hpp"
-#include "hw/ports.hpp"
 #include "hw/acpi.hpp"
 #include "hw/fpu/mmx.hpp"
 #include "core/computer.hpp"

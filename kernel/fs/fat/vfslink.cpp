@@ -3,7 +3,7 @@
 #include "core/kheap.hpp"
 #include "hal/logidisk.hpp"
 #include "hal/diskphys.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 
 extern "C" {
 	#include "fs/fat/ff.h"

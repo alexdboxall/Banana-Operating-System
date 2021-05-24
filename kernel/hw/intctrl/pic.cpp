@@ -1,5 +1,5 @@
 #include "hw/intctrl/pic.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "core/main.hpp"
 #include "hal/intctrl.hpp"
 #pragma GCC optimize ("O0")

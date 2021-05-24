@@ -1,6 +1,6 @@
 #include "hw/timer/apictimer.hpp"
 #include "hal/intctrl.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
 #include "hw/intctrl/apic.hpp"
 #include "core/common.hpp"

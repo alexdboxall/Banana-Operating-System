@@ -10,7 +10,7 @@
 #include "hal/clock.hpp"
 #include "hw/cpu.hpp"
 #include "hw/smp.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "hal/vcache.hpp"
 #include "fs/vfs.hpp"
 #include "vm86/vm8086.hpp"

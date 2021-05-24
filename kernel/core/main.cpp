@@ -4,7 +4,7 @@
 #include "core/kheap.hpp"
 #include "dbg/kconsole.hpp"
 #include "core/computer.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 
 #pragma GCC optimize ("O0")
 #pragma GCC optimize ("-fno-strict-aliasing")

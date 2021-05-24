@@ -1,5 +1,5 @@
 #include "core/main.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
 #include "hw/fpu/AVX.hpp"
 #include <stdint.h>

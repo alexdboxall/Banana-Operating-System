@@ -3,7 +3,7 @@
 #include "hw/diskctrl/ide.hpp"
 #include "hw/diskphys/ata.hpp"
 #include "hw/diskphys/atapi.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
 #include "hal/device.hpp"
 #pragma GCC optimize ("Os")

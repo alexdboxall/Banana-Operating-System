@@ -1,9 +1,9 @@
 #include "core/common.hpp"
 #include "hal/intctrl.hpp"
 #include "hw/intctrl/apic.hpp"
-#include "hw/ports.hpp"
 #include "hw/acpi.hpp"
 #include "hw/cpu.hpp"
+#include "krnl/hal.hpp"
 #pragma GCC optimize ("O0")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
