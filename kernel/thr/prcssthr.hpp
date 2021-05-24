@@ -167,6 +167,8 @@ extern int irqDisableCounter;
 extern int postponeTaskSwitchesCounter;
 extern int taskSwitchesPostponedFlag;
 
+#include <krnl/hal.hpp>
+
 static inline __attribute__((always_inline)) void disableIRQs(void)
 {
 	Hal::disableIRQs();
