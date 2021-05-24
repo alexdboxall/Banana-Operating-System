@@ -5,6 +5,8 @@
 
 #define INLINE inline __attribute__((always_inline)) 
 
+extern uint64_t(*_i386_HAL_tscFunction)();
+
 namespace Hal
 {
 	void initialise();
@@ -62,7 +64,6 @@ namespace Hal
 
 	INLINE uint64_t readTimestampCounter()
 	{
-		extern uint64_t(*_i386_HAL_tscFunction)();
 		return _i386_HAL_tscFunction();
 	}
 
