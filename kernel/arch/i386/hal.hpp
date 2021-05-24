@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <krnl/panic.hpp>
+#include <hw/cpu.hpp>
 
 #define INLINE inline __attribute__((always_inline)) 
 
@@ -21,7 +22,7 @@ namespace Hal
 
 	INLINE void loadCoprocessor(void*)
 	{
-
+		CPU::writeCR0(CPU::readCR0() | 8);
 	}
 
 	INLINE void panic(const char* message)
