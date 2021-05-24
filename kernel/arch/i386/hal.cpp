@@ -54,13 +54,13 @@ extern "C" void x87Init();
 void (*coproSaveFunc)(size_t);
 void (*coproLoadFunc)(size_t);
 
-void _i386_saveCoprocessor(void* buf)
+void i386SaveCoprocessor(void* buf)
 {
 	size_t addr = (((size_t) buf) + 63) & ~0x3F;
 	coproSaveFunc(addr);
 }
 
-void _i386_loadCoprocessor(void* buf)
+void i386LoadCoprocessor(void* buf)
 {
 	size_t addr = (((size_t) buf) + 63) & ~0x3F;
 	coproLoadFunc(addr);
@@ -70,35 +70,41 @@ ThreadControlBlock* fpuOwner = nullptr;
 
 void x87EmulHandler(regs* r, void* context)
 {
-	size_t cr0 = CPU::readCR0();
-	bool handled;
+	kprintf("x87EmulHandler\n");
 
 	if (currentTaskTCB->vm86Task) {
 		goto bad;
 	}
 
+	size_t cr0 = CPU::readCR0();
+
 	if (cr0 & 8) {
+		kprintf("clts\n");
+
 		//clear task switched
 		asm volatile ("clts");
 
 		//save previous state
 		if (fpuOwner) {
-			_i386_saveCoprocessor(fpuOwner->fpuState);
+			kprintf("saving FPU state.\n");
+			i386SaveCoprocessor(fpuOwner->fpuState);
 		}
 
 		//check if never had state before, otherwise load state
 		if (currentTaskTCB->fpuState == nullptr) {
+			kprintf("allocing FPU state.\n");
 			currentTaskTCB->fpuState = malloc(512 + 64);
 
 		} else {
-			Hal::loadCoprocessor(fpuOwner->fpuState);
+			kprintf("loading FPU state.\n");
+			i386LoadCoprocessor(fpuOwner->fpuState);
 		}
 
 		fpuOwner = currentTaskTCB;
 		return;
 	}
 
-	handled = Vm::x87Handler(r);
+	bool handled = Vm::x87Handler(r);
 	if (handled) {
 		return;
 	}
@@ -122,6 +128,7 @@ namespace Hal
 		CPU::current()->intCtrl->installISRHandler(ISR_DEVICE_NOT_AVAILABLE, x87EmulHandler);
 
 		if (avxDetect()) {
+			kprintf("AVX.\n");
 			coproSaveFunc = avxSave;
 			coproLoadFunc = avxLoad;
 			avxInit();
@@ -129,6 +136,7 @@ namespace Hal
 		}
 
 		if (sseDetect()) {
+			kprintf("SSE.\n");
 			coproSaveFunc = sseSave;
 			coproLoadFunc = sseLoad;
 			sseInit();
@@ -136,11 +144,14 @@ namespace Hal
 		}
 
 		if (x87Detect()) {
+			kprintf("X87.\n");
 			coproSaveFunc = x87Save;
 			coproLoadFunc = x87Load;
 			x87Init();
 			return;
 		}
+
+		kprintf("NO FPU.\n");
 
 		coproSaveFunc = noCopro;
 		coproLoadFunc = noCopro;
@@ -195,10 +206,10 @@ namespace Hal
 		}
 	}
 
-	extern "C" void _i386_getRDRAND();
+	extern "C" void i386GetRDRAND();
 	uint32_t getRand()
 	{
-		//_i386_getRDRAND()
+		//i386GetRDRAND()
 
 		return 0;
 	}

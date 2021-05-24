@@ -1,6 +1,6 @@
-global _i386_getRDRAND
+global i386GetRDRAND
 
-_i386_getRDRAND:
+i386GetRDRAND:
     mov ecx, 100
 retry:
     rdrand eax
