@@ -114,7 +114,6 @@ extern "C" void kernel_main()
 	}
 
 	Krnl::setBootMessage("Starting the memory manager...");
-
 	Phys::physicalMemorySetup(((*((uint32_t*) 0x524)) + 4095) & ~0xFFF);		//cryptic one-liner
 	Virt::virtualMemorySetup();
 

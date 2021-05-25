@@ -23,8 +23,7 @@
 
 #define VGA_TEXT_MODE_ADDRESS (VIRT_LOW_MEGS + 0xB8000)
 
-namespace Hal
-	
+namespace Hal {
 	void consoleScroll(int fg, int bg)
 	{
 		uint8_t* ptr = (uint8_t*) VGA_TEXT_MODE_ADDRESS;
