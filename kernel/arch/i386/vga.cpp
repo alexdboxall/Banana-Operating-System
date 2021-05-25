@@ -43,7 +43,7 @@ namespace Hal {
 
 	void consoleWriteCharacter(char c, int fg, int bg, int x, int y)
 	{
-		uint16_t word = c | ((fg & 0xF) | ((bg & 0xF) << 4)) << 8;
+		uint16_t word = ((uint8_t) c) | ((fg & 0xF) | ((bg & 0xF) << 4)) << 8;
 		uint16_t* ptr = (uint16_t*) VGA_TEXT_MODE_ADDRESS;
 		ptr += (y * 80 + x) + 80;
 		*ptr = word;
