@@ -26,7 +26,6 @@ public:
 
 	time_t timeInSecondsUTC();
 	datetime_t timeInDatetimeUTC();
-
 	bool setTimeInSecondsUTC(time_t t);
 	bool setTimeInDatetimeUTC(datetime_t d);
 

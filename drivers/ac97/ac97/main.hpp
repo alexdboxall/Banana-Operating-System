@@ -9,7 +9,6 @@
 #include "core/kheap.hpp"
 #include "core/terminal.hpp"
 #include "hal/intctrl.hpp"
-#include "hw/ports.hpp"
 #include "hw/acpi.hpp"
 #include "hal/sound/sndcard.hpp"
 #include "fs/vfs.hpp"
