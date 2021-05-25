@@ -660,14 +660,17 @@ void drawBootScreen()
     term->setTitle("");
     term->setTitleColour(VgaColour::Black);
     term->setTitleTextColour(VgaColour::Black);
-
+    term->setCursor(0, 0);
+    for (int x = 0; x < 80; ++x) {
+        term->putchar(' ', VgaColour::Black, VgaColour::Black);
+    }
     for (int y = 0; y < 25; ++y) {
         term->setCursor(0, y);
         for (int x = 0; x < 16; ++x) {
             term->putchar(' ', VgaColour::Black, VgaColour::Black);
         }
     }
-    term->setCursor(1, 0);
+    term->setCursor(1, 1);
     term->puts("Checking\n system\n requirements\n\n Legal\n notices\n\n Choosing a\n partition\n\n Formatting\n\n Copying files\n\n Restarting\n your computer\n\n", VgaColour::White, VgaColour::Black);
     term->puts(" Finalising the\n installation", VgaColour::Yellow, VgaColour::Black);
     term->setDefaultBgColour(VgaColour::White);
@@ -676,6 +679,8 @@ void drawBootScreen()
 
 void drawBasicWindow(int wx, int wy, int ww, int wh, const char* wtitle)
 {
+    wy++;
+
     for (int y = 0; y < wh; ++y) {
         term->setCursor(wx, wy + y);
         for (int x = 0; x < ww; ++x) {
@@ -734,30 +739,30 @@ void bootInstallKeybrd(KeyboardToken kt, bool* keystates)
 
 void bootInstallTasks(int done)
 { 
-    term->setCursor(24, 7);
+    term->setCursor(24, 8);
     term->puts("Please wait while the install finishes.");
 
-    term->setCursor(26, 9);
+    term->setCursor(26, 10);
     term->puts(done == 0 ? "\x10 " : "  ");
     term->puts("Allocating the swapfile", done >= 0 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
 
-    term->setCursor(26, 10);
+    term->setCursor(26, 11);
     term->puts(done == 1 ? "\x10 " : "  ");
     term->puts("Updating the registry", done >= 1 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
 
-    term->setCursor(26, 11);
+    term->setCursor(26, 12);
     term->puts(done == 2 ? "\x10 " : "  ");
     term->puts("Creating user account", done >= 2 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
 
-    term->setCursor(26, 12);
+    term->setCursor(26, 13);
     term->puts(done == 3 ? "\x10 " : "  ");
     term->puts("Installing packages", done >= 3 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
 
-    term->setCursor(26, 13);
+    term->setCursor(26, 14);
     term->puts(done == 4 ? "\x10 " : "  ");
     term->puts("Backing up system files", done >= 4 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
 
-    term->setCursor(26, 14);
+    term->setCursor(26, 15);
     term->puts(done == 5 ? "\x10 " : "  ");
     term->puts("Finishing touches", done >= 5 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
 }
@@ -781,38 +786,38 @@ void firstRun()
     char currComp[48] = "";
 
     int sel = 0;
-    drawBasicWindow(22, 2, 50, 13, "Banana Setup");
-    term->setCursor(24, 4); term->puts("Please enter your details. Press TAB to switch");
-    term->setCursor(24, 5); term->puts("between fields.");
-    term->setCursor(24, 7); term->puts("Name");
-    term->setCursor(24, 9); term->puts("Company");
+    drawBasicWindow(22, 3, 50, 12, "Banana Setup");
+    term->setCursor(24, 6); term->puts("Please enter your details. Press TAB to switch");
+    term->setCursor(24, 7); term->puts("between fields.");
+    term->setCursor(24, 9); term->puts("Name");
+    term->setCursor(24, 11); term->puts("Company");
 
     while (1) {
-        term->setCursor(33, 7);
+        term->setCursor(33, 9);
         term->puts("                         ", VgaColour::Black, VgaColour::LightGrey);
         term->puts(sel == 0 ? "  \x11" : "   ", VgaColour::Black, VgaColour::White);
         term->setCursorX(33);
         term->puts(currName, VgaColour::Black, VgaColour::LightGrey);
 
-        term->setCursor(33, 9);
+        term->setCursor(33, 11);
         term->puts("                         ", VgaColour::Black, VgaColour::LightGrey);
         term->puts(sel == 1 ? "  \x11" : "   ", VgaColour::Black, VgaColour::White);
         term->setCursorX(33);
         term->puts(currComp, VgaColour::Black, VgaColour::LightGrey);
 
-        term->setCursor(24, 11);
+        term->setCursor(24, 13);
         term->puts(sel == 2 ? "Press ENTER" : "           ", VgaColour::DarkGrey, VgaColour::White);
-        term->setCursor(24, 12);
+        term->setCursor(24, 14);
         term->puts(sel == 2 ? "to submit" : "           ", VgaColour::DarkGrey, VgaColour::White);
       
-        term->setCursor(50, 11);
+        term->setCursor(50, 13);
         if (sel != 2) term->puts("   OK   ", VgaColour::White, VgaColour::DarkGrey);
         else          term->puts("   OK   ", VgaColour::White, VgaColour::Blue);
         term->puts(sel == 2 ? "  \x11" : "   ", VgaColour::Black, VgaColour::White);
 
-        if (sel == 0) term->setCursor(33 + strlen(currName), 7);
-        if (sel == 1) term->setCursor(33 + strlen(currComp), 9);
-        if (sel == 2) term->setCursor(0, 0);
+        if (sel == 0) term->setCursor(33 + strlen(currName), 9);
+        if (sel == 1) term->setCursor(33 + strlen(currComp), 11);
+        if (sel == 2) term->setCursor(0, 2);
 
         while (installKey == 0);
         if (installKey == '\t' || installKey == '\n') {
@@ -875,12 +880,12 @@ void firstRun()
 
     int timePtr = 0;
 
-    term->setCursor(24, 4); term->puts("Please enter the current date and time,");
-    term->setCursor(24, 5); term->puts("and then press ENTER.");
-    term->setCursor(26, 8); term->puts("DD/MM/YYYY HH:MM:SS", VgaColour::LightGrey, VgaColour::White);
+    term->setCursor(24, 5); term->puts("Please enter the current date and time,");
+    term->setCursor(24, 6); term->puts("and then press ENTER.");
+    term->setCursor(26, 9); term->puts("DD/MM/YYYY HH:MM:SS", VgaColour::LightGrey, VgaColour::White);
     while (1) {
-        term->setCursor(26, 7); term->puts(dateTime);
-        term->setCursor(26 + timePtr, 7);
+        term->setCursor(26, 8); term->puts(dateTime);
+        term->setCursor(26 + timePtr, 8);
         term->putchar(dateTime[timePtr], VgaColour::White, VgaColour::Black);
         
         int hr = (dateTime[11] - '0') * 10 + (dateTime[12] - '0');
@@ -901,9 +906,9 @@ void firstRun()
         xyz[abc++] = hr >= 12 ? 'P' : 'A';
         xyz[abc++] = 'M';
         xyz[abc++] = ')';
-        term->setCursor(26 + strlen(dateTime) + 4, 7); term->puts(xyz);
+        term->setCursor(26 + strlen(dateTime) + 4, 8); term->puts(xyz);
 
-        term->setCursor(26 + timePtr, 7);
+        term->setCursor(26 + timePtr, 8);
 
         while (installKey == 0);
         if (installKey == 3 || installKey == '\b') {
@@ -1077,18 +1082,18 @@ void begin(void* a)
         setActiveTerminal(term);
         drawBootScreen();
         drawBasicWindow(22, 5, 50, 13, "Finalising Installation");
-        term->setCursor(24, 7);
+        term->setCursor(24, 8);
         term->puts("The installation has been completed.\n");
-        term->setCursor(24, 9);
-        term->puts("Please press ENTER to restart your computer");
         term->setCursor(24, 10);
+        term->puts("Please press ENTER to restart your computer");
+        term->setCursor(24, 11);
         term->puts("and start Banana.");
 
         installKey = 0;
         while (installKey == 0);
         installKey = 0;
 
-        term->setCursor(24, 11);
+        term->setCursor(24, 12);
 
         computer->close(1, 0, nullptr);
         term->puts("PLEASE MANUALLY RESTART YOUR COMPUTER", VgaColour::Red, VgaColour::White);
@@ -1097,6 +1102,13 @@ void begin(void* a)
         VgaText::hiddenOut = false;
         usertask = new Process("C:/Banana/System/command.exe");
         setActiveTerminal(usertask->terminal);
+
+        for (int y = 0; y < 25; ++y) {
+            for (int x = 0; x < 80; ++x) {
+                Hal::consoleWriteCharacter(' ', 7, 0, x, y);
+            }
+        }
+       
         usertask->createUserThread();
 
         int autogui = Reg::readIntWithDefault((char*) "shell", (char*) "autogui", 0);
