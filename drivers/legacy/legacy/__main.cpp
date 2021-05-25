@@ -16,7 +16,7 @@ void start(void* _parent)
 
 #include "core/common.hpp"
 #include "thr/elf.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "hal/video.hpp"
 #include "hw/acpi.hpp"
 #include "reg/registry.hpp"

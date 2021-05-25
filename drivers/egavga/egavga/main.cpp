@@ -15,7 +15,7 @@ void begin(Device* s)
 #include "thr/prcssthr.hpp"
 #include "reg/registry.hpp"
 #include "hal/intctrl.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
 #include "fs/vfs.hpp"
 

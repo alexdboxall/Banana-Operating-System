@@ -3,7 +3,7 @@
 #include "core/virtmgr.hpp"
 #include "core/common.hpp"
 #include "hw/cpu.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
 #include "hal/timer.hpp"
 #include "core/main.hpp"
@@ -527,7 +527,7 @@ extern "C" {
 		ctx[0] = reinterpret_cast<size_t>(Handler);
 		ctx[1] = (size_t) Context;
 
-		CPU::current()->intCtrl->installIRQHandler(InterruptLevel, (void(*)(struct regs*, void*))Subhandler, false, ctx);
+		installIRQHandler(InterruptLevel, (void(*)(struct regs*, void*))Subhandler, false, ctx);
 		return AE_OK;
 	}
 

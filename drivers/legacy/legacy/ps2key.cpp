@@ -1,5 +1,5 @@
 #include "core/main.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
 #include "hal/intctrl.hpp"
 #include "thr/prcssthr.hpp"

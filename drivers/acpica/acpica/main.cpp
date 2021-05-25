@@ -6,7 +6,7 @@
 #include "core/terminal.hpp"
 #include "core/physmgr.hpp"
 #include "hal/intctrl.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
 #include "thr/prcssthr.hpp"
 #include "reg/registry.hpp"
@@ -18,7 +18,6 @@
 #include "core/physmgr.hpp"
 #include "hw/acpi.hpp"
 #include "hw/cpu.hpp"
-#include "hw/ports.hpp"
 #include "hw/bus/pci.hpp"
 #include "hw/bus/isa.hpp"
 
@@ -429,7 +428,7 @@ void start(void* xxa)
 		params.Pointer = &arg;
 
 		arg.Type = ACPI_TYPE_INTEGER;
-		arg.Integer.Value = CPU::current()->intCtrl->getName()[0] == 'A';
+		arg.Integer.Value = computer->features.hasAPIC;
 		kprintf("value = %d\n", arg.Integer.Value);
 
 		status = AcpiEvaluateObject(NULL, (ACPI_STRING) "\\_PIC", &params, NULL);

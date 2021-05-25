@@ -45,7 +45,7 @@
 
 #include "thr/prcssthr.hpp"
 #include "core/physmgr.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "fs/vfs.hpp"
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")

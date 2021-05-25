@@ -2,7 +2,7 @@
 #include "ps2port.hpp"
 #include "ps2mouse.hpp"
 
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
 #include "core/main.hpp"
 #include <stdint.h>

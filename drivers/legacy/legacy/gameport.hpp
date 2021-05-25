@@ -10,7 +10,7 @@
 #include "core/kheap.hpp"
 #include "core/terminal.hpp"
 #include "hal/intctrl.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
 #include "hal/sound/sndhw.hpp"
 #include "fs/vfs.hpp"

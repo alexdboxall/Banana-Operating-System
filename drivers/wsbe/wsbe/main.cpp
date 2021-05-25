@@ -7,7 +7,7 @@
 #include "core/physmgr.hpp"
 #include "sys/syscalls.hpp"
 #include "hal/intctrl.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
 #include "hal/keybrd.hpp"
 #include "hal/video.hpp"

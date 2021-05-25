@@ -1,6 +1,6 @@
 #include "core/common.hpp"
 #include "thr/elf.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
 #include "reg/registry.hpp"
 

@@ -7,7 +7,7 @@
 #include "thr/prcssthr.hpp"
 #include "hal/intctrl.hpp"
 #include "hw/cpu.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
 #include "fs/vfs.hpp"
 #include "vm86/vm8086.hpp"

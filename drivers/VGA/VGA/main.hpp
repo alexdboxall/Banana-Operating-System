@@ -4,7 +4,7 @@
 
 #include <stdint.h>
 #include "hal/video.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 
 class VGAVideo: public Video
 {

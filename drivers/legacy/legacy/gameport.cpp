@@ -5,7 +5,7 @@
 #include "gameport.hpp"
 
 #include "core/main.hpp"
-#include "hw/ports.hpp"
+#include "krnl/hal.hpp"
 #include "core/physmgr.hpp"
 #include "core/common.hpp"
 #include "thr/prcssthr.hpp"
