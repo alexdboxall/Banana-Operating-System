@@ -96,7 +96,6 @@ extern "C" void kernel_main()
 
 	kprintf("\n\nKERNEL HAS STARTED.\n");
 
-	uint16_t* b = (uint16_t*) 0xC20B8000;
 	int x = 0;
 	int y = 5;
 	int addx = 10;
@@ -108,7 +107,7 @@ extern "C" void kernel_main()
 			++y;
 			addx = 10;
 		} else {
-			*(b + y * 80 + x + addx) = ((uint16_t) titleScreen[i]) | 0x0E00;
+			Hal::consoleWriteCharacter(titleScreen[i], 0xE, 0x0, x + addx, y);
 			++x;
 		}
 	}
