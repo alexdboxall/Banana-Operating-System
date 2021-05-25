@@ -433,8 +433,51 @@ void x87EmulHandler(regs* r, void* context)
 
 extern void setupINTS();
 
+#define VGA_TEXT_MODE_ADDRESS (VIRT_LOW_MEGS + 0xB8000)
 namespace Hal
 {
+	// ;
+	//((uint8_t) c) | (((uint16_t) col) << 8);
+
+	
+	void consoleScroll(int fg, int bg)
+	{
+		uint8_t* ptr = (uint8_t*) VGA_TEXT_MODE_ADDRESS;
+		for (int y = 2; y < 25; ++y) {
+			for (int x = 0; x < 160; ++x) {
+				ptr[y * 160 + x - 160] = ptr[y * 160 + x];
+				if (y == 24) {
+					if (x & 1) {
+						ptr[y * 160 + x] = (fg & 0xF) | ((bg & 0xF) << 4);
+					} else {
+						ptr[y * 160 + x] = ' ';
+					}
+				}
+			}
+		}
+	}
+
+	void consoleWriteCharacter(char c, int fg, int bg, int x, int y)
+	{
+		uint16_t word = terminal->combineCharAndColour(c, (fg & 0xF) | ((bg & 0xF) << 4));
+		uint16_t* ptr = (uint16_t*) VGA_TEXT_MODE_ADDRESS;
+		if (vgamono) word = c | 0x200;
+		ptr += (y * 80 + x) + 80;
+		*ptr = word;
+	}
+		/*
+		terminal->cursorX + (terminal->cursorY + (25 - terminal->terminalDisplayHeight)) * VgaText::width;*/
+
+	void consoleCursorUpdate(int x, int y)
+	{
+		uint16_t pos = x + (y + 1) * 80;
+
+		outb(0x3D4, 0x0F);
+		outb(0x3D5, (uint8_t) (pos & 0xFF));
+		outb(0x3D4, 0x0E);
+		outb(0x3D5, (uint8_t) ((pos >> 8) & 0xFF));
+	}
+
 	void noCopro (size_t a)
 	{
 

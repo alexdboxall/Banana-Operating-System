@@ -458,7 +458,6 @@ int ACPI::open(int mode, int, void*)
 	}
 	
 	Krnl::setBootMessage("Loading device drivers...");
-	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/bios.sys"), computer);
 
 	//this should be moved to its own function
 	{

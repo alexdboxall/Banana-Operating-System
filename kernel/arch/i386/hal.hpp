@@ -82,6 +82,10 @@ namespace Hal
 	void shutdown();
 	void sleep();
 
+	void consoleScroll(int fg, int bg);
+	void consoleWriteCharacter(char c, int fg, int bg, int x, int y);
+	void consoleCursorUpdate(int x, int y);
+		
 	INLINE void stallProcessor()
 	{
 		asm volatile ("hlt");

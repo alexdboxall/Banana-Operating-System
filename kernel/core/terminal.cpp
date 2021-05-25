@@ -97,12 +97,6 @@ void setActiveTerminal(VgaText* terminal)
 	terminal->load();
 }
 
-VgaTextImplementation textModeImplementation;
-
-void installVgaTextImplementation()
-{
-	memset(&textModeImplementation, 0, sizeof(textModeImplementation));
-}
 
 //START HARDWARE SPECIFIC
 
@@ -119,16 +113,7 @@ void scrollTerminalScrollLock(int amount)
 
 void VgaText::updateTitle()
 {
-	char title[80];
-	for (int i = 0; i < 80; ++i) title[i] = ' ';
-
-	for (int i = 0; name[i]; ++i) {
-		title[i] = name[i];
-	}
-
-	if (implementation.loadInTitle) {
-		implementation.loadInTitle(this, title);
-	}
+	
 }
 
 void VgaText::putx(uint32_t num)
@@ -143,19 +128,7 @@ void VgaText::putx(uint32_t num)
 
 void VgaText::load()
 {
-	char title[80];
-	for (int i = 0; i < 80; ++i) title[i] = ' ';
 
-	for (int i = 0; name[i]; ++i) {
-		title[i] = name[i];
-	}
-
-	if (implementation.loadInTitle) {
-		implementation.loadInTitle(this, title);
-	}
-	if (implementation.loadInData) {
-		implementation.loadInData(this);
-	}
 }
 
 void VgaText::scrollScreen()
@@ -177,9 +150,7 @@ void VgaText::scrollScreen()
 		if (scrollLock) {
 			scrollPoint--;
 		} else {
-			if (implementation.scrollScreen) {
-				implementation.scrollScreen(this);
-			}
+			Hal::consoleScroll((uint8_t) currentFg, (uint8_t) currentBg);
 		}
 	}
 
@@ -198,9 +169,7 @@ void VgaText::writeCharacter(char c, enum VgaColour fg, enum VgaColour bg, int x
 	*ptr = word;
 
 	if (this == activeTerminal) {
-		if (implementation.writeCharacter) {
-			implementation.writeCharacter(this, c, fg, bg, x, y);
-		}
+		Hal::consoleWriteCharacter(c, (int) fg, (int) bg, x, y);
 	}
 }
 
@@ -254,9 +223,7 @@ void VgaText::puts(const char* c, enum VgaColour fg, enum VgaColour bg)
 
 		*ptr++ = combineCharAndColour(c[i], cols);
 		if (this == activeTerminal) {
-			if (implementation.writeCharacter) {
-				implementation.writeCharacter(this, c[i], fg, bg, cursorX, cursorY);
-			}
+			Hal::consoleWriteCharacter(c[i], (int) fg, (int) bg, cursorX, cursorY);
 		}
 		needsRepainting = true;
 
@@ -278,11 +245,7 @@ void VgaText::puts(const char* c, enum VgaColour fg, enum VgaColour bg)
 
 void VgaText::updateCursor()
 {
-	if (this == activeTerminal) {
-		if (implementation.updateCursor) {
-			implementation.updateCursor(this);
-		}
-	}
+	Hal::consoleCursorUpdate(cursorX, cursorY);
 }
 
 // END HARDWARE SPECIFIC
@@ -536,8 +499,6 @@ VgaText::~VgaText()
 
 VgaText::VgaText(const char* n)
 {
-	implementation = textModeImplementation;
-
 	strcpy(name, n);
 
 	terminalDisplayHeight = bufferHeight;
@@ -610,9 +571,7 @@ FileStatus VgaText::read(uint64_t bytes, void* data, int* br)
 
 void VgaText::doUpdate()
 {
-	if (implementation.update) {
-		implementation.update(this);
-	}
+
 }
 
 FileStatus VgaText::write(uint64_t bytes, void* data, int* bw)
