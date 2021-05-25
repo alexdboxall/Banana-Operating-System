@@ -106,8 +106,8 @@ public:
 	virtual bool isAtty();
 
     static const int width = 80;
-    static const int height = 24;
-	static const int bufferHeight = 24;
+    static const int height = 25;
+	static const int bufferHeight = 25;
 
 	char name[128];
     

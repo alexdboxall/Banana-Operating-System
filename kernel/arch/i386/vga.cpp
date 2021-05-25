@@ -27,7 +27,7 @@ namespace Hal {
 	void consoleScroll(int fg, int bg)
 	{
 		uint8_t* ptr = (uint8_t*) VGA_TEXT_MODE_ADDRESS;
-		for (int y = 2; y < 25; ++y) {
+		for (int y = 1; y < 25; ++y) {
 			for (int x = 0; x < 160; ++x) {
 				ptr[y * 160 + x - 160] = ptr[y * 160 + x];
 				if (y == 24) {
@@ -45,13 +45,13 @@ namespace Hal {
 	{
 		uint16_t word = ((uint8_t) c) | ((fg & 0xF) | ((bg & 0xF) << 4)) << 8;
 		uint16_t* ptr = (uint16_t*) VGA_TEXT_MODE_ADDRESS;
-		ptr += (y * 80 + x) + 80;
+		ptr += (y * 80 + x);
 		*ptr = word;
 	}
 
 	void consoleCursorUpdate(int x, int y)
 	{
-		uint16_t pos = x + (y + 1) * 80;
+		uint16_t pos = x + y * 80;
 
 		outb(0x3D4, 0x0F);
 		outb(0x3D5, (uint8_t) (pos & 0xFF));
