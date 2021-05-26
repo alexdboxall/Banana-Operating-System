@@ -117,8 +117,6 @@ int SATABus::findCmdslot(HBA_PORT* port)
 
 void SATABus::probePort(HBA_MEM* abar)
 {
-	KDEBUG_PAUSE("SATABus::probePort A");
-
 	uint32_t pi = abar->pi;
 
 	for (int i = 0; i < 32; ++i) {
@@ -127,16 +125,9 @@ void SATABus::probePort(HBA_MEM* abar)
 			if (dt == AHCI_DEV_SATA) {
 				portRebase(&abar->ports[i], i);
 
-				KDEBUG_PAUSE("SATABus::probePort B");
-
 				SATA* dev = new SATA();
-				KDEBUG_PAUSE("SATABus::probePort C");
-
 				addChild(dev);
-				KDEBUG_PAUSE("SATABus::probePort D");
-
 				dev->open(i, 0, this);
-				KDEBUG_PAUSE("SATABus::probePort E");
 
 			} else if (dt == AHCI_DEV_SATAPI) {
 				portRebase(&abar->ports[i], i);

@@ -66,8 +66,6 @@ void Computer::setBootMessage(const char* message)
 
 int Computer::open(int a, int b, void* vas)
 {
-	Krnl::setBootMessage("Detecting processor information...");
-
 	VgaText::hiddenOut = false;
 
 	if (!(sysBootSettings & 4)) {
@@ -290,7 +288,6 @@ namespace Krnl
 {
 	void firstTask()
 	{
-		Krnl::setBootMessage("Enabling interrupts...");
 		asm("sti");
 
 		Krnl::setBootMessage("Starting core threads...");

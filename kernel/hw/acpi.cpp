@@ -101,8 +101,6 @@ int nextACPITable = 0;
 
 uint8_t* findRSDP()
 {
-	Krnl::setBootMessage("Finding RSDP...");
-
 	if (!computer->features.hasACPI) {
 		return 0;
 	}
@@ -111,18 +109,14 @@ uint8_t* findRSDP()
 		computer->features.hasACPI = false;
 		return 0;
 	}
-	Krnl::setBootMessage("Actually finding RSDP...");
 
 	uint8_t* ptr = (uint8_t*) (size_t) (VIRT_LOW_MEGS + 0x0);
 
 	for (; ptr < (uint8_t*) (size_t) (VIRT_LOW_MEGS + 0xFFFFF); ptr += 16) {
 		if (!memcmp((char*) ptr, "RSD PTR ", 8)) {
-			Krnl::setBootMessage("Found RSDP...");
-
 			return ptr;
 		}
 	}
-	Krnl::setBootMessage("Didn't find RSDP...");
 
 	return 0;
 }
@@ -177,29 +171,21 @@ void loadACPITables(uint8_t* ptr)
 
 uint8_t* findRSDT(uint8_t* ptr)
 {
-	Krnl::setBootMessage("Finding RSDP A...");
-
 	if (!computer->features.hasACPI) {
 		return 0;
 	}
-	Krnl::setBootMessage("Finding RSDP B...");
 
 	struct RSDPDescriptor20 a;
 	memcpy(&a, ptr, sizeof(a));
-	Krnl::setBootMessage("Finding RSDP C...");
 
 	uint8_t rev = a.firstPart.Revision;
 	uint8_t* ret = 0;
-	Krnl::setBootMessage("Finding RSDP D...");
 
 	struct XSDT* xsdt = (struct XSDT*) a.XsdtAddress;
 	struct RSDT* rsdt = (struct RSDT*) a.firstPart.RsdtAddress;
 
-	kprintf("PHYS: RSDT = 0x%X, XSDT = 0x%X\n", rsdt, xsdt);
-
 	xsdt = (struct XSDT*) ((((size_t) xsdt) & 0xFFF) | Virt::getAKernelVAS()->mapRange(((size_t) xsdt) & ~0xFFF, Virt::allocateKernelVirtualPages(2), 2, PAGE_PRESENT | PAGE_SUPERVISOR));
 	rsdt = (struct RSDT*) ((((size_t) rsdt) & 0xFFF) | Virt::getAKernelVAS()->mapRange(((size_t) rsdt) & ~0xFFF, Virt::allocateKernelVirtualPages(2), 2, PAGE_PRESENT | PAGE_SUPERVISOR));
-	kprintf("VIRT: RSDT = 0x%X, XSDT = 0x%X\n", rsdt, xsdt);
 
 	if (rev == 0) {
 		usingXSDT = 0;
@@ -232,22 +218,18 @@ uint8_t* findDataTable(uint8_t* ptr, char name[])
 extern uint32_t sysBootSettings;
 void scanMADT()
 {
-	Krnl::setBootMessage("SCAN MADT...");
-
 	if (sysBootSettings & 1024) {
 		computer->features.hasACPI = false;
 	}
 	if (!computer->features.hasACPI) {
 		return;
 	}
-	Krnl::setBootMessage("Finding RSDT A...");
-
+	
 	RSDPpointer = findRSDP();
 	if (!RSDPpointer) {
 		computer->features.hasACPI = false;
 		return;
 	}
-	Krnl::setBootMessage("Finding RSDT...");
 
 	RSDTpointer = findRSDT(RSDPpointer);
 	if (!RSDTpointer) {
@@ -255,7 +237,6 @@ void scanMADT()
 		return;
 	}
 
-	Krnl::setBootMessage("Loading other tables...");
 	loadACPITables(RSDTpointer);
 
 	struct MADTHeader* a = (struct MADTHeader*) findDataTable(RSDTpointer, (char*) "APIC");
@@ -320,7 +301,6 @@ void scanMADT()
 
 ACPI::ACPI(): Device("ACPI")
 {
-	Krnl::setBootMessage("ACPI::ACPI...");
 	scanMADT();
 }
 
@@ -408,21 +388,11 @@ void ACPI::detectPCI()
 	if (pciDetected) {
 		Krnl::setBootMessage("Scanning the PCI bus...");
 
-		if (pciAccessMech1) {
-			KDEBUG_PAUSE("PCI MECHANISM 1 (THE NORMAL ONE)");
-		} else if (!pciAccessMech1) {
-			KDEBUG_PAUSE("PCI MECHANISM 2 (THE ANCIENT ONE)");
-		}
-
 		PCI* pci = new PCI();	
-		KDEBUG_PAUSE("PCI 1");
 		addChild(pci);
-		KDEBUG_PAUSE("PCI 2");
 		pci->open(pciAccessMech1 ? 1 : 2, 0, nullptr);
-		KDEBUG_PAUSE("PCI 3");
 
 	} else {
-		kprintf("NO PCI...\n");
 		Krnl::setBootMessage("Probing ISA ports...");
 
 		IDE* dev = new IDE();
@@ -516,9 +486,7 @@ void (*systemSleepFunction)();
 
 void ACPI::sleep()
 {
-	kprintf("ACPI::sleep\n");
 	if (systemSleepFunction) {
-		kprintf("have systemSleepFunction\n");
 		systemSleepFunction();
 	}
 }

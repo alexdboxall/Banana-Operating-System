@@ -185,14 +185,11 @@ int CPU::open(int num, int b, void* vas_)
 	Krnl::setBootMessage("Starting the HAL...");
 	Hal::initialise();
 
-	Krnl::setBootMessage("Setting up system timer...");
 	timer = setupTimer(sysBootSettings & 16 ? 30 : 100);
 
 	if (sysBootSettings & 32) {
-		Krnl::setBootMessage("Setting up CPU features...");
 		setupFeatures();
 	}
-	Krnl::setBootMessage("Displaying CPU features...");
 	displayFeatures();
 
 	return 0;

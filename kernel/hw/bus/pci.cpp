@@ -232,15 +232,11 @@ static inline __attribute__((always_inline)) uint8_t hexCharToInt(char c)
 
 char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo, char* outbuffer)
 {
-	KDEBUG_PAUSE("PCI::pciDetailsToFilepath");
-
 	static bool loadedLookupFile = false;
 	static char* lookupData = nullptr;
 	static int lookupSize = 0;
 
 	if (!loadedLookupFile) {
-		KDEBUG_PAUSE("!loadedLookupFile");
-
 		File* f = new File("C:/Banana/System/PCI.LST", kernelProcess);
 		f->open(FileOpenMode::Read);
 
@@ -257,7 +253,6 @@ char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo, char* outbuffer)
 
 		lookupSize = siz;
 	}
-	KDEBUG_PAUSE("ABCD");
 
 	uint8_t classCode = 0;
 	uint8_t subClass = 0;
@@ -268,13 +263,9 @@ char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo, char* outbuffer)
 	int i = 0;
 	int j = 0;
 	char current[256];
-	KDEBUG_PAUSE("ABC123");
 
 	while (i < lookupSize) {
-		KDEBUG_PAUSE("ABC1234");
-
 		classCode = hexCharToInt(lookupData[i++]);
-		KDEBUG_PAUSE("ABC12345");
 
 		classCode <<= 4;
 		classCode |= hexCharToInt(lookupData[i++]);
@@ -341,7 +332,6 @@ char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo, char* outbuffer)
 void PCI::foundDevice(PCIDeviceInfo info)
 {
 	if (info.vendorID == 0xFFFF) return;
-	KDEBUG_PAUSE("FOUND A DEVICE!");
 
 	if ((info.classCode == 0x06) && (info.subClass == 0x04)) {
 		uint8_t secondaryBus = getSecondaryBus(info.bus, info.slot, info.function);
@@ -357,27 +347,16 @@ void PCI::foundDevice(PCIDeviceInfo info)
 
 	//hardcode the boot related things in first
 	if (info.classCode == 1 && info.subClass == 6) {
-		KDEBUG_PAUSE("SATA?");
 		SATABus* dev = new SATABus();
-		KDEBUG_PAUSE("SATA? A");
 		addChild(dev);
-		KDEBUG_PAUSE("SATA? B");
 		dev->preOpenPCI(info);
-		KDEBUG_PAUSE("SATA? C");
 		dev->open(0, 0, nullptr);
-		KDEBUG_PAUSE("SATA? D");
-
 
 	} else if (info.classCode == 1 && info.subClass == 1) {
-		KDEBUG_PAUSE("IDE? A");
 		IDE* dev = new IDE();
-		KDEBUG_PAUSE("IDE? B");
 		addChild(dev);
-		KDEBUG_PAUSE("IDE? C");
 		dev->preOpenPCI(info);
-		KDEBUG_PAUSE("IDE? D");
 		dev->open(0, 0, nullptr);
-		KDEBUG_PAUSE("IDE? E");
 
 	} else {
 		//NOTE: It will be set up as a DriverlessDevice for now
@@ -390,18 +369,7 @@ void PCI::foundDevice(PCIDeviceInfo info)
 }
 
 void PCI::getDeviceData(uint8_t bus, uint8_t slot, uint8_t function)
-{
-	char q[32];
-	strcpy(q, "000 00 00 GET DEVICE DATA.");
-	q[0] = (bus / 100) % 10 + '0';
-	q[1] = (bus / 10) % 10 + '0';
-	q[2] = (bus / 1) % 10 + '0';
-	q[4] = (slot / 10) % 10 + '0';
-	q[5] = (slot / 1) % 10 + '0';
-	q[7] = (function / 10) % 10 + '0';
-	q[8] = (function / 1) % 10 + '0';
-	KDEBUG_PAUSE(q);
-		
+{		
 	uint32_t headerType = pciReadWord(bus, slot, function, 0xC);
 	headerType >>= 16;
 	headerType &= 0xFF;
@@ -424,23 +392,8 @@ void PCI::getDeviceData(uint8_t bus, uint8_t slot, uint8_t function)
 	if (computer->root->nextPCIIRQAssignment) {
 		for (int i = 0; i < computer->root->nextPCIIRQAssignment; ++i) {
 
-			char q[32];
-			strcpy(q, "000 00 00 00 GET DEVICE DATA - IRQ ASSIGNMENT.");
-			q[0] = (bus / 100) % 10 + '0';
-			q[1] = (bus / 10) % 10 + '0';
-			q[2] = (bus / 1) % 10 + '0';
-			q[4] = (slot / 10) % 10 + '0';
-			q[5] = (slot / 1) % 10 + '0';
-			q[7] = (function / 10) % 10 + '0';
-			q[8] = (function / 1) % 10 + '0';
-			q[10] = (i / 10) % 10 + '0';
-			q[11] = (i / 1) % 10 + '0';
-			KDEBUG_PAUSE(q);
-
 			if (slot == computer->root->pciIRQAssignments[i].slot && intPIN == computer->root->pciIRQAssignments[i].pin) {
-				kprintf("TODO: PIC::getDeviceData check bus!\n");
 				intno = computer->root->pciIRQAssignments[i].interrupt;
-				kprintf("Slot %d, Pin %d -> IRQ %d\n", slot, intPIN, intno);
 			}
 		}
 	}
