@@ -374,9 +374,9 @@ void x87EmulHandler(regs* r, void* context)
 		return;
 	}
 
-	if (Vm::x87Handler(r)) {
+	/*if (Vm::x87Handler(r)) {
 		return;
-	}
+	}*/
 
 	kprintf("Device not available\n");
 	Thr::terminateFromIRQ();
