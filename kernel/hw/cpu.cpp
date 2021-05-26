@@ -590,7 +590,10 @@ void CPU::setupFeatures()
 
 uint8_t* CPU::decodeAddress(regs* r, int* instrLenOut, bool* registerOnlyOut, uint8_t* middleDigitOut)
 {
-	uint32_t segmentInfo;
+	panic("CPU::decodeAddress");
+	return 0;
+
+	/*uint32_t segmentInfo;
 	asm volatile ("lar %1, %0" : "=r"(segmentInfo) : "r"(r->cs));
 	bool fromKernel = ((segmentInfo >> 13) & 3) == 0;
 
@@ -695,5 +698,5 @@ uint8_t* CPU::decodeAddress(regs* r, int* instrLenOut, bool* registerOnlyOut, ui
 	*instrLenOut = instrLen;
 	*registerOnlyOut = registerOnly;
 
-	return ptr;
+	return ptr;*/
 }
