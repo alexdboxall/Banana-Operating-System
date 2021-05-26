@@ -15,15 +15,14 @@ namespace Sys
 	/// <summary>
 	/// Yields the currently running thread's timeslice.
 	/// </summary>
-	/// <returns>Returns a random value based on the system timer.</returns>
+	/// <returns>Returns zero.</returns>
 	/// 
 	uint64_t yield(regs* r)
 	{
 		lockScheduler();
 		schedule();
 		unlockScheduler();
-
-		return milliTenthsSinceBoot >> 17 ^ ((milliTenthsSinceBoot & 7777) << 7);
+		return 0;
 	}
 }
 

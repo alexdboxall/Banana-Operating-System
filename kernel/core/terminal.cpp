@@ -58,21 +58,12 @@ void setTerminalScrollLock(bool state)
 
 void doTerminalCycle()
 {
-	terminalCycle = terminalCycle->next;
-	setActiveTerminal(terminalCycle);
+
 }
 
 void addToTerminalCycle(VgaText* terminal)
 {
-	if (terminalCycle == nullptr) {
-		terminal->next = terminal;
-		terminalCycle = terminal;
-		return;
-	}
-
-	VgaText* oldNext = terminalCycle->next;
-	terminalCycle->next = terminal;
-	terminal->next = oldNext;
+	
 }
 
 void setActiveTerminal(VgaText* terminal)
@@ -89,12 +80,6 @@ void setActiveTerminal(VgaText* terminal)
 	activeTerminal = terminal;
 	//reload the cursor for this terminal
 	terminal->setCursor(terminal->cursorX, terminal->cursorY);
-
-	if (!terminal->scrollLock) {
-		terminal->scrollPoint = 0;
-	}
-
-	terminal->load();
 }
 
 

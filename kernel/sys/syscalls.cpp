@@ -502,36 +502,6 @@ uint64_t sysCallGetEnv(regs* r)
 	return 0;
 }
 
-uint64_t sysAppSettings(regs* r)
-{
-	AppSettings_t* appset = (AppSettings_t*) r->edx;
-
-	if (appset->valid != _APPSETTINGS_VALIDATION_V1) {
-		return 1;
-	}
-
-	if (appset->mode == _APPSETTINGS_MODE_SET_NAME) {
-		memset(currentTaskTCB->processRelatedTo->taskname, 0, sizeof(currentTaskTCB->processRelatedTo->taskname));
-		memcpy(currentTaskTCB->processRelatedTo->taskname, appset->string, sizeof(currentTaskTCB->processRelatedTo->taskname) - 1);
-		currentTaskTCB->processRelatedTo->terminal->setTitle(currentTaskTCB->processRelatedTo->taskname);
-
-	} else if (appset->mode == _APPSETTINGS_MODE_SET_FLAGS) {
-		currentTaskTCB->processRelatedTo->terminal->unbufferedKeyboard = appset->unbufferedKeyboard;
-
-	} else if (appset->mode == _APPSETTINGS_MODE_UNKNOWN) {
-		return 2;
-
-	} else if (appset->mode == _APPSETTINGS_MODE_SET_TITLECOLOUR) {
-		currentTaskTCB->processRelatedTo->terminal->setTitleColour((VgaColour) (appset->intData & 0xF));
-		currentTaskTCB->processRelatedTo->terminal->setTitleTextColour((VgaColour) ((appset->intData >> 4) & 0xF));
-
-	} else {
-		return appset->mode + 1000;
-	}
-
-	return 0;
-}
-
 uint64_t sysFormatDisk(regs* r)
 {
 	Filesystem* current = installedFilesystems;
@@ -671,7 +641,6 @@ namespace Sys
 		systemCallHandlers[(int) SystemCallNumber::SizeFromFilename] = sysCallSizeFromFilename;
 		systemCallHandlers[(int) SystemCallNumber::Spawn] = sysCallSpawn;
 		systemCallHandlers[(int) SystemCallNumber::GetEnv] = sysCallGetEnv;
-		systemCallHandlers[(int) SystemCallNumber::AppSettings] = sysAppSettings;
 		systemCallHandlers[(int) SystemCallNumber::FormatDisk] = sysFormatDisk;
 		systemCallHandlers[(int) SystemCallNumber::SetDiskVolumeLabel] = sysSetDiskVolumeLabel;
 		systemCallHandlers[(int) SystemCallNumber::GetDiskVolumeLabel] = sysGetDiskVolumeLabel;
