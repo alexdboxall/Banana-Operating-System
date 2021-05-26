@@ -37,20 +37,11 @@
 /* This option switches filtered directory read functions, f_findfirst() and
 /  f_findnext(). (0:Disable, 1:Enable 2:Enable with matching altname[] too) */
 
-#ifdef JUMPER32
 #define FF_USE_MKFS		1
-#else
-#define FF_USE_MKFS		1
-#endif
 /* This option switches f_mkfs() function. (0:Disable or 1:Enable) */
 
-#ifdef JUMPER32
-#define FF_USE_FASTSEEK	0
-#else
 #define FF_USE_FASTSEEK	1
-#endif
 /* This option switches fast seek function. (0:Disable or 1:Enable) */
-
 
 #define FF_USE_EXPAND	1
 /* This option switches f_expand function. (0:Disable or 1:Enable) */
@@ -119,11 +110,8 @@
 /  memory for the working buffer, memory management functions, ff_memalloc() and
 /  ff_memfree() exemplified in ffsystem.c, need to be added to the project. */
 
-#ifdef JUMPER32
-#define FF_LFN_UNICODE	0
-#else
+
 #define FF_LFN_UNICODE	2
-#endif
 /* This option switches the character encoding on the API when LFN is enabled.
 /
 /   0: ANSI/OEM in current CP (TCHAR = char)
@@ -206,7 +194,7 @@
 /  GET_SECTOR_SIZE command. */
 
 
-#define FF_LBA64		1
+#define FF_LBA64		0
 /* This option switches support for 64-bit LBA. (0:Disable or 1:Enable)
 /  To enable the 64-bit LBA, also exFAT needs to be enabled. (FF_FS_EXFAT == 1) */
 
@@ -233,7 +221,7 @@
 /  Instead of private sector buffer eliminated from the file object, common sector
 /  buffer in the filesystem object (FATFS) is used for the file data transfer. */
 
-#define FF_FS_EXFAT		1
+#define FF_FS_EXFAT		0
 /* This option switches support for exFAT filesystem. (0:Disable or 1:Enable)
 /  To enable exFAT, also LFN needs to be enabled. (FF_USE_LFN >= 1)
 /  Note that enabling exFAT discards ANSI C (C89) compatibility. */
