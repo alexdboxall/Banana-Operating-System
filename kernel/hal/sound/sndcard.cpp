@@ -45,8 +45,6 @@ bool SoundCard::configureRates(int sampleRate, int bits, int channels)
 
 int SoundCard::getSamples16(int max, int16_t* buffer)
 {
-	kprintf("getting samples to here: 0x%X\n");
-
 	int maxGot = 0;
 	memset(buffer, 0, max * sizeof(int16_t));
 
@@ -97,12 +95,10 @@ int SoundCard::addChannel(SoundPort* ch)
 	}
 
 	if (id == -1) {
-		kprintf("Could not add channel!\n");
 		panic("DEBUG: Could not add channel!\n");
 		return -1;
 	}
 
-	kprintf("Channel %d has a port added.\n", id);
 	channels[id] = ch;
 	return id;
 }
@@ -114,10 +110,10 @@ void SoundCard::removeChannel(int id)
 
 void SoundCard::beginPlayback()
 {
-	panic("PSEDUO-PURE VIRTUAL SoundCard::beginPlayback CALLED");
+	panic("PSEDUO-PURE VIRTUAL SoundCard CALLED");
 }
 
 void SoundCard::stopPlayback()
 {
-	panic("PSEDUO-PURE VIRTUAL SoundCard::stopPlayback CALLED");
+	panic("PSEDUO-PURE VIRTUAL SoundCard CALLED");
 }

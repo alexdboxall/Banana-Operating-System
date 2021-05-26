@@ -41,9 +41,6 @@ namespace Thr
 		size_t nullPagesReq = (additionalNullBytes + 4095) / 4096;
 		size_t virtMappingSpot = Virt::allocateKernelVirtualPages(1);
 
-		kprintf("pages req = 0x%X\n", pagesReq);
-		kprintf("nulls req = 0x%X\n", nullPagesReq);
-
 		int actual;
 
 		if (pagesReq) {
@@ -53,12 +50,10 @@ namespace Thr
 
 				FileStatus res = file->read(size > 4096 ? 4096 : size, (void*) buffer, &actual);
 				if (res != FileStatus::Success ) {
-					kprintf("allocate memory for task failed (A)! 0x%X\n", (int) res);
 					Virt::freeKernelVirtualPages(virtMappingSpot);
 					return false;
 				}
 				if (actual != (size > 4096 ? 4096 : size)) {
-					kprintf("allocate memory for task failed (A2)! 0x%X\n", (int) res);
 					Virt::freeKernelVirtualPages(virtMappingSpot);
 					return false;
 				}

@@ -108,8 +108,6 @@ public:
     static const int width = 80;
     static const int height = 25;
 	static const int bufferHeight = 25;
-
-	char name[128];
     
 	char keybufferInternal[TERMINAL_KEYBUFFER_IN_SIZE];			//for holding what's currently been written, gets copied to the other one when a newline is encountered, handles backspace, etc.
 	char keybufferSent[TERMINAL_KEYBUFFER_OUT_SIZE];			//applications read from this one

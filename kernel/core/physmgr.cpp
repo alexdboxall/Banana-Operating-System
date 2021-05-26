@@ -22,8 +22,6 @@ namespace Phys
 
 	size_t allocateDMA(size_t size)
 	{
-		kprintf("DMA allocating stuff...\n");
-
 		int blocks = (size + DMA_BLOCK_SIZE - 1) / DMA_BLOCK_SIZE;
 
 		int start = 0;
@@ -56,11 +54,9 @@ namespace Phys
 					}
 
 					usedPages += (size + 4095) / 4096;
-					kprintf("returning DMA memory!\n");
 					if (startSeg < SIZE_DMA_MEMORY_1 / 65536) {
 						return VIRT_DMA_MEMORY_1 + start * DMA_BLOCK_SIZE;
 					} else {
-						kprintf("A.\n");
 						panic("UH OH! NO MORE DMA RAM! physmgr.cpp!");
 						//return VIRT_DMA_MEMORY_2 + (start - SIZE_DMA_MEMORY_1 / DMA_BLOCK_SIZE) * DMA_BLOCK_SIZE;
 					}
@@ -68,7 +64,6 @@ namespace Phys
 			}
 		}
 
-		kprintf("B.\n");
 		panic("UH OH! NO MORE DMA RAM! physmgr.cpp!");
 
 		return 0;
@@ -76,7 +71,6 @@ namespace Phys
 
 	void freeDMA(size_t addr, size_t size)
 	{
-		kprintf("DMA freeing stuff...\n");
 		int blocks = (size + DMA_BLOCK_SIZE - 1) / DMA_BLOCK_SIZE;
 		usedPages -= (size + 4095) / 4096;
 
@@ -125,10 +119,7 @@ namespace Phys
 
 	void freePage(size_t address)
 	{
-		kprintf("Freeing page 0x%X\n", address);
-
 		if ((address >= PHYS_DMA_MEMORY_1 && address < PHYS_DMA_MEMORY_1 + SIZE_DMA_MEMORY_1)/* || (address >= PHYS_DMA_MEMORY_2 && address < PHYS_DMA_MEMORY_2 + SIZE_DMA_MEMORY_2)*/) {
-			kprintf("freeing 'DMA' at 0x%X\n", address);
 			freeDMA(address, 4096);
 			return;
 		}
@@ -154,7 +145,7 @@ namespace Phys
 			if (getPageState(currentPagePointer) == STATE_FREE) {
 				setPageState(currentPagePointer, STATE_ALLOCATED);
 				++usedPages;
-				kprintf("allocated page %d / %d. 0x%X\n", usedPages, usablePages, 4096 * currentPagePointer);
+				//kprintf("allocated page %d / %d. 0x%X\n", usedPages, usablePages, 4096 * currentPagePointer);
 				return 4096 * currentPagePointer;
 			}
 
@@ -174,8 +165,6 @@ namespace Phys
 						return dma;
 					}*/
 				}
-
-				kprintf("No DMA or 50/50, so evicting...\n");
 
 				size_t evict = currentTaskTCB->processRelatedTo->vas->scanForEviction();
 				if (evict) {

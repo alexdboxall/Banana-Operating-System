@@ -73,8 +73,6 @@ int SoundPort::buffer16(int16_t* data, int samples)
 		buff[buffUsed++] = data[i] * 0x8000;
 
 		if (buffUsed == buffSize) {
-			kprintf("16: Audio buffer is full.\n");
-
 			//buffer full
 			return i + 1;
 		}
@@ -94,8 +92,6 @@ int SoundPort::buffer32(int32_t* data, int samples)
 		buff[buffUsed++] = data[i];
 
 		if (buffUsed == buffSize) {
-			kprintf("32: Audio buffer is full.\n");
-
 			//buffer full
 			return i + 1;
 		}
@@ -121,9 +117,6 @@ int SoundPort::unbufferAndAdd16(int max, int16_t* buffer, SoundCard* card)
 		buffer[i] += buff[i] / 0x8000;
 	}
 
-	kprintf("sound port had %d, now has %d. (amount was %d)\n", buffUsed, buffUsed - amount, amount);
-
-	kprintf("moving %d bytes from 0x%X to 0x%X\n", (buffSize - amount) * sizeof(int32_t), buff + amount, buff);
 	memmove(buff, buff + amount, (buffSize - amount) * sizeof(int32_t));
 	buffUsed -= amount;
 	return amount;

@@ -160,12 +160,9 @@ int ATAPI::eject()
 
 void ATAPI::diskRemoved()
 {
-	kprintf("ATAPI: Disk removed.\n");
 	diskIn = false;
 
-	kprintf("unmounting...\n");
 	logi->unmount();
-	kprintf("unmounted...\n");
 
 	cache->writeWriteBuffer();
 	cache->invalidateReadBuffer();
@@ -173,7 +170,6 @@ void ATAPI::diskRemoved()
 
 void ATAPI::diskInserted()
 {
-	kprintf("ATAPI: Disk inserted.\n");
 	diskIn = true;
 }
 

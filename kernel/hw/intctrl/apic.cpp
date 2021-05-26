@@ -91,8 +91,6 @@ bool IOAPIC::handlesGSIWithNumber(unsigned number)
 }
 
 int IOAPIC::open(int a, int, void*) {
-	kprintf("OPENING IOAPIC.\n");
-
 	number = a;
 	base = ioapicAddresses[number];
 	gsiBase = ioapicGSIBase[number];

@@ -40,15 +40,11 @@ extern "C" void __cxa_finalize(void* f)
 
 extern "C" void __stack_chk_fail(void)
 {
-	kprintf("\n\nSTACK CHECK FAILED.\n    FUNCTION __stack_chk_fail IN kernel/coreobjs/c++.cpp\n");
-
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wframe-address"
 
 	kprintf("'0x%X'\n", __builtin_return_address(0));
 	kprintf("'0x%X'\n", __builtin_return_address(1));
-	kprintf("'0x%X'\n", __builtin_return_address(2));
-	kprintf("'0x%X'\n", __builtin_return_address(3));
 
 	panic("Stack smashing detected");
 

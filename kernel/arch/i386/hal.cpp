@@ -124,6 +124,7 @@ void displayDebugInfo(regs* r)
 
 void displayProgramFault(const char* text)
 {
+	kprintf(text);
 	if (currentTaskTCB->processRelatedTo->terminal) {
 		currentTaskTCB->processRelatedTo->terminal->puts(text, VgaColour::White, VgaColour::Maroon);
 	}
@@ -141,8 +142,6 @@ void gpFault(regs* r, void* context)
 		}
 	}
 
-	kprintf("General Protection Fault!\n");
-
 	displayDebugInfo(r);
 	displayProgramFault("General protection fault");
 
@@ -154,8 +153,6 @@ void pgFault(regs* r, void* context)
 	if (currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2())) {
 		return;
 	}
-
-	kprintf("Page Fault!\n");
 
 	displayDebugInfo(r);
 	displayProgramFault("Page fault");
@@ -170,8 +167,6 @@ void nmiHandler(regs* r, void* context)
 
 void otherISRHandler(regs* r, void* context)
 {
-	kprintf("UNHANDLED EXCEPTION 0x%X/%d\n", r->int_no, r->int_no);
-
 	displayDebugInfo(r);
 	displayProgramFault("Unhandled exception - CHECK KERNEL LOGS");
 
@@ -293,8 +288,6 @@ void opcodeFault(regs* r, void* context)
 	kprintf("OPCODE vm86: 0x%X (then 0x%X %X %X)\n", *((uint8_t*) (0 + r->eip + r->cs * 16)), *((uint8_t*) (1 + r->eip + r->cs * 16)), *((uint8_t*) (2 + r->eip + r->cs * 16)), *((uint8_t*) (3 + r->eip + r->cs * 16)));
 	kprintf("OPCODE i386: 0x%X (then 0x%X %X %X)\n", *((uint8_t*) (0 + r->eip)), *((uint8_t*) (1 + r->eip)), *((uint8_t*) (2 + r->eip)), *((uint8_t*) (3 + r->eip)));
 	*/
-
-	kprintf("Invalid Opcode!\n");
 
 	displayDebugInfo(r);
 	displayProgramFault("Opcode fault");

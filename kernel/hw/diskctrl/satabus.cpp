@@ -48,7 +48,6 @@ SATABus::SATABus() : HardDiskController("Advanced Host Controller Interface")
 int SATABus::open(int, int, void*)
 {
 	abar = (HBA_MEM*) (size_t) pci.info.bar[5];
-	kprintf("SATA ABAR = 0x%X\n", abar);
 
 	//perform BIOS/OS handoff
 	/*if (abar->cap2 & 1) {

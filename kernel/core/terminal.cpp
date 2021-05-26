@@ -144,7 +144,6 @@ void VgaText::scrollScreen()
 
 void VgaText::writeCharacter(char c, enum VgaColour fg, enum VgaColour bg, int x, int y)
 {
-
 	uint16_t word = combineCharAndColour(c, combineColours((uint8_t) fg, (uint8_t) bg));
 
 	uint16_t pos = (y * VgaText::width + x);
@@ -410,7 +409,6 @@ void VgaText::setTitleColour(enum VgaColour bg)
 
 void VgaText::setTitle(char* text)
 {
-	strcpy(name, text);
 	updateTitle();
 }
 
@@ -484,8 +482,6 @@ VgaText::~VgaText()
 
 VgaText::VgaText(const char* n)
 {
-	strcpy(name, n);
-
 	terminalDisplayHeight = bufferHeight;
 
 	displayData = (uint8_t*) Virt::allocateKernelVirtualPages(1);

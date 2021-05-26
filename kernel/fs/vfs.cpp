@@ -49,9 +49,7 @@ namespace Fs
 			int diskNo = tmpbuffer[0] - 'A';
 
 			if (disks[diskNo] && disks[diskNo]->fs == nullptr) {
-				kprintf("setcwd() called. trying to mount...\n");
 				disks[diskNo]->mount();
-				kprintf("mounted...\n");
 			}
 
 			if (diskNo >= 0 && diskNo <= 25) {
@@ -196,9 +194,7 @@ File::File(const char* filename, Process* process) : UnixFile()
 	fileOpen = false;
 
 	if (disks[driveNo] && disks[driveNo]->fs == nullptr) {
-		kprintf("new File() called. trying to mount...\n");
 		disks[driveNo]->mount();
-		kprintf("mounted...\n");
 	}
 }
 
@@ -322,9 +318,7 @@ Directory::Directory(const char* filename, Process* process) : UnixFile()
 	fileOpen = false;
 
 	if (disks[driveNo] && disks[driveNo]->fs == nullptr) {
-		kprintf("new Directory() called. trying to mount...\n");
 		disks[driveNo]->mount();
-		kprintf("mounted...\n");
 	}
 }
 

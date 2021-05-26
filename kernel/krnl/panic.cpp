@@ -63,8 +63,7 @@ namespace Krnl
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wframe-address"
-		
-
+	
 		activeTerminal->puts("      Technical information:\n        ");
 		activeTerminal->puts("    CR0: ");
 		activeTerminal->putx(CPU::readCR0());
@@ -75,18 +74,6 @@ namespace Krnl
 		activeTerminal->puts("    CR4: ");
 		activeTerminal->putx(CPU::readCR4());
 		activeTerminal->puts("\n            Callers: ");
-
-		while (1);
-
-		/*kprintf("0: 0x%X\n", __builtin_return_address(0));
-		kprintf("1: 0x%X\n", __builtin_return_address(1));
-		kprintf("2: 0x%X\n", __builtin_return_address(2));
-
-		activeTerminal->putx((size_t) __builtin_return_address(0));
-		activeTerminal->puts(", ");
-		activeTerminal->putx((size_t) __builtin_return_address(1));
-		activeTerminal->puts(", ");
-		activeTerminal->putx((size_t) __builtin_return_address(2));*/
 
 #pragma GCC diagnostic pop
 

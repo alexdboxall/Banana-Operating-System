@@ -367,8 +367,6 @@ VAS::~VAS()
 	Virt::freeKernelVirtualPages((size_t) pageDirectoryBase);
 	Phys::freePage(pageDirectoryBasePhysical);
 	++fp;
-
-	kprintf("Freed %d KB from VAS deletion.\n", fp * 4);
 	
 	unlockScheduler();
 }
@@ -588,7 +586,7 @@ void VAS::evict(size_t virt)
 	//flush TLB
 	CPU::writeCR3(CPU::readCR3());
 
-	kprintf("evicting phys 0x%X, virt 0x%X, swap balance %d\n", physAddr, virt, swapBalance);
+	//kprintf("evicting phys 0x%X, virt 0x%X, swap balance %d\n", physAddr, virt, swapBalance);
 	kprintf("Total swaps: %d\n", twswaps++);
 }
 
@@ -624,10 +622,6 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 
 		Virt::freeSwapfilePage(id);
 		unlockScheduler();
-
-		if (onPageBoundary) {
-			kprintf("** ON BOUNDARY\n");
-		}
 
 		//flush TLB
 		CPU::writeCR3(CPU::readCR3());
@@ -696,22 +690,16 @@ extern "C" void mapVASFirstTime()
 
 	//24KB kernel (interrupt handler) stack
 	for (int i = 0; i < 6; ++i) {
-		kprintf("kernel (IRQ) stack at 0x%X\n", VIRT_APP_STACK_KRNL_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL);
 		vas->mapRange(Phys::allocatePage(), VIRT_APP_STACK_KRNL_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL, 1, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_WRITABLE | PAGE_SUPERVISOR);
 	}
 
 	//OLD: 8KB user (or kernel mode task) stack
 	//NEW: 128KB user stack
 	for (int i = 0; i < 32; ++i) {
-		kprintf("user stack at 0x%X\n", VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL);
-		kprintf("flags = 0x%X\n", PAGE_PRESENT | PAGE_ALLOCATED | PAGE_WRITABLE | (vas->supervisorVAS ? PAGE_SUPERVISOR : PAGE_USER));
 		size_t physp = Phys::allocatePage();
-		kprintf("phys page going to is 0x%X\n", physp);
 		vas->mapRange(physp, VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL, 1, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_WRITABLE | (vas->supervisorVAS ? PAGE_SUPERVISOR : PAGE_USER));
 	
 		size_t* e = vas->getPageTableEntry(VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL);
-		kprintf("*e = 0x%X\n", *e);
-		kprintf("Cr3 = 0x%X, vas = 0x%X\n", CPU::readCR3(), vas);
 	}
 
 	CPU::writeCR3(CPU::readCR3());

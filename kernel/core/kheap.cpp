@@ -14,8 +14,6 @@
 
 extern "C" void* sbrk(ptrdiff_t increment)
 {
-	kprintf("KERNEL SBRK called with 0x%X\n", increment);
-
 	static size_t brk = VIRT_SBRK_MIN;
 	if (increment == 0) {
 		return (void*) brk;

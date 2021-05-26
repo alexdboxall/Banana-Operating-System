@@ -37,23 +37,6 @@ Device::~Device()
 void Device::findAndLoadDriver()
 {
 	kprintf("DON'T USE THIS CODE ANYMORE. Device::findAndLoadDriver()\n");
-	bool driverFound = false;
-
-	if (detectionType == DetectionType::Manual) {
-
-	} else if (detectionType == DetectionType::ISAProbe) {
-
-	} else if (detectionType == DetectionType::PCI) {
-
-	} else if (detectionType == DetectionType::USB) {
-
-	} else if (detectionType == DetectionType::ACPI) {
-
-	}
-
-	if (driverFound) {
-		panic("DON'T USE THIS CODE ANYMORE.");
-	}
 }
 
 void Device::preOpenPCI(PCIDeviceInfo info)
@@ -163,28 +146,12 @@ void Device::detectAll()
 
 void Device::disableLegacyAll()
 {
-	disableLegacy();
 
-	DeviceNode* conductor = children;
-
-	while (conductor->next) {
-		conductor->child->disableLegacyAll();
-		conductor = conductor->next;
-	}
 }
 
 void Device::loadDriversForAll()
 {
-	if (deviceType == DeviceType::Unknown) {
-		findAndLoadDriver();
-	}
 
-	DeviceNode* conductor = children;
-
-	while (conductor->next) {
-		conductor->child->loadDriversForAll();
-		conductor = conductor->next;
-	}
 }
 
 void Device::closeAll()
