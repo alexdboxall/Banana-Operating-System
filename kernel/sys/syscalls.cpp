@@ -411,6 +411,8 @@ uint64_t sysCallRealpath(regs* r)
 
 uint64_t sysCallTTYName(regs* r)
 {
+	return 1;
+
 	if (r->edx == 0) {
 		return 1;
 	}
@@ -430,7 +432,7 @@ uint64_t sysCallTTYName(regs* r)
 	}
 
 	VgaText* terminal = static_cast<VgaText*>(file);
-	strcpy((char*) r->edx, terminal->name);
+	strcpy((char*) r->edx,"<NO NAME>");
 	return 0;
 }
 
