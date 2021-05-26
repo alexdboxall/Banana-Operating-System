@@ -41,7 +41,7 @@ namespace Sys
 		memcpy((void*) r->ebx, (const char*) terminal->displayData, 4000);
 		*((int*) (r->ebx + 4000)) = terminal->cursorX;
 		*((int*) (r->ebx + 4004)) = terminal->cursorY;
-		strcpy((char*) (r->ebx + 4008), terminal->name);
+		strcpy((char*) (r->ebx + 4008), "<NO NAME>");
 		return 0;
 	}
 }
