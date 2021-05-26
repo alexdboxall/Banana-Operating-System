@@ -50,7 +50,7 @@
 
 namespace Krnl
 {
-	char exceptionNames[][32] = {
+	/*char exceptionNames[][32] = {
 		"Division by zero error",
 		"Debug",
 		"Non-maskable interrupt",
@@ -72,7 +72,7 @@ namespace Krnl
 		"Machine check",
 		"SIMD floating-point exception",
 		"Virtualisation exception",
-	};
+	};*/
 }
 
 void displayDebugInfo(regs* r)
@@ -86,12 +86,6 @@ void displayDebugInfo(regs* r)
 	size_t cr4;
 	asm volatile ("mov %%cr4, %0" : "=r"(cr4));
 
-	kprintf("EAX: 0x%X\n", r->eax);
-	kprintf("EBX: 0x%X\n", r->ebx);
-	kprintf("ECX: 0x%X\n", r->ecx);
-	kprintf("EDX: 0x%X\n", r->edx);
-	kprintf("ESI: 0x%X\n", r->esi);
-	kprintf("EDI: 0x%X\n", r->edi);
 	kprintf("ESP: 0x%X\n", r->esp);
 	kprintf("EBP: 0x%X\n", r->ebp);
 	kprintf("USERESP: 0x%X\n", r->useresp);
@@ -103,7 +97,6 @@ void displayDebugInfo(regs* r)
 
 	setActiveTerminal(kernelProcess->terminal);
 
-	kernelProcess->terminal->puts(Krnl::exceptionNames[r->int_no]);
 	kernelProcess->terminal->puts("\n TASK: ");
 	kernelProcess->terminal->puts(currentTaskTCB->processRelatedTo->taskname);
 	kernelProcess->terminal->puts("\n EIP: ");
@@ -124,45 +117,9 @@ void displayDebugInfo(regs* r)
 	kernelProcess->terminal->putx((uint32_t) cr2);
 	kernelProcess->terminal->puts("\n CR3: ");
 	kernelProcess->terminal->putx((uint32_t) cr3);
-	kernelProcess->terminal->puts("\n CR4: ");
-	kernelProcess->terminal->putx((uint32_t) cr4);
-
-	kernelProcess->terminal->puts("\n\n DR0: ");
-	kernelProcess->terminal->putx((uint32_t) CPU::readDR0());
-	kernelProcess->terminal->puts("\n DR1: ");
-	kernelProcess->terminal->putx((uint32_t) CPU::readDR1());
-	kernelProcess->terminal->puts("\n DR2: ");
-	kernelProcess->terminal->putx((uint32_t) CPU::readDR2());
-	kernelProcess->terminal->puts("\n DR3: ");
-	kernelProcess->terminal->putx((uint32_t) CPU::readDR3());
-	kernelProcess->terminal->puts("\n DR6: ");
-	kernelProcess->terminal->putx((uint32_t) CPU::readDR6());
-	kernelProcess->terminal->puts("\n DR7: ");
-	kernelProcess->terminal->putx((uint32_t) CPU::readDR7());
-
-	char* drvName = Thr::getDriverNameFromAddress((size_t) r->eip);
-	if (drvName) {
-		kprintf("\n DRIVER: %s\n", drvName);
-		kernelProcess->terminal->puts("\n\n DRIVER: ");
-		kernelProcess->terminal->puts(drvName);
-		kernelProcess->terminal->puts("\n\n OFFSET: ");
-		kernelProcess->terminal->putx((uint32_t) Thr::getDriverOffsetFromAddress((size_t) r->eip));
-		kprintf("\n OFFSET: 0x%X\n", drvName);
-	}
 
 	asm("cli;hlt;");
 	while (1);
-
-	kprintf("'0x%X'\n", __builtin_return_address(1));
-	kprintf("'0x%X'\n", __builtin_return_address(2));
-	kprintf("'0x%X'\n", __builtin_return_address(3));
-
-	kernelProcess->terminal->puts("\n 1: ");
-	kernelProcess->terminal->putx((uint32_t) __builtin_return_address(1));
-	kernelProcess->terminal->puts("\n 2: ");
-	kernelProcess->terminal->putx((uint32_t) __builtin_return_address(2));
-	kernelProcess->terminal->puts("\n 3: ");
-	kernelProcess->terminal->putx((uint32_t) __builtin_return_address(3));
 }
 
 void displayProgramFault(const char* text)
@@ -194,7 +151,6 @@ void gpFault(regs* r, void* context)
 
 void pgFault(regs* r, void* context)
 {
-	kprintf("pgFault. EIP = 0x%X\n", r->eip);
 	if (currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2())) {
 		return;
 	}
@@ -238,6 +194,7 @@ void opcodeFault(regs* r, void* context)
 
 	//emulate instructions added to the 486 and Pentium
 
+	/*
 	uint8_t* eip = (uint8_t*) r->eip;
 
 	//lock prefix
@@ -335,6 +292,9 @@ void opcodeFault(regs* r, void* context)
 	kprintf("Invalid Opcode!\n");
 	kprintf("OPCODE vm86: 0x%X (then 0x%X %X %X)\n", *((uint8_t*) (0 + r->eip + r->cs * 16)), *((uint8_t*) (1 + r->eip + r->cs * 16)), *((uint8_t*) (2 + r->eip + r->cs * 16)), *((uint8_t*) (3 + r->eip + r->cs * 16)));
 	kprintf("OPCODE i386: 0x%X (then 0x%X %X %X)\n", *((uint8_t*) (0 + r->eip)), *((uint8_t*) (1 + r->eip)), *((uint8_t*) (2 + r->eip)), *((uint8_t*) (3 + r->eip)));
+	*/
+
+	kprintf("Invalid Opcode!\n");
 
 	displayDebugInfo(r);
 	displayProgramFault("Opcode fault");
@@ -394,8 +354,6 @@ ThreadControlBlock* fpuOwner = nullptr;
 
 void x87EmulHandler(regs* r, void* context)
 {
-	kprintf("x87EmulHandler\n");
-
 	if (currentTaskTCB->vm86Task) {
 		panic("VM86 CANNOT USE FPU");
 	}
@@ -446,7 +404,6 @@ namespace Hal
 		installISRHandler(ISR_DEVICE_NOT_AVAILABLE, x87EmulHandler);
 
 		if (avxDetect()) {
-			kprintf("AVX.\n");
 			coproSaveFunc = avxSave;
 			coproLoadFunc = avxLoad;
 			avxInit();
@@ -454,7 +411,6 @@ namespace Hal
 		}
 
 		if (sseDetect()) {
-			kprintf("SSE.\n");
 			coproSaveFunc = sseSave;
 			coproLoadFunc = sseLoad;
 			sseInit();
@@ -462,14 +418,11 @@ namespace Hal
 		}
 
 		if (x87Detect()) {
-			kprintf("X87.\n");
 			coproSaveFunc = x87Save;
 			coproLoadFunc = x87Load;
 			x87Init();
 			return;
 		}
-
-		kprintf("NO FPU.\n");
 
 		coproSaveFunc = noCopro;
 		coproLoadFunc = noCopro;
@@ -533,38 +486,34 @@ namespace Hal
 		installISRHandler(ISR_DIV_BY_ZERO, otherISRHandler);
 		installISRHandler(ISR_DEBUG, otherISRHandler);
 		installISRHandler(ISR_NMI, nmiHandler);
+
 		installISRHandler(ISR_BREAKPOINT, otherISRHandler);
 		installISRHandler(ISR_OVERFLOW, otherISRHandler);
 		installISRHandler(ISR_BOUNDS, otherISRHandler);
+
 		installISRHandler(ISR_INVALID_OPCODE, opcodeFault);
 		installISRHandler(ISR_DOUBLE_FAULT, doubleFault);
-		installISRHandler(ISR_COPROCESSOR_SEGMENT_OVERRUN, otherISRHandler);
-		installISRHandler(ISR_INVALID_TSS, otherISRHandler);
-		installISRHandler(ISR_SEGMENT_NOT_PRESENT, otherISRHandler);
-		installISRHandler(ISR_STACK_SEGMENT, otherISRHandler);
+
+		for (int i = ISR_COPROCESSOR_SEGMENT_OVERRUN; i < ISR_STACK_SEGMENT; ++i) {
+			installISRHandler(i, otherISRHandler);
+		}
+
 		installISRHandler(ISR_GENERAL_PROTECTION, gpFault);
 		installISRHandler(ISR_PAGE_FAULT, pgFault);
-		installISRHandler(ISR_RESERVED, otherISRHandler);
-		installISRHandler(ISR_FPU_EXCEPTION, otherISRHandler);
-		installISRHandler(ISR_ALIGNMENT_CHECK, otherISRHandler);
-		installISRHandler(ISR_MACHINE_CHECK, otherISRHandler);
-		installISRHandler(ISR_SIMD_EXCEPTION, otherISRHandler);
-		installISRHandler(ISR_VIRTULIZATION_EXCEPTION, otherISRHandler);
-		installISRHandler(ISR_SECURITY_EXCEPTION, otherISRHandler);
+
+		for (int i = ISR_RESERVED; i < ISR_SECURITY_EXCEPTION; ++i) {
+			installISRHandler(i, otherISRHandler);
+		}
+
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcast-function-type"
 		installISRHandler(96, reinterpret_cast<void(*)(regs*, void*)>(Sys::systemCall));
 #pragma GCC diagnostic pop
 
-
-
-
 		computer->clock = nullptr;
 
 		if (computer->clock == nullptr) {
-			Krnl::setBootMessage("Starting RTC driver...");
-
 			RTC* rtc = new RTC();
 			rtc->detectionType = DetectionType::ISAProbe;
 			computer->addChild(rtc);
