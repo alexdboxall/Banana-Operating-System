@@ -39,7 +39,7 @@ namespace Krnl
 		activeTerminal->setDefaultColours(VgaColour::White, VgaColour::Blue);
 
 		//print error message
-		activeTerminal->puts("\n\n     ");
+		activeTerminal->puts("\n\n      ");
 		activeTerminal->setDefaultColours(VgaColour::Blue, VgaColour::White);
 		activeTerminal->puts(" STOP ERROR ");
 		activeTerminal->setDefaultColours(VgaColour::White, VgaColour::Blue);
