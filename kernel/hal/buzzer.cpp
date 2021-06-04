@@ -16,7 +16,7 @@ void beepThread(void* v)
 	unlockScheduler();
 
 	milliTenthSleep(((int) v) * 10);
-	HalMakeKeep(0);
+	HalMakeBeep(0);
 
 	blockTask(TaskState::Terminated);
 }
