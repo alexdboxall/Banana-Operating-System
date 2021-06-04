@@ -171,7 +171,7 @@ extern int taskSwitchesPostponedFlag;
 
 static inline __attribute__((always_inline)) void disableIRQs(void)
 {
-	Hal::disableIRQs();
+	HalDisableInterrupts();
 	irqDisableCounter++;
 }
 
@@ -184,7 +184,7 @@ static inline __attribute__((always_inline)) void enableIRQs(void)
 {
 	irqDisableCounter--;
 	if (irqDisableCounter == 0) {
-		Hal::enableIRQs();
+		HalEnableInterrupts();
 	}
 }
 

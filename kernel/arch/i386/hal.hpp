@@ -37,12 +37,12 @@ INLINE void HalLoadCoprocessor(void*)
 	asm volatile ("mov %0, %%cr0" :: "r"(cr0));
 }
 
-INLINE void HalEnableIRQs()
+INLINE void HalEnableInterrupts()
 {
 	asm volatile ("sti");
 }
 
-INLINE void HalDisableIRQs()
+INLINE void HalDisableInterrupts()
 {
 	asm volatile ("cli");
 }

@@ -26,12 +26,12 @@ extern "C" void _ZdlPv(void* p)			//	operator delete(void*)
 
 extern "C" void _Z11disableIRQsv()
 {
-	disableIRQs();
+	HalDisableInterrupts();
 }
 
 extern "C" void _Z10enableIRQsv()
 {
-	enableIRQs();
+	HalEnableInterrupts();
 }
 
 extern "C" void _Z13lockSchedulerv()
