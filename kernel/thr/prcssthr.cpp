@@ -63,15 +63,15 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 	static uint64_t elapsed = 0;
 	static uint64_t lastCount = 0;
 
-	currentCount = Hal::readTimestampCounter();
+	currentCount = HalQueryPerformanceCounter();
 	elapsed = currentCount - lastCount;
 	lastCount = currentCount;
 
 	currentTaskTCB->timeKeeping += elapsed;
 
-	Hal::saveCoprocessor(currentTaskTCB->fpuState);
+	HalSaveCoprocessor(currentTaskTCB->fpuState);
 	switchToThreadASM(nextThreadToRun);
-	Hal::loadCoprocessor(currentTaskTCB->fpuState);
+	HalLoadCoprocessor(currentTaskTCB->fpuState);
 }
 
 ThreadControlBlock* Process::createUserThread()
@@ -99,7 +99,7 @@ ThreadControlBlock* Process::createThread(void (*where)(void*), void* context, i
 
 	threadUsage |= (1 << threadNo);
 	if (!threads[threadNo].vm86Task) {
-		threads[threadNo].fpuState = Hal::allocateCoprocessorState();
+		threads[threadNo].fpuState = HalAllocateCoprocessorState();
 	}
 	threads[threadNo].cr3 = vas->pageDirectoryBasePhysical;
 	threads[threadNo].startContext = context;
@@ -144,7 +144,7 @@ void setupMultitasking(void (*where)())
 	setActiveTerminal(p->terminal);
 
 	p->threadUsage |= 1;
-	p->threads[0].fpuState = Hal::allocateCoprocessorState();
+	p->threads[0].fpuState = HalAllocateCoprocessorState();
 	p->threads[0].cr3 = p->vas->pageDirectoryBasePhysical;
 	p->threads[0].esp = VIRT_APP_STACK_USER_TOP - STACK_LEEWAY;
 	p->threads[0].rtid = 0;
