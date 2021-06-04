@@ -1105,7 +1105,7 @@ void begin(void* a)
 
         for (int y = 0; y < 25; ++y) {
             for (int x = 0; x < 80; ++x) {
-                Hal::consoleWriteCharacter(' ', 7, 0, x, y);
+                HalConsoleWriteCharacter(' ', 7, 0, x, y);
             }
         }
        
