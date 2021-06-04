@@ -5,97 +5,57 @@
 
 #define INLINE inline __attribute__((always_inline)) 
 
-extern uint64_t(*_i386_HAL_tscFunction)();
+void HalInitialise();
+void HalInitialiseCoprocessor();
+void HalPanic(const char* message);
+uint64_t HalQueryPerformanceCounter();
+void HalMakeBeep(int hertz);
+uint32_t HalGetRand();
+void HalEndOfInterrupt(int);
+void HalRestart();
+void HalShutdown();
+void HalSleep();
+void HalConsoleScroll(int fg, int bg);
+void HalConsoleWriteCharacter(char c, int fg, int bg, int x, int y);
+void HalConsoleCursorUpdate(int x, int y);
 
-namespace Hal
+INLINE void* HalAllocateCoprocessorState()
 {
-	void initialise();
+	return nullptr;
+}
 
-	void initialiseCoprocessor();
+INLINE void HalSaveCoprocessor(void*)
+{
 
-	INLINE void* allocateCoprocessorState()
-	{
-		return nullptr;
-	}
-		
-	INLINE void saveCoprocessor(void*)
-	{
+}
 
-	}
+INLINE void HalLoadCoprocessor(void*)
+{
+	size_t cr0;
+	asm volatile ("mov %%cr0, %0" : "=r"(cr0));
+	cr0 |= 8;
+	asm volatile ("mov %0, %%cr0" :: "r"(cr0));
+}
 
-	INLINE void loadCoprocessor(void*)
-	{
-		size_t cr0;
-		asm volatile ("mov %%cr0, %0" : "=r"(cr0));
-		cr0 |= 8;
-		asm volatile ("mov %0, %%cr0" :: "r"(cr0));
-	}
+INLINE void HalEnableIRQs()
+{
+	asm volatile ("sti");
+}
 
-	void panic(const char* message);
+INLINE void HalDisableIRQs()
+{
+	asm volatile ("cli");
+}
 
-	INLINE void enableIRQs()
-	{
-		asm volatile ("sti");
-	}
+INLINE void HalStallProcessor()
+{
+	asm volatile ("hlt");
+}
 
-	INLINE void disableIRQs()
-	{
-		asm volatile ("cli");
-	}
-
-	INLINE void pushIRQs(int* ptr)
-	{
-		panic("[i386] pushIRQs not implemented");
-	}
-
-	INLINE void popIRQs(int* ptr)
-	{
-		panic("[i386] popIRQs not implemented");
-	}
-
-	INLINE bool areIRQsOn()
-	{
-		unsigned long flags;
-		asm volatile ("pushf\n\t"
-					  "pop %0"
-					  : "=g"(flags));
-		return flags & (1 << 9);
-	}
-
-	INLINE uint64_t readTimestampCounter()
-	{
-		return _i386_HAL_tscFunction();
-	}
-
-	void makeBeep(int hertz);
-
-	INLINE void stopBeep()
-	{
-		makeBeep(0);
-	}
-
-	uint32_t getRand();
-
-	void endOfInterrupt(int);
-
-	void restart();
-	void shutdown();
-	void sleep();
-
-	void consoleScroll(int fg, int bg);
-	void consoleWriteCharacter(char c, int fg, int bg, int x, int y);
-	void consoleCursorUpdate(int x, int y);
-
-	INLINE void stallProcessor()
-	{
-		asm volatile ("hlt");
-	}
-
-	INLINE void systemIdle()
-	{
-		Hal::stallProcessor();
-	}
-};
+INLINE void HalSystemIdle()
+{
+	Hal::stallProcessor();
+}
 
 INLINE uint8_t inb(uint16_t port)
 {
