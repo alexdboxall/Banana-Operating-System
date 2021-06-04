@@ -39,7 +39,11 @@ namespace Krnl
 		activeTerminal->setDefaultColours(VgaColour::White, VgaColour::Blue);
 
 		//print error message
-		activeTerminal->puts("\n      FATAL SYSTEM ERROR\n\n");
+		activeTerminal->puts("\n\n     ");
+		activeTerminal->setDefaultColours(VgaColour::Blue, VgaColour::Whote);
+		activeTerminal->puts(" STOP ERROR ");
+		activeTerminal->setDefaultColours(VgaColour::White, VgaColour::Blue);
+		activeTerminal->puts("\n\n");
 		activeTerminal->puts("      A problem has occured and Banana cannot continue.\n\n");
 		activeTerminal->puts("          ");
 		activeTerminal->puts(message);
@@ -61,22 +65,6 @@ namespace Krnl
 		activeTerminal->puts("      screen appears again, hold the 7 key on startup and disable\n");
 		activeTerminal->puts("      APIC and ACPI.\n\n\n");
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wframe-address"
-	
-		activeTerminal->puts("      Technical information:\n        ");
-		activeTerminal->puts("    CR0: ");
-		activeTerminal->putx(CPU::readCR0());
-		activeTerminal->puts("    CR2: ");
-		activeTerminal->putx(CPU::readCR2());
-		activeTerminal->puts("\n            CR3: ");
-		activeTerminal->putx(CPU::readCR3());
-		activeTerminal->puts("    CR4: ");
-		activeTerminal->putx(CPU::readCR4());
-		activeTerminal->puts("\n            Callers: ");
-
-#pragma GCC diagnostic pop
-
 		//endlessly loop
 		while (1) {
 			char c = inb(0x60);
@@ -89,5 +77,4 @@ namespace Krnl
 			}
 		}
 	}
-
 }
