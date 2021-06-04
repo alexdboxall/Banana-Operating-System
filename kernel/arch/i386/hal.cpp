@@ -239,6 +239,12 @@ void i386LoadCoprocessor(void* buf)
 	coproLoadFunc(addr);
 }
 
+
+void noCopro(size_t a)
+{
+
+}
+
 ThreadControlBlock* fpuOwner = nullptr;
 
 void x87EmulHandler(regs* r, void* context)
