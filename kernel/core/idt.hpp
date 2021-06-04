@@ -33,9 +33,7 @@ struct IDTDescriptor
 {
 	uint16_t size;
 	size_t offset;
-
 };
-
 #pragma pack(pop)
 
 class IDT
