@@ -54,7 +54,7 @@ INLINE void HalStallProcessor()
 
 INLINE void HalSystemIdle()
 {
-	Hal::stallProcessor();
+	HalStallProcessor();
 }
 
 INLINE uint8_t inb(uint16_t port)
