@@ -107,7 +107,7 @@ extern "C" void kernel_main()
 			++y;
 			addx = 10;
 		} else {
-			Hal::consoleWriteCharacter(titleScreen[i], 0xE, 0x0, x + addx, y);
+			HalConsoleWriteCharacter(titleScreen[i], 0xE, 0x0, x + addx, y);
 			++x;
 		}
 	}

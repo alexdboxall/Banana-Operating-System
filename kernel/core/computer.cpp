@@ -87,7 +87,7 @@ int Computer::open(int a, int b, void* vas)
 	cpu[0]->open(0, 0, vas);		//FIRST ARG IS CPU NUMBER
 	
 	Krnl::setBootMessage("Detecting numerical coprocessors...");
-	Hal::initialiseCoprocessor();
+	HalInitialiseCoprocessor();
 
 	Krnl::setBootMessage("Setting up multitasking...");
 	setupMultitasking(Krnl::firstTask);

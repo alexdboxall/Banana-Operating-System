@@ -135,7 +135,7 @@ void VgaText::scrollScreen()
 		if (scrollLock) {
 			scrollPoint--;
 		} else {
-			Hal::consoleScroll((uint8_t) currentFg, (uint8_t) currentBg);
+			HalConsoleScroll((uint8_t) currentFg, (uint8_t) currentBg);
 		}
 	}
 
@@ -153,7 +153,7 @@ void VgaText::writeCharacter(char c, enum VgaColour fg, enum VgaColour bg, int x
 	*ptr = word;
 
 	if (this == activeTerminal) {
-		Hal::consoleWriteCharacter(c, (int) fg, (int) bg, x, y);
+		HalConsoleWriteCharacter(c, (int) fg, (int) bg, x, y);
 	}
 }
 
@@ -207,7 +207,7 @@ void VgaText::puts(const char* c, enum VgaColour fg, enum VgaColour bg)
 
 		*ptr++ = combineCharAndColour(c[i], cols);
 		if (this == activeTerminal) {
-			Hal::consoleWriteCharacter(c[i], (int) fg, (int) bg, cursorX, cursorY);
+			HalConsoleWriteCharacter(c[i], (int) fg, (int) bg, cursorX, cursorY);
 		}
 		needsRepainting = true;
 
@@ -229,7 +229,7 @@ void VgaText::puts(const char* c, enum VgaColour fg, enum VgaColour bg)
 
 void VgaText::updateCursor()
 {
-	Hal::consoleCursorUpdate(cursorX, cursorY);
+	HalConsoleCursorUpdate(cursorX, cursorY);
 }
 
 // END HARDWARE SPECIFIC

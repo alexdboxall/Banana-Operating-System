@@ -183,7 +183,7 @@ int CPU::open(int num, int b, void* vas_)
 	detectFeatures();
 
 	Krnl::setBootMessage("Starting the HAL...");
-	Hal::initialise();
+	HalInitialise();
 
 	timer = setupTimer(sysBootSettings & 16 ? 30 : 100);
 

@@ -26,7 +26,7 @@ void idleFunction(void* context)
 	unlockScheduler();
 	
 	while (1) {
-		Hal::systemIdle();
+		HalSystemIdle();
 		idleCommon();
 	}
 

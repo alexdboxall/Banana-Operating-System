@@ -25,8 +25,8 @@ void* INT_contexts[256][4];
 extern "C" uint64_t int_handler(struct regs* r)
 {
 	while (Krnl::kernelInPanic) {
-		Hal::disableIRQs();
-		Hal::stallProcessor();
+		HalDisableIRQs();
+		HalStallProcessor();
 	}
 
 	int num = r->int_no;
@@ -35,7 +35,7 @@ extern "C" uint64_t int_handler(struct regs* r)
 	//this is done now because the handler could cause a task switch, which
 	//would mean the EOI never gets called, and so the system basically locks up
 	if (num >= 32 && num < 32 + 24) {
-		Hal::endOfInterrupt(num - 32);
+		HalEndOfInterrupt(num - 32);
 	}
 
 	auto handleList = INT_handlers[num];
