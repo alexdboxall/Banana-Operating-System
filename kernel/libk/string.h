@@ -17,6 +17,7 @@ extern "C" {
 		return originalDest;
 	}
 
+	void strncpy(char* _dst, const char* _src, size_t _n);
 	void* memmove(void*, const void*, size_t);
 	void* memset(void*, int, size_t);
 	size_t strlen(const char*);
@@ -24,6 +25,7 @@ extern "C" {
 	int strcmp(const char* s1, const char* s2);
 	int strncmp(const char* s1, const char* s2, size_t num);
 	char* strcat(char* dest, const char* src);
+	char* strchr(char* str, int ch);
 
 #ifdef __cplusplus
 }

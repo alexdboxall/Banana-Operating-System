@@ -42,6 +42,9 @@ ISO9660 systems, as these were used as references as well.
 
 char cdDriveLetter;
 
+#define lock(x)
+#define unlock(x)
+
 extern int isoReadDiscSectorHelper(uint8_t* buffer, uint32_t sector, int count, char drvLetter);
 int isoReadDiscSector(uint8_t* buffer, uint32_t sector, int count)
 {

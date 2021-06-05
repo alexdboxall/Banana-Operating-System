@@ -107,3 +107,18 @@ int strncmp(const char* s1, const char* s2, size_t n)
 		return (*(unsigned char*) s1 - *(unsigned char*) s2);
 	}
 }
+
+char* strchr(char* str, int ch)
+{
+	for (;; str++) {
+		if (*str == ch) return str;
+		if (!*str) return NULL;
+	}
+	return NULL;
+}
+
+void strncpy(char* _dst, const char* _src, size_t _n)
+{
+	size_t i = 0;
+	while (i++ != _n && (*_dst++ = *_src++));
+}
