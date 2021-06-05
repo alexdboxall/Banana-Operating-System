@@ -39,8 +39,6 @@ public:
 
 	void setBootMessage(const char* message);
 
-	void setDiskActivityLight(int disk, bool state);
-
 	bool nmiEnabled();
 	void enableNMI(bool enable = true);
 	void disableNMI();

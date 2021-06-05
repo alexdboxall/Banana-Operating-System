@@ -315,9 +315,6 @@ namespace Krnl
 		Krnl::setBootMessage("Loading more device drivers...");
 		computer->root->loadDriversForAll();
 
-		Krnl::setBootMessage("Configuring processors...");
-		Krnl::startCPUs();
-
 		Krnl::setBootMessage("Getting ready...");
 		Thr::executeDLL(Thr::loadDLL("C:/Banana/System/system.dll"), computer);
 
@@ -356,15 +353,5 @@ void Computer::handleNMI()
 
 	if (sysB & (1 << 7)) {
 		panic("MEMORY ERROR");
-	}
-}
-
-void Computer::setDiskActivityLight(int disk, bool state)
-{
-	if (disk == 0 || disk == 1) {
-		uint8_t sysA = inb(PORT_SYSTEM_CONTROL_A);
-		sysA &= ~(0x40 << disk);
-		sysA |= 0x40 << ((int) state);
-		outb(PORT_SYSTEM_CONTROL_A, sysA);
 	}
 }
