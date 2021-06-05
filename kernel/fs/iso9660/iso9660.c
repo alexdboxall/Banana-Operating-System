@@ -196,12 +196,6 @@ typedef struct
 	char	name[1];
 } iso_dirent_t;
 
-/* Util function to reverse the byte order of a u32 */
-static u32 ntohl_32(const void* data)
-{
-	const u8* d = (const u8*) data;
-	return (d[0] << 24) | (d[1] << 16) | (d[2] << 8) | (d[3] << 0);
-}
 
 /* This seems kinda silly, but it's important since it allows us
    to do unaligned accesses on a buffer */
@@ -741,7 +735,6 @@ int64_t iso_seek(int fd, int64_t offset, int whence)
 	}
 
 	/* Check bounds */
-	if (fh[fd].ptr < 0) fh[fd].ptr = 0;
 	if (fh[fd].ptr > fh[fd].size) fh[fd].ptr = fh[fd].size;
 
 	return fh[fd].ptr;
