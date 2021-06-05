@@ -53,7 +53,6 @@ int readSectorFromCDROM(uint32_t sector, uint8_t* data, char driveletter)
 			recentSector = sector;
 			recentDriveletter = driveletter;
 		} else {
-			memset(data, 0, 2048);
 			return 1;
 		}
 	}
@@ -65,7 +64,8 @@ int readSectorFromCDROM(uint32_t sector, uint8_t* data, char driveletter)
 bool readRoot(uint32_t* lbaOut, uint32_t* lenOut, char driveletter)
 {
 	uint8_t sector[2048];
-	readSectorFromCDROM(16, sector, driveletter);
+	int fail = readSectorFromCDROM(16, sector, driveletter);
+	if (fail) return false;
 	uint8_t root[34];
 	memcpy(root, sector + 156, 34);
 
@@ -136,7 +136,10 @@ bool getFileData(char* filename, uint32_t* lbaOut, uint32_t* lenOut, char drivel
 	uint32_t lba = 0, len = 0;
 	*lbaOut = -1;
 	*lenOut = -1;
-	readRoot(&lba, &len, driveletter);
+	int fail = readRoot(&lba, &len, driveletter);
+	if (fail) {
+		return false;
+	}
 
 	if (strlen(filename) <= 3) {
 		*lbaOut = lba;
@@ -196,7 +199,7 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 
 	int dir;
 	bool res = getFileData((char*) __fn, &lbaO, &lenO, __fn[0], &dir);
-	if (!res || dir) {
+	if (!res || dir || lbaO == -1) {
 		file->error = true;
 		return FileStatus::Failure;
 	}
