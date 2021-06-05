@@ -88,8 +88,10 @@ void playThread(void* __)
 	f->open(FileOpenMode::Read);
 
 	while (1) {
-		int bytesRead = 0;
+		int bytesRead = 0;	
+		kprintf("about to read.\n");
 		FileStatus st = f->read(4096 * 2, buf, &bytesRead);
+		kprintf("we just read.\n");
 
 		if (bytesRead == 0 || st != FileStatus::Success) {
 			kprintf("SONG SHOULD BE DONE.\n");
@@ -166,6 +168,7 @@ void AC97::handleIRQ()
 	kprintf("we got %d samples to 0x%X\n", sgot, dma);
 
 	thePCI->writeBAR16(nabm, 0x1C, 0x16);
+	kprintf("done.\n");
 	++handles;
 }
 

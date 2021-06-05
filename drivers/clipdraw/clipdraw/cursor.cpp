@@ -122,9 +122,6 @@ namespace Krnl
 
 void processMouse(int mx, int my, int buttons)
 {
-    if (mx > 637 && my < 3) {
-        panic("TESTING THE PANIC HANDLER");
-    }
     Krnl::userIOReceived();
 
     int i, x, y;

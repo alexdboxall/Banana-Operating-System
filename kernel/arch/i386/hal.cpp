@@ -150,6 +150,8 @@ void gpFault(regs* r, void* context)
 
 void pgFault(regs* r, void* context)
 {
+	kprintf("PAGE FAULT AT ADDR: 0x%X. EIP = 0x%X\n", CPU::readCR2(), r->eip);
+
 	if (currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2())) {
 		return;
 	}

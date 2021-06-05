@@ -51,7 +51,7 @@ public:
 	void handleNMI();
 
 	Clock* clock;
-	CPU* cpu[32];
+	CPU* cpu[1];
 	FPU* fpu;
 
 	ACPI* root;

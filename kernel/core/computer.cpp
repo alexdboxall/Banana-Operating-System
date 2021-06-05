@@ -42,19 +42,8 @@ Computer::Computer() : Device("Computer")
 
 	features.hasACPI = true;
 
-	//CMOS
 	ports[noPorts].rangeStart = PORT_CMOS_BASE;
 	ports[noPorts].rangeLength = 2;
-	ports[noPorts++].width = 0;
-
-	//SYSTEM CONTROL PORT A
-	ports[noPorts].rangeStart = PORT_SYSTEM_CONTROL_A;
-	ports[noPorts].rangeLength = 1;
-	ports[noPorts++].width = 0;
-
-	//SYSTEM CONTROL PORT B
-	ports[noPorts].rangeStart = PORT_SYSTEM_CONTROL_B;
-	ports[noPorts].rangeLength = 1;
 	ports[noPorts++].width = 0;
 }
 
