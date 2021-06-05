@@ -72,21 +72,3 @@ int isxdigit(int c)
 {
     return isdigit(c) || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f');
 }
-
-int tolower(int c)
-{
-    if (isupper(c)) {
-        c -= 'A';
-        c += 'a';
-    }
-    return c;
-}
-
-int toupper(int c)
-{
-    if (islower(c)) {
-        c -= 'a';
-        c += 'A';
-    }
-    return c;
-}

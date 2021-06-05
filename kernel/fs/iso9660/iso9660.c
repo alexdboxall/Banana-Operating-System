@@ -29,7 +29,7 @@ ISO9660 systems, as these were used as references as well.
 
 */
 
-#define MAX_ISO_FILES 32
+#define MAX_ISO_FILES 16
 
 #include <fs/iso9660/iso9660.h>
 #include <core/kheap.hpp>

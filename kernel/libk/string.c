@@ -93,32 +93,3 @@ int strcmp(const char* s1, const char* s2)
 		s1++, s2++;
 	return *(const unsigned char*) s1 - *(const unsigned char*) s2;
 }*/
-
-int strncmp(const char* s1, const char* s2, size_t n)
-{
-	while (n && *s1 && (*s1 == *s2)) {
-		++s1;
-		++s2;
-		--n;
-	}
-	if (n == 0) {
-		return 0;
-	} else {
-		return (*(unsigned char*) s1 - *(unsigned char*) s2);
-	}
-}
-
-char* strchr(char* str, int ch)
-{
-	for (;; str++) {
-		if (*str == ch) return str;
-		if (!*str) return NULL;
-	}
-	return NULL;
-}
-
-void strncpy(char* _dst, const char* _src, size_t _n)
-{
-	size_t i = 0;
-	while (i++ != _n && (*_dst++ = *_src++));
-}
