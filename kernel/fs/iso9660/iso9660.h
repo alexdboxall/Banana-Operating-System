@@ -31,6 +31,7 @@ ISO9660 systems, as these were used as references as well.
 
 */
 
+#include <stddef.h>
 
 int iso_open(const char* fn, int mode);
 void iso_close(int fd);

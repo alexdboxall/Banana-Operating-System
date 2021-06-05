@@ -44,8 +44,11 @@ ISO9660 systems, as these were used as references as well.
 typedef uint8_t u8;
 typedef uint16_t u16;
 typedef uint32_t u32;
+typedef int8_t s8;
+typedef int16_t s16;
+typedef int32_t s32;
 
-#define dbglog(sev,prm...) kprintf(sev prm);
+#define dbglog(sev,prm...)
 
 static struct bdev* iso9660_dev;
 
@@ -261,7 +264,7 @@ static int bread_cache(cache_block_t** cache, u32 sector)
 	if (i >= NUM_CACHE_BLOCKS) { i = 0; }
 
 	/* Load the requested block */
-	j = iso9660_dev->ops->read(iso9660_dev, cache[i]->data, sector, 1);
+	j = iso_read(iso9660_dev, cache[i]->data, sector, 1);
 	if (j < 0) {
 		dbglog(DBG_ERROR, "fs_iso9660: can't read_sectors for %d: %d\n", sector, j);
 		//gli		if (j == ERR_DISC_CHG || j == ERR_NO_DISC) {
@@ -653,7 +656,7 @@ ssize_t iso_read(int fd, void* buf, size_t bytes)
 				thissect);*/
 
 				// Do the read
-			if (iso9660_dev->ops->read(iso9660_dev, outbuf,
+			if (iso_read(iso9660_dev, outbuf,
 				fh[fd].first_extent + fh[fd].ptr / 2048,
 				thissect) <= 0) {
 				// Something went wrong...
