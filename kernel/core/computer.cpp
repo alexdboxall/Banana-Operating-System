@@ -8,7 +8,6 @@
 #include "hw/acpi.hpp"
 #include "hal/clock.hpp"
 #include "hw/cpu.hpp"
-#include "hw/smp.hpp"
 #include "krnl/hal.hpp"
 #include "hal/vcache.hpp"
 #include "fs/vfs.hpp"
