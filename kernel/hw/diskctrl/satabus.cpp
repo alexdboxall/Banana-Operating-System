@@ -31,6 +31,7 @@
 #define HBA_PORT_DET_PRESENT	3
 
 #define HBA_PxCMD_ST    0x0001
+#define HBA_PxCMD_SUD   0x0002
 #define HBA_PxCMD_FRE   0x0010
 #define HBA_PxCMD_FR    0x4000
 #define HBA_PxCMD_CR    0x8000
@@ -68,8 +69,8 @@ int SATABus::open(int, int, void*)
 
 	// make sure ST, CR, FR, FE are cleared
 
-	/*//now reset the thing
-	abar->ghc |= 1;*/
+	//now reset the thing
+	abar->ghc |= 1;
 	int timeout = 0;
 	while (abar->ghc & 1) {
 		milliTenthSleep(10);
@@ -213,7 +214,11 @@ void SATABus::portRebase(HBA_PORT* port, int portNo)
 		cmdheader[i].ctbau = 0;
 	}
 
+	port->is = (uint32_t) -1;
+
 	startCmd(port);	// Start command engine
+
+	port->is = (uint32_t) -1;
 }
 
 void SATABus::startCmd(HBA_PORT* port)
@@ -226,6 +231,8 @@ void SATABus::startCmd(HBA_PORT* port)
 	// Set FRE (bit4) and ST (bit0)
 	port->cmd |= HBA_PxCMD_FRE;
 	port->cmd |= HBA_PxCMD_ST;
+	
+	//port->cmd |= HBA_PxCMD_SUD;
 }
 
 void SATABus::stopCmd(HBA_PORT* port)
@@ -235,6 +242,8 @@ void SATABus::stopCmd(HBA_PORT* port)
 
 	// Clear FRE (bit4)
 	port->cmd &= ~HBA_PxCMD_FRE;
+
+	//port->cmd &= ~HBA_PxCMD_SUD;
 
 	// Wait until FR (bit14), CR (bit15) are cleared
 	while (1) {
