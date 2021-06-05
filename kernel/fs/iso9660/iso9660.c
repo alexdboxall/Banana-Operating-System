@@ -570,6 +570,12 @@ static iso_dirent_t* find_object_path(const char* fn, int dir, iso_dirent_t* sta
 /********************************************************************************/
 /* File primitives */
 
+struct direntX
+{
+	uint64_t d_reclen;
+	char d_name[120];
+};
+
 /* File handles.. I could probably do this with a linked list, but I'm just
    too lazy right now. =) */
 static struct
@@ -578,7 +584,7 @@ static struct
 	int		dir;		/* >0 if a directory */
 	u32		ptr;		/* Current read position in bytes */
 	u32		size;		/* Length of file in bytes */
-	struct dirent	dirent;		/* A static dirent to pass back to clients */
+	struct direntX	dirent;		/* A static dirent to pass back to clients */
 	int		broken;		/* >0 if the CD has been swapped out since open */
 
 } fh[MAX_ISO_FILES];
@@ -783,7 +789,7 @@ void fn_postprocess(char* fnin)
 }
 
 /* Read a directory entry */
-struct dirent* iso_readdir(int fd)
+struct direntX* iso_readdir(int fd)
 {
 	int		c;
 	iso_dirent_t* de;
