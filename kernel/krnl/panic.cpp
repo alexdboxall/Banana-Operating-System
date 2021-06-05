@@ -14,9 +14,6 @@
 
 #include "hal/mouse.hpp"
 
-extern "C" void realmodeBSOD();
-extern VAS* panicVAS;
-
 namespace Krnl
 {
 	bool kernelInPanic = false;

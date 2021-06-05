@@ -321,8 +321,6 @@ void VAS::freeAllocatedPages(size_t virt) {
 	}
 }
 
-VAS* panicVAS;
-
 VAS::VAS()
 {
 	firstVAS = this;
@@ -330,8 +328,6 @@ VAS::VAS()
 	supervisorVAS = true;
 	specialFirstVAS = true;
 	pageDirectoryBase = (size_t*) VIRT_KRNL_PAGE_DIRECTORY;
-
-	panicVAS = new VAS(true);
 }
 
 VAS::~VAS()

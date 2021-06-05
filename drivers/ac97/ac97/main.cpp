@@ -152,7 +152,6 @@ void ac97IRQHandler(regs* r, void* context)
 	ac97->handleIRQ();
 }
 
-int handles = 0;
 void AC97::handleIRQ()
 {
 	kprintf("AC97 IRQ.\n");
@@ -168,8 +167,6 @@ void AC97::handleIRQ()
 	kprintf("we got %d samples to 0x%X\n", sgot, dma);
 
 	thePCI->writeBAR16(nabm, 0x1C, 0x16);
-	kprintf("done.\n");
-	++handles;
 }
 
 void AC97::setSampleRate(int hertz)
