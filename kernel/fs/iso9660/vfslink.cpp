@@ -53,6 +53,7 @@ int readSectorFromCDROM(uint32_t sector, uint8_t* data, char driveletter)
 			recentSector = sector;
 			recentDriveletter = driveletter;
 		} else {
+			kprintf("readSectorFromCDROM FAIL.\n");
 			memset(data, 0, 2048);
 			return 1;
 		}
@@ -66,7 +67,10 @@ bool readRoot(uint32_t* lbaOut, uint32_t* lenOut, char driveletter)
 {
 	uint8_t sector[2048];
 	int fail = readSectorFromCDROM(16, sector, driveletter);
-	if (fail) return false;
+	if (fail) {
+		kprintf("readRoot FAIL.\n");
+		return false;
+	}
 	uint8_t root[34];
 	memcpy(root, sector + 156, 34);
 
@@ -76,9 +80,18 @@ bool readRoot(uint32_t* lbaOut, uint32_t* lenOut, char driveletter)
 	return true;
 }
 
+int recursionDepth = 0;
 bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 					 uint32_t* lbaOut, uint32_t* lenOut, char driveletter, int* dirout)
 {
+	recursionDepth += 1;
+	if (recursionDepth > 30) {
+		panic("VERY STRANGE");
+	}
+	if (filename == 0 || filename[0] == 0) {
+		recursionDepth -= 1;
+		return false;
+	}
 	if (filename[1] == ':') {
 		filename += 2;
 	}
@@ -110,6 +123,7 @@ bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 	uint8_t* o = __memmem(data, startLen, (uint8_t*) firstPart, strlen(firstPart));
 	if (o == 0) {
 		free(data);
+		recursionDepth -= 1;
 		return false;
 	}
 	o -= 33;            //we searched by filename using memmem, which starts at 33
@@ -120,15 +134,20 @@ bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 
 	if (dir) {
 		free(data);
-		return readRecursively(filename, newLba, newLen, lbaOut, lenOut, driveletter, dirout);
+		bool val = readRecursively(filename, newLba, newLen, lbaOut, lenOut, driveletter, dirout);
+		recursionDepth -= 1;
+		return val;
+
 	} else {
 		*lbaOut = newLba;      //data
 		*lenOut = newLen;      //data
 		*dirout = isDir;
 		free(data);
+		recursionDepth -= 1;
 		return true;
 	}
 
+	recursionDepth -= 1;
 	return false;
 }
 
@@ -139,6 +158,7 @@ bool getFileData(char* filename, uint32_t* lbaOut, uint32_t* lenOut, char drivel
 	*lenOut = -1;
 	bool success = readRoot(&lba, &len, driveletter);
 	if (!success) {
+		kprintf("getFileData FAIL.\n");
 		return false;
 	}
 
@@ -201,6 +221,7 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 	int dir;
 	bool res = getFileData((char*) __fn, &lbaO, &lenO, __fn[0], &dir);
 	if (!res || dir) {
+		kprintf("ISO9660::open FAIL.\n");
 		file->error = true;
 		return FileStatus::Failure;
 	}

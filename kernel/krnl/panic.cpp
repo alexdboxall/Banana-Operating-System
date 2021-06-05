@@ -46,6 +46,8 @@ namespace Krnl
 		activeTerminal->puts(message);
 		activeTerminal->puts("\n\n");
 
+		while (1);
+
 		char* drvName = Thr::getDriverNameFromAddress((size_t) __builtin_return_address(0));
 		if (drvName) {
 			activeTerminal->puts("      The currently executing driver was:\n\n");
