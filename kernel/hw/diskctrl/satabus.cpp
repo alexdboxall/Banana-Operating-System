@@ -52,7 +52,7 @@ int SATABus::open(int, int, void*)
 	//enable AHCI mode
 	abar->ghc |= (1ULL << 31ULL);
 
-	/*//perform BIOS/OS handoff
+	//perform BIOS/OS handoff
 	if (abar->cap2 & 1) {
 		kprintf("BIOS/OS handoff supported.\n");
 
@@ -68,7 +68,7 @@ int SATABus::open(int, int, void*)
 
 	// make sure ST, CR, FR, FE are cleared
 
-	//now reset the thing
+	/*//now reset the thing
 	abar->ghc |= 1;
 	int timeout = 0;
 	while (abar->ghc & 1) {
