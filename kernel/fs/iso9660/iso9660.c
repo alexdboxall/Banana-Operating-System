@@ -596,14 +596,12 @@ void iso_break_all()
 }
 
 /* Open a file or directory */
-int iso_open(const char* fn, int mode)
+int iso_open(const char* fn)
 {
 	int		fd;
 	iso_dirent_t* de;
 
 	/* Make sure they don't want to open things as writeable */
-	if (mode != O_RDONLY)
-		return 0;
 
 	/* Do this only when we need to (this is still imperfect) */
 	if (!percd_done && init_percd() < 0)
