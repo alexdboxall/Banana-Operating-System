@@ -78,13 +78,13 @@ int SATABus::open(int, int, void*)
 			kprintf("AHCI reset timeout...\n");
 			break;
 		}
-	}
+	}*/
 
 	//enable AHCI mode again
 	abar->ghc |= (1ULL << 31ULL);
 
 	//enable IRQs
-	abar->ghc |= (1 << 1);*/
+	abar->ghc |= (1 << 1);
 
 	probePort(abar);
 
