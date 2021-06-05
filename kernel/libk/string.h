@@ -22,6 +22,7 @@ extern "C" {
 	size_t strlen(const char*);
 	char* strcpy(char* strDest, const char* strSrc);
 	int strcmp(const char* s1, const char* s2);
+	int strncmp(const char* s1, const char* s2, size_t num);
 	char* strcat(char* dest, const char* src);
 
 #ifdef __cplusplus

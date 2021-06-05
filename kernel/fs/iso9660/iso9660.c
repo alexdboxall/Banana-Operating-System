@@ -40,6 +40,15 @@ ISO9660 systems, as these were used as references as well.
 #define DBG_NOTICE "[iso9660] Notice: "
 #define DBG_ERROR "[iso9660] Error: "
 
+char cdDriveLetter;
+
+extern int isoReadDiscSectorHelper(uint8_t* buffer, uint32_t sector, int count, char drvLetter);
+int isoReadDiscSector(uint8_t* buffer, uint32_t sector, int count)
+{
+	return isoReadDiscSectorHelper(buffer, secctor, count, cdDriveLetter);
+}
+
+
 #include <stdint.h>
 #include <stddef.h>
 typedef uint8_t u8;
@@ -50,8 +59,6 @@ typedef int16_t s16;
 typedef int32_t s32;
 
 #define dbglog(sev,prm...)
-
-static struct bdev* iso9660_dev;
 
 int iso_reset();
 static int init_percd();
@@ -199,6 +206,7 @@ typedef struct
 {
 	s32	sector;			/* CD sector */
 	u8	data[2048];		/* Sector data */
+
 } cache_block_t;
 
 /* List of cache blocks (ordered least recently used to most recently) */
@@ -265,7 +273,7 @@ static int bread_cache(cache_block_t** cache, u32 sector)
 	if (i >= NUM_CACHE_BLOCKS) { i = 0; }
 
 	/* Load the requested block */
-	j = iso_read(iso9660_dev, cache[i]->data, sector, 1);
+	j = isoReadDiscSector(cache[i]->data, sector, 1);
 	if (j < 0) {
 		dbglog(DBG_ERROR, "fs_iso9660: can't read_sectors for %d: %d\n", sector, j);
 		//gli		if (j == ERR_DISC_CHG || j == ERR_NO_DISC) {
@@ -546,6 +554,7 @@ static struct
 	u32		size;		/* Length of file in bytes */
 	struct dirent	dirent;		/* A static dirent to pass back to clients */
 	int		broken;		/* >0 if the CD has been swapped out since open */
+
 } fh[MAX_ISO_FILES];
 
 /* Mutex for file handles */
@@ -657,7 +666,7 @@ int64_t iso_read(int fd, void* buf, size_t bytes)
 				thissect);*/
 
 				// Do the read
-			if (iso_read(iso9660_dev, outbuf,
+			if (isoReadDiscSector(outbuf,
 				fh[fd].first_extent + fh[fd].ptr / 2048,
 				thissect) <= 0) {
 				// Something went wrong...
@@ -837,8 +846,10 @@ int iso_ioctl(int hnd, void* data, size_t size)
 }
 
 /* Initialize the file system */
-int fs_iso9660_init()
+int fs_iso9660_init(char drive)
 {
+	cdDriveLetter = drive;
+
 	int i;
 
 	/* Reset fd's */
