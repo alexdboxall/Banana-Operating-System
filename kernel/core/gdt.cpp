@@ -20,14 +20,37 @@ void GDTEntry::setLimit(uint32_t limit)
 	limitHigh = (limit >> 16) & 0xF;
 }
 
-GDTDescriptor gdtDescr;
-
-extern "C" void loadGDT();
 
 GDT::GDT()
 {
 	entryCount = 0;
+}
 
+int GDT::addEntry(GDTEntry entry)
+{
+	entries[entryCount] = entry.val;
+	return (entryCount++) * 8;
+}
+
+int GDT::getNumberOfEntries()
+{
+	return entryCount;
+}
+
+GDTDescriptor gdtDescr;
+
+extern "C" void loadGDT();
+
+void GDT::flush()
+{
+	gdtDescr.size = entryCount * 8 - 1;
+	gdtDescr.offset = (size_t) (void*) entries;
+
+	loadGDT();
+}
+
+void GDT::setup()
+{
 	GDTEntry null;
 	null.setBase(0);
 	null.setLimit(0);
@@ -68,15 +91,12 @@ GDT::GDT()
 	data16.size = 0;
 	data16.gran = 0;
 
-	entries[entryCount++] = null.val;
-	entries[entryCount++] = code.val;			//0x08
-	entries[entryCount++] = data.val;			//0x10
-	entries[entryCount++] = userCode.val;		//0x18
-	entries[entryCount++] = userData.val;		//0x20
-	entries[entryCount++] = code16.val;			//0x28
-	entries[entryCount++] = data16.val;			//0x30
-
-	gdtDescr.size = entryCount * 8 - 1;
-	gdtDescr.offset = (size_t) (void*) entries;
-	loadGDT();
+	addEntry(null);
+	addEntry(code);			//0x08
+	addEntry(data);			//0x10		
+	addEntry(userCode);		//0x18
+	addEntry(userData);		//0x20
+	addEntry(code16);		//0x28
+	addEntry(data16);		//0x30
+	flush();
 }
