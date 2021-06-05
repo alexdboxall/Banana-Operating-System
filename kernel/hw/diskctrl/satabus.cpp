@@ -49,7 +49,7 @@ int SATABus::open(int, int, void*)
 {
 	abar = (HBA_MEM*) (size_t) pci.info.bar[5];
 
-	//enable AHCI mode
+	/*//enable AHCI mode
 	abar->ghc |= (1ULL << 31ULL);
 
 	//perform BIOS/OS handoff
@@ -83,11 +83,8 @@ int SATABus::open(int, int, void*)
 	//enable AHCI mode again
 	abar->ghc |= (1ULL << 31ULL);
 
-
-
-
 	//enable IRQs
-	//	abar->ghc |= (1 << 1);
+	abar->ghc |= (1 << 1);*/
 
 	probePort(abar);
 
