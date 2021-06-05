@@ -732,13 +732,13 @@ int64_t iso_seek(int fd, int64_t offset, int whence)
 
 	/* Update current position according to arguments */
 	switch (whence) {
-	case SEEK_SET:
+	case 0:
 		fh[fd].ptr = offset;
 		break;
-	case SEEK_CUR:
+	case 1:
 		fh[fd].ptr += offset;
 		break;
-	case SEEK_END:
+	case 2:
 		fh[fd].ptr = fh[fd].size + offset;
 		break;
 	default:
