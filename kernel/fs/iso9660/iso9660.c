@@ -48,7 +48,7 @@ char cdDriveLetter;
 extern int isoReadDiscSectorHelper(uint8_t* buffer, uint32_t sector, int count, char drvLetter);
 int isoReadDiscSector(uint8_t* buffer, uint32_t sector, int count)
 {
-	return isoReadDiscSectorHelper(buffer, secctor, count, cdDriveLetter);
+	return isoReadDiscSectorHelper(buffer, sector, count, cdDriveLetter);
 }
 
 int strnicmp(const char* s1, const char* s2, size_t len)
