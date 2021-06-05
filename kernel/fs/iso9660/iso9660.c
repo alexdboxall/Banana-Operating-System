@@ -29,6 +29,13 @@ ISO9660 systems, as these were used as references as well.
 
 */
 
+#pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
+#pragma GCC optimize ("-fno-align-labels")
+#pragma GCC optimize ("-fno-align-jumps")
+#pragma GCC optimize ("-fno-align-loops")
+#pragma GCC optimize ("-fno-align-functions")
+
 #define MAX_ISO_FILES 16
 
 #include <fs/iso9660/iso9660.h>
