@@ -84,7 +84,6 @@ bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 					 uint32_t* lbaOut, uint32_t* lenOut, char driveletter, int* dirout)
 {
 	if (filename == 0 || filename[0] == 0) {
-		recursionDepth -= 1;
 		return false;
 	}
 	if (filename[1] == ':') {
