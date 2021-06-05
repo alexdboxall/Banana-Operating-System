@@ -52,6 +52,18 @@ int isoReadDiscSector(uint8_t* buffer, uint32_t sector, int count)
 }
 
 
+int stricmp(const char* a, const char* b)
+{
+	int ca, cb;
+	do {
+		ca = (unsigned char) *a++;
+		cb = (unsigned char) *b++;
+		ca = tolower(toupper(ca));
+		cb = tolower(toupper(cb));
+	} while (ca == cb && ca != '\0');
+	return ca - cb;
+}
+
 #include <stdint.h>
 #include <stddef.h>
 typedef uint8_t u8;
@@ -474,7 +486,7 @@ static iso_dirent_t* find_object(const char* fn, int dir,
 
 				/* Check the filename against the requested one */
 				if (rrnamelen > 0) {
-					char* p = strchr(fn, '/');
+					char* p = strchr((char*) fn, '/');
 					int fnlen;
 
 					if (p)
@@ -522,7 +534,7 @@ static iso_dirent_t* find_object_path(const char* fn, int dir, iso_dirent_t* sta
 
 	/* If the object is in a sub-tree, traverse the trees looking
 	   for the right directory */
-	while ((cur = strchr(fn, '/'))) {
+	while ((cur = strchr((char*) fn, '/'))) {
 		if (cur != fn) {
 			/* Note: trailing path parts don't matter since find_object
 			   only compares based on the FN length on the disc. */
