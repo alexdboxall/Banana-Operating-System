@@ -51,6 +51,17 @@ int isoReadDiscSector(uint8_t* buffer, uint32_t sector, int count)
 	return isoReadDiscSectorHelper(buffer, secctor, count, cdDriveLetter);
 }
 
+int strnicmp(const char* s1, const char* s2, size_t len)
+{
+	int diff = 0;
+	while (!diff && len-- && *s1 && *s2) {
+		if (*s1 != *s2)
+			diff = (int) tolower(*s1) - (int) tolower(*s2);
+		s1++;
+		s2++;
+	}
+	return diff;
+}
 
 int stricmp(const char* a, const char* b)
 {
