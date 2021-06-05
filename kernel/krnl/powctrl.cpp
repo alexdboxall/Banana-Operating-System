@@ -45,7 +45,7 @@ namespace Krnl
 
 			if (secondsSinceLastUserIO > sleepThreshold && sleepThreshold) {
 				//go to sleep
-				computer->sleep();
+				//computer->sleep();
 			}
 		}
 	}

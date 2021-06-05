@@ -140,11 +140,13 @@ int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, uint64_t lba, uint1
 		if (times > 2000 && times < 2015) {
 			milliTenthSleep(600);
 		}
-		if (times > 3000 && times < 3015) {
+		if (times > 3000 && times < 3008) {
 			milliTenthSleep(1500);
 		}
-		if (times > 7000 && times < 7015) {
-			milliTenthSleep(2500);
+		if (!(packet[0] == ATAPI_CMD_EJECT && packet[4] == 1)) {
+			if (times > 7000 && times < 7008) {
+				milliTenthSleep(2500);
+			}
 		}
 		if (times > 10000) {
 			kprintf("SATAPI time out...\n");
