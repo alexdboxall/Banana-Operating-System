@@ -23,7 +23,7 @@ uint32_t apicGetBase()
 	}
 	
 	uint64_t ret = computer->rdmsr(IA32_APIC_BASE_MSR);
-	return (ret & 0xfffff000);
+	return (ret & 0xffff0000);
 }
 
 void apicOpen() {

@@ -49,8 +49,11 @@ int SATABus::open(int, int, void*)
 {
 	abar = (HBA_MEM*) (size_t) pci.info.bar[5];
 
+	//enable AHCI mode
+	abar->ghc |= (1ULL << 31ULL);
+
 	//perform BIOS/OS handoff
-	/*if (abar->cap2 & 1) {
+	if (abar->cap2 & 1) {
 		kprintf("BIOS/OS handoff supported.\n");
 
 		abar->bohc |= 2;		//ask for ownership
@@ -62,8 +65,8 @@ int SATABus::open(int, int, void*)
 			milliTenthSleep(1);
 		}
 	}
-	
-	kprintf("About to reset...\n");
+
+	// make sure ST, CR, FR, FE are cleared
 
 	//now reset the thing
 	abar->ghc |= 1;
@@ -77,12 +80,14 @@ int SATABus::open(int, int, void*)
 		}
 	}
 
-	kprintf("SATA was reset...\n");
+	//enable AHCI mode again
+	abar->ghc |= (1ULL << 31ULL);
+
+
+
 
 	//enable IRQs
-	abar->ghc |= (1 << 1);
-	abar->ghc |= (1 << 31);
-	*/
+	//	abar->ghc |= (1 << 1);
 
 	probePort(abar);
 
