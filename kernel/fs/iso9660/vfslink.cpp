@@ -136,8 +136,8 @@ bool getFileData(char* filename, uint32_t* lbaOut, uint32_t* lenOut, char drivel
 	uint32_t lba = 0, len = 0;
 	*lbaOut = -1;
 	*lenOut = -1;
-	int fail = readRoot(&lba, &len, driveletter);
-	if (fail) {
+	int success = readRoot(&lba, &len, driveletter);
+	if (success) {
 		return false;
 	}
 
