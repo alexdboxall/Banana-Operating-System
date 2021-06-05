@@ -35,10 +35,10 @@ ISO9660 systems, as these were used as references as well.
 
 int iso_open(const char* fn, int mode);
 void iso_close(int fd);
-ssize_t iso_read(int fd, void* buf, size_t bytes);
-off_t iso_seek(int fd, off_t offset, int whence);
+int64_t iso_read(int fd, void* buf, size_t bytes);
+int64_t iso_seek(int fd, int64_t offset, int whence);
 size_t iso_total(int fd);
-off_t iso_tell(int fd);
+int64_t iso_tell(int fd);
 void fn_postprocess(char* fnin);
 struct dirent* iso_readdir(int fd);
 int iso_reset();

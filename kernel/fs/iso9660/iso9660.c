@@ -617,7 +617,7 @@ void iso_close(int fd)
 }
 
 /* Read from a file */
-ssize_t iso_read(int fd, void* buf, size_t bytes)
+int64_t iso_read(int fd, void* buf, size_t bytes)
 {
 	int rv, toread, thissect, c;
 	u8* outbuf;
@@ -683,7 +683,7 @@ ssize_t iso_read(int fd, void* buf, size_t bytes)
 }
 
 /* Seek elsewhere in a file */
-off_t iso_seek(int fd, off_t offset, int whence)
+int64_t iso_seek(int fd, int64_t offset, int whence)
 {
 	/* Check that the fd is valid */
 	if (fd >= MAX_ISO_FILES || fh[fd].first_extent == 0 || fh[fd].broken)
@@ -712,7 +712,7 @@ off_t iso_seek(int fd, off_t offset, int whence)
 }
 
 /* Tell where in the file we are */
-off_t iso_tell(int fd)
+int64_t iso_tell(int fd)
 {
 	if (fd >= MAX_ISO_FILES || fh[fd].first_extent == 0 || fh[fd].broken)
 		return -1;
