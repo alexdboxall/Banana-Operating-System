@@ -60,7 +60,7 @@ void GDT::setup()
 	null.flags = 0;
 
 	GDTEntry code;
-	code.setBase(1);
+	code.setBase(0);
 	code.setLimit(PLATFORM_ID == 64 ? 0 : 0xFFFFFF);
 	code.bit64 = PLATFORM_ID == 64;
 	code.size = PLATFORM_ID != 64;
