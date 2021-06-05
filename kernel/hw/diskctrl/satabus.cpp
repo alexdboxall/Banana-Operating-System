@@ -69,7 +69,7 @@ int SATABus::open(int, int, void*)
 	// make sure ST, CR, FR, FE are cleared
 
 	/*//now reset the thing
-	abar->ghc |= 1;
+	abar->ghc |= 1;*/
 	int timeout = 0;
 	while (abar->ghc & 1) {
 		milliTenthSleep(10);
@@ -78,7 +78,7 @@ int SATABus::open(int, int, void*)
 			kprintf("AHCI reset timeout...\n");
 			break;
 		}
-	}*/
+	}
 
 	//enable AHCI mode again
 	abar->ghc |= (1ULL << 31ULL);
