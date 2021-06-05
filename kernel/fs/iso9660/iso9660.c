@@ -33,10 +33,17 @@ ISO9660 systems, as these were used as references as well.
 
 #include <core/kheap.hpp>
 #include <libk/string.h>
+#include <libk/ctype.h>
 
 #define MAX_FN_LEN 256
 #define DBG_NOTICE "[iso9660] Notice: "
 #define DBG_ERROR "[iso9660] Error: "
+
+#include <stdint.h>
+#include <stddef.h>
+typedef uint8_t u8;
+typedef uint16_t u16;
+typedef uint32_t u32;
 
 #define dbglog(sev,prm...) kprintf(sev prm);
 
