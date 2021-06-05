@@ -49,10 +49,10 @@ int SATABus::open(int, int, void*)
 {
 	abar = (HBA_MEM*) (size_t) pci.info.bar[5];
 
-	/*//enable AHCI mode
+	//enable AHCI mode
 	abar->ghc |= (1ULL << 31ULL);
 
-	//perform BIOS/OS handoff
+	/*//perform BIOS/OS handoff
 	if (abar->cap2 & 1) {
 		kprintf("BIOS/OS handoff supported.\n");
 
