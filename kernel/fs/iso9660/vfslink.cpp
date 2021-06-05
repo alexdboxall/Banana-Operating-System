@@ -80,14 +80,9 @@ bool readRoot(uint32_t* lbaOut, uint32_t* lenOut, char driveletter)
 	return true;
 }
 
-int recursionDepth = 0;
 bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 					 uint32_t* lbaOut, uint32_t* lenOut, char driveletter, int* dirout)
 {
-	recursionDepth += 1;
-	if (recursionDepth > 30) {
-		panic("VERY STRANGE");
-	}
 	if (filename == 0 || filename[0] == 0) {
 		recursionDepth -= 1;
 		return false;
@@ -123,7 +118,6 @@ bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 	uint8_t* o = __memmem(data, startLen, (uint8_t*) firstPart, strlen(firstPart));
 	if (o == 0) {
 		free(data);
-		recursionDepth -= 1;
 		return false;
 	}
 	o -= 33;            //we searched by filename using memmem, which starts at 33
@@ -135,7 +129,6 @@ bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 	if (dir) {
 		free(data);
 		bool val = readRecursively(filename, newLba, newLen, lbaOut, lenOut, driveletter, dirout);
-		recursionDepth -= 1;
 		return val;
 
 	} else {
@@ -143,11 +136,9 @@ bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
 		*lenOut = newLen;      //data
 		*dirout = isDir;
 		free(data);
-		recursionDepth -= 1;
 		return true;
 	}
 
-	recursionDepth -= 1;
 	return false;
 }
 

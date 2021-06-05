@@ -71,10 +71,6 @@ protected:
 
 public:
 	GDT();
-	int addEntry(GDTEntry entry);
-	int getNumberOfEntries();
-	void flush();
-	void setup();
 };
 
 

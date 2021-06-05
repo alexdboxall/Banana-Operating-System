@@ -284,11 +284,11 @@ void SATAPI::detectMedia()
 	//create a REQUEST SENSE packet
 	memset(packet, 0, 12);
 	packet[0] = ATAPI_CMD_REQUEST_SENSE;
-	packet[4] = 18;
+	packet[4] = 24;
 
 	//send it
-	uint8_t senseData[18];
-	res = sendPacket(packet, 18, false, (uint16_t*) senseData, 1);
+	uint8_t senseData[24];
+	res = sendPacket(packet, 24, false, (uint16_t*) senseData, 1);
 	if (res == 1) {
 		activeTerminal->puts("ERR 2\n");
 
