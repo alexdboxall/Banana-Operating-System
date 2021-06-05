@@ -570,11 +570,6 @@ static iso_dirent_t* find_object_path(const char* fn, int dir, iso_dirent_t* sta
 /********************************************************************************/
 /* File primitives */
 
-struct direntX
-{
-	uint64_t d_reclen;
-	char d_name[120];
-};
 
 /* File handles.. I could probably do this with a linked list, but I'm just
    too lazy right now. =) */

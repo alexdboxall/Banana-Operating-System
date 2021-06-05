@@ -34,6 +34,12 @@ ISO9660 systems, as these were used as references as well.
 #include <stddef.h>
 #include <stdint.h>
 
+struct direntX
+{
+	uint64_t d_reclen;
+	char d_name[120];
+};
+
 int iso_open(const char* fn, int mode);
 void iso_close(int fd);
 int64_t iso_read(int fd, void* buf, size_t bytes);
@@ -43,4 +49,4 @@ int64_t iso_tell(int fd);
 void fn_postprocess(char* fnin);
 struct dirent* iso_readdir(int fd);
 int iso_reset();
-int fs_iso9660_init();
+int fs_iso9660_init(char drive);
