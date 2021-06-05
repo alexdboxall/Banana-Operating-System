@@ -208,6 +208,8 @@ int SATAPI::read(uint64_t lba, int count, void* buffer)
 		panic("UNIMPLEMENTED SATAPI::read with count > 4");
 	}
 
+	portRebase(&sbus->abar->ports[deviceNum], deviceNum);
+
 	//start the unit
 	uint8_t packet2[12] = { ATAPI_CMD_EJECT, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 };
 	sendPacket(packet2, 2, false, nullptr, 0);
