@@ -22,11 +22,23 @@ void HalInitialiseCoprocessor();
 void HalPanic(const char* message);
 
 /// <summary>
-/// Returns the 
+/// Returns the value of performance counter (e.g. the timestamp counter) if the system has one. If the system has one,
+/// all values are expected to be larger than the previously returned value. If the system does not have one, the function
+/// shall either return zero or provide a estimate (in which case all values should be larger than the previously returned value).
 /// </summary>
-/// <returns></returns>
+/// <returns>The current value of the performance counter.</returns>
 uint64_t HalQueryPerformanceCounter();
+
+/// <summary>
+/// Causes the speaker to produce a tone at the requested frequency, until this function is called with a frequency of zero.
+/// </summary>
+/// <param name="hertz">The frequency to produce, or zero to stop.</param>
 void HalMakeBeep(int hertz);
+
+/// <summary>
+/// Returns a 32-bit pseudo-random value. The seed is calculated using a hardware RNG generator if available.
+/// </summary>
+/// <returns>A 32-bit pseudo-random value.</returns>
 uint32_t HalGetRand();
 void HalEndOfInterrupt(int);
 void HalRestart();

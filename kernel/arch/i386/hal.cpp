@@ -123,7 +123,7 @@ void displayDebugInfo(regs* r)
 }
 
 extern "C" void doTPAUSE();
-INLINE void HalSystemIdle()
+void HalSystemIdle()
 {
 	if (CPU::current()->features.hasTPAUSE) {
 		uint64_t msr = computer->rdmsr(0xE1);
