@@ -207,16 +207,16 @@ FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead
 {
 	if (ptr == nullptr || bytesRead == nullptr) return FileStatus::InvalidArgument;
 
-	struct direntX* dent = iso_readdir(((int)ptr)-100);
+	struct direntX* ddd = iso_readdir(((int)ptr)-100);
 	if (!dent) {
 		return FileStatus::Failure;
 	}
 
 	struct dirent dent;
 	dent.d_ino = 0;
-	dent.d_namlen = strlen(dent->d_name);
-	dent.d_type = d_name.d_reclen == -1 ? DT_DIR : DT_REG;
-	strcpy(dent.d_name, dent->d_name);
+	dent.d_namlen = strlen(ddd->d_name);
+	dent.d_type = ddd->d_reclen == -1 ? DT_DIR : DT_REG;
+	strcpy(dent.d_name, ddd->d_name);
 
 	memcpy(where, &dent, bytes);
 	*bytesRead = sizeof(dent);
