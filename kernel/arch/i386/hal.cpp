@@ -125,7 +125,7 @@ void displayDebugInfo(regs* r)
 extern "C" void doTPAUSE();
 INLINE void HalSystemIdle()
 {
-	if (computer->features.hasTPAUSE) {
+	if (CPU::current()->features.hasTPAUSE) {
 		uint64_t msr = computer->rdmsr(0xE1);
 		computer->wrmsr(0xE1, msr & 2);	//only keep bit 1 as it is reserved
 		doTPAUSE();

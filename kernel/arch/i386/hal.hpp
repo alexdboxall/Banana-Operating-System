@@ -5,9 +5,26 @@
 
 #define INLINE inline __attribute__((always_inline)) 
 
+/// <summary>
+/// Initialises the HAL. Should only be called once, and is internal to the kernel.
+/// </summary>
 void HalInitialise();
+
+/// <summary>
+/// Initialies the floating point coprocessor if it exists. Should only be called once, and is internal to the kernel.
+/// </summary>
 void HalInitialiseCoprocessor();
+
+/// <summary>
+/// Causes a stop error, for when the system detects an unrecoverable situation which requires a complete lockup of the system.
+/// </summary>
+/// <param name="message">The error message to display to the user.</param>
 void HalPanic(const char* message);
+
+/// <summary>
+/// Returns the 
+/// </summary>
+/// <returns></returns>
 uint64_t HalQueryPerformanceCounter();
 void HalMakeBeep(int hertz);
 uint32_t HalGetRand();
