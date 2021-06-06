@@ -200,12 +200,14 @@ FileStatus ISO9660::stat(const char* path, uint64_t* size, bool* directory)
 	if (fd == -1) {
 		fd = iso_open(path + 3, 1);
 		*directory = 1;
+		return FileStatus::Success;
 	}
 
 	if (fd == -1) {
 		return FileStatus::NotExist;
 	}
 
+	kprintf("ISO TOTAL = 0x%X\n", iso_total(fd));
 	*size = iso_total(fd);
 	iso_close(fd);
 
