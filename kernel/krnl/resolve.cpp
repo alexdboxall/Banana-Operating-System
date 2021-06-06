@@ -25,6 +25,9 @@ size_t KeResolveCompatibilitySymbol(char* name)
 	} else if (!strcmp(name, "_ZN4Krnl5panicEPKc")) {
 		return (size_t) KePanic;
 
+	} else if (!strcmp(name, "_ZN4Krnl14setBootMessageEPKc")) {
+		return (size_t) KeSetBootMessage;
+
 	} else if (!strcmp(name, "__umoddi3")) {
 		return (size_t) __umoddi3;
 
