@@ -184,9 +184,20 @@ FileStatus ISO9660::stat(const char* path, uint64_t* size, bool* directory)
 	*directory = 0;
 	*size = 0;
 
-	HalPanic("ISO9660::stat (2) UNIMPLEMENTED");
+	int fd = iso_open(__fn + 3, 0);
+	if (fd == -1) {
+		fd = iso_open(__fn + 3, 1);
+		*directory = 1;
+	}
 
-	return FileStatus::Failure;
+	if (fd == -1) {
+		return FileStatus::NotExist;
+	}
+
+	*size = iso_total(fd);
+	iso_close(fd);
+
+	return FileStatus::Success;
 }
 
 FileStatus ISO9660::close(void* ptr)
@@ -215,7 +226,6 @@ FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 	}
 
 	int fd = iso_open(__fn + 3, 1);
-	kprintf("OPEN DIR RETURNED FD OF %d FOR DIR %s\n", fd, __fn + 3);
 
 	if (fd == -1) {
 		return FileStatus::Failure;
