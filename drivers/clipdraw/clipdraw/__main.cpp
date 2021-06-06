@@ -92,7 +92,7 @@ void start(void* s)
 	Region* rgn2 = new Region(50, 50, 200, 120, rgn1->context);
 	rgn1->addChild(rgn2);
 	rgn2->addChild(new Rectangle(0, 0, 70, 70, bz, rgn2->context));
-	rgn2->addChild(new Rectangle(100, 20, 85, 70, by, rgn2->context));
+	rgn2->addChild(new Ellipse(100, 20, 85, 70, by, rgn2->context));
 
 	window->addChild(new LegacyTextObject(getLegacyFont(LegacyFontType::System), \
 					 "The System font!", 50, 450, 0, ctxt));

@@ -145,6 +145,7 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 
 	} else {*/
 		invalidateReadBuffer();
+		memset(ptr, 0, disk->sectorSize);
 		return disk->read(lba, count, ptr);
 	/*}*/
 

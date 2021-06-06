@@ -381,33 +381,81 @@ void Context::drawBitmap1(uint8_t* data, int x, int y, int w, int h, uint32_t co
 	}
 }
 
-#define drawPoint(x,y) buffer[(y) * x1 + (x)] = 0xFF;
-#define drawRow(x,y,l) for (int a = 0; a < (l); ++a) buffer[(y) * x1 + (x) + a] = 0xFF;
-
-void drawEllipse(uint8_t* buffer, int originx, int originy, int width, int height, bool fill)
+void plot(Context* ctxt, int x, int y, CRect* clip_area)
 {
-	
+	ctxt->clippedRect(x, y, 1, 1, clip_area, (uint32_t) 0x0);
+}
+
+void midptellipse(Context* ctxt, int rx, int ry,
+				  int xc, int yc, CRect* clip_area)
+{
+	float dx, dy, d1, d2, x, y;
+	x = 0;
+	y = ry;
+
+	// Initial decision parameter of region 1
+	d1 = (ry * ry) - (rx * rx * ry) +
+		(0.25 * rx * rx);
+	dx = 2 * ry * ry * x;
+	dy = 2 * rx * rx * y;
+
+	// For region 1
+	while (dx < dy) {
+
+		// Print points based on 4-way symmetry
+		plot(ctxt, x + xc, y + yc, clip_area);
+		plot(ctxt, -x + xc, y + yc, clip_area);
+		plot(ctxt, x + xc, -y + yc, clip_area);
+		plot(ctxt, -x + xc, -y + yc, clip_area);
+
+		// Checking and updating value of
+		// decision parameter based on algorithm
+		if (d1 < 0) {
+			x++;
+			dx = dx + (2 * ry * ry);
+			d1 = d1 + dx + (ry * ry);
+		} else {
+			x++;
+			y--;
+			dx = dx + (2 * ry * ry);
+			dy = dy - (2 * rx * rx);
+			d1 = d1 + dx - dy + (ry * ry);
+		}
+	}
+
+	// Decision parameter of region 2
+	d2 = ((ry * ry) * ((x + 0.5) * (x + 0.5))) +
+		((rx * rx) * ((y - 1) * (y - 1))) -
+		(rx * rx * ry * ry);
+
+	// Plotting points of region 2
+	while (y >= 0) {
+
+		// Print points based on 4-way symmetry
+		plot(ctxt, x + xc, y + yc, clip_area);
+		plot(ctxt, -x + xc, y + yc, clip_area);
+		plot(ctxt, x + xc, -y + yc, clip_area);
+		plot(ctxt, -x + xc, -y + yc, clip_area);
+
+		// Checking and updating parameter
+		// value based on algorithm
+		if (d2 > 0) {
+			y--;
+			dy = dy - (2 * rx * rx);
+			d2 = d2 + (rx * rx) - dy;
+		} else {
+			y--;
+			x++;
+			dx = dx + (2 * ry * ry);
+			dy = dy - (2 * rx * rx);
+			d2 = d2 + dx - dy + (rx * rx);
+		}
+	}
 }
 
 void Context::clippedEllipse(bool fill, int x, int y, int w, int h, CRect* clip_area, uint32_t colour)
 {
-	uint8_t* ellipseBuffer = (uint8_t*) malloc(w * h);
-	memset(ellipseBuffer, 0, w * h);
-
-	drawEllipse(ellipseBuffer, x + w / 2, y + h / 2, w, h, fill);
-
-	uint32_t col00 = palette256[0];
-	uint32_t colFF = palette256[255];
-
-	palette256[0x00] = 0xFFFFFFFF;
-	palette256[0xFF] = colour;
-
-	drawBitmap8(ellipseBuffer, x, y, w, h);
-
-	palette256[0x00] = col00;
-	palette256[0xFF] = colFF;
-
-	free(ellipseBuffer);
+	midptellipse(this, w / 2, y / 2, x + w / 2, y + h / 2, clip_area);
 }
 
 void Context::clippedEllipse(bool fill, int x, int y, int w, int h, CRect* clip_area, Brush* brush)
