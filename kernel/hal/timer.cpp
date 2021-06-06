@@ -68,7 +68,7 @@ void timerHandler(uint32_t milliTenths)
 {
 	milliTenthsSinceBoot += milliTenths;
 
-	if (!Krnl::KeSchedulingOn) return;
+	if (!KeSchedulingOn) return;
 
 	ThreadControlBlock* next_task;
 	ThreadControlBlock* this_task = nullptr;
