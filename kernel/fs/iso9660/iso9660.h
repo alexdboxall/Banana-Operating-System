@@ -49,5 +49,5 @@ int64_t iso_tell(int fd);
 void fn_postprocess(char* fnin);
 struct direntX* iso_readdir(int fd);
 int iso_reset();
-int fs_iso9660_init(char drive);
+int fs_iso9660_init();
 int init_percd(char drive);

@@ -47,7 +47,7 @@ int readSectorFromCDROM(uint32_t sector, uint8_t* data, char driveletter)
 
 ISO9660::ISO9660() : Filesystem()
 {
-
+	fs_iso9660_init();
 }
 
 ISO9660::~ISO9660()
@@ -98,8 +98,6 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 		if (status == -1) {
 			return FileStatus::NoFilesystem;
 		}
-
-		fs_iso9660_init(__fn[0]);
 
 		if (iso9660Owner) {
 			HalPanic("CD OWNER CHANGE");

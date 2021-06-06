@@ -236,20 +236,20 @@ typedef struct
 
 /* List of cache blocks (ordered least recently used to most recently) */
 #define NUM_CACHE_BLOCKS 16
-static cache_block_t* icache[NUM_CACHE_BLOCKS];		/* inode cache */
-static cache_block_t* dcache[NUM_CACHE_BLOCKS];		/* data cache */
+cache_block_t* icache[NUM_CACHE_BLOCKS];		/* inode cache */
+cache_block_t* dcache[NUM_CACHE_BLOCKS];		/* data cache */
 
 /* Cache modification mutex */
 static unsigned int* cache_mutex;
 
 /* Clears all cache blocks */
-static void bclear_cache(cache_block_t** cache)
+static void bclear_cache()
 {
-	int i;
-
 	lock(cache_mutex);
-	for (i = 0; i < NUM_CACHE_BLOCKS; i++)
-		cache[i]->sector = -1;
+	for (int i = 0; i < NUM_CACHE_BLOCKS; i++) {
+		dcache[i]->sector = -1;
+		icache[i]->sector = -1;
+	}
 	unlock(cache_mutex);
 }
 
@@ -333,8 +333,7 @@ static int biread(u32 sector)
 /* Clear both caches */
 static void bclear()
 {
-	bclear_cache(dcache);
-	bclear_cache(icache);
+	bclear_cache();
 }
 
 /********************************************************************************/
@@ -862,10 +861,8 @@ int iso_ioctl(int hnd, void* data, size_t size)
 }
 
 /* Initialize the file system */
-int fs_iso9660_init(char drive)
+int fs_iso9660_init()
 {
-	cdDriveLetter = drive;
-
 	int i;
 
 	/* Reset fd's */
@@ -878,13 +875,18 @@ int fs_iso9660_init(char drive)
 	cache_mutex = malloc(sizeof(u32));
 	fh_mutex = malloc(sizeof(u32));
 
-	/* Allocate cache block space */
-	for (i = 0; i < NUM_CACHE_BLOCKS; i++) {
-		icache[i] = malloc(sizeof(cache_block_t));
-		icache[i]->sector = -1;
-		dcache[i] = malloc(sizeof(cache_block_t));
-		dcache[i]->sector = -1;
+	if (!cachesHaveBeenInitied) {
+		cachesHaveBeenInitied = true;
+
+		/* Allocate cache block space */
+		for (i = 0; i < NUM_CACHE_BLOCKS; i++) {
+			icache[i] = malloc(sizeof(cache_block_t));
+			icache[i]->sector = -1;
+			dcache[i] = malloc(sizeof(cache_block_t));
+			dcache[i]->sector = -1;
+		}
 	}
+	
 
 	return 0;
 }
