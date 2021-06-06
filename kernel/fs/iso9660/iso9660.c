@@ -94,8 +94,6 @@ typedef int32_t s32;
 #define dbglog(sev,prm...)
 
 int iso_reset();
-static int init_percd();
-static int percd_done;
 
 /********************************************************************************/
 /* Low-level Joliet utils */
@@ -610,13 +608,6 @@ int iso_open(const char* fn)
 	int		fd;
 	iso_dirent_t* de;
 
-	/* Make sure they don't want to open things as writeable */
-
-	/* Do this only when we need to (this is still imperfect) */
-	if (!percd_done && init_percd() < 0)
-		return -1;
-	percd_done = 1;
-
 	/* Find the file we want */
 	de = find_object_path(fn, /*(mode & O_DIR)?1:*/0, &root_dirent);
 	if (!de) return -1;
@@ -859,7 +850,6 @@ int iso_reset()
 {
 	iso_break_all();
 	bclear();
-	percd_done = 0;
 	return 0;
 }
 
@@ -896,8 +886,6 @@ int fs_iso9660_init(char drive)
 		dcache[i] = malloc(sizeof(cache_block_t));
 		dcache[i]->sector = -1;
 	}
-
-	percd_done = 0;
 
 	return 0;
 }

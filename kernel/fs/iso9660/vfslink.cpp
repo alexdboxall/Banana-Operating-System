@@ -83,7 +83,7 @@ bool ISO9660::tryMount(LogicalDisk* disk, int diskNum)
 	return true;
 }
 
-char iso9660Owner;
+char iso9660Owner = 0;
 
 FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 {
@@ -101,6 +101,9 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 
 		fs_iso9660_init(__fn[0]);
 
+		if (iso9660Owner) {
+			HalPanic("CD OWNER CHANGE");
+		}
 		iso9660Owner = __fn[0];
 	}
 
