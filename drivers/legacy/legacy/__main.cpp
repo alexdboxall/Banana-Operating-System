@@ -66,7 +66,7 @@ void ISA::doSoundblaster()
 	outb(0x226, 0);
 
 	if (inb(0x22A) == 0xAA) {
-		Krnl::setBootMessage("Starting Soundblaster driver...");
+		KeSetBootMessage("Starting Soundblaster driver...");
 
 		//panic("Soundblaster IS SUPPORTED!! :)");
 		SoundBlaster16* sb = new SoundBlaster16();
@@ -96,7 +96,7 @@ void ISA::doParallel()
 
 void ISA::doGameport()
 {
-	Krnl::setBootMessage("Starting gameport driver...");
+	KeSetBootMessage("Starting gameport driver...");
 
 	Gameport* gp = new Gameport();
 	addChild(gp);
@@ -106,7 +106,7 @@ void ISA::doGameport()
 void ISA::doFloppy()
 {
 	if (sysBootSettings & 8192) {
-		Krnl::setBootMessage("Starting floppy driver...");
+		KeSetBootMessage("Starting floppy driver...");
 
 		uint16_t* biosDataArea = (uint16_t*) (size_t) 0x410;
 		if ((*biosDataArea) & 1) {
@@ -135,7 +135,7 @@ char str_devices[] = "@devices:";
 
 void ISA::doPS2()
 {
-	Krnl::setBootMessage("Starting PS/2 driver...");
+	KeSetBootMessage("Starting PS/2 driver...");
 
 	kprintf(str_ps2);
 	kprintf(str_ps2);
@@ -166,7 +166,7 @@ void ISA::detect()
 	static bool didPS2 = false;
 
 	//DMA needs to be setup first
-	Krnl::setBootMessage("Starting DMA driver...");
+	KeSetBootMessage("Starting DMA driver...");
 	isaDMAController = new DMA();
 	addChild(isaDMAController);
 	isaDMAController->open(0, 0, nullptr);

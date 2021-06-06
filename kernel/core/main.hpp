@@ -9,7 +9,7 @@
 #pragma GCC diagnostic ignored "-Wattributes"
 
 #define KDEBUG_PAUSE(msg) if (sysBootSettings & 2048) {\
-Krnl::setBootMessage(msg);\
+KeSetBootMessage(msg);\
 if (!(sysBootSettings & 128)) {\
 	while (1) {\
 		uint8_t a = inb(0x60); \

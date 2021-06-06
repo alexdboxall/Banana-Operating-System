@@ -771,7 +771,7 @@ void firstRun()
 {
     guiKeyboardHandler = bootInstallKeybrd;
 
-	Krnl::setBootMessage("Setting up the system for the first time");
+	KeSetBootMessage("Setting up the system for the first time");
 
     VgaText::hiddenOut = false;
 
@@ -1003,7 +1003,7 @@ void firstRun()
 
 void loadExtensions()
 {
-    Krnl::setBootMessage("Loading extensions...");
+    KeSetBootMessage("Loading extensions...");
 }
 
 void begin(void* a)

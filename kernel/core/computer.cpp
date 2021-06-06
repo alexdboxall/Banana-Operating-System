@@ -60,7 +60,7 @@ int Computer::open(int a, int b, void* vas)
 		VgaText::hiddenOut = true;
 	}
 
-	Krnl::setBootMessage("Creating device tree...");
+	KeSetBootMessage("Creating device tree...");
 	root = new ACPI();
 	addChild(root);
 
@@ -68,16 +68,16 @@ int Computer::open(int a, int b, void* vas)
 	displayFeatures();
 	enableNMI();
 
-	Krnl::setBootMessage("Configuring processors...");
+	KeSetBootMessage("Configuring processors...");
 
 	cpu[0] = new CPU();
 	addChild(cpu[0]);
 	cpu[0]->open(0, 0, vas);		//FIRST ARG IS CPU NUMBER
 	
-	Krnl::setBootMessage("Detecting numerical coprocessors...");
+	KeSetBootMessage("Detecting numerical coprocessors...");
 	HalInitialiseCoprocessor();
 
-	Krnl::setBootMessage("Setting up multitasking...");
+	KeSetBootMessage("Setting up multitasking...");
 	setupMultitasking(Krnl::firstTask);
 	return -1;
 }
@@ -278,7 +278,7 @@ namespace Krnl
 	{
 		asm("sti");
 
-		Krnl::setBootMessage("Starting core threads...");
+		KeSetBootMessage("Starting core threads...");
 
 		//setup up the core processes and threads we need
 		Process* idleProcess = new Process(true, "Idle Process", kernelProcess);
@@ -288,23 +288,23 @@ namespace Krnl
 
 		schedulingOn = true;
 
-		Krnl::setBootMessage("Initialising system components...");
+		KeSetBootMessage("Initialising system components...");
 		Vm::initialise8086();
 		Fs::initVFS();
 
-		Krnl::setBootMessage("Loading device drivers...");
+		KeSetBootMessage("Loading device drivers...");
 		computer->root->open(0, 0, nullptr);
 
-		Krnl::setBootMessage("Initialising system components...");
+		KeSetBootMessage("Initialising system components...");
 		KeLoadSystemCalls();
 		Krnl::loadSystemEnv();
 		Krnl::setupPowerManager();
 		User::loadClockSettings(Reg::readIntWithDefault((char*) "country", (char*) "timezone", 58));
 		
-		Krnl::setBootMessage("Loading more device drivers...");
+		KeSetBootMessage("Loading more device drivers...");
 		computer->root->loadDriversForAll();
 
-		Krnl::setBootMessage("Getting ready...");
+		KeSetBootMessage("Getting ready...");
 		Thr::executeDLL(Thr::loadDLL("C:/Banana/System/system.dll"), computer);
 
 		while (1) {

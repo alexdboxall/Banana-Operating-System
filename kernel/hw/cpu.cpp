@@ -178,11 +178,11 @@ int CPU::open(int num, int b, void* vas_)
 	VAS* vas = (VAS*) vas_;
 	vas->setCPUSpecific((size_t) cpuSpecificPhysAddr);
 	
-	Krnl::setBootMessage("Detecting CPU specific features...");
+	KeSetBootMessage("Detecting CPU specific features...");
 	//here so APIC can be disabled on dodgy K5 CPUs
 	detectFeatures();
 
-	Krnl::setBootMessage("Starting the HAL...");
+	KeSetBootMessage("Starting the HAL...");
 	HalInitialise();
 
 	timer = setupTimer(sysBootSettings & 16 ? 30 : 100);
