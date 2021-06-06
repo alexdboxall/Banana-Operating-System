@@ -85,6 +85,8 @@ namespace Krnl
 	void firstTask();
 }
 
+using Krnl::computer;
+
 extern bool KeSchedulingOn;
 extern bool KePreemptionOn;
 

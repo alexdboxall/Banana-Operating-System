@@ -1,12 +1,12 @@
-#include "thr/elf.hpp"
-#include "thr/prcssthr.hpp"
-#include "core/physmgr.hpp"
-#include "core/virtmgr.hpp"
-#include "core/kheap.hpp"
-#include "libk/string.h"
-#include "core/physmgr.hpp"
-#include "hw/cpu.hpp"
-#include "compat/resolve.hpp"
+#include <thr/elf.hpp>
+#include <thr/prcssthr.hpp>
+#include <core/physmgr.hpp>
+#include <core/virtmgr.hpp>
+#include <core/kheap.hpp>
+#include <libk/string.h>
+#include <core/physmgr.hpp>
+#include <hw/cpu.hpp>
+#include <krnl/resolve.hpp>
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -517,7 +517,7 @@ namespace Thr
 					addr = getAddressOfKernelSymbol(((char*) stringTab) + symbolTab[symbolNum].st_name);
 					dynamic = true;
 					if (addr == 0) {
-						addr = Krnl::resolveCompatibilitySymbol(((char*) stringTab) + symbolTab[symbolNum].st_name);
+						addr = KeResolveCompatibilitySymbol(((char*) stringTab) + symbolTab[symbolNum].st_name);
 
 						if (addr == 0) {
 							kprintf("UNDEFINED DLL SYMBOL: %s\n", ((char*) stringTab) + symbolTab[symbolNum].st_name);
