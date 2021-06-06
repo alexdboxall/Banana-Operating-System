@@ -3,12 +3,7 @@
 
 #include "core/main.hpp"
 
-namespace Krnl
-{
-	extern bool kernelInPanic;
-	extern void panic(const char* message);
-}
-
-using Krnl::panic;
+extern bool KeKernelInPanic;
+extern void KePanic(const char* message);
 
 #endif

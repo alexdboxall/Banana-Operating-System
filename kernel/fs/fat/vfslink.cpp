@@ -176,7 +176,7 @@ FileStatus FAT::format(LogicalDisk* disk, int diskNum, const char* typestr, int 
 bool FAT::tryMount(LogicalDisk* disk, int diskNum)
 {
 	if (fats == 20) {
-		panic("TOO MUCH FAT!");
+		KePanic("TOO MUCH FAT!");
 		return false;
 	}
 	if (disk->physDisk->sectorSize != 512) {

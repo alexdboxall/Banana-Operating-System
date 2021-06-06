@@ -57,14 +57,14 @@ namespace Phys
 					if (startSeg < SIZE_DMA_MEMORY_1 / 65536) {
 						return VIRT_DMA_MEMORY_1 + start * DMA_BLOCK_SIZE;
 					} else {
-						panic("UH OH! NO MORE DMA RAM! physmgr.cpp!");
+						KePanic("UH OH! NO MORE DMA RAM! physmgr.cpp!");
 						//return VIRT_DMA_MEMORY_2 + (start - SIZE_DMA_MEMORY_1 / DMA_BLOCK_SIZE) * DMA_BLOCK_SIZE;
 					}
 				}
 			}
 		}
 
-		panic("UH OH! NO MORE DMA RAM! physmgr.cpp!");
+		KePanic("UH OH! NO MORE DMA RAM! physmgr.cpp!");
 
 		return 0;
 	}
@@ -126,7 +126,7 @@ namespace Phys
 
 		size_t page = address / 4096;
 		if (getPageState(page) == STATE_FREE) {
-			panic("FREEING NOT ALLOCATED");
+			KePanic("FREEING NOT ALLOCATED");
 			return;
 		}
 
@@ -172,7 +172,7 @@ namespace Phys
 					return evict;
 				}
 
-				panic("NO MORE SWAPPABLE PAGES OR DMA! OUT OF MEMORY!");
+				KePanic("NO MORE SWAPPABLE PAGES OR DMA! OUT OF MEMORY!");
 			}
 		}
 	}
@@ -246,7 +246,7 @@ namespace Phys
 		uint16_t* ramTableLengthAddr = (uint16_t*) VIRT_RAM_TABLE_SIZE;
 		uint16_t ramTableLength = *ramTableLengthAddr;
 		if (ramTableLength == 0) {
-			panic("No RAM table!");
+			KePanic("No RAM table!");
 		}
 
 		for (int i = 0; i < ramTableLength; ++i) {

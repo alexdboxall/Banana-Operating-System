@@ -120,7 +120,7 @@ namespace Virt
 			if (pageAllocPtr > VIRT_HEAP_MAX / 4096) {
 				pageAllocPtr = VIRT_HEAP_MIN / 4096;
 				if (failures) {
-					panic("KERNEL VIRTUAL MEMORY EXHAUSTED");
+					KePanic("KERNEL VIRTUAL MEMORY EXHAUSTED");
 				}
 				failures = true;
 			}
@@ -138,7 +138,7 @@ namespace Virt
 			VirtPageState state = getPageState(page);
 
 			if (state == VirtPageState::Free) {
-				panic("FREEING PAGES NOT ALLOCATED");
+				KePanic("FREEING PAGES NOT ALLOCATED");
 			}
 
 			size_t* entry = getAKernelVAS()->getPageTableEntry(page * 4096);
@@ -150,7 +150,7 @@ namespace Virt
 				if (first) {
 					setPageState(page, VirtPageState::Free);
 				} else {
-					panic("FREEING PAGES START AND END PROBLEM");
+					KePanic("FREEING PAGES START AND END PROBLEM");
 				}
 				return;
 
@@ -158,14 +158,14 @@ namespace Virt
 				if (first) {
 					setPageState(page, VirtPageState::Free);
 				} else {
-					panic("FREEING PAGES START PROBLEM");
+					KePanic("FREEING PAGES START PROBLEM");
 				}
 
 			} else if (state == VirtPageState::End) {
 				if (!first) {
 					setPageState(page, VirtPageState::Free);
 				} else {
-					panic("FREEING PAGES END PROBLEM");
+					KePanic("FREEING PAGES END PROBLEM");
 				}
 				return;
 
@@ -202,7 +202,7 @@ namespace Virt
 			}
 		}
 
-		panic("NO SWAPFILE SPACE LEFT");
+		KePanic("NO SWAPFILE SPACE LEFT");
 		return 0;
 	}
 
@@ -274,7 +274,7 @@ size_t VAS::allocatePages(int count, int flags)
 
 	} else {
 		if (!sbrk) {
-			panic("NEED TO LOAD TASK BEFORE ALLOCATING PAGES");
+			KePanic("NEED TO LOAD TASK BEFORE ALLOCATING PAGES");
 		}
 
 		size_t virt = sbrk;
@@ -375,7 +375,7 @@ void VAS::setCPUSpecific(size_t physAddr)
 
 VAS::VAS(VAS* old)
 {
-	panic("VAS::VAS(VAS* old) not implemented");
+	KePanic("VAS::VAS(VAS* old) not implemented");
 }
 
 VAS::VAS(bool kernel) {
@@ -448,7 +448,7 @@ size_t* VAS::getForeignPageTableEntry(bool secondSlot, size_t virt)
 	size_t pageTableNumber = virt / 0x400000;
 
 	/*if (!(pageDirectoryBase[pageTableNumber] & PAGE_PRESENT)) {
-		panic("VAS::getForeignPageTableEntry NOT PRESENT");
+		KePanic("VAS::getForeignPageTableEntry NOT PRESENT");
 	}*/
 
 	size_t pageNumber = (virt % 0x400000) / 0x1000;
@@ -462,7 +462,7 @@ size_t* VAS::getPageTableEntry(size_t virt)
 	size_t pageTableNumber = virt / 0x400000;
 
 	/*if (!(pageDirectoryBase[pageTableNumber] & PAGE_PRESENT)) {
-		panic("VAS::getPageTableEntry NOT PRESENT");
+		KePanic("VAS::getPageTableEntry NOT PRESENT");
 	}*/
 
 	size_t pageNumber = (virt % 0x400000) / 0x1000;
@@ -499,7 +499,7 @@ void VAS::mapOtherVASIn(bool secondSlot, VAS* other)
 void VAS::mapForeignPage(bool secondSlot, VAS* other, size_t physicalAddr, size_t virtualAddr, int flags)
 {
 	if ((virtualAddr | physicalAddr) & 0xFFF) {
-		panic("UNALIGNED PAGE MAPPING REQUESTED 2");
+		KePanic("UNALIGNED PAGE MAPPING REQUESTED 2");
 	}
 
 	size_t pageTableNumber = virtualAddr / 0x400000;
@@ -533,7 +533,7 @@ void VAS::mapPage(size_t physicalAddr, size_t virtualAddr, int flags) {
 	}
 	
 	if ((virtualAddr | physicalAddr) & 0xFFF) {
-		panic("UNALIGNED PAGE MAPPING REQUESTED");
+		KePanic("UNALIGNED PAGE MAPPING REQUESTED");
 	}
 
 	size_t pageTableNumber = virtualAddr / 0x400000;

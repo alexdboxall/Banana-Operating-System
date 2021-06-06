@@ -249,7 +249,7 @@ namespace Thr
 		File* f = new File(filename, p);
 		FileStatus status = f->open(FileOpenMode::Read);
 		if (status != FileStatus::Success) {
-			panic("NO WORKING DISK DRIVER");
+			KePanic("NO WORKING DISK DRIVER");
 			return false;
 		}
 
@@ -258,25 +258,25 @@ namespace Thr
 
 		status = f->read(sizeof(ELFHeader), (void*) elf, &actual);
 		if (status != FileStatus::Success) {
-			panic("KERNEL FILE CAN'T LOAD");
+			KePanic("KERNEL FILE CAN'T LOAD");
 			return false;
 		}
 
 		if (elf->identify[0] == 0x7F && elf->identify[1] == 'E' && elf->identify[2] == 'L' && elf->identify[3] == 'F') {
 		} else {
-			panic("KERNEL FILE CAN'T LOAD");
+			KePanic("KERNEL FILE CAN'T LOAD");
 			return false;
 		}
 
 		//LOAD SECTION HEADERS
 		if (elf->shOffset == 0) {
-			panic("KERNEL FILE CAN'T LOAD");
+			KePanic("KERNEL FILE CAN'T LOAD");
 			return false;
 		}
 
 		status = f->seek(elf->shOffset);
 		if (status != FileStatus::Success) {
-			panic("KERNEL FILE CAN'T LOAD");
+			KePanic("KERNEL FILE CAN'T LOAD");
 			return false;
 		}
 
@@ -319,10 +319,10 @@ namespace Thr
 		}
 
 		if (!symTabOffset) {
-			panic("KERNEL TABLE HAS NO TABLE");
+			KePanic("KERNEL TABLE HAS NO TABLE");
 		}
 		if (!stringTabOffset) {
-			panic("KERNEL TABLE HAS NO TABLE");
+			KePanic("KERNEL TABLE HAS NO TABLE");
 		}
 
 		f->seek(symTabOffset);
@@ -527,7 +527,7 @@ namespace Thr
 							strcat(msg, "'");
 
 							if (critical) {
-								panic(msg);
+								KePanic(msg);
 							} else {
 								f->close();
 								delete f;
@@ -551,7 +551,7 @@ namespace Thr
 						x = addr + *entry;
 						if (info == 0x101 || info == 0x401 || (info >> 8) < (elf->shNum > 0xC ? 0xC : elf->shNum)) {
 							if (critical) {
-								panic("RELOCATION UNHANDLED CASE 1");
+								KePanic("RELOCATION UNHANDLED CASE 1");
 							} else {
 								f->close();
 								delete f;
@@ -586,7 +586,7 @@ namespace Thr
 						//kprintf("    addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
 						
 						if (critical) {
-							panic("RELOCATION UNHANDLED CASE 2");
+							KePanic("RELOCATION UNHANDLED CASE 2");
 						} else {
 							f->close();
 							delete f;
@@ -613,7 +613,7 @@ namespace Thr
 				} else {
 					kprintf("TYPE 0x%X\n", type);
 					if (critical) {
-						panic("UNKNOWN RELOCATION TYPE");
+						KePanic("UNKNOWN RELOCATION TYPE");
 					} else {
 						f->close();
 						delete f;
@@ -693,7 +693,7 @@ namespace Thr
 			strcpy(msg, "COULD NOT LOAD DLL '");
 			strcat(msg, name);
 			strcat(msg, "'");
-			panic(msg);
+			KePanic(msg);
 		}
 		FileStatus status = f->stat(&siz, &dir);
 		delete f;
@@ -703,7 +703,7 @@ namespace Thr
 			strcpy(msg, "COULD NOT LOAD DLL '");
 			strcat(msg, name);
 			strcat(msg, "'");
-			panic(msg);
+			KePanic(msg);
 		}
 
 		size_t addr = (size_t) Virt::getAKernelVAS()->allocatePages((siz + 4095) / 4096, PAGE_PRESENT | PAGE_SUPERVISOR | PAGE_WRITABLE);
@@ -716,10 +716,10 @@ namespace Thr
 
 		bool couldLoad = Thr::loadDriverIntoMemory(name, addr);
 		if (!couldLoad && critical) {
-			panic("COULD NOT LOAD CRITICAL DRIVER");
+			KePanic("COULD NOT LOAD CRITICAL DRIVER");
 		}
 		if (!couldLoad) {
-			panic("DEBUG. DRIVER COULDN'T LOAD");
+			KePanic("DEBUG. DRIVER COULDN'T LOAD");
 		}
 
 		int used = 0;
@@ -737,7 +737,7 @@ namespace Thr
 	void executeDLL(size_t startAddr, void* parentDevice)
 	{
 		if (!startAddr) {
-			panic("ATTEMPTING TO START DRIVER LOCATED AT 0x0");
+			KePanic("ATTEMPTING TO START DRIVER LOCATED AT 0x0");
 		}
 		kprintf("executeDLL: start addr = 0x%X\n", startAddr);
 		reinterpret_cast<int(*)(void*)>(startAddr)(parentDevice);

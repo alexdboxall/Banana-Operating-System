@@ -41,7 +41,7 @@ public:
 	void addElement(T* element)
 	{
 		if (element == nullptr) {
-			panic("Null element added to linked list");
+			KePanic("Null element added to linked list");
 		}
 
 		if (first && last) {
@@ -55,11 +55,11 @@ public:
 			last->next = nullptr;		//it took me until the 5th of September 2020 to add this line!
 
 			if (debugLength != 0) {
-				panic("Whoa... 3");
+				KePanic("Whoa... 3");
 			}
 
 		} else {
-			panic("addElement");
+			KePanic("addElement");
 		}
 
 		++debugLength;
@@ -68,18 +68,18 @@ public:
 	void removeFirst()
 	{
 		if (first == nullptr) {
-			panic("ERROR: removing from empty list...\n");
+			KePanic("ERROR: removing from empty list...\n");
 			return;
 		}
 		if (last->next != nullptr) {
-			panic("Whoa...");
+			KePanic("Whoa...");
 		}
 
 		if (first->next == nullptr) {
 			first = nullptr;
 			last = nullptr;
 			if (debugLength != 1) {
-				panic("first->next == nullptr, but length = 1");
+				KePanic("first->next == nullptr, but length = 1");
 			}
 
 		} else {

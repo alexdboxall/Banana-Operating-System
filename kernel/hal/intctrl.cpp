@@ -24,7 +24,7 @@ void* INT_contexts[256][4];
 
 extern "C" uint64_t int_handler(struct regs* r)
 {
-	while (Krnl::kernelInPanic) {
+	while (KeKernelInPanic) {
 		HalDisableInterrupts();
 		HalStallProcessor();
 	}
@@ -69,7 +69,7 @@ void installISRHandler(int num, void (*handler)(regs*, void*), void* context)
 		}
 	}
 
-	panic("[intctrl] A!");
+	KePanic("[intctrl] A!");
 }
 
 int installIRQHandler(int num, void (*handler)(regs*, void*), bool legacy, void* context)
@@ -88,7 +88,7 @@ int installIRQHandler(int num, void (*handler)(regs*, void*), bool legacy, void*
 					levelTriggered = false;
 				}
 			} else {
-				panic("[installIRQHandler] Legacy IRQ with number 16 or higher");
+				KePanic("[installIRQHandler] Legacy IRQ with number 16 or higher");
 			}
 		}
 
@@ -106,7 +106,7 @@ int installIRQHandler(int num, void (*handler)(regs*, void*), bool legacy, void*
 			}
 		}
 		if (!found) {
-			panic("[apic] OOPS!");
+			KePanic("[apic] OOPS!");
 		}
 	}
 
@@ -123,7 +123,7 @@ int installIRQHandler(int num, void (*handler)(regs*, void*), bool legacy, void*
 		}
 	}
 
-	panic("can't install IRQ handler, too many!");
+	KePanic("can't install IRQ handler, too many!");
 	return -1;
 }
 
@@ -143,7 +143,7 @@ void uninstallIRQHandler(int num, void (*handler)(regs*, void*), bool legacy)
 		if (num < 16) {
 			num = legacyIRQRemaps[num];
 		} else {
-			panic("[intctrl] E!");
+			KePanic("[intctrl] E!");
 		}
 	}
 
@@ -172,7 +172,7 @@ int convertLegacyIRQNumber(int num)
 		if (num < 16) {
 			num = legacyIRQRemaps[num];
 		} else {
-			panic("[installIRQHandler] Legacy IRQ with number 16 or higher");
+			KePanic("[installIRQHandler] Legacy IRQ with number 16 or higher");
 		}
 	}
 

@@ -313,9 +313,9 @@ PCIIRQAssignments ACPI::getPCIIRQAssignment(uint8_t bus, uint16_t slot, uint8_t 
 		if (pciIRQAssignments[i].slot == slot && pciIRQAssignments[i].pin == pin) {
 			if (gotRes) {
 				if (pciIRQAssignments[i].rootBus != result.rootBus) {
-					panic("MULTIPLE PCI BUSES, CANNOT GET IRQ ASSIGNMENT");
+					KePanic("MULTIPLE PCI BUSES, CANNOT GET IRQ ASSIGNMENT");
 				}
-				panic("ACPI IS SCREWY");
+				KePanic("ACPI IS SCREWY");
 			}
 			result = pciIRQAssignments[i];
 			gotRes = true;
@@ -334,7 +334,7 @@ void ACPI::registerPCIIRQAssignment(ACPI_HANDLE handle, uint16_t slot, uint8_t p
 	++nextPCIIRQAssignment;
 
 	if (nextPCIIRQAssignment == MAC_PCI_IRQ_ASSIGNMENTS) {
-		panic("TOO MANY PCI IRQ ASSIGNMENTS");
+		KePanic("TOO MANY PCI IRQ ASSIGNMENTS");
 	}
 }
 
@@ -367,7 +367,7 @@ void ACPI::detectPCI()
 	} else if (*biosPCIDetect == 2) {
 		pciDetected = true;
 		if (pciAccessMech1) {
-			panic("TODO: ASK USER: PCI MECHANSIM CONFLICT");
+			KePanic("TODO: ASK USER: PCI MECHANSIM CONFLICT");
 		}
 	}
 
@@ -380,7 +380,7 @@ void ACPI::detectPCI()
 		} else if (detected == 2) {
 			pciDetected = true;
 			if (pciAccessMech1) {
-				panic("TODO: ASK USER: PCI MECHANSIM CONFLICT");
+				KePanic("TODO: ASK USER: PCI MECHANSIM CONFLICT");
 			}
 		}
 	}
@@ -501,7 +501,7 @@ int ACPI::close(int mode, int b, void* c)
 		if (systemShutdownFunction) {
 			systemShutdownFunction();
 		}
-		panic("You may now turn off your computer.");
+		KePanic("You may now turn off your computer.");
 
 		return -1;
 

@@ -41,7 +41,7 @@ int APICTimer::open(int hz, int _irqNum, void*)
 
 void APICTimer::write(int hz)
 {
-	panic("APICTime::write");
+	KePanic("APICTime::write");
 
 	frequency = hz;
 

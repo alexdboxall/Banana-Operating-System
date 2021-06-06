@@ -105,7 +105,7 @@ int IDE::open(int a, int, void*)
 
 				outl(0xCF8, (1 << 31) | (pci.info.bus << 16) | (pci.info.slot << 11) | (pci.info.function << 8) | 0x3C);
 				if ((inl(0xCFC) & 0xFF) != interrupt) {
-					panic("BADNESS");
+					KePanic("BADNESS");
 				}
 
 			} else {
@@ -113,11 +113,11 @@ int IDE::open(int a, int, void*)
 				if (pci.info.classCode == 0x01 && pci.info.subClass == 0x01 && (pci.info.progIF == 0x8A || pci.info.progIF == 0x80)) {
 					legacyIRQs = true;
 				} else {
-					panic("IDE DOESN'T HAVE ANY CLUE WHAT ITS IRQ NUMBER IS");
+					KePanic("IDE DOESN'T HAVE ANY CLUE WHAT ITS IRQ NUMBER IS");
 				}
 			}
 		} else {
-			panic("THE EXISITNG PCI IDE DEVICE DOESN'T EXIST");
+			KePanic("THE EXISITNG PCI IDE DEVICE DOESN'T EXIST");
 		}
 
 		if (pci.info.progIF & 0x80) {

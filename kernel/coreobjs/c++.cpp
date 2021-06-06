@@ -46,7 +46,7 @@ extern "C" void __stack_chk_fail(void)
 	kprintf("'0x%X'\n", __builtin_return_address(0));
 	kprintf("'0x%X'\n", __builtin_return_address(1));
 
-	panic("Stack smashing detected");
+	KePanic("Stack smashing detected");
 
 #pragma GCC diagnostic pop
 
@@ -54,7 +54,7 @@ extern "C" void __stack_chk_fail(void)
 
 extern "C" void __cxa_pure_virtual()
 {
-	panic("__cxa_pure_virtual");
+	KePanic("__cxa_pure_virtual");
 }
 
 void* operator new[](size_t size)

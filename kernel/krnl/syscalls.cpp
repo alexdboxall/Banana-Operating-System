@@ -548,7 +548,7 @@ uint64_t sysSetFatAttrib(regs* r)
 
 uint64_t sysPanic(regs* r)
 {
-	panic((char*) r->edx);
+	KePanic((char*) r->edx);
 	return 1;
 }
 

@@ -38,13 +38,13 @@ extern "C" void* sbrk(ptrdiff_t increment)
 
 extern "C" void* mmap(void* addr, size_t length, int prot, int flags, int fd, size_t offset)
 {
-	panic("MMAP");
+	KePanic("MMAP");
 	return 0;
 }
 
 extern "C" int munmap(void* addr, size_t length)
 {
-	panic("MUNMAP");
+	KePanic("MUNMAP");
 	return 0;
 }
 

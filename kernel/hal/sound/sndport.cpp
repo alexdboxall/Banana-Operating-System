@@ -103,13 +103,13 @@ int SoundPort::buffer32(int32_t* data, int samples)
 int SoundPort::unbufferAndAdd16(int max, int16_t* buffer, SoundCard* card)
 {
 	if (sampleRate != card->currentSampleRate) {
-		panic("TODO 16! Convert sample rates!");
+		KePanic("TODO 16! Convert sample rates!");
 	}
 	if (bits != card->currentBits) {
-		panic("TODO 16! Convert bit rates!");
+		KePanic("TODO 16! Convert bit rates!");
 	}
 	if (channels != card->currentChannels) {
-		panic("TODO 16! Convert bit rates!");
+		KePanic("TODO 16! Convert bit rates!");
 	}
 
 	int amount = buffUsed > max ? max : buffUsed;
@@ -125,13 +125,13 @@ int SoundPort::unbufferAndAdd16(int max, int16_t* buffer, SoundCard* card)
 int SoundPort::unbufferAndAdd32(int max, int32_t* buffer, SoundCard* card)
 {
 	if (sampleRate != card->currentSampleRate) {
-		panic("TODO 32! Convert sample rates!");
+		KePanic("TODO 32! Convert sample rates!");
 	}
 	if (bits != card->currentBits) {
-		panic("TODO 32! Convert bit rates!");
+		KePanic("TODO 32! Convert bit rates!");
 	}
 	if (channels != card->currentChannels) {
-		panic("TODO 32! Convert bit rates!");
+		KePanic("TODO 32! Convert bit rates!");
 	}
 
 	int amount = buffUsed > max ? max : buffUsed;

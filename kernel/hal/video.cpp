@@ -43,7 +43,7 @@ int Video::getHeight()
 
 void Video::putpixel(int x, int y, uint32_t col)
 {
-	panic("Video::pixel MUST BE OVERRIDDEN\n");
+	KePanic("Video::pixel MUST BE OVERRIDDEN\n");
 }
 
 void Video::drawCursor(int mouse_x, int mouse_y, uint8_t* data, int invertMouse)
@@ -163,7 +163,7 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 	tga_header_t* header = (tga_header_t*) ptr;
 
 	if (!data) {
-		panic("tgaParse malloc");
+		KePanic("tgaParse malloc");
 	}
 
 	int j, k;

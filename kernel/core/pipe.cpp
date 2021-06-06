@@ -54,7 +54,7 @@ FileStatus Pipe::read(uint64_t bytes, void* where, int* bytesRead)
 	bufferBase = (bufferBase + bytes) % maxSize;
 
 	if (!bytesRead) {
-		panic("PIPE READ NULL BR PASSED IN");
+		KePanic("PIPE READ NULL BR PASSED IN");
 	}
 
 	*bytesRead = bytes;
@@ -79,7 +79,7 @@ FileStatus Pipe::write(uint64_t bytes, void* where, int* bytesWritten)
 	bufferLength += bytes;
 
 	if (!bytesWritten) {
-		panic("PIPE WRITE NULL BR PASSED IN");
+		KePanic("PIPE WRITE NULL BR PASSED IN");
 	}
 
 	*bytesWritten = bytes;

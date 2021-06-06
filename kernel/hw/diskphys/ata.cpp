@@ -182,7 +182,7 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 void ATA::detectCHS()
 {
 	ide->devices[ideDeviceNum].size = 0;
-	panic("ENTER CHS VALUES!");
+	KePanic("ENTER CHS VALUES!");
 }
 
 int ATA::open(int __a, int _ideDeviceNum, void* _ide)

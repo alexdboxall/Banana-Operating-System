@@ -69,7 +69,7 @@ void addToTerminalCycle(VgaText* terminal)
 void setActiveTerminal(VgaText* terminal)
 {
 	if (!terminal) {
-		panic("NULL TERMINAL");
+		KePanic("NULL TERMINAL");
 		return;
 	}
 
@@ -531,7 +531,7 @@ void VgaText::receiveKey(uint8_t key)
 
 	if (unbufferedKeyboard || key == (uint8_t) '\n') {
 		if (strlen(keybufferSent) + strlen(keybufferInternal) + 4 > TERMINAL_KEYBUFFER_OUT_SIZE) {
-			panic("TODO: HANDLE OVERFLOWS FOR KEYBUFFERS (terminal.cpp, VgaText::receiveKey)");
+			KePanic("TODO: HANDLE OVERFLOWS FOR KEYBUFFERS (terminal.cpp, VgaText::receiveKey)");
 		}
 
 		//copy it to the read buffer

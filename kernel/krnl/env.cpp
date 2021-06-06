@@ -240,7 +240,7 @@ namespace Krnl
 
 		}
 		
-		panic("getProcessEnvPair FAILURE");
+		KePanic("getProcessEnvPair FAILURE");
 
 		EnvVar e;
 		e.key = nullptr;

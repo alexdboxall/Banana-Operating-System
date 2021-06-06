@@ -185,7 +185,7 @@ int SATAPI::open(int _deviceNum, int b, void* _ide)
 	for (int i = 1; i < 2; ++i) {
 		size_t got = Phys::allocatePage();
 		if (got != prev + 4096) {
-			panic("SATAPI NOT CONTIGUOUS");
+			KePanic("SATAPI NOT CONTIGUOUS");
 		}
 		prev = got;
 	}
@@ -211,7 +211,7 @@ int SATAPI::read(uint64_t lba, int count, void* buffer)
 	kprintf("SATAPI::read A.\n");
 
 	if (count > 4) {
-		panic("UNIMPLEMENTED SATAPI::read with count > 4");
+		KePanic("UNIMPLEMENTED SATAPI::read with count > 4");
 	}
 
 	sbus->portRebase(&sbus->abar->ports[deviceNum], deviceNum);

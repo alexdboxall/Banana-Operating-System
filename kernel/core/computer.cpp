@@ -196,7 +196,7 @@ void Computer::displayFeatures()
 uint64_t Computer::rdmsr(uint32_t msr_id)
 {
 	if (!features.hasMSR) {
-		panic("RDMSR");
+		KePanic("RDMSR");
 	}
 #if PLATFORM_ID == 86
 	uint64_t msr_value;
@@ -218,7 +218,7 @@ uint64_t Computer::rdmsr(uint32_t msr_id)
 void Computer::wrmsr(uint32_t msr_id, uint64_t msr_value)
 {
 	if (!features.hasMSR) {
-		panic("WRMSR");
+		KePanic("WRMSR");
 	}
 #if PLATFORM_ID == 86
 	asm volatile ("wrmsr" : : "c" (msr_id), "A" (msr_value));
@@ -333,14 +333,14 @@ void Computer::handleNMI()
 	kprintf("RECEIVED AN NMI\n");
 
 	if (sysA & (1 << 4)) {
-		panic("WATCHDOG NMI");
+		KePanic("WATCHDOG NMI");
 	}
 
 	if (sysB & (1 << 6)) {
-		panic("BUS ERROR");
+		KePanic("BUS ERROR");
 	}
 
 	if (sysB & (1 << 7)) {
-		panic("MEMORY ERROR");
+		KePanic("MEMORY ERROR");
 	}
 }

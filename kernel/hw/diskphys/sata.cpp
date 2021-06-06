@@ -51,7 +51,7 @@ int SATA::open(int _deviceNum, int b, void* _ide)
 	for (int i = 1; i < 2; ++i) {
 		size_t got = Phys::allocatePage();
 		if (got != prev + 4096) {
-			panic("SATA NOT CONTIGUOUS");
+			KePanic("SATA NOT CONTIGUOUS");
 		}
 		prev = got;
 	}
@@ -69,7 +69,7 @@ int SATA::open(int _deviceNum, int b, void* _ide)
 int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 {
 	if (count > 16) {
-		panic("SATA::access with > 16. SATA::read/write should prevent.");
+		KePanic("SATA::access with > 16. SATA::read/write should prevent.");
 	}
 
 	uint32_t startl = lba & 0xFFFFFFFF;

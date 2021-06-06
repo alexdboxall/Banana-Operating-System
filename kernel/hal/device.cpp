@@ -243,7 +243,7 @@ DriverlessDevice::DriverlessDevice(const char* name): Device(name)
 
 int DriverlessDevice::open(int, int, void*)
 {
-	panic("CANNOT OPEN DRIVERLESS DEVICE");
+	KePanic("CANNOT OPEN DRIVERLESS DEVICE");
 	return -1;
 }
 

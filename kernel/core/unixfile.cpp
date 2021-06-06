@@ -68,8 +68,8 @@ UnixFile::~UnixFile()
 
 		unixFileLinkedList.addElement(f);
 
-		if (timeout++ == 5000) {
-			panic("DELETING UNIXFILE - CANNOT FIND");
+		if (timeout++ == 500000) {
+			KePanic("DELETING UNIXFILE - CANNOT FIND");
 		}
 	}
 }

@@ -105,7 +105,7 @@ void LogicalDisk::unmount()
 
 int LogicalDisk::open(int a, int b, void* c)
 {
-	panic("PLEASE DON'T CALL LogicalDisk::open");
+	KePanic("PLEASE DON'T CALL LogicalDisk::open");
 	return -1;
 }
 
@@ -122,7 +122,7 @@ int LogicalDisk::close(int a, int b, void* c)
 void LogicalDisk::unassignDriveLetter()
 {
 	if (!mounted) {
-		panic("CANNOT UNASSIGN UNASSIGNED DISK");
+		KePanic("CANNOT UNASSIGN UNASSIGNED DISK");
 		return;
 	}
 	uint64_t bit = (1 << (mounted - 'A'));

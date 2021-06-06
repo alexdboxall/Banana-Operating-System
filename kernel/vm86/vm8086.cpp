@@ -175,7 +175,7 @@ namespace Vm
 
 		File* f = new File(filename, kernelProcess);
 		if (!f) {
-			panic("VM8086 FILE FAILED!");
+			KePanic("VM8086 FILE FAILED!");
 			unlockScheduler();
 			return false;
 		}
@@ -185,7 +185,7 @@ namespace Vm
 		f->stat(&siz, &dir);
 
 		if (dir) {
-			panic("VM8086 FILE STAT FAILED!");
+			KePanic("VM8086 FILE STAT FAILED!");
 			unlockScheduler();
 			return false;
 		}
@@ -193,7 +193,7 @@ namespace Vm
 		FileStatus st = f->open(FileOpenMode::Read);
 
 		if (st != FileStatus::Success) {
-			panic("VM8086 FILE OPEN FAILED!");
+			KePanic("VM8086 FILE OPEN FAILED!");
 			unlockScheduler();
 			return false;
 		}

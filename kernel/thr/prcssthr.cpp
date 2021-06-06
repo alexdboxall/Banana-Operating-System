@@ -300,7 +300,7 @@ void cleanupTerminatedTask(ThreadControlBlock* task)
 				if (task->processRelatedTo->parent->threadUsage & (1 << i)) {
 					if (task->processRelatedTo->parent->threads[i].state == TaskState::WaitPID) {
 						if (task->processRelatedTo->parent->threads[i].waitingPID < -1) {
-							panic("We don't currently support waitpid() with PID < -1");
+							KePanic("We don't currently support waitpid() with PID < -1");
 
 						} else if (task->processRelatedTo->parent->threads[i].waitingPID == -1) {
 							task->processRelatedTo->parent->threads[i].waitingPID = task->processRelatedTo->pid;
@@ -308,7 +308,7 @@ void cleanupTerminatedTask(ThreadControlBlock* task)
 							unblockTask(&task->processRelatedTo->parent->threads[i]);
 
 						} else if (task->processRelatedTo->parent->threads[i].waitingPID == 0) {
-							panic("We don't currently support waitpid() with PID == 0");
+							KePanic("We don't currently support waitpid() with PID == 0");
 
 						} else if (task->processRelatedTo->parent->threads[i].waitingPID == task->processRelatedTo->pid) {
 							task->processRelatedTo->parent->threads[i].waitingPID = task->processRelatedTo->pid;
@@ -513,7 +513,7 @@ void sleep(uint32_t seconds)
 
 extern "C" void taskReturned()
 {	
-	panic("TASK RETURNED. CHECK KERNEL TASKS AND ALL DRIVERS.\n");
+	KePanic("TASK RETURNED. CHECK KERNEL TASKS AND ALL DRIVERS.\n");
 
 	while (1) {
 		blockTask(TaskState::Paused);
@@ -554,7 +554,7 @@ void Semaphore::assertLocked(const char* msg)
 	lockStuff();
 
 	if (currentCount < maxCount) {
-		panic(msg);
+		KePanic(msg);
 	}
 
 	unlockStuff();

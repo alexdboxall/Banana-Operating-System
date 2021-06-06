@@ -98,7 +98,7 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 		}
 
 		if (iso9660Owner) {
-			HalPanic("CD OWNER CHANGE");
+			KePanic("CD OWNER CHANGE");
 		}
 		iso9660Owner = __fn[0];
 	}
@@ -129,7 +129,7 @@ FileStatus ISO9660::read(void* ptr, size_t bytes, void* bf, int* bytesRead)
 
 bool ISO9660::exists(const char* file)
 {
-	HalPanic("ISO9660::exists UNIMPLEMENTED");
+	KePanic("ISO9660::exists UNIMPLEMENTED");
 
 	return false;
 }
@@ -190,7 +190,7 @@ FileStatus ISO9660::stat(const char* path, uint64_t* size, bool* directory)
 		}
 
 		if (iso9660Owner) {
-			HalPanic("CD OWNER CHANGE");
+			KePanic("CD OWNER CHANGE");
 		}
 		iso9660Owner = path[0];
 	}
@@ -233,7 +233,7 @@ FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 		}
 
 		if (iso9660Owner) {
-			HalPanic("CD OWNER CHANGE");
+			KePanic("CD OWNER CHANGE");
 		}
 		iso9660Owner = __fn[0];
 	}

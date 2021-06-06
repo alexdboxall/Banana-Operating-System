@@ -110,6 +110,13 @@ INLINE void HalSaveCoprocessor(void* buffer)
 
 }
 
+INLINE void HalFlushTLB()
+{
+	size_t cr3;
+	asm volatile ("mov %%cr0, %0" : "=r"(cr3));
+	asm volatile ("mov %0, %%cr0" :: "r"(cr3));
+}
+
 /// <summary>
 /// Restores the coprocessor state from a buffer previously allocated with HalAllocateCoprocessorState.
 /// </summary>

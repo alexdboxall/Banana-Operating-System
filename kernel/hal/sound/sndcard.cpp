@@ -95,7 +95,7 @@ int SoundCard::addChannel(SoundPort* ch)
 	}
 
 	if (id == -1) {
-		panic("DEBUG: Could not add channel!\n");
+		KePanic("DEBUG: Could not add channel!\n");
 		return -1;
 	}
 
@@ -110,10 +110,10 @@ void SoundCard::removeChannel(int id)
 
 void SoundCard::beginPlayback()
 {
-	panic("PSEDUO-PURE VIRTUAL SoundCard CALLED");
+	KePanic("PSEDUO-PURE VIRTUAL SoundCard CALLED");
 }
 
 void SoundCard::stopPlayback()
 {
-	panic("PSEDUO-PURE VIRTUAL SoundCard CALLED");
+	KePanic("PSEDUO-PURE VIRTUAL SoundCard CALLED");
 }
