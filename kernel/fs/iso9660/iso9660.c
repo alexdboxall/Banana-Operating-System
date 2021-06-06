@@ -29,7 +29,7 @@ ISO9660 systems, as these were used as references as well.
 
 */
 
-#pragma GCC optimize ("Os")
+#pragma GCC optimize ("O1")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
 #pragma GCC optimize ("-fno-align-jumps")
