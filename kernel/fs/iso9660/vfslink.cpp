@@ -200,17 +200,26 @@ FileStatus ISO9660::close(void* ptr)
 
 FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 {
-	if (__fn == nullptr || ptr == nullptr) return FileStatus::InvalidArgument;
-
-	HalPanic("ISO9660::openDir UNIMPLEMENTED");
-	return FileStatus::Success;
+	return open(__fn, ptr, FileOpenMode::Read);
 }
 
 FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead)
 {
 	if (ptr == nullptr || bytesRead == nullptr) return FileStatus::InvalidArgument;
 
-	HalPanic("ISO9660::readDir UNIMPLEMENTED");
+	struct direntX* dent = iso_readdir(((int)ptr)-100);
+	if (!dent) {
+		return FileStatus::Failure;
+	}
+
+	struct dirent dent;
+	dent.d_ino = 0;
+	dent.d_namlen = strlen(dent->d_name);
+	dent.d_type = d_name.d_reclen == -1 ? DT_DIR : DT_REG;
+	strcpy(dent.d_name, dent->d_name);
+
+	memcpy(where, &dent, bytes);
+	*bytesRead = sizeof(dent);
 	return FileStatus::Success;
 }
 
