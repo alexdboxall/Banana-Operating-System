@@ -22,8 +22,6 @@ if (!(sysBootSettings & 128)) {\
 }\
 }
 
-extern "C" void kernel_main();
-
 extern "C" void* malloc(size_t);
 extern "C" void  rfree(void*);
 

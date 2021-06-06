@@ -46,11 +46,11 @@ namespace Virt
 	void setupPageSwapping(int megs);
 }
 
-extern "C" void kernel_main();
+extern "C" void KeEntryPoint();
 
 class VAS {
 private:
-	friend void kernel_main();
+	friend void KeEntryPoint();
 	VAS();
 	bool specialFirstVAS;
 
