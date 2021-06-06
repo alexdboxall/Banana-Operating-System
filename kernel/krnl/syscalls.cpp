@@ -341,7 +341,7 @@ uint64_t sysCallWait(regs* r)
 
 uint64_t sysCallNotImpl(regs* r)
 {
-	panic("UNIMPLEMENTED SYSTEM CALL");
+	KePanic("UNIMPLEMENTED SYSTEM CALL");
 	return -1;
 }
 
