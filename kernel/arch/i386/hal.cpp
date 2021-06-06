@@ -388,7 +388,7 @@ void HalInitialise()
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcast-function-type"
-	installISRHandler(96, reinterpret_cast<void(*)(regs*, void*)>(Sys::systemCall));
+	installISRHandler(96, reinterpret_cast<void(*)(regs*, void*)>(KeSystemCall));
 #pragma GCC diagnostic pop
 
 	computer->clock = nullptr;

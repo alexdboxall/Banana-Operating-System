@@ -6,12 +6,8 @@
 
 #ifdef __cplusplus
 struct regs;
-namespace Sys
-{
-	void loadSyscalls();
-	uint64_t systemCall(regs* r, void* context);
-
-}
+void KeLoadSystemCalls();
+uint64_t KeSystemCall(regs* r, void* context);
 #endif
 
 #define _APPSETTINGS_VALIDATION_V1			'N'

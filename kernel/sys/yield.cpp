@@ -10,17 +10,15 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-namespace Sys
+/// <summary>
+/// Yields the currently running thread's timeslice.
+/// </summary>
+/// <returns>Returns zero.</returns>
+/// 
+uint64_t SysYield(regs* r)
 {
-	/// <summary>
-	/// Returns the process ID of the calling process.
-	/// </summary>
-	/// <returns>Returns the process ID.</returns>
-	/// 
-	uint64_t getPID(regs* r)
-	{
-		return currentTaskTCB->processRelatedTo->pid;
-	}
+	lockScheduler();
+	schedule();
+	unlockScheduler();
+	return 0;
 }
-
-

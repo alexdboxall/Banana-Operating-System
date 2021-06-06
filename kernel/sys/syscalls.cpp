@@ -21,27 +21,23 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-uint64_t (*systemCallHandlers[128])(regs* r);
+uint64_t(*systemCallHandlers[128])(regs* r);
 
-namespace Sys
-{
-	uint64_t yield(regs* r);
-	uint64_t exit(regs* r);
-	uint64_t sbrk(regs* r);
-	uint64_t write(regs* r);
-	uint64_t read(regs* r);
-	uint64_t getPID(regs* r);
-	uint64_t getCwd(regs* r);
-	uint64_t setCwd(regs* r);
-
-	uint64_t loadDLL(regs* r);
-	uint64_t setTime(regs* r);
-	uint64_t timezone(regs* r);
-	uint64_t eject(regs* r);
-	uint64_t wsbe(regs* r);
-	uint64_t getRAMData(regs* r);
-	uint64_t getVGAPtr(regs* r);
-}
+uint64_t SysYield(regs* r);
+uint64_t SysExit(regs* r);
+uint64_t SysSbrk(regs* r);
+uint64_t SysWrite(regs* r);
+uint64_t SysRead(regs* r);
+uint64_t SysGetPID(regs* r);
+uint64_t SysGetCwd(regs* r);
+uint64_t SysSetCwd(regs* r);
+uint64_t SysLoadDLL(regs* r);
+uint64_t SysSetTime(regs* r);
+uint64_t SysTimezone(regs* r);
+uint64_t SysEject(regs* r);
+uint64_t SysWsbe(regs* r);
+uint64_t SysGetRAMData(regs* r);
+uint64_t SysGetVGAPtr(regs* r);
 
 int string_ends_with(const char* str, const char* suffix)
 {
@@ -118,7 +114,7 @@ uint64_t sysCallOpen(regs* r)
 	}
 
 	*((uint64_t*) r->ebx) = ((UnixFile*) f)->getFileDescriptor();
-	
+
 	return 0;
 }
 
@@ -156,7 +152,7 @@ uint64_t sysCallTell(regs* r)
 		file = getFromFileDescriptor(r->ebx);
 	}
 
-	FileStatus st = ((File*) file)->tell ((uint64_t*) r->ecx);
+	FileStatus st = ((File*) file)->tell((uint64_t*) r->ecx);
 
 	if (st != FileStatus::Success) {
 		return -1;
@@ -356,7 +352,7 @@ uint64_t sysCallRmdir(regs* r)
 	File* f = new File(name, currentTaskTCB->processRelatedTo);
 	FileStatus res = f->unlink();
 	delete f;
-	
+
 	if (res == FileStatus::Success) {
 		return 0;
 	}
@@ -432,7 +428,7 @@ uint64_t sysCallTTYName(regs* r)
 	}
 
 	VgaText* terminal = static_cast<VgaText*>(file);
-	strcpy((char*) r->edx,"<NO NAME>");
+	strcpy((char*) r->edx, "<NO NAME>");
 	return 0;
 }
 
@@ -604,70 +600,68 @@ uint64_t sysGetUnixTime(regs* r)
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-namespace Sys
+void KeLoadSystemCalls()
 {
-	void loadSyscalls()
-	{
-		systemCallHandlers[(int) SystemCallNumber::Yield] = Sys::yield;
-		systemCallHandlers[(int) SystemCallNumber::Exit] = Sys::exit;
-		systemCallHandlers[(int) SystemCallNumber::Sbrk] = Sys::sbrk;
-		systemCallHandlers[(int) SystemCallNumber::Write] = Sys::write;
-		systemCallHandlers[(int) SystemCallNumber::Read] = Sys::read;
-		systemCallHandlers[(int) SystemCallNumber::GetPID] = Sys::getPID;
-		systemCallHandlers[(int) SystemCallNumber::GetCwd] = Sys::getCwd;
-		systemCallHandlers[(int) SystemCallNumber::SetCwd] = Sys::setCwd;
+	systemCallHandlers[(int) SystemCallNumber::Yield] = SysYield;
+	systemCallHandlers[(int) SystemCallNumber::Exit] = SysExit;
+	systemCallHandlers[(int) SystemCallNumber::Sbrk] = SysSbrk;
+	systemCallHandlers[(int) SystemCallNumber::Write] = SysWrite;
+	systemCallHandlers[(int) SystemCallNumber::Read] = SysRead;
+	systemCallHandlers[(int) SystemCallNumber::GetPID] = SysGetPID;
+	systemCallHandlers[(int) SystemCallNumber::GetCwd] = SysGetCwd;
+	systemCallHandlers[(int) SystemCallNumber::SetCwd] = SysSetCwd;
 
-		systemCallHandlers[(int) SystemCallNumber::Close] = sysCallClose;
-		systemCallHandlers[(int) SystemCallNumber::Open] = sysCallOpen;
-		systemCallHandlers[(int) SystemCallNumber::OpenDir] = sysCallOpenDir;
-		systemCallHandlers[(int) SystemCallNumber::ReadDir] = sysCallReadDir;
-		systemCallHandlers[(int) SystemCallNumber::SeekDir] = sysCallSeekDir;
-		systemCallHandlers[(int) SystemCallNumber::TellDir] = sysCallTellDir;
-		systemCallHandlers[(int) SystemCallNumber::MakeDir] = sysCallMakeDir;
-		systemCallHandlers[(int) SystemCallNumber::CloseDir] = sysCallCloseDir;
-		systemCallHandlers[(int) SystemCallNumber::Seek] = sysCallSeek;
-		systemCallHandlers[(int) SystemCallNumber::Tell] = sysCallTell;
-		systemCallHandlers[(int) SystemCallNumber::Size] = sysCallSize;
-		systemCallHandlers[(int) SystemCallNumber::Verify] = sysCallVerify;
-		systemCallHandlers[(int) SystemCallNumber::Wait] = sysCallWait;
-		systemCallHandlers[(int) SystemCallNumber::Fork] = sysCallNotImpl;
-		systemCallHandlers[(int) SystemCallNumber::Execve] = sysCallNotImpl;
-		systemCallHandlers[(int) SystemCallNumber::Rmdir] = sysCallRmdir;
-		systemCallHandlers[(int) SystemCallNumber::Unlink] = sysCallUnlink;
-		systemCallHandlers[(int) SystemCallNumber::GetArgc] = sysCallGetArgc;
-		systemCallHandlers[(int) SystemCallNumber::GetArgv] = sysCallGetArgv;
-		systemCallHandlers[(int) SystemCallNumber::Realpath] = sysCallRealpath;
-		systemCallHandlers[(int) SystemCallNumber::TTYName] = sysCallTTYName;
-		systemCallHandlers[(int) SystemCallNumber::IsATTY] = sysCallIsATTY;
-		systemCallHandlers[(int) SystemCallNumber::USleep] = sysCallUSleep;
-		systemCallHandlers[(int) SystemCallNumber::SizeFromFilename] = sysCallSizeFromFilename;
-		systemCallHandlers[(int) SystemCallNumber::Spawn] = sysCallSpawn;
-		systemCallHandlers[(int) SystemCallNumber::GetEnv] = sysCallGetEnv;
-		systemCallHandlers[(int) SystemCallNumber::FormatDisk] = sysFormatDisk;
-		systemCallHandlers[(int) SystemCallNumber::SetDiskVolumeLabel] = sysSetDiskVolumeLabel;
-		systemCallHandlers[(int) SystemCallNumber::GetDiskVolumeLabel] = sysGetDiskVolumeLabel;
-		systemCallHandlers[(int) SystemCallNumber::SetFATAttrib] = sysSetFatAttrib;
-		systemCallHandlers[(int) SystemCallNumber::Panic] = sysPanic;
-		systemCallHandlers[(int) SystemCallNumber::Shutdown] = sysShutdown;
-		systemCallHandlers[(int) SystemCallNumber::Pipe] = sysPipe;
-		systemCallHandlers[(int) SystemCallNumber::GetUnixTime] = sysGetUnixTime;
-		systemCallHandlers[(int) SystemCallNumber::LoadDLL] = Sys::loadDLL;
-		systemCallHandlers[(int) SystemCallNumber::SetTime] = Sys::setTime;
-		systemCallHandlers[(int) SystemCallNumber::Timezone] = Sys::timezone;
-		systemCallHandlers[(int) SystemCallNumber::Eject] = Sys::eject;
-		systemCallHandlers[(int) SystemCallNumber::WSBE] = Sys::wsbe;
-		systemCallHandlers[(int) SystemCallNumber::GetRAMData] = Sys::getRAMData;
-		systemCallHandlers[(int) SystemCallNumber::GetVGAPtr] = Sys::getVGAPtr;
+	systemCallHandlers[(int) SystemCallNumber::Close] = sysCallClose;
+	systemCallHandlers[(int) SystemCallNumber::Open] = sysCallOpen;
+	systemCallHandlers[(int) SystemCallNumber::OpenDir] = sysCallOpenDir;
+	systemCallHandlers[(int) SystemCallNumber::ReadDir] = sysCallReadDir;
+	systemCallHandlers[(int) SystemCallNumber::SeekDir] = sysCallSeekDir;
+	systemCallHandlers[(int) SystemCallNumber::TellDir] = sysCallTellDir;
+	systemCallHandlers[(int) SystemCallNumber::MakeDir] = sysCallMakeDir;
+	systemCallHandlers[(int) SystemCallNumber::CloseDir] = sysCallCloseDir;
+	systemCallHandlers[(int) SystemCallNumber::Seek] = sysCallSeek;
+	systemCallHandlers[(int) SystemCallNumber::Tell] = sysCallTell;
+	systemCallHandlers[(int) SystemCallNumber::Size] = sysCallSize;
+	systemCallHandlers[(int) SystemCallNumber::Verify] = sysCallVerify;
+	systemCallHandlers[(int) SystemCallNumber::Wait] = sysCallWait;
+	systemCallHandlers[(int) SystemCallNumber::Fork] = sysCallNotImpl;
+	systemCallHandlers[(int) SystemCallNumber::Execve] = sysCallNotImpl;
+	systemCallHandlers[(int) SystemCallNumber::Rmdir] = sysCallRmdir;
+	systemCallHandlers[(int) SystemCallNumber::Unlink] = sysCallUnlink;
+	systemCallHandlers[(int) SystemCallNumber::GetArgc] = sysCallGetArgc;
+	systemCallHandlers[(int) SystemCallNumber::GetArgv] = sysCallGetArgv;
+	systemCallHandlers[(int) SystemCallNumber::Realpath] = sysCallRealpath;
+	systemCallHandlers[(int) SystemCallNumber::TTYName] = sysCallTTYName;
+	systemCallHandlers[(int) SystemCallNumber::IsATTY] = sysCallIsATTY;
+	systemCallHandlers[(int) SystemCallNumber::USleep] = sysCallUSleep;
+	systemCallHandlers[(int) SystemCallNumber::SizeFromFilename] = sysCallSizeFromFilename;
+	systemCallHandlers[(int) SystemCallNumber::Spawn] = sysCallSpawn;
+	systemCallHandlers[(int) SystemCallNumber::GetEnv] = sysCallGetEnv;
+	systemCallHandlers[(int) SystemCallNumber::FormatDisk] = sysFormatDisk;
+	systemCallHandlers[(int) SystemCallNumber::SetDiskVolumeLabel] = sysSetDiskVolumeLabel;
+	systemCallHandlers[(int) SystemCallNumber::GetDiskVolumeLabel] = sysGetDiskVolumeLabel;
+	systemCallHandlers[(int) SystemCallNumber::SetFATAttrib] = sysSetFatAttrib;
+	systemCallHandlers[(int) SystemCallNumber::Panic] = sysPanic;
+	systemCallHandlers[(int) SystemCallNumber::Shutdown] = sysShutdown;
+	systemCallHandlers[(int) SystemCallNumber::Pipe] = sysPipe;
+	systemCallHandlers[(int) SystemCallNumber::GetUnixTime] = sysGetUnixTime;
+
+	systemCallHandlers[(int) SystemCallNumber::LoadDLL] = SysLoadDLL;
+	systemCallHandlers[(int) SystemCallNumber::SetTime] = SysSetTime;
+	systemCallHandlers[(int) SystemCallNumber::Timezone] = SysTimezone;
+	systemCallHandlers[(int) SystemCallNumber::Eject] = SysEject;
+	systemCallHandlers[(int) SystemCallNumber::WSBE] = SysWsbe;
+	systemCallHandlers[(int) SystemCallNumber::GetRAMData] = SysGetRAMData;
+	systemCallHandlers[(int) SystemCallNumber::GetVGAPtr] = SysGetVGAPtr;
+}
+
+uint64_t KeSystemCall(regs* r, void* context)
+{
+	if (r->eax < 128 && systemCallHandlers[r->eax]) {
+		r->eax = systemCallHandlers[r->eax](r);
+	} else {
+		kprintf("Invalid syscall %d\n", r->eax);
 	}
 
-	uint64_t systemCall(regs* r, void* context)
-	{
-		if (r->eax < 128 && systemCallHandlers[r->eax]) {
-			r->eax = systemCallHandlers[r->eax](r);
-		} else {
-			kprintf("Invalid syscall %d\n", r->eax);
-		}
-
-		return 0xDEADBEEF;
-	}
+	return 0xDEADBEEF;
 }
