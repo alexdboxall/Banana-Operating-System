@@ -126,7 +126,7 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 		writeWriteBuffer();
 	}
 
-	if (count == 1 && !disk->removable) {
+	/*if (count == 1 && !disk->removable) {
 		if (!(readCacheValid && (lba & ~(READ_BUFFER_BLOCK_SIZE - 1)) == readCacheLBA)) {
 
 			readCacheValid = true;
@@ -143,10 +143,10 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 		memcpy(ptr, readCacheBuffer + (lba & (READ_BUFFER_BLOCK_SIZE - 1)) * disk->sectorSize, disk->sectorSize);
 		return 0;
 
-	} else {
+	} else {*/
 		invalidateReadBuffer();
 		return disk->read(lba, count, ptr);
-	}
+	/*}*/
 
 	//mutex->release();
 	return 0;
