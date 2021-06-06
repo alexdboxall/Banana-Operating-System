@@ -5,6 +5,7 @@
 #include "dbg/kconsole.hpp"
 #include "core/computer.hpp"
 #include "krnl/hal.hpp"
+#include "krnl/bootmsg.hpp"
 
 #pragma GCC optimize ("O0")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -17,35 +18,16 @@
 
 Minimum System Requirements:
 
-	CPU:	Intel 386 or better (hopefully, 486 is the oldest tested)
-	RAM:	6 MB (12 MB to install it)
+	CPU:	Intel 486 or better
+	RAM:	4 MB (8 MB to install it)
 	HDD:	64 MB
 
-	VGA (or EGA) compatible video card;
-	VGA (or EGA) compatible, or MDA monitor;
+	VGA compatible video card;
+	VGA compatible, or MDA monitor;
 	USB or PS/2 keyboard
 
 	If the computer was made in the 90s, you'll be fine
 	If the computer was made in the 80s, it'll be more intersting
-*/
-
-/*
-
-Kernel Subsystems
-
-Krnl	Core Kernel
-Phys	Physical Memory Manager
-Virt	Virtual Memory Manager
-Sys		System Calls
-Thr		Processes, Threads, Program / Driver Loading
-Hal		Hardware Abstraction Library
-Dev		Device Subsystem
-Dbg		Debugging
-Fs		Filesystem
-Reg		Registry
-Vm		x86 Virtualisation
-User	User settings, etc.
-
 */
 
 extern "C" {
@@ -53,9 +35,8 @@ extern "C" {
 }
 
 uint32_t sysBootSettings = 0;
-extern "C" void callGlobalConstructors();
+extern "C" void _init();
 extern VAS* firstVAS;
-extern void installVgaTextImplementation();
 
 #pragma GCC optimize ("O2")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -64,16 +45,8 @@ extern void installVgaTextImplementation();
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-namespace Krnl
-{
-	void setBootMessage(const char* msg)
-	{
-		
-	}
-};
 
-
-extern "C" void kernel_main()
+extern "C" void KeEntryPoint()
 {
 	sysBootSettings = *((uint32_t*) 0x500);
 
@@ -87,7 +60,7 @@ extern "C" void kernel_main()
 
 	kprintf("\n\nKERNEL HAS STARTED.\n");
 
-	
+	KeDisplaySplashScreen();
 
 	Phys::physicalMemorySetup(((*((uint32_t*) 0x524)) + 4095) & ~0xFFF);		//cryptic one-liner
 	Virt::virtualMemorySetup();
@@ -96,7 +69,7 @@ extern "C" void kernel_main()
 		VAS v;
 		firstVAS = &v;
 
-		callGlobalConstructors();
+		_init();
 
 		computer = new Computer();
 		computer->open(0, 0, nullptr);

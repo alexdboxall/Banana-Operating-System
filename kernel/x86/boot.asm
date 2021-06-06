@@ -3,9 +3,7 @@ bits 32
 _START_OF_KERNEL:
 
 jmp start
-extern kernel_main
-
-extern _init
+extern KeEntryPoint
 
 start:
     cli
@@ -20,26 +18,4 @@ start:
     push byte 2
     popf
 
-	call kernel_main
-
-
-global callGlobalConstructors
-
-extern start_ctors                      ; beginning and end
-extern end_ctors                        ; of the respective
-
-callGlobalConstructors:
-    call _init
-    ret
-	mov ebx, start_ctors + 4            ; call the constructors, skipping the first one (crtbegin.o)
-    jmp .ctors_until_end
-
-.call_constructor:
-    call [ebx]
-    add ebx, 4
-
-.ctors_until_end:
-    cmp ebx, end_ctors - 4				; skip the last one (crtend.o)
-    jb .call_constructor
-
-	ret
+	call KeEntryPoint
