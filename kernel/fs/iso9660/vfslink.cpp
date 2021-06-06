@@ -4,12 +4,11 @@
 #include "hal/logidisk.hpp"
 
 /*
-This ISO 9660 driver is 'sketchy as hell'
-It is based on code I wrote at an athletics carnival (!) a few years ago.
+The old ISO 9660 driver was 'sketchy as hell'
+It was based on code I wrote at an athletics carnival (!) a few years ago.
 
-A badly formatted disk will cause array indices to exceed boundaries,
-overwriting random data on the stack and (hopefully) crashing the OS,
-or if we are not lucky, will silently corrupt memory and cause random bugs.
+A badly formatted disk would cause array indices to exceed boundaries,
+and crashing the OS.
 */
 
 extern "C" {

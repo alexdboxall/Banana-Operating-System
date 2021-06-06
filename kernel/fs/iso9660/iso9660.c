@@ -640,6 +640,8 @@ void iso_close(int fd)
 		/* No need to lock the mutex: this is an atomic op */
 		fh[fd].first_extent = 0;
 	}
+
+	bclear_cache();
 }
 
 /* Read from a file */
