@@ -122,6 +122,19 @@ void displayDebugInfo(regs* r)
 	while (1);
 }
 
+extern "C" void doTPAUSE();
+INLINE void HalSystemIdle()
+{
+	if (computer->features.hasTPAUSE) {
+		uint64_t msr = computer->rdmsr(0xE1);
+		computer->wrmsr(0xE1, msr & 2);	//only keep bit 1 as it is reserved
+		doTPAUSE();
+
+	} else {
+		HalStallProcessor();
+	}
+}
+
 void displayProgramFault(const char* text)
 {
 	kprintf(text);

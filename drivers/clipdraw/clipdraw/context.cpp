@@ -381,86 +381,69 @@ void Context::drawBitmap1(uint8_t* data, int x, int y, int w, int h, uint32_t co
 	}
 }
 
-void plot(Context* ctxt, int x, int y, CRect* clip_area)
+void plot(Context* ctxt, int x, int y, CRect* clip_area, uint32_t colour, Brush* brush)
 {
-	ctxt->clippedRect(x, y, 1, 1, clip_area, (uint32_t) 0x0);
+	if (brush) {
+		ctxt->clippedRect(x, y, 1, 1, clip_area, brush);
+	} else {
+		ctxt->clippedRect(x, y, 1, 1, clip_area, colour);
+	}
+}
+
+void plotrow(Context* ctxt, int x, int y, int w, CRect* clip_area, uint32_t colour, Brush* brush)
+{
+	if (brush) {
+		ctxt->clippedRect(x, y, w, 1, clip_area, brush);
+	} else {
+		ctxt->clippedRect(x, y, w, 1, clip_area, colour);
+	}
 }
 
 void midptellipse(Context* ctxt, int rx, int ry,
-				  int xc, int yc, CRect* clip_area)
+				  int xc, int yc, CRect* clip_area, uint32_t colour, Brush* brush)
 {
-	float dx, dy, d1, d2, x, y;
-	x = 0;
-	y = ry;
+	Brush b;
 
-	// Initial decision parameter of region 1
-	d1 = (ry * ry) - (rx * rx * ry) +
-		(0.25 * rx * rx);
-	dx = 2 * ry * ry * x;
-	dy = 2 * rx * rx * y;
+	int width = rx;
+	int height = ry;
 
-	// For region 1
-	while (dx < dy) {
+	int h2 = height * height;
+	int w2 = width * width;
+	int h2w2 = h2 * w2;
 
-		// Print points based on 4-way symmetry
-		plot(ctxt, x + xc, y + yc, clip_area);
-		plot(ctxt, -x + xc, y + yc, clip_area);
-		plot(ctxt, x + xc, -y + yc, clip_area);
-		plot(ctxt, -x + xc, -y + yc, clip_area);
+	for (int y = -height; y <= height; y++) {
 
-		// Checking and updating value of
-		// decision parameter based on algorithm
-		if (d1 < 0) {
-			x++;
-			dx = dx + (2 * ry * ry);
-			d1 = d1 + dx + (ry * ry);
-		} else {
-			x++;
-			y--;
-			dx = dx + (2 * ry * ry);
-			dy = dy - (2 * rx * rx);
-			d1 = d1 + dx - dy + (ry * ry);
+		uint8_t bgot = 0;
+		int base;
+
+		for (int x = -width; x <= width; x++) {
+			if (x * x * h2 + y * y * w2 <= h2w2) {
+				b = *brush;
+				if (bgot == 0) {
+					base = x;
+					bgot = 1;
+				}
+			} else if (bgot == 1) {
+				plotrow(ctxt, xc + base, yc + y, x - base, clip_area, colour, &b);
+				bgot = 2;
+				break;
+			}
 		}
-	}
-
-	// Decision parameter of region 2
-	d2 = ((ry * ry) * ((x + 0.5) * (x + 0.5))) +
-		((rx * rx) * ((y - 1) * (y - 1))) -
-		(rx * rx * ry * ry);
-
-	// Plotting points of region 2
-	while (y >= 0) {
-
-		// Print points based on 4-way symmetry
-		plot(ctxt, x + xc, y + yc, clip_area);
-		plot(ctxt, -x + xc, y + yc, clip_area);
-		plot(ctxt, x + xc, -y + yc, clip_area);
-		plot(ctxt, -x + xc, -y + yc, clip_area);
-
-		// Checking and updating parameter
-		// value based on algorithm
-		if (d2 > 0) {
-			y--;
-			dy = dy - (2 * rx * rx);
-			d2 = d2 + (rx * rx) - dy;
-		} else {
-			y--;
-			x++;
-			dx = dx + (2 * ry * ry);
-			dy = dy - (2 * rx * rx);
-			d2 = d2 + dx - dy + (rx * rx);
+		if (bgot == 1) {
+			b = *brush;
+			plotrow(ctxt, xc + base, yc + y, width + 1 - base, clip_area, colour, &b);
 		}
 	}
 }
 
 void Context::clippedEllipse(bool fill, int x, int y, int w, int h, CRect* clip_area, uint32_t colour)
 {
-	midptellipse(this, w / 2, y / 2, x + w / 2, y + h / 2, clip_area);
+	midptellipse(this, w / 2, h / 2, x + w / 2, y + h / 2, clip_area, colour, nullptr);
 }
 
 void Context::clippedEllipse(bool fill, int x, int y, int w, int h, CRect* clip_area, Brush* brush)
 {
-	clippedEllipse(fill, x, y, w, h, clip_area, 0xFF0000);
+	midptellipse(this, w / 2, h / 2, x + w / 2, y + h / 2, clip_area, 0xFFFFFF, brush);
 }
 
 void Context::clippedRect(int x, int y, int w, int h, CRect* clip_area, uint32_t colour)

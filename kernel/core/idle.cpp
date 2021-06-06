@@ -29,11 +29,4 @@ void idleFunction(void* context)
 		HalSystemIdle();
 		idleCommon();
 	}
-
-		//set mode, no timeout and 
-		/*uint64_t msr = computer->rdmsr(0xE1);
-		computer->wrmsr(0xE1, msr & 2);	//only keep bit 1 as it is reserved
-		while (1) {
-		doTPAUSE();
-		idleCommon();*/
 }

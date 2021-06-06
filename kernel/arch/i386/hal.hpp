@@ -18,6 +18,7 @@ void HalSleep();
 void HalConsoleScroll(int fg, int bg);
 void HalConsoleWriteCharacter(char c, int fg, int bg, int x, int y);
 void HalConsoleCursorUpdate(int x, int y);
+void HalSystemIdle();
 
 INLINE void* HalAllocateCoprocessorState()
 {
@@ -50,11 +51,6 @@ INLINE void HalDisableInterrupts()
 INLINE void HalStallProcessor()
 {
 	asm volatile ("hlt");
-}
-
-INLINE void HalSystemIdle()
-{
-	HalStallProcessor();
 }
 
 INLINE uint8_t inb(uint16_t port)
