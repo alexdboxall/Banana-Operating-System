@@ -40,7 +40,7 @@ struct direntX
 	char d_name[120];
 };
 
-int iso_open(const char* fn);
+int iso_open(const char* fn, int wantdir);
 void iso_close(int fd);
 int64_t iso_read(int fd, void* buf, size_t bytes);
 int64_t iso_seek(int fd, int64_t offset, int whence);

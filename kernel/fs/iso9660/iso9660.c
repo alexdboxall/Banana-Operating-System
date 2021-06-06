@@ -601,13 +601,13 @@ void iso_break_all()
 }
 
 /* Open a file or directory */
-int iso_open(const char* fn)
+int iso_open(const char* fn, int wantdir)
 {
 	int		fd;
 	iso_dirent_t* de;
 
 	/* Find the file we want */
-	de = find_object_path(fn, /*(mode & O_DIR)?1:*/0, &root_dirent);
+	de = find_object_path(fn, wantdir ? 1 : 0, &root_dirent);
 	if (!de) return -1;
 
 	/* Find a free file handle */
@@ -624,7 +624,7 @@ int iso_open(const char* fn)
 
 	/* Fill in the file handle and return the fd */
 	fh[fd].first_extent = iso_733(de->extent);
-	fh[fd].dir = /*(mode & O_DIR)?1:*/0;
+	fh[fd].dir = wantdir ? 1 : 0;
 	fh[fd].ptr = 0;
 	fh[fd].size = iso_733(de->size);
 	fh[fd].broken = 0;

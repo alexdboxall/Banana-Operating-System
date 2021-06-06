@@ -104,7 +104,7 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 		iso9660Owner = __fn[0];
 	}
 
-	int fd = iso_open(__fn + 3);
+	int fd = iso_open(__fn + 3, 0);
 
 	if (fd == -1) {
 		return FileStatus::Failure;
@@ -200,7 +200,30 @@ FileStatus ISO9660::close(void* ptr)
 
 FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 {
-	return open(__fn, ptr, FileOpenMode::Read);
+	if(__fn == nullptr || ptr == nullptr) return FileStatus::InvalidArgument;
+
+	if (iso9660Owner != __fn[0]) {
+		int status = init_percd(__fn[0]);
+		if (status == -1) {
+			return FileStatus::NoFilesystem;
+		}
+
+		if (iso9660Owner) {
+			HalPanic("CD OWNER CHANGE");
+		}
+		iso9660Owner = __fn[0];
+	}
+
+	int fd = iso_open(__fn + 3, 1);
+	kprintf("OPEN DIR RETURNED FD OF %d FOR DIR %s\n", fd, __fn + 3);
+
+	if (fd == -1) {
+		return FileStatus::Failure;
+	}
+
+
+	*ptr = (void*) (fd + 100);
+	return FileStatus::Success;
 }
 
 FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead)
