@@ -259,6 +259,9 @@ int SATAPI::close(int a, int b, void* c)
 
 void SATAPI::detectMedia()
 {
+	cache->writeWriteBuffer();
+	cache->invalidateReadBuffer();
+
 	return;
 
 	kprintf("detecting media...\n");

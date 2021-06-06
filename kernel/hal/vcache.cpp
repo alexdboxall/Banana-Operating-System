@@ -102,7 +102,7 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 
 		//otherwise, just write it
 		} else {
-			disk->write(lba, count, ptr);
+			return disk->write(lba, count, ptr);
 		}
 	}
 
@@ -136,14 +136,16 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 			//SATA does it subtly
 			//ATA does it blatantly
 
-			disk->read((lba & ~(READ_BUFFER_BLOCK_SIZE - 1)), READ_BUFFER_BLOCK_SIZE, readCacheBuffer);
+			int retV = disk->read((lba & ~(READ_BUFFER_BLOCK_SIZE - 1)), READ_BUFFER_BLOCK_SIZE, readCacheBuffer);
+			if (retV) return retV;
 		}
 
 		memcpy(ptr, readCacheBuffer + (lba & (READ_BUFFER_BLOCK_SIZE - 1)) * disk->sectorSize, disk->sectorSize);
+		return 0;
 
 	} else {
 		invalidateReadBuffer();
-		disk->read(lba, count, ptr);
+		return disk->read(lba, count, ptr);
 	}
 
 	//mutex->release();

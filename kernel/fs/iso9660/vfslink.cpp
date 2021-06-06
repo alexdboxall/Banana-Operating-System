@@ -226,9 +226,6 @@ FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 {
 	if(__fn == nullptr || ptr == nullptr) return FileStatus::InvalidArgument;
 
-	disks[__fn - 'A']->physDisk->cache->writeWriteBuffer();
-	disks[__fn - 'A']->physDisk->cache->invalidateReadBuffer();
-
 	if (iso9660Owner != __fn[0]) {
 		int status = init_percd(__fn[0]);
 		if (status == -1) {

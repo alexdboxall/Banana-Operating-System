@@ -1215,6 +1215,11 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 } VESAModeInfo;*/
 
 		FILE* f = fopen("C:/Banana/System/vesamode.dat", "rb");
+		if (!f) {
+			fprintf(stderr, "The VESA driver has not been run yet.\n");
+			return -1;
+		}
+	
 		fseek(f, 0, SEEK_END);
 		long size = ftell(f);
 		rewind(f);
