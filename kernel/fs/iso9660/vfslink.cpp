@@ -79,7 +79,6 @@ bool ISO9660::tryMount(LogicalDisk* disk, int diskNum)
 		return false;
 	}
 
-	fs_iso9660_init(diskNum + 'A');
 	return true;
 }
 
