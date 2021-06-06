@@ -13,6 +13,7 @@ or if we are not lucky, will silently corrupt memory and cause random bugs.
 */
 
 extern "C" {
+	#include <fs/iso9660/iso9660.h>
 	#include "libk/string.h"
 }
 #pragma GCC optimize ("Os")
@@ -21,25 +22,6 @@ extern "C" {
 #pragma GCC optimize ("-fno-align-jumps")
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
-
-uint8_t* __memmem(uint8_t* big, int bigLen, uint8_t* small, int smallLen)
-{
-	//may have an 'off by one' error, but this won't matter, as all
-	//names end in ';1'
-	for (int i = 0; i < bigLen - smallLen; ++i) {
-		bool yes = true;
-		for (int j = 0; j < smallLen; ++j) {
-			if (small[j] != big[i + j]) {
-				yes = false;
-				break;
-			}
-		}
-		if (yes) {
-			return big + i;
-		}
-	}
-	return 0;
-}
 
 uint8_t recentBuffer[2048];
 uint32_t recentSector = 0;
@@ -61,105 +43,6 @@ int readSectorFromCDROM(uint32_t sector, uint8_t* data, char driveletter)
 
 	memcpy(data, recentBuffer, 2048);
 	return 0;
-}
-
-bool readRoot(uint32_t* lbaOut, uint32_t* lenOut, char driveletter)
-{
-	uint8_t sector[2048];
-	int fail = readSectorFromCDROM(16, sector, driveletter);
-	if (fail) {
-		kprintf("readRoot FAIL.\n");
-		return false;
-	}
-	uint8_t root[34];
-	memcpy(root, sector + 156, 34);
-
-	*lbaOut = root[2] | (root[3] << 8) | (root[4] << 16) | (root[5] << 24);
-	*lenOut = root[10] | (root[11] << 8) | (root[12] << 16) | (root[13] << 24);
-
-	return true;
-}
-
-bool readRecursively(char* filename, uint32_t startSec, uint32_t startLen, \
-					 uint32_t* lbaOut, uint32_t* lenOut, char driveletter, int* dirout)
-{
-	if (filename == 0 || filename[0] == 0) {
-		return false;
-	}
-	if (filename[1] == ':') {
-		filename += 2;
-	}
-	while (filename[0] == '/') filename++;
-
-	char firstPart[256];
-	memset(firstPart, 0, 256);
-	bool dir = false;
-	for (int i = 0; filename[i]; ++i) {
-		if (filename[i] == '/') {
-			filename += i + 1;
-			dir = true;
-			break;
-		}
-		firstPart[i] = filename[i];
-		if (firstPart[i] >= 'a' && firstPart[i] <= 'z') {
-			firstPart[i] -= 'a';
-			firstPart[i] += 'A';
-		}
-	}
-
-	uint32_t newLba, newLen;
-	uint8_t* data = (uint8_t*) malloc(startLen);
-
-	for (int i = 0; (uint32_t) i < (startLen + 2047) / 2048; ++i) {
-		readSectorFromCDROM(startSec + i, data + i * 2048, driveletter);
-	}
-
-	uint8_t* o = __memmem(data, startLen, (uint8_t*) firstPart, strlen(firstPart));
-	if (o == 0) {
-		free(data);
-		return false;
-	}
-	o -= 33;            //we searched by filename using memmem, which starts at 33
-						//so subtract 33 to get the actual start of the directory entry
-	newLba = o[2] | (o[3] << 8) | (o[4] << 16) | (o[5] << 24);
-	newLen = o[10] | (o[11] << 8) | (o[12] << 16) | (o[13] << 24);
-	bool isDir = (o[25] & 2) ? 1 : 0;
-
-	if (dir) {
-		free(data);
-		bool val = readRecursively(filename, newLba, newLen, lbaOut, lenOut, driveletter, dirout);
-		return val;
-
-	} else {
-		*lbaOut = newLba;      //data
-		*lenOut = newLen;      //data
-		*dirout = isDir;
-		free(data);
-		return true;
-	}
-
-	return false;
-}
-
-bool getFileData(char* filename, uint32_t* lbaOut, uint32_t* lenOut, char driveletter, int* dirout)
-{
-	uint32_t lba = 0, len = 0;
-	*lbaOut = -1;
-	*lenOut = -1;
-	bool success = readRoot(&lba, &len, driveletter);
-	if (!success) {
-		kprintf("getFileData FAIL.\n");
-		return false;
-	}
-
-	if (strlen(filename) <= 3) {
-		*lbaOut = lba;
-		*lenOut = len;
-		*dirout = 1;
-		return true;
-	}
-
-	return readRecursively(filename, lba, len, lbaOut, lenOut, driveletter, dirout);
 }
 
 ISO9660::ISO9660() : Filesystem()
@@ -190,9 +73,17 @@ bool ISO9660::tryMount(LogicalDisk* disk, int diskNum)
 	if (bf[3] != '0') return false;
 	if (bf[4] != '0') return false;
 	if (bf[5] != '1') return false;
-	
+
+	int status = init_percd(diskNum + 'A');
+	if (status == -1) {
+		return false;
+	}
+
+	fs_iso9660_init(diskNum + 'A');
 	return true;
 }
+
+char iso9660Owner;
 
 FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 {
@@ -202,121 +93,55 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 		return FileStatus::WriteProtect;
 	}
 
-	*ptr = malloc(sizeof(isoFile_t));
-	isoFile_t* file = (isoFile_t*) *ptr;
+	if (iso9660Owner != __fn[0]) {
+		int status = init_percd(__fn[0]);
+		if (status == -1) {
+			return FileStatus::NoFilesystem;
+		}
 
-	uint32_t lbaO;
-	uint32_t lenO;
+		fs_iso9660_init(__fn[0]);
 
-	int dir;
-	bool res = getFileData((char*) __fn, &lbaO, &lenO, __fn[0], &dir);
-	if (!res || dir) {
-		kprintf("ISO9660::open FAIL.\n");
-		file->error = true;
+		iso9660Owner = __fn[0];
+	}
+
+	int fd = iso_open(__fn + 3);
+
+	if (fd == -1) {
 		return FileStatus::Failure;
 	}
 
-	file->error = false;
-	file->seekMark = 0;
-	file->fileStartLba = lbaO;
-	file->fileLength = lenO;
-	file->driveLetter = __fn[0];
-	
+	*ptr = (void*)(fd + 100);
 	return FileStatus::Success;
 }
 
 FileStatus ISO9660::read(void* ptr, size_t bytes, void* bf, int* bytesRead)
 {
-	uint8_t* buffer = (uint8_t*) bf;
-
-	isoFile_t* file = (isoFile_t*) ptr;
-
 	if (ptr == nullptr || bytesRead == nullptr) return FileStatus::InvalidArgument;
-	if (file->error) {
+	
+	int64_t br = iso_read(((int) ptr) - 100, bf, bytes);
+	*bytesRead = br;
+
+	if (br == 0) {
 		return FileStatus::Failure;
 	}
-
-	int64_t ulength = (int64_t) bytes;							//1024
-	uint64_t intendedSeekMark = file->seekMark + ulength;		//1024
-
-	if (intendedSeekMark > file->fileLength) {					//1024 > 72
-		uint64_t subtract = (intendedSeekMark - file->fileLength);	//952
-		intendedSeekMark -= subtract;							//72
-		ulength -= subtract;									//72
-	}
-
-	uint64_t bytesToRead = ulength;								//72
-	
-	//
-	// we now have how many bytes we need in 'ulength'
-	//
-
-	//33314 * 2048 + 0
-	//
-	uint64_t startPoint = file->fileStartLba * 2048 + file->seekMark;
-	
-	//read from the partial first sector (could be the entire sector though)
-	uint8_t sectorBuffer[2048];
-	readSectorFromCDROM(startPoint / 2048, sectorBuffer, file->driveLetter);
-
-	//work out how many bytes to read
-	int count = 2048 - file->seekMark % 2048;
-	if (count > ulength) {
-		count = ulength;
-	}
-	if (count == 0) {
-		*bytesRead = 0;
-		return FileStatus::Success;
-	}
-
-	//read them
-	//memcpy((void*) buffer, (const void*) (sectorBuffer + file->seekMark % 2048), (size_t) count);
-	uint8_t* v = (sectorBuffer + file->seekMark % 2048);
-	for (int i = 0; i < count; ++i) {
-		*buffer++ = *v++;
-	}
-	
-	buffer += count;
-	startPoint += count;
-	ulength -= count;
-
-	//now we are on a sector boundry
-	while (ulength >= 2048) {
-		readSectorFromCDROM(startPoint / 2048, buffer, file->driveLetter);
-		//kprintf("reading sector %d\n", startPoint / 2048);
-		startPoint += 2048;
-		buffer += 2048;
-		ulength -= 2048;
-	}
-
-	if (ulength) {
-		//now we just have bytes left on the final sector
-		readSectorFromCDROM(startPoint / 2048, sectorBuffer, file->driveLetter);
-		memcpy(buffer, sectorBuffer, ulength);
-	}
-
-	*bytesRead = bytesToRead;
-	file->seekMark = intendedSeekMark;
 
 	return FileStatus::Success;
 }
 
 bool ISO9660::exists(const char* file)
 {
-	uint32_t lbaO;
-	uint32_t lenO;
-	int dir;
-	bool res = getFileData((char*) file, &lbaO, &lenO, file[0], &dir);
-	return res;
+	HalPanic("ISO9660::exists UNIMPLEMENTED");
+
+	return false;
 }
 
 FileStatus ISO9660::seek(void* ptr, uint64_t offset)
 {
 	if (ptr == nullptr) return FileStatus::InvalidArgument;
 
-	isoFile_t* file = (isoFile_t*) ptr;
-	if (offset < file->fileLength) {
-		file->seekMark = offset;
+	uint64_t pos = iso_seek(((int) ptr) - 100, offset, 0);
+
+	if (pos == offset) {
 		return FileStatus::Success;
 	}
 
@@ -328,8 +153,8 @@ FileStatus ISO9660::tell(void* ptr, uint64_t* offset)
 	if (ptr == nullptr) return FileStatus::InvalidArgument;
 	if (offset == nullptr) return FileStatus::InvalidArgument;
 
-	isoFile_t* file = (isoFile_t*) ptr;
-	*offset = file->seekMark;
+	uint64_t pos = iso_tell(((int) ptr) - 100);
+	*offset = pos;
 
 	return FileStatus::Success;
 }
@@ -344,8 +169,8 @@ FileStatus ISO9660::stat(void* ptr, uint64_t* size)
 	if (ptr == nullptr) return FileStatus::InvalidArgument;
 	if (size == nullptr) return FileStatus::InvalidArgument;
 
-	isoFile_t* file = (isoFile_t*) ptr;
-	*size = file->fileLength;
+	size_t sz = iso_total(((int) ptr) - 100);
+	*size = sz;
 
 	return FileStatus::Success;
 }
@@ -359,18 +184,7 @@ FileStatus ISO9660::stat(const char* path, uint64_t* size, bool* directory)
 	*directory = 0;
 	*size = 0;
 
-	uint32_t lbaO;
-	uint32_t lenO;
-	int dir;
-	bool res = getFileData((char*) path, &lbaO, &lenO, path[0], &dir);
-	if (res) {
-		*size = lenO;
-		*directory = dir;
-		if (dir) {
-			*size = 0;
-		}
-		return FileStatus::Success;
-	}
+	HalPanic("ISO9660::stat (2) UNIMPLEMENTED");
 
 	return FileStatus::Failure;
 }
@@ -379,7 +193,7 @@ FileStatus ISO9660::close(void* ptr)
 {
 	if (ptr == nullptr) return FileStatus::InvalidArgument;
 
-	free(ptr);
+	iso_close(((int) ptr) - 100);
 
 	return FileStatus::Success;
 }
@@ -388,25 +202,7 @@ FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 {
 	if (__fn == nullptr || ptr == nullptr) return FileStatus::InvalidArgument;
 
-	*ptr = malloc(sizeof(isoFile_t));
-	isoFile_t* file = (isoFile_t*) *ptr;
-
-	uint32_t lbaO;
-	uint32_t lenO;
-
-	int dir;
-	bool res = getFileData((char*) __fn, &lbaO, &lenO, __fn[0], &dir);
-	if (!res || !dir) {
-		file->error = true;
-		return FileStatus::Failure;
-	}
-
-	file->error = false;
-	file->seekMark = 0;
-	file->fileStartLba = lbaO;
-	file->fileLength = lenO;
-	file->driveLetter = __fn[0];
-
+	HalPanic("ISO9660::openDir UNIMPLEMENTED");
 	return FileStatus::Success;
 }
 
@@ -414,82 +210,13 @@ FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead
 {
 	if (ptr == nullptr || bytesRead == nullptr) return FileStatus::InvalidArgument;
 
-	isoFile_t* file = (isoFile_t*) ptr;
-	if (file->fileLength == 0) {
-		return FileStatus::DirectoryEOF;
-	}
-
-	uint32_t startPoint = file->fileStartLba * 2048 + file->seekMark;
-	uint8_t sectorBuffer[2048];
-	readSectorFromCDROM(startPoint / 2048, sectorBuffer, file->driveLetter);
-
-	uint8_t len = sectorBuffer[file->seekMark % 2048 + 0];
-	if (len == 0) {
-		int add = ((file->seekMark + 2047) % 2048) - file->seekMark;
-		file->seekMark += add;
-		if (file->fileLength <= add) {
-			file->fileLength = 0;
-		} else {
-			file->fileLength -= add;
-		}
-		if (file->fileLength == 0) {
-			return FileStatus::DirectoryEOF;
-		}
-		startPoint = file->fileStartLba * 2048 + file->seekMark;
-		readSectorFromCDROM(startPoint / 2048, sectorBuffer, file->driveLetter);
-		len = sectorBuffer[file->seekMark % 2048 + 0];
-	}
-
-	char name[40];
-	memset(name, 0, 40);
-
-	//whoa... all of those conditions are here in an attempt to stop a page fault
-	for (int i = 0; sectorBuffer[file->seekMark % 2048 + i + 33] != ';' && sectorBuffer[file->seekMark % 2048 + i + 33] != 0 && i < 40 && (file->seekMark % 2048 + i + 33) < 2048; ++i) {
-		name[i] = sectorBuffer[file->seekMark % 2048 + i + 33];
-	}
-
-	struct dirent dent;
-	dent.d_ino = 0;
-	dent.d_namlen = strlen(name);
-	dent.d_type = sectorBuffer[file->seekMark % 2048 + 25] & 2 ? DT_DIR : DT_REG;
-
-	strcpy(dent.d_name, name);
-
-	if (dent.d_name[0] == 0) {
-		dent.d_name[0] = '.';
-		dent.d_name[1] = 0;
-		dent.d_namlen = 1;
-		dent.d_type = DT_DIR;
-	}
-	if (dent.d_name[0] == 1) {
-		dent.d_name[0] = '.';
-		dent.d_name[1] = '.';
-		dent.d_name[2] = 0;
-		dent.d_namlen = 2;
-		dent.d_type = DT_DIR;
-	}	
-
-	memcpy(where, &dent, bytes);
-
-	*bytesRead = sizeof(dent);
-
-	file->seekMark += len;
-	if (file->fileLength <= len) {
-		file->fileLength = 0;
-	} else {
-		file->fileLength -= len;
-	}
-
+	HalPanic("ISO9660::readDir UNIMPLEMENTED");
 	return FileStatus::Success;
 }
 
 FileStatus ISO9660::closeDir(void* ptr)
 {
-	if (ptr == nullptr) return FileStatus::InvalidArgument;
-
-	free(ptr);
-
-	return FileStatus::Success;
+	return close(ptr);
 }
 
 FileStatus ISO9660::chfatattr(const char* path, uint8_t andMask, uint8_t orFlags)
@@ -504,7 +231,7 @@ FileStatus ISO9660::unlink(const char* file)
 
 FileStatus ISO9660::write(void* ptr, size_t bytes, void* where, int* bytesWritten)
 {
-	return FileStatus::Failure;
+	return FileStatus::WriteProtect;
 }
 
 FileStatus ISO9660::rename(const char* old, const char* _new)

@@ -50,3 +50,4 @@ void fn_postprocess(char* fnin);
 struct direntX* iso_readdir(int fd);
 int iso_reset();
 int fs_iso9660_init(char drive);
+int init_percd(char drive);

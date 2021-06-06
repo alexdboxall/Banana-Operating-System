@@ -355,9 +355,11 @@ static iso_dirent_t root_dirent;
 
 /* Per-disc initialization; this is done every time it's discovered that
    a new CD has been inserted. */
-static int init_percd()
+int init_percd(char diskletter)
 {
 	int		i, blk;
+
+	cdDriveLetter = diskletter;
 
 	dbglog(DBG_NOTICE, "fs_iso9660: disc change detected\n");
 
@@ -612,12 +614,12 @@ int iso_open(const char* fn)
 
 	/* Do this only when we need to (this is still imperfect) */
 	if (!percd_done && init_percd() < 0)
-		return 0;
+		return -1;
 	percd_done = 1;
 
 	/* Find the file we want */
 	de = find_object_path(fn, /*(mode & O_DIR)?1:*/0, &root_dirent);
-	if (!de) return 0;
+	if (!de) return -1;
 
 	/* Find a free file handle */
 	lock(fh_mutex);
@@ -629,7 +631,7 @@ int iso_open(const char* fn)
 	}
 	unlock(fh_mutex);
 	if (fd >= MAX_ISO_FILES)
-		return 0;
+		return -1;
 
 	/* Fill in the file handle and return the fd */
 	fh[fd].first_extent = iso_733(de->extent);
