@@ -184,9 +184,21 @@ FileStatus ISO9660::stat(const char* path, uint64_t* size, bool* directory)
 	*directory = 0;
 	*size = 0;
 
-	int fd = iso_open(__fn + 3, 0);
+	if (iso9660Owner != path[0]) {
+		int status = init_percd(path[0]);
+		if (status == -1) {
+			return FileStatus::NoFilesystem;
+		}
+
+		if (iso9660Owner) {
+			HalPanic("CD OWNER CHANGE");
+		}
+		iso9660Owner = path[0];
+	}
+
+	int fd = iso_open(path + 3, 0);
 	if (fd == -1) {
-		fd = iso_open(__fn + 3, 1);
+		fd = iso_open(path + 3, 1);
 		*directory = 1;
 	}
 
