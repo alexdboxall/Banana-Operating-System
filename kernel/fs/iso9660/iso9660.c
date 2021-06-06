@@ -758,6 +758,8 @@ size_t iso_total(int fd)
    it a bit prettier. */
 void fn_postprocess(char* fnin)
 {
+	return;
+
 	char* fn = fnin;
 
 	while (*fn && *fn != ';') {
