@@ -34,6 +34,9 @@ size_t KeResolveCompatibilitySymbol(char* name)
 	} else if (!strcmp(name, "__moddi3")) {
 		return (size_t) __moddi3;
 
+	} else if (!strcmp(name, "_ZN4Krnl12preemptionOnE")) {
+		return (size_t) &KeIsPreemptionOn;
+
 	} else if (!strcmp(name, "preemptionOn")) {
 		return (size_t) &KeIsPreemptionOn;
 
