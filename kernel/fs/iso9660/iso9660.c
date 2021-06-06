@@ -302,7 +302,6 @@ static int bread_cache(cache_block_t** cache, u32 sector)
 	if (j < 0) {
 		dbglog(DBG_ERROR, "fs_iso9660: can't read_sectors for %d: %d\n", sector, j);
 		//gli		if (j == ERR_DISC_CHG || j == ERR_NO_DISC) {
-		init_percd();
 		//gli		}
 		rv = -1;
 		goto bread_exit;
