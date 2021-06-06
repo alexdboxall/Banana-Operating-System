@@ -32,10 +32,10 @@ size_t KeResolveCompatibilitySymbol(char* name)
 		return (size_t) __moddi3;
 
 	} else if (!strcmp(name, "preemptionOn")) {
-		return (size_t) &KePreemptionOn;
+		return (size_t) &KeIsPreemptionOn;
 
 	} else if (!strcmp(name, "schedulingOn")) {
-		return (size_t) &KeSchedulingOn;
+		return (size_t) &KeIsSchedulingOn;
 
 	}
 

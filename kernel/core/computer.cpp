@@ -27,8 +27,8 @@
 
 #define PORT_CMOS_BASE			0x70	
 
-bool KeSchedulingOn = false;
-bool KePreemptionOn = false;
+bool KeIsSchedulingOn = false;
+bool KeIsPreemptionOn = false;
 
 namespace Krnl
 {
@@ -286,7 +286,7 @@ namespace Krnl
 
 		cleanerThread = kernelProcess->createThread(cleanerTaskFunction, nullptr, 122);
 
-		KeSchedulingOn = true;
+		KeIsSchedulingOn = true;
 
 		KeSetBootMessage("Initialising system components...");
 		Vm::initialise8086();

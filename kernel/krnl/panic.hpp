@@ -3,7 +3,7 @@
 
 #include "core/main.hpp"
 
-extern bool KeKernelInPanic;
+extern bool KeIsKernelInPanic;
 extern void KePanic(const char* message);
 
 #endif

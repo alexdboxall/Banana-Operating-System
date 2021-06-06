@@ -24,7 +24,7 @@ void* INT_contexts[256][4];
 
 extern "C" uint64_t int_handler(struct regs* r)
 {
-	while (KeKernelInPanic) {
+	while (KeIsKernelInPanic) {
 		HalDisableInterrupts();
 		HalStallProcessor();
 	}

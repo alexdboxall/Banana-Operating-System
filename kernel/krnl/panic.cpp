@@ -12,10 +12,10 @@
 #pragma GCC optimize ("-fno-align-functions")
 #include "core/terminal.hpp"
 
-bool KeKernelInPanic = false;
+bool KeIsKernelInPanic = false;
 
 void KePanic(const char* message)
 {
-	KeKernelInPanic = true;
+	KeIsKernelInPanic = true;
 	HalPanic(message);
 }

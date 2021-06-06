@@ -87,7 +87,7 @@ namespace Krnl
 
 using Krnl::computer;
 
-extern bool KeSchedulingOn;
-extern bool KePreemptionOn;
+extern bool KeIsSchedulingOn;
+extern bool KeIsPreemptionOn;
 
 #endif
