@@ -14,7 +14,7 @@ cd D:/Users/Alex/Desktop/Banana
 git add *.*
 git add LICENSE
 git add COPYRIGHT
-git add README
+git add README.md
 git add kernel
 git add firmware
 git add bochs
