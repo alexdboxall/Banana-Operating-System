@@ -28,9 +28,10 @@ private:
 protected:
 	friend class VCache;
 	friend class LogicalDisk;
-	VCache* cache;
 
 public:		
+	VCache* cache;
+	
 	int sectorSize;
 	uint64_t sizeInKBs;
 

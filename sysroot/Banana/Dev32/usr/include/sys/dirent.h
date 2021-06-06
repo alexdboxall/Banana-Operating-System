@@ -4,12 +4,21 @@
 #include <stdint.h>
 #include <sys/types.h>
 
+#ifndef __machine_ino_t_defined
+#if (defined(__i386__) && (defined(GO32) || defined(__MSDOS__))) || \
+    defined(__sparc__) || defined(__SPU__)
+typedef unsigned long __ino_t;
+#else
+typedef unsigned short __ino_t;
+#endif
+#endif
+
 #define DT_UNKNOWN  0
 #define DT_REG      1
 #define DT_DIR      2
 
 struct dirent {
-    ino_t d_ino;
+    __ino_t d_ino;
     uint64_t d_namlen;  //name, without the \0 (strlen)
     int d_type;         //the type
     char d_name[256];

@@ -1160,9 +1160,6 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 			}
 		}
 
-		
-		
-
 	} else if (!strcasecmp(argv[0], "install")) {
 		extern int installmain(int argc, char* argv[]);
 		installmain(argc, argv);

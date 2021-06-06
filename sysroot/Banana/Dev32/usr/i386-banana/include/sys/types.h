@@ -21,10 +21,6 @@
 #include <sys/cdefs.h>
 #include <machine/_types.h>
 
-#ifdef __KERNEL_DIRENT_INCLUDE
-
-#else
-
 /* BSD types permitted by POSIX and always exposed as in Glibc.  Only provided
    for backward compatibility with BSD code.  The uintN_t standard types should
    be preferred in new code. */
@@ -113,10 +109,16 @@ typedef	_CLOCK_T_	clock_t;
 #define	_CLOCK_T_DECLARED
 #endif
 
+#ifndef __KERNEL_DIRENT_INCLUDE
+
 #if !defined(__time_t_defined) && !defined(_TIME_T_DECLARED)
 typedef	_TIME_T_	time_t;
 #define	__time_t_defined
 #define	_TIME_T_DECLARED
+#endif
+
+#else
+
 #endif
 
 #ifndef __daddr_t_defined
@@ -231,5 +233,4 @@ typedef	__int64_t	sbintime_t;
 
 #undef __need_inttypes
 
-#endif
 #endif	/* _SYS_TYPES_H */

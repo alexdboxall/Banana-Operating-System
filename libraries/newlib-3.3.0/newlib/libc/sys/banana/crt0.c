@@ -9,7 +9,7 @@ extern void _init_signal();
 extern void _environ_setup();
 
 #include <stdint.h>
-#include "D:/Users/Alex/Desktop/Banana/kernel/core/syscalls.hpp"
+#include "D:/Users/Alex/Desktop/Banana/kernel/sys/syscalls.hpp"
 
 extern uint64_t SystemCall(size_t a, size_t b, size_t c, size_t d);
 

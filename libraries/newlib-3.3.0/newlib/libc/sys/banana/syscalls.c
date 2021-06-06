@@ -313,6 +313,7 @@ struct dirent readdirData;
 
 struct dirent* readdir(DIR * dirp)
 {
+	memset(&readdirData, 0, sizeof(readdirData));
 	struct dirent* ent = &readdirData;
 	int retval = _readdir(dirp->_object_ID, ent, sizeof(struct dirent));     //copies an entry into 'ent'
 	if (retval != 0) {

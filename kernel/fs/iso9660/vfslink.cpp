@@ -226,6 +226,9 @@ FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 {
 	if(__fn == nullptr || ptr == nullptr) return FileStatus::InvalidArgument;
 
+	disks[__fn - 'A']->physDisk->cache->writeWriteBuffer();
+	disks[__fn - 'A']->physDisk->cache->invalidateReadBuffer();
+
 	if (iso9660Owner != __fn[0]) {
 		int status = init_percd(__fn[0]);
 		if (status == -1) {
@@ -244,7 +247,6 @@ FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 		return FileStatus::Failure;
 	}
 
-
 	*ptr = (void*) (fd + 100);
 	return FileStatus::Success;
 }
@@ -253,12 +255,14 @@ FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead
 {
 	if (ptr == nullptr || bytesRead == nullptr) return FileStatus::InvalidArgument;
 
+	struct dirent dent;
+
 	struct direntX* ddd = iso_readdir(((int)ptr)-100);
 	if (!ddd) {
+		memset(where, 0, sizeof(dent));
 		return FileStatus::Failure;
 	}
 
-	struct dirent dent;
 	dent.d_ino = 0;
 	dent.d_namlen = strlen(ddd->d_name);
 	dent.d_type = ddd->d_reclen == -1 ? DT_DIR : DT_REG;
