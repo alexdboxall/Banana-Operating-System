@@ -1,7 +1,8 @@
-#include "core/computer.hpp"
+#include <core/computer.hpp>
+#include <krnl/panic.hpp>
 
 extern "C" {
-#include "libk/string.h"
+#include <libk/string.h>
 }
 
 extern "C" unsigned long __udivdi3(unsigned long, unsigned long);
@@ -21,6 +22,9 @@ namespace Krnl
 
 		} else if (!strcmp(name, "__divdi3")) {
 			return (size_t) __divdi3;
+
+		} else if (!strcmp(name, "_ZN4Krnl5panicEPKc")) {
+			return (size_t) KePanic;
 
 		} else if (!strcmp(name, "__umoddi3")) {
 			return (size_t) __umoddi3;

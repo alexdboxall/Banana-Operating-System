@@ -62,3 +62,4 @@ extern "C" void* __not_memcpy(void* destination, const void* source, size_t n)
 {
 	return memcpy(destination, source, n);
 }
+

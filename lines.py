@@ -5,29 +5,31 @@ lines = 0
 ext = ['c', 'h', 'cpp', 'hpp', 'asm', 's', 'py', 'bat', 'Makefile']
 
 for path, subdirs, files in os.walk(os.getcwd()):
-    if '\mlibc-master' in path or '\mlibc-master' in subdirs:
+    if '\\mlibc-master' in path or '\\mlibc-master' in subdirs:
         pass
-    elif '\libgui' in path or '\libgui' in subdirs:
+    elif '\\libgui' in path or '\\libgui' in subdirs:
         pass
     else:
-        if '\.git' in path: continue
-        if '\.git' in subdirs: continue
-        if '\.vs' in path: continue
-        if '\.vs' in subdirs: continue
-        if '\Debug' in path: continue
-        if '\Debug' in subdirs: continue
-        if '\tools' in path: continue
-        if '\tools' in subdirs: continue
-        if '\other' in path: continue
-        if '\other' in subdirs: continue
-        if '\libraries' in path: continue
-        if '\libraries' in subdirs: continue
+        if '\\.git' in path: continue
+        if '\\.git' in subdirs: continue
+        if '\\.vs' in path: continue
+        if '\\.vs' in subdirs: continue
+        if '\\Debug' in path: continue
+        if '\\Debug' in subdirs: continue
+        if '\\tools' in path: continue
+        if '\\tools' in subdirs: continue
+        if '\\other' in path: continue
+        if '\\other' in subdirs: continue
+        if '\\libraries' in path: continue
+        if '\\libraries' in subdirs: continue
 
-    print(path)
+    #print(path)
 	
     for name in files:
         if name.split('.')[-1] in ext:
             n = os.path.join(path, name)
+            if '\\libraries' in n:
+                continue
             print(n)
             j = len(open(n, 'rb').readlines())
             lines += j
