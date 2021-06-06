@@ -875,16 +875,12 @@ int fs_iso9660_init()
 	cache_mutex = malloc(sizeof(u32));
 	fh_mutex = malloc(sizeof(u32));
 
-	if (!cachesHaveBeenInitied) {
-		cachesHaveBeenInitied = true;
-
-		/* Allocate cache block space */
-		for (i = 0; i < NUM_CACHE_BLOCKS; i++) {
-			icache[i] = malloc(sizeof(cache_block_t));
-			icache[i]->sector = -1;
-			dcache[i] = malloc(sizeof(cache_block_t));
-			dcache[i]->sector = -1;
-		}
+	/* Allocate cache block space */
+	for (i = 0; i < NUM_CACHE_BLOCKS; i++) {
+		icache[i] = malloc(sizeof(cache_block_t));
+		icache[i]->sector = -1;
+		dcache[i] = malloc(sizeof(cache_block_t));
+		dcache[i]->sector = -1;
 	}
 	
 
