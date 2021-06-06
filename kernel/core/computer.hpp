@@ -11,18 +11,13 @@ class CPU;
 class FPU;
 class Clock;
 
-extern "C" void kernel_main();
+extern "C" void KeEntryPoint();
 extern void firstTask();
-
-namespace Krnl
-{
-	void setBootMessage(const char* msg);
-}
 
 class Computer : public Device
 {
 private:
-	friend void kernel_main();
+	friend void KeEntryPoint();
 	Computer();
 	int open(int a, int b, void* c);
 
@@ -86,12 +81,11 @@ public:
 namespace Krnl
 {
 	extern Computer* computer;
-	extern bool schedulingOn;
-	extern bool preemptionOn;
-
+	
 	void firstTask();
 }
 
-using Krnl::computer;
+extern bool KeSchedulingOn;
+extern bool KePreemptionOn;
 
 #endif

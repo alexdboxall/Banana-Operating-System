@@ -33,10 +33,10 @@ namespace Krnl
 			return (size_t) __moddi3;
 
 		} else if (!strcmp(name, "preemptionOn")) {
-			return (size_t) &preemptionOn;
+			return (size_t) &KePreemptionOn;
 
 		} else if (!strcmp(name, "schedulingOn")) {
-			return (size_t) &schedulingOn;
+			return (size_t) &KeSchedulingOn;
 
 		}
 

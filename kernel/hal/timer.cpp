@@ -68,7 +68,7 @@ void timerHandler(uint32_t milliTenths)
 {
 	milliTenthsSinceBoot += milliTenths;
 
-	if (!Krnl::schedulingOn) return;
+	if (!Krnl::KeSchedulingOn) return;
 
 	ThreadControlBlock* next_task;
 	ThreadControlBlock* this_task = nullptr;
@@ -96,7 +96,7 @@ void timerHandler(uint32_t milliTenths)
 	}
 
 	//do preemption
-	if (currentTaskTCB->timeSliceRemaining != 0 && Krnl::preemptionOn) {
+	if (currentTaskTCB->timeSliceRemaining != 0 && KePreemptionOn) {
 		lockScheduler();		
 		currentTaskTCB->timeSliceRemaining -= milliTenthsSinceBoot;
 		if (currentTaskTCB->timeSliceRemaining <= milliTenthsSinceBoot) {
