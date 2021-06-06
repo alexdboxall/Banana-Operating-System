@@ -208,7 +208,7 @@ FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead
 	if (ptr == nullptr || bytesRead == nullptr) return FileStatus::InvalidArgument;
 
 	struct direntX* ddd = iso_readdir(((int)ptr)-100);
-	if (!dent) {
+	if (!ddd) {
 		return FileStatus::Failure;
 	}
 
