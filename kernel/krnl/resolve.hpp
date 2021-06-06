@@ -1,9 +1,3 @@
-#ifndef COMPAT_RESOLVE_HPP
-#define COMPAT_RESOLVE_HPP
+#pragma once
 
-namespace Krnl
-{
-	size_t resolveCompatibilitySymbol(char* name);
-}
-
-#endif
+size_t KeResolveCompatibilitySymbol(char* name);
