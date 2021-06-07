@@ -360,8 +360,6 @@ int init_percd(char diskletter)
 
 	cdDriveLetter = diskletter;
 
-	iso_kprintf("iso9660 disk change detected\n");
-
 	/* Start off with no cached blocks and no open files*/
 	iso_reset();
 
@@ -372,8 +370,6 @@ int init_percd(char diskletter)
 		if (blk < 0) return blk;
 		if (memcmp((char*) icache[blk]->data, "\02CD001", 6) == 0) {
 			joliet = isjoliet((char*) icache[blk]->data + 88);
-			iso_kprintf("joliet extensions detected\n");
-			iso_kprintfd(joliet);
 			if (joliet) break;
 		}
 	}
@@ -384,7 +380,6 @@ int init_percd(char diskletter)
 		blk = biread(session_base + 16);
 		if (blk < 0) return i;
 		if (memcmp((char*) icache[blk]->data, "\01CD001", 6)) {
-			iso_kprintf("jnot iso9660\n");
 			return -1;
 		}
 	}

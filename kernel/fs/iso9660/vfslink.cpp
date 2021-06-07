@@ -34,7 +34,6 @@ int readSectorFromCDROM(uint32_t sector, uint8_t* data, char driveletter)
 			recentSector = sector;
 			recentDriveletter = driveletter;
 		} else {
-			kprintf("readSectorFromCDROM FAIL.\n");
 			memset(data, 0, 2048);
 			return 1;
 		}
@@ -207,7 +206,6 @@ FileStatus ISO9660::stat(const char* path, uint64_t* size, bool* directory)
 		return FileStatus::NotExist;
 	}
 
-	kprintf("ISO TOTAL = 0x%X\n", iso_total(fd));
 	*size = iso_total(fd);
 	iso_close(fd);
 

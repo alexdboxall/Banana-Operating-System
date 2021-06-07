@@ -116,6 +116,8 @@ int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, uint64_t lba, uint1
 	if (spin == 1000000) {
 		kprintf("Port is hung SATAPI\n");
 		activeTerminal->puts("SATAPI PORT HUNG\n");
+		sbus->stopCmd(port);
+		sbus->startCmd(port);
 		return 1;
 	}
 
@@ -131,7 +133,6 @@ int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, uint64_t lba, uint1
 		if (port->is & HBA_PxIS_TFES)	// Task file error
 		{
 			kprintf("satapi disk error\n");
-			activeTerminal->puts("SATAPI DISK ERR\n");
 			return 1;
 		}
 	
@@ -151,7 +152,6 @@ int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, uint64_t lba, uint1
 			}
 		}
 		if (times > 10000) {
-			activeTerminal->puts("SATAPI TIMEOUT\n");
 			kprintf("SATAPI time out...\n");
 			return 1;
 		}
@@ -160,7 +160,6 @@ int SATAPI::sendPacket(uint8_t* packet, int maxTransferSize, uint64_t lba, uint1
 	// Check again
 	if (port->is & HBA_PxIS_TFES) {
 		kprintf("satapi disk error 2\n");
-		activeTerminal->puts("SATAPI DISK ERR 2\n");
 		return 1;
 	}
 
@@ -220,9 +219,7 @@ int SATAPI::read(uint64_t lba, int count, void* buffer)
 	uint8_t packet2[12] = { ATAPI_CMD_EJECT, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 };
 	int fail = sendPacket(packet2, 2, false, nullptr, 0);
 	if (fail) {
-		activeTerminal->puts("FAIL 1\n");
 		detectMedia();
-		activeTerminal->puts("FAIL 1.1\n");
 		return fail;
 	}
 
@@ -237,9 +234,7 @@ int SATAPI::read(uint64_t lba, int count, void* buffer)
 	fail = sendPacket(packet, 2048 * count, lba, (uint16_t*) buffer, count);
 
 	if (fail) {
-		activeTerminal->puts("FAIL 2\n");
 		detectMedia();
-		activeTerminal->puts("FAIL 2.1\n");
 	}
 
 	//send the packet
@@ -265,7 +260,6 @@ void SATAPI::detectMedia()
 	return;
 
 	kprintf("detecting media...\n");
-	activeTerminal->puts("DETECTING 1\n");
 
 	//create a TEST UNIT READY packet
 	uint8_t packet[12];
@@ -274,8 +268,6 @@ void SATAPI::detectMedia()
 	//send it
 	int res = sendPacket(packet, 0, false, nullptr, 0);
 	if (res == 1) {
-		activeTerminal->puts("ERR 1\n");
-
 		kprintf("err 1...\n");
 		//drive not ready, probably no disk
 		if (diskIn) {
@@ -293,8 +285,6 @@ void SATAPI::detectMedia()
 	uint8_t senseData[24];
 	res = sendPacket(packet, 24, false, (uint16_t*) senseData, 1);
 	if (res == 1) {
-		activeTerminal->puts("ERR 2\n");
-
 		kprintf("err 2...\n");
 
 		//drive not ready, probably no disk
