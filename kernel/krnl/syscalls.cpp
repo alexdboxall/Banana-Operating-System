@@ -633,6 +633,7 @@ uint64_t(*systemCallHandlers[])(regs* r) = {
 	SysSizeFromFilename,
 	SysSpawn,
 	SysGetEnv,
+	SysNotImpl,
 	SysFormatDisk,
 	SysSetDiskVolumeLabel,
 	SysGetDiskVolumeLabel,
