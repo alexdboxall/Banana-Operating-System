@@ -102,6 +102,7 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 		}
 		iso9660Owner = __fn[0];
 	}
+	init_percd(iso9660Owner);
 
 	int fd = iso_open(__fn + 3, 0);
 
@@ -237,6 +238,7 @@ FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 		}
 		iso9660Owner = __fn[0];
 	}
+	init_percd(iso9660Owner);
 
 	int fd = iso_open(__fn + 3, 1);
 

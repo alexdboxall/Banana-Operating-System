@@ -1893,8 +1893,6 @@ int main(int argc, char* argv[])
 
 	printf("\n%s\n    (C)Copyright Alex Boxall 2016-2021\n\n", VERSION_STRING);
 
-	//setttyname("Banana Command Prompt");
-
 	if (!getenv("PATH")) {
 		printf("Warning: The PATH is not set.\n\n");
 	}
