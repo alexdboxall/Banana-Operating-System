@@ -6,7 +6,6 @@
 
 #ifdef __cplusplus
 struct regs;
-void KeLoadSystemCalls();
 uint64_t KeSystemCall(regs* r, void* context);
 #endif
 
