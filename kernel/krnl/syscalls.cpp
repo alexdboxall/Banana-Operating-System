@@ -598,7 +598,7 @@ uint64_t SysGetUnixTime(regs* r)
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-uint64_t(*systemCallHandlers[128])(regs* r) = {
+uint64_t(*systemCallHandlers[])(regs* r) = {
 	SysYield,
 	SysExit,
 	SysSbrk,
@@ -652,7 +652,7 @@ uint64_t(*systemCallHandlers[128])(regs* r) = {
 
 uint64_t KeSystemCall(regs* r, void* context)
 {
-	if (r->eax < 128 && systemCallHandlers[r->eax]) {
+	if (r->eax < sizeof(systemCallHandlers) / sizeof(systemCallHandlers[0]) && systemCallHandlers[r->eax]) {
 		r->eax = systemCallHandlers[r->eax](r);
 	} else {
 		kprintf("Invalid syscall %d\n", r->eax);
