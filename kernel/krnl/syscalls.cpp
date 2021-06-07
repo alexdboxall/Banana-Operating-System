@@ -648,7 +648,7 @@ uint64_t(*systemCallHandlers[128])(regs* r) = {
 	SysWsbe,
 	SysGetRAMData,
 	SysGetVGAPtr,
-}
+};
 
 uint64_t KeSystemCall(regs* r, void* context)
 {
