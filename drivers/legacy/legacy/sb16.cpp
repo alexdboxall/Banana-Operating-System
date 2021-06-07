@@ -281,7 +281,7 @@ int SoundBlaster16::_open(int, int, void*)
 
 	dmaChannel16 = isaDMAController->tryLockChannel(5);
 	if (dmaChannel16 == nullptr) {
-		panic("CAN'T GET DMA CHANNEL 5!");
+		KePanic("CAN'T GET DMA CHANNEL 5!");
 	}
 	dmaChannel16->allocateAddressAndSet(DMA_SIZE / 2);
 	dmaChannel16->setMode(0x59);
@@ -309,7 +309,7 @@ int SoundBlaster16::_open(int, int, void*)
 		else if (currentIRQ == IRQ_7)  addIRQHandler(7, sb16Handler, true, (void*) this);
 		else if (currentIRQ == IRQ_10) addIRQHandler(10, sb16Handler, true, (void*) this);
 		else {
-			panic(noirq);
+			KePanic(noirq);
 		}
 
 	} else {
@@ -329,7 +329,7 @@ int SoundBlaster16::_open(int, int, void*)
 	if (dmaChannel->getChannelNum() == 1) DSPOut(DSP_MIXER_DATA, (currentDMA & ~0xF) | DMA_1);
 	else if (dmaChannel->getChannelNum() == 3) DSPOut(DSP_MIXER_DATA, (currentDMA & ~0xF) | DMA_3);
 	else {
-		panic(baddma);
+		KePanic(baddma);
 	}
 
 	//set volume

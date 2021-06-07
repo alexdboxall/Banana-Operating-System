@@ -106,7 +106,7 @@ void DMAChannel::setLength(uint32_t len)
 
 	//you can have 0x10000, but no more, because we subtract 1 from it when sending
 	if (len > 0x10000) {
-		panic(dmaLong);
+		KePanic(dmaLong);
 	}
 }
 
@@ -195,7 +195,7 @@ void DMAChannel::start()
 		pageReg = DMA7_PAGE;
 		break;
 	default:
-		panic(dmaConfused);
+		KePanic(dmaConfused);
 		return;
 	}
 
@@ -431,7 +431,7 @@ void DMA::unlockChannel(DMAChannel* channel)
 {
 	//check for null channel
 	if (channel == nullptr) {
-		panic(badDma);
+		KePanic(badDma);
 	}
 
 	lockScheduler();
@@ -445,7 +445,7 @@ void DMA::unlockChannel(DMAChannel* channel)
 		delete channel;
 
 	} else {
-		panic(badBook);
+		KePanic(badBook);
 	}
 
 	unlockScheduler();

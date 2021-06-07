@@ -88,10 +88,10 @@ bool Floppy::wasFailure()
 void Floppy::writeCommand(uint8_t cmd)
 {
 	if (_failedCommand) {
-		panic("PREVIOUS COMMAND FAILED, CAUGHT BY writeCommand");
+		KePanic("PREVIOUS COMMAND FAILED, CAUGHT BY writeCommand");
 	}
 	if (!_checkedFailure) {
-		panic("DID NOT CHECK FOR FAILURE BEFORE writeCommand");
+		KePanic("DID NOT CHECK FOR FAILURE BEFORE writeCommand");
 	}
 
 	_checkedFailure = false;
@@ -112,10 +112,10 @@ void Floppy::writeCommand(uint8_t cmd)
 uint8_t Floppy::readData()
 {
 	if (_failedCommand) {
-		panic("PREVIOUS COMMAND FAILED, CAUGHT BY writeCommand");
+		KePanic("PREVIOUS COMMAND FAILED, CAUGHT BY writeCommand");
 	}
 	if (!_checkedFailure) {
-		panic("DID NOT CHECK FOR FAILURE BEFORE writeCommand");
+		KePanic("DID NOT CHECK FOR FAILURE BEFORE writeCommand");
 	}
 
 	_checkedFailure = false;
@@ -350,7 +350,7 @@ bool Floppy::specify(int drive)
 	int datarateTable[4] = { 500000, 300000, 250000, 1000000 };
 	int datarateID = floppyTable[(int) driveTypes[drive]].dataRate;
 	if (datarateID == -1) {
-		panic("SPECIFY BAD DATARATE");
+		KePanic("SPECIFY BAD DATARATE");
 	}
 	int datarate = datarateTable[datarateID];
 	int srt = 16 - (7 * datarate / 500000);
@@ -395,7 +395,7 @@ bool Floppy::select(int drive, bool state)
 			//set the datarate
 			int8_t rate = floppyTable[(int) driveTypes[drive]].dataRate;
 			if (rate == -1) {
-				panic("UNSUPPORTED FLOPPY FORMAT (DATARATE NOT KNOWN)");
+				KePanic("UNSUPPORTED FLOPPY FORMAT (DATARATE NOT KNOWN)");
 			}
 			writePort(FloppyReg::CCR, rate);
 			unlockScheduler();
@@ -918,7 +918,7 @@ int FloppyDrive::read(uint64_t lba, int count, void* ptr)
 		_TEMP_write_bf = (uint8_t*) malloc(0x4800);
 	}
 	if (count != 1) {
-		panic("floppy read count not 1");
+		KePanic("floppy read count not 1");
 	}
 
 	kprintf("FloppyDrive::read called.\n");

@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#include <core/main.hpp>
+#define INLINEX inline __attribute__((always_inline)) 
 
 /// <summary>
 /// Initialises the HAL. Should only be called once, and is internal to the kernel.
@@ -96,7 +96,7 @@ void HalSystemIdle();
 /// Allocates a buffer which stores the coprocessor state. This buffer is passed into HalSaveCoprocessor and HalLoadCoprocessor.
 /// </summary>
 /// <returns></returns>
-INLINE void* HalAllocateCoprocessorState()
+INLINEX void* HalAllocateCoprocessorState()
 {
 	return nullptr;
 }
@@ -105,12 +105,12 @@ INLINE void* HalAllocateCoprocessorState()
 /// Saves the coprocessor state to a buffer previously allocated with HalAllocateCoprocessorState.
 /// </summary>
 /// <param name="buffer">The buffer to save the data to.</param>
-INLINE void HalSaveCoprocessor(void* buffer)
+INLINEX void HalSaveCoprocessor(void* buffer)
 {
 
 }
 
-INLINE void HalFlushTLB()
+INLINEX void HalFlushTLB()
 {
 	size_t cr3;
 	asm volatile ("mov %%cr0, %0" : "=r"(cr3));
@@ -121,7 +121,7 @@ INLINE void HalFlushTLB()
 /// Restores the coprocessor state from a buffer previously allocated with HalAllocateCoprocessorState.
 /// </summary>
 /// <param name="buffer">The buffer to load the data from.</param>
-INLINE void HalLoadCoprocessor(void* buffer)
+INLINEX void HalLoadCoprocessor(void* buffer)
 {
 	size_t cr0;
 	asm volatile ("mov %%cr0, %0" : "=r"(cr0));
@@ -132,7 +132,7 @@ INLINE void HalLoadCoprocessor(void* buffer)
 /// <summary>
 /// Enables hardware interrupts.
 /// </summary>
-INLINE void HalEnableInterrupts()
+INLINEX void HalEnableInterrupts()
 {
 	asm volatile ("sti");
 }
@@ -140,7 +140,7 @@ INLINE void HalEnableInterrupts()
 /// <summary>
 /// Disables hardware interrupts.
 /// </summary>
-INLINE void HalDisableInterrupts()
+INLINEX void HalDisableInterrupts()
 {
 	asm volatile ("cli");
 }
@@ -148,7 +148,7 @@ INLINE void HalDisableInterrupts()
 /// <summary>
 /// Waits until the next interrupt.
 /// </summary>
-INLINE void HalStallProcessor()
+INLINEX void HalStallProcessor()
 {
 	asm volatile ("hlt");
 }
@@ -158,7 +158,7 @@ INLINE void HalStallProcessor()
 /// </summary>
 /// <param name="port">The port number.</param>
 /// <returns>The data received.</returns>
-INLINE uint8_t inb(uint16_t port)
+INLINEX uint8_t inb(uint16_t port)
 {
 	uint8_t ret;
 	asm volatile ("inb %1, %0"
@@ -172,7 +172,7 @@ INLINE uint8_t inb(uint16_t port)
 /// </summary>
 /// <param name="port">The port number.</param>
 /// <returns>The data received.</returns>
-INLINE uint16_t inw(uint16_t port)
+INLINEX uint16_t inw(uint16_t port)
 {
 	uint16_t ret;
 	asm volatile ("inw %1, %w0"
@@ -186,7 +186,7 @@ INLINE uint16_t inw(uint16_t port)
 /// </summary>
 /// <param name="port">The port number.</param>
 /// <returns>The data received.</returns>
-INLINE uint32_t inl(uint16_t port)
+INLINEX uint32_t inl(uint16_t port)
 {
 	uint32_t ret;
 	asm volatile ("inl %1, %0"
@@ -201,7 +201,7 @@ INLINE uint32_t inl(uint16_t port)
 /// <param name="port">The port number.</param>
 /// <param name="addr">The buffer address.</param>
 /// <param name="cnt">The number of 8 bit values to read from the port.</param>
-INLINE void insb(uint16_t port, void* addr, size_t cnt)
+INLINEX void insb(uint16_t port, void* addr, size_t cnt)
 {
 	asm volatile ("rep insb" : "+D" (addr), "+c" (cnt) : "d" (port) : "memory");
 }
@@ -212,7 +212,7 @@ INLINE void insb(uint16_t port, void* addr, size_t cnt)
 /// <param name="port">The port number.</param>
 /// <param name="addr">The buffer address.</param>
 /// <param name="cnt">The number of 16 bit values to read from the port.</param>
-INLINE void insw(uint16_t port, void* addr, size_t cnt)
+INLINEX void insw(uint16_t port, void* addr, size_t cnt)
 {
 	asm volatile ("rep insw" : "+D" (addr), "+c" (cnt) : "d" (port) : "memory");
 }
@@ -223,7 +223,7 @@ INLINE void insw(uint16_t port, void* addr, size_t cnt)
 /// <param name="port">The port number.</param>
 /// <param name="addr">The buffer address.</param>
 /// <param name="cnt">The number of 32 bit values to read from the port.</param>
-INLINE void insl(uint16_t port, void* addr, size_t cnt)
+INLINEX void insl(uint16_t port, void* addr, size_t cnt)
 {
 	asm volatile ("rep insl" : "+D" (addr), "+c" (cnt) : "d" (port) : "memory");
 }
@@ -233,7 +233,7 @@ INLINE void insl(uint16_t port, void* addr, size_t cnt)
 /// </summary>
 /// <param name="port">The port number.</param>
 /// <param name="val">The value to write.</param>
-INLINE void outb(uint16_t port, uint8_t  val)
+INLINEX void outb(uint16_t port, uint8_t  val)
 {
 	asm volatile ("outb %0, %1" : : "a"(val), "Nd"(port));
 }
@@ -243,7 +243,7 @@ INLINE void outb(uint16_t port, uint8_t  val)
 /// </summary>
 /// <param name="port">The port number.</param>
 /// <param name="val">The value to write.</param>
-INLINE void outw(uint16_t port, uint16_t val)
+INLINEX void outw(uint16_t port, uint16_t val)
 {
 	asm volatile ("outw %0, %1" : : "a"(val), "Nd"(port));
 }
@@ -253,7 +253,7 @@ INLINE void outw(uint16_t port, uint16_t val)
 /// </summary>
 /// <param name="port">The port number.</param>
 /// <param name="val">The value to write.</param>
-INLINE void outl(uint16_t port, uint32_t val)
+INLINEX void outl(uint16_t port, uint32_t val)
 {
 	asm volatile ("outl %0, %1" : : "a"(val), "Nd"(port));
 }
@@ -264,7 +264,7 @@ INLINE void outl(uint16_t port, uint32_t val)
 /// <param name="port">The port number.</param>
 /// <param name="addr">The buffer address.</param>
 /// <param name="cnt">The number of 8 bit values to write to the port.</param>
-INLINE void outsb(uint16_t port, const void* addr, size_t cnt)
+INLINEX void outsb(uint16_t port, const void* addr, size_t cnt)
 {
 	asm volatile ("rep outsb" : "+S" (addr), "+c" (cnt) : "d" (port));
 }
@@ -275,7 +275,7 @@ INLINE void outsb(uint16_t port, const void* addr, size_t cnt)
 /// <param name="port">The port number.</param>
 /// <param name="addr">The buffer address.</param>
 /// <param name="cnt">The number of 16 bit values to write to the port.</param>
-INLINE void outsw(uint16_t port, const void* addr, size_t cnt)
+INLINEX void outsw(uint16_t port, const void* addr, size_t cnt)
 {
 	asm volatile ("rep outsw" : "+S" (addr), "+c" (cnt) : "d" (port));
 }
@@ -286,7 +286,7 @@ INLINE void outsw(uint16_t port, const void* addr, size_t cnt)
 /// <param name="port">The port number.</param>
 /// <param name="addr">The buffer address.</param>
 /// <param name="cnt">The number of 32 bit values to write to the port.</param>
-INLINE void outsl(uint16_t port, const void* addr, size_t cnt)
+INLINEX void outsl(uint16_t port, const void* addr, size_t cnt)
 {
 	asm volatile ("rep outsl" : "+S" (addr), "+c" (cnt) : "d" (port));
 }

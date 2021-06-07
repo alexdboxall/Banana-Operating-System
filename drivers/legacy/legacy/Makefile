@@ -34,18 +34,18 @@ $(TARGET32): $(OBJECTS32)
 	$(LD32) $(LDFLAGS) -shared -q -o $(OUTPUT32) $^ -Map=D:/Users/Alex/Desktop/driver32.map
 
 %.32: %.cpp
-	$(CXX32) $(CXXFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel -fno-exceptions -fno-rtti
+	$(CXX32) -fvisibility=hidden $(CXXFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel -fno-exceptions -fno-rtti
 	
 %.32: %.c
-	$(C32) $(CFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel
+	$(C32) -fvisibility=hidden $(CFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel
 
 
 $(TARGET64): $(OBJECTS64)
 	$(LD64) $(LDFLAGS) -shared -q -o $(OUTPUT64) $^ -Map=D:/Users/Alex/Desktop/driver64.map
 
 %.64: %.cpp
-	$(CXX64) $(CXXFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel -fno-exceptions -fno-rtti
+	$(CXX64) -fvisibility=hidden $(CXXFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel -fno-exceptions -fno-rtti
 	
 %.64: %.c
-	$(C64) $(CFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel
+	$(C64) -fvisibility=hidden $(CFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel
 
