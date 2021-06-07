@@ -8,6 +8,9 @@
 #pragma GCC diagnostic ignored "-Wsized-deallocation"
 #pragma GCC diagnostic ignored "-Wattributes"
 
+#define EXPORT __attribute__((__visibility__("default")))
+#define INLINE inline __attribute__((always_inline)) 
+
 #define KDEBUG_PAUSE(msg) if (sysBootSettings & 2048) {\
 KeSetBootMessage(msg);\
 if (!(sysBootSettings & 128)) {\

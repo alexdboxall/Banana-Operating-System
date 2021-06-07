@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#define INLINE inline __attribute__((always_inline)) 
+#include <core/main.hpp>
 
 /// <summary>
 /// Initialises the HAL. Should only be called once, and is internal to the kernel.
