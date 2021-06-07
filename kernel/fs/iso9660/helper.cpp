@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <hal/diskctrl.hpp>
 #include <hal/logidisk.hpp>
+#include <core/terminal.hpp>
 
 extern "C" int isoReadDiscSectorHelper(uint8_t* buffer, uint32_t sector, int count, char drvLetter)
 {
@@ -9,4 +10,16 @@ extern "C" int isoReadDiscSectorHelper(uint8_t* buffer, uint32_t sector, int cou
 		return count * 2048;
 	}
 	return 0;
+}
+
+extern "C" void iso_kprintf(char* str)
+{
+	activeTerminal->puts(str);
+}
+
+extern "C" void iso_kprintfd(int d)
+{
+	activeTerminal->puts("0x");
+	activeTerminal->putx(d);
+	activeTerminal->puts("\n");
 }

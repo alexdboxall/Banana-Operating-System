@@ -29,12 +29,15 @@ ISO9660 systems, as these were used as references as well.
 
 */
 
-#pragma GCC optimize ("O1")
+#pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
 #pragma GCC optimize ("-fno-align-jumps")
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
+
+extern void iso_kprintf(char* str);
+extern void iso_kprintfd(int d);
 
 #define MAX_ISO_FILES 16
 
@@ -357,7 +360,7 @@ int init_percd(char diskletter)
 
 	cdDriveLetter = diskletter;
 
-	dbglog(DBG_NOTICE, "fs_iso9660: disc change detected\n");
+	iso_kprintf("iso9660 disk change detected");
 
 	/* Start off with no cached blocks and no open files*/
 	iso_reset();
@@ -369,7 +372,8 @@ int init_percd(char diskletter)
 		if (blk < 0) return blk;
 		if (memcmp((char*) icache[blk]->data, "\02CD001", 6) == 0) {
 			joliet = isjoliet((char*) icache[blk]->data + 88);
-			dbglog(DBG_NOTICE, "  (joliet level %d extensions detected)\n", joliet);
+			iso_kprintf("joliet extensions detected");
+			iso_kprintfd(joliet);
 			if (joliet) break;
 		}
 	}
@@ -380,7 +384,7 @@ int init_percd(char diskletter)
 		blk = biread(session_base + 16);
 		if (blk < 0) return i;
 		if (memcmp((char*) icache[blk]->data, "\01CD001", 6)) {
-			dbglog(DBG_ERROR, "fs_iso9660: disc is not iso9660\r\n");
+			iso_kprintf("jnot iso9660");
 			return -1;
 		}
 	}
