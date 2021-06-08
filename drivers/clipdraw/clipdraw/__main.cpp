@@ -92,7 +92,7 @@ void start(void* s)
 	Region* rgn2 = new Region(50, 50, 200, 120, rgn1->context);
 	rgn1->addChild(rgn2);
 	rgn2->addChild(new Rectangle(0, 0, 70, 70, bz, rgn2->context));
-	rgn2->addChild(new Ellipse(100, 20, 85, 70, bz, rgn2->context));
+	rgn2->addChild(new Ellipse(100, 20, 85, 70, by, rgn2->context));
 
 	window->addChild(new LegacyTextObject(getLegacyFont(LegacyFontType::System), \
 					 "The System font!", 50, 450, 0, ctxt));
@@ -117,7 +117,17 @@ void start(void* s)
 	//window->addChild(new Region(100, 150, 400, 300, ctxt));
 	//window->addChild(new Region(200, 100, 200, 300, ctxt));
 
+	Region* testWindow = new Region(170, 130, 300, 200, ctxt);
+	testWindow->parent = window;
+	
+	Rectangle* r1 = new Rectangle(0, 0, 300, 200, 0xAAAAAA, ctxt);
+	testWindow->addChild(r1);
+	Rectangle* r2 = new Rectangle(0, 0, 300, 20, 0x0000FF, ctxt);
+	testWindow->addChild(r2);
+	window->addChild(testWindow);
+
 	window->update(nullptr, 1);
+	testWindow->update(nullptr, 1);
 	startMouse();
 	processMouse(300, 200, 0);
 

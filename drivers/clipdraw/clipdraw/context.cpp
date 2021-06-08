@@ -208,6 +208,7 @@ void Context::drawVerticalLine(int x, int y, int length, uint32_t colour)
 
 void Context::clippedRect(int x, int y, int w, int h, CRect* clip_area, Brush* brush)
 {
+	kprintf("clipped rect. %d, %d, %d, %d, 0x%X, 0x%X\n", x, y, w, h, clip_area, brush);
 	int curX;
 	int maxX = x + w;
 	int maxY = y + h;

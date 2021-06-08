@@ -10,7 +10,7 @@ extern "C" {
 void GDO::update(List<CRect*>* dirtyRegions, bool paintChildren)
 {
 	if (type != GDOType::Region) {
-		panic("UPDATE CALLED ON NON-REGION");
+		KePanic("UPDATE CALLED ON NON-REGION");
 
 	} else {
 		int i, screen_x, screen_y, child_screen_x, child_screen_y;
@@ -149,7 +149,7 @@ GDO* GDO::getChild(int index)
 {
 	if (index >= GDO_CHILD_DIM_LEN * GDO_CHILD_DIM_LEN) return nullptr;
 	if (!childDim) {
-		panic("NO CHILD DIM");
+		KePanic("NO CHILD DIM");
 	}
 	GDO** dim = childDim[(unsigned) index / GDO_CHILD_DIM_LEN];
 	if (!dim) {
@@ -174,7 +174,7 @@ int GDO::screenX()
 	}
 	if (parent) {
 		if (parent->type != GDOType::Region) {
-			panic("pre-emptive GDO::screenX on non-region");
+			KePanic("pre-emptive GDO::screenX on non-region");
 		}
 		return dataRegion.x + parent->screenX();
 	}
@@ -188,7 +188,7 @@ int GDO::screenY()
 	}
 	if (parent) {
 		if (parent->type != GDOType::Region) {
-			panic("pre-emptive GDO::screenY on non-region");
+			KePanic("pre-emptive GDO::screenY on non-region");
 		}
 		return dataRegion.y + parent->screenY();
 	}
@@ -198,7 +198,7 @@ int GDO::screenY()
 int GDO::addChild(GDO* obj)
 {
 	if (type != GDOType::Region) {
-		panic("GDO::addChild on non-region");
+		KePanic("GDO::addChild on non-region");
 		return 0;
 	}
 	obj->parent = this;
@@ -223,19 +223,20 @@ int GDO::addChild(GDO* obj)
 		//create a new dim
 		kprintf("CREATING A NEW DIM AT %d\n", notDim);
 		childDim[notDim] = (GDO**) malloc(sizeof(GDO*) * GDO_CHILD_DIM_LEN);		//MUST BE calloc!
+		kprintf("childDim[notDim] = 0x%X\n", childDim[notDim]);
 		memset(childDim[notDim], 0, sizeof(GDO*) * GDO_CHILD_DIM_LEN);
 		childDim[notDim][0] = obj;
 		return notDim * GDO_CHILD_DIM_LEN;
 	}
 
-	panic("GDO::addChild no more slots left!");
+	KePanic("GDO::addChild no more slots left!");
 	return -1;
 }
 
 bool GDO::removeChild(int index)
 {
 	if (type != GDOType::Region) {
-		panic("GDO::removeChild on non-region");
+		KePanic("GDO::removeChild on non-region");
 		return false;
 	}
 	if (index >= GDO_CHILD_DIM_LEN * GDO_CHILD_DIM_LEN) return false;
