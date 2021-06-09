@@ -208,7 +208,6 @@ void Context::drawVerticalLine(int x, int y, int length, uint32_t colour)
 
 void Context::clippedRect(int x, int y, int w, int h, CRect* clip_area, Brush* brush)
 {
-	kprintf("clipped rect. %d, %d, %d, %d, 0x%X, 0x%X\n", x, y, w, h, clip_area, brush);
 	int curX;
 	int maxX = x + w;
 	int maxY = y + h;
@@ -403,6 +402,9 @@ void plotrow(Context* ctxt, int x, int y, int w, CRect* clip_area, uint32_t colo
 void midptellipse(Context* ctxt, int rx, int ry,
 				  int xc, int yc, CRect* clip_area, uint32_t colour, Brush* brush)
 {
+	if (!clip_area) {
+		KePanic("midptellipse GOT NULL");
+	}
 	Brush b;
 
 	int width = rx;
@@ -439,11 +441,17 @@ void midptellipse(Context* ctxt, int rx, int ry,
 
 void Context::clippedEllipse(bool fill, int x, int y, int w, int h, CRect* clip_area, uint32_t colour)
 {
+	if (!clip_area) {
+		KePanic("clippedEllipse GOT NULL");
+	}
 	midptellipse(this, w / 2, h / 2, x + w / 2, y + h / 2, clip_area, colour, nullptr);
 }
 
 void Context::clippedEllipse(bool fill, int x, int y, int w, int h, CRect* clip_area, Brush* brush)
 {
+	if (!clip_area) {
+		KePanic("clippedEllipseX GOT NULL");
+	}
 	midptellipse(this, w / 2, h / 2, x + w / 2, y + h / 2, clip_area, 0xFFFFFF, brush);
 }
 
@@ -563,7 +571,7 @@ void Context::ellipse(bool fill, int x, int y, int w, int h, uint32_t colour)
 			screen_area.left = 0;
 			screen_area.bottom = height - 1;
 			screen_area.right = width - 1;
-			clippedEllipse(fill, x, y, w, h, clip_area, colour);
+			clippedEllipse(fill, x, y, w, h, &screen_area, colour);
 		}
 	}
 }
@@ -596,7 +604,7 @@ void Context::ellipse(bool fill, int x, int y, int w, int h, Brush* brush)
 			screen_area.left = 0;
 			screen_area.bottom = height - 1;
 			screen_area.right = width - 1;
-			clippedEllipse(fill, x, y, w, h, clip_area, brush);
+			clippedEllipse(fill, x, y, w, h, &screen_area, brush);
 		}
 	}
 }

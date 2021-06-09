@@ -64,7 +64,6 @@ void start(void* s)
 	Brush* bB = new Brush(BrushType::StockWhite);
 	Brush* bC = new Brush(BrushType::DitherDouble);
 
-	
 	window->addChild(new Rectangle(50, 50, 100, 100, b1, ctxt));
 	window->addChild(new Rectangle(200, 50, 100, 100, b2, ctxt));
 	window->addChild(new Rectangle(350, 50, 100, 100, b3, ctxt));
@@ -81,6 +80,7 @@ void start(void* s)
 	window->addChild(new Rectangle(500, 350, 100, 100, bC, ctxt));
 
 	Region* rgn1 = new Region(10, 10, 300, 200, ctxt);
+	rgn1->parent = window;
 	window->addChild(rgn1);
 	rgn1->addChild(new Rectangle(0, 0, 300, 200, 0x0000FF, rgn1->context));
 
@@ -90,8 +90,9 @@ void start(void* s)
 	by->bg = 0xFF8800;
 
 	Region* rgn2 = new Region(50, 50, 200, 120, rgn1->context);
+	rgn2->parent = rgn1;
 	rgn1->addChild(rgn2);
-	rgn2->addChild(new Rectangle(0, 0, 70, 70, bz, rgn2->context));
+	rgn2->addChild(new Rectangle(0, 0, 200, 120, bz, rgn2->context));
 	rgn2->addChild(new Ellipse(100, 20, 85, 70, by, rgn2->context));
 
 	window->addChild(new LegacyTextObject(getLegacyFont(LegacyFontType::System), \
