@@ -518,7 +518,13 @@ void VgaText::receiveKey(uint8_t key)
 
 	} else {
 		//display the character
-		this->putchar((char) key);
+		if (key < 'Z' - 'A') {
+			this->puts("CTRL-", this->currentBg, this->currentFg);
+			this->putchar(key + '@', this->currentBg, this->currentFg);
+
+		} else {
+			this->putchar((char) key);
+		}
 
 		//generate string from character
 		char addon[2];

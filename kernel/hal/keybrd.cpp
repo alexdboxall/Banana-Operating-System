@@ -176,18 +176,12 @@ void sendKeyboardToken(KeyboardToken kt)
 	}
 
 	if (!noMoreSend && !kt.release && keystates[(int) KeyboardSpecialKeys::Ctrl] && (kt.halScancode >= 64 && kt.halScancode < 128)) {
-		if (kt.halScancode == 'c' && keystates[(uint16_t) KeyboardSpecialKeys::Ctrl]) {
-			sendKeyToTerminal('C');
-			sendKeyToTerminal('T');
-			sendKeyToTerminal('R');
-			sendKeyToTerminal('L');
-			sendKeyToTerminal('-');
-			sendKeyToTerminal('C');
-			terminateTask(-1);
-		}
-
 		//also deals with lowercase instead of uppercase
 		sendKeyToTerminal(kt.halScancode - '@' - (kt.halScancode >= 96 ? 32 : 0));
+
+		if (kt.halScancode == 'c') {
+			terminateTask(-1);
+		}
 	}
 
 	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::F1 && !kt.release) {
