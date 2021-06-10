@@ -1,0 +1,281 @@
+\b \i\c{all} is an group alias for \e{all} warning classes.  Thus, \c{-w+all}
+enables all available warnings, and \c{-w-all} disables warnings
+entirely (since NASM 2.13).
+
+\b \i\c{bad-pragma} is a backwards compatibility alias for \c{pragma-bad}.
+
+\b \i\c{bnd} warns about ineffective use of the \c{BND} prefix when the
+\c{JMP} instruction is converted to the \c{SHORT} form.
+This should be extremely rare since the short \c{JMP} only
+is applicable to jumps inside the same module, but if
+it is legitimate, it may be necessary to use
+\c{bnd jmp dword}.
+
+\> Enabled by default.
+
+\b \i\c{db-empty} warns about a \c{DB}, \c{DW}, etc declaration
+with no operands, producing no output.
+This is permitted, but often indicative of an error.
+See \k{db}.
+
+\> Enabled by default.
+
+\b \i\c{environment} warns if a nonexistent environment variable
+is accessed using the \c{%!} preprocessor
+construct (see \k{getenv}.)  Such environment
+variables are treated as empty (with this
+warning issued) starting in NASM 2.15;
+earlier versions of NASM would treat this as
+an error.
+
+\> Enabled by default.
+
+\b \i\c{float} is a group alias for all warning classes prefixed by \c{float-}; currently
+\c{float-denorm}, \c{float-overflow}, \c{float-toolong}, and \c{float-underflow}.
+
+\b \i\c{float-denorm} warns about denormal floating point constants.
+
+\> Disabled by default.
+
+\b \i\c{float-overflow} warns about floating point underflow.
+
+\> Enabled by default.
+
+\b \i\c{float-toolong} warns about too many digits in floating-point numbers.
+
+\> Enabled by default.
+
+\b \i\c{float-underflow} warns about floating point underflow (a nonzero
+constant rounded to zero.)
+
+\> Disabled by default.
+
+\b \i\c{hle} warns about invalid use of the HLE \c{XACQUIRE} or \c{XRELEASE}
+prefixes.
+
+\> Enabled by default.
+
+\b \i\c{label} is a group alias for all warning classes prefixed by \c{label-}; currently
+\c{label-orphan}, \c{label-redef}, and \c{label-redef-late}.
+
+\b \i\c{label-orphan} warns about source lines which contain no instruction but define
+a label without a trailing colon. This is most likely indicative
+of a typo, but is technically correct NASM syntax (see \k{syntax}.)
+
+\> Enabled by default.
+
+\b \i\c{label-redef} warns if a label is defined more than once, but the
+value is identical. It is an unconditional error to
+define the same label more than once to \e{different} values.
+
+\> Disabled by default.
+
+\b \i\c{label-redef-late} the value of a label changed during the final, code-generation
+pass. This may be the result of strange use of the
+preprocessor. This is very likely to produce incorrect code and
+may end up being an unconditional error in a future
+version of NASM.
+
+\> Enabled and promoted to error by default.
+
+\b \i\c{lock} warns about \c{LOCK} prefixes on unlockable instructions.
+
+\> Enabled by default.
+
+\b \i\c{macro} is a group alias for all warning classes prefixed by \c{macro-}; currently
+\c{macro-def-case-single}, \c{macro-def-greedy-single}, \c{macro-def-param-single}, \c{macro-defaults}, \c{macro-params-legacy}, \c{macro-params-multi}, and \c{macro-params-single}.
+
+\b \i\c{macro-def} is a group alias for all warning classes prefixed by \c{macro-def-}; currently
+\c{macro-def-case-single}, \c{macro-def-greedy-single}, and \c{macro-def-param-single}.
+
+\b \i\c{macro-def-case-single} warns when a single-line macro is defined both case
+sensitive and case insensitive.
+The new macro
+definition will override (shadow) the original one,
+although the original macro is not deleted, and will
+be re-exposed if the new macro is deleted with
+\c{%undef}, or, if the original macro is the case
+insensitive one, the macro call is done with a
+different case.
+
+\> Enabled by default.
+
+\b \i\c{macro-def-greedy-single} definition shadows greedy macro warns when a
+single-line macro is defined which would match a
+previously existing greedy definition.  The new macro
+definition will override (shadow) the original one,
+although the original macro is not deleted, and will
+be re-exposed if the new macro is deleted with
+\c{%undef}, and will be invoked if called with a
+parameter count that does not match the new definition.
+
+\> Enabled by default.
+
+\b \i\c{macro-def-param-single} warns if the same single-line macro is defined with and
+without parameters.
+The new macro
+definition will override (shadow) the original one,
+although the original macro is not deleted, and will
+be re-exposed if the new macro is deleted with
+\c{%undef}.
+
+\> Enabled and promoted to error by default.
+
+\b \i\c{macro-defaults} warns when a macro has more default parameters than optional parameters.
+See \k{mlmacdef} for why might want to disable this warning.
+
+\> Enabled by default.
+
+\b \i\c{macro-params} is a group alias for all warning classes prefixed by \c{macro-params-}; currently
+\c{macro-params-legacy}, \c{macro-params-multi}, and \c{macro-params-single}.
+
+\b \i\c{macro-params-legacy} warns about \i{multi-line macros} being invoked
+with the wrong number of parameters, but for bug-compatibility
+with NASM versions older than 2.15, NASM tried to fix up the
+parameters to match the legacy behavior and call the macro anyway.
+This can happen in certain cases where there are empty arguments
+without braces, sometimes as a result of macro expansion.
+
+\> The legacy behavior is quite strange and highly context-dependent,
+and can be disabled with:
+
+\c      %pragma preproc sane_empty_expansion true
+
+\> It is highly recommended to use this option in new code.
+
+\> Enabled by default.
+
+\b \i\c{macro-params-multi} warns about \i{multi-line macros} being invoked
+with the wrong number of parameters. See \k{mlmacover} for an
+example of why you might want to disable this warning.
+
+\> Enabled by default.
+
+\b \i\c{macro-params-single} warns about \i{single-line macros} being invoked
+with the wrong number of parameters.
+
+\> Enabled by default.
+
+\b \i\c{negative-rep} warns about negative counts given to the \c{%rep}
+preprocessor directive.
+
+\> Enabled by default.
+
+\b \i\c{not-my-pragma} is a backwards compatibility alias for \c{pragma-na}.
+
+\b \i\c{number-overflow} covers warnings about numeric constants which
+don't fit in 64 bits.
+
+\> Enabled by default.
+
+\b \i\c{obsolete} is a group alias for all warning classes prefixed by \c{obsolete-}; currently
+\c{obsolete-nop}, \c{obsolete-removed}, and \c{obsolete-valid}.
+
+\b \i\c{obsolete-nop} warns for an instruction which has been removed
+from the architecture, but has been architecturally
+defined to be a noop for future CPUs.
+
+\> Enabled by default.
+
+\b \i\c{obsolete-removed} warns for an instruction which has been removed
+from the architecture, and is no longer included
+in the CPU definition given in the \c{[CPU]}
+directive, for example \c{POP CS}, the opcode for
+which, \c{0Fh}, instead is an opcode prefix on
+CPUs newer than the first generation 8086.
+
+\> Enabled by default.
+
+\b \i\c{obsolete-valid} warns for an instruction which has been removed
+from the architecture, but is still valid on the
+specific CPU given in the \c{CPU} directive. Code
+using these instructions is most likely not
+forward compatible.
+
+\> Enabled by default.
+
+\b \i\c{orphan-labels} is a backwards compatibility alias for \c{label-orphan}.
+
+\b \i\c{other} specifies any warning not included in any specific warning class.
+
+\> Enabled by default.
+
+\b \i\c{phase} warns about symbols having changed values during
+the second-to-last assembly pass. This is not
+inherently fatal, but may be a source of bugs.
+
+\> Disabled by default.
+
+\b \i\c{pragma} is a group alias for all warning classes prefixed by \c{pragma-}; currently
+\c{pragma-bad}, \c{pragma-empty}, \c{pragma-na}, and \c{pragma-unknown}.
+
+\b \i\c{pragma-bad} warns about a malformed or otherwise unparsable
+\c{%pragma} directive.
+
+\> Disabled by default.
+
+\b \i\c{pragma-empty} warns about a \c{%pragma} directive containing nothing.
+This is treated identically to \c{%pragma ignore} except
+for this optional warning.
+
+\> Disabled by default.
+
+\b \i\c{pragma-na} warns about a \c{%pragma} directive which is not applicable to
+this particular assembly session.  This is not yet implemented.
+
+\> Disabled by default.
+
+\b \i\c{pragma-unknown} warns about an unknown \c{%pragma} directive.
+This is not yet implemented for most cases.
+
+\> Disabled by default.
+
+\b \i\c{ptr} warns about keywords used in other assemblers that might
+indicate a mistake in the source code.  Currently only the MASM
+\c{PTR} keyword is recognized. See also \k{pkg_masm}.
+
+\> Enabled by default.
+
+\b \i\c{regsize} warns about a register with implicit size (such as \c{EAX}, which is always 32 bits)
+been given an explicit size specification which is inconsistent with the size
+of the named register, e.g. \c{WORD EAX}. \c{DWORD EAX} or \c{WORD AX} are
+permitted, and do not trigger this warning. Some registers which \e{do not} imply
+a specific size, such as \c{K0}, may need this specification unless the instruction
+itself implies the instruction size:
+
+\c      KMOVW K0,[foo]          ; Permitted, KMOVW implies 16 bits
+\c      KMOV  WORD K0,[foo]     ; Permitted, WORD K0 specifies instruction size
+\c      KMOV  K0,WORD [foo]     ; Permitted, WORD [foo] specifies instruction size
+\c      KMOV  K0,[foo]          ; Not permitted, instruction size ambiguous
+
+\> Enabled by default.
+
+\b \i\c{unknown-pragma} is a backwards compatibility alias for \c{pragma-unknown}.
+
+\b \i\c{unknown-warning} warns about a \c{-w} or \c{-W} option or a \c{[WARNING]} directive
+that contains an unknown warning name or is otherwise not possible to process.
+
+\> Disabled by default.
+
+\b \i\c{user} controls output of \c{%warning} directives (see \k{pperror}).
+
+\> Enabled by default.
+
+\b \i\c{warn-stack-empty} a [WARNING POP] directive was executed when
+the warning stack is empty. This is treated
+as a [WARNING *all] directive.
+
+\> Enabled by default.
+
+\b \i\c{zeroing} a \c{RESx} directive was used in a section which contains
+initialized data, and the output format does not support
+this. Instead, this will be replaced with explicit zero
+content, which may produce a large output file.
+
+\> Enabled by default.
+
+\b \i\c{zext-reloc} warns that a relocation has been zero-extended due
+to limitations in the output format.
+
+\> Enabled by default.
+
