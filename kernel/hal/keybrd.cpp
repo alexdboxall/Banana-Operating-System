@@ -134,10 +134,6 @@ void sendKeyboardToken(KeyboardToken kt)
 	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::KeypadDivide) kt.halScancode = (uint16_t) '/';
 	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::KeypadPeriod) kt.halScancode = (uint16_t) '.';
 
-	if (kt.halScancode == 'C' && keystates[(uint16_t) KeyboardSpecialKeys::Ctrl]) {
-		terminateTask(-1);
-	}
-
 	bool noMoreSend = false;
 	if (!kt.release) {
 		if (keystates[(uint16_t) KeyboardSpecialKeys::Alt]) {
@@ -180,6 +176,16 @@ void sendKeyboardToken(KeyboardToken kt)
 	}
 
 	if (!noMoreSend && !kt.release && keystates[(int) KeyboardSpecialKeys::Ctrl] && (kt.halScancode >= 64 && kt.halScancode < 128)) {
+		if (kt.halScancode == 'c' && keystates[(uint16_t) KeyboardSpecialKeys::Ctrl]) {
+			sendKeyToTerminal('C');
+			sendKeyToTerminal('T');
+			sendKeyToTerminal('R');
+			sendKeyToTerminal('L');
+			sendKeyToTerminal('-');
+			sendKeyToTerminal('C');
+			terminateTask(-1);
+		}
+
 		//also deals with lowercase instead of uppercase
 		sendKeyToTerminal(kt.halScancode - '@' - (kt.halScancode >= 96 ? 32 : 0));
 	}
