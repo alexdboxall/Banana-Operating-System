@@ -109,6 +109,8 @@ struct Process
 
 	ThreadControlBlock* createThread(void (*where)(void*), void* context = nullptr, int pri = 128);
 	ThreadControlBlock* createUserThread();
+
+	bool gotCtrlC = false;
 };
 
 void userModeEntryPoint(void* ignored);
