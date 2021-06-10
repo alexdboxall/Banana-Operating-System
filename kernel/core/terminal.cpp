@@ -512,15 +512,13 @@ void VgaText::receiveKey(uint8_t key)
 			//terminal driver handles this one
 			this->putchar('\b');
 
+			char old = keybufferInternal[strlen(keybufferInternal) - 1];
+			if (old < 'Z' - 'A' && old != '\b' && old != '\t' && old != '\n' && old != '\r') {
+				this->puts("\b\b\b\b\b");
+			}
+
 			//clear a character off the buffer
 			keybufferInternal[strlen(keybufferInternal) - 1] = 0;
-			if ((uint8_t) (strlen(keybufferInternal) - 1) == 0xFF) {
-				keybufferInternal[strlen(keybufferInternal) - 1] = 0;
-				keybufferInternal[strlen(keybufferInternal) - 1] = 0;
-				keybufferInternal[strlen(keybufferInternal) - 1] = 0;
-				keybufferInternal[strlen(keybufferInternal) - 1] = 0;
-				keybufferInternal[strlen(keybufferInternal) - 1] = 0;
-			}
 		}
 
 	} else {
