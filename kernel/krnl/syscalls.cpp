@@ -657,7 +657,7 @@ uint64_t KeSystemCall(regs* r, void* context)
 	if (r->eax < sizeof(systemCallHandlers) / sizeof(systemCallHandlers[0]) && systemCallHandlers[r->eax]) {
 		r->eax = systemCallHandlers[r->eax](r);
 
-		if (currentTaskTCB->processRelatedTo->gotCtrlC) {
+		if (currentTaskTCB->processRelatedTo->terminal->gotCtrlC) {
 			terminateTask(-1);
 		}
 

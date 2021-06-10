@@ -179,8 +179,8 @@ void sendKeyboardToken(KeyboardToken kt)
 		//also deals with lowercase instead of uppercase
 		sendKeyToTerminal(kt.halScancode - '@' - (kt.halScancode >= 96 ? 32 : 0));
 
-		if (kt.halScancode == 'c') {
-			currentTaskTCB->processRelatedTo->gotCtrlC = true;
+		if (kt.halScancode == 'C' || kt.halScancode == 'c') {
+			activeTerminal->gotCtrlC = true;
 		}
 	}
 
