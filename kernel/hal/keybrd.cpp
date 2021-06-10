@@ -24,7 +24,7 @@ void sendKeyToTerminal(uint8_t code)
 {
 	activeTerminal->receiveKey(code);
 
-	if (code == (uint8_t) '\n') {
+	if (code == (uint8_t) '\n' || code == (uint8_t) '\3') {
 		ThreadControlBlock* next_task;
 		ThreadControlBlock* this_task;
 
@@ -178,10 +178,6 @@ void sendKeyboardToken(KeyboardToken kt)
 	if (!noMoreSend && !kt.release && keystates[(int) KeyboardSpecialKeys::Ctrl] && (kt.halScancode >= 64 && kt.halScancode < 128)) {
 		//also deals with lowercase instead of uppercase
 		sendKeyToTerminal(kt.halScancode - '@' - (kt.halScancode >= 96 ? 32 : 0));
-
-		if (kt.halScancode == 'C' || kt.halScancode == 'c') {
-			activeTerminal->gotCtrlC = true;
-		}
 	}
 
 	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::F1 && !kt.release) {
@@ -241,6 +237,9 @@ int readKeyboard(VgaText* terminal, char* buf, size_t count)
 		*buf++ = terminal->keybufferSent[0];
 
 		char key = terminal->keybufferSent[0];
+		if (key == '\3') {
+			terminateTask(-1);
+		}
 
 		//remove first char from that buffer
 		memmove(terminal->keybufferSent, terminal->keybufferSent + 1, strlen(terminal->keybufferSent));
