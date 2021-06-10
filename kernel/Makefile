@@ -85,16 +85,16 @@ CRTI_OBJ32:=crti.32
 CRTN_OBJ32:=crtn.32
 
 common32:
-	nasm -O0 -f bin $(SOURCEDIR)/vm86/VGASET.S -o $(SYSROOTDIR)/Banana/System/VGA.COM   -w+orphan-labels
-	nasm -O0 -f bin $(SOURCEDIR)/vm86/VESASET.S -o $(SYSROOTDIR)/Banana/System/VESA.COM   -w+orphan-labels
-	nasm -O0 -f bin $(SOURCEDIR)/vm86/EDID.S -o $(SYSROOTDIR)/Banana/System/EDID.COM   -w+orphan-labels
-	nasm -O0 -f bin $(SOURCEDIR)/vm86/BIOSBSOD.S -o $(SYSROOTDIR)/Banana/System/BIOSBSOD.COM   -w+orphan-labels
-	nasm -O0 -f bin $(SOURCEDIR)/vm86/INT13.S -o $(SYSROOTDIR)/Banana/System/DUCTTAPE.COM   -w+orphan-labels
-	nasm $(SOURCEDIR)/x86/boot.asm     -felf32 -O0 -o $(SOURCEDIR)/boot.32
-	nasm $(SOURCEDIR)/x86/hardware.asm -felf32 -O0 -o $(SOURCEDIR)/morenasm.32
-	nasm -O0 -f bin $(SOURCEDIR)/boot/TRAMP.S -o $(SOURCEDIR)/TRAMP.EXE   -w+orphan-labels
-	nasm -O0 -f bin $(SOURCEDIR)/boot/BOOT1.ASM -o $(SOURCEDIR)/STAGE1.bin   -w+orphan-labels
-	nasm -O0 -f bin $(SOURCEDIR)/boot/FIRMWARE.ASM -o $(SOURCEDIR)/FIRMWARE.LIB -w+orphan-labels -i $(SOURCEDIR)/boot/
+	C:/Users/Alex/AppData/Local/bin/NASM/nasm.exe -O0 -f bin $(SOURCEDIR)/vm86/VGASET.S -o $(SYSROOTDIR)/Banana/System/VGA.COM   -w+orphan-labels
+	C:/Users/Alex/AppData/Local/bin/NASM/nasm.exe -O0 -f bin $(SOURCEDIR)/vm86/VESASET.S -o $(SYSROOTDIR)/Banana/System/VESA.COM   -w+orphan-labels
+	C:/Users/Alex/AppData/Local/bin/NASM/nasm.exe -O0 -f bin $(SOURCEDIR)/vm86/EDID.S -o $(SYSROOTDIR)/Banana/System/EDID.COM   -w+orphan-labels
+	C:/Users/Alex/AppData/Local/bin/NASM/nasm.exe -O0 -f bin $(SOURCEDIR)/vm86/BIOSBSOD.S -o $(SYSROOTDIR)/Banana/System/BIOSBSOD.COM   -w+orphan-labels
+	C:/Users/Alex/AppData/Local/bin/NASM/nasm.exe -O0 -f bin $(SOURCEDIR)/vm86/INT13.S -o $(SYSROOTDIR)/Banana/System/DUCTTAPE.COM   -w+orphan-labels
+	C:/Users/Alex/AppData/Local/bin/NASM/nasm.exe $(SOURCEDIR)/x86/boot.asm     -felf32 -O0 -o $(SOURCEDIR)/boot.32
+	C:/Users/Alex/AppData/Local/bin/NASM/nasm.exe $(SOURCEDIR)/x86/hardware.asm -felf32 -O0 -o $(SOURCEDIR)/morenasm.32
+	C:/Users/Alex/AppData/Local/bin/NASM/nasm.exe -O0 -f bin $(SOURCEDIR)/boot/TRAMP.S -o $(SOURCEDIR)/TRAMP.EXE   -w+orphan-labels
+	C:/Users/Alex/AppData/Local/bin/NASM/nasm.exe -O0 -f bin $(SOURCEDIR)/boot/BOOT1.ASM -o $(SOURCEDIR)/STAGE1.bin   -w+orphan-labels
+	C:/Users/Alex/AppData/Local/bin/NASM/nasm.exe -O0 -f bin $(SOURCEDIR)/boot/FIRMWARE.ASM -o $(SOURCEDIR)/FIRMWARE.LIB -w+orphan-labels -i $(SOURCEDIR)/boot/
 	
 
 $(TARGET32_386): $(OBJECTS32)
@@ -155,8 +155,8 @@ clean:
 	$(CXX32) $(CXXFLAGS32) $^ -o $@
 	
 %.32: %.s
-	nasm -O0 -felf32 $^ -o $@
+	C:/Users/Alex/AppData/Local/bin/NASM/nasm.exe -O0 -felf32 $^ -o $@
 
 %.com: %.s
-	nasm -O0 -f bin $^ -o $@
+	C:/Users/Alex/AppData/Local/bin/NASM/nasm.exe -O0 -f bin $^ -o $@
 
