@@ -238,6 +238,10 @@ int readKeyboard(VgaText* terminal, char* buf, size_t count)
 
 		char key = terminal->keybufferSent[0];
 
+		if (key == '\3') {
+			terminateTask(-1);
+		}
+
 		//remove first char from that buffer
 		memmove(terminal->keybufferSent, terminal->keybufferSent + 1, strlen(terminal->keybufferSent));
 
