@@ -134,6 +134,10 @@ void sendKeyboardToken(KeyboardToken kt)
 	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::KeypadDivide) kt.halScancode = (uint16_t) '/';
 	if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::KeypadPeriod) kt.halScancode = (uint16_t) '.';
 
+	if (kt.halScancode == 'C' && keystates[(uint16_t) KeyboardSpecialKeys::Ctrl]) {
+		terminateTask(-1);
+	}
+
 	bool noMoreSend = false;
 	if (!kt.release) {
 		if (keystates[(uint16_t) KeyboardSpecialKeys::Alt]) {
@@ -237,10 +241,6 @@ int readKeyboard(VgaText* terminal, char* buf, size_t count)
 		*buf++ = terminal->keybufferSent[0];
 
 		char key = terminal->keybufferSent[0];
-
-		if (key == '\3') {
-			terminateTask(-1);
-		}
 
 		//remove first char from that buffer
 		memmove(terminal->keybufferSent, terminal->keybufferSent + 1, strlen(terminal->keybufferSent));
