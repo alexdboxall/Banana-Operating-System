@@ -514,12 +514,19 @@ void VgaText::receiveKey(uint8_t key)
 
 			//clear a character off the buffer
 			keybufferInternal[strlen(keybufferInternal) - 1] = 0;
+			if ((uint8_t) (strlen(keybufferInternal) - 1) == 0xFF) {
+				keybufferInternal[strlen(keybufferInternal) - 1] = 0;
+				keybufferInternal[strlen(keybufferInternal) - 1] = 0;
+				keybufferInternal[strlen(keybufferInternal) - 1] = 0;
+				keybufferInternal[strlen(keybufferInternal) - 1] = 0;
+				keybufferInternal[strlen(keybufferInternal) - 1] = 0;
+			}
 		}
 
 	} else {
 		//display the character
-		if (key < 'Z' - 'A') {
-			this->puts("CTRL-", this->currentBg, this->currentFg);
+		if (key < 'Z' - 'A' && key != '\b' && key != '\t' && key != '\n' && key != '\r') {
+			this->puts("CTRL\xFF", this->currentBg, this->currentFg);
 			this->putchar(key + '@', this->currentBg, this->currentFg);
 
 		} else {
