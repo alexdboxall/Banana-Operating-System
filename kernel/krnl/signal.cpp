@@ -75,7 +75,7 @@ size_t KeCheckSignal(SigHandlerBlock* shb)
 					break;
 				}
 			}
-			return shb->handler[sig];
+			return (size_t) shb->handler[sig];
 		}
 		++shb->pendingBase;
 	}
