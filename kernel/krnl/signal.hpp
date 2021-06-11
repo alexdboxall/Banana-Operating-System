@@ -6,6 +6,7 @@ extern "C" {
 
 #include <stdint.h>
 
+//a power of 2 is very helpful here
 #define MAX_PENDING_SIGNALS		8
 
 struct SigHandlerBlock

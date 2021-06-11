@@ -20,7 +20,7 @@ SigHandlerBlock KeInitSignals()
 	return ret;
 }
 
-int KeRegisterSignalHandler(SigHandlerBlock* shb, int sig, sig_handler_bna_t* handler, uint32_t mask, int flags)
+int KeRegisterSignalHandler(SigHandlerBlock* shb, int sig, sig_handler_bna_t handler, uint32_t mask, int flags)
 {
 	if (sig >= __MAX_SIGNALS__) {
 		return 1;
