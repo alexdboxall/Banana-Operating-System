@@ -4,12 +4,14 @@ extern "C" {
 #include <krnl/signaldef.h>
 }
 
+#include <stdint.h>
+
 #define MAX_PENDING_SIGNALS		8
 
 struct SigHandlerBlock
 {
 	sig_handler_bna_t* handler[__MAX_SIGNALS__];
-	uint32_t mask[__MAX_SIGNALS__];
+	uint32_t masks[__MAX_SIGNALS__];
 	uint8_t flags[__MAX_SIGNALS__];
 
 	int pending[MAX_PENDING_SIGNALS];
