@@ -35,6 +35,7 @@ int KeRegisterSignalHandler(SigHandlerBlock* shb, int sig, sig_handler_bna_t* ha
 
 int KeRaiseSignal(SigHandlerBlock* shb, int sig)
 {
+	shb->checkSignals = true;
 	int base = shb->pendingBase;
 
 	for (int i = 0; i < MAX_PENDING_SIGNALS; ++i) {
@@ -47,11 +48,15 @@ int KeRaiseSignal(SigHandlerBlock* shb, int sig)
 	return 1;
 }
 
-int KeCheckSignal(SigHandlerBlock* shb)
+size_t KeCheckSignal(SigHandlerBlock* shb)
 {
+	if (!shb->checkSignals) {
+		return 0;
+	}
+
 	for (int i = 0; i < MAX_PENDING_SIGNALS; ++i) {
-		if (shb->pending[shb->pendingBase]) {
-			int sig = shb->pending[shb->pendingBase];
+		if (shb->pending[(shb->pendingBase + i) % MAX_PENDING_SIGNALS]) {
+			int sig = shb->pending[(shb->pendingBase + i) % MAX_PENDING_SIGNALS];
 
 			if (shb->masks[shb->current] & (1 << sig)) {
 				//blocked for now
@@ -61,7 +66,16 @@ int KeCheckSignal(SigHandlerBlock* shb)
 			//only increase base if can actually be handled
 			shb->pending[shb->pendingBase++] = 0;
 			shb->current = sig;
-			return sig;
+
+			shb->checkSignals = false;
+
+			for (int j = 0; j < MAX_PENDING_SIGNALS; ++j) {
+				if (shb->pending[j]) {
+					shb->checkSignals = true;
+					break;
+				}
+			}
+			return shb->handler[sig];
 		}
 		++shb->pendingBase;
 	}

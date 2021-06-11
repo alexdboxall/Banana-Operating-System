@@ -16,11 +16,11 @@ struct SigHandlerBlock
 
 	int pending[MAX_PENDING_SIGNALS];
 	int pendingBase;
-
 	int current;
+	bool checkSignals;
 };
 
 SigHandlerBlock KeInitSignals();
 int KeRegisterSignalHandler(SigHandlerBlock* shb, int sig, sig_handler_bna_t* handler, uint32_t mask, int flags);
 int KeRaiseSignal(SigHandlerBlock* shb, int sig);
-int KeCheckSignal(SigHandlerBlock* shb);
+size_t KeCheckSignal(SigHandlerBlock* shb);
