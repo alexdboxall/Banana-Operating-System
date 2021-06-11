@@ -9,6 +9,7 @@
 #include "core/pipe.hpp"
 #include "core/virtmgr.hpp"
 #include "krnl/env.hpp"
+#include <krnl/signal.hpp>
 
 struct Process;
 
@@ -111,6 +112,8 @@ struct Process
 	ThreadControlBlock* createUserThread();
 
 	bool gotCtrlC = false;
+
+	SigHandlerBlock signals;
 };
 
 void userModeEntryPoint(void* ignored);

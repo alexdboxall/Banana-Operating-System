@@ -24,7 +24,7 @@ void sendKeyToTerminal(uint8_t code)
 {
 	activeTerminal->receiveKey(code);
 
-	if (code == (uint8_t) '\n' || code == (uint8_t) '\3') {
+	if (code == (uint8_t) '\n') {
 		ThreadControlBlock* next_task;
 		ThreadControlBlock* this_task;
 
@@ -237,9 +237,6 @@ int readKeyboard(VgaText* terminal, char* buf, size_t count)
 		*buf++ = terminal->keybufferSent[0];
 
 		char key = terminal->keybufferSent[0];
-		if (key == '\3') {
-			terminateTask(-1);
-		}
 
 		//remove first char from that buffer
 		memmove(terminal->keybufferSent, terminal->keybufferSent + 1, strlen(terminal->keybufferSent));

@@ -72,8 +72,6 @@ public:
 	char escapeCode[16];
 	int escapeCodePtr = 0;
 
-	bool gotCtrlC = false;
-
 	void doANSI_SGR(int code);
 
 	static uint8_t combineColours(uint8_t fg, uint8_t bg);
