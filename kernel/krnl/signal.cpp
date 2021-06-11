@@ -58,14 +58,16 @@ size_t KeCheckSignal(SigHandlerBlock* shb)
 		if (shb->pending[(shb->pendingBase + i) % MAX_PENDING_SIGNALS]) {
 			int sig = shb->pending[(shb->pendingBase + i) % MAX_PENDING_SIGNALS];
 
-			if (shb->masks[shb->current] & (1 << sig)) {
-				//blocked for now
-				return 0;
+			for (int j = 0; j < __MAX_SIGNALS__; ++j) {
+				if ((shb->current & (1 << j)) && (shb->masks[j] & (1 << sig))) {
+					//blocked for now
+					return 0;
+				}
 			}
 
 			//only increase base if can actually be handled
 			shb->pending[shb->pendingBase++] = 0;
-			shb->current = sig;
+			shb->current |= 1 << sig;
 
 			shb->checkSignals = false;
 
@@ -79,5 +81,14 @@ size_t KeCheckSignal(SigHandlerBlock* shb)
 		}
 		++shb->pendingBase;
 	}
+
 	return 0;
+}
+
+void KeCompleteSignal(SigHandlerBlock* shb, int sig)
+{
+	if (sig >= __MAX_SIGNALS__ || !(shb->current & (1 << sig))) {
+		KePanic("KeCompleteSignal");
+	}
+	shb->current &= ~(1 << sig);
 }
