@@ -13,12 +13,9 @@ SigHandlerBlock KeInitSignals()
 {
 	SigHandlerBlock ret;
 	ret.pendingBase = 0;
-
-	for (int i = 0; i < MAX_PENDING_SIGNALS; ++i) {
-		ret.pending[i] = 0;
-	}
-
 	ret.current = 0;
+
+	memset(ret.pending, 0, sizeof(ret.pending));
 
 	return ret;
 }
@@ -52,27 +49,21 @@ int KeRaiseSignal(SigHandlerBlock* shb, int sig)
 
 int KeCheckSignal(SigHandlerBlock* shb)
 {
-	bool found = false;
 	for (int i = 0; i < MAX_PENDING_SIGNALS; ++i) {
 		if (shb->pending[shb->pendingBase]) {
-			found = true;
-			break;
+			int sig = shb->pending[shb->pendingBase];
+
+			if (shb->masks[shb->current] & (1 << sig)) {
+				//blocked for now
+				return 0;
+			}
+
+			//only increase base if can actually be handled
+			shb->pending[shb->pendingBase++] = 0;
+			shb->current = sig;
+			return sig;
 		}
 		++shb->pendingBase;
 	}
-	if (!found) {
-		return 0;
-	}
-
-	int sig = shb->pending[shb->pendingBase];
-
-	if (shb->masks[shb->current] & (1 << sig)) {
-		//blocked for now
-		return 0;
-	}
-	
-	//only increase base if can actually be handled
-	shb->pending[shb->pendingBase++] = 0;
-	shb->current = sig;
-	return sig;
+	return 0;
 }
