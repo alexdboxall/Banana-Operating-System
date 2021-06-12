@@ -110,7 +110,6 @@ int KeRegisterSignalHandler(SigHandlerBlock* shb, int sig, sig_handler_bna_t han
 
 int KeRaiseSignal(SigHandlerBlock* shb, int sig)
 {
-	return 1;
 	kprintf("KeRaiseSignal A\n");
 
 	shb->checkSignals = true;
@@ -130,7 +129,6 @@ int KeRaiseSignal(SigHandlerBlock* shb, int sig)
 
 size_t KeCheckSignal(SigHandlerBlock* shb)
 {
-	return 0;
 	kprintf("KeCheckSignal A\n");
 
 	if (!shb->checkSignals) {
