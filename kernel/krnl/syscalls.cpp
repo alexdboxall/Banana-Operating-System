@@ -57,6 +57,8 @@ uint64_t SysOpen(regs* r)
 		return -1;
 	}
 
+	kprintf("OPENING: %s\n", (const char*) r->edx);
+
 	char fname[256];
 	Fs::standardiseFiles(fname, (const char*) r->edx, "Z:/");
 
