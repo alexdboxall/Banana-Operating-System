@@ -258,7 +258,6 @@ irq0:
     push byte 0
     push byte 32
 
-syscall_common_stub:
 int_common_stub:
     pushad
 
@@ -287,6 +286,47 @@ int_common_stub:
     add esp, 8     ; Cleans up the pushed error code and pushed ISR number
 
     iret
+
+
+extern KiCheckSignalZ
+syscall_common_stub:
+    pushad
+
+    push ds
+    push es
+    push fs
+    push gs
+
+    mov ax, 0x10   ; Load the Kernel Data Segment descriptor!
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+
+    push esp
+    cld             ; the kernel will "have a fit" if userspace has the direction flag set when we interrupt
+    call int_handler
+    add esp, 4
+
+	pop gs
+    pop fs
+    pop es
+    pop ds
+
+    call KiCheckSignalZ
+    cmp eax, 0
+	je .skipSignals
+    
+.skipSignals:
+
+	popa
+    add esp, 8     ; Cleans up the pushed error code and pushed ISR number
+
+    iret
+
+
+
+
 
 
 irq16:
