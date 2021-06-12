@@ -317,7 +317,13 @@ syscall_common_stub:
     cmp eax, 0
 	je .skipSignals
 
+    mov ecx, [esp + 10 * 4]
     mov [esp + 10 * 4], eax
+    mov ebx, esp
+    mov esp, [ebx + 13 * 4]
+    push ecx
+    push finishSignal
+    mov esp, ebx
     popa
     add esp, 8
     iret
@@ -327,7 +333,7 @@ syscall_common_stub:
 	;unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax;
     ;             8       9
 	;unsigned int int_no, err_code;
-    ;             10
+    ;             10   11  12      13
 	;unsigned int eip, cs, eflags, useresp, ss;
 	;unsigned int v86es, v86ds, v86fs, v86gs;
 
@@ -339,6 +345,7 @@ syscall_common_stub:
     iret
 
 
+finishSignal:
 
 
 
