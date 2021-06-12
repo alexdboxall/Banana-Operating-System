@@ -174,7 +174,7 @@ size_t KeCheckSignal(SigHandlerBlock* shb)
 
 			} else if (handler == SIG_IGN) {
 				kprintf("KeCheckSignal H\n");
-				eturn 0;
+				return 0;
 
 			} else if (handler == SIG_DFL) {
 				kprintf("KeCheckSignal I\n");
