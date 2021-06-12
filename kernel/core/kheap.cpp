@@ -81,6 +81,7 @@ extern "C" void* realloc(void* ptr, size_t size)
 
 extern "C" void* malloc(size_t size)
 {
+	kprintf("malloc 0x%X\n", size);
 	return dlmalloc(size);
 }
 

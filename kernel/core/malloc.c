@@ -3355,7 +3355,6 @@ Void_t* mALLOc(size_t bytes)
   Void_t* mALLOc(bytes) size_t bytes;
 #endif
 {
-      kprintf("mALLOc 0x%X\n", bytes);
   mstate av = get_malloc_state();
 
   INTERNAL_SIZE_T nb;               /* normalized request size */
