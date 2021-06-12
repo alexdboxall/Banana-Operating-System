@@ -118,7 +118,7 @@ int KeRaiseSignal(SigHandlerBlock* shb, int sig)
 	for (int i = 0; i < MAX_PENDING_SIGNALS; ++i) {
 		if (shb->pending[(i + base) % MAX_PENDING_SIGNALS] == 0) {
 			shb->pending[(i + base) % MAX_PENDING_SIGNALS] = sig;
-			kprintf("KeRaiseSignal B\n");
+			kprintf("KeRaiseSignal B went to slot %d\n", (i + base) % MAX_PENDING_SIGNALS);
 			return 0;
 		}
 	}
