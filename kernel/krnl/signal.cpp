@@ -100,7 +100,11 @@ int KeRegisterSignalHandler(SigHandlerBlock* shb, int sig, sig_handler_bna_t han
 		return 1;
 	}
 
+	kprintf("A 0x%X\n", &shb->handler[sig]);
+	kprintf("A 0x%X\n", &shb->masks[sig]);
+	kprintf("A 0x%X\n", &shb->flags[sig]);
 	/*shb->handler[sig] = handler;
+	* 
 	shb->masks[sig] = mask | (1 << sig);
 	shb->flags[sig] = 0;*/
 	kprintf("KeRegisterSignalHandler C\n");
