@@ -6,10 +6,6 @@
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
-#pragma GCC optimize ("-fno-align-labels")
-#pragma GCC optimize ("-fno-align-jumps")
-#pragma GCC optimize ("-fno-align-loops")
-#pragma GCC optimize ("-fno-align-functions")
 
 
 //THESE RUN IN USER MODE!!!
@@ -21,6 +17,7 @@ void KiDefaultSignalHandlerAbort(int sig)
 	char s[] = "KiDefaultSignalHandlerAbort";
 	KeSystemCallFromUsermode((size_t) SystemCallNumber::Panic, 0, 0, (size_t) s);
 }
+#pragma GCC pop_options
 
 void KiDefaultSignalHandlerTerminate(int sig)
 {
@@ -50,7 +47,6 @@ void KiSigKill(int sig)
 	char s[] = "KiSigKill";
 	KeSystemCallFromUsermode((size_t) SystemCallNumber::Panic, 0, 0, (size_t) s);
 }
-#pragma GCC pop_options
 
 //END OF USER MODE!!!
 
