@@ -10,7 +10,10 @@
 
 //THESE RUN IN USER MODE!!!
 
-int __attribute__((__section__("align_previous"))) DO_NOT_DELETE;
+void __attribute__((__section__("align_previous"))) DO_NOT_DELETE()
+{
+
+}
 
 void __attribute__((__section__("userkernel"))) KiDefaultSignalHandlerAbort(int sig)
 {
@@ -101,8 +104,6 @@ SigHandlerBlock* KeInitSignals()
 {
 	kprintf("START_USER_KERNEL 0x%X\n", &__start_userkernel);
 	kprintf("END_USER_KERNEL   0x%X\n", &__stop_userkernel);
-	kprintf("START_USER_KERNEL 0x%X\n", __start_userkernel);
-	kprintf("END_USER_KERNEL   0x%X\n", __stop_userkernel);
 
 	SigHandlerBlock* obj = (SigHandlerBlock*) malloc(sizeof(SigHandlerBlock));
 	obj->pendingBase = 0;
