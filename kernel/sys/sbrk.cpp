@@ -24,7 +24,7 @@
 /// <returns>On success, the updated system break value is returned. On error, it returns -1.</returns>
 uint64_t SysSbrk(regs* r)
 {
-	kprintf("SRBK: 0x%X\n", r->ebx);
+	kprintf("SBRK: 0x%X\n", r->ebx);
 	size_t previousBreak = currentTaskTCB->processRelatedTo->vas->sbrk;
 
 	if (r->ebx == 0) {
