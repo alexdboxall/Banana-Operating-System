@@ -676,6 +676,9 @@ extern uint8_t inb(uint16_t);
 
 extern "C" void mapVASFirstTime()
 {
+	extern int __start_userkernel;
+	extern int __stop_userkernel;
+
 	if (currentTaskTCB->firstTimeEIP == 1) {
 		kprintf("STARTING A FORKED TASK.\n");
 		return;
@@ -699,8 +702,7 @@ extern "C" void mapVASFirstTime()
 	}
 
 	kprintf("reflagging range: 0x%X. pages = %d\n", ((size_t) &__start_userkernel), (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel)) / 4096);
-	extern int __start_userkernel;
-	extern int __stop_userkernel;
+	
 	vas->reflagRange(((size_t)&__start_userkernel), \
 					 (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel)) / 4096, \
 					 ~PAGE_WRITABLE, \
