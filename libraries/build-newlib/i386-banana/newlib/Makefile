@@ -172,22 +172,22 @@ RUNTEST = `if test -f $(top_srcdir)/../dejagnu/runtest; then \
 	     echo runtest; \
 	   fi`
 DIST_SUBDIRS = libc libm doc . 
-ACLOCAL = ${SHELL} /cygdrive/d/Users/Alex/Desktop/Banana/libraries/newlib-3.3.0/missing --run aclocal-1.11
+ACLOCAL = ${SHELL} /cygdrive/d/Users/Alex/Desktop/Banana/Libraries/newlib-3.3.0/missing --run aclocal-1.11
 AMTAR = $${TAR-tar}
 AR = i386-banana-ar
 AS = i386-banana-as
-AUTOCONF = ${SHELL} /cygdrive/d/Users/Alex/Desktop/Banana/libraries/newlib-3.3.0/missing --run autoconf
-AUTOHEADER = ${SHELL} /cygdrive/d/Users/Alex/Desktop/Banana/libraries/newlib-3.3.0/missing --run autoheader
-AUTOMAKE = ${SHELL} /cygdrive/d/Users/Alex/Desktop/Banana/libraries/newlib-3.3.0/missing --run automake-1.11
+AUTOCONF = ${SHELL} /cygdrive/d/Users/Alex/Desktop/Banana/Libraries/newlib-3.3.0/missing --run autoconf
+AUTOHEADER = ${SHELL} /cygdrive/d/Users/Alex/Desktop/Banana/Libraries/newlib-3.3.0/missing --run autoheader
+AUTOMAKE = ${SHELL} /cygdrive/d/Users/Alex/Desktop/Banana/Libraries/newlib-3.3.0/missing --run automake-1.11
 AWK = gawk
-CC = i386-banana-gcc -B/cygdrive/d/Users/Alex/Desktop/Banana/libraries/build-newlib/i386-banana/newlib/ -isystem /cygdrive/d/Users/Alex/Desktop/Banana/libraries/build-newlib/i386-banana/newlib/targ-include -isystem /cygdrive/d/Users/Alex/Desktop/Banana/libraries/newlib-3.3.0/newlib/libc/include -B/cygdrive/d/Users/Alex/Desktop/Banana/libraries/build-newlib/i386-banana/libgloss/i386 -L/cygdrive/d/Users/Alex/Desktop/Banana/libraries/build-newlib/i386-banana/libgloss/libnosys -L/cygdrive/d/Users/Alex/Desktop/Banana/libraries/newlib-3.3.0/libgloss/i386   
-CCAS = i386-banana-gcc -B/cygdrive/d/Users/Alex/Desktop/Banana/libraries/build-newlib/i386-banana/newlib/ -isystem /cygdrive/d/Users/Alex/Desktop/Banana/libraries/build-newlib/i386-banana/newlib/targ-include -isystem /cygdrive/d/Users/Alex/Desktop/Banana/libraries/newlib-3.3.0/newlib/libc/include -B/cygdrive/d/Users/Alex/Desktop/Banana/libraries/build-newlib/i386-banana/libgloss/i386 -L/cygdrive/d/Users/Alex/Desktop/Banana/libraries/build-newlib/i386-banana/libgloss/libnosys -L/cygdrive/d/Users/Alex/Desktop/Banana/libraries/newlib-3.3.0/libgloss/i386   
+CC = i386-banana-gcc -B/cygdrive/d/Users/Alex/Desktop/Banana/Libraries/build-newlib/i386-banana/newlib/ -isystem /cygdrive/d/Users/Alex/Desktop/Banana/Libraries/build-newlib/i386-banana/newlib/targ-include -isystem /cygdrive/d/Users/Alex/Desktop/Banana/Libraries/newlib-3.3.0/newlib/libc/include -B/cygdrive/d/Users/Alex/Desktop/Banana/Libraries/build-newlib/i386-banana/libgloss/i386 -L/cygdrive/d/Users/Alex/Desktop/Banana/Libraries/build-newlib/i386-banana/libgloss/libnosys -L/cygdrive/d/Users/Alex/Desktop/Banana/Libraries/newlib-3.3.0/libgloss/i386   
+CCAS = i386-banana-gcc -B/cygdrive/d/Users/Alex/Desktop/Banana/Libraries/build-newlib/i386-banana/newlib/ -isystem /cygdrive/d/Users/Alex/Desktop/Banana/Libraries/build-newlib/i386-banana/newlib/targ-include -isystem /cygdrive/d/Users/Alex/Desktop/Banana/Libraries/newlib-3.3.0/newlib/libc/include -B/cygdrive/d/Users/Alex/Desktop/Banana/Libraries/build-newlib/i386-banana/libgloss/i386 -L/cygdrive/d/Users/Alex/Desktop/Banana/Libraries/build-newlib/i386-banana/libgloss/libnosys -L/cygdrive/d/Users/Alex/Desktop/Banana/Libraries/newlib-3.3.0/libgloss/i386   
 CCASFLAGS = -g -O2
 CCDEPMODE = depmode=gcc3
-CC_FOR_BUILD = gcc
-CC_FOR_NEWLIB = i386-banana-gcc -B/cygdrive/d/Users/Alex/Desktop/Banana/libraries/build-newlib/i386-banana/newlib/ -isystem /cygdrive/d/Users/Alex/Desktop/Banana/libraries/build-newlib/i386-banana/newlib/targ-include -isystem /cygdrive/d/Users/Alex/Desktop/Banana/libraries/newlib-3.3.0/newlib/libc/include -B/cygdrive/d/Users/Alex/Desktop/Banana/libraries/build-newlib/i386-banana/libgloss/i386 -L/cygdrive/d/Users/Alex/Desktop/Banana/libraries/build-newlib/i386-banana/libgloss/libnosys -L/cygdrive/d/Users/Alex/Desktop/Banana/libraries/newlib-3.3.0/libgloss/i386   
+CC_FOR_BUILD = D:/cygwin64/bin/gcc.exe
+CC_FOR_NEWLIB = i386-banana-gcc -B/cygdrive/d/Users/Alex/Desktop/Banana/Libraries/build-newlib/i386-banana/newlib/ -isystem /cygdrive/d/Users/Alex/Desktop/Banana/Libraries/build-newlib/i386-banana/newlib/targ-include -isystem /cygdrive/d/Users/Alex/Desktop/Banana/Libraries/newlib-3.3.0/newlib/libc/include -B/cygdrive/d/Users/Alex/Desktop/Banana/Libraries/build-newlib/i386-banana/libgloss/i386 -L/cygdrive/d/Users/Alex/Desktop/Banana/Libraries/build-newlib/i386-banana/libgloss/libnosys -L/cygdrive/d/Users/Alex/Desktop/Banana/Libraries/newlib-3.3.0/libgloss/i386   
 CFLAGS = -g -O2
-CPP = 
+CPP = D:/cygwin64/bin/cpp.exe
 CPPFLAGS = 
 CRT0 = crt0.o
 CRT0_DIR = libc/
@@ -225,7 +225,7 @@ MACHINE_OBJECTLIST = libc/machine/i386/objectlist.awk.in
 MAINT = #
 MAKEINFO = makeinfo --split-size=5000000
 MKDIR_P = /usr/bin/mkdir -p
-NEWLIB_CFLAGS =  -fno-builtin -DMISSING_SYSCALL_NAMES -DHAVE_INIT_FINI
+NEWLIB_CFLAGS = -DSIGNAL_PROVIDED -fno-builtin -DMISSING_SYSCALL_NAMES -DHAVE_INIT_FINI
 NM = i386-banana-nm
 NMEDIT = 
 NO_INCLUDE_LIST =  rpc/types.h rpc/xdr.h
@@ -255,10 +255,10 @@ SYS_MACH_OBJECTLIST =
 SYS_OBJECTLIST = libc/sys/banana/objectlist.awk.in
 UNIX_OBJECTLIST = 
 VERSION = 3.3.0
-abs_builddir = /cygdrive/d/Users/Alex/Desktop/Banana/libraries/build-newlib/i386-banana/newlib
-abs_srcdir = /cygdrive/d/Users/Alex/Desktop/Banana/libraries/build-newlib/i386-banana/newlib/../../../newlib-3.3.0/newlib
-abs_top_builddir = /cygdrive/d/Users/Alex/Desktop/Banana/libraries/build-newlib/i386-banana/newlib
-abs_top_srcdir = /cygdrive/d/Users/Alex/Desktop/Banana/libraries/build-newlib/i386-banana/newlib/../../../newlib-3.3.0/newlib
+abs_builddir = /cygdrive/d/Users/Alex/Desktop/Banana/Libraries/build-newlib/i386-banana/newlib
+abs_srcdir = /cygdrive/d/Users/Alex/Desktop/Banana/Libraries/build-newlib/i386-banana/newlib/../../../newlib-3.3.0/newlib
+abs_top_builddir = /cygdrive/d/Users/Alex/Desktop/Banana/Libraries/build-newlib/i386-banana/newlib
+abs_top_srcdir = /cygdrive/d/Users/Alex/Desktop/Banana/Libraries/build-newlib/i386-banana/newlib/../../../newlib-3.3.0/newlib
 ac_ct_CC = 
 ac_ct_DUMPBIN = 
 aext = a
@@ -287,7 +287,7 @@ host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /cygdrive/d/Users/Alex/Desktop/Banana/libraries/newlib-3.3.0/install-sh
+install_sh = ${SHELL} /cygdrive/d/Users/Alex/Desktop/Banana/Libraries/newlib-3.3.0/install-sh
 libc_cv_cc_loop_to_function = yes
 libc_cv_initfinit_array = yes
 libdir = ${exec_prefix}/lib
@@ -324,8 +324,8 @@ MULTISRCTOP =
 MULTIBUILDTOP = 
 MULTIDIRS = 
 MULTISUBDIR = 
-MULTIDO = true
-MULTICLEAN = true
+MULTIDO = $(MAKE)
+MULTICLEAN = $(MAKE)
 LIBTOOL_VERSION_INFO = 0:0:0
 MATHDIR = math
 
@@ -1251,3 +1251,72 @@ clean-local:
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
+
+PWD_COMMAND=$${PWDCMD-pwd}
+
+# FIXME: There should be an @-sign in front of the `if'.
+# Leave out until this is tested a bit more.
+multi-do:
+	if [ -z "$(MULTIDIRS)" ]; then \
+	  true; \
+	else \
+	  rootpre=`${PWD_COMMAND}`/; export rootpre; \
+	  srcrootpre=`cd $(srcdir); ${PWD_COMMAND}`/; export srcrootpre; \
+	  lib=`echo "$${rootpre}" | sed -e 's,^.*/\([^/][^/]*\)/$$,\1,'`; \
+	  compiler="$(CC)"; \
+	  for i in `$${compiler} --print-multi-lib 2>/dev/null`; do \
+	    dir=`echo $$i | sed -e 's/;.*$$//'`; \
+	    if [ "$${dir}" = "." ]; then \
+	      true; \
+	    else \
+	      if [ -d ../$${dir}/$${lib} ]; then \
+		flags=`echo $$i | sed -e 's/^[^;]*;//' -e 's/@/ -/g'`; \
+		if (cd ../$${dir}/$${lib}; $(MAKE) $(FLAGS_TO_PASS) \
+				CFLAGS="$(CFLAGS) $${flags}" \
+				CCASFLAGS="$(CCASFLAGS) $${flags}" \
+				FCFLAGS="$(FCFLAGS) $${flags}" \
+				FFLAGS="$(FFLAGS) $${flags}" \
+				ADAFLAGS="$(ADAFLAGS) $${flags}" \
+				prefix="$(prefix)" \
+				exec_prefix="$(exec_prefix)" \
+				GCJFLAGS="$(GCJFLAGS) $${flags}" \
+				GOCFLAGS="$(GOCFLAGS) $${flags}" \
+				CXXFLAGS="$(CXXFLAGS) $${flags}" \
+				LIBCFLAGS="$(LIBCFLAGS) $${flags}" \
+				LIBCXXFLAGS="$(LIBCXXFLAGS) $${flags}" \
+				LDFLAGS="$(LDFLAGS) $${flags}" \
+				MULTIFLAGS="$${flags}" \
+				DESTDIR="$(DESTDIR)" \
+				INSTALL="$(INSTALL)" \
+				INSTALL_DATA="$(INSTALL_DATA)" \
+				INSTALL_PROGRAM="$(INSTALL_PROGRAM)" \
+				INSTALL_SCRIPT="$(INSTALL_SCRIPT)" \
+				$(DO)); then \
+		  true; \
+		else \
+		  exit 1; \
+		fi; \
+	      else true; \
+	      fi; \
+	    fi; \
+	  done; \
+	fi
+
+# FIXME: There should be an @-sign in front of the `if'.
+# Leave out until this is tested a bit more.
+multi-clean:
+	if [ -z "$(MULTIDIRS)" ]; then \
+	  true; \
+	else \
+	  lib=`${PWD_COMMAND} | sed -e 's,^.*/\([^/][^/]*\)$$,\1,'`; \
+	  for dir in : $(MULTIDIRS); do \
+	    test $$dir != : || continue; \
+	    if [ -f ../$${dir}/$${lib}/Makefile ]; then \
+	      if (cd ../$${dir}/$${lib}; $(MAKE) $(FLAGS_TO_PASS) $(DO)); \
+	      then true; \
+	      else exit 1; \
+	      fi; \
+	    else true; \
+	    fi; \
+	  done; \
+	fi

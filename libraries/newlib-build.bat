@@ -5,7 +5,7 @@ D:
 cd D:/Users/Alex/Desktop/Banana/libraries/build-newlib
 
 rem ../newlib-3.0.0/configure --prefix=/usr --target=i386-banana --enable-newlib-long-time_t
-rem ../newlib-3.3.0/configure --prefix=/usr --target=i386-banana --enable-newlib-long-time_t --enable-lto
+rem ../newlib-3.3.0/configure --prefix=/usr --target=i386-banana --enable-newlib-long-time_t
 
 make all
 make DESTDIR=D:/Users/Alex/Desktop/Banana/sysroot/Banana/Dev32 install

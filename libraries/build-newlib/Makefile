@@ -53,9 +53,9 @@ bindir = ${exec_prefix}/bin
 sbindir = ${exec_prefix}/sbin
 libexecdir = ${exec_prefix}/libexec
 datadir = ${datarootdir}
-sysconfdir = ${prefix}/etc
-sharedstatedir = ${prefix}/com
-localstatedir = ${prefix}/var
+sysconfdir = /etc
+sharedstatedir = /var
+localstatedir = /var
 libdir = ${exec_prefix}/lib
 includedir = ${prefix}/include
 oldincludedir = /usr/include
@@ -90,7 +90,7 @@ MAINTAINER_MODE_TRUE = #
 # -------------------------------------------------
 
 # The gcc driver likes to know the arguments it was configured with.
-TOPLEVEL_CONFIGURE_ARGUMENTS=../newlib-3.3.0/configure --prefix=/usr --target=i386-banana --enable-newlib-long-time_t --disable-multilib
+TOPLEVEL_CONFIGURE_ARGUMENTS=../newlib-3.3.0/configure --prefix=/usr --target=i386-banana --enable-newlib-long-time_t
 
 tooldir = ${exec_prefix}/i386-banana
 build_tooldir = ${exec_prefix}/i386-banana
@@ -108,7 +108,7 @@ GCC_SHLIB_SUBDIR = /shlib
 BUILD_SUBDIR = build-x86_64-pc-cygwin
 # This is set by the configure script to the arguments to use when configuring
 # directories built for the build system.
-BUILD_CONFIGARGS =  --cache-file=./config.cache '--prefix=/usr' '--enable-newlib-long-time_t' '--disable-multilib' --program-transform-name='s&^&i386-banana-&' --disable-option-checking --with-build-subdir="$(BUILD_SUBDIR)"
+BUILD_CONFIGARGS =  --cache-file=./config.cache '--prefix=/usr' '--enable-newlib-long-time_t' --program-transform-name='s&^&i386-banana-&' --disable-option-checking --with-build-subdir="$(BUILD_SUBDIR)"
 
 # Linker flags to use on the host, for stage1 or when not
 # bootstrapping.
@@ -171,7 +171,7 @@ SUBDIRS =  etc
 TARGET_CONFIGDIRS = libgloss newlib
 # This is set by the configure script to the arguments to use when configuring
 # directories built for the host system.
-HOST_CONFIGARGS =  --cache-file=./config.cache  --with-system-zlib --with-newlib '--prefix=/usr' '--enable-newlib-long-time_t' '--disable-multilib' --program-transform-name='s&^&i386-banana-&' --disable-option-checking
+HOST_CONFIGARGS =  --cache-file=./config.cache  --with-system-zlib --with-newlib '--prefix=/usr' '--enable-newlib-long-time_t' --program-transform-name='s&^&i386-banana-&' --disable-option-checking
 # Host programs are put under this directory, which is . except if building
 # with srcdir=..
 HOST_SUBDIR = .
@@ -244,7 +244,7 @@ POSTSTAGE1_HOST_EXPORTS = \
 TARGET_SUBDIR = i386-banana
 # This is set by the configure script to the arguments to use when configuring
 # directories built for the target.
-TARGET_CONFIGARGS = --cache-file=./config.cache --with-newlib --with-cross-host=x86_64-pc-cygwin   '--prefix=/usr' '--enable-newlib-long-time_t' '--disable-multilib' --program-transform-name='s&^&i386-banana-&' --disable-option-checking --with-target-subdir="$(TARGET_SUBDIR)"
+TARGET_CONFIGARGS = --cache-file=./config.cache --with-newlib --enable-multilib --with-cross-host=x86_64-pc-cygwin   '--prefix=/usr' '--enable-newlib-long-time_t' --program-transform-name='s&^&i386-banana-&' --disable-option-checking --with-target-subdir="$(TARGET_SUBDIR)"
 # This is the list of variables to export in the environment when
 # configuring subdirectories for the target system.
 BASE_TARGET_EXPORTS = \
@@ -368,7 +368,7 @@ MAKEINFOFLAGS = --split-size=5000000
 AS = as
 AR = ar
 AR_FLAGS = rc
-CC = gcc
+CC = D:/cygwin64/bin/gcc.exe
 CXX = D:/cygwin64/bin/g++.exe
 DLLTOOL = dlltool
 LD = D:/cygwin64/bin/gcc.exe

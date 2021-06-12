@@ -5,6 +5,8 @@
 #include "core/terminal.hpp"
 #include "libk/string.h"
 #include "thr/prcssthr.hpp"
+#include <krnl/signal.hpp>
+
 #pragma GCC optimize ("O0")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
@@ -24,7 +26,7 @@ void sendKeyToTerminal(uint8_t code)
 {
 	activeTerminal->receiveKey(code);
 
-	if (code == (uint8_t) '\n') {
+	if (code == (uint8_t) '\n' || code == (uint8_t) '\3') {
 		ThreadControlBlock* next_task;
 		ThreadControlBlock* this_task;
 
@@ -237,6 +239,10 @@ int readKeyboard(VgaText* terminal, char* buf, size_t count)
 		*buf++ = terminal->keybufferSent[0];
 
 		char key = terminal->keybufferSent[0];
+
+		if ((uint8_t) key == (uint8_t) '\3') {
+			KeRaiseSignal(currentTaskTCB->processRelatedTo->signals, SIGTERM);
+		}
 
 		//remove first char from that buffer
 		memmove(terminal->keybufferSent, terminal->keybufferSent + 1, strlen(terminal->keybufferSent));
