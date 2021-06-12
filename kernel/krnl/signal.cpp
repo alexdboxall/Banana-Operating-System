@@ -10,13 +10,13 @@
 
 //THESE RUN IN USER MODE!!!
 
-void __attribute__((__section__(".userkernel"))) KiDefaultSignalHandlerAbort(int sig)
+void __attribute__((__section__("userkernel"))) KiDefaultSignalHandlerAbort(int sig)
 {
 	char s[] = "KiDefaultSignalHandlerAbort";
 	KeSystemCallFromUsermode((size_t) SystemCallNumber::Panic, 0, 0, (size_t) s);
 }
 
-void __attribute__((__section__(".userkernel"))) KiDefaultSignalHandlerTerminate(int sig)
+void __attribute__((__section__("userkernel"))) KiDefaultSignalHandlerTerminate(int sig)
 {
 	char s[] = "KiDefaultSignalHandlerTerminate";
 	KeSystemCallFromUsermode((size_t) SystemCallNumber::Panic, 0, 0, (size_t) s);
@@ -93,13 +93,11 @@ void KeDeinitSignals(SigHandlerBlock* block)
 	free(block);
 }
 
-extern size_t START_USER_KERNEL;
-extern size_t END_USER_KERNEL;
 
 SigHandlerBlock* KeInitSignals()
 {
-	kprintf("START 0x%X\n", START_USER_KERNEL);
-	kprintf("END   0x%X\n", END_USER_KERNEL);
+	kprintf("START_USER_KERNEL 0x%X\n", &__start_userkernel);
+	kprintf("END_USER_KERNEL   0x%X\n", &__stop_userkernel);
 
 	SigHandlerBlock* obj = (SigHandlerBlock*) malloc(sizeof(SigHandlerBlock));
 	obj->pendingBase = 0;

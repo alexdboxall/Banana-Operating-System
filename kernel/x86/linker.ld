@@ -49,9 +49,7 @@ SECTIONS
 	
 	.userkernel BLOCK(4096) : ALIGN(4096)
 	{
-		START_USER_KERNEL = .;
 		*(.userkernel)
-		END_USER_KERNEL = .;
 	}
 
 	/* Read-write data (uninitialized) and stack */
