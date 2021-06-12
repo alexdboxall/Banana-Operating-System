@@ -93,7 +93,8 @@ void KeDeinitSignals(SigHandlerBlock* block)
 	free(block);
 }
 
-
+extern int __start_userkernel;
+extern int __stop_userkernel;
 SigHandlerBlock* KeInitSignals()
 {
 	kprintf("START_USER_KERNEL 0x%X\n", &__start_userkernel);
