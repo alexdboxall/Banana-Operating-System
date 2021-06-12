@@ -93,8 +93,14 @@ void KeDeinitSignals(SigHandlerBlock* block)
 	free(block);
 }
 
+extern size_t START_USER_KERNEL;
+extern size_t END_USER_KERNEL;
+
 SigHandlerBlock* KeInitSignals()
 {
+	kprintf("START 0x%X\n", START_USER_KERNEL);
+	kprintf("END   0x%X\n", END_USER_KERNEL);
+
 	SigHandlerBlock* obj = (SigHandlerBlock*) malloc(sizeof(SigHandlerBlock));
 	obj->pendingBase = 0;
 	obj->current = 0;

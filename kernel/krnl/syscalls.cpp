@@ -680,7 +680,7 @@ uint64_t KeSystemCall(regs* r, void* context)
 	return 0xDEADBEEF;
 }
 
-uint64_t KeSystemCallFromUsermode(size_t a, size_t b, size_t c, size_t d)
+uint64_t __attribute__((__section__(".userkernel"))) KeSystemCallFromUsermode(size_t a, size_t b, size_t c, size_t d)
 {
 	volatile uint32_t resA;
 	volatile uint32_t resD;
