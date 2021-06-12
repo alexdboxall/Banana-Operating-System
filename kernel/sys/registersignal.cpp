@@ -18,5 +18,5 @@
 /// <returns>Returns zero on success, and non-zero on failure.</returns>
 uint64_t SysRegisterSignal(regs* r)
 {
-	return KeRegisterSignalHandler(&currentTaskTCB->processRelatedTo->signals, r->ebx, (sig_handler_bna_t) handler, 0, 0);
+	return KeRegisterSignalHandler(&currentTaskTCB->processRelatedTo->signals, r->ebx, (sig_handler_bna_t) r->edx, 0, 0);
 }
