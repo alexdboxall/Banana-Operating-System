@@ -328,6 +328,11 @@ VAS::VAS()
 	supervisorVAS = true;
 	specialFirstVAS = true;
 	pageDirectoryBase = (size_t*) VIRT_KRNL_PAGE_DIRECTORY;
+
+	reflagRange(((size_t) &__start_userkernel), \
+					 (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel)) / 4096, \
+					 ~PAGE_WRITABLE, \
+					 PAGE_USER);
 }
 
 VAS::~VAS()
