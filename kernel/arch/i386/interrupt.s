@@ -316,7 +316,17 @@ syscall_common_stub:
     call KiCheckSignalZ
     cmp eax, 0
 	je .skipSignals
+
+    mov [esp + 8 * 4], 0xDEADBEEF
+    popa
+    jmp $
     
+    ;unsigned int gs, fs, es, ds;
+	;unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax;
+	;unsigned int int_no, err_code;
+	;unsigned int eip, cs, eflags, useresp, ss;
+	;unsigned int v86es, v86ds, v86fs, v86gs;
+
 .skipSignals:
 
 	popa
