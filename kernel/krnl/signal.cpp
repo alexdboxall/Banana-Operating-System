@@ -11,7 +11,7 @@
 //THESE RUN IN USER MODE!!!
 
 #pragma GCC push_options
-#pragma GCC optimize ("align-functions=4096")
+#pragma GCC optimize ("-falign-functions=4096")
 void KiDefaultSignalHandlerAbort(int sig)
 {
 	char s[] = "KiDefaultSignalHandlerAbort";
