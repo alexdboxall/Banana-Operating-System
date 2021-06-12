@@ -477,6 +477,7 @@ void VAS::reflagRange(size_t virtualAddr, int pages, int andFlags, int orFlags)
 		size_t* entry = getPageTableEntry(virtualAddr + i * 4096);
 		*entry &= andFlags;
 		*entry |= orFlags;
+		kprintf("reflag AND 0x%X, OR 0x%X\n", andFlags, orFlags);
 	}
 }
 
