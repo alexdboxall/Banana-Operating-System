@@ -78,27 +78,30 @@ sig_handler_bna_t KiDefaultSignalHandlers[] = {
 	KiDefaultSignalHandlerAbort,			//NULL
 };
 
-SigHandlerBlock KeInitSignals()
+void KeDeinitSignals(SigHandlerBlock* block)
 {
-	kprintf("KeInitSignals A\n");
-	SigHandlerBlock ret;
-	ret.pendingBase = 0;
-	ret.current = 0;
+	free(block);
+}
+
+SigHandlerBlock* KeInitSignals()
+{
+	SigHandlerBlock* ret = malloc(sizeof(SigHandlerBlock));
+	ret->pendingBase = 0;
+	ret->current = 0;
 
 	memset(ret.pending, 0, sizeof(ret.pending));
 	memset(ret.handler, 0, sizeof(ret.handler));
-	kprintf("KeInitSignals B\n");
 
 	return ret;
 }
 
-int KeRegisterSignalHandler(SigHandlerBlock* shb, int sig, sig_handler_bna_t hndlr, uint32_t mask, int flags)
+int KeRegisterSignalHandler(SigHandlerBlock* shb, int sig, sig_handler_bna_t handler, uint32_t mask, int flags)
 {
 	if (sig >= __MAX_SIGNALS__) {
 		return 1;
 	}
 
-	shb->handler[sig] = hndlr;
+	shb->handler[sig] = handler;
 	shb->masks[sig] = mask | (1 << sig);
 	shb->flags[sig] = 0;
 

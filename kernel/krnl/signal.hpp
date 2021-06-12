@@ -22,7 +22,8 @@ struct SigHandlerBlock
 	bool checkSignals;
 };
 
-SigHandlerBlock KeInitSignals();
+SigHandlerBlock* KeInitSignals();
+void KeDeinitSignals(SigHandlerBlock* block);
 int KeRegisterSignalHandler(SigHandlerBlock* shb, int sig, sig_handler_bna_t handler, uint32_t mask, int flags);
 int KeRaiseSignal(SigHandlerBlock* shb, int sig);
 size_t KeCheckSignal(SigHandlerBlock* shb);
