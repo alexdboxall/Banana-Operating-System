@@ -679,3 +679,24 @@ uint64_t KeSystemCall(regs* r, void* context)
 
 	return 0xDEADBEEF;
 }
+
+uint64_t KeSystemCallFromUsermode(size_t a, size_t b, size_t c, size_t d)
+{
+	volatile uint32_t resA;
+	volatile uint32_t resD;
+
+	asm volatile (
+		"int $96"  :			//assembly
+	"=d" (resD),				//output
+		"=a" (resA) :			//output
+		"a" (a),				//input
+		"b" (b),				//input
+		"c" (c),				//input
+		"d" (d) :				//input
+		"memory", "cc");		//clobbers
+
+	uint64_t res = (uint64_t) resD;
+	res <<= 32;
+	res |= (uint64_t) resA;
+	return res;
+}

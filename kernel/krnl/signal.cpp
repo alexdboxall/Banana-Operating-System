@@ -2,6 +2,7 @@
 #include <krnl/panic.hpp>
 #include <core/common.hpp>
 #include <thr/prcssthr.hpp>
+#include <sys/syscalls.hpp>
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -10,14 +11,18 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
+
+//THESE RUN IN USER MODE!!!
 void KiDefaultSignalHandlerAbort(int sig)
 {
-	KePanic("KiDefaultSignalHandlerAbort");
+	char s[] = "KiDefaultSignalHandlerAbort";
+	KeSystemCallFromUsermode(SystemCallNumber::Panic, 0, 0, (size_t) s);
 }
 
 void KiDefaultSignalHandlerTerminate(int sig)
 {
-	terminateTask(55);
+	char s[] = "KiDefaultSignalHandlerTerminate";
+	KeSystemCallFromUsermode(SystemCallNumber::Panic, 0, 0, (size_t) s);
 }
 
 void KiDefaultSignalHandlerIgnore(int sig)
@@ -27,18 +32,25 @@ void KiDefaultSignalHandlerIgnore(int sig)
 
 void KiDefaultSignalHandlerPause(int sig)
 {
-	KePanic("KiDefaultSignalHandlerPause");
+	char s[] = "KiDefaultSignalHandlerPause";
+	KeSystemCallFromUsermode(SystemCallNumber::Panic, 0, 0, (size_t) s);
 }
 
 void KiDefaultSignalHandlerResume(int sig)
 {
-	KePanic("KiDefaultSignalHandlerResume");
+	char s[] = "KiDefaultSignalHandlerResume";
+	KeSystemCallFromUsermode(SystemCallNumber::Panic, 0, 0, (size_t) s);
 }
 
 void KiSigKill(int sig)
 {
-	KePanic("KiSigKill");
+	char s[] = "KiSigKill";
+	KeSystemCallFromUsermode(SystemCallNumber::Panic, 0, 0, (size_t) s);
 }
+
+//END OF USER MODE!!!
+
+
 
 #define	SIGHUP	1		/* hangup */
 #define	SIGINT	2		/* interrupt */
@@ -135,26 +147,20 @@ extern "C" size_t KiCheckSignalZ()
 
 size_t KeCheckSignal(SigHandlerBlock* shb)
 {
-	kprintf("KeCheckSignal A\n");
-
 	if (!shb->checkSignals) {
 		return 0;
 	}
-	kprintf("KeCheckSignal B\n");
 
 	for (int i = 0; i < MAX_PENDING_SIGNALS; ++i) {
 		if (shb->pending[(shb->pendingBase + i) % MAX_PENDING_SIGNALS]) {
 			int sig = shb->pending[(shb->pendingBase + i) % MAX_PENDING_SIGNALS];
-			kprintf("KeCheckSignal C\n");
 
 			for (int j = 0; j < __MAX_SIGNALS__; ++j) {
 				if ((shb->current & (1 << j)) && (shb->masks[j] & (1 << sig))) {
 					//blocked for now
-					kprintf("KeCheckSignal D\n");
 					return 0;
 				}
 			}
-			kprintf("KeCheckSignal E\n");
 
 			//only increase base if can actually be handled
 			shb->pending[shb->pendingBase++] = 0;
@@ -168,30 +174,23 @@ size_t KeCheckSignal(SigHandlerBlock* shb)
 					break;
 				}
 			}
-			kprintf("KeCheckSignal F\n");
 
 			size_t handler = (size_t) shb->handler[sig];
 
 			if (sig == SIGKILL) {
-				kprintf("KeCheckSignal G\n");
-
 				return (size_t) KiSigKill;
 
 			} else if (handler == SIG_IGN) {
-				kprintf("KeCheckSignal H\n");
 				return 0;
 
 			} else if (handler == SIG_DFL) {
-				kprintf("KeCheckSignal I\n");
 				return (size_t) KiDefaultSignalHandlers[sig];
 			}
 
-			kprintf("KeCheckSignal J\n");
 			return handler;
 		}
 		++shb->pendingBase;
 	}
-	kprintf("KeCheckSignal K\n");
 
 	return 0;
 }

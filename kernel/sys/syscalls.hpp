@@ -7,6 +7,7 @@
 #ifdef __cplusplus
 struct regs;
 uint64_t KeSystemCall(regs* r, void* context);
+uint64_t KeSystemCallFromUsermode(size_t a, size_t b, size_t c, size_t d);
 #endif
 
 #define _APPSETTINGS_VALIDATION_V1			'N'
