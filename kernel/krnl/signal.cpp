@@ -9,6 +9,75 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
+void KiDefaultSignalHandlerAbort(int sig)
+{
+	KePanic("KiDefaultSignalHandlerAbort");
+}
+
+void KiDefaultSignalHandlerTerminate(int sig)
+{
+	KePanic("KiDefaultSignalHandlerTerminate");
+}
+
+void KiDefaultSignalHandlerIgnore(int sig)
+{
+
+}
+
+void KiDefaultSignalHandlerPause(int sig)
+{
+	KePanic("KiDefaultSignalHandlerPause");
+}
+
+void KiDefaultSignalHandlerResume(int sig)
+{
+	KePanic("KiDefaultSignalHandlerResume");
+}
+
+void KiSigKill(int sig)
+{
+	KePanic("KiSigKill");
+}
+
+#define	SIGHUP	1		/* hangup */
+#define	SIGINT	2		/* interrupt */
+#define	SIGQUIT	3		/* quit */
+#define	SIGILL	4		/* illegal instruction (not reset when caught) */
+#define	SIGTRAP	5		/* trace trap (not reset when caught) */
+#define	SIGIOT	6		/* IOT instruction */
+#define	SIGABRT 6		/* used by abort, replace SIGIOT in the future */
+#define	SIGEMT	7		/* EMT instruction */
+#define	SIGFPE	8		/* floating point exception */
+#define	SIGKILL	9		/* kill (cannot be caught or ignored) */
+#define	SIGBUS	10		/* bus error */
+#define	SIGSEGV	11		/* segmentation violation */
+#define	SIGSYS	12		/* bad argument to system call */
+#define	SIGPIPE	13		/* write on a pipe with no one to read it */
+#define	SIGALRM	14		/* alarm clock */
+#define	SIGTERM	15		/* software termination signal from kill */
+
+sig_handler_bna_t KiDefaultSignalHandlers[] = {
+	KiDefaultSignalHandlerAbort,			//NULL
+	KiDefaultSignalHandlerTerminate,		//SIGHUP
+	KiDefaultSignalHandlerTerminate,		//SIGINT
+	KiDefaultSignalHandlerAbort,			//SIGQUIT
+	KiDefaultSignalHandlerAbort,			//SIGILL
+	KiDefaultSignalHandlerAbort,			//SIGTRAP
+	KiDefaultSignalHandlerAbort,			//SIGIOT
+	KiDefaultSignalHandlerAbort,			//SIGABRT
+	KiDefaultSignalHandlerAbort,			//SIGEMT
+	KiDefaultSignalHandlerAbort,			//SIGFPE
+	KiSigKill,								//SIGKILL
+	KiDefaultSignalHandlerAbort,			//SIGBUS
+	KiDefaultSignalHandlerAbort,			//SIGSEGV
+	KiDefaultSignalHandlerAbort,			//SIGSYS
+	KiDefaultSignalHandlerTerminate,		//SIGPIPE
+	KiDefaultSignalHandlerTerminate,		//SIGALRM
+	KiDefaultSignalHandlerTerminate,		//SIGTERM
+	KiDefaultSignalHandlerAbort,			//NULL
+	KiDefaultSignalHandlerAbort,			//NULL
+};
+
 SigHandlerBlock KeInitSignals()
 {
 	SigHandlerBlock ret;
@@ -16,6 +85,7 @@ SigHandlerBlock KeInitSignals()
 	ret.current = 0;
 
 	memset(ret.pending, 0, sizeof(ret.pending));
+	memset(ret.handler, 0, sizeof(ret.handler));
 
 	return ret;
 }
@@ -77,7 +147,20 @@ size_t KeCheckSignal(SigHandlerBlock* shb)
 					break;
 				}
 			}
-			return (size_t) shb->handler[sig];
+
+			size_t handler = (size_t) shb->handler[sig];
+
+			if (sig == SIGKILL) {
+				return KiSigKill;
+			}
+			if (handler == SIG_IGN) {
+				return 0;
+			}
+			if (handler == SIG_DFT) {
+				return KiDefaultSignalHandlers[sig];
+			}
+
+			return handler;
 		}
 		++shb->pendingBase;
 	}

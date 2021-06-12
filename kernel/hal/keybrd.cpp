@@ -241,7 +241,7 @@ int readKeyboard(VgaText* terminal, char* buf, size_t count)
 		char key = terminal->keybufferSent[0];
 
 		if ((uint8_t) key == (uint8_t) '\3') {
-			KeRaiseSignal(&currentTaskTCB->processRelatedTo->signals, SIGTERM);
+			KeRaiseSignal(&currentTaskTCB->processRelatedTo->signals, SIGINT);
 		}
 
 		//remove first char from that buffer

@@ -273,7 +273,7 @@ int sigqueue (pid_t, int, const union sigval);
 #define SIGUSR2	19
 #define NSIG    20
 #elif !defined(SIGTRAP)
-#include "D:/Users/Alex/Desktop/Banana/krnl/signaldef.h"
+#include "D:/Users/Alex/Desktop/Banana/kernel/krnl/signaldef.h"
 
 #if defined(__rtems__)
 #define	SIGURG	16	/* urgent condition on IO channel */

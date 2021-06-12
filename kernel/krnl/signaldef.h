@@ -21,7 +21,12 @@ extern "C" {
 
 #define __MAX_SIGNALS__ 17
 
-	typedef void (*sig_handler_bna_t)(int sig, void* hwctxt);
+#ifndef SIG_DFL
+#define SIG_DFL 0		// MUST BE ZERO
+#define SIG_IGN 1		/* Ignore action */
+#endif
+
+	typedef void (*sig_handler_bna_t)(int sig);
 
 #ifdef __cplusplus
 }

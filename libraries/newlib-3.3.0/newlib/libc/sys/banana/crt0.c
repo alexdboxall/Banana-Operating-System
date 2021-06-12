@@ -5,7 +5,7 @@
 
 extern void exit(int code);
 extern int main ();
-extern void _init_signal();
+void _init_signal();
 extern void _environ_setup();
 
 #include <stdint.h>
@@ -28,6 +28,14 @@ void _start() {
 
     int ex = main(argc, argv);
     exit(ex);
+}
+
+#include <signal.h>
+void _init_signal()
+{
+	for (int i = 0; i < __MAX_SIGNALS__; ++i) {
+		signal(i, SIG_DFL);
+	}
 }
 
 #pragma GCC pop_options

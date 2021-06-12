@@ -285,6 +285,22 @@ int gettimeofday(struct timeval* __restrict p, void* __restrict z)
 
 #include <dirent.h>
 
+int kill(pid_t pid, int sig)
+{
+	errno = EPERM;
+	return -1;
+}
+
+#include <signal.h>
+
+void (*signal(int sig, void (*func)(int)))(int) {
+	int fail = SystemCall(RegisterSignal, sig, 0, (size_t) func);
+	if (fail) {
+		return SIG_ERR;
+	}
+	return func;
+}
+
 int _readdir(unsigned int fd, struct dirent* dirp,
 			 unsigned int count)
 {
