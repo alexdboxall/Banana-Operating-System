@@ -221,19 +221,6 @@ commonThreadSwitch:
 
 	call changeTSS
 
-extern KiCheckSignalZ
-
-;TODO: make this much more efficient
-	call KiCheckSignalZ
-	cmp eax, 0
-	je .skipHandlers
-
-	push dword 1		;signal number
-	call eax
-
-	;call KiEndHandlerZ
-	
-.skipHandlers:
 	pop ebp
 	pop edi
 	pop esi

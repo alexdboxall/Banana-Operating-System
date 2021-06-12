@@ -16,13 +16,13 @@
 void KiDefaultSignalHandlerAbort(int sig)
 {
 	char s[] = "KiDefaultSignalHandlerAbort";
-	KeSystemCallFromUsermode(SystemCallNumber::Panic, 0, 0, (size_t) s);
+	KeSystemCallFromUsermode((size_t) SystemCallNumber::Panic, 0, 0, (size_t) s);
 }
 
 void KiDefaultSignalHandlerTerminate(int sig)
 {
 	char s[] = "KiDefaultSignalHandlerTerminate";
-	KeSystemCallFromUsermode(SystemCallNumber::Panic, 0, 0, (size_t) s);
+	KeSystemCallFromUsermode((size_t) SystemCallNumber::Panic, 0, 0, (size_t) s);
 }
 
 void KiDefaultSignalHandlerIgnore(int sig)
@@ -33,19 +33,19 @@ void KiDefaultSignalHandlerIgnore(int sig)
 void KiDefaultSignalHandlerPause(int sig)
 {
 	char s[] = "KiDefaultSignalHandlerPause";
-	KeSystemCallFromUsermode(SystemCallNumber::Panic, 0, 0, (size_t) s);
+	KeSystemCallFromUsermode((size_t) SystemCallNumber::Panic, 0, 0, (size_t) s);
 }
 
 void KiDefaultSignalHandlerResume(int sig)
 {
 	char s[] = "KiDefaultSignalHandlerResume";
-	KeSystemCallFromUsermode(SystemCallNumber::Panic, 0, 0, (size_t) s);
+	KeSystemCallFromUsermode((size_t) SystemCallNumber::Panic, 0, 0, (size_t) s);
 }
 
 void KiSigKill(int sig)
 {
 	char s[] = "KiSigKill";
-	KeSystemCallFromUsermode(SystemCallNumber::Panic, 0, 0, (size_t) s);
+	KeSystemCallFromUsermode((size_t) SystemCallNumber::Panic, 0, 0, (size_t) s);
 }
 
 //END OF USER MODE!!!
