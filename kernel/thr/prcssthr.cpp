@@ -176,7 +176,7 @@ Process::Process(const char* _filepath, Process* _parent, char** _argv)
 	vas = new VAS(false);
 	argc = 0;
 	parent = _parent;
-	signals = KeInitSignals();
+	//signals = KeInitSignals();
 
 	if (parent) {
 		terminal = parent->terminal;
@@ -204,7 +204,7 @@ Process::Process(bool _kernel, const char* _name, Process* _parent, char** _argv
 	vas = new VAS(_kernel);
 	argc = 0;
 	parent = _parent;
-	signals = KeInitSignals();
+	//signals = KeInitSignals();
 
 	if (parent) {
 		terminal = parent->terminal;
