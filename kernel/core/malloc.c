@@ -1580,7 +1580,6 @@ static pthread_mutex_t mALLOC_MUTEx = PTHREAD_MUTEX_INITIALIZER;
 #endif
 
 Void_t* public_mALLOc(size_t bytes) {
-    kprintf("public_mALLOc 0x%X\n", bytes);
   Void_t* m;
   if (MALLOC_PREACTION != 0) {
     return 0;
@@ -3356,6 +3355,7 @@ Void_t* mALLOc(size_t bytes)
   Void_t* mALLOc(bytes) size_t bytes;
 #endif
 {
+      kprintf("mALLOc 0x%X\n", bytes);
   mstate av = get_malloc_state();
 
   INTERNAL_SIZE_T nb;               /* normalized request size */
