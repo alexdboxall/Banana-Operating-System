@@ -323,6 +323,9 @@ void VAS::freeAllocatedPages(size_t virt) {
 
 VAS::VAS()
 {
+	extern int __start_userkernel;
+	extern int __stop_userkernel;
+
 	firstVAS = this;
 
 	supervisorVAS = true;
