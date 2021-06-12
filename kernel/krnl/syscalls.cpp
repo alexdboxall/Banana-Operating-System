@@ -239,19 +239,28 @@ uint64_t SysOpenDir(regs* r)
 		return -1;
 	}
 
+	kprintf("ARGS: A 0x%X, B 0x%X, C 0x%X, D 0x%X\n", r->eax, r->ebx, r->ecx, r->edx);
+
 	kprintf("OPENING DIR: %s\n", (const char*) r->edx);
 
 	Directory* f = new Directory((const char*) r->edx, currentTaskTCB->processRelatedTo);
+	kprintf("A.\n");
 	if (!f) {
+		kprintf("B!\n");
 		return -1;
 	}
+	kprintf("C.\n");
 
 	FileStatus s = f->open();
+	kprintf("D.\n");
 	if (s != FileStatus::Success) {
+		kprintf("E!\n");
 		return -1;
 	}
+	kprintf("F.\n");
 
 	*((uint64_t*) r->ebx) = ((UnixFile*) f)->getFileDescriptor();
+	kprintf("G.\n");
 
 	return 0;
 }
