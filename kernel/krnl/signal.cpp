@@ -85,12 +85,12 @@ void KeDeinitSignals(SigHandlerBlock* block)
 
 SigHandlerBlock* KeInitSignals()
 {
-	SigHandlerBlock* ret = malloc(sizeof(SigHandlerBlock));
-	ret->pendingBase = 0;
-	ret->current = 0;
+	SigHandlerBlock* obj = (SigHandlerBlock*) malloc(sizeof(SigHandlerBlock));
+	obj->pendingBase = 0;
+	obj->current = 0;
 
-	memset(ret.pending, 0, sizeof(ret.pending));
-	memset(ret.handler, 0, sizeof(ret.handler));
+	memset(obj->pending, 0, sizeof(obj->pending));
+	memset(obj->handler, 0, sizeof(obj->handler));
 
 	return ret;
 }
