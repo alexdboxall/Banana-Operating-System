@@ -698,5 +698,13 @@ extern "C" void mapVASFirstTime()
 		size_t* e = vas->getPageTableEntry(VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL);
 	}
 
+
+	extern int __start_userkernel;
+	extern int __stop_userkernel;
+	vas->reflagRange(&__start_userkernel, \
+					 (&__stop_userkernel - &__start_userkernel) / 4096, \
+					 ~PAGE_WRITABLE, \
+					 PAGE_USER);
+
 	CPU::writeCR3(CPU::readCR3());
 }
