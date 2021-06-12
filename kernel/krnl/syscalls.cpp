@@ -250,6 +250,7 @@ uint64_t SysOpenDir(regs* r)
 		return -1;
 	}
 	kprintf("C.\n");
+	kprintf("R->EDX = %s\n", r->edx);
 
 	FileStatus s = f->open();
 	kprintf("D.\n");
