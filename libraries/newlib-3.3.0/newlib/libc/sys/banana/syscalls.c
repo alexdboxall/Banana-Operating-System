@@ -120,10 +120,6 @@ int isatty(int file)
 	return 0;*/
 }
 
-int kill(int pid, int sig)
-{
-	return 1;
-}
 
 int link(char* old, char* new)
 {

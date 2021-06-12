@@ -36,6 +36,7 @@ uint64_t SysEject(regs* r);
 uint64_t SysWsbe(regs* r);
 uint64_t SysGetRAMData(regs* r);
 uint64_t SysGetVGAPtr(regs* r);
+uint64_t SysRegisterSignal(regs* r);
 
 int string_ends_with(const char* str, const char* suffix)
 {
@@ -649,6 +650,7 @@ uint64_t(*systemCallHandlers[])(regs* r) = {
 	SysWsbe,
 	SysGetRAMData,
 	SysGetVGAPtr,
+	SysRegisterSignal,
 };
 
 uint64_t KeSystemCall(regs* r, void* context)

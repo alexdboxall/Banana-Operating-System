@@ -94,6 +94,8 @@ SystemCallNumber
 	WSBE,
 	GetRAMData,
 	GetVGAPtr,
+	RegisterSignal,
+
 };
 
 
