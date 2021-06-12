@@ -10,16 +10,13 @@
 
 //THESE RUN IN USER MODE!!!
 
-#pragma GCC push_options
-#pragma GCC optimize ("-falign-functions=4096")
-void KiDefaultSignalHandlerAbort(int sig)
+void __attribute__((__section__(".userkernel"))) KiDefaultSignalHandlerAbort(int sig)
 {
 	char s[] = "KiDefaultSignalHandlerAbort";
 	KeSystemCallFromUsermode((size_t) SystemCallNumber::Panic, 0, 0, (size_t) s);
 }
-#pragma GCC pop_options
 
-void KiDefaultSignalHandlerTerminate(int sig)
+void __attribute__((__section__(".userkernel"))) KiDefaultSignalHandlerTerminate(int sig)
 {
 	char s[] = "KiDefaultSignalHandlerTerminate";
 	KeSystemCallFromUsermode((size_t) SystemCallNumber::Panic, 0, 0, (size_t) s);
