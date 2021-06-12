@@ -13,6 +13,9 @@
 
 
 //THESE RUN IN USER MODE!!!
+
+#pragma GCC push_options
+#pragma GCC optimize ("align-functions=4096")
 void KiDefaultSignalHandlerAbort(int sig)
 {
 	char s[] = "KiDefaultSignalHandlerAbort";
@@ -47,6 +50,7 @@ void KiSigKill(int sig)
 	char s[] = "KiSigKill";
 	KeSystemCallFromUsermode((size_t) SystemCallNumber::Panic, 0, 0, (size_t) s);
 }
+#pragma GCC pop_options
 
 //END OF USER MODE!!!
 
