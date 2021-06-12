@@ -317,7 +317,7 @@ syscall_common_stub:
     cmp eax, 0
 	je .skipSignals
 
-    mov [esp + 8 * 4], 0xDEADBEEF
+    mov [esp + 8 * 4], dword 0xDEADBEEF
     popa
     jmp $
     
