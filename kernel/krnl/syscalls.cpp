@@ -239,6 +239,8 @@ uint64_t SysOpenDir(regs* r)
 		return -1;
 	}
 
+	kprintf("OPENING DIR: %s\n", (const char*) r->edx);
+
 	Directory* f = new Directory((const char*) r->edx, currentTaskTCB->processRelatedTo);
 	if (!f) {
 		return -1;
