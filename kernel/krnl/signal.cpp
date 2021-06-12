@@ -127,6 +127,11 @@ int KeRaiseSignal(SigHandlerBlock* shb, int sig)
 	return 1;
 }
 
+extern "C" size_t KiCheckSignalZ()
+{
+	return KeCheckSignal(currentTaskTCB->processRelatedTo->signals);
+}
+
 size_t KeCheckSignal(SigHandlerBlock* shb)
 {
 	kprintf("KeCheckSignal A\n");
