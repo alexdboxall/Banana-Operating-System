@@ -99,6 +99,8 @@ SigHandlerBlock* KeInitSignals()
 {
 	kprintf("START_USER_KERNEL 0x%X\n", &__start_userkernel);
 	kprintf("END_USER_KERNEL   0x%X\n", &__stop_userkernel);
+	kprintf("START_USER_KERNEL 0x%X\n", __start_userkernel);
+	kprintf("END_USER_KERNEL   0x%X\n", __stop_userkernel);
 
 	SigHandlerBlock* obj = (SigHandlerBlock*) malloc(sizeof(SigHandlerBlock));
 	obj->pendingBase = 0;

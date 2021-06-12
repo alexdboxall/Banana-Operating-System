@@ -47,9 +47,9 @@ SECTIONS
 		*(.eh_frame)
 	}
 	
-	.userkernel BLOCK(4096) : ALIGN(4096)
+	userkernel BLOCK(4096) : ALIGN(4096)
 	{
-		*(.userkernel)
+		*(userkernel)
 	}
 
 	/* Read-write data (uninitialized) and stack */
