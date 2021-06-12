@@ -10,6 +10,8 @@
 
 //THESE RUN IN USER MODE!!!
 
+int __attribute__((__section__("align_previous"))) DO_NOT_DELETE;
+
 void __attribute__((__section__("userkernel"))) KiDefaultSignalHandlerAbort(int sig)
 {
 	char s[] = "KiDefaultSignalHandlerAbort";

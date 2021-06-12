@@ -51,6 +51,11 @@ SECTIONS
 	{
 		*(userkernel)
 	}
+	
+	align_previous BLOCK(4096) : ALIGN(4096)
+	{
+		*(align_previous)
+	}
 
 	/* Read-write data (uninitialized) and stack */
 	.bss BLOCK(1) : ALIGN(1)
