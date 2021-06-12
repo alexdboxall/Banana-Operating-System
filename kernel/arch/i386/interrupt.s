@@ -317,16 +317,17 @@ syscall_common_stub:
     cmp eax, 0
 	je .skipSignals
 
-    mov [esp + 4 * 4], dword 0xDEADBEEF     ;EBX
-    mov [esp + 5 * 4], dword 0xCAFECAFE     ;?
+    mov [esp + 10 * 4], eax
     popa
-    cli
-    hlt
-    jmp $
+    add esp, 8
+    iret
     
     ;unsigned int gs, fs, es, ds;
+    ;             0    1    2    3    4    5    6    7
 	;unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax;
+    ;             8       9
 	;unsigned int int_no, err_code;
+    ;             10
 	;unsigned int eip, cs, eflags, useresp, ss;
 	;unsigned int v86es, v86ds, v86fs, v86gs;
 
