@@ -1,5 +1,7 @@
 #include <thr/prcssthr.hpp>
 #include <krnl/signal.hpp>
+#include <sys/syscalls.hpp>
+#include <hal/intctrl.hpp>
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
