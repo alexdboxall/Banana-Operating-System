@@ -80,60 +80,76 @@ sig_handler_bna_t KiDefaultSignalHandlers[] = {
 
 SigHandlerBlock KeInitSignals()
 {
+	kprintf("KeInitSignals A\n");
 	SigHandlerBlock ret;
 	ret.pendingBase = 0;
 	ret.current = 0;
 
 	memset(ret.pending, 0, sizeof(ret.pending));
 	memset(ret.handler, 0, sizeof(ret.handler));
+	kprintf("KeInitSignals B\n");
 
 	return ret;
 }
 
 int KeRegisterSignalHandler(SigHandlerBlock* shb, int sig, sig_handler_bna_t handler, uint32_t mask, int flags)
 {
+	kprintf("KeRegisterSignalHandler A\n");
+
 	if (sig >= __MAX_SIGNALS__) {
 		return 1;
 	}
+	kprintf("KeRegisterSignalHandler B\n");
 
 	shb->handler[sig] = handler;
 	shb->masks[sig] = mask | (1 << sig);
 	shb->flags[sig] = 0;
+	kprintf("KeRegisterSignalHandler C\n");
 
 	return 0;
 }
 
 int KeRaiseSignal(SigHandlerBlock* shb, int sig)
 {
+	kprintf("KeRaiseSignal A\n");
+
 	shb->checkSignals = true;
 	int base = shb->pendingBase;
 
 	for (int i = 0; i < MAX_PENDING_SIGNALS; ++i) {
 		if (shb->pending[(i + base) % MAX_PENDING_SIGNALS] == 0) {
 			shb->pending[(i + base) % MAX_PENDING_SIGNALS] = sig;
+			kprintf("KeRaiseSignal B\n");
 			return 0;
 		}
 	}
+	kprintf("KeRaiseSignal C\n");
 
 	return 1;
 }
 
 size_t KeCheckSignal(SigHandlerBlock* shb)
 {
+	kprintf("KeCheckSignal A\n");
+
 	if (!shb->checkSignals) {
 		return 0;
 	}
+	kprintf("KeCheckSignal B\n");
 
 	for (int i = 0; i < MAX_PENDING_SIGNALS; ++i) {
 		if (shb->pending[(shb->pendingBase + i) % MAX_PENDING_SIGNALS]) {
 			int sig = shb->pending[(shb->pendingBase + i) % MAX_PENDING_SIGNALS];
+			kprintf("KeCheckSignal C\n");
 
 			for (int j = 0; j < __MAX_SIGNALS__; ++j) {
 				if ((shb->current & (1 << j)) && (shb->masks[j] & (1 << sig))) {
 					//blocked for now
+					kprintf("KeCheckSignal D\n");
 					return 0;
 				}
 			}
+			kprintf("KeCheckSignal E\n");
 
 			//only increase base if can actually be handled
 			shb->pending[shb->pendingBase++] = 0;
@@ -147,23 +163,30 @@ size_t KeCheckSignal(SigHandlerBlock* shb)
 					break;
 				}
 			}
+			kprintf("KeCheckSignal F\n");
 
 			size_t handler = (size_t) shb->handler[sig];
 
 			if (sig == SIGKILL) {
+				kprintf("KeCheckSignal G\n");
+
 				return (size_t) KiSigKill;
 
 			} else if (handler == SIG_IGN) {
-				return 0;
+				kprintf("KeCheckSignal H\n");
+				eturn 0;
 
 			} else if (handler == SIG_DFL) {
+				kprintf("KeCheckSignal I\n");
 				return (size_t) KiDefaultSignalHandlers[sig];
 			}
 
+			kprintf("KeCheckSignal J\n");
 			return handler;
 		}
 		++shb->pendingBase;
 	}
+	kprintf("KeCheckSignal K\n");
 
 	return 0;
 }
