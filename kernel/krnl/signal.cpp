@@ -92,7 +92,7 @@ SigHandlerBlock* KeInitSignals()
 	memset(obj->pending, 0, sizeof(obj->pending));
 	memset(obj->handler, 0, sizeof(obj->handler));
 
-	return ret;
+	return obj;
 }
 
 int KeRegisterSignalHandler(SigHandlerBlock* shb, int sig, sig_handler_bna_t handler, uint32_t mask, int flags)
