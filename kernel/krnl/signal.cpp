@@ -151,13 +151,13 @@ size_t KeCheckSignal(SigHandlerBlock* shb)
 			size_t handler = (size_t) shb->handler[sig];
 
 			if (sig == SIGKILL) {
-				return KiSigKill;
-			}
-			if (handler == SIG_IGN) {
+				return (size_t) KiSigKill;
+
+			} else if (handler == SIG_IGN) {
 				return 0;
-			}
-			if (handler == SIG_DFT) {
-				return KiDefaultSignalHandlers[sig];
+
+			} else if (handler == SIG_DFL) {
+				return (size_t) KiDefaultSignalHandlers[sig];
 			}
 
 			return handler;
