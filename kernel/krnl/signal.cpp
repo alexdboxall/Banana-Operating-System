@@ -92,13 +92,13 @@ SigHandlerBlock KeInitSignals()
 	return ret;
 }
 
-int KeRegisterSignalHandler(SigHandlerBlock* shb, int sig, sig_handler_bna_t handler, uint32_t mask, int flags)
+int KeRegisterSignalHandler(SigHandlerBlock* shb, int sig, sig_handler_bna_t hndlr, uint32_t mask, int flags)
 {
 	if (sig >= __MAX_SIGNALS__) {
 		return 1;
 	}
 
-	//shb->handler[sig] = handler;
+	shb->handler[sig] = hndlr;
 	shb->masks[sig] = mask | (1 << sig);
 	shb->flags[sig] = 0;
 
