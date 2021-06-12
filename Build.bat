@@ -15,7 +15,7 @@ git add *.*
 git add LICENSE
 git add COPYRIGHT
 git add README.md
-git add kernel
+git add kernel -f
 git add firmware
 git add bochs
 git commit -a --allow-empty-message -m ""
