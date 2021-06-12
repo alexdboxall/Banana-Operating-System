@@ -17,7 +17,7 @@ void KiDefaultSignalHandlerAbort(int sig)
 
 void KiDefaultSignalHandlerTerminate(int sig)
 {
-	KePanic("KiDefaultSignalHandlerTerminate");
+	terminateTask(55);
 }
 
 void KiDefaultSignalHandlerIgnore(int sig)
