@@ -241,6 +241,7 @@ int readKeyboard(VgaText* terminal, char* buf, size_t count)
 		char key = terminal->keybufferSent[0];
 
 		if ((uint8_t) key == (uint8_t) '\3') {
+			kprintf("sending SIGINT\n");
 			KeRaiseSignal(currentTaskTCB->processRelatedTo->signals, SIGINT);
 		}
 
@@ -250,7 +251,7 @@ int readKeyboard(VgaText* terminal, char* buf, size_t count)
 		--count;
 		++charsRead;
 
-		if (key == '\n') {
+		if (key == '\n' || key == '\3') {
 			return charsRead;
 		}
 	}
