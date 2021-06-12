@@ -97,15 +97,16 @@ int KeRegisterSignalHandler(SigHandlerBlock* shb, int sig, sig_handler_bna_t han
 	kprintf("KeRegisterSignalHandler A\n");
 
 	if (sig >= __MAX_SIGNALS__) {
+		kprintf("BAD SIG NUM\n");
 		return 1;
 	}
 
 	kprintf("A 0x%X\n", &shb->handler[sig]);
-	kprintf("A 0x%X\n", &shb->masks[sig]);
-	kprintf("A 0x%X\n", &shb->flags[sig]);
-	/*shb->handler[sig] = handler;
-	* 
-	shb->masks[sig] = mask | (1 << sig);
+	kprintf("B 0x%X\n", &shb->masks[sig]);
+	kprintf("C 0x%X\n", &shb->flags[sig]);
+	shb->handler[sig] = handler;
+
+	/*shb->masks[sig] = mask | (1 << sig);
 	shb->flags[sig] = 0;*/
 	kprintf("KeRegisterSignalHandler C\n");
 
