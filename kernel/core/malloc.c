@@ -1580,6 +1580,7 @@ static pthread_mutex_t mALLOC_MUTEx = PTHREAD_MUTEX_INITIALIZER;
 #endif
 
 Void_t* public_mALLOc(size_t bytes) {
+    kprintf("public_mALLOc 0x%X\n", bytes);
   Void_t* m;
   if (MALLOC_PREACTION != 0) {
     return 0;
