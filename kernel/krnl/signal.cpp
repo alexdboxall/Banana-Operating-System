@@ -1,6 +1,7 @@
 #include <krnl/signal.hpp>
 #include <krnl/panic.hpp>
 #include <core/common.hpp>
+#include <thr/prcssthr.hpp>
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
