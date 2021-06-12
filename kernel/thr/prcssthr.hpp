@@ -113,7 +113,7 @@ struct Process
 
 	bool gotCtrlC = false;
 
-	//SigHandlerBlock signals;
+	SigHandlerBlock signals;
 };
 
 void userModeEntryPoint(void* ignored);
