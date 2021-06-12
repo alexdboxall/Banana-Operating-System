@@ -701,7 +701,7 @@ extern "C" void mapVASFirstTime()
 		size_t* e = vas->getPageTableEntry(VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL);
 	}
 
-	kprintf("reflagging range: 0x%X, 0x%X pages = %d\n", ((size_t) &__start_userkernel), ((size_t) &__stop_userkernel), (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel)) / 4096);
+	kprintf("reflagging range: 0x%X, 0x%X pages = %d\n", ((size_t) &__start_userkernel), ((size_t) &__stop_userkernel), (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096);
 	
 	vas->reflagRange(((size_t)&__start_userkernel), \
 					 (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, \
