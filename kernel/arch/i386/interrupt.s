@@ -319,6 +319,8 @@ syscall_common_stub:
 
     mov [esp + 8 * 4], dword 0xDEADBEEF
     popa
+    cli
+    hlt
     jmp $
     
     ;unsigned int gs, fs, es, ds;
