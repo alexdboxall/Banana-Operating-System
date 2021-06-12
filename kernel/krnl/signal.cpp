@@ -99,7 +99,7 @@ int KeRegisterSignalHandler(SigHandlerBlock* shb, int sig, sig_handler_bna_t han
 	if (sig >= __MAX_SIGNALS__) {
 		return 1;
 	}
-	kprintf("KeRegisterSignalHandler B\n");
+	kprintf("SIG: %d, HANDLER = 0x%X\n", sig, handler);
 
 	shb->handler[sig] = handler;
 	shb->masks[sig] = mask | (1 << sig);
@@ -111,6 +111,7 @@ int KeRegisterSignalHandler(SigHandlerBlock* shb, int sig, sig_handler_bna_t han
 
 int KeRaiseSignal(SigHandlerBlock* shb, int sig)
 {
+	return 1;
 	kprintf("KeRaiseSignal A\n");
 
 	shb->checkSignals = true;
@@ -130,6 +131,7 @@ int KeRaiseSignal(SigHandlerBlock* shb, int sig)
 
 size_t KeCheckSignal(SigHandlerBlock* shb)
 {
+	return 0;
 	kprintf("KeCheckSignal A\n");
 
 	if (!shb->checkSignals) {
