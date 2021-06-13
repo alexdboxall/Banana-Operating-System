@@ -231,6 +231,24 @@ int ATA::read(uint64_t lba, int count, void* buffer)
 		return (int) DiskError::Failure;
 	}
 
+	++ataSectorsRead;
+
+	uint16_t* p = (uint16_t*) VGA_TEXT_MODE_ADDRESS;
+	p += 63;
+
+	*p++ = combineCharAndColour((ataSectorsRead / 10000) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
+	*p++ = combineCharAndColour((ataSectorsRead / 1000) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
+	*p++ = combineCharAndColour((ataSectorsRead / 100) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
+	*p++ = combineCharAndColour((ataSectorsRead / 10) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
+	*p++ = combineCharAndColour((ataSectorsRead / 1) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
+	p++;
+	*p++ = combineCharAndColour((ataSectorsWritten / 10000) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
+	*p++ = combineCharAndColour((ataSectorsWritten / 1000) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
+	*p++ = combineCharAndColour((ataSectorsWritten / 100) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
+	*p++ = combineCharAndColour((ataSectorsWritten / 10) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
+	*p++ = combineCharAndColour((ataSectorsWritten / 1) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
+
+
 	return (int) DiskError::Success;
 }
 
@@ -251,6 +269,23 @@ int ATA::write(uint64_t lba, int count, void* buffer)
 	if (err) {
 		return (int) DiskError::Failure;
 	}
+
+	++ataSectorsWritten;
+
+	uint16_t* p = (uint16_t*) VGA_TEXT_MODE_ADDRESS;
+	p += 63;
+
+	*p++ = combineCharAndColour((ataSectorsRead / 10000) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
+	*p++ = combineCharAndColour((ataSectorsRead / 1000) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
+	*p++ = combineCharAndColour((ataSectorsRead / 100) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
+	*p++ = combineCharAndColour((ataSectorsRead / 10) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
+	*p++ = combineCharAndColour((ataSectorsRead / 1) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
+	p++;
+	*p++ = combineCharAndColour((ataSectorsWritten / 10000) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
+	*p++ = combineCharAndColour((ataSectorsWritten / 1000) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
+	*p++ = combineCharAndColour((ataSectorsWritten / 100) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
+	*p++ = combineCharAndColour((ataSectorsWritten / 10) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
+	*p++ = combineCharAndColour((ataSectorsWritten / 1) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
 
 	return (int) DiskError::Success;
 }
