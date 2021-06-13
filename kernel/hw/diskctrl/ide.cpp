@@ -13,8 +13,6 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-#ifndef JUMPER32
-
 IDE::IDE(): HardDiskController("Standard IDE Controller")
 {
 
@@ -472,5 +470,3 @@ void IDE::detect()
 		}
 	}
 }
-
-#endif

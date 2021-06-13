@@ -673,14 +673,14 @@ void drawBootScreen()
     term->setDefaultFgColour(VgaColour::Black);
 }
 
-void drawBasicWindow(int wx, int wy, int ww, int wh, const char* wtitle)
+void drawBasicWindowX(int wx, int wy, int ww, int wh, const char* wtitle, bool grey)
 {
     wy++;
 
     for (int y = 0; y < wh; ++y) {
         term->setCursor(wx, wy + y);
         for (int x = 0; x < ww; ++x) {
-            term->putchar(' ', VgaColour::White, VgaColour::White);
+            term->putchar(' ', grey ? VgaColour::LightGrey : VgaColour::White, grey ? VgaColour::LightGrey : VgaColour::White);
         }
     }
 
@@ -700,7 +700,7 @@ void drawBasicWindow(int wx, int wy, int ww, int wh, const char* wtitle)
 
         if (x != wy + wh - 1) {
             term->setCursor(wx, 1 + x);
-            term->putchar('\xDD', VgaColour::Black, VgaColour::White);
+            term->putchar('\xDD', VgaColour::Black, grey ? VgaColour::LightGrey : VgaColour::White);
         }
     }
 
@@ -709,6 +709,11 @@ void drawBasicWindow(int wx, int wy, int ww, int wh, const char* wtitle)
     for (int j = 0; j < strlen(wtitle); ++j) {
         term->putchar(wtitle[j], VgaColour::White, VgaColour::Blue);
     }
+}
+
+void drawBasicWindow(int wx, int wy, int ww, int wh, const char* wtitle)
+{
+    drawBasicWindowX(wx, wy, ww, wh, wtitle, false);
 }
 
 #include "hal/keybrd.hpp"
@@ -761,6 +766,127 @@ void bootInstallTasks(int done)
     term->setCursor(26, 15);
     term->puts(done == 5 ? "\x10 " : "  ");
     term->puts("Finishing touches", done >= 5 ? VgaColour::Black : VgaColour::LightGrey, VgaColour::White);
+}
+
+uint64_t ror(uint64_t x, int L, int N)
+{
+    uint64_t lsbs = x & ((1 << L) - 1);
+    return (x >> L) | (lsbs << (N - L));
+}
+
+uint64_t swapBits(uint64_t n, uint64_t p1, uint64_t p2)
+{
+    return (((n >> p1) & 1ULL) == ((n >> p2) & 1ULL) ? n : ((n ^ (1ULL << p2)) ^ (1ULL << p1)));
+}
+
+uint32_t getChecksum(uint32_t num)
+{
+    uint16_t checksumA = 'NI';
+    uint16_t checksumB = 'ny';
+    uint16_t checksumC = 'ag';
+    uint16_t checksumD = (num >> 16) ^ ((num & 0xffff) * 1009);
+
+    while (num) {
+        checksumA *= (756 / num) ^ (278354 + ror(num, 5, 29));
+        checksumB -= (234 / num) ^ (645893 + ror(num, 3, 31));
+        checksumC += (checksumA ^ checksumB) & 1234;
+        checksumC += num;
+        num >>= 1;
+    }
+
+    return (checksumA ^ checksumB ^ checksumC ^ checksumD) & 0x7FFF;
+}
+
+
+
+char lookupA[] = "QWRTYUPSDFGHKZCB";
+char lookupB[] = "HQYUTSDRBPFGWKCZ";
+char lookupC[] = "GSBPDTCHWURZQYMN";
+
+bool checkKey(char* buffer)
+{
+    //AB-123-456-789-C
+    //0123456789012345
+    //0000000000111111
+
+    int alpha1 = -1;
+    int alpha2 = -1;
+    int alpha3 = -1;
+    for (int i = 0; i < 16; ++i) {
+        if (lookupA[i] == buffer[0]) {
+            alpha1 = i;
+        }
+        if (lookupB[i] == buffer[1]) {
+            alpha2 = i;
+        }
+        if (lookupC[i] == buffer[15]) {
+            alpha3 = i;
+        }
+    }
+
+    if (alpha1 == -1 || alpha2 == -1 || alpha3 == -1) return false;
+
+    uint64_t num1 = (buffer[3] - '0') * 100 + (buffer[4] - '0') * 10 + (buffer[5] - '0') * 1;
+    uint64_t num2 = (buffer[7] - '0') * 100 + (buffer[8] - '0') * 10 + (buffer[9] - '0') * 1;
+    uint64_t num3 = (buffer[11] - '0') * 100 + (buffer[12] - '0') * 10 + (buffer[13] - '0') * 1;
+
+    uint64_t bits = (num1 << 0ULL) | (num2 << 10ULL) | (num3 << 20ULL);
+    bits <<= 12;
+    bits |= (alpha1 << 0) | (alpha2 << 4) | (alpha3 << 8);
+
+    for (int i = 0; i < 9436; ++i) {
+        bits = ror(bits, 19, 42);
+        bits = swapBits(bits, 3, 8);
+        bits = swapBits(bits, 13, 12);
+        bits = swapBits(bits, 37, 22);
+        bits ^= 0x37B5E43895ULL;
+    }
+
+    uint32_t minor = bits & 0x7FFF;
+    uint32_t major = (uint32_t) (bits >> 15ULL);
+
+    return getChecksum(major) == minor;
+}
+
+bool checkExtendedKey(char* modified)
+{
+    ///0123456789012345
+    // AB-12345-67890-C     MODIFIED FORM
+
+    ///0123456789012345
+    // AB-123-456-789-C     REGULAR FORM
+
+    char regular[20];
+    regular[ 0] = modified[0];
+    regular[ 1] = modified[1];
+    regular[ 2] = modified[2];
+    regular[ 3] = modified[3];
+    regular[ 4] = modified[4];
+    regular[ 5] = modified[5];
+    regular[ 6] = '-';
+    regular[ 7] = modified[6];
+    regular[ 8] = modified[7];
+    regular[ 9] = modified[9];
+    regular[10] = '-';
+    regular[11] = modified[10];
+    regular[12] = modified[11];
+    regular[13] = modified[12];
+    regular[14] = '-';
+    regular[15] = modified[15];
+
+    if (regular[3] < '0' || regular[3] > '9') return false;
+    if (regular[4] < '0' || regular[4] > '9') return false;
+    if (regular[5] < '0' || regular[5] > '9') return false;
+
+    if (regular[7] < '0' || regular[7] > '9') return false;
+    if (regular[8] < '0' || regular[8] > '9') return false;
+    if (regular[9] < '0' || regular[9] > '9') return false;
+
+    if (regular[11] < '0' || regular[11] > '9') return false;
+    if (regular[12] < '0' || regular[12] > '9') return false;
+    if (regular[13] < '0' || regular[13] > '9') return false;
+
+    return checkKey(regular);
 }
 
 void firstRun()
@@ -816,6 +942,8 @@ void firstRun()
         if (sel == 2) term->setCursor(0, 2);
 
         while (installKey == 0);
+        memset(term->keybufferInternal, 0, 16);
+        memset(term->keybufferSent, 0, 16);
         if (installKey == '\t' || installKey == '\n') {
             if (sel == 2 && installKey == '\n') {
                 installKey = 0;
@@ -907,6 +1035,8 @@ void firstRun()
         term->setCursor(26 + timePtr, 8);
 
         while (installKey == 0);
+        memset(term->keybufferInternal, 0, 16);
+        memset(term->keybufferSent, 0, 16);
         if (installKey == 3 || installKey == '\b') {
             do {
                 --timePtr;
@@ -971,7 +1101,101 @@ void firstRun()
             }
         }
 
-        milliTenthSleep(1800);
+        milliTenthSleep(1100);
+        installKey = 0;
+    }
+
+
+    installKey = 0;
+    milliTenthSleep(900);
+    drawBootScreen();
+    milliTenthSleep(11800);
+
+    char pkeybuf[18];
+    strcpy(pkeybuf, "WW-78388-45555-N");
+    timePtr = 0;
+
+retryProductKey:
+    installKey = 0;
+
+    drawBootScreen();
+    drawBasicWindow(22, 2, 50, 14, "Product Key");
+
+ 
+    term->setCursor(24, 5); term->puts("Please enter your product key below,");
+    term->setCursor(24, 6); term->puts("and then press ENTER.");
+
+
+    while (1) {
+        pkeybuf[16] = 0;
+        pkeybuf[17] = 0;
+        term->setCursor(28, 8); 
+        term->puts(pkeybuf);
+        term->setCursor(28 + timePtr, 8);
+        term->putchar(pkeybuf[timePtr], VgaColour::White, VgaColour::Black);
+        term->setCursor(28 + 16, 8);
+        term->putchar(' ', VgaColour::White, VgaColour::White);
+        term->setCursor(28 + timePtr, 8);
+
+        while (installKey == 0);
+        memset(term->keybufferInternal, 0, 16);
+        memset(term->keybufferSent, 0, 16);
+        if (installKey == 3 || installKey == '\b') {
+            do {
+                --timePtr;
+                if (timePtr == -1) timePtr = strlen(pkeybuf) - 1;
+            } while (pkeybuf[timePtr] == '-');
+
+        } else if ((installKey >= '0' && installKey <= '9') || (installKey >= 'A' && installKey <= 'Z') || (installKey >= 'a' && installKey <= 'z') || installKey == ' ' || installKey == 4) {
+            if ((installKey >= '0' && installKey <= '9') || (installKey >= 'A' && installKey <= 'Z') || (installKey >= 'a' && installKey <= 'z')) {
+                pkeybuf[timePtr] = (installKey >= 'a' && installKey <= 'z') ? installKey - 32 : installKey;
+            }
+
+            do {
+                ++timePtr;
+                if (timePtr >= strlen(pkeybuf)) timePtr = 0;
+            } while (pkeybuf[timePtr] == '-');
+
+        } else if (installKey == '\n') {
+            bool valid = checkExtendedKey(pkeybuf);
+
+            if (valid) {
+                installKey = 0;
+                milliTenthSleep(900);
+                drawBootScreen();
+                milliTenthSleep(4800);
+                installKey = 0;
+                break;
+
+            } else {
+
+                drawBasicWindowX(22, 2, 50, 14, "Product Key", true);
+                term->setCursor(24, 5); 
+                term->puts("Please enter your product key below,", VgaColour::Black, VgaColour::LightGrey);
+                term->setCursor(24, 6); 
+                term->puts("and then press ENTER.", VgaColour::Black, VgaColour::LightGrey);
+
+                term->setCursor(28, 8);
+                term->puts(pkeybuf, VgaColour::Black, VgaColour::LightGrey);
+                term->setCursor(28 + 16, 8);
+                term->putchar(' ', VgaColour::LightGrey, VgaColour::LightGrey);
+                term->setCursor(28 + timePtr, 8);
+
+                drawBasicWindow(34, 10, 43, 11, "Invalid Product Key");
+                term->setCursor(36, 13); term->puts("The entered product key was invalid.");
+                term->setCursor(36, 15); term->puts("Press any key to continue and then");
+                term->setCursor(36, 16); term->puts("enter the product key correctly.");
+
+                installKey = 0;
+                milliTenthSleep(1900);
+                installKey = 0;
+                
+                while (installKey == 0);
+
+                goto retryProductKey;
+            }
+        }
+        
         installKey = 0;
     }
 

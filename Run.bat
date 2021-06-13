@@ -19,6 +19,7 @@ rm disvesa.txt
 rm disvga.txt
 rm discmd.txt
 rm disbios.txt
+rm dissys.txt
 rm disac97.txt
 objdump -drwC -Mintel packages/banana/32/0002/acpica.sys >> disacpica.txt
 objdump -drwC -Mintel packages/system/32/0002/legacy.sys >> dislegacy.txt
@@ -27,6 +28,7 @@ objdump -drwC -Mintel packages/banana/32/0002/vga.sys >> disvga.txt
 objdump -drwC -Mintel packages/banana/32/0002/ac97.sys >> disac97.txt
 objdump -drwC -Mintel packages/banana/32/0002/vesa.sys >> disvesa.txt
 objdump -drwC -Mintel packages/system/32/0001/command.exe >> discmd.txt
+objdump -drwC -Mintel packages/system/32/0001/system.dll >> dissys.txt
 
 cd D:/Users/Alex/Desktop/Banana/firmware/BOOT2
 call build.bat

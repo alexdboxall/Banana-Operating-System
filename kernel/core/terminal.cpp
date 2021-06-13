@@ -522,6 +522,10 @@ void VgaText::receiveKey(uint8_t key)
 		}
 
 	} else {
+		if (strlen(keybufferSent) + strlen(keybufferInternal) + 3 > TERMINAL_KEYBUFFER_OUT_SIZE) {
+			return;
+		}
+
 		//display the character
 		if (key < 'Z' - 'A' && key != '\b' && key != '\t' && key != '\n' && key != '\r') {
 			this->puts("CTRL\xFF", this->currentBg, this->currentFg);
@@ -541,10 +545,6 @@ void VgaText::receiveKey(uint8_t key)
 	}
 
 	if (unbufferedKeyboard || key == (uint8_t) '\n' || key == (uint8_t) '\3') {
-		if (strlen(keybufferSent) + strlen(keybufferInternal) + 4 > TERMINAL_KEYBUFFER_OUT_SIZE) {
-			KePanic("TODO: HANDLE OVERFLOWS FOR KEYBUFFERS (terminal.cpp, VgaText::receiveKey)");
-		}
-
 		//copy it to the read buffer
 		strcat(keybufferSent, keybufferInternal);
 
