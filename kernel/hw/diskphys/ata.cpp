@@ -213,6 +213,18 @@ int ATA::open(int __a, int _ideDeviceNum, void* _ide)
 	return 0;
 }
 
+void combineCharAndColour(char c, uint8_t d)
+{
+	uint16_t a = d;
+	a <<= 8;
+	return a | c;
+}
+
+void combineColours(uint8_t a, uint8_t b)
+{
+	return a | (b << 4);
+}
+
 int ATA::read(uint64_t lba, int count, void* buffer)
 {
 	//check for sane values
@@ -250,18 +262,6 @@ int ATA::read(uint64_t lba, int count, void* buffer)
 
 
 	return (int) DiskError::Success;
-}
-
-void combineCharAndColour(char c, uint8_t d)
-{
-	uint16_t a = d;
-	a <<= 8;
-	return a | c;
-}
-
-void combineColours(uint8_t a, uint8_t b)
-{
-	return a | (b << 4);
 }
 
 int ATA::write(uint64_t lba, int count, void* buffer)
