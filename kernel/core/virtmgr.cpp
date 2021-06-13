@@ -332,7 +332,10 @@ VAS::VAS()
 	specialFirstVAS = true;
 	pageDirectoryBase = (size_t*) VIRT_KRNL_PAGE_DIRECTORY;
 
-	mapRange(((size_t) &__start_userkernel), ((size_t) &__start_userkernel), (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
+	reflagRange(((size_t) &__start_userkernel), \
+				(((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, \
+				- 1, \
+				PAGE_USER);
 }
 
 VAS::~VAS()
@@ -731,12 +734,12 @@ extern "C" void mapVASFirstTime()
 
 	vas->reflagRange(((size_t) &__start_userkernel), \
 					 (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, \
-					 ~PAGE_WRITABLE, \
+					 -1, \
 					 PAGE_USER);
 
 	Virt::getAKernelVAS()->reflagRange(((size_t) &__start_userkernel), \
 					 (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, \
-					 ~PAGE_WRITABLE, \
+					 -1, \
 					 PAGE_USER);
 
 	CPU::writeCR3(CPU::readCR3());
