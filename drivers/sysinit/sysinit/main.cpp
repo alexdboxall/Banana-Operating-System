@@ -180,7 +180,7 @@ strcpy(
 }
 
 char*
-strncpy(
+strncpyxx(
     char* DstString,
     const char* SrcString,
     ACPI_SIZE               Count)
@@ -412,7 +412,7 @@ void copytree(char* basePath, char* newPath)
             if (dp->d_type & DT_DIR) {
                 int mres = mkdir(npath, 0700);
                 if (mres != 0) {
-                    panic("COULD NOT CREATE");
+                    KePanic("COULD NOT CREATE");
                 } else {
                     copytree(path, npath);
                 }
@@ -421,7 +421,7 @@ void copytree(char* basePath, char* newPath)
                 File* f = new File(path, currentTaskTCB->processRelatedTo); //fopen(path, "rb");
                 f->open(FILE_OPEN_READ);
                 if (!f) {
-                    panic("COULD NOT COPY");
+                    KePanic("COULD NOT COPY");
                     continue;
                 }
 
@@ -429,14 +429,14 @@ void copytree(char* basePath, char* newPath)
                     File* dest = new File(npath, currentTaskTCB->processRelatedTo);
                     dest->open(FILE_OPEN_WRITE_NORMAL);
                     if (!dest) {
-                        panic("COULD NOT COPY");
+                        KePanic("COULD NOT COPY");
                         dest->close();
                         continue;
                     }
 
                     char* m = (char*) malloc(4096);
                     if (!m) {
-                        panic("NO MEMORY");
+                        KePanic("NO MEMORY");
                         free(path);
                         free(npath);
                         return;
@@ -528,7 +528,7 @@ void backupTree(char* basePath, uint16_t hash)
 
                 char ss[9];
                 memset(ss, 0, 9); 
-                strncpy(ss, dp->d_name, 8);
+                strncpyxx(ss, dp->d_name, 8);
                 for (int i = 0; i < 8; ++i) {
                     if (ss[i] >= 'a' && ss[i] <= 'z') ss[i] -= 32;
                     if (ss[i] == 'Y') ss[i] = 'Q';
@@ -559,7 +559,7 @@ void backupTree(char* basePath, uint16_t hash)
                 File* f = new File(path, currentTaskTCB->processRelatedTo); //fopen(path, "rb");
                 f->open(FILE_OPEN_READ);
                 if (!f) {
-                    panic("COULD NOT COPY");
+                    KePanic("COULD NOT COPY");
                     continue;
                 }
 
@@ -567,24 +567,20 @@ void backupTree(char* basePath, uint16_t hash)
                     File* dest = new File(bkupPath, currentTaskTCB->processRelatedTo);
                     dest->open(FILE_OPEN_WRITE_NORMAL);
                     if (!dest) {
-                        panic("COULD NOT COPY");
+                        KePanic("COULD NOT COPY");
                         dest->close();
                         continue;
                     }
-
-                    kprintf("Copying: %s -> %s\n", path, bkupPath);
 
                     char m[4096];
                     while (1) {
                         int red;
                         int red2;
                         FileStatus st = f->read(4096, m, &red);
-                        kprintf("read  = %d\n", red);
                         if (st != FileStatus::Success) {
                             break;
                         }
                         dest->write(red, m, &red2);
-                        kprintf("write = %d\n", red2);
                         if (red != 4096) {
                             break;
                         }
@@ -1012,7 +1008,7 @@ void begin(void* a)
 
     File* f = new File("C:/Banana/System/setupisd.one", kernelProcess);
     if (!f) {
-        panic("SYSINIT FAILURE");
+        KePanic("SYSINIT FAILURE");
     }
     FileStatus fs = f->open(FileOpenMode::Read);
 
@@ -1030,7 +1026,7 @@ void begin(void* a)
         loadExtensions();
     }
 
-    Krnl::preemptionOn = true;
+    KeIsPreemptionOn = true;
 
     Process* usertask;
 
@@ -1124,6 +1120,6 @@ void begin(void* a)
     }
 
     computer->close(0, 0, nullptr);
-    panic("TURN OFF PC");
+    KePanic("TURN OFF PC");
     while (1);
 }
