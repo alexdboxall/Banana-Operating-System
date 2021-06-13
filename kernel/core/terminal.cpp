@@ -540,7 +540,7 @@ void VgaText::receiveKey(uint8_t key)
 		strcat(keybufferInternal, addon);
 	}
 
-	if (unbufferedKeyboard || key == (uint8_t) '\n') {
+	if (unbufferedKeyboard || key == (uint8_t) '\n' || key == (uint8_t) '\3') {
 		if (strlen(keybufferSent) + strlen(keybufferInternal) + 4 > TERMINAL_KEYBUFFER_OUT_SIZE) {
 			KePanic("TODO: HANDLE OVERFLOWS FOR KEYBUFFERS (terminal.cpp, VgaText::receiveKey)");
 		}
