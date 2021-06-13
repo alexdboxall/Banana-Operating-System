@@ -425,7 +425,7 @@ VAS::VAS(bool kernel) {
 	disableIRQs();
 	size_t cr3 = CPU::readCR3();
 	CPU::writeCR3(pageDirectoryBasePhysical);
-	vas->mapRange(((size_t) &__start_userkernel), ((size_t) &__start_userkernel), (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
+	mapRange(((size_t) &__start_userkernel), ((size_t) &__start_userkernel), (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
 	CPU::writeCR3(cr3);
 	enableIRQs();
 }
