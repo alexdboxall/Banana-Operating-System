@@ -418,16 +418,6 @@ VAS::VAS(bool kernel) {
 		mapPage((*getPageTableEntry(CPU::current()->idt.getPointerToInvalidOpcodeEntryForF00F())) & ~0xFFF, CPU::current()->idt.getPointerToInvalidOpcodeEntryForF00F() & ~0xFFF, PAGE_PRESENT | PAGE_SUPERVISOR | PAGE_CACHE_DISABLE);
 		enableIRQs();
 	}
-
-	extern int __start_userkernel;
-	extern int __stop_userkernel;
-
-	disableIRQs();
-	size_t cr3 = CPU::readCR3();
-	CPU::writeCR3(pageDirectoryBasePhysical);
-	mapRange(((size_t) &__start_userkernel), ((size_t) &__start_userkernel), (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
-	CPU::writeCR3(cr3);
-	enableIRQs();
 }
 
 size_t VAS::mapRange(size_t physicalAddr, size_t virtualAddr, int pages, int flags)
