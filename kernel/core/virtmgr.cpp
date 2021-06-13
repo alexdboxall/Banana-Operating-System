@@ -419,6 +419,9 @@ VAS::VAS(bool kernel) {
 		enableIRQs();
 	}
 
+	extern int __start_userkernel;
+	extern int __stop_userkernel;
+
 	disableIRQs();
 	size_t cr3 = CPU::readCR3();
 	CPU::writeCR3(pageDirectoryBasePhysical);
