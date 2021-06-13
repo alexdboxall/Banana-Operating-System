@@ -430,6 +430,9 @@ VAS::VAS(bool kernel) {
 				size_t vaddr = ((size_t) i) * 0x400000 + ((size_t) j) * 0x1000;
 				size_t* oldPageEntryPtr = currentTaskTCB->processRelatedTo->vas->getForeignPageTableEntry(true, vaddr);*/
 
+	extern int __start_userkernel;
+	extern int __stop_userkernel;
+
 	lockScheduler();
 
 	currentTaskTCB->processRelatedTo->vas->mapOtherVASIn(true, this);
