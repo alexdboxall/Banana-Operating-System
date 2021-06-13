@@ -728,8 +728,16 @@ extern "C" void mapVASFirstTime()
 
 	kprintf("reflagging range: 0x%X, 0x%X pages = %d\n", ((size_t) &__start_userkernel), ((size_t) &__stop_userkernel), (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096);
 
-	vas->mapRange(((size_t) &__start_userkernel), ((size_t) &__start_userkernel), (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
-	Virt::getAKernelVAS()->mapRange(((size_t) &__start_userkernel), ((size_t) &__start_userkernel), (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
+
+	vas->reflagRange(((size_t) &__start_userkernel), \
+					 (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, \
+					 ~PAGE_WRITABLE, \
+					 PAGE_USER);
+
+	Virt::getAKernelVAS()->reflagRange(((size_t) &__start_userkernel), \
+					 (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, \
+					 ~PAGE_WRITABLE, \
+					 PAGE_USER);
 
 	CPU::writeCR3(CPU::readCR3());
 }
