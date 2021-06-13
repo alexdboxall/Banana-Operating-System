@@ -430,20 +430,6 @@ VAS::VAS(bool kernel) {
 				size_t vaddr = ((size_t) i) * 0x400000 + ((size_t) j) * 0x1000;
 				size_t* oldPageEntryPtr = currentTaskTCB->processRelatedTo->vas->getForeignPageTableEntry(true, vaddr);*/
 
-	extern int __start_userkernel;
-	extern int __stop_userkernel;
-
-	lockScheduler();
-
-	Virt::getAKernelVAS()->mapOtherVASIn(true, this);
-	for (int i = 0; i < (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096; ++i) {
-		size_t* fpe = Virt::getAKernelVAS()->getForeignPageTableEntry(true, ((size_t) &__start_userkernel) + 4096 * i);
-		*fpe &= ~PAGE_WRITABLE;
-		*fpe |= PAGE_USER;
-	}
-
-	unlockScheduler();
-
 	//size_t physicalAddr, size_t virtualAddr, int pages, int flags);
 	//vas->mapRange(((size_t) &__start_userkernel), ((size_t) &__start_userkernel), (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
 
@@ -741,6 +727,9 @@ extern "C" void mapVASFirstTime()
 	}
 
 	kprintf("reflagging range: 0x%X, 0x%X pages = %d\n", ((size_t) &__start_userkernel), ((size_t) &__stop_userkernel), (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096);
+
+	vas->mapRange(((size_t) &__start_userkernel), ((size_t) &__start_userkernel), (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
+	Virt::getAKernelVAS()->mapRange(((size_t) &__start_userkernel), ((size_t) &__start_userkernel), (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
 
 	CPU::writeCR3(CPU::readCR3());
 }
