@@ -169,11 +169,6 @@ void pgFault(regs* r, void* context)
 		return;
 	}
 
-	extern int __start_userkernel;
-	extern int __stop_userkernel;
-	Virt::getAKernelVAS()->mapRange(((size_t) &__start_userkernel), ((size_t) &__start_userkernel), (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
-	return;
-
 	displayDebugInfo(r);
 	displayProgramFault("Page fault");
 

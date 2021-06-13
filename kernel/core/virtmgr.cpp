@@ -418,6 +418,36 @@ VAS::VAS(bool kernel) {
 		mapPage((*getPageTableEntry(CPU::current()->idt.getPointerToInvalidOpcodeEntryForF00F())) & ~0xFFF, CPU::current()->idt.getPointerToInvalidOpcodeEntryForF00F() & ~0xFFF, PAGE_PRESENT | PAGE_SUPERVISOR | PAGE_CACHE_DISABLE);
 		enableIRQs();
 	}
+
+
+	/*currentTaskTCB->processRelatedTo->vas->mapOtherVASIn(true, this);
+
+	for (int i = 0; i < 256 * 3; ++i) {
+		size_t oldEntry = pageDirectoryBase[i];
+
+		if (oldEntry & PAGE_PRESENT) {
+			for (int j = 0; j < 1024; ++j) {
+				size_t vaddr = ((size_t) i) * 0x400000 + ((size_t) j) * 0x1000;
+				size_t* oldPageEntryPtr = currentTaskTCB->processRelatedTo->vas->getForeignPageTableEntry(true, vaddr);*/
+
+	lockScheduler();
+
+	currentTaskTCB->processRelatedTo->vas->mapOtherVASIn(true, this);
+	for (int i = 0; i < (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096; ++i) {
+		size_t* fpe = currentTaskTCB->processRelatedTo->vas->getForeignPageTableEntry(true, ((size_t) &__start_userkernel) + 4096 * i);
+		*fpe &= ~PAGE_WRITABLE;
+		*fpe |= PAGE_USER;
+	}
+
+	unlockScheduler();
+
+	//size_t physicalAddr, size_t virtualAddr, int pages, int flags);
+	//vas->mapRange(((size_t) &__start_userkernel), ((size_t) &__start_userkernel), (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
+
+	/*vas->reflagRange(((size_t) &__start_userkernel), \
+					 (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, \
+					 ~PAGE_WRITABLE, \
+					 PAGE_USER);*/
 }
 
 size_t VAS::mapRange(size_t physicalAddr, size_t virtualAddr, int pages, int flags)
@@ -708,14 +738,6 @@ extern "C" void mapVASFirstTime()
 	}
 
 	kprintf("reflagging range: 0x%X, 0x%X pages = %d\n", ((size_t) &__start_userkernel), ((size_t) &__stop_userkernel), (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096);
-	
-	//size_t physicalAddr, size_t virtualAddr, int pages, int flags);
-	vas->mapRange(((size_t) &__start_userkernel), ((size_t) &__start_userkernel), (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
-
-	/*vas->reflagRange(((size_t) &__start_userkernel), \
-					 (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, \
-					 ~PAGE_WRITABLE, \
-					 PAGE_USER);*/
 
 	CPU::writeCR3(CPU::readCR3());
 }
