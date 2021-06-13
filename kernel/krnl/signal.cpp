@@ -18,13 +18,13 @@ void __attribute__((__section__("align_previous"))) DO_NOT_DELETE()
 void __attribute__((__section__("userkernel"))) KiDefaultSignalHandlerAbort(int sig)
 {
 	char s[] = "KiDefaultSignalHandlerAbort";
-	KeSystemCallFromUsermode((size_t) SystemCallNumber::Panic, 0, 0, (size_t) s);
+	KeSystemCallFromUsermode((size_t) SystemCallNumber::Exit, 56, 0, (size_t) s);
 }
 
 void __attribute__((__section__("userkernel"))) KiDefaultSignalHandlerTerminate(int sig)
 {
 	char s[] = "KiDefaultSignalHandlerTerminate";
-	KeSystemCallFromUsermode((size_t) SystemCallNumber::Panic, 0, 0, (size_t) s);
+	KeSystemCallFromUsermode((size_t) SystemCallNumber::Exit, 55, 0, (size_t) s);
 }
 
 void KiDefaultSignalHandlerIgnore(int sig)
