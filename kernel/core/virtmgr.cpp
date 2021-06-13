@@ -401,7 +401,7 @@ VAS::VAS(bool kernel) {
 
 	//map in the kernel
 	for (int i = 768; i < 1024; ++i) {
-		pageDirectoryBase[i] = PAGE_PRESENT | PAGE_SUPERVISOR | PAGE_WRITABLE | (0x100000 + (i - 768) * 4096) | (CPU::current()->features.hasGlobalPages ? PAGE_GLOBAL : 0);
+		pageDirectoryBase[i] = PAGE_PRESENT | PAGE_USER | (0x100000 + (i - 768) * 4096) | (CPU::current()->features.hasGlobalPages ? PAGE_GLOBAL : 0);
 
 		if (1 && (i - 768) >= 64 && (i - 768) < 64 * 3) {
 			pageDirectoryBase[i] = PAGE_NOT_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR;
