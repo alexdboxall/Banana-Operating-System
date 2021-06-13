@@ -272,7 +272,7 @@ int ATA::write(uint64_t lba, int count, void* buffer)
 
 	++ataSectorsWritten;
 
-	uint16_t* p = (uint16_t*) VGA_TEXT_MODE_ADDRESS;
+	uint16_t* p = (uint16_t*) 0xC20B8000;
 	p += 63;
 
 	*p++ = combineCharAndColour((ataSectorsRead / 10000) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
