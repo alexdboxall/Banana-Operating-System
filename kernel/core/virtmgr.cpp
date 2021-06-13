@@ -434,12 +434,10 @@ VAS::VAS(bool kernel) {
 	extern int __stop_userkernel;
 
 	lockScheduler();
-	kprintf("currentTaskTCB = 0x%X\n", currentTaskTCB);
-	kprintf("currentTaskTCB->processRelatedTo = 0x%X\n", currentTaskTCB->processRelatedTo);
-	kprintf("currentTaskTCB->processRelatedTo->vas = 0x%X\n", currentTaskTCB->processRelatedTo->vas);
-	currentTaskTCB->processRelatedTo->vas->mapOtherVASIn(true, this);
+
+	Virt::getAKernelVAS()->mapOtherVASIn(true, this);
 	for (int i = 0; i < (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096; ++i) {
-		size_t* fpe = currentTaskTCB->processRelatedTo->vas->getForeignPageTableEntry(true, ((size_t) &__start_userkernel) + 4096 * i);
+		size_t* fpe = Virt::getAKernelVAS()->getForeignPageTableEntry(true, ((size_t) &__start_userkernel) + 4096 * i);
 		*fpe &= ~PAGE_WRITABLE;
 		*fpe |= PAGE_USER;
 	}
