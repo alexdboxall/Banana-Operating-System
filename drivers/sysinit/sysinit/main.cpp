@@ -1243,14 +1243,14 @@ void begin(void* a)
     }
     delete f;
 
+    KeIsPreemptionOn = true;
+
     if (firstTime) {
         firstRun();
 
     } else {
         loadExtensions();
     }
-
-    KeIsPreemptionOn = true;
 
     Process* usertask;
 

@@ -405,6 +405,12 @@ void HalInitialise()
 		computer->features.hasAPIC = false;
 	}
 
+
+	/// DEBUG
+	computer->features.hasAPIC = false;
+	/// DEBUG
+
+
 	apic = computer->features.hasAPIC;
 
 	picOpen();
