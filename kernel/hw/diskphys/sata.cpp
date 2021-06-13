@@ -179,6 +179,9 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 	return 0;
 }
 
+extern uint16_t combineCharAndColour(char c, uint8_t d);
+extern uint8_t combineColours(uint8_t a, uint8_t b);
+
 int SATA::read(uint64_t lba, int count, void* buffer)
 {
 	//check for sane values
