@@ -56,7 +56,7 @@ extern "C" {
 #include "libk/string.h"
 }
 
-int16_t buf[4096];
+int16_t buf[8192];
 
 void playThread(void* __);
 void start(Device* _dvl)
@@ -81,16 +81,16 @@ void playThread(void* __)
 
 	SoundCard* card = (SoundCard*) __;
 
-	SoundPort* port = new SoundPort(8000, 16, 2, 65536 * 6);
+	SoundPort* port = new SoundPort(16000, 16, 2, 65536 * 6);
 	bool started = false;
 
-	File* f = new File("C:/Banana/Audio/win95snd.wav", kernelProcess);
+	File* f = new File("C:/gumball.wav", kernelProcess);
 	f->open(FileOpenMode::Read);
 
 	while (1) {
 		int bytesRead = 0;	
 		kprintf("about to read.\n");
-		FileStatus st = f->read(4096 * 2, buf, &bytesRead);
+		FileStatus st = f->read(8192 * 2, buf, &bytesRead);
 		kprintf("we just read.\n");
 
 		if (bytesRead == 0 || st != FileStatus::Success) {
@@ -101,7 +101,7 @@ void playThread(void* __)
 		kprintf("buffer has %d samples in it.\n", port->getBufferUsed());
 
 		if (!started) {
-			card->configureRates(8000, 16, 2);
+			card->configureRates(16000, 16, 2);
 			card->addChannel(port);
 			port->unpause();
 			card->beginPlayback();
@@ -280,11 +280,11 @@ void AC97::beginPlayback()
 	setSampleRate(currentSampleRate);
 
 	if (currentBits != 16) {
-		panic("AC97::beginPlayback bits != 16 NOT SUPPORTED!");
+		KePanic("AC97::beginPlayback bits != 16 NOT SUPPORTED!");
 	}
 
 	if (currentChannels != 2) {
-		panic("AC97::beginPlayback channels != 2 NOT SUPPORTED!");
+		KePanic("AC97::beginPlayback channels != 2 NOT SUPPORTED!");
 	}
 
 	//start transfer
