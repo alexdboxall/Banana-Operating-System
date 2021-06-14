@@ -10,6 +10,7 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
+#define READ_BUFFER_MAX_SECTORS 16
 
 #define WRITE_BUFFER_MAX_SECTORS 80
 
