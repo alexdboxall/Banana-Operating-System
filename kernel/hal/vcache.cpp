@@ -10,10 +10,8 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-//must be a power of 2
-#define READ_BUFFER_MAX_SECTORS 16
 
-#define WRITE_BUFFER_MAX_SECTORS 64
+#define WRITE_BUFFER_MAX_SECTORS 80
 
 VCache::VCache(PhysicalDisk* d)
 {
@@ -30,7 +28,7 @@ VCache::VCache(PhysicalDisk* d)
 
 	readCacheValid = false;
 	readCacheBuffer = (uint8_t*) malloc(d->sectorSize * READ_BUFFER_MAX_SECTORS + 4096);
-	READ_BUFFER_BLOCK_SIZE = 4;
+	READ_BUFFER_BLOCK_SIZE = 8;		//must be a power of 2
 
 	writeCacheValid = false;
 	writeCacheBuffer = (uint8_t*) malloc(d->sectorSize * WRITE_BUFFER_MAX_SECTORS);

@@ -238,8 +238,8 @@ over:
 	call puts
 
 .retrySpacebar
-	mov cx, 0x7
-	mov dx, 0x4240
+	mov cx, 0x6
+	mov dx, 0x7240
 	mov ah, 0x86
 	int 0x15
     mov ah, 1
@@ -247,8 +247,8 @@ over:
     cmp ah, 1
 	jg BootFromCD
 
-	mov cx, 0x7
-	mov dx, 0x4240
+	mov cx, 0x6
+	mov dx, 0x7240
 	mov ah, 0x86
 	int 0x15
     mov ah, 1
