@@ -25,6 +25,7 @@ protected:
 
 public:		
 	PhysicalDisk* physDisk;
+	bool diskChanged = false;
 
 	Filesystem* fs;
 

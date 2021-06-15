@@ -91,17 +91,14 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 	}
 
 	if (iso9660Owner != __fn[0]) {
-		int status = init_percd(__fn[0]);
-		if (status == -1) {
-			return FileStatus::NoFilesystem;
-		}
-
 		if (iso9660Owner) {
 			KePanic("CD OWNER CHANGE");
 		}
 		iso9660Owner = __fn[0];
 	}
-	init_percd(iso9660Owner);
+	if (disks[path[0]]->diskChanged) {
+		init_percd(iso9660Owner);
+	}
 
 	int fd = iso_open(__fn + 3, 0);
 
@@ -187,15 +184,13 @@ FileStatus ISO9660::stat(const char* path, uint64_t* size, bool* directory)
 	*size = 0;
 
 	if (iso9660Owner != path[0]) {
-		int status = init_percd(path[0]);
-		if (status == -1) {
-			return FileStatus::NoFilesystem;
-		}
-
 		if (iso9660Owner) {
 			KePanic("CD OWNER CHANGE");
 		}
 		iso9660Owner = path[0];
+	}
+	if (disks[path[0]]->diskChanged) {
+		init_percd(iso9660Owner);
 	}
 
 	int fd = iso_open(path + 3, 0);
@@ -231,17 +226,15 @@ FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 	if(__fn == nullptr || ptr == nullptr) return FileStatus::InvalidArgument;
 
 	if (iso9660Owner != __fn[0]) {
-		int status = init_percd(__fn[0]);
-		if (status == -1) {
-			return FileStatus::NoFilesystem;
-		}
-
 		if (iso9660Owner) {
 			KePanic("CD OWNER CHANGE");
 		}
 		iso9660Owner = __fn[0];
 	}
-	init_percd(iso9660Owner);
+	if (disks[path[0]]->diskChanged) {
+		init_percd(iso9660Owner);
+	}
+
 	kprintf("OPEN DIR.\n");
 
 	int fd = iso_open(__fn + 3, 1);

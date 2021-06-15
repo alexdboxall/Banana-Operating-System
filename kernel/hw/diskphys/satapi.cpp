@@ -254,6 +254,12 @@ void SATAPI::detectMedia()
 	cache->writeWriteBuffer();
 	cache->invalidateReadBuffer();
 
+	for (int i = 0; i < 26; ++i) {
+		if (disks[i]->physDisk == this) {
+			disks[i]->diskChanged = true;
+		}
+	}
+
 	return;
 
 	kprintf("detecting media...\n");
