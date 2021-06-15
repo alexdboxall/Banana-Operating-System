@@ -165,6 +165,8 @@ char* ISO9660::getName()
 
 FileStatus ISO9660::stat(void* ptr, uint64_t* size)
 {
+	kprintf("STAT B.");
+
 	if (ptr == nullptr) return FileStatus::InvalidArgument;
 	if (size == nullptr) return FileStatus::InvalidArgument;
 
@@ -176,6 +178,7 @@ FileStatus ISO9660::stat(void* ptr, uint64_t* size)
 
 FileStatus ISO9660::stat(const char* path, uint64_t* size, bool* directory)
 {
+	kprintf("STAT A.");
 	if (path == nullptr) return FileStatus::InvalidArgument;
 	if (size == nullptr) return FileStatus::InvalidArgument;
 	if (directory == nullptr) return FileStatus::InvalidArgument;
@@ -198,8 +201,10 @@ FileStatus ISO9660::stat(const char* path, uint64_t* size, bool* directory)
 	int fd = iso_open(path + 3, 0);
 	if (fd == -1) {
 		fd = iso_open(path + 3, 1);
-		*directory = 1;
-		return FileStatus::Success;
+		if (fd != -1) {
+			*directory = 1;
+			return FileStatus::Success;
+		}
 	}
 
 	if (fd == -1) {
