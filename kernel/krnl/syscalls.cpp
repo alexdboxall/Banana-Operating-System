@@ -299,7 +299,6 @@ uint64_t SysMakeDir(regs* r)
 	Directory* d = new Directory((const char*) r->edx, currentTaskTCB->processRelatedTo);
 	if (d) {
 		FileStatus st = d->create();
-		d->close();
 		delete d;
 
 		if (st == FileStatus::Success) {
