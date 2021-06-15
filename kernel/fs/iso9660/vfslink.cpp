@@ -247,6 +247,8 @@ FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 	int fd = iso_open(__fn + 3, 1);
 
 	if (fd == -1) {
+		kprintf("OPEN DIR FAILURE %s.\n", __fn);
+
 		return FileStatus::Failure;
 	}
 
@@ -259,11 +261,13 @@ FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead)
 {
 	if (ptr == nullptr || bytesRead == nullptr) return FileStatus::InvalidArgument;
+	kprintf("READ DIR.\n");
 
 	struct dirent dent;
 
 	struct direntX* ddd = iso_readdir(((int)ptr)/2-50);
 	if (!ddd) {
+		kprintf("READ DIR FAILURE.\n");
 		memset(where, 0, sizeof(dent));
 		return FileStatus::Failure;
 	}
@@ -275,6 +279,9 @@ FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead
 
 	memcpy(where, &dent, bytes);
 	*bytesRead = sizeof(dent);
+
+	kprintf("READ DIR SUCCESS -> %s, %d\n", ddd->d_name, dent.d_type);
+
 	return FileStatus::Success;
 }
 
