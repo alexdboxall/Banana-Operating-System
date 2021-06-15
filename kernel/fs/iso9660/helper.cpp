@@ -14,12 +14,14 @@ extern "C" int isoReadDiscSectorHelper(uint8_t* buffer, uint32_t sector, int cou
 
 extern "C" void iso_kprintf(char* str)
 {
-	activeTerminal->puts(str);
+	kprintf("%s\n", str);
+	//activeTerminal->puts(str);
 }
 
 extern "C" void iso_kprintfd(int d)
 {
-	activeTerminal->puts("0x");
+	kprintf("0x%X\n", d);
+	/*activeTerminal->puts("0x");
 	activeTerminal->putx(d);
-	activeTerminal->puts("\n");
+	activeTerminal->puts("\n");*/
 }
