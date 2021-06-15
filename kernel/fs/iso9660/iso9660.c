@@ -784,7 +784,14 @@ struct direntX* iso_readdir(int fd)
 	char* pnt;
 
 	if (fd >= MAX_ISO_FILES || fh[fd].first_extent == 0 || !fh[fd].dir || fh[fd].broken) {
-		kprintf("FD = %d, 1st = %d, dir = %d, broken = %d\n", fd, fh[fd].first_extent, fh[fd].dir, fh[fd].broken);
+		iso_kprintf("FD: ");
+		iso_kprintfd(fd);
+		iso_kprintf("1st: ");
+		iso_kprintfd(fh[fd].first_extent);
+		iso_kprintf("dir: ");
+		iso_kprintfd(fh[fd].dir);
+		iso_kprintf("broken: ");
+		iso_kprintfd(fh[fd].broken);
 		return NULL;
 	}
 
