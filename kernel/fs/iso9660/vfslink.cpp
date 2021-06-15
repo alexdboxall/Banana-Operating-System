@@ -96,10 +96,10 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 		}
 		iso9660Owner = __fn[0];
 	}
-	if (!disks[(int) __fn[0]] || disks[(int)__fn[0]]->diskChanged) {
-		if (disks[(int) __fn[0]]) disks[(int) __fn[0]]->diskChanged = false;
+	//if (!disks[(int) __fn[0]] || disks[(int)__fn[0]]->diskChanged) {
+	//	if (disks[(int) __fn[0]]) disks[(int) __fn[0]]->diskChanged = false;
 		init_percd(iso9660Owner);
-	}
+	//}
 
 	int fd = iso_open(__fn + 3, 0);
 
@@ -190,10 +190,10 @@ FileStatus ISO9660::stat(const char* path, uint64_t* size, bool* directory)
 		}
 		iso9660Owner = path[0];
 	}
-	if (!disks[(int) path[0]] || disks[(int) path[0]]->diskChanged) {
-		if (disks[(int) path[0]]) disks[(int) path[0]]->diskChanged = false;
-		init_percd(iso9660Owner);
-	}
+	//if (!disks[(int) path[0]] || disks[(int) path[0]]->diskChanged) {
+	//	if (disks[(int) path[0]]) disks[(int) path[0]]->diskChanged = false;
+	//	init_percd(iso9660Owner);
+	//}
 
 	int fd = iso_open(path + 3, 0);
 	if (fd == -1) {
@@ -235,10 +235,10 @@ FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 	}
 	kprintf("OPEN DIR.\n");
 	kprintf("__fn = %s. %c. 0x%X", __fn, __fn[0], disks[(int) __fn[0]]);
-	if (!disks[(int) __fn[0]] || disks[(int) __fn[0]]->diskChanged) {
-		if (disks[(int) __fn[0]]) disks[(int) __fn[0]]->diskChanged = false;
-		init_percd(iso9660Owner);
-	}
+	//if (!disks[(int) __fn[0]] || disks[(int) __fn[0]]->diskChanged) {
+	//	if (disks[(int) __fn[0]]) disks[(int) __fn[0]]->diskChanged = false;
+	//	init_percd(iso9660Owner);
+	//}
 
 	int fd = iso_open(__fn + 3, 1);
 
