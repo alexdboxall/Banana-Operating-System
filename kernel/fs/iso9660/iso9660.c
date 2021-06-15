@@ -248,6 +248,8 @@ static unsigned int* cache_mutex;
 /* Clears all cache blocks */
 static void bclear_cache()
 {
+	iso_kprintf("bclear_cache\n");
+
 	lock(cache_mutex);
 	for (int i = 0; i < NUM_CACHE_BLOCKS; i++) {
 		dcache[i]->sector = -1;
@@ -591,6 +593,7 @@ static unsigned int* fh_mutex;
    will be cleared. */
 void iso_break_all()
 {
+	iso_kprintf("iso_break_all\n");
 	int i;
 
 	lock(fh_mutex);
@@ -856,6 +859,7 @@ struct direntX* iso_readdir(int fd)
 
 int iso_reset()
 {
+	iso_kprintf("iso_reset\n");
 	iso_break_all();
 	bclear();
 	return 0;
@@ -865,6 +869,8 @@ int iso_reset()
    always clear data and size. */
 int iso_ioctl(int hnd, void* data, size_t size)
 {
+	iso_kprintf("iso_ioctl\n");
+
 	iso_reset();
 
 	return 0;
@@ -873,6 +879,7 @@ int iso_ioctl(int hnd, void* data, size_t size)
 /* Initialize the file system */
 int fs_iso9660_init()
 {
+	iso_kprintf("fs_iso9660_init\n");
 	int i;
 
 	/* Reset fd's */
