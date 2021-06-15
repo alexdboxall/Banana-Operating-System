@@ -109,7 +109,7 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 		return FileStatus::Failure;
 	}
 
-	*ptr = (void*)(fd + 100);
+	*ptr = (void*)(fd * 2 + 100);
 	return FileStatus::Success;
 }
 
@@ -117,7 +117,7 @@ FileStatus ISO9660::read(void* ptr, size_t bytes, void* bf, int* bytesRead)
 {
 	if (ptr == nullptr || bytesRead == nullptr) return FileStatus::InvalidArgument;
 	
-	int64_t br = iso_read(((int) ptr) - 100, bf, bytes);
+	int64_t br = iso_read(((int) ptr) / 2 - 50, bf, bytes);
 	*bytesRead = br;
 
 	if (br == 0) {
@@ -138,7 +138,7 @@ FileStatus ISO9660::seek(void* ptr, uint64_t offset)
 {
 	if (ptr == nullptr) return FileStatus::InvalidArgument;
 
-	uint64_t pos = iso_seek(((int) ptr) - 100, offset, 0);
+	uint64_t pos = iso_seek(((int) ptr) / 2 - 50, offset, 0);
 
 	if (pos == offset) {
 		return FileStatus::Success;
@@ -152,7 +152,7 @@ FileStatus ISO9660::tell(void* ptr, uint64_t* offset)
 	if (ptr == nullptr) return FileStatus::InvalidArgument;
 	if (offset == nullptr) return FileStatus::InvalidArgument;
 
-	uint64_t pos = iso_tell(((int) ptr) - 100);
+	uint64_t pos = iso_tell(((int) ptr) / 2 - 50);
 	*offset = pos;
 
 	return FileStatus::Success;
@@ -168,7 +168,7 @@ FileStatus ISO9660::stat(void* ptr, uint64_t* size)
 	if (ptr == nullptr) return FileStatus::InvalidArgument;
 	if (size == nullptr) return FileStatus::InvalidArgument;
 
-	size_t sz = iso_total(((int) ptr) - 100);
+	size_t sz = iso_total(((int) ptr) / 2 - 50);
 	*size = sz;
 
 	return FileStatus::Success;
@@ -216,7 +216,7 @@ FileStatus ISO9660::close(void* ptr)
 {
 	if (ptr == nullptr) return FileStatus::InvalidArgument;
 
-	iso_close(((int) ptr) - 100);
+	iso_close(((int) ptr)/2 - 50);
 
 	return FileStatus::Success;
 }
@@ -239,12 +239,15 @@ FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 	init_percd(iso9660Owner);
 
 	int fd = iso_open(__fn + 3, 1);
-
+	kprintf("OPEN DIR CALLED WITH DIR %s\n", __fn + 3);
 	if (fd == -1) {
+		kprintf("FAILURE.\n");
 		return FileStatus::Failure;
 	}
 
-	*ptr = (void*) (fd + 100);
+	kprintf("SUCCESS.\n");
+
+	*ptr = (void*) (fd * 2 + 101);
 	return FileStatus::Success;
 }
 
@@ -254,7 +257,7 @@ FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead
 
 	struct dirent dent;
 
-	struct direntX* ddd = iso_readdir(((int)ptr)-100);
+	struct direntX* ddd = iso_readdir(((int)ptr)/2-50);
 	if (!ddd) {
 		memset(where, 0, sizeof(dent));
 		return FileStatus::Failure;
