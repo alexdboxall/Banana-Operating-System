@@ -231,11 +231,11 @@ FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 		}
 		iso9660Owner = __fn[0];
 	}
+	kprintf("OPEN DIR.\n");
+	kprintf("__fn = %s. %c. 0x%X", __fn, __fn[0], disks[(int) __fn[0]]);
 	if (disks[(int) __fn[0]]->diskChanged) {
 		init_percd(iso9660Owner);
 	}
-
-	kprintf("OPEN DIR.\n");
 
 	int fd = iso_open(__fn + 3, 1);
 
