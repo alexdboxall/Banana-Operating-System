@@ -96,7 +96,7 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 		}
 		iso9660Owner = __fn[0];
 	}
-	if (disks[path[0]]->diskChanged) {
+	if (disks[(int)__fn[0]]->diskChanged) {
 		init_percd(iso9660Owner);
 	}
 
@@ -189,7 +189,7 @@ FileStatus ISO9660::stat(const char* path, uint64_t* size, bool* directory)
 		}
 		iso9660Owner = path[0];
 	}
-	if (disks[path[0]]->diskChanged) {
+	if (disks[(int) path[0]]->diskChanged) {
 		init_percd(iso9660Owner);
 	}
 
@@ -231,7 +231,7 @@ FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 		}
 		iso9660Owner = __fn[0];
 	}
-	if (disks[path[0]]->diskChanged) {
+	if (disks[(int) __fn[0]]->diskChanged) {
 		init_percd(iso9660Owner);
 	}
 
