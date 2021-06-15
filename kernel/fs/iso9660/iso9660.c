@@ -783,8 +783,10 @@ struct direntX* iso_readdir(int fd)
 	int		len;
 	char* pnt;
 
-	if (fd >= MAX_ISO_FILES || fh[fd].first_extent == 0 || !fh[fd].dir || fh[fd].broken)
+	if (fd >= MAX_ISO_FILES || fh[fd].first_extent == 0 || !fh[fd].dir || fh[fd].broken) {
+		kprintf("FD = %d, 1st = %d, dir = %d, broken = %d\n", fd, fh[fd].first_extent, fh[fd].dir, fh[fd].broken);
 		return NULL;
+	}
 
 	/* Scan forwards until we find the next valid entry, an
 	   end-of-entry mark, or run out of dir size. */
