@@ -73,25 +73,21 @@ namespace Fs
 
 		uint64_t sz;
 		bool dir = false;
-		kprintf("statting directory %s in setcwd()\n", tmpbuffer);
+
 		FileStatus status = f->stat(&sz, &dir);
 
 		if (status == FileStatus::NotExist) {
 			delete f;
-			kprintf("NOT EXIST.\n");
 			return 1;
 
 		} else if (dir == false) {
 			delete f;
-			kprintf("NOT DIRECTORY.\n");
 			return 2;
 
 		} else if (status != FileStatus::Success) {
 			delete f;
-			kprintf("NOT SUCCESS.\n");
 			return 1;
 		}
-		kprintf("SUCCESS.\n");
 
 		delete f;
 		strcpy(process->cwd, tmpbuffer);

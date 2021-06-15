@@ -242,15 +242,15 @@ FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 		iso9660Owner = __fn[0];
 	}
 	init_percd(iso9660Owner);
+	kprintf("OPEN DIR.\n");
 
 	int fd = iso_open(__fn + 3, 1);
-	kprintf("OPEN DIR CALLED WITH DIR %s\n", __fn + 3);
+
 	if (fd == -1) {
-		kprintf("FAILURE.\n");
 		return FileStatus::Failure;
 	}
 
-	kprintf("SUCCESS.\n");
+	kprintf("OPEN DIR SUCCESS %s.\n", __fn);
 
 	*ptr = (void*) (fd * 2 + 101);
 	return FileStatus::Success;

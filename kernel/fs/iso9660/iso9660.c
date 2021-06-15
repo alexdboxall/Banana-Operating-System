@@ -506,17 +506,11 @@ static iso_dirent_t* find_object(const char* fn, int dir,
 					if (!strnicmp(rrname, fn, fnlen)) {
 						if (!((dir << 1) ^ de->flags))
 							return de;
-						else {
-							return NULL;		//@@@ NEW
-						}
 					}
 				} else {
 					if (!fncompare(de->name, de->name_len, fn)) {
 						if (!((dir << 1) ^ de->flags))
 							return de;
-						else {
-							return NULL;		//@@@ NEW
-						}
 					}
 				}
 			}
