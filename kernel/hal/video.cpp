@@ -46,7 +46,7 @@ void Video::putpixel(int x, int y, uint32_t col)
 	KePanic("Video::pixel MUST BE OVERRIDDEN\n");
 }
 
-void Video::drawCursor(int mouse_x, int mouse_y, uint8_t* data, int invertMouse)
+void Video::drawCursor(int mouse_x, int mouse_y, uint32_t* data, int invertMouse)
 {
 	//No more hacky mouse, instead we're going to rather inefficiently 
 	//copy the pixels from our mouse image into the framebuffer

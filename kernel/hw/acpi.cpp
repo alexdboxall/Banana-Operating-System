@@ -65,6 +65,9 @@ Parts of this are based on Minux:
 62 
 */
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic warning "-Wcast-align"
+
 #include "core/common.hpp"
 #include "core/virtmgr.hpp"
 #include "thr/elf.hpp"
@@ -91,15 +94,15 @@ uint16_t legacyIRQFlags[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 uint32_t apicNMIInfo[MAX_IOAPICS];
 int nextAPICNMI;
 
-struct RSDP* RSDPpointer;
-struct RSDT* RSDTpointer;
-struct MADT* MADTpointer;
+uint8_t* RSDPpointer;
+uint8_t* RSDTpointer;
+uint8_t* MADTpointer;
 bool usingXSDT;
 
 ACPITable acpiTables[64];
 int nextACPITable = 0;
 
-struct RSDP* findRSDP()
+uint8_t* findRSDP()
 {
 	if (!computer->features.hasACPI) {
 		return 0;
@@ -121,7 +124,7 @@ struct RSDP* findRSDP()
 	return 0;
 }
 
-void loadACPITables(struct RSDT* ptr)
+void loadACPITables(uint8_t* ptr)
 {
 	if (!computer->features.hasACPI) return;
 
@@ -169,7 +172,7 @@ void loadACPITables(struct RSDT* ptr)
 	}
 }
 
-struct RSDT* findRSDT(uint8_t* ptr)
+uint8_t* findRSDT(uint8_t* ptr)
 {
 	if (!computer->features.hasACPI) {
 		return 0;
@@ -179,7 +182,7 @@ struct RSDT* findRSDT(uint8_t* ptr)
 	memcpy(&a, ptr, sizeof(a));
 
 	uint8_t rev = a.firstPart.Revision;
-	struct RSDT* ret = 0;
+	uint8_t* ret = 0;
 
 	struct XSDT* xsdt = (struct XSDT*) a.XsdtAddress;
 	struct RSDT* rsdt = (struct RSDT*) a.firstPart.RsdtAddress;
@@ -189,11 +192,11 @@ struct RSDT* findRSDT(uint8_t* ptr)
 
 	if (rev == 0) {
 		usingXSDT = 0;
-		ret = (struct RSDT*) (size_t) rsdt;
+		ret = (uint8_t*) (size_t) rsdt;
 
 	} else if (rev == 2) {
 		usingXSDT = 1;
-		ret = (struct RSDT*) (size_t) xsdt;
+		ret = (uint8_t*) (size_t) xsdt;
 
 	} else {
 		return 0;
@@ -516,3 +519,6 @@ int ACPI::close(int mode, int b, void* c)
 
 	return -1;
 }
+
+
+#pragma GCC diagnostic pop
