@@ -66,11 +66,6 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 {
 	///TODO:	get all touchy-feely AND LOCK THE MEMORY (aka. ensure the buffer is in actual RAM, not the swapfile)
 
-	for (int i = 0; i < count; ++i) {
-		unsigned int* abc = (unsigned int*) (((uint8_t*) ptr) + i * disk->sectorSize);
-		asm volatile ("" : "=m" (*abc) : "r" (*abc));
-	}
-
 	//mutex->acquire();
 
 	if (readCacheValid) {
