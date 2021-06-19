@@ -118,14 +118,15 @@ void VgaText::load()
 
 void VgaText::scrollScreen()
 {
+	uint8_t* displayData8 = (uint8_t*) displayData;
 	for (int y = 1; y < VgaText::bufferHeight; ++y) {
 		for (int x = 0; x < 160; ++x) {
-			displayData[y * 160 + x - 160] = displayData[y * 160 + x];
+			displayData8[y * 160 + x - 160] = displayData8[y * 160 + x];
 			if (y == VgaText::bufferHeight - 1) {
 				if (x & 1) {
-					this->displayData[y * 160 + x] = combineColours((uint8_t) currentFg, (uint8_t) currentBg);
+					this->displayData8[y * 160 + x] = combineColours((uint8_t) currentFg, (uint8_t) currentBg);
 				} else {
-					this->displayData[y * 160 + x] = ' ';
+					this->displayData8[y * 160 + x] = ' ';
 				}
 			}
 		}
@@ -148,7 +149,7 @@ void VgaText::writeCharacter(char c, enum VgaColour fg, enum VgaColour bg, int x
 
 	uint16_t pos = (y * VgaText::width + x);
 
-	uint16_t* ptr = (uint16_t*) this->displayData;
+	uint16_t* ptr = this->displayData;
 	ptr += pos;
 	*ptr = word;
 
@@ -166,7 +167,7 @@ void VgaText::puts(const char* c, enum VgaColour fg, enum VgaColour bg)
 	uint8_t cols = combineColours((uint8_t) fg, (uint8_t) bg);
 
 	uint16_t pos = (cursorY * VgaText::width + cursorX);
-	uint16_t* ptr = (uint16_t*) this->displayData;
+	uint16_t* ptr = this->displayData;
 	ptr += pos;
 
 	for (int i = 0; c[i]; ++i) {
@@ -190,7 +191,7 @@ void VgaText::puts(const char* c, enum VgaColour fg, enum VgaColour bg)
 			updateCursor();
 
 			pos = (cursorY * VgaText::width + cursorX);
-			ptr = (uint16_t*) this->displayData;
+			ptr = this->displayData;
 			ptr += pos;
 			continue;
 		}
@@ -200,7 +201,7 @@ void VgaText::puts(const char* c, enum VgaColour fg, enum VgaColour bg)
 			writeCharacter(' ', currentFg, currentBg, cursorX, cursorY);
 
 			pos = (cursorY * VgaText::width + cursorX);
-			ptr = (uint16_t*) this->displayData;
+			ptr = this->displayData;
 			ptr += pos;
 			continue;
 		}
@@ -215,7 +216,7 @@ void VgaText::puts(const char* c, enum VgaColour fg, enum VgaColour bg)
 		//recalculate positions because a scroll might have happened
 		if (cursorX == 0) {
 			pos = (cursorY * VgaText::width + cursorX);
-			ptr = (uint16_t*) this->displayData;
+			ptr = this->displayData;
 			ptr += pos;
 		}
 	}
@@ -484,7 +485,7 @@ VgaText::VgaText(const char* n)
 {
 	terminalDisplayHeight = bufferHeight;
 
-	displayData = (uint8_t*) Virt::allocateKernelVirtualPages(1);
+	displayData = (uint16_t*) Virt::allocateKernelVirtualPages(1);
 	Virt::getAKernelVAS()->mapPage(Phys::allocatePage(), (size_t) displayData, PAGE_PRESENT | PAGE_USER | PAGE_ALLOCATED | PAGE_SWAPPABLE);
 	memset(displayData, 0, bufferHeight * width * 2);
 

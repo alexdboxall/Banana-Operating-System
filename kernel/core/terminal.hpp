@@ -48,7 +48,7 @@ private:
 protected:
 
 public:	
-	uint8_t* displayData;
+	uint16_t* displayData;
 
 	int terminalDisplayHeight;
 
