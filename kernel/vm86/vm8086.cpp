@@ -273,7 +273,7 @@ namespace Vm
 
 		uint8_t* ip = (uint8_t*) (size_t) realToLinear(r->cs, r->eip);
 		uint16_t* stack = (uint16_t*) (size_t) realToLinear(r->ss, r->useresp);
-		uint32_t* stack32 = (uint32_t*) stack;
+		uint32_t* stack32 = (uint32_t*) (size_t) realToLinear(r->ss, r->useresp);
 		uint16_t* ivt = (uint16_t*) (size_t) 0;
 
 		static uint8_t pause = 0;
