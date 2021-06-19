@@ -15,6 +15,9 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic warning "-Wcast-align"
+
 ATAPI::ATAPI() : PhysicalDisk("ATAPI Disk", 2048)
 {
 
@@ -248,3 +251,5 @@ int ATAPI::close(int a, int b, void* c)
 	delete cache;
 	return 0;
 }
+
+#pragma GCC diagnostic pop

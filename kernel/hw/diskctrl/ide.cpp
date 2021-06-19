@@ -13,6 +13,9 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic warning "-Wcast-align"
+
 IDE::IDE(): HardDiskController("Standard IDE Controller")
 {
 
@@ -470,3 +473,5 @@ void IDE::detect()
 		}
 	}
 }
+
+#pragma GCC diagnostic pop
