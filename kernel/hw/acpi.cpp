@@ -91,15 +91,15 @@ uint16_t legacyIRQFlags[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 uint32_t apicNMIInfo[MAX_IOAPICS];
 int nextAPICNMI;
 
-uint8_t* RSDPpointer;
-uint8_t* RSDTpointer;
-uint8_t* MADTpointer;
+struct RSDP* RSDPpointer;
+struct RSDT* RSDTpointer;
+struct MADT* MADTpointer;
 bool usingXSDT;
 
 ACPITable acpiTables[64];
 int nextACPITable = 0;
 
-uint8_t* findRSDP()
+struct RSDP* findRSDP()
 {
 	if (!computer->features.hasACPI) {
 		return 0;
@@ -121,7 +121,7 @@ uint8_t* findRSDP()
 	return 0;
 }
 
-void loadACPITables(uint8_t* ptr)
+void loadACPITables(struct RSDT* ptr)
 {
 	if (!computer->features.hasACPI) return;
 
@@ -169,7 +169,7 @@ void loadACPITables(uint8_t* ptr)
 	}
 }
 
-uint8_t* findRSDT(uint8_t* ptr)
+struct RSDT* findRSDT(uint8_t* ptr)
 {
 	if (!computer->features.hasACPI) {
 		return 0;
@@ -179,7 +179,7 @@ uint8_t* findRSDT(uint8_t* ptr)
 	memcpy(&a, ptr, sizeof(a));
 
 	uint8_t rev = a.firstPart.Revision;
-	uint8_t* ret = 0;
+	struct RSDT* ret = 0;
 
 	struct XSDT* xsdt = (struct XSDT*) a.XsdtAddress;
 	struct RSDT* rsdt = (struct RSDT*) a.firstPart.RsdtAddress;
@@ -189,11 +189,11 @@ uint8_t* findRSDT(uint8_t* ptr)
 
 	if (rev == 0) {
 		usingXSDT = 0;
-		ret = (uint8_t*) (size_t) rsdt;
+		ret = (struct RSDT*) (size_t) rsdt;
 
 	} else if (rev == 2) {
 		usingXSDT = 1;
-		ret = (uint8_t*) (size_t) xsdt;
+		ret = (struct RSDT*) (size_t) xsdt;
 
 	} else {
 		return 0;
