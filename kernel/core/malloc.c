@@ -3,6 +3,7 @@
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic warning "-Wunused-function"
+#pragma GCC diagnostic warning "-Wcast-align"
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
