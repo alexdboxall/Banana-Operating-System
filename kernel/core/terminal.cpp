@@ -124,9 +124,9 @@ void VgaText::scrollScreen()
 			displayData8[y * 160 + x - 160] = displayData8[y * 160 + x];
 			if (y == VgaText::bufferHeight - 1) {
 				if (x & 1) {
-					this->displayData8[y * 160 + x] = combineColours((uint8_t) currentFg, (uint8_t) currentBg);
+					displayData8[y * 160 + x] = combineColours((uint8_t) currentFg, (uint8_t) currentBg);
 				} else {
-					this->displayData8[y * 160 + x] = ' ';
+					displayData8[y * 160 + x] = ' ';
 				}
 			}
 		}
