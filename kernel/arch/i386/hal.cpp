@@ -157,8 +157,8 @@ void gpFault(regs* r, void* context)
 		}
 	}
 
-	displayDebugInfo(r);
 	displayProgramFault("General protection fault");
+	displayDebugInfo(r);
 
 	Thr::terminateFromIRQ();
 }
@@ -171,8 +171,8 @@ void pgFault(regs* r, void* context)
 		return;
 	}
 
-	displayDebugInfo(r);
 	displayProgramFault("Page fault");
+	displayDebugInfo(r);
 
 	Thr::terminateFromIRQ();
 }
@@ -184,8 +184,8 @@ void nmiHandler(regs* r, void* context)
 
 void otherISRHandler(regs* r, void* context)
 {
-	displayDebugInfo(r);
 	displayProgramFault("Unhandled exception - CHECK KERNEL LOGS");
+	displayDebugInfo(r);
 
 	Thr::terminateFromIRQ();
 }
@@ -204,8 +204,8 @@ void opcodeFault(regs* r, void* context)
 		return;
 	}
 
-	displayDebugInfo(r);
 	displayProgramFault("Opcode fault");
+	displayDebugInfo(r);
 
 	Thr::terminateFromIRQ();
 }
