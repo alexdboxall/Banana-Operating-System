@@ -335,8 +335,13 @@ int VESA::open(int a, int b, void* c)
 
 uint32_t VESA::readPixelApprox(int x, int y)
 {
-	//ONLY WORKS ON 32 BIT MODES!!!!
-	return ((uint32_t*) vram)[y * pitch + x];
+	if (bpp == 32) {
+		//ONLY WORKS ON 32 BIT MODES!!!!
+		return ((uint32_t*) vram)[y * pitch + x];
+
+	} else {
+		KePanic("WRONG BPP (VESA)");
+	}
 }
 
 inline __attribute__((always_inline)) uint32_t colTo15(uint32_t col)
