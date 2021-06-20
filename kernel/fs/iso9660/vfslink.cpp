@@ -245,7 +245,10 @@ FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 	kprintf("OPEN DIR.\n");
 	kprintf("__fn = %s. %c. 0x%X", __fn, __fn[0], disks[(int) __fn[0]]);
 	if (!disks[(int) __fn[0]] || disks[(int) __fn[0]]->diskChanged) {
+
+
 		kprintf("ISO9660::openDir DISK CHANGE TRUE\n");
+		kprintf("__fn = %s, __fn[0] = %c, disk = 0x%X\n", __fn, __fn[0], disks[(int) __fn[0]]);
 
 		if (disks[(int) __fn[0]]) {
 			kprintf("ISO9660::openDir DISK CHANGE CLEARING\n");
