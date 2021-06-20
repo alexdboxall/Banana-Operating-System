@@ -25,6 +25,7 @@ public:
 	int open(int, int, void*);
 	int close(int, int, void*);
 
+	virtual uint32_t readPixelApprox(int x, int y) override;
 	virtual void bitblit(int sx, int sy, int x, int y, int w, int h, int pitch, uint32_t* data);
 	virtual void putpixel(int x, int y, uint32_t colour) override;
 	virtual void putrect(int x, int y, int w, int h, uint32_t colour) override;

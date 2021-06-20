@@ -275,6 +275,7 @@ FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead
 	if (!ddd) {
 		kernelProcess->terminal->puts("\nREAD DIR FAILURE\n");
 		memset(where, 0, sizeof(dent));
+		*bytesRead = 0;
 		return FileStatus::Failure;
 	}
 

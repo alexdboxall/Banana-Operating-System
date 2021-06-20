@@ -104,7 +104,7 @@ void VESA::setMode(int mode)
 	if (bpp == 0) {
 		kprintf("BPP IS ZERO\n");
 		if (mode == 0x4114) {
-			panic("BPP IS ZERO");
+			KePanic("BPP IS ZERO");
 		}
 
 		File* fil = new File("C:/Banana/System/vesamode.dat", kernelProcess);
@@ -121,7 +121,7 @@ void VESA::setMode(int mode)
 	if (width == 0 && height == 0 && pitch == 0) {
 		kprintf("UNSUPPORTED VESA MODE\n");
 		if (mode == 0x4114) {
-			panic("UNSUPPORTED VESA MODE");
+			KePanic("UNSUPPORTED VESA MODE");
 		}
 
 		File* fil = new File("C:/Banana/System/vesamode.dat", kernelProcess);
@@ -329,7 +329,14 @@ int VESA::open(int a, int b, void* c)
 	if (best.bpp == 16) ppxptr = &VESA::putpixel16;
 	if (best.bpp == 24) ppxptr = &VESA::putpixel24;
 	if (best.bpp == 32) ppxptr = &VESA::putpixel32;
+
 	return 0;
+}
+
+uint32_t VESA::readPixelApprox(int x, int y)
+{
+	//ONLY WORKS ON 32 BIT MODES!!!!
+	return ((uint32_t*) vram)[y * pitch + x];
 }
 
 inline __attribute__((always_inline)) uint32_t colTo15(uint32_t col)

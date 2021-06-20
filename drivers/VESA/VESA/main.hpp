@@ -57,6 +57,8 @@ public:
 
 	void (VESA::*ppxptr)(int, int, uint32_t);
 
+	virtual uint32_t readPixelApprox(int x, int y) override;
+
 	virtual void putpixel(int x, int y, uint32_t colour) override;
 };
 

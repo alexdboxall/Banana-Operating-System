@@ -46,6 +46,12 @@ void Video::putpixel(int x, int y, uint32_t col)
 	KePanic("Video::pixel MUST BE OVERRIDDEN\n");
 }
 
+uint32_t Video::readPixelApprox(int x, int y)
+{
+	KePanic("Video::readPixelApprox MUST BE OVERRIDDEN\n");
+	return 0;
+}
+
 void Video::drawCursor(int mouse_x, int mouse_y, uint32_t* data, int invertMouse)
 {
 	//No more hacky mouse, instead we're going to rather inefficiently 

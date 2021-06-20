@@ -62,6 +62,11 @@ VGAVideo::VGAVideo(): Video("VGA Display")
 
 }
 
+uint32_t VGAVideo::readPixelApprox(int x, int y)
+{
+	return 0x808080;
+}
+
 int VGAVideo::close(int a, int b, void* c)
 {
 	return 0;
