@@ -96,10 +96,10 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 		}
 		iso9660Owner = __fn[0];
 	}
-	if (!disks[(int) __fn[0]] || disks[(int)__fn[0]]->diskChanged) {
+	if (!disks[(int) __fn[0] - 'A'] || disks[(int) __fn[0] - 'A']->diskChanged) {
 		kprintf("ISO9660::open DISK CHANGE TRUE\n");
-		if (disks[(int) __fn[0]]) {
-			disks[(int) __fn[0]]->diskChanged = false;
+		if (disks[(int) __fn[0] - 'A']) {
+			disks[(int) __fn[0] - 'A']->diskChanged = false;
 			kprintf("ISO9660::open DISK CHANGE CLEARING\n");
 
 		}
@@ -195,11 +195,11 @@ FileStatus ISO9660::stat(const char* path, uint64_t* size, bool* directory)
 		}
 		iso9660Owner = path[0];
 	}
-	if (!disks[(int) path[0]] || disks[(int) path[0]]->diskChanged) {
+	if (!disks[(int) path[0] - 'A'] || disks[(int) path[0] - 'A']->diskChanged) {
 		kprintf("ISO9660::stat DISK CHANGE TRUE\n");
-		if (disks[(int) path[0]]) {
+		if (disks[(int) path[0] - 'A']) {
 			kprintf("ISO9660::stat DISK CHANGE CLEARING\n");
-			disks[(int) path[0]]->diskChanged = false;
+			disks[(int) path[0] - 'A']->diskChanged = false;
 		}
 		init_percd(iso9660Owner);
 	}
@@ -244,15 +244,13 @@ FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 	}
 	kprintf("OPEN DIR.\n");
 	kprintf("__fn = %s. %c. 0x%X", __fn, __fn[0], disks[(int) __fn[0]]);
-	if (!disks[(int) __fn[0]] || disks[(int) __fn[0]]->diskChanged) {
-
-
+	if (!disks[(int) __fn[0] - 'A'] || disks[(int) __fn[0] - 'A']->diskChanged) {
 		kprintf("ISO9660::openDir DISK CHANGE TRUE\n");
-		kprintf("__fn = %s, __fn[0] = %c, disk = 0x%X\n", __fn, __fn[0], disks[(int) __fn[0]]);
+		kprintf("__fn = %s, __fn[0] = %c, disk = 0x%X\n", __fn, __fn[0], disks[(int) __fn[0] - 'A']);
 
-		if (disks[(int) __fn[0]]) {
+		if (disks[(int) __fn[0] - 'A']) {
 			kprintf("ISO9660::openDir DISK CHANGE CLEARING\n");
-			disks[(int) __fn[0]]->diskChanged = false;
+			disks[(int) __fn[0] - 'A']->diskChanged = false;
 		}
 
 		init_percd(iso9660Owner);
