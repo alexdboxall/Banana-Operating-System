@@ -97,6 +97,8 @@ void displayDebugInfo(regs* r)
 
 	setActiveTerminal(kernelProcess->terminal);
 
+	kernelProcess->terminal->puts("\n FAULT NUM: ");
+	kernelProcess->terminal->puts(r->int_no);
 	kernelProcess->terminal->puts("\n TASK: ");
 	kernelProcess->terminal->puts(currentTaskTCB->processRelatedTo->taskname);
 	kernelProcess->terminal->puts("\n EIP: ");
