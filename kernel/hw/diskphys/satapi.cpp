@@ -258,7 +258,7 @@ void SATAPI::detectMedia()
 	cache->invalidateReadBuffer();
 
 	for (int i = 0; i < 26; ++i) {
-		if (disks[i]->physDisk == this) {
+		if (disks[i] && disks[i]->physDisk == this) {
 			disks[i]->diskChanged = true;
 		}
 	}

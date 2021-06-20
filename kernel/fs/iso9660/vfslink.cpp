@@ -96,10 +96,10 @@ FileStatus ISO9660::open(const char* __fn, void** ptr, FileOpenMode mode)
 		}
 		iso9660Owner = __fn[0];
 	}
-	//if (!disks[(int) __fn[0]] || disks[(int)__fn[0]]->diskChanged) {
-	//	if (disks[(int) __fn[0]]) disks[(int) __fn[0]]->diskChanged = false;
+	if (!disks[(int) __fn[0]] || disks[(int)__fn[0]]->diskChanged) {
+		if (disks[(int) __fn[0]]) disks[(int) __fn[0]]->diskChanged = false;
 		init_percd(iso9660Owner);
-	//}
+	}
 
 	int fd = iso_open(__fn + 3, 0);
 
