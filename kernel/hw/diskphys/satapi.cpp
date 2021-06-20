@@ -28,6 +28,9 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic warning "-Wcast-align"
+
 SATAPI::SATAPI(): PhysicalDisk("SATAPI Disk", 2048)
 {
 
@@ -339,3 +342,5 @@ int SATAPI::eject()
 
 	return 0;
 }
+
+#pragma GCC diagnostic pop
