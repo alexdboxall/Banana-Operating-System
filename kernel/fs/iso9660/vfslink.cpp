@@ -242,14 +242,9 @@ FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 		}
 		iso9660Owner = __fn[0];
 	}
-	kprintf("OPEN DIR.\n");
-	kprintf("__fn = %s. %c. 0x%X", __fn, __fn[0], disks[(int) __fn[0]]);
-	if (!disks[(int) __fn[0] - 'A'] || disks[(int) __fn[0] - 'A']->diskChanged) {
-		kprintf("ISO9660::openDir DISK CHANGE TRUE\n");
-		kprintf("__fn = %s, __fn[0] = %c, disk = 0x%X\n", __fn, __fn[0], disks[(int) __fn[0] - 'A']);
 
+	if (!disks[(int) __fn[0] - 'A'] || disks[(int) __fn[0] - 'A']->diskChanged) {
 		if (disks[(int) __fn[0] - 'A']) {
-			kprintf("ISO9660::openDir DISK CHANGE CLEARING\n");
 			disks[(int) __fn[0] - 'A']->diskChanged = false;
 		}
 
@@ -259,12 +254,11 @@ FileStatus ISO9660::openDir(const char* __fn, void** ptr)
 	int fd = iso_open(__fn + 3, 1);
 
 	if (fd == -1) {
-		kprintf("OPEN DIR FAILURE %s.\n", __fn);
-
+		kernelProcess->terminal->puts("\nOPEN DIR FAILURE\n");
 		return FileStatus::Failure;
 	}
 
-	kprintf("OPEN DIR SUCCESS %s.\n", __fn);
+	kernelProcess->terminal->puts("\nOPEN DIR SUCCESS\n");
 
 	*ptr = (void*) (fd * 2 + 101);
 	return FileStatus::Success;
@@ -279,7 +273,7 @@ FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead
 
 	struct direntX* ddd = iso_readdir(((int)ptr)/2-50);
 	if (!ddd) {
-		kprintf("READ DIR FAILURE.\n");
+		kernelProcess->terminal->puts("\nREAD DIR FAILURE\n");
 		memset(where, 0, sizeof(dent));
 		return FileStatus::Failure;
 	}
@@ -292,7 +286,7 @@ FileStatus ISO9660::readDir(void* ptr, size_t bytes, void* where, int* bytesRead
 	memcpy(where, &dent, bytes);
 	*bytesRead = sizeof(dent);
 
-	kprintf("READ DIR SUCCESS -> %s, %d\n", ddd->d_name, dent.d_type);
+	kernelProcess->terminal->puts("\nREAD DIR SUCCESS\n");
 
 	return FileStatus::Success;
 }
