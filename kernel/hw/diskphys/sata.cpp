@@ -12,6 +12,9 @@
 #include "hal/logidisk.hpp"
 #include "hw/cpu.hpp"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic warning "-Wcast-align"
+
 extern int ataSectorsRead;
 extern int ataSectorsWritten;
 
@@ -280,3 +283,5 @@ void SATA::powerSaving(PowerSavingLevel level)
 {
 
 }
+
+#pragma GCC diagnostic pop
