@@ -23,6 +23,9 @@ extern "C" {
 #include "context.hpp"
 #include "window.hpp"
 
+#pragma GCC optimize ("O3")
+#pragma GCC optimize ("-fno-strict-aliasing")
+
 void start(void* s)
 {
 	extern Video* screen;
