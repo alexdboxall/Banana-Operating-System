@@ -1,8 +1,12 @@
 #include "context.hpp"
 
-
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
+
+#define SSFN_IMPLEMENTATION
+#include "ssfn.h"
+
+ssfn_t ssfn_ctx;
 
 void NIContext::drvPutpixel4(int x, int y, uint32_t col)
 {
@@ -28,23 +32,35 @@ void NIContext::drvDarken4(int x, int y, int amount)
 
 int NIContext::renderTTF(int x, int y, uint32_t col, char* str, int* chars)
 {
-	ssfn_buf.x = 0;
-	ssfn_buf.y = 0;
-	ssfn_buf.fg = 0xFF000000ULL | col;
+	memset(glyphRenderBuffer, 0xFF, 64 * 64 * 4);
 
 	if (!chars) {
 		KePanic("NIContext::drvRenderTTF4");
 	}
+	
+	int ww, hh, lleft, ttop;
+	ssfn_bbox(&ssfn_ctx, str, &ww, &hh, &lleft, &ttop);
+	
+	ssfn_buf_t ssfn_buf;
+	ssfn_buf.ptr = (uint8_t*) glyphRenderBuffer;
+	ssfn_buf.w = 64;
+	ssfn_buf.h = 64;
+	ssfn_buf.p = 64 * 4;
+	ssfn_buf.x = 0;
+	ssfn_buf.y = ttop;
+	ssfn_buf.fg = 0xFF000000ULL | col;
 
 	*chars = ssfn_render(&ssfn_ctx, &ssfn_buf, str);
 
 	int k = 0;
-	for (int j = 0; j < 144; ++j) {
-		for (int i = 0; i < 144; ++i, ++k) {
-			if (glyphRenderBuffer[k] >> 24 == 0xFF) {
+	for (int j = 0; j < hh; ++j) {
+		for (int i = 0; i < ssfn_buf.x; ++i) {
+			if (glyphRenderBuffer[k] != 0xFFFFFFFFU) {
 				screen->putpixel(x + i, y + j, glyphRenderBuffer[k] & 0xFFFFFF);
 			}
+			++k;
 		}
+		k += 64 - ssfn_buf.x;
 	}
 
 	return ssfn_buf.x;
@@ -70,11 +86,7 @@ NIContext::NIContext(Video* vid, int w, int h, int p, int _bitsPerPixel)
 	bitsPerPixel = _bitsPerPixel;
 
 	memset(&ssfn_ctx, 0, sizeof(ssfn_ctx));
-	glyphRenderBuffer = (uint32_t*) malloc(144 * 144 * 4);
-	ssfn_buf.ptr = (uint8_t*) glyphRenderBuffer;
-	ssfn_buf.w = 144;
-	ssfn_buf.h = 144;
-	ssfn_buf.p = 144 * 4;
+	glyphRenderBuffer = (uint32_t*) malloc(64 * 64 * 4);
 
 	nextFont = 0;
 
@@ -128,6 +140,7 @@ NIContext::NIContext(Video* vid, int w, int h, int p, int _bitsPerPixel)
 
 		uint8_t* ptr = (uint8_t*) malloc(siz);
 		status = fil->read(siz, ptr, &br);
+		kprintf("font is of size %d\n", siz);
 		if (status != FileStatus::Success || br != siz) {
 			fil->close();
 			free(ptr);
@@ -135,14 +148,19 @@ NIContext::NIContext(Video* vid, int w, int h, int p, int _bitsPerPixel)
 			continue;
 		}
 
+		kprintf("Loaded font: %s\n", f);
+
 		int ssfn_res = ssfn_load(&ssfn_ctx, ptr);
+		kprintf("SSFN_RES = %d\n", ssfn_res);
 
 		fil->close();
 		delete fil;
 
-		kprintf("Loaded font: %s\n", f);
+		break;
 	}
 
 	dir->close();
 	delete dir;
+
+	ssfn_select(&ssfn_ctx, SSFN_FAMILY_ANY, nullptr, SSFN_STYLE_REGULAR, 16);
 }

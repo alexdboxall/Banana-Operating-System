@@ -53,6 +53,41 @@ void start(void* s)
 	sha3.SHADOW_TEST();
 	win3.realdraw();
 
+
+	{
+		int chrs = 0;
+		int total = 0;
+		int xp = win3.xpos + 15;
+		int yp = win3.ypos + 3;
+
+		do {
+			xp += ctxt.renderTTF(xp, yp, 0, (char*) "Run..." + total, &chrs);
+			total += chrs;
+		} while (chrs);
+	}
+	{
+		int chrs = 0;
+		int total = 0;
+		int xp = win2.xpos + 15;
+		int yp = win2.ypos + 3;
+
+		do {
+			xp += ctxt.renderTTF(xp, yp, 0xAAAAAA, (char*) "About Banana" + total, &chrs);
+			total += chrs;
+		} while (chrs);
+	}
+	{
+		int chrs = 0;
+		int total = 0;
+		int xp = win1.xpos + 15;
+		int yp = win1.ypos + 3;
+
+		do {
+			xp += ctxt.renderTTF(xp, yp, 0xAAAAAA, (char*) "Notepad" + total, &chrs);
+			total += chrs;
+		} while (chrs);
+	}
+
 	while (1) {
 		blockTask(TaskState::Paused);
 	}

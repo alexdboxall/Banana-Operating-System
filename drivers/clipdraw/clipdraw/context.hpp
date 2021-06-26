@@ -3,17 +3,14 @@
 #include <stdint.h>
 #include <hal/video.hpp>
 
-#define SSFN_IMPLEMENTATION
-#include "ssfn.h"
+#pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
 
 class NIContext
 {
 private:
 
 protected:
-	ssfn_t ssfn_ctx;
-	ssfn_buf_t ssfn_buf;
-
 	uint32_t* glyphRenderBuffer;
 
 	char* fontNames[256];
