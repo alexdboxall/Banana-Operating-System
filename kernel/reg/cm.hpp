@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "fs/vfs.hpp"
 
 #pragma pack(push,1)
 
@@ -29,7 +30,7 @@
 
 
 typedef struct Reghive_Tag {
-    FILE* f;
+    File* f;
     bool valid;
     
     struct Header {

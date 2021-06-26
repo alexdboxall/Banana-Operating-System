@@ -5,7 +5,6 @@
 #include "hal/vcache.hpp"
 #include "hal/bus.hpp"
 #include "hal/diskphys.hpp"
-#include "fs/vfs.hpp"
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -22,42 +21,35 @@ extern "C" {
 
 Reghive* CmOpen(const char* filename)
 {
-    Reghive* reg = malloc(sizeof(Reghive));
+    int br;
+    bool dir;
+    uint64_t size;
 
-    reg->f = fopen(filename, "rb");
-    fseek(reg->f, 0, SEEK_END);
-    long size = ftell(reg->f);
-    rewind(reg->f);
+    Reghive* reg = (Reghive*) malloc(sizeof(Reghive));
+
+    reg->f = new File(filename, kernelProcess);
+    reg->f->stat(&siz, &dir);
+    reg->f->open(FileOpenMode::Read);
 
     uint8_t* data = malloc(size);
-    fread(data, size, 1, reg->f);
-    fclose(reg->f);
+    reg->f->read(size, data, &br);
+    reg->f->close();
 
-    reg->f = fopen(filename, "wb+");
-    fwrite(data, size, 1, reg->f);
+    reg->f->open((FileOpenMode) (((int) FileOpenMode::Read) | ((int) FileOpenMode::Write) | ((int) FileOpenMode::CreateAlways)));
+    reg->f->write(size, data, &br);
     free(data);
 
     if (!reg->f) {
-        printf("ERR 1\n");
-        abort();
-        free(reg);
-        return NULL;
+        KePanic("BAD REGISTRY (A)");
     }
 
-    rewind(reg->f);
-    fread(&reg->header, sizeof(reg->header), 1, reg->f);
-    rewind(reg->f);
-
+    reg->f->seek(0);
+    reg->f->read(sizeof(reg->header), &reg->header, &br);
+    reg->f->seek(0);
 
     if (memcmp(reg->header.sig, "REGISTRY", 8)) {
-        printf("ERR 2\n");
-        fclose(reg->f);
-        abort();
-        free(reg);
-        return NULL;
+        KePanic("BAD REGISTRY (B)");
     }
-
-    printf("NUM = %d\n", reg->header.numExtents);
 
     reg->valid = true;
 
@@ -69,7 +61,8 @@ void CmClose(Reghive* reg)
     if (!reg->valid) {
         return;
     }
-    fclose(reg->f);
+
+    reg->f->close();
 }
 
 int CmCreateExtent(Reghive* reg, int parent, int type, uint8_t* data)
@@ -150,8 +143,7 @@ void CmSetString(Reghive* reg, int extnum, const char* data)
 {
     int components = (int) (strlen(data) + 38) / 39;
     if (components > 7) {
-        printf("SET STRING TOO LONG!");
-        abort();
+        KePanic("CmSetString TOO LONG");
     }
 
     Extent ext;
@@ -221,8 +213,7 @@ int CmFindInDirectory(Reghive* reg, int direntry, const char* name)
         }
         CmReadExtent(reg, num, (uint8_t*) &ext);
         if (ext.type == EXTENT_STRING_DATA && ext.type == EXTENT_BLANK) {
-            printf("ASSERTION FAILED.\n");
-            abort();
+            KePanic("CmFindInDirectory ASSERTION FAILED");
         }
         if (!memcmp(wantName, ext.s.name, 18)) {
             return num;
@@ -274,9 +265,9 @@ void CmReadExtent(Reghive* reg, int extnum, uint8_t* data)
         return;
     }
 
-    rewind(reg->f);
-    fseek(reg->f, extnum * EXTENT_LENGTH, SEEK_SET);
-    fread(data, EXTENT_LENGTH, 1, reg->f);
+    int br;
+    reg->f->seek(extnum * EXTENT_LENGTH);
+    reg->f->read(EXTENT_LENGTH, data, &br);
 
     if (extnum) {
         uint32_t* d = (uint32_t*) data;
@@ -315,9 +306,9 @@ void CmWriteExtent(Reghive* reg, int extnum, uint8_t* data)
         }
     }
 
-    rewind(reg->f);
-    fseek(reg->f, extnum * EXTENT_LENGTH, SEEK_SET);
-    fwrite(data, EXTENT_LENGTH, 1, reg->f);
+    int br;
+    reg->f->seek(extnum * EXTENT_LENGTH);
+    reg->f->write(EXTENT_LENGTH, data, &br);
 }
 
 void CmUpdateHeader(Reghive* reg)
@@ -335,12 +326,13 @@ int CmExpand(Reghive* reg, int extents)
         return -1;
     }
 
-    fseek(reg->f, 0, SEEK_END);
+    reg->f->seek(reg->header.numExtents * EXTENT_LENGTH);
 
     uint8_t data[EXTENT_LENGTH];
     memset(data, 0, EXTENT_LENGTH);
     for (int i = 0; i < extents; ++i) {
-        fwrite(data, EXTENT_LENGTH, 1, reg->f);
+        int br;
+        reg->f->write(EXTENT_LENGTH, data, &br);
     }
 
     int retv = reg->header.numExtents;
@@ -356,22 +348,21 @@ int CmFindUnusedExtent(Reghive* reg)
         return -1;
     }
 
-    rewind(reg->f);
+    reg->f->seek(0);
 
     int extNum = 0;
-    printf("NUM = %d\n", reg->header.numExtents);
     while (extNum < reg->header.numExtents) {
         uint8_t type;
-        fread(&type, 1, 1, reg->f);
+        int br;
+        reg->f->read(1, &type, &br);
         if (type == 0) {
             return extNum;
         }
 
         extNum++;
-        fseek(reg->f, EXTENT_LENGTH * extNum, SEEK_SET);
+        reg->f->seek(EXTENT_LENGTH * extNum);
     }
 
-    puts("ABC");
     return CmExpand(reg, 64);
 }
 
@@ -487,7 +478,6 @@ int CmConvertToInternalFilename(const char* __path, uint8_t* out)
     for (int i = 0; i < strlen(__path); ++i) {
         path[i] = toupper(__path[i]);
     }
-    //memcpy(path, __path, strlen(__path));
 
     uint8_t parts[24];
     int next = 0;
@@ -513,12 +503,12 @@ int CmConvertToInternalFilename(const char* __path, uint8_t* out)
             thing = getMatch(NULL, digraph, false, &matchedDigraph);
         }
         if (thing == -1) {
-            exit(2);
+            KePanic("STATUS_NOT_ENCODABLE");
             return STATUS_NOT_ENCODABLE;
         }
 
         if (next == 24) {
-            exit(1);
+            KePanic("STATUS_LONG_NAME");
             return STATUS_LONG_NAME;
         }
 
@@ -581,8 +571,8 @@ void tree(Reghive* reg, int a, int n)
         memset(nm, 0, 50);
         int type = CmGetNameAndTypeFromExtent(reg, a, nm);
 
-        for (int i = 0; i < n; ++i) putchar(' ');
-        printf("%d = /%s\n", a, nm);
+        for (int i = 0; i < n; ++i) kprintf(" ");
+        kprintf("%d = /%s\n", a, nm);
 
         if (type == EXTENT_DIRECTORY) {
             tree(reg, CmEnterDirectory(reg, a), n + 4);
