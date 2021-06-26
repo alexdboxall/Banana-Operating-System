@@ -13,6 +13,10 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic warning "-Wcast-align"
+
 extern "C" {
 #include <libk/string.h>
 #include <libk/ctype.h>
@@ -28,10 +32,10 @@ Reghive* CmOpen(const char* filename)
     Reghive* reg = (Reghive*) malloc(sizeof(Reghive));
 
     reg->f = new File(filename, kernelProcess);
-    reg->f->stat(&siz, &dir);
+    reg->f->stat(&size, &dir);
     reg->f->open(FileOpenMode::Read);
 
-    uint8_t* data = malloc(size);
+    uint8_t* data = (uint8_t*) malloc(size);
     reg->f->read(size, data, &br);
     reg->f->close();
 
