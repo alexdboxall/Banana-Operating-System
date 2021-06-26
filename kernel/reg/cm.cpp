@@ -13,7 +13,6 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-
 #pragma GCC diagnostic push
 #pragma GCC diagnostic warning "-Wcast-align"
 
@@ -595,3 +594,5 @@ char* CmSplitFinalSlashInPlace(char* str)
     }
     return NULL;
 }
+
+#pragma GCC diagnostic pop

@@ -17,6 +17,14 @@ extern "C" {
 		return originalDest;
 	}
 
+
+	//https://stackoverflow.com/questions/49131175/recreate-the-strstr-function
+	char* strstr(const char* str, const char* substring);
+
+
+	char* strtok(char* str, const char* delim);
+
+
 	void strncpy(char* _dst, const char* _src, size_t _n);
 	void* memmove(void*, const void*, size_t);
 	void* memset(void*, int, size_t);

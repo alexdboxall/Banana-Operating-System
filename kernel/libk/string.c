@@ -1,6 +1,86 @@
 #include "libk/string.h"
 
 
+
+//https://stackoverflow.com/questions/49131175/recreate-the-strstr-function
+char* strstr(const char* str, const char* substring)
+{
+	const char* a = str, * b = substring;
+	for (;;) {
+		if (!*b) return (char*) str;
+		if (!*a) return NULL;
+		if (*a++ != *b++) { a = ++str; b = substring; }
+	}
+}
+
+
+/*
+* Copyright (c) 2012-2019, Fehmi Noyan ISI fnoyanisi@yahoo.com
+* All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*
+* 1. Redistributions of source code must retain the above copyright
+*   notice, this list of conditions and the following disclaimer.
+* 2. Redistributions in binary form must reproduce the above copyright
+*   notice, this list of conditions and the following disclaimer in the
+*   documentation and/or other materials provided with the distribution.
+*
+* THIS SOFTWARE IS PROVIDED BY Fehmi Noyan ISI ''AS IS'' AND ANY
+* EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL Fehmi Noyan ISI BE LIABLE FOR ANY
+* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+char* strtok(char* str, const char* delim)
+{
+	static char* s_str = NULL;   /* var to store last address */
+	char* p;
+
+	if (delim == NULL || (str == NULL && s_str == NULL)) {
+		return NULL;
+	}
+
+	if (str == NULL) {
+		str = s_str;
+	}
+
+	/* if delim is not contained in str, return str */
+	if ((p = strstr(str, delim)) == NULL) {
+		s_str = NULL;
+		return str;
+	}
+
+	/*
+	* check for consecutive delimiters
+	* if first char is delim, return delim
+	*/
+	if (str[0] == delim[0]) {
+		s_str++;
+		return (char*) delim;
+	}
+
+	/* terminate the string */
+	*p = '\0';
+
+	/* save the rest of the string */
+	if ((p + 1) != NULL) {
+		s_str = (p + 1);
+	} else {
+		s_str = NULL;
+	}
+
+	return str;
+}
+
+
 //ALL OF THESE DEFINED BY ACPICA
 
 /*
