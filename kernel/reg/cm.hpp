@@ -94,5 +94,6 @@ void CmGetInteger(Reghive* reg, int extnum, uint64_t* i);
 void CmSetInteger(Reghive* reg, int extnum, uint64_t i);
 char* CmSplitFinalSlashInPlace(char* str);
 int CmCreateDirectory(Reghive* reg, int parent, const char* name);
+void CmDisplayTree(Reghive* reg, int a, int n);
 
 #pragma pack(pop)

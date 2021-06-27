@@ -1169,6 +1169,9 @@ retryProductKey:
                 break;
 
             } else {
+                milliTenthSleep(2200);
+                drawBootScreen();
+                milliTenthSleep(3800);
 
                 drawBasicWindowX(22, 2, 50, 14, "Product Key", true);
                 term->setCursor(24, 5); 
@@ -1188,7 +1191,7 @@ retryProductKey:
                 term->setCursor(36, 16); term->puts("enter the product key correctly.");
 
                 installKey = 0;
-                milliTenthSleep(1900);
+                milliTenthSleep(2900);
                 installKey = 0;
                 
                 while (installKey == 0);
@@ -1256,12 +1259,11 @@ void begin(void* a)
 
         CmCreateDirectory(reg, 0, "CLIPDRAW");
         CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "CLIPDRAW")), "BACKGROUNDIMAGE");
-        /*CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "CLIPDRAW/BACKGROUNDIMAGE")), "MODE");
+        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "CLIPDRAW/BACKGROUNDIMAGE")), "MODE");
         CmSetString(reg, CmFindObjectFromPath(reg, "CLIPDRAW/BACKGROUNDIMAGE/MODE"), "solid colour");
         CmCreateInteger(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "CLIPDRAW")), "AUTOGUI", 1, EXTENT_INTEGER8);
         CmCreateInteger(reg, 1, "SERIALNUMBER", 0xCAFEDEADBEEF, EXTENT_INTEGER64);
         CmSetString(reg, CmFindObjectFromPath(reg, "CLIPDRAW/BACKGROUNDIMAGE/MODE"), "the background should be in the mode where it is an image tiled in a 9x9 arrangement, but stretched so 9x9 overs the whole screen");
-        */
         CmClose(reg);
 
         firstRun();

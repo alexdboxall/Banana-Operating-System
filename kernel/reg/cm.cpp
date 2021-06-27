@@ -36,13 +36,10 @@ Reghive* CmOpen(const char* filename)
 
     uint8_t* data = (uint8_t*) malloc(size);
     reg->f->read(size, data, &br);
-    kprintf("REGISTRY has a size of %d\n", (int) size);
-    kprintf("br = %d\n", br);
     reg->f->close();
 
     reg->f->open((FileOpenMode) (((int) FileOpenMode::Read) | ((int) FileOpenMode::Write) | ((int) FileOpenMode::CreateAlways)));
     reg->f->write(size, data, &br);
-    kprintf("wrote %d bytes.\n", br);
     free(data);
 
     if (!reg->f) {
@@ -206,7 +203,6 @@ int CmEnterDirectory(Reghive* reg, int num)
 
 int CmFindInDirectory(Reghive* reg, int direntry, const char* name)
 {
-    kprintf("CmFindInDirectory %s\n", name);
     Extent ext;
 
     uint8_t wantName[18];
@@ -250,8 +246,6 @@ int CmGetNext(Reghive* reg, int extnum)
 
 int CmCreateDirectory(Reghive* reg, int parent, const char* name)
 {
-    kprintf("CREATING DIR %s\n", name);
-
     Extent ext;
     memset(&ext, 0, sizeof(Extent));
 
@@ -482,14 +476,11 @@ int CmConvertFromInternalFilename(const uint8_t* in, char* out)
 
 int CmConvertToInternalFilename(const char* __path, uint8_t* out)
 {
-    kprintf("ENCODING %s\n", __path);
-
     char path[48];
     memset(path, 0, 48);
     for (int i = 0; i < strlen(__path); ++i) {
         path[i] = toupper(__path[i]);
     }
-    kprintf("ENCODING %s\n", path);
 
     uint8_t parts[24];
     int next = 0;
@@ -562,30 +553,26 @@ int CmFindObjectFromPath(Reghive* reg, const char* __name)
     char name[256];
     strcpy(name, __name);
 
-    kprintf("CmFindObjectFromPath %s\n", name);
-
     int loc = 1;
     char* p = strtok(name, "/");
     if (!p) {
         return 1;
     }
-    kprintf("pA = %s\n", p);
+
     loc = CmFindInDirectory(reg, loc, p);
     p = strtok(NULL, "/");
-    kprintf("pB = %s\n", p);
 
     while (p) {
         loc = CmEnterDirectory(reg, loc);
         if (loc == -1) return -1;
         loc = CmFindInDirectory(reg, loc, p);
         p = strtok(NULL, "/");
-        kprintf("pC = %s\n", p);
     }
 
     return loc;
 }
 
-void tree(Reghive* reg, int a, int n)
+void CmDisplayTree(Reghive* reg, int a, int n)
 {
     while (a > 0) {
         char nm[50];
