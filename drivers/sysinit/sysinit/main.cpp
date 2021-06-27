@@ -1169,9 +1169,8 @@ retryProductKey:
                 break;
 
             } else {
-                milliTenthSleep(2200);
+                milliTenthSleep(2800);
                 drawBootScreen();
-                milliTenthSleep(3800);
 
                 drawBasicWindowX(22, 2, 50, 14, "Product Key", true);
                 term->setCursor(24, 5); 
@@ -1191,10 +1190,13 @@ retryProductKey:
                 term->setCursor(36, 16); term->puts("enter the product key correctly.");
 
                 installKey = 0;
-                milliTenthSleep(2900);
+                milliTenthSleep(4500);
                 installKey = 0;
                 
                 while (installKey == 0);
+
+                drawBootScreen();
+                milliTenthSleep(3000);
 
                 goto retryProductKey;
             }
