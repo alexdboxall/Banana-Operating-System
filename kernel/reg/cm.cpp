@@ -249,6 +249,8 @@ int CmGetNext(Reghive* reg, int extnum)
 
 int CmCreateDirectory(Reghive* reg, int parent, const char* name)
 {
+    kprintf("CREATING DIR %s\n", name);
+
     Extent ext;
     memset(&ext, 0, sizeof(Extent));
 
