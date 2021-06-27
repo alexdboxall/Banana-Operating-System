@@ -566,17 +566,17 @@ int CmFindObjectFromPath(Reghive* reg, const char* __name)
 
     int loc = 1;
     char* p = strtok(name, "/");
-    printf("pA = %s\n", p);
+    kprintf("pA = %s\n", p);
     loc = CmFindInDirectory(reg, loc, p);
     p = strtok(NULL, "/");
-    printf("pB = %s\n", p);
+    kprintf("pB = %s\n", p);
 
     while (p) {
         loc = CmEnterDirectory(reg, loc);
         if (loc == -1) return -1;
         loc = CmFindInDirectory(reg, loc, p);
         p = strtok(NULL, "/");
-        printf("pC = %s\n", p);
+        kprintf("pC = %s\n", p);
     }
 
     return loc;
