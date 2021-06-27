@@ -237,8 +237,17 @@ char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo, char* outbuffer)
 	static int lookupSize = 0;
 
 	if (!loadedLookupFile) {
+
 		File* f = new File("C:/Banana/System/PCI.LST", kernelProcess);
-		f->open(FileOpenMode::Read);
+		if (!f) {
+			*outbuffer = 0;
+			return nullptr;
+		}
+		FileStatus sts = f->open(FileOpenMode::Read);
+		if (sts != FileStatus::Success) {
+			*outbuffer = 0;
+			return nullptr;
+		}
 
 		uint64_t siz;
 		bool dir;
@@ -249,7 +258,14 @@ char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo, char* outbuffer)
 		lookupData = (char*) malloc(siz + 1);
 		lookupData[siz] = 0;
 		f->read(siz, lookupData, &br);
+		if (br != siz) {
+			*outbuffer = 0;
+			return nullptr;
+		}
+
 		f->close();
+
+		loadedLookupFile = true;
 
 		lookupSize = siz;
 	}
@@ -290,7 +306,7 @@ char* PCI::pciDetailsToFilepath(PCIDeviceInfo pciInfo, char* outbuffer)
 		}
 		++i;
 
-		hasDevice = lookupData[i] != 'D';
+		hasDevice = lookupData[i] != 'X';
 		if (!hasDevice) {
 			i += 4;
 		} else {
