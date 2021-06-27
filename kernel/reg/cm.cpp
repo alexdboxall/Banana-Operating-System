@@ -479,13 +479,14 @@ int CmConvertFromInternalFilename(const uint8_t* in, char* out)
 
 int CmConvertToInternalFilename(const char* __path, uint8_t* out)
 {
-    kprintf("ENCODING %s\n", path);
+    kprintf("ENCODING %s\n", __path);
 
     char path[48];
     memset(path, 0, 48);
     for (int i = 0; i < strlen(__path); ++i) {
         path[i] = toupper(__path[i]);
     }
+    kprintf("ENCODING %s\n", path);
 
     uint8_t parts[24];
     int next = 0;
