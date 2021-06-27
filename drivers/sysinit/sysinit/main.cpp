@@ -1196,7 +1196,7 @@ retryProductKey:
                 while (installKey == 0);
 
                 drawBootScreen();
-                milliTenthSleep(3000);
+                milliTenthSleep(6300);
 
                 goto retryProductKey;
             }
