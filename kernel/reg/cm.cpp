@@ -36,10 +36,13 @@ Reghive* CmOpen(const char* filename)
 
     uint8_t* data = (uint8_t*) malloc(size);
     reg->f->read(size, data, &br);
+    kprintf("REGISTRY has a size of %d\n", (int) size);
+    kprintf("br = %d\n", br);
     reg->f->close();
 
     reg->f->open((FileOpenMode) (((int) FileOpenMode::Read) | ((int) FileOpenMode::Write) | ((int) FileOpenMode::CreateAlways)));
     reg->f->write(size, data, &br);
+    kprintf("wrote %d bytes.\n", br);
     free(data);
 
     if (!reg->f) {
@@ -144,8 +147,8 @@ void CmGetString(Reghive* reg, int extnum, char* out)
 
 void CmSetString(Reghive* reg, int extnum, const char* data)
 {
-    int components = (int) (strlen(data) + 38) / 39;
-    if (components > 7) {
+    int CmComponents = (int) (strlen(data) + 38) / 39;
+    if (CmComponents > 7) {
         KePanic("CmSetString TOO LONG");
     }
 
@@ -160,7 +163,7 @@ void CmSetString(Reghive* reg, int extnum, const char* data)
         num <<= 8;
         num |= ext.s.extents[i * 3 + 0];
 
-        if (i < components) {
+        if (i < CmComponents) {
             if (num == 0) {
                 Extent blank;
                 blank.type = EXTENT_STRING_DATA;
@@ -369,7 +372,7 @@ int CmFindUnusedExtent(Reghive* reg)
     return CmExpand(reg, 64);
 }
 
-char components[64][4] = {
+char CmComponents[64][4] = {
     "TH", "HE", "IN", "ER", "AN", "RE", "ND", "AT", "ON", "NT", "HA", "ES",
     "ST", "EN", "ED", "TO", "IT", "OU", "EA", "HI", "IS", "OR", "TI", "AS",
     "TE", "ET", "NG", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
@@ -377,23 +380,23 @@ char components[64][4] = {
     "0", "1", "2", "3", "4", "5", "V", "W", "X", "Y", "Z", 0,
 };
 
-int getMatch(char* digraph, char* mono, bool tryDigraph, bool* matchedDigraph)
+int CmGetMatch(char* digraph, char* mono, bool tryDigraph, bool* matchedDigraph)
 {
     if (tryDigraph) {
         *matchedDigraph = true;
         for (int i = 0; i < 63; ++i) {
-            if (!strcmp(digraph, components[i])) return i;
+            if (!strcmp(digraph, CmComponents[i])) return i;
         }
     }
     *matchedDigraph = false;
     for (int i = 0; i < 63; ++i) {
-        if (!strcmp(mono, components[i])) return i;
+        if (!strcmp(mono, CmComponents[i])) return i;
     }
 
     return -1;
 }
 
-bool addShiftCm(uint32_t* reg, int* count, uint8_t val, int bits)
+bool CmAddShift(uint32_t* reg, int* count, uint8_t val, int bits)
 {
     if (*count + bits < 32) {
         *reg |= (((uint32_t) val) << *count);
@@ -405,7 +408,7 @@ bool addShiftCm(uint32_t* reg, int* count, uint8_t val, int bits)
     }
 }
 
-uint8_t getShiftCm(uint32_t* reg, int* count, int bits, bool* success)
+uint8_t CmGetShift(uint32_t* reg, int* count, int bits, bool* success)
 {
     if (*count >= bits) {
         uint8_t ret = (*reg) & ((1 << bits) - 1);
@@ -454,11 +457,11 @@ int CmConvertFromInternalFilename(const uint8_t* in, char* out)
     memset(out, 0xEE, 18);
 
     for (int i = 0; i < 18; ++i) {
-        addShiftCm(&sreg, &sregcnt, in[i], 8);
+        CmAddShift(&sreg, &sregcnt, in[i], 8);
 
     retry:;
         bool success;
-        uint8_t val = getShiftCm(&sreg, &sregcnt, 6, &success);
+        uint8_t val = CmGetShift(&sreg, &sregcnt, 6, &success);
 
         if (success) {
             decoded[ob++] = val;
@@ -468,7 +471,7 @@ int CmConvertFromInternalFilename(const uint8_t* in, char* out)
 
     out[0] = 0;
     for (int i = 0; i < 24; ++i) {
-        strcat(out, components[decoded[i]]);
+        strcat(out, CmComponents[decoded[i]]);
     }
 
     return STATUS_SUCCESS;
@@ -476,6 +479,8 @@ int CmConvertFromInternalFilename(const uint8_t* in, char* out)
 
 int CmConvertToInternalFilename(const char* __path, uint8_t* out)
 {
+    kprintf("ENCODING %s\n", path);
+
     char path[48];
     memset(path, 0, 48);
     for (int i = 0; i < strlen(__path); ++i) {
@@ -501,9 +506,9 @@ int CmConvertToInternalFilename(const char* __path, uint8_t* out)
 
         int thing;
         if (strlen(mono)) {
-            thing = getMatch(digraph, mono, true, &matchedDigraph);
+            thing = CmGetMatch(digraph, mono, true, &matchedDigraph);
         } else {
-            thing = getMatch(NULL, digraph, false, &matchedDigraph);
+            thing = CmGetMatch(NULL, digraph, false, &matchedDigraph);
         }
         if (thing == -1) {
             KePanic("STATUS_NOT_ENCODABLE");
@@ -530,10 +535,10 @@ int CmConvertToInternalFilename(const char* __path, uint8_t* out)
     memset(out, 0xEE, 18);
 
     for (int i = 0; i < 100; ++i) {
-        bool canAdd = i >= 24 ? false : addShiftCm(&sreg, &sregcnt, parts[i], 6);
+        bool canAdd = i >= 24 ? false : CmAddShift(&sreg, &sregcnt, parts[i], 6);
         if (!canAdd) {
             bool success;
-            uint8_t val = getShiftCm(&sreg, &sregcnt, 8, &success);
+            uint8_t val = CmGetShift(&sreg, &sregcnt, 8, &success);
 
             if (success) {
                 out[ob++] = val;
