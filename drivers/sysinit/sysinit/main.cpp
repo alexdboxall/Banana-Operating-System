@@ -14,6 +14,7 @@ void beginx(void* a)
 #include "core/terminal.hpp"
 #include "core/physmgr.hpp"
 #include "reg/registry.hpp"
+#include "reg/cm.hpp"
 #include "thr/prcssthr.hpp"
 #include "hal/buzzer.hpp"
 #include "hal/clock.hpp"
@@ -1246,6 +1247,22 @@ void begin(void* a)
     KeIsPreemptionOn = true;
 
     if (firstTime) {
+
+        if (sizeof(Extent) != EXTENT_LENGTH) {
+            KePanic("EXTENT LENGTH WRONG");
+        }
+
+        Reghive* reg = CmOpen("C:/Banana/System/SYSTEM.REG");
+
+        CmCreateDirectory(reg, 0, "CLIPDRAW");
+        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "CLIPDRAW")), "BACKGROUNDIMAGE");
+        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "CLIPDRAW/BACKGROUNDIMAGE")), "MODE");
+        CmSetString(reg, CmFindObjectFromPath(reg, "CLIPDRAW/BACKGROUNDIMAGE/MODE"), "solid colour");
+        CmCreateInteger(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "CLIPDRAW")), "AUTOGUI", 1, EXTENT_INTEGER8);
+        CmCreateInteger(reg, 1, "SERIALNUMBER", 0xCAFEDEADBEEF, EXTENT_INTEGER64);
+        CmSetString(reg, CmFindObjectFromPath(reg, "CLIPDRAW/BACKGROUNDIMAGE/MODE"), "the background should be in the mode where it is an image tiled in a 9x9 arrangement, but stretched so 9x9 overs the whole screen");
+        CmClose(reg);
+
         firstRun();
 
     } else {

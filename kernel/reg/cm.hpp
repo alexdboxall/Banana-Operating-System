@@ -93,5 +93,6 @@ int CmConvertFromInternalFilename(const uint8_t* in, char* out);
 void CmGetInteger(Reghive* reg, int extnum, uint64_t* i);
 void CmSetInteger(Reghive* reg, int extnum, uint64_t i);
 char* CmSplitFinalSlashInPlace(char* str);
+int CmCreateDirectory(Reghive* reg, int parent, const char* name);
 
 #pragma pack(pop)
