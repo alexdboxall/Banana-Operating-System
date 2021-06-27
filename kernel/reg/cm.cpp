@@ -566,6 +566,9 @@ int CmFindObjectFromPath(Reghive* reg, const char* __name)
 
     int loc = 1;
     char* p = strtok(name, "/");
+    if (!p) {
+        return 1;
+    }
     kprintf("pA = %s\n", p);
     loc = CmFindInDirectory(reg, loc, p);
     p = strtok(NULL, "/");
