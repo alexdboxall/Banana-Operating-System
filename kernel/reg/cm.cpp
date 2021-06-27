@@ -206,6 +206,7 @@ int CmEnterDirectory(Reghive* reg, int num)
 
 int CmFindInDirectory(Reghive* reg, int direntry, const char* name)
 {
+    kprintf("CmFindInDirectory %s\n", name);
     Extent ext;
 
     uint8_t wantName[18];
@@ -561,15 +562,21 @@ int CmFindObjectFromPath(Reghive* reg, const char* __name)
     char name[256];
     strcpy(name, __name);
 
+    kprintf("CmFindObjectFromPath %s\n", name);
+
     int loc = 1;
     char* p = strtok(name, "/");
+    printf("pA = %s\n", p);
     loc = CmFindInDirectory(reg, loc, p);
     p = strtok(NULL, "/");
+    printf("pB = %s\n", p);
+
     while (p) {
         loc = CmEnterDirectory(reg, loc);
         if (loc == -1) return -1;
         loc = CmFindInDirectory(reg, loc, p);
         p = strtok(NULL, "/");
+        printf("pC = %s\n", p);
     }
 
     return loc;
