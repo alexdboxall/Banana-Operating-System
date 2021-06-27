@@ -583,7 +583,7 @@ void CmDisplayTree(Reghive* reg, int a, int n)
         kprintf("%d = /%s\n", a, nm);
 
         if (type == EXTENT_DIRECTORY) {
-            tree(reg, CmEnterDirectory(reg, a), n + 4);
+            CmDisplayTree(reg, CmEnterDirectory(reg, a), n + 4);
         }
         a = CmGetNext(reg, a);
     }
