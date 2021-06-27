@@ -1480,6 +1480,89 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 			return -1;
 		}
 
+	} else if (!strcasecmp(argv[0], "hexview")) {
+		if (argc == 1) {
+			fprintf(stderr, "Please enter file name.\n");
+			return -1;
+		}
+
+		int start = 0;
+		int end = -1;
+		bool pages = false;
+		for (int i = 2; i < argc; ++i) {
+			if (argv[i][0] == 's' && argv[i][1]) {
+				sscanf(argv[i] + 1, "%d", &start);
+			} else if (argv[i][0] == 'e' && argv[i][1]) {
+				sscanf(argv[i] + 1, "%d", &end);
+			} else if (argv[i][0] == 'p') {
+				pages = true;
+			} else {
+				fprintf(stderr, "Bad parameter. Must either be:\n  s1234	Set start address\n  e5678    Set end address\n  p        Pause after each page\n");
+				return -1;
+			}
+		}
+
+		int len = end == -1 ? -1 : end - start;
+
+		if (start < 0 || end < -1 || (end != -1 && start > end)) {
+			fprintf(stderr, "Invalid start and/or end addresses.\n");
+			return -1;
+		}
+
+		FILE* f = fopen(argv[1], "rb");
+		if (!f) {
+			fprintf(stderr, "Error opening file.\n");
+		} else {
+			fprintf(out, "         00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F\n\n");
+			uint8_t s;
+			uint8_t x[16];
+			int pos = 0;
+			int line = 0;
+			int row = 0;
+			bool eof = false;
+			fseek(f, start, SEEK_SET);
+			while (1) {
+				fread(&s, 1, 1, f);
+				eof = feof(f) || len-- == 0;
+				if (!eof) {
+					if (pos == 0) {
+						fprintf(out, "%06X : ", row * 16);
+						++row;
+					}
+					fprintf(out, "%02X ", s);
+					x[pos] = s;
+					++pos;
+				}
+				
+				if (pos == 16 || eof) {
+					for (int i = 0; i < (16 - pos); ++i) fprintf(out, "   ");
+
+					fprintf(out, "    ");
+					for (int i = 0; i < 16; ++i) {
+						fprintf(out, "%c", x[i] == 127 || x[i] < 32 ? '.' : x[i]);
+					}
+					fprintf(out, "\n");
+					pos = 0;
+
+					++line;
+
+					if (line == 16 && pages) {	
+						line = 0;
+						printf("\n\n\nPress ENTER to continue... ");
+						int c = getchar();
+						if (c != '\n' && c != EOF) while ((c = getchar()) != '\n' && c != EOF) {}
+
+						fprintf(out, "\n         00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F\n\n");
+					}
+				}
+				if (eof) {
+					break;
+				}
+			}
+			fprintf(out, "\n");
+			fclose(f);
+		}
+
 	} else if (!strcasecmp(argv[0], "type")) {
 		if (argc == 1) {
 			fprintf(stderr, "Please enter file name.\n");

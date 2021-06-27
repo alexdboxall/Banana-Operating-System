@@ -60,6 +60,7 @@ enum class DeviceType
 	Screen,
 	Mouse,
 	Buzzer,
+	NIC,
 
 	Intctrl,
 	Timer,
