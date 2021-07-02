@@ -245,7 +245,7 @@ jmp QUARTER_SECOND_DELAY
 times 11 db 0
 jmp PAGING_SETUP
 times 11 db 0
-jmp UNUSED_D
+jmp DETECT_CPU
 times 11 db 0
 jmp REBOOT
 times 11 db 0
@@ -474,8 +474,52 @@ PAGING_SETUP:
 	mov cr0, eax
 	ret
 
-UNUSED_D:
+DETECT_CPU:
+	cmp eax, 0
+	jne .not0
+
+		;DETECT FOR PENTIUM
+		pushfd                               ;Save EFLAGS
+		pushfd                               ;Store EFLAGS
+		xor dword [esp],0x00200000           ;Invert the ID bit in stored EFLAGS
+		popfd                                ;Load stored EFLAGS (with ID bit inverted)
+		pushfd                               ;Store EFLAGS again (ID bit may or may not be inverted)
+		pop eax                              ;eax = modified EFLAGS (ID bit may or may not be inverted)
+		xor eax,[esp]                        ;eax = whichever bits were changed
+		popfd                                ;Restore original EFLAGS
+		and eax,0x00200000                   ;eax = zero if ID bit can't be changed, else non-zero
+		cmp eax, 0
+		je .skippy
+		mov eax, 1
+	.skippy:
+		ret
+
+.not0:
+
+	cmp eax, 1
+	jne .not1
+
+	MOV EDX, CR0                            ; Start probe, get CR0
+	AND EDX, (-1) - (8 | 4)       ; clear TS and EM to force fpu access
+	MOV CR0, EDX                            ; store control word
+	FNINIT                                  ; load defaults to FPU
+	FNSTSW [.testword]                      ; store status word
+	CMP word [.testword], 0                 ; compare the written status with the expected FPU state
+	JNE .nofpu                              ; jump if the FPU hasn't written anything (i.e. it's not there)
+	JMP .hasfpu
+
+	.hasfpu:
+	MOV EAX, 1
+	jmp .not1
+	.nofpu:
+	MOV EAX, 0
+ 
+.not1:
+
+
 	ret
+
+.testword: DW 0x55AA                    ; store garbage to be able to detect a change
 
 REBOOT:
 	jmp $

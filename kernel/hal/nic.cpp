@@ -19,22 +19,13 @@ NIC::~NIC()
 
 }
 
+//RETURNS IN BIG-ENDIAN
 uint64_t NIC::getMAC()
 {
 	return 0;
 }
 
-int NIC::havePackets()
-{
-	return 0;
-}
-
 int NIC::write(int len, uint8_t* data, int* br)
-{
-	return NS_UNIMPLEMENTED;
-}
-
-int NIC::read(int len, uint8_t* data, int* br)
 {
 	return NS_UNIMPLEMENTED;
 }

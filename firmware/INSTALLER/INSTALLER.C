@@ -263,8 +263,12 @@ void initWinRepaint2(Window* w)
 
 void ramTest1(Window* w)
 {
-	windowWrite(w, 0, 0, "Checking for installed RAM...");
+	windowWrite(w, 0, 0, "Please wait while Setup checks your");
+	windowWrite(w, 0, 1, "computer's hardware configuration.");
+
+	windowWrite(w, 0, 5, "Installed RAM...");
 }
+
 
 char ramStr[7];
 void ramTest2(Window* w)
@@ -343,11 +347,48 @@ void disclaimer2(Window* w)
 	}
 }
 
+void lackMath(Window* w)
+{
+	windowWrite(w, 0, 0, "Your computer does not have a math");
+	windowWrite(w, 0, 1, "processor.");
+
+	windowWrite(w, 0, 3, "Some functionality may not work correctly");
+	windowWrite(w, 0, 4, "until it is installed. Some programs may");
+	windowWrite(w, 0, 5, "not be able to run, or they may be unstable.");
+
+	windowWrite(w, 0, 11, "To cancel the installation, press ESC");
+	windowWrite(w, 0, 13, "To proceed regardless, press ENTER");
+}
+
+void lackPent(Window* w)
+{
+	windowWrite(w, 0, 0, "Your CPU is not Pentium compatible.");
+	windowWrite(w, 0, 2, "Banana is designed to run on Pentium or");
+	windowWrite(w, 0, 3, "newer computers. If you wish to continue");
+	windowWrite(w, 0, 4, "installation, some features may not work or");
+	windowWrite(w, 0, 5, "be available, and the system may be sluggish");
+	windowWrite(w, 0, 6, "and less stable.");
+
+	windowWrite(w, 0, 11, "To cancel the installation, press ESC");
+	windowWrite(w, 0, 13, "To proceed regardless, press ENTER");
+}
+
+void lackRAMSoft(Window* w)
+{
+	windowWrite(w, 0, 0, "Your computer may not enough RAM");
+	windowWrite(w, 0, 1, "run Banana.");
+	windowWrite(w, 0, 3, "It is recommended to have at least 8 MB");
+	windowWrite(w, 0, 4, "of RAM to use Banana.");
+
+	windowWrite(w, 0, 11, "To cancel the installation, press ESC");
+	windowWrite(w, 0, 13, "To proceed regardless, press ENTER");
+}
+
 void lackRAM(Window* w)
 {
 	windowWrite(w, 0, 0, "There is not enough RAM in your computer to");
 	windowWrite(w, 0, 1, "run Banana.");
-	windowWrite(w, 0, 3, "Banana requires at least 4 MB");
+	windowWrite(w, 0, 3, "Banana requires at least 8 MB");
 	windowWrite(w, 0, 4, "of RAM to run.");
 
 	windowWrite(w, 0, 13, "To cancel the installation, press ESC");
@@ -1536,6 +1577,10 @@ void scanPartitions(Window* w)
 	}
 }
 
+bool gotPentium = false;
+bool gotFPU = false;
+int cpuMHz = 0;
+
 void main()
 {
 	setupAbstractionLibrary();
@@ -1621,6 +1666,30 @@ void main()
 	}
 	totalRAM = tr;
 
+	windowWrite(windows[0], 24, 5, "Done");
+
+	windowWrite(windows[0], 0, 6, "Processor type... ");
+	millisleep(200);
+	regs_t in;
+	in.eax = 0;
+	in = abstractionCall(ACDetectCPUFeatures, in);
+	gotPentium = in.eax;
+	windowWrite(windows[0], 24, 6, "Done");
+
+
+	windowWrite(windows[0], 0, 7, "Processor speed...");
+	millisleep(1200);
+	windowWrite(windows[0], 24, 7, "Done");
+
+
+	windowWrite(windows[0], 0, 8, "Math coprocessor...");
+	millisleep(200);
+	in.eax = 1;
+	in = abstractionCall(ACDetectCPUFeatures, in);
+	gotFPU = !in.eax;
+	windowWrite(windows[0], 24, 8, "Done");
+	millisleep(200);
+
 	if (totalRAM < 4) {
 		w.repaint = lackRAM;
 		drawScreen();
@@ -1631,9 +1700,27 @@ void main()
 			} else if (debug) break;
 		}
 	}
+	if (totalRAM < 8) {
+		w.repaint = lackRAMSoft;
+		drawScreen();
+		continueOrExit();
+	}
+
 	w.repaint = ramTest2;
 	drawScreen();
 	continueOrExit();
+
+	if (!gotPentium) {
+		w.repaint = lackPent;
+		drawScreen();
+		continueOrExit();
+	}
+	if (!gotFPU) {
+		w.repaint = lackMath;
+		drawScreen();
+		continueOrExit();
+	}
+
 
 	installPhase = PHASE_LEGAL_1;
 

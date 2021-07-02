@@ -9,6 +9,7 @@
 #define NS_UNIMPLEMENTED	1
 #define NS_FAILURE			2
 #define NS_HARDFAIL			3
+#define NS_TIMEOUT			4
 
 class NIC: public Device
 {
@@ -20,10 +21,8 @@ public:
 	NIC(const char* name);
 	virtual ~NIC();
 
-	virtual uint64_t getMAC();
-	virtual int havePackets();
+	virtual uint64_t getMAC();	//RETURNS IN BIG-ENDIAN
 	virtual int write(int len, uint8_t* data, int* br);
-	virtual int read(int len, uint8_t* data, int* br);
 };
 
 #endif

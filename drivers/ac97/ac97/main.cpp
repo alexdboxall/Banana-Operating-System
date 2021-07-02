@@ -195,6 +195,7 @@ int AC97::_open(int a, int b, void* c)
 		ports[noPorts++].width = 0;
 	}
 
+
 	//set bit 0 and bit 2 in the PCI command register
 	uint16_t w = thePCI->pciReadWord(pci.info.bus, pci.info.slot, pci.info.function, 0x4);
 	thePCI->pciWriteWord(pci.info.bus, pci.info.slot, pci.info.function, 0x4, w | 5);

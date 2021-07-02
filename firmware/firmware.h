@@ -39,6 +39,7 @@ enum AbstractionCalls
 	ACBootFATInformation,
 	ACQuarterSecondDelay,
 	ACPagingSetup,
+	ACDetectCPUFeatures,
 };
 
 enum TerminalColours
