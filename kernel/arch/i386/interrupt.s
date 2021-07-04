@@ -289,6 +289,8 @@ int_common_stub:
 
 
 extern KiCheckSignalZ
+global KiEndSignal
+
 syscall_common_stub:
     pushad
 
@@ -313,22 +315,47 @@ syscall_common_stub:
     pop es
     pop ds
 
-    call KiCheckSignalZ
+    call KiEndSignal
     cmp eax, 0
 	je .skipSignals
 
-    mov ecx, [esp + 10 * 4]
-    mov [esp + 10 * 4], eax
-    mov ebx, esp
-    mov esp, [ebx + 13 * 4]
-    push ecx
-    push dword 4
-    push finishSignal
-    mov [ebx + 13 * 4], esp
-    mov esp, ebx
-    popa
-    add esp, 8
+
+    ;mov eax, esp			;user mode uses the same stack (this is only called on the first 0->3 switch, in all the others IRET takes care of moving the kernel stack to the user stack)
+	;push 0x23
+	;push eax
+	;push dword 0x202
+	;push 0x1B
+	;push ebx
+	;iretd
+
+    mov ebx, esp                    ;SAVE KERNEL STACK
+    mov esp, [ebx + 13 * 4]         ;GET APPLICATION STACK
+    push dword 4                    ;PUSH SIGNAL NUMBER
+    push .finishSignal              ;PUSH RETURN ADDRESS
+    mov [ebx + 13 * 4], esp         ;SET APPLICATION STACK REFLECT CHANGES
+    mov esp, ebx                    ;RESTORE KERNEL STACK
+
+    mov ecx, [ebx + 13 * 4]         ;USER STACK
+
+    ;CREATE AN IRET FRAME
+    push 0x23
+    push ecx                        
+    push 0x202
+    push 0x1B
+    push eax
     iret
+
+ .finishSignal:
+    add esp, (1 + 5) * 4                  ;CLEAR IRET FRAME AND SIGNAL NUMBER (WE DO NOT RETURN TO SIGNAL HANDLER)
+
+    ;NOW DO THE ORIGINAL INTERRUPT
+.skipSignals:
+	popa
+    add esp, 8     ; Cleans up the pushed error code and pushed ISR number
+
+    iret
+
+
     
     ;unsigned int gs, fs, es, ds;
     ;             0    1    2    3    4    5    6    7
@@ -338,22 +365,6 @@ syscall_common_stub:
     ;             10   11  12      13
 	;unsigned int eip, cs, eflags, useresp, ss;
 	;unsigned int v86es, v86ds, v86fs, v86gs;
-
-.skipSignals:
-
-	popa
-    add esp, 8     ; Cleans up the pushed error code and pushed ISR number
-
-    iret
-
-finishSignal:
-    mov eax, 0xCAFECAFE
-    mov ebx, 0xDEADDEAD
-    mov ecx, 0xBEEFBEEF
-    mov edx, 0xFEEDFEED
-    cli
-    hlt
-    jmp finishSignal
 
 
 
