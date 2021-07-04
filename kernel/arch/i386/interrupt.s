@@ -289,7 +289,6 @@ int_common_stub:
 
 
 extern KiCheckSignalZ
-global KiEndSignal
 
 syscall_common_stub:
     pushad
@@ -315,7 +314,7 @@ syscall_common_stub:
     pop es
     pop ds
 
-    call KiEndSignal
+    call KiCheckSignalZ
     cmp eax, 0
 	je .skipSignals
 
