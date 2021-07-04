@@ -223,6 +223,13 @@ irq14:
     cli
     push byte 0
     push byte 46
+
+    push eax
+    mov eax, cr2
+    cmp eax, KiFinishSignal
+    je eax
+    pop eax
+
     jmp int_common_stub
 
 irq15:
@@ -316,7 +323,7 @@ syscall_common_stub:
 
     call KiCheckSignalZ
     cmp eax, 0
-	je .skipSignals
+	je skipSignals
 
 
     ;mov eax, esp			;user mode uses the same stack (this is only called on the first 0->3 switch, in all the others IRET takes care of moving the kernel stack to the user stack)
@@ -330,7 +337,7 @@ syscall_common_stub:
     mov ebx, esp                    ;SAVE KERNEL STACK
     mov esp, [ebx + 13 * 4]         ;GET APPLICATION STACK
     push dword 4                    ;PUSH SIGNAL NUMBER
-    push .finishSignal              ;PUSH RETURN ADDRESS
+    push KiFinishSignal             ;PUSH RETURN ADDRESS
     mov [ebx + 13 * 4], esp         ;SET APPLICATION STACK REFLECT CHANGES
     mov esp, ebx                    ;RESTORE KERNEL STACK
 
@@ -344,11 +351,12 @@ syscall_common_stub:
     push eax
     iret
 
- .finishSignal:
+ KiFinishSignal:
+    pop eax
     add esp, (1 + 5) * 4                  ;CLEAR IRET FRAME AND SIGNAL NUMBER (WE DO NOT RETURN TO SIGNAL HANDLER)
 
     ;NOW DO THE ORIGINAL INTERRUPT
-.skipSignals:
+skipSignals:
 	popa
     add esp, 8     ; Cleans up the pushed error code and pushed ISR number
 
