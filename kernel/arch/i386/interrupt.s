@@ -133,6 +133,13 @@ isr15:
     cli
     push byte 0
     push byte 15
+
+    push eax
+    mov eax, cr2
+    cmp eax, KiFinishSignal
+    pop eax
+    je KiFinishSignal2
+
     jmp int_common_stub
 
 isr16:
@@ -224,20 +231,12 @@ irq14:
     push byte 0
     push byte 46
 
-    push eax
-    mov eax, cr2
-    cmp eax, KiFinishSignal
-    pop eax
-    je KiFinishSignal2
-
     jmp int_common_stub
 
 irq15:
     cli
     push byte 0
     push byte 47
-
-    jmp $
 
     jmp int_common_stub
 
@@ -355,7 +354,7 @@ syscall_common_stub:
     iret
 
 KiFinishSignal:
-    cli
+    int 15
 KiFinishSignal2:
     mov edi, 0xCAFEBABE
     jmp $
