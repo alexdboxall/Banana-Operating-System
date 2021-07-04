@@ -328,18 +328,11 @@ syscall_common_stub:
     cmp eax, 0
 	je skipSignals
 
-
-    ;mov eax, esp			;user mode uses the same stack (this is only called on the first 0->3 switch, in all the others IRET takes care of moving the kernel stack to the user stack)
-	;push 0x23
-	;push eax
-	;push dword 0x202
-	;push 0x1B
-	;push ebx
-	;iretd
+    mov edx, 4          ;SIGNAL NUM
 
     mov ebx, esp                    ;SAVE KERNEL STACK
     mov esp, [ebx + 13 * 4]         ;GET APPLICATION STACK
-    push dword 4                    ;PUSH SIGNAL NUMBER
+    push edx                    ;PUSH SIGNAL NUMBER
     push KiFinishSignal             ;PUSH RETURN ADDRESS
     mov [ebx + 13 * 4], esp         ;SET APPLICATION STACK TO REFLECT CHANGES
     mov esp, ebx                    ;RESTORE KERNEL STACK
@@ -364,6 +357,12 @@ KiFinishSignal2:
     pop esi         ;EFLAGS
     pop edi         ;ESP
     pop ebp         ;SS
+
+    mov esp, edi
+    pop eax
+    pop ebx
+    pop ecx
+    pop edx
 
     jmp $
 
