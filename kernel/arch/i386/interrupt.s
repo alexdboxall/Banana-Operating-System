@@ -367,13 +367,6 @@ KiFinishSignal2:
     pop edi         ;ESP
     pop ebp         ;SS
 
-    pop eax         
-    pop ebx
-    pop ecx
-    pop edx
-    pop esi
-    pop edi
-    pop ebp
 
     mov esp, 0xAABBCCDD
     jmp $
