@@ -357,6 +357,8 @@ syscall_common_stub:
 KiFinishSignal:
     int 15                          ;cause a GPF, as usermode cannot call this interrupt
 KiFinishSignal2:
+    sub esp, 12
+
     pop eax         ;IRQ NUMBER
     pop ebx         ;ERROR CODE?
     pop ecx         ;EIP
@@ -364,14 +366,6 @@ KiFinishSignal2:
     pop esi         ;EFLAGS
     pop edi         ;ESP
     pop ebp         ;SS
-
-    pop eax         
-    pop ebx
-    pop ecx
-    pop edx
-    pop esi
-    pop edi
-    pop ebp
 
     pop eax         
     pop ebx
