@@ -124,9 +124,8 @@ isr13:
     push byte 13
 
     push ebx
-    mov ebx, [esp + 4 * 2]
+    mov ebx, [esp + 4 * 3]
     mov eax, KiFinishSignal
-    jmp $
     cmp ebx, KiFinishSignal
     pop ebx
     je KiFinishSignal2
@@ -362,7 +361,7 @@ KiFinishSignal2:
     mov edi, 0xCAFEBABE
     jmp $
 
-    add esp, (1 + 2 + 5) * 4                  ;CLEAR IRET FRAME, ERR CODE, ISR NUMBER, SIGNAL NUMBER (WE DO NOT RETURN TO SIGNAL HANDLER)
+    add esp, (5 + 2 + 1) * 4                  ;CLEAR IRET FRAME, ERR CODE, ISR NUMBER, SIGNAL NUMBER (WE DO NOT RETURN TO SIGNAL HANDLER)
 
     ;NOW DO THE ORIGINAL INTERRUPT
 skipSignals:
