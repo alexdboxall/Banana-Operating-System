@@ -236,6 +236,9 @@ irq15:
     cli
     push byte 0
     push byte 47
+
+    jmp $
+
     jmp int_common_stub
 
 irq1:
