@@ -358,7 +358,7 @@ syscall_common_stub:
 KiFinishSignal:
     int 15                          ;cause a GPF, as usermode cannot call this interrupt
 KiFinishSignal2:
-    add esp, (5 + 2 + 1) * 4                  ;CLEAR IRET FRAME, ERR CODE, ISR NUMBER, SIGNAL NUMBER (WE DO NOT RETURN TO SIGNAL HANDLER)
+    add esp, (5 + 2 + 1 + 1) * 4                  ;CLEAR IRET FRAME, ERR CODE, ISR NUMBER, SIGNAL NUMBER (WE DO NOT RETURN TO SIGNAL HANDLER)
 
     ;NOW DO THE ORIGINAL INTERRUPT
 skipSignals:
