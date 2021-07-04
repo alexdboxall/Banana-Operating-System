@@ -328,11 +328,11 @@ syscall_common_stub:
     cmp eax, 0
 	je skipSignals
 
-    mov edx, 4          ;SIGNAL NUM
+    mov edx, 5          ;SIGNAL NUM
 
     mov ebx, esp                    ;SAVE KERNEL STACK
     mov esp, [ebx + 13 * 4]         ;GET APPLICATION STACK
-    push edx                    ;PUSH SIGNAL NUMBER
+    push edx                        ;PUSH SIGNAL NUMBER
     push KiFinishSignal             ;PUSH RETURN ADDRESS
     mov [ebx + 13 * 4], esp         ;SET APPLICATION STACK TO REFLECT CHANGES
     mov esp, ebx                    ;RESTORE KERNEL STACK
