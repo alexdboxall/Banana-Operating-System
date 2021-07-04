@@ -227,8 +227,8 @@ irq14:
     push eax
     mov eax, cr2
     cmp eax, KiFinishSignal
-    je eax
     pop eax
+    je KiFinishSignal
 
     jmp int_common_stub
 
@@ -352,7 +352,6 @@ syscall_common_stub:
     iret
 
  KiFinishSignal:
-    pop eax
     add esp, (1 + 5) * 4                  ;CLEAR IRET FRAME AND SIGNAL NUMBER (WE DO NOT RETURN TO SIGNAL HANDLER)
 
     ;NOW DO THE ORIGINAL INTERRUPT
