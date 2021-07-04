@@ -125,6 +125,8 @@ isr13:
 
     push ebx
     mov ebx, [esp + 4 * 2]
+    mov eax, KiFinishSignal
+    jmp $
     cmp ebx, KiFinishSignal
     pop ebx
     je KiFinishSignal2
