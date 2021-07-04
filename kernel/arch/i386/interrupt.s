@@ -328,15 +328,17 @@ syscall_common_stub:
     cmp eax, 0
 	je skipSignals
 
+    cli
     mov edx, 5          ;SIGNAL NUM
 
-    mov ebx, esp                    ;SAVE KERNEL STACK
-    mov esp, [ebx + 13 * 4]         ;GET APPLICATION STACK
-    push edx                        ;PUSH SIGNAL NUMBER
-    push KiFinishSignal             ;PUSH RETURN ADDRESS
-    mov [ebx + 13 * 4], esp         ;SET APPLICATION STACK TO REFLECT CHANGES
-    mov esp, ebx                    ;RESTORE KERNEL STACK
-
+    mov ebx, esp                    ;save kernel stack
+                                    ; *** CRITICAL SECTION ***
+    mov esp, [ebx + 13 * 4]         ;get application stack
+    push edx                        ;push signal number
+    push KiFinishSignal             ;push return address
+    mov [ebx + 13 * 4], esp         ;set application stack to reflect changes
+    mov esp, ebx                    ;restore kernel stack 
+                                    ; *** END CRITICAL SECTION ***
     mov ecx, [ebx + 13 * 4]         ;USER STACK
 
     ;CREATE AN IRET FRAME
@@ -351,7 +353,15 @@ syscall_common_stub:
 KiFinishSignal:
     int 15                          ;cause a GPF, as usermode cannot call this interrupt
 KiFinishSignal2:
-    sub esp, 32
+    sub esp, 32                     ;black magic
+    popa
+    add esp, 8
+    pop eax
+    pop ebx
+    pop ecx
+    pop edx
+    pop esi
+    jmp $
 
     ;NOW DO THE ORIGINAL INTERRUPT
 skipSignals:
