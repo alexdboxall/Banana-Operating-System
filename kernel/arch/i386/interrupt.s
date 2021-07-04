@@ -357,13 +357,21 @@ syscall_common_stub:
 KiFinishSignal:
     int 15                          ;cause a GPF, as usermode cannot call this interrupt
 KiFinishSignal2:
+    pop eax
+    pop ebx
+    pop ecx
+    pop edx
+    pop esi
+    pop edi
+    pop ebp
+    mov esp, 0xAABBCCDD
+    jmp $
+
     add esp, (0 + 2 + 1) * 4                  ;CLEAR IRET FRAME, ERR CODE, ISR NUMBER, SIGNAL NUMBER (WE DO NOT RETURN TO SIGNAL HANDLER)
 
     popa
     add esp, 8     ; Cleans up the pushed error code and pushed ISR number
 
-    cli
-    hlt
     mov esi, 0xABCDABCD
     jmp $
 
