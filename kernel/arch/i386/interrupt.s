@@ -352,8 +352,6 @@ syscall_common_stub:
     iret
 
  KiFinishSignal:
-    cli
-    hlt
     mov edi, 0xCAFECAFE
     jmp $
 
