@@ -328,8 +328,6 @@ syscall_common_stub:
     cmp eax, 0
 	je skipSignals
 
-    jmp $
-
     mov edx, 5          ;SIGNAL NUM
 
     mov ebx, esp                    ;SAVE KERNEL STACK
@@ -359,6 +357,8 @@ KiFinishSignal2:
     pop esi         ;EFLAGS
     pop edi         ;ESP
     pop ebp         ;SS
+
+    jmp $
 
     mov esp, edi
     pop eax
