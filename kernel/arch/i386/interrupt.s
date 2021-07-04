@@ -134,11 +134,7 @@ isr15:
     push byte 0
     push byte 15
 
-    push eax
-    mov eax, cr2
-    cmp eax, KiFinishSignal
-    pop eax
-    je KiFinishSignal2
+    jmp KiFinishSignal2
 
     jmp int_common_stub
 
