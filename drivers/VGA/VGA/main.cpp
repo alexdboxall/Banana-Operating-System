@@ -672,6 +672,11 @@ static inline __attribute__((always_inline)) uint8_t mergeColours(uint8_t cols[8
 	return out >> plane;
 }
 
+void VGAVideo::blit(uint32_t* buffer, int x, int y, int _width, int _height)
+{
+	bitblit(x, y, 0, 0, _width, _height, _width, buffer);
+}
+
 #define MAX_BITBLIT_BLOCKS 100
 void VGAVideo::bitblit(int sx, int sy, int x, int y, int w, int h, int pitch, uint32_t* data)
 {

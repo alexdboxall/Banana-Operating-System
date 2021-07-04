@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <signal.h>
 
 typedef struct Line
 {
@@ -648,8 +649,20 @@ void newDoc()
 	last = 0;
 }
 
+void sighandler_(int sig)
+{
+	printf("SIGNAL %d RECEIVED.\n", sig);
+}
+
 int main(int argc, char* argv[])
 {
+	
+	signal(SIGABRT, sighandler_);
+	signal(SIGTERM, sighandler_);
+	signal(SIGINT, sighandler_);
+	signal(SIGKILL, sighandler_);
+	signal(SIGSTOP, sighandler_);
+
 	//memset(filename, 0, 256);
 	printf("te - text editor\n\n");
 

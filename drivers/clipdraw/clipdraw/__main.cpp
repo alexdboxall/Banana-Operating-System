@@ -22,6 +22,7 @@ extern "C" {
 
 #include "context.hpp"
 #include "window.hpp"
+#include "desktop.hpp"
 
 #pragma GCC optimize ("O3")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -32,13 +33,28 @@ void start(void* s)
 
 	NIContext ctxt(screen, screen->getWidth(), screen->getHeight(), screen->getWidth(), 32);
 
-	for (int y = 0; y < screen->getHeight(); ++y) {
-		for (int x = 0; x < screen->getWidth(); ++x) {
-			ctxt.drvPutpixel4(x, y, 0x5580FF);
+	NIDesktop desktop(&ctxt);
+
+	NIWindow win1(&ctxt, 50, 50, 400, 320);
+	NIWindow win2(&ctxt, 200, 150, 500, 380);
+	NIWindow win3(&ctxt, 125, 400, 270, 175);
+
+	desktop.addWindow(&win1);
+	desktop.addWindow(&win2);
+	desktop.addWindow(&win3);
+
+	desktop.completeRefresh();
+
+	while (1) {
+		desktop.rangeRefresh(win2.ypos, win2.ypos + win2.height, win2.xpos - 5, win2.xpos + win2.width + 5);
+		win2.xpos += 2;
+		if (win2.xpos >= 450) {
+			win2.xpos = 200;
+			desktop.completeRefresh();
 		}
 	}
 
-	NIWindow win1(&ctxt, 50, 50, 400, 320);
+	/*NIWindow win1(&ctxt, 50, 50, 400, 320);
 	NIWindow sha1(&ctxt, 45, 45, 410, 330);
 	sha1.SHADOW_TEST();
 	win1.realdraw();
@@ -51,8 +67,7 @@ void start(void* s)
 	NIWindow win3(&ctxt, 125, 400, 270, 175);
 	NIWindow sha3(&ctxt, 120, 395, 280, 185);
 	sha3.SHADOW_TEST();
-	win3.realdraw();
-
+	win3.realdraw();*/
 
 	{
 		int chrs = 0;

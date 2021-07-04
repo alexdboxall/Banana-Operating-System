@@ -346,7 +346,13 @@ syscall_common_stub:
 
 
 finishSignal:
-
+    mov eax, 0xCAFECAFE
+    mov ebx, 0xDEADDEAD
+    mov ecx, 0xBEEFBEEF
+    mov edx, 0xFEEDFEED
+    cli
+    hlt
+    jmp finishSignal
 
 
 

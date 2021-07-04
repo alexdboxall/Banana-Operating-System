@@ -396,3 +396,24 @@ void VESA::putpixel(int x, int y, uint32_t colour)
 {
 	(this->*ppxptr)(x, y, colour);
 }
+
+void VESA::blit(uint32_t* buffer, int x, int y, int _width, int _height)
+{
+	if (ppxptr == &VESA::putpixel32 && _height == 1) {
+		memcpy(((uint32_t*) vram) + y * pitch + x, buffer, _width * 4);
+		return;
+	}
+
+	for (int h = y; h < y + _height; ++h) {
+		if (h > this->height) {
+			break;
+		}
+		for (int w = x; w < x + _width; ++w) {
+			if (w > this->width) {
+				buffer++;
+			} else {
+				putpixel(x, y, *buffer++);
+			}
+		}
+	}
+}

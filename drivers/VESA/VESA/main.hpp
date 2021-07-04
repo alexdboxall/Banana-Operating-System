@@ -54,6 +54,7 @@ public:
 	void putpixel16(int x, int y, uint32_t colour);
 	void putpixel24(int x, int y, uint32_t colour);
 	void putpixel32(int x, int y, uint32_t colour);
+	void blit(uint32_t* buffer, int x, int y, int _width, int _height);
 
 	void (VESA::*ppxptr)(int, int, uint32_t);
 
