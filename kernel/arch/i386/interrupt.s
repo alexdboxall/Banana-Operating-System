@@ -122,6 +122,9 @@ isr12:
 isr13:
     cli
     push byte 13
+
+    jmp $
+
     jmp int_common_stub
 
 isr14:
@@ -133,8 +136,6 @@ isr15:
     cli
     push byte 0
     push byte 15
-
-    jmp KiFinishSignal2
 
     jmp int_common_stub
 
