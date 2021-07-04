@@ -328,6 +328,8 @@ syscall_common_stub:
     cmp eax, 0
 	je skipSignals
 
+    jmp $
+
     mov edx, 5          ;SIGNAL NUM
 
     mov ebx, esp                    ;SAVE KERNEL STACK
@@ -362,7 +364,7 @@ KiFinishSignal2:
     pop eax
 
     popa
-     pop eax         ;IRQ NUMBER
+    pop eax         ;IRQ NUMBER
     pop ebx         ;ERROR CODE?
     pop ecx         ;EIP
     pop edx         ;CS
