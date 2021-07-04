@@ -360,6 +360,12 @@ KiFinishSignal2:
 
     mov esp, edi
     pop eax
+
+    popa
+    add esp, 8     ; Cleans up the pushed error code and pushed ISR number
+
+    iret
+
     pop ebx
     pop ecx
     pop edx
