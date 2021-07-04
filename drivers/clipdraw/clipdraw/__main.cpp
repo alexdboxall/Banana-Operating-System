@@ -27,31 +27,37 @@ extern "C" {
 #pragma GCC optimize ("O3")
 #pragma GCC optimize ("-fno-strict-aliasing")
 
+extern void (*guiMouseHandler) (int xdelta, int ydelta, int buttons, int z);
+
+NIDesktop* desktop;
+
+void clipdrawHandleMouse(int xdelta, int ydelta, int buttons, int z)
+{
+	desktop->handleMouse(xdelta, ydelta, buttons, z);
+}
+
 void start(void* s)
 {
 	extern Video* screen;
 
 	NIContext ctxt(screen, screen->getWidth(), screen->getHeight(), screen->getWidth(), 32);
 
-	NIDesktop desktop(&ctxt);
+	desktop = new NIDesktop(&ctxt);
 
 	NIWindow win1(&ctxt, 50, 50, 400, 320);
 	NIWindow win2(&ctxt, 200, 150, 500, 380);
 	NIWindow win3(&ctxt, 125, 400, 270, 175);
 
-	desktop.addWindow(&win1);
-	desktop.addWindow(&win2);
-	desktop.addWindow(&win3);
+	desktop->addWindow(&win1);
+	desktop->addWindow(&win2);
+	desktop->addWindow(&win3);
 
-	desktop.completeRefresh();
+	desktop->completeRefresh();
+
+	guiMouseHandler = clipdrawHandleMouse;
 
 	while (1) {
-		desktop.rangeRefresh(win2.ypos, win2.ypos + win2.height, win2.xpos - 5, win2.xpos + win2.width + 5);
-		win2.xpos += 2;
-		if (win2.xpos >= 450) {
-			win2.xpos = 200;
-			desktop.completeRefresh();
-		}
+		blockTask(TaskState::Paused);
 	}
 
 	/*NIWindow win1(&ctxt, 50, 50, 400, 320);
