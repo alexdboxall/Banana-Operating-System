@@ -347,54 +347,11 @@ syscall_common_stub:
     push eax
     iret
 
+    ;only the heaviest of wizardry is used to implement signals
 KiFinishSignal:
     int 15                          ;cause a GPF, as usermode cannot call this interrupt
 KiFinishSignal2:
     sub esp, 32
-    jmp $
-
-
-    pop eax         ;IRQ NUMBER
-    pop ebx         ;ERROR CODE?
-    pop ecx         ;EIP
-    pop edx         ;CS
-    pop esi         ;EFLAGS
-    pop edi         ;ESP
-    pop ebp         ;SS
-
-    jmp $
-
-    mov esp, edi
-    pop eax
-
-    popa
-    pop eax         ;IRQ NUMBER
-    pop ebx         ;ERROR CODE?
-    pop ecx         ;EIP
-    pop edx         ;CS
-    pop esi         ;EFLAGS
-    pop edi         ;ESP
-    pop ebp         ;SS
-    jmp $
-
-
-    add esp, 8     ; Cleans up the pushed error code and pushed ISR number
-
-    iret
-
-    pop ebx
-    pop ecx
-    pop edx
-
-    jmp $
-
-    add esp, (0 + 2 + 1) * 4                  ;CLEAR IRET FRAME, ERR CODE, ISR NUMBER, SIGNAL NUMBER (WE DO NOT RETURN TO SIGNAL HANDLER)
-
-    popa
-    add esp, 8     ; Cleans up the pushed error code and pushed ISR number
-
-    mov esi, 0xABCDABCD
-    jmp $
 
     ;NOW DO THE ORIGINAL INTERRUPT
 skipSignals:
