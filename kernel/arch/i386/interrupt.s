@@ -322,8 +322,8 @@ syscall_common_stub:
     mov ebx, esp
     mov esp, [ebx + 13 * 4]
     push ecx
-    push finishSignal
     push dword 4
+    push finishSignal
     mov [ebx + 13 * 4], esp
     mov esp, ebx
     popa
