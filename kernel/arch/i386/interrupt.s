@@ -123,7 +123,9 @@ isr13:
     cli
     push byte 13
 
-    mov eax, [esp - 4 * 2]
+    mov eax, [esp - 4 * 1]
+    mov ebx, [esp - 4 * 2]
+    mov ecx, [esp - 4 * 3]
     jmp $
 
     jmp int_common_stub
