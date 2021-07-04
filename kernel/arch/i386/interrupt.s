@@ -352,9 +352,9 @@ syscall_common_stub:
     iret
 
 KiFinishSignal:
-    cil
+    cli
 KiFinishSignal2:
-    mov edi, 0xCAFECAFE
+    mov edi, 0xCAFEBABE
     jmp $
 
     add esp, (1 + 2 + 5) * 4                  ;CLEAR IRET FRAME, ERR CODE, ISR NUMBER, SIGNAL NUMBER (WE DO NOT RETURN TO SIGNAL HANDLER)
