@@ -652,6 +652,11 @@ void newDoc()
 void sighandler_(int sig)
 {
 	printf("SIGNAL %d RECEIVED.\n", sig);
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wframe-address"
+	printf("                              '0x%X'\n", __builtin_return_address(0));
+#pragma GCC diagnostic pop
 }
 
 int main(int argc, char* argv[])

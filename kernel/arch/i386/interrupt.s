@@ -323,6 +323,8 @@ syscall_common_stub:
     mov esp, [ebx + 13 * 4]
     push ecx
     push finishSignal
+    push dword 4
+    mov [ebx + 13 * 4], esp
     mov esp, ebx
     popa
     add esp, 8
@@ -343,7 +345,6 @@ syscall_common_stub:
     add esp, 8     ; Cleans up the pushed error code and pushed ISR number
 
     iret
-
 
 finishSignal:
     mov eax, 0xCAFECAFE
