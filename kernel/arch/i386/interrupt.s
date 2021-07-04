@@ -362,6 +362,16 @@ KiFinishSignal2:
     pop eax
 
     popa
+     pop eax         ;IRQ NUMBER
+    pop ebx         ;ERROR CODE?
+    pop ecx         ;EIP
+    pop edx         ;CS
+    pop esi         ;EFLAGS
+    pop edi         ;ESP
+    pop ebp         ;SS
+    jmp $
+
+
     add esp, 8     ; Cleans up the pushed error code and pushed ISR number
 
     iret
