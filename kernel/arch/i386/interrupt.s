@@ -356,12 +356,7 @@ KiFinishSignal2:
     sub esp, 32                     ;black magic
     popa
     add esp, 8
-    pop eax
-    pop ebx
-    pop ecx
-    pop edx
-    pop esi
-    jmp $
+    iret
 
     ;NOW DO THE ORIGINAL INTERRUPT
 skipSignals:
