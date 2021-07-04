@@ -350,6 +350,10 @@ syscall_common_stub:
 KiFinishSignal:
     int 15                          ;cause a GPF, as usermode cannot call this interrupt
 KiFinishSignal2:
+    sub esp, 32
+    jmp $
+
+
     pop eax         ;IRQ NUMBER
     pop ebx         ;ERROR CODE?
     pop ecx         ;EIP
