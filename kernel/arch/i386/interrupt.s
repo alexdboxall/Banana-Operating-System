@@ -123,9 +123,9 @@ isr13:
     cli
     push byte 13
 
-    mov eax, [esp - 4 * 1]
-    mov ebx, [esp - 4 * 2]
-    mov ecx, [esp - 4 * 3]
+    mov eax, [esp + 4 * 1]
+    mov ebx, [esp + 4 * 2]
+    mov ecx, [esp + 4 * 0]
     jmp $
 
     jmp int_common_stub
@@ -340,7 +340,7 @@ syscall_common_stub:
     mov esp, [ebx + 13 * 4]         ;GET APPLICATION STACK
     push dword 4                    ;PUSH SIGNAL NUMBER
     push KiFinishSignal             ;PUSH RETURN ADDRESS
-    mov [ebx + 13 * 4], esp         ;SET APPLICATION STACK REFLECT CHANGES
+    mov [ebx + 13 * 4], esp         ;SET APPLICATION STACK TO REFLECT CHANGES
     mov esp, ebx                    ;RESTORE KERNEL STACK
 
     mov ecx, [ebx + 13 * 4]         ;USER STACK
@@ -354,7 +354,7 @@ syscall_common_stub:
     iret
 
 KiFinishSignal:
-    int 15
+    int 15                          ;cause a GPF, as usermode cannot call this interrupt
 KiFinishSignal2:
     mov edi, 0xCAFEBABE
     jmp $
