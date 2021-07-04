@@ -123,10 +123,11 @@ isr13:
     cli
     push byte 13
 
-    mov eax, [esp + 4 * 1]
+    push ebx
     mov ebx, [esp + 4 * 2]
-    mov ecx, [esp + 4 * 0]
-    jmp $
+    cmp ebx, KiFinishSignal
+    pop ebx
+    je KiFinishSignal2
 
     jmp int_common_stub
 
