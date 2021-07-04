@@ -365,8 +365,6 @@ KiFinishSignal2:
     pop edi         ;ESP
     pop ebp         ;SS
 
-
-    mov esp, 0xAABBCCDD
     jmp $
 
     add esp, (0 + 2 + 1) * 4                  ;CLEAR IRET FRAME, ERR CODE, ISR NUMBER, SIGNAL NUMBER (WE DO NOT RETURN TO SIGNAL HANDLER)
