@@ -1,5 +1,7 @@
 #include <stdint.h>
 
+#pragma GCC optimize ("O1")
+
 void start(void* s);
 void begin(void* s)
 {
@@ -24,37 +26,26 @@ extern "C" {
 #include "window.hpp"
 #include "desktop.hpp"
 
-#pragma GCC optimize ("O3")
 #pragma GCC optimize ("-fno-strict-aliasing")
 
-extern void (*guiMouseHandler) (int xdelta, int ydelta, int buttons, int z);
-
-NIDesktop* desktop;
-
-void clipdrawHandleMouse(int xdelta, int ydelta, int buttons, int z)
-{
-	desktop->handleMouse(xdelta, ydelta, buttons, z);
-}
 
 void start(void* s)
 {
 	extern Video* screen;
 
-	NIContext ctxt(screen, screen->getWidth(), screen->getHeight(), screen->getWidth(), 32);
+	NIContext* ctxt = new NIContext(screen, screen->getWidth(), screen->getHeight(), screen->getWidth(), 32);
 
-	desktop = new NIDesktop(&ctxt);
+	NIDesktop* desktop = new NIDesktop(ctxt);
 
-	NIWindow win1(&ctxt, 50, 50, 400, 320);
-	NIWindow win2(&ctxt, 200, 150, 500, 380);
-	NIWindow win3(&ctxt, 125, 400, 270, 175);
+	NIWindow* win1 = new NIWindow(ctxt, 50, 50, 400, 320);
+	NIWindow* win2 = new NIWindow(ctxt, 200, 150, 500, 380);
+	NIWindow* win3 = new NIWindow(ctxt, 125, 400, 270, 175);
 
-	desktop->addWindow(&win1);
-	desktop->addWindow(&win2);
-	desktop->addWindow(&win3);
+	desktop->addWindow(win1);
+	desktop->addWindow(win2);
+	desktop->addWindow(win3);
 
 	desktop->completeRefresh();
-
-	guiMouseHandler = clipdrawHandleMouse;
 
 	while (1) {
 		blockTask(TaskState::Paused);
@@ -75,7 +66,7 @@ void start(void* s)
 	sha3.SHADOW_TEST();
 	win3.realdraw();*/
 
-	{
+	/* {
 		int chrs = 0;
 		int total = 0;
 		int xp = win3.xpos + 15;
@@ -108,6 +99,7 @@ void start(void* s)
 			total += chrs;
 		} while (chrs);
 	}
+	*/
 
 	while (1) {
 		blockTask(TaskState::Paused);
