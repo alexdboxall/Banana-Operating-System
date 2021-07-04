@@ -228,7 +228,7 @@ irq14:
     mov eax, cr2
     cmp eax, KiFinishSignal
     pop eax
-    je KiFinishSignal
+    je KiFinishSignal2
 
     jmp int_common_stub
 
@@ -351,7 +351,9 @@ syscall_common_stub:
     push eax
     iret
 
- KiFinishSignal:
+KiFinishSignal:
+    cil
+KiFinishSignal2:
     mov edi, 0xCAFECAFE
     jmp $
 
