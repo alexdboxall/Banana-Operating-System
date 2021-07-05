@@ -2,6 +2,7 @@
 #include "window.hpp"
 #include <krnl/panic.hpp>
 #include <core/kheap.hpp>
+#include <krnl/hal.hpp>
 
 extern "C" {
 #include <libk/string.h>
@@ -55,18 +56,21 @@ NIDesktop::NIDesktop(NIContext* context)
 
 void NIDesktop::addWindow(NIWindow* window)
 {
-	head->insertAtHead(window);
+	head->insertAtHead(window);		
+	refreshWindowBounds(window);
 }
 
 void NIDesktop::raiseWindow(NIWindow* window)
 {
 	head->deleteElement(window);
 	head->insertAtHead(window);
+	refreshWindowBounds(window);
 }
 
 void NIDesktop::deleteWindow(NIWindow* window)
 {
 	head->deleteElement(window);
+	refreshWindowBounds(window);
 }
 
 void NIDesktop::rangeRefresh(int top, int bottom, int left, int right)
@@ -85,10 +89,56 @@ void NIDesktop::completeRefresh()
 	ctxt->screen->drawCursor(mouseX, mouseY, (uint32_t*) (___mouse_data + cursorOffset), 0);
 }
 
+
+void NIDesktop::refreshWindowBounds(NIWindow* window)
+{
+	rangeRefresh(window->ypos, window->ypos + window->height, window->xpos, window->xpos + window->width);
+}
+
+NIWindow* NIDesktop::getTopmostWindowAtPixel(int x, int line)
+{
+	auto curr = head->getHead();
+	while (curr->next) {
+		if (!curr) break;
+		NIWindow* window = curr->getValue();
+		if (!window) break;
+
+		if (window->ypos <= line && line < window->ypos + window->height) {
+			int ls = window->renderTable[line - window->ypos].leftSkip;
+			int rs = window->renderTable[line - window->ypos].rightSkip;
+			if (window->xpos + ls <= x && x < window->xpos + window->width - rs) {
+				return window;
+			}
+		}
+
+		curr = curr->next;
+	}
+
+	return nullptr;
+}
+
+
+
+#pragma GCC optimize ("Ofast")
+
+uint8_t render[2048];
+uint32_t renderData[2048];
+NIWindow* movingWin = nullptr;
+
+extern uint64_t milliTenthsSinceBoot;
+
 void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 {
+	static int previousButtons = 0;
+	static int moveBaseX = 0;
+	static int moveBaseY = 0;
+	static uint64_t lastClick = 0;
+
 	//clear old mouse
 	rangeRefresh(mouseY, mouseY + MOUSE_HEIGHT, mouseX, mouseX + MOUSE_WIDTH);
+
+	int oldX = mouseX;
+	int oldY = mouseY;
 
 	//move mouse
 	mouseX += xdelta;
@@ -100,15 +150,93 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 	if (mouseX > ctxt->width - 1) mouseX = ctxt->width - 1;
 	if (mouseY > ctxt->height - 1) mouseY = ctxt->height - 1;
 
+	NIWindow* clickon = getTopmostWindowAtPixel(mouseX, mouseY);
+
+	if (movingWin) {
+		bool release = !(buttons & 1) && (previousButtons & 1);
+
+		int thingy = 32;
+		/*while (movingWin->height * movingWin->width / thingy > 4096) {
+			thingy <<= 1;
+		}*/
+		thingy--;
+		for (int y = 1; y < movingWin->height - 1; ++y) {
+			for (int x = 1; x < movingWin->width - 1; ++x) {
+				if (!((x + y) & thingy) && !(y & 3)) {
+					rangeRefresh(oldY - moveBaseY + y, oldY - moveBaseY + y + 1, oldX - moveBaseX + x, oldX - moveBaseX + x + 1);
+					if (!release) ctxt->screen->putpixel(mouseX - moveBaseX + x, mouseY - moveBaseY + y, 0);
+				}
+			}
+		}
+
+		rangeRefresh(oldY - moveBaseY, oldY - moveBaseY + 1, oldX - moveBaseX, oldX - moveBaseX + movingWin->width);
+		rangeRefresh(oldY - moveBaseY + movingWin->height - 1, oldY - moveBaseY + movingWin->height, oldX - moveBaseX, oldX - moveBaseX + movingWin->width);
+
+		if (!release) {
+			ctxt->screen->putrect(mouseX - moveBaseX, mouseY - moveBaseY, movingWin->width, 1, 0);
+			ctxt->screen->putrect(mouseX - moveBaseX, mouseY - moveBaseY + movingWin->height - 1, movingWin->width, 1, 0);
+		}
+
+		if (release) {
+			auto win = movingWin;
+			movingWin->xpos = mouseX - moveBaseX;
+			movingWin->ypos = mouseY - moveBaseY;
+			movingWin = nullptr;
+			addWindow(win);
+		}
+	}
+
+	if ((buttons & 1) && clickon) {
+		if (!(previousButtons & 1)) {
+			uint64_t sincePrev = milliTenthsSinceBoot - lastClick;
+
+			if (sincePrev < 3000) {
+				if (clickon->fullscreen) {
+					clickon->xpos = clickon->rstrx;
+					clickon->ypos = clickon->rstry;
+					clickon->width = clickon->rstrw;
+					clickon->height = clickon->rstrh;
+
+				} else {
+					clickon->rstrx = clickon->xpos;
+					clickon->rstry = clickon->ypos;
+					clickon->rstrw = clickon->width;
+					clickon->rstrh = clickon->height;
+
+					clickon->xpos = 0;
+					clickon->ypos = 0;
+					clickon->width = ctxt->width;
+					clickon->height = ctxt->height;
+				}
+				clickon->fullscreen ^= 1;
+
+				clickon->rerender();
+				completeRefresh();
+
+			} else {
+				if (clickon != head->getHead()->getValue()) {
+					raiseWindow(clickon);
+				}
+			}
+			
+			lastClick = milliTenthsSinceBoot;
+
+		} else if (!movingWin) {
+			if (mouseY - clickon->ypos < WINDOW_TITLEBAR_HEIGHT) {
+				movingWin = clickon;
+				moveBaseX = mouseX - clickon->xpos;
+				moveBaseY = mouseY - clickon->ypos;
+				deleteWindow(clickon);
+			}
+		}
+	}
+
 	//paint new mouse
-	//ctxt->screen->putrect(mouseX, mouseY, 15, 25, 0);
 	ctxt->screen->drawCursor(mouseX, mouseY, (uint32_t*) (___mouse_data + cursorOffset), 0);
+
+	previousButtons = buttons;
 }
 
-uint8_t render[2048];
-uint32_t renderData[2048];
-
-#pragma GCC optimize ("Ofast")
 void NIDesktop::renderScanline(int line, int left, int right)
 {
 	memset(render, 0, sizeof(render));
@@ -116,15 +244,14 @@ void NIDesktop::renderScanline(int line, int left, int right)
 	int expectedBytes = right - left;
 
 	auto curr = head->getHead();
-	int iter = 0;
-	kprintf("head->len = %d\n", head->length());
 	while (curr->next) {
-		kprintf("A iter %d\n", iter);
 		if (!curr) break;
 		NIWindow* window = curr->getValue();
-		kprintf("B iter %d\n", iter);
 		if (!window) break;
-		kprintf("C iter %d\n", iter++);
+		if (movingWin == window) {
+			curr = curr->next;
+			continue;
+		}
 
 		if (window->ypos <= line && line < window->ypos + window->height) {
 			int ls = window->renderTable[line - window->ypos].leftSkip;

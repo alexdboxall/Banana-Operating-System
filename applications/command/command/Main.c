@@ -1497,7 +1497,7 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 			} else if (argv[i][0] == 'p') {
 				pages = true;
 			} else {
-				fprintf(stderr, "Bad parameter. Must either be:\n  s1234	Set start address\n  e5678    Set end address\n  p        Pause after each page\n");
+				fprintf(stderr, "Bad parameter. Must either be:\n  s1234    Set start address\n  e5678    Set end address\n  p        Pause after each page\n");
 				return -1;
 			}
 		}

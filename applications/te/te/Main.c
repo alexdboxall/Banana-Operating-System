@@ -659,7 +659,7 @@ int main(int argc, char* argv[])
 	
 	signal(SIGABRT, sighandler_);
 	signal(SIGTERM, sighandler_);
-	signal(SIGINT, sighandler_);
+	signal(SIGINT,  sighandler_);
 	signal(SIGKILL, sighandler_);
 	signal(SIGSTOP, sighandler_);
 

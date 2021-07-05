@@ -329,6 +329,33 @@ syscall_common_stub:
 	je skipSignals
 
     cli
+
+    popa
+    mov [STICKY_TAPE.sax], eax
+    mov [STICKY_TAPE.sbx], ebx
+    mov [STICKY_TAPE.scx], ecx
+    mov [STICKY_TAPE.sdx], edx
+    mov [STICKY_TAPE.ssi], esi
+    mov [STICKY_TAPE.sdi], edi
+    mov [STICKY_TAPE.sbp], ebp
+    add esp, 8
+    pop eax
+    pop ebx
+    pop ecx
+    pop edx
+    mov [STICKY_TAPE.sip], eax
+    mov [STICKY_TAPE.sfl], ecx
+    mov [STICKY_TAPE.ssp], edx
+    push edx
+    push ecx
+    push ebx
+    push eax
+    mov eax, [STICKY_TAPE.sax]
+    mov ebx, [STICKY_TAPE.sbx]
+    mov ecx, [STICKY_TAPE.scx]
+    mov edx, [STICKY_TAPE.sdx]  
+    pusha
+
     mov edx, 5          ;SIGNAL NUM
 
     mov ebx, esp                    ;save kernel stack
@@ -353,10 +380,25 @@ syscall_common_stub:
 KiFinishSignal:
     int 15                          ;cause a GPF, as usermode cannot call this interrupt
 KiFinishSignal2:
-    sub esp, 32                     ;black magic
-    popa
-    add esp, 8
+    mov eax, [STICKY_TAPE.sax]
+    mov ebx, [STICKY_TAPE.sbx]
+    mov ecx, [STICKY_TAPE.scx]
+    mov edx, [STICKY_TAPE.sdx]
+    mov esi, [STICKY_TAPE.ssi]
+    mov edi, [STICKY_TAPE.sdi]
+    mov ebp, [STICKY_TAPE.sbp]
+    
+    push 0x23
+    push dword [STICKY_TAPE.ssp]
+    push dword [STICKY_TAPE.sfl]
+    push 0x1B
+    push dword [STICKY_TAPE.sip]
     iret
+
+    ;sub esp, 32                     ;black magic
+    ;popa
+    ;add esp, 8
+    ;iret
 
     ;NOW DO THE ORIGINAL INTERRUPT
 skipSignals:
@@ -365,7 +407,17 @@ skipSignals:
 
     iret
 
-
+STICKY_TAPE:
+.sax dd 0
+.sbx dd 0
+.scx dd 0
+.sdx dd 0
+.ssi dd 0
+.sdi dd 0
+.sbp dd 0
+.ssp dd 0
+.sip dd 0
+.sfl dd 0
     
     ;unsigned int gs, fs, es, ds;
     ;             0    1    2    3    4    5    6    7

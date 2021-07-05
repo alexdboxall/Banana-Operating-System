@@ -945,20 +945,28 @@ int checkExtendedKey(char* modified)
     regular[14] = '-';
     regular[15] = modified[15];
 
-    if (regular[3] < '0' || regular[3] > '9') return false;
-    if (regular[4] < '0' || regular[4] > '9') return false;
-    if (regular[5] < '0' || regular[5] > '9') return false;
+    if (modified[13] != modified[12]) {
+        return KEY_TYPE_INVALID;
+    }
 
-    if (regular[7] < '0' || regular[7] > '9') return false;
-    if (regular[8] < '0' || regular[8] > '9') return false;
-    if (regular[9] < '0' || regular[9] > '9') return false;
+    if (regular[3] < '0' || regular[3] > '9') return KEY_TYPE_INVALID;
+    if (regular[4] < '0' || regular[4] > '9') return KEY_TYPE_INVALID;
+    if (regular[5] < '0' || regular[5] > '9') return KEY_TYPE_INVALID;
 
-    if (regular[11] < '0' || regular[11] > '9') return false;
-    if (regular[12] < '0' || regular[12] > '9') return false;
-    if (regular[13] < '0' || regular[13] > '9') return false;
+    if (regular[7] < '0' || regular[7] > '9') return KEY_TYPE_INVALID;
+    if (regular[8] < '0' || regular[8] > '9') return KEY_TYPE_INVALID;
+    if (regular[9] < '0' || regular[9] > '9') return KEY_TYPE_INVALID;
+
+    if (regular[11] < '0' || regular[11] > '9') return KEY_TYPE_INVALID;
+    if (regular[12] < '0' || regular[12] > '9') return KEY_TYPE_INVALID;
+    if (regular[13] < '0' || regular[13] > '9') return KEY_TYPE_INVALID;
 
     return checkKey(regular);
 }
+
+char currName[48] = "Alex";
+char currComp[48] = "";
+char pkeybuf[18];
 
 void firstRun()
 {
@@ -974,9 +982,6 @@ void firstRun()
     term = new VgaText("Test");
     setActiveTerminal(term);
     drawBootScreen();
-
-    char currName[48] = "Alex";
-    char currComp[48] = "";
 
     int sel = 0;
     drawBasicWindow(22, 3, 50, 12, "Banana Setup");
@@ -1182,7 +1187,6 @@ void firstRun()
     drawBootScreen();
     milliTenthSleep(11800);
 
-    char pkeybuf[18];
     strcpy(pkeybuf, "WW-78388-45555-N");
     timePtr = 0;
 
@@ -1231,6 +1235,9 @@ retryProductKey:
             bool valid = checkExtendedKey(pkeybuf);
 
             if (valid) {
+                milliTenthSleep(2800);
+                drawBootScreen();
+
                 installKey = 0;
                 milliTenthSleep(900);
                 drawBootScreen();
@@ -1327,17 +1334,6 @@ void begin(void* a)
             KePanic("EXTENT LENGTH WRONG");
         }
 
-        Reghive* reg = CmOpen("C:/Banana/System/SYSTEM.REG");
-
-        CmCreateDirectory(reg, 0, "CLIPDRAW");
-        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "CLIPDRAW")), "BACKGROUNDIMAGE");
-        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "CLIPDRAW/BACKGROUNDIMAGE")), "MODE");
-        CmSetString(reg, CmFindObjectFromPath(reg, "CLIPDRAW/BACKGROUNDIMAGE/MODE"), "solid colour");
-        CmCreateInteger(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "CLIPDRAW")), "AUTOGUI", 1, EXTENT_INTEGER8);
-        CmCreateInteger(reg, 1, "SERIALNUMBER", 0xCAFEDEADBEEF, EXTENT_INTEGER64);
-        CmSetString(reg, CmFindObjectFromPath(reg, "CLIPDRAW/BACKGROUNDIMAGE/MODE"), "the background should be in the mode where it is an image tiled in a 9x9 arrangement, but stretched so 9x9 overs the whole screen");
-        CmClose(reg);
-
         firstRun();
 
     } else {
@@ -1388,6 +1384,17 @@ void begin(void* a)
         backupTree("C:/Banana/Registry/", 0xFFFF);
 
         bootInstallTasks(5);
+
+        Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
+        CmCreateDirectory(reg, 0, "BANANA");
+        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "SETUP");
+        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "NAME");
+        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "COMPANY");
+        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "PRODUCTKEY");
+        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/NAME"), currName);
+        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/COMPANY"), currComp);
+        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/PRODUCTKEY"), pkeybuf);
+        CmClose(reg);
 
         //finishing touches go here
 

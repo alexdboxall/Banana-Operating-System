@@ -25,6 +25,8 @@ NIWindow::NIWindow(NIContext* ctxt, int _x, int _y, int _w, int _h)
 	width = _w;
 	height = _h;
 
+	fullscreen = false;
+
 	valid = false;
 	renderTable = nullptr;
 	renderTableLength = 0;
@@ -134,7 +136,7 @@ void NIWindow::rerender()
 	//placeholder
 	for (int j = 0; j < height; ++j) {
 		for (int i = 0; i < width; ++i) {
-			putpixel(i, j, j > 25 ? 0xD4D4D4 : 0xFFFFFF);
+			putpixel(i, j, j > WINDOW_TITLEBAR_HEIGHT ? 0xD4D4D4 : 0xFFFFFF);
 		}
 	}
 }

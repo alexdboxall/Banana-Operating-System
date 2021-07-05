@@ -45,6 +45,9 @@ public:
 	void completeRefresh();
 	void rangeRefresh(int top, int bottom, int left, int right);
 	void renderScanline(int line, int left, int right);
+	void refreshWindowBounds(NIWindow* window);
 
 	void handleMouse(int xdelta, int ydelta, int buttons, int z);
+
+	NIWindow* getTopmostWindowAtPixel(int x, int y);
 };

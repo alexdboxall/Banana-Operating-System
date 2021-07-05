@@ -2,6 +2,8 @@
 
 #include "context.hpp"
 
+#define WINDOW_TITLEBAR_HEIGHT 25
+
 class NIWindow
 {
 private:
@@ -34,6 +36,12 @@ public:
 	int ypos;
 	int width;
 	int height;
+
+	bool fullscreen;
+	int rstrx;
+	int rstry;
+	int rstrw;
+	int rstrh;
 
 	void rerender();
 	void invalidate();
