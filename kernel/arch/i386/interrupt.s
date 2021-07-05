@@ -368,7 +368,6 @@ syscall_common_stub:
     mov ecx, [STICKY_TAPE.scx]
     mov edx, [STICKY_TAPE.sdx]  
     pusha
-    jmp $
 
     ;CREATE AN IRET FRAME
     push 0x23
