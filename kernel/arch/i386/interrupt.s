@@ -350,6 +350,7 @@ syscall_common_stub:
     push ecx
     push ebx
     push eax
+    sub esp, 8
     mov eax, [STICKY_TAPE.sax]
     mov ebx, [STICKY_TAPE.sbx]
     mov ecx, [STICKY_TAPE.scx]
@@ -380,6 +381,7 @@ syscall_common_stub:
 KiFinishSignal:
     int 15                          ;cause a GPF, as usermode cannot call this interrupt
 KiFinishSignal2:
+    jmp $
     mov eax, [STICKY_TAPE.sax]
     mov ebx, [STICKY_TAPE.sbx]
     mov ecx, [STICKY_TAPE.scx]
