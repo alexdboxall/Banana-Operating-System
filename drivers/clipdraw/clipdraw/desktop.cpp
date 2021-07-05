@@ -46,57 +46,27 @@ NIDesktop::NIDesktop(NIContext* context)
 	mouseY = 30;
 	cursorOffset = MOUSE_OFFSET_NORMAL;
 
-	head = new DesktopWindowNode;
-	head->next = nullptr;
-	head->win = nullptr;
+	head = new List<NIWindow*>();
 
 	mouseDesktop = this;
 	guiMouseHandler = clipdrawHandleMouse;
 }
 
-DesktopWindowNode* NIDesktop::getLastNode()
-{
-	DesktopWindowNode* curr = head;
-
-	while (curr->next) {
-		curr = curr->next;
-	}
-
-	return curr;
-}
 
 void NIDesktop::addWindow(NIWindow* window)
 {
-	DesktopWindowNode* last = getLastNode();
-	last->win = window;
-	last->next = new DesktopWindowNode;
-	last = last->next;
-	last->win = nullptr;
-	last->next = nullptr;
+	head->insertAtHead(window);
 }
 
 void NIDesktop::raiseWindow(NIWindow* window)
 {
-	deleteWindow(window);
-
-	DesktopWindowNode* a = new DesktopWindowNode;
-	a->next = head;
-	a->win = window;
-
-	head = a;
+	head->deleteElement(window);
+	head->insertAtHead(window);
 }
 
 void NIDesktop::deleteWindow(NIWindow* window)
 {
-	DesktopWindowNode* curr = head;
-	while (curr->next) {
-		if (curr->win == window) {
-			curr->win = nullptr;
-			if (curr->next) curr->next = curr->next->next;
-			return;
-		}
-		curr = curr->next;
-	}
+	head->deleteElement(window);
 }
 
 void NIDesktop::rangeRefresh(int top, int bottom, int left, int right)
@@ -145,11 +115,16 @@ void NIDesktop::renderScanline(int line, int left, int right)
 
 	int expectedBytes = right - left;
 
-	DesktopWindowNode* curr = head;
+	auto curr = head->getHead();
+	int iter = 0;
+	kprintf("head->len = %d\n", head->length());
 	while (curr->next) {
+		kprintf("A iter %d\n", iter);
 		if (!curr) break;
-		NIWindow* window = curr->win;
+		NIWindow* window = curr->getValue();
+		kprintf("B iter %d\n", iter);
 		if (!window) break;
+		kprintf("C iter %d\n", iter++);
 
 		if (window->ypos <= line && line < window->ypos + window->height) {
 			int ls = window->renderTable[line - window->ypos].leftSkip;
@@ -181,6 +156,8 @@ void NIDesktop::renderScanline(int line, int left, int right)
 	}
 
 done:
-	ctxt->screen->blit(renderData + left, left, line, right - left, 1);
+	for (int i = left; i < right; ++i) {
+		ctxt->screen->putpixel(i, line, renderData[i]);
+	}
 }
 #pragma GCC optimize ("Os")

@@ -42,6 +42,7 @@ void start(void* s)
 	NIWindow* win3 = new NIWindow(ctxt, 125, 400, 270, 175);
 
 	desktop->addWindow(win1);
+	desktop->addWindow(win1);
 	desktop->addWindow(win2);
 	desktop->addWindow(win3);
 

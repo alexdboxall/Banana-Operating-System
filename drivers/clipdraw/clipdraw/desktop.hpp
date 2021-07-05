@@ -1,14 +1,10 @@
 #pragma once
 
 #include "context.hpp"
+#include "list.hpp"
 
 class NIWindow;
 
-struct DesktopWindowNode
-{
-	NIWindow* win;
-	DesktopWindowNode* next;
-};
 
 #define MOUSE_WIDTH 32
 #define MOUSE_HEIGHT 32
@@ -31,7 +27,7 @@ private:
 
 
 protected:
-	DesktopWindowNode* head;
+	List<NIWindow*>* head;
 	NIContext* ctxt;
 
 public:
@@ -45,7 +41,6 @@ public:
 	void addWindow(NIWindow* window);
 	void raiseWindow(NIWindow* window);
 	void deleteWindow(NIWindow* window);
-	DesktopWindowNode* getLastNode();
 
 	void completeRefresh();
 	void rangeRefresh(int top, int bottom, int left, int right);
