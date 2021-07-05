@@ -358,6 +358,7 @@ syscall_common_stub:
     mov [STICKY_TAPE.sip], eax
     mov [STICKY_TAPE.sfl], ecx
     mov [STICKY_TAPE.ssp], edx
+    jmp $
     push edx
     push ecx
     push ebx
