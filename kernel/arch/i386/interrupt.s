@@ -342,6 +342,9 @@ syscall_common_stub:
                                     ; *** END CRITICAL SECTION ***
     mov ecx, [ebx + 13 * 4]         ;USER STACK
 
+    mov [STICKY_TAPE.calcEax], eax
+    mov [STICKY_TAPE.calcEcx], ecx
+
     popa
     mov [STICKY_TAPE.sax], eax
     mov [STICKY_TAPE.sbx], ebx
@@ -358,7 +361,6 @@ syscall_common_stub:
     mov [STICKY_TAPE.sip], eax
     mov [STICKY_TAPE.sfl], ecx
     mov [STICKY_TAPE.ssp], edx
-    jmp $
     push edx
     push ecx
     push ebx
@@ -372,10 +374,10 @@ syscall_common_stub:
 
     ;CREATE AN IRET FRAME
     push 0x23
-    push ecx                        
+    push dword [STICKY_TAPE.calcEcx]                        
     push 0x202
     push 0x1B
-    push eax
+    push dword [STICKY_TAPE.calcEax]
     iret
 
     ;only the heaviest of wizardry is used to implement signals
@@ -421,6 +423,8 @@ STICKY_TAPE:
 .ssp dd 0
 .sip dd 0
 .sfl dd 0
+.calcEcx dd 0
+.calcEax dd 0
     
     ;unsigned int gs, fs, es, ds;
     ;             0    1    2    3    4    5    6    7
