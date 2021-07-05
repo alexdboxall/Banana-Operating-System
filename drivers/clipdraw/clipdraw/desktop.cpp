@@ -57,7 +57,7 @@ NIDesktop::NIDesktop(NIContext* context)
 DesktopWindowNode* NIDesktop::getLastNode()
 {
 	DesktopWindowNode* curr = head;
-	
+
 	while (curr->next) {
 		curr = curr->next;
 	}
@@ -78,7 +78,7 @@ void NIDesktop::addWindow(NIWindow* window)
 void NIDesktop::raiseWindow(NIWindow* window)
 {
 	deleteWindow(window);
-	
+
 	DesktopWindowNode* a = new DesktopWindowNode;
 	a->next = head;
 	a->win = window;
@@ -165,7 +165,7 @@ void NIDesktop::renderScanline(int line, int left, int right)
 				}
 			}
 		}
-		
+
 		curr = curr->next;
 	}
 

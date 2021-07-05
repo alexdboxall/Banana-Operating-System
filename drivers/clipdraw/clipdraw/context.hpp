@@ -18,7 +18,7 @@ protected:
 
 public:
 	Video* screen;
-	
+
 	int width;
 	int height;
 	int pitch;

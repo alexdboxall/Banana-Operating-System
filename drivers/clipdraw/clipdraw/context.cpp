@@ -18,15 +18,15 @@ void NIContext::drvDarken4(int x, int y, int amount)
 	uint32_t og = screen->readPixelApprox(x, y);
 
 	uint32_t r = (og >> 16) & 0xFF;
-	uint32_t g = (og >>  8) & 0xFF;
-	uint32_t b = (og >>  0) & 0xFF;
+	uint32_t g = (og >> 8) & 0xFF;
+	uint32_t b = (og >> 0) & 0xFF;
 
 	r = (r * amount) >> 7;
 	g = (g * amount) >> 7;
 	b = (b * amount) >> 7;
 
 	uint32_t s = (r << 16) | (g << 8) | b;
-	
+
 	screen->putpixel(x, y, s);
 }
 
@@ -37,10 +37,10 @@ int NIContext::renderTTF(int x, int y, uint32_t col, char* str, int* chars)
 	if (!chars) {
 		KePanic("NIContext::drvRenderTTF4");
 	}
-	
+
 	int ww, hh, lleft, ttop;
 	ssfn_bbox(&ssfn_ctx, str, &ww, &hh, &lleft, &ttop);
-	
+
 	ssfn_buf_t ssfn_buf;
 	ssfn_buf.ptr = (uint8_t*) glyphRenderBuffer;
 	ssfn_buf.w = 64;
@@ -91,7 +91,7 @@ NIContext::NIContext(Video* vid, int w, int h, int p, int _bitsPerPixel)
 	nextFont = 0;
 
 	Directory* dir = new Directory("C:/Banana/Fonts/SFN", kernelProcess);
-	
+
 	if (!dir) {
 	fail:
 		KePanic("CANNOT LOAD FONT DIRECTORY");

@@ -116,11 +116,11 @@ void NIWindow::rerender()
 		if (i < (largeRounded ? 11 : 7)) {
 			renderTable[i].leftSkip = largeRounded ? curveLoopup11[i] : curveLookup7[i];
 			renderTable[i].rightSkip = largeRounded ? curveLoopup11[i] : curveLookup7[i];
-		
+
 		} else if (i > height - (largeRounded ? 11 : 7)) {
 			renderTable[i].leftSkip = largeRounded ? curveLoopup11[height - i] : curveLookup7[height - i];
 			renderTable[i].rightSkip = largeRounded ? curveLoopup11[height - i] : curveLookup7[height - i];
-		
+
 		} else {
 			renderTable[i].leftSkip = 0;
 			renderTable[i].rightSkip = 0;

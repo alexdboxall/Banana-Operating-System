@@ -804,7 +804,53 @@ char lookupA[] = "QWRTYUPSDFGHKZCB";
 char lookupB[] = "HQYUTSDRBPFGWKCZ";
 char lookupC[] = "GSBPDTCHWURZQYMN";
 
-bool checkKey(char* buffer)
+void createKey(char* buffer, uint32_t iter)
+{
+    strcpy(buffer, "QQ-000-000-000-Q");
+
+    uint64_t bits = ((uint64_t) iter) << 15ULL;
+    bits |= getChecksum(iter);
+
+    for (int i = 0; i < 9436; ++i) {
+        bits ^= 0x37B5E43895ULL;
+        bits = swapBits(bits, 3, 8);
+        bits = swapBits(bits, 13, 12);
+        bits = swapBits(bits, 37, 22);
+        bits = ror(bits, 19, 42);
+    }
+
+    int alpha1 = bits & 0xF;
+    bits >>= 4;
+    int alpha2 = bits & 0xF;
+    bits >>= 4;
+    int alpha3 = bits & 0xF;
+    bits >>= 4;
+
+    int num1 = bits & 1023;
+    bits >>= 10;
+    int num2 = bits & 1023;
+    bits >>= 10;
+    int num3 = bits & 1023;
+    bits >>= 10;
+
+    buffer[0] = lookupA[alpha1];
+    buffer[1] = lookupA[alpha2];
+    buffer[15] = lookupA[alpha3];
+
+    buffer[3] = (num1 / 100) % 10 + '0';
+    buffer[4] = (num1 / 10) % 10 + '0';
+    buffer[5] = (num1 / 1) % 10 + '0';
+
+    buffer[7] = (num2 / 100) % 10 + '0';
+    buffer[8] = (num2 / 10) % 10 + '0';
+    buffer[9] = (num2 / 1) % 10 + '0';
+
+    buffer[11] = (num3 / 100) % 10 + '0';
+    buffer[12] = (num3 / 10) % 10 + '0';
+    buffer[13] = (num3 / 1) % 10 + '0';
+}
+
+uint64_t retrieveBits(char* buffer)
 {
     //AB-123-456-789-C
     //0123456789012345
@@ -843,13 +889,37 @@ bool checkKey(char* buffer)
         bits ^= 0x37B5E43895ULL;
     }
 
+    return bits;
+}
+
+#define KEY_TYPE_INVALID        0
+#define KEY_TYPE_STANDARD       1
+#define KEY_TYPE_PROFESSIONAL   2
+
+int checkKey(char* buffer)
+{
+    uint64_t bits = retrieveBits(buffer);
+
     uint32_t minor = bits & 0x7FFF;
     uint32_t major = (uint32_t) (bits >> 15ULL);
 
-    return getChecksum(major) == minor;
+    if (getChecksum(major) != minor) return KEY_TYPE_INVALID;
+
+    return bits & 7;
 }
 
-bool checkExtendedKey(char* modified)
+bool changeKeyType(char* buffer, int type)
+{
+    uint64_t bits = retrieveBits(buffer);
+    bits &= ~7ULL;
+    bits |= type;
+
+    createKey(buffer, bits);
+
+    return checkKey(buffer);
+}
+
+int checkExtendedKey(char* modified)
 {
     ///0123456789012345
     // AB-12345-67890-C     MODIFIED FORM

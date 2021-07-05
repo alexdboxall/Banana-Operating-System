@@ -21,13 +21,11 @@ rm discmd.txt
 rm disbios.txt
 rm dissys.txt
 rm disac97.txt
-rm disrtl.txt
 objdump -drwC -Mintel packages/banana/32/0002/acpica.sys >> disacpica.txt
 objdump -drwC -Mintel packages/system/32/0002/legacy.sys >> dislegacy.txt
 objdump -drwC -Mintel packages/banana/32/0001/clipdraw.dll >> disclipdraw.txt
 objdump -drwC -Mintel packages/banana/32/0002/vga.sys >> disvga.txt
 objdump -drwC -Mintel packages/banana/32/0002/ac97.sys >> disac97.txt
-objdump -drwC -Mintel packages/banana/32/0002/rtl8139.sys >> disrtl.txt
 objdump -drwC -Mintel packages/banana/32/0002/vesa.sys >> disvesa.txt
 objdump -drwC -Mintel packages/system/32/0001/command.exe >> discmd.txt
 objdump -drwC -Mintel packages/system/32/0001/system.dll >> dissys.txt
@@ -213,7 +211,7 @@ if exist Banana/qemuinhibit.txt (
 	rem "C:/Program Files/QEMU/qemu-system-i386" -L "C:\Program Files\qemu" 
 	rem qemu-system-i386
 
-qemu-system-i386 -soundhw pcspk,ac97 -vga std -nic model=rtl8139 -cpu max -serial file:log3.txt -m 32 -cdrom D:/Users/Alex/Desktop/banana-os/Installer/BANANA.ISO -fda mikeos.flp -rtc base=utc -d guest_errors,cpu_reset -monitor stdio  -drive file="banana-os/newimage.img",id=abcdefg,if=none -device ich9-ahci,id=ahci -device ide-drive,drive=abcdefg,bus=ahci.0  
+qemu-system-i386 -soundhw pcspk,ac97 -vga std -cpu max -serial file:log3.txt -m 32 -cdrom D:/Users/Alex/Desktop/banana-os/Installer/BANANA.ISO -fda mikeos.flp -rtc base=utc -d guest_errors,cpu_reset -monitor stdio  -drive file="banana-os/newimage.img",id=abcdefg,if=none -device ich9-ahci,id=ahci -device ide-drive,drive=abcdefg,bus=ahci.0  
 pause
 	rem -cdrom D:/Users/Alex/Desktop/banana-os/Installer/BANANA.ISO
 	rem  -cdrom D:/Users/Alex/Desktop/Banana/Installer/BANANA.ISO -drive file="banana-os/newimage.img",id=abcdefg,if=none -device ich9-ahci,id=ahci -device ide-drive,drive=abcdefg,bus=ahci.0 

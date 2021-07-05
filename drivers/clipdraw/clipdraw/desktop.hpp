@@ -28,7 +28,7 @@ struct DesktopWindowNode
 class NIDesktop
 {
 private:
-	
+
 
 protected:
 	DesktopWindowNode* head;

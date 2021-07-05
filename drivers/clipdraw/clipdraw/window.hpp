@@ -40,7 +40,7 @@ public:
 	void request();
 	void realdraw();
 	void SHADOW_TEST();
-	
+
 	NIWindow(NIContext* ctxt, int x, int y, int w, int h);
 	void changeContext(NIContext* ctxt, int x, int y);
 
