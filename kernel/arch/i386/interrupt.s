@@ -356,6 +356,7 @@ syscall_common_stub:
     mov ecx, [STICKY_TAPE.scx]
     mov edx, [STICKY_TAPE.sdx]  
     pusha
+    jmp $
 
     mov edx, 5          ;SIGNAL NUM
 
