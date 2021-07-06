@@ -243,6 +243,9 @@ int readKeyboard(VgaText* terminal, char* buf, size_t count)
 		if ((uint8_t) key == (uint8_t) '\3') {
 			KeRaiseSignal(currentTaskTCB->processRelatedTo->signals, SIGINT);
 		}
+		if ((uint8_t) key == (uint8_t) '\x1C') {
+			KeRaiseSignal(currentTaskTCB->processRelatedTo->signals, SIGKILL);
+		}
 
 		//remove first char from that buffer
 		memmove(terminal->keybufferSent, terminal->keybufferSent + 1, strlen(terminal->keybufferSent));
