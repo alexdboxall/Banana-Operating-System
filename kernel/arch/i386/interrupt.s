@@ -424,7 +424,7 @@ skipSignals:
     iret
 
 align 4
-struc SIG_STATE_STRUCT:
+struc SIG_STATE_STRUCT
 .sigaddr resd 0
 .sigaddrh resd 0
 .signum resd 0
