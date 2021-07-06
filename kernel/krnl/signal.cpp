@@ -182,7 +182,7 @@ size_t KeCheckSignal(SigHandlerBlock* shb, int* num)
 			}
 
 			//only increase base if can actually be handled
-			shb->pending[shb->pendingBase++] = 0;
+			shb->pending[(shb->pendingBase++ + i) % MAX_PENDING_SIGNALS] = 0;
 			shb->current |= 1 << sig;
 
 			shb->checkSignals = false;
@@ -201,6 +201,7 @@ size_t KeCheckSignal(SigHandlerBlock* shb, int* num)
 				return (size_t) KiSigKill;
 
 			} else if (handler == SIG_IGN) {
+				shb->current &= ~(1 << sig);
 				return 0;
 
 			} else if (handler == SIG_DFL) {
