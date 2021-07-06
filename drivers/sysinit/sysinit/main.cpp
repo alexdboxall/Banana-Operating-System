@@ -968,7 +968,7 @@ char currName[48] = "Alex";
 char currComp[48] = "";
 char pkeybuf[18];
 
-void firstRun()
+void firstRun(bool onlyPkey)
 {
     guiKeyboardHandler = bootInstallKeybrd;
 
@@ -983,211 +983,235 @@ void firstRun()
     setActiveTerminal(term);
     drawBootScreen();
 
-    int sel = 0;
-    drawBasicWindow(22, 3, 50, 12, "Banana Setup");
-    term->setCursor(24, 6); term->puts("Please enter your details. Press TAB to switch");
-    term->setCursor(24, 7); term->puts("between fields.");
-    term->setCursor(24, 9); term->puts("Name");
-    term->setCursor(24, 11); term->puts("Company");
-
-    while (1) {
-        term->setCursor(33, 9);
-        term->puts("                         ", VgaColour::Black, VgaColour::LightGrey);
-        term->puts(sel == 0 ? "  \x11" : "   ", VgaColour::Black, VgaColour::White);
-        term->setCursorX(33);
-        term->puts(currName, VgaColour::Black, VgaColour::LightGrey);
-
-        term->setCursor(33, 11);
-        term->puts("                         ", VgaColour::Black, VgaColour::LightGrey);
-        term->puts(sel == 1 ? "  \x11" : "   ", VgaColour::Black, VgaColour::White);
-        term->setCursorX(33);
-        term->puts(currComp, VgaColour::Black, VgaColour::LightGrey);
-
-        term->setCursor(24, 13);
-        term->puts(sel == 2 ? "Press ENTER" : "           ", VgaColour::DarkGrey, VgaColour::White);
-        term->setCursor(24, 14);
-        term->puts(sel == 2 ? "to submit" : "           ", VgaColour::DarkGrey, VgaColour::White);
-      
-        term->setCursor(50, 13);
-        if (sel != 2) term->puts("   OK   ", VgaColour::White, VgaColour::DarkGrey);
-        else          term->puts("   OK   ", VgaColour::White, VgaColour::Blue);
-        term->puts(sel == 2 ? "  \x11" : "   ", VgaColour::Black, VgaColour::White);
-
-        if (sel == 0) term->setCursor(33 + strlen(currName), 9);
-        if (sel == 1) term->setCursor(33 + strlen(currComp), 11);
-        if (sel == 2) term->setCursor(0, 2);
-
-        while (installKey == 0);
-        memset(term->keybufferInternal, 0, 16);
-        memset(term->keybufferSent, 0, 16);
-        if (installKey == '\t' || installKey == '\n') {
-            if (sel == 2 && installKey == '\n') {
-                installKey = 0;
-                break;
-            }
-            sel += 1;
-            if (sel == 3) sel = 0;
-            milliTenthSleep(300);
-
-        } else if (installKey >= 32 && installKey < 127) {
-            char ss[2];
-            ss[0] = installKey;
-            ss[1] = 0;
-            if (sel == 0 && strlen(currName) < 24) strcat(currName, ss);
-            if (sel == 1 && strlen(currComp) < 24) strcat(currComp, ss);
-
-        } else if (installKey == '\b') {
-            if (sel == 0 && strlen(currName)) currName[strlen(currName) - 1] = 0;
-            if (sel == 1 && strlen(currComp)) currComp[strlen(currComp) - 1] = 0;
-        
-        } else if (installKey == 127) {
-            // Shift + TAB
-            sel--;
-            if (sel == -1) {
-                sel = 2;
-            }
-            milliTenthSleep(300);
-        }
-
-        installKey = 0;
-    }
-
-    installKey = 0;
-    milliTenthSleep(4000);
-    installKey = 0;
-
-    drawBootScreen();
-    drawBasicWindow(22, 2, 50, 13, "Date and Time");
-
-    datetime_t dt = computer->clock->timeInDatetimeUTC();
-
-    char dateTime[64];
-    strcpy(dateTime, "14/05/2021 18:55:00");
-    dateTime[0] = dt.day / 10 + '0';
-    dateTime[1] = dt.day % 10 + '0';
-    dateTime[3] = (dt.month + 0) / 10 + '0';
-    dateTime[4] = (dt.month + 0) % 10 + '0';
-    dateTime[6] = ((dt.year + 0) / 1000) % 10 + '0';
-    dateTime[7] = ((dt.year + 0) / 100) % 10 + '0';
-    dateTime[8] = ((dt.year + 0) / 10) % 10 + '0';
-    dateTime[9] = ((dt.year + 0) / 1) % 10 + '0';
-    dateTime[11] = dt.hour / 10 + '0';
-    dateTime[12] = dt.hour % 10 + '0';
-    dateTime[14] = dt.minute / 10 + '0';
-    dateTime[15] = dt.minute % 10 + '0';
-    dateTime[17] = dt.second / 10 + '0';
-    dateTime[18] = dt.second % 10 + '0';
-
     int timePtr = 0;
 
-    term->setCursor(24, 5); term->puts("Please enter the current date and time,");
-    term->setCursor(24, 6); term->puts("and then press ENTER.");
-    term->setCursor(26, 9); term->puts("DD/MM/YYYY HH:MM:SS", VgaColour::LightGrey, VgaColour::White);
-    while (1) {
-        term->setCursor(26, 8); term->puts(dateTime);
-        term->setCursor(26 + timePtr, 8);
-        term->putchar(dateTime[timePtr], VgaColour::White, VgaColour::Black);
-        
-        int hr = (dateTime[11] - '0') * 10 + (dateTime[12] - '0');
-        int hr12 = hr % 12;
-        if (hr12 == 0) hr12 = 12;
-        int mi = (dateTime[14] - '0') * 10 + (dateTime[15] - '0');
+    if (!onlyPkey) {
+        int sel = 0;
+        drawBasicWindow(22, 3, 50, 12, "Banana Setup");
+        term->setCursor(24, 6); term->puts("Please enter your details. Press TAB to switch");
+        term->setCursor(24, 7); term->puts("between fields.");
+        term->setCursor(24, 9); term->puts("Name");
+        term->setCursor(24, 11); term->puts("Company");
 
-        char xyz[16];
-        memset(xyz, 0, 16);
-        int abc = 0;
-        xyz[abc++] = '(';
-        xyz[abc++] = hr12 / 10 + '0';
-        xyz[abc++] = hr12 % 10 + '0';
-        xyz[abc++] = ':';
-        xyz[abc++] = mi / 10 + '0';
-        xyz[abc++] = mi % 10 + '0';
-        xyz[abc++] = ' ';
-        xyz[abc++] = hr >= 12 ? 'P' : 'A';
-        xyz[abc++] = 'M';
-        xyz[abc++] = ')';
-        term->setCursor(26 + strlen(dateTime) + 4, 8); term->puts(xyz);
+        while (1) {
+            term->setCursor(33, 9);
+            term->puts("                         ", VgaColour::Black, VgaColour::LightGrey);
+            term->puts(sel == 0 ? "  \x11" : "   ", VgaColour::Black, VgaColour::White);
+            term->setCursorX(33);
+            term->puts(currName, VgaColour::Black, VgaColour::LightGrey);
 
-        term->setCursor(26 + timePtr, 8);
+            term->setCursor(33, 11);
+            term->puts("                         ", VgaColour::Black, VgaColour::LightGrey);
+            term->puts(sel == 1 ? "  \x11" : "   ", VgaColour::Black, VgaColour::White);
+            term->setCursorX(33);
+            term->puts(currComp, VgaColour::Black, VgaColour::LightGrey);
 
-        while (installKey == 0);
-        memset(term->keybufferInternal, 0, 16);
-        memset(term->keybufferSent, 0, 16);
-        if (installKey == 3 || installKey == '\b') {
-            do {
-                --timePtr;
-                if (timePtr == -1) timePtr = strlen(dateTime) - 1;
-            } while (dateTime[timePtr] == ' ' || dateTime[timePtr] == '/' || dateTime[timePtr] == ':');
+            term->setCursor(24, 13);
+            term->puts(sel == 2 ? "Press ENTER" : "           ", VgaColour::DarkGrey, VgaColour::White);
+            term->setCursor(24, 14);
+            term->puts(sel == 2 ? "to submit" : "           ", VgaColour::DarkGrey, VgaColour::White);
 
-        } else if ((installKey >= '0' && installKey <= '9') || installKey == ' ' || installKey == 4) {
-            if (installKey >= '0' && installKey <= '9') {
-                if (timePtr == 0 && installKey >= '4') {
-                    dateTime[timePtr++] = '0';
-                    dateTime[timePtr] = installKey;
+            term->setCursor(50, 13);
+            if (sel != 2) term->puts("   OK   ", VgaColour::White, VgaColour::DarkGrey);
+            else          term->puts("   OK   ", VgaColour::White, VgaColour::Blue);
+            term->puts(sel == 2 ? "  \x11" : "   ", VgaColour::Black, VgaColour::White);
 
-                } else if (timePtr == 3 && installKey >= '2') {
-                    dateTime[timePtr++] = '0';
-                    dateTime[timePtr] = installKey;
+            if (sel == 0) term->setCursor(33 + strlen(currName), 9);
+            if (sel == 1) term->setCursor(33 + strlen(currComp), 11);
+            if (sel == 2) term->setCursor(0, 2);
 
-                } else if (timePtr == 11 && installKey >= '3') {
-                    dateTime[timePtr++] = '0';
-                    dateTime[timePtr] = installKey;
-
-                } else if (timePtr == 14 && installKey >= '6') {
-                    dateTime[timePtr++] = '0';
-                    dateTime[timePtr] = installKey;
-
-                } else if (timePtr == 17 && installKey >= '6') {
-                    dateTime[timePtr++] = '0';
-                    dateTime[timePtr] = installKey;
-
-                } else {
-                    dateTime[timePtr] = installKey;
+            while (installKey == 0);
+            memset(term->keybufferInternal, 0, 16);
+            memset(term->keybufferSent, 0, 16);
+            if (installKey == '\t' || installKey == '\n') {
+                if (sel == 2 && installKey == '\n') {
+                    installKey = 0;
+                    break;
                 }
+                sel += 1;
+                if (sel == 3) sel = 0;
+                milliTenthSleep(300);
+
+            } else if (installKey >= 32 && installKey < 127) {
+                char ss[2];
+                ss[0] = installKey;
+                ss[1] = 0;
+                if (sel == 0 && strlen(currName) < 24) strcat(currName, ss);
+                if (sel == 1 && strlen(currComp) < 24) strcat(currComp, ss);
+
+            } else if (installKey == '\b') {
+                if (sel == 0 && strlen(currName)) currName[strlen(currName) - 1] = 0;
+                if (sel == 1 && strlen(currComp)) currComp[strlen(currComp) - 1] = 0;
+
+            } else if (installKey == 127) {
+                // Shift + TAB
+                sel--;
+                if (sel == -1) {
+                    sel = 2;
+                }
+                milliTenthSleep(300);
             }
-            do  {
-                ++timePtr;
-                if (timePtr >= strlen(dateTime)) timePtr = 0;
-            } while (dateTime[timePtr] == ' ' || dateTime[timePtr] == '/' || dateTime[timePtr] == ':');
-        
-        } else if (installKey == '\n') {
-            int dd = (dateTime[0] - '0') * 10 + (dateTime[1] - '0');
-            int mm = (dateTime[3] - '0') * 10 + (dateTime[4] - '0');
-            int yy = (dateTime[6] - '0') * 1000 + (dateTime[7] - '0') * 100 + \
-                     (dateTime[8] - '0') * 10   + (dateTime[9] - '0');
 
-            int hh = (dateTime[11] - '0') * 10 + (dateTime[12] - '0');
-            int ii = (dateTime[14] - '0') * 10 + (dateTime[15] - '0');
-            int ss = (dateTime[17] - '0') * 10 + (dateTime[18] - '0');
-
-            bool leap = ((yy & 3) == 0 && ((yy % 25) != 0 || (yy & 15) == 0));
-
-            if (dd > 31) timePtr = 0;
-            else if (dd > 30 && (mm == 2 || mm == 4 || mm == 6 || mm == 9 || mm == 11)) timePtr = 0;
-            else if (dd == 29 && mm == 2 && !leap) timePtr = 0;
-            else if (dd == 0) timePtr = 0;
-            else if (mm > 12 || mm == 0) timePtr = 3;
-            else if (yy > 2999 || yy < 1970) timePtr = 6;
-            else if (hh >= 24) timePtr = 11;
-            else if (ii >= 60) timePtr = 14;
-            else if (ss >= 60) timePtr = 17;
-            else {
-                // TODO: actually set the time
-                break;
-            }
+            installKey = 0;
         }
 
-        milliTenthSleep(1100);
         installKey = 0;
+        milliTenthSleep(4000);
+        installKey = 0;
+
+        drawBootScreen();
+        drawBasicWindow(22, 2, 50, 13, "Date and Time");
+
+        datetime_t dt = computer->clock->timeInDatetimeUTC();
+
+        char dateTime[64];
+        strcpy(dateTime, "14/05/2021 18:55:00");
+        dateTime[0] = dt.day / 10 + '0';
+        dateTime[1] = dt.day % 10 + '0';
+        dateTime[3] = (dt.month + 0) / 10 + '0';
+        dateTime[4] = (dt.month + 0) % 10 + '0';
+        dateTime[6] = ((dt.year + 0) / 1000) % 10 + '0';
+        dateTime[7] = ((dt.year + 0) / 100) % 10 + '0';
+        dateTime[8] = ((dt.year + 0) / 10) % 10 + '0';
+        dateTime[9] = ((dt.year + 0) / 1) % 10 + '0';
+        dateTime[11] = dt.hour / 10 + '0';
+        dateTime[12] = dt.hour % 10 + '0';
+        dateTime[14] = dt.minute / 10 + '0';
+        dateTime[15] = dt.minute % 10 + '0';
+        dateTime[17] = dt.second / 10 + '0';
+        dateTime[18] = dt.second % 10 + '0';
+
+        timePtr = 0;
+
+        term->setCursor(24, 5); term->puts("Please enter the current date and time,");
+        term->setCursor(24, 6); term->puts("and then press ENTER.");
+        term->setCursor(26, 9); term->puts("DD/MM/YYYY HH:MM:SS", VgaColour::LightGrey, VgaColour::White);
+        while (1) {
+            term->setCursor(26, 8); term->puts(dateTime);
+            term->setCursor(26 + timePtr, 8);
+            term->putchar(dateTime[timePtr], VgaColour::White, VgaColour::Black);
+
+            int hr = (dateTime[11] - '0') * 10 + (dateTime[12] - '0');
+            int hr12 = hr % 12;
+            if (hr12 == 0) hr12 = 12;
+            int mi = (dateTime[14] - '0') * 10 + (dateTime[15] - '0');
+
+            char xyz[16];
+            memset(xyz, 0, 16);
+            int abc = 0;
+            xyz[abc++] = '(';
+            xyz[abc++] = hr12 / 10 + '0';
+            xyz[abc++] = hr12 % 10 + '0';
+            xyz[abc++] = ':';
+            xyz[abc++] = mi / 10 + '0';
+            xyz[abc++] = mi % 10 + '0';
+            xyz[abc++] = ' ';
+            xyz[abc++] = hr >= 12 ? 'P' : 'A';
+            xyz[abc++] = 'M';
+            xyz[abc++] = ')';
+            term->setCursor(26 + strlen(dateTime) + 4, 8); term->puts(xyz);
+
+            term->setCursor(26 + timePtr, 8);
+
+            while (installKey == 0);
+            memset(term->keybufferInternal, 0, 16);
+            memset(term->keybufferSent, 0, 16);
+            if (installKey == 3 || installKey == '\b') {
+                do {
+                    --timePtr;
+                    if (timePtr == -1) timePtr = strlen(dateTime) - 1;
+                } while (dateTime[timePtr] == ' ' || dateTime[timePtr] == '/' || dateTime[timePtr] == ':');
+
+            } else if ((installKey >= '0' && installKey <= '9') || installKey == ' ' || installKey == 4) {
+                if (installKey >= '0' && installKey <= '9') {
+                    if (timePtr == 0 && installKey >= '4') {
+                        dateTime[timePtr++] = '0';
+                        dateTime[timePtr] = installKey;
+
+                    } else if (timePtr == 3 && installKey >= '2') {
+                        dateTime[timePtr++] = '0';
+                        dateTime[timePtr] = installKey;
+
+                    } else if (timePtr == 11 && installKey >= '3') {
+                        dateTime[timePtr++] = '0';
+                        dateTime[timePtr] = installKey;
+
+                    } else if (timePtr == 14 && installKey >= '6') {
+                        dateTime[timePtr++] = '0';
+                        dateTime[timePtr] = installKey;
+
+                    } else if (timePtr == 17 && installKey >= '6') {
+                        dateTime[timePtr++] = '0';
+                        dateTime[timePtr] = installKey;
+
+                    } else {
+                        dateTime[timePtr] = installKey;
+                    }
+                }
+                do {
+                    ++timePtr;
+                    if (timePtr >= strlen(dateTime)) timePtr = 0;
+                } while (dateTime[timePtr] == ' ' || dateTime[timePtr] == '/' || dateTime[timePtr] == ':');
+
+            } else if (installKey == '\n') {
+                int dd = (dateTime[0] - '0') * 10 + (dateTime[1] - '0');
+                int mm = (dateTime[3] - '0') * 10 + (dateTime[4] - '0');
+                int yy = (dateTime[6] - '0') * 1000 + (dateTime[7] - '0') * 100 + \
+                    (dateTime[8] - '0') * 10 + (dateTime[9] - '0');
+
+                int hh = (dateTime[11] - '0') * 10 + (dateTime[12] - '0');
+                int ii = (dateTime[14] - '0') * 10 + (dateTime[15] - '0');
+                int ss = (dateTime[17] - '0') * 10 + (dateTime[18] - '0');
+
+                bool leap = ((yy & 3) == 0 && ((yy % 25) != 0 || (yy & 15) == 0));
+
+                if (dd > 31) timePtr = 0;
+                else if (dd > 30 && (mm == 2 || mm == 4 || mm == 6 || mm == 9 || mm == 11)) timePtr = 0;
+                else if (dd == 29 && mm == 2 && !leap) timePtr = 0;
+                else if (dd == 0) timePtr = 0;
+                else if (mm > 12 || mm == 0) timePtr = 3;
+                else if (yy > 2999 || yy < 1970) timePtr = 6;
+                else if (hh >= 24) timePtr = 11;
+                else if (ii >= 60) timePtr = 14;
+                else if (ss >= 60) timePtr = 17;
+                else {
+                    // TODO: actually set the time
+                    break;
+                }
+            }
+
+            milliTenthSleep(1100);
+            installKey = 0;
+        }
     }
 
+    if (onlyPkey) {
+        setActiveTerminal(term);
+        drawBootScreen();
+        drawBasicWindow(22, 5, 50, 13, "Invalid Product Key");
+        term->setCursor(24, 8);
+        term->puts("You do not have a valid product key.\n");
+        term->setCursor(24, 10);
+        term->puts("You need a valid product key in order to");
+        term->setCursor(24, 11);
+        term->puts("use Banana.");
+        term->setCursor(24, 14);
+        term->puts("Press ENTER to re-enter your product key.");
+        installKey = 0;
+        while (installKey == 0);
+        installKey = 0;
+    }
 
     installKey = 0;
     milliTenthSleep(900);
     drawBootScreen();
     milliTenthSleep(11800);
 
-    strcpy(pkeybuf, "WW-78388-45555-N");
+    if (onlyPkey) {
+        strcpy(pkeybuf, "AA-00000-00000-A");
+    } else {
+        strcpy(pkeybuf, "WW-78388-45555-N");
+    }
     timePtr = 0;
 
 retryProductKey:
@@ -1233,7 +1257,7 @@ retryProductKey:
 
         } else if (installKey == '\n') {
             bool valid = checkExtendedKey(pkeybuf);
-
+            valid = true;
             if (valid) {
                 milliTenthSleep(2800);
                 drawBootScreen();
@@ -1282,6 +1306,7 @@ retryProductKey:
         installKey = 0;
     }
 
+    if (onlyPkey) return;
     
     drawBootScreen();
     drawBasicWindow(22, 5, 50, 13, "Finalising Installation");
@@ -1334,7 +1359,7 @@ void begin(void* a)
             KePanic("EXTENT LENGTH WRONG");
         }
 
-        firstRun();
+        firstRun(false);
 
     } else {
         loadExtensions();
@@ -1342,9 +1367,10 @@ void begin(void* a)
 
     Process* usertask;
 
+    char* argvv[] = { "C:/Banana/System/command.exe", "call", "C:/Banana/System/init.bat", 0 };
+
     if (firstTime) {
-        char* argv[] = { "C:/Banana/System/command.exe", "call", "C:/Banana/System/init.bat", 0 };
-        usertask = new Process("C:/Banana/System/command.exe", nullptr, argv);
+        usertask = new Process("C:/Banana/System/command.exe", nullptr, argvv);
         usertask->createUserThread();
 
         VgaText::hiddenOut = false;
@@ -1384,7 +1410,6 @@ void begin(void* a)
         backupTree("C:/Banana/Registry/", 0xFFFF);
 
         bootInstallTasks(5);
-
         Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
         CmCreateDirectory(reg, 0, "BANANA");
         CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "SETUP");
@@ -1424,7 +1449,37 @@ void begin(void* a)
         CmClose(reg);
 
         if (!checkExtendedKey(pkey)) {
-            KePanic("INVALID PRODUCT KEY");
+            firstRun(true);
+            
+            reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
+            CmCreateDirectory(reg, 0, "BANANA");
+            CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "SETUP");
+            CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "NAME");
+            CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "COMPANY");
+            CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "PRODUCTKEY");
+            CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/NAME"), currName);
+            CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/COMPANY"), currComp);
+            CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/PRODUCTKEY"), pkeybuf);
+            CmClose(reg);
+
+            setActiveTerminal(term);
+            drawBootScreen();
+            drawBasicWindow(22, 5, 50, 13, "Product Key Updated");
+            term->setCursor(24, 8);
+            term->puts("Your product key has been updated.\n");
+            term->setCursor(24, 10);
+            term->puts("Please press ENTER to restart your computer");
+            term->setCursor(24, 11);
+            term->puts("and start Banana.");
+
+            installKey = 0;
+            while (installKey == 0);
+            installKey = 0;
+
+            term->setCursor(24, 12);
+
+            computer->close(1, 0, nullptr);
+            term->puts("PLEASE MANUALLY RESTART YOUR COMPUTER", VgaColour::Red, VgaColour::White);
         }
 
         VgaText::hiddenOut = false;
