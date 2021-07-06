@@ -649,6 +649,7 @@ void createUser(const char* name)
 }
 
 VgaText* term;
+bool showSidebar = true;
 void drawBootScreen()
 {
     term->setDefaultBgColour(VgaColour::Cyan);
@@ -661,15 +662,17 @@ void drawBootScreen()
     for (int x = 0; x < 80; ++x) {
         term->putchar(' ', VgaColour::Black, VgaColour::Black);
     }
-    for (int y = 0; y < 25; ++y) {
-        term->setCursor(0, y);
-        for (int x = 0; x < 16; ++x) {
-            term->putchar(' ', VgaColour::Black, VgaColour::Black);
+    if (showSidebar) {
+        for (int y = 0; y < 25; ++y) {
+            term->setCursor(0, y);
+            for (int x = 0; x < 16; ++x) {
+                term->putchar(' ', VgaColour::Black, VgaColour::Black);
+            }
         }
+        term->setCursor(1, 1);
+        term->puts("Checking\n system\n requirements\n\n Legal\n notices\n\n Choosing a\n partition\n\n Formatting\n\n Copying files\n\n Restarting\n your computer\n\n", VgaColour::White, VgaColour::Black);
+        term->puts(" Finalising the\n installation", VgaColour::Yellow, VgaColour::Black);
     }
-    term->setCursor(1, 1);
-    term->puts("Checking\n system\n requirements\n\n Legal\n notices\n\n Choosing a\n partition\n\n Formatting\n\n Copying files\n\n Restarting\n your computer\n\n", VgaColour::White, VgaColour::Black);
-    term->puts(" Finalising the\n installation", VgaColour::Yellow, VgaColour::Black);
     term->setDefaultBgColour(VgaColour::White);
     term->setDefaultFgColour(VgaColour::Black);
 }
@@ -734,6 +737,22 @@ void bootInstallKeybrd(KeyboardToken kt, bool* keystates)
     }
     if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::Right) {
         installKey = 4; 
+        return;
+    }
+    if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::Up) {
+        installKey = 1;
+        return;
+    }
+    if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::Down) {
+        installKey = 2;
+        return;
+    }
+    if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::PageDown) {
+        installKey = 125;
+        return;
+    }
+    if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::PageDown) {
+        installKey = 126;
         return;
     }
     installKey = kt.halScancode;
@@ -945,6 +964,11 @@ int checkExtendedKey(char* modified)
     regular[14] = '-';
     regular[15] = modified[15];
 
+    regular[3] -= 1;
+    if (regular[3] + 1 == '0') regular[3] = '9';
+    regular[9] -= 1;
+    if (regular[9] + 1 == '0') regular[9] = '9';
+
     if (modified[13] != modified[12]) {
         return KEY_TYPE_INVALID;
     }
@@ -968,8 +992,72 @@ char currName[48] = "Alex";
 char currComp[48] = "";
 char pkeybuf[18];
 
+char* timezoneStrings[200];
+
+int loadTimezoneStrings()
+{
+    File* f = new File("C:/Banana/System/timezones.txt", kernelProcess);
+    f->open(FileOpenMode::Read);
+    uint64_t siz;
+    bool dir;
+    f->stat(&siz, &dir);
+    int br;
+    char* bf = (char*) malloc(siz);
+    memset(bf, 0, siz);
+    f->read(siz, bf, &br);
+    f->close();
+
+    kprintf("siz = %d\n", (int) siz);
+
+    int num = 0;
+    for (int i = 0; i < 200; ++i) {
+        timezoneStrings[i] = (char*) malloc(120);
+        strcpy(timezoneStrings[i], " ");
+    }
+    int j = 0;
+
+    while (1) {
+        char s[2];
+        s[0] = bf[j++];
+        s[1] = 0;
+        if (s[0] == '\r') continue;
+        if (s[0] == '\t') {
+            while (strlen(timezoneStrings[num]) < 9) {
+                strcat(timezoneStrings[num], " ");
+            }
+            
+            continue;
+        }
+        if (s[0] == '\n') {
+            while (strlen(timezoneStrings[num]) < 54) {
+                strcat(timezoneStrings[num], " ");
+            }
+            num++;
+            if (j >= siz) break;
+            continue;
+        }
+        if (strlen(timezoneStrings[num]) < 50) {
+            strcat(timezoneStrings[num], s);
+        } else if (strlen(timezoneStrings[num]) == 50) {
+            strcat(timezoneStrings[num], "... ");
+
+        }
+        //kprintf("%d: %s (%s)\n", num, timezoneStrings[num], s);
+    }
+
+    free(bf);
+
+    for (int i = 0; i < 200; ++i) {
+        kprintf("%d; %s\n", i, timezoneStrings[num]);
+    }
+
+    return num;
+}
+
 void firstRun(bool onlyPkey)
 {
+    showSidebar = !onlyPkey;
+
     guiKeyboardHandler = bootInstallKeybrd;
 
 	KeSetBootMessage("Setting up the system for the first time");
@@ -1183,9 +1271,99 @@ void firstRun(bool onlyPkey)
             milliTenthSleep(1100);
             installKey = 0;
         }
+
+        installKey = 0;
+        milliTenthSleep(4000);
+        installKey = 0;
+
+        drawBootScreen();
+        drawBasicWindow(18, 1, 60, 20, "Date and Time");
+        term->setCursor(20, 4); term->puts("Please select your timezone and then press ENTER.");
+
+        int tzsel = 0;
+        int scroll = 0;
+        int numEntries = loadTimezoneStrings();
+
+        int barHeight = 15 * 14 / numEntries;
+
+        while (1) {
+            for (int i = 0; i < 14; ++i) {
+                term->setCursor(75, 7 + i);
+                term->putchar(' ');
+            }
+            for (int i = 0; i < barHeight; ++i) {
+                term->setCursor(75, 7 + i + scroll * 14 / numEntries);
+                term->putchar(219);
+            }
+            term->setCursor(75, 6);
+            term->putchar(30);
+            term->setCursor(75, 20);
+            term->putchar(31);
+
+            for (int i = 0; i < 15; ++i) {
+                term->setCursor(20, 6 + i);
+                /*term->putchar(' ', scroll + i == tzsel ? VgaColour::White : VgaColour::DarkGrey, \
+                    scroll + i == tzsel ? VgaColour::Black : VgaColour::White);*/
+                term->puts(timezoneStrings[scroll + i], \
+                           scroll + i == tzsel ? VgaColour::White : VgaColour::Black, \
+                           scroll + i == tzsel ? VgaColour::Black : VgaColour::White);
+            }
+
+
+            while (installKey == 0);
+            memset(term->keybufferInternal, 0, 4);
+            memset(term->keybufferSent, 0, 4);
+            if (installKey == 1) {
+                tzsel--;
+                if (tzsel - scroll < 5) {
+                    scroll--;
+                }
+                if (tzsel < 0) tzsel = 0;
+                if (scroll < 0) scroll = 0;
+
+            } else if (installKey == 2) {
+                tzsel++;
+                if (tzsel - scroll > 10) {
+                    scroll++;
+                }
+                if (tzsel > numEntries - 2) tzsel = numEntries - 2;
+                if (scroll > numEntries - 15 - 1) scroll = numEntries - 15 - 1;
+
+            }/* else if (installKey == 125) {
+                //page up
+
+                for (int i = 0; i < 14; ++i) {
+                    tzsel--;
+                    if (tzsel - scroll < 5) {
+                        scroll--;
+                    }
+                    if (tzsel < 0) tzsel = 0;
+                    if (scroll < 0) scroll = 0;
+                }
+
+            } else if (installKey == 126) {
+                //page down
+
+                for (int i = 0; i < 14; ++i) {
+                    tzsel++;
+                    if (tzsel - scroll > 10) {
+                        scroll++;
+                    }
+                    if (tzsel > numEntries - 2) tzsel = numEntries - 2;
+                    if (scroll > numEntries - 15 - 1) scroll = numEntries - 15 - 1;
+                }
+
+            }*/ else if (installKey == '\n') {
+                break;
+            }
+
+            milliTenthSleep(500);
+            installKey = 0;
+        }
     }
 
     if (onlyPkey) {
+        showSidebar = false;
         setActiveTerminal(term);
         drawBootScreen();
         drawBasicWindow(22, 5, 50, 13, "Invalid Product Key");
@@ -1210,7 +1388,7 @@ void firstRun(bool onlyPkey)
     if (onlyPkey) {
         strcpy(pkeybuf, "AA-00000-00000-A");
     } else {
-        strcpy(pkeybuf, "WW-78388-45555-N");
+        strcpy(pkeybuf, "WW-88388-55555-N");
     }
     timePtr = 0;
 
@@ -1257,7 +1435,7 @@ retryProductKey:
 
         } else if (installKey == '\n') {
             bool valid = checkExtendedKey(pkeybuf);
-            valid = true;
+
             if (valid) {
                 milliTenthSleep(2800);
                 drawBootScreen();

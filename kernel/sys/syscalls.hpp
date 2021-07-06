@@ -97,6 +97,14 @@ SystemCallNumber
 	GetVGAPtr,
 	RegisterSignal,
 	Kill,
+	RegistryGetTypeFromPath,
+	RegistryReadExtent,
+	RegistryPathToExtentLookup,
+	RegistryEnterDirectory,
+	RegistryGetNext,
+	RegistryGetNameAndTypeFromExtent,
+	RegistryOpen,
+	RegistryClose,
 };
 
 

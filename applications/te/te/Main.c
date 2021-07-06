@@ -651,12 +651,11 @@ void newDoc()
 
 void sighandler_(int sig)
 {
-	printf("SIGNAL %d RECEIVED.\n", sig);
+	
 }
 
 int main(int argc, char* argv[])
 {
-	
 	signal(SIGABRT, sighandler_);
 	signal(SIGTERM, sighandler_);
 	signal(SIGINT,  sighandler_);

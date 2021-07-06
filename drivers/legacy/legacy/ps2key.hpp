@@ -58,8 +58,8 @@
 #define PS2_SCANCODE_end 0x69
 #define PS2_SCANCODE_insert 0x70
 #define PS2_SCANCODE_delete 0x71
-#define PS2_SCANCODE_pageup 0x49
-#define PS2_SCANCODE_pagedown 0x51
+#define PS2_SCANCODE_pageup 0x7D
+#define PS2_SCANCODE_pagedown 0x7A
 
 
 #define PS2_STUPID_backspace 0x0E

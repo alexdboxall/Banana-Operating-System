@@ -38,6 +38,14 @@ uint64_t SysGetRAMData(regs* r);
 uint64_t SysGetVGAPtr(regs* r);
 uint64_t SysRegisterSignal(regs* r);
 uint64_t SysKill(regs* r);
+uint64_t SysRegistryGetTypeFromPath(regs* r);
+uint64_t SysRegistryReadExtent(regs* r);
+uint64_t SysRegistryPathToExtentLookup(regs* r);
+uint64_t SysRegistryEnterDirectory(regs* r);
+uint64_t SysRegistryGetNext(regs* r);
+uint64_t SysRegistryGetNameAndTypeFromExtent(regs* r);
+uint64_t SysRegistryOpen(regs* r);
+uint64_t SysRegistryClose(regs* r);
 
 int string_ends_with(const char* str, const char* suffix)
 {
@@ -652,6 +660,14 @@ uint64_t(*systemCallHandlers[])(regs* r) = {
 	SysGetVGAPtr,
 	SysRegisterSignal,
 	SysKill,
+	SysRegistryGetTypeFromPath,
+	SysRegistryReadExtent,
+	SysRegistryPathToExtentLookup,
+	SysRegistryEnterDirectory,
+	SysRegistryGetNext,
+	SysRegistryGetNameAndTypeFromExtent,
+	SysRegistryOpen,
+	SysRegistryClose,
 };
 
 uint64_t KeSystemCall(regs* r, void* context)
