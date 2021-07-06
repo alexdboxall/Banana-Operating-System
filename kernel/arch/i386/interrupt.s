@@ -1,5 +1,8 @@
 bits 32
 
+currentTaskTCB equ 0xC2002000		;JUST FOR NOW, NEEDS CHANGING IS prcssthr.hpp AS WELL IF CHANGED
+
+
 global isr0
 global isr1
 global isr2
