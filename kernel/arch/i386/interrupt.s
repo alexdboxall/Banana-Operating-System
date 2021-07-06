@@ -428,19 +428,19 @@ skipSignals:
 
 align 4
 struc SIG_STATE_STRUCT
-.sigaddr resd 0
-.sigaddrh resd 0
-.signum resd 0
-.sax resd 0
-.sbx resd 0
-.scx resd 0
-.sdx resd 0
-.ssi resd 0
-.sdi resd 0
-.sbp resd 0
-.ssp resd 0
-.sip resd 0
-.sfl resd 0
+.sigaddr resd 1
+.sigaddrh resd 1
+.signum resd 1
+.sax resd 1
+.sbx resd 1
+.scx resd 1
+.sdx resd 1
+.ssi resd 1
+.sdi resd 1
+.sbp resd 1
+.ssp resd 1
+.sip resd 1
+.sfl resd 1
 endstruc
 
     ;unsigned int gs, fs, es, ds;
