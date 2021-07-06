@@ -233,6 +233,7 @@ static inline __attribute__((always_inline)) void unlockStuff(void)
 extern Process* kernelProcess;
 extern ThreadControlBlock* cleanerThread;
 extern LinkedList<volatile ThreadControlBlock> sleepingTaskList;
+extern LinkedList<volatile ThreadControlBlock> taskList;
 
 extern void terminateTask(int returnCode = 0);
 
