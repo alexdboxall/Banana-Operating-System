@@ -144,9 +144,10 @@ int KeRaiseSignal(SigHandlerBlock* shb, int sig)
 
 extern "C" void KiFinishSignalZ(uint32_t* ptr)
 {
-	kprintf("Finishing signal %d\n", ptr[2]);
-
 	KeCompleteSignal(currentTaskTCB->processRelatedTo->signals, ptr[2]);
+	ptr[0] = 0;
+	ptr[1] = 0;
+	ptr[2] = 0;
 }
 
 extern "C" size_t KiCheckSignalZ()
