@@ -514,7 +514,7 @@ void VgaText::receiveKey(uint8_t key)
 			this->putchar('\b');
 
 			char old = keybufferInternal[strlen(keybufferInternal) - 1];
-			if (old < 32 && old != '\b' && old != '\t' && old != '\n' && old != '\r') {
+			if (key != 0 && old < 32 && old != '\b' && old != '\t' && old != '\n' && old != '\r') {
 				this->puts("\b\b\b\b\b");
 			}
 
@@ -528,7 +528,7 @@ void VgaText::receiveKey(uint8_t key)
 		}
 
 		//display the character
-		if (key < 32 && key != '\b' && key != '\t' && key != '\n' && key != '\r') {
+		if (key != 0 && key < 32 && key != '\b' && key != '\t' && key != '\n' && key != '\r') {
 			this->puts("CTRL\xFF", this->currentBg, this->currentFg);
 			this->putchar(key + '@', this->currentBg, this->currentFg);
 
@@ -545,7 +545,7 @@ void VgaText::receiveKey(uint8_t key)
 		strcat(keybufferInternal, addon);
 	}
 
-	if (unbufferedKeyboard || key == (uint8_t) '\n' || key == (uint8_t) '\3') {
+	if (unbufferedKeyboard || key == (uint8_t) '\n' || key == (uint8_t) '\3' || key == (uint8_t) '\x1C') {
 		//copy it to the read buffer
 		strcat(keybufferSent, keybufferInternal);
 
