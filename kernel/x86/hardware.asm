@@ -206,7 +206,6 @@ commonThreadSwitch:
 	mov [currentTaskTCB], esi				;update the pointer to point to the new task
 
 	mov eax, [esi + 0x0]			;CR3 stored at offset 0x0 into the struct
-	mov ebx, [esi + 0x8]			;address of top of kernel stack
 	mov edx, [esi + 0xC]			;load first time EIP / a zero
 
 	mov ecx, cr3					;the task we just switched from's register

@@ -30,7 +30,7 @@ struct ThreadControlBlock
 {
 	volatile size_t cr3;					//MUST BE AT OFFSET 0x0			INTO THE STRUCT
 	volatile size_t esp;					//MUST BE AT OFFSET 0x4/0x8		INTO THE STRUCT
-	volatile size_t krnlStack;				//MUST BE AT OFFSET 0x8/0x10	INTO THE STRUCT		(USELESS)
+	volatile size_t signalStateHandler;		//MUST BE AT OFFSET 0x8/0x10	INTO THE STRUCT		(USELESS)
 	volatile size_t firstTimeEIP;			//MUST BE AT OFFSET 0xC/0x18	INTO THE STRUCT
 	volatile uint64_t timeKeeping;			//MUST BE AT OFFSET 0x10/0x20	INTO THE STRUCT
 	volatile enum TaskState state;			//MUST BE AT OFFSET 0x18/0x28	INTO THE STRUCT

@@ -651,7 +651,7 @@ void newDoc()
 
 void sighandler_(int sig)
 {
-	//printf("SIGNAL %d RECEIVED.\n", sig);
+	printf("SIGNAL %d RECEIVED.\n", sig);
 }
 
 int main(int argc, char* argv[])

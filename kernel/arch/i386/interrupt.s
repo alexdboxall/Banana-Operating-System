@@ -125,9 +125,9 @@ isr13:
 
     push ebx
     mov ebx, [esp + 4 * 3]
-    cmp ebx, KiFinishSignal
+    cmp ebx, finishSignal
     pop ebx
-    je KiFinishSignal2
+    je finishSignal2
 
     jmp int_common_stub
 
@@ -299,6 +299,7 @@ int_common_stub:
 
 
 extern KiCheckSignalZ
+extern KiFinishSignalZ
 
 syscall_common_stub:
     pushad
@@ -328,36 +329,40 @@ syscall_common_stub:
     cmp eax, 0
 	je skipSignals
 
-    mov [STICKY_TAPE.calcEax], eax
+    mov [currentTaskTCB + 0x8], eax
 
     popa
-    mov [STICKY_TAPE.sax], eax
-    mov [STICKY_TAPE.sbx], ebx
-    mov [STICKY_TAPE.scx], ecx
-    mov [STICKY_TAPE.sdx], edx
-    mov [STICKY_TAPE.ssi], esi
-    mov [STICKY_TAPE.sdi], edi
-    mov [STICKY_TAPE.sbp], ebp
+    push ebx
+    mov ebx, [currentTaskTCB + 0x8]
+    mov [ebx + SIG_STATE_STRUCT.sax], eax
+    pop ebx
+
+    mov eax, [currentTaskTCB + 0x8]
+    mov [eax + SIG_STATE_STRUCT.sbx], ebx
+    mov [eax + SIG_STATE_STRUCT.scx], ecx
+    mov [eax + SIG_STATE_STRUCT.sdx], edx
+    mov [eax + SIG_STATE_STRUCT.ssi], esi
+    mov [eax + SIG_STATE_STRUCT.sdi], edi
+    mov [eax + SIG_STATE_STRUCT.sbp], ebp
     add esp, 8
-    pop eax
+    pop esi
     pop ebx
     pop ecx
     pop edx
-    mov [STICKY_TAPE.sip], eax
-    mov [STICKY_TAPE.sfl], ecx
-    mov [STICKY_TAPE.ssp], edx
+    mov [eax + SIG_STATE_STRUCT.sip], esi
+    mov [eax + SIG_STATE_STRUCT.sfl], ecx
+    mov [eax + SIG_STATE_STRUCT.ssp], edx
     push edx
     push ecx
     push ebx
-    push eax
+    push esi
     sub esp, 8
-    mov eax, [STICKY_TAPE.sax]
-    mov ebx, [STICKY_TAPE.sbx]
-    mov ecx, [STICKY_TAPE.scx]
-    mov edx, [STICKY_TAPE.sdx]  
+    mov esi, [eax + SIG_STATE_STRUCT.ssi]
+    mov ebx, [eax + SIG_STATE_STRUCT.sbx]
+    mov ecx, [eax + SIG_STATE_STRUCT.scx]
+    mov edx, [eax + SIG_STATE_STRUCT.sdx]  
+    mov eax, [eax + SIG_STATE_STRUCT.sax]       ;must revert EAX back
     pusha
-
-    cli
 
     mov edx, 5          ;SIGNAL NUM
 
@@ -365,39 +370,40 @@ syscall_common_stub:
                                     ; *** CRITICAL SECTION ***
     mov esp, [ebx + 13 * 4]         ;get application stack
     push edx                        ;push signal number
-    push KiFinishSignal             ;push return address
+    push finishSignal               ;push return address
     mov [ebx + 13 * 4], esp         ;set application stack to reflect changes
     mov esp, ebx                    ;restore kernel stack 
                                     ; *** END CRITICAL SECTION ***
     mov ecx, [ebx + 13 * 4]         ;USER STACK
 
-    mov [STICKY_TAPE.calcEcx], ecx
 
     ;CREATE AN IRET FRAME
     push 0x23
-    push dword [STICKY_TAPE.calcEcx]                        
+    push ecx                    
     push 0x202
     push 0x1B
-    push dword [STICKY_TAPE.calcEax]
+    push dword [SIG_STATE_STRUCT.sigaddr]
     iret
 
     ;only the heaviest of wizardry is used to implement signals
-KiFinishSignal:
+finishSignal:
     int 15                          ;cause a GPF, as usermode cannot call this interrupt
-KiFinishSignal2:
-    mov eax, [STICKY_TAPE.sax]
-    mov ebx, [STICKY_TAPE.sbx]
-    mov ecx, [STICKY_TAPE.scx]
-    mov edx, [STICKY_TAPE.sdx]
-    mov esi, [STICKY_TAPE.ssi]
-    mov edi, [STICKY_TAPE.sdi]
-    mov ebp, [STICKY_TAPE.sbp]
+finishSignal2:
+    push dword [currentTaskTCB + 0x8]
+    call KiFinishSignalZ
+    mov eax, [SIG_STATE_STRUCT.sax]
+    mov ebx, [SIG_STATE_STRUCT.sbx]
+    mov ecx, [SIG_STATE_STRUCT.scx]
+    mov edx, [SIG_STATE_STRUCT.sdx]
+    mov esi, [SIG_STATE_STRUCT.ssi]
+    mov edi, [SIG_STATE_STRUCT.sdi]
+    mov ebp, [SIG_STATE_STRUCT.sbp]
     
     push 0x23
-    push dword [STICKY_TAPE.ssp]
-    push dword [STICKY_TAPE.sfl]
+    push dword [SIG_STATE_STRUCT.ssp]
+    push dword [SIG_STATE_STRUCT.sfl]
     push 0x1B
-    push dword [STICKY_TAPE.sip]
+    push dword [SIG_STATE_STRUCT.sip]
     iret
 
     ;sub esp, 32                     ;black magic
@@ -412,20 +418,23 @@ skipSignals:
 
     iret
 
-STICKY_TAPE:
-.sax dd 0
-.sbx dd 0
-.scx dd 0
-.sdx dd 0
-.ssi dd 0
-.sdi dd 0
-.sbp dd 0
-.ssp dd 0
-.sip dd 0
-.sfl dd 0
-.calcEcx dd 0
-.calcEax dd 0
-    
+align 4
+struc SIG_STATE_STRUCT:
+.sigaddr resd 0
+.sigaddrh resd 0
+.signum resd 0
+.sax resd 0
+.sbx resd 0
+.scx resd 0
+.sdx resd 0
+.ssi resd 0
+.sdi resd 0
+.sbp resd 0
+.ssp resd 0
+.sip resd 0
+.sfl resd 0
+endstruc
+
     ;unsigned int gs, fs, es, ds;
     ;             0    1    2    3    4    5    6    7
 	;unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax;

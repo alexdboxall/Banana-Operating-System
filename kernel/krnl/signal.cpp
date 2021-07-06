@@ -142,12 +142,27 @@ int KeRaiseSignal(SigHandlerBlock* shb, int sig)
 	return 1;
 }
 
-extern "C" size_t KiCheckSignalZ()
+extern "C" void KiFinishSignalZ(uint32_t* ptr)
 {
-	return KeCheckSignal(currentTaskTCB->processRelatedTo->signals);
+	kprintf("Finishing signal %d\n", ptr[2]);
+
+	KeCompleteSignal(currentTaskTCB->processRelatedTo->signals, ptr[2]);
 }
 
-size_t KeCheckSignal(SigHandlerBlock* shb)
+extern "C" size_t KiCheckSignalZ()
+{
+	int num;
+	uint64_t sigaddr = KeCheckSignal(currentTaskTCB->processRelatedTo->signals, &num);
+
+	uint32_t* sigState = (size_t*) currentTaskTCB->signalStateHandler;
+	sigState[0] = sidaddr & 0xFFFFFFFFULL;
+	sigState[1] = sidaddr >> 32;
+	sigState[2] = num;
+
+	return (size_t) sigState;
+}
+
+size_t KeCheckSignal(SigHandlerBlock* shb, int* num)
 {
 	if (!shb->checkSignals) {
 		return 0;
@@ -178,6 +193,7 @@ size_t KeCheckSignal(SigHandlerBlock* shb)
 			}
 
 			size_t handler = (size_t) shb->handler[sig];
+			*num = sig;
 
 			if (sig == SIGKILL) {
 				return (size_t) KiSigKill;

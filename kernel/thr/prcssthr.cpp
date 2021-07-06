@@ -110,6 +110,7 @@ ThreadControlBlock* Process::createThread(void (*where)(void*), void* context, i
 	threads[threadNo].state = TaskState::ReadyToRun;
 	threads[threadNo].firstTimeEIP = (size_t) where;
 	threads[threadNo].timeKeeping = 0;
+	threads[threadNo].signalStateHandler = (size_t) malloc(256);
 
 	taskList.addElement(&threads[threadNo]);
 
@@ -153,6 +154,7 @@ void setupMultitasking(void (*where)())
 	p->threads[0].timeKeeping = 0;
 	p->threads[0].processRelatedTo = p;
 	p->threads[0].timeSliceRemaining = 50000000;
+	p->threads[0].signalStateHandler = (size_t) malloc(256);
 
 	currentTaskTCB = &p->threads[0];
 
