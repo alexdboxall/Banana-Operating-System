@@ -364,7 +364,9 @@ syscall_common_stub:
     mov eax, [eax + SIG_STATE_STRUCT.sax]       ;must revert EAX back
     pusha
 
-    mov edx, 5          ;SIGNAL NUM
+    mov esi, [currentTaskTCB + 0x8]
+
+    mov edx, [esi + SIG_STATE_STRUCT.signum]    ;SIGNAL NUM
 
     mov ebx, esp                    ;save kernel stack
                                     ; *** CRITICAL SECTION ***
@@ -382,7 +384,7 @@ syscall_common_stub:
     push ecx                    
     push 0x202
     push 0x1B
-    push dword [SIG_STATE_STRUCT.sigaddr]
+    push dword [esi + SIG_STATE_STRUCT.sigaddr]
     iret
 
     ;only the heaviest of wizardry is used to implement signals
@@ -391,19 +393,22 @@ finishSignal:
 finishSignal2:
     push dword [currentTaskTCB + 0x8]
     call KiFinishSignalZ
-    mov eax, [SIG_STATE_STRUCT.sax]
-    mov ebx, [SIG_STATE_STRUCT.sbx]
-    mov ecx, [SIG_STATE_STRUCT.scx]
-    mov edx, [SIG_STATE_STRUCT.sdx]
-    mov esi, [SIG_STATE_STRUCT.ssi]
-    mov edi, [SIG_STATE_STRUCT.sdi]
-    mov ebp, [SIG_STATE_STRUCT.sbp]
-    
+    mov ebp, [currentTaskTCB + 0x8]
+
     push 0x23
-    push dword [SIG_STATE_STRUCT.ssp]
-    push dword [SIG_STATE_STRUCT.sfl]
+    push dword [ebp + SIG_STATE_STRUCT.ssp]
+    push dword [ebp + SIG_STATE_STRUCT.sfl]
     push 0x1B
-    push dword [SIG_STATE_STRUCT.sip]
+    push dword [ebp + SIG_STATE_STRUCT.sip]
+
+    mov eax, [ebp + SIG_STATE_STRUCT.sax]
+    mov ebx, [ebp + SIG_STATE_STRUCT.sbx]
+    mov ecx, [ebp + SIG_STATE_STRUCT.scx]
+    mov edx, [ebp + SIG_STATE_STRUCT.sdx]
+    mov esi, [ebp + SIG_STATE_STRUCT.ssi]
+    mov edi, [ebp + SIG_STATE_STRUCT.sdi]
+    mov ebp, [ebp + SIG_STATE_STRUCT.sbp]
+
     iret
 
     ;sub esp, 32                     ;black magic
