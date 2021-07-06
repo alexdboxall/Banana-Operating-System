@@ -1418,6 +1418,15 @@ void begin(void* a)
         term->puts("PLEASE MANUALLY RESTART YOUR COMPUTER", VgaColour::Red, VgaColour::White);
 
     } else {
+        Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
+        char pkey[600];
+        CmGetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/PRODUCTKEY"), pkey);
+        CmClose(reg);
+
+        if (!checkExtendedKey(pkey)) {
+            KePanic("INVALID PRODUCT KEY");
+        }
+
         VgaText::hiddenOut = false;
         usertask = new Process("C:/Banana/System/command.exe");
         setActiveTerminal(usertask->terminal);
