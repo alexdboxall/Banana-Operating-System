@@ -26,7 +26,7 @@ void sendKeyToTerminal(uint8_t code)
 {
 	activeTerminal->receiveKey(code);
 
-	if (code == (uint8_t) '\n' || code == (uint8_t) '\3') {
+	if (code == (uint8_t) '\n' || code == (uint8_t) '\3' || code == (uint8_t) '\x1C') {
 		ThreadControlBlock* next_task;
 		ThreadControlBlock* this_task;
 

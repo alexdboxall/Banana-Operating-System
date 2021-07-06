@@ -96,7 +96,7 @@ SystemCallNumber
 	GetRAMData,
 	GetVGAPtr,
 	RegisterSignal,
-
+	Kill,
 };
 
 
