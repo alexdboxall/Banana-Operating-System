@@ -328,22 +328,7 @@ syscall_common_stub:
     cmp eax, 0
 	je skipSignals
 
-    cli
-
-    mov edx, 5          ;SIGNAL NUM
-
-    mov ebx, esp                    ;save kernel stack
-                                    ; *** CRITICAL SECTION ***
-    mov esp, [ebx + 13 * 4]         ;get application stack
-    push edx                        ;push signal number
-    push KiFinishSignal             ;push return address
-    mov [ebx + 13 * 4], esp         ;set application stack to reflect changes
-    mov esp, ebx                    ;restore kernel stack 
-                                    ; *** END CRITICAL SECTION ***
-    mov ecx, [ebx + 13 * 4]         ;USER STACK
-
     mov [STICKY_TAPE.calcEax], eax
-    mov [STICKY_TAPE.calcEcx], ecx
 
     popa
     mov [STICKY_TAPE.sax], eax
@@ -371,6 +356,22 @@ syscall_common_stub:
     mov ecx, [STICKY_TAPE.scx]
     mov edx, [STICKY_TAPE.sdx]  
     pusha
+
+    cli
+
+    mov edx, 5          ;SIGNAL NUM
+
+    mov ebx, esp                    ;save kernel stack
+                                    ; *** CRITICAL SECTION ***
+    mov esp, [ebx + 13 * 4]         ;get application stack
+    push edx                        ;push signal number
+    push KiFinishSignal             ;push return address
+    mov [ebx + 13 * 4], esp         ;set application stack to reflect changes
+    mov esp, ebx                    ;restore kernel stack 
+                                    ; *** END CRITICAL SECTION ***
+    mov ecx, [ebx + 13 * 4]         ;USER STACK
+
+    mov [STICKY_TAPE.calcEcx], ecx
 
     ;CREATE AN IRET FRAME
     push 0x23
