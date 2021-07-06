@@ -6,6 +6,11 @@
 #include "hal/device.hpp"
 #include "hal/vcache.hpp"
 #include <reg/cm.hpp>
+
+extern "C" {
+#include <libk/string.h>
+}
+
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
@@ -74,7 +79,7 @@ uint64_t SysRegistryGetNameAndTypeFromExtent(regs* r)
 
 uint64_t SysRegistryOpen(regs* r)
 {
-	return CmOpen((const char*) r->edx);
+	return (uint64_t) CmOpen((const char*) r->edx);
 }
 
 uint64_t SysRegistryClose(regs* r)
