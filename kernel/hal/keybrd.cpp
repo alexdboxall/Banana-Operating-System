@@ -253,7 +253,7 @@ int readKeyboard(VgaText* terminal, char* buf, size_t count)
 		--count;
 		++charsRead;
 
-		if (key == '\n' || key == '\3') {
+		if (key == '\n' || key == '\3' || key == '\x1C') {
 			return charsRead;
 		}
 	}

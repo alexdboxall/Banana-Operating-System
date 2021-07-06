@@ -46,8 +46,9 @@ void KiDefaultSignalHandlerResume(int sig)
 
 void KiSigKill(int sig)
 {
-	char s[] = "KiSigKill";
-	KeSystemCallFromUsermode((size_t) SystemCallNumber::Panic, 0, 0, (size_t) s);
+	KeSystemCallFromUsermode((size_t) SystemCallNumber::Exit, -1, 0, 0); 
+	//char s[] = "KiSigKill";
+	//KeSystemCallFromUsermode((size_t) SystemCallNumber::Panic, 0, 0, (size_t) s);
 }
 
 //END OF USER MODE!!!
