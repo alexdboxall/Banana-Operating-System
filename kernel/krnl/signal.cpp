@@ -153,6 +153,7 @@ extern "C" size_t KiCheckSignalZ()
 {
 	int num;
 	uint64_t sigaddr = KeCheckSignal(currentTaskTCB->processRelatedTo->signals, &num);
+	if (!sigaddr) return 0;
 
 	uint32_t* sigState = (uint32_t*) currentTaskTCB->signalStateHandler;
 	sigState[0] = sigaddr & 0xFFFFFFFFULL;
