@@ -5,6 +5,7 @@
 #include "hal/timer.hpp"
 #include "hal/device.hpp"
 #include "hal/vcache.hpp"
+#include <krnl/signal.hpp>
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -16,13 +17,36 @@
 /// <summary>
 /// Sends a signal to another process. Blame POSIX for the misleading name.
 /// </summary>
-/// <param name="ebx">The signal number to send. A negative value sends the signal to all possible processes.</param>
-/// <param name="ecx">The process ID to send the signal to.</param>
+/// <param name="ebx">The signal number to send.</param>
+/// <param name="ecx">The process ID to send the signal to. A negative value sends the signal to all possible processes.</param>
 /// <returns>Returns 0 on success, or non-zero on failure.</returns>
 /// 
 uint64_t SysKill(regs* r)
 {
-	return 1;
+	if (r->ecx == -1) {
+		KePanic("kill(-1) WILL DESTORY THE SYSTEM");
+		return -1;
+	}
+
+	ThreadControlBlock* f = (ThreadControlBlock*) taskList.getFirstElement();
+	while (f) {
+		if (f->processRelatedTo->pid == r->ecx) {
+			KeRaiseSignal(currentTaskTCB->processRelatedTo->signals, r->ebx);
+			return 0;
+		}
+		f = (ThreadControlBlock*) taskList.getNext(f);
+	}
+
+	f = (ThreadControlBlock*) sleepingTaskList.getFirstElement();
+	while (f) {
+		if (f->processRelatedTo->pid == r->ecx) {
+			KeRaiseSignal(currentTaskTCB->processRelatedTo->signals, r->ebx);
+			return 0;
+		}
+		f = (ThreadControlBlock*) sleepingTaskList.getNext(f);
+	}
+
+	return -1;
 }
 
 

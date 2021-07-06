@@ -283,8 +283,7 @@ int gettimeofday(struct timeval* __restrict p, void* __restrict z)
 
 int kill(pid_t pid, int sig)
 {
-	errno = EPERM;
-	return -1;
+	return SystemCall(Kill, sig, pid, 0);
 }
 
 #include <signal.h>
