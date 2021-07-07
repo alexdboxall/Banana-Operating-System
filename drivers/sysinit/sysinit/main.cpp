@@ -1695,9 +1695,9 @@ void begin(void* a)
        
         usertask->createUserThread();
 
-        extern void startGUIVGA(void* a);
+        extern void startGUI(void* a);
         extern void startGUIVESA(void* a);
-        if (autogui == 1) startGUIVGA(nullptr);
+        if (autogui == 1) startGUI(nullptr);
         if (autogui == 2) startGUIVESA(nullptr);
 
         int wstatus;
