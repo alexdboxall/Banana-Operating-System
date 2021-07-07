@@ -1613,31 +1613,13 @@ void begin(void* a)
         bootInstallTasks(5);
         Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
         CmCreateDirectory(reg, 0, "BANANA");
-        rgtree(reg, 1, 0);
-        kprintf("banana is at location %d\n", CmFindObjectFromPath(reg, "BANANA"));
-        kprintf("banana is entered at location %d\n", CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")));
-
-        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "SETUP");
-        rgtree(reg, 1, 0);
-        kprintf("setup is at location %d\n", CmFindObjectFromPath(reg, "BANANA/SETUP"));
-        kprintf("setup is entered at location %d\n", CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")));
-        CmClose(reg);
-        KePanic("CHECK REGISTRY FILE FOR DEBUG");
-        
+        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "SETUP");        
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "NAME");
-        rgtree(reg, 1, 0);
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "COMPANY");
-        rgtree(reg, 1, 0);
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "PRODUCTKEY");
-        rgtree(reg, 1, 0);
-        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/NAME"), "TEST NAME" /*currName*/);
-        rgtree(reg, 1, 0);
-        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/COMPANY"), "TEST COMP" /*currComp*/);
-        rgtree(reg, 1, 0);
-        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/PRODUCTKEY"), "WW-88388-55555-N" /*pkeybuf*/);
-        
-        rgtree(reg, 1, 0);
-        
+        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/NAME"), currName);
+        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/COMPANY"), currComp);
+        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/PRODUCTKEY"), pkeybuf);  
         CmClose(reg);
 
         //finishing touches go here

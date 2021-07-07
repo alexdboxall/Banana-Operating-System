@@ -608,15 +608,11 @@ int CmFindObjectFromPath(Reghive* reg, const char* __name)
     char name[256];
     strcpy(name, __name);
 
-    kprintf("CmFindObjectFromPath: %s, %s\n", name, __name);
-
     int loc = 1;
     char* p = zStrtok(name, "/");
     if (!p) {
-        kprintf("!!! CmFindObjectFromPath returns 1\n");
         return 1;
     }
-    kprintf("p: %s\n", p);
 
     loc = CmFindInDirectory(reg, loc, p);
     p = zStrtok(NULL, "/");
