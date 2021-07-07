@@ -108,5 +108,6 @@ uint64_t SysRegistryOpen(regs* r)
 
 uint64_t SysRegistryClose(regs* r)
 {
-	return CmClose((Reghive*) r->ebx);
+	CmClose((Reghive*) r->ebx);
+	return 0; 
 }
