@@ -1512,6 +1512,29 @@ void loadExtensions()
     KeSetBootMessage("Loading extensions...");
 }
 
+void rgtree(Reghive* reg, int a, int n)
+{
+    if (a == 1 && n == 0) {
+        kprintf("\n\n:\n");
+    }
+    while (a > 0) {
+        char nm[50];
+        memset(nm, 0, 50);
+
+        int type = CmGetNameAndTypeFromExtent(reg, a, nm);
+        for (int i = 0; i < n; ++i) {
+            kprintf(" ");
+        }
+
+        kprintf("/%s\n", nm);
+
+        if (type == 0x4E) {
+            rgtree(reg, CmEnterDirectory(reg, a), n + 4);
+        }
+        a = CmGetNext(reg, a);
+    }
+}
+
 void begin(void* a)
 {
     bool firstTime = false;
@@ -1590,13 +1613,25 @@ void begin(void* a)
         bootInstallTasks(5);
         Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
         CmCreateDirectory(reg, 0, "BANANA");
+        rgtree(reg, 1, 0);
         CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "SETUP");
+        rgtree(reg, 1, 0);
+        kprintf("setup is at location %d\n", CmFindObjectFromPath(reg, "BANANA/SETUP"));
+        kprintf("setup is entered at location %d\n", CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")));
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "NAME");
+        rgtree(reg, 1, 0);
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "COMPANY");
+        rgtree(reg, 1, 0);
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "PRODUCTKEY");
+        rgtree(reg, 1, 0);
         CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/NAME"), "TEST NAME" /*currName*/);
+        rgtree(reg, 1, 0);
         CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/COMPANY"), "TEST COMP" /*currComp*/);
-        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/PRODUCTKEY"), pkeybuf);
+        rgtree(reg, 1, 0);
+        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/PRODUCTKEY"), "WW-88388-55555-N" /*pkeybuf*/);
+        
+        rgtree(reg, 1, 0);
+        
         CmClose(reg);
 
         //finishing touches go here
