@@ -172,6 +172,7 @@ void VESA::getModes()
 		}
 	}
 
+	activeTerminal->puts("\n  Finding video modes supported by your video card...\n");
 	for (int i = 0x4100; i < 0x41FF; ++i) {
 		ModeInfo mode = getModeStruct(i);
 		//filter out invalid modes and very bad modes
@@ -321,6 +322,14 @@ ModeInfo VESA::calculateBestMode()
 
 int VESA::open(int a, int b, void* c)
 {
+	activeTerminal->setDefaultBgColour(VgaColour::Black);
+	activeTerminal->setDefaultFgColour(VgaColour::Black);
+	activeTerminal->clearScreen();
+	activeTerminal->setDefaultBgColour(VgaColour::Black);
+	activeTerminal->setDefaultFgColour(VgaColour::LightGrey);
+	activeTerminal->setCursor(0, 0);
+	activeTerminal->puts("\n  Starting the VESA video driver...\n");
+
 	ModeInfo best = calculateBestMode();
 
 	setMode(best.number);

@@ -22,7 +22,6 @@ void beginx(void* a)
 
 //MAIN SCRIPT
 
-
 #define ACPI_SIZE size_t
 
 int
@@ -731,6 +730,10 @@ void bootInstallKeybrd(KeyboardToken kt, bool* keystates)
         return;
     }
     if (kt.release) return;
+    if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::Escape) {
+        installKey = '\e';
+        return;
+    }
     if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::Left) { 
         installKey = 3; 
         return; 
@@ -1054,6 +1057,8 @@ int loadTimezoneStrings()
     return num;
 }
 
+int tzsel;
+int modesel;
 void firstRun(bool onlyPkey)
 {
     showSidebar = !onlyPkey;
@@ -1072,9 +1077,27 @@ void firstRun(bool onlyPkey)
     drawBootScreen();
 
     int timePtr = 0;
+    char dateTime[64];
+
+    if (onlyPkey) {
+        strcpy(pkeybuf, "AA-00000-00000-A");
+    } else {
+        strcpy(pkeybuf, "WW-88388-55555-N");
+    }
 
     if (!onlyPkey) {
-        int sel = 0;
+        int sel;
+        int scroll;
+        int numEntries;
+        int barHeight;
+        datetime_t dt;
+        scroll = 0;
+        tzsel = 0;
+        modesel = 0;
+    screen1:
+        drawBootScreen();
+        sel = 0;
+        installKey = 0;
         drawBasicWindow(22, 3, 50, 12, "Banana Setup");
         term->setCursor(24, 6); term->puts("Please enter your details. Press TAB to switch");
         term->setCursor(24, 7); term->puts("between fields.");
@@ -1145,14 +1168,14 @@ void firstRun(bool onlyPkey)
 
         installKey = 0;
         milliTenthSleep(4000);
+    screen2:
         installKey = 0;
 
         drawBootScreen();
         drawBasicWindow(22, 2, 50, 13, "Date and Time");
 
-        datetime_t dt = computer->clock->timeInDatetimeUTC();
+        dt = computer->clock->timeInDatetimeUTC();
 
-        char dateTime[64];
         strcpy(dateTime, "14/05/2021 18:55:00");
         dateTime[0] = dt.day / 10 + '0';
         dateTime[1] = dt.day % 10 + '0';
@@ -1174,6 +1197,8 @@ void firstRun(bool onlyPkey)
         term->setCursor(24, 5); term->puts("Please enter the current date and time,");
         term->setCursor(24, 6); term->puts("and then press ENTER.");
         term->setCursor(26, 9); term->puts("DD/MM/YYYY HH:MM:SS", VgaColour::LightGrey, VgaColour::White);
+
+        term->setCursor(17, 24); term->puts("ESC: Go back a screen", VgaColour::Teal, VgaColour::Cyan);
         while (1) {
             term->setCursor(26, 8); term->puts(dateTime);
             term->setCursor(26 + timePtr, 8);
@@ -1266,6 +1291,8 @@ void firstRun(bool onlyPkey)
                     // TODO: actually set the time
                     break;
                 }
+            } else if (installKey == '\e') {
+                goto screen1;
             }
 
             milliTenthSleep(1100);
@@ -1274,17 +1301,16 @@ void firstRun(bool onlyPkey)
 
         installKey = 0;
         milliTenthSleep(4000);
+    screen3:
         installKey = 0;
 
         drawBootScreen();
         drawBasicWindow(18, 1, 60, 20, "Date and Time");
         term->setCursor(20, 4); term->puts("Please select your timezone and then press ENTER.");
+        term->setCursor(17, 24); term->puts("ESC: Go back a screen", VgaColour::Teal, VgaColour::Cyan);
 
-        int tzsel = 0;
-        int scroll = 0;
-        int numEntries = loadTimezoneStrings();
-
-        int barHeight = 15 * 14 / numEntries;
+        numEntries = loadTimezoneStrings();
+        barHeight = 15 * 14 / numEntries;
 
         while (1) {
             for (int i = 0; i < 14; ++i) {
@@ -1329,37 +1355,66 @@ void firstRun(bool onlyPkey)
                 if (tzsel > numEntries - 2) tzsel = numEntries - 2;
                 if (scroll > numEntries - 15 - 1) scroll = numEntries - 15 - 1;
 
-            }/* else if (installKey == 125) {
-                //page up
-
-                for (int i = 0; i < 14; ++i) {
-                    tzsel--;
-                    if (tzsel - scroll < 5) {
-                        scroll--;
-                    }
-                    if (tzsel < 0) tzsel = 0;
-                    if (scroll < 0) scroll = 0;
-                }
-
-            } else if (installKey == 126) {
-                //page down
-
-                for (int i = 0; i < 14; ++i) {
-                    tzsel++;
-                    if (tzsel - scroll > 10) {
-                        scroll++;
-                    }
-                    if (tzsel > numEntries - 2) tzsel = numEntries - 2;
-                    if (scroll > numEntries - 15 - 1) scroll = numEntries - 15 - 1;
-                }
-
-            }*/ else if (installKey == '\n') {
+            } else if (installKey == '\n') {
                 break;
+            } else if (installKey == '\e') {
+                goto screen2;
             }
 
             milliTenthSleep(500);
             installKey = 0;
         }
+
+
+        installKey = 0;
+        milliTenthSleep(4000);
+    screen4:
+        drawBootScreen();
+        milliTenthSleep(7000);
+        installKey = 0;
+
+        drawBootScreen();
+        drawBasicWindow(20, 3, 55, 16, "User Interface");
+        term->setCursor(22, 6); term->puts("Please select the user interface you want Banana");
+        term->setCursor(22, 7); term->puts("to boot into by default when you start the computer.");
+        term->setCursor(17, 24); term->puts("ESC: Go back a screen", VgaColour::Teal, VgaColour::Cyan);
+
+        numEntries = 3;
+
+        char* modeStrings[] = { 
+            " Boot to command line               ",
+            " Boot to graphical interface (VGA)  ", 
+            " Boot to graphical interface (VESA) " };
+
+        while (1) {
+            for (int i = 0; i < numEntries; ++i) {
+                term->setCursor(22, 9 + i);
+                term->puts(modeStrings[i], \
+                            i == modesel ? VgaColour::White : VgaColour::Black, \
+                            i == modesel ? VgaColour::Black : VgaColour::White);
+            }
+
+            while (installKey == 0);
+            memset(term->keybufferInternal, 0, 4);
+            memset(term->keybufferSent, 0, 4);
+            if (installKey == 1) {
+                modesel--;
+                if (modesel < 0) modesel = 0;
+
+            } else if (installKey == 2) {
+                modesel++;
+                if (modesel > numEntries - 1) modesel = numEntries - 1;
+
+            } else if (installKey == '\n') {
+                break;
+            } else if (installKey == '\e') {
+                goto screen3;
+            }
+
+            milliTenthSleep(500);
+            installKey = 0;
+        }
+
     }
 
     if (onlyPkey) {
@@ -1385,11 +1440,6 @@ void firstRun(bool onlyPkey)
     drawBootScreen();
     milliTenthSleep(11800);
 
-    if (onlyPkey) {
-        strcpy(pkeybuf, "AA-00000-00000-A");
-    } else {
-        strcpy(pkeybuf, "WW-88388-55555-N");
-    }
     timePtr = 0;
 
 retryProductKey:
@@ -1397,6 +1447,7 @@ retryProductKey:
 
     drawBootScreen();
     drawBasicWindow(22, 2, 50, 14, "Product Key");
+    term->setCursor(17, 24); term->puts("ESC: Go back a screen", VgaColour::Teal, VgaColour::Cyan);
 
  
     term->setCursor(24, 5); term->puts("Please enter your product key below,");
@@ -1432,6 +1483,9 @@ retryProductKey:
                 ++timePtr;
                 if (timePtr >= strlen(pkeybuf)) timePtr = 0;
             } while (pkeybuf[timePtr] == '-');
+
+        } else if (installKey == '\e') {
+            goto screen4;
 
         } else if (installKey == '\n') {
             bool valid = checkExtendedKey(pkeybuf);
@@ -1614,11 +1668,11 @@ void begin(void* a)
         Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
         CmCreateDirectory(reg, 0, "BANANA");
         CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "SETUP");        
-        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "BOOT");        
+        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "BOOT");    
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "NAME");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "COMPANY");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "PRODUCTKEY");
-        CmCreateInteger(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/BOOT")), "AUTOGUI", 2, EXTENT_INTEGER8);
+        CmCreateInteger(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/BOOT")), "AUTOGUI", modesel, EXTENT_INTEGER8);
         CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/NAME"), currName);
         CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/COMPANY"), currComp);
         CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/PRODUCTKEY"), pkeybuf);  
@@ -1697,14 +1751,14 @@ void begin(void* a)
 
         extern void startGUI(void* a);
         extern void startGUIVESA(void* a);
-        if (autogui == 1) startGUI(nullptr);
-        if (autogui == 2) startGUIVESA(nullptr);
+        if (autogui == 1) kernelProcess->createThread(startGUI, nullptr, 1);
+        if (autogui == 2) kernelProcess->createThread(startGUIVESA, nullptr, 1);
 
         int wstatus;
         waitTask(usertask->pid, &wstatus, 0);
     }
 
     computer->close(0, 0, nullptr);
-    KePanic("TURN OFF PC");
+    KePanic("It is safe to turn off your PC");
     while (1);
 }
