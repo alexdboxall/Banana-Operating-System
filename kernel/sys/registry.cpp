@@ -48,12 +48,12 @@ uint64_t SysRegistryGetTypeFromPath(regs* r)
 /// 
 uint64_t SysRegistryReadExtent(regs* r)
 {
-	if (r->ecx >> 31) {
+	if ((r->ecx >> 31) & 1) {
 		uint64_t i;
 		CmGetInteger(((Reghive*) r->ebx), r->ecx & 0x7FFFFFFF, &i);
 		return i;
 
-	} else if (r->ecx == 1) {
+	} else {
 		CmGetString(((Reghive*) r->ebx), r->ecx & 0x7FFFFFFF, (char*) r->edx);
 		return 0;
 	}
