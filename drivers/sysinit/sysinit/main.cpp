@@ -989,7 +989,7 @@ int checkExtendedKey(char* modified)
 }
 
 char currName[48] = "Alex";
-char currComp[48] = "";
+char currComp[48] = "Company Name";
 char pkeybuf[18];
 
 char* timezoneStrings[200];
@@ -1614,9 +1614,11 @@ void begin(void* a)
         Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
         CmCreateDirectory(reg, 0, "BANANA");
         CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "SETUP");        
+        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "BOOT");        
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "NAME");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "COMPANY");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "PRODUCTKEY");
+        CmCreateInteger(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/BOOT")), "AUTOGUI", 2, EXTENT_INTEGER8);
         CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/NAME"), currName);
         CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/COMPANY"), currComp);
         CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/PRODUCTKEY"), pkeybuf);  
@@ -1645,8 +1647,10 @@ void begin(void* a)
 
     } else {
         Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
-        char pkey[600];
+        char pkey[500];
+        uint64_t autogui;
         CmGetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/PRODUCTKEY"), pkey);
+        CmGetInteger(reg, CmFindObjectFromPath(reg, "BANANA/BOOT/AUTOGUI"), &autogui);
         CmClose(reg);
 
         if (!checkExtendedKey(pkey)) {
@@ -1691,13 +1695,10 @@ void begin(void* a)
        
         usertask->createUserThread();
 
-        int autogui = Reg::readIntWithDefault((char*) "shell", (char*) "autogui", 0);
-
+        extern void startGUIVGA(void* a);
         extern void startGUIVESA(void* a);
-        if (autogui) {
-            kprintf("AUTO GUI.\n");
-            startGUIVESA(nullptr);
-        }
+        if (autogui == 1) startGUIVGA(nullptr);
+        if (autogui == 2) startGUIVESA(nullptr);
 
         int wstatus;
         waitTask(usertask->pid, &wstatus, 0);
