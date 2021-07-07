@@ -1594,8 +1594,8 @@ void begin(void* a)
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "NAME");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "COMPANY");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "PRODUCTKEY");
-        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/NAME"), currName);
-        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/COMPANY"), currComp);
+        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/NAME"), "TEST NAME" /*currName*/);
+        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/COMPANY"), "TEST COMP" /*currComp*/);
         CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/PRODUCTKEY"), pkeybuf);
         CmClose(reg);
 

@@ -21,7 +21,9 @@ rm discmd.txt
 rm disbios.txt
 rm dissys.txt
 rm disac97.txt
+rm disregedit.txt
 objdump -drwC -Mintel packages/banana/32/0002/acpica.sys >> disacpica.txt
+objdump -drwC -Mintel packages/banana/32/0001/regedit.exe >> disregedit.txt
 objdump -drwC -Mintel packages/system/32/0002/legacy.sys >> dislegacy.txt
 objdump -drwC -Mintel packages/banana/32/0001/clipdraw.dll >> disclipdraw.txt
 objdump -drwC -Mintel packages/banana/32/0002/vga.sys >> disvga.txt

@@ -272,7 +272,7 @@ void CmReadExtent(Reghive* reg, int extnum, uint8_t* data)
     reg->f->seek(extnum * EXTENT_LENGTH);
     reg->f->read(EXTENT_LENGTH, data, &br);
 
-    if (extnum) {
+    /*if (extnum) {
         uint32_t* d = (uint32_t*) data;
 
         for (int i = 0; i < 1; ++i) {
@@ -285,7 +285,7 @@ void CmReadExtent(Reghive* reg, int extnum, uint8_t* data)
 
             *d++ = (uint32_t) val;
         }
-    }
+    }*/
 }
 
 void CmWriteExtent(Reghive* reg, int extnum, uint8_t* data)
@@ -294,7 +294,7 @@ void CmWriteExtent(Reghive* reg, int extnum, uint8_t* data)
         return;
     }
 
-    if (extnum) {
+    /*if (extnum) {
         uint32_t* d = (uint32_t*) data;
 
         for (int i = 0; i < 1; ++i) {
@@ -307,7 +307,7 @@ void CmWriteExtent(Reghive* reg, int extnum, uint8_t* data)
 
             *d++ = (uint32_t) val;
         }
-    }
+    }*/
 
     int br;
     reg->f->seek(extnum * EXTENT_LENGTH);
