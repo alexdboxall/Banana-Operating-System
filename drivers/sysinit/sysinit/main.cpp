@@ -1614,10 +1614,16 @@ void begin(void* a)
         Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
         CmCreateDirectory(reg, 0, "BANANA");
         rgtree(reg, 1, 0);
+        kprintf("banan is at location %d\n", CmFindObjectFromPath(reg, "BANANA"));
+        kprintf("banana is entered at location %d\n", CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")));
+
         CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "SETUP");
         rgtree(reg, 1, 0);
         kprintf("setup is at location %d\n", CmFindObjectFromPath(reg, "BANANA/SETUP"));
         kprintf("setup is entered at location %d\n", CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")));
+        CmClose(reg);
+        KePanic("CHECK REGISTRY FILE FOR DEBUG");
+        
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "NAME");
         rgtree(reg, 1, 0);
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "COMPANY");
