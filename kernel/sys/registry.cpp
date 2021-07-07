@@ -38,9 +38,27 @@ uint64_t SysRegistryGetTypeFromPath(regs* r)
 	return type;
 }
 
+/// <summary>
+/// Reads data.
+/// </summary>
+/// <param name="ebx">The registry pointer.</param>
+/// <param name="ecx">The extent number, with the 31st bit determining whether to read an integer (bit set), or a string (bit clear).</param>
+/// <param name="edx">The path to write string data.</param>
+/// <returns>Returns the integer data, else 0 if success, or non-zero on failure.</returns>
+/// 
 uint64_t SysRegistryReadExtent(regs* r)
 {
-	return 0;
+	if (r->ecx >> 31) {
+		uint64_t i;
+		CmGetInteger(((Reghive*) r->ebx), r->ecx & 0x7FFFFFFF, &i);
+		return i;
+
+	} else if (r->ecx == 1) {
+		CmGetString(((Reghive*) r->ebx), r->ecx & 0x7FFFFFFF, (char*) r->edx);
+		return 0;
+	}
+
+	return -1;
 }
 
 /// <summary>
@@ -77,22 +95,18 @@ uint64_t SysRegistryGetNext(regs* r)
 
 uint64_t SysRegistryGetNameAndTypeFromExtent(regs* r)
 {
-	kprintf("SysRegistryGetNameAndTypeFromExtent %d\n", r->ecx);
-
 	char name[300];
 	int type = CmGetNameAndTypeFromExtent(((Reghive*) r->ebx), r->ecx, name);
 	strcpy((char*) r->edx, name);
-	kprintf("name = %s, type = %d\n", name, type);
 	return type;
 }
 
 uint64_t SysRegistryOpen(regs* r)
 {
-	kprintf("SysRegistryOpen %s\n", (const char*) r->edx);
 	return (uint64_t) CmOpen((const char*) r->edx);
 }
 
 uint64_t SysRegistryClose(regs* r)
 {
-	return 0;
+	return CmClose((Reghive*) r->ebx);
 }
