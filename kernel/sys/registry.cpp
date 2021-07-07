@@ -27,10 +27,13 @@ extern "C" {
 /// 
 uint64_t SysRegistryGetTypeFromPath(regs* r)
 {
-	char name[256];
+	kprintf("SysRegistryGetTypeFromPath: %s\n", (const char*) r->edx);
+	char name[300];
 	int x = CmFindObjectFromPath(((Reghive*) r->ebx), (const char*) r->edx);
+	kprintf("x = %d\n", x);
 	if (!x) return -1;
 	int type = CmGetNameAndTypeFromExtent(((Reghive*) r->ebx), x, name);
+	kprintf("type = %d, name = %s\n", type, name);
 
 	return type;
 }
@@ -49,6 +52,7 @@ uint64_t SysRegistryReadExtent(regs* r)
 /// 
 uint64_t SysRegistryPathToExtentLookup(regs* r)
 {
+	kprintf("SysRegistryPathToExtentLookup: %s\n", (const char*) r->edx);
 	return CmFindObjectFromPath(((Reghive*) r->ebx), (const char*) r->edx);
 }
 
@@ -61,24 +65,30 @@ uint64_t SysRegistryPathToExtentLookup(regs* r)
 /// 
 uint64_t SysRegistryEnterDirectory(regs* r)
 {
+	kprintf("SysRegistryEnterDirectory %d\n", r->ecx);
 	return CmEnterDirectory(((Reghive*) r->ebx), r->ecx);
 }
 
 uint64_t SysRegistryGetNext(regs* r)
 {
+	kprintf("SysRegistryGetNext %d\n", r->ecx);
 	return CmGetNext(((Reghive*) r->ebx), r->ecx);
 }
 
 uint64_t SysRegistryGetNameAndTypeFromExtent(regs* r)
 {
-	char name[256];
+	kprintf("SysRegistryGetNameAndTypeFromExtent %d\n", r->ecx);
+
+	char name[300];
 	int type = CmGetNameAndTypeFromExtent(((Reghive*) r->ebx), r->ecx, name);
 	strcpy((char*) r->edx, name);
+	kprintf("name = %s, type = %d\n", name, type);
 	return type;
 }
 
 uint64_t SysRegistryOpen(regs* r)
 {
+	kprintf("SysRegistryOpen %s\n", (const char*) r->edx);
 	return (uint64_t) CmOpen((const char*) r->edx);
 }
 

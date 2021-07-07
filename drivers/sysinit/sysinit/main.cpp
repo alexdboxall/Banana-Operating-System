@@ -1632,11 +1632,7 @@ void begin(void* a)
             reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
             CmCreateDirectory(reg, 0, "BANANA");
             CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "SETUP");
-            CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "NAME");
-            CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "COMPANY");
             CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "PRODUCTKEY");
-            CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/NAME"), currName);
-            CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/COMPANY"), currComp);
             CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/PRODUCTKEY"), pkeybuf);
             CmClose(reg);
 
