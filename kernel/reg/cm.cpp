@@ -253,7 +253,17 @@ int CmCreateDirectory(Reghive* reg, int parent, const char* name)
     ext.type = EXTENT_DIRECTORY;
     ext.d.start = 0;
 
-    int a = CmCreateExtent(reg, parent, 0, (uint8_t*) &ext);
+    int next = parent;
+    while (parent) {
+        int nxt = CmGetNext(reg, next);
+        if (nxt != 0) {
+            next = nxt;
+        } else {
+            break;
+        }
+    }
+
+    int a = CmCreateExtent(reg, next, 0, (uint8_t*) &ext);
 
     CmReadExtent(reg, a, (uint8_t*) &ext);
     ext.d.start = CmCreateInteger(reg, a, "DUMMY", 0, EXTENT_INTEGER32);
