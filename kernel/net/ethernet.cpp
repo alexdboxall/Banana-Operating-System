@@ -45,14 +45,14 @@ uint32_t EthernetCRC32(uint8_t* data, int len)
 #define ETHERNET_PACKET_TYPE_ARP	0x806
 #define ETHERNET_PACKET_TYPE_IP		0x800
 
-void EthernetReceivedPacket(uint8_t* data, uint16_t length)
+void EthernetReceivedPacket(EthernetUnwrappedFrame* data, uint16_t length)
 {
-	/*EthernetUnwrappedFrame* frame = (EthernetUnwrappedFrame*) data;
+	EthernetUnwrappedFrame* frame = (EthernetUnwrappedFrame*) data;
 
 	if (frame->typeOrLength == ETHERNET_PACKET_TYPE_ARP) {
 		kprintf("Recieved ARP packet.\n");
 
 	} else if (frame->typeOrLength == ETHERNET_PACKET_TYPE_IP) {
 		kprintf("Recieved IP packet.\n");
-	}*/
+	}
 }

@@ -17,10 +17,9 @@
 #pragma GCC diagnostic warning "-Wcast-align"
 
 extern "C" {
-#include <libk/string.h>
-#include <libk/ctype.h>
+    #include <libk/string.h>
+    #include <libk/ctype.h>
 }
-
 
 Reghive* CmOpen(const char* filename)
 {

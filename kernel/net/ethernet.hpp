@@ -16,4 +16,4 @@ struct EthernetUnwrappedFrame
 
 
 void EthernetSendPacket();				
-void EthernetReceivedPacket(uint8_t* data, uint16_t length);		//drivers call this
+void EthernetReceivedPacket(EthernetUnwrappedFrame* data, uint16_t length);		//drivers call this
