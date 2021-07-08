@@ -113,8 +113,8 @@ INLINEX void HalSaveCoprocessor(void* buffer)
 INLINEX void HalFlushTLB()
 {
 	size_t cr3;
-	asm volatile ("mov %%cr0, %0" : "=r"(cr3));
-	asm volatile ("mov %0, %%cr0" :: "r"(cr3));
+	asm volatile ("mov %%cr3, %0" : "=r"(cr3));
+	asm volatile ("mov %0, %%cr3" :: "r"(cr3));
 }
 
 /// <summary>

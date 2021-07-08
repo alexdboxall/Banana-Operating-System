@@ -19,6 +19,7 @@ void beginx(void* a)
 #include "hal/buzzer.hpp"
 #include "hal/clock.hpp"
 #include "fs/vfs.hpp"
+#include "krnl/random.hpp"
 
 //MAIN SCRIPT
 
@@ -1060,6 +1061,11 @@ int loadTimezoneStrings()
     return num;
 }
 
+extern "C" uint32_t _bcrypt_rand()
+{
+    return KeRand();
+}
+
 int _bcrypt_errno = 0;
 int tzsel;
 int modesel;
@@ -1072,10 +1078,6 @@ void firstRun(bool onlyPkey)
 	KeSetBootMessage("Setting up the system for the first time");
 
     VgaText::hiddenOut = false;
-
-    if (computer->features.hasCPUID && computer->features.hasMSR) {
-
-    }
 
     activeTerminal->puts("\n\n\n\n\n\n");
     kernelProcess->terminal->puts("\n\n\n\n\n\n");
