@@ -1125,19 +1125,19 @@ char passwhash[80];*/
         while (1) {
             term->setCursor(33, 9);
             term->puts("                                    ", VgaColour::Black, VgaColour::LightGrey);
-            term->puts(sel == 0 ? "  \x11" : "   ", VgaColour::Black, VgaColour::White);
+            term->puts(sel == 0 ? " \x11" : "   ", VgaColour::Black, VgaColour::White);
             term->setCursorX(33);
             term->puts(currName, VgaColour::Black, VgaColour::LightGrey);
 
             term->setCursor(33, 11);
             term->puts("                                    ", VgaColour::Black, VgaColour::LightGrey);
-            term->puts(sel == 1 ? "  \x11" : "   ", VgaColour::Black, VgaColour::White);
+            term->puts(sel == 1 ? " \x11" : "   ", VgaColour::Black, VgaColour::White);
             term->setCursorX(33);
             term->puts(currComp, VgaColour::Black, VgaColour::LightGrey);
 
             term->setCursor(33, 13);
             term->puts("                                    ", VgaColour::Black, VgaColour::LightGrey);
-            term->puts(sel == 2 ? "  \x11" : "   ", VgaColour::Black, VgaColour::White);
+            term->puts(sel == 2 ? " \x11" : "   ", VgaColour::Black, VgaColour::White);
             term->setCursorX(33);
             for (int i = 0; i < strlen(passwbufA); ++i) {
                 term->puts("*", VgaColour::Black, VgaColour::LightGrey);
@@ -1145,18 +1145,18 @@ char passwhash[80];*/
 
             term->setCursor(33, 15);
             term->puts("                                    ", VgaColour::Black, VgaColour::LightGrey);
-            term->puts(sel == 3 ? "  \x11" : "   ", VgaColour::Black, VgaColour::White);
+            term->puts(sel == 3 ? " \x11" : "   ", VgaColour::Black, VgaColour::White);
             term->setCursorX(33);
             for (int i = 0; i < strlen(passwbufB); ++i) {
                 term->puts("*", VgaColour::Black, VgaColour::LightGrey);
             }
 
-            term->setCursor(24, 18);
-            term->puts(sel == 4 ? "Press ENTER to submit" : "           ", VgaColour::DarkGrey, VgaColour::White);
+            term->setCursor(24, 20);
+            term->puts(sel == 4 ? "Press ENTER to submit" : "                      ", VgaColour::DarkGrey, VgaColour::White);
             //term->setCursor(24, 19);
             //term->puts(sel == 4 ? "" : "           ", VgaColour::DarkGrey, VgaColour::White);
 
-            term->setCursor(60, 18);
+            term->setCursor(60, 20);
             if (sel != 4) term->puts("   OK   ", VgaColour::White, VgaColour::DarkGrey);
             else          term->puts("   OK   ", VgaColour::White, VgaColour::Blue);
             term->puts(sel == 4 ? "  \x11" : "   ", VgaColour::Black, VgaColour::White);
@@ -1173,10 +1173,19 @@ char passwhash[80];*/
             if (installKey == '\t' || installKey == '\n') {
                 if (sel == 4 && installKey == '\n') {
                     installKey = 0;
-                    break;
+
+                    if (!strcmp(passwbufA, passwbufB)) {
+                        break;
+                    } else {
+                        sel = 3;
+                        memset(passwbufA, 0, 48);
+                        memset(passwbufB, 0, 48);
+                    }
+                } else {
+                    sel += 1;
+                    if (sel == 5) sel = 0;
                 }
-                sel += 1;
-                if (sel == 5) sel = 0;
+                
                 milliTenthSleep(300);
 
             } else if (installKey >= 32 && installKey < 127) {
