@@ -36,9 +36,9 @@ uint64_t HalQueryPerformanceCounter();
 void HalMakeBeep(int hertz);
 
 /// <summary>
-/// Returns a 32-bit pseudo-random value. The seed is calculated using a hardware RNG generator if available.
+/// Returns a 32-bit random value using a hardware RNG generator if available, else it should return zero.
 /// </summary>
-/// <returns>A 32-bit pseudo-random value.</returns>
+/// <returns>A 32-bit random value, or zero if hardware RNG is not supported.</returns>
 uint32_t HalGetRand();
 
 /// <summary>

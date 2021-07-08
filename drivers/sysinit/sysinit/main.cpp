@@ -993,6 +993,9 @@ int checkExtendedKey(char* modified)
 
 char currName[48] = "Alex";
 char currComp[48] = "Company Name";
+char passwbufA[48] = "";
+char passwbufB[48] = "";
+char passwhash[80];
 char pkeybuf[18];
 
 char* timezoneStrings[200];
@@ -1057,6 +1060,7 @@ int loadTimezoneStrings()
     return num;
 }
 
+int _bcrypt_errno = 0;
 int tzsel;
 int modesel;
 void firstRun(bool onlyPkey)
@@ -1068,6 +1072,10 @@ void firstRun(bool onlyPkey)
 	KeSetBootMessage("Setting up the system for the first time");
 
     VgaText::hiddenOut = false;
+
+    if (computer->features.hasCPUID && computer->features.hasMSR) {
+
+    }
 
     activeTerminal->puts("\n\n\n\n\n\n");
     kernelProcess->terminal->puts("\n\n\n\n\n\n");
@@ -1098,11 +1106,19 @@ void firstRun(bool onlyPkey)
         drawBootScreen();
         sel = 0;
         installKey = 0;
-        drawBasicWindow(22, 3, 50, 12, "Banana Setup");
+        drawBasicWindow(22, 3, 50, 20, "Banana Setup");
         term->setCursor(24, 6); term->puts("Please enter your details. Press TAB to switch");
         term->setCursor(24, 7); term->puts("between fields.");
         term->setCursor(24, 9); term->puts("Name");
         term->setCursor(24, 11); term->puts("Company");
+        term->setCursor(24, 13); term->puts("Password");
+        term->setCursor(24, 15); term->puts("Confirm");
+        term->setCursor(24, 16); term->puts("password");
+
+        /*
+        char passwbufA[48] = "";
+char passwbufB[48] = "";
+char passwhash[80];*/
 
         while (1) {
             term->setCursor(33, 9);
@@ -1117,19 +1133,33 @@ void firstRun(bool onlyPkey)
             term->setCursorX(33);
             term->puts(currComp, VgaColour::Black, VgaColour::LightGrey);
 
-            term->setCursor(24, 13);
+            term->setCursor(33, 13);
+            term->puts("                         ", VgaColour::Black, VgaColour::LightGrey);
+            term->puts(sel == 2 ? "  \x11" : "   ", VgaColour::Black, VgaColour::White);
+            term->setCursorX(33);
+            term->puts(currComp, VgaColour::Black, VgaColour::LightGrey);
+
+            term->setCursor(33, 15);
+            term->puts("                         ", VgaColour::Black, VgaColour::LightGrey);
+            term->puts(sel == 3 ? "  \x11" : "   ", VgaColour::Black, VgaColour::White);
+            term->setCursorX(33);
+            term->puts(currComp, VgaColour::Black, VgaColour::LightGrey);
+
+            term->setCursor(24, 18);
             term->puts(sel == 2 ? "Press ENTER" : "           ", VgaColour::DarkGrey, VgaColour::White);
-            term->setCursor(24, 14);
+            term->setCursor(24, 19);
             term->puts(sel == 2 ? "to submit" : "           ", VgaColour::DarkGrey, VgaColour::White);
 
-            term->setCursor(50, 13);
+            term->setCursor(50, 18);
             if (sel != 2) term->puts("   OK   ", VgaColour::White, VgaColour::DarkGrey);
             else          term->puts("   OK   ", VgaColour::White, VgaColour::Blue);
             term->puts(sel == 2 ? "  \x11" : "   ", VgaColour::Black, VgaColour::White);
 
             if (sel == 0) term->setCursor(33 + strlen(currName), 9);
             if (sel == 1) term->setCursor(33 + strlen(currComp), 11);
-            if (sel == 2) term->setCursor(0, 2);
+            if (sel == 2) term->setCursor(33 + strlen(passwbufA), 13);
+            if (sel == 3) term->setCursor(33 + strlen(passwbufB), 15);
+            if (sel == 4) term->setCursor(0, 2);
 
             while (installKey == 0);
             memset(term->keybufferInternal, 0, 16);
@@ -1140,7 +1170,7 @@ void firstRun(bool onlyPkey)
                     break;
                 }
                 sel += 1;
-                if (sel == 3) sel = 0;
+                if (sel == 5) sel = 4;
                 milliTenthSleep(300);
 
             } else if (installKey >= 32 && installKey < 127) {
@@ -1149,16 +1179,20 @@ void firstRun(bool onlyPkey)
                 ss[1] = 0;
                 if (sel == 0 && strlen(currName) < 24) strcat(currName, ss);
                 if (sel == 1 && strlen(currComp) < 24) strcat(currComp, ss);
+                if (sel == 2 && strlen(passwbufA) < 24) strcat(passwbufA, ss);
+                if (sel == 3 && strlen(passwbufB) < 24) strcat(passwbufB, ss);
 
             } else if (installKey == '\b') {
                 if (sel == 0 && strlen(currName)) currName[strlen(currName) - 1] = 0;
                 if (sel == 1 && strlen(currComp)) currComp[strlen(currComp) - 1] = 0;
+                if (sel == 2 && strlen(passwbufA)) passwbufA[strlen(passwbufA) - 1] = 0;
+                if (sel == 3 && strlen(passwbufB)) passwbufB[strlen(passwbufB) - 1] = 0;
 
             } else if (installKey == 127) {
                 // Shift + TAB
                 sel--;
                 if (sel == -1) {
-                    sel = 2;
+                    sel = 0;
                 }
                 milliTenthSleep(300);
             }

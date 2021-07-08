@@ -40,7 +40,7 @@ $(TARGET32): $(OBJECTS32)
 	$(CXX32) $(CXXFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel -fno-exceptions -fno-rtti
 	
 %.32: %.c
-	$(C32) $(CFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel
+	$(CC32) $(CFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel
 
 
 $(TARGET64): $(OBJECTS64)
@@ -50,5 +50,5 @@ $(TARGET64): $(OBJECTS64)
 	$(CXX64) $(CXXFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel -fno-exceptions -fno-rtti
 	
 %.64: %.c
-	$(C64) $(CFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel
+	$(CC64) $(CFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel
 

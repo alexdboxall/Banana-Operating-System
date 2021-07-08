@@ -2,7 +2,7 @@
 
 #define MAIN_DISK_MEGABYTES 64
 
-#define MAIN_DISK_FIRST_SECTOR 0x40
+#define MAIN_DISK_FIRST_SECTOR 0x41
 #define FLOPPY_DISK_FIRST_SECTOR 33
 
 void main();
@@ -1678,7 +1678,7 @@ void main()
 
 
 	windowWrite(windows[0], 0, 7, "Processor speed...");
-	millisleep(1200);
+	millisleep(800);
 	windowWrite(windows[0], 24, 7, "Done");
 
 
@@ -1686,7 +1686,7 @@ void main()
 	millisleep(200);
 	in.eax = 1;
 	in = abstractionCall(ACDetectCPUFeatures, in);
-	gotFPU = !in.eax;
+	gotFPU = in.eax;
 	windowWrite(windows[0], 24, 8, "Done");
 	millisleep(200);
 

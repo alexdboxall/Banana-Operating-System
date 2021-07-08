@@ -50,7 +50,6 @@ void NIWindow::SHADOW_TEST()
 			for (int x = ls; x < width - rs; ++x) {
 				if (!(y < 6 || y > height - 6 || x < ls + 6 || x > width - rs - 6)) continue;
 
-
 				int dC = 490 / (y + 5);
 				int dD = 490 / ((height - rs) - y + 4);
 
@@ -66,7 +65,7 @@ void NIWindow::SHADOW_TEST()
 				if (dX < 10) dX = 10;
 
 				int dZ = (dX * dX * 8 + dYY8 + dX * dY) >> 8;
-				if (dZ > 102/*80*/) {
+				if (dZ > 102) {
 					dZ = ((dZ - 102) >> 1) + 102;
 				}
 				if (dZ > 115) {
@@ -130,6 +129,7 @@ void NIWindow::rerender()
 
 		renderTable[i].data32 = (uint32_t*) malloc(width * bytesPerPixel);
 	}
+	valid = true;
 
 	/// TODO: call user function to populate the framebuffer
 
@@ -147,7 +147,6 @@ void NIWindow::invalidate()
 		for (int i = 0; i < renderTableLength; ++i) {
 			free(renderTable[i].data8);
 		}
-
 		free(renderTable);
 	}
 
