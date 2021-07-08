@@ -14,6 +14,7 @@
 #include "vm86/vm8086.hpp"
 #include "krnl/powctrl.hpp"
 #include "krnl/hal.hpp"
+#include "krnl/random.hpp"
 
 #pragma GCC optimize ("O2")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -287,6 +288,7 @@ namespace Krnl
 		cleanerThread = kernelProcess->createThread(cleanerTaskFunction, nullptr, 122);
 
 		KeIsSchedulingOn = true;
+		KeInitRand();
 
 		KeSetBootMessage("Initialising system components...");
 		Vm::initialise8086();

@@ -2,6 +2,7 @@
 #include <core/main.hpp>
 #include <core/computer.hpp>
 #include <krnl/hal.hpp>
+#include <krnl/random.hpp>
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
