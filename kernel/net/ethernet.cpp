@@ -1,5 +1,8 @@
 #include <net/ethernet.hpp>
 #include <stdint.h>
+#include "thr/prcssthr.hpp"
+#include "core/main.hpp"
+#include "sys/syscalls.hpp"
 
 #define CRC_POLY    0xEDB88320
 
