@@ -314,6 +314,7 @@ void HalInitialiseCoprocessor()
 		coproSaveFunc = sseSave;
 		coproLoadFunc = sseLoad;
 		sseInit();
+		kprintf("SSE up and running...\n");
 		return;
 	}
 
@@ -324,14 +325,14 @@ void HalInitialiseCoprocessor()
 		return;
 	}
 
+	installISRHandler(ISR_DEVICE_NOT_AVAILABLE, x87EmulHandler);
+
 	KePanic("DEBUG: NO MATH COPROCESSOR");
 
 	coproSaveFunc = noCopro;
 	coproLoadFunc = noCopro;
 
 	CPU::current()->writeCR0(CPU::current()->readCR0() | 4);
-
-	installISRHandler(ISR_DEVICE_NOT_AVAILABLE, x87EmulHandler);
 }
 
 void HalPanic(const char* message)
