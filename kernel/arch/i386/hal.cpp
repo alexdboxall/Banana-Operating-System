@@ -302,7 +302,6 @@ extern void setupINTS();
 void HalInitialiseCoprocessor()
 {
 	fpuOwner = nullptr;
-	installISRHandler(ISR_DEVICE_NOT_AVAILABLE, x87EmulHandler);
 
 	if (avxDetect()) {
 		coproSaveFunc = avxSave;
@@ -325,10 +324,14 @@ void HalInitialiseCoprocessor()
 		return;
 	}
 
+	KePanic("DEBUG: NO MATH COPROCESSOR");
+
 	coproSaveFunc = noCopro;
 	coproLoadFunc = noCopro;
 
 	CPU::current()->writeCR0(CPU::current()->readCR0() | 4);
+
+	installISRHandler(ISR_DEVICE_NOT_AVAILABLE, x87EmulHandler);
 }
 
 void HalPanic(const char* message)
