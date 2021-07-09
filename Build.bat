@@ -30,7 +30,7 @@ make clean || pause
 cp crti.322 crti.32
 cp crtn.322 crtn.32
 rem make -j4 kernel486 TUNING=i486 || (pause && exit)
-make -j4 kernelPentium2 TUNING=pentium2
+make -j4 kernelPentium TUNING=pentium
 
 cd D:/Users/Alex/Desktop/Banana
 rm disasm.txt
