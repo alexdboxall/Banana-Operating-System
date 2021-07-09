@@ -1,4 +1,5 @@
 OUTPUT32="D:/Users/Alex/Desktop/Banana/packages/banana/32/0001/clipdraw.dll"
+OUTPUT32X="D:/Users/Alex/Desktop/Banana/packages/banana/32/0001/clipdrwx.dll"
 OUTPUT64="D:/Users/Alex/Desktop/Banana/packages/banana/64/0001/clipdraw.dll"
 
 AS32=i386-banana-as
@@ -18,35 +19,35 @@ CXXFLAGS=-Os -fomit-frame-pointer
 LDFLAGS=-g -T D:/Users/Alex/Desktop/Banana/drivers/dlink.ld -fno-reorder-functions
 
 CXXOBJECTS32 = $(patsubst %.cpp, %.32, $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp) $(wildcard */*/*/*.cpp) $(wildcard **/*.cpp))
-CXXOBJECTS64 = $(patsubst %.cpp, %.64, $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp) $(wildcard */*/*/*.cpp) $(wildcard **/*.cpp))
 COBJECTS32 = $(patsubst %.c, %.32, $(wildcard *.c) $(wildcard */*.c) $(wildcard */*/*.c) $(wildcard */*/*/*.c) $(wildcard **/*.c))
-COBJECTS64 = $(patsubst %.c, %.64, $(wildcard *.c) $(wildcard */*.c) $(wildcard */*/*.c) $(wildcard */*/*/*.c) $(wildcard **/*.c))
+CXXOBJECTS32X = $(patsubst %.cpp, %.32X, $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp) $(wildcard */*/*/*.cpp) $(wildcard **/*.cpp))
+COBJECTS32X = $(patsubst %.c, %.32X, $(wildcard *.c) $(wildcard */*.c) $(wildcard */*/*.c) $(wildcard */*/*/*.c) $(wildcard **/*.c))
 
 TARGET32 = BananaDriver32
-TARGET64 = BananaDriver64
+TARGET32X = BananaDriver32X
 
 OBJECTS32 = $(CXXOBJECTS32) $(COBJECTS32)
-OBJECTS64 = $(CXXOBJECTS64) $(COBJECTS64)
+OBJECTS32X = $(CXXOBJECTS32X) $(COBJECTS32X)
 
-all: build32
+all: build32 build32x
 build32: $(TARGET32) 
+build32x: $(TARGET32X) 
 
 $(TARGET32): $(OBJECTS32)
 	$(LD32) $(LDFLAGS) -shared -q -o $(OUTPUT32) $^ -Map=D:/Users/Alex/Desktop/driver32.map
 
+$(TARGET32X): $(OBJECTS32X)
+	$(LD32) $(LDFLAGS) -shared -q -o $(OUTPUT32X) $^ -Map=D:/Users/Alex/Desktop/driver32x.map
+
 %.32: %.cpp
-	$(CXX32) $(CXXFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel -fno-exceptions -fno-rtti
+	$(CXX32) $(CXXFLAGS) -mno-mmx -mno-sse -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel -fno-exceptions -fno-rtti
 	
 %.32: %.c
-	$(CC32) $(CFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel
+	$(CC32) $(CFLAGS) -mno-mmx -mno-sse -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel
 
-
-$(TARGET64): $(OBJECTS64)
-	$(LD64) $(LDFLAGS) -shared -q -o $(OUTPUT64) $^ -Map=D:/Users/Alex/Desktop/driver64.map
-
-%.64: %.cpp
-	$(CXX64) $(CXXFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel -fno-exceptions -fno-rtti
+%.32X: %.cpp
+	$(CXX32) $(CXXFLAGS) -mmmx -msse4 -mavx -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel -fno-exceptions -fno-rtti
 	
-%.64: %.c
-	$(CC64) $(CFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel
+%.32X: %.c
+	$(CC32) $(CFLAGS) -mmmx -msse4 -mavx -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel
 

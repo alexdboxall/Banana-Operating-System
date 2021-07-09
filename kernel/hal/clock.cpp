@@ -1,6 +1,6 @@
 #include "fs/vfs.hpp"
 #include "hal/clock.hpp"
-#pragma GCC optimize ("Os")
+#pragma GCC optimize ("Ofast")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
 #pragma GCC optimize ("-fno-align-jumps")

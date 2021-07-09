@@ -15,6 +15,7 @@ cd D:/Users/Alex/Desktop/Banana
 rm disacpica.txt
 rm dislegacy.txt
 rm disclipdraw.txt
+rm disclipdrawx.txt
 rm disvesa.txt
 rm disvga.txt
 rm discmd.txt
@@ -26,6 +27,7 @@ objdump -drwC -Mintel packages/banana/32/0002/acpica.sys >> disacpica.txt
 objdump -drwC -Mintel packages/banana/32/0001/regedit.exe >> disregedit.txt
 objdump -drwC -Mintel packages/system/32/0002/legacy.sys >> dislegacy.txt
 objdump -drwC -Mintel packages/banana/32/0001/clipdraw.dll >> disclipdraw.txt
+objdump -drwC -Mintel packages/banana/32/0001/clipdrwx.dll >> disclipdrawx.txt
 objdump -drwC -Mintel packages/banana/32/0002/vga.sys >> disvga.txt
 objdump -drwC -Mintel packages/banana/32/0002/ac97.sys >> disac97.txt
 objdump -drwC -Mintel packages/banana/32/0002/vesa.sys >> disvesa.txt
