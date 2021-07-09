@@ -62,8 +62,6 @@ extern "C" void KeEntryPoint()
 
 	KeDisplaySplashScreen();
 
-	HalInitialiseCoprocessor();
-
 	Phys::physicalMemorySetup(((*((uint32_t*) 0x524)) + 4095) & ~0xFFF);		//cryptic one-liner
 	Virt::virtualMemorySetup();
 
