@@ -195,7 +195,7 @@ Process::Process(const char* _filepath, Process* _parent, char** _argv)
 
 	bool f = Thr::loadProgramIntoMemory(this, _filepath);
 	failedToLoadProgram = !f;
-	kprintf("LOAD PROGRAM INTO MEMORY RETURNED %d\n", f);
+	kprintf("LOAD PROGRAM %s INTO MEMORY RETURNED %d\n", _filepath, f);
 }
 
 Process::Process(bool _kernel, const char* _name, Process* _parent, char** _argv)
