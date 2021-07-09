@@ -325,8 +325,6 @@ void HalInitialiseCoprocessor()
 		return;
 	}
 
-	KePanic("DEBUG: NO MATH COPROCESSOR");
-
 	coproSaveFunc = noCopro;
 	coproLoadFunc = noCopro;
 
