@@ -21,6 +21,9 @@ void beginx(void* a)
 #include "fs/vfs.hpp"
 #include "krnl/random.hpp"
 
+extern "C" {
+#include "bcrypt.h"
+}
 //MAIN SCRIPT
 
 #define ACPI_SIZE size_t
@@ -994,8 +997,8 @@ int checkExtendedKey(char* modified)
 
 char currName[48] = "Alex";
 char currComp[48] = "Company Name";
-char passwbufA[48] = "";
-char passwbufB[48] = "";
+char passwbufA[80] = "";
+char passwbufB[80] = "";
 char passwhash[80];
 char pkeybuf[18];
 
@@ -1088,7 +1091,9 @@ void firstRun(bool onlyPkey)
 
     int timePtr = 0;
     char dateTime[64];
-
+    char saltbf[100];
+    int res;
+    int work;
     if (onlyPkey) {
         strcpy(pkeybuf, "AA-00000-00000-A");
     } else {
@@ -1177,7 +1182,7 @@ char passwhash[80];*/
                     if (!strcmp(passwbufA, passwbufB)) {
                         break;
                     } else {
-                        sel = 3;
+                        sel = 2;
                         memset(passwbufA, 0, 48);
                         memset(passwbufB, 0, 48);
                     }
@@ -1216,7 +1221,49 @@ char passwhash[80];*/
         }
 
         installKey = 0;
-        milliTenthSleep(4000);
+        milliTenthSleep(2000);
+        drawBootScreen();
+
+        work = 7;
+        if (computer->features.hasMMX || computer->features.has3DNow) {
+            work = 8;
+        }
+        if (computer->features.hasSSE) {
+            work = 9;
+        }
+        if (computer->features.hasLongMode || computer->features.hasSSE2) {
+            work = 10;
+        }
+        if (computer->features.hasAVX) {
+            work = 11;
+        }
+        if (computer->features.hasAVX512) {
+            work = 12;
+        }
+        _bcrypt_errno = 0;
+        res = bcrypt_gensalt(work, saltbf);
+        if (res || _bcrypt_errno) {
+            sel = 0;
+            strcpy(currName, "COULD NOT SAVE");
+            strcpy(currComp, "YOUR PASSWORD (A)");
+            memset(passwbufA, 0, 80);
+            memset(passwbufB, 0, 80);
+            goto screen1;
+        }
+        res = bcrypt_hashpw(passwbufA, saltbf, passwhash);
+        if (res || _bcrypt_errno) {
+            sel = 0;
+            strcpy(currName, "COULD NOT SAVE");
+            strcpy(currComp, "YOUR PASSWORD (B)");
+            memset(passwbufA, 0, 80);
+            memset(passwbufB, 0, 80);
+            goto screen1;
+        }
+
+        memset(passwbufA, 0, 80);
+        memset(passwbufB, 0, 80);
+
+        milliTenthSleep(2000);
     screen2:
         installKey = 0;
 
@@ -1716,15 +1763,20 @@ void begin(void* a)
         bootInstallTasks(5);
         Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
         CmCreateDirectory(reg, 0, "BANANA");
+        
         CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "SETUP");        
         CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "BOOT");    
+        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "USERS");    
+        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/USERS")), "ALEX");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "NAME");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "COMPANY");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "PRODUCTKEY");
+        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/USERS/ALEX")), "PASSWORD");
         CmCreateInteger(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/BOOT")), "AUTOGUI", modesel, EXTENT_INTEGER8);
         CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/NAME"), currName);
         CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/COMPANY"), currComp);
         CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/PRODUCTKEY"), pkeybuf);  
+        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/USERS/ALEX/PASSWORD"), passwhash);  
         CmClose(reg);
 
         //finishing touches go here
