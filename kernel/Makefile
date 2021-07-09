@@ -61,7 +61,7 @@ kernelCannonlake: common32 $(TARGET32_Cannonlake)
 
 #-msoft-float
 #-msse2 
-OPTIMISATIONS = -mmmx -mno-sse -mno-avx -O0 -fno-strict-aliasing -fpeephole2 -fauto-inc-dec -fno-unwind-tables -freorder-functions -ftoplevel-reorder -fno-asynchronous-unwind-tables -fno-stack-protector -fomit-frame-pointer -fdelete-null-pointer-checks -fcompare-elim -fcprop-registers -fdce -fif-conversion -fif-conversion2 -fmerge-constants -fno-reorder-blocks  -fno-reorder-blocks-and-partition -fno-prefetch-loop-arrays -falign-functions=4 -falign-loops=4 -falign-labels=4 -falign-jumps=4 
+OPTIMISATIONS = -mmmx -msse -mno-avx -O0 -fno-strict-aliasing -fpeephole2 -fauto-inc-dec -fno-unwind-tables -freorder-functions -ftoplevel-reorder -fno-asynchronous-unwind-tables -fno-stack-protector -fomit-frame-pointer -fdelete-null-pointer-checks -fcompare-elim -fcprop-registers -fdce -fif-conversion -fif-conversion2 -fmerge-constants -fno-reorder-blocks  -fno-reorder-blocks-and-partition -fno-prefetch-loop-arrays -falign-functions=4 -falign-loops=4 -falign-labels=4 -falign-jumps=4 
 
 #
 CFLAGSCOMMON = $(WARNINGS) $(ACPI) $(OPTIMISATIONS) -march=$(TUNING) -mtune=$(TUNING) -mcld -ffreestanding -fmax-errors=5 -I $(INCPATH) -I $(LIBKPATH) -DKERNEL_CODE -D_libk
