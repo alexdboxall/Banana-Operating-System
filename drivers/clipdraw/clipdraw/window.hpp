@@ -18,13 +18,13 @@ public:
 	{
 		uint16_t leftSkip;
 		uint16_t rightSkip;
+	};
 
-		union
-		{
-			uint8_t* data8;
-			uint16_t* data16;
-			uint32_t* data32;
-		};
+	union
+	{
+		uint8_t* data8;
+		uint16_t* data16;
+		uint32_t* data32;
 	};
 
 	bool valid;

@@ -93,7 +93,7 @@ void NIWindow::realdraw()
 			int ls = renderTable[y].leftSkip;
 			int rs = renderTable[y].rightSkip;
 			for (int x = ls; x < width - rs; ++x) {
-				context->drvPutpixel4(x + xpos, y + ypos, renderTable[y].data32[x]);
+				context->drvPutpixel4(x + xpos, y + ypos, data32[y * width + x]);
 			}
 		}
 	}
@@ -112,6 +112,7 @@ void NIWindow::rerender()
 
 	renderTableLength = height;
 	renderTable = (RenderTableEntry*) malloc(sizeof(RenderTableEntry) * renderTableLength);
+	data32 = (uint32_t*) malloc(height * width * bytesPerPixel);
 
 	for (int i = 0; i < renderTableLength; ++i) {
 		if (i < (largeRounded ? 11 : 7)) {
@@ -126,8 +127,6 @@ void NIWindow::rerender()
 			renderTable[i].leftSkip = 0;
 			renderTable[i].rightSkip = 0;
 		}
-
-		renderTable[i].data32 = (uint32_t*) malloc(width * bytesPerPixel);
 	}
 	valid = true;
 
@@ -144,9 +143,7 @@ void NIWindow::rerender()
 void NIWindow::invalidate()
 {
 	if (valid && renderTable) {
-		for (int i = 0; i < renderTableLength; ++i) {
-			free(renderTable[i].data8);
-		}
+		free(data8);
 		free(renderTable);
 	}
 
@@ -164,7 +161,7 @@ void NIWindow::request()
 
 void NIWindow::putpixel(int x, int y, uint32_t colour)
 {
-	if (bytesPerPixel == 4) renderTable[y].data32[x] = colour;
-	else if (bytesPerPixel == 2) renderTable[y].data16[x] = colour;
-	else renderTable[y].data8[x] = colour;
+	if (bytesPerPixel == 4) data32[y * width + x] = colour;
+	else if (bytesPerPixel == 2) data16[y * width + x] = colour;
+	else data8[y * width + x] = colour;
 }

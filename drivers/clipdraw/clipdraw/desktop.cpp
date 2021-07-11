@@ -161,14 +161,9 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 	if (movingWin) {
 		bool release = !(buttons & 1) && (previousButtons & 1);
 
-		int thingy = 32;
-		/*while (movingWin->height * movingWin->width / thingy > 4096) {
-			thingy <<= 1;
-		}*/
-		thingy--;
 		for (int y = 1; y < movingWin->height - 1; ++y) {
 			for (int x = 1; x < movingWin->width - 1; ++x) {
-				if (!((x + y) & thingy) && !(y & 3)) {
+				if (!((x + y) & 31) && !(y & 3)) {
 					rangeRefresh(oldY - moveBaseY + y, oldY - moveBaseY + y + 1, oldX - moveBaseX + x, oldX - moveBaseX + x + 1);
 					if (!release) ctxt->screen->putpixel(mouseX - moveBaseX + x, mouseY - moveBaseY + y, 0);
 				}
@@ -331,7 +326,7 @@ void NIDesktop::renderScanline(int line, int left, int right)
 				if (i > right) break;
 				if (!render[i]) {
 					render[i] = 1;
-					renderData[i] = window->renderTable[line - window->ypos].data32[i - window->xpos];
+					renderData[i] = window->data32[(line - window->ypos) * window->width + (i - window->xpos)];
 					--expectedBytes;
 					if (expectedBytes == 0) {
 						goto done;
