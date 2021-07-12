@@ -29,7 +29,7 @@ TARGET32X = BananaDriver32X
 OBJECTS32 = $(CXXOBJECTS32) $(COBJECTS32)
 OBJECTS32X = $(CXXOBJECTS32X) $(COBJECTS32X)
 
-all: build32 build32x
+all: build32
 build32: $(TARGET32) 
 build32x: $(TARGET32X) 
 

@@ -412,8 +412,16 @@ int ACPI::open(int mode, int, void*)
 	detectPCI();
 
 	KeSetBootMessage("Loading kernel symbol table...");
-	Thr::loadKernelSymbolTable("C:/Banana/System/KERNEL32.EXE");
-
+	
+	uint8_t vl = *((uint8_t*) 0x54C);// = useSafeKernel ? 0xBB : 0x01;
+	if (vl == 0x01) {
+		Thr::loadKernelSymbolTable("C:/Banana/System/KERNEL32.EXE");
+	} else if (vl == 0xBB) {
+		Thr::loadKernelSymbolTable("C:/Banana/System/KRNLBKUP.EXE");
+	} else {
+		KePanic("KERNEL FILENAME NOT KNOWN");
+	}
+	
 	bool firstTime = false;
 	File* f = new File("C:/Banana/System/setupisd.one", kernelProcess);
 	FileStatus fs = f->open(FileOpenMode::Read);

@@ -513,6 +513,7 @@ void main()
 	*((uint32_t*) 0x524) = highestFreeAddress;
 	*((uint32_t*) 0x500) = data;
 	*((uint32_t*) 0x504) = data;
+	*((uint8_t*) 0x54C) = useSafeKernel ? 0xBB : 0x01;
 	clearScreen();
 	if (fulldebug) {
 		writeString("\nPRESS ANY KEY (H)");
