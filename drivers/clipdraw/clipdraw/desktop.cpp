@@ -361,13 +361,13 @@ void NIDesktop::renderScanline(int line, int left, int right)
 			render[i] = 1;
 
 			uint16_t og = justMonika[(line * 480 / ctxt->height) * 640 + (i * 640 / ctxt->width)];
-			/*if (i >= 640) og = 0xFFFFFF;
-			if (line >= 480) og = 0xFFFFFF;*/
+			
 			uint32_t r = ((og >> 5) & 0x3) * 85;
 			uint32_t g = ((og >> 2) & 0x7) * 36;
 			uint32_t b = ((og >> 0) & 0x3) * 85;
 
 			renderData[i] = (r << 16) | (g << 8) | b;
+			renderData[i] = 0x5580FF;
 			--expectedBytes;
 			if (expectedBytes == 0) {
 				goto done;

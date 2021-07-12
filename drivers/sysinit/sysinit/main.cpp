@@ -17,6 +17,7 @@ void beginx(void* a)
 #include "reg/cm.hpp"
 #include "thr/prcssthr.hpp"
 #include "hal/buzzer.hpp"
+#include "hw/cpu.hpp"
 #include "hal/clock.hpp"
 #include "fs/vfs.hpp"
 #include "krnl/random.hpp"
@@ -1780,6 +1781,16 @@ void begin(void* a)
         CmClose(reg);
 
         //finishing touches go here
+
+        if (computer->features.hasSSE || (computer->features.hasMMX && CPU::current()->features.hasPAE)) {
+            File* f = new File("C:/Banana/System/KERNEL32.EXE", kernelProcess);
+            f->rename("C:/Banana/System/KRNLBKUP.EXE");
+            delete f;
+
+            f = new File("C:/Banana/System/KRNLP2.EXE", kernelProcess);
+            f->rename("C:/Banana/System/KERNEL32.EXE");
+
+        }
 
         setActiveTerminal(term);
         drawBootScreen();
