@@ -29,12 +29,12 @@ cp crtn.322 crtn.32
 make clean || pause
 cp crti.322 crti.32
 cp crtn.322 crtn.32
-make -j4 kernel486 TUNING=i486 || (pause && exit)
+make -j4 kernel486 MARCH=i486 TUNING=i486 || (pause && exit)
 
 make clean || pause
 cp crti.322 crti.32
 cp crtn.322 crtn.32
-make -j4 kernelPentium2 TUNING=pentium2 || (pause && exit)
+make -j4 kernelPentium2 MARCH=pentium4 TUNING=pentium2 || (pause && exit)
 
 
 cd D:/Users/Alex/Desktop/Banana
