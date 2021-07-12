@@ -238,7 +238,7 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 			lastClick = milliTenthsSinceBoot;
 
 		} else if (!movingWin) {
-			if (mouseY - clickon->ypos < WINDOW_TITLEBAR_HEIGHT) {
+			if (mouseY - clickon->ypos < WINDOW_TITLEBAR_HEIGHT && !clickon->fullscreen) {
 				movingWin = clickon;
 				moveBaseX = mouseX - clickon->xpos;
 				moveBaseY = mouseY - clickon->ypos;

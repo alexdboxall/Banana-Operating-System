@@ -37,8 +37,6 @@ void start(void* s)
 
 	guiPanicHandler = monikaBsod;
 
-	KePanic("JUST MONIKA");
-
 	NIContext* ctxt = new NIContext(screen, screen->getWidth(), screen->getHeight(), screen->getWidth(), 32);
 
 	NIDesktop* desktop = new NIDesktop(ctxt);

@@ -615,6 +615,9 @@ void VAS::evict(size_t virt)
 
 bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 {
+	if (faultAddr >= 0xFFC00000U) {
+		panic("NESTED PAGE FAULT");
+	}
 	kprintf("fault addr = 0x%x\n", faultAddr);
 	bool onPageBoundary = (faultAddr & 0xFFF) > 0xFE0;
 
