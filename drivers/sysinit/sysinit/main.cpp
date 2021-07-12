@@ -1001,6 +1001,7 @@ char currComp[48] = "Company Name";
 char passwbufA[80] = "";
 char passwbufB[80] = "";
 char passwhash[80];
+char passwsalt[80];
 char pkeybuf[18];
 
 char* timezoneStrings[200];
@@ -1198,7 +1199,14 @@ char passwhash[80];*/
                 char ss[2];
                 ss[0] = installKey;
                 ss[1] = 0;
-                if (sel == 0 && strlen(currName) < 35) strcat(currName, ss);
+                if (sel == 0 && strlen(currName) < 35) {
+                    if ((installKey >= 'A' && installKey >= 'Z') || \
+                        (installKey >= 'a' && installKey >= 'z') || \
+                        (installKey >= '0' && installKey >= '9') || \
+                        installKey == '_' || installKey == ' ') {
+                        strcat(currName, ss);
+                    }
+                }
                 if (sel == 1 && strlen(currComp) < 35) strcat(currComp, ss);
                 if (sel == 2 && strlen(passwbufA) < 35) strcat(passwbufA, ss);
                 if (sel == 3 && strlen(passwbufB) < 35) strcat(passwbufB, ss);
@@ -1250,7 +1258,8 @@ char passwhash[80];*/
             memset(passwbufA, 0, 80);
             memset(passwbufB, 0, 80);
             goto screen1;
-        }
+        }        
+        strcpy(passwsalt, saltbf);
         res = bcrypt_hashpw(passwbufA, saltbf, passwhash);
         if (res || _bcrypt_errno) {
             sel = 0;
@@ -1686,6 +1695,20 @@ void rgtree(Reghive* reg, int a, int n)
     }
 }
 
+void getRegsafeName(char* in, char* out)
+{
+    strcpy(out, in);
+
+    for (int i = 0; out[i]; ++i) {
+        if (out[i] >= 'a' && out[i] <= 'z') {
+            out[i] -= 'a';
+            out[i] += 'A';
+        } else if (out[i] == ' ') {
+            out[i] = '_';
+        }
+    }
+}
+
 void begin(void* a)
 {
     bool firstTime = false;
@@ -1764,20 +1787,46 @@ void begin(void* a)
         bootInstallTasks(5);
         Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
         CmCreateDirectory(reg, 0, "BANANA");
-        
+
+        char regsafename[64];
+        getRegsafeName(currName, regsafename);
+        kprintf("regsafename = %s\n", regsafename);
+
+        char userBasePath[128];
+        strcpy(userBasePath, "BANANA/USERS/");
+        strcat(userBasePath, regsafename);
+        kprintf("userBasePath = %s\n", userBasePath);
+
         CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "SETUP");        
         CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "BOOT");    
         CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "USERS");    
-        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/USERS")), "ALEX");
+        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/USERS")), regsafename);
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "NAME");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "COMPANY");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "PRODUCTKEY");
-        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/USERS/ALEX")), "PASSWORD");
+        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, userBasePath)), "SALT");
+        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, userBasePath)), "PASSWORD");
+        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, userBasePath)), "DISPLAYNAME");
         CmCreateInteger(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/BOOT")), "AUTOGUI", modesel, EXTENT_INTEGER8);
         CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/NAME"), currName);
         CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/COMPANY"), currComp);
-        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/PRODUCTKEY"), pkeybuf);  
-        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/USERS/ALEX/PASSWORD"), passwhash);  
+        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/PRODUCTKEY"), pkeybuf); 
+
+        strcpy(userBasePath, "BANANA/USERS/");
+        strcat(userBasePath, regsafename);
+        strcat(userBasePath, "/PASSWORD");
+        CmSetString(reg, CmFindObjectFromPath(reg, userBasePath), passwhash);
+
+        strcpy(userBasePath, "BANANA/USERS/");
+        strcat(userBasePath, regsafename);
+        strcat(userBasePath, "/SALT");
+        CmSetString(reg, CmFindObjectFromPath(reg, userBasePath), passwsalt);
+
+        strcpy(userBasePath, "BANANA/USERS/");
+        strcat(userBasePath, regsafename);
+        strcat(userBasePath, "/DISPLAYNAME");
+        CmSetString(reg, CmFindObjectFromPath(reg, userBasePath), currName);
+
         CmClose(reg);
 
         //finishing touches go here
@@ -1789,7 +1838,6 @@ void begin(void* a)
 
             f = new File("C:/Banana/System/KRNLP2.EXE", kernelProcess);
             f->rename("C:/Banana/System/KERNEL32.EXE");
-
         }
 
         setActiveTerminal(term);
@@ -1847,6 +1895,181 @@ void begin(void* a)
 
             computer->close(1, 0, nullptr);
             term->puts("PLEASE MANUALLY RESTART YOUR COMPUTER", VgaColour::Red, VgaColour::White);
+        }
+
+        showSidebar = false;
+        term = new VgaText("Test");
+        setActiveTerminal(term);
+        installKey = 0;
+
+        
+        int numEntries = 0;
+        int usersel = 0;
+
+        char* userStrings[32];
+        memset(userStrings, 0, sizeof(userStrings));
+        char* userStringsA[32];
+        memset(userStringsA, 0, sizeof(userStringsA));
+
+        /*userStrings[0] = (char*) malloc(80);
+        strcpy(userStrings[0], " DEFAULT                                          ");
+        numEntries++;*/
+
+        reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
+        int userExtent = CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/USERS"));
+        while (userExtent) {
+            char name[80];
+            memset(name, 0, 80);
+            int type = CmGetNameAndTypeFromExtent(reg, userExtent, name);
+            if (type == EXTENT_DIRECTORY) {
+                userStringsA[numEntries] = (char*) malloc(80);
+                strcpy(userStringsA[numEntries], name);
+
+                char name2[80];
+                strcpy(name2, "BANANA/USERS/");
+                strcat(name2, name);
+                strcat(name2, "/DISPLAYNAME");
+
+                CmGetString(reg, CmFindObjectFromPath(reg, name2), name);
+
+                userStrings[numEntries] = (char*) malloc(80);
+                strcpy(userStrings[numEntries], " ");
+                strcat(userStrings[numEntries], name);
+                while (strlen(userStrings[numEntries]) < 50) {
+                    strcat(userStrings[numEntries], " ");
+                }
+
+ 
+                numEntries++;
+            }
+
+            userExtent = CmGetNext(reg, userExtent);
+        }
+        CmClose(reg);
+
+        guiKeyboardHandler = bootInstallKeybrd;
+        char passwbufC[128];
+
+    getUsername:
+        installKey = 0;
+        drawBootScreen();
+        drawBasicWindow(12, 3, 57, 16, "Login");
+        term->setCursor(14, 6); term->puts("Please select your username.");
+        while (1) {
+            /*if (numEntries == 1) {
+                usersel = 0;
+                break;
+            }*/
+
+            for (int i = 0; i < numEntries; ++i) {
+                term->setCursor(15, 8 + i);
+                term->puts(userStrings[i], \
+                           i == usersel ? VgaColour::White : VgaColour::Black, \
+                           i == usersel ? VgaColour::Black : VgaColour::White);
+            }
+            while (installKey == 0);
+            memset(term->keybufferInternal, 0, 4);
+            memset(term->keybufferSent, 0, 4);
+            if (installKey == 1) {
+                usersel--;
+                if (usersel < 0) usersel = 0;
+
+            } else if (installKey == 2) {
+                usersel++;
+                if (usersel > numEntries - 1) usersel = numEntries - 1;
+
+            } else if (installKey == '\n') {
+                break;
+            }
+
+            milliTenthSleep(500);
+            installKey = 0;
+        }
+
+        char requiredHash[128];
+        char gotSalt[80];
+        strcpy(passwbufC, "BANANA/USERS/");
+        strcat(passwbufC, userStringsA[usersel]);
+        strcat(passwbufC, "/PASSWORD");
+        reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
+        CmGetString(reg, CmFindObjectFromPath(reg, passwbufC), requiredHash);
+
+        strcpy(passwbufC, "BANANA/USERS/");
+        strcat(passwbufC, userStringsA[usersel]);
+        strcat(passwbufC, "/SALT");
+        CmGetString(reg, CmFindObjectFromPath(reg, passwbufC), gotSalt);
+
+        CmClose(reg);
+        memset(passwbufC, 0, 128);
+
+        drawBootScreen();
+        drawBasicWindowX(12, 3, 57, 16, "Login", true);
+        term->setCursor(14, 6); term->puts("Please select your username.", VgaColour::Black, VgaColour::LightGrey);
+        
+        if (numEntries > 0) {
+            for (int i = 0; i < numEntries; ++i) {
+                term->setCursor(15, 8 + i);
+                term->puts(userStrings[i], \
+                            i == usersel ? VgaColour::LightGrey : VgaColour::Black, \
+                            i == usersel ? VgaColour::Black : VgaColour::LightGrey);
+            }
+        }
+
+        drawBasicWindow(31, 10, 40, 12, "Login");
+
+        while (1) {
+            term->setCursor(33, 13);
+            term->puts("Please type your password and press ENTER");
+            term->puts("or press ESC to go back.");
+
+            term->setCursor(33, 16);
+            term->puts("                                    ", VgaColour::Black, VgaColour::LightGrey);
+            term->setCursorX(33);
+            for (int i = 0; i < strlen(passwbufC); ++i) {
+                term->puts("*", VgaColour::Black, VgaColour::LightGrey);
+            }
+         
+            term->setCursor(33 + strlen(passwbufC), 16);
+            
+            while (installKey == 0);
+            memset(term->keybufferInternal, 0, 16);
+            memset(term->keybufferSent, 0, 16);
+            if (installKey == '\n') {
+                installKey = 0;
+                char gotHash[128];
+                bcrypt_hashpw(passwbufC, gotSalt, gotHash);
+                kprintf("REQUIRED: %s\nGOT: %s\nSALT: %s\n", requiredHash, gotHash, gotSalt);
+                if (!strcmp(requiredHash, gotHash)) {
+                    break;
+                }
+                memset(gotHash, 0, 128);
+
+            } else if (installKey >= 32 && installKey < 127) {
+                char ss[2];
+                ss[0] = installKey;
+                ss[1] = 0;
+                if (strlen(passwbufC) < 35) strcat(passwbufC, ss);
+
+            } else if (installKey == '\b') {
+                if (strlen(passwbufC)) passwbufC[strlen(passwbufC) - 1] = 0;
+
+            } else if (installKey == '\e') {
+                goto getUsername;
+            }
+
+            installKey = 0;
+        }
+        guiKeyboardHandler = nullptr;
+
+        for (int i = 0; i < numEntries; ++i) {
+            if (userStrings[i]) {
+                free(userStrings[i]);
+                userStrings[i] = nullptr;
+            }
+            if (userStringsA[i]) {
+                free(userStringsA[i]);
+                userStringsA[i] = nullptr;
+            }
         }
 
         VgaText::hiddenOut = false;
