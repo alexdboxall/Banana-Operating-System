@@ -39,12 +39,14 @@ make -j4 kernelPentium2 TUNING=pentium2 || (pause && exit)
 
 cd D:/Users/Alex/Desktop/Banana
 rm disasm.txt
+rm disasm2.txt
 rm disacpica.txt
 rm dislegacy.txt
 rm diswsbe.txt
 rm dis87.txt
 rm disboot.txt
 objdump -drwC -Mintel kernel/KERNEL32.EXE >> disasm.txt
+objdump -drwC -Mintel kernel/KRNLP2.EXE >> disasm2.txt
 objdump -drwC -Mintel packages/banana/32/0002/acpica.sys >> disacpica.txt
 objdump -drwC -Mintel packages/system/32/0002/legacy.sys >> dislegacy.txt
 ndisasm -b16 kernel/STAGE1.BIN >> disboot.txt

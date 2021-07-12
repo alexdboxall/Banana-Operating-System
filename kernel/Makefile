@@ -69,7 +69,7 @@ CFLAGS32 = -c -m32 -DTHIRTYTWOBIT $(CFLAGSCOMMON) -fvisibility=hidden
 #C code has visibility hidden so that all of the ACPICA stuff doesn't clog it up
 
 CXXFLAGS32 = -c -m32 -DTHIRTYTWOBIT $(CFLAGSCOMMON) -fno-exceptions -fno-rtti -fvisibility=protected $(ACPI) $(OPTIMISATIONS)
-LDFLAGS32 = -lkgcc -lsoftfp -L$(SOURCEDIR) -L$(SOURCEDIR)/libk -lm32 -ffreestanding $(LD_OPTIMISE_LEVEL) -nostdlib -flto -Wl,-Map=kernel32.map 
+LDFLAGS32 = -lkgcc -lsoftfp -L$(SOURCEDIR) -L$(SOURCEDIR)/libk -lm32 -ffreestanding $(LD_OPTIMISE_LEVEL) -nostdlib -flto 
 
 COBJECTS32 = $(patsubst %.c, %.32, $(wildcard *.c) $(wildcard */*.c) $(wildcard */*/*.c) $(wildcard */*/*/*.c) $(wildcard **/*.c))
 CXXOBJECTS32 = $(patsubst %.cpp, %.32, $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp) $(wildcard */*/*/*.cpp) $(wildcard **/*.cpp))
@@ -102,14 +102,14 @@ $(TARGET32_386): $(OBJECTS32)
 	$(CC32) -T $(SOURCEDIR)/x86/linker.ld -o $(SOURCEDIR)/KRNL386.EXE $(SOURCEDIR)/boot.32 $(CRTI_OBJ32) $(CRTBEGIN_OBJ32) $(EXTRAFILES32) $^ $(CRTEND_OBJ32) $(CRTN_OBJ32) $(LDFLAGS32) -L$(SYSROOTDIR)
 
 $(TARGET32_486): $(OBJECTS32)
-	$(CC32) -T $(SOURCEDIR)/x86/linker.ld -o $(SOURCEDIR)/KERNEL32.EXE $(SOURCEDIR)/boot.32 $(CRTI_OBJ32) $(CRTBEGIN_OBJ32) $(EXTRAFILES32) $^ $(CRTEND_OBJ32) $(CRTN_OBJ32) $(LDFLAGS32) -L$(SYSROOTDIR)
+	$(CC32) -T $(SOURCEDIR)/x86/linker.ld -o $(SOURCEDIR)/KERNEL32.EXE $(SOURCEDIR)/boot.32 $(CRTI_OBJ32) $(CRTBEGIN_OBJ32) $(EXTRAFILES32) $^ $(CRTEND_OBJ32) $(CRTN_OBJ32) $(LDFLAGS32) -Wl,-Map=kernel32.map  -L$(SYSROOTDIR)
 
 	
 $(TARGET32_Pentium): $(OBJECTS32)
 	$(CC32) -T $(SOURCEDIR)/x86/linker.ld -o $(MOREKRNLDIR)/KRNL586.EXE $(SOURCEDIR)/boot.32 $(CRTI_OBJ32) $(CRTBEGIN_OBJ32) $(EXTRAFILES32) $^ $(CRTEND_OBJ32) $(CRTN_OBJ32) $(LDFLAGS32) -L$(SYSROOTDIR)
 	
 $(TARGET32_Pentium2): $(OBJECTS32)
-	$(CC32) -T $(SOURCEDIR)/x86/linker.ld -o $(SOURCEDIR)/KRNLP2.EXE $(SOURCEDIR)/boot.32 $(CRTI_OBJ32) $(CRTBEGIN_OBJ32) $(EXTRAFILES32) $^ $(CRTEND_OBJ32) $(CRTN_OBJ32) $(LDFLAGS32) -L$(SYSROOTDIR)
+	$(CC32) -T $(SOURCEDIR)/x86/linker.ld -o $(SOURCEDIR)/KRNLP2.EXE $(SOURCEDIR)/boot.32 $(CRTI_OBJ32) $(CRTBEGIN_OBJ32) $(EXTRAFILES32) $^ $(CRTEND_OBJ32) $(CRTN_OBJ32) $(LDFLAGS32) -Wl,-Map=kernelp2.map  -L$(SYSROOTDIR)
 
 $(TARGET32_Pentium3): $(OBJECTS32)
 	$(CC32) -T $(SOURCEDIR)/x86/linker.ld -o $(MOREKRNLDIR)/KRNLP3.EXE $(SOURCEDIR)/boot.32 $(CRTI_OBJ32) $(CRTBEGIN_OBJ32) $(EXTRAFILES32) $^ $(CRTEND_OBJ32) $(CRTN_OBJ32) $(LDFLAGS32) -L$(SYSROOTDIR)

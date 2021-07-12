@@ -15,7 +15,6 @@ cd D:/Users/Alex/Desktop/Banana
 rm disacpica.txt
 rm dislegacy.txt
 rm disclipdraw.txt
-rm disclipdrawx.txt
 rm disvesa.txt
 rm disvga.txt
 rm discmd.txt
@@ -27,7 +26,6 @@ objdump -drwC -Mintel packages/banana/32/0002/acpica.sys >> disacpica.txt
 objdump -drwC -Mintel packages/banana/32/0001/regedit.exe >> disregedit.txt
 objdump -drwC -Mintel packages/system/32/0002/legacy.sys >> dislegacy.txt
 objdump -drwC -Mintel packages/banana/32/0001/clipdraw.dll >> disclipdraw.txt
-objdump -drwC -Mintel packages/banana/32/0001/clipdrwx.dll >> disclipdrawx.txt
 objdump -drwC -Mintel packages/banana/32/0002/vga.sys >> disvga.txt
 objdump -drwC -Mintel packages/banana/32/0002/ac97.sys >> disac97.txt
 objdump -drwC -Mintel packages/banana/32/0002/vesa.sys >> disvesa.txt
@@ -49,9 +47,6 @@ python create.py
 
 
 
-cd D:/Users/Alex/Desktop/Banana/installer/FloppyRoot
-xdelta3 -f -s D:/Users/Alex/Desktop/Banana/kernel/KRNL386.EXE D:/Users/Alex/Desktop/Banana/kernel/KRNL486.EXE 386TO4.DIF
-xdelta3 -f -s D:/Users/Alex/Desktop/Banana/kernel/KRNL486.EXE D:/Users/Alex/Desktop/Banana/kernel/KRNL586.EXE 486TO5.DIF
 cd D:/Users/Alex/Desktop/banana-os
 del newimage.img
 del basicimage.img
@@ -84,6 +79,7 @@ cd kernel
 copy "D:/Users/Alex/Desktop/Banana/kernel/BANANABT" "T:/Banana/BANANABT" || pause
 copy "D:/Users/Alex/Desktop/Banana/kernel/FIRMWARE.LIB" "T:/Banana/FIRMWARE.LIB" || pause
 copy "D:/Users/Alex/Desktop/Banana/kernel/KERNEL32.EXE" "T:/BANANA/System/KERNEL32.EXE" || pause
+copy "D:/Users/Alex/Desktop/Banana/kernel/KRNLP2.EXE" "T:/BANANA/System/KRNLP2.EXE" || pause
 copy "D:/Users/Alex/Desktop/Banana/kernel/TRAMP.EXE" "T:/Banana/System/tramp.exe" || pause
 rem python ../genCoreFileBackups.py || pause
 
