@@ -28,10 +28,48 @@ extern "C" {
 
 #pragma GCC optimize ("-fno-strict-aliasing")
 
+#include "monika.hpp"
+/*uint16_t og = justMonika[(line * 480 / ctxt->height) * 640 + (i * 640 / ctxt->width)];
+
+			uint32_t r = ((og >> 5) & 0x3) * 85;
+			uint32_t g = ((og >> 2) & 0x7) * 36;
+			uint32_t b = ((og >> 0) & 0x3) * 85;
+
+			renderData[i] = (r << 16) | (g << 8) | b;*/
+
+void monikaBsod(char* msg)
+{
+	extern Video* screen;
+
+	int i = 0;
+	int m = 0;
+	while (1) {
+		uint8_t val = justMonika[m++];
+		uint8_t count = 1;
+		if (val >= 0x80) {
+			count = val - 0x80;
+			val = justMonika[m++];
+		}
+
+		for (int j = 0; j < count; ++j) {
+			uint32_t r = ((val >> 5) & 3) * 85;
+			uint32_t g = ((val >> 2) & 7) * 36;
+			uint32_t b = ((val >> 0) & 3) * 85;
+			uint32_t col = (r << 16) | (g << 8) | b;
+			screen->putpixel(i % 640, i / 640, col);
+			++i;
+		}
+	}
+}
 
 void start(void* s)
 {
 	extern Video* screen;
+	extern void (*guiPanicHandler)(char* message);
+
+	guiPanicHandler = monikaBsod;
+
+	monikaBsod("JUST MONIKA");
 
 	NIContext* ctxt = new NIContext(screen, screen->getWidth(), screen->getHeight(), screen->getWidth(), 32);
 

@@ -2004,7 +2004,7 @@ void begin(void* a)
 
         drawBootScreen();
         drawBasicWindowX(12, 3, 57, 16, "Login", true);
-        term->setCursor(14, 6); term->puts("Please select your username.", VgaColour::Black, VgaColour::LightGrey);
+        term->setCursor(14, 6); term->puts("Please select your username and press ENTER.", VgaColour::Black, VgaColour::LightGrey);
         
         if (numEntries > 0) {
             for (int i = 0; i < numEntries; ++i) {
@@ -2015,21 +2015,22 @@ void begin(void* a)
             }
         }
 
-        drawBasicWindow(31, 10, 40, 12, "Login");
+        drawBasicWindow(28, 10, 45, 11, "Login");
 
         while (1) {
-            term->setCursor(33, 13);
+            term->setCursor(30, 13);
             term->puts("Please type your password and press ENTER");
+            term->setCursor(30, 14);
             term->puts("or press ESC to go back.");
 
-            term->setCursor(33, 16);
+            term->setCursor(30, 16);
             term->puts("                                    ", VgaColour::Black, VgaColour::LightGrey);
-            term->setCursorX(33);
+            term->setCursorX(30);
             for (int i = 0; i < strlen(passwbufC); ++i) {
                 term->puts("*", VgaColour::Black, VgaColour::LightGrey);
             }
          
-            term->setCursor(33 + strlen(passwbufC), 16);
+            term->setCursor(30 + strlen(passwbufC), 16);
             
             while (installKey == 0);
             memset(term->keybufferInternal, 0, 16);

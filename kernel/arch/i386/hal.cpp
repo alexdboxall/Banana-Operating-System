@@ -331,6 +331,8 @@ void HalInitialiseCoprocessor()
 	CPU::current()->writeCR0(CPU::current()->readCR0() | 4);
 }
 
+void (*guiPanicHandler)(char* message);
+
 void HalPanic(const char* message)
 {
 	HalDisableInterrupts();
@@ -356,6 +358,7 @@ void HalPanic(const char* message)
 	activeTerminal->puts(message);
 	activeTerminal->puts("\n\n");
 
+	if (guiPanicHandler) guiPanicHandler(message);
 	while (1);
 
 	char* drvName = Thr::getDriverNameFromAddress((size_t) __builtin_return_address(0));

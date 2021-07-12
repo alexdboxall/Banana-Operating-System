@@ -253,8 +253,6 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 	previousButtons = buttons;
 }
 
-#include "monika.hpp"
-
 void NIDesktop::renderScanline(int line, int left, int right)
 {
 	int expectedBytes = right - left;
@@ -359,14 +357,6 @@ void NIDesktop::renderScanline(int line, int left, int right)
 	for (int i = left; i < right; ++i) {
 		if (!render[i]) {
 			render[i] = 1;
-
-			uint16_t og = justMonika[(line * 480 / ctxt->height) * 640 + (i * 640 / ctxt->width)];
-			
-			uint32_t r = ((og >> 5) & 0x3) * 85;
-			uint32_t g = ((og >> 2) & 0x7) * 36;
-			uint32_t b = ((og >> 0) & 0x3) * 85;
-
-			renderData[i] = (r << 16) | (g << 8) | b;
 			renderData[i] = 0x5580FF;
 			--expectedBytes;
 			if (expectedBytes == 0) {
