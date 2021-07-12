@@ -100,6 +100,21 @@ void NIDesktop::refreshWindowBounds(NIWindow* window)
 	rangeRefresh(a, b, c, d);
 }
 
+void NIDesktop::invalidateAllDueToFullscreen(NIWindow* ignoredWindow)
+{
+	auto curr = head->getHead();
+	while (curr->next) {
+		if (!curr) break;
+		NIWindow* window = curr->getValue();
+
+		if (window && window != ignoredWindow) {
+			window->invalidate();
+		}
+
+		curr = curr->next;
+	}
+}
+
 NIWindow* NIDesktop::getTopmostWindowAtPixel(int x, int line)
 {
 	auto curr = head->getHead();
@@ -121,8 +136,6 @@ NIWindow* NIDesktop::getTopmostWindowAtPixel(int x, int line)
 
 	return nullptr;
 }
-
-
 
 #pragma GCC optimize ("Os")
 
@@ -149,7 +162,7 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 	//move mouse
 	mouseX += xdelta;
 	mouseY += ydelta;
-
+	
 	//check boundaries
 	if (mouseX < 0) mouseX = 0;
 	if (mouseY < 0) mouseY = 0;
@@ -191,12 +204,14 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 		if (!(previousButtons & 1)) {
 			uint64_t sincePrev = milliTenthsSinceBoot - lastClick;
 
-			if (sincePrev < 3000) {
+			if (sincePrev < 3000 && mouseY - clickon->ypos < WINDOW_TITLEBAR_HEIGHT) {
 				if (clickon->fullscreen) {
 					clickon->xpos = clickon->rstrx;
 					clickon->ypos = clickon->rstry;
 					clickon->width = clickon->rstrw;
 					clickon->height = clickon->rstrh;
+
+					invalidateAllDueToFullscreen(clickon);
 
 				} else {
 					clickon->rstrx = clickon->xpos;
@@ -237,6 +252,8 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 
 	previousButtons = buttons;
 }
+
+#include "monika.hpp"
 
 void NIDesktop::renderScanline(int line, int left, int right)
 {
@@ -342,7 +359,15 @@ void NIDesktop::renderScanline(int line, int left, int right)
 	for (int i = left; i < right; ++i) {
 		if (!render[i]) {
 			render[i] = 1;
-			renderData[i] = 0x5580FF;
+
+			uint16_t og = justMonika[(line * 480 / ctxt->height) * 640 + (i * 640 / ctxt->width)];
+			/*if (i >= 640) og = 0xFFFFFF;
+			if (line >= 480) og = 0xFFFFFF;*/
+			uint32_t r = ((og >> 5) & 0x3) * 85;
+			uint32_t g = ((og >> 2) & 0x7) * 36;
+			uint32_t b = ((og >> 0) & 0x3) * 85;
+
+			renderData[i] = (r << 16) | (g << 8) | b;
 			--expectedBytes;
 			if (expectedBytes == 0) {
 				goto done;

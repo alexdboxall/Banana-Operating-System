@@ -42,6 +42,8 @@ public:
 	void raiseWindow(NIWindow* window);
 	void deleteWindow(NIWindow* window);
 
+	void invalidateAllDueToFullscreen(NIWindow* ignoredWindow);
+
 	void completeRefresh();
 	void rangeRefresh(int top, int bottom, int left, int right);
 	void renderScanline(int line, int left, int right);
