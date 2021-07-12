@@ -338,6 +338,7 @@ void HalPanic(const char* message)
 	HalDisableInterrupts();
 
 	kprintf("\nFATAL SYSTEM ERROR: %s\n", message);
+	if (guiPanicHandler) guiPanicHandler((char*) message);
 
 	//VgaText::hiddenOut = false;
 
@@ -358,7 +359,6 @@ void HalPanic(const char* message)
 	activeTerminal->puts(message);
 	activeTerminal->puts("\n\n");
 
-	if (guiPanicHandler) guiPanicHandler((char*) message);
 	while (1);
 
 	char* drvName = Thr::getDriverNameFromAddress((size_t) __builtin_return_address(0));

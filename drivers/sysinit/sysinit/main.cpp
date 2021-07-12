@@ -1956,10 +1956,10 @@ void begin(void* a)
         drawBasicWindow(12, 3, 57, 16, "Login");
         term->setCursor(14, 6); term->puts("Please select your username.");
         while (1) {
-            /*if (numEntries == 1) {
+            if (numEntries == 1) {
                 usersel = 0;
                 break;
-            }*/
+            }
 
             for (int i = 0; i < numEntries; ++i) {
                 term->setCursor(15, 8 + i);
