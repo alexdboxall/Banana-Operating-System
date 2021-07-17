@@ -11,7 +11,7 @@ exit
 D:
 cd D:/Users/Alex/Desktop/Banana
 
-git add *.*
+rem git add *.*
 git add LICENSE
 git add COPYRIGHT
 git add README.md
@@ -21,7 +21,7 @@ git add bochs
 git commit -a --allow-empty-message -m ""
 git remote add origin https://github.com/A22347/Banana.git
 git push -u origin main
- 
+
 cd kernel
 cp crti.322 crti.32
 cp crtn.322 crtn.32

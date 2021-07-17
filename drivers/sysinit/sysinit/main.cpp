@@ -1954,7 +1954,7 @@ void begin(void* a)
         installKey = 0;
         drawBootScreen();
         drawBasicWindow(12, 3, 57, 16, "Login");
-        term->setCursor(14, 6); term->puts("Please select your username.");
+        term->setCursor(14, 6); term->puts("Please select your username and press ENTER.", VgaColour::Black, VgaColour::LightGrey);
         while (1) {
             if (numEntries == 1) {
                 usersel = 0;
@@ -2017,7 +2017,16 @@ void begin(void* a)
 
         drawBasicWindow(28, 10, 45, 11, "Login");
 
-        while (1) {
+        bool doPass = true;
+
+        char gotHash[128];
+        bcrypt_hashpw(passwbufC, gotSalt, gotHash);
+        if (!strcmp(requiredHash, gotHash)) {
+            doPass = false;
+        }
+        memset(gotHash, 0, 128);
+
+        while (doPass) {
             term->setCursor(30, 13);
             term->puts("Please type your password and press ENTER");
             term->setCursor(30, 14);
