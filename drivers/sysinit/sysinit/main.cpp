@@ -1434,8 +1434,6 @@ char passwhash[80];*/
 
             for (int i = 0; i < 15; ++i) {
                 term->setCursor(20, 6 + i);
-                /*term->putchar(' ', scroll + i == tzsel ? VgaColour::White : VgaColour::DarkGrey, \
-                    scroll + i == tzsel ? VgaColour::Black : VgaColour::White);*/
                 term->puts(timezoneStrings[scroll + i], \
                            scroll + i == tzsel ? VgaColour::White : VgaColour::Black, \
                            scroll + i == tzsel ? VgaColour::Black : VgaColour::White);

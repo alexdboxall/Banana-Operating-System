@@ -177,8 +177,8 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 		for (int y = 1; y < movingWin->height - 1; ++y) {
 			for (int x = 1; x < movingWin->width - 1; ++x) {
 				if (!((x + y) & 31) && !(y & 3)) {
-					rangeRefresh(oldY - moveBaseY + y, oldY - moveBaseY + y + 1, oldX - moveBaseX + x, oldX - moveBaseX + x + 1);
-					if (!release) ctxt->screen->putpixel(mouseX - moveBaseX + x, mouseY - moveBaseY + y, 0);
+					if (oldY - moveBaseY + y >= 0) rangeRefresh(oldY - moveBaseY + y, oldY - moveBaseY + y + 1, oldX - moveBaseX + x, oldX - moveBaseX + x + 1);
+					if (!release && mouseX - moveBaseX + x >= 0) ctxt->screen->putpixel(mouseX - moveBaseX + x, mouseY - moveBaseY + y, 0);
 				}
 			}
 		}
@@ -187,6 +187,12 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 		rangeRefresh(oldY - moveBaseY + movingWin->height - 1, oldY - moveBaseY + movingWin->height, oldX - moveBaseX, oldX - moveBaseX + movingWin->width);
 
 		if (!release) {
+			int x1 = mouseX - moveBaseX;
+			if (x1 < 0) x1 = 0;
+			int x2 = mouseX - moveBaseX + movingWin->width - x1;
+			if (x2 < 0) {
+				kprintf("What is this...?!?!\n");
+			}
 			ctxt->screen->putrect(mouseX - moveBaseX, mouseY - moveBaseY, movingWin->width, 1, 0);
 			ctxt->screen->putrect(mouseX - moveBaseX, mouseY - moveBaseY + movingWin->height - 1, movingWin->width, 1, 0);
 		}
@@ -386,9 +392,6 @@ done:
 		}
 	}
 
-	//ctxt->screen->blit(renderData + left, left, line, right - left, 1);
-	for (int i = left; i < right; ++i) {
-		ctxt->screen->putpixel(i, line, renderData[i]);
-	}
+	ctxt->screen->bitblit(left, line, left, 0, right - left, 1, 0, renderData);
 }
 #pragma GCC optimize ("Os")
