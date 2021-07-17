@@ -312,7 +312,8 @@ size_t VAS::virtualToPhysical(size_t virt)
 	return (*getPageTableEntry(virt)) & ~0xFFF;
 }
 
-void VAS::freeAllocatedPages(size_t virt) {
+void VAS::freeAllocatedPages(size_t virt) 
+{
 	if (supervisorVAS) {
 		Virt::freeKernelVirtualPages(virt);
 
@@ -609,7 +610,7 @@ void VAS::evict(size_t virt)
 	//flush TLB
 	CPU::writeCR3(CPU::readCR3());
 
-	//kprintf("evicting phys 0x%X, virt 0x%X, swap balance %d\n", physAddr, virt, swapBalance);
+	kprintf("evicting phys 0x%X, virt 0x%X, swap balance %d\n", physAddr, virt, swapBalance);
 	kprintf("Total swaps: %d\n", twswaps++);
 }
 
@@ -685,6 +686,7 @@ size_t VAS::scanForEviction()
 					kprintf("will evict... 0x%X\n", evictionScanner);
 					evict(evictionScanner);
 					kprintf("did evict... 0x%X\n", evictionScanner);
+					kprintf("ret... 0x%X\n", ret);
 					evictionScanner += 4096;		//saves a check the next time this gets called
 					return ret;
 				}

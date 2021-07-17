@@ -18,8 +18,8 @@
 
 Minimum System Requirements:
 
-	CPU:	Intel 486 or better
-	RAM:	4 MB (8 MB to install it)
+	CPU:	Intel 486 or better (Pentium recommended)
+	RAM:	8 MB (16 MB to run the GUI)
 	HDD:	64 MB
 
 	VGA compatible video card;
@@ -31,7 +31,7 @@ Minimum System Requirements:
 */
 
 extern "C" {
-	#include "libk/string.h"
+#include "libk/string.h"
 }
 
 uint32_t sysBootSettings = 0;
