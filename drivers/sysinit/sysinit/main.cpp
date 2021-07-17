@@ -1900,23 +1900,23 @@ void begin(void* a)
         showSidebar = false;
         term = new VgaText("Test");
         setActiveTerminal(term);
-        installKey = 0;
-
         
-        int numEntries = 0;
-        int usersel = 0;
+        int numEntries;
+        int usersel;
+        int userExtent;
 
         char* userStrings[32];
-        memset(userStrings, 0, sizeof(userStrings));
         char* userStringsA[32];
+        
+    selectUsernameStart:
+        numEntries = 0;
+        usersel = 0;
+        installKey = 0;
+        memset(userStrings, 0, sizeof(userStrings));
         memset(userStringsA, 0, sizeof(userStringsA));
 
-        /*userStrings[0] = (char*) malloc(80);
-        strcpy(userStrings[0], " DEFAULT                                          ");
-        numEntries++;*/
-
         reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
-        int userExtent = CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/USERS"));
+        userExtent = CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/USERS"));
         while (userExtent) {
             char name[80];
             memset(name, 0, 80);
@@ -1947,6 +1947,10 @@ void begin(void* a)
         }
         CmClose(reg);
 
+        userStrings[numEntries] = (char*) malloc(80);
+        strcpy(userStrings[numEntries], " Create new user...                               ");
+        numEntries++;
+
         guiKeyboardHandler = bootInstallKeybrd;
         char passwbufC[128];
 
@@ -1954,7 +1958,7 @@ void begin(void* a)
         installKey = 0;
         drawBootScreen();
         drawBasicWindow(12, 3, 57, 16, "Login");
-        term->setCursor(14, 6); term->puts("Please select your username and press ENTER.", VgaColour::Black, VgaColour::LightGrey);
+        term->setCursor(14, 6); term->puts("Please select your username and press ENTER.", VgaColour::Black, VgaColour::White);
         while (1) {
             if (numEntries == 1) {
                 usersel = 0;
@@ -1984,6 +1988,16 @@ void begin(void* a)
 
             milliTenthSleep(500);
             installKey = 0;
+        }
+
+        if (usersel == numEntries - 1) {
+            //createNewUser();
+            installKey = 0;
+            while (installKey == 0);
+            memset(term->keybufferInternal, 0, 4);
+            memset(term->keybufferSent, 0, 4);
+            installKey = 0;
+            goto selectUsernameStart;
         }
 
         char requiredHash[128];
