@@ -12,6 +12,13 @@ struct source_location
 	uint32_t column;
 };
 
+struct type_descriptor
+{
+	uint16_t kind;
+	uint16_t info;
+	char* name;
+};
+
 struct type_mismatch_info
 {
 	struct source_location location;
@@ -45,7 +52,7 @@ void KiUbsanPrintDetails(const char* str, void* ptr)
 
 extern "C" void __ubsan_handle_type_mismatch_v1(struct type_mismatch_info* type_mismatch, uintptr_t pointer)
 {
-	kprintf("__ubsan_handle_type_mismatch_v1\n");
+	KiUbsanPrintDetails("__ubsan_handle_type_mismatch_v1", type_mismatch);
 	
 	if (pointer == 0) {
 		kprintf("Null pointer access\n");
@@ -61,19 +68,23 @@ extern "C" void __ubsan_handle_type_mismatch_v1(struct type_mismatch_info* type_
 			type_mismatch->type->name);
 	}
 
-	KiUbsanPrintDetails("__ubsan_handle_type_mismatch_v1", type_mismatch);
 	KePanic("__ubsan_handle_type_mismatch_v1");
 }
 
 extern "C" void __ubsan_handle_pointer_overflow(void* ptr)
 {
 	KiUbsanPrintDetails("__ubsan_handle_pointer_overflow", ptr);
+
+	// ...
 	KePanic("__ubsan_handle_pointer_overflow");
 }
 
 extern "C" void __ubsan_handle_out_of_bounds(void* ptr)
 {
 	KiUbsanPrintDetails("__ubsan_handle_out_of_bounds", ptr);
+
+	// ...
+
 	KePanic("__ubsan_handle_out_of_bounds");
 }
 
