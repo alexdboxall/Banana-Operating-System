@@ -13,7 +13,7 @@ struct type_mismatch_info
 	uint8_t type_check_kind;
 };
 
-const char* Type_Check_Kinds[] = {
+const char* KiUsbanTypeMismatchTypes[] = {
 	"load of",
 	"store to",
 	"reference binding to",
@@ -49,7 +49,7 @@ extern "C" void __ubsan_handle_type_mismatch_v1(struct type_mismatch_info* type_
 	
 	struct source_location* location = &type_mismatch->location;
 
-	if (pointer == nullptr) {
+	if (pointer == 0) {
 		kprintf("Null pointer access\n");
 
 	} else if (type_mismatch->alignment != 0 &&
@@ -59,7 +59,7 @@ extern "C" void __ubsan_handle_type_mismatch_v1(struct type_mismatch_info* type_
 	} else {
 		kprintf("ubsan: Insufficient size\n");
 		kprintf("ubsan: %s address %p with insufficient space for object of type %s\n",
-			Type_Check_Kinds[type_mismatch->type_check_kind], (void*) pointer,
+			KiUsbanTypeMismatchTypes[type_mismatch->type_check_kind], (void*) pointer,
 			type_mismatch->type->name);
 	}
 
