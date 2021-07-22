@@ -24,3 +24,23 @@ extern "C" void __ubsan_handle_load_invalid_value()
 {
 	KePanic("__ubsan_handle_load_invalid_value");
 }
+
+extern "C" void __ubsan_handle_divrem_overflow()
+{
+	KePanic("__ubsan_handle_divrem_overflow");
+}
+
+extern "C" void __ubsan_handle_mul_overflow()
+{
+	KePanic("__ubsan_handle_mul_overflow");
+}
+
+extern "C" void __ubsan_handle_sub_overflow()
+{
+	KePanic("__ubsan_handle_sub_overflow");
+}
+
+extern "C" void __ubsan_handle_shift_out_of_bounds()
+{
+	KePanic("__ubsan_handle_shift_out_of_bounds");
+}
