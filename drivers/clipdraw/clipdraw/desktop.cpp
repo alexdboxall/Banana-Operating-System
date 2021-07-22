@@ -177,24 +177,34 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 		for (int y = 1; y < movingWin->height - 1; ++y) {
 			for (int x = 1; x < movingWin->width - 1; ++x) {
 				if (!((x + y) & 31) && !(y & 3)) {
-					if (oldY - moveBaseY + y >= 0) rangeRefresh(oldY - moveBaseY + y, oldY - moveBaseY + y + 1, oldX - moveBaseX + x, oldX - moveBaseX + x + 1);
-					if (!release && mouseX - moveBaseX + x >= 0) ctxt->screen->putpixel(mouseX - moveBaseX + x, mouseY - moveBaseY + y, 0);
+					if (oldX - moveBaseX + x >= 0 && oldX - moveBaseX + x < ctxt->width) rangeRefresh(oldY - moveBaseY + y, oldY - moveBaseY + y + 1, oldX - moveBaseX + x, oldX - moveBaseX + x + 1);
+					if (!release && mouseX - moveBaseX + x >= 0 && mouseX - moveBaseX + x < ctxt->width) ctxt->screen->putpixel(mouseX - moveBaseX + x, mouseY - moveBaseY + y, 0);
 				}
 			}
 		}
-
-		rangeRefresh(oldY - moveBaseY, oldY - moveBaseY + 1, oldX - moveBaseX, oldX - moveBaseX + movingWin->width);
-		rangeRefresh(oldY - moveBaseY + movingWin->height - 1, oldY - moveBaseY + movingWin->height, oldX - moveBaseX, oldX - moveBaseX + movingWin->width);
 
 		if (!release) {
 			int x1 = mouseX - moveBaseX;
 			if (x1 < 0) x1 = 0;
 			int x2 = mouseX - moveBaseX + movingWin->width - x1;
-			if (x2 < 0) {
-				kprintf("What is this...?!?!\n");
+			if (x1 + x2 >= ctxt->width) {
+				x2 = ctxt->width - x1;
+				if (x2 < 0) x2 = 0;
 			}
-			ctxt->screen->putrect(mouseX - moveBaseX, mouseY - moveBaseY, movingWin->width, 1, 0);
-			ctxt->screen->putrect(mouseX - moveBaseX, mouseY - moveBaseY + movingWin->height - 1, movingWin->width, 1, 0);
+			if (x2) {
+				int ox1 = oldX - moveBaseX;
+				if (ox1 < 0) ox1 = 0;
+				int ox2 = oldX - moveBaseX + movingWin->width - ox1;
+				if (ox1 + ox2 >= ctxt->width) {
+					ox2 = ctxt->width - ox1;
+					if (ox2 < 0) ox2 = 0;
+				}
+				rangeRefresh(oldY - moveBaseY, oldY - moveBaseY + 1, ox1, ox1 + ox2);
+				rangeRefresh(oldY - moveBaseY + movingWin->height - 1, oldY - moveBaseY + movingWin->height, ox1, ox1 + ox2);
+
+				ctxt->screen->putrect(x1, mouseY - moveBaseY, x2, 1, 0);
+				ctxt->screen->putrect(x1, mouseY - moveBaseY + movingWin->height - 1, x2, 1, 0);
+			}
 		}
 
 		if (release) {
