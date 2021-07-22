@@ -2,6 +2,7 @@
 #include "core/common.hpp"
 #include "core/terminal.hpp"
 #include "hal/vcache.hpp"		//cache purging
+#include <krnl/unaligned.hpp>
 
 #pragma GCC optimize ("O2")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -244,7 +245,7 @@ namespace Phys
 
 		uint64_t* ramTable = (uint64_t*) VIRT_RAM_TABLE;
 		uint16_t* ramTableLengthAddr = (uint16_t*) VIRT_RAM_TABLE_SIZE;
-		uint16_t ramTableLength = *ramTableLengthAddr;
+		uint16_t ramTableLength = readUnaligned16(ramTableLengthAddr);
 		if (ramTableLength == 0) {
 			KePanic("No RAM table!");
 		}
