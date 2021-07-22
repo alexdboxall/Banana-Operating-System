@@ -47,10 +47,7 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wframe-address"
 
-
-namespace Krnl
-{
-	/*char exceptionNames[][32] = {
+char exceptionNames[][32] = {
 		"Division by zero error",
 		"Debug",
 		"Non-maskable interrupt",
@@ -72,8 +69,7 @@ namespace Krnl
 		"Machine check",
 		"SIMD floating-point exception",
 		"Virtualisation exception",
-	};*/
-}
+};
 
 void displayDebugInfo(regs* r)
 {
@@ -94,6 +90,8 @@ void displayDebugInfo(regs* r)
 
 	kprintf("CR2: 0x%X\n", (uint32_t) cr2);
 	kprintf("CR3: 0x%X\n", cr3);
+
+	kprintf("ERROR: %d, %s\n", r->int_no, exceptionNames[r->int_no]);
 
 	setActiveTerminal(kernelProcess->terminal);
 
