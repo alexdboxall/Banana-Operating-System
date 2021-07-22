@@ -16,7 +16,7 @@ void KeDisplaySplashScreen()
 	int x = 0;
 	int y = 5;
 	int addx = 10;
-	for (int i = 0; KiSplashScreen[i] && i < sizeof(KiSplashScreen); ++i) {
+	for (int i = 0; i < sizeof(KiSplashScreen) && KiSplashScreen[i]; ++i) {
 		if (KiSplashScreen[x + 54] == 0xDB && (KiSplashScreen[x + 53] & ~1) == 0xBA) ++addx;
 		if (KiSplashScreen[i] == '\r') continue;
 		if (KiSplashScreen[i] == '\n') {
