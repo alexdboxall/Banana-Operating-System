@@ -44,3 +44,8 @@ extern "C" void __ubsan_handle_shift_out_of_bounds()
 {
 	KePanic("__ubsan_handle_shift_out_of_bounds");
 }
+
+extern "C" void __ubsan_handle_negate_overflow()
+{
+	KePanic("__ubsan_handle_negate_overflow");
+}
