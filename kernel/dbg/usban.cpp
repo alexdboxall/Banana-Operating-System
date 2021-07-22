@@ -5,6 +5,13 @@
 // Alignment must be a power of 2.
 #define is_aligned(value, alignment) !(value & (alignment - 1))
 
+struct source_location
+{
+	const char* file;
+	uint32_t line;
+	uint32_t column;
+};
+
 struct type_mismatch_info
 {
 	struct source_location location;
@@ -26,13 +33,6 @@ const char* KiUsbanTypeMismatchTypes[] = {
 	"cast to virtual base of",
 };
 
-struct source_location
-{
-	const char* file;
-	uint32_t line;
-	uint32_t column;
-};
-
 void KiUbsanPrintDetails(const char* str, void* ptr)
 {
 	kprintf("UBSAN DETECTED: %s\n", str);
@@ -47,8 +47,6 @@ extern "C" void __ubsan_handle_type_mismatch_v1(struct type_mismatch_info* type_
 {
 	kprintf("__ubsan_handle_type_mismatch_v1\n");
 	
-	struct source_location* location = &type_mismatch->location;
-
 	if (pointer == 0) {
 		kprintf("Null pointer access\n");
 
