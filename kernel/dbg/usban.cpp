@@ -9,7 +9,7 @@ struct source_location
 	uint32_t column;
 };
 
-void KiUbsanPrintDetails(char* str, void* ptr)
+void KiUbsanPrintDetails(const char* str, void* ptr)
 {
 	kprintf("UBSAN DETECTED: %s\n", str);
 
