@@ -59,11 +59,11 @@ extern "C" void __ubsan_handle_type_mismatch_v1(struct type_mismatch_info* type_
 
 	} else if (type_mismatch->alignment != 0 &&
 		is_aligned(pointer, type_mismatch->alignment)) {
-		kprintf("ubsan: Unaligned memory access\n");
+		kprintf("ubsan: Unaligned memory access to 0x%X\n", pointer);
 
 	} else {
 		kprintf("ubsan: Insufficient size\n");
-		kprintf("ubsan: %s address %p with insufficient space for object of type %s\n",
+		kprintf("ubsan: %s address 0x%X with insufficient space for object of type %s\n",
 			KiUsbanTypeMismatchTypes[type_mismatch->type_check_kind], (void*) pointer,
 			type_mismatch->type->name);
 	}
