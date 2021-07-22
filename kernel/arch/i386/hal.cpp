@@ -336,26 +336,27 @@ void HalPanic(const char* message)
 	HalDisableInterrupts();
 
 	kprintf("\nFATAL SYSTEM ERROR: %s\n", message);
+
 	if (guiPanicHandler) guiPanicHandler((char*) message);
 
-	//VgaText::hiddenOut = false;
+	if (activeTerminal) {
+		//give it those classic colours
+		activeTerminal->setDefaultColours(VgaColour::White, VgaColour::Blue);
+		activeTerminal->clearScreen();
+		activeTerminal->setTitle((char*) "");
+		activeTerminal->setDefaultColours(VgaColour::White, VgaColour::Blue);
 
-	//give it those classic colours
-	activeTerminal->setDefaultColours(VgaColour::White, VgaColour::Blue);
-	activeTerminal->clearScreen();
-	activeTerminal->setTitle((char*) "");
-	activeTerminal->setDefaultColours(VgaColour::White, VgaColour::Blue);
-
-	//print error message
-	activeTerminal->puts("\n\n      ");
-	activeTerminal->setDefaultColours(VgaColour::Blue, VgaColour::White);
-	activeTerminal->puts(" STOP ERROR ");
-	activeTerminal->setDefaultColours(VgaColour::White, VgaColour::Blue);
-	activeTerminal->puts("\n\n");
-	activeTerminal->puts("      A problem has occured and Banana cannot continue.\n\n");
-	activeTerminal->puts("          ");
-	activeTerminal->puts(message);
-	activeTerminal->puts("\n\n");
+		//print error message
+		activeTerminal->puts("\n\n      ");
+		activeTerminal->setDefaultColours(VgaColour::Blue, VgaColour::White);
+		activeTerminal->puts(" STOP ERROR ");
+		activeTerminal->setDefaultColours(VgaColour::White, VgaColour::Blue);
+		activeTerminal->puts("\n\n");
+		activeTerminal->puts("      A problem has occured and Banana cannot continue.\n\n");
+		activeTerminal->puts("          ");
+		activeTerminal->puts(message);
+		activeTerminal->puts("\n\n");
+	}
 
 	while (1);
 
