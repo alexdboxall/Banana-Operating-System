@@ -64,7 +64,7 @@ extern "C" void __ubsan_handle_type_mismatch_v1(struct type_mismatch_info* type_
 	} else {
 		kprintf("ubsan: Insufficient size\n");
 		uint8_t* ptr = (uint8_t*) (12 + 2 * sizeof(size_t));
-		kprintf("ubsan: type is %d\n", *ptr);
+		kprintf("ubsan: type is %d\n", *(ptr + type_mismatch));
 		kprintf("ubsan: %s address 0x%X with insufficient space for object of type %s\n",
 			KiUsbanTypeMismatchTypes[type_mismatch->type_check_kind], (void*) pointer,
 			type_mismatch->type->name);
