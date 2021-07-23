@@ -167,6 +167,7 @@ extern "C" size_t KiCheckSignalZ()
 
 size_t KeCheckSignal(SigHandlerBlock* shb, int* num)
 {
+	if (!shb) return 0;
 	if (!shb->checkSignals) {
 		return 0;
 	}
