@@ -16,7 +16,7 @@ struct type_descriptor
 {
 	uint16_t kind;
 	uint16_t info;
-	char* name;
+	char name[80];
 };
 
 struct type_mismatch_info
@@ -64,6 +64,7 @@ extern "C" void __ubsan_handle_type_mismatch_v1(struct type_mismatch_info* type_
 	} else {
 		kprintf("ubsan: Insufficient size\n");
 		kprintf("ubsan: Check data here: 0x%X\n", type_mismatch);
+		kprintf("ubsan: %s\n", type_mismatch->type->name + strlen(type_mismatch->type->name) + sizeof(size_t));
 		kprintf("ubsan: %s address 0x%X with insufficient space for object of type %s\n",
 			KiUsbanTypeMismatchTypes[type_mismatch->type_check_kind], (void*) pointer,
 			type_mismatch->type->name);
