@@ -6,6 +6,7 @@
 #include <libk/string.h>
 #include <core/physmgr.hpp>
 #include <hw/cpu.hpp>
+#include <krnl/unaligned.hpp>
 #include <krnl/resolve.hpp>
 
 #pragma GCC optimize ("Os")
@@ -602,11 +603,9 @@ namespace Thr
 					}
 
 					if (dynamic) {
-						x = addr - pos + *entry + entryPoint - relocationPoint;
+						x = addr - pos + readUnaligned32(entry) + entryPoint - relocationPoint;
 					} else {
-						kprintf("referencing 0x%X\n", entry);
-						kprintf("references to 0x%X\n", *entry);
-						x = addr - pos + *entry;
+						x = addr - pos + readUnaligned32(entry);
 					}
 					//kprintf("    R_386_PC32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
 					//kprintf("    addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
