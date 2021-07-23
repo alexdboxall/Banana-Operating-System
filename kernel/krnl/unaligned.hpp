@@ -14,7 +14,7 @@ static inline __attribute__((always_inline)) uint32_t readUnaligned32(uint32_t* 
 
 static inline __attribute__((always_inline)) void writeUnaligned32(uint32_t* _ptr, uint32_t val)
 {
-	uint8_t p = (uint8_t*) _ptr;
+	uint8_t* p = (uint8_t*) _ptr;
 
 	p[0] = val & 0xFF;
 	p[1] = (val >> 8) & 0xFF;
