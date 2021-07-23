@@ -176,7 +176,11 @@ int CPU::open(int num, int b, void* vas_)
 	cpuSpecificPhysAddr->cpuPointer = this;
 
 	VAS* vas = (VAS*) vas_;
-	vas->setCPUSpecific((size_t) cpuSpecificPhysAddr);
+	if (vas) {
+		vas->setCPUSpecific((size_t) cpuSpecificPhysAddr);
+	} else {
+		kprintf("CPU specific features not set up!!!\n");
+	}
 	
 	KeSetBootMessage("Detecting CPU specific features...");
 	//here so APIC can be disabled on dodgy K5 CPUs
