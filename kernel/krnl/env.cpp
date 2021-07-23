@@ -63,9 +63,9 @@ void EnvVarContainer::loadFrom(const char* filename, const char* defaultN)
 	f->open(FILE_OPEN_READ);
 	char c;
 	do {
-		kprintf("env %c\n", c);
 		br = 0;
 		f->read(1, &c, &br);
+		if (!c) break;
 		if (c == '\r') continue;
 		if (equSpot && (c == '\n' || br == 0 || linePtr >= 255)) {
 			EnvVar e;

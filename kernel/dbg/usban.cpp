@@ -75,50 +75,53 @@ extern "C" void __ubsan_handle_type_mismatch_v1(struct type_mismatch_info* type_
 extern "C" void __ubsan_handle_pointer_overflow(void* ptr)
 {
 	KiUbsanPrintDetails("__ubsan_handle_pointer_overflow", ptr);
-
-	// ...
 	KePanic("__ubsan_handle_pointer_overflow");
 }
 
 extern "C" void __ubsan_handle_out_of_bounds(void* ptr)
 {
 	KiUbsanPrintDetails("__ubsan_handle_out_of_bounds", ptr);
-
-	// ...
-
 	KePanic("__ubsan_handle_out_of_bounds");
 }
 
-extern "C" void __ubsan_handle_add_overflow() {
+extern "C" void __ubsan_handle_add_overflow(void* ptr)
+{
+	KiUbsanPrintDetails("__ubsan_handle_add_overflow", ptr);
 	KePanic("__ubsan_handle_add_overflow");
 }
 
-extern "C" void __ubsan_handle_load_invalid_value()
+extern "C" void __ubsan_handle_load_invalid_value(void* ptr)
 {
+	KiUbsanPrintDetails("__ubsan_handle_load_invalid_value", ptr);
 	KePanic("__ubsan_handle_load_invalid_value");
 }
 
-extern "C" void __ubsan_handle_divrem_overflow()
+extern "C" void __ubsan_handle_divrem_overflow(void* ptr)
 {
+	KiUbsanPrintDetails("__ubsan_handle_divrem_overflow", ptr);
 	KePanic("__ubsan_handle_divrem_overflow");
 }
 
-extern "C" void __ubsan_handle_mul_overflow()
+extern "C" void __ubsan_handle_mul_overflow(void* ptr)
 {
+	KiUbsanPrintDetails("__ubsan_handle_mul_overflow", ptr);
 	KePanic("__ubsan_handle_mul_overflow");
 }
 
-extern "C" void __ubsan_handle_sub_overflow()
+extern "C" void __ubsan_handle_sub_overflow(void* ptr)
 {
+	KiUbsanPrintDetails("__ubsan_handle_sub_overflow", ptr);
 	KePanic("__ubsan_handle_sub_overflow");
 }
 
-extern "C" void __ubsan_handle_shift_out_of_bounds()
+extern "C" void __ubsan_handle_shift_out_of_bounds(void* ptr)
 {
+	KiUbsanPrintDetails("__ubsan_handle_shift_out_of_bounds", ptr);
 	KePanic("__ubsan_handle_shift_out_of_bounds");
 }
 
-extern "C" void __ubsan_handle_negate_overflow()
+extern "C" void __ubsan_handle_negate_overflow(void* ptr)
 {
+	KiUbsanPrintDetails("__ubsan_handle_negate_overflow", ptr);
 	KePanic("__ubsan_handle_negate_overflow");
 }
