@@ -217,9 +217,9 @@ namespace Vm
 		uint16_t* stack = (uint16_t*) (size_t) realToLinear(ss, sp);
 		r->useresp = (r->useresp - 6) & 0xFFFF;
 
-		writeUnaligned16(stack + 0, r->eip + 2);
-		writeUnaligned16(stack + 1, r->cs);
-		writeUnaligned16(stack + 2, r->eflags);
+		KeWriteUnaligned16(stack + 0, r->eip + 2);
+		KeWriteUnaligned16(stack + 1, r->cs);
+		KeWriteUnaligned16(stack + 2, r->eflags);
 
 		if (currentTaskTCB->vm86VIE) {
 			KeWriteUnaligned16(stack + 2, KeReadUnaligned16(stack + 2) | 0x200);
