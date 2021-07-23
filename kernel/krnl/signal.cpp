@@ -104,6 +104,7 @@ SigHandlerBlock* KeInitSignals()
 	SigHandlerBlock* obj = (SigHandlerBlock*) malloc(sizeof(SigHandlerBlock));
 	obj->pendingBase = 0;
 	obj->current = 0;
+	obj->checkSignals = false;
 
 	memset(obj->pending, 0, sizeof(obj->pending));
 	memset(obj->handler, 0, sizeof(obj->handler));
