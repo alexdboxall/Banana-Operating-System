@@ -220,7 +220,7 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 		if (!(previousButtons & 1)) {
 			uint64_t sincePrev = milliTenthsSinceBoot - lastClick;
 
-			if (sincePrev < 3000 && mouseY - clickon->ypos < WINDOW_TITLEBAR_HEIGHT) {
+			if (sincePrev < 3000 && mouseY - clickon->ypos < WINDOW_TITLEBAR_HEIGHT && !(clickon->flags & WINFLAG_DISABLE_RESIZE)) {
 				if (clickon->fullscreen) {
 					clickon->xpos = clickon->rstrx;
 					clickon->ypos = clickon->rstry;
@@ -240,6 +240,7 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 					clickon->width = ctxt->width;
 					clickon->height = ctxt->height;
 				}
+				sincePrev = 0;
 				clickon->fullscreen ^= 1;
 
 				clickon->rerender();

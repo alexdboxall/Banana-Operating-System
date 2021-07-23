@@ -4,6 +4,8 @@
 
 #define WINDOW_TITLEBAR_HEIGHT 25
 
+#define WINFLAG_DISABLE_RESIZE 1
+
 class NIWindow
 {
 private:
@@ -42,6 +44,8 @@ public:
 	int rstry;
 	int rstrw;
 	int rstrh;
+
+	uint32_t flags;
 
 	void rerender();
 	void invalidate();

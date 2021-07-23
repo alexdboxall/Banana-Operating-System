@@ -47,6 +47,8 @@ void start(void* s)
 	NIWindow* win2 = new NIWindow(ctxt, 200, 150, 500, 380);
 	NIWindow* win3 = new NIWindow(ctxt, 125, 400, 270, 175);
 
+	win3->flags |= WINFLAG_DISABLE_RESIZE;
+
 	desktop->addWindow(win0);
 	desktop->addWindow(win1);
 	desktop->addWindow(win2);

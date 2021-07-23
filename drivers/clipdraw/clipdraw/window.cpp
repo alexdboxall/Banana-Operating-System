@@ -27,6 +27,8 @@ NIWindow::NIWindow(NIContext* ctxt, int _x, int _y, int _w, int _h)
 
 	fullscreen = false;
 
+	flags = 0;
+
 	valid = false;
 	renderTable = nullptr;
 	renderTableLength = 0;
