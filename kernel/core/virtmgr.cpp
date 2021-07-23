@@ -445,7 +445,7 @@ VAS::VAS(bool kernel) {
 
 size_t VAS::mapRange(size_t physicalAddr, size_t virtualAddr, int pages, int flags)
 {
-	bool invlpg = CPU::current()->features.hasINVLPG;
+	bool invlpg = CPU::current() && CPU::current()->features.hasINVLPG;
 
 	for (int i = 0; i < pages; ++i) {
 		mapPage(physicalAddr + i * 4096, virtualAddr + i * 4096, flags);
