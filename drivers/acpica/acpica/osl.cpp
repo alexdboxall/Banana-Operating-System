@@ -28,7 +28,7 @@ extern "C" {
 	//THAT WE DON'T HAVE THE HEADER FILE (THE DEFINITIONS ARE HIDDEN DEEP WITHIN ACPICA)
 	void* memmove(void* destination, const void* source, size_t n);
 	char* strcpy(char*  destination, const char*  source);
-	char* strncpy(char*  destination, const char*  source, size_t n);
+	//char* strncpy(char*  destination, const char*  source, size_t n);
 	char* strcat(char*  destination, const char*  source);
 	char* strncat(char*  destination, const char*  source, size_t n);
 
@@ -42,7 +42,7 @@ extern "C" {
 	int strncasecmp(const char* s1, const char* s2, size_t n);
 
 	void* memchr(const void* s, int c, size_t n);
-	char* strchr(const char* s, int c);
+	//char* strchr(const char* s, int c);
 	char* strrchr(const char* s, int c);
 	size_t strcspn(const char* s1, const char* s2);
 	char* strpbrk(const char* s1, const char* s2);
@@ -213,7 +213,7 @@ extern "C" {
 
 	void AcpiOsWaitEventsComplete(void)
 	{
-		panic("AcpiOsWaitEventsComplete");
+		KePanic("AcpiOsWaitEventsComplete");
 	}
 
 	//https://github.com/no92/vineyard/blob/dev/kernel/driver/acpi/osl/pci.c
@@ -255,7 +255,7 @@ extern "C" {
 			outl(0xCFC, Value & 0xFFFFFFFF);
 			break;
 		default:
-			panic("[acpica osl] AcpiOsWritePciConfiguration bad width!");
+			KePanic("[acpica osl] AcpiOsWritePciConfiguration bad width!");
 			break;
 		}
 
@@ -267,13 +267,13 @@ extern "C" {
 	{
 		switch (Function) {
 		case ACPI_SIGNAL_FATAL:
-			panic("[acpi]	AML fatal opcode");
+			KePanic("[acpi]	AML fatal opcode");
 			break;
 		case ACPI_SIGNAL_BREAKPOINT:
 			kprintf("[acpi]	AML breakpoint\n");
 			break;
 		default:
-			panic("[acpi] AcpiOsSignal");
+			KePanic("[acpi] AcpiOsSignal");
 			return AE_BAD_PARAMETER;
 		}
 
@@ -282,7 +282,7 @@ extern "C" {
 
 	ACPI_STATUS AcpiOsReadMemory(ACPI_PHYSICAL_ADDRESS Address, UINT64* Value, UINT32 Width)
 	{
-		panic("Read Memory...\n");
+		KePanic("Read Memory...\n");
 		if (Width == 8) {
 			uint8_t* a = (uint8_t*) (size_t) Address;
 			*Value = *a;
@@ -310,7 +310,7 @@ extern "C" {
 
 	ACPI_STATUS AcpiOsWriteMemory(ACPI_PHYSICAL_ADDRESS Address, UINT64 Value, UINT32 Width)
 	{
-		panic("Write Memory...\n");
+		KePanic("Write Memory...\n");
 
 		if (Width == 8) {
 			uint8_t* a = (uint8_t*) (size_t) Address;
@@ -406,7 +406,7 @@ extern "C" {
 
 	ACPI_STATUS AcpiOsExecute(ACPI_EXECUTE_TYPE Type, ACPI_OSD_EXEC_CALLBACK Function, void* Context)
 	{
-		panic("TODO: PUT CONTEXT ON THE STACK AcpiOsExecute");
+		KePanic("TODO: PUT CONTEXT ON THE STACK AcpiOsExecute");
 		//createKernelThread(kernelProcess, (void(*)()) Function, 128);
 		return AE_OK;
 	}
@@ -533,7 +533,7 @@ extern "C" {
 
 	ACPI_STATUS AcpiOsRemoveInterruptHandler(UINT32 InterruptNumber, ACPI_OSD_HANDLER Handler)
 	{
-		panic("AcpiOsRemoveInterruptHandler");
+		KePanic("AcpiOsRemoveInterruptHandler");
 		return AE_OK;
 	}
 

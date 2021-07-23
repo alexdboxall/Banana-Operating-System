@@ -35,12 +35,12 @@ void begin(void* s)
 void acpiGlobalEventHandler(uint32_t type, ACPI_HANDLE device, uint32_t number, void* context)
 {
 	if (type == ACPI_EVENT_TYPE_FIXED && number == ACPI_EVENT_POWER_BUTTON) {
-		Krnl::handlePowerButton();
+		KeHandlePowerButton();
 		//computer->close(0, 0, nullptr);
 		//handleShutdownButton();
 	}
 	if (type == ACPI_EVENT_TYPE_FIXED && number == ACPI_EVENT_SLEEP_BUTTON) {
-		Krnl::handleSleepButton();
+		KeHandleSleepButton();
 	}
 }
 
@@ -103,7 +103,7 @@ UINT32 acpiWalkDescendingCallback(ACPI_HANDLE object, UINT32 nestingLevel, void*
 					ACPI_STATUS st = acpi->setScreenBrightnessLevel(parent, acpi->screenControlInfo[acpi->nextScreenControl].mainsBrightnessLevel);
 					acpi->nextScreenControl++;
 					if (acpi->nextScreenControl == 8) {
-						panic("ACPI TOO MANY SCREENS!");
+						KePanic("ACPI TOO MANY SCREENS!");
 					}
 				}
 
@@ -272,7 +272,7 @@ UINT32 acpiWalkCallback(ACPI_HANDLE object, UINT32 nestingLevel, void* context, 
 		kprintf("[acpiWalkCallback] AcpiGetObjectInfo 0x%X\n", status);
 		return AE_OK;
 
-		panic("[acpiWalkCallback] AcpiGetObjectInfo");
+		KePanic("[acpiWalkCallback] AcpiGetObjectInfo");
 	}
 
 	char name[5];
@@ -292,7 +292,7 @@ UINT32 acpiWalkCallback(ACPI_HANDLE object, UINT32 nestingLevel, void* context, 
 			while (1);
 			return AE_OK;
 
-			panic("[acpiWalkCallback] AcpiGetIrqRoutingTable");
+			KePanic("[acpiWalkCallback] AcpiGetIrqRoutingTable");
 		}
 
 		kprintf("Got PCI routing table!\n");
@@ -310,7 +310,7 @@ UINT32 acpiWalkCallback(ACPI_HANDLE object, UINT32 nestingLevel, void* context, 
 				ACPI_HANDLE link;
 				status = AcpiGetHandle(object, table->Source, &link);
 				if (ACPI_FAILURE(status)) {
-					panic("[acpiWalkCallback] AcpiGetHandle");
+					KePanic("[acpiWalkCallback] AcpiGetHandle");
 				}
 
 				kprintf("link = 0x%X\n", link);
@@ -393,31 +393,31 @@ void start(void* xxa)
 	ths->nextScreenControl = 0;
 
 	ACPI_STATUS a = AcpiInitializeSubsystem();
-	if (ACPI_FAILURE(a)) panic("FAILURE AcpiInitializeSubsystem");
+	if (ACPI_FAILURE(a)) KePanic("FAILURE AcpiInitializeSubsystem");
 
 	a = AcpiInitializeTables(nullptr, 16, true);
-	if (ACPI_FAILURE(a)) panic("FAILURE AcpiInitializeTables");
+	if (ACPI_FAILURE(a)) KePanic("FAILURE AcpiInitializeTables");
 
 	a = AcpiInstallAddressSpaceHandler(ACPI_ROOT_OBJECT,
 									   ACPI_ADR_SPACE_SYSTEM_MEMORY, ACPI_DEFAULT_HANDLER, NULL, NULL);
-	if (ACPI_FAILURE(a)) panic("FAILURE AcpiInstallAddressSpaceHandler ACPI_ADR_SPACE_SYSTEM_MEMORY");
+	if (ACPI_FAILURE(a)) KePanic("FAILURE AcpiInstallAddressSpaceHandler ACPI_ADR_SPACE_SYSTEM_MEMORY");
 
 	a = AcpiInstallAddressSpaceHandler(ACPI_ROOT_OBJECT,
 									   ACPI_ADR_SPACE_SYSTEM_IO, ACPI_DEFAULT_HANDLER, NULL, NULL);
-	if (ACPI_FAILURE(a)) panic("FAILURE AcpiInstallAddressSpaceHandler ACPI_ADR_SPACE_SYSTEM_IO");
+	if (ACPI_FAILURE(a)) KePanic("FAILURE AcpiInstallAddressSpaceHandler ACPI_ADR_SPACE_SYSTEM_IO");
 
 	a = AcpiInstallAddressSpaceHandler(ACPI_ROOT_OBJECT,
 									   ACPI_ADR_SPACE_PCI_CONFIG, ACPI_DEFAULT_HANDLER, NULL, NULL);
-	if (ACPI_FAILURE(a)) panic("FAILURE AcpiInstallAddressSpaceHandler ACPI_ADR_SPACE_PCI_CONFIG");
+	if (ACPI_FAILURE(a)) KePanic("FAILURE AcpiInstallAddressSpaceHandler ACPI_ADR_SPACE_PCI_CONFIG");
 
 	a = AcpiLoadTables();
-	if (ACPI_FAILURE(a)) panic("FAILURE AcpiLoadTables");
+	if (ACPI_FAILURE(a)) KePanic("FAILURE AcpiLoadTables");
 
 	a = AcpiEnableSubsystem(ACPI_FULL_INITIALIZATION);
-	if (ACPI_FAILURE(a)) panic("FAILURE AcpiEnableSubsystem");
+	if (ACPI_FAILURE(a)) KePanic("FAILURE AcpiEnableSubsystem");
 
 	a = AcpiInitializeObjects(ACPI_FULL_INITIALIZATION);
-	if (ACPI_FAILURE(a)) panic("FAILURE AcpiInitializeObjects");
+	if (ACPI_FAILURE(a)) KePanic("FAILURE AcpiInitializeObjects");
 
 	ACPI_STATUS status;
 	if (computer->features.hasAPIC) {
@@ -434,7 +434,7 @@ void start(void* xxa)
 		status = AcpiEvaluateObject(NULL, (ACPI_STRING) "\\_PIC", &params, NULL);
 		if (ACPI_FAILURE(status) && status != AE_NOT_FOUND) {
 			kprintf("status = 0x%X\n", status);
-			panic("ACPI failure AcpiEvaluateObject(_PIC)");
+			KePanic("ACPI failure AcpiEvaluateObject(_PIC)");
 
 		} else if (status == AE_NOT_FOUND) {
 			kprintf("_PIC method not found.\n");
@@ -449,7 +449,7 @@ void start(void* xxa)
 	AcpiWriteBitRegister(ACPI_BITREG_SCI_ENABLE, 1);
 
 	a = AcpiInstallGlobalEventHandler(acpiGlobalEventHandler, nullptr);
-	if (a != AE_OK) panic("FAILURE AcpiInstallGlobalEventHandler");
+	if (a != AE_OK) KePanic("FAILURE AcpiInstallGlobalEventHandler");
 
 	a = AcpiEnableEvent(ACPI_EVENT_SLEEP_BUTTON, 0);
 	a = AcpiEnableEvent(ACPI_EVENT_POWER_BUTTON, 0);
@@ -457,7 +457,7 @@ void start(void* xxa)
 	void* ret;
 	status = AcpiGetDevices(nullptr, (ACPI_WALK_CALLBACK) acpiWalkCallback, (void*) ths, &ret);
 	if (ACPI_FAILURE(status)) {
-		panic("NAMESPACE COULD NOT BE WALKED FOR PCI DEVICES");
+		KePanic("NAMESPACE COULD NOT BE WALKED FOR PCI DEVICES");
 	}
 
 	void* retVal;
