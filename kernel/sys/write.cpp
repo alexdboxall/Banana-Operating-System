@@ -25,7 +25,7 @@ uint64_t SysWrite(regs* r)
 	if (r->ebx <= 2) {
 		file = currentTaskTCB->processRelatedTo->terminal;
 	} else {
-		file = getFromFileDescriptor(r->ebx);
+		file = KeGetFileFromDescriptor(r->ebx);
 	}
 
 	if (file == nullptr) {

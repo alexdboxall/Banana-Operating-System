@@ -135,7 +135,7 @@ uint64_t SysSeek(regs* r)
 	} else if (r->ebx > RESERVED_FD_START) {
 		return -1;
 	} else {
-		file = getFromFileDescriptor(r->ebx);
+		file = KeGetFileFromDescriptor(r->ebx);
 	}
 
 	FileStatus st = ((File*) file)->seek(r->ecx);
@@ -157,7 +157,7 @@ uint64_t SysTell(regs* r)
 		*((uint64_t*) r->ecx) = 0;
 		return 0;
 	} else {
-		file = getFromFileDescriptor(r->ebx);
+		file = KeGetFileFromDescriptor(r->ebx);
 	}
 
 	FileStatus st = ((File*) file)->tell((uint64_t*) r->ecx);
@@ -205,7 +205,7 @@ uint64_t SysSize(regs* r)
 		*((uint64_t*) r->ecx) = 0;
 		return 0;
 	} else {
-		file = getFromFileDescriptor(r->ebx);
+		file = KeGetFileFromDescriptor(r->ebx);
 	}
 
 	bool dummy;
@@ -231,7 +231,7 @@ uint64_t SysClose(regs* r)
 	} else if (r->ebx > RESERVED_FD_START) {
 		return -1;
 	} else {
-		file = getFromFileDescriptor(r->ebx);
+		file = KeGetFileFromDescriptor(r->ebx);
 	}
 
 	((File*) file)->close();
@@ -272,7 +272,7 @@ uint64_t SysReadDir(regs* r)
 	} else if (r->ebx > RESERVED_FD_START) {
 		return -1;
 	} else {
-		file = getFromFileDescriptor(r->ecx);
+		file = KeGetFileFromDescriptor(r->ecx);
 	}
 
 	if (file == nullptr) {
@@ -327,7 +327,7 @@ uint64_t SysCloseDir(regs* r)
 	} else if (r->ebx > RESERVED_FD_START) {
 		return -1;
 	} else {
-		file = getFromFileDescriptor(r->ebx);
+		file = KeGetFileFromDescriptor(r->ebx);
 	}
 
 	((Directory*) file)->close();
@@ -424,7 +424,7 @@ uint64_t SysTTYName(regs* r)
 	if (r->ebx <= 2 || r->ebx == RESERVED_FD_CON) {
 		file = currentTaskTCB->processRelatedTo->terminal;
 	} else {
-		file = getFromFileDescriptor(r->ebx);
+		file = KeGetFileFromDescriptor(r->ebx);
 	}
 	if (!file) {
 		return 1;
@@ -445,7 +445,7 @@ uint64_t SysIsATTY(regs* r)
 	if (r->ebx <= 2 || r->ebx == RESERVED_FD_CON) {
 		file = currentTaskTCB->processRelatedTo->terminal;
 	} else {
-		file = getFromFileDescriptor(r->ebx);
+		file = KeGetFileFromDescriptor(r->ebx);
 	}
 
 	if (!file) {

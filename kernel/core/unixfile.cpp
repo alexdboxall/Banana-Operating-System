@@ -79,7 +79,7 @@ int UnixFile::getFileDescriptor()
 	return fd;
 }
 
-UnixFile* getFromFileDescriptor(int fdIn)
+UnixFile* KeGetFileFromDescriptor(int fdIn)
 {
 	//shenanigans to make things work with reserved filenames
 	//even though newlib truncates to a SIGNED SHORT!

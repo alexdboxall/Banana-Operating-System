@@ -222,10 +222,10 @@ namespace Vm
 		writeUnaligned16(stack + 2, r->eflags);
 
 		if (currentTaskTCB->vm86VIE) {
-			writeUnaligned16(stack + 2, readUnaligned16(stack + 2) | 0x200);
+			KeWriteUnaligned16(stack + 2, KeReadUnaligned16(stack + 2) | 0x200);
 			//stack[2] |= 0x200;
 		} else {
-			writeUnaligned16(stack + 2, readUnaligned16(stack + 2) & ~0x200);
+			KeWriteUnaligned16(stack + 2, KeReadUnaligned16(stack + 2) & ~0x200);
 			//stack[2] &= ~0x200;
 		}
 
@@ -432,12 +432,12 @@ namespace Vm
 			case 0xCF:
 				//kprintf("iret ");
 				
-				r->eip = readUnaligned16(stack + 0);
-				r->cs = readUnaligned16(stack + 1);
-				r->eflags = 0x20200 | readUnaligned16(stack + 2);
+				r->eip = KeReadUnaligned16(stack + 0);
+				r->cs = KeReadUnaligned16(stack + 1);
+				r->eflags = 0x20200 | KeReadUnaligned16(stack + 2);
 
 				//kprintf("RELOADING IP AS 0x%X, CS AS 0x%X, (STACK AT 0x%X)\n", r->eip, r->cs, stack);
-				currentTaskTCB->vm86VIE = (readUnaligned16(stack + 2) & 0x200) != 0;
+				currentTaskTCB->vm86VIE = (KeReadUnaligned16(stack + 2) & 0x200) != 0;
 
 				r->useresp = (r->useresp + 6) & 0xFFFF;
 

@@ -36,14 +36,14 @@ enum class FileStatus
 #define RESERVED_FD_START	RESERVED_FD_NUL
 
 class UnixFile;
-UnixFile* getFromFileDescriptor(int fd);
+UnixFile* KeGetFileFromDescriptor(int fd);
 
 class UnixFile
 {
 private:
 
 protected:
-	friend UnixFile* getFromFileDescriptor(int fd);
+	friend UnixFile* KeGetFileFromDescriptor(int fd);
 
 	int fd;	
 	static int nextFd;

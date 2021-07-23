@@ -587,8 +587,3 @@ bool VgaText::isAtty()
 {
 	return true;
 }
-
-VgaText* newTerminal(char* name)
-{
-	return new VgaText(name);
-}

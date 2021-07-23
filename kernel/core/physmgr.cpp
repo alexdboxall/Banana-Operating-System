@@ -245,7 +245,7 @@ namespace Phys
 
 		uint64_t* ramTable = (uint64_t*) VIRT_RAM_TABLE;
 		uint16_t* ramTableLengthAddr = (uint16_t*) VIRT_RAM_TABLE_SIZE;
-		uint16_t ramTableLength = readUnaligned16(ramTableLengthAddr);
+		uint16_t ramTableLength = KeReadUnaligned16(ramTableLengthAddr);
 		if (ramTableLength == 0) {
 			KePanic("No RAM table!");
 		}

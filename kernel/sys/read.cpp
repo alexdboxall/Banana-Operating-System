@@ -26,7 +26,7 @@ uint64_t SysRead(regs* r)
 		file = currentTaskTCB->processRelatedTo->terminal;
 
 	} else {
-		file = getFromFileDescriptor(r->ebx);
+		file = KeGetFileFromDescriptor(r->ebx);
 	}
 
 	if (file == nullptr) {
