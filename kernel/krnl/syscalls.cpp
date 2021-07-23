@@ -485,7 +485,7 @@ uint64_t SysGetEnv(regs* r)
 {
 	char* addr = (char*) r->edx;
 	int num = r->ebx;
-	int count = Krnl::getProcessTotalEnvCount(currentTaskTCB->processRelatedTo);
+	int count = KeGetProcessTotalEnvCount(currentTaskTCB->processRelatedTo);
 
 	if (num >= count) {
 		if (addr) {
@@ -494,7 +494,7 @@ uint64_t SysGetEnv(regs* r)
 		return 0;
 	}
 
-	EnvVar ev = Krnl::getProcessEnvPair(currentTaskTCB->processRelatedTo, num);
+	EnvVar ev = KeGetProcessEnvPair(currentTaskTCB->processRelatedTo, num);
 	if (r->ecx == 0) {
 		return strlen(ev.key) + strlen(ev.value) + 1;
 	}
