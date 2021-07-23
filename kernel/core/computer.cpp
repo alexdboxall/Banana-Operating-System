@@ -299,7 +299,7 @@ namespace Krnl
 
 		KeSetBootMessage("Initialising system components...");
 		KeLoadSystemEnv();
-		Krnl::setupPowerManager();
+		KeSetupPowerManager();
 		User::loadClockSettings(Reg::readIntWithDefault((char*) "country", (char*) "timezone", 58));
 		
 		KeSetBootMessage("Loading more device drivers...");
