@@ -4,6 +4,7 @@
 #include "thr/prcssthr.hpp"
 #include "hal/intctrl.hpp"
 #include "hw/cpu.hpp"
+#include <krnl/unaligned.hpp>
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -216,14 +217,16 @@ namespace Vm
 		uint16_t* stack = (uint16_t*) (size_t) realToLinear(ss, sp);
 		r->useresp = (r->useresp - 6) & 0xFFFF;
 
-		stack[0] = r->eip + 2;
-		stack[1] = r->cs;
-		stack[2] = r->eflags;
+		writeUnaligned16(stack + 0, r->eip + 2);
+		writeUnaligned16(stack + 1, r->cs);
+		writeUnaligned16(stack + 2, r->eflags);
 
 		if (currentTaskTCB->vm86VIE) {
-			stack[2] |= 0x200;
+			writeUnaligned16(stack + 2, readUnaligned16(stack + 2) | 0x200);
+			//stack[2] |= 0x200;
 		} else {
-			stack[2] &= ~0x200;
+			writeUnaligned16(stack + 2, readUnaligned16(stack + 2) & ~0x200);
+			//stack[2] &= ~0x200;
 		}
 
 		currentTaskTCB->vm86VIE = false;

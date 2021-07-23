@@ -50,7 +50,7 @@ void KiUbsanPrintDetails(const char* str, void* ptr)
 	kprintf("clmn: %d\n", src->column);
 }
 
-extern "C" void __ubsan_handle_type_mismatch_v1(struct type_mismatch_info* type_mismatch, uintptr_t pointer)
+extern "C" void __attribute__((no_sanitize("undefined"))) __ubsan_handle_type_mismatch_v1(struct type_mismatch_info* type_mismatch, uintptr_t pointer)
 {
 	KiUbsanPrintDetails("__ubsan_handle_type_mismatch_v1", type_mismatch);
 	
