@@ -72,6 +72,6 @@ extern "C" void KeEntryPoint()
 		_init();
 
 		computer = new Computer();
-		computer->open(0, 0, nullptr);
+		computer->open(0, 0, &v);
 	}
 }

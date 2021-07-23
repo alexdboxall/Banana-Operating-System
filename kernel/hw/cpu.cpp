@@ -179,7 +179,7 @@ int CPU::open(int num, int b, void* vas_)
 	if (vas) {
 		vas->setCPUSpecific((size_t) cpuSpecificPhysAddr);
 	} else {
-		kprintf("CPU specific features not set up!!!\n");
+		KePanic("NO KERNEL VAS");
 	}
 	
 	KeSetBootMessage("Detecting CPU specific features...");
