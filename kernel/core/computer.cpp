@@ -298,7 +298,7 @@ namespace Krnl
 		computer->root->open(0, 0, nullptr);
 
 		KeSetBootMessage("Initialising system components...");
-		Krnl::loadSystemEnv();
+		KeLoadSystemEnv();
 		Krnl::setupPowerManager();
 		User::loadClockSettings(Reg::readIntWithDefault((char*) "country", (char*) "timezone", 58));
 		
