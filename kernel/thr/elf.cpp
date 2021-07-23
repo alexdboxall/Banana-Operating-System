@@ -604,6 +604,8 @@ namespace Thr
 					if (dynamic) {
 						x = addr - pos + *entry + entryPoint - relocationPoint;
 					} else {
+						kprintf("referencing 0x%X\n", entry);
+						kprintf("references to 0x%X\n", *entry);
 						x = addr - pos + *entry;
 					}
 					//kprintf("    R_386_PC32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
