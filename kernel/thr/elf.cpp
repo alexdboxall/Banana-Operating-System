@@ -609,7 +609,8 @@ namespace Thr
 					}
 					//kprintf("    R_386_PC32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
 					//kprintf("    addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
-					*entry = x;
+					
+					writeUnaligned32(entry, x);
 
 				} else {
 					kprintf("TYPE 0x%X\n", type);
