@@ -130,130 +130,128 @@ EnvVarContainer::~EnvVarContainer()
 	}
 }
 
-namespace Krnl
+
+EnvVarContainer* KeSystemEnv = nullptr;
+EnvVarContainer* KeUserEnv = nullptr;
+
+char* KeGetEnv(Process* prcss, const char* envname)
 {
-	EnvVarContainer* systemEnv = nullptr;
-	EnvVarContainer* userEnv = nullptr;
+	if (prcss != kernelProcess && prcss != nullptr) {
+		char* processEnv = prcss->env->getEnv(envname);
+		if (processEnv) {
+			return processEnv;
+		}
+	}
 
-	char* getEnv(Process* prcss, const char* envname)
-	{
-		if (prcss != kernelProcess && prcss != nullptr) {
-			char* processEnv = prcss->env->getEnv(envname);
-			if (processEnv) {
-				return processEnv;
-			}
+	if (KeUserEnv) {
+		char* uenv = KeUserEnv->getEnv(envname);
+		if (uenv) {
+			return uenv;
+		}
+	}
+
+	return KeSystemEnv->getEnv(envname);
+}
+
+void KeSetEnvSystem(const char* envname, const char* data)
+{
+	KeSystemEnv->setEnv(envname, data);
+}
+
+void KeSetEnvUser(const char* envname, const char* data)
+{
+	if (!KeUserEnv) return;
+	KeUserEnv->setEnv(envname, data);
+}
+
+void KeSetEnvProcess(Process* prcss, const char* envname, const char* data)
+{
+	prcss->env->setEnv(envname, data);
+}
+
+void KeDeleteEnvSystem(const char* envname)
+{
+	KeSystemEnv->deleteEnv(envname);
+}
+
+void KeDeleteEnvUser(const char* envname)
+{
+	if (!KeUserEnv) return;
+	KeUserEnv->deleteEnv(envname);
+}
+
+void KeDeleteEnvProcess(Process* prcss, const char* envname)
+{
+	prcss->env->deleteEnv(envname);
+}
+
+EnvVarContainer* KeNewProcessEnv(Process* prcss)
+{
+	return new EnvVarContainer(prcss);
+}
+
+EnvVarContainer* KeCopyProcessEnv(Process* oldProcess, Process* newProcess)
+{
+	EnvVarContainer* e = oldProcess->env;
+	EnvVarContainer* copy = new EnvVarContainer(newProcess);
+	copy->count = e->count;
+	copy->envarr = (EnvVar*) malloc(sizeof(EnvVar) * e->count);
+	memcpy(copy->envarr, e->envarr, sizeof(EnvVar) * e->count);
+	return copy;
+}
+
+void KeLoadSystemEnv()
+{
+	KeSystemEnv = new EnvVarContainer(kernelProcess);
+	KeSystemEnv->__loadSystem();
+}
+
+void KeLoadUserEnv()
+{
+	KeUserEnv = new EnvVarContainer(kernelProcess);
+	KeUserEnv->__loadUser();
+}
+
+void KeFlushEnv()
+{
+
+}
+
+int KeGetProcessTotalEnvCount(Process* prcss)
+{
+	if (!KeUserEnv) {
+		return prcss->env->count + KeSystemEnv->count;
+	}
+	return prcss->env->count + KeSystemEnv->count + KeUserEnv->count;
+}
+
+EnvVar KeGetProcessEnvPair(Process* prcss, int num)
+{
+	if (!KeUserEnv) {
+		if (num < prcss->env->count) {
+			return prcss->env->envarr[num];
+
+		} else if (num < prcss->env->count + KeSystemEnv->count) {
+			return KeSystemEnv->envarr[num - prcss->env->count];
 		}
 
-		if (userEnv) {
-			char* uenv = userEnv->getEnv(envname);
-			if (uenv) {
-				return uenv;
-			}
+	} else {
+		if (num < prcss->env->count) {
+			return prcss->env->envarr[num];
+
+		} else if (num < prcss->env->count + KeUserEnv->count) {
+			return KeUserEnv->envarr[num - prcss->env->count];
+
+		} else if (num < prcss->env->count + KeUserEnv->count + KeSystemEnv->count) {
+			return KeSystemEnv->envarr[num - prcss->env->count - KeUserEnv->count];
 		}
 
-		return systemEnv->getEnv(envname);
 	}
 
-	void setEnvSystem(const char* envname, const char* data)
-	{
-		systemEnv->setEnv(envname, data);
-	}
+	KePanic("getProcessEnvPair FAILURE");
 
-	void setEnvUser(const char* envname, const char* data)
-	{
-		if (!userEnv) return;
-		userEnv->setEnv(envname, data);
-	}
-
-	void setEnvProcess(Process* prcss, const char* envname, const char* data)
-	{
-		prcss->env->setEnv(envname, data);
-	}
-
-	void deleteEnvSystem(const char* envname)
-	{
-		systemEnv->deleteEnv(envname);
-	}
-
-	void deleteEnvUser(const char* envname)
-	{
-		if (!userEnv) return;
-		userEnv->deleteEnv(envname);
-	}
-
-	void deleteEnvProcess(Process* prcss, const char* envname)
-	{
-		prcss->env->deleteEnv(envname);
-	}
-
-	EnvVarContainer* newProcessEnv(Process* prcss)
-	{
-		return new EnvVarContainer(prcss);
-	}
-
-	EnvVarContainer* copyProcessEnv(Process* oldProcess, Process* newProcess)
-	{
-		EnvVarContainer* e = oldProcess->env;
-		EnvVarContainer* copy = new EnvVarContainer(newProcess);
-		copy->count = e->count;
-		copy->envarr = (EnvVar*) malloc(sizeof(EnvVar) * e->count);
-		memcpy(copy->envarr, e->envarr, sizeof(EnvVar) * e->count);
-		return copy;
-	}
-
-	void loadSystemEnv()
-	{
-		systemEnv = new EnvVarContainer(kernelProcess);
-		systemEnv->__loadSystem();
-	}
-
-	void loadUserEnv()
-	{
-		userEnv = new EnvVarContainer(kernelProcess);
-		userEnv->__loadUser();
-	}
-
-	void flushEnv()
-	{
-
-	}
-
-	int getProcessTotalEnvCount(Process* prcss)
-	{
-		if (!userEnv) {
-			return prcss->env->count + systemEnv->count;
-		}
-		return prcss->env->count + systemEnv->count + userEnv->count;
-	}
-
-	EnvVar getProcessEnvPair(Process* prcss, int num)
-	{
-		if (!userEnv) {
-			if (num < prcss->env->count) {
-				return prcss->env->envarr[num];
-
-			} else if (num < prcss->env->count + systemEnv->count) {
-				return systemEnv->envarr[num - prcss->env->count];
-			}
-
-		} else {
-			if (num < prcss->env->count) {
-				return prcss->env->envarr[num];
-
-			} else if (num < prcss->env->count + userEnv->count) {
-				return userEnv->envarr[num - prcss->env->count];
-
-			} else if (num < prcss->env->count + userEnv->count + systemEnv->count) {
-				return systemEnv->envarr[num - prcss->env->count - userEnv->count];
-			}
-
-		}
-
-		KePanic("getProcessEnvPair FAILURE");
-
-		EnvVar e;
-		e.key = nullptr;
-		e.value = nullptr;
-		return e;
-	}
+	EnvVar e;
+	e.key = nullptr;
+	e.value = nullptr;
+	return e;
 }

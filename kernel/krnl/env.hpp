@@ -33,31 +33,30 @@ public:
 	~EnvVarContainer();
 };
 
-namespace Krnl
-{
-	extern EnvVarContainer* systemEnv;
-	extern EnvVarContainer* userEnv;
 
-	char* getEnv(Process* prcss, const char* envname);
+extern EnvVarContainer* KeSystemEnv;
+extern EnvVarContainer* KeUserEnv;
 
-	void setEnvSystem(const char* envname, const char* data);
-	void setEnvUser(const char* envname, const char* data);
-	void setEnvProcess(Process* prcss, const char* envname, const char* data);
+char* KeGetEnv(Process* prcss, const char* envname);
 
-	void deleteEnvSystem(const char* envname);
-	void deleteEnvUser(const char* envname);
-	void deleteEnvProcess(Process* prcss, const char* envname);
+void KeSetEnvSystem(const char* envname, const char* data);
+void KeSetEnvUser(const char* envname, const char* data);
+void KeSetEnvProcess(Process* prcss, const char* envname, const char* data);
 
-	void loadSystemEnv();
-	void loadUserEnv();
+void KeDeleteEnvSystem(const char* envname);
+void KeDeleteEnvUser(const char* envname);
+void KeDeleteEnvProcess(Process* prcss, const char* envname);
 
-	void flushEnv();
+void KeLoadSystemEnv();
+void KeLoadUserEnv();
 
-	EnvVarContainer* newProcessEnv(Process* prcss);
-	EnvVarContainer* copyProcessEnv(Process* oldProcess, Process* newProcess);
+void KeFlushEnv();
 
-	int getProcessTotalEnvCount(Process* prcss);
-	EnvVar getProcessEnvPair(Process* prcss, int num);
-}
+EnvVarContainer* KeNewProcessEnv(Process* prcss);
+EnvVarContainer* KeCopyProcessEnv(Process* oldProcess, Process* newProcess);
+
+int KeGetProcessTotalEnvCount(Process* prcss);
+EnvVar KeGetProcessEnvPair(Process* prcss, int num);
+
 
 #endif
