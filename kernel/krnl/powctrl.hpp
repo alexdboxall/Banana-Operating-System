@@ -5,42 +5,39 @@
 #include <stddef.h>
 #include "hal/device.hpp"
 
-namespace Krnl
+enum class PowerButtonOption : int
 {
-	enum class PowerButtonOption : int
-	{
-		Nothing,
-		Sleep,
-		Shutdown,
-		DisplayOff,
-	};
+	Nothing,
+	Sleep,
+	Shutdown,
+	DisplayOff,
+};
 
-	struct PowerSettings
-	{
-		PowerButtonOption powerButton;
-		PowerButtonOption sleepButton;
-		PowerButtonOption lidClosed;
+struct PowerSettings
+{
+	PowerButtonOption powerButton;
+	PowerButtonOption sleepButton;
+	PowerButtonOption lidClosed;
 
-		int poweredSecsBeforeDisplayOff;
-		int poweredSecsBeforeDiskOff;
-		int poweredSecsBeforeSleep;
+	int poweredSecsBeforeDisplayOff;
+	int poweredSecsBeforeDiskOff;
+	int poweredSecsBeforeSleep;
 
-		int batterySecsBeforeDisplayOff;
-		int batterySecsBeforeDiskOff;
-		int batterySecsBeforeSleep;
-	};
+	int batterySecsBeforeDisplayOff;
+	int batterySecsBeforeDiskOff;
+	int batterySecsBeforeSleep;
+};
 
-	extern int secondsSinceLastUserIO;
-	extern PowerSettings currentPowerSettings;
-	extern bool powCtrlOnBattery;
+extern int secondsSinceLastUserIO;
+extern PowerSettings currentPowerSettings;
+extern bool powCtrlOnBattery;
 
-	void changePowerSettings(PowerSettings settings);
-	void setupPowerManager();
-	void userIOReceived();
-	void powCtrlSetPowerState(bool battery);
+void KeChangePowerSettings(PowerSettings settings);
+void KeSetupPowerManager();
+void KeUserIOReceived();
+void KePowCtrlSetPowerState(bool battery);
 
-	void handlePowerButton();
-	void handleSleepButton();
-}
+void KeHandlePowerButton();
+void KeHandleSleepButton();
 
 #endif

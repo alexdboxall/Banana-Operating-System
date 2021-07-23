@@ -10,89 +10,86 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-namespace Krnl
+int secondsSinceLastUserIO;
+PowerSettings currentPowerSettings;
+bool powCtrlOnBattery;
+
+void KeChangePowerSettings(PowerSettings settings)
 {
-	int secondsSinceLastUserIO;
-	PowerSettings currentPowerSettings;
-	bool powCtrlOnBattery;
+	currentPowerSettings = settings;
+}
 
-	void changePowerSettings(PowerSettings settings)
-	{
-		currentPowerSettings = settings;
-	}
+void KePowerThread(void* context)
+{
+	unlockScheduler();
 
-	void powerThread(void* context)
-	{
-		unlockScheduler();
-
-		while (1) {			
-			powCtrlOnBattery = false;
-			
-			int displayOffThreshold = powCtrlOnBattery ? currentPowerSettings.batterySecsBeforeDisplayOff : currentPowerSettings.poweredSecsBeforeDisplayOff;
-			int diskOffThreshold = powCtrlOnBattery ? currentPowerSettings.batterySecsBeforeDiskOff : currentPowerSettings.poweredSecsBeforeDiskOff;
-			int sleepThreshold = powCtrlOnBattery ? currentPowerSettings.batterySecsBeforeSleep : currentPowerSettings.poweredSecsBeforeSleep;
-
-			sleep(10);
-			secondsSinceLastUserIO += 10;
-
-			if (secondsSinceLastUserIO > displayOffThreshold && displayOffThreshold) {
-				//turn the display off
-			}
-
-			if (secondsSinceLastUserIO > diskOffThreshold && diskOffThreshold) {
-				//turn the disk drives off
-			}
-
-			if (secondsSinceLastUserIO > sleepThreshold && sleepThreshold) {
-				//go to sleep
-				//computer->sleep();
-			}
-		}
-	}
-
-	void userIOReceived()
-	{
-		secondsSinceLastUserIO = 0;
-	}
-
-	void handlePowerButton()
-	{
-		if (currentPowerSettings.powerButton == PowerButtonOption::Shutdown) {
-			computer->shutdown();
-
-		} else if (currentPowerSettings.powerButton == PowerButtonOption::Sleep) {
-			computer->sleep();
-		}
-	}
-
-	void handleSleepButton()
-	{
-		if (currentPowerSettings.sleepButton == PowerButtonOption::Shutdown) {
-			computer->shutdown();
-
-		} else if (currentPowerSettings.sleepButton == PowerButtonOption::Sleep) {
-			computer->sleep();
-		}
-	}
-
-	void setupPowerManager()
-	{
-		secondsSinceLastUserIO = 0;
+	while (1) {
 		powCtrlOnBattery = false;
 
-		kernelProcess->createThread(powerThread, nullptr, 240);
+		int displayOffThreshold = powCtrlOnBattery ? currentPowerSettings.batterySecsBeforeDisplayOff : currentPowerSettings.poweredSecsBeforeDisplayOff;
+		int diskOffThreshold = powCtrlOnBattery ? currentPowerSettings.batterySecsBeforeDiskOff : currentPowerSettings.poweredSecsBeforeDiskOff;
+		int sleepThreshold = powCtrlOnBattery ? currentPowerSettings.batterySecsBeforeSleep : currentPowerSettings.poweredSecsBeforeSleep;
 
-		currentPowerSettings.powerButton = PowerButtonOption::Shutdown;
-		currentPowerSettings.sleepButton = PowerButtonOption::Sleep;
-		currentPowerSettings.lidClosed = PowerButtonOption::DisplayOff;
+		sleep(10);
+		secondsSinceLastUserIO += 10;
 
-		currentPowerSettings.poweredSecsBeforeDisplayOff = 0;		//none
-		currentPowerSettings.batterySecsBeforeDisplayOff = 0;		//none
+		if (secondsSinceLastUserIO > displayOffThreshold && displayOffThreshold) {
+			//turn the display off
+		}
 
-		currentPowerSettings.poweredSecsBeforeDiskOff = 0;			//none
-		currentPowerSettings.batterySecsBeforeDiskOff = 0;			//none
+		if (secondsSinceLastUserIO > diskOffThreshold && diskOffThreshold) {
+			//turn the disk drives off
+		}
 
-		currentPowerSettings.poweredSecsBeforeSleep = 60;			//none
-		currentPowerSettings.batterySecsBeforeSleep = 60;			//none
+		if (secondsSinceLastUserIO > sleepThreshold && sleepThreshold) {
+			//go to sleep
+			//computer->sleep();
+		}
 	}
+}
+
+void KeUserIOReceived()
+{
+	secondsSinceLastUserIO = 0;
+}
+
+void KeHandlePowerButton()
+{
+	if (currentPowerSettings.powerButton == PowerButtonOption::Shutdown) {
+		computer->shutdown();
+
+	} else if (currentPowerSettings.powerButton == PowerButtonOption::Sleep) {
+		computer->sleep();
+	}
+}
+
+void KeHandleSleepButton()
+{
+	if (currentPowerSettings.sleepButton == PowerButtonOption::Shutdown) {
+		computer->shutdown();
+
+	} else if (currentPowerSettings.sleepButton == PowerButtonOption::Sleep) {
+		computer->sleep();
+	}
+}
+
+void KeSetupPowerManager()
+{
+	secondsSinceLastUserIO = 0;
+	powCtrlOnBattery = false;
+
+	kernelProcess->createThread(powerThread, nullptr, 240);
+
+	currentPowerSettings.powerButton = PowerButtonOption::Shutdown;
+	currentPowerSettings.sleepButton = PowerButtonOption::Sleep;
+	currentPowerSettings.lidClosed = PowerButtonOption::DisplayOff;
+
+	currentPowerSettings.poweredSecsBeforeDisplayOff = 0;		//none
+	currentPowerSettings.batterySecsBeforeDisplayOff = 0;		//none
+
+	currentPowerSettings.poweredSecsBeforeDiskOff = 0;			//none
+	currentPowerSettings.batterySecsBeforeDiskOff = 0;			//none
+
+	currentPowerSettings.poweredSecsBeforeSleep = 60;			//none
+	currentPowerSettings.batterySecsBeforeSleep = 60;			//none
 }
