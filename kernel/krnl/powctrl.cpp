@@ -78,7 +78,7 @@ void KeSetupPowerManager()
 	secondsSinceLastUserIO = 0;
 	powCtrlOnBattery = false;
 
-	kernelProcess->createThread(powerThread, nullptr, 240);
+	kernelProcess->createThread(KePowerThread, nullptr, 240);
 
 	currentPowerSettings.powerButton = PowerButtonOption::Shutdown;
 	currentPowerSettings.sleepButton = PowerButtonOption::Sleep;
