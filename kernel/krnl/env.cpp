@@ -63,6 +63,7 @@ void EnvVarContainer::loadFrom(const char* filename, const char* defaultN)
 	f->open(FILE_OPEN_READ);
 	char c;
 	do {
+		kprintf("env %c\n", c);
 		f->read(1, &c, &br);
 		if (c == '\r') continue;
 		if (equSpot && (c == '\n' || br == 0 || linePtr >= 255)) {
@@ -89,9 +90,13 @@ void EnvVarContainer::loadFrom(const char* filename, const char* defaultN)
 
 		} else if (c == '=') {
 			equSpot = linePtr;
-		
+
 		} else {
-			line[linePtr++] = c;
+			if (linePtr < sizeof(line) - 1) {
+				line[linePtr++] = c;
+			} else {
+				line[sizeof(line) - 1] = 0;
+			}
 		}
 
 	} while (br);
@@ -239,7 +244,7 @@ namespace Krnl
 			}
 
 		}
-		
+
 		KePanic("getProcessEnvPair FAILURE");
 
 		EnvVar e;
