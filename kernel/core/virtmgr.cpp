@@ -23,7 +23,7 @@ namespace Virt
 	int swapfileSectorsPerPage = 4096 / 512;
 	size_t* swapfileBitmap;
 
-	enum class VirtPageState: uint8_t
+	enum class VirtPageState : uint8_t
 	{
 		//we only have 1 nibble here
 
@@ -241,8 +241,6 @@ namespace Virt
 
 size_t VAS::allocatePages(int count, int flags)
 {
-	bool invlpg = CPU::current()->features.hasINVLPG;
-
 	if (supervisorVAS) {
 		size_t virt = Virt::allocateKernelVirtualPages(count);
 		if (virt >= VIRT_KERNEL_BASE && CPU::current()->features.hasGlobalPages) {
@@ -251,24 +249,9 @@ size_t VAS::allocatePages(int count, int flags)
 		for (int i = 0; i < count; ++i) {
 			size_t phys = Phys::allocatePage();
 			mapPage(phys, virt + i * 4096, flags | PAGE_ALLOCATED);
-
-			if (invlpg) {
-				asm volatile ("invlpg (%0)" : : "b"((void*) (virt + i * 4096)) : "memory");
-			}
 		}
 
-		if (!invlpg) {
-			CPU::writeCR3(CPU::readCR3());
-		} else {
-			//invalidate the recursive structure
-			size_t invaddrLow = (0xFFC00000 + ((virt / 0x400) & ~0xFFF));
-			size_t invaddrHigh = (0xFFC00000 + (((virt + count * 4096) / 0x400) & ~0xFFF));
-
-			while (invaddrLow <= invaddrHigh) {
-				asm volatile ("invlpg (%0)" : : "b"((void*) invaddrLow) : "memory");
-				invaddrLow += 4096;
-			}
-		}
+		HalFlushTLB();
 
 		return virt;
 
@@ -283,24 +266,9 @@ size_t VAS::allocatePages(int count, int flags)
 		for (int i = 0; i < count; ++i) {
 			size_t phys = Phys::allocatePage();
 			mapPage(phys, virt + i * 4096, flags | PAGE_ALLOCATED);
-			if (invlpg) {
-				asm volatile ("invlpg (%0)" : : "b"((void*) (virt + i * 4096)) : "memory");
-			}
 		}
 
-		if (!invlpg) {
-			CPU::writeCR3(CPU::readCR3());
-		} else {
-			//invalidate the recursive structure
-			size_t invaddrLow = (0xFFC00000 + ((virt / 0x400) & ~0xFFF));
-			size_t invaddrHigh = (0xFFC00000 + (((virt + count * 4096) / 0x400) & ~0xFFF));
-
-			while (invaddrLow <= invaddrHigh) {
-				asm volatile ("invlpg (%0)" : : "b"((void*) invaddrLow) : "memory");
-				invaddrLow += 4096;
-			}
-		}
-
+		HalFlushTLB();
 		return virt;
 	}
 
@@ -312,7 +280,7 @@ size_t VAS::virtualToPhysical(size_t virt)
 	return (*getPageTableEntry(virt)) & ~0xFFF;
 }
 
-void VAS::freeAllocatedPages(size_t virt) 
+void VAS::freeAllocatedPages(size_t virt)
 {
 	if (supervisorVAS) {
 		Virt::freeKernelVirtualPages(virt);
@@ -334,9 +302,9 @@ VAS::VAS()
 	pageDirectoryBase = (size_t*) VIRT_KRNL_PAGE_DIRECTORY;
 
 	reflagRange(((size_t) &__start_userkernel), \
-				(((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, \
-				- 1, \
-				PAGE_USER);
+		(((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, \
+		- 1, \
+		PAGE_USER);
 }
 
 VAS::~VAS()
@@ -372,7 +340,7 @@ VAS::~VAS()
 	Virt::freeKernelVirtualPages((size_t) pageDirectoryBase);
 	Phys::freePage(pageDirectoryBasePhysical);
 	++fp;
-	
+
 	unlockScheduler();
 }
 
@@ -387,7 +355,8 @@ VAS::VAS(VAS* old)
 	KePanic("VAS::VAS(VAS* old) not implemented");
 }
 
-VAS::VAS(bool kernel) {
+VAS::VAS(bool kernel)
+{
 	supervisorVAS = kernel;
 
 	pageDirectoryBasePhysical = Phys::allocatePage();
@@ -434,40 +403,22 @@ VAS::VAS(bool kernel) {
 				size_t vaddr = ((size_t) i) * 0x400000 + ((size_t) j) * 0x1000;
 				size_t* oldPageEntryPtr = currentTaskTCB->processRelatedTo->vas->getForeignPageTableEntry(true, vaddr);*/
 
-	//size_t physicalAddr, size_t virtualAddr, int pages, int flags);
-	//vas->mapRange(((size_t) &__start_userkernel), ((size_t) &__start_userkernel), (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
+				//size_t physicalAddr, size_t virtualAddr, int pages, int flags);
+				//vas->mapRange(((size_t) &__start_userkernel), ((size_t) &__start_userkernel), (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
 
-	/*vas->reflagRange(((size_t) &__start_userkernel), \
-					 (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, \
-					 ~PAGE_WRITABLE, \
-					 PAGE_USER);*/
+				/*vas->reflagRange(((size_t) &__start_userkernel), \
+								 (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, \
+								 ~PAGE_WRITABLE, \
+								 PAGE_USER);*/
 }
 
 size_t VAS::mapRange(size_t physicalAddr, size_t virtualAddr, int pages, int flags)
 {
-	bool invlpg = CPU::current() && CPU::current()->features.hasINVLPG;
-
 	for (int i = 0; i < pages; ++i) {
 		mapPage(physicalAddr + i * 4096, virtualAddr + i * 4096, flags);
-
-		if (invlpg) {
-			asm volatile ("invlpg (%0)" : : "b"((void*) (virtualAddr + i * 4096)) : "memory");
-		}
 	}
 
-	if (!invlpg) {
-		CPU::writeCR3(CPU::readCR3());
-	} else {
-		//invalidate the recursive structure
-		size_t invaddrLow = (0xFFC00000 + ((virtualAddr / 0x400) & ~0xFFF));
-		size_t invaddrHigh = (0xFFC00000 + (((virtualAddr + pages * 4096) / 0x400) & ~0xFFF));
-
-		while (invaddrLow <= invaddrHigh) {
-			asm volatile ("invlpg (%0)" : : "b"((void*) invaddrLow) : "memory");
-			invaddrLow += 4096;
-		}
-	}
-
+	HalFlushTLB();
 	return virtualAddr;
 }
 
@@ -521,7 +472,7 @@ void VAS::mapOtherVASIn(bool secondSlot, VAS* other)
 	pageDirectoryBase[(secondSlot ? VIRT_RECURSIVE_SPOT_2 : VIRT_RECURSIVE_SPOT_1) / 0x400000] = other->pageDirectoryBasePhysical | PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR;
 
 	//flush TLB
-	CPU::writeCR3(CPU::readCR3());
+	HalFlushTLB();
 }
 
 void VAS::mapForeignPage(bool secondSlot, VAS* other, size_t physicalAddr, size_t virtualAddr, int flags)
@@ -550,7 +501,8 @@ void VAS::mapForeignPage(bool secondSlot, VAS* other, size_t physicalAddr, size_
 	pageTable[pageNumber] = physicalAddr | flags;
 }
 
-void VAS::mapPage(size_t physicalAddr, size_t virtualAddr, int flags) {
+void VAS::mapPage(size_t physicalAddr, size_t virtualAddr, int flags)
+{
 	if (virtualAddr < VIRT_KERNEL_BASE) {
 		size_t cr3;
 		asm volatile ("mov %%cr3, %0" : "=r"(cr3));
@@ -559,14 +511,14 @@ void VAS::mapPage(size_t physicalAddr, size_t virtualAddr, int flags) {
 			//panic("CANNOT MAP NON-KERNEL IN NON-CURRENT VAS");
 		}
 	}
-	
+
 	if ((virtualAddr | physicalAddr) & 0xFFF) {
 		KePanic("UNALIGNED PAGE MAPPING REQUESTED");
 	}
 
 	size_t pageTableNumber = virtualAddr / 0x400000;
 
-	if (!(pageDirectoryBase[pageTableNumber] & PAGE_PRESENT)) {		
+	if (!(pageDirectoryBase[pageTableNumber] & PAGE_PRESENT)) {
 		//create the page table first
 		size_t addr = Phys::allocatePage();
 
@@ -601,14 +553,13 @@ void VAS::evict(size_t virt)
 	*entry &= ~PAGE_PRESENT;					//not present
 	*entry &= ~PAGE_SWAPPABLE;					//clear bit 11
 	*entry &= 0xFFFU;							//clear the address
-	*entry |= id << 11;							//put the swap ID in
+	*entry |= id << 12;							//put the swap ID in
 
 	++swapBalance;
 
 	Phys::freePage(physAddr);
 
-	//flush TLB
-	CPU::writeCR3(CPU::readCR3());
+	HalFlushTLB();
 
 	kprintf("evicting phys 0x%X, virt 0x%X, swap balance %d\n", physAddr, virt, swapBalance);
 	kprintf("Total swaps: %d\n", twswaps++);
@@ -628,9 +579,31 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		return false;
 	}
 
-	if (entry && ((*entry) & PAGE_ALLOCATED) && !((*entry) & PAGE_PRESENT)) {
+	if (entry && ((*entry) & PAGE_COPY_ON_WRITE)) {
+		//TODO: check that it was a write operation which caused the page fault
 
-		size_t id = (*entry) >> 11;				//we need the ID
+		size_t oldphys = (*entry) >> 12;
+		size_t newphys = Phys::allocatePage();
+
+		uint8_t buffer[4096];
+		memcpy(buffer, (const void*) (faultAddr & ~0xFFF), 4096);
+
+		*entry &= ~PAGE_COPY_ON_WRITE;
+		*entry |= PAGE_WRITABLE;
+
+		*entry &= 0xFFF;
+		*entry |= newphys;
+
+		HalFlushTLB();
+
+		memcpy((void*) (faultAddr & ~0xFFF), buffer, 4096);
+
+		return true;
+	}
+	}
+
+	if (entry && ((*entry) & PAGE_ALLOCATED) && !((*entry) & PAGE_PRESENT)) {
+		size_t id = (*entry) >> 12;				//we need the ID
 		size_t phys = Phys::allocatePage();		//get a new physical page
 
 		*entry &= 0xFFF;						//clear address
@@ -638,7 +611,6 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		*entry |= PAGE_SWAPPABLE;				//if it was swapped it had to be swappable we don't need to
 												//clear this as the low bit of the ID, as we want it set to 1
 		*entry |= phys;
-
 
 		for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
 			disks[Virt::swapfileDrive - 'A']->read(Virt::swapIDToSector(id) + i, 1, ((uint8_t*) faultAddr) + 512 * i);
@@ -650,8 +622,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		Virt::freeSwapfilePage(id);
 		unlockScheduler();
 
-		//flush TLB
-		CPU::writeCR3(CPU::readCR3());
+		HalFlushTLB();
 
 		return true;
 	}
@@ -698,7 +669,7 @@ size_t VAS::scanForEviction()
 			evictionScanner = 0;
 			++runs;
 			if (runs == 3) {
-				return 0; 
+				return 0;
 			}
 		}
 	}
@@ -729,19 +700,19 @@ extern "C" void mapVASFirstTime()
 	for (int i = 0; i < 32; ++i) {
 		size_t physp = Phys::allocatePage();
 		vas->mapRange(physp, VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL, 1, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_WRITABLE | (vas->supervisorVAS ? PAGE_SUPERVISOR : PAGE_USER));
-	
+
 		size_t* e = vas->getPageTableEntry(VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL);
 	}
 
 	vas->reflagRange(((size_t) &__start_userkernel), \
-					 (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, \
-					 -1, \
-					 PAGE_USER);
+		(((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, \
+		- 1, \
+		PAGE_USER);
 
 	Virt::getAKernelVAS()->reflagRange(((size_t) &__start_userkernel), \
-					 (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, \
-					 -1, \
-					 PAGE_USER);
+		(((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, \
+		- 1, \
+		PAGE_USER);
 
-	CPU::writeCR3(CPU::readCR3());
+	HalFlushTLB();
 }
