@@ -154,6 +154,7 @@ namespace Vm
 
 	bool start8086(const char* filename, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss)
 	{
+		kprintf("started vm8086 with filename: %s\n", filename);
 		while (1) {
 			lockScheduler();
 			if (vmReady) {
