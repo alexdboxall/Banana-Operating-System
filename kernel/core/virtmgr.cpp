@@ -347,7 +347,7 @@ VAS::~VAS()
 void VAS::setCPUSpecific(size_t physAddr)
 {
 	//map the CPU specific data in (kernel mode can write to readable pages)
-	mapPage(physAddr, VIRT_CPU_SPECIFIC, PAGE_PRESENT | PAGE_READONLY | PAGE_USER);
+	//mapPage(physAddr, VIRT_CPU_SPECIFIC, PAGE_PRESENT | PAGE_READONLY | PAGE_USER);
 }
 
 VAS::VAS(VAS* old)

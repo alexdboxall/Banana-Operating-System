@@ -567,7 +567,7 @@ namespace Thr
 							}
 						}
 					} else {
-						if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum) {
+						if (info == 0x101 || info == 0x401 || info == 0x21401 || (info >> 8) < elf->shNum) {
 							x = KeReadUnaligned32(entry) - entryPoint + relocationPoint;
 
 						} else {
