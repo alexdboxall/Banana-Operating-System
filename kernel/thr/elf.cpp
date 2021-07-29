@@ -549,7 +549,7 @@ namespace Thr
 					uint32_t* entry = (uint32_t*) (pos - entryPoint + relocationPoint);		//0xF0063B6C
 					uint32_t x;
 					if (dynamic) {
-						x = addr + KeReadUnaligned32(entry);
+						x = addr + *entry;
 						if (info == 0x101 || info == 0x401 || (info >> 8) < (elf->shNum > 0xC ? 0xC : elf->shNum)) {
 							if (critical) {
 								KePanic("RELOCATION UNHANDLED CASE 1");
@@ -568,23 +568,23 @@ namespace Thr
 						}
 					} else {
 						if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum) {
-							x = KeReadUnaligned32(entry) - entryPoint + relocationPoint;
+							x = *entry - entryPoint + relocationPoint;
 
 						} else {
-							x = addr - entryPoint + relocationPoint + KeReadUnaligned32(entry);
+							x = addr - entryPoint + relocationPoint + *entry;
 						}
 					}
-					//kprintf("    R_386_32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
-					//kprintf("    addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
-					KeWriteUnaligned32(entry, x);
+					kprintf("    R_386_32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
+					kprintf("    addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
+					*entry = x;
 
 				} else if (type == 2 && sizeof(size_t) == 4) {			//R_386_PC32
 					uint32_t* entry = (uint32_t*) (pos - entryPoint + relocationPoint);
 					uint32_t x;
 
 					if (info == 0x101 || info == 0x401 || (info >> 8) < (elf->shNum - 4 > 0xA ? 0xA : elf->shNum - 4)) {
-						//kprintf("    R_386_PC32	Modifying symbol 0x%X at 0x%X to become 0x???\n", *entry, entry);
-						//kprintf("    addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
+						kprintf("    R_386_PC32	Modifying symbol 0x%X at 0x%X to become 0x???\n", *entry, entry);
+						kprintf("    addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
 						
 						if (critical) {
 							KePanic("RELOCATION UNHANDLED CASE 2");
@@ -603,14 +603,15 @@ namespace Thr
 					}
 
 					if (dynamic) {
-						x = addr - pos + KeReadUnaligned32(entry) + entryPoint - relocationPoint;
+						x = addr - pos + *entry + entryPoint - relocationPoint;
 					} else {
-						x = addr - pos + KeReadUnaligned32(entry);
+						x = addr - pos + *entry;
 					}
-					//kprintf("    R_386_PC32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
-					//kprintf("    addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
+
+					kprintf("    R_386_PC32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
+					kprintf("    addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
 					
-					KeWriteUnaligned32(entry, x);
+					*entry = x;
 
 				} else {
 					kprintf("TYPE 0x%X\n", type);
