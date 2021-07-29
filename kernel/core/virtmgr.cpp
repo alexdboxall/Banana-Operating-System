@@ -552,6 +552,8 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 	if (entry && ((*entry) & PAGE_COPY_ON_WRITE)) {
 		//TODO: check that it was a write operation which caused the page fault
 
+		kprintf("Copy on write handler called.\n");
+
 		size_t oldphys = (*entry) >> 12;
 		size_t newphys = Phys::allocatePage();
 
