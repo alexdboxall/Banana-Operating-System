@@ -145,6 +145,7 @@ namespace Virt
 			if (*entry & PAGE_ALLOCATED) {
 				Phys::freePage(*entry & ~0xFFF);
 			}
+			*entry = 0;
 
 			if (state == VirtPageState::StartAndEnd) {
 				if (first) {
@@ -615,9 +616,12 @@ size_t VAS::allocateSharedMemoryWithKernel(size_t pageCount, size_t* krnlVirt)
 	return uvirt;
 }
 
-void VAS::freeSharedMemoryWithKernel(size_t vaddr, size_t krnlVirt)
+void VAS::freeSharedMemoryWithKernel(size_t vaddr, size_t krnlVirt, int count)
 {
+	kprintf("Note: VAS::freeSharedMemoryWithKernel should only be used by kernel code (never a system call)\n");
+	kprintf("      (this doesn't mean this has actually happened, just here to remind you so you don't ever let untrusted apps call it)\n");
 
+	Virt::freeKernelVirtualPages(krnlVirt);
 }
 
 size_t VAS::scanForEviction()
