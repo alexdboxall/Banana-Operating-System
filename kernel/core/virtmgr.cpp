@@ -600,7 +600,6 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 
 		return true;
 	}
-	}
 
 	if (entry && ((*entry) & PAGE_ALLOCATED) && !((*entry) & PAGE_PRESENT)) {
 		size_t id = (*entry) >> 12;				//we need the ID
