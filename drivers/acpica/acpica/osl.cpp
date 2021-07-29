@@ -388,8 +388,7 @@ extern "C" {
 
 	BOOLEAN AcpiOsReadable(void* Memory, ACPI_SIZE Length)
 	{
-		return true; ,
-			kprintf("AcpiOsReadable 0x%X\n", );
+		kprintf("AcpiOsReadable 0x%X\n", Memory);
 		return true;
 	}
 
