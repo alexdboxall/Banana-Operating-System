@@ -395,7 +395,6 @@ extern "C" {
 	BOOLEAN AcpiOsWritable(void* Memory, ACPI_SIZE Length)
 	{
 		kprintf("AcpiOsWritable 0x%X\n", Memory);
-
 		return true;
 	}
 

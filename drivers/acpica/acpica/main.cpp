@@ -28,9 +28,12 @@ extern "C" {
 void start(void* s);
 void begin(void* s)
 {
-	kprintf("begin ACPICA.\n");
+	kprintf("begin ACPICA. s = 0x%X\n", s);
+	kprintf("a.\n");
+	kprintf("start = 0x%X\n", start);
 	start(s);
 }
+
 
 void acpiGlobalEventHandler(uint32_t type, ACPI_HANDLE device, uint32_t number, void* context)
 {
@@ -381,6 +384,8 @@ void acpicaReset()
 
 void start(void* xxa)
 {
+	kprintf("test.\n");
+
 	ACPI* ths = (ACPI*) xxa;
 
 	kprintf("ACPICA init.\n");
