@@ -252,7 +252,6 @@ size_t VAS::allocatePages(int count, int flags)
 		}
 
 		HalFlushTLB();
-
 		return virt;
 
 	} else {
@@ -387,29 +386,10 @@ VAS::VAS(bool kernel)
 	pageDirectoryBase[1023] = (size_t) pageDirectoryBasePhysical | PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR | (CPU::current()->features.hasGlobalPages ? PAGE_GLOBAL : 0);
 
 	if (!strcmp(CPU::current()->getName(), "Intel Pentium")) {
-		disableIRQs();
+		HalDisableInterrupts();
 		mapPage((*getPageTableEntry(CPU::current()->idt.getPointerToInvalidOpcodeEntryForF00F())) & ~0xFFF, CPU::current()->idt.getPointerToInvalidOpcodeEntryForF00F() & ~0xFFF, PAGE_PRESENT | PAGE_SUPERVISOR | PAGE_CACHE_DISABLE);
-		enableIRQs();
+		HalEnableInterrupts();
 	}
-
-
-	/*currentTaskTCB->processRelatedTo->vas->mapOtherVASIn(true, this);
-
-	for (int i = 0; i < 256 * 3; ++i) {
-		size_t oldEntry = pageDirectoryBase[i];
-
-		if (oldEntry & PAGE_PRESENT) {
-			for (int j = 0; j < 1024; ++j) {
-				size_t vaddr = ((size_t) i) * 0x400000 + ((size_t) j) * 0x1000;
-				size_t* oldPageEntryPtr = currentTaskTCB->processRelatedTo->vas->getForeignPageTableEntry(true, vaddr);*/
-
-				//size_t physicalAddr, size_t virtualAddr, int pages, int flags);
-				//vas->mapRange(((size_t) &__start_userkernel), ((size_t) &__start_userkernel), (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
-
-				/*vas->reflagRange(((size_t) &__start_userkernel), \
-								 (((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, \
-								 ~PAGE_WRITABLE, \
-								 PAGE_USER);*/
 }
 
 size_t VAS::mapRange(size_t physicalAddr, size_t virtualAddr, int pages, int flags)
@@ -426,10 +406,6 @@ size_t* VAS::getForeignPageTableEntry(bool secondSlot, size_t virt)
 {
 	size_t pageTableNumber = virt / 0x400000;
 
-	/*if (!(pageDirectoryBase[pageTableNumber] & PAGE_PRESENT)) {
-		KePanic("VAS::getForeignPageTableEntry NOT PRESENT");
-	}*/
-
 	size_t pageNumber = (virt % 0x400000) / 0x1000;
 	size_t* pageTable = (size_t*) ((secondSlot ? VIRT_RECURSIVE_SPOT_2 : VIRT_RECURSIVE_SPOT_1) + pageTableNumber * 0x1000);
 
@@ -440,17 +416,13 @@ size_t* VAS::getPageTableEntry(size_t virt)
 {
 	size_t pageTableNumber = virt / 0x400000;
 
-	/*if (!(pageDirectoryBase[pageTableNumber] & PAGE_PRESENT)) {
-		KePanic("VAS::getPageTableEntry NOT PRESENT");
-	}*/
-
 	size_t pageNumber = (virt % 0x400000) / 0x1000;
 	size_t* pageTable = (size_t*) (0xFFC00000 + pageTableNumber * 0x1000);
 
 	return pageTable + pageNumber;
 }
 
-void VAS::reflagRange(size_t virtualAddr, int pages, int andFlags, int orFlags)
+void VAS::reflagRange(size_t virtualAddr, int pages, size_t andFlags, size_t orFlags)
 {
 	for (int i = 0; i < pages; ++i) {
 		size_t* entry = getPageTableEntry(virtualAddr + i * 4096);
@@ -462,7 +434,7 @@ void VAS::reflagRange(size_t virtualAddr, int pages, int andFlags, int orFlags)
 void VAS::setToWriteCombining(size_t virtualAddr, int pages)
 {
 	if (CPU::current()->features.hasPAT) {
-		reflagRange(virtualAddr, pages, -1, PAGE_PAT);
+		reflagRange(virtualAddr, pages, -1ULL, PAGE_PAT);
 	}
 }
 
@@ -504,11 +476,8 @@ void VAS::mapForeignPage(bool secondSlot, VAS* other, size_t physicalAddr, size_
 void VAS::mapPage(size_t physicalAddr, size_t virtualAddr, int flags)
 {
 	if (virtualAddr < VIRT_KERNEL_BASE) {
-		size_t cr3;
-		asm volatile ("mov %%cr3, %0" : "=r"(cr3));
 		if (CPU::current()->readCR3() != (size_t) pageDirectoryBasePhysical) {
 			kprintf("\n\nFATAL 'WARNING':\n    CANNOT MAP NON-KERNEL IN NON-CURRENT VAS.\n    THIS COULD BE A *FATAL ERROR*.\n");
-			//panic("CANNOT MAP NON-KERNEL IN NON-CURRENT VAS");
 		}
 	}
 
@@ -627,6 +596,28 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 	}
 
 	return false;
+}
+
+size_t VAS::allocateSharedMemoryWithKernel(size_t pageCount, size_t* krnlVirt)
+{
+	size_t kvirt = Virt::allocateKernelVirtualPages(pageCount);
+	size_t uvirt = this->allocatePages(pageCount, PAGE_PRESENT | PAGE_WRITABLE | PAGE_USER);
+
+	for (int i = 0; i < pageCount; ++i) {
+		size_t phys = Phys::allocatePage();
+
+		mapPage(phys, kvirt, PAGE_PRESENT | PAGE_SUPERVISOR | PAGE_WRITABLE);
+		mapPage(phys, uvirt, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
+	}
+
+	*krnlVirt = kvirt;
+
+	return uvirt;
+}
+
+void VAS::freeSharedMemoryWithKernel(size_t vaddr, size_t krnlVirt)
+{
+
 }
 
 size_t VAS::scanForEviction()

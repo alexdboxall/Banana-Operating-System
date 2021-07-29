@@ -110,6 +110,7 @@ INLINEX void HalSaveCoprocessor(void* buffer)
 
 }
 
+
 INLINEX void HalFlushTLB()
 {
 	size_t cr3;

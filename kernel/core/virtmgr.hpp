@@ -83,11 +83,14 @@ public:
     void mapPage(size_t physicalAddr, size_t virtualAddr, int flags);
 	size_t mapRange(size_t physicalAddr, size_t virtualAddr, int pages, int flags);
 
-	void reflagRange(size_t virtualAddr, int pages, int andFlags, int orFlags);
+	void reflagRange(size_t virtualAddr, int pages, size_t andFlags, size_t orFlags);
 	void setToWriteCombining(size_t virtualAddr, int pages);
 
 	void mapOtherVASIn(bool secondSlot, VAS* other);
 	void mapForeignPage(bool secondSlot, VAS* other, size_t physicalAddr, size_t virtualAddr, int flags);
+
+	size_t allocateSharedMemoryWithKernel(size_t pageCount, size_t* krnlVirt);
+	void freeSharedMemoryWithKernel(size_t vaddr, size_t krnlVirt);
 };
 
 extern "C" void mapVASFirstTime();
