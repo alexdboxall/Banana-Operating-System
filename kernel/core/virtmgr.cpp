@@ -434,7 +434,7 @@ void VAS::reflagRange(size_t virtualAddr, int pages, size_t andFlags, size_t orF
 void VAS::setToWriteCombining(size_t virtualAddr, int pages)
 {
 	if (CPU::current()->features.hasPAT) {
-		reflagRange(virtualAddr, pages, -1ULL, PAGE_PAT);
+		reflagRange(virtualAddr, pages, -1, PAGE_PAT);
 	}
 }
 
