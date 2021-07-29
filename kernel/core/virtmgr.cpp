@@ -616,7 +616,7 @@ size_t VAS::allocateSharedMemoryWithKernel(size_t pageCount, size_t* krnlVirt)
 	return uvirt;
 }
 
-void VAS::freeSharedMemoryWithKernel(size_t vaddr, size_t krnlVirt, int count)
+void VAS::freeSharedMemoryWithKernel(size_t vaddr, size_t krnlVirt)
 {
 	kprintf("Note: VAS::freeSharedMemoryWithKernel should only be used by kernel code (never a system call)\n");
 	kprintf("      (this doesn't mean this has actually happened, just here to remind you so you don't ever let untrusted apps call it)\n");
