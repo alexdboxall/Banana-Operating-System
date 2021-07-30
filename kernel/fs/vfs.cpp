@@ -1,6 +1,7 @@
 #include "core/main.hpp"
 #include "thr/prcssthr.hpp"
 #include "fs/vfs.hpp" 
+#include "fs/symlink.hpp" 
 #include "hal/logidisk.hpp"
 #include "libk/string.h"
 
@@ -185,6 +186,13 @@ namespace Fs
 		while ((outBuffer[strlen(outBuffer) - 1] == '.' || outBuffer[strlen(outBuffer) - 1] == '/') && outBuffer[strlen(outBuffer) - 2] != ':') outBuffer[strlen(outBuffer) - 1] = 0;
 	}
 
+
+	while (1) {
+		strcpy(middleBuffer, outBuffer);
+
+		int deref = KeDereferenceSymlink(middleBuffer, outBuffer);
+		if (deref != 1) break;
+	}
 }
 
 File::File(const char* filename, Process* process) : UnixFile()
