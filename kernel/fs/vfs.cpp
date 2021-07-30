@@ -184,7 +184,8 @@ namespace Fs
 		}
 		outBuffer[op] = 0;
 		while ((outBuffer[strlen(outBuffer) - 1] == '.' || outBuffer[strlen(outBuffer) - 1] == '/') && outBuffer[strlen(outBuffer) - 2] != ':') outBuffer[strlen(outBuffer) - 1] = 0;
-	
+		kprintf("OUTBF: %s, %c, %c\n", outBuffer, outBuffer[strlen(outBuffer) - 1], outBuffer[strlen(outBuffer) - 2]);
+
 		if (outBuffer[strlen(outBuffer) - 1] == '@' && outBuffer[strlen(outBuffer) - 2] == '@') {
 			outBuffer[strlen(outBuffer) - 1] = 0;
 			outBuffer[strlen(outBuffer) - 1] = 0;
