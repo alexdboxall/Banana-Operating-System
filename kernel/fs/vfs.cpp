@@ -185,11 +185,16 @@ namespace Fs
 		outBuffer[op] = 0;
 		while ((outBuffer[strlen(outBuffer) - 1] == '.' || outBuffer[strlen(outBuffer) - 1] == '/') && outBuffer[strlen(outBuffer) - 2] != ':') outBuffer[strlen(outBuffer) - 1] = 0;
 	
+		int symrecur = 0;
 		while (followSymlinks) {
 			strcpy(middleBuffer, outBuffer);
 
 			int deref = KeDereferenceSymlink(middleBuffer, outBuffer);
 			if (deref != 1) break;
+
+			if (symrecur++ == 20) {
+				KePanic("TODO: HANDLE TOO MANY NESTED SYMLINKS");
+			}
 		}
 	}
 }
