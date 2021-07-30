@@ -131,7 +131,7 @@ int KeDereferenceSymlink(const char* linkName, char* dereferencedBuffer)
 		return -1;
 	}
 
-	FileStatus status = fil->open(FileModeOpen::Read);
+	FileStatus status = fil->open(FileOpenMode::Read);
 	if (status != FileStatus::Success) {
 		delete fil;
 		return -1;
@@ -192,7 +192,7 @@ int KeCreateSymlink(const char* existing, const char* linkName)
 		return 1;
 	}
 
-	FileStatus status = fil->open(FileModeOpen::Write);
+	FileStatus status = fil->open(FileOpenMode::Write);
 	if (status != FileStatus::Success) {
 		delete fil;
 		return 1;
@@ -203,21 +203,21 @@ int KeCreateSymlink(const char* existing, const char* linkName)
 
 	int br;
 	char symsig[] = "SYMLINK\0";
-	status = f->write(8, symsig, &br);
+	status = fil->write(8, symsig, &br);
 	if (br != 8 || status != FileStatus::Success) {
 		fil->close();
 		delete fil;
 		return 1;
 	}
 
-	status = f->write(8, &id, &br);
+	status = fil->write(8, &id, &br);
 	if (br != 8 || status != FileStatus::Success) {
 		fil->close();
 		delete fil;
 		return 1;
 	}
 
-	status = f->write(strlen(existing), existing, &br);
+	status = fil->write(strlen(existing), existing, &br);
 	if (br != strlen(existing) || status != FileStatus::Success) {
 		fil->close();
 		delete fil;
