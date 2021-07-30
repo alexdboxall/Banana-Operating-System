@@ -135,7 +135,7 @@ void main()
 		bool resetConfig = false;
 		do {
 			clearScreenToColour(TCBlack);
-			writeString("Banana Boot Options:\n\n [1] - Continue booting normally\n [2] - Boot in Safe Mode\n [3] - Reboot\n [4] - Shutdown\n [5] - Boot in i486 mode\n\n");
+			writeString("Banana Boot Options:\n\n [1] - Continue booting normally\n [2] - Boot in Safe Mode\n [3] - Reboot\n [4] - Shutdown\n [5] - Boot backup kernel\n\n");
 
 			writeString(" [K] - PS/2 keyboard mode             ");
 			writeString(showLogs ? " set 2\n" : " set 1\n");

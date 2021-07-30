@@ -93,7 +93,8 @@ protected:
 public:
 	void* fsSpecificData;
 
-	File(const char* filename, Process* process, bool followSymlinks = true);		//process required to obtain the trust certificates
+	File(const char* filename, Process* process, bool followSymlinks);
+	File(const char* filename, Process* process);
 	~File();
 	virtual bool isAtty();
 
