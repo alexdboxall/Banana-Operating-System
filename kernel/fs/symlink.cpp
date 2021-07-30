@@ -111,6 +111,8 @@ void KeInitialiseSymlinks()
 		f->close();
 	}
 	delete f;
+
+	KeCreateSymlink("C:/Banana/System/KERNEL32.EXE", "C:/kernel.lnk");
 }
 
 
