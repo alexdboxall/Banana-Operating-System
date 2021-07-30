@@ -636,10 +636,18 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 				strcpy(name, dirname);
 				strcat(name, "/");
 				strcat(name, ent->d_name);
-				stat(name, &st);
+				lstat(name, &st);
+				bool sym = st.st_mode == S_IFLNK;
+				if (sym) {
+					memset(name, 0, 255);
+					strcpy(name, dirname);
+					strcat(name, "/");
+					strcat(name, ent->d_name);
+					stat(name, &st);
+				}
 				if (ent->d_type == DT_DIR) dircnt++;
 				else filecnt++;
-				fprintf(out, "%s %11lld %-48s \n", ent->d_type == DT_DIR ? "<DIR>" : (st.st_mode == S_IFLNK ? "<LNK>" : "     "), st.st_size, ent->d_name);
+				fprintf(out, "%s %c %11lld %-48s \n", ent->d_type == DT_DIR ? "<DIR>" : "     ", sym ? '*' : ' ', st.st_size, ent->d_name);
 			}
 
 			closedir(dir);
@@ -1219,7 +1227,7 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 			fprintf(stderr, "The VESA driver has not been run yet.\n");
 			return -1;
 		}
-	
+
 		fseek(f, 0, SEEK_END);
 		long size = ftell(f);
 		rewind(f);
@@ -1533,7 +1541,7 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 					x[pos] = s;
 					++pos;
 				}
-				
+
 				if (pos == 16 || eof) {
 					for (int i = 0; i < (16 - pos); ++i) fprintf(out, "   ");
 
@@ -1546,7 +1554,7 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 
 					++line;
 
-					if (line == 16 && pages) {	
+					if (line == 16 && pages) {
 						line = 0;
 						printf("\n\n\nPress ENTER to continue... ");
 						int c = getchar();
