@@ -290,10 +290,9 @@ namespace Krnl
 
 		cleanerThread = kernelProcess->createThread(cleanerTaskFunction, nullptr, 122);
 
+		KeSetBootMessage("Initialising system components...");
 		KeIsSchedulingOn = true;
 		KeInitRand();
-
-		KeSetBootMessage("Initialising system components...");
 		Vm::initialise8086();
 		Fs::initVFS();
 

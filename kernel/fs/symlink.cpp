@@ -27,7 +27,7 @@ char KiNewlyCreatedSymlinks[MAX_WAITING_ROOM_LINKS][256];
 uint64_t KiNewlyCreatedIDs[MAX_WAITING_ROOM_LINKS];
 int KiNumWaitingRoomSymlinks = 0;
 
-uint64_t KiCreateLinkID()
+uint64_t KiCreateSymlinkID()
 {
 	int insanityCounter = 0;
 	uint64_t id;
@@ -54,7 +54,7 @@ void KiFlushSymlinkChanges()
 		KePanic("CANNOT WRITE SYMLINKS (A)");
 	}
 	
-	FileStatus status = f->open(FileOpenMode::Append);
+	FileStatus status = f->open(FILE_OPEN_APPEND);
 	if (status != FileStatus::Success) {
 		KePanic("CANNOT WRITE SYMLINKS (B)");
 	}
@@ -101,12 +101,12 @@ void KeInitialiseSymlinks()
 
 	File* f = new File("C:/Banana/System/symlinks.sys", kernelProcess);
 	if (!f) {
-		KePanic("CANNOT CREATE SYMLINK FILE");
+		KePanic("CANNOT CREATE SYMLINK FILE A");
 	}
 	if (!f->exists()) {
-		FileStatus status = f->open(FileOpenMode::Write);
+		FileStatus status = f->open(FILE_OPEN_WRITE_NORMAL);
 		if (status != FileStatus::Success) {
-			KePanic("CANNOT CREATE SYMLINK FILE");
+			KePanic("CANNOT CREATE SYMLINK FILE B");
 		}
 		f->close();
 	}
@@ -192,14 +192,11 @@ int KeCreateSymlink(const char* existing, const char* linkName)
 		return 1;
 	}
 
-	FileStatus status = fil->open(FileOpenMode::Write);
+	FileStatus status = fil->open(FILE_OPEN_WRITE_NORMAL);
 	if (status != FileStatus::Success) {
 		delete fil;
 		return 1;
 	}
-
-	uint64_t id = KiCreateLinkID();
-	KeRegisterSymlink(linkName, id);
 
 	int br;
 	char symsig[] = "SYMLINK\0";
@@ -210,6 +207,7 @@ int KeCreateSymlink(const char* existing, const char* linkName)
 		return 1;
 	}
 
+	uint64_t id = KiCreateSymlinkID();
 	status = fil->write(8, &id, &br);
 	if (br != 8 || status != FileStatus::Success) {
 		fil->close();
@@ -223,6 +221,8 @@ int KeCreateSymlink(const char* existing, const char* linkName)
 		delete fil;
 		return 1;
 	}
+
+	KeRegisterSymlink(linkName, id);
 
 	fil->close();
 	delete fil;
