@@ -53,20 +53,6 @@ void KeUserIOReceived()
 	secondsSinceLastUserIO = 0;
 }
 
-namespace Krnl
-{
-	void handlePowerButton()
-	{
-		KePanic("OUTDATED FUNCTION (Krnl::handlePowerButton)");
-	}
-
-	void handleSleepButton()
-	{
-		KePanic("OUTDATED FUNCTION (Krnl::handleSleepButton)");
-	}
-
-}
-
 void KeHandlePowerButton()
 {
 	if (currentPowerSettings.powerButton == PowerButtonOption::Shutdown) {
