@@ -73,6 +73,18 @@ int execve(char* name, char** argv, char** env)
 	return -1;
 }
 
+int	chmod(const char* __path, mode_t __mode)
+{
+	errno = ENOMEM;
+	return -1;
+}
+
+int fchmod(int __fd, mode_t __mode)
+{
+	errno = ENOMEM;
+	return -1;
+}
+
 int fork()
 {
 	return SystemCall(Fork, 0, 0, 0);

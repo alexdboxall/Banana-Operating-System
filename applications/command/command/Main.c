@@ -639,7 +639,7 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 				stat(name, &st);
 				if (ent->d_type == DT_DIR) dircnt++;
 				else filecnt++;
-				fprintf(out, "%s %11lld %-48s \n", ent->d_type == DT_DIR ? "<DIR>" : "     ", st.st_size, ent->d_name);
+				fprintf(out, "%s %11lld %-48s \n", ent->d_type == DT_DIR ? "<DIR>" : (st.st_mode == S_IFLNK ? "<LNK>" : "     "), st.st_size, ent->d_name);
 			}
 
 			closedir(dir);

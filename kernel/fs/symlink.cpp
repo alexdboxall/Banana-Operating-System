@@ -207,7 +207,7 @@ int KeDereferenceSymlink(const char* linkName, char* dereferencedBuffer)
 	delete fil;
 	kprintf("F\n");
 
-	return 0;
+	return 1;
 }
 
 

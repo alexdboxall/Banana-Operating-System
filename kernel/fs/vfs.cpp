@@ -199,11 +199,7 @@ namespace Fs
 	}
 }
 
-File::File(const char* filename, Process* process) : File(filename, process, true)
-{
-
-}
-
+File::File(const char* filename, Process* process) : File(filename, process, true) { }
 File::File(const char* filename, Process* process, bool followSymlinks) : UnixFile()
 {
 	Fs::standardiseFiles(this->filepath, filename, process->cwd, followSymlinks && (process != kernelProcess));

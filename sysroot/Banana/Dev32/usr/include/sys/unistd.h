@@ -286,7 +286,7 @@ int     ftruncate (int __fd, off_t __length);
 int     truncate (const char *, off_t __length);
 #endif
 #endif
-
+int ftruncate(int, off_t);
 #if __BSD_VISIBLE || __POSIX_VISIBLE < 200112
 int	getdtablesize (void);
 #endif
@@ -308,6 +308,8 @@ int	setdtablesize (int);
 #if __BSD_VISIBLE || __XSI_VISIBLE >= 500
 void    sync (void);
 #endif
+
+int symlink(const char*, const char*);
 
 #if __BSD_VISIBLE || __POSIX_VISIBLE >= 200112 || __XSI_VISIBLE >= 4
 ssize_t readlink (const char *__restrict __path,

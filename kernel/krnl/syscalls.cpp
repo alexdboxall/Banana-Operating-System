@@ -183,7 +183,8 @@ uint64_t SysSizeFromFilename(regs* r)
 		*((uint64_t*) r->ecx) = 0;
 		return 0;
 	} else {
-		file = new File(filename, currentTaskTCB->processRelatedTo);
+		kprintf("Getting size from filename: %s\n", filename);
+		file = new File(filename, currentTaskTCB->processRelatedTo, true);
 	}
 
 	bool dummy;
