@@ -196,6 +196,40 @@ uint64_t SysSizeFromFilename(regs* r)
 	return 0;
 }
 
+uint64_t SizeFromFilenameNoSymlink(regs* r)
+{
+	char* filename = (char*) r->ebx;
+	UnixFile* file = nullptr;
+	int* typeptr = (int*) r->edx;
+	*typeptr = 0;
+
+	if (r->ebx <= 2) {
+		return -1;
+	} else if (r->ebx > RESERVED_FD_START) {
+		*((uint64_t*) r->ecx) = 0;
+		return 0;
+	} else {
+		file = new File(filename, currentTaskTCB->processRelatedTo, false);
+	}
+
+	bool dummy;
+	FileStatus st = ((File*) file)->stat((uint64_t*) r->ecx, &dummy);
+
+	delete file;
+
+	if (st != FileStatus::Success) {
+		return -1;
+	}
+
+	char dereferencedBuffer[280];
+	int sym = KeDereferenceSymlink(filename, dereferencedBuffer);
+	if (sym == 1) {
+		*typeptr = 1;
+	}
+
+	return 0;
+}
+
 uint64_t SysSize(regs* r)
 {
 	UnixFile* file = nullptr;
@@ -357,7 +391,7 @@ uint64_t SysRmdir(regs* r)
 {
 	char* name = (char*) r->edx;
 
-	File* f = new File(name, currentTaskTCB->processRelatedTo);
+	File* f = new File(name, currentTaskTCB->processRelatedTo, false);
 	FileStatus res = f->unlink();
 	delete f;
 
@@ -372,7 +406,7 @@ uint64_t SysUnlink(regs* r)
 {
 	char* name = (char*) r->edx;
 
-	File* f = new File(name, currentTaskTCB->processRelatedTo);
+	File* f = new File(name, currentTaskTCB->processRelatedTo, false);
 	FileStatus res = f->unlink();
 	delete f;
 
@@ -669,6 +703,9 @@ uint64_t(*systemCallHandlers[])(regs* r) = {
 	SysRegistryGetNameAndTypeFromExtent,
 	SysRegistryOpen,
 	SysRegistryClose,
+	SysTruncate,
+	SysSizeFromFilenameNoSymlink,
+	SysSymlink,
 };
 
 uint64_t KeSystemCall(regs* r, void* context)

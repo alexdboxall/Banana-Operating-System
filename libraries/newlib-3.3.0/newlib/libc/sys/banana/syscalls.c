@@ -89,6 +89,7 @@ int fstat(int file, struct stat* st)
 	int res = SystemCall(Size, file, &fileSize, 0);
 
 	st->st_size = fileSize;
+	st->st_mode = S_IFREG;
 
 	return res;
 }
@@ -236,6 +237,24 @@ int stat(const char* file, struct stat* st)
 	int res = SystemCall(SizeFromFilename, (size_t) file, &fileSize, 0);
 
 	st->st_size = fileSize;
+	st->st_mode = S_IFREG;
+
+	return res;
+}
+
+int lstat(const char* file, struct stat* st)
+{
+	if (file == 0 || file == 1 || file == 2) {
+		st->st_mode = S_IFCHR;
+		return 0;
+	}
+
+	uint64_t fileSize = 0;
+	int a = 0;
+	int res = SystemCall(SizeFromFilenameNoSymlink, (size_t) file, &fileSize, (size_t) &a);
+
+	st->st_size = fileSize;
+	st->st_mode = a ? S_IFLNK : S_IFREG;
 
 	return res;
 }
@@ -467,7 +486,6 @@ unsigned sleep(unsigned seconds)
 	return usleep(seconds * 1000 * 1000);
 }
 
-
 int ftruncate(int fildes, off_t length)
 {
 	extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
@@ -483,6 +501,20 @@ int truncate(const char* path, off_t length)
 	extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
 	int res = SystemCall(Truncate, length, 1, (size_t) path);
 	if (res) {
+		errno = EROFS;
+	}
+	return res;
+}
+
+int symlink(const char* oldname, const char* newname)
+{
+	extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
+	int res = SystemCall(Symlink, 0, (size_t) oldname, (size_t) newname);
+	if (res == 1) {
+		errno = EROFS;
+	} else if (res == 2) {
+		errno = ELOOP;
+	} else {
 		errno = EROFS;
 	}
 	return res;

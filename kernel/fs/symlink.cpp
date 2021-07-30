@@ -213,7 +213,7 @@ int KeDereferenceSymlink(const char* linkName, char* dereferencedBuffer)
 
 int KeCreateSymlink(const char* existing, const char* linkName)
 {
-	File* fil = new File(linkName, kernelProcess);
+	File* fil = new File(linkName, kernelProcess, false);
 	if (!fil) {
 		return 1;
 	}

@@ -184,13 +184,6 @@ namespace Fs
 		}
 		outBuffer[op] = 0;
 		while ((outBuffer[strlen(outBuffer) - 1] == '.' || outBuffer[strlen(outBuffer) - 1] == '/') && outBuffer[strlen(outBuffer) - 2] != ':') outBuffer[strlen(outBuffer) - 1] = 0;
-		kprintf("OUTBF: %s, %c, %c\n", outBuffer, outBuffer[strlen(outBuffer) - 1], outBuffer[strlen(outBuffer) - 2]);
-
-		if (outBuffer[strlen(outBuffer) - 1] == 'w') {
-			outBuffer[strlen(outBuffer) - 1] = 0;
-			kprintf("AVOIDED SYMLINK: %s\n", outBuffer);
-			return;
-		}
 
 		int symrecur = 0;
 		while (followSymlinks) {
@@ -206,9 +199,9 @@ namespace Fs
 	}
 }
 
-File::File(const char* filename, Process* process) : UnixFile()
+File::File(const char* filename, Process* process, bool followSymlinks) : UnixFile()
 {
-	Fs::standardiseFiles(this->filepath, filename, process->cwd, process != kernelProcess);
+	Fs::standardiseFiles(this->filepath, filename, process->cwd, followSymlinks && (process != kernelProcess));
 
 	this->driveNo = this->filepath[0] - 'A';
 	fileOpen = false;

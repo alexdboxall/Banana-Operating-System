@@ -106,6 +106,8 @@ SystemCallNumber
 	RegistryOpen,
 	RegistryClose,
 	Truncate,
+	SizeFromFilenameNoSymlink,
+	Symlink,
 
 };
 
