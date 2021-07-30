@@ -149,7 +149,7 @@ int KeDereferenceSymlink(const char* linkName, char* dereferencedBuffer)
 	char buffer[9];
 	int br;
 	status = fil->read(8, buffer, &br);
-	if (status != FileStatus::Success || br != 8 || strcmp(buffer, "SYMLINK")) {
+	if (status != FileStatus::Success || br != 8) {
 		fil->close();
 		delete fil;
 		return -1;
@@ -208,7 +208,7 @@ int KeCreateSymlink(const char* existing, const char* linkName)
 	}
 
 	int br;
-	char symsig[] = "SYMLINK\0";
+	char symsig[] = "SYMLINK!";
 	status = fil->write(8, symsig, &br);
 	if (br != 8 || status != FileStatus::Success) {
 		fil->close();
