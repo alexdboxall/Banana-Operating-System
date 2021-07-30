@@ -130,21 +130,29 @@ uint64_t KiIsSymlinkRegistered(const char* linkName)
 
 int KeDereferenceSymlink(const char* linkName, char* dereferencedBuffer)
 {
+	kprintf("dereferencing symlink %s\n", linkName);
 	uint64_t registrationID = KiIsSymlinkRegistered(linkName);
 	if (!registrationID) {
 		return 0;
 	}
+
+	kprintf("regid l 0x%X\n", (uint32_t) registrationID);
+	kprintf("regid h 0x%X\n", (uint32_t) (registrationID >> 32));
 
 	File* fil = new File(linkName, kernelProcess);
 	if (!fil) {
 		return -1;
 	}
 
+	kprintf("A\n");
+
 	FileStatus status = fil->open(FileOpenMode::Read);
 	if (status != FileStatus::Success) {
 		delete fil;
 		return -1;
 	}
+
+	kprintf("B\n");
 
 	char buffer[9];
 	int br;
@@ -154,7 +162,9 @@ int KeDereferenceSymlink(const char* linkName, char* dereferencedBuffer)
 		delete fil;
 		return -1;
 	}
-	
+
+	kprintf("C\n");
+
 	uint64_t id;
 	status = fil->read(8, &id, &br);
 	if (status != FileStatus::Success || br != 8) {
@@ -166,6 +176,8 @@ int KeDereferenceSymlink(const char* linkName, char* dereferencedBuffer)
 		return 0;
 	}
 
+	kprintf("D\n");
+
 	uint64_t siz = 0;
 	bool dir;
 	fil->stat(&siz, &dir);
@@ -175,6 +187,8 @@ int KeDereferenceSymlink(const char* linkName, char* dereferencedBuffer)
 		delete fil; 
 		return -1;
 	}
+
+	kprintf("D\n");
 
 	siz -= 16;
 	if (siz > 255) {
@@ -187,8 +201,11 @@ int KeDereferenceSymlink(const char* linkName, char* dereferencedBuffer)
 		return -1;
 	}
 
+	kprintf("E\n");
+
 	fil->close();
 	delete fil;
+	kprintf("F\n");
 
 	return 0;
 }
