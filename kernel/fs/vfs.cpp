@@ -102,7 +102,7 @@ namespace Fs
 		ISO9660* i = new ISO9660();
 	}
 
-	void standardiseFiles(char* outBuffer, const char* filename, const char* cwd)
+	void standardiseFiles(char* outBuffer, const char* filename, const char* cwd, bool followSymlinks = false)
 	{
 		char middleBuffer[1024];
 		memset(middleBuffer, 0, 1024);
@@ -185,7 +185,7 @@ namespace Fs
 		outBuffer[op] = 0;
 		while ((outBuffer[strlen(outBuffer) - 1] == '.' || outBuffer[strlen(outBuffer) - 1] == '/') && outBuffer[strlen(outBuffer) - 2] != ':') outBuffer[strlen(outBuffer) - 1] = 0;
 	
-		while (1) {
+		while (followSymlinks) {
 			strcpy(middleBuffer, outBuffer);
 
 			int deref = KeDereferenceSymlink(middleBuffer, outBuffer);
@@ -196,7 +196,7 @@ namespace Fs
 
 File::File(const char* filename, Process* process) : UnixFile()
 {
-	Fs::standardiseFiles(this->filepath, filename, process->cwd);
+	Fs::standardiseFiles(this->filepath, filename, process->cwd, process != kernelProcess);
 
 	this->driveNo = this->filepath[0] - 'A';
 	fileOpen = false;
@@ -328,7 +328,7 @@ FileStatus File::stat(uint64_t* size, bool* directory)
 
 Directory::Directory(const char* filename, Process* process) : UnixFile()
 {
-	Fs::standardiseFiles(this->filepath, filename, process->cwd);
+	Fs::standardiseFiles(this->filepath, filename, process->cwd, process != kernelProcess);
 
 	this->driveNo = this->filepath[0] - 'A';
 	fileOpen = false;
