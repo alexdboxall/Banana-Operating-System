@@ -6,6 +6,7 @@
 #include "core/computer.hpp"
 #include "krnl/hal.hpp"
 #include "krnl/bootmsg.hpp"
+#include "krnl/atexit.hpp"
 
 #pragma GCC optimize ("O0")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -64,6 +65,8 @@ extern "C" void KeEntryPoint()
 
 	Phys::physicalMemorySetup(((*((uint32_t*) 0x524)) + 4095) & ~0xFFF);		//cryptic one-liner
 	Virt::virtualMemorySetup();
+
+	KeInitialiseAtexit();
 
 	{
 		VAS v;

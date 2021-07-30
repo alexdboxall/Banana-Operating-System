@@ -15,6 +15,7 @@
 #include "krnl/powctrl.hpp"
 #include "krnl/hal.hpp"
 #include "krnl/random.hpp"
+#include "krnl/atexit.hpp"
 
 #pragma GCC optimize ("O2")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -238,6 +239,7 @@ void Computer::wrmsr(uint32_t msr_id, uint64_t msr_value)
 
 int Computer::close(int a, int b, void* c)
 {
+	KeExecuteAtexit();
 	root->closeAll();
 	return root->close(a, 9999, c);
 }
@@ -293,6 +295,7 @@ namespace Krnl
 		KeSetBootMessage("Initialising system components...");
 		Vm::initialise8086();
 		Fs::initVFS();
+		KeInitialiseSymlinks();
 
 		KeSetBootMessage("Loading device drivers...");
 		computer->root->open(0, 0, nullptr);
