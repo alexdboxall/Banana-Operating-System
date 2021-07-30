@@ -56,6 +56,7 @@ public:
 	virtual FileStatus closeDir(void* ptr) = 0;
 	virtual FileStatus seek(void* ptr, uint64_t offset) = 0;
 	virtual FileStatus tell(void* ptr, uint64_t* pos) = 0;
+	virtual FileStatus truncate(void* ptr, uint64_t bytes) = 0;
 
 	virtual FileStatus stat(void* ptr, uint64_t* size) = 0;
 	virtual FileStatus stat(const char* filename, uint64_t* size, bool* directory) = 0;
@@ -105,6 +106,7 @@ public:
 	FileStatus rewind();
 	FileStatus seek(uint64_t offset);
 	FileStatus tell(uint64_t* pos);
+	FileStatus truncate(uint64_t bytes);
 
 	//these rely on the file being CLOSED
 	FileStatus unlink();

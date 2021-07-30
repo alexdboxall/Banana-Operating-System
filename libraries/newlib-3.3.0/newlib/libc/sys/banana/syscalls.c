@@ -467,24 +467,25 @@ unsigned sleep(unsigned seconds)
 	return usleep(seconds * 1000 * 1000);
 }
 
-void setttyname(char* name)
+
+int ftruncate(int fildes, off_t length)
 {
 	extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
-	AppSettings_t appset;
-	appset.valid = _APPSETTINGS_VALIDATION_V1;
-	appset.mode = _APPSETTINGS_MODE_SET_NAME;
-	strcpy(appset.string, name);
-	SystemCall(AppSettings, 0, 0, &appset);
+	int res = SystemCall(Truncate, length, 0, fildes);
+	if (res) {
+		errno = EROFS;
+	}
+	return res;
 }
 
-void setcolours(int fg, int bg)
+int truncate(const char* path, off_t length)
 {
 	extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
-	AppSettings_t appset;
-	appset.valid = _APPSETTINGS_VALIDATION_V1;
-	appset.mode = _APPSETTINGS_MODE_SET_TITLECOLOUR;
-	appset.intData = bg | (fg << 4);
-	SystemCall(AppSettings, 0, 0, &appset);
+	int res = SystemCall(Truncate, length, 1, (size_t) path);
+	if (res) {
+		errno = EROFS;
+	}
+	return res;
 }
 
 #pragma GCC pop_options

@@ -248,6 +248,14 @@ FileStatus File::seek(uint64_t offset)
 	return disks[driveNo]->fs->seek(fsSpecificData, offset);
 }
 
+FileStatus File::truncate(uint64_t offset)
+{
+	if (driveNo > 25 || !disks[driveNo] || !disks[driveNo]->fs) return FileStatus::NoFilesystem;
+	if (!fileOpen) return FileStatus::FileNotOpen;
+
+	return disks[driveNo]->fs->truncate(fsSpecificData, offset);
+}
+
 FileStatus File::tell(uint64_t* pos)
 {
 	if (driveNo > 25 || !disks[driveNo] || !disks[driveNo]->fs) return FileStatus::NoFilesystem;

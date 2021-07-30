@@ -433,6 +433,44 @@ FileStatus FAT::closeDir(void* ptr)
 	return FileStatus::Failure;
 }
 
+FileStatus FAT::truncate(void* ptr, uint64_t offset)
+{
+	if (ptr == nullptr) return FileStatus::InvalidArgument;
+
+	uint64_t pos = f_tell(((FIL*) ptr));
+	
+	FRESULT r;
+	
+	r = f_lseek((FIL*) ptr, offset);
+	switch (r) {
+	case FR_OK:
+		return FileStatus::Success;
+
+	default:
+		return FileStatus::Failure;
+	}
+
+	r = f_truncate((FIL*) ptr);
+	switch (r) {
+	case FR_OK:
+		return FileStatus::Success;
+
+	default:
+		return FileStatus::Failure;
+	}
+
+	r = f_lseek((FIL*) ptr, pos);
+	switch (r) {
+	case FR_OK:
+		return FileStatus::Success;
+
+	default:
+		return FileStatus::Failure;
+	}
+
+	return FileStatus::Failure;
+}
+
 FileStatus FAT::seek(void* ptr, uint64_t offset)
 {
 	if (ptr == nullptr) return FileStatus::InvalidArgument;

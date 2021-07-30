@@ -105,6 +105,8 @@ SystemCallNumber
 	RegistryGetNameAndTypeFromExtent,
 	RegistryOpen,
 	RegistryClose,
+	Truncate,
+
 };
 
 

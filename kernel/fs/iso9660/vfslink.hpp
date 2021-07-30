@@ -38,6 +38,7 @@ public:
 	FileStatus close(void* ptr);
 	FileStatus closeDir(void* ptr);
 	FileStatus seek(void* ptr, uint64_t position);
+	FileStatus truncate(void* ptr, uint64_t position);
 	FileStatus tell(void* ptr, uint64_t* position);
 	FileStatus unlink(const char* file);
 	FileStatus rename(const char* old, const char* _new);

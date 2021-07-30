@@ -46,6 +46,7 @@ uint64_t SysRegistryGetNext(regs* r);
 uint64_t SysRegistryGetNameAndTypeFromExtent(regs* r);
 uint64_t SysRegistryOpen(regs* r);
 uint64_t SysRegistryClose(regs* r);
+uint64_t SysTruncate(regs* r);
 
 int string_ends_with(const char* str, const char* suffix)
 {

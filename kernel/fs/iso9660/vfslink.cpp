@@ -137,6 +137,11 @@ bool ISO9660::exists(const char* file)
 	return false;
 }
 
+FileStatus ISO9660::truncate(void* ptr, uint64_t offset)
+{
+	return FileStatus::Failure;
+}
+
 FileStatus ISO9660::seek(void* ptr, uint64_t offset)
 {
 	if (ptr == nullptr) return FileStatus::InvalidArgument;
