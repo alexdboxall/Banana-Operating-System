@@ -16,6 +16,7 @@
 #include "krnl/hal.hpp"
 #include "krnl/random.hpp"
 #include "krnl/atexit.hpp"
+#include "fs/symlink.hpp"
 
 #pragma GCC optimize ("O2")
 #pragma GCC optimize ("-fno-strict-aliasing")
