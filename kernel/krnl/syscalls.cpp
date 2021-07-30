@@ -47,6 +47,7 @@ uint64_t SysRegistryGetNameAndTypeFromExtent(regs* r);
 uint64_t SysRegistryOpen(regs* r);
 uint64_t SysRegistryClose(regs* r);
 uint64_t SysTruncate(regs* r);
+uint64_t SysSymlink(regs* r);
 
 int string_ends_with(const char* str, const char* suffix)
 {
@@ -196,7 +197,7 @@ uint64_t SysSizeFromFilename(regs* r)
 	return 0;
 }
 
-uint64_t SizeFromFilenameNoSymlink(regs* r)
+uint64_t SysSizeFromFilenameNoSymlink(regs* r)
 {
 	char* filename = (char*) r->ebx;
 	UnixFile* file = nullptr;
