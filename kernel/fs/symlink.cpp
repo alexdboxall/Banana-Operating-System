@@ -21,7 +21,7 @@ extern "C" {
 
 uint32_t KiBaseSymlinkID = 0;
 
-#define MAX_WAITING_ROOM_LINKS 16
+#define MAX_WAITING_ROOM_LINKS 4
 
 char KiNewlyCreatedSymlinks[MAX_WAITING_ROOM_LINKS][256];
 uint64_t KiNewlyCreatedIDs[MAX_WAITING_ROOM_LINKS];
@@ -47,7 +47,7 @@ uint64_t KiCreateSymlinkID()
 
 void KiFlushSymlinkChanges()
 {
-	//write KiBaseSymlinkID back to disk
+	//TODO: write KiBaseSymlinkID back to disk
 
 	File* f = new File("C:/Banana/System/symlinks.sys", kernelProcess);
 	if (!f) {
@@ -112,12 +112,19 @@ void KeInitialiseSymlinks()
 	}
 	delete f;
 
-	KeCreateSymlink("C:/Banana/System/KERNEL32.EXE", "C:/kernel.lnk");
+	KeCreateSymlink("C:/Banana/System/KERNEL32.EXE", "C:/kernel.txt");
 }
 
 
 uint64_t KiIsSymlinkRegistered(const char* linkName)
 {
+	for (int i = 0; i < KiNumWaitingRoomSymlinks; ++i) {
+		if (!strcmp(linkName, KiNewlyCreatedSymlinks[i])) {
+			return KiNewlyCreatedIDs[i];
+		}
+	}
+
+	//TODO: check the symlink file
 	return 0;
 }
 

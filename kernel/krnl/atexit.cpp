@@ -14,7 +14,7 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-#define MAX_ATEXIT_HANDLERS 64
+#define MAX_ATEXIT_HANDLERS 24
 
 void (*KiAtexitHandlers[MAX_ATEXIT_HANDLERS])(void*);
 void* KiAtexitContexts[MAX_ATEXIT_HANDLERS];
@@ -42,8 +42,11 @@ void KeExecuteAtexit()
 {
 	for (int i = 0; i < KiNextAtexitHandler; ++i) {
 		if (KiAtexitHandlers[i]) {
+			kprintf("Calling atexit handler %d (0x%X)\n", i, KiAtexitHandlers[i]);
 			KiAtexitHandlers[i](KiAtexitContexts[i]);
+			kprintf("Done");
 			KiAtexitHandlers[i] = nullptr;
+			kprintf(".\n");
 		}
 	}
 }
