@@ -567,15 +567,11 @@ namespace Thr
 							}
 						}
 					} else {
-						if (info == 0x101 || info == 0x401 || info == 0x21401 || (info >> 8) < elf->shNum) {
+						if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum) {
 							x = KeReadUnaligned32(entry) - entryPoint + relocationPoint;
 
 						} else {
 							x = addr - entryPoint + relocationPoint + KeReadUnaligned32(entry);
-						}
-						if ((x >> 28) == 0xD) {
-							//very ugly hack
-							x = KeReadUnaligned32(entry) - entryPoint + relocationPoint;
 						}
 					}
 					kprintf("    R_386_32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
