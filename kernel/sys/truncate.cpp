@@ -37,7 +37,7 @@ uint64_t SysTruncate(regs* r)
 			return 4;
 		}
 
-		status = f->truncate(f, size);
+		status = f->truncate(size);
 		if (status != FileStatus::Success) {
 			f->close();
 			delete f;
@@ -60,7 +60,7 @@ uint64_t SysTruncate(regs* r)
 				return 2;
 			}
 
-			return f->truncate(f, size) != FileStatus::Success;
+			return f->truncate(size) != FileStatus::Success;
 		}
 	}
 
