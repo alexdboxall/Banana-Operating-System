@@ -168,7 +168,7 @@ namespace Fs
 	int getcwd(Process* process, char* buffer, int bytes);
 	int setcwd(Process* process, char* buffer);
 
-	void standardiseFiles(char* outBuffer, const char* filename, const char* cwd);
+	void standardiseFiles(char* outBuffer, const char* filename, const char* cwd, bool followSymlinks = false);
 	void initVFS();
 }
 

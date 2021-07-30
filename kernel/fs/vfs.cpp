@@ -102,7 +102,7 @@ namespace Fs
 		ISO9660* i = new ISO9660();
 	}
 
-	void standardiseFiles(char* outBuffer, const char* filename, const char* cwd, bool followSymlinks = false)
+	void standardiseFiles(char* outBuffer, const char* filename, const char* cwd, bool followSymlinks)
 	{
 		char middleBuffer[1024];
 		memset(middleBuffer, 0, 1024);
