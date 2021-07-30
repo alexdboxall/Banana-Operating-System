@@ -296,12 +296,12 @@ namespace Krnl
 		KeSetBootMessage("Initialising system components...");
 		Vm::initialise8086();
 		Fs::initVFS();
-		KeInitialiseSymlinks();
 
 		KeSetBootMessage("Loading device drivers...");
 		computer->root->open(0, 0, nullptr);
 
 		KeSetBootMessage("Initialising system components...");
+		KeInitialiseSymlinks();
 		KeLoadSystemEnv();
 		KeSetupPowerManager();
 		User::loadClockSettings(Reg::readIntWithDefault((char*) "country", (char*) "timezone", 58));
