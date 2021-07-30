@@ -184,14 +184,13 @@ namespace Fs
 		}
 		outBuffer[op] = 0;
 		while ((outBuffer[strlen(outBuffer) - 1] == '.' || outBuffer[strlen(outBuffer) - 1] == '/') && outBuffer[strlen(outBuffer) - 2] != ':') outBuffer[strlen(outBuffer) - 1] = 0;
-	}
+	
+		while (1) {
+			strcpy(middleBuffer, outBuffer);
 
-
-	while (1) {
-		strcpy(middleBuffer, outBuffer);
-
-		int deref = KeDereferenceSymlink(middleBuffer, outBuffer);
-		if (deref != 1) break;
+			int deref = KeDereferenceSymlink(middleBuffer, outBuffer);
+			if (deref != 1) break;
+		}
 	}
 }
 
@@ -209,7 +208,7 @@ File::File(const char* filename, Process* process) : UnixFile()
 
 File::~File()
 {
-	
+
 }
 
 FileStatus File::open(FileOpenMode mode)
