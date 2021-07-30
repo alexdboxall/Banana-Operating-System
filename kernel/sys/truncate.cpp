@@ -57,7 +57,7 @@ uint64_t SysTruncate(regs* r)
 
 			FileStatus status = file->truncate(file, size);
 
-			return status;
+			return status != FileStatus::Success;
 		}
 	}
 
