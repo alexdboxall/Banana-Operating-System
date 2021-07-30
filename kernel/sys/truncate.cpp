@@ -37,7 +37,12 @@ uint64_t SysTruncate(regs* r)
 			return 4;
 		}
 
-		f->truncate(f, size);
+		status = f->truncate(f, size);
+		if (status != FileStatus::Success) {
+			f->close();
+			delete f;
+			return 5;
+		}
 
 		f->close();
 		delete f;
@@ -49,13 +54,13 @@ uint64_t SysTruncate(regs* r)
 			return 1;
 
 		} else {
-			UnixFile* file = KeGetFileFromDescriptor(r->ebx);
+			File* f = (File*) KeGetFileFromDescriptor(r->ebx);
 
-			if (file == nullptr) {
+			if (f == nullptr) {
 				return 2;
 			}
 
-			FileStatus status = file->truncate(file, size);
+			FileStatus status = file->truncate(f, size);
 
 			return status != FileStatus::Success;
 		}
