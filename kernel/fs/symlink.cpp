@@ -217,7 +217,7 @@ int KeCreateSymlink(const char* existing, const char* linkName)
 		return 1;
 	}
 
-	status = fil->write(strlen(existing), existing, &br);
+	status = fil->write(strlen(existing), (void*) existing, &br);
 	if (br != strlen(existing) || status != FileStatus::Success) {
 		fil->close();
 		delete fil;
