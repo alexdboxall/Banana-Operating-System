@@ -185,6 +185,13 @@ namespace Fs
 		outBuffer[op] = 0;
 		while ((outBuffer[strlen(outBuffer) - 1] == '.' || outBuffer[strlen(outBuffer) - 1] == '/') && outBuffer[strlen(outBuffer) - 2] != ':') outBuffer[strlen(outBuffer) - 1] = 0;
 	
+		if (outBuffer[strlen(outBuffer) - 1] == '@' && outBuffer[strlen(outBuffer) - 2] == '@') {
+			outBuffer[strlen(outBuffer) - 1] = 0;
+			outBuffer[strlen(outBuffer) - 1] = 0;
+			kprintf("AVOIDED SYMLINK: %s\n", outBuffer);
+			return;
+		}
+
 		int symrecur = 0;
 		while (followSymlinks) {
 			strcpy(middleBuffer, outBuffer);
