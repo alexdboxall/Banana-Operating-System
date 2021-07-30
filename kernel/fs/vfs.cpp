@@ -186,8 +186,7 @@ namespace Fs
 		while ((outBuffer[strlen(outBuffer) - 1] == '.' || outBuffer[strlen(outBuffer) - 1] == '/') && outBuffer[strlen(outBuffer) - 2] != ':') outBuffer[strlen(outBuffer) - 1] = 0;
 		kprintf("OUTBF: %s, %c, %c\n", outBuffer, outBuffer[strlen(outBuffer) - 1], outBuffer[strlen(outBuffer) - 2]);
 
-		if (outBuffer[strlen(outBuffer) - 1] == '@' && outBuffer[strlen(outBuffer) - 2] == '@') {
-			outBuffer[strlen(outBuffer) - 1] = 0;
+		if (outBuffer[strlen(outBuffer) - 1] == 'w') {
 			outBuffer[strlen(outBuffer) - 1] = 0;
 			kprintf("AVOIDED SYMLINK: %s\n", outBuffer);
 			return;
