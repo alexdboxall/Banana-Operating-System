@@ -504,7 +504,7 @@ void ACPI::sleep()
 
 int ACPI::close(int mode, int b, void* c)
 {
-	kprintf("ACPI::close1 \n");
+	kprintf("ACPI::close 1\n");
 	if (b != 9999) {
 		return 0;
 	}

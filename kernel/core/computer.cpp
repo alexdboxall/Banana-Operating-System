@@ -244,9 +244,12 @@ int Computer::close(int a, int b, void* c)
 	KeExecuteAtexit();
 	kprintf("done atexit\n");
 	root->closeAll();
+	lockScheduler();
 	kprintf("done closeAll\n");
 	int retv = root->close(a, 9999, c);
 	kprintf("COMPUTER CLOSE RETV = %d (%d, %d, %d)\n", retv, a, 9999, c);
+	unlockScheduler();
+	KePanic("COMPUTER::CLOSE ERROR");
 	return retv;
 }
 
