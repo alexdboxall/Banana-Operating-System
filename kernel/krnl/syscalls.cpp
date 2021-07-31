@@ -177,7 +177,7 @@ uint64_t SysSizeFromFilename(regs* r)
 	char* filename = (char*) r->ebx;
 	UnixFile* file = nullptr;
 	int* typeptr = (int*) r->edx;
-	*typeptr = 0;
+	if (typeptr) *typeptr = 0;
 
 	if (r->ebx <= 2) {
 		return -1;
@@ -200,11 +200,11 @@ uint64_t SysSizeFromFilename(regs* r)
 	char dereferencedBuffer[280];
 	int sym = KeDereferenceSymlink(filename, dereferencedBuffer);
 	if (sym == 1) {
-		*typeptr = 2;
+		if (typeptr) *typeptr = 2;
 	} else if (dir) {
-		*typeptr = 1;
+		if (typeptr) *typeptr = 1;
 	} else {
-		*typeptr = 0;
+		if (typeptr) *typeptr = 0;
 	}
 
 	return 0;
@@ -215,7 +215,7 @@ uint64_t SysSizeFromFilenameNoSymlink(regs* r)
 	char* filename = (char*) r->ebx;
 	UnixFile* file = nullptr;
 	int* typeptr = (int*) r->edx;
-	*typeptr = 0;
+	if (typeptr) *typeptr = 0;
 
 	if (r->ebx <= 2) {
 		return -1;
@@ -238,11 +238,11 @@ uint64_t SysSizeFromFilenameNoSymlink(regs* r)
 	char dereferencedBuffer[280];
 	int sym = KeDereferenceSymlink(filename, dereferencedBuffer);
 	if (sym == 1) {
-		*typeptr = 2;
+		if (typeptr) *typeptr = 2;
 	} else if (dir) {
-		*typeptr = 1;
+		if (typeptr) *typeptr = 1;
 	} else {
-		*typeptr = 0;
+		if (typeptr) *typeptr = 0;
 	}
 
 	return 0;
