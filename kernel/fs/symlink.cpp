@@ -268,6 +268,7 @@ int KeDereferenceSymlink(const char* linkName, char* dereferencedBuffer)
 	if (siz > 255) {
 		return -1;
 	}
+	memset(dereferencedBuffer, 0, siz + 1);
 	status = fil->read(siz, dereferencedBuffer, &br);
 	if (status != FileStatus::Success || br != siz) {
 		fil->close();
