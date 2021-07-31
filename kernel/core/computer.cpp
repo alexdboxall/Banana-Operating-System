@@ -240,15 +240,11 @@ void Computer::wrmsr(uint32_t msr_id, uint64_t msr_value)
 
 int Computer::close(int a, int b, void* c)
 {
-	kprintf("doing atexit\n");
 	KeExecuteAtexit();
-	kprintf("done atexit\n");
-	//root->closeAll();
-	kprintf("done closeAll\n");
-	int retv = root->close(a, 9999, c);
-	kprintf("COMPUTER CLOSE RETV = %d (%d, %d, %d)\n", retv, a, 9999, c);
+	root->closeAll();
+	root->close(a, 9999, c);
 	KePanic("COMPUTER::CLOSE ERROR");
-	return retv;
+	return 0;
 }
 
 void Computer::shutdown()
