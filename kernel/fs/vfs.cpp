@@ -192,6 +192,8 @@ namespace Fs
 			int deref = KeDereferenceSymlink(middleBuffer, outBuffer);
 			if (deref != 1) break;
 
+			kprintf("DEREFERENCED %s -> %s\n", middleBuffer, outBuffer);
+
 			if (symrecur++ == 20) {
 				KePanic("TODO: HANDLE TOO MANY NESTED SYMLINKS");
 			}
