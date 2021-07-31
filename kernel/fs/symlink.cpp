@@ -11,6 +11,7 @@ extern "C" {
 
 #include <krnl/random.hpp>
 #include <krnl/atexit.hpp>
+#include <krnl/crc32.hpp>
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -22,12 +23,34 @@ extern "C" {
 uint32_t KiBaseSymlinkID = 0;
 
 #define MAX_WAITING_ROOM_LINKS 4
+#define SYMLINK_TABLE_BYTES 8192
 
+uint8_t KiSymlinkHashTable[SYMLINK_TABLE_BYTES];
 char KiNewlyCreatedSymlinks[MAX_WAITING_ROOM_LINKS][256];
 uint64_t KiNewlyCreatedIDs[MAX_WAITING_ROOM_LINKS];
 int KiNumWaitingRoomSymlinks = 0;
 
-uint64_t KiCreateSymlinkID()
+static uint16_t KiGetSymlinkHash(char* filepath)
+{
+	uint32_t crc = KeCalculateCRC32(filepath, strlen(filepath));
+	return (crc & 0xFFFF) ^ (crc >> 16);
+}
+
+static bool KiIsHashInTable(uint16_t hash)
+{
+	return (KiSymlinkHashTable[hash >> 3] >> (hash & 7)) & 1;
+}
+
+static void KiSetHashInTable(uint16_t hash, bool state)
+{
+	if (state) {
+		KiSymlinkHashTable[hash >> 3] |= 1 << (hash & 7);
+	} else {
+		KiSymlinkHashTable[hash >> 3] &= ~(1 << (hash & 7));
+	}
+}
+
+static uint64_t KiCreateSymlinkID()
 {
 	int insanityCounter = 0;
 	uint64_t id;
@@ -45,7 +68,7 @@ uint64_t KiCreateSymlinkID()
 	return id;
 }
 
-void KiFlushSymlinkChanges()
+static void KiFlushSymlinkChanges()
 {
 	//TODO: write KiBaseSymlinkID back to disk
 
@@ -61,6 +84,10 @@ void KiFlushSymlinkChanges()
 
 	int br;
 	for (int i = 0; i < KiNumWaitingRoomSymlinks; ++i) {
+		f->write(8, KiNewlyCreatedIDs[i], &br);
+		if (br != 8) {
+			KePanic("CANNOT WRITE SYMLINKS (D)");
+		}
 		f->write(256, KiNewlyCreatedSymlinks[i], &br);
 		if (br != 256) {
 			KePanic("CANNOT WRITE SYMLINKS (C)");
@@ -83,6 +110,9 @@ void KeRegisterSymlink(const char* linkName, uint64_t linkID)
 	KiNewlyCreatedIDs[KiNumWaitingRoomSymlinks] = linkID;
 	memset(KiNewlyCreatedSymlinks[KiNumWaitingRoomSymlinks], 0, 256);
 	strcpy(KiNewlyCreatedSymlinks[KiNumWaitingRoomSymlinks], linkName);
+
+	uint16_t hash = KiGetSymlinkHash(linkName);
+	KiSetHashInTable(hash, true);
 
 	++KiNumWaitingRoomSymlinks;
 
