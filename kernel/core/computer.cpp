@@ -240,8 +240,11 @@ void Computer::wrmsr(uint32_t msr_id, uint64_t msr_value)
 
 int Computer::close(int a, int b, void* c)
 {
+	kprintf("doing atexit\n");
 	KeExecuteAtexit();
+	kprintf("done atexit\n");
 	root->closeAll();
+	kprintf("done closeAll\n");
 	return root->close(a, 9999, c);
 }
 

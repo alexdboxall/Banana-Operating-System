@@ -413,7 +413,7 @@ int ACPI::open(int mode, int, void*)
 
 	KeSetBootMessage("Loading kernel symbol table...");
 	
-	uint8_t vl = *((uint8_t*) 0x54C);// = useSafeKernel ? 0xBB : 0x01;
+	uint8_t vl = *((uint8_t*) 0x54C);
 	if (vl == 0x01) {
 		Thr::loadKernelSymbolTable("C:/Banana/System/KERNEL32.EXE");
 	} else if (vl == 0xBB) {
@@ -504,11 +504,13 @@ void ACPI::sleep()
 
 int ACPI::close(int mode, int b, void* c)
 {
+	kprintf("ACPI::close\n");
 	if (b != 9999) {
 		return 0;
 	}
 
 	if (mode == 0) {
+		kprintf("systemShutdownFunction: 0x%X\n", systemShutdownFunction);
 		if (systemShutdownFunction) {
 			systemShutdownFunction();
 		}
@@ -517,9 +519,11 @@ int ACPI::close(int mode, int b, void* c)
 		return -1;
 
 	} else if (mode == 1) {
+		kprintf("systemResetFunction: 0x%X\n", systemShutdownFunction);
 		if (systemResetFunction) {
 			systemResetFunction();
 		}
+		kprintf("doing ps/2 reset\n");
 		uint8_t good = 0x02;
 		while (good & 0x02) good = inb(0x64);
 		outb(0x64, 0xFE);
