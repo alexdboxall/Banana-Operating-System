@@ -30,9 +30,9 @@ char KiNewlyCreatedSymlinks[MAX_WAITING_ROOM_LINKS][256];
 uint64_t KiNewlyCreatedIDs[MAX_WAITING_ROOM_LINKS];
 int KiNumWaitingRoomSymlinks = 0;
 
-static uint16_t KiGetSymlinkHash(char* filepath)
+static uint16_t KiGetSymlinkHash(const char* filepath)
 {
-	uint32_t crc = KeCalculateCRC32(filepath, strlen(filepath));
+	uint32_t crc = KeCalculateCRC32((uint8_t*) filepath, strlen(filepath));
 	return (crc & 0xFFFF) ^ (crc >> 16);
 }
 
@@ -70,8 +70,6 @@ static uint64_t KiCreateSymlinkID()
 
 static void KiFlushSymlinkChanges()
 {
-	//TODO: write KiBaseSymlinkID back to disk
-
 	File* f = new File("C:/Banana/System/symlinks.sys", kernelProcess);
 	if (!f) {
 		KePanic("CANNOT WRITE SYMLINKS (A)");
@@ -84,7 +82,7 @@ static void KiFlushSymlinkChanges()
 
 	int br;
 	for (int i = 0; i < KiNumWaitingRoomSymlinks; ++i) {
-		f->write(8, KiNewlyCreatedIDs[i], &br);
+		f->write(8, &KiNewlyCreatedIDs[i], &br);
 		if (br != 8) {
 			KePanic("CANNOT WRITE SYMLINKS (D)");
 		}
@@ -94,10 +92,14 @@ static void KiFlushSymlinkChanges()
 		}
 	}
 
-	KiNumWaitingRoomSymlinks = 0;
-
 	f->close();
 	delete f;
+
+	KiNumWaitingRoomSymlinks = 0;
+
+	//TODO: write KiBaseSymlinkID back to disk
+
+	//TODO: flush the hash table
 }
 
 void KiDeinitialiseSymlinks(void* context)
@@ -148,13 +150,16 @@ void KeInitialiseSymlinks()
 
 uint64_t KiIsSymlinkRegistered(const char* linkName)
 {
+	if (!KiIsHashInTable(KiGetSymlinkHash(linkName))) {
+		return 0;
+	}
+
 	for (int i = 0; i < KiNumWaitingRoomSymlinks; ++i) {
 		if (!strcmp(linkName, KiNewlyCreatedSymlinks[i])) {
 			return KiNewlyCreatedIDs[i];
 		}
 	}
 
-	//TODO: check the symlink file
 	return 0;
 }
 
