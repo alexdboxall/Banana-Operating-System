@@ -32,6 +32,7 @@ int KiNumWaitingRoomSymlinks = 0;
 
 static uint16_t KiGetSymlinkHash(const char* filepath)
 {
+
 	uint32_t crc = KeCalculateCRC32((uint8_t*) filepath, strlen(filepath));
 	return (crc & 0xFFFF) ^ (crc >> 16);
 }
