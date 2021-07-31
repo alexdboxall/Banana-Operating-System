@@ -101,7 +101,7 @@ static void KiFlushSymlinkChanges()
 
 	Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
 	if (CmFindObjectFromPath(reg, "BANANA/SYMLINKBASEID") == -1) {
-		CmCreateInteger(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "SYMLINKBASEID", KiBaseSymlinkID, EXTENT_INTEGER43);
+		CmCreateInteger(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "SYMLINKBASEID", KiBaseSymlinkID, EXTENT_INTEGER32);
 	} else {
 		CmSetInteger(reg, CmFindObjectFromPath(reg, "BANANA/SYMLINKBASEID"), KiBaseSymlinkID);
 	}
