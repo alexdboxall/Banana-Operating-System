@@ -38,11 +38,13 @@ static uint16_t KiGetSymlinkHash(const char* filepath)
 
 static bool KiIsHashInTable(uint16_t hash)
 {
+	kprintf("READING HASH 0x%X, IT IS %d\n", hash, (KiSymlinkHashTable[hash >> 3] >> (hash & 7)) & 1);
 	return (KiSymlinkHashTable[hash >> 3] >> (hash & 7)) & 1;
 }
 
 static void KiSetHashInTable(uint16_t hash, bool state)
 {
+	kprintf("HASH 0x%X WAS SET TO %d\n", hash, state);
 	if (state) {
 		KiSymlinkHashTable[hash >> 3] |= 1 << (hash & 7);
 	} else {
