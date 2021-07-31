@@ -13,7 +13,6 @@
 #include "hal/clock.hpp"
 #include "fs/vfs.hpp"
 #include "hw/cpu.hpp"
-#include "fs/symlink.hpp"
 #include "fs/vfs.hpp"
 
 #pragma GCC optimize ("O2")

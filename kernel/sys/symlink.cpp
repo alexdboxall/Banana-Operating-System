@@ -2,7 +2,7 @@
 #include "sys/syscalls.hpp"
 #include "hal/intctrl.hpp"
 #include "hal/timer.hpp"
-
+#include "fs/vfs.hpp"
 #include "fs/symlink.hpp"
 
 #pragma GCC optimize ("Os")
