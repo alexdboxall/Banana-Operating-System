@@ -156,6 +156,8 @@ void KeInitialiseSymlinks()
 			f->read(8, &id, &br);
 			if (br != 8) break;
 
+			printf("On load, a symlink with name %s was loaded and hashed.\n", nm);
+
 			KiSetHashInTable(KiGetSymlinkHash(nm), true);
 		}
 
@@ -173,6 +175,8 @@ uint64_t KiIsSymlinkRegistered(const char* linkName)
 	if (!KiIsHashInTable(KiGetSymlinkHash(linkName))) {
 		return 0;
 	}
+
+	kprintf("a symlink %s is in the table.\n", linkName);
 
 	for (int i = 0; i < KiNumWaitingRoomSymlinks; ++i) {
 		if (!strcmp(linkName, KiNewlyCreatedSymlinks[i])) {
@@ -198,6 +202,8 @@ uint64_t KiIsSymlinkRegistered(const char* linkName)
 		if (br != 256) break;
 		f->read(8, &id, &br);
 		if (br != 8) break;
+
+		kprintf("%s vs %s\n", linkName, nm);
 
 		if (!strcmp(linkName, nm)) {
 			f->close();
