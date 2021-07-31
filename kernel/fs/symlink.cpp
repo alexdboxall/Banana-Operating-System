@@ -172,7 +172,7 @@ void KeInitialiseSymlinks()
 
 uint64_t KiIsSymlinkRegistered(const char* linkName)
 {
-	kprintf("GOT HASH: 0x%X\n", KiGetSymlinkHash(linkName));
+	kprintf("GOT HASH: 0x%X (%s)\n", KiGetSymlinkHash(linkName), linkName);
 
 	if (!KiIsHashInTable(KiGetSymlinkHash(linkName))) {
 		return 0;
@@ -320,7 +320,7 @@ int KeCreateSymlink(const char* existing, const char* linkName)
 		return 1;
 	}
 
-	kprintf("About to register symlink...\n");
+	kprintf("About to register symlink... %s, %s\n", existing, linkName);
 	KeRegisterSymlink(linkName, id);
 	kprintf("Registered.\n");
 
