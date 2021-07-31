@@ -156,14 +156,20 @@ void Device::loadDriversForAll()
 
 void Device::closeAll()
 {
+	kprintf("Device::closeAll A\n");
 	close(0, 0, nullptr);
+	kprintf("Device::closeAll B\n");
 
 	DeviceNode* conductor = children;
 
 	while (conductor->next) {
+		kprintf("Device::closeAll C\n");
 		conductor->child->closeAll();
+		kprintf("Device::closeAll D\n");
 		conductor = conductor->next;
 	}
+	kprintf("Device::closeAll E\n");
+
 }
 
 void Device::powerSavingAll(PowerSavingLevel level)
