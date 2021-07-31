@@ -156,7 +156,7 @@ void KeInitialiseSymlinks()
 			f->read(8, &id, &br);
 			if (br != 8) break;
 
-			printf("On load, a symlink with name %s was loaded and hashed.\n", nm);
+			kprintf("On load, a symlink with name %s was loaded and hashed.\n", nm);
 
 			KiSetHashInTable(KiGetSymlinkHash(nm), true);
 		}
