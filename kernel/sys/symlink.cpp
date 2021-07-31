@@ -22,5 +22,9 @@
 uint64_t SysSymlink(regs* r)
 {
 	if (r->ecx == 0 || r->edx == 0) return -1;
-	return KeCreateSymlink((const char*) r->ecx, (const char*) r->edx);
+
+	char outBuffer[280];
+	Fs::standardiseFiles(outBuffer, (const char*) r->edx, currentTaskTCB->processRelatedTo->cwd, true);
+
+	return KeCreateSymlink((const char*) r->ecx, outBuffer);
 }
