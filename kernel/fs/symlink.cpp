@@ -112,6 +112,7 @@ void KeRegisterSymlink(const char* linkName, uint64_t linkID)
 	strcpy(KiNewlyCreatedSymlinks[KiNumWaitingRoomSymlinks], linkName);
 
 	uint16_t hash = KiGetSymlinkHash(linkName);
+	kprintf("SETTING HASH: 0x%X\n", hash);
 	KiSetHashInTable(hash, true);
 
 	++KiNumWaitingRoomSymlinks;
@@ -166,13 +167,13 @@ void KeInitialiseSymlinks()
 	}
 
 	delete f;
-
-	KeCreateSymlink("C:/Banana/System/KERNEL32.EXE", "C:/kernel.txt");
 }
 
 
 uint64_t KiIsSymlinkRegistered(const char* linkName)
 {
+	kprintf("GOT HASH: 0x%X\n", KiGetSymlinkHash(linkName));
+
 	if (!KiIsHashInTable(KiGetSymlinkHash(linkName))) {
 		return 0;
 	}
@@ -319,7 +320,9 @@ int KeCreateSymlink(const char* existing, const char* linkName)
 		return 1;
 	}
 
+	kprintf("About to register symlink...\n");
 	KeRegisterSymlink(linkName, id);
+	kprintf("Registered.\n");
 
 	fil->close();
 	delete fil;

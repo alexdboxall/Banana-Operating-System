@@ -806,6 +806,22 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 		copytree(argv[1], argv[2]);
 		printf("\n");
 
+	} else if (!strcasecmp(argv[0], "ln") || !strcasecmp(argv[0], "link")) {
+		if (argc == 1) {
+			fprintf(stderr, "Please enter a target file or directory name.\n");
+			return -1;
+
+		} else if (argc == 2) {
+			fprintf(stderr, "Please enter a link filepath.\n");
+			return -1;
+
+		} else {
+			int res = symlink(argv[1], argv[2]);
+			if (res) {
+				fprintf(stderr, "The link could not be created.\n");
+			}
+		}
+
 	} else if (!strcasecmp(argv[0], "copy") || !strcasecmp(argv[0], "cp")) {
 		struct dirent* ent;
 		DIR* dir;
