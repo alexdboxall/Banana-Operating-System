@@ -1019,8 +1019,6 @@ int loadTimezoneStrings()
     f->read(siz, bf, &br);
     f->close();
 
-    kprintf("siz = %d\n", (int) siz);
-
     int num = 0;
     for (int i = 0; i < 200; ++i) {
         timezoneStrings[i] = (char*) malloc(120);
@@ -1054,14 +1052,9 @@ int loadTimezoneStrings()
             strcat(timezoneStrings[num], "... ");
 
         }
-        //kprintf("%d: %s (%s)\n", num, timezoneStrings[num], s);
     }
 
     free(bf);
-
-    for (int i = 0; i < 200; ++i) {
-        kprintf("%d; %s\n", i, timezoneStrings[num]);
-    }
 
     return num;
 }

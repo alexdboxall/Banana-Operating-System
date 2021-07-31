@@ -12,6 +12,7 @@ extern "C" {
 #include <krnl/random.hpp>
 #include <krnl/atexit.hpp>
 #include <krnl/crc32.hpp>
+#include <reg/cm.hpp>
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -56,7 +57,7 @@ static uint64_t KiCreateSymlinkID()
 	uint64_t id;
 	do {
 		id = KeRand();
-		id <<= 27;
+		id <<= 31;
 
 		id ^= KiBaseSymlinkID++;
 
@@ -98,7 +99,13 @@ static void KiFlushSymlinkChanges()
 
 	KiNumWaitingRoomSymlinks = 0;
 
-	//TODO: write KiBaseSymlinkID back to disk
+	Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
+	if (CmFindObjectFromPath(reg, "BANANA/SYMLINKBASEID") == -1) {
+		CmCreateInteger(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "SYMLINKBASEID", KiBaseSymlinkID, EXTENT_INTEGER43);
+	} else {
+		CmSetInteger(reg, CmFindObjectFromPath(reg, "BANANA/SYMLINKBASEID"), KiBaseSymlinkID);
+	}
+	CmClose(reg);
 }
 
 void KiDeinitialiseSymlinks(void* context)
@@ -127,7 +134,17 @@ void KeInitialiseSymlinks()
 	KiNumWaitingRoomSymlinks = 0;
 	memset(KiSymlinkHashTable, 0, sizeof(KiSymlinkHashTable));
 
-	//TODO: load KiBaseSymlinkID
+	Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
+	if (CmFindObjectFromPath(reg, "BANANA/SYMLINKBASEID") != -1) {
+		uint64_t x;
+		CmGetInteger(reg, CmFindObjectFromPath(reg, "BANANA/SYMLINKBASEID"), &x);
+		KiBaseSymlinkID = x;
+	} else {
+		KiBaseSymlinkID = 0;
+	}
+	CmClose(reg);
+
+	kprintf("LOADING KiBaseSymlinkID, %d\n", KiBaseSymlinkID);
 
 	KeRegisterAtexit(KiDeinitialiseSymlinks, nullptr);
 
@@ -156,8 +173,6 @@ void KeInitialiseSymlinks()
 			if (br != 256) break;
 			f->read(8, &id, &br);
 			if (br != 8) break;
-
-			kprintf("On load, a symlink with name %s was loaded and hashed.\n", nm);
 
 			KiSetHashInTable(KiGetSymlinkHash(nm), true);
 		}
@@ -203,7 +218,6 @@ uint64_t KiIsSymlinkRegistered(const char* linkName)
 		if (br != 8) break;
 
 		if (!strcmp(linkName, nm)) {
-			kprintf("matched a symlink: %s\n", nm);
 			f->close();
 			delete f;
 			return id;
