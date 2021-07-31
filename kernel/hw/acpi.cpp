@@ -506,6 +506,7 @@ int ACPI::close(int mode, int b, void* c)
 {
 	kprintf("ACPI::close 1\n");
 	if (b != 9999) {
+		kprintf("returning zero.\n");
 		return 0;
 	}
 	kprintf("ACPI::close 2\n");
