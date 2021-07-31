@@ -98,16 +98,6 @@ static void KiFlushSymlinkChanges()
 	delete f;
 
 	KiNumWaitingRoomSymlinks = 0;
-
-	Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
-	if (reg) {
-		if (CmFindObjectFromPath(reg, "BANANA/SYMLINKBASEID") == -1) {
-			CmCreateInteger(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "SYMLINKBASEID", KiBaseSymlinkID, EXTENT_INTEGER32);
-		} else {
-			CmSetInteger(reg, CmFindObjectFromPath(reg, "BANANA/SYMLINKBASEID"), KiBaseSymlinkID);
-		}
-		CmClose(reg);
-	}
 }
 
 void KiDeinitialiseSymlinks(void* context)
@@ -137,16 +127,6 @@ void KeInitialiseSymlinks()
 	KiNumWaitingRoomSymlinks = 0;
 	memset(KiSymlinkHashTable, 0, sizeof(KiSymlinkHashTable));
 
-	Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
-	if (reg) {
-		if (CmFindObjectFromPath(reg, "BANANA/SYMLINKBASEID") != -1) {
-			uint64_t x;
-			CmGetInteger(reg, CmFindObjectFromPath(reg, "BANANA/SYMLINKBASEID"), &x);
-			KiBaseSymlinkID = x;
-		}
-		CmClose(reg);
-	}
-
 	kprintf("LOADING KiBaseSymlinkID, %d\n", KiBaseSymlinkID);
 
 	KeRegisterAtexit(KiDeinitialiseSymlinks, nullptr);
@@ -169,6 +149,8 @@ void KeInitialiseSymlinks()
 		}
 
 		while (1) {
+			++KiBaseSymlinkID;
+			
 			char nm[256];
 			uint64_t id;
 			int br;
