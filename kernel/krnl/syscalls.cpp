@@ -176,6 +176,8 @@ uint64_t SysSizeFromFilename(regs* r)
 {
 	char* filename = (char*) r->ebx;
 	UnixFile* file = nullptr;
+	int* typeptr = (int*) r->edx;
+	*typeptr = 0;
 
 	if (r->ebx <= 2) {
 		return -1;
@@ -183,17 +185,26 @@ uint64_t SysSizeFromFilename(regs* r)
 		*((uint64_t*) r->ecx) = 0;
 		return 0;
 	} else {
-		kprintf("Getting size from filename: %s\n", filename);
 		file = new File(filename, currentTaskTCB->processRelatedTo, true);
 	}
 
-	bool dummy;
-	FileStatus st = ((File*) file)->stat((uint64_t*) r->ecx, &dummy);
+	bool dir;
+	FileStatus st = ((File*) file)->stat((uint64_t*) r->ecx, &dir);
 
 	delete file;
 
 	if (st != FileStatus::Success) {
 		return -1;
+	}
+
+	char dereferencedBuffer[280];
+	int sym = KeDereferenceSymlink(filename, dereferencedBuffer);
+	if (sym == 1) {
+		*typeptr = 2;
+	} else if (dir) {
+		*typeptr = 1;
+	} else {
+		*typeptr = 0;
 	}
 
 	return 0;
@@ -215,8 +226,8 @@ uint64_t SysSizeFromFilenameNoSymlink(regs* r)
 		file = new File(filename, currentTaskTCB->processRelatedTo, false);
 	}
 
-	bool dummy;
-	FileStatus st = ((File*) file)->stat((uint64_t*) r->ecx, &dummy);
+	bool dir;
+	FileStatus st = ((File*) file)->stat((uint64_t*) r->ecx, &dir);
 
 	delete file;
 
@@ -227,7 +238,11 @@ uint64_t SysSizeFromFilenameNoSymlink(regs* r)
 	char dereferencedBuffer[280];
 	int sym = KeDereferenceSymlink(filename, dereferencedBuffer);
 	if (sym == 1) {
+		*typeptr = 2;
+	} else if (dir) {
 		*typeptr = 1;
+	} else {
+		*typeptr = 0;
 	}
 
 	return 0;

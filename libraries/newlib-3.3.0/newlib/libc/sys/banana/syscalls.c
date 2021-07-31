@@ -246,10 +246,19 @@ int stat(const char* file, struct stat* st)
 	}
 
 	uint64_t fileSize = 0;
-	int res = SystemCall(SizeFromFilename, (size_t) file, &fileSize, 0);
+	int a = 0;
+	int res = SystemCall(SizeFromFilename, (size_t) file, &fileSize, (size_t) &a);
 
 	st->st_size = fileSize;
-	st->st_mode = S_IFREG;
+	if (a == 0) {
+		st->st_mode = S_IFREG;
+	} else if (a == 1) {
+		st->st_mode = S_IFDIR;
+	} else if (a == 2) {
+		st->st_mode = S_IFLNK;
+	} else {
+		st->st_mode = S_IFREG;
+	}
 
 	return res;
 }
@@ -266,7 +275,16 @@ int lstat(const char* file, struct stat* st)
 	int res = SystemCall(SizeFromFilenameNoSymlink, (size_t) file, &fileSize, (size_t) &a);
 
 	st->st_size = fileSize;
-	st->st_mode = a ? S_IFLNK : S_IFREG;
+	if (a == 0) {
+		st->st_mode = S_IFREG;
+	} else if (a == 1) {
+		st->st_mode = S_IFDIR;
+	} else if (a == 2) {
+		st->st_mode = S_IFLNK;
+	} else {
+		st->st_mode = S_IFREG;
+	}
+	
 
 	return res;
 }
