@@ -98,8 +98,6 @@ static void KiFlushSymlinkChanges()
 	KiNumWaitingRoomSymlinks = 0;
 
 	//TODO: write KiBaseSymlinkID back to disk
-
-	//TODO: flush the hash table
 }
 
 void KiDeinitialiseSymlinks(void* context)
@@ -126,6 +124,7 @@ void KeRegisterSymlink(const char* linkName, uint64_t linkID)
 void KeInitialiseSymlinks()
 {
 	KiNumWaitingRoomSymlinks = 0;
+	memset(KiSymlinkHashTable, 0, sizeof(KiSymlinkHashTable));
 
 	//TODO: load KiBaseSymlinkID
 
@@ -141,7 +140,28 @@ void KeInitialiseSymlinks()
 			KePanic("CANNOT CREATE SYMLINK FILE B");
 		}
 		f->close();
+
+	} else {
+		FileStatus status = f->open(FILE_OPEN_READ);
+		if (status != FileStatus::Success) {
+			KePanic("CANNOT READ SYMLINK FILE A");
+		}
+
+		while (1) {
+			char nm[256];
+			uint64_t id;
+			int br;
+			f->read(256, nm, &br);
+			if (br != 256) break;
+			f->read(8, &id, &br);
+			if (br != 8) break;
+
+			KiSetHashInTable(KiGetSymlinkHash(nm), true);
+		}
+
+		f->close();
 	}
+
 	delete f;
 
 	KeCreateSymlink("C:/Banana/System/KERNEL32.EXE", "C:/kernel.txt");
@@ -159,6 +179,35 @@ uint64_t KiIsSymlinkRegistered(const char* linkName)
 			return KiNewlyCreatedIDs[i];
 		}
 	}
+
+	File* f = new File("C:/Banana/System/symlinks.sys", kernelProcess);
+	if (!f || !f->exists()) {
+		KePanic("CANNOT READ SYMLINK FILE B");
+	}
+
+	FileStatus status = f->open(FILE_OPEN_READ);
+	if (status != FileStatus::Success) {
+		KePanic("CANNOT READ SYMLINK FILE C");
+	}
+
+	while (1) {
+		char nm[256];
+		uint64_t id;
+		int br;
+		f->read(256, nm, &br);
+		if (br != 256) break;
+		f->read(8, &id, &br);
+		if (br != 8) break;
+
+		if (!strcmp(linkName, nm)) {
+			f->close();
+			delete f;
+			return id;
+		}
+	}
+
+	f->close();
+	delete f;
 
 	return 0;
 }
