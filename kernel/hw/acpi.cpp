@@ -504,10 +504,11 @@ void ACPI::sleep()
 
 int ACPI::close(int mode, int b, void* c)
 {
-	kprintf("ACPI::close\n");
+	kprintf("ACPI::close1 \n");
 	if (b != 9999) {
 		return 0;
 	}
+	kprintf("ACPI::close 2\n");
 
 	if (mode == 0) {
 		kprintf("systemShutdownFunction: 0x%X\n", systemShutdownFunction);
@@ -528,6 +529,7 @@ int ACPI::close(int mode, int b, void* c)
 		while (good & 0x02) good = inb(0x64);
 		outb(0x64, 0xFE);
 	}
+	kprintf("ACPI::close 3\n");
 
 	return -1;
 }

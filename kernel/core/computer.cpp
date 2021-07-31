@@ -245,7 +245,9 @@ int Computer::close(int a, int b, void* c)
 	kprintf("done atexit\n");
 	root->closeAll();
 	kprintf("done closeAll\n");
-	return root->close(a, 9999, c);
+	int retv = root->close(a, 9999, c);
+	kprintf("COMPUTER CLOSE RETV = %d (%d, %d, %d)\n", retv, a, 9999, c);
+	return retv;
 }
 
 void Computer::shutdown()

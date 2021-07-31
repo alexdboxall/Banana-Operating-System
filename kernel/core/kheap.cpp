@@ -6,6 +6,7 @@
 #include "libk/string.h"
 #include "core/malloc.h"
 #include "hw/cpu.hpp"
+#include "krnl/hal.hpp"
 
 #define USE_MY_ALLOC
 
@@ -30,7 +31,7 @@ extern "C" void* sbrk(ptrdiff_t increment)
 			brk += 4096;
 		}
 
-		CPU::writeCR3(CPU::readCR3());
+		HalFlushTLB();
 
 		return (void*) oldbrk;
 	}
