@@ -82,13 +82,14 @@ static void KiFlushSymlinkChanges()
 
 	int br;
 	for (int i = 0; i < KiNumWaitingRoomSymlinks; ++i) {
-		f->write(8, &KiNewlyCreatedIDs[i], &br);
-		if (br != 8) {
-			KePanic("CANNOT WRITE SYMLINKS (D)");
-		}
 		f->write(256, KiNewlyCreatedSymlinks[i], &br);
 		if (br != 256) {
 			KePanic("CANNOT WRITE SYMLINKS (C)");
+		}
+
+		f->write(8, &KiNewlyCreatedIDs[i], &br);
+		if (br != 8) {
+			KePanic("CANNOT WRITE SYMLINKS (D)");
 		}
 	}
 
