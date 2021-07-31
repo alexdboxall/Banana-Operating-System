@@ -26,5 +26,8 @@ uint64_t SysSymlink(regs* r)
 	char outBuffer[280];
 	Fs::standardiseFiles(outBuffer, (const char*) r->edx, currentTaskTCB->processRelatedTo->cwd, true);
 
-	return KeCreateSymlink((const char*) r->ecx, outBuffer);
+	char inBuffer[280];
+	Fs::standardiseFiles(inBuffer, (const char*) r->ecx, currentTaskTCB->processRelatedTo->cwd, true);
+
+	return KeCreateSymlink(inBuffer, outBuffer);
 }

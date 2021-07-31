@@ -38,9 +38,10 @@ int KeDereferenceSymlink(const char* linkName, char* dereferenced);
 bool KeVerifySymlink(const char* linkName);
 
 /// <summary>
-/// Creates a symbolic link.
-/// <param name="existing">The target filepath.</param>
-/// <param name="linkName">The symlink filepath.</param>
+/// Creates a symbolic link. WARNING: if relative or non-normalised paths are used
+/// the system may become unstable.
+/// <param name="existing">The absolute, normalised target filepath.</param>
+/// <param name="linkName">The absolute, normalised symlink filepath.</param>
 /// <returns>Returns 0 on success, and non-zero on error.</returns>
 /// </summary>
 int KeCreateSymlink(const char* existing, const char* linkName);
