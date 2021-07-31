@@ -198,7 +198,10 @@ uint64_t SysSizeFromFilename(regs* r)
 	}
 
 	char dereferencedBuffer[280];
-	int sym = KeDereferenceSymlink(filename, dereferencedBuffer);
+	char outBuffer[280];
+	Fs::standardiseFiles(outBuffer, filename, currentTaskTCB->processRelatedTo->cwd, false);
+
+	int sym = KeDereferenceSymlink(outBuffer, dereferencedBuffer);
 	if (sym == 1) {
 		if (typeptr) *typeptr = 2;
 	} else if (dir) {
