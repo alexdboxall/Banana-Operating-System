@@ -1771,9 +1771,9 @@ void begin(void* a)
         drawBasicWindow(22, 5, 50, 13, "Finalising Installation");
         bootInstallTasks(4);
 
-        backupTree("C:/Banana/Drivers/", 0xDDDD);
-        backupTree("C:/Banana/System/", 0xEEEE);
-        backupTree("C:/Banana/Registry/", 0xFFFF);
+        //backupTree("C:/Banana/Drivers/", 0xDDDD);
+        //backupTree("C:/Banana/System/", 0xEEEE);
+        //backupTree("C:/Banana/Registry/", 0xFFFF);
 
         bootInstallTasks(5);
         Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");

@@ -244,7 +244,7 @@ int Computer::close(int a, int b, void* c)
 	root->closeAll();
 	root->close(a, 9999, c);
 	KePanic("COMPUTER::CLOSE ERROR");
-	return 0;
+	return -1;
 }
 
 void Computer::shutdown()
