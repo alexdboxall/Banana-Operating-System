@@ -1762,7 +1762,7 @@ void begin(void* a)
         //I think a lot of RAM needs to be freed here...
         {
             //give the cleaner task some time to clear out stuff
-            sleep(2);
+            sleep(1);
         }
 
         VgaText::hiddenOut = false;
