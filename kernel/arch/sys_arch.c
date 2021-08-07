@@ -1,6 +1,7 @@
 #include "arch/sys_arch.h"
 #include "arch/cc.h"
 #include "lwip/err.h"
+#include "lwip/ip.h"
 
 err_t sys_sem_new(sys_sem_t* sem, u8_t count)
 {
