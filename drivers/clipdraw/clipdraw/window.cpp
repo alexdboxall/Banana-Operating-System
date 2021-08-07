@@ -131,15 +131,6 @@ void NIWindow::rerender()
 		}
 	}
 	valid = true;
-
-	/// TODO: call user function to populate the framebuffer
-
-	//placeholder
-	for (int j = 0; j < height; ++j) {
-		for (int i = 0; i < width; ++i) {
-			putpixel(i, j, j > WINDOW_TITLEBAR_HEIGHT ? 0xD4D4D4 : 0xFFFFFF);
-		}
-	}
 }
 
 void NIWindow::invalidate()

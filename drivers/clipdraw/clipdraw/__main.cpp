@@ -13,6 +13,7 @@ void begin(void* s)
 #include "core/physmgr.hpp"
 #include "thr/prcssthr.hpp"
 #include "reg/registry.hpp"
+#include "sys/syscalls.hpp"
 #include "hal/intctrl.hpp"
 #include "hw/acpi.hpp"
 #include "fs/vfs.hpp"
@@ -21,25 +22,24 @@ extern "C" {
 	#include "libk/string.h"
 }
 
-
 #include "context.hpp"
 #include "window.hpp"
 #include "desktop.hpp"
+#include "syshandler.hpp"
 
 #pragma GCC optimize ("-fno-strict-aliasing")
 
-extern void monikaBsod(char*);
+NIContext* ctxt;
+NIDesktop* desktop;
 
 void start(void* s)
 {
 	extern Video* screen;
-	extern void (*guiPanicHandler)(char* message);
 
-	guiPanicHandler = monikaBsod;
+	NiInstallSysHooks();
 
-	NIContext* ctxt = new NIContext(screen, screen->getWidth(), screen->getHeight(), screen->getWidth(), 32);
-
-	NIDesktop* desktop = new NIDesktop(ctxt);
+	ctxt = new NIContext(screen, screen->getWidth(), screen->getHeight(), screen->getWidth(), 32);
+	desktop = new NIDesktop(ctxt);
 
 	NIWindow* win0 = new NIWindow(ctxt, 0, 0, 1, 1);
 
@@ -55,6 +55,8 @@ void start(void* s)
 	desktop->addWindow(win3);
 
 	desktop->completeRefresh();
+
+	(new Process("C:/Banana/System/newgui.exe"))->createUserThread();
 
 	while (1) {
 		blockTask(TaskState::Paused);
