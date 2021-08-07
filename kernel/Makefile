@@ -1,6 +1,7 @@
 #these may be changed to suit your needs
 
-WARNINGS = -Werror -Wall -Wextra -Wcast-align=strict -Wchar-subscripts -W -Wuninitialized -Wpointer-arith  -Wno-error=unused-variable -Wno-error=unused-parameter \
+# -Werror
+WARNINGS =  -Wall -Wextra -Wcast-align=strict -Wchar-subscripts -W -Wuninitialized -Wpointer-arith  -Wno-error=unused-variable -Wno-error=unused-parameter \
 	   -Wno-error=unused-const-variable -Wno-error=sign-compare -Wno-unused-parameter
 
 SOURCEDIR = D:/Users/Alex/Desktop/Banana/kernel
