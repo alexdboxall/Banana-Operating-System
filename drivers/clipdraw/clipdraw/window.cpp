@@ -104,6 +104,15 @@ void NIWindow::realdraw()
 int curveLookup7[] = { 5, 3, 2, 1, 1, 0, 0, 0 };
 int curveLoopup11[] = { 9, 6, 4, 3, 2, 2, 1, 1, 1, 0, 0, 0, 0 };
 
+void NIWindow::drawBasicWindow()
+{
+	for (int j = 0; j < height; ++j) {
+		for (int i = 0; i < width; ++i) {
+			putpixel(i, j, j > WINDOW_TITLEBAR_HEIGHT ? 0xD4D4D4 : 0xFFFFFF);
+		}
+	}
+}
+
 void NIWindow::rerender()
 {
 	const bool largeRounded = false;
@@ -131,6 +140,8 @@ void NIWindow::rerender()
 		}
 	}
 	valid = true;
+
+	//TODO: 
 }
 
 void NIWindow::invalidate()

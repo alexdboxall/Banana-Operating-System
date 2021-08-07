@@ -55,6 +55,7 @@ public:
 
 	NIWindow(NIContext* ctxt, int x, int y, int w, int h);
 	void changeContext(NIContext* ctxt, int x, int y);
+	void drawBasicWindow();
 
 	void putpixel(int x, int y, uint32_t colour);
 };
