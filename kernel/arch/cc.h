@@ -35,9 +35,14 @@ typedef size_t	mem_ptr_t;
 #define PACK_STRUCT_STRUCT __attribute__((packed))
 #define PACK_STRUCT_FIELD(...) __VA_ARGS__
 
-#define LWIP_PLATFORM_DIAG(x, ...) kprintf("LWIP MSG: %s", x);
-#define LWIP_PLATFORM_ASSERT(x, ...) kprintf("LWIP ERR: %s", x);
+extern void CLockScheduler();
+extern void CUnlockScheduler();
+extern void CPrintf(const char* msg, ...);
 
-#define SYS_ARCH_PROTECT(x) lockScheduler();
-#define SYS_ARCH_UNPROTECT(x) unlockScheduler();
+#define LWIP_PLATFORM_DIAG(x, ...) CPrintf("LWIP MSG: %s", x);
+#define LWIP_PLATFORM_ASSERT(x, ...) CPrintf("LWIP ERR: %s", x);
+
+
+#define SYS_ARCH_PROTECT(x) CLockScheduler();
+#define SYS_ARCH_UNPROTECT(x) CUnlockScheduler();
 #define SYS_ARCH_DECL_PROTECT(x) 
