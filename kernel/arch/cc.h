@@ -23,9 +23,10 @@ typedef size_t	mem_ptr_t;
 
 #define BYTE_ORDER LITTLE_ENDIAN
 
+extern uint16_t LWIP_PLATFORM_HTONS(uint16_t x);
+extern uint32_t LWIP_PLATFORM_HTONL(uint16_t x);
+
 #define LWIP_PLATFORM_BYTESWAP 1
-#define LWIP_PLATFORM_HTONS ((((u16_t)(x))>>8)|(((x)&0xFF)<<8))
-#define LWIP_PLATFORM_HTONL ((((u32_t)(x))>>24)|(((x)&0xFF0000)>>8)|(((x)&0xFF00)<<8)|(((x)&0xFF)<< 24))
 
 #define LWIP_CHKSUM_ALGORITHM 2
 
