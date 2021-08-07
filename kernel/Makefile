@@ -64,7 +64,7 @@ kernelCannonlake: common32 $(TARGET32_Cannonlake)
 OPTIMISATIONS = -mno-default -mno-sse -mno-avx -mno-mmx -msoft-float -O0 -fno-strict-aliasing -fpeephole2 -fauto-inc-dec -fno-unwind-tables -freorder-functions -ftoplevel-reorder -fno-asynchronous-unwind-tables -fno-stack-protector -fomit-frame-pointer -fdelete-null-pointer-checks -fcompare-elim -fcprop-registers -fdce -fif-conversion -fif-conversion2 -fmerge-constants -fno-reorder-blocks  -fno-reorder-blocks-and-partition -fno-prefetch-loop-arrays -falign-functions=4 -falign-loops=4 -falign-labels=4 -falign-jumps=4 
 
 #-fsanitize=undefined 
-CFLAGSCOMMON = $(WARNINGS) $(ACPI) $(OPTIMISATIONS) -march=$(MARCH) -mtune=$(TUNING) -mcld -ffreestanding -fmax-errors=5 -I $(INCPATH) -I $(LIBKPATH) -DKERNEL_CODE -D_libk
+CFLAGSCOMMON = $(WARNINGS) $(ACPI) $(OPTIMISATIONS) -march=$(MARCH) -mtune=$(TUNING) -mcld -ffreestanding -fmax-errors=5 -I $(INCPATH) -I $(INCPATH)/net/include -I $(LIBKPATH) -DKERNEL_CODE -D_libk
 CFLAGS32 = -c -m32 -DTHIRTYTWOBIT $(CFLAGSCOMMON) -fvisibility=hidden
 #C code has visibility hidden so that all of the ACPICA stuff doesn't clog it up
 
