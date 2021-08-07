@@ -1,7 +1,6 @@
 #include "arch/sys_arch.h"
 #include "arch/cc.h"
 #include "lwip/err.h"
-#include "lwip/ip.h"
 
 err_t sys_sem_new(sys_sem_t* sem, u8_t count)
 {
@@ -23,7 +22,7 @@ u32_t sys_arch_sem_wait(sys_sem_t* sem, u32_t timeout)
 	return 0;
 }
 
-err_t sys_mbox_new(mbox_t* mbox, int size)
+err_t sys_mbox_new(sys_mbox_t* mbox, int size)
 {
 	return 0;
 }
