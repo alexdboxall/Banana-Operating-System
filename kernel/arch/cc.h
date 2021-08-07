@@ -42,7 +42,6 @@ extern void CPrintf(const char* msg, ...);
 #define LWIP_PLATFORM_DIAG(x, ...) CPrintf("LWIP MSG: %s", x);
 #define LWIP_PLATFORM_ASSERT(x, ...) CPrintf("LWIP ERR: %s", x);
 
-
 #define SYS_ARCH_PROTECT(x) CLockScheduler();
 #define SYS_ARCH_UNPROTECT(x) CUnlockScheduler();
 #define SYS_ARCH_DECL_PROTECT(x) 
