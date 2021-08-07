@@ -6,6 +6,7 @@
 typedef size_t sys_sem_t;
 typedef size_t sys_mbox_t;
 typedef size_t sys_thread_t;
+typedef size_t sys_mutex_t;
 
 #define SYS_MBOX_NULL 0
 #define SYS_SEM_NULL 0
