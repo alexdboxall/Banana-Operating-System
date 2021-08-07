@@ -33,7 +33,7 @@ typedef size_t	mem_ptr_t;
 #define PACK_STRUCT_BEGIN
 #define PACK_STRUCT_END
 #define PACK_STRUCT_STRUCT __attribute__((packed))
-#define PACK_STRUCT_FIELD
+#define PACK_STRUCT_FIELD(...) __VA_ARGS__
 
 #define LWIP_PLATFORM_DIAG(x, ...) kprintf("LWIP MSG: %s", x);
 #define LWIP_PLATFORM_ASSERT(x, ...) kprintf("LWIP ERR: %s", x);
