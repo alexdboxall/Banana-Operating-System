@@ -141,7 +141,9 @@ void NIWindow::rerender()
 	}
 	valid = true;
 
-	//TODO: 
+	drawBasicWindow();
+
+	//TODO: tell the user so they can make a call to update the framebuffer
 }
 
 void NIWindow::invalidate()

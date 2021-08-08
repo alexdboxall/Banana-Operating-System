@@ -71,8 +71,7 @@ void start(Device* _dvl)
 	dev->preOpenPCI(driverless->pci.info);
 	dev->_open(0, 0, nullptr);
 
-	//kernelProcess->createThread(playThread, dev, 30);
-
+	kernelProcess->createThread(playThread, dev, 30);
 }
 
 void playThread(void* __)
@@ -81,10 +80,14 @@ void playThread(void* __)
 
 	SoundCard* card = (SoundCard*) __;
 
-	SoundPort* port = new SoundPort(16000, 16, 2, 65536 * 6);
+	const int SOUND_HERTZ = 24000;
+	const int SOUND_BITS = 16;
+	const int SOUND_CHANNELS = 2;
+
+	SoundPort* port = new SoundPort(SOUND_HERTZ, SOUND_BITS, SOUND_CHANNELS, 65536 * 6);
 	bool started = false;
 
-	File* f = new File("C:/gumball.wav", kernelProcess);
+	File* f = new File("C:/fluffy bluff.wav", kernelProcess);
 	f->open(FileOpenMode::Read);
 
 	while (1) {
@@ -101,7 +104,7 @@ void playThread(void* __)
 		kprintf("buffer has %d samples in it.\n", port->getBufferUsed());
 
 		if (!started) {
-			card->configureRates(16000, 16, 2);
+			card->configureRates(SOUND_HERTZ, SOUND_BITS, SOUND_CHANNELS);
 			card->addChannel(port);
 			port->unpause();
 			card->beginPlayback();
@@ -115,7 +118,6 @@ void playThread(void* __)
 		}
 
 		port->buffer16(buf, bytesRead / 2);
-
 	}
 
 	terminateTask(0);
