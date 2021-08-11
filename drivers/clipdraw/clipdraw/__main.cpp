@@ -36,7 +36,7 @@ void NiMain(void* s)
 {
 	extern Video* screen;
 
-	//NiInstallSysHooks();
+	NiInstallSysHooks();
 	NiLoadCursors();
 
 	ctxt = new NIContext(screen, screen->getWidth(), screen->getHeight(), screen->getWidth(), 32);
@@ -62,12 +62,12 @@ void NiMain(void* s)
 	
 	(new Process("C:/Banana/System/newgui.exe"))->createUserThread();
 
-	while (1) {
+	/*while (1) {
 		lockScheduler();
 		schedule();
 		unlockScheduler();
 		//blockTask(TaskState::Paused);
-	}
+	}*/
 
 	/*NIWindow win1(&ctxt, 50, 50, 400, 320);
 	NIWindow sha1(&ctxt, 45, 45, 410, 330);

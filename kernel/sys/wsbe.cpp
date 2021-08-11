@@ -19,7 +19,7 @@
 /// <param name="ebx">Driver dependent, or the return code if no driver loaded.</param>
 /// <param name="ecx">Driver dependent.</param>
 /// <param name="edx">Driver dependent.</param>
-/// <returns>Does not return.</returns>
+/// <returns>Driver dependent.</returns>
 /// 
 uint64_t SysWsbe(regs* r)
 {
@@ -27,6 +27,5 @@ uint64_t SysWsbe(regs* r)
 	char noGUI[] = "This program requires a GUI driver to run.\n";
 	currentTaskTCB->processRelatedTo->terminal->write(strlen(noGUI), (void*) noGUI, &br);
 	terminateTask(r->edx);
-	KePanic(noGUI);
 	return 0xDEADBEEF;
 }
