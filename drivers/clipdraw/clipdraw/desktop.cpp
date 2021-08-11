@@ -144,6 +144,11 @@ uint8_t shadow[2048];
 uint32_t renderData[2048];
 NIWindow* movingWin = nullptr;
 
+#define MOVE_TYPE_MOVE			1
+#define MOVE_TYPE_RESIZE_BR		2
+
+int movingType = 0;
+
 extern uint64_t milliTenthsSinceBoot;
 
 void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
@@ -171,7 +176,7 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 
 	NIWindow* clickon = getTopmostWindowAtPixel(mouseX, mouseY);
 
-	if (movingWin) {
+	if (movingWin && movingType == MOVE_TYPE_MOVE) {
 		bool release = !(buttons & 1) && (previousButtons & 1);
 
 		for (int y = 1; y < movingWin->height - 1; ++y) {
@@ -216,6 +221,11 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 		}
 	}
 
+	if (movingWin && movingType == MOVE_TYPE_RESIZE_BR) {
+		movingWin->width += mouseX - moveBaseX;
+		movingWin->height += mouseY - moveBaseY;
+	}
+
 	if ((buttons & 1) && clickon) {
 		if (!(previousButtons & 1)) {
 			uint64_t sincePrev = milliTenthsSinceBoot - lastClick;
@@ -257,9 +267,17 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 		} else if (!movingWin) {
 			if (mouseY - clickon->ypos < WINDOW_TITLEBAR_HEIGHT && !clickon->fullscreen) {
 				movingWin = clickon;
+				movingType = MOVE_TYPE_MOVE;
 				moveBaseX = mouseX - clickon->xpos;
 				moveBaseY = mouseY - clickon->ypos;
 				deleteWindow(clickon);
+			}
+			if (mouseY - clickon->ypos > clickon->height - 15) {
+				movingWin = clickon;
+				movingType = MOVE_TYPE_RESIZE_BR;
+				moveBaseX = mouseX - clickon->xpos;
+				moveBaseY = mouseY - clickon->ypos;
+				//deleteWindow(clickon);
 			}
 		}
 	}

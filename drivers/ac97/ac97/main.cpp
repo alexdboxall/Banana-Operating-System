@@ -71,7 +71,7 @@ void start(Device* _dvl)
 	dev->preOpenPCI(driverless->pci.info);
 	dev->_open(0, 0, nullptr);
 
-	kernelProcess->createThread(playThread, dev, 30);
+	//kernelProcess->createThread(playThread, dev, 30);
 }
 
 void playThread(void* __)
