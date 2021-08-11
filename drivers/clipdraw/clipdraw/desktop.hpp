@@ -21,6 +21,8 @@ class NIWindow;
 #define MOUSE_OFFSET_HORZ	(CURSOR_DATA_SIZE * 5)
 #define MOUSE_OFFSET_HAND	(CURSOR_DATA_SIZE * 6)
 
+void NiLoadCursors();
+
 class NIDesktop
 {
 private:

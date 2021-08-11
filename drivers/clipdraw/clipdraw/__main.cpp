@@ -2,10 +2,10 @@
 
 #pragma GCC optimize ("O1")
 
-void start(void* s);
-void begin(void* s)
+void NiMain(void* s);
+void NiBegin(void* s)
 {
-	start(s);
+	NiMain(s);
 }
 
 #include "core/main.hpp"
@@ -32,11 +32,12 @@ extern "C" {
 NIContext* ctxt;
 NIDesktop* desktop;
 
-void start(void* s)
+void NiMain(void* s)
 {
 	extern Video* screen;
 
 	NiInstallSysHooks();
+	NiLoadCursors();
 
 	ctxt = new NIContext(screen, screen->getWidth(), screen->getHeight(), screen->getWidth(), 32);
 	desktop = new NIDesktop(ctxt);

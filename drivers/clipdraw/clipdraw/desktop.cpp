@@ -3,6 +3,7 @@
 #include <krnl/panic.hpp>
 #include <core/kheap.hpp>
 #include <krnl/hal.hpp>
+#include <fs/vfs.hpp>
 
 extern "C" {
 #include <libk/string.h>
@@ -34,9 +35,59 @@ uint8_t ___mouse_data[CURSOR_DATA_SIZE * MAX_CURSOR_TYPES] = {
 extern void (*guiMouseHandler) (int xdelta, int ydelta, int buttons, int z);
 NIDesktop* mouseDesktop;
 
-void clipdrawHandleMouse(int xdelta, int ydelta, int buttons, int z)
+void NiHandleMouse(int xdelta, int ydelta, int buttons, int z)
 {
 	mouseDesktop->handleMouse(xdelta, ydelta, buttons, z);
+}
+
+void NiLoadCursors()
+{
+	File* f = new File("C:/Banana/Cursors/STANDARD.CUR", kernelProcess);
+	FileStatus status = f->open(FileOpenMode::Read);
+	if (status != FileStatus::Success) {
+		kprintf("CURSOR LOAD: BAD 1\n");
+		return;
+	}
+
+	uint64_t size;
+	bool dir;
+	f->stat(&size, &dir);
+	int read;
+	uint8_t* curdata = (uint8_t*) malloc(size);
+	f->read(size, curdata, &read);
+	if (read != (int) size) {
+		kprintf("CURSOR LOAD: BAD 2\n");
+		return;
+	}
+
+	int numCursors = size / 260;
+	kprintf("CURSORS: %d\n", numCursors);
+	kprintf((char*) curdata);
+	for (int i = 0; i < numCursors; ++i) {
+		int offset;
+		if (!memcmp(curdata + i * 4, "NRML", 4)) {
+			offset = MOUSE_OFFSET_NORMAL;
+		} else if (!memcmp((char*) curdata + i * 4, "WAIT", 4)) {
+			offset = MOUSE_OFFSET_WAIT;
+		} else if (!memcmp((char*) curdata + i * 4, "TLDR", 4)) {
+			offset = MOUSE_OFFSET_TLDR;
+		} else if (!memcmp((char*) curdata + i * 4, "TEXT", 4)) {
+			offset = MOUSE_OFFSET_TEXT;
+		} else if (!memcmp((char*) curdata + i * 4, "VERT", 4)) {
+			offset = MOUSE_OFFSET_VERT;
+		} else if (!memcmp((char*) curdata + i * 4, "HORZ", 4)) {
+			offset = MOUSE_OFFSET_HORZ;
+		} else if (!memcmp((char*) curdata + i * 4, "HAND", 4)) {
+			offset = MOUSE_OFFSET_HAND;
+		} else {
+			kprintf("CURSOR LOAD: BAD 3\n");
+			break;
+		}
+
+		memcpy(___mouse_data + offset, curdata + numCursors * 4 + i * CURSOR_DATA_SIZE, CURSOR_DATA_SIZE);
+	}
+
+	free(curdata);
 }
 
 NIDesktop::NIDesktop(NIContext* context)
@@ -50,7 +101,7 @@ NIDesktop::NIDesktop(NIContext* context)
 	head = new List<NIWindow*>();
 
 	mouseDesktop = this;
-	guiMouseHandler = clipdrawHandleMouse;
+	guiMouseHandler = NiHandleMouse;
 }
 
 
@@ -146,6 +197,8 @@ NIWindow* movingWin = nullptr;
 
 #define MOVE_TYPE_MOVE			1
 #define MOVE_TYPE_RESIZE_BR		2
+#define MOVE_TYPE_RESIZE_B		3
+#define MOVE_TYPE_RESIZE_R		4
 
 int movingType = 0;
 
@@ -221,9 +274,50 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 		}
 	}
 
-	if (movingWin && movingType == MOVE_TYPE_RESIZE_BR) {
-		movingWin->width += mouseX - moveBaseX;
-		movingWin->height += mouseY - moveBaseY;
+	if (movingWin && (movingType == MOVE_TYPE_RESIZE_BR || movingType == MOVE_TYPE_RESIZE_B || movingType == MOVE_TYPE_RESIZE_R)) {
+		bool release = !(buttons & 1) && (previousButtons & 1);
+
+		int oldW = movingWin->width + oldX - moveBaseX;
+		int oldH = movingWin->height + oldY - moveBaseY;
+		int newW = movingWin->width + mouseX - moveBaseX;
+		int newH = movingWin->height + mouseY - moveBaseY;
+
+		if (movingType == MOVE_TYPE_RESIZE_B) newW = oldW = movingWin->width;
+		if (movingType == MOVE_TYPE_RESIZE_R) newH = oldH = movingWin->height;
+
+		int mxW = oldW > newW ? oldW : newW;
+		int mxH = oldH > newH ? oldH : newH;
+		for (int y = 1; y < mxH; ++y) {
+			for (int x = 1; x < mxW; ++x) {
+				if (!((x + y) & 31) && !(y & 3)) {
+					rangeRefresh(movingWin->ypos + y, movingWin->ypos + 1 + y, movingWin->xpos + x, movingWin->xpos + 1 + x);
+					if (!release && x < newW && y < newH) ctxt->screen->putpixel(movingWin->xpos + x, movingWin->ypos + y, 0);
+				}
+			}
+		}
+
+		if (!release) {
+			rangeRefresh(movingWin->ypos, movingWin->ypos + 1, movingWin->xpos, movingWin->xpos + oldW);
+			ctxt->screen->putrect(movingWin->xpos, movingWin->ypos, newW, 1, 0);
+
+			rangeRefresh(movingWin->ypos + oldH, movingWin->ypos + 1 + oldH, movingWin->xpos, movingWin->xpos + oldW);
+			ctxt->screen->putrect(movingWin->xpos, movingWin->ypos + newH, newW, 1, 0);
+
+			//ctxt->screen->drawCursor(mouseX, mouseY, (uint32_t*) (___mouse_data + cursorOffset), 0);
+		}
+
+		if (release) {
+			auto win = movingWin;
+			movingWin = nullptr;
+
+			win->width = newW;
+			win->height = newH;
+			win->rerender();
+			addWindow(win);
+			refreshWindowBounds(win);
+
+			cursorOffset = MOUSE_OFFSET_NORMAL;
+		}
 	}
 
 	if ((buttons & 1) && clickon) {
@@ -265,19 +359,34 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 			lastClick = milliTenthsSinceBoot;
 
 		} else if (!movingWin) {
-			if (mouseY - clickon->ypos < WINDOW_TITLEBAR_HEIGHT && !clickon->fullscreen) {
+			if (mouseY - clickon->ypos > clickon->height - 15 && !clickon->fullscreen) {
+				movingWin = clickon;
+				movingType = MOVE_TYPE_RESIZE_B;
+				cursorOffset = MOUSE_OFFSET_VERT;
+				moveBaseX = mouseX;
+				moveBaseY = mouseY;
+				deleteWindow(clickon);
+			} 
+			if (mouseX - clickon->xpos > clickon->width - 15 && !clickon->fullscreen) {
+				if (!movingWin) {
+					movingWin = clickon;
+					movingType = MOVE_TYPE_RESIZE_R;
+					cursorOffset = MOUSE_OFFSET_HORZ;
+					moveBaseX = mouseX;
+					moveBaseY = mouseY;
+					deleteWindow(clickon);
+				} else {
+					movingType = MOVE_TYPE_RESIZE_BR;
+					cursorOffset = MOUSE_OFFSET_TLDR;
+				}
+			}
+
+			if (!movingWin && mouseY - clickon->ypos < WINDOW_TITLEBAR_HEIGHT && !clickon->fullscreen) {
 				movingWin = clickon;
 				movingType = MOVE_TYPE_MOVE;
 				moveBaseX = mouseX - clickon->xpos;
 				moveBaseY = mouseY - clickon->ypos;
 				deleteWindow(clickon);
-			}
-			if (mouseY - clickon->ypos > clickon->height - 15) {
-				movingWin = clickon;
-				movingType = MOVE_TYPE_RESIZE_BR;
-				moveBaseX = mouseX - clickon->xpos;
-				moveBaseY = mouseY - clickon->ypos;
-				//deleteWindow(clickon);
 			}
 		}
 	}
