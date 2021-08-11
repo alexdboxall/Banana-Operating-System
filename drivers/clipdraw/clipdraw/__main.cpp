@@ -119,7 +119,4 @@ void NiMain(void* s)
 	}
 	*/
 
-	while (1) {
-		blockTask(TaskState::Paused);
-	}
 }

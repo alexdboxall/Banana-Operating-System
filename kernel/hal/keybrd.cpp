@@ -56,6 +56,8 @@ void startGUI(void* a)
 
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/vga.sys"), computer);
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/System/clipdraw.dll"), computer);
+	
+	KePanic("startGUI returns");
 }
 
 void startGUIVESA(void* a)
@@ -64,6 +66,8 @@ void startGUIVESA(void* a)
 
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/vesa.sys"), computer);
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/System/clipdraw.dll"), computer);
+
+	KePanic("startGUIVESA returns");
 }
 
 void sendKeyboardToken(KeyboardToken kt)
