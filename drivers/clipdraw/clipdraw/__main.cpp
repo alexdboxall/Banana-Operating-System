@@ -36,11 +36,14 @@ void NiMain(void* s)
 {
 	extern Video* screen;
 
-	NiInstallSysHooks();
+	//NiInstallSysHooks();
 	NiLoadCursors();
 
 	ctxt = new NIContext(screen, screen->getWidth(), screen->getHeight(), screen->getWidth(), 32);
 	desktop = new NIDesktop(ctxt);
+
+	extern void NiDisplayRAM(void*);
+	kernelProcess->createThread(NiDisplayRAM);
 
 	NIWindow* win0 = new NIWindow(ctxt, 0, 0, 1, 1);
 
@@ -56,11 +59,14 @@ void NiMain(void* s)
 	desktop->addWindow(win3);
 
 	desktop->completeRefresh();
-
+	
 	(new Process("C:/Banana/System/newgui.exe"))->createUserThread();
 
 	while (1) {
-		blockTask(TaskState::Paused);
+		lockScheduler();
+		schedule();
+		unlockScheduler();
+		//blockTask(TaskState::Paused);
 	}
 
 	/*NIWindow win1(&ctxt, 50, 50, 400, 320);

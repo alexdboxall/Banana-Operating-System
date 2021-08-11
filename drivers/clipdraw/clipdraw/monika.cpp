@@ -38,6 +38,30 @@ void drawVGAChar(int x, int y, int c)
 	}
 }
 
+void NiDisplayRAM(void* a)
+{
+	unlockScheduler();
+	while (1) {
+		extern void drawVGAChar(int x, int y, int c);
+		drawVGAChar(0, 0, '?');
+		drawVGAChar(1, 0, '?');
+		drawVGAChar(2, 0, '%');
+		drawVGAChar(3, 0, ' ');
+		drawVGAChar(4, 0, 'R');
+		drawVGAChar(5, 0, 'A');
+		drawVGAChar(6, 0, 'M');
+		drawVGAChar(7, 0, ' ');
+		drawVGAChar(8, 0, 'u');
+		drawVGAChar(9, 0, 's');
+		drawVGAChar(10, 0, 'e');
+		drawVGAChar(11, 0, 'd');
+	}
+}
+
+
+
+
+
 void monikaBsod(char* msg)
 {
 	extern Video* screen;
