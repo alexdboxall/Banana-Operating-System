@@ -34,6 +34,10 @@ NIDesktop* desktop;
 
 void NiMain(void* s)
 {
+	while (1) {
+
+	}
+
 	extern Video* screen;
 
 	NiInstallSysHooks();
