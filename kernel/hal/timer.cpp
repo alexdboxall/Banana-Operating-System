@@ -97,10 +97,11 @@ void timerHandler(uint32_t milliTenths)
 	//do preemption
 	kprintf("KeIsPreemptionOn: %d\n", KeIsPreemptionOn);
 	if (currentTaskTCB->timeSliceRemaining != 0 && KeIsPreemptionOn) {
+		kprintf("       ****** A\n");
 		lockScheduler();		
 		currentTaskTCB->timeSliceRemaining -= milliTenthsSinceBoot;
 		if (currentTaskTCB->timeSliceRemaining <= milliTenthsSinceBoot) {
-			kprintf("pre-empted.\n");
+			kprintf("       ****** BBB\n");
 			schedule();
 		}
 		unlockScheduler();
