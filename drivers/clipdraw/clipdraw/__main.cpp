@@ -60,8 +60,6 @@ void NiMain(void* s)
 
 	desktop->completeRefresh();
 	
-	(new Process("C:/Banana/System/newgui.exe"))->createUserThread();
-
 	/*while (1) {
 		lockScheduler();
 		schedule();
