@@ -72,7 +72,7 @@ void timerHandler(uint32_t milliTenths)
 
 	ThreadControlBlock* next_task;
 	ThreadControlBlock* this_task = nullptr;
-
+	kprintf("timer handler.\n");
 	lockStuff();
 
 	if (!sleepingTaskList.isEmpty()) {
