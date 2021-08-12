@@ -48,11 +48,16 @@ void NiDisplayRAM(void* a)
 {
 	unlockScheduler();
 	while (1) {
-		extern void drawVGAChar(int x, int y, int c);
+		extern Video* screen;
 
 		int percent = Phys::usedPages * 100 / Phys::usablePages;
-		drawVGAChar(0, 0, ' ');
-		drawVGAChar(1, 0, ' ');
+		
+		for (int y = 0; y < 16; ++y) {
+			for (int x = 0; x < 16; ++x) {
+				screen->putpixel(x, y, 0xFFFFFF);
+			}
+		}
+
 		drawVGAChar(0, 0, percent / 10 + '0');
 		drawVGAChar(1, 0, percent % 10 + '0');
 		drawVGAChar(2, 0, '%');
