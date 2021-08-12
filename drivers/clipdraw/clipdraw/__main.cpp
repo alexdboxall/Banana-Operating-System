@@ -34,6 +34,7 @@ NIDesktop* desktop;
 
 void NiMain(void* s)
 {
+	(new Process("C:/Banana/System/newgui.exe"))->createUserThread();
 	while (1) {
 
 	}
