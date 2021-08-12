@@ -100,6 +100,7 @@ void timerHandler(uint32_t milliTenths)
 		lockScheduler();		
 		currentTaskTCB->timeSliceRemaining -= milliTenthsSinceBoot;
 		if (currentTaskTCB->timeSliceRemaining <= milliTenthsSinceBoot) {
+			kprintf("pre-empted.\n");
 			schedule();
 		}
 		unlockScheduler();

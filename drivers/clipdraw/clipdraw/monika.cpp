@@ -55,6 +55,10 @@ void NiDisplayRAM(void* a)
 		drawVGAChar(9, 0, 's');
 		drawVGAChar(10, 0, 'e');
 		drawVGAChar(11, 0, 'd');
+
+		lockScheduler();
+		schedule();
+		unlockScheduler();
 	}
 }
 

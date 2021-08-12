@@ -34,11 +34,6 @@ NIDesktop* desktop;
 
 void NiMain(void* s)
 {
-	(new Process("C:/Banana/System/newgui.exe"))->createUserThread();
-	while (1) {
-
-	}
-
 	extern Video* screen;
 
 	NiInstallSysHooks();
@@ -65,12 +60,14 @@ void NiMain(void* s)
 
 	desktop->completeRefresh();
 	
-	/*while (1) {
+	(new Process("C:/Banana/System/newgui.exe"))->createUserThread();
+
+	while (1) {
 		lockScheduler();
 		schedule();
 		unlockScheduler();
 		//blockTask(TaskState::Paused);
-	}*/
+	}
 
 	/*NIWindow win1(&ctxt, 50, 50, 400, 320);
 	NIWindow sha1(&ctxt, 45, 45, 410, 330);
