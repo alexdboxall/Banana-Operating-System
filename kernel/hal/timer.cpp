@@ -66,7 +66,6 @@ Timer* setupTimer(int hz)
 
 void timerHandler(uint32_t milliTenths)
 {
-	kprintf("milliTenths: %d\n", milliTenths);
 	milliTenthsSinceBoot += milliTenths;
 
 	if (!KeIsSchedulingOn) return;
@@ -96,13 +95,10 @@ void timerHandler(uint32_t milliTenths)
 	}
 
 	//do preemption
-	kprintf("KeIsPreemptionOn: %d\n", KeIsPreemptionOn);
 	if (currentTaskTCB->timeSliceRemaining != 0 && KeIsPreemptionOn) {
-		kprintf("       ****** A\n");
 		lockScheduler();		
-		currentTaskTCB->timeSliceRemaining -= milliTenthsSinceBoot;
+		currentTaskTCB->timeSliceRemaining -= milliTenths;
 		if (currentTaskTCB->timeSliceRemaining <= milliTenthsSinceBoot) {
-			kprintf("       ****** B\n");
 			schedule();
 		}
 		unlockScheduler();
