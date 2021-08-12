@@ -66,6 +66,7 @@ Timer* setupTimer(int hz)
 
 void timerHandler(uint32_t milliTenths)
 {
+	kprintf("milliTenths: %d\n", milliTenths);
 	milliTenthsSinceBoot += milliTenths;
 
 	if (!KeIsSchedulingOn) return;
@@ -101,7 +102,7 @@ void timerHandler(uint32_t milliTenths)
 		lockScheduler();		
 		currentTaskTCB->timeSliceRemaining -= milliTenthsSinceBoot;
 		if (currentTaskTCB->timeSliceRemaining <= milliTenthsSinceBoot) {
-			kprintf("       ****** BBB\n");
+			kprintf("       ****** B\n");
 			schedule();
 		}
 		unlockScheduler();
