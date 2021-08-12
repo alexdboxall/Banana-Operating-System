@@ -72,7 +72,6 @@ void timerHandler(uint32_t milliTenths)
 
 	ThreadControlBlock* next_task;
 	ThreadControlBlock* this_task = nullptr;
-	kprintf("timer handler.\n");
 	lockStuff();
 
 	if (!sleepingTaskList.isEmpty()) {
@@ -96,6 +95,7 @@ void timerHandler(uint32_t milliTenths)
 	}
 
 	//do preemption
+	kprintf("KeIsPreemptionOn: %d\n", KeIsPreemptionOn);
 	if (currentTaskTCB->timeSliceRemaining != 0 && KeIsPreemptionOn) {
 		lockScheduler();		
 		currentTaskTCB->timeSliceRemaining -= milliTenthsSinceBoot;
