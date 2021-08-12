@@ -699,6 +699,7 @@ namespace Thr
 		}
 		FileStatus status = f->stat(&siz, &dir);
 		delete f;
+		kprintf("status = %d, siz = %d, dir = %d\n", status, siz, (uint32_t) dir);
 		if (dir || !siz) {
 			if (!critical) return 0;
 			char msg[256];
