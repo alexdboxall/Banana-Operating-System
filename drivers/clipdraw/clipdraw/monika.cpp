@@ -51,6 +51,8 @@ void NiDisplayRAM(void* a)
 		extern void drawVGAChar(int x, int y, int c);
 
 		int percent = Phys::usedPages * 100 / Phys::usablePages;
+		drawVGAChar(0, 0, ' ');
+		drawVGAChar(1, 0, ' ');
 		drawVGAChar(0, 0, percent / 10 + '0');
 		drawVGAChar(1, 0, percent % 10 + '0');
 		drawVGAChar(2, 0, '%');
@@ -64,9 +66,7 @@ void NiDisplayRAM(void* a)
 		drawVGAChar(10, 0, 'e');
 		drawVGAChar(11, 0, 'd');
 
-		lockScheduler();
-		schedule();
-		unlockScheduler();
+		sleep(1);
 	}
 }
 
