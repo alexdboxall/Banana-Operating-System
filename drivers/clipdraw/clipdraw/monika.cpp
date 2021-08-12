@@ -38,13 +38,21 @@ void drawVGAChar(int x, int y, int c)
 	}
 }
 
+namespace Phys
+{
+	extern int usablePages;
+	extern int usedPages;
+}
+
 void NiDisplayRAM(void* a)
 {
 	unlockScheduler();
 	while (1) {
 		extern void drawVGAChar(int x, int y, int c);
-		drawVGAChar(0, 0, '?');
-		drawVGAChar(1, 0, '?');
+
+		int percent = Phys::usedPages * 100 / Phys::usablePages;
+		drawVGAChar(0, 0, percent / 10 + '0');
+		drawVGAChar(1, 0, percent % 10 + '0');
 		drawVGAChar(2, 0, '%');
 		drawVGAChar(3, 0, ' ');
 		drawVGAChar(4, 0, 'R');

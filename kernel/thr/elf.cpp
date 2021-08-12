@@ -692,7 +692,7 @@ namespace Thr
 			if (!critical) return 0;
 
 			char msg[256];
-			strcpy(msg, "COULD NOT LOAD DLL '");
+			strcpy(msg, "COULD NOT LOAD DLL (A) '");
 			strcat(msg, name);
 			strcat(msg, "'");
 			KePanic(msg);
@@ -702,7 +702,7 @@ namespace Thr
 		if (dir || !siz) {
 			if (!critical) return 0;
 			char msg[256];
-			strcpy(msg, "COULD NOT LOAD DLL '");
+			strcpy(msg, "COULD NOT LOAD DLL (B) '");
 			strcat(msg, name);
 			strcat(msg, "'");
 			KePanic(msg);
