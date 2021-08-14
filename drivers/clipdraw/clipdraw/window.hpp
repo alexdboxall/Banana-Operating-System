@@ -2,6 +2,10 @@
 
 #include "context.hpp"
 
+extern "C" {
+#include "userlink.h"
+}
+
 #define WINDOW_TITLEBAR_HEIGHT 25
 
 #define WINFLAG_DISABLE_RESIZE 1
@@ -28,6 +32,11 @@ public:
 		uint16_t* data16;
 		uint32_t* data32;
 	};
+
+	int numEvents;
+	int nextEventId;
+	int firstEventId;
+	NiEvent events[MAX_EVENTS_PER_WINDOW];
 
 	bool valid;
 	int renderTableLength;
@@ -58,4 +67,8 @@ public:
 	void drawBasicWindow();
 
 	void putpixel(int x, int y, uint32_t colour);
+
+	void postEvent(NiEvent evnt);
+	int getEventCount();
+	NiEvent grabEvent();
 };

@@ -20,6 +20,26 @@ void NIWindow::changeContext(NIContext* ctxt, int _x, int _y)
 	rerender();
 }
 
+void NIWindow::postEvent(NiEvent evnt)
+{
+	events[nextEventId] = evnt;
+	nextEventId = (nextEventId + 1) % MAX_EVENTS_PER_WINDOW;
+	numEvents++;
+}
+
+int NIWindow::getEventCount()
+{
+	return numEvents;
+}
+
+NiEvent NIWindow::grabEvent()
+{
+	NiEvent e = events[firstEventId];
+	firstEventId = (firstEventId + 1) % MAX_EVENTS_PER_WINDOW;
+	numEvents--;
+	return e;
+}
+
 NIWindow::NIWindow(NIContext* ctxt, int _x, int _y, int _w, int _h)
 {
 	width = _w;
@@ -32,6 +52,10 @@ NIWindow::NIWindow(NIContext* ctxt, int _x, int _y, int _w, int _h)
 	valid = false;
 	renderTable = nullptr;
 	renderTableLength = 0;
+
+	numEvents = 0;
+	nextEventId = 0;
+	firstEventId = 0;
 
 	changeContext(ctxt, _x, _y);
 }

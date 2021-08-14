@@ -53,7 +53,7 @@ void NiDisplayRAM(void* a)
 		int percent = Phys::usedPages * 100 / Phys::usablePages;
 		
 		for (int y = 0; y < 16; ++y) {
-			for (int x = 0; x < 16; ++x) {
+			for (int x = 0; x < 8 * 12; ++x) {
 				screen->putpixel(x, y, 0xFFFFFF);
 			}
 		}
@@ -71,7 +71,7 @@ void NiDisplayRAM(void* a)
 		drawVGAChar(10, 0, 'e');
 		drawVGAChar(11, 0, 'd');
 
-		sleep(1);
+		milliTenthSleep(2500);
 	}
 }
 

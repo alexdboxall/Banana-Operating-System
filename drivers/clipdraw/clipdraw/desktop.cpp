@@ -6,6 +6,7 @@
 #include <fs/vfs.hpp>
 
 extern "C" {
+#include "userlink.h"
 #include <libk/string.h>
 }
 
@@ -31,9 +32,19 @@ uint8_t ___mouse_data[CURSOR_DATA_SIZE * MAX_CURSOR_TYPES] = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-
 extern void (*guiMouseHandler) (int xdelta, int ydelta, int buttons, int z);
 NIDesktop* mouseDesktop;
+
+NiEvent NiCreateEvent(NIWindow* win, int type, bool redraw)
+{
+	NiEvent evnt;
+	evnt.type = type;
+	evnt.needsRedraw = redraw;
+	evnt.krnlWindow = (void*) win;
+	evnt.mouseX = mouseDesktop->mouseX;
+	evnt.mouseY = mouseDesktop->mouseY;
+	return evnt;
+}
 
 void NiHandleMouse(int xdelta, int ydelta, int buttons, int z)
 {
@@ -302,17 +313,17 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 
 			rangeRefresh(movingWin->ypos + oldH, movingWin->ypos + 1 + oldH, movingWin->xpos, movingWin->xpos + oldW);
 			ctxt->screen->putrect(movingWin->xpos, movingWin->ypos + newH, newW, 1, 0);
-
-			//ctxt->screen->drawCursor(mouseX, mouseY, (uint32_t*) (___mouse_data + cursorOffset), 0);
 		}
 
 		if (release) {
 			auto win = movingWin;
 			movingWin = nullptr;
 
+			NiEvent evnt = NiCreateEvent(win, EVENT_TYPE_RESIZED, true);
 			win->width = newW;
 			win->height = newH;
 			win->rerender();
+			win->postEvent(evnt);
 			addWindow(win);
 			refreshWindowBounds(win);
 

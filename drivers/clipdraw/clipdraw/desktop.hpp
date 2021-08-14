@@ -55,3 +55,8 @@ public:
 
 	NIWindow* getTopmostWindowAtPixel(int x, int y);
 };
+
+extern "C" {
+#include "userlink.h"
+}
+NiEvent NiCreateEvent(NIWindow* win, int type, bool redraw);
