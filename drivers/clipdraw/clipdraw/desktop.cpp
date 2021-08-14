@@ -323,10 +323,9 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 			win->width = newW;
 			win->height = newH;
 			win->rerender();
-			win->postEvent(evnt);
 			addWindow(win);
 			refreshWindowBounds(win);
-
+			win->postEvent(evnt);
 			cursorOffset = MOUSE_OFFSET_NORMAL;
 		}
 	}

@@ -2,6 +2,9 @@
 #include <krnl/panic.hpp>
 #include <core/kheap.hpp>
 
+extern "C" {
+#include "libk/string.h"
+}
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
 
@@ -148,6 +151,7 @@ void NIWindow::rerender()
 	renderTableLength = height;
 	renderTable = (RenderTableEntry*) malloc(sizeof(RenderTableEntry) * renderTableLength);
 	data32 = (uint32_t*) malloc(height * width * bytesPerPixel);
+	memset(data32, 0, height * width * bytesPerPixel);
 
 	for (int i = 0; i < renderTableLength; ++i) {
 		if (i < (largeRounded ? 11 : 7)) {
@@ -166,13 +170,11 @@ void NIWindow::rerender()
 	valid = true;
 
 	drawBasicWindow();
-
-	//TODO: tell the user so they can make a call to update the framebuffer
 }
 
 void NIWindow::invalidate()
 {
-	if (valid && renderTable) {
+	if (valid && renderTable && data8) {
 		free(data8);
 		free(renderTable);
 	}
