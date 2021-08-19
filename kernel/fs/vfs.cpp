@@ -464,4 +464,4 @@ uint64_t Filesystem::allocateSwapfile(const char* filename, int megs)
 }
 
 
-const char* NiDedication[] = "This operating system is dedicated to N.M.I.";
+const char* NiDedication = "This operating system is dedicated to N.M.I.";
