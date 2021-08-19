@@ -75,16 +75,3 @@ avxInit:
 
 avxClose:
     ret
-
-global wouldSheSayYes
-wouldSheSayYes:
-    ret
-    dec ecx
-    and [edi+ebp*2+0x76],ch
-    and [gs:ecx+0x6f],bh
-    db 0x75
-    db 0x20
-    dec esi
-    db 0x79
-    db 0x61
-    push 0x2e2e2e 

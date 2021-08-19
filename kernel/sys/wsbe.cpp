@@ -12,8 +12,6 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-#ident "Dedicated to N.M.I."
-
 /// <summary>
 /// Makes a call to the GUI driver. If not loaded yet, it will print a message and terminate the program with exit code specified.
 /// </summary>
