@@ -75,3 +75,8 @@ avxInit:
 
 avxClose:
     ret
+
+
+global NyDedication
+
+NyDedication db "This operating system is dedicated to N.M.I."

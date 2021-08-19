@@ -463,5 +463,3 @@ uint64_t Filesystem::allocateSwapfile(const char* filename, int megs)
 	return 0;
 }
 
-
-const char* NiDedication = "This operating system is dedicated to N.M.I.";
