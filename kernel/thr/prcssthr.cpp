@@ -658,7 +658,7 @@ bool KiRestorePreemptionValue = false;
 void KeDisablePreemption()
 {
 	if (KiPreemptionDisableCounter == 0) {
-		KiRestorePreemptionValue = KePreemptionIsOn;
+		KiRestorePreemptionValue = KeIsPreemptionOn;
 		KeIsPreemptionOn = false;
 	}
 	KiPreemptionDisableCounter++;
