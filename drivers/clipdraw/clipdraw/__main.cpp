@@ -57,6 +57,27 @@ void NiMain(void* s)
 	desktop->addWindow(win1);
 	desktop->addWindow(win2);
 	desktop->addWindow(win3);
+	
+	{
+		File* f = new File("C:/Banana/Icons/Office/new.tga", kernelProcess);
+		uint64_t tgaLen;
+		bool dir;
+		f->stat(&tgaLen, &dir);
+		int br;
+		uint8_t* tgaData = (uint8_t*) malloc(tgaLen);
+		f->read(tgaLen, tgaData, &br);
+		screen->putTGA(win1->xpos + 3 + 16 * 0, win1->ypos + WINDOW_TITLEBAR_HEIGHT, tgaData, tgaLen);
+	}
+	{
+		File* f = new File("C:/Banana/Icons/Office/new.tga", kernelProcess);
+		uint64_t tgaLen;
+		bool dir;
+		f->stat(&tgaLen, &dir);
+		int br;
+		uint8_t* tgaData = (uint8_t*) malloc(tgaLen);
+		f->read(tgaLen, tgaData, &br);
+		screen->putTGA(win1->xpos + 3 + 16 * 1, win1->ypos + WINDOW_TITLEBAR_HEIGHT, tgaData, tgaLen);
+	}
 
 	desktop->completeRefresh();
 	

@@ -37473,7 +37473,7 @@ c001c604:	89 44 24 10          	mov    DWORD PTR [esp+0x10],eax
 c001c608:	5b                   	pop    ebx
 c001c609:	5e                   	pop    esi
 c001c60a:	5f                   	pop    edi
-c001c60b:	e9 c2 0a 00 00       	jmp    c001d0d2 <VCache::read(unsigned long long, int, void*)>
+c001c60b:	e9 c8 0a 00 00       	jmp    c001d0d8 <VCache::read(unsigned long long, int, void*)>
 c001c610:	b8 05 00 00 00       	mov    eax,0x5
 c001c615:	eb 05                	jmp    c001c61c <LogicalDisk::read(unsigned long long, int, void*)+0x68>
 c001c617:	b8 07 00 00 00       	mov    eax,0x7
@@ -38290,181 +38290,178 @@ c001cfe6:	56                   	push   esi
 c001cfe7:	53                   	push   ebx
 c001cfe8:	83 ec 1c             	sub    esp,0x1c
 c001cfeb:	8b 5c 24 30          	mov    ebx,DWORD PTR [esp+0x30]
-c001cfef:	8b 44 24 34          	mov    eax,DWORD PTR [esp+0x34]
-c001cff3:	8b 6c 24 38          	mov    ebp,DWORD PTR [esp+0x38]
-c001cff7:	89 44 24 08          	mov    DWORD PTR [esp+0x8],eax
-c001cffb:	8b 7c 24 3c          	mov    edi,DWORD PTR [esp+0x3c]
-c001cfff:	8b 74 24 40          	mov    esi,DWORD PTR [esp+0x40]
-c001d003:	80 7b 3c 00          	cmp    BYTE PTR [ebx+0x3c],0x0
-c001d007:	74 07                	je     c001d010 <VCache::write(unsigned long long, int, void*)+0x2c>
-c001d009:	53                   	push   ebx
-c001d00a:	e8 f9 fe ff ff       	call   c001cf08 <VCache::invalidateReadBuffer()>
-c001d00f:	58                   	pop    eax
+c001cfef:	8b 74 24 34          	mov    esi,DWORD PTR [esp+0x34]
+c001cff3:	8b 7c 24 38          	mov    edi,DWORD PTR [esp+0x38]
+c001cff7:	e8 b0 77 00 00       	call   c00247ac <KeDisablePreemption()>
+c001cffc:	80 7b 3c 00          	cmp    BYTE PTR [ebx+0x3c],0x0
+c001d000:	74 0e                	je     c001d010 <VCache::write(unsigned long long, int, void*)+0x2c>
+c001d002:	83 ec 0c             	sub    esp,0xc
+c001d005:	53                   	push   ebx
+c001d006:	e8 fd fe ff ff       	call   c001cf08 <VCache::invalidateReadBuffer()>
+c001d00b:	83 c4 10             	add    esp,0x10
+c001d00e:	66 90                	xchg   ax,ax
 c001d010:	80 7b 2c 00          	cmp    BYTE PTR [ebx+0x2c],0x0
-c001d014:	74 62                	je     c001d078 <VCache::write(unsigned long long, int, void*)+0x94>
-c001d016:	8b 43 24             	mov    eax,DWORD PTR [ebx+0x24]
-c001d019:	8b 4c 24 08          	mov    ecx,DWORD PTR [esp+0x8]
-c001d01d:	99                   	cdq    
-c001d01e:	89 44 24 0c          	mov    DWORD PTR [esp+0xc],eax
-c001d022:	03 43 1c             	add    eax,DWORD PTR [ebx+0x1c]
-c001d025:	13 53 20             	adc    edx,DWORD PTR [ebx+0x20]
-c001d028:	31 c1                	xor    ecx,eax
-c001d02a:	89 d0                	mov    eax,edx
-c001d02c:	89 ca                	mov    edx,ecx
-c001d02e:	31 e8                	xor    eax,ebp
-c001d030:	09 c2                	or     edx,eax
-c001d032:	75 38                	jne    c001d06c <VCache::write(unsigned long long, int, void*)+0x88>
-c001d034:	83 ff 01             	cmp    edi,0x1
-c001d037:	75 33                	jne    c001d06c <VCache::write(unsigned long long, int, void*)+0x88>
-c001d039:	8b 43 08             	mov    eax,DWORD PTR [ebx+0x8]
-c001d03c:	8b 4c 24 0c          	mov    ecx,DWORD PTR [esp+0xc]
-c001d040:	8b 80 5c 01 00 00    	mov    eax,DWORD PTR [eax+0x15c]
-c001d046:	8b 7b 28             	mov    edi,DWORD PTR [ebx+0x28]
-c001d049:	0f af c8             	imul   ecx,eax
-c001d04c:	01 cf                	add    edi,ecx
-c001d04e:	89 c1                	mov    ecx,eax
-c001d050:	f3 a4                	rep movs BYTE PTR es:[edi],BYTE PTR ds:[esi]
-c001d052:	8b 43 24             	mov    eax,DWORD PTR [ebx+0x24]
-c001d055:	40                   	inc    eax
-c001d056:	89 43 24             	mov    DWORD PTR [ebx+0x24],eax
-c001d059:	83 f8 50             	cmp    eax,0x50
-c001d05c:	75 6a                	jne    c001d0c8 <VCache::write(unsigned long long, int, void*)+0xe4>
-c001d05e:	83 ec 0c             	sub    esp,0xc
-c001d061:	53                   	push   ebx
-c001d062:	e8 b1 fe ff ff       	call   c001cf18 <VCache::writeWriteBuffer()>
-c001d067:	83 c4 10             	add    esp,0x10
-c001d06a:	eb 5c                	jmp    c001d0c8 <VCache::write(unsigned long long, int, void*)+0xe4>
-c001d06c:	83 ec 0c             	sub    esp,0xc
-c001d06f:	53                   	push   ebx
-c001d070:	e8 a3 fe ff ff       	call   c001cf18 <VCache::writeWriteBuffer()>
-c001d075:	83 c4 10             	add    esp,0x10
-c001d078:	8b 43 08             	mov    eax,DWORD PTR [ebx+0x8]
-c001d07b:	83 ff 4f             	cmp    edi,0x4f
-c001d07e:	7f 20                	jg     c001d0a0 <VCache::write(unsigned long long, int, void*)+0xbc>
-c001d080:	89 7b 24             	mov    DWORD PTR [ebx+0x24],edi
-c001d083:	8b 54 24 08          	mov    edx,DWORD PTR [esp+0x8]
-c001d087:	89 6b 20             	mov    DWORD PTR [ebx+0x20],ebp
-c001d08a:	89 53 1c             	mov    DWORD PTR [ebx+0x1c],edx
-c001d08d:	c6 43 2c 01          	mov    BYTE PTR [ebx+0x2c],0x1
-c001d091:	8b 7b 28             	mov    edi,DWORD PTR [ebx+0x28]
-c001d094:	8b 88 5c 01 00 00    	mov    ecx,DWORD PTR [eax+0x15c]
-c001d09a:	f3 a4                	rep movs BYTE PTR es:[edi],BYTE PTR ds:[esi]
-c001d09c:	eb 2a                	jmp    c001d0c8 <VCache::write(unsigned long long, int, void*)+0xe4>
-c001d09e:	66 90                	xchg   ax,ax
-c001d0a0:	8b 10                	mov    edx,DWORD PTR [eax]
-c001d0a2:	89 74 24 40          	mov    DWORD PTR [esp+0x40],esi
-c001d0a6:	89 7c 24 3c          	mov    DWORD PTR [esp+0x3c],edi
-c001d0aa:	8b 74 24 08          	mov    esi,DWORD PTR [esp+0x8]
-c001d0ae:	89 6c 24 38          	mov    DWORD PTR [esp+0x38],ebp
-c001d0b2:	89 74 24 34          	mov    DWORD PTR [esp+0x34],esi
-c001d0b6:	89 44 24 30          	mov    DWORD PTR [esp+0x30],eax
-c001d0ba:	8b 42 2c             	mov    eax,DWORD PTR [edx+0x2c]
-c001d0bd:	83 c4 1c             	add    esp,0x1c
-c001d0c0:	5b                   	pop    ebx
-c001d0c1:	5e                   	pop    esi
-c001d0c2:	5f                   	pop    edi
-c001d0c3:	5d                   	pop    ebp
-c001d0c4:	ff e0                	jmp    eax
-c001d0c6:	66 90                	xchg   ax,ax
-c001d0c8:	83 c4 1c             	add    esp,0x1c
-c001d0cb:	31 c0                	xor    eax,eax
-c001d0cd:	5b                   	pop    ebx
-c001d0ce:	5e                   	pop    esi
-c001d0cf:	5f                   	pop    edi
-c001d0d0:	5d                   	pop    ebp
-c001d0d1:	c3                   	ret    
+c001d014:	74 5e                	je     c001d074 <VCache::write(unsigned long long, int, void*)+0x90>
+c001d016:	8b 6b 24             	mov    ebp,DWORD PTR [ebx+0x24]
+c001d019:	89 e8                	mov    eax,ebp
+c001d01b:	99                   	cdq    
+c001d01c:	03 43 1c             	add    eax,DWORD PTR [ebx+0x1c]
+c001d01f:	13 53 20             	adc    edx,DWORD PTR [ebx+0x20]
+c001d022:	89 c1                	mov    ecx,eax
+c001d024:	89 d0                	mov    eax,edx
+c001d026:	31 f1                	xor    ecx,esi
+c001d028:	31 f8                	xor    eax,edi
+c001d02a:	09 c1                	or     ecx,eax
+c001d02c:	75 3a                	jne    c001d068 <VCache::write(unsigned long long, int, void*)+0x84>
+c001d02e:	83 7c 24 3c 01       	cmp    DWORD PTR [esp+0x3c],0x1
+c001d033:	75 33                	jne    c001d068 <VCache::write(unsigned long long, int, void*)+0x84>
+c001d035:	8b 43 08             	mov    eax,DWORD PTR [ebx+0x8]
+c001d038:	89 ef                	mov    edi,ebp
+c001d03a:	8b 88 5c 01 00 00    	mov    ecx,DWORD PTR [eax+0x15c]
+c001d040:	8b 74 24 40          	mov    esi,DWORD PTR [esp+0x40]
+c001d044:	0f af f9             	imul   edi,ecx
+c001d047:	03 7b 28             	add    edi,DWORD PTR [ebx+0x28]
+c001d04a:	f3 a4                	rep movs BYTE PTR es:[edi],BYTE PTR ds:[esi]
+c001d04c:	8b 43 24             	mov    eax,DWORD PTR [ebx+0x24]
+c001d04f:	40                   	inc    eax
+c001d050:	89 43 24             	mov    DWORD PTR [ebx+0x24],eax
+c001d053:	83 f8 50             	cmp    eax,0x50
+c001d056:	75 70                	jne    c001d0c8 <VCache::write(unsigned long long, int, void*)+0xe4>
+c001d058:	83 ec 0c             	sub    esp,0xc
+c001d05b:	53                   	push   ebx
+c001d05c:	e8 b7 fe ff ff       	call   c001cf18 <VCache::writeWriteBuffer()>
+c001d061:	83 c4 10             	add    esp,0x10
+c001d064:	eb 62                	jmp    c001d0c8 <VCache::write(unsigned long long, int, void*)+0xe4>
+c001d066:	66 90                	xchg   ax,ax
+c001d068:	83 ec 0c             	sub    esp,0xc
+c001d06b:	53                   	push   ebx
+c001d06c:	e8 a7 fe ff ff       	call   c001cf18 <VCache::writeWriteBuffer()>
+c001d071:	83 c4 10             	add    esp,0x10
+c001d074:	8b 43 08             	mov    eax,DWORD PTR [ebx+0x8]
+c001d077:	83 7c 24 3c 4f       	cmp    DWORD PTR [esp+0x3c],0x4f
+c001d07c:	7f 22                	jg     c001d0a0 <VCache::write(unsigned long long, int, void*)+0xbc>
+c001d07e:	89 73 1c             	mov    DWORD PTR [ebx+0x1c],esi
+c001d081:	89 7b 20             	mov    DWORD PTR [ebx+0x20],edi
+c001d084:	8b 54 24 3c          	mov    edx,DWORD PTR [esp+0x3c]
+c001d088:	c6 43 2c 01          	mov    BYTE PTR [ebx+0x2c],0x1
+c001d08c:	89 53 24             	mov    DWORD PTR [ebx+0x24],edx
+c001d08f:	8b 7b 28             	mov    edi,DWORD PTR [ebx+0x28]
+c001d092:	8b 88 5c 01 00 00    	mov    ecx,DWORD PTR [eax+0x15c]
+c001d098:	8b 74 24 40          	mov    esi,DWORD PTR [esp+0x40]
+c001d09c:	f3 a4                	rep movs BYTE PTR es:[edi],BYTE PTR ds:[esi]
+c001d09e:	eb 28                	jmp    c001d0c8 <VCache::write(unsigned long long, int, void*)+0xe4>
+c001d0a0:	83 ec 0c             	sub    esp,0xc
+c001d0a3:	8b 10                	mov    edx,DWORD PTR [eax]
+c001d0a5:	ff 74 24 4c          	push   DWORD PTR [esp+0x4c]
+c001d0a9:	ff 74 24 4c          	push   DWORD PTR [esp+0x4c]
+c001d0ad:	57                   	push   edi
+c001d0ae:	56                   	push   esi
+c001d0af:	50                   	push   eax
+c001d0b0:	ff 52 2c             	call   DWORD PTR [edx+0x2c]
+c001d0b3:	89 44 24 2c          	mov    DWORD PTR [esp+0x2c],eax
+c001d0b7:	83 c4 20             	add    esp,0x20
+c001d0ba:	e8 15 77 00 00       	call   c00247d4 <KeRestorePreemption()>
+c001d0bf:	8b 44 24 0c          	mov    eax,DWORD PTR [esp+0xc]
+c001d0c3:	eb 0b                	jmp    c001d0d0 <VCache::write(unsigned long long, int, void*)+0xec>
+c001d0c5:	8d 76 00             	lea    esi,[esi+0x0]
+c001d0c8:	e8 07 77 00 00       	call   c00247d4 <KeRestorePreemption()>
+c001d0cd:	31 c0                	xor    eax,eax
+c001d0cf:	90                   	nop
+c001d0d0:	83 c4 1c             	add    esp,0x1c
+c001d0d3:	5b                   	pop    ebx
+c001d0d4:	5e                   	pop    esi
+c001d0d5:	5f                   	pop    edi
+c001d0d6:	5d                   	pop    ebp
+c001d0d7:	c3                   	ret    
 
-c001d0d2 <VCache::read(unsigned long long, int, void*)>:
-c001d0d2:	55                   	push   ebp
-c001d0d3:	57                   	push   edi
-c001d0d4:	56                   	push   esi
-c001d0d5:	53                   	push   ebx
-c001d0d6:	83 ec 1c             	sub    esp,0x1c
-c001d0d9:	8b 7c 24 30          	mov    edi,DWORD PTR [esp+0x30]
-c001d0dd:	8b 44 24 40          	mov    eax,DWORD PTR [esp+0x40]
-c001d0e1:	8b 5c 24 34          	mov    ebx,DWORD PTR [esp+0x34]
-c001d0e5:	8b 74 24 38          	mov    esi,DWORD PTR [esp+0x38]
-c001d0e9:	8b 6c 24 3c          	mov    ebp,DWORD PTR [esp+0x3c]
-c001d0ed:	89 44 24 04          	mov    DWORD PTR [esp+0x4],eax
-c001d0f1:	80 7f 2c 00          	cmp    BYTE PTR [edi+0x2c],0x0
-c001d0f5:	74 0d                	je     c001d104 <VCache::read(unsigned long long, int, void*)+0x32>
-c001d0f7:	83 ec 0c             	sub    esp,0xc
-c001d0fa:	57                   	push   edi
-c001d0fb:	e8 18 fe ff ff       	call   c001cf18 <VCache::writeWriteBuffer()>
-c001d100:	83 c4 10             	add    esp,0x10
-c001d103:	90                   	nop
-c001d104:	83 fd 01             	cmp    ebp,0x1
-c001d107:	0f 85 93 00 00 00    	jne    c001d1a0 <VCache::read(unsigned long long, int, void*)+0xce>
-c001d10d:	8b 47 08             	mov    eax,DWORD PTR [edi+0x8]
-c001d110:	89 04 24             	mov    DWORD PTR [esp],eax
-c001d113:	80 b8 68 01 00 00 00 	cmp    BYTE PTR [eax+0x168],0x0
-c001d11a:	0f 85 80 00 00 00    	jne    c001d1a0 <VCache::read(unsigned long long, int, void*)+0xce>
-c001d120:	8b 6f 40             	mov    ebp,DWORD PTR [edi+0x40]
-c001d123:	89 e9                	mov    ecx,ebp
-c001d125:	f7 d9                	neg    ecx
-c001d127:	89 c8                	mov    eax,ecx
-c001d129:	89 4c 24 08          	mov    DWORD PTR [esp+0x8],ecx
-c001d12d:	c1 f8 1f             	sar    eax,0x1f
-c001d130:	21 d9                	and    ecx,ebx
-c001d132:	89 44 24 0c          	mov    DWORD PTR [esp+0xc],eax
-c001d136:	89 c8                	mov    eax,ecx
-c001d138:	8b 4c 24 0c          	mov    ecx,DWORD PTR [esp+0xc]
-c001d13c:	21 f1                	and    ecx,esi
-c001d13e:	80 7f 3c 00          	cmp    BYTE PTR [edi+0x3c],0x0
-c001d142:	89 ca                	mov    edx,ecx
-c001d144:	74 2e                	je     c001d174 <VCache::read(unsigned long long, int, void*)+0xa2>
-c001d146:	39 4f 34             	cmp    DWORD PTR [edi+0x34],ecx
-c001d149:	75 29                	jne    c001d174 <VCache::read(unsigned long long, int, void*)+0xa2>
-c001d14b:	39 47 30             	cmp    DWORD PTR [edi+0x30],eax
-c001d14e:	75 24                	jne    c001d174 <VCache::read(unsigned long long, int, void*)+0xa2>
-c001d150:	8b 47 08             	mov    eax,DWORD PTR [edi+0x8]
-c001d153:	8b 88 5c 01 00 00    	mov    ecx,DWORD PTR [eax+0x15c]
-c001d159:	8b 47 40             	mov    eax,DWORD PTR [edi+0x40]
-c001d15c:	8d 70 ff             	lea    esi,[eax-0x1]
-c001d15f:	21 f3                	and    ebx,esi
-c001d161:	0f af d9             	imul   ebx,ecx
-c001d164:	03 5f 38             	add    ebx,DWORD PTR [edi+0x38]
-c001d167:	8b 7c 24 04          	mov    edi,DWORD PTR [esp+0x4]
-c001d16b:	89 de                	mov    esi,ebx
-c001d16d:	f3 a4                	rep movs BYTE PTR es:[edi],BYTE PTR ds:[esi]
-c001d16f:	31 c0                	xor    eax,eax
-c001d171:	eb 61                	jmp    c001d1d4 <VCache::read(unsigned long long, int, void*)+0x102>
-c001d173:	90                   	nop
-c001d174:	83 ec 0c             	sub    esp,0xc
-c001d177:	c6 47 3c 01          	mov    BYTE PTR [edi+0x3c],0x1
-c001d17b:	8b 74 24 0c          	mov    esi,DWORD PTR [esp+0xc]
-c001d17f:	89 47 30             	mov    DWORD PTR [edi+0x30],eax
-c001d182:	89 57 34             	mov    DWORD PTR [edi+0x34],edx
-c001d185:	8b 0e                	mov    ecx,DWORD PTR [esi]
-c001d187:	ff 77 38             	push   DWORD PTR [edi+0x38]
-c001d18a:	55                   	push   ebp
-c001d18b:	52                   	push   edx
-c001d18c:	50                   	push   eax
-c001d18d:	ff 74 24 1c          	push   DWORD PTR [esp+0x1c]
-c001d191:	ff 51 28             	call   DWORD PTR [ecx+0x28]
-c001d194:	83 c4 20             	add    esp,0x20
-c001d197:	85 c0                	test   eax,eax
-c001d199:	75 39                	jne    c001d1d4 <VCache::read(unsigned long long, int, void*)+0x102>
-c001d19b:	eb b3                	jmp    c001d150 <VCache::read(unsigned long long, int, void*)+0x7e>
-c001d19d:	8d 76 00             	lea    esi,[esi+0x0]
-c001d1a0:	83 ec 0c             	sub    esp,0xc
-c001d1a3:	57                   	push   edi
-c001d1a4:	e8 5f fd ff ff       	call   c001cf08 <VCache::invalidateReadBuffer()>
-c001d1a9:	8b 47 08             	mov    eax,DWORD PTR [edi+0x8]
-c001d1ac:	8b 4c 24 14          	mov    ecx,DWORD PTR [esp+0x14]
-c001d1b0:	8b 10                	mov    edx,DWORD PTR [eax]
-c001d1b2:	89 6c 24 4c          	mov    DWORD PTR [esp+0x4c],ebp
-c001d1b6:	89 5c 24 44          	mov    DWORD PTR [esp+0x44],ebx
-c001d1ba:	89 74 24 48          	mov    DWORD PTR [esp+0x48],esi
-c001d1be:	89 4c 24 50          	mov    DWORD PTR [esp+0x50],ecx
-c001d1c2:	89 44 24 40          	mov    DWORD PTR [esp+0x40],eax
-c001d1c6:	8b 42 28             	mov    eax,DWORD PTR [edx+0x28]
-c001d1c9:	83 c4 2c             	add    esp,0x2c
-c001d1cc:	5b                   	pop    ebx
-c001d1cd:	5e                   	pop    esi
-c001d1ce:	5f                   	pop    edi
-c001d1cf:	5d                   	pop    ebp
-c001d1d0:	ff e0                	jmp    eax
+c001d0d8 <VCache::read(unsigned long long, int, void*)>:
+c001d0d8:	55                   	push   ebp
+c001d0d9:	57                   	push   edi
+c001d0da:	56                   	push   esi
+c001d0db:	53                   	push   ebx
+c001d0dc:	83 ec 1c             	sub    esp,0x1c
+c001d0df:	8b 5c 24 30          	mov    ebx,DWORD PTR [esp+0x30]
+c001d0e3:	8b 74 24 34          	mov    esi,DWORD PTR [esp+0x34]
+c001d0e7:	8b 7c 24 38          	mov    edi,DWORD PTR [esp+0x38]
+c001d0eb:	8b 6c 24 3c          	mov    ebp,DWORD PTR [esp+0x3c]
+c001d0ef:	e8 b8 76 00 00       	call   c00247ac <KeDisablePreemption()>
+c001d0f4:	80 7b 2c 00          	cmp    BYTE PTR [ebx+0x2c],0x0
+c001d0f8:	74 0e                	je     c001d108 <VCache::read(unsigned long long, int, void*)+0x30>
+c001d0fa:	83 ec 0c             	sub    esp,0xc
+c001d0fd:	53                   	push   ebx
+c001d0fe:	e8 15 fe ff ff       	call   c001cf18 <VCache::writeWriteBuffer()>
+c001d103:	83 c4 10             	add    esp,0x10
+c001d106:	66 90                	xchg   ax,ax
+c001d108:	83 fd 01             	cmp    ebp,0x1
+c001d10b:	0f 85 97 00 00 00    	jne    c001d1a8 <VCache::read(unsigned long long, int, void*)+0xd0>
+c001d111:	8b 43 08             	mov    eax,DWORD PTR [ebx+0x8]
+c001d114:	89 44 24 04          	mov    DWORD PTR [esp+0x4],eax
+c001d118:	80 b8 68 01 00 00 00 	cmp    BYTE PTR [eax+0x168],0x0
+c001d11f:	0f 85 83 00 00 00    	jne    c001d1a8 <VCache::read(unsigned long long, int, void*)+0xd0>
+c001d125:	8b 6b 40             	mov    ebp,DWORD PTR [ebx+0x40]
+c001d128:	89 e9                	mov    ecx,ebp
+c001d12a:	f7 d9                	neg    ecx
+c001d12c:	89 c8                	mov    eax,ecx
+c001d12e:	89 4c 24 08          	mov    DWORD PTR [esp+0x8],ecx
+c001d132:	c1 f8 1f             	sar    eax,0x1f
+c001d135:	21 f1                	and    ecx,esi
+c001d137:	89 44 24 0c          	mov    DWORD PTR [esp+0xc],eax
+c001d13b:	89 c8                	mov    eax,ecx
+c001d13d:	8b 4c 24 0c          	mov    ecx,DWORD PTR [esp+0xc]
+c001d141:	21 f9                	and    ecx,edi
+c001d143:	80 7b 3c 00          	cmp    BYTE PTR [ebx+0x3c],0x0
+c001d147:	89 ca                	mov    edx,ecx
+c001d149:	74 31                	je     c001d17c <VCache::read(unsigned long long, int, void*)+0xa4>
+c001d14b:	39 4b 34             	cmp    DWORD PTR [ebx+0x34],ecx
+c001d14e:	75 2c                	jne    c001d17c <VCache::read(unsigned long long, int, void*)+0xa4>
+c001d150:	39 43 30             	cmp    DWORD PTR [ebx+0x30],eax
+c001d153:	75 27                	jne    c001d17c <VCache::read(unsigned long long, int, void*)+0xa4>
+c001d155:	8d 76 00             	lea    esi,[esi+0x0]
+c001d158:	8b 43 08             	mov    eax,DWORD PTR [ebx+0x8]
+c001d15b:	8b 7c 24 40          	mov    edi,DWORD PTR [esp+0x40]
+c001d15f:	8b 88 5c 01 00 00    	mov    ecx,DWORD PTR [eax+0x15c]
+c001d165:	8b 43 40             	mov    eax,DWORD PTR [ebx+0x40]
+c001d168:	48                   	dec    eax
+c001d169:	21 c6                	and    esi,eax
+c001d16b:	0f af f1             	imul   esi,ecx
+c001d16e:	03 73 38             	add    esi,DWORD PTR [ebx+0x38]
+c001d171:	f3 a4                	rep movs BYTE PTR es:[edi],BYTE PTR ds:[esi]
+c001d173:	e8 5c 76 00 00       	call   c00247d4 <KeRestorePreemption()>
+c001d178:	31 c0                	xor    eax,eax
+c001d17a:	eb 58                	jmp    c001d1d4 <VCache::read(unsigned long long, int, void*)+0xfc>
+c001d17c:	83 ec 0c             	sub    esp,0xc
+c001d17f:	c6 43 3c 01          	mov    BYTE PTR [ebx+0x3c],0x1
+c001d183:	8b 4c 24 10          	mov    ecx,DWORD PTR [esp+0x10]
+c001d187:	89 43 30             	mov    DWORD PTR [ebx+0x30],eax
+c001d18a:	89 53 34             	mov    DWORD PTR [ebx+0x34],edx
+c001d18d:	8b 09                	mov    ecx,DWORD PTR [ecx]
+c001d18f:	ff 73 38             	push   DWORD PTR [ebx+0x38]
+c001d192:	55                   	push   ebp
+c001d193:	52                   	push   edx
+c001d194:	50                   	push   eax
+c001d195:	ff 74 24 20          	push   DWORD PTR [esp+0x20]
+c001d199:	ff 51 28             	call   DWORD PTR [ecx+0x28]
+c001d19c:	83 c4 20             	add    esp,0x20
+c001d19f:	85 c0                	test   eax,eax
+c001d1a1:	75 31                	jne    c001d1d4 <VCache::read(unsigned long long, int, void*)+0xfc>
+c001d1a3:	eb b3                	jmp    c001d158 <VCache::read(unsigned long long, int, void*)+0x80>
+c001d1a5:	8d 76 00             	lea    esi,[esi+0x0]
+c001d1a8:	83 ec 0c             	sub    esp,0xc
+c001d1ab:	53                   	push   ebx
+c001d1ac:	e8 57 fd ff ff       	call   c001cf08 <VCache::invalidateReadBuffer()>
+c001d1b1:	5a                   	pop    edx
+c001d1b2:	8b 43 08             	mov    eax,DWORD PTR [ebx+0x8]
+c001d1b5:	8b 10                	mov    edx,DWORD PTR [eax]
+c001d1b7:	ff 74 24 4c          	push   DWORD PTR [esp+0x4c]
+c001d1bb:	55                   	push   ebp
+c001d1bc:	57                   	push   edi
+c001d1bd:	56                   	push   esi
+c001d1be:	50                   	push   eax
+c001d1bf:	ff 52 28             	call   DWORD PTR [edx+0x28]
+c001d1c2:	89 44 24 24          	mov    DWORD PTR [esp+0x24],eax
+c001d1c6:	83 c4 20             	add    esp,0x20
+c001d1c9:	e8 06 76 00 00       	call   c00247d4 <KeRestorePreemption()>
+c001d1ce:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
 c001d1d2:	66 90                	xchg   ax,ax
 c001d1d4:	83 c4 1c             	add    esp,0x1c
 c001d1d7:	5b                   	pop    ebx
