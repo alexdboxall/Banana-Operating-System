@@ -181,7 +181,7 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
         return NULL;
     }
 
-    switch (ptr[2]) {
+	switch (ptr[2]) {
 	case 2:
 	{
 		if (header->cmaplen != 0 || header->colormap != 0 || (header->bpp != 24 && header->bpp != 32)) {
@@ -195,6 +195,46 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 			for (int x = 0; x < w; x++) {
 				data[i++] = ((header->bpp == 32 ? ptr[j + 3] : 0) << 24) | (ptr[j + 2] << 16) | (ptr[j + 1] << 8) | ptr[j];
 				j += header->bpp >> 3;
+			}
+		}
+		break;
+	}
+	case 10:
+	{
+		if (header->cmaplen != 0 || header->colormap != 0 || (header->bpp != 24 && header->bpp != 32)) {
+			kprintf("case 10 null.\n");
+			free(data);
+			return NULL;
+		}
+		int m = imageDataOffset;
+		int i = 0;
+		int y = 0;
+		for (int x = 0; x < w * h && m < size;) {
+			int k = ptr[m++];
+			if (k > 127) {
+				k -= 128;
+				x += k;
+				int j = ptr[m++] * (header->cmapent >> 3) + 18;
+				while (k--) {
+					if (!(i % w)) {
+						i = ((!o ? h - y - 1 : y) * w);
+						y++;
+					}
+					data[i++] = ((header->bpp == 32 ? ptr[m + 3] : 0) << 24) | (ptr[m + 2] << 16) | (ptr[m + 1] << 8) | ptr[m];
+				}
+				m += header->bpp >> 3;
+
+			} else {
+				k++;
+				x += k;
+				while (k--) {
+					if (!(i % w)) {
+						i = ((!o ? h - y - 1 : y) * w);
+						y++;
+					}
+					data[i++] = ((header->bpp == 32 ? ptr[m + 3] : 0) << 24) | (ptr[m + 2] << 16) | (ptr[m + 1] << 8) | ptr[m];
+					m += header->bpp >> 3;
+				}
 			}
 		}
 		break;

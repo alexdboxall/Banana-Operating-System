@@ -369,7 +369,7 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 			lastClick = milliTenthsSinceBoot;
 
 		} else if (!movingWin) {
-			if (mouseY - clickon->ypos > clickon->height - 15 && !clickon->fullscreen) {
+			if (mouseY - clickon->ypos > clickon->height - 15 && !clickon->fullscreen && !(clickon->flags & WINFLAG_DISABLE_RESIZE)) {
 				movingWin = clickon;
 				movingType = MOVE_TYPE_RESIZE_B;
 				cursorOffset = MOUSE_OFFSET_VERT;
@@ -377,7 +377,7 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 				moveBaseY = mouseY;
 				deleteWindow(clickon);
 			} 
-			if (mouseX - clickon->xpos > clickon->width - 15 && !clickon->fullscreen) {
+			if (mouseX - clickon->xpos > clickon->width - 15 && !clickon->fullscreen && !(clickon->flags & WINFLAG_DISABLE_RESIZE)) {
 				if (!movingWin) {
 					movingWin = clickon;
 					movingType = MOVE_TYPE_RESIZE_R;

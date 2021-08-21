@@ -58,18 +58,27 @@ void NiMain(void* s)
 	desktop->addWindow(win2);
 	desktop->addWindow(win3);
 	
+	desktop->completeRefresh();
+	
 	{
 		File* f = new File("C:/Banana/Icons/Office/new.tga", kernelProcess);
+		FileStatus fs = f->open(FILE_OPEN_READ);
+		kprintf("FS = %d\n", (int) fs);
 		uint64_t tgaLen;
 		bool dir;
 		f->stat(&tgaLen, &dir);
+		kprintf("tgalen = %d\n", (int) tgaLen);
 		int br;
 		uint8_t* tgaData = (uint8_t*) malloc(tgaLen);
-		f->read(tgaLen, tgaData, &br);
-		screen->putTGA(win1->xpos + 3 + 16 * 0, win1->ypos + WINDOW_TITLEBAR_HEIGHT, tgaData, tgaLen);
+		fs = f->read(tgaLen, tgaData, &br);
+		kprintf("br = %d, fs = %d\n", br, (int) fs);
+		screen->putTGA(50 + 3 + 16 * 0, 50 + WINDOW_TITLEBAR_HEIGHT, tgaData, tgaLen);
+		f->close();
+		delete f;
 	}
 	{
-		File* f = new File("C:/Banana/Icons/Office/new.tga", kernelProcess);
+		File* f = new File("C:/Banana/Icons/Office/open.tga", kernelProcess);
+		f->open(FILE_OPEN_READ);
 		uint64_t tgaLen;
 		bool dir;
 		f->stat(&tgaLen, &dir);
@@ -77,67 +86,13 @@ void NiMain(void* s)
 		uint8_t* tgaData = (uint8_t*) malloc(tgaLen);
 		f->read(tgaLen, tgaData, &br);
 		screen->putTGA(win1->xpos + 3 + 16 * 1, win1->ypos + WINDOW_TITLEBAR_HEIGHT, tgaData, tgaLen);
+		f->close();
+		delete f;
 	}
 
-	desktop->completeRefresh();
-	
-	(new Process("C:/Banana/System/newgui.exe"))->createUserThread();
+	//(new Process("C:/Banana/System/newgui.exe"))->createUserThread();
 
 	while (1) {
-		lockScheduler();
-		schedule();
-		unlockScheduler();
-		//blockTask(TaskState::Paused);
+		blockTask(TaskState::Paused);
 	}
-
-	/*NIWindow win1(&ctxt, 50, 50, 400, 320);
-	NIWindow sha1(&ctxt, 45, 45, 410, 330);
-	sha1.SHADOW_TEST();
-	win1.realdraw();
-
-	NIWindow win2(&ctxt, 200, 150, 500, 380);
-	NIWindow sha2(&ctxt, 195, 145, 510, 390);
-	sha2.SHADOW_TEST();
-	win2.realdraw();
-
-	NIWindow win3(&ctxt, 125, 400, 270, 175);
-	NIWindow sha3(&ctxt, 120, 395, 280, 185);
-	sha3.SHADOW_TEST();
-	win3.realdraw();*/
-
-	/* {
-		int chrs = 0;
-		int total = 0;
-		int xp = win3.xpos + 15;
-		int yp = win3.ypos + 3;
-
-		do {
-			xp += ctxt.renderTTF(xp, yp, 0, (char*) "Run..." + total, &chrs);
-			total += chrs;
-		} while (chrs);
-	}
-	{
-		int chrs = 0;
-		int total = 0;
-		int xp = win2.xpos + 15;
-		int yp = win2.ypos + 3;
-
-		do {
-			xp += ctxt.renderTTF(xp, yp, 0xAAAAAA, (char*) "About Banana" + total, &chrs);
-			total += chrs;
-		} while (chrs);
-	}
-	{
-		int chrs = 0;
-		int total = 0;
-		int xp = win1.xpos + 15;
-		int yp = win1.ypos + 3;
-
-		do {
-			xp += ctxt.renderTTF(xp, yp, 0xAAAAAA, (char*) "Notepad" + total, &chrs);
-			total += chrs;
-		} while (chrs);
-	}
-	*/
-
 }
