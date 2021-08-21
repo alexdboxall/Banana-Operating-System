@@ -242,7 +242,7 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 				int numPixels = k + 1;
 				for (int z = 0; z < numPixels; ++z) {
 					if (reverse && !(i % w)) {		//flip image vertically
-						i = (h - (i / w) - 1) * w;
+						i = (h - y - 1) * w;
 						++y;
 					}
 					data[i++] = ((header->bpp == 32 ? ptr[m + 3] : 0xFF) << 24) | (ptr[m + 2] << 16) | (ptr[m + 1] << 8) | ptr[m];
