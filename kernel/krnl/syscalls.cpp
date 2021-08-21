@@ -734,12 +734,16 @@ uint64_t(*systemCallHandlers[])(regs* r) = {
 
 uint64_t KeSystemCall(regs* r, void* context)
 {
+	KeDisablePreemption();
+
 	if (r->eax < sizeof(systemCallHandlers) / sizeof(systemCallHandlers[0]) && systemCallHandlers[r->eax]) {
 		r->eax = systemCallHandlers[r->eax](r);
 
 	} else {
 		kprintf("Invalid syscall %d\n", r->eax);
 	}
+
+	KeRestorePreemption();
 
 	return 0xDEADBEEF;
 }
