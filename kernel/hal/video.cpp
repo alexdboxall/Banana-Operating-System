@@ -174,6 +174,9 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 
 	kprintf("BPP = %d\n", header->bpp);
 
+	bool reverse = (header->pixeltype & 0x20);
+	kprintf("REVERSE = %d\n", reverse);
+
 	int j, k;
 	int o = header->y;
     int imageDataOffset = ((header->colormap ? (header->cmapent >> 3) * header->cmaplen : 0) + 18);
