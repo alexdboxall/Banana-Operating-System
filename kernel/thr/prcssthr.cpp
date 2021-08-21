@@ -1,4 +1,5 @@
 #include "thr/prcssthr.hpp"
+#include "core/computer.hpp"
 #include "core/common.hpp"
 #include "core/terminal.hpp"
 #include "libk/string.h"
@@ -648,5 +649,23 @@ namespace Thr
 
 		//taskList;
 		//LinkedList<volatile ThreadControlBlock> sleepingTaskList;
+	}
+}
+
+int KiPreemptionDisableCounter = 0;
+void KeDisablePreemption()
+{
+	if (KiPreemptionDisableCounter == 0) {
+		KiRestorePreemptionValue = KePreemptionIsOn;
+		KePreemptionIsOn = false;
+	}
+	KiPreemptionDisableCounter++;
+}
+
+void KeRestorePreemption()
+{
+	KiPreemptionDisableCounter--;
+	if (KiPreemptionDisableCounter == 0) {
+		KePreemptionIsOn = KiRestorePreemptionValue;
 	}
 }

@@ -157,6 +157,9 @@ public:
 extern "C" size_t taskStartupFunction();
 extern "C" void taskReturned();
 
+void KeDisablePreemption();
+void KeRestorePreemption();
+
 void switchToThread(ThreadControlBlock* nextThreadToRun);
 void setupMultitasking(void (*where)());
 void schedule();
