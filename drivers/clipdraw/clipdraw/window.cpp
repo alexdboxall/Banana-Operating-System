@@ -128,7 +128,7 @@ void NIWindow::realdraw()
 	}
 }
 
-int curveLookup7[]	= { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };	// { 5, 3, 2, 1, 1, 0, 0, 0 };
+int curveLookup7[]	= { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };	// { 5, 3, 2, 1, 1, 0, 0, 0 };
 int curveLoopup11[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };	//{ 9, 6, 4, 3, 2, 2, 1, 1, 1, 0, 0, 0, 0 };
 
 void NIWindow::drawBasicWindow()

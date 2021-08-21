@@ -64,6 +64,8 @@ void VCache::writeWriteBuffer()
 
 int VCache::write(uint64_t lba, int count, void* ptr)
 {
+	KeDisablePreemption();
+
 	///TODO:	get all touchy-feely AND LOCK THE MEMORY (aka. ensure the buffer is in actual RAM, not the swapfile)
 
 	//mutex->acquire();
@@ -97,16 +99,21 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 
 		//otherwise, just write it
 		} else {
-			return disk->write(lba, count, ptr);
+			int retv = disk->write(lba, count, ptr);
+			KeRestorePreemption();
+			return retv;
 		}
 	}
 
+	KeRestorePreemption();
 	//mutex->release();
 	return 0;
 }
 
 int VCache::read(uint64_t lba, int count, void* ptr)
-{	
+{
+	KeDisablePreemption();
+
 	///TODO:	get all touchy-feely AND LOCK THE MEMORY (aka. ensure the buffer is in actual RAM, not the swapfile)
 
 	//mutex->acquire();
@@ -132,13 +139,17 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 		}
 
 		memcpy(ptr, readCacheBuffer + (lba & (READ_BUFFER_BLOCK_SIZE - 1)) * disk->sectorSize, disk->sectorSize);
+		KeRestorePreemption();
 		return 0;
 
 	} else {
 		invalidateReadBuffer();
-		return disk->read(lba, count, ptr);
+		int retv = disk->read(lba, count, ptr);
+		KeRestorePreemption();
+		return retv;
 	}
 
 	//mutex->release();
+	KeRestorePreemption();
 	return 0;
 }
