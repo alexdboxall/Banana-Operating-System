@@ -67,6 +67,8 @@ void ideChannel1IRQHandler(regs* r, void* context)
 
 int IDE::open(int a, int, void*)
 {
+	KeDisablePreemption();
+
 	channels[0].busMastering = 0;
 	channels[1].busMastering = 0;
 	legacyIRQs = false;
@@ -187,16 +189,22 @@ int IDE::open(int a, int, void*)
 	enableIRQs(0, true);
 	enableIRQs(1, true);
 
+	KeRestorePreemption();
+
 	return 0;
 }
 
 void IDE::enableIRQs(uint8_t channel, bool on)
 {
+	KeDisablePreemption();
+
 	channels[channel].nIEN = on ? 0 : 2;
 	write(channel, ATA_REG_CONTROL, channels[channel].nIEN);
 	for (int i = 0; i < 4; ++i) {
 		read(channel, ATA_REG_ALTSTATUS);
 	}
+
+	KeRestorePreemption();
 }
 
 void selectDrive(uint8_t channel, uint8_t drive) {
@@ -370,6 +378,8 @@ void IDE::detect()
 	if (detectDone) return;
 	detectDone = true;
 
+	KeDisablePreemption();
+
 	int deviceCount = 0;
 
 	for (int i = 0; i < 2; ++i) {
@@ -472,6 +482,8 @@ void IDE::detect()
 			deviceCount++;
 		}
 	}
+
+	KeRestorePreemption();
 }
 
 #pragma GCC diagnostic pop

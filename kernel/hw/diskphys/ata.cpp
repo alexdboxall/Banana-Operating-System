@@ -25,13 +25,19 @@ ATA::ATA() : PhysicalDisk("ATA Hard Drive", 512)
 
 void ATA::flush(bool lba48)
 {
+	KeDisablePreemption();
+
 	//send a flush command to the drive
 	ide->write(channel, ATA_REG_COMMAND, lba48 ? ATA_CMD_CACHE_FLUSH_EXT : ATA_CMD_CACHE_FLUSH);
 	ide->polling(channel, 0);
+
+	KeRestorePreemption();
 }
 
 bool ATA::readyForCommand()
 {
+	KeDisablePreemption();
+
 	//wait for the device to be ready
 	int timeout = 0;
 	while (ide->read(channel, ATA_REG_ALTSTATUS) & (ATA_SR_BSY | ATA_SR_DRQ)) {
@@ -40,10 +46,12 @@ bool ATA::readyForCommand()
 			milliTenthSleep(10);
 		}
 		if (timeout == 2000) {
+			KeRestorePreemption();
 			return false;
 		}
 	}
 
+	KeRestorePreemption();
 	return true;
 }
 
@@ -53,6 +61,8 @@ bool ATA::readyForCommand()
 
 int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 {
+	KeDisablePreemption();
+
 	uint8_t lbaIO[6];
 	uint8_t lbaMode;
 	uint8_t head;
@@ -107,6 +117,7 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 	//wait for the drive to be not busy
 	if (!readyForCommand()) {
+		KeRestorePreemption();
 		return 1;
 	}
 
@@ -141,6 +152,7 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 	else if (!write && lbaMode == MODE_LBA48) command = ATA_CMD_READ_PIO_EXT;
 	else if (!write && lbaMode != MODE_LBA48) command = ATA_CMD_READ_PIO;
 	else {
+		KeRestorePreemption();
 		return 1;
 	}
 		
@@ -157,6 +169,7 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 		if (err) {
 			ide->printError(channel, drive, err);
+			KeRestorePreemption();
 			return err;
 		}
 
@@ -176,6 +189,7 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 		flush(lbaMode == MODE_LBA48);
 	}
 
+	KeRestorePreemption();
 	return 0;
 }
 
