@@ -208,7 +208,6 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 		}
 		int m = imageDataOffset;
 		int i = 0;
-		int y = 0;
 		for (int x = 0; x < w * h && m < size;) {
 			//packet header
 			int k = ptr[m++];
@@ -226,7 +225,7 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 			} else {
 				//raw packet
 
-				int numPixels = k;
+				int numPixels = k + 1;
 				for (int z = 0; z < numPixels; ++z) {
 					data[i++] = ((header->bpp == 32 ? ptr[m + 3] : 0) << 24) | (ptr[m + 2] << 16) | (ptr[m + 1] << 8) | ptr[m];
 					m += header->bpp >> 3;
