@@ -30,7 +30,6 @@ extern "C" uint64_t int_handler(struct regs* r)
 	}
 
 	bool preempt = KeIsPreemptionOn;
-	KeIsPreemptionOn = false;
 
 	int num = r->int_no;
 
@@ -48,6 +47,7 @@ extern "C" uint64_t int_handler(struct regs* r)
 	for (int i = 0; i < 4; ++i) {
 		if (handleList[i]) {
 			if (r->int_no == 96) {
+				KeIsPreemptionOn = false;
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcast-function-type"
 				uint64_t retV = reinterpret_cast<uint64_t(*)(regs*, void*)>(handleList[i])(r, contextList[i]);		//this has got to be the world's worst line of code, ever
