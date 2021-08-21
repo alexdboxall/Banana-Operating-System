@@ -41,6 +41,8 @@ SATA::SATA() : PhysicalDisk("SATA Hard Drive", 512)
 
 int SATA::open(int _deviceNum, int b, void* _ide)
 {
+	kprintf("SATA::open\n");
+
 	//save parameters
 	sbus = (SATABus*) _ide;
 	deviceNum = _deviceNum;
