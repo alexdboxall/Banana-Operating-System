@@ -210,28 +210,22 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 		int i = 0;
 		int y = 0;
 		for (int x = 0; x < w * h && m < size;) {
-			int k = ptr[m++];
-			if (k > 127) {
-				k -= 128;
-				x += k;
-				int j = ptr[m++] * (header->cmapent >> 3) + 18;
-				while (k--) {
-					if (!(i % w)) {
-						i = ((!o ? h - y - 1 : y) * w);
-						y++;
-					}
-					data[i++] = ((header->bpp == 32 ? ptr[m + 3] : 0) << 24) | (ptr[m + 2] << 16) | (ptr[m + 1] << 8) | ptr[m];
+			int k = ptr[m++];		//packet header
+
+			if (k >= 128) {
+				//RLE packet
+				int numRepeats = k & 0x7F;
+				uint32_t val = ((header->bpp == 32 ? ptr[m + 3] : 0) << 24) | (ptr[m + 2] << 16) | (ptr[m + 1] << 8) | ptr[m];
+				for (int z = 0; z < numRepeats; ++z) {
+					data[i++] = val;
 				}
 				m += header->bpp >> 3;
 
 			} else {
-				k++;
-				x += k;
-				while (k--) {
-					if (!(i % w)) {
-						i = ((!o ? h - y - 1 : y) * w);
-						y++;
-					}
+				//raw packet
+
+				int numPixels = k;
+				for (int z = 0; z < numPixels; ++z) {
 					data[i++] = ((header->bpp == 32 ? ptr[m + 3] : 0) << 24) | (ptr[m + 2] << 16) | (ptr[m + 1] << 8) | ptr[m];
 					m += header->bpp >> 3;
 				}
