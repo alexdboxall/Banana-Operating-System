@@ -174,7 +174,7 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 
 	kprintf("BPP = %d\n", header->bpp);
 
-	bool reverse = (header->pixeltype & 0x20);
+	bool reverse = !(header->pixeltype & 0x20);
 	kprintf("REVERSE = %d\n", reverse);
 
 	int j, k;
@@ -198,7 +198,11 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 		int i = 0;
 		for (int y = 0; y < h; y++) {
 			for (int x = 0; x < w; x++) {
+				if (reverse && !(i % w)) {		//flip image vertically
+					i = (h - (i / w) - 1) * w;
+				}
 				data[i++] = ((header->bpp == 32 ? ptr[j + 3] : 0) << 24) | (ptr[j + 2] << 16) | (ptr[j + 1] << 8) | ptr[j];
+				
 				j += header->bpp >> 3;
 			}
 		}
@@ -222,6 +226,9 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 				int numRepeats = (k & 0x7F) + 1;
 				uint32_t val = ((header->bpp == 32 ? ptr[m + 3] : 0) << 24) | (ptr[m + 2] << 16) | (ptr[m + 1] << 8) | ptr[m];
 				for (int z = 0; z < numRepeats; ++z) {
+					if (reverse && !(i % w)) {		//flip image vertically
+						i = (h - (i / w) - 1) * w;
+					}
 					data[i++] = val;
 				}
 				x += numRepeats;
@@ -232,6 +239,9 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 
 				int numPixels = k + 1;
 				for (int z = 0; z < numPixels; ++z) {
+					if (reverse && !(i % w)) {		//flip image vertically
+						i = (h - (i / w) - 1) * w;
+					}
 					data[i++] = ((header->bpp == 32 ? ptr[m + 3] : 0xFF) << 24) | (ptr[m + 2] << 16) | (ptr[m + 1] << 8) | ptr[m];
 					m += header->bpp >> 3;
 				}
