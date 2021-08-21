@@ -71,7 +71,7 @@ int SATA::open(int _deviceNum, int b, void* _ide)
 
 int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 {
-	disableScheduler();
+	lockScheduler();
 
 	if (count > 16) {
 		KePanic("SATA::access with > 16. SATA::read/write should prevent.");
@@ -86,7 +86,7 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 	int spin = 0;
 	int slot = sbus->findCmdslot(port);
 	if (slot == -1) {
-		enableScheduler();
+		unlockScheduler();
 		return 1;
 	}
 
@@ -136,7 +136,7 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 	if (spin == 1000000) {
 		kprintf("Port is hung\n");
-		enableScheduler();
+		unlockScheduler();
 		return 1;
 	}
 
@@ -152,7 +152,7 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 		if (port->is & HBA_PxIS_TFES)	// Task file error
 		{
 			kprintf("Read disk error\n");
-			enableScheduler();
+			unlockScheduler();
 			return 1;
 		}
 
@@ -177,7 +177,7 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 	// Check again
 	if (port->is & HBA_PxIS_TFES) {
-		enableScheduler();
+		unlockScheduler();
 		return 1;
 	}
 
@@ -185,7 +185,7 @@ int SATA::access(uint64_t lba, int count, void* buffer, bool write)
 		memcpy(buffer, (const void*) sataVirtAddr, 512 * count);
 	}
 
-	enableScheduler();
+	unlockScheduler();
 	return 0;
 }
 
