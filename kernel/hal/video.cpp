@@ -172,6 +172,8 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 		KePanic("tgaParse malloc");
 	}
 
+	kprintf("BPP = %d\n", header->bpp);
+
 	int j, k;
 	int o = header->y;
     int imageDataOffset = ((header->colormap ? (header->cmapent >> 3) * header->cmaplen : 0) + 18);
@@ -227,7 +229,7 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 
 				int numPixels = k + 1;
 				for (int z = 0; z < numPixels; ++z) {
-					data[i++] = ((header->bpp == 32 ? ptr[m + 3] : 0) << 24) | (ptr[m + 2] << 16) | (ptr[m + 1] << 8) | ptr[m];
+					data[i++] = ((header->bpp == 32 ? ptr[m + 3] : 0xFF) << 24) | (ptr[m + 2] << 16) | (ptr[m + 1] << 8) | ptr[m];
 					m += header->bpp >> 3;
 				}
 				x += numPixels;
@@ -258,7 +260,10 @@ void Video::putTGA(int baseX, int baseY, uint8_t* tgaData, int tgaLen)
 
 	for (int y = baseY; y < baseY + tgaHeight; ++y) {
 		for (int x = baseX; x < baseX + tgaWidth; ++x) {
-			putpixel(x, y, *parsed++);
+			uint32_t px = *parsed++;
+			if (px >> 31) {
+				putpixel(x, y, px);
+			}
 		}
 	}
 }
