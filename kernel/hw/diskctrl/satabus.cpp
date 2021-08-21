@@ -88,7 +88,9 @@ int SATABus::open(int, int, void*)
 	//enable IRQs
 	abar->ghc |= (1 << 1);*/
 
+	KeDisablePreemption();
 	probePort(abar);
+	KeRestorePreemption();
 
 	return 0;
 }
