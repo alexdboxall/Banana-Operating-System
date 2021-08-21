@@ -34,7 +34,9 @@ uint64_t SysRead(regs* r)
 	}
 
 	int br = 0;
+	KeDisablePreemption();
 	FileStatus status = file->read(r->ecx, (void*) r->edx, &br);
+	KeRestorePreemption();
 
 	return br;
 }

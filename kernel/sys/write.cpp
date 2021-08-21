@@ -32,8 +32,10 @@ uint64_t SysWrite(regs* r)
 		return -1;
 	}
 
+	KeDisablePreemption();
 	int br = 0;
 	FileStatus status = file->write(r->ecx, (void*) r->edx, &br);
+	KeRestorePreemption();
 
 	return br;
 }
