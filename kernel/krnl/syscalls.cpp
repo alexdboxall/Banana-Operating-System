@@ -68,7 +68,6 @@ uint64_t SysOpen(regs* r)
 	if (!r->edx) {
 		return -1;
 	}
-	KeDisablePreemption();
 
 	char fname[256];
 	Fs::standardiseFiles(fname, (const char*) r->edx, "Z:/");
@@ -83,18 +82,15 @@ uint64_t SysOpen(regs* r)
 
 	if (string_ends_with((const char*) r->edx, "/con") || string_ends_with((const char*) r->edx, "\\con") || !strcmp((const char*) r->edx, "con") || string_ends_with(fname, "/con")) {
 		*((uint64_t*) r->ebx) = RESERVED_FD_CON;
-		KeRestorePreemption(); 
 		return 0;
 	}
 	if (string_ends_with((const char*) r->edx, "/nul") || string_ends_with((const char*) r->edx, "\\nul") || !strcmp((const char*) r->edx, "nul") || string_ends_with(fname, "/nul")) {
 		*((uint64_t*) r->ebx) = RESERVED_FD_NUL;
-		KeRestorePreemption(); 
 		return 0;
 	}
 
 	File* f = new File((const char*) r->edx, currentTaskTCB->processRelatedTo);
 	if (!f) {
-		KeRestorePreemption(); 
 		return -1;
 	}
 
@@ -125,13 +121,11 @@ uint64_t SysOpen(regs* r)
 
 	FileStatus s = f->open((FileOpenMode) mode);
 	if (s != FileStatus::Success) {
-		KeRestorePreemption(); 
 		return -1;
 	}
 
 	*((uint64_t*) r->ebx) = ((UnixFile*) f)->getFileDescriptor();
 
-	KeRestorePreemption();
 	return 0;
 }
 
