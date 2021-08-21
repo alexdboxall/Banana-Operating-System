@@ -653,11 +653,13 @@ namespace Thr
 }
 
 int KiPreemptionDisableCounter = 0;
+bool KiRestorePreemptionValue = false;
+
 void KeDisablePreemption()
 {
 	if (KiPreemptionDisableCounter == 0) {
 		KiRestorePreemptionValue = KePreemptionIsOn;
-		KePreemptionIsOn = false;
+		KeIsPreemptionOn = false;
 	}
 	KiPreemptionDisableCounter++;
 }
@@ -666,6 +668,6 @@ void KeRestorePreemption()
 {
 	KiPreemptionDisableCounter--;
 	if (KiPreemptionDisableCounter == 0) {
-		KePreemptionIsOn = KiRestorePreemptionValue;
+		KeIsPreemptionOn = KiRestorePreemptionValue;
 	}
 }

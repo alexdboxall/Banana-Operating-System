@@ -29,8 +29,6 @@ extern "C" uint64_t int_handler(struct regs* r)
 		HalStallProcessor();
 	}
 
-	bool preempt = KeIsPreemptionOn;
-
 	int num = r->int_no;
 
 	//send EOI command for IRQs
@@ -47,12 +45,10 @@ extern "C" uint64_t int_handler(struct regs* r)
 	for (int i = 0; i < 4; ++i) {
 		if (handleList[i]) {
 			if (r->int_no == 96) {
-				KeIsPreemptionOn = false;
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcast-function-type"
 				uint64_t retV = reinterpret_cast<uint64_t(*)(regs*, void*)>(handleList[i])(r, contextList[i]);		//this has got to be the world's worst line of code, ever
 #pragma GCC diagnostic pop
-				KeIsPreemptionOn = preempt;
 				return retV;
 			} else {
 				handleList[i](r, contextList[i]);
@@ -60,7 +56,6 @@ extern "C" uint64_t int_handler(struct regs* r)
 		}
 	}
 
-	KeIsPreemptionOn = preempt;
 	return 0;
 }
 
