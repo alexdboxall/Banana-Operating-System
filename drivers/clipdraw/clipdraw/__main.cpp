@@ -72,7 +72,7 @@ void NiMain(void* s)
 		uint8_t* tgaData = (uint8_t*) malloc(tgaLen);
 		fs = f->read(tgaLen, tgaData, &br);
 		kprintf("br = %d, fs = %d\n", br, (int) fs);
-		screen->putTGA(50 + 3 + 16 * 0, 50 + WINDOW_TITLEBAR_HEIGHT, tgaData, tgaLen);
+		screen->putTGA(50 + 10 + 24 * 0, 55 + WINDOW_TITLEBAR_HEIGHT, tgaData, tgaLen);
 		f->close();
 		delete f;
 	}
@@ -85,7 +85,114 @@ void NiMain(void* s)
 		int br;
 		uint8_t* tgaData = (uint8_t*) malloc(tgaLen);
 		f->read(tgaLen, tgaData, &br);
-		screen->putTGA(win1->xpos + 3 + 16 * 1, win1->ypos + WINDOW_TITLEBAR_HEIGHT, tgaData, tgaLen);
+		screen->putTGA(50 + 10 + 24 * 1, 55 + WINDOW_TITLEBAR_HEIGHT, tgaData, tgaLen);
+		f->close();
+		delete f;
+	}
+	{
+		File* f = new File("C:/Banana/Icons/Office/print.tga", kernelProcess);
+		f->open(FILE_OPEN_READ);
+		uint64_t tgaLen;
+		bool dir;
+		f->stat(&tgaLen, &dir);
+		int br;
+		uint8_t* tgaData = (uint8_t*) malloc(tgaLen);
+		f->read(tgaLen, tgaData, &br);
+		screen->putTGA(50 + 10 + 24 * 2, 55 + WINDOW_TITLEBAR_HEIGHT, tgaData, tgaLen);
+		f->close();
+		delete f;
+	}
+
+	{
+		File* f = new File("C:/Banana/Icons/Office/copy.tga", kernelProcess);
+		f->open(FILE_OPEN_READ);
+		uint64_t tgaLen;
+		bool dir;
+		f->stat(&tgaLen, &dir);
+		int br;
+		uint8_t* tgaData = (uint8_t*) malloc(tgaLen);
+		f->read(tgaLen, tgaData, &br);
+		screen->putTGA(50 + 10 + 24 * 4, 55 + WINDOW_TITLEBAR_HEIGHT, tgaData, tgaLen);
+		f->close();
+		delete f;
+	}
+	{
+		File* f = new File("C:/Banana/Icons/Office/paste.tga", kernelProcess);
+		f->open(FILE_OPEN_READ);
+		uint64_t tgaLen;
+		bool dir;
+		f->stat(&tgaLen, &dir);
+		int br;
+		uint8_t* tgaData = (uint8_t*) malloc(tgaLen);
+		f->read(tgaLen, tgaData, &br);
+		screen->putTGA(50 + 10 + 24 * 5, 55 + WINDOW_TITLEBAR_HEIGHT, tgaData, tgaLen);
+		f->close();
+		delete f;
+	}
+
+	{
+		File* f = new File("C:/Banana/Icons/Office/undo.tga", kernelProcess);
+		f->open(FILE_OPEN_READ);
+		uint64_t tgaLen;
+		bool dir;
+		f->stat(&tgaLen, &dir);
+		int br;
+		uint8_t* tgaData = (uint8_t*) malloc(tgaLen);
+		f->read(tgaLen, tgaData, &br);
+		screen->putTGA(50 + 10 + 24 * 7, 55 + WINDOW_TITLEBAR_HEIGHT, tgaData, tgaLen);
+		f->close();
+		delete f;
+	}
+	{
+		File* f = new File("C:/Banana/Icons/Office/redo.tga", kernelProcess);
+		f->open(FILE_OPEN_READ);
+		uint64_t tgaLen;
+		bool dir;
+		f->stat(&tgaLen, &dir);
+		int br;
+		uint8_t* tgaData = (uint8_t*) malloc(tgaLen);
+		f->read(tgaLen, tgaData, &br);
+		screen->putTGA(50 + 10 + 24 * 8, 55 + WINDOW_TITLEBAR_HEIGHT, tgaData, tgaLen);
+		f->close();
+		delete f;
+	}
+
+	{
+		File* f = new File("C:/Banana/Icons/Office/bold.tga", kernelProcess);
+		f->open(FILE_OPEN_READ);
+		uint64_t tgaLen;
+		bool dir;
+		f->stat(&tgaLen, &dir);
+		int br;
+		uint8_t* tgaData = (uint8_t*) malloc(tgaLen);
+		f->read(tgaLen, tgaData, &br);
+		screen->putTGA(50 + 10 + 24 * 10, 55 + WINDOW_TITLEBAR_HEIGHT, tgaData, tgaLen);
+		f->close();
+		delete f;
+	}
+	{
+		File* f = new File("C:/Banana/Icons/Office/italic.tga", kernelProcess);
+		f->open(FILE_OPEN_READ);
+		uint64_t tgaLen;
+		bool dir;
+		f->stat(&tgaLen, &dir);
+		int br;
+		uint8_t* tgaData = (uint8_t*) malloc(tgaLen);
+		f->read(tgaLen, tgaData, &br);
+		screen->putTGA(50 + 10 + 24 * 11, 55 + WINDOW_TITLEBAR_HEIGHT, tgaData, tgaLen);
+		f->close();
+		delete f;
+	}
+	{
+		File* f = new File("C:/Banana/Icons/Office/underline.tga", kernelProcess);
+		f->open(FILE_OPEN_READ);
+		uint64_t tgaLen;
+		bool dir;
+		f->stat(&tgaLen, &dir);
+		int br;
+		uint8_t* tgaData = (uint8_t*) malloc(tgaLen);
+		f->read(tgaLen, tgaData, &br);
+		screen->putTGA(50 + 10 + 24 * 12, 55 + WINDOW_TITLEBAR_HEIGHT, tgaData, tgaLen);
 		f->close();
 		delete f;
 	}
