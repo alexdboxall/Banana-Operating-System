@@ -4,6 +4,8 @@
 extern "C" {
 #endif
 
+#include <stddef.h>
+
 	void KeNetCreateSemaphore(size_t* mutex, int count);
 	void KeNetFreeSemaphore(size_t* mutex);
 	void KeNetSignalSemaphore(size_t* mutex);
