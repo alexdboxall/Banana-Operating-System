@@ -36,30 +36,52 @@ void Semaphore::assertLocked(const char* msg)
 	unlockStuff();
 }
 
-void Semaphore::acquire()
+int Semaphore::acquire(int milliseconds)
 {
-	lockStuff();
+	if (milliseconds) {
+		int time = 0;
+		bool waited = true;
+		while (waited) {
+			waited = !tryAcquire();
+			if (!waited) break;
 
-	if (currentCount < maxCount) {
-		//we can aquire now
-		++currentCount;
+			if (milliseconds <= 40) {
+				milliTenthSleep(milliseconds * 10);
+				time += milliseconds;
+				milliseconds = 0;
+			} else {
+				milliTenthSleep(40 * 10);
+				time += 40;
+				milliseconds -= 40;
+			}
+		}
+		return time;
 
 	} else {
-		//we have to wait
-		currentTaskTCB->next = nullptr;
+		lockStuff();
 
-		if (firstWaitingTask == nullptr) {
-			firstWaitingTask = (ThreadControlBlock*) currentTaskTCB;
+		if (currentCount < maxCount) {
+			//we can aquire now
+			++currentCount;
+
 		} else {
-			lastWaitingTask->next = (ThreadControlBlock*) currentTaskTCB;
+			//we have to wait
+			currentTaskTCB->next = nullptr;
+
+			if (firstWaitingTask == nullptr) {
+				firstWaitingTask = (ThreadControlBlock*) currentTaskTCB;
+			} else {
+				lastWaitingTask->next = (ThreadControlBlock*) currentTaskTCB;
+			}
+			lastWaitingTask = (ThreadControlBlock*) currentTaskTCB;
+
+			kprintf("blocking on Semaphore::acquire");
+			blockTask(TaskState::WaitingForLock);
 		}
-		lastWaitingTask = (ThreadControlBlock*) currentTaskTCB;
 
-		kprintf("blocking on Semaphore::acquire");
-		blockTask(TaskState::WaitingForLock);
+		unlockStuff();
+		return 0;
 	}
-
-	unlockStuff();
 }
 
 void Semaphore::release()

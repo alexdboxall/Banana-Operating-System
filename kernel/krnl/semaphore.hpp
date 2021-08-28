@@ -15,9 +15,9 @@ public:
 	int currentCount;
 
 	Semaphore(int maxCount);
-	void acquire();
-	void release();
+	int acquire(int milliseconds = 0);
 	bool tryAcquire();
+	void release();
 
 	void assertLocked(const char* msg = "SEMAPHORE SHOULD BE LOCKED");
 };
