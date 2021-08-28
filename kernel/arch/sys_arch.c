@@ -9,6 +9,11 @@ void lwip_socket_init()
 	// TYPE SIGNATURE UNKNOWN!!
 }
 
+void tcpip_callback_with_block()
+{
+	// TYPE SIGNATURE UNKNOWN!!
+}
+
 err_t sys_sem_new(sys_sem_t* sem, u8_t count)
 {
 	KeNetCreateSemaphore((size_t*) sem, count);
