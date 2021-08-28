@@ -7,11 +7,13 @@
 void lwip_socket_init()
 {
 	// TYPE SIGNATURE UNKNOWN!!
+	KeCPanic("lwip_socket_init");
 }
 
 void tcpip_callback_with_block()
 {
 	// TYPE SIGNATURE UNKNOWN!!
+	KeCPanic("tcpip_callback_with_block");
 }
 
 err_t sys_sem_new(sys_sem_t* sem, u8_t count)
@@ -37,37 +39,40 @@ u32_t sys_arch_sem_wait(sys_sem_t* sem, u32_t timeout)
 
 err_t sys_mbox_new(sys_mbox_t* mbox, int size)
 {
+	KeCPanic("sys_mbox_new");
 	return 0;
 }
 
 void sys_mbox_free(sys_mbox_t* mbox)
 {
-
+	KeCPanic("sys_mbox_free");
 }
 
 void sys_mbox_post(sys_mbox_t* mbox, void* msg)
 {
-
+	KeCPanic("sys_mbox_post");
 }
 
 u32_t sys_arch_mbox_fetch(sys_mbox_t* mbox, void** msg, u32_t timeout)
 {
+	KeCPanic("sys_arch_mbox_fetch");
 	return 0;
 }
 
 u32_t sys_arch_mbox_tryfetch(sys_mbox_t* mbox, void** msg)
 {
+	KeCPanic("sys_arch_mbox_tryfetch");
 	return 0;
 }
 
 err_t sys_mbox_trypost(sys_mbox_t* mbox, void* msg)
 {
-
+	KeCPanic("sys_mbox_trypost");
 }
 
-sys_thread_t sys_thread_new(char* name, void (*thread)(void* arg), void* arg, int stacksize, int prio)
+sys_thread_t sys_thread_new(char* name, void (*thread)(void*), void* arg, int stacksize, int prio)
 {
-	
+	KeNetCreateThread(thread, arg);
 	return 0;
 }
 

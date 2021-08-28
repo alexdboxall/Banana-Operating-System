@@ -28,3 +28,8 @@ extern "C" void KeNetCreateThread(void (*thread)(void*), void* arg)
 {
 	kernelProcess->createThread(thread, arg, 128);
 }
+
+extern "C" void KeCPanic(void* message)
+{
+	KePanic(message);
+}
