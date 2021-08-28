@@ -1,6 +1,7 @@
 
 #include <net/netosl.hpp>
 #include <krnl/semaphore.hpp>
+#include <thr/prcssthr.hpp>
 
 extern "C" void KeNetCreateSemaphore(size_t* mutex, int count)
 {
