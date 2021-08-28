@@ -67,7 +67,7 @@ err_t sys_mbox_trypost(sys_mbox_t* mbox, void* msg)
 
 sys_thread_t sys_thread_new(char* name, void (*thread)(void* arg), void* arg, int stacksize, int prio)
 {
-	kernelProcess->createThread(thread, arg, 128);
+	
 	return 0;
 }
 

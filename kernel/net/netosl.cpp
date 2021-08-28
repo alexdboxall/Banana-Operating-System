@@ -22,3 +22,8 @@ extern "C" int KeNetWaitSemaphore(size_t* mutex, int millisecs)
 {
 	return ((Semaphore*) (*mutex))->acquire(millisecs);
 }
+
+extern "C" void KeNetCreateThread(void (*thread)(void*), void* arg)
+{
+	kernelProcess->createThread(thread, arg, 128);
+}
