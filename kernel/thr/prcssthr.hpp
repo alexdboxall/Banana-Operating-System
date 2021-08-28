@@ -120,36 +120,8 @@ void userModeEntryPoint(void* ignored);
 
 #pragma pack(pop)
 
-class Semaphore
-{
-private:
-
-protected:
-	int maxCount;
-	ThreadControlBlock* firstWaitingTask;
-	ThreadControlBlock* lastWaitingTask;
-
-public:
-	int currentCount;
-
-	Semaphore(int maxCount);
-	void acquire();
-	void release();
-	bool tryAcquire();
-
-	void assertLocked(const char* msg = "SEMAPHORE SHOULD BE LOCKED");
-};
-
-class Mutex: public Semaphore
-{
-private:
-
-protected:
-
-public:
-	Mutex();
-};
-
+#include <krnl/semaphore.hpp>
+#include <krnl/mutex.hpp>
 
 //JUST FOR NOW	- NEEDS TO BE UPDATED IN hardware.asm IF THIS IS CHANGED
 #define currentTaskTCB (*((ThreadControlBlock**) 0xC2002000))		
