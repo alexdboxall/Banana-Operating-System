@@ -128,14 +128,31 @@ void NIWindow::realdraw()
 	}
 }
 
-int curveLookup7[]	= { 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };	// { 5, 3, 2, 1, 1, 0, 0, 0 };
-int curveLoopup11[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };	//{ 9, 6, 4, 3, 2, 2, 1, 1, 1, 0, 0, 0, 0 };
+int curveLookup7[]	= { 4, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
+
+// { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
+// { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
+// { 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
+// { 4, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
+// { 5, 3, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, };
+// { 9, 6, 4, 3, 2, 2, 1, 1, 1, 0, 0, 0, 0, };
+
+int curveLoopup11[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };	
 
 void NIWindow::drawBasicWindow()
 {
 	for (int j = 0; j < height; ++j) {
 		for (int i = 0; i < width; ++i) {
 			putpixel(i, j, j > WINDOW_TITLEBAR_HEIGHT ? 0xD4D4D4 : 0xFFFFFF);
+		}
+	}
+
+	if (!(flags & WINFLAG_DISABLE_RESIZE)) {
+		for (int i = 0; i < 7; ++i) {
+			putpixel(width - 10 + i, height - 4 - i, 0xAAAAAA);
+		}
+		for (int i = 0; i < 13; ++i) {
+			putpixel(width - 16 + i, height - 4 - i, 0xAAAAAA);
 		}
 	}
 }
