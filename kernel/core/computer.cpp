@@ -278,6 +278,8 @@ void Computer::disableNMI()
 	enableNMI(false);
 }
 
+extern "C" void lwip_init(void);
+
 namespace Krnl
 {
 	void firstTask()
@@ -309,6 +311,8 @@ namespace Krnl
 		
 		KeSetBootMessage("Loading more device drivers...");
 		computer->root->loadDriversForAll();
+		
+		lwip_init();
 
 		KeSetBootMessage("Getting ready...");
 		Thr::executeDLL(Thr::loadDLL("C:/Banana/System/system.dll"), computer);
