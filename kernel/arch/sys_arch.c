@@ -2,6 +2,8 @@
 #include "arch/cc.h"
 #include "lwip/err.h"
 
+#include <net/netosl.hpp>
+
 void lwip_socket_init()
 {
 	// TYPE SIGNATURE UNKNOWN!!
@@ -29,22 +31,23 @@ void tcpip_callback_with_block()
 
 err_t sys_sem_new(sys_sem_t* sem, u8_t count)
 {
-	return 0;
+	KeNetCreateSemaphore((size_t*) sem, count);
+	return ERR_OK;
 }
 
 void sys_sem_free(sys_sem_t* sem)
 {
-
+	KeNetFreeSemaphore((size_t*) sem);
 }
 
 void sys_sem_signal(sys_sem_t* sem)
 {
-
+	KeNetSignalSemaphore((size_t*) sem);
 }
 
 u32_t sys_arch_sem_wait(sys_sem_t* sem, u32_t timeout)
 {
-	return 0;
+	return KeNetWaitSemaphore((size_t*) sem, timeout);
 }
 
 err_t sys_mbox_new(sys_mbox_t* mbox, int size)
