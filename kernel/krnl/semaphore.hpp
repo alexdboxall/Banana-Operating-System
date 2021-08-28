@@ -15,7 +15,8 @@ public:
 	int currentCount;
 
 	Semaphore(int maxCount);
-	int acquire(int milliseconds = 0);
+	int acquire(int milliseconds);
+	void acquire();
 	bool tryAcquire();
 	void release();
 

@@ -36,6 +36,11 @@ void Semaphore::assertLocked(const char* msg)
 	unlockStuff();
 }
 
+void Semaphore::acquire()
+{
+	acquire(0);
+}
+
 int Semaphore::acquire(int milliseconds)
 {
 	if (milliseconds) {
