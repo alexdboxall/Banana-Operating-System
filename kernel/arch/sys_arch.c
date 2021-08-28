@@ -6,7 +6,7 @@
 
 void lwip_socket_init()
 {
-	KeCPrintf("Sockets not compiled. When they are, remove this function.\n");
+	KeCPuts("Sockets not compiled. When they are, remove this function.");
 }
 
 void tcpip_callback_with_block()

@@ -12,6 +12,7 @@ extern "C" {
 	int KeNetWaitSemaphore(size_t* mutex, int millisecs);
 	void KeNetCreateThread(void (*thread)(void*), void* arg);
 	void KeCPanic(const char* message);
+	void KeCPuts(const char* message);
 
 #ifdef __cplusplus
 }

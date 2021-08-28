@@ -33,3 +33,8 @@ extern "C" void KeCPanic(const char* message)
 {
 	KePanic(message);
 }
+
+extern "C" void KeCPuts(const char* message)
+{
+	kprintf("%s\n", message);
+}
