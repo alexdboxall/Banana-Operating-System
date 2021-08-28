@@ -1,6 +1,6 @@
 #pragma once
 
-struct struct ThreadControlBlock;
+struct ThreadControlBlock;
 
 class Semaphore
 {
