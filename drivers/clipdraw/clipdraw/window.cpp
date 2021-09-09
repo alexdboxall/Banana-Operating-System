@@ -147,7 +147,7 @@ void NIWindow::drawBasicWindow()
 		}
 	}
 
-	if (!(flags & WINFLAG_DISABLE_RESIZE)) {
+	if (!(flags & WINFLAG_DISABLE_RESIZE) && !fullscreen) {
 		for (int i = 0; i < 7; ++i) {
 			putpixel(width - 10 + i, height - 4 - i, 0xAAAAAA);
 		}
@@ -160,7 +160,7 @@ void NIWindow::drawBasicWindow()
 void NIWindow::rerender()
 {
 	const bool largeRounded = false;
-
+	
 	if (valid) {
 		invalidate();
 	}
@@ -171,17 +171,22 @@ void NIWindow::rerender()
 	memset(data32, 0, height * width * bytesPerPixel);
 
 	for (int i = 0; i < renderTableLength; ++i) {
-		if (i < (largeRounded ? 11 : 7)) {
-			renderTable[i].leftSkip = largeRounded ? curveLoopup11[i] : curveLookup7[i];
-			renderTable[i].rightSkip = largeRounded ? curveLoopup11[i] : curveLookup7[i];
-
-		} else if (i > height - (largeRounded ? 11 : 7)) {
-			renderTable[i].leftSkip = largeRounded ? curveLoopup11[height - i] : curveLookup7[height - i];
-			renderTable[i].rightSkip = largeRounded ? curveLoopup11[height - i] : curveLookup7[height - i];
-
-		} else {
+		if (fullscreen) {
 			renderTable[i].leftSkip = 0;
 			renderTable[i].rightSkip = 0;
+		} else {
+			if (i < (largeRounded ? 11 : 7)) {
+				renderTable[i].leftSkip = largeRounded ? curveLoopup11[i] : curveLookup7[i];
+				renderTable[i].rightSkip = largeRounded ? curveLoopup11[i] : curveLookup7[i];
+
+			} else if (i > height - (largeRounded ? 11 : 7)) {
+				renderTable[i].leftSkip = largeRounded ? curveLoopup11[height - i] : curveLookup7[height - i];
+				renderTable[i].rightSkip = largeRounded ? curveLoopup11[height - i] : curveLookup7[height - i];
+
+			} else {
+				renderTable[i].leftSkip = 0;
+				renderTable[i].rightSkip = 0;
+			}
 		}
 	}
 	valid = true;

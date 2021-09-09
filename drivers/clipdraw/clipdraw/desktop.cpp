@@ -160,6 +160,8 @@ void NIDesktop::refreshWindowBounds(NIWindow* window)
 	int d = window->xpos + window->width > ctxt->width - 6 ? ctxt->width - 1 : window->xpos + window->width + 5;
 	
 	rangeRefresh(a, b, c, d);
+
+	ctxt->screen->drawCursor(mouseX, mouseY, (uint32_t*) (___mouse_data + cursorOffset), 0);
 }
 
 void NIDesktop::invalidateAllDueToFullscreen(NIWindow* ignoredWindow)
@@ -356,7 +358,8 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 				}
 				sincePrev = 0;
 				clickon->fullscreen ^= 1;
-
+				NiEvent evnt = NiCreateEvent(clickon, EVENT_TYPE_RESIZED, true);
+				clickon->postEvent(evnt);
 				clickon->rerender();
 				completeRefresh();
 
