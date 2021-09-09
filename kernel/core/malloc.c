@@ -1,5 +1,8 @@
 #include "libk/string.h"
+
+#define MALLOC_H_WANT_INTERNAL_DEFINITIONS
 #include "core/malloc.h"
+#undef MALLOC_H_WANT_INTERNAL_DEFINITIONS
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic warning "-Wunused-function"
@@ -12,7 +15,9 @@
 #pragma GCC optimize ("-fno-align-functions")
 
 void* sbrk(ptrdiff_t increment);
+void* sbr_thunk(ptrdiff_t increment);
 void* mmap(void* addr, size_t length, int prot, int flags, int fd, size_t offset);
+int munmap(void* addr, size_t length);
 
 #define USE_DL_PREFIX
 #define MORECORE_CANNOT_TRIM
@@ -698,7 +703,7 @@ extern Void_t* sbrk_thunk();
 */
 
 #ifndef MMAP_AS_MORECORE_SIZE
-#define MMAP_AS_MORECORE_SIZE (4096 * 8)
+#define MMAP_AS_MORECORE_SIZE MMAP_MIN_SIZE
 #endif
 
 /*

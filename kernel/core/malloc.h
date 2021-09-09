@@ -24,6 +24,14 @@
 
 #define USE_DL_PREFIX
 
+#ifdef MALLOC_H_WANT_INTERNAL_DEFINITIONS
+#define PROT_READ  1
+#define PROT_WRITE 2
+#define MAP_PRIVATE 4
+#define MMAP_MIN_SIZE (4096 * 8)
+
+#endif
+
 #ifndef MALLOC_270_H
 #define MALLOC_270_H
 

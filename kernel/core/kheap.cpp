@@ -37,9 +37,13 @@ extern "C" void* sbrk(ptrdiff_t increment)
 	}
 }
 
+#define MALLOC_H_WANT_INTERNAL_DEFINITIONS
+#include "core/malloc.h"
+#undef MALLOC_H_WANT_INTERNAL_DEFINITIONS
+
 extern "C" void* sbrk_thunk(ptrdiff_t increment)
 {
-	if (increment < 4096 * 8) {
+	if (increment < MMAP_MIN_SIZE) {
 		return sbrk(increment);
 	} else {
 		kprintf("Big sbrk 0x%X\n", increment);
