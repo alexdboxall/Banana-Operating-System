@@ -17,8 +17,6 @@ void* mmap(void* addr, size_t length, int prot, int flags, int fd, size_t offset
 #define USE_DL_PREFIX
 #define MORECORE_CANNOT_TRIM
 #define HAVE_USR_INCLUDE_MALLOC_H
-#undef HAVE_MMAP
-//#define HAVE_MMAP 1
 
 /*
   This is a version (aka dlmalloc) of malloc/free/realloc written by
@@ -254,51 +252,6 @@ void* mmap(void* addr, size_t length, int prot, int flags, int fd, size_t offset
 /* #define WIN32 */
 
 #define HAVE_MEMCPY
-
-#ifdef WIN32
-
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-
-/* Win32 doesn't supply or need the following headers */
-#define LACKS_UNISTD_H
-#define LACKS_SYS_PARAM_H
-#define LACKS_SYS_MMAN_H
-
-/* Use the supplied emulation of sbrk */
-#define MORECORE sbrk
-#define MORECORE_CONTIGUOUS 1
-#define MORECORE_FAILURE    ((void*)(-1))
-
-/* Use the supplied emulation of mmap and munmap */
-#define HAVE_MMAP 1
-#define MUNMAP_FAILURE  (-1)
-#define MMAP_CLEARS 1
-
-/* These values don't really matter in windows mmap emulation */
-#define MAP_PRIVATE 1
-#define MAP_ANONYMOUS 2
-#define PROT_READ 1
-#define PROT_WRITE 2
-
-/* Emulation functions defined at the end of this file */
-
-/* If USE_MALLOC_LOCK, use supplied critical-section-based lock functions */
-#ifdef USE_MALLOC_LOCK
-static int slwait(int *sl);
-static int slrelease(int *sl);
-#endif
-
-static long getpagesize(void);
-static long getregionsize(void);
-static void *sbrk(long size);
-static void *mmap(void *ptr, long size, long prot, long type, long handle, long arg);
-static long munmap(void *ptr, long size);
-
-static void vminfo (unsigned long*free, unsigned long*reserved, unsigned long*committed);
-static int cpuinfo (int whole, unsigned long*kernel, unsigned long*user);
-
-#endif
 
 /*
   __STD_C should be nonzero if using ANSI-standard C compiler, a C++
@@ -647,9 +600,9 @@ Void_t* memcpy();
 #ifdef LACKS_UNISTD_H
 #if !defined(__FreeBSD__) && !defined(__OpenBSD__) && !defined(__NetBSD__)
 #if __STD_C
-extern Void_t*     sbrk(ptrdiff_t);
+extern Void_t* sbrk_thunk(ptrdiff_t);
 #else
-extern Void_t*     sbrk();
+extern Void_t* sbrk_thunk();
 #endif
 #endif
 #endif
@@ -662,7 +615,7 @@ extern Void_t*     sbrk();
 */
 
 #ifndef MORECORE
-#define MORECORE sbrk
+#define MORECORE sbrk_thunk
 #endif
 
 /*
@@ -712,7 +665,7 @@ extern Void_t*     sbrk();
   or so) may be slower than you'd like.
 */
 
-
+#define HAVE_MMAP 1
 #if HAVE_MMAP
 /* 
    Standard unix mmap using /dev/zero clears memory so calloc doesn't
@@ -745,7 +698,7 @@ extern Void_t*     sbrk();
 */
 
 #ifndef MMAP_AS_MORECORE_SIZE
-#define MMAP_AS_MORECORE_SIZE (1024 * 1024)
+#define MMAP_AS_MORECORE_SIZE (4096 * 8)
 #endif
 
 /*

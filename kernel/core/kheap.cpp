@@ -37,6 +37,16 @@ extern "C" void* sbrk(ptrdiff_t increment)
 	}
 }
 
+extern "C" void* sbrk_thunk(ptrdiff_t increment)
+{
+	if (increment < 4096 * 8) {
+		return sbrk(increment);
+	} else {
+		kprintf("Big sbrk 0x%X\n", increment);
+		return sbrk(increment);
+	}
+}
+
 extern "C" void* mmap(void* addr, size_t length, int prot, int flags, int fd, size_t offset)
 {
 	KePanic("MMAP");
@@ -82,7 +92,6 @@ extern "C" void* realloc(void* ptr, size_t size)
 
 extern "C" void* malloc(size_t size)
 {
-	kprintf("malloc 0x%X\n", size);
 	return dlmalloc(size);
 }
 
