@@ -63,7 +63,7 @@ extern "C" void* mmap(void* addr, size_t length, int prot, int flags, int fd, si
 		Virt::getAKernelVAS()->mapPage(Phys::allocatePage(), vaddr + i * 4096, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_SUPERVISOR);
 	}
 
-	return vaddr;
+	return (void*) vaddr;
 }
 
 extern "C" int munmap(void* addr, size_t length)
