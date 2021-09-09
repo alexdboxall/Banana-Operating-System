@@ -28,7 +28,8 @@
 #define PROT_READ  1
 #define PROT_WRITE 2
 #define MAP_PRIVATE 4
-#define MMAP_MIN_SIZE (4096 * 8)
+#define MAP_ANONYMOUS 8
+#define MMAP_MIN_SIZE (4096 * 12)
 
 #endif
 
