@@ -47,12 +47,14 @@ extern "C" void* sbrk_thunk(ptrdiff_t increment)
 		return sbrk(increment);
 	} else {
 		kprintf("Big sbrk 0x%X\n", increment);
-		return sbrk(increment);
+		return -1;
+		//return sbrk(increment);
 	}
 }
 
 extern "C" void* mmap(void* addr, size_t length, int prot, int flags, int fd, size_t offset)
 {
+	kprintf("addr = 0x%X, length = 0x%X, prot = 0x%X, flags = 0xX%, fd = 0x%X, offset = 0x%X\n");
 	KePanic("MMAP");
 	return 0;
 }
