@@ -1761,8 +1761,7 @@ do {                                                                          \
 /* ------------------ MMAP support ------------------  */
 
 
-#define MAP_ANONYMOUS
-#define MAP_ANON
+
 #if HAVE_MMAP
 
 #if !defined(MAP_ANONYMOUS) && defined(MAP_ANON)
@@ -1775,7 +1774,7 @@ do {                                                                          \
    supplied just in case.
 */
 
-#ifndef MAP_ANONYMOUS
+#if 0
 
 static int dev_zero_fd = -1; /* Cached file descriptor for /dev/zero. */
 
