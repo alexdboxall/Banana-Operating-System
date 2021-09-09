@@ -70,7 +70,11 @@ extern "C" void* mmap(void* addr, size_t length, int prot, int flags, int fd, si
 extern "C" int munmap(void* addr, size_t length)
 {
 	kprintf("munmap freeing %d KB...\n", length / 1024);
-	Virt::freeKernelVirtualPages(vaddr + i * 4096);
+
+	size_t vaddr = (size_t) addr;
+	kprintf("    |--> 0x%X\n", vaddr);
+
+	Virt::freeKernelVirtualPages(vaddr);
 	return 0;
 }
 
