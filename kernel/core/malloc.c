@@ -1761,8 +1761,8 @@ do {                                                                          \
 /* ------------------ MMAP support ------------------  */
 
 
-#undef MAP_ANONYMOUS
-#undef MAP_ANON
+#define MAP_ANONYMOUS
+#define MAP_ANON
 #if HAVE_MMAP
 
 #if !defined(MAP_ANONYMOUS) && defined(MAP_ANON)
