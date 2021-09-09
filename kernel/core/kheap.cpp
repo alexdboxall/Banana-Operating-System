@@ -55,8 +55,15 @@ extern "C" void* sbrk_thunk(ptrdiff_t increment)
 extern "C" void* mmap(void* addr, size_t length, int prot, int flags, int fd, size_t offset)
 {
 	kprintf("addr = 0x%X, length = 0x%X, prot = 0x%X, flags = 0x%X, fd = 0x%X, offset = 0x%X\n", addr, length, prot, flags, fd, offset);
-	KePanic("MMAP");
-	return 0;
+
+	int numPages = (length + 4095) / 4096;
+	
+	size_t vaddr = Virt::allocateKernelVirtualPages(numPages);
+	for (int i = 0; i < numPages; ++i) {
+		Virt::getAKernelVAS()->mapPage(Phys::allocatePage(), vaddr + i * 4096, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_SUPERVISOR);
+	}
+
+	return vaddr;
 }
 
 extern "C" int munmap(void* addr, size_t length)
