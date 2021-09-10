@@ -177,7 +177,7 @@ void VESA::getModes()
 		ModeInfo mode = getModeStruct(i);
 		//filter out invalid modes and very bad modes
 		if (mode.width >= 640 && mode.height >= 480) {
-			//filter out modes we don't support
+			//only accept modes we support
 			if (mode.bpp == 15 || mode.bpp == 16 || mode.bpp == 32) {
 				modes[numModes++] = mode;
 				if (numModes == 256) break;
@@ -292,9 +292,7 @@ ModeInfo VESA::calculateBestMode()
 		score *= (modes[i].bpp + 12);
 
 		if (modes[i].width > monitorWidth || modes[i].height > monitorHeight) {
-			if (score) score /= 16;
-			score -= monitorWidth * 2;
-			score -= monitorHeight * 2;
+			score = 0;
 
 		} else if (modes[i].ratioEstimation == monitorResolution) {
 			score *= 2;

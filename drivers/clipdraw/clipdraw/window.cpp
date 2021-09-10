@@ -50,7 +50,9 @@ NIWindow::NIWindow(NIContext* ctxt, int _x, int _y, int _w, int _h)
 
 	fullscreen = false;
 
-	flags = 0;
+	for (int i = 0; i < WIN_MAX_FLAG_DWORDS; ++i) {
+		flags[i] = 0;
+	}
 
 	valid = false;
 	renderTable = nullptr;
@@ -146,14 +148,30 @@ void NIWindow::drawBasicWindow()
 			putpixel(i, j, j > WINDOW_TITLEBAR_HEIGHT ? 0xD4D4D4 : 0xFFFFFF);
 		}
 	}
+}
 
-	if (!(flags & WINFLAG_DISABLE_RESIZE) && !fullscreen) {
-		for (int i = 0; i < 7; ++i) {
-			putpixel(width - 10 + i, height - 4 - i, 0xAAAAAA);
-		}
-		for (int i = 0; i < 13; ++i) {
-			putpixel(width - 16 + i, height - 4 - i, 0xAAAAAA);
-		}
+void NIWindow::drawResizeMarker()
+{
+	if (!(flags[0] & WIN_FLAGS_0_NO_RESIZE) && !fullscreen) {
+		putpixel(width - 10 - 3, height - 2 - 3, 0x555555);
+		putpixel(width -  8 - 3, height - 2 - 3, 0x555555);
+		putpixel(width -  6 - 3, height - 2 - 3, 0x555555);
+		putpixel(width -  4 - 3, height - 2 - 3, 0x555555);
+		putpixel(width -  2 - 3, height - 2 - 3, 0x555555);
+
+		putpixel(width - 8 - 3, height - 4 - 3, 0x555555);
+		putpixel(width - 6 - 3, height - 4 - 3, 0x555555);
+		putpixel(width - 4 - 3, height - 4 - 3, 0x555555);
+		putpixel(width - 2 - 3, height - 4 - 3, 0x555555);
+
+		putpixel(width - 6 - 3, height - 6 - 3, 0x555555);
+		putpixel(width - 4 - 3, height - 6 - 3, 0x555555);
+		putpixel(width - 2 - 3, height - 6 - 3, 0x555555);
+
+		putpixel(width - 4 - 3, height - 8 - 3, 0x555555);
+		putpixel(width - 2 - 3, height - 8 - 3, 0x555555);
+
+		putpixel(width - 2 - 3, height - 10 - 3, 0x555555);
 	}
 }
 
@@ -168,10 +186,9 @@ void NIWindow::rerender()
 	renderTableLength = height;
 	renderTable = (RenderTableEntry*) malloc(sizeof(RenderTableEntry) * renderTableLength);
 	data32 = (uint32_t*) malloc(height * width * bytesPerPixel);
-	memset(data32, 0, height * width * bytesPerPixel);
 
 	for (int i = 0; i < renderTableLength; ++i) {
-		if (fullscreen) {
+		if (fullscreen || (flags[0] & WIN_FLAGS_0_FORCE_RECTANGULAR)) {
 			renderTable[i].leftSkip = 0;
 			renderTable[i].rightSkip = 0;
 		} else {
@@ -191,7 +208,14 @@ void NIWindow::rerender()
 	}
 	valid = true;
 
-	drawBasicWindow();
+	if (!(flags[0] & WIN_FLAGS_0_HIDE_ON_INVALIDATE)) {
+		if (flags[0] & WIN_FLAGS_0_BLACK_ON_INVALIDATE) {
+			memset(data32, 0, height * width * bytesPerPixel);
+		}
+		if (flags[0] & WIN_FLAGS_0_DRAW_ON_INVALIDATE) {
+			drawBasicWindow();
+		}
+	}
 }
 
 void NIWindow::invalidate()
@@ -204,6 +228,8 @@ void NIWindow::invalidate()
 	renderTable = nullptr;
 	renderTableLength = 0;
 	valid = false;
+
+	flags[0] |= WIN_FLAGS_0_INTERNAL_HAS_BEEN_INVALIDATED;
 }
 
 void NIWindow::request()

@@ -173,6 +173,7 @@ void NIDesktop::invalidateAllDueToFullscreen(NIWindow* ignoredWindow)
 
 		if (window && window != ignoredWindow) {
 			window->invalidate();
+			window->postEvent(NiCreateEvent(window, EVENT_TYPE_REPAINT, true));
 		}
 
 		curr = curr->next;
@@ -336,7 +337,7 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 		if (!(previousButtons & 1)) {
 			uint64_t sincePrev = milliTenthsSinceBoot - lastClick;
 
-			if (sincePrev < 3000 && mouseY - clickon->ypos < WINDOW_TITLEBAR_HEIGHT && !(clickon->flags & WINFLAG_DISABLE_RESIZE)) {
+			if (sincePrev < 3000 && mouseY - clickon->ypos < WINDOW_TITLEBAR_HEIGHT && !(clickon->flags[0] & WIN_FLAGS_0_NO_RESIZE)) {
 				if (clickon->fullscreen) {
 					clickon->xpos = clickon->rstrx;
 					clickon->ypos = clickon->rstry;
@@ -372,7 +373,7 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 			lastClick = milliTenthsSinceBoot;
 
 		} else if (!movingWin) {
-			if (mouseY - clickon->ypos > clickon->height - 15 && !clickon->fullscreen && !(clickon->flags & WINFLAG_DISABLE_RESIZE)) {
+			if (mouseY - clickon->ypos > clickon->height - 15 && !clickon->fullscreen && !(clickon->flags[0] & WIN_FLAGS_0_NO_RESIZE)) {
 				movingWin = clickon;
 				movingType = MOVE_TYPE_RESIZE_B;
 				cursorOffset = MOUSE_OFFSET_VERT;
@@ -380,7 +381,7 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 				moveBaseY = mouseY;
 				deleteWindow(clickon);
 			} 
-			if (mouseX - clickon->xpos > clickon->width - 15 && !clickon->fullscreen && !(clickon->flags & WINFLAG_DISABLE_RESIZE)) {
+			if (mouseX - clickon->xpos > clickon->width - 15 && !clickon->fullscreen && !(clickon->flags[0] & WIN_FLAGS_0_NO_RESIZE)) {
 				if (!movingWin) {
 					movingWin = clickon;
 					movingType = MOVE_TYPE_RESIZE_R;
@@ -417,6 +418,7 @@ void NIDesktop::renderScanline(int line, int left, int right)
 	memset(render + left, 0, expectedBytes);
 	memset(shadow + left, 128, expectedBytes);
 
+	bool wasAnyShadows = false;
 	auto curr = head->getHead();
 	while (curr->next) {
 		if (!curr) break;
@@ -428,47 +430,66 @@ void NIDesktop::renderScanline(int line, int left, int right)
 			continue;
 		}
 
+		if ((window->flags[0] & WIN_FLAGS_0_HIDE_ON_INVALIDATE) &&
+			(window->flags[0] & WIN_FLAGS_0_INTERNAL_HAS_BEEN_INVALIDATED)) {
+			curr = curr->next;
+			continue;
+		}
+
 		window->request();
 
-		if (line < window->ypos + window->height && !window->fullscreen) {
+		if (line < window->ypos + window->height && !window->fullscreen && !(window->flags[0] & WIN_FLAGS_0_NO_SHADOWS)) {
 			for (int i = window->xpos; i < window->xpos + window->width; ++i) {
 				if (i < left) continue;
 				if (i > right) break;
-				int j = line;
+				int j = line;				
+				int z = (window->flags[0] & WIN_FLAGS_0_DRAW_OUTLINE_INSTEAD_OF_SHADOW) ? 2 : 5;
+
 				while (j < window->ypos || \
 					   (j - window->ypos >= 0 && window->renderTable[j - window->ypos].leftSkip > i - window->xpos) || \
 					   (j - window->ypos >= 0 && i > window->xpos + window->width - window->renderTable[j - window->ypos].rightSkip) \
 					   ) {
 					++j;
-					if (j - line > 5) break;
+					if (j - line > z) break;
 				}
 				int diff = j - line;
-				if (diff < 5 && diff > 0) {
+				if (diff < z && diff > 0) {
 					if (!render[i]) {
 						diff--;
-						shadow[i] = ((101 + diff * 8) * shadow[i] / 256) + (101 + diff * 8) / 2;
+						wasAnyShadows = true;
+						if (window->flags[0] & WIN_FLAGS_0_DRAW_OUTLINE_INSTEAD_OF_SHADOW) {
+							shadow[i] = 0;
+						} else {
+							shadow[i] = ((101 + diff * 8) * shadow[i] / 256) + (101 + diff * 8) / 2;
+						}
 					}
 				}
 			}
 
-		} else if (line > window->ypos && !window->fullscreen) {
+		} else if (line > window->ypos && !window->fullscreen && !(window->flags[0] & WIN_FLAGS_0_NO_SHADOWS)) {
 			for (int i = window->xpos; i < window->xpos + window->width; ++i) {
 				if (i < left) continue;
 				if (i > right) break;
 				int j = line;
 				
+				int z = (window->flags[0] & WIN_FLAGS_0_DRAW_OUTLINE_INSTEAD_OF_SHADOW) ? 2 : 5;
 				do {
 					--j;
-					if (line - j > 5) break;
+					if (line - j > z) break;
 				} while (j >= window->ypos + window->height || \
 						 (j - window->ypos < window->height && window->renderTable[j - window->ypos].leftSkip > i - window->xpos) || \
 						 (j - window->ypos < window->height && i > window->xpos + window->width - window->renderTable[j - window->ypos].rightSkip) \
 						 );
 
 				int diff = line - j;
-				if (diff < 5 && diff >= 0) {
+				if (diff < z && diff >= 0) {
 					if (!render[i]) {
-						shadow[i] = ((93 + diff * 8) * shadow[i] / 256) + (93 + diff * 8) / 2;
+						wasAnyShadows = true;
+						if (window->flags[0] & WIN_FLAGS_0_DRAW_OUTLINE_INSTEAD_OF_SHADOW) {
+							shadow[i] = 0;
+						} else {
+							shadow[i] = ((93 + diff * 8) * shadow[i] / 256) + (93 + diff * 8) / 2;
+						}
 					}
 				}
 			}
@@ -480,15 +501,25 @@ void NIDesktop::renderScanline(int line, int left, int right)
 			int ls = window->renderTable[line - window->ypos].leftSkip;
 			int rs = window->renderTable[line - window->ypos].rightSkip;
 
-			if (!window->fullscreen) {
-				for (int i = 0; i < 4; ++i) {
+			if (!window->fullscreen && !(window->flags[0] & WIN_FLAGS_0_NO_SHADOWS)) {
+				for (int i = (window->flags[0] & WIN_FLAGS_0_DRAW_OUTLINE_INSTEAD_OF_SHADOW) ? 3 : 1; i < 4; ++i) {
 					int j = window->xpos + ls - 4 + i;
-					int k = window->xpos + window->width - rs + i;
+					int k = window->xpos + window->width - rs + i - ((window->flags[0] & WIN_FLAGS_0_DRAW_OUTLINE_INSTEAD_OF_SHADOW) ? 3 : 0);
 					if (!render[j]) {
-						shadow[j] = ((125 - i * 8) * shadow[j] / 256) + (125 - i * 8) / 2;
+						wasAnyShadows = true;
+						if (window->flags[0] & WIN_FLAGS_0_DRAW_OUTLINE_INSTEAD_OF_SHADOW) {
+							shadow[j] = 0;
+						} else {
+							shadow[j] = ((125 - i * 8) * shadow[j] / 256) + (125 - i * 8) / 2;
+						}
 					}
 					if (!render[k]) {
-						shadow[k] = ((101 + i * 8) * shadow[k] / 256) + (101 + i * 8) / 2;
+						wasAnyShadows = true;
+						if (window->flags[0] & WIN_FLAGS_0_DRAW_OUTLINE_INSTEAD_OF_SHADOW) {
+							shadow[k] = 0;
+						} else {
+							shadow[k] = ((101 + i * 8) * shadow[k] / 256) + (101 + i * 8) / 2;
+						}
 					}
 				}
 			}
@@ -513,8 +544,9 @@ void NIDesktop::renderScanline(int line, int left, int right)
 
 	for (int i = left; i < right; ++i) {
 		if (!render[i]) {
+
 			render[i] = 1;
-			renderData[i] = 0x5580FF;
+			renderData[i] = ctxt->width > 640 ? 0x55afff : 0x00AAAA;
 			--expectedBytes;
 			if (expectedBytes == 0) {
 				goto done;
@@ -524,7 +556,7 @@ void NIDesktop::renderScanline(int line, int left, int right)
 
 done:
 	curr = head->getHead();
-	if (curr && curr->getValue() && !curr->getValue()->fullscreen) {
+	if (curr && curr->getValue() && !curr->getValue()->fullscreen && wasAnyShadows) {
 		for (int i = left; i < right; ++i) {
 			int amount = shadow[i];
 			if (amount != 128) {

@@ -8,8 +8,6 @@ extern "C" {
 
 #define WINDOW_TITLEBAR_HEIGHT 25
 
-#define WINFLAG_DISABLE_RESIZE 1
-
 class NIWindow
 {
 private:
@@ -54,13 +52,14 @@ public:
 	int rstrw;
 	int rstrh;
 
-	uint32_t flags;
+	uint32_t flags[WIN_MAX_FLAG_DWORDS];
 
 	void rerender();
 	void invalidate();
 	void request();
 	void realdraw();
 	void SHADOW_TEST();
+	void drawResizeMarker();
 
 	NIWindow(NIContext* ctxt, int x, int y, int w, int h);
 	void changeContext(NIContext* ctxt, int x, int y);

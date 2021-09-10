@@ -46,17 +46,7 @@ void NiMain(void* s)
 	kernelProcess->createThread(NiDisplayRAM);
 
 	NIWindow* win0 = new NIWindow(ctxt, 0, 0, 1, 1);
-
-	NIWindow* win1 = new NIWindow(ctxt, 50, 50, 400, 320);
-	NIWindow* win2 = new NIWindow(ctxt, 200, 150, 500, 380);
-	NIWindow* win3 = new NIWindow(ctxt, 125, 400, 270, 175);
-
-	win3->flags |= WINFLAG_DISABLE_RESIZE;
-
 	desktop->addWindow(win0);
-	desktop->addWindow(win1);
-	desktop->addWindow(win2);
-	desktop->addWindow(win3);
 	
 	desktop->completeRefresh();
 

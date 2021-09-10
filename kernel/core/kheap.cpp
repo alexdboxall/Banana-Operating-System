@@ -54,8 +54,6 @@ extern "C" void* sbrk_thunk(ptrdiff_t increment)
 
 extern "C" void* mmap(void* addr, size_t length, int prot, int flags, int fd, size_t offset)
 {
-	kprintf("mmap allocating %d KB...\n", length / 1024);
-
 	int numPages = (length + 4095) / 4096;
 	
 	size_t vaddr = Virt::allocateKernelVirtualPages(numPages);
@@ -63,18 +61,12 @@ extern "C" void* mmap(void* addr, size_t length, int prot, int flags, int fd, si
 		Virt::getAKernelVAS()->mapPage(Phys::allocatePage(), vaddr + i * 4096, PAGE_PRESENT | PAGE_ALLOCATED | PAGE_SUPERVISOR);
 	}
 
-	kprintf("    |--> 0x%X\n", vaddr);
 	return (void*) vaddr;
 }
 
 extern "C" int munmap(void* addr, size_t length)
 {
-	kprintf("munmap freeing %d KB...\n", length / 1024);
-
-	size_t vaddr = (size_t) addr;
-	kprintf("    |--> 0x%X\n", vaddr);
-
-	Virt::freeKernelVirtualPages(vaddr);
+	Virt::freeKernelVirtualPages((size_t) addr);
 	return 0;
 }
 

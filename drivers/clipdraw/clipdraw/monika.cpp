@@ -71,7 +71,7 @@ void NiDisplayRAM(void* a)
 		drawVGAChar(10, 0, 'e');
 		drawVGAChar(11, 0, 'd');
 
-		milliTenthSleep(2500);
+		milliTenthSleep(7500);
 	}
 }
 
