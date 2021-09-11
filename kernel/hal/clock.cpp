@@ -1,5 +1,7 @@
 #include "fs/vfs.hpp"
 #include "hal/clock.hpp"
+#include "reg/cm.hpp"
+
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
@@ -15,17 +17,36 @@ namespace User
 
 	void loadClockSettings(int tzID)
 	{
-		File* fil = new File("C:/Banana/System/timezone.txt", kernelProcess);
-		fil->open(FileOpenMode::Read);
+		char tzstring[300];
+		tzstring[0] = 0;
 
-		//TODO: read the file
+		Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
+		int loc = CmFindObjectFromPath(reg, "BANANA/TIME/TIMEZONE");
+		if (loc > 0) {
+			CmGetString(reg, loc, tzstring);
+		}
+		CmClose(reg);
 
-		fil->close();
-		delete fil;
+		if (tzstring[0] == '+' || tzstring[0] == '-') {
+			User::dstOn = false;
+			User::timezoneHalfHourOffset = \
+				(tzstring[2] == '.' && tzstring[3] == '5') ||
+				(tzstring[3] == '.' && tzstring[4] == '5');
 
-		//timezoneHourOffset = 10;
-		//timezoneHalfHourOffset = false;
-		//dstOn = true;
+			User::timezoneHourOffset = tzstring[1] - '0';
+			if (tzstring[3] == '.') {
+				User::timezoneHourOffset *= 10;
+				User::timezoneHourOffset += tzstring[2] - '0';
+			}
+			if (tzstring[0] == '-') {
+				User::timezoneHourOffset = -User::timezoneHourOffset;
+			}
+
+		} else {
+			User::dstOn = false;
+			User::timezoneHalfHourOffset = 0;
+			User::timezoneHourOffset = 0;
+		}
 	}
 }
 
