@@ -72,7 +72,7 @@ int IDE::open(int a, int, void*)
 	legacyIRQs = false;
 
 	if (detectionType == DetectionType::PCI) {
-		if ((pci.info.progIF & 0x7F) == 0x05 || (pci.info.progIF & 0x7F) == 0x0F) {
+		if ((pci.info.progIF & 0x7F) == 0x05 || (pci.info.progIF & 0x7F) == 0x0A || (pci.info.progIF & 0x7F) == 0x0F) {
 			channels[0].base = pci.info.bar[0] & ~3;
 			channels[0].ctrl = pci.info.bar[1] & ~3;
 			channels[1].base = pci.info.bar[2] & ~3;
