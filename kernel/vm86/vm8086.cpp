@@ -93,14 +93,14 @@ namespace Vm
 		vm86Thread = kernelProcess->createThread(mainVm8086Loop, nullptr, 128);
 		kernelProcess->vas->mapRange(0x0, 0x0, 256 + 16, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
 
-		File* f = new File("C:/Banana/System/lowram.sys", kernelProcess);
+		File* f = new File("C:/Banana/conventional.ram", kernelProcess);
 		f->open(FILE_OPEN_WRITE_NORMAL);
-
-		//	FileStatus write(uint64_t bytes, void* where, int* bytesWritten);
 		int br;
 		f->write(0x100000 + 65536, (void*) 0, &br);
 		f->close();
 		delete f;
+
+		kprintf("initialise8086 done.\n");
 	}
 
 	void resetConventionalMemory8086()
