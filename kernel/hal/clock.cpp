@@ -27,6 +27,7 @@ namespace User
 			CmGetString(reg, loc, tzstring);
 		}		
 		CmClose(reg);
+		kprintf("tzstring = %s\n", tzstring);
 
 		if (tzstring[0] == '+' || tzstring[0] == '-') {
 			User::dstOn = false;
