@@ -126,6 +126,8 @@ namespace Vm
 		return x;
 	}
 
+	bool started8086Yet = false;
+
 	bool start8086FromBuffer(uint8_t* buffer, int siz, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss)
 	{
 		if (!started8086Yet) {
