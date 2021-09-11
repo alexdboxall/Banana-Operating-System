@@ -94,7 +94,7 @@ namespace Vm
 		kernelProcess->vas->mapRange(0x0, 0x0, 256 + 16, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
 
 		File* f = new File("C:/Banana/System/lowram.sys", kernelProcess);
-		f->open(FILE_MODE_WRITE);
+		f->open(FILE_OPEN_WRITE);
 
 		//	FileStatus write(uint64_t bytes, void* where, int* bytesWritten);
 		int br;
