@@ -192,8 +192,8 @@ int IDE::open(int a, int, void*)
 		addIRQHandler(interrupt, ideChannel0IRQHandler, false, this);
 		addIRQHandler(interrupt2, ideChannel1IRQHandler, false, this);
 		KeSetBootMessage("L");
-
 	}
+	KeSetBootMessage("L1");
 
 	detect();
 	KeSetBootMessage("M");
@@ -385,34 +385,44 @@ uint8_t IDE::polling(uint8_t channel, uint32_t advanced_check)
 void IDE::detect()
 {
 	extern int getIRQNestingLevel();
+	KeSetBootMessage(".1");
 
 	if (detectDone) return;
+	KeSetBootMessage(".2");
 	detectDone = true;
 
 	int deviceCount = 0;
 
 	for (int i = 0; i < 2; ++i) {
+		KeSetBootMessage(".3");
+
 		for (int j = 0; j < 2; ++j) {
+			KeSetBootMessage(".4");
 
 			uint8_t err = 0;
 			uint8_t type = IDE_ATA;
 			uint8_t status = 0;
 
 			devices[deviceCount].reserved = 0;
+			KeSetBootMessage(".5");
 
 			write(i, ATA_REG_HDDEVSEL, 0xA0 | (j << 4));
 			read(i, ATA_REG_ALTSTATUS);
 			read(i, ATA_REG_ALTSTATUS);
 			read(i, ATA_REG_ALTSTATUS);
 			read(i, ATA_REG_ALTSTATUS);
+			KeSetBootMessage(".6");
 
 			write(i, ATA_REG_COMMAND, ATA_CMD_IDENTIFY);
 			read(i, ATA_REG_ALTSTATUS);
 			read(i, ATA_REG_ALTSTATUS);
 			read(i, ATA_REG_ALTSTATUS);
 			read(i, ATA_REG_ALTSTATUS);
+			KeSetBootMessage(".7");
 
 			if (read(i, ATA_REG_ALTSTATUS) == 0) {
+				KeSetBootMessage(".8");
+
 				continue;
 			}
 
@@ -435,6 +445,7 @@ void IDE::detect()
 					break;
 				}
 			}
+			KeSetBootMessage(".9");
 
 			if (err != 0) {
 				uint8_t cl = read(i, ATA_REG_LBA1);
@@ -451,9 +462,11 @@ void IDE::detect()
 				write(i, ATA_REG_COMMAND, ATA_CMD_IDENTIFY_PACKET);
 				milliTenthSleep(10);
 			}
+			KeSetBootMessage(".10");
 
 			uint8_t ideBuf[512];
 			readBuffer(i, ATA_REG_DATA, (size_t) ideBuf, 128);
+			KeSetBootMessage(".11");
 
 			devices[deviceCount].reserved = 1;
 			devices[deviceCount].type = type;
@@ -462,12 +475,14 @@ void IDE::detect()
 			devices[deviceCount].signature = *((uint16_t*) (ideBuf + ATA_IDENT_DEVICETYPE));
 			devices[deviceCount].capabilities = *((uint16_t*) (ideBuf + ATA_IDENT_CAPABILITIES));
 			devices[deviceCount].commandSets = *((uint8_t*) (ideBuf + ATA_IDENT_COMMANDSETS));
+			KeSetBootMessage(".12");
 
 			if (devices[deviceCount].commandSets & (1 << 26)) {
 				devices[deviceCount].size = *((uint32_t*) (ideBuf + ATA_IDENT_MAX_LBA_EXT));
 			} else {
 				devices[deviceCount].size = *((uint32_t*) (ideBuf + ATA_IDENT_MAX_LBA));
 			}
+			KeSetBootMessage(".13");
 
 			for (int k = 0; k < 40; k += 2) {
 				devices[deviceCount].model[k] = ideBuf[ATA_IDENT_MODEL + k + 1];
@@ -476,6 +491,7 @@ void IDE::detect()
 			devices[deviceCount].model[40] = 0;
 
 			devices[deviceCount].hasLBA = devices[deviceCount].capabilities & 0x200;
+			KeSetBootMessage(".14");
 
 			if (type == IDE_ATA && devices[deviceCount].size) {
 				KeSetBootMessage("ATA");
@@ -496,6 +512,8 @@ void IDE::detect()
 				KeSetBootMessage("ATAPI3");
 
 			}
+
+			KeSetBootMessage(".99");
 
 			deviceCount++;
 		}
