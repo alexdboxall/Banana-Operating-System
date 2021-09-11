@@ -86,7 +86,12 @@ int IDE::open(int a, int, void*)
 			channels[1].base = 0x170;
 			channels[1].ctrl = 0x376;
 
-			KeSetBootMessage("B");
+			char zz[10];
+			strcpy(zz, "B XXX");
+			zz[2] = (pci.info.progIF / 100) % 10 + '0';
+			zz[3] = (pci.info.progIF / 10) % 10 + '0';
+			zz[4] = (pci.info.progIF / 1) % 10 + '0';
+			KeSetBootMessage(zz);
 		}
 
 		outl(0xCF8, (1 << 31) | (pci.info.bus << 16) | (pci.info.slot << 11) | (pci.info.function << 8) | 8);			// Send the parameters.
