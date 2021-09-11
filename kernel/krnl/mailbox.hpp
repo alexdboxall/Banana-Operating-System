@@ -9,7 +9,7 @@ typedef struct Mailbox
 	int items;
 };
 
-Mailbox* mbox KeMailboxCreate();
+Mailbox* KeMailboxCreate();
 bool KeMailboxTryPost(Mailbox* mbox, void* item);
 void KeMailboxPost(Mailbox* mbox, void* item);
 bool KeMailboxTryGet(Mailbox* mbox, void** item);

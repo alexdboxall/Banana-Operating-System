@@ -32,7 +32,7 @@ bool KeMailboxTryGet(Mailbox* mbox, void** itm)
 	return res;
 }
 
-Mailbox* mbox KeMailboxCreate()
+Mailbox* KeMailboxCreate()
 {
 	Mailbox* m = (Mailbox*) malloc(sizeof(Mailbox));
 	m->item = 0;
