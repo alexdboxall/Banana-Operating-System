@@ -17,7 +17,7 @@ namespace User
 
 	void loadClockSettings()
 	{
-		char tzstring[300];
+		char tzstring[600];
 		tzstring[0] = 0;
 
 		Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
@@ -27,7 +27,7 @@ namespace User
 			CmGetString(reg, loc, tzstring);
 		}		
 		CmClose(reg);
-		kprintf("tzstring = %s\n", tzstring);
+		kprintf("tzstring = '%s', 0x%X\n", tzstring, tzstring[0]);
 
 		if (tzstring[0] == '+' || tzstring[0] == '-') {
 			User::dstOn = false;
