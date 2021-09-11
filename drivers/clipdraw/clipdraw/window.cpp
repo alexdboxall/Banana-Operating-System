@@ -53,6 +53,7 @@ NIWindow::NIWindow(NIContext* ctxt, int _x, int _y, int _w, int _h)
 	for (int i = 0; i < WIN_MAX_FLAG_DWORDS; ++i) {
 		flags[i] = 0;
 	}
+	flags[0] |= WIN_FLAGS_0_HIDDEN;
 
 	valid = false;
 	renderTable = nullptr;

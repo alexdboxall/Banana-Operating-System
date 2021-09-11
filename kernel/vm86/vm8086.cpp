@@ -91,7 +91,16 @@ namespace Vm
 	void initialise8086()
 	{
 		vm86Thread = kernelProcess->createThread(mainVm8086Loop, nullptr, 128);
-		kernelProcess->vas->mapRange(0x0, 0x0, 256, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
+		kernelProcess->vas->mapRange(0x0, 0x0, 256 + 16, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
+
+		File* f = new File("C:/Banana/System/lowram.sys", kernelProcess);
+		f->open(FILE_MODE_WRITE);
+
+		//	FileStatus write(uint64_t bytes, void* where, int* bytesWritten);
+		int br;
+		f->write(0x100000 + 65536, (volatile uint8_t* volatile) 0x0, &br);
+		f->close();
+		delete f;
 	}
 
 	uint32_t finish8086()

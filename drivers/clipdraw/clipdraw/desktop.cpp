@@ -144,6 +144,8 @@ void NIDesktop::rangeRefresh(int top, int bottom, int left, int right)
 
 void NIDesktop::completeRefresh()
 {
+	rangeRefresh(mouseY, mouseY + MOUSE_HEIGHT, mouseX, mouseX + MOUSE_WIDTH);
+	
 	for (int y = 0; y < ctxt->height; ++y) {
 		renderScanline(y, 0, ctxt->width);
 	}
@@ -154,13 +156,14 @@ void NIDesktop::completeRefresh()
 
 void NIDesktop::refreshWindowBounds(NIWindow* window)
 {
+	rangeRefresh(mouseY, mouseY + MOUSE_HEIGHT, mouseX, mouseX + MOUSE_WIDTH);
+	
 	int a = window->ypos < 5 ? 0 : window->ypos - 5;
 	int b = window->ypos + window->height > ctxt->height - 6 ? ctxt->height - 1 : window->ypos + window->height + 5;
 	int c = window->xpos < 5 ? 0 : window->xpos - 5;
 	int d = window->xpos + window->width > ctxt->width - 6 ? ctxt->width - 1 : window->xpos + window->width + 5;
 	
 	rangeRefresh(a, b, c, d);
-
 	ctxt->screen->drawCursor(mouseX, mouseY, (uint32_t*) (___mouse_data + cursorOffset), 0);
 }
 
@@ -299,23 +302,34 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 		if (movingType == MOVE_TYPE_RESIZE_B) newW = oldW = movingWin->width;
 		if (movingType == MOVE_TYPE_RESIZE_R) newH = oldH = movingWin->height;
 
+		if (newW < 50) newW = 50;
+		if (newH < 50) newH = 50;
+		if (oldW < 50) oldW = 50;
+		if (oldH < 50) oldH = 50;
+
 		int mxW = oldW > newW ? oldW : newW;
 		int mxH = oldH > newH ? oldH : newH;
 		for (int y = 1; y < mxH; ++y) {
 			for (int x = 1; x < mxW; ++x) {
 				if (!((x + y) & 31) && !(y & 3)) {
-					rangeRefresh(movingWin->ypos + y, movingWin->ypos + 1 + y, movingWin->xpos + x, movingWin->xpos + 1 + x);
-					if (!release && x < newW && y < newH) ctxt->screen->putpixel(movingWin->xpos + x, movingWin->ypos + y, 0);
+					if (movingWin->xpos + x >= 0 && movingWin->xpos + x < ctxt->width) rangeRefresh(movingWin->ypos + y, movingWin->ypos + 1 + y, movingWin->xpos + x, movingWin->xpos + 1 + x);
+					if (!release && x < newW && y < newH && movingWin->xpos + x >= 0 && movingWin->xpos + x < ctxt->width) ctxt->screen->putpixel(movingWin->xpos + x, movingWin->ypos + y, 0);
 				}
 			}
 		}
 
 		if (!release) {
-			rangeRefresh(movingWin->ypos, movingWin->ypos + 1, movingWin->xpos, movingWin->xpos + oldW);
-			ctxt->screen->putrect(movingWin->xpos, movingWin->ypos, newW, 1, 0);
-
-			rangeRefresh(movingWin->ypos + oldH, movingWin->ypos + 1 + oldH, movingWin->xpos, movingWin->xpos + oldW);
-			ctxt->screen->putrect(movingWin->xpos, movingWin->ypos + newH, newW, 1, 0);
+			if (movingWin->xpos < 0) {
+				rangeRefresh(movingWin->ypos, movingWin->ypos + 1, 0, movingWin->xpos + oldW);
+				ctxt->screen->putrect(0, movingWin->ypos, newW + movingWin->xpos, 1, 0);
+				rangeRefresh(movingWin->ypos + oldH, movingWin->ypos + 1 + oldH, 0, movingWin->xpos + oldW);
+				ctxt->screen->putrect(0, movingWin->ypos + newH, newW + movingWin->xpos, 1, 0);
+			} else {
+				rangeRefresh(movingWin->ypos, movingWin->ypos + 1, movingWin->xpos, movingWin->xpos + oldW);
+				ctxt->screen->putrect(movingWin->xpos, movingWin->ypos, newW, 1, 0);
+				rangeRefresh(movingWin->ypos + oldH, movingWin->ypos + 1 + oldH, movingWin->xpos, movingWin->xpos + oldW);
+				ctxt->screen->putrect(movingWin->xpos, movingWin->ypos + newH, newW, 1, 0);
+			}
 		}
 
 		if (release) {
@@ -325,6 +339,7 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 			NiEvent evnt = NiCreateEvent(win, EVENT_TYPE_RESIZED, true);
 			win->width = newW;
 			win->height = newH;
+
 			win->rerender();
 			addWindow(win);
 			refreshWindowBounds(win);
@@ -432,6 +447,11 @@ void NIDesktop::renderScanline(int line, int left, int right)
 
 		if ((window->flags[0] & WIN_FLAGS_0_HIDE_ON_INVALIDATE) &&
 			(window->flags[0] & WIN_FLAGS_0_INTERNAL_HAS_BEEN_INVALIDATED)) {
+			curr = curr->next;
+			continue;
+		}
+
+		if (window->flags[0] & WIN_FLAGS_0_HIDDEN) {
 			curr = curr->next;
 			continue;
 		}

@@ -391,9 +391,27 @@ void ACPI::detectPCI()
 	if (pciDetected) {
 		KeSetBootMessage("Scanning the PCI bus...");
 
+		if (!pciAccessMech1) {
+			KeSetBootMessage("Scanning the PCI bus... (method 2)");
+		}
 		PCI* pci = new PCI();	
+		if (!pciAccessMech1) {
+			KeSetBootMessage("Scanning the PCI bus... (method 2, B)");
+		} else {
+			KeSetBootMessage("Scanning the PCI bus... (B)");
+		}
 		addChild(pci);
+		if (!pciAccessMech1) {
+			KeSetBootMessage("Scanning the PCI bus... (method 2, C)");
+		} else {
+			KeSetBootMessage("Scanning the PCI bus... (C)");
+		}
 		pci->open(pciAccessMech1 ? 1 : 2, 0, nullptr);
+		if (!pciAccessMech1) {
+			KeSetBootMessage("Scanning the PCI bus... (method 2, D)");
+		} else {
+			KeSetBootMessage("Scanning the PCI bus... (D)");
+		}
 
 	} else {
 		KeSetBootMessage("Probing ISA ports...");
