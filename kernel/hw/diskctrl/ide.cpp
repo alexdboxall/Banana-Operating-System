@@ -422,7 +422,6 @@ void IDE::detect()
 
 			if (read(i, ATA_REG_ALTSTATUS) == 0) {
 				KeSetBootMessage(".8");
-
 				continue;
 			}
 

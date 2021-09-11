@@ -110,6 +110,8 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 		return 1;
 	}
 
+	lockScheduler();
+
 	//select the drive
 	if (lbaMode == MODE_CHS) {
 		ide->write(channel, ATA_REG_HDDEVSEL, 0xA0 | (drive << 4) | head);
@@ -146,6 +148,7 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 		
 	//send the command
 	ide->write(channel, ATA_REG_COMMAND, command);
+	unlockScheduler();
 
 	//for each sector
 	int ogcount = count;
@@ -162,11 +165,16 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 		//read/write data
 		if (write) {
+			lockScheduler();
 			for (int i = 0; i < 256; ++i) {
 				outw(ide->getBase(channel), *buffer16++);
 			}
+			unlockScheduler();
+
 		} else {
+			lockScheduler();
 			asm("cld; rep insw" : : "c"(256), "d"(ide->getBase(channel)), "D"(buffer16) : "flags", "memory");
+			unlockScheduler();
 		}
 
 		buffer = (void*) (((uint8_t*) buffer) + 512);
