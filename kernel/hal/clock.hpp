@@ -25,7 +25,7 @@ namespace User
 	extern bool timezoneHalfHourOffset;
 	extern bool dstOn;
 
-	void loadClockSettings(int tzID);
+	void loadClockSettings();
 }
 
 class Clock: public Device

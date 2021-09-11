@@ -15,38 +15,53 @@ namespace User
 	bool timezoneHalfHourOffset = false;
 	bool dstOn = false;
 
-	void loadClockSettings(int tzID)
+	void loadClockSettings()
 	{
+		kprintf("loadClockSettings: 1\n");
 		char tzstring[300];
 		tzstring[0] = 0;
+		kprintf("loadClockSettings: 2\n");
 
 		Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
+		kprintf("loadClockSettings: 3\n");
 		int loc = CmFindObjectFromPath(reg, "BANANA/TIME/TIMEZONE");
+		kprintf("loadClockSettings: 4\n");
 		if (loc > 0) {
+			kprintf("loadClockSettings: 4.1\n");
 			CmGetString(reg, loc, tzstring);
-		}
+		}		
+		kprintf("loadClockSettings: 5\n");
 		CmClose(reg);
+		kprintf("loadClockSettings: 6\n");
 
 		if (tzstring[0] == '+' || tzstring[0] == '-') {
+			kprintf("loadClockSettings: 7\n");
 			User::dstOn = false;
 			User::timezoneHalfHourOffset = \
 				(tzstring[2] == '.' && tzstring[3] == '5') ||
 				(tzstring[3] == '.' && tzstring[4] == '5');
+			kprintf("loadClockSettings: 8\n");
 
 			User::timezoneHourOffset = tzstring[1] - '0';
 			if (tzstring[3] == '.') {
 				User::timezoneHourOffset *= 10;
 				User::timezoneHourOffset += tzstring[2] - '0';
-			}
+			}		
+			kprintf("loadClockSettings: 9\n");
+
 			if (tzstring[0] == '-') {
 				User::timezoneHourOffset = -User::timezoneHourOffset;
 			}
+			kprintf("loadClockSettings: 10\n");
 
 		} else {
+			kprintf("loadClockSettings: 7\n");
 			User::dstOn = false;
 			User::timezoneHalfHourOffset = 0;
 			User::timezoneHourOffset = 0;
 		}
+
+		kprintf("loadClockSettings: 99\n");
 	}
 }
 

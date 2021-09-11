@@ -307,7 +307,8 @@ namespace Krnl
 		KeInitialiseSymlinks();
 		KeLoadSystemEnv();
 		KeSetupPowerManager();
-		User::loadClockSettings(Reg::readIntWithDefault((char*) "country", (char*) "timezone", 58));
+		KeSetBootMessage("Initialising the clock...");
+		User::loadClockSettings();
 		
 		KeSetBootMessage("Loading more device drivers...");
 		computer->root->loadDriversForAll();
