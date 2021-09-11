@@ -336,6 +336,7 @@ void HalPanic(const char* message)
 	HalDisableInterrupts();
 
 	kprintf("\nFATAL SYSTEM ERROR: %s\n", message);
+	return;
 
 	if (guiPanicHandler) guiPanicHandler((char*) message);
 

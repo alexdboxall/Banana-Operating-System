@@ -78,11 +78,15 @@ int IDE::open(int a, int, void*)
 			channels[1].base = pci.info.bar[2] & ~3;
 			channels[0].ctrl = pci.info.bar[3] & ~3;
 
+			KeSetBootMessage("A");
+
 		} else {
 			channels[0].base = 0x1F0;
 			channels[0].ctrl = 0x3F6;
 			channels[1].base = 0x170;
 			channels[1].ctrl = 0x376;
+
+			KeSetBootMessage("B");
 		}
 
 		outl(0xCF8, (1 << 31) | (pci.info.bus << 16) | (pci.info.slot << 11) | (pci.info.function << 8) | 8);			// Send the parameters.
@@ -93,12 +97,15 @@ int IDE::open(int a, int, void*)
 			outl(0xCF8, (1 << 31) | (pci.info.bus << 16) | (pci.info.slot << 11) | (pci.info.function << 8) | 0x3C);		// Read the interrupt line field
 			if ((inl(0xCFC) & 0xFF) == 0xFE) {
 				// This device needs an IRQ assignment.
+				KeSetBootMessage("C");
 
 				if (computer->features.hasAPIC) {
 					interrupt = computer->root->getPCIIRQAssignment(pci.info.bus, pci.info.slot, pci.info.intPIN + 1).interrupt;
+					KeSetBootMessage("D");
 
 				} else {
 					interrupt = 14;
+					KeSetBootMessage("E");
 				}
 
 				outl(0xCF8, (1 << 31) | (pci.info.bus << 16) | (pci.info.slot << 11) | (pci.info.function << 8) | 0x3C);		// Read the interrupt line field
@@ -112,7 +119,9 @@ int IDE::open(int a, int, void*)
 			} else {
 				// The device doesn't use IRQs, check if this is an Parallel IDE:
 				if (pci.info.classCode == 0x01 && pci.info.subClass == 0x01 && (pci.info.progIF == 0x8A || pci.info.progIF == 0x80)) {
-					legacyIRQs = true;
+					legacyIRQs = true;			
+					KeSetBootMessage("F");
+
 				} else {
 					KePanic("IDE DOESN'T HAVE ANY CLUE WHAT ITS IRQ NUMBER IS");
 				}
@@ -134,6 +143,7 @@ int IDE::open(int a, int, void*)
 
 		legacyIRQs = true;
 	}
+	KeSetBootMessage("G");
 
 	for (int i = 0; i < 2; ++i) {
 		if ((channels[i].ctrl & 0xF) == 0x8) {
@@ -162,30 +172,39 @@ int IDE::open(int a, int, void*)
 		ports[noPorts].rangeLength = 16;
 		ports[noPorts++].width = 0;
 	}
+	KeSetBootMessage("H");
 
 	prepareInterrupt(0);
 	prepareInterrupt(1);
+	KeSetBootMessage("I");
 
 	//disable IRQs
 	enableIRQs(0, false);
 	enableIRQs(1, false);
+	KeSetBootMessage("J");
 
 	if (legacyIRQs) {
 		interrupt = addIRQHandler(14, ideChannel0IRQHandler, true, this);
 		interrupt2 = addIRQHandler(15, ideChannel1IRQHandler, true, this);
+		KeSetBootMessage("K");
 	} else {
 		interrupt2 = 15;
 		addIRQHandler(interrupt, ideChannel0IRQHandler, false, this);
 		addIRQHandler(interrupt2, ideChannel1IRQHandler, false, this);
+		KeSetBootMessage("L");
+
 	}
 
 	detect();
+	KeSetBootMessage("M");
 
 	read(0, ATA_REG_STATUS);
 	read(1, ATA_REG_STATUS);
+	KeSetBootMessage("N");
 
 	enableIRQs(0, true);
 	enableIRQs(1, true);
+	KeSetBootMessage("O");
 
 	return 0;
 }
@@ -459,14 +478,23 @@ void IDE::detect()
 			devices[deviceCount].hasLBA = devices[deviceCount].capabilities & 0x200;
 
 			if (type == IDE_ATA && devices[deviceCount].size) {
+				KeSetBootMessage("ATA");
 				ATA* dev = new ATA();
+				KeSetBootMessage("ATA1");
 				addChild(dev);
+				KeSetBootMessage("ATA2");
 				dev->open(0, deviceCount, this);
+				KeSetBootMessage("ATA3");
 
 			} else if (type == IDE_ATAPI) {
+				KeSetBootMessage("ATAPI");
 				ATAPI* dev = new ATAPI();
+				KeSetBootMessage("ATAPI1");
 				addChild(dev);
+				KeSetBootMessage("ATAPI2");
 				dev->open(0, deviceCount, this);
+				KeSetBootMessage("ATAPI3");
+
 			}
 
 			deviceCount++;
