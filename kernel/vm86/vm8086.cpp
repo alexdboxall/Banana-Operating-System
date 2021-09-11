@@ -96,20 +96,14 @@ namespace Vm
 
 	void resetConventionalMemory8086()
 	{
-		lockScheduler();
-		kprintf("resetConventionalMemory8086: 1\n");
+		return;
+
 		File* f = new File("C:/Banana/conventional.ram", kernelProcess);
-		kprintf("resetConventionalMemory8086: 2\n");
 		f->open(FILE_OPEN_READ);
-		kprintf("resetConventionalMemory8086: 3\n");
 		int br;
 		f->read(0x100000 + 65536, (void*) 0, &br);
-		kprintf("resetConventionalMemory8086: 4\n");
 		f->close();
-		kprintf("resetConventionalMemory8086: 5\n");
 		delete f;
-		kprintf("resetConventionalMemory8086: 6\n");
-		unlockScheduler();
 	}
 
 	uint32_t finish8086()
