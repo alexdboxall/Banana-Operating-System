@@ -98,9 +98,14 @@ namespace Vm
 
 		//	FileStatus write(uint64_t bytes, void* where, int* bytesWritten);
 		int br;
-		f->write(0x100000 + 65536, (volatile uint8_t* volatile) 0x0, &br);
+		f->write(0x100000 + 65536, (void*) 0, &br);
 		f->close();
 		delete f;
+	}
+
+	void resetConventionalMemory8086()
+	{
+
 	}
 
 	uint32_t finish8086()
