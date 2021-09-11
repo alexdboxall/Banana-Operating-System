@@ -361,6 +361,17 @@ void PCI::foundDevice(PCIDeviceInfo info)
 		n = n->next;
 	}
 
+	char fnd[100] = "Found PCI device AA, BB, CC";
+	fnd[17] = info.classCode / 10 + '0';
+	fnd[18] = info.classCode % 10 + '0';
+	fnd[21] = info.subClass / 10 + '0';
+	fnd[22] = info.subClass % 10 + '0';
+	fnd[25] = /*info.classCode / 10 +*/ '0';
+	fnd[26] = /*info.classCode % 10 + */ '0';
+
+	KeSetBootMessage(fnd);
+
+
 	//hardcode the boot related things in first
 	if (info.classCode == 1 && info.subClass == 6) {
 		SATABus* dev = new SATABus();
