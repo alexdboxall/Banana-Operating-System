@@ -28,7 +28,7 @@ namespace User
 		CmClose(reg);
 
 		if (tzstring[0] == '+' || tzstring[0] == '-') {
-			User::dstOn = false;
+			User::dstOn = true;
 			User::timezoneHalfHourOffset = \
 				(tzstring[2] == '.' && tzstring[3] == '5') ||
 				(tzstring[3] == '.' && tzstring[4] == '5');
@@ -64,7 +64,7 @@ Clock::~Clock()
 time_t Clock::timeInSecondsLocal()
 {
 	using namespace User;
-	return timeInSecondsUTC() - (timezoneHourOffset + dstOn) * 3600 + (timezoneHalfHourOffset ? 1800 : 0);
+	return timeInSecondsUTC() + (timezoneHourOffset + dstOn) * 3600 + (timezoneHalfHourOffset ? 1800 : 0);
 }
 
 datetime_t Clock::timeInDatetimeLocal()
@@ -75,13 +75,13 @@ datetime_t Clock::timeInDatetimeLocal()
 bool Clock::setTimeInSecondsLocal(time_t t)
 {
 	using namespace User;
-	return setTimeInSecondsUTC(t + (timezoneHourOffset + dstOn) * 3600 - (timezoneHalfHourOffset ? 1800 : 0));
+	return setTimeInSecondsUTC(t - (timezoneHourOffset + dstOn) * 3600 - (timezoneHalfHourOffset ? 1800 : 0));
 }
 
 bool Clock::setTimeInDatetimeLocal(datetime_t d)
 {
 	using namespace User;
-	return setTimeInSecondsUTC(datetimeToSeconds(d) + (timezoneHourOffset + dstOn) * 3600 - (timezoneHalfHourOffset ? 1800 : 0));
+	return setTimeInSecondsUTC(datetimeToSeconds(d) - (timezoneHourOffset + dstOn) * 3600 - (timezoneHalfHourOffset ? 1800 : 0));
 }
 
 
