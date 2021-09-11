@@ -307,8 +307,6 @@ namespace Krnl
 		KeInitialiseSymlinks();
 		KeLoadSystemEnv();
 		KeSetupPowerManager();
-		KeSetBootMessage("Initialising the clock...");
-		User::loadClockSettings();
 		
 		KeSetBootMessage("Loading more device drivers...");
 		computer->root->loadDriversForAll();

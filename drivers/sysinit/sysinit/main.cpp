@@ -1870,6 +1870,8 @@ void begin(void* a)
         term->puts("PLEASE MANUALLY RESTART YOUR COMPUTER", VgaColour::Red, VgaColour::White);
 
     } else {
+        User::loadClockSettings();
+
         Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
         char pkey[500];
         uint64_t autogui;

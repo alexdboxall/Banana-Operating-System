@@ -48,7 +48,7 @@ void KeMailboxPost(Mailbox* mbox, void* item)
 	do {
 		posted = KeMailboxTryPost(mbox, item);
 
-		if (!got) {
+		if (!posted) {
 			lockScheduler();
 			schedule();
 			unlockScheduler();
