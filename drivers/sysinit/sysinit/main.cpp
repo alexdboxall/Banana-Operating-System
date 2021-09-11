@@ -1461,7 +1461,22 @@ char passwhash[80];*/
             milliTenthSleep(500);
             installKey = 0;
         }
+        
+        User::dstOn = false;
+        User::timezoneHalfHourOffset = \
+            (timezoneStrings[tzsel][2] == '.' && timezoneStrings[tzsel][3] == '5') ||
+            (timezoneStrings[tzsel][3] == '.' && timezoneStrings[tzsel][4] == '5');
+        
+        User::timezoneHourOffset = timezoneStrings[tzsel][1] - '0';
+        if (timezoneStrings[tzsel][3] == '.') {
+            User::timezoneHourOffset *= 10;
+            User::timezoneHourOffset += timezoneStrings[tzsel][2] - '0';
+        }
+        if (timezoneStrings[tzsel][0] == '-') {
+            User::timezoneHourOffset = -User::timezoneHourOffset;
+        }
 
+        computer->clock->setTimeInDatetimeLocal(dt);
 
         installKey = 0;
         milliTenthSleep(4000);
@@ -1790,8 +1805,10 @@ void begin(void* a)
 
         CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "SETUP");        
         CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "BOOT");    
+        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "TIME");    
         CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "USERS");    
         CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/USERS")), regsafename);
+        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/TIME")), "TIMEZONE");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "NAME");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "COMPANY");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "PRODUCTKEY");
@@ -1799,6 +1816,8 @@ void begin(void* a)
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, userBasePath)), "PASSWORD");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, userBasePath)), "DISPLAYNAME");
         CmCreateInteger(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/BOOT")), "AUTOGUI", modesel, EXTENT_INTEGER8);
+        CmCreateInteger(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/TIME")), "TIMEZONEID", tzsel, EXTENT_INTEGER8);
+        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/TIME/TIMEZONE"), timezoneStrings[tzsel]);
         CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/NAME"), currName);
         CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/COMPANY"), currComp);
         CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/PRODUCTKEY"), pkeybuf); 
