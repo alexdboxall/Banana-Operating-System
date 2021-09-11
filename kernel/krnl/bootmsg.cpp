@@ -45,6 +45,11 @@ void KeSetBootMessage(const char* msg)
 	
 	while (true) {
 		uint8_t a = inb(0x60);
-		if (a == 0x1C || a == 0x5A) break;
+		if (a == 0x1C || a == 0x5A) {
+			while (true) {
+				a = inb(0x60);
+				if (a != 0x1C && a != 0x5A) return;
+			}
+		}
 	}
 }
