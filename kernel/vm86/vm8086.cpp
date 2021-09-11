@@ -92,17 +92,6 @@ namespace Vm
 	{
 		vm86Thread = kernelProcess->createThread(mainVm8086Loop, nullptr, 128);
 		kernelProcess->vas->mapRange(0x0, 0x0, 256 + 16, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
-
-		File* f = new File("C:/Banana/conventional.ram", kernelProcess);
-		f->open(FILE_OPEN_WRITE_NORMAL);
-		int br;
-		uint8_t zero = 0;
-		f->write(1, &zero, &br);
-		f->write(0x100000 + 65536 - 1, (void*) 1, &br);
-		f->close();
-		delete f;
-
-		kprintf("initialise8086 done.\n");
 	}
 
 	void resetConventionalMemory8086()
@@ -139,6 +128,17 @@ namespace Vm
 
 	bool start8086FromBuffer(uint8_t* buffer, int siz, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss)
 	{
+		if (!started8086Yet) {
+			File* f = new File("C:/Banana/conventional.ram", kernelProcess);
+			f->open(FILE_OPEN_WRITE_NORMAL);
+			int br;
+			f->write(0x100000 + 65536, (void*) 0, &br);
+			f->close();
+			delete f;
+
+			started8086Yet = true;
+		}
+
 		while (1) {
 			lockScheduler();
 			if (vmReady) {
@@ -170,6 +170,19 @@ namespace Vm
 
 	bool start8086(const char* filename, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss)
 	{
+		if (!started8086Yet) {
+			File* f = new File("C:/Banana/conventional.ram", kernelProcess);
+			f->open(FILE_OPEN_WRITE_NORMAL);
+			int br;
+			uint8_t zero = 0;
+			f->write(0x100000 + 65536, (void*) 0, &br);
+			f->close();
+			delete f;
+
+			started8086Yet = true;
+		}
+		
+
 		kprintf("started vm8086 with filename: %s\n", filename);
 		while (1) {
 			lockScheduler();
