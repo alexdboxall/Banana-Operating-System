@@ -86,8 +86,6 @@ void VESA::setMode(int mode)
 	ModeInfo modeInfo;
 	int ogmode = mode;
 
-	Vm::resetConventionalMemory8086();
-
 	Vm::start8086("C:/Banana/System/VESA.COM", 0x0000, 0x90, mode, mode);
 	uint8_t* addr = (uint8_t*) &modeInfo;
 	int totalGot = 0;
