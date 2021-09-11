@@ -96,7 +96,9 @@ namespace Vm
 		File* f = new File("C:/Banana/conventional.ram", kernelProcess);
 		f->open(FILE_OPEN_WRITE_NORMAL);
 		int br;
-		f->write(0x100000 + 65536, (void*) 0, &br);
+		uint8_t zero = 0;
+		f->write(1, &zero, &br);
+		f->write(0x100000 + 65536 - 1, (void*) 1, &br);
 		f->close();
 		delete f;
 
