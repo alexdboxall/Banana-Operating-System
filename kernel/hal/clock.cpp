@@ -28,7 +28,7 @@ namespace User
 		CmClose(reg);
 
 		if (tzstring[0] == '+' || tzstring[0] == '-') {
-			User::dstOn = true;
+			User::dstOn = false;
 			User::timezoneHalfHourOffset = \
 				(tzstring[2] == '.' && tzstring[3] == '5') ||
 				(tzstring[3] == '.' && tzstring[4] == '5');
@@ -47,6 +47,8 @@ namespace User
 			User::timezoneHalfHourOffset = 0;
 			User::timezoneHourOffset = 0;
 		}
+
+		kprintf("Timezone: %d.%d\n", User::timezoneHourOffset, (int) User::timezoneHalfHourOffset * 5);
 	}
 }
 
