@@ -22,6 +22,7 @@ namespace User
 
 		Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
 		int loc = CmFindObjectFromPath(reg, "BANANA/TIME/TIMEZONE");
+		kprintf("REGISTRY: %d\n", loc);
 		if (loc > 0) {
 			CmGetString(reg, loc, tzstring);
 		}		
