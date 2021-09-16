@@ -315,7 +315,7 @@ ModeInfo VESA::calculateBestMode()
 		kprintf("0x%X: %d %dx%d @ %dbpp. %d\n", modes[i].number, score, modes[i].width, modes[i].height, modes[i].bpp, modes[i].ratioEstimation);
 	}
 
-	File* f = new File("C:/Banana/System/vesamodehint.txt", kernelProcess);
+	File* f = new File("C:/Banana/System/vesamode.sys", kernelProcess);
 	if (f->exists()) {
 		int br;
 		char bff[4];

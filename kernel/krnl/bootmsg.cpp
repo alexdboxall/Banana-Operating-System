@@ -43,6 +43,8 @@ void KeSetBootMessage(const char* msg)
 	uint16_t* b = (uint16_t*) 0xC20B8000;
 	memcpy(b + 80 * 20, vgatext, sizeof(vgatext));
 	
+	return;
+
 	while (true) {
 		uint8_t a = inb(0x60);
 		if (a == 0x1C || a == 0x5A) {
