@@ -49,7 +49,7 @@ public:
 	void completeRefresh();
 	void rangeRefresh(int top, int bottom, int left, int right);
 	void renderScanline(int line, int left, int right);
-	void refreshWindowBounds(NIWindow* window);
+	void refreshWindowBounds(NIWindow* window, int start = -1, int end = -1);
 
 	void handleMouse(int xdelta, int ydelta, int buttons, int z);
 

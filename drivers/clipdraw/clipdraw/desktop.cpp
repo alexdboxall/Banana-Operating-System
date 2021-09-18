@@ -154,7 +154,7 @@ void NIDesktop::completeRefresh()
 }
 
 
-void NIDesktop::refreshWindowBounds(NIWindow* window)
+void NIDesktop::refreshWindowBounds(NIWindow* window, int start, int end)
 {
 	rangeRefresh(mouseY, mouseY + MOUSE_HEIGHT, mouseX, mouseX + MOUSE_WIDTH);
 	
@@ -163,6 +163,16 @@ void NIDesktop::refreshWindowBounds(NIWindow* window)
 	int c = window->xpos < 5 ? 0 : window->xpos - 5;
 	int d = window->xpos + window->width > ctxt->width - 6 ? ctxt->width - 1 : window->xpos + window->width + 5;
 	
+	if (start != -1) {
+		//set 'a' correctly
+		a = window->ypos + start < 5 ? 0 : window->ypos + start - 5;
+	}
+
+	if (end != -1) {
+		//set 'b' correctly
+		b = window->ypos + end > ctxt->height - 6 ? ctxt->height - 1 : window->ypos + end + 5;
+	}
+
 	rangeRefresh(a, b, c, d);
 	ctxt->screen->drawCursor(mouseX, mouseY, (uint32_t*) (___mouse_data + cursorOffset), 0);
 }
@@ -246,6 +256,13 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 
 	NIWindow* clickon = getTopmostWindowAtPixel(mouseX, mouseY);
 
+	if (clickon && (xdelta || ydelta)) {
+		NiEvent evnt = NiCreateEvent(clickon, buttons & 1 ? EVENT_TYPE_MOUSE_DRAG : EVENT_TYPE_MOUSE_MOVE, false);
+		evnt.mouseX = mouseX;
+		evnt.mouseY = mouseY;
+		clickon->postEvent(evnt);
+	}
+
 	if (movingWin && movingType == MOVE_TYPE_MOVE) {
 		bool release = !(buttons & 1) && (previousButtons & 1);
 
@@ -288,6 +305,9 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 			movingWin->ypos = mouseY - moveBaseY;
 			movingWin = nullptr;
 			addWindow(win);
+
+			NiEvent evnt = NiCreateEvent(win, EVENT_TYPE_MOVED, true);
+			win->postEvent(evnt);
 		}
 	}
 

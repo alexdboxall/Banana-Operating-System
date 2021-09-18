@@ -25,6 +25,12 @@ void NIWindow::changeContext(NIContext* ctxt, int _x, int _y)
 
 void NIWindow::postEvent(NiEvent evnt)
 {
+	if (evnt.type == EVENT_TYPE_MOUSE_MOVE && nextEventId && events[nextEventId - 1].type == EVENT_TYPE_MOUSE_MOVE) {
+		return;
+	}
+	if (evnt.type == EVENT_TYPE_MOUSE_DRAG && nextEventId && events[nextEventId - 1].type == EVENT_TYPE_MOUSE_DRAG) {
+		return;
+	}
 	events[nextEventId] = evnt;
 	nextEventId = (nextEventId + 1) % MAX_EVENTS_PER_WINDOW;
 	numEvents++;
@@ -38,6 +44,7 @@ int NIWindow::getEventCount()
 NiEvent NIWindow::grabEvent()
 {
 	NiEvent e = events[firstEventId];
+	events[firstEventId].type = EVENT_TYPE_NULL;
 	firstEventId = (firstEventId + 1) % MAX_EVENTS_PER_WINDOW;
 	numEvents--;
 	return e;
