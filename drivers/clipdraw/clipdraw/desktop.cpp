@@ -43,6 +43,7 @@ NiEvent NiCreateEvent(NIWindow* win, int type, bool redraw)
 	evnt.krnlWindow = (void*) win;
 	evnt.mouseX = mouseDesktop->mouseX;
 	evnt.mouseY = mouseDesktop->mouseY;
+	evnt.mouseButtons = mouseDesktop->mouseButtons;
 	return evnt;
 }
 
@@ -247,6 +248,10 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 	//move mouse
 	mouseX += xdelta;
 	mouseY += ydelta;
+
+	int oldButtons = mouseButtons;
+
+	mouseButtons = buttons;
 	
 	//check boundaries
 	if (mouseX < 0) mouseX = 0;
@@ -256,11 +261,14 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 
 	NIWindow* clickon = getTopmostWindowAtPixel(mouseX, mouseY);
 
-	if (clickon && (xdelta || ydelta)) {
-		NiEvent evnt = NiCreateEvent(clickon, buttons & 1 ? EVENT_TYPE_MOUSE_DRAG : EVENT_TYPE_MOUSE_MOVE, false);
-		evnt.mouseX = mouseX;
-		evnt.mouseY = mouseY;
-		clickon->postEvent(evnt);
+	if (clickon) {
+		if (xdelta || ydelta) {
+			clickon->postEvent(NiCreateEvent(clickon, buttons & 1 ? EVENT_TYPE_MOUSE_DRAG : EVENT_TYPE_MOUSE_MOVE, false));
+		} else if ((buttons & 1) && !(oldButtons & 1)) {
+			clickon->postEvent(NiCreateEvent(clickon, EVENT_TYPE_MOUSE_DOWN, false));
+		} else if (!(buttons & 1) && (oldButtons & 1)) {
+			clickon->postEvent(NiCreateEvent(clickon, EVENT_TYPE_MOUSE_UP, false));
+		}
 	}
 
 	if (movingWin && movingType == MOVE_TYPE_MOVE) {

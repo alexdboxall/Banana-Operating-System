@@ -35,6 +35,7 @@ protected:
 public:
 	int mouseX;
 	int mouseY;
+	int mouseButtons;
 
 	int cursorOffset;
 
