@@ -12,25 +12,18 @@ exit
 
 D:
 cd D:/Users/Alex/Desktop/Banana
-rm disacpica.txt
-rm dislegacy.txt
-rm disclipdraw.txt
-rm disvesa.txt
-rm disvga.txt
-rm discmd.txt
-rm disbios.txt
-rm dissys.txt
-rm disac97.txt
-rm disregedit.txt
-objdump -drwC -Mintel packages/banana/32/0002/acpica.sys >> disacpica.txt
-objdump -drwC -Mintel packages/banana/32/0001/regedit.exe >> disregedit.txt
-objdump -drwC -Mintel packages/system/32/0002/legacy.sys >> dislegacy.txt
-objdump -drwC -Mintel packages/banana/32/0001/clipdraw.dll >> disclipdraw.txt
-objdump -drwC -Mintel packages/banana/32/0002/vga.sys >> disvga.txt
-objdump -drwC -Mintel packages/banana/32/0002/ac97.sys >> disac97.txt
-objdump -drwC -Mintel packages/banana/32/0002/vesa.sys >> disvesa.txt
-objdump -drwC -Mintel packages/system/32/0001/command.exe >> discmd.txt
-objdump -drwC -Mintel packages/system/32/0001/system.dll >> dissys.txt
+cd disasms
+rm *.txt
+cd ..
+objdump -drwC -Mintel packages/banana/32/0002/acpica.sys >> disasms/disacpica.txt
+objdump -drwC -Mintel packages/banana/32/0001/newgui.exe >> disasms/disnewgui.txt
+objdump -drwC -Mintel packages/system/32/0002/legacy.sys >> disasms/dislegacy.txt
+objdump -drwC -Mintel packages/banana/32/0001/clipdraw.dll >> disasms/disclipdraw.txt
+objdump -drwC -Mintel packages/banana/32/0002/vga.sys >> disasms/disvga.txt
+objdump -drwC -Mintel packages/banana/32/0002/ac97.sys >> disasms/disac97.txt
+objdump -drwC -Mintel packages/banana/32/0002/vesa.sys >> disasms/disvesa.txt
+objdump -drwC -Mintel packages/system/32/0001/command.exe >> disasms/discmd.txt
+objdump -drwC -Mintel packages/system/32/0001/system.dll >> disasms/dissys.txt
 
 cd D:/Users/Alex/Desktop/Banana/firmware/BOOT2
 call build.bat
