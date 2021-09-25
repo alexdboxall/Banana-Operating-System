@@ -20,10 +20,16 @@ int standardButtonPainter(NRegion* _self)
     if (self->mouseDown && !self->disabled) {
         switch (self->style) {
         case ButtonStyle::PopOut:
+            self->fillRect(0, 0, self->width, self->height, 0xD4D4D4);
+            self->drawRect(0, 0, self->width, 1, 0xAAAAAA);
+            self->drawRect(0, 0, 1, self->height, 0xAAAAAA);
+
+            self->drawRect(0, self->height - 1, self->width, 1, 0xFFFFFF);
+            self->drawRect(self->width - 1, 0, 1, self->height, 0xFFFFFF);
             break;
 
         case ButtonStyle::Standard:
-            self->fillRect(0, 0, self->width, self->height, 0xAAAAAA);
+            self->fillRect(0, 0, self->width, self->height, 0x808080);
             break;
 
         default:

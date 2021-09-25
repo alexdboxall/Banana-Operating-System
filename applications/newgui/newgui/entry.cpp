@@ -8,51 +8,181 @@ int disableBtn(NButton* btn)
     return 0;
 }
 
+NTextField* txtf;
+
+int alignLeftCmd(NButton* btn)
+{
+    txtf->setAlignment(TextAlignment::Left); 
+    return 0;
+}
+
+int alignCentreCmd(NButton* btn)
+{
+    txtf->setAlignment(TextAlignment::Centre);
+    return 0;
+}
+
+int alignRightCmd(NButton* btn)
+{
+    txtf->setAlignment(TextAlignment::Right);
+    return 0;
+}
+
+int alignJustifyCmd(NButton* btn)
+{
+    txtf->setAlignment(TextAlignment::Justify);
+    return 0;
+}
+
+
 extern "C" int appMain() {
     createSystemBrushes();
 
     NTopLevel* win = new NTopLevel("My Test Window", 600, 400);
-        
-    NButton* btn = new NButton(50, 100, 150, 35, win, "My Test Button");
-    btn->setCommand(disableBtn);
-    win->add(btn);
+       
+    txtf = new NTextField(15, 90, 570, 295, win, "This is some random text.\nIt has some newlines in it too...\n\nThat was two newlines!\n\n... The END");
+    win->add(txtf);
 
     {
-        NButton* btn2 = new NButton(300, 100, 100, 24, win, "New");
-        btn2->setIcon("C:/Banana/Icons/Office/new.tga", ButtonIconPosition::Right);
-        btn2->setIconPadding(12);
-        win->add(btn2);
+        NButton* btn = new NButton(15, 30, 24, 24, win, "");
+        btn->setIcon("C:/Banana/Icons/Office/new.tga");
+        btn->setStyle(ButtonStyle::PopOut);
+        win->add(btn);
     }
     {
-        NButton* btn2 = new NButton(300, 140, 100, 24, win, "Open");
-        btn2->setIcon("C:/Banana/Icons/Office/open.tga", ButtonIconPosition::Right);
-        btn2->setIconPadding(12);
-        win->add(btn2);
+        NButton* btn = new NButton(15 + 25 * 1, 30, 24, 24, win, "");
+        btn->setIcon("C:/Banana/Icons/Office/open.tga");
+        btn->setStyle(ButtonStyle::PopOut);
+        win->add(btn);
     }
     {
-        NButton* btn2 = new NButton(300, 180, 100, 24, win, "Save");
-        btn2->setIcon("C:/Banana/Icons/Office/save.tga", ButtonIconPosition::Right);
-        btn2->setIconPadding(12);
-        win->add(btn2);
+        NButton* btn = new NButton(15 + 25 * 2, 30, 24, 24, win, "");
+        btn->setIcon("C:/Banana/Icons/Office/save.tga");
+        btn->setStyle(ButtonStyle::PopOut);
+        win->add(btn);
+    }
+    // --------------------------------
+    {
+        NButton* btn = new NButton(15 + 25 * 3 + 10, 30, 24, 24, win, "");
+        btn->setIcon("C:/Banana/Icons/Office/print.tga");
+        btn->setStyle(ButtonStyle::PopOut);
+        win->add(btn);
     }
     {
-        NButton* btn2 = new NButton(300, 220, 100, 24, win, "Print");
-        btn2->setIcon("C:/Banana/Icons/Office/print.tga", ButtonIconPosition::Right);
-        btn2->setIconPadding(12);
-        win->add(btn2);
+        NButton* btn = new NButton(15 + 25 * 4 + 10, 30, 24, 24, win, "");
+        btn->setIcon("C:/Banana/Icons/Office/preview.tga");
+        btn->setStyle(ButtonStyle::PopOut);
+        win->add(btn);
+    }
+    // --------------------------------
+    {
+        NButton* btn = new NButton(15 + 25 * 5 + 20, 30, 24, 24, win, "");
+        btn->setIcon("C:/Banana/Icons/Office/copy.tga");
+        btn->setStyle(ButtonStyle::PopOut);
+        win->add(btn);
     }
     {
-        NButton* btn2 = new NButton(300, 260, 100, 24, win, "Copy");
-        btn2->setIcon("C:/Banana/Icons/Office/copy.tga", ButtonIconPosition::Right);
-        btn2->setIconPadding(12);
-        btn2->setTextPadding(12);
-        win->add(btn2);
+        NButton* btn = new NButton(15 + 25 * 6 + 20, 30, 24, 24, win, "");
+        btn->setIcon("C:/Banana/Icons/Office/paste.tga");
+        btn->setStyle(ButtonStyle::PopOut);
+        win->add(btn);
+    }
+    // --------------------------------
+    {
+        NButton* btn = new NButton(15 + 25 * 7 + 30, 30, 24, 24, win, "");
+        btn->setIcon("C:/Banana/Icons/Office/undo.tga");
+        btn->setStyle(ButtonStyle::PopOut);
+        win->add(btn);
     }
     {
-        NButton* btn2 = new NButton(300, 300, 100, 24, win, "Paste");
-        btn2->setIcon("C:/Banana/Icons/Office/paste.tga", ButtonIconPosition::Right);
-        btn2->setIconPadding(12);
-        win->add(btn2);
+        NButton* btn = new NButton(15 + 25 * 8 + 30, 30, 24, 24, win, "");
+        btn->setIcon("C:/Banana/Icons/Office/redo.tga");
+        btn->setStyle(ButtonStyle::PopOut);
+        win->add(btn);
+    }
+    // --------------------------------
+    {
+        NButton* btn = new NButton(15 + 25 * 9 + 40, 30, 24, 24, win, "");
+        btn->setIcon("C:/Banana/Icons/Office/table.tga");
+        btn->setStyle(ButtonStyle::PopOut);
+        win->add(btn);
+    }
+    {
+        NButton* btn = new NButton(15 + 25 * 10 + 40, 30, 24, 24, win, "");
+        btn->setIcon("C:/Banana/Icons/Office/columns.tga");
+        btn->setStyle(ButtonStyle::PopOut);
+        win->add(btn);
+    }
+    // --------------------------------
+    {
+        NButton* btn = new NButton(15 + 25 * 11 + 50, 30, 24, 24, win, "");
+        btn->setIcon("C:/Banana/Icons/Office/paragraph.tga");
+        btn->setStyle(ButtonStyle::PopOut);
+        win->add(btn);
+    }
+
+
+
+
+    {
+        NButton* btn = new NButton(15, 60, 24, 24, win, "");
+        btn->setIcon("C:/Banana/Icons/Office/bold.tga");
+        btn->setStyle(ButtonStyle::PopOut);
+        win->add(btn);
+    }
+    {
+        NButton* btn = new NButton(15 + 25 * 1, 60, 24, 24, win, "");
+        btn->setIcon("C:/Banana/Icons/Office/italic.tga");
+        btn->setStyle(ButtonStyle::PopOut);
+        win->add(btn);
+    }
+    {
+        NButton* btn = new NButton(15 + 25 * 2, 60, 24, 24, win, "");
+        btn->setIcon("C:/Banana/Icons/Office/underline.tga");
+        btn->setStyle(ButtonStyle::PopOut);
+        win->add(btn);
+    }
+    // --------------------------------
+    {
+        NButton* btn = new NButton(15 + 25 * 3 + 10, 60, 24, 24, win, "");
+        btn->setIcon("C:/Banana/Icons/Office/left.tga");
+        btn->setStyle(ButtonStyle::PopOut);
+        win->add(btn);
+        btn->setCommand(alignLeftCmd);
+    }
+    {
+        NButton* btn = new NButton(15 + 25 * 4 + 10, 60, 24, 24, win, "");
+        btn->setIcon("C:/Banana/Icons/Office/centre.tga");
+        btn->setStyle(ButtonStyle::PopOut);
+        win->add(btn);
+        btn->setCommand(alignCentreCmd);
+    }
+    {
+        NButton* btn = new NButton(15 + 25 * 5 + 10, 60, 24, 24, win, "");
+        btn->setIcon("C:/Banana/Icons/Office/right.tga");
+        btn->setStyle(ButtonStyle::PopOut);
+        btn->setCommand(alignRightCmd);
+        win->add(btn);
+    }
+    {
+        NButton* btn = new NButton(15 + 25 * 6 + 10, 60, 24, 24, win, "");
+        btn->setIcon("C:/Banana/Icons/Office/justify.tga");
+        btn->setStyle(ButtonStyle::PopOut);
+        win->add(btn);
+        btn->setCommand(alignJustifyCmd);
+    }
+    // --------------------------------
+    {
+        NButton* btn = new NButton(15 + 25 * 7 + 20, 60, 24, 24, win, "");
+        btn->setIcon("C:/Banana/Icons/Office/numpnt.tga");
+        btn->setStyle(ButtonStyle::PopOut);
+        win->add(btn);
+    }
+    {
+        NButton* btn = new NButton(15 + 25 * 8 + 20, 60, 24, 24, win, "");
+        btn->setIcon("C:/Banana/Icons/Office/dotpnt.tga");
+        btn->setStyle(ButtonStyle::PopOut);
+        win->add(btn);
     }
 
     win->initialise();

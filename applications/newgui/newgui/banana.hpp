@@ -10,5 +10,7 @@ extern "C" {
 #include "NRegion.hpp"
 #include "NButton.hpp"
 #include "NLoadedBitmap.hpp"
+#include "NTextFormatter.hpp"
+#include "NTextField.hpp"
 
 #endif //CONTEXT_H
