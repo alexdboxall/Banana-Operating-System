@@ -5,6 +5,8 @@ It comes with an installer which can be run from floppies or a CD-ROM. Currently
 Released under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International license.
 See LICENSE and COPYRIGHT for the license and copyright notices. No warranties.
 
+![Banana command line](https://github.com/A22347/Banana-Operating-System/blob/main/doc/images/bna_prompt.PNG "Banana command line")
+
 System Requirements:
  - 486 or better CPU
  - 8MB or more RAM (can technically be used with 4MB)
@@ -17,9 +19,8 @@ System Requirements:
   - FAT, exFAT, ISO9660
   - PS/2 keyboard and mouse
   - Full ACPI support
-  - Soundblaster 16 audio (8 and 16 bit)
+  - Soundblaster 16, AC97 audio
   - x87, MMX, SSE and AVX floating point
-  - AC97 audio (16 bit)
   - RTC, PIC, PIT, APIC, APIC timer, PC speaker
   
   
