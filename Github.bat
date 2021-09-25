@@ -11,7 +11,7 @@ git add applications
 git add bochs
 git add drivers
 git add doc
-git add packages
+git add packages -f
 git add sysroot
 git add ip
 git add installer/*.txt -f
