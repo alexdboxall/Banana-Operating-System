@@ -16,15 +16,15 @@
 int standardTextFieldPainter(NRegion* _self)
 {
     NTextField* self = (NTextField*) _self;
+    self->invalidating = true;
 
     self->fillRect(0, 0, self->width, self->height, 0xFFFFFF);
    
     char x[2];
     x[1] = 0;
 
-    unsigned int xpos = self->marginLeft;
-    unsigned int ypos = self->marginTop;
-    unsigned int ogxpos = xpos;
+    unsigned int xpos = 0;
+    unsigned int ypos = 0;
     unsigned int lastBiggest = 0;
     bool prevNewline = true;
     int xplus = 0;
@@ -36,22 +36,60 @@ int standardTextFieldPainter(NRegion* _self)
 
     int justifyScalePer256 = 256;
     int justifyLeftovers = 0;
-
+    
     bool selectionOn = false;
+    int stDrawSpot = 0;
 
+    int prevSpaceI = -1;
+    int prevSpaceXPos = -1;
+
+    bool forcedWrap = false;
+    
     for (int i = 0; self->text[i]; ++i) {
-        if (self->text[i] == '\n') {
+        if (self->callback) {
+            //self->callback(self, i);
+        }
+
+        if (self->text[i] == ' ') {
+            prevSpaceI = i;
+            prevSpaceXPos = xpos;
+        }
+
+        int effectiveWidth = (self->width - self->marginLeft - self->marginRight);
+
+        if (self->text[i] != '\n') {
+            x[0] = self->text[i];
+            Context_bound_text(self->ctxt, x, &xplus, &yheight);
+
+            xplus = (xplus * self->charSpacingPercent + 50) / 100;
+            if (self->alignment == TextAlignment::Justify && drawMode) {
+                int temp = (xplus * justifyScalePer256 + justifyLeftovers) / 256;
+                justifyLeftovers = (xplus * justifyScalePer256 + justifyLeftovers) % 256;
+                xplus = temp;
+            }
+        }
+
+        bool wrapPoint = forcedWrap || (self->text[i] != '\n' && (xplus + (prevNewline ? 0 : xpos) - ((drawMode && !prevNewline) ? stDrawSpot : 0) > effectiveWidth && (self->wrapMode == TextWrap::Character || self->wrapMode == TextWrap::Word)));
+        bool wordWrap = false;
+        if (wrapPoint && self->text[i] != ' ' && self->wrapMode == TextWrap::Word && prevSpaceI != -1 && !forcedWrap) {
+            i = prevSpaceI;
+            xpos = prevSpaceXPos;
+            wordWrap = true;
+        }
+
+        if (self->text[i] == '\n' || wrapPoint) {
             if (drawMode || prevNewline) {
-                xpos = ogxpos;
-                ypos += (lastBiggest * self->lineSpacingTenths + 5) / 10;
+                xpos = 0;
+                ypos += lastBiggest;
                 prevNewline = true;
                 drawMode = false;
+                if (wrapPoint && !wordWrap) --i;
                 continue;
 
             } else {
                 drawMode = true;
                 if (self->alignment == TextAlignment::Left) {
-                    xpos = ogxpos;
+                    xpos = 0;
 
                 } else if (self->alignment == TextAlignment::Right) {
                     xpos = (self->width - self->marginLeft - self->marginRight) - xpos;
@@ -60,42 +98,38 @@ int standardTextFieldPainter(NRegion* _self)
                     xpos = ((self->width - self->marginLeft - self->marginRight) - xpos) / 2;
                 
                 } else if (self->alignment == TextAlignment::Justify) {
-                    if (xpos == 0) {
+                    if (xpos == 0 || !wrapPoint) {
                         justifyScalePer256 = 256;
                     } else {
-                        justifyScalePer256 = ((self->width - self->marginLeft - self->marginRight) * 256 + 128) / xpos;
+                        justifyScalePer256 = (effectiveWidth * 256 + 128) / xpos;
                     }
                     
                     justifyLeftovers = 0;
                     xpos = 0;
                 }
+                stDrawSpot = xpos;
 
                 prevNewline = false;
                 i = startOfLine;
+                --i;
+                continue;
             }
         }
+        
         if (prevNewline) {
-            selectionOn = false;
             prevNewline = false;
             lastBiggest = 0;
             startOfLine = i;
             drawMode = false;
+            stDrawSpot = 0;
             xpos = 0;
         }
-        x[0] = self->text[i];
-        Context_bound_text(self->ctxt, x, &xplus, &yheight);
-        xplus = (xplus * self->charSpacingPercent + 50) / 100;
-        if (self->alignment == TextAlignment::Justify && drawMode) {
-            int temp = (xplus * justifyScalePer256 + justifyLeftovers) / 256;
-            justifyLeftovers = (xplus * justifyScalePer256 + justifyLeftovers) % 256;
-            xplus = temp;
-        }
-        
-        // text wrapping...
+
+        yheight = (yheight * self->lineSpacingTenths + 5) / 10;
 
         if (drawMode) {
             if (self->curStart == i && self->curEnd == i) {
-                self->fillRect(xpos - self->scrollX - 1, ypos - self->scrollY, 1, yheight, 0x000000);
+                self->fillRect(xpos - self->scrollX - 1 + self->marginLeft, ypos - self->scrollY + self->marginTop, 1, yheight, self->cursorCol);
             }
             if (self->curStart == i) {
                 selectionOn ^= 1;
@@ -104,9 +138,9 @@ int standardTextFieldPainter(NRegion* _self)
                 selectionOn ^= 1;
             }
             if (selectionOn) {
-                self->fillRect(xpos - self->scrollX, ypos - self->scrollY, xplus, yheight, 0x0000AA);
+                self->fillRect(xpos - self->scrollX + self->marginLeft, ypos - self->scrollY - 1 + self->marginTop, xplus, yheight, self->selBgCol);
             }
-            self->drawBasicText(xpos - self->scrollX, ypos - self->scrollY, 0x000000, x);
+            self->drawBasicText(xpos - self->scrollX + self->marginLeft, ypos - self->scrollY + self->marginTop, selectionOn ? self->selFgCol : self->fgCol, x);
         }
         xpos += xplus;
 
@@ -115,11 +149,27 @@ int standardTextFieldPainter(NRegion* _self)
         }
     }
    
+    self->fillRect(0, 0, self->width, self->marginTop, 0xFFFF00);
+    self->fillRect(0, 0, self->marginLeft, self->height, 0xFFFF00);
+
+    self->invalidating = false;
     return 0;
+}
+
+void NTextField::setTextWrap(TextWrap wrap)
+{
+    wrapMode = wrap;
+    invalidate();
+}
+
+TextWrap NTextField::getTextWrap()
+{
+    return wrapMode;
 }
 
 void NTextField::invalidate()
 {
+    if (invalidating) return;
     Window_invalidate(win, 0, 0, win->height, win->width);
 }
 
@@ -142,10 +192,20 @@ NTextField::NTextField(int x, int y, int w, int h, Context* context, const char*
     scrollX = 0;
     scrollY = 0;
 
+    invalidating = false;
+
     lineSpacingTenths = 15;
     charSpacingPercent = 100;
 
     alignment = TextAlignment::Left;
+    wrapMode = TextWrap::Character;
+
+    callback = nullptr;
+
+    fgCol = 0x000000;
+    cursorCol = 0x000000;
+    selFgCol = 0xFFFFFF;
+    selBgCol = 0x000080;
 
     marginTop = 4;
     marginBottom = 4;
@@ -153,9 +213,30 @@ NTextField::NTextField(int x, int y, int w, int h, Context* context, const char*
     marginRight = 4;
 
     curStart = 3;
-    curEnd = 6;
+    curEnd = 36;
 
 	paintHandler = standardTextFieldPainter;
+}
+
+NTextFieldFormattingCallback NTextField::getFormattingCallback()
+{
+    return callback;
+}
+
+void NTextField::setFormattingCallback(NTextFieldFormattingCallback call)
+{
+    call = callback;
+}
+
+void NTextField::setForegroundColour(uint32_t col)
+{
+    fgCol = col;
+    invalidate();
+}
+
+uint32_t NTextField::getForegroundColour()
+{
+    return fgCol;
 }
 
 void NTextField::setAlignment(TextAlignment align)

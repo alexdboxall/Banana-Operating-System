@@ -20,6 +20,16 @@ enum class TextAlignment
 	Justify
 };
 
+enum class TextWrap
+{
+	None,
+	Character,
+	Word,
+};
+
+class NTextField;
+typedef int (*NTextFieldFormattingCallback)(NTextField*, int);
+
 class NTextField : public NRegion
 {
 protected:
@@ -39,8 +49,19 @@ protected:
 	int marginLeft;
 	int marginRight;
 
+	TextWrap wrapMode;
+
 	int curStart;
 	int curEnd;
+
+	uint32_t fgCol;
+	uint32_t selFgCol;
+	uint32_t selBgCol;
+	uint32_t cursorCol;
+
+	NTextFieldFormattingCallback callback;
+
+	bool invalidating;
 
 public:
 	NTextField(int x, int y, int w, int h, Context* context, const char* text = "");
@@ -48,10 +69,19 @@ public:
 	NTextField(int x, int y, int w, int h, NRegion* rgn, const char* text = "");
 	~NTextField();
 
+	void setTextWrap(TextWrap wrap);
+	TextWrap getTextWrap();
+
 	void setAlignment(TextAlignment align);
 	TextAlignment getAlignment();
 
 	void invalidate();
+
+	NTextFieldFormattingCallback getFormattingCallback();
+	void setFormattingCallback(NTextFieldFormattingCallback call);
+
+	void setForegroundColour(uint32_t col);
+	uint32_t getForegroundColour();
 
 	char* getText();
 	void setText(const char* text);

@@ -594,7 +594,7 @@ void NIDesktop::renderScanline(int line, int left, int right)
 		if (!render[i]) {
 
 			render[i] = 1;
-			renderData[i] = ctxt->width > 640 ? 0x55afff : 0x00AAAA;
+			renderData[i] = ctxt->width > 640 ? 0x55afff : 0x008080;
 			--expectedBytes;
 			if (expectedBytes == 0) {
 				goto done;

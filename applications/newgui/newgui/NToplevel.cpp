@@ -69,7 +69,7 @@ NxWindow NxCreateWindow(int w, int h, const char* name) {
 int defaultToplevelPainter(NTopLevel* self) {
     Context* ctxt = self->getContext();
 
-    Context_fill_rect(ctxt, 0, 25, ctxt->width, ctxt->height - 25, 0xD4D4D4);
+    Context_fill_rect(ctxt, 0, 25, ctxt->width, ctxt->height - 25, 0xD0D0D0);
     
     if (self->paintHandlerHook) {
         self->paintHandlerHook(self);
