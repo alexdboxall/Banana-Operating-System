@@ -5,6 +5,7 @@ It comes with an installer which can be run from floppies or a CD-ROM. Currently
 Released under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International license.
 See LICENSE and COPYRIGHT for the license and copyright notices. No warranties.
 
+![Banana GUI (VESA)](https://github.com/A22347/Banana-Operating-System/blob/main/doc/images/bna_vesa.PNG "Banana GUI (VESA)")
 ![Banana command line](https://github.com/A22347/Banana-Operating-System/blob/main/doc/images/bna_prompt.PNG "Banana command line")
 
 System Requirements:
@@ -25,3 +26,6 @@ System Requirements:
   
   
 Copyright 2016-2021 Alex Boxall
+
+![Banana GUI (VGA)](https://github.com/A22347/Banana-Operating-System/blob/main/doc/images/bna_vga.PNG "Banana GUI (VGA)")
+![Banana command line](https://github.com/A22347/Banana-Operating-System/blob/main/doc/images/bna_prompt2.PNG "Banana command line")
