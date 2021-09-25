@@ -39,6 +39,9 @@ protected:
 	int marginLeft;
 	int marginRight;
 
+	int curStart;
+	int curEnd;
+
 public:
 	NTextField(int x, int y, int w, int h, Context* context, const char* text = "");
 	NTextField(int x, int y, int w, int h, NTopLevel* tl, const char* text = "");

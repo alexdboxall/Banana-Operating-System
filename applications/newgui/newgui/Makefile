@@ -23,10 +23,10 @@ build: $(OBJECTS32)
 	$(CC32) -Wl,_R32.o -Wl,-Map=D:/Users/Alex/Desktop/app32.map -o $(OUTPUT32) $^ -lm
 
 %.o: %.c
-	$(CC32) -O1 $(CCFLAGS) $^ -o $@
+	$(CC32) -Os $(CCFLAGS) $^ -o $@
 
 %.o: %.cpp
-	$(CXX32) -O1 -fno-exceptions -fno-rtti -c $^ -o $@
+	$(CXX32) -Os -fno-exceptions -fno-rtti -c $^ -o $@
 
 #build:
 #	$(AS32) $(ASFLAGS) Resclink.s -o _R32.o

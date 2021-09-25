@@ -37,6 +37,8 @@ int standardTextFieldPainter(NRegion* _self)
     int justifyScalePer256 = 256;
     int justifyLeftovers = 0;
 
+    bool selectionOn = false;
+
     for (int i = 0; self->text[i]; ++i) {
         if (self->text[i] == '\n') {
             if (drawMode || prevNewline) {
@@ -73,6 +75,7 @@ int standardTextFieldPainter(NRegion* _self)
             }
         }
         if (prevNewline) {
+            selectionOn = false;
             prevNewline = false;
             lastBiggest = 0;
             startOfLine = i;
@@ -82,14 +85,29 @@ int standardTextFieldPainter(NRegion* _self)
         x[0] = self->text[i];
         Context_bound_text(self->ctxt, x, &xplus, &yheight);
         xplus = (xplus * self->charSpacingPercent + 50) / 100;
-        if (self->alignment == TextAlignment::Justify) {
+        if (self->alignment == TextAlignment::Justify && drawMode) {
             int temp = (xplus * justifyScalePer256 + justifyLeftovers) / 256;
             justifyLeftovers = (xplus * justifyScalePer256 + justifyLeftovers) % 256;
             xplus = temp;
         }
         
-        // check for wrapping...
-        if (drawMode) self->drawBasicText(xpos - self->scrollX, ypos - self->scrollY, 0x000000, x);
+        // text wrapping...
+
+        if (drawMode) {
+            if (self->curStart == i && self->curEnd == i) {
+                self->fillRect(xpos - self->scrollX - 1, ypos - self->scrollY, 1, yheight, 0x000000);
+            }
+            if (self->curStart == i) {
+                selectionOn ^= 1;
+            }
+            if (self->curEnd == i) {
+                selectionOn ^= 1;
+            }
+            if (selectionOn) {
+                self->fillRect(xpos - self->scrollX, ypos - self->scrollY, xplus, yheight, 0x0000AA);
+            }
+            self->drawBasicText(xpos - self->scrollX, ypos - self->scrollY, 0x000000, x);
+        }
         xpos += xplus;
 
         if (yheight > lastBiggest) {
@@ -133,6 +151,9 @@ NTextField::NTextField(int x, int y, int w, int h, Context* context, const char*
     marginBottom = 4;
     marginLeft = 4;
     marginRight = 4;
+
+    curStart = 3;
+    curEnd = 6;
 
 	paintHandler = standardTextFieldPainter;
 }
