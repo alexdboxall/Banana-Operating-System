@@ -15,6 +15,8 @@
 
 int standardTextFieldPainter(NRegion* _self)
 {
+    //this function is arcane black magic
+
     NTextField* self = (NTextField*) _self;
     self->invalidating = true;
 
@@ -42,25 +44,29 @@ int standardTextFieldPainter(NRegion* _self)
 
     int prevSpaceI = -1;
     int prevSpaceXPos = -1;
+    int wordWrapTop = -1;
 
-    bool forcedWrap = false;
-    
+    bool canSkipSpace = false;
+
     for (int i = 0; self->text[i]; ++i) {
-        if (self->callback) {
-            //self->callback(self, i);
+        if (self->text[i] == ' ' && canSkipSpace && self->wrapMode == TextWrap::Word) {
+            continue;
+        } else if (canSkipSpace) {
+            canSkipSpace = false;
         }
-
-        if (self->text[i] == ' ') {
+        if (self->callback) {
+            self->callback(self, i);
+        }
+        if (self->text[i] == ' ' && !drawMode && self->wrapMode == TextWrap::Word) {
             prevSpaceI = i;
             prevSpaceXPos = xpos;
         }
-
-        int effectiveWidth = (self->width - self->marginLeft - self->marginRight);
+        
+        int effectiveWidth = self->width - self->marginLeft - self->marginRight;
 
         if (self->text[i] != '\n') {
             x[0] = self->text[i];
             Context_bound_text(self->ctxt, x, &xplus, &yheight);
-
             xplus = (xplus * self->charSpacingPercent + 50) / 100;
             if (self->alignment == TextAlignment::Justify && drawMode) {
                 int temp = (xplus * justifyScalePer256 + justifyLeftovers) / 256;
@@ -69,24 +75,32 @@ int standardTextFieldPainter(NRegion* _self)
             }
         }
 
-        bool wrapPoint = forcedWrap || (self->text[i] != '\n' && (xplus + (prevNewline ? 0 : xpos) - ((drawMode && !prevNewline) ? stDrawSpot : 0) > effectiveWidth && (self->wrapMode == TextWrap::Character || self->wrapMode == TextWrap::Word)));
+        bool wrapPoint = (self->text[i] != '\n' && (xplus + (prevNewline ? 0 : xpos) - ((drawMode && !prevNewline) ? stDrawSpot : 0) > effectiveWidth && (self->wrapMode == TextWrap::Character || self->wrapMode == TextWrap::Word)));
         bool wordWrap = false;
-        if (wrapPoint && self->text[i] != ' ' && self->wrapMode == TextWrap::Word && prevSpaceI != -1 && !forcedWrap) {
-            i = prevSpaceI;
+        if (!drawMode && wrapPoint && self->text[i] != ' ' && self->wrapMode == TextWrap::Word && prevSpaceI != -1) {
+            wordWrapTop = prevSpaceI;
+            i = prevSpaceI - 1;
             xpos = prevSpaceXPos;
             wordWrap = true;
         }
+        if (drawMode && i == wordWrapTop) {
+            wrapPoint = true;
+            wordWrap = true;
+            wordWrapTop = -1;
+        }
 
-        if (self->text[i] == '\n' || wrapPoint) {
+        if (self->text[i] == '\n' || wrapPoint || !self->text[i + 1]) {
             if (drawMode || prevNewline) {
                 xpos = 0;
                 ypos += lastBiggest;
                 prevNewline = true;
+                canSkipSpace = wrapPoint;
                 drawMode = false;
                 if (wrapPoint && !wordWrap) --i;
                 continue;
 
             } else {
+                canSkipSpace = wrapPoint;
                 drawMode = true;
                 if (self->alignment == TextAlignment::Left) {
                     xpos = 0;
@@ -115,7 +129,6 @@ int standardTextFieldPainter(NRegion* _self)
                 continue;
             }
         }
-        
         if (prevNewline) {
             prevNewline = false;
             lastBiggest = 0;
@@ -151,6 +164,8 @@ int standardTextFieldPainter(NRegion* _self)
    
     self->fillRect(0, 0, self->width, self->marginTop, 0xFFFF00);
     self->fillRect(0, 0, self->marginLeft, self->height, 0xFFFF00);
+    self->fillRect(0, self->height - self->marginBottom, self->width, self->marginBottom, 0xFFFF00);
+    self->fillRect(self->width - self->marginRight, 0, self->marginRight, self->height, 0xFFFF00);
 
     self->invalidating = false;
     return 0;
