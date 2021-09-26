@@ -34,7 +34,6 @@ int alignJustifyCmd(NButton* btn)
     return 0;
 }
 
-
 extern "C" int appMain() {
     createSystemBrushes();
 

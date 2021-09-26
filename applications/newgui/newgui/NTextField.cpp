@@ -55,7 +55,7 @@ int standardTextFieldPainter(NRegion* _self)
             canSkipSpace = false;
         }
         if (self->callback) {
-            self->callback(self, i);
+            //self->callback(self, i);
         }
         if (self->text[i] == ' ' && !drawMode && self->wrapMode == TextWrap::Word) {
             prevSpaceI = i;
@@ -162,10 +162,10 @@ int standardTextFieldPainter(NRegion* _self)
         }
     }
    
-    self->fillRect(0, 0, self->width, self->marginTop, 0xFFFF00);
-    self->fillRect(0, 0, self->marginLeft, self->height, 0xFFFF00);
-    self->fillRect(0, self->height - self->marginBottom, self->width, self->marginBottom, 0xFFFF00);
-    self->fillRect(self->width - self->marginRight, 0, self->marginRight, self->height, 0xFFFF00);
+    self->fillRect(0, 0, self->width, self->marginTop, 0xFFFFFF);
+    self->fillRect(0, 0, self->marginLeft, self->height, 0xFFFFFF);
+    self->fillRect(0, self->height - self->marginBottom, self->width, self->marginBottom, 0xFFFFFF);
+    self->fillRect(self->width - self->marginRight, 0, self->marginRight, self->height, 0xFFFFFF);
 
     self->invalidating = false;
     return 0;
