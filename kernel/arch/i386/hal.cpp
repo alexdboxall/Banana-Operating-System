@@ -302,12 +302,12 @@ void HalInitialiseCoprocessor()
 	fpuOwner = nullptr;
 	installISRHandler(ISR_DEVICE_NOT_AVAILABLE, x87EmulHandler);
 
-	if (avxDetect()) {
+	/*if (avxDetect()) {
 		coproSaveFunc = avxSave;
 		coproLoadFunc = avxLoad;
 		avxInit();
 		return;
-	}
+	}*/
 
 	if (sseDetect()) {
 		coproSaveFunc = sseSave;
