@@ -193,12 +193,10 @@ void NIDesktop::refreshWindowBounds(NIWindow* window, int start, int end)
 	int d = window->xpos + window->width > ctxt->width - 6 ? ctxt->width - 1 : window->xpos + window->width + 5;
 	
 	if (start != -1) {
-		//set 'a' correctly
 		a = window->ypos + start < 5 ? 0 : window->ypos + start - 5;
 	}
 
 	if (end != -1) {
-		//set 'b' correctly
 		b = window->ypos + end > ctxt->height - 6 ? ctxt->height - 1 : window->ypos + end + 5;
 	}
 

@@ -81,11 +81,27 @@ protected:
 
 	bool invalidating;
 
+	int poisonCharacter;
+	int poisonCharacterReverse;
+	int poisonHiddenDataLength;
+
+	void incCurEnd();
+	void incCurStart();
+	void decCurEnd();
+	void decCurStart();
+
+	void normaliseCursorPosition();
+
 public:
 	NTextField(int x, int y, int w, int h, Context* context, const char* text = "");
 	NTextField(int x, int y, int w, int h, NTopLevel* tl, const char* text = "");
 	NTextField(int x, int y, int w, int h, NRegion* rgn, const char* text = "");
 	~NTextField();
+
+	void enableHiddenData(int poisonValue, int reversePoison, int tokenLength);
+	void disableHiddenData();
+
+	void insert(int pos, char* text);
 
 	int getCursorStart();
 	int getCursorEnd();

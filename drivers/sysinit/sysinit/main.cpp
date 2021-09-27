@@ -1475,6 +1475,7 @@ char passwhash[80];*/
         if (timezoneStrings[tzsel][1] == '-') {
             User::timezoneHourOffset = -User::timezoneHourOffset;
         }
+        kprintf("TZHR: %d:%d\n", User::timezoneHourOffset, User::timezoneHalfHourOffset);
         computer->clock->setTimeInDatetimeLocal(dt);
 
         installKey = 0;

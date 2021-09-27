@@ -34,22 +34,48 @@ int alignJustifyCmd(NButton* btn)
     return 0;
 }
 
+int underlineCmd(NButton* btn)
+{
+    int start = txtf->getCursorStart();
+
+    if (start != txtf->getCursorEnd()) {
+        txtf->insert(start, (char*) "\x7EU100\x7F");
+        txtf->insert(txtf->getCursorEnd(), (char*) "\x7EU000\x7F");
+    }
+
+    return 0;
+}
+
+int formattingCallback(NTextField* t, int pos)
+{
+    bool underline = false;
+    char* text = t->getText();
+    for (int i = 0; text[i]; ++i) {
+        if (text[i] == '\x7E') {
+            if (text[i + 1] == 'U') {
+                underline = text[i + 2] == '1';
+            }
+            i += 5;
+            continue;
+        }
+
+        if (i == pos) {
+            t->enableUnderline(underline);
+        }
+    }
+
+    return 0;
+}
+
 extern "C" int appMain() {
     createSystemBrushes();
 
     NTopLevel* win = new NTopLevel("My Test Window", 600, 400);
        
-    uint8_t underlineStyle[] = {
-        0b0010,
-        0b0101,
-        0b1000,
-        0b0000,
-    };
-    txtf = new NTextField(15, 90, 570, 295, win, "abc def\nThis is some random text.\nIt has some newlines in it too...\n\nThat was two newlines!\n\n\nThis is now going to be a test of the text wrap. Hopefully, this line should wrap onto the next line, and it should be justified. But, the last line should just be left aligned as usual, so it doesn't look too weird.\nThis should also be left aligned.\nTesting just one more thing..., which is the\n space after a newline thing.\n");
+    txtf = new NTextField(15, 90, 570, 295, win, "abc def\nThis is \x7EU100\x7Fsome random\x7EU000\x7F text.\nIt has some newlines in it too...\n\nThat was two newlines!\n\n\nThis is now going to be a test of the text wrap. Hopefully, this line should wrap onto the next line, and it should be justified. But, the last line should just be left aligned as usual, so it doesn't look too weird.\nThis should also be left aligned.\nTesting just one more thing..., which is the\n space after a newline thing.\n");
     txtf->setTextWrap(TextWrap::Word);
-    txtf->setUnderlineColour(0xFF0000);
-    txtf->setUnderline(4, underlineStyle);
-    txtf->enableUnderline();
+    txtf->enableHiddenData(0x7E, 0x7F, 4);
+    txtf->setFormattingCallback(formattingCallback);
     win->add(txtf);
 
     {
@@ -149,6 +175,7 @@ extern "C" int appMain() {
         NButton* btn = new NButton(15 + 25 * 2, 60, 24, 24, win, "");
         btn->setIcon("C:/Banana/Icons/Office/underline.tga");
         btn->setStyle(ButtonStyle::PopOut);
+        btn->setCommand(underlineCmd);
         win->add(btn);
     }
     // --------------------------------

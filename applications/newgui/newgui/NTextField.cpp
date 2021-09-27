@@ -51,6 +51,10 @@ int textFieldEngine(NRegion* _self, int posi, int* xout, int* yout)
     bool canSkipSpace = false;
 
     for (int i = 0; self->text[i]; ++i) {
+        if ((uint8_t) self->text[i] == self->poisonCharacter) {
+            i += self->poisonHiddenDataLength + 1;
+            continue;
+        }
         if (self->text[i] == ' ' && canSkipSpace && self->wrapMode == TextWrap::Word) {
             continue;
         } else if (canSkipSpace) {
@@ -252,6 +256,88 @@ NTextField::NTextField(int x, int y, int w, int h, NRegion* rgn, const char* tex
 
 }
 
+void NTextField::normaliseCursorPosition()
+{
+    for (int i = 0; i < poisonHiddenDataLength + 2; ++i) {
+        if (text[curStart + i] == poisonCharacter) break;
+        if (text[curStart + i] == poisonCharacterReverse) {
+            curStart += i + 1;
+            break;
+        }
+    }
+
+    for (int i = 0; i < poisonHiddenDataLength + 2; ++i) {
+        if (text[curEnd + i] == poisonCharacter) break;
+        if (text[curEnd + i] == poisonCharacterReverse) {
+            curEnd += i + 1;
+            break;
+        }
+    }
+
+    for (int i = 0; i < poisonHiddenDataLength + 2; ++i) {
+        if (text[curStart - i] == poisonCharacterReverse) break;
+        if (text[curStart - i] == poisonCharacter) {
+            curStart -= i;
+            break;
+        }
+    }
+
+    for (int i = 0; i < poisonHiddenDataLength + 2; ++i) {
+        if (text[curEnd - i] == poisonCharacter) break;
+        if (text[curEnd - i] == poisonCharacterReverse) {
+            curEnd -= i;
+            break;
+        }
+    }
+}
+
+void NTextField::insert(int pos, char* inserted)
+{
+    char* txt = (char*) malloc(strlen(text) + strlen(inserted) + 4);
+    for (int i = 0; i < pos; ++i) {
+        txt[i] = text[i];
+        txt[i + 1] = 0;
+    }
+    strcat(txt, inserted);
+    strcat(txt, text + pos);
+    setText(txt);
+    free(txt);
+
+    normaliseCursorPosition();
+}
+
+void NTextField::incCurEnd()
+{
+    if (text[curEnd] == poisonCharacter) {
+        curEnd += poisonHiddenDataLength + 2;
+    } else {
+        ++curEnd;
+    }
+}
+
+void NTextField::incCurStart()
+{
+    if (text[curStart] == poisonCharacter) {
+        curStart += poisonHiddenDataLength + 2;
+    } else {
+        ++curStart;
+    }
+}
+
+void NTextField::decCurEnd()
+{
+    if (text[--curEnd] == poisonCharacterReverse) {
+        curEnd -= poisonHiddenDataLength + 2;
+    }
+}
+
+void NTextField::decCurStart()
+{
+    if (text[--curStart] == poisonCharacterReverse) {
+        curStart -= poisonHiddenDataLength + 2;
+    }
+}
+
 void textfieldKeyHandler(Window* w, void* self_, KeyStates key)
 {
     NTextField* self = (NTextField*) self_;
@@ -274,10 +360,10 @@ void textfieldKeyHandler(Window* w, void* self_, KeyStates key)
 
         } else {
             if (msgshift) {
-                if (self->curEnd) self->curEnd--;
+                if (self->curEnd) self->decCurEnd();
 
             } else {
-                if (self->curEnd) self->curEnd--;
+                if (self->curEnd) self->decCurEnd();
                 self->curStart = self->curEnd;
             }
         }
@@ -299,7 +385,7 @@ void textfieldKeyHandler(Window* w, void* self_, KeyStates key)
                 if (y2 < y1) {
                     if (y3 == -1) y3 = y2;
                     if (y2 != y3) {
-                        self->curEnd++;
+                        self->incCurEnd();
                         break;
                     }
                     if (x2 <= x1) break;
@@ -325,7 +411,7 @@ void textfieldKeyHandler(Window* w, void* self_, KeyStates key)
                 if (y2 > y1) {
                     if (y3 == -1) y3 = y2;
                     if (y2 != y3) {
-                        self->curEnd--;
+                        self->decCurEnd();
                         break;
                     }
                     if (x2 >= x1) break;
@@ -340,7 +426,7 @@ void textfieldKeyHandler(Window* w, void* self_, KeyStates key)
 
         if (msgctrl) {
             if (msgshift) {
-                while (self->curEnd < strlen(self->text)) self->curEnd++;
+                while (self->curEnd < strlen(self->text)) self->incCurEnd();
 
             } else {
                 self->curEnd = strlen(self->text);
@@ -349,10 +435,10 @@ void textfieldKeyHandler(Window* w, void* self_, KeyStates key)
 
         } else {
             if (msgshift) {
-                if (self->curEnd < strlen(self->text)) self->curEnd++;
+                if (self->curEnd < strlen(self->text)) self->incCurEnd();
 
             } else {
-                if (self->curEnd < strlen(self->text)) self->curEnd++;
+                if (self->curEnd < strlen(self->text)) self->incCurEnd();
                 self->curStart = self->curEnd;
             }
         }
@@ -377,7 +463,7 @@ void textfieldKeyHandler(Window* w, void* self_, KeyStates key)
         strcpy(txt, self->text);
 
         while (self->curEnd > self->curStart) {
-            self->curEnd -= 1;
+            self->decCurEnd();
             int rem = self->curEnd;
             int len = strlen(txt);
             int i;
@@ -386,7 +472,7 @@ void textfieldKeyHandler(Window* w, void* self_, KeyStates key)
         }
 
         if (msgkey == '\b' && self->curEnd) {
-            self->curEnd -= 1;
+            self->decCurEnd();
             int rem = self->curEnd;
             int len = strlen(txt);
             int i;
@@ -396,7 +482,7 @@ void textfieldKeyHandler(Window* w, void* self_, KeyStates key)
         } else {
             memmove(txt + self->curEnd + 1, txt + self->curEnd, strlen(txt + self->curEnd));
             txt[self->curStart] = msgkey;
-            self->curEnd++;
+            self->incCurEnd();
         }
 
         self->curStart = self->curEnd;
@@ -408,7 +494,7 @@ void textfieldKeyHandler(Window* w, void* self_, KeyStates key)
         //Ctrl+A
 
         self->curStart = 0;
-        while (self->curEnd < strlen(self->text)) self->curEnd++;
+        while (self->curEnd < strlen(self->text)) self->incCurEnd();
         self->keepBlinkOneExtraTick = true;
         self->blinkState = true;
 
@@ -449,6 +535,10 @@ NTextField::NTextField(int x, int y, int w, int h, Context* context, const char*
     selBgCol = 0x000080;
     underlineCol = 0x000000;
 
+    poisonCharacter = -1;
+    poisonCharacterReverse = -2;
+    poisonHiddenDataLength = 0;
+
     underline = false;
     underlinePattern[0] = 0;
     underlinePattern[1] = 1;
@@ -471,6 +561,18 @@ NTextField::NTextField(int x, int y, int w, int h, Context* context, const char*
 	paintHandler = standardTextFieldPainter;
 }
 
+void NTextField::enableHiddenData(int poisonValue, int reversePoison, int tokenLength)
+{
+    poisonCharacter = poisonValue;
+    poisonCharacterReverse = reversePoison;
+    poisonHiddenDataLength = tokenLength;
+}
+
+void NTextField::disableHiddenData()
+{
+    enableHiddenData(-1, -2, 0);
+}
+
 NTextFieldFormattingCallback NTextField::getFormattingCallback()
 {
     return callback;
@@ -478,7 +580,7 @@ NTextFieldFormattingCallback NTextField::getFormattingCallback()
 
 void NTextField::setFormattingCallback(NTextFieldFormattingCallback call)
 {
-    call = callback;
+    callback = call;
 }
 
 int NTextField::getCursorStart()
