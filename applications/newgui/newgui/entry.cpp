@@ -113,7 +113,7 @@ int formattingCallback(NTextField* t, int pos)
     static uint32_t colour;
     static int i = -1;
 
-    if (pos != i + 1 || i == -1) {
+    if (pos != i + 1 || i == -1 || 1) {
         i = 0;
         underline = false;
         colour = 0x000000;
