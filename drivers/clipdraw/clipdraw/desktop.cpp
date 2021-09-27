@@ -180,7 +180,6 @@ void NiShutdownHandler(void* v)
 			if ((x + y) & 1) mouseDesktop->ctxt->screen->putpixel(x, y, 0);
 		}
 	}
-	sleep(1);
 }
 
 void NIDesktop::refreshWindowBounds(NIWindow* window, int start, int end)

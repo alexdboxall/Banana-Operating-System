@@ -73,6 +73,7 @@ protected:
 	uint32_t selBgCol;
 	uint32_t cursorCol;
 
+	bool bold;
 	bool underline;
 	uint8_t underlinePattern[4];
 	int underlineWidth;
@@ -110,6 +111,9 @@ public:
 
 	void setUnderline(int width, uint8_t* pattern);
 	int getUnderline(uint8_t* pattern);
+
+	void enableBold(bool on = true);
+	void disableBold();
 
 	void enableUnderline(bool on = true);
 	void disableUnderline();

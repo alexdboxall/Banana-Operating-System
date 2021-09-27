@@ -21,7 +21,9 @@ int textFieldEngine(NRegion* _self, int posi, int* xout, int* yout)
     self->invalidating = true;
 
     if (posi == -1) {
-        self->fillRect(0, 0, self->width, self->height, self->bgCol);
+        int ml = self->marginLeft ? self->marginLeft - 1 : 0;
+        int mt = self->marginTop ? self->marginTop - 1 : 0;
+        self->fillRect(ml, mt, self->width - ml - self->marginRight, self->height - mt - self->marginTop, self->bgCol);
     }
 
     char x[2];
@@ -73,6 +75,9 @@ int textFieldEngine(NRegion* _self, int posi, int* xout, int* yout)
         if (self->text[i] != '\n') {
             x[0] = self->text[i];
             Context_bound_text(self->ctxt, x, &xplus, &yheight);
+            if (self->bold && xplus) {
+                ++xplus;
+            }
             if (self->text[i] == '\t') {
                 xplus = ((xpos + self->tabStopPixels + 1) / self->tabStopPixels) * self->tabStopPixels - xpos;
             }
@@ -171,7 +176,9 @@ int textFieldEngine(NRegion* _self, int posi, int* xout, int* yout)
                 if (self->curEnd == i) selectionOn ^= 1;
                 if (selectionOn) self->fillRect(xpos - self->scrollX + self->marginLeft, ypos - self->scrollY - 1 + self->marginTop, xplus, yheight, self->selBgCol);
                 self->drawBasicText(xpos - self->scrollX + self->marginLeft, ypos - self->scrollY + self->marginTop, selectionOn ? self->selFgCol : self->fgCol, x);
-            
+                if (self->bold) {
+                    self->drawBasicText(xpos - self->scrollX + self->marginLeft + 1, ypos - self->scrollY + self->marginTop, selectionOn ? self->selFgCol : self->fgCol, x);
+                }
                 if (self->underline) {
                     for (int jy = 0; jy < 4; ++jy) {
                         for (int jx = 0; jx < xplus; ++jx) {
@@ -258,11 +265,12 @@ NTextField::NTextField(int x, int y, int w, int h, NRegion* rgn, const char* tex
 
 void NTextField::normaliseCursorPosition()
 {
+retry:
     for (int i = 0; i < poisonHiddenDataLength + 2; ++i) {
         if (text[curStart + i] == poisonCharacter) break;
         if (text[curStart + i] == poisonCharacterReverse) {
             curStart += i + 1;
-            break;
+            goto retry;
         }
     }
 
@@ -270,23 +278,23 @@ void NTextField::normaliseCursorPosition()
         if (text[curEnd + i] == poisonCharacter) break;
         if (text[curEnd + i] == poisonCharacterReverse) {
             curEnd += i + 1;
-            break;
+            goto retry;
         }
     }
 
     for (int i = 0; i < poisonHiddenDataLength + 2; ++i) {
         if (text[curStart - i] == poisonCharacterReverse) break;
         if (text[curStart - i] == poisonCharacter) {
-            curStart -= i;
-            break;
+            curStart -= i + 1;
+            goto retry;
         }
     }
 
     for (int i = 0; i < poisonHiddenDataLength + 2; ++i) {
-        if (text[curEnd - i] == poisonCharacter) break;
-        if (text[curEnd - i] == poisonCharacterReverse) {
-            curEnd -= i;
-            break;
+        if (text[curEnd - i] == poisonCharacterReverse) break;
+        if (text[curEnd - i] == poisonCharacter) {
+            curEnd -= i + 1;
+            goto retry;
         }
     }
 }
@@ -308,19 +316,15 @@ void NTextField::insert(int pos, char* inserted)
 
 void NTextField::incCurEnd()
 {
-    if (text[curEnd] == poisonCharacter) {
+    if (text[++curEnd] == poisonCharacter) {
         curEnd += poisonHiddenDataLength + 2;
-    } else {
-        ++curEnd;
     }
 }
 
 void NTextField::incCurStart()
 {
-    if (text[curStart] == poisonCharacter) {
+    if (text[++curStart] == poisonCharacter) {
         curStart += poisonHiddenDataLength + 2;
-    } else {
-        ++curStart;
     }
 }
 
@@ -379,8 +383,9 @@ void textfieldKeyHandler(Window* w, void* self_, KeyStates key)
             int x2, y2;
             int y3 = -1;
             self->getPositionFromIndex(self->curEnd, &x1, &y1);
-            for (int i = self->curEnd; i != -1; --i) {
-                self->curEnd = i;
+            for (int i = self->curEnd; i != -1;) {
+                self->decCurEnd();
+                i = self->curEnd;
                 self->getPositionFromIndex(i, &x2, &y2);
                 if (y2 < y1) {
                     if (y3 == -1) y3 = y2;
@@ -405,8 +410,9 @@ void textfieldKeyHandler(Window* w, void* self_, KeyStates key)
             int x2, y2;
             int y3 = -1;
             self->getPositionFromIndex(self->curEnd, &x1, &y1);
-            for (int i = self->curEnd; self->text[i]; ++i) {
-                self->curEnd = i;
+            for (int i = self->curEnd; self->text[i];) {
+                self->incCurEnd();
+                i = self->curEnd;
                 self->getPositionFromIndex(i, &x2, &y2);
                 if (y2 > y1) {
                     if (y3 == -1) y3 = y2;
@@ -613,6 +619,16 @@ void NTextField::setForegroundColour(uint32_t col)
 uint32_t NTextField::getForegroundColour()
 {
     return fgCol;
+}
+
+void NTextField::enableBold(bool on)
+{
+    bold = on;
+}
+
+void NTextField::disableBold()
+{
+    enableBold(false);
 }
 
 void NTextField::enableUnderline(bool on)
