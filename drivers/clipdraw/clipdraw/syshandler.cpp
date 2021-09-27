@@ -3,6 +3,7 @@
 #include "syshandler.hpp"
 #include "main.hpp"
 #include "window.hpp"
+#include <hal/keybrd.hpp>
 
 extern "C" {
 #include "userlink.h"
@@ -14,10 +15,13 @@ extern "C" {
 extern void monikaBsod(char*);
 extern void (*guiPanicHandler)(char* message);
 extern uint64_t(*systemCallHandlers[])(regs* r);
+extern void (*guiKeyboardHandler) (KeyboardToken kt, bool* keystates);
+extern void NiKeyhandler(KeyboardToken kt, bool* keystates);
 
 void NiInstallSysHooks()
 {
 	guiPanicHandler = monikaBsod;
+	guiKeyboardHandler = NiKeyhandler;
 	systemCallHandlers[(int) SystemCallNumber::WSBE] = NiSystemCallHandler;
 }
 

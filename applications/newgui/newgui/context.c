@@ -550,7 +550,7 @@ void Context_draw_bitmap(Context* context, uint32_t* data, int x, int y, int w, 
 void Context_draw_text(Context* context, char* string, int x, int y, uint32_t color) {
 
     for( ; *string; x += 8)
-        Context_draw_char(context, *(string++), x, y, color);
+        Context_draw_char(context, *(string++), x, y + 6, color);
 }
 
 

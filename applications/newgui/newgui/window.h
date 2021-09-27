@@ -22,11 +22,23 @@
 //Forward struct declaration for function type declarations
 struct Window_struct;
 
+
+typedef struct KeyStates
+{
+    int key;
+    int ctrl;
+    int alt;
+    int shift;
+
+} KeyStates;
+
+
 //Callback function type declarations
 typedef void (*WindowPaintHandler)(struct Window_struct*, void*);
 typedef void (*WindowMousedownHandler)(struct Window_struct*, void*, int, int);
 typedef void (*WindowMousemoveHandler)(struct Window_struct*, void*, int, int);
 typedef void (*WindowMouseleaveHandler)(struct Window_struct*, void*);
+typedef void (*WindowKeydownHandler)(struct Window_struct*, void*, KeyStates);
 
 typedef struct Window_struct {  
     struct Window_struct* parent;
@@ -48,6 +60,7 @@ typedef struct Window_struct {
     WindowMousedownHandler mouseup_function;
     WindowMousemoveHandler mousemove_function;
     WindowMouseleaveHandler mouseleave_function;
+    WindowKeydownHandler keydown_function;
     char* title;
 } Window;
 
@@ -59,6 +72,7 @@ int Window_init(Window* window, int16_t x, int16_t y, uint16_t width,
 int Window_screen_x(Window* window);
 int Window_screen_y(Window* window);                   
 void Window_paint(Window* window, List* dirty_regions, uint8_t paint_children);
+void Window_process_key(Window* window, KeyStates key);
 void Window_process_mouse(Window* window, uint16_t mouse_x,
                           uint16_t mouse_y, uint8_t mouse_buttons);
 void Window_paint_handler(Window* window, void*);

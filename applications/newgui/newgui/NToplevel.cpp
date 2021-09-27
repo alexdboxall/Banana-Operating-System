@@ -175,6 +175,50 @@ void NTopLevel::sync() {
     win->height = h;
 }
 
+void NTopLevel::defaultEventHandler(NiEvent evnt)
+{
+    switch (evnt.type) {
+    case EVENT_TYPE_MOUSE_MOVE:
+    case EVENT_TYPE_MOUSE_DRAG:
+    case EVENT_TYPE_MOUSE_DOWN:
+    case EVENT_TYPE_MOUSE_UP:
+    {
+        processMouse(evnt);
+        repaintFlush();
+        break;
+    }
+
+    case EVENT_TYPE_KEYDOWN:
+    {
+        processKeyboard(evnt);
+        repaintFlush();
+        break;
+    }
+
+    case EVENT_TYPE_NULL:
+        break;
+
+    default:
+        if (evnt.needsRedraw) repaint();
+        break;
+    }
+}
+
+void NTopLevel::processKeyboard(KeyStates key)
+{
+    Window_process_key(win, key);
+}
+
+void NTopLevel::processKeyboard(NiEvent evnt)
+{
+    KeyStates ks;
+    ks.key = evnt.key;
+    ks.ctrl = evnt.ctrl;
+    ks.alt = evnt.alt;
+    ks.shift = evnt.shift;
+    processKeyboard(ks);
+}
+
 void NTopLevel::processMouse(int mouseX, int mouseY, int mouseB)
 {
     Window_process_mouse(win, mouseX, mouseY, mouseB);

@@ -13,7 +13,8 @@
 #define EVENT_TYPE_MOUSE_DRAG	5
 #define EVENT_TYPE_MOUSE_DOWN	6
 #define EVENT_TYPE_MOUSE_UP		7
-
+#define EVENT_TYPE_KEYDOWN		8
+#define EVENT_TYPE_KEYUP		9
 
 #define WIN_MAX_FLAG_DWORDS		1
 
@@ -34,12 +35,17 @@ typedef struct NiEvent {
 	void* krnlWindow;
 
 	int mouseButtons : 10;
-	int type : 21;
+	int ctrl : 1;
+	int alt : 1;
+	int shift : 1;
+	int type : 18;
 	int needsRedraw : 1;
 
 	int16_t mouseX;
 	int16_t mouseY;
 	int16_t x, y, w, h;
+
+	uint16_t key;
 
 } NiEvent; 
 

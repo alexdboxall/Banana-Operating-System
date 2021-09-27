@@ -29,10 +29,11 @@ private:
 
 
 protected:
-	List<NIWindow*>* head;
 	NIContext* ctxt;
 
 public:
+	List<NIWindow*>* head;
+	
 	int mouseX;
 	int mouseY;
 	int mouseButtons;

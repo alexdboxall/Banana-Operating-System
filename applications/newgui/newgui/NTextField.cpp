@@ -13,15 +13,17 @@
 #include <string.h>
 #include <stdlib.h>
 
-int standardTextFieldPainter(NRegion* _self)
+int textFieldEngine(NRegion* _self, int posi, int* xout, int* yout)
 {
     //this function is arcane black magic
 
     NTextField* self = (NTextField*) _self;
     self->invalidating = true;
 
-    self->fillRect(0, 0, self->width, self->height, 0xFFFFFF);
-   
+    if (posi == -1) {
+        self->fillRect(0, 0, self->width, self->height, self->bgCol);
+    }
+
     char x[2];
     x[1] = 0;
 
@@ -38,7 +40,7 @@ int standardTextFieldPainter(NRegion* _self)
 
     int justifyScalePer256 = 256;
     int justifyLeftovers = 0;
-    
+
     bool selectionOn = false;
     int stDrawSpot = 0;
 
@@ -55,18 +57,21 @@ int standardTextFieldPainter(NRegion* _self)
             canSkipSpace = false;
         }
         if (self->callback) {
-            //self->callback(self, i);
+            self->callback(self, i);
         }
         if (self->text[i] == ' ' && !drawMode && self->wrapMode == TextWrap::Word) {
             prevSpaceI = i;
             prevSpaceXPos = xpos;
         }
-        
+
         int effectiveWidth = self->width - self->marginLeft - self->marginRight;
 
         if (self->text[i] != '\n') {
             x[0] = self->text[i];
             Context_bound_text(self->ctxt, x, &xplus, &yheight);
+            if (self->text[i] == '\t') {
+                xplus = ((xpos + self->tabStopPixels + 1) / self->tabStopPixels) * self->tabStopPixels - xpos;
+            }
             xplus = (xplus * self->charSpacingPercent + 50) / 100;
             if (self->alignment == TextAlignment::Justify && drawMode) {
                 int temp = (xplus * justifyScalePer256 + justifyLeftovers) / 256;
@@ -91,6 +96,21 @@ int standardTextFieldPainter(NRegion* _self)
 
         if (self->text[i] == '\n' || wrapPoint || !self->text[i + 1]) {
             if (drawMode || prevNewline) {
+                int xx = xpos - self->scrollX + self->marginLeft;
+                if (self->alignment == TextAlignment::Centre && prevNewline) xx = effectiveWidth / 2 + self->marginLeft;
+                if (self->alignment == TextAlignment::Right) xx = effectiveWidth + self->marginLeft;
+                if (posi == -1) {
+                    if (self->curStart == i && self->curEnd == i) self->fillRect(xx - 1, ypos - self->scrollY + self->marginTop, 1, lastBiggest, self->cursorCol);
+                    if (self->curStart == i) selectionOn ^= 1;
+                    if (self->curEnd == i) selectionOn ^= 1;
+                    if (selectionOn) self->fillRect(xx, ypos - self->scrollY - 1 + self->marginTop, 1, lastBiggest, self->selBgCol);
+                } else if (i == posi) {
+                    *xout = xx;
+                    *yout = ypos - self->scrollY + self->marginTop;
+                    self->invalidating = false;
+                    return 0;
+                }
+
                 xpos = 0;
                 ypos += lastBiggest;
                 prevNewline = true;
@@ -110,14 +130,14 @@ int standardTextFieldPainter(NRegion* _self)
 
                 } else if (self->alignment == TextAlignment::Centre) {
                     xpos = ((self->width - self->marginLeft - self->marginRight) - xpos) / 2;
-                
+
                 } else if (self->alignment == TextAlignment::Justify) {
                     if (xpos == 0 || !wrapPoint) {
                         justifyScalePer256 = 256;
                     } else {
                         justifyScalePer256 = (effectiveWidth * 256 + 128) / xpos;
                     }
-                    
+
                     justifyLeftovers = 0;
                     xpos = 0;
                 }
@@ -141,19 +161,29 @@ int standardTextFieldPainter(NRegion* _self)
         yheight = (yheight * self->lineSpacingTenths + 5) / 10;
 
         if (drawMode) {
-            if (self->curStart == i && self->curEnd == i) {
-                self->fillRect(xpos - self->scrollX - 1 + self->marginLeft, ypos - self->scrollY + self->marginTop, 1, yheight, self->cursorCol);
+            if (posi == -1) {
+                if (self->curStart == i && self->curEnd == i) self->fillRect(xpos - self->scrollX - 1 + self->marginLeft, ypos - self->scrollY + self->marginTop, 1, yheight, self->cursorCol);
+                if (self->curStart == i) selectionOn ^= 1;
+                if (self->curEnd == i) selectionOn ^= 1;
+                if (selectionOn) self->fillRect(xpos - self->scrollX + self->marginLeft, ypos - self->scrollY - 1 + self->marginTop, xplus, yheight, self->selBgCol);
+                self->drawBasicText(xpos - self->scrollX + self->marginLeft, ypos - self->scrollY + self->marginTop, selectionOn ? self->selFgCol : self->fgCol, x);
+            
+                if (self->underline) {
+                    for (int jy = 0; jy < 4; ++jy) {
+                        for (int jx = 0; jx < xplus; ++jx) {
+                            if ((self->underlinePattern[jy] >> ((xpos - self->scrollX + self->marginLeft + jx) % self->underlineWidth)) & 1) {
+                                self->drawRect(xpos - self->scrollX + self->marginLeft + jx, ypos - self->scrollY + self->marginTop + jy + yheight, 1, 1, self->underlineCol);
+                            }
+                        }
+                    }
+                }
+            
+            } else if (i == posi) {
+                *xout = xpos - self->scrollX + self->marginLeft;
+                *yout = ypos - self->scrollY + self->marginTop;
+                self->invalidating = false;
+                return 0;
             }
-            if (self->curStart == i) {
-                selectionOn ^= 1;
-            }
-            if (self->curEnd == i) {
-                selectionOn ^= 1;
-            }
-            if (selectionOn) {
-                self->fillRect(xpos - self->scrollX + self->marginLeft, ypos - self->scrollY - 1 + self->marginTop, xplus, yheight, self->selBgCol);
-            }
-            self->drawBasicText(xpos - self->scrollX + self->marginLeft, ypos - self->scrollY + self->marginTop, selectionOn ? self->selFgCol : self->fgCol, x);
         }
         xpos += xplus;
 
@@ -161,20 +191,44 @@ int standardTextFieldPainter(NRegion* _self)
             lastBiggest = yheight;
         }
     }
-   
-    self->fillRect(0, 0, self->width, self->marginTop, 0xFFFFFF);
-    self->fillRect(0, 0, self->marginLeft, self->height, 0xFFFFFF);
-    self->fillRect(0, self->height - self->marginBottom, self->width, self->marginBottom, 0xFFFFFF);
-    self->fillRect(self->width - self->marginRight, 0, self->marginRight, self->height, 0xFFFFFF);
 
+    if (posi == -1) {
+        self->fillRect(0, 0, self->width, self->marginTop, self->bgCol);
+        self->fillRect(0, 0, self->marginLeft == 0 ? 0 : self->marginLeft - 1, self->height, self->bgCol);
+        self->fillRect(0, self->height - self->marginBottom, self->width, self->marginBottom, self->bgCol);
+        self->fillRect(self->width - self->marginRight, 0, self->marginRight, self->height, self->bgCol);
+    }
     self->invalidating = false;
-    return 0;
+    return posi == -1 ? 0 : -1;
+}
+
+void NTextField::getPositionFromIndex(int index, int* x, int* y)
+{
+    textFieldEngine(this, index, x, y);
+}
+
+int standardTextFieldPainter(NRegion* _self)
+{
+    return textFieldEngine(_self, -1, 0, 0);
 }
 
 void NTextField::setTextWrap(TextWrap wrap)
 {
     wrapMode = wrap;
     invalidate();
+}
+
+void NTextField::setUnderline(int width, uint8_t* pattern)
+{
+    memcpy(underlinePattern, pattern, sizeof(underlinePattern));
+    underlineWidth = width;
+    invalidate();
+}
+
+int NTextField::getUnderline(uint8_t* pattern)
+{
+    memcpy(pattern, underlinePattern, sizeof(underlinePattern));
+    return underlineWidth;
 }
 
 TextWrap NTextField::getTextWrap()
@@ -198,11 +252,182 @@ NTextField::NTextField(int x, int y, int w, int h, NRegion* rgn, const char* tex
 
 }
 
+void textfieldKeyHandler(Window* w, void* self_, KeyStates key)
+{
+    NTextField* self = (NTextField*) self_;
+    int msgkey = key.key;
+    bool msgctrl = key.ctrl;
+    bool msgshift = key.shift;
+
+    if (msgkey == (int) Left) {
+        self->keepBlinkOneExtraTick = true;
+        self->blinkState = true;
+
+        if (msgctrl) {
+            if (msgshift) {
+                if (self->curEnd) self->curEnd = 0;
+
+            } else {
+                self->curStart = 0;
+                self->curEnd = 0;
+            }
+
+        } else {
+            if (msgshift) {
+                if (self->curEnd) self->curEnd--;
+
+            } else {
+                if (self->curEnd) self->curEnd--;
+                self->curStart = self->curEnd;
+            }
+        }
+
+    } else if (msgkey == (int) Up) {
+        self->keepBlinkOneExtraTick = true;
+        self->blinkState = true;
+
+        if (msgctrl) {
+            
+        } else {
+            int x1, y1;
+            int x2, y2;
+            int y3 = -1;
+            self->getPositionFromIndex(self->curEnd, &x1, &y1);
+            for (int i = self->curEnd; i != -1; --i) {
+                self->curEnd = i;
+                self->getPositionFromIndex(i, &x2, &y2);
+                if (y2 < y1) {
+                    if (y3 == -1) y3 = y2;
+                    if (y2 != y3) {
+                        self->curEnd++;
+                        break;
+                    }
+                    if (x2 <= x1) break;
+                }
+            }
+            if (!msgshift) self->curStart = self->curEnd;
+        }
+
+    } else if (msgkey == (int) Down) {
+        self->keepBlinkOneExtraTick = true;
+        self->blinkState = true;
+
+        if (msgctrl) {
+
+        } else {
+            int x1, y1;
+            int x2, y2;
+            int y3 = -1;
+            self->getPositionFromIndex(self->curEnd, &x1, &y1);
+            for (int i = self->curEnd; self->text[i]; ++i) {
+                self->curEnd = i;
+                self->getPositionFromIndex(i, &x2, &y2);
+                if (y2 > y1) {
+                    if (y3 == -1) y3 = y2;
+                    if (y2 != y3) {
+                        self->curEnd--;
+                        break;
+                    }
+                    if (x2 >= x1) break;
+                }
+            }
+            if (!msgshift) self->curStart = self->curEnd;
+        }
+
+    } else if (msgkey == (int) Right) {
+        self->keepBlinkOneExtraTick = true;
+        self->blinkState = true;
+
+        if (msgctrl) {
+            if (msgshift) {
+                while (self->curEnd < strlen(self->text)) self->curEnd++;
+
+            } else {
+                self->curEnd = strlen(self->text);
+                self->curStart = strlen(self->text);
+            }
+
+        } else {
+            if (msgshift) {
+                if (self->curEnd < strlen(self->text)) self->curEnd++;
+
+            } else {
+                if (self->curEnd < strlen(self->text)) self->curEnd++;
+                self->curStart = self->curEnd;
+            }
+        }
+
+    } else if (((msgkey >= ' ' && msgkey < 127) || msgkey == '\b' || msgkey == '\n' || msgkey == '\t') && !msgctrl) {
+        self->keepBlinkOneExtraTick = true;
+        self->blinkState = true;
+
+        while (strlen(self->text) + 4 > self->textLength) {
+            self->textLength *= 2;
+            self->text = (char*) realloc(self->text, self->textLength);
+        }
+
+        if (self->curEnd < self->curStart) {
+            int temp = self->curEnd;
+            self->curEnd = self->curStart;
+            self->curStart = temp;
+        }
+
+        char* txt = (char*) calloc(16 + strlen(self->text), 1);
+
+        strcpy(txt, self->text);
+
+        while (self->curEnd > self->curStart) {
+            self->curEnd -= 1;
+            int rem = self->curEnd;
+            int len = strlen(txt);
+            int i;
+            for (i = rem; i < len - 1; i++) txt[i] = txt[i + 1];
+            if (i < len) txt[i] = '\0';
+        }
+
+        if (msgkey == '\b' && self->curEnd) {
+            self->curEnd -= 1;
+            int rem = self->curEnd;
+            int len = strlen(txt);
+            int i;
+            for (i = rem; i < len - 1; i++) txt[i] = txt[i + 1];
+            if (i < len) txt[i] = '\0';
+
+        } else {
+            memmove(txt + self->curEnd + 1, txt + self->curEnd, strlen(txt + self->curEnd));
+            txt[self->curStart] = msgkey;
+            self->curEnd++;
+        }
+
+        self->curStart = self->curEnd;
+
+        strcpy(self->text, txt);
+        free(txt);
+
+    } else if (msgctrl && (msgkey == 'a' || msgkey == 'A') && !msgshift) {
+        //Ctrl+A
+
+        self->curStart = 0;
+        while (self->curEnd < strlen(self->text)) self->curEnd++;
+        self->keepBlinkOneExtraTick = true;
+        self->blinkState = true;
+
+    } else {
+        //don't repaint
+        return;
+    }
+
+    self->invalidate();
+
+}
+
 NTextField::NTextField(int x, int y, int w, int h, Context* context, const char* _text) :
 	NRegion(x, y, w, h, context)
 {
-	text = (char*) malloc(strlen(_text) + 1);
-	strcpy(text, _text);
+    textLength = 64;
+    text = (char*) calloc(textLength, 1);
+
+    setText(_text);
 
     scrollX = 0;
     scrollY = 0;
@@ -218,9 +443,20 @@ NTextField::NTextField(int x, int y, int w, int h, Context* context, const char*
     callback = nullptr;
 
     fgCol = 0x000000;
+    bgCol = 0xFFFFFF;
     cursorCol = 0x000000;
     selFgCol = 0xFFFFFF;
     selBgCol = 0x000080;
+    underlineCol = 0x000000;
+
+    underline = false;
+    underlinePattern[0] = 0;
+    underlinePattern[1] = 1;
+    underlinePattern[2] = 0;
+    underlinePattern[3] = 0;
+    underlineWidth = 1;
+
+    tabStopPixels = 64;     //cannot be zero!!
 
     marginTop = 4;
     marginBottom = 4;
@@ -229,6 +465,8 @@ NTextField::NTextField(int x, int y, int w, int h, Context* context, const char*
 
     curStart = 3;
     curEnd = 36;
+
+    win->keydown_function = textfieldKeyHandler;
 
 	paintHandler = standardTextFieldPainter;
 }
@@ -243,6 +481,27 @@ void NTextField::setFormattingCallback(NTextFieldFormattingCallback call)
     call = callback;
 }
 
+int NTextField::getCursorStart()
+{
+    return curStart;
+}
+
+int NTextField::getCursorEnd()
+{
+    return curEnd;
+}
+
+void NTextField::setCursorPosition(int pos)
+{
+    selectText(pos, pos);
+}
+
+void NTextField::selectText(int start, int end)
+{
+    curStart = start;
+    curEnd = end;
+}
+
 void NTextField::setForegroundColour(uint32_t col)
 {
     fgCol = col;
@@ -252,6 +511,69 @@ void NTextField::setForegroundColour(uint32_t col)
 uint32_t NTextField::getForegroundColour()
 {
     return fgCol;
+}
+
+void NTextField::enableUnderline(bool on)
+{
+    underline = on;
+}
+
+void NTextField::disableUnderline()
+{
+    enableUnderline(false);
+}
+
+void NTextField::setBackgroundColour(uint32_t col)
+{
+    bgCol = col;
+    invalidate();
+}
+
+uint32_t NTextField::getBackgroundColour()
+{
+    return bgCol;
+}
+
+void NTextField::setHighlightBackgroundColour(uint32_t col)
+{
+    selBgCol = col;
+}
+
+uint32_t NTextField::getHighlightBackgroundColour()
+{
+    return selBgCol;
+}
+
+void NTextField::setHighlightForegroundColour(uint32_t col)
+{
+    selFgCol = col;
+}
+
+uint32_t NTextField::getHighlightForegroundColour()
+{
+    return selFgCol;
+}
+
+void NTextField::setCursorColour(uint32_t col)
+{
+    cursorCol = col;
+    invalidate();
+}
+
+uint32_t NTextField::getCursorColour()
+{
+    return cursorCol;
+}
+
+void NTextField::setUnderlineColour(uint32_t col)
+{
+    underlineCol = col;
+    invalidate();
+}
+
+uint32_t NTextField::getUnderlineColour()
+{
+    return underlineCol;
 }
 
 void NTextField::setAlignment(TextAlignment align)
@@ -272,9 +594,14 @@ char* NTextField::getText()
 
 void NTextField::setText(const char* _text)
 {
-    if (text) free(text);
-    text = (char*) malloc(strlen(_text) + 1);
+    while (strlen(_text) + 16 > textLength) {
+        textLength *= 2;
+        text = (char*) realloc(text, textLength);
+    }
+
     strcpy(text, _text);
+    curStart = strlen(text);
+    curEnd = strlen(text);
 
     invalidate();
 }

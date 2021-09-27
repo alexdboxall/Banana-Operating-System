@@ -39,8 +39,17 @@ extern "C" int appMain() {
 
     NTopLevel* win = new NTopLevel("My Test Window", 600, 400);
        
+    uint8_t underlineStyle[] = {
+        0b0010,
+        0b0101,
+        0b1000,
+        0b0000,
+    };
     txtf = new NTextField(15, 90, 570, 295, win, "abc def\nThis is some random text.\nIt has some newlines in it too...\n\nThat was two newlines!\n\n\nThis is now going to be a test of the text wrap. Hopefully, this line should wrap onto the next line, and it should be justified. But, the last line should just be left aligned as usual, so it doesn't look too weird.\nThis should also be left aligned.\nTesting just one more thing..., which is the\n space after a newline thing.\n");
     txtf->setTextWrap(TextWrap::Word);
+    txtf->setUnderlineColour(0xFF0000);
+    txtf->setUnderline(4, underlineStyle);
+    txtf->enableUnderline();
     win->add(txtf);
 
     {
@@ -191,21 +200,9 @@ extern "C" int appMain() {
         NiEvent evnt = win->process();
 
         switch (evnt.type) {
-        case EVENT_TYPE_MOUSE_MOVE:
-        case EVENT_TYPE_MOUSE_DRAG:
-        case EVENT_TYPE_MOUSE_DOWN:
-        case EVENT_TYPE_MOUSE_UP:
-        {
-            win->processMouse(evnt);
-            win->repaintFlush();
-            break;
-        }
-
-        case EVENT_TYPE_NULL:
-            break;
 
         default:
-            if (evnt.needsRedraw) win->repaint();
+            win->defaultEventHandler(evnt);
             break;
         }
     }

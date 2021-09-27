@@ -9,6 +9,10 @@
 #ifndef NRegion_hpp
 #define NRegion_hpp
 
+#define _USER_WSBE_WANT_KEYBRD_
+#include "D:/Users/Alex/Desktop/Banana/kernel/hal/keybrd.hpp"
+#undef _USER_WSBE_WANT_KEYBRD_
+
 extern "C" {
     #include "context.h"
     #include "window.h"

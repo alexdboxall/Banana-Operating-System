@@ -4,6 +4,7 @@
 #include <core/kheap.hpp>
 #include <krnl/hal.hpp>
 #include <fs/vfs.hpp>
+#include <hal/keybrd.hpp>
 
 extern "C" {
 #include "userlink.h"
@@ -45,6 +46,24 @@ NiEvent NiCreateEvent(NIWindow* win, int type, bool redraw)
 	evnt.mouseY = mouseDesktop->mouseY;
 	evnt.mouseButtons = mouseDesktop->mouseButtons;
 	return evnt;
+}
+
+void NiKeyhandler(KeyboardToken kt, bool* keystates)
+{
+	auto h = mouseDesktop->head->getHead();
+	if (!h) return;
+
+	NIWindow* win = h->getValue();
+	if (!win) return;
+
+	NiEvent evnt = NiCreateEvent(win, kt.release ? EVENT_TYPE_KEYUP : EVENT_TYPE_KEYDOWN, false);
+	evnt.key = (uint16_t) kt.halScancode;
+
+	evnt.ctrl = (keystates[(int) KeyboardSpecialKeys::Ctrl]);
+	evnt.shift = (keystates[(int) KeyboardSpecialKeys::Shift]);
+	evnt.alt = (keystates[(int) KeyboardSpecialKeys::Alt]);
+
+	win->postEvent(evnt);
 }
 
 void NiHandleMouse(int xdelta, int ydelta, int buttons, int z)

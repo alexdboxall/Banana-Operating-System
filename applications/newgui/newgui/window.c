@@ -57,6 +57,7 @@ int Window_init(Window* window, int16_t x, int16_t y, uint16_t width,
     window->mousedown_function = 0;
     window->mousemove_function = 0;
     window->mouseup_function = 0;
+    window->keydown_function = 0;
     window->mouseleave_function = 0;
     window->active_child = (Window*)0;
     window->title = (char*)0;
@@ -541,6 +542,18 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
     }
 
     window->last_button_state = mouse_buttons;
+}
+
+void Window_process_key(Window* window, KeyStates key)
+{
+    if (window->keydown_function) {
+        window->keydown_function(window, window->paint_function_args, key);
+    }
+
+    for (int i = window->children->count - 1; i >= 0; i--) {
+        Window* child = (Window*) List_get_at(window->children, i);
+        Window_process_key(child, key);
+    }
 }
 
 //The default handler for window mouse events doesn't do anything

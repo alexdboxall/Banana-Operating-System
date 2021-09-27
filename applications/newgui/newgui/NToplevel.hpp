@@ -62,6 +62,10 @@ public:
     void initialise();
     void processMouse(int mouseX, int mouseY, int mouseB);
     void processMouse(NiEvent evnt);
+    void processKeyboard(KeyStates ks);
+    void processKeyboard(NiEvent evnt);
+
+    void defaultEventHandler(NiEvent evnt);
     
     void add(NRegion* rgn);
 };

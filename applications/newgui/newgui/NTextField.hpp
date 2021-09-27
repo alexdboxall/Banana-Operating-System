@@ -33,11 +33,23 @@ typedef int (*NTextFieldFormattingCallback)(NTextField*, int);
 class NTextField : public NRegion
 {
 protected:
-	friend int standardTextFieldPainter(NRegion* self);
+	friend int textFieldEngine(NRegion* _self, int posi, int* x, int* y);
+	friend void textfieldKeyHandler(Window* w, void* self_, KeyStates key);
+
+	void getPositionFromIndex(int index, int* x, int* y);
 
 	char* text;
+	int textLength;
+
 	int scrollX;
 	int scrollY;
+
+	int lastKnownCursorXPos;
+
+	int tabStopPixels;
+
+	bool keepBlinkOneExtraTick;
+	bool blinkState;
 
 	int lineSpacingTenths;
 	int charSpacingPercent;
@@ -55,9 +67,15 @@ protected:
 	int curEnd;
 
 	uint32_t fgCol;
+	uint32_t bgCol;
+	uint32_t underlineCol;
 	uint32_t selFgCol;
 	uint32_t selBgCol;
 	uint32_t cursorCol;
+
+	bool underline;
+	uint8_t underlinePattern[4];
+	int underlineWidth;
 
 	NTextFieldFormattingCallback callback;
 
@@ -68,6 +86,17 @@ public:
 	NTextField(int x, int y, int w, int h, NTopLevel* tl, const char* text = "");
 	NTextField(int x, int y, int w, int h, NRegion* rgn, const char* text = "");
 	~NTextField();
+
+	int getCursorStart();
+	int getCursorEnd();
+	void setCursorPosition(int pos);
+	void selectText(int start, int end);
+
+	void setUnderline(int width, uint8_t* pattern);
+	int getUnderline(uint8_t* pattern);
+
+	void enableUnderline(bool on = true);
+	void disableUnderline();
 
 	void setTextWrap(TextWrap wrap);
 	TextWrap getTextWrap();
@@ -81,7 +110,18 @@ public:
 	void setFormattingCallback(NTextFieldFormattingCallback call);
 
 	void setForegroundColour(uint32_t col);
+	void setBackgroundColour(uint32_t col);
+	void setUnderlineColour(uint32_t col);
+	void setHighlightForegroundColour(uint32_t col);
+	void setHighlightBackgroundColour(uint32_t col);
+	void setCursorColour(uint32_t col);
+
 	uint32_t getForegroundColour();
+	uint32_t getBackgroundColour();
+	uint32_t getUnderlineColour();
+	uint32_t getHighlightForegroundColour();
+	uint32_t getHighlightBackgroundColour(); 
+	uint32_t getCursorColour();
 
 	char* getText();
 	void setText(const char* text);
