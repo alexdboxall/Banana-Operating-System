@@ -29,9 +29,9 @@ private:
 
 
 protected:
-	NIContext* ctxt;
 
 public:
+	NIContext* ctxt;
 	List<NIWindow*>* head;
 	
 	int mouseX;

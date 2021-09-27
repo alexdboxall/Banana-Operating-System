@@ -112,7 +112,7 @@ void main()
 	}	
 	setFgCol(TCLightGrey);
 	writeString("  Hold ESC for boot settings");
-	millisleep(750);
+	millisleep(1250);
 
 	char key = nonBlockingKeyboard();
 	bool fulldebug = false;

@@ -173,6 +173,15 @@ void NIDesktop::completeRefresh()
 	ctxt->screen->drawCursor(mouseX, mouseY, (uint32_t*) (___mouse_data + cursorOffset), 0);
 }
 
+void NiShutdownHandler(void* v)
+{
+	for (int y = 0; y < mouseDesktop->ctxt->screen->getHeight(); ++y) {
+		for (int x = 0; x < mouseDesktop->ctxt->screen->getWidth(); ++x) {
+			if ((x + y) & 1) mouseDesktop->ctxt->screen->putpixel(x, y, 0);
+		}
+	}
+	sleep(1);
+}
 
 void NIDesktop::refreshWindowBounds(NIWindow* window, int start, int end)
 {

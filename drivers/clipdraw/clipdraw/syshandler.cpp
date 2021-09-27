@@ -4,6 +4,7 @@
 #include "main.hpp"
 #include "window.hpp"
 #include <hal/keybrd.hpp>
+#include <krnl/atexit.hpp>
 
 extern "C" {
 #include "userlink.h"
@@ -17,9 +18,12 @@ extern void (*guiPanicHandler)(char* message);
 extern uint64_t(*systemCallHandlers[])(regs* r);
 extern void (*guiKeyboardHandler) (KeyboardToken kt, bool* keystates);
 extern void NiKeyhandler(KeyboardToken kt, bool* keystates);
+extern void NiShutdownHandler(void*);
 
 void NiInstallSysHooks()
 {
+	KeRegisterAtexit(NiShutdownHandler, nullptr);
+
 	guiPanicHandler = monikaBsod;
 	guiKeyboardHandler = NiKeyhandler;
 	systemCallHandlers[(int) SystemCallNumber::WSBE] = NiSystemCallHandler;
