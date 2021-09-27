@@ -13,6 +13,7 @@
 #define EXPORT __attribute__((__visibility__("default")))
 #define INLINE inline __attribute__((always_inline)) 
 
+#ifdef KERNEL_DEBUG
 //#ifdef KERNEL_DEBUG
 #define KDEBUG_PAUSE(msg) if (sysBootSettings & 2048) {\
 KeSetBootMessage(msg);\
