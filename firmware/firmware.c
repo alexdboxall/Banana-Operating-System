@@ -110,6 +110,7 @@ char blockingKeyboard()
 	if (c == '\r') c = '\n';
 	if (high == 0x48) return 1;
 	if (high == 0x50) return 2;
+	if (high == 0x01 && (in.eax & 0xFF) == 0x1B) return '\e';
 
 	return c;
 }
@@ -123,6 +124,7 @@ char nonBlockingKeyboard()
 	if (c == '\r') c = '\n';
 	if (high == 0x48) return 1;
 	if (high == 0x50) return 2;
+	if (high == 0x01 && (in.eax & 0xFF) == 0x1B) return '\e';
 
 	return c;
 }

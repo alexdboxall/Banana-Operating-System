@@ -103,16 +103,24 @@ void main()
 
 	setupAbstractionLibrary();
 
-	setFgCol(TCLightGrey);
-	writeString("\n  Starting Banana...");
 	setFgCol(TCBlack);
 	clearScreenToColour(TCBlack);
+	setFgCol(TCWhite);
+	writeString("\n  Starting Banana...");
+	for (int i = 0; i < 22; ++i) {
+		writeString("\n");
+	}	
+	setFgCol(TCLightGrey);
+	writeString("  Hold ESC for boot settings");
 	millisleep(750);
-	
+
 	char key = nonBlockingKeyboard();
 	bool fulldebug = false;
-	if (key == '6' || key == '7' || key == '8') {
+	if (key == '6' || key == '7' || key == '8' || key == '\e') {
 		setFgCol(TCLightGrey);
+		clearScreenToColour(TCBlack);
+	} else {
+		setFgCol(TCBlack);
 		clearScreenToColour(TCBlack);
 	}
 
@@ -121,7 +129,7 @@ void main()
 	readSector(s, (void*) secdata, getFirstHDD());
 	setBootData(secdata[0]);
 
-	if (key == '7' || key == '8') {
+	if (key == '7' || key == '8' || key == '\e') {
 		if (key == '8') {
 			fulldebug = true;
 			writeString(" PRESS ENTER (A)");
@@ -135,7 +143,7 @@ void main()
 		bool resetConfig = false;
 		do {
 			clearScreenToColour(TCBlack);
-			writeString("Banana Boot Options:\n\n [1] - Continue booting normally\n [2] - Boot in Safe Mode\n [3] - Reboot\n [4] - Shutdown\n [5] - Boot backup kernel\n\n");
+			writeString("\nBanana Boot Options:\n\n [1] - Continue booting normally\n [2] - Boot in Safe Mode\n [3] - Reboot\n [4] - Shutdown\n [5] - Boot backup kernel\n\n");
 
 			writeString(" [K] - PS/2 keyboard mode             ");
 			writeString(showLogs ? " set 2\n" : " set 1\n");
