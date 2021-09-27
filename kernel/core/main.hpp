@@ -5,12 +5,15 @@
 #include <stdarg.h>
 #include <stddef.h>
 
+#define KERNEL_DEBUG 
+
 #pragma GCC diagnostic ignored "-Wsized-deallocation"
 #pragma GCC diagnostic ignored "-Wattributes"
 
 #define EXPORT __attribute__((__visibility__("default")))
 #define INLINE inline __attribute__((always_inline)) 
 
+#ifdef KERNEL_DEBUG
 #define KDEBUG_PAUSE(msg) if (sysBootSettings & 2048) {\
 KeSetBootMessage(msg);\
 if (!(sysBootSettings & 128)) {\
@@ -24,6 +27,9 @@ if (!(sysBootSettings & 128)) {\
 	}\
 }\
 }
+#else
+#define KDEBUG_PAUSE(msg) do {;} while(0);
+#endif
 
 extern "C" void* malloc(size_t);
 extern "C" void  rfree(void*);
@@ -38,8 +44,6 @@ inline __attribute__((always_inline)) void operator delete(void* p)
 	rfree(p);
 }
 
-#define KERNEL_DEBUG 
-
 #ifdef THIRTYTWOBIT
 #define PLATFORM_ID 86
 #else
@@ -50,7 +54,7 @@ inline __attribute__((always_inline)) void operator delete(void* p)
 #define OS_VERSION_MIN 1
 #define OS_VERSION_PATCH1 0
 #define OS_VERSION_PATCH2 0
-#define OS_VERSION_STRING "Banana 0.1.3"
+#define OS_VERSION_STRING "Banana v0.1 Alpha"
 #define OS_COPYRIGHT "Copyright Alex Boxall 2016-2021. All rights reserved."
 
 constexpr size_t PHYS_RAM_TABLE_SIZE			= 0x513;

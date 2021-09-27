@@ -59,6 +59,10 @@ namespace Dbg
 
 	void kprintf(const char* format, ...)
 	{
+#ifndef KERNEL_DEBUG
+		return;
+#endif
+
 		if (sysBootSettings & 16) return;
 
 		va_list list;

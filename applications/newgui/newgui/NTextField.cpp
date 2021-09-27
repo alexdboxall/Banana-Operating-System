@@ -201,7 +201,7 @@ NTextField::NTextField(int x, int y, int w, int h, NRegion* rgn, const char* tex
 NTextField::NTextField(int x, int y, int w, int h, Context* context, const char* _text) :
 	NRegion(x, y, w, h, context)
 {
-	text = (char*) malloc(strlen(_text));
+	text = (char*) malloc(strlen(_text) + 1);
 	strcpy(text, _text);
 
     scrollX = 0;
@@ -273,7 +273,7 @@ char* NTextField::getText()
 void NTextField::setText(const char* _text)
 {
     if (text) free(text);
-    text = (char*) malloc(strlen(_text));
+    text = (char*) malloc(strlen(_text) + 1);
     strcpy(text, _text);
 
     invalidate();

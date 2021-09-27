@@ -251,6 +251,7 @@ int ATA::read(uint64_t lba, int count, void* buffer)
 		return (int) DiskError::Failure;
 	}
 
+#ifdef KERNEL_DEBUG
 	ataSectorsRead += count;
 
 	uint16_t* p = (uint16_t*) 0xC20B8000;
@@ -267,6 +268,7 @@ int ATA::read(uint64_t lba, int count, void* buffer)
 	*p++ = combineCharAndColour((ataSectorsWritten / 100) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
 	*p++ = combineCharAndColour((ataSectorsWritten / 10) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
 	*p++ = combineCharAndColour((ataSectorsWritten / 1) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
+#endif
 
 	return (int) DiskError::Success;
 }
@@ -289,6 +291,7 @@ int ATA::write(uint64_t lba, int count, void* buffer)
 		return (int) DiskError::Failure;
 	}
 
+#ifdef KERNEL_DEBUG
 	ataSectorsWritten += count;
 
 	uint16_t* p = (uint16_t*) 0xC20B8000;
@@ -305,6 +308,7 @@ int ATA::write(uint64_t lba, int count, void* buffer)
 	*p++ = combineCharAndColour((ataSectorsWritten / 100) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
 	*p++ = combineCharAndColour((ataSectorsWritten / 10) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
 	*p++ = combineCharAndColour((ataSectorsWritten / 1) % 10 + '0', combineColours((uint8_t) 0, (uint8_t) 15));
+#endif
 
 	return (int) DiskError::Success;
 }

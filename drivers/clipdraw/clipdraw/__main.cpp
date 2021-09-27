@@ -42,8 +42,10 @@ void NiMain(void* s)
 	ctxt = new NIContext(screen, screen->getWidth(), screen->getHeight(), screen->getWidth(), 32);
 	desktop = new NIDesktop(ctxt);
 
+#ifdef KERNEL_DEBUG
 	extern void NiDisplayRAM(void*);
 	kernelProcess->createThread(NiDisplayRAM);
+#endif
 
 	NIWindow* win0 = new NIWindow(ctxt, 0, 0, 1, 1);
 	desktop->addWindow(win0);

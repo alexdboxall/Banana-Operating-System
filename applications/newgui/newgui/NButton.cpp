@@ -180,7 +180,7 @@ NButton::NButton(int x, int y, int w, int h, NRegion* rgn, const char* text, But
 NButton::NButton(int x, int y, int w, int h, Context* context, const char* _text, ButtonStyle _style) :
 	NRegion(x, y, w, h, context)
 {
-	text = (char*) malloc(strlen(_text));
+	text = (char*) malloc(strlen(_text) + 1);
 	strcpy(text, _text);
 
 	style = _style;
@@ -251,7 +251,7 @@ char* NButton::getText()
 void NButton::setText(const char* _text)
 {
     if (text) free(text);
-    text = (char*) malloc(strlen(_text));
+    text = (char*) malloc(strlen(_text) + 1);
     strcpy(text, _text);
 
     invalidate();
