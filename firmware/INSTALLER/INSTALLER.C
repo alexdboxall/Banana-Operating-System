@@ -1222,7 +1222,7 @@ void realInstall()
 	uint64_t imageLba = MAIN_DISK_FIRST_SECTOR;
 	uint64_t imageLen;
 
-	for (int i = 0; i < 7; ++i) {
+	for (int i = 0; i < 4; ++i) {
 		read2KSectorFromInstallMedia(imageLba, bf);
 		millisleep(500);
 	}
@@ -1678,17 +1678,17 @@ void main()
 
 
 	windowWrite(windows[0], 0, 7, "Processor speed...");
-	millisleep(800);
+	millisleep(500);
 	windowWrite(windows[0], 24, 7, "Done");
 
 
 	windowWrite(windows[0], 0, 8, "Math coprocessor...");
-	millisleep(200);
+	millisleep(250);
 	in.eax = 1;
 	in = abstractionCall(ACDetectCPUFeatures, in);
 	gotFPU = in.eax;
 	windowWrite(windows[0], 24, 8, "Done");
-	millisleep(200);
+	millisleep(250);
 
 	if (totalRAM < 4) {
 		w.repaint = lackRAM;
