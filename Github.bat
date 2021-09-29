@@ -20,7 +20,7 @@ git add installer/*.s -f
 git add installer/*.py -f
 git add installer/*.vbs -f
 git add libraries/newlib-3.3.0 -f
-git add libraries/udraw -f
+git add libraries/userdraw -f
 
 git commit -a --allow-empty-message -m ""
 git remote add origin https://github.com/A22347/Banana-Operating-System.git
