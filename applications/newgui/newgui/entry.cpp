@@ -1,7 +1,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "banana.hpp"
+#include <udraw/banana.hpp>
 
 int disableBtn(NButton* btn)
 {
@@ -113,11 +113,16 @@ int formattingCallback(NTextField* t, int pos)
     static uint32_t colour;
     static int i = -1;
 
-    if (pos != i + 1 || i == -1 || 1) {
+    if (pos != i + 1 || i == -1) {
         i = 0;
         underline = false;
+        bold = false;
         colour = 0x000000;
     }
+
+    t->enableUnderline(underline);
+    t->setForegroundColour(colour);
+    t->enableBold(bold);
 
     for (; text[i]; ++i) {
         if (text[i] == '\x7E') {
@@ -154,16 +159,220 @@ int formattingCallback(NTextField* t, int pos)
     return 0;
 }
 
-extern "C" int appMain() {
+#include <time.h>
+NButton* cells[30][30];
+bool mines[30][30];
+uint8_t state[30][30];
+
+#define CELL_STATE_UNKNOWN      0
+#define CELL_STATE_QUESTION     1
+#define CELL_STATE_FLAGGED      2
+#define CELL_STATE_SAFE         3
+#define CELL_STATE_EXPLOSION    4
+
+bool firstClick = true;
+
+int GAME_WIDTH = 10;
+int GAME_HEIGHT = 10;
+
+bool isMine(int x, int y)
+{
+    if (x < 0 || y < 0 || x >= GAME_WIDTH || y >= GAME_HEIGHT) return false;
+    return mines[y][x];
+}
+
+void createMine()
+{
+    while (true) {
+        int x = rand() % GAME_WIDTH;
+        int y = rand() % GAME_HEIGHT;
+        if (!isMine(x, y)) {
+            mines[y][x] = true;
+            break;
+        }
+    }
+}
+
+int findPosition(NButton* btn)
+{
+    for (int y = 0; y < GAME_HEIGHT; ++y) {
+        for (int x = 0; x < GAME_WIDTH; ++x) {
+            if (cells[y][x] == btn) {
+                return y * GAME_WIDTH + x;
+            }
+        }
+    }
+    return -1;
+}
+
+int getNearbyCount(int x, int y)
+{
+    int count = 0;
+    count += (int) isMine(x - 1, y);
+    count += (int) isMine(x + 1, y);
+    count += (int) isMine(x, y + 1);
+    count += (int) isMine(x, y - 1);
+    count += (int) isMine(x - 1, y + 1);
+    count += (int) isMine(x + 1, y + 1);
+    count += (int) isMine(x - 1, y - 1);
+    count += (int) isMine(x + 1, y - 1);
+    return count;
+}
+
+void setSafe(int x, int y)
+{
+    if (x < 0 || y < 0 || x >= GAME_WIDTH || y >= GAME_HEIGHT) return;
+    if (state[y][x] == CELL_STATE_SAFE) return;
+
+    if (isMine(x, y)) {
+        if (firstClick) {
+            createMine();
+            mines[y][x] = false;
+
+        } else {
+            cells[y][x]->setText("*");
+            state[y][x] = CELL_STATE_EXPLOSION;
+            return;
+        }
+    }
+
+    firstClick = false;
+
+    state[y][x] = CELL_STATE_SAFE;
+
+    int nearby = getNearbyCount(x, y);
+    if (nearby == 0) {
+        cells[y][x]->setText("-");
+
+        setSafe(x - 1, y);
+        setSafe(x + 1, y);
+        setSafe(x, y + 1);
+        setSafe(x, y - 1);
+        setSafe(x - 1, y + 1);
+        setSafe(x + 1, y + 1);
+        setSafe(x - 1, y - 1);
+        setSafe(x + 1, y - 1);
+
+    } else {
+        uint32_t fgcols[] = {
+            0x0000FF,
+            0x008000,
+            0xFF0000,
+            0x000080,
+            0x800000,
+            0x008080,
+            0x000000,
+            0x808080,
+        };
+
+        char txt[5];
+        sprintf(txt, "%d", nearby);
+        cells[y][x]->setForegroundColour(fgcols[nearby - 1]);
+        cells[y][x]->setText(txt);
+    }
+}
+
+int clickCallback(NButton* btn)
+{
+    int pos = findPosition(btn);
+    int x = pos % GAME_WIDTH;
+    int y = pos / GAME_WIDTH;
+
+    if (state[y][x] == CELL_STATE_UNKNOWN) {
+        state[y][x] = CELL_STATE_QUESTION;
+        cells[y][x]->setText("?");
+
+    } else if (state[y][x] == CELL_STATE_QUESTION) {
+        state[y][x] = CELL_STATE_FLAGGED;
+        cells[y][x]->setText("F");
+
+    } else if (state[y][x] == CELL_STATE_FLAGGED) {
+        setSafe(x, y);
+        
+    }
+
+    return 0;
+}
+
+NTopLevel* mainwin;
+void newGame(int w, int h)
+{
+    GAME_WIDTH = w;
+    GAME_HEIGHT = h;
+
+    int numMines = (GAME_WIDTH * GAME_HEIGHT) * 10 / 64 + 1;
+
+    srand(clock());
+    firstClick = true;
+
+    for (int y = 0; y < GAME_HEIGHT; ++y) {
+        for (int x = 0; x < GAME_WIDTH; ++x) {
+            mines[y][x] = false;
+            state[y][x] = CELL_STATE_UNKNOWN;
+            cells[y][x] = new NButton(30 + x * 25, 90 + y * 25, 25, 25, mainwin, " ", ButtonStyle::AlwaysPopOut);
+            cells[y][x]->setCommand(clickCallback);
+            mainwin->add(cells[y][x]);
+        }
+    }
+
+    for (int i = 0; i < numMines; ++i) {
+        createMine();
+    }
+
+    mainwin->repaint();
+}
+
+int easyGame(NButton* btn)
+{
+    newGame(10, 10);
+    return 0;
+}
+
+int nrmlGame(NButton* btn)
+{
+    newGame(15, 15);
+    return 0;
+}
+
+int hardGame(NButton* btn)
+{
+    newGame(25, 15);
+    return 0;
+}
+
+void gui2()
+{
+    mainwin = new NTopLevel("Minesweeper", 750, 450);
+
+    NButton* easy = new NButton(30, 30, 80, 28, mainwin, "Easy", ButtonStyle::AlwaysPopOut);
+    NButton* nrml = new NButton(130, 30, 80, 28, mainwin, "Normal", ButtonStyle::AlwaysPopOut);
+    NButton* hard = new NButton(230, 30, 80, 28, mainwin, "Hard", ButtonStyle::AlwaysPopOut);
+
+    easy->setCommand(easyGame);
+    nrml->setCommand(nrmlGame);
+    hard->setCommand(hardGame);
+
+    mainwin->add(easy);
+    mainwin->add(nrml);
+    mainwin->add(hard);
+
+}
+
+extern "C" int main() {
     createSystemBrushes();
 
-    NTopLevel* win = new NTopLevel("My Test Window", 600, 400);
+    gui2();
+    //return 0;
+
+    NTopLevel* win = new NTopLevel("Sentences - *Untitled Document", 600, 400);
        
     txtf = new NTextField(15, 90, 570, 295, win, "abc def\nThis is some random text.\nIt has some newlines in it too...\n\nThat was two newlines!\n\n\nThis is now going to be a test of the text wrap. Hopefully, this line should wrap onto the next line, and it should be justified. But, the last line should just be left aligned as usual, so it doesn't look too weird.\nThis should also be left aligned.\nTesting just one more thing..., which is the\n space after a newline thing.\n");
     txtf->setTextWrap(TextWrap::Word);
     txtf->enableHiddenData(0x7E, 0x7F, 6);
     txtf->setFormattingCallback(formattingCallback);
     win->add(txtf);
+
+    // "You forget who wears the pants around here now!"
 
     {
         NButton* btn = new NButton(15, 30, 24, 24, win, "");
@@ -312,9 +521,12 @@ extern "C" int appMain() {
 
     win->initialise();
 
-    while (1) {
-        NiEvent evnt = win->process();
+    mainwin->initialise();
 
+    while (1) {
+        mainwin->defaultEventHandler(mainwin->process());
+        
+        NiEvent evnt = win->process();
         switch (evnt.type) {
 
         default:
