@@ -223,6 +223,7 @@ void setSafe(int x, int y)
 {
     if (x < 0 || y < 0 || x >= GAME_WIDTH || y >= GAME_HEIGHT) return;
     if (state[y][x] == CELL_STATE_SAFE) return;
+    if (state[y][x] == CELL_STATE_EXPLOSION) return;
 
     if (isMine(x, y)) {
         if (firstClick) {
@@ -272,8 +273,10 @@ void setSafe(int x, int y)
     }
 }
 
-int clickCallback(NButton* btn)
+void rightClickCallback(Window* window, void* self_, int mx, int my)
 {
+    NButton* btn = (NButton*) self_;
+
     int pos = findPosition(btn);
     int x = pos % GAME_WIDTH;
     int y = pos / GAME_WIDTH;
@@ -287,9 +290,18 @@ int clickCallback(NButton* btn)
         cells[y][x]->setText("F");
 
     } else if (state[y][x] == CELL_STATE_FLAGGED) {
-        setSafe(x, y);
-        
+        state[y][x] = CELL_STATE_UNKNOWN;
+        cells[y][x]->setText(" ");
     }
+}
+
+int clickCallback(NButton* btn)
+{
+    int pos = findPosition(btn);
+    int x = pos % GAME_WIDTH;
+    int y = pos / GAME_WIDTH;
+
+    setSafe(x, y);
 
     return 0;
 }
@@ -311,6 +323,7 @@ void newGame(int w, int h)
             state[y][x] = CELL_STATE_UNKNOWN;
             cells[y][x] = new NButton(30 + x * 25, 90 + y * 25, 25, 25, mainwin, " ", ButtonStyle::AlwaysPopOut);
             cells[y][x]->setCommand(clickCallback);
+            cells[y][x]->setRightMouseDownHandler(rightClickCallback);
             mainwin->add(cells[y][x]);
         }
     }
@@ -355,7 +368,6 @@ void gui2()
     mainwin->add(easy);
     mainwin->add(nrml);
     mainwin->add(hard);
-
 }
 
 extern "C" int main() {

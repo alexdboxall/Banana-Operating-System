@@ -289,10 +289,19 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 	if (clickon) {
 		if (xdelta || ydelta) {
 			clickon->postEvent(NiCreateEvent(clickon, buttons & 1 ? EVENT_TYPE_MOUSE_DRAG : EVENT_TYPE_MOUSE_MOVE, false));
+
 		} else if ((buttons & 1) && !(oldButtons & 1)) {
 			clickon->postEvent(NiCreateEvent(clickon, EVENT_TYPE_MOUSE_DOWN, false));
+
 		} else if (!(buttons & 1) && (oldButtons & 1)) {
 			clickon->postEvent(NiCreateEvent(clickon, EVENT_TYPE_MOUSE_UP, false));
+		}
+
+		if ((buttons & 2) && !(oldButtons & 2)) {
+			clickon->postEvent(NiCreateEvent(clickon, EVENT_TYPE_RMOUSE_DOWN, false));
+
+		} else if (!(buttons & 2) && (oldButtons & 2)) {
+			clickon->postEvent(NiCreateEvent(clickon, EVENT_TYPE_RMOUSE_UP, false));
 		}
 	}
 

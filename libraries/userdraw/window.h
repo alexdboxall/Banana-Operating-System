@@ -57,7 +57,9 @@ typedef struct Window_struct {
     WindowPaintHandler paint_function;
     void* paint_function_args;
     WindowMousedownHandler mousedown_function;
+    WindowMousedownHandler rmousedown_function;
     WindowMousedownHandler mouseup_function;
+    WindowMousedownHandler rmouseup_function;
     WindowMousemoveHandler mousemove_function;
     WindowMouseleaveHandler mouseleave_function;
     WindowKeydownHandler keydown_function;

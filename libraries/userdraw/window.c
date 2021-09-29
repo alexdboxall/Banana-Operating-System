@@ -55,7 +55,9 @@ int Window_init(Window* window, int16_t x, int16_t y, uint16_t width,
     window->last_button_state = 0;
     window->paint_function = 0;
     window->mousedown_function = 0;
+    window->rmousedown_function = 0;
     window->mousemove_function = 0;
+    window->rmouseup_function = 0;
     window->mouseup_function = 0;
     window->keydown_function = 0;
     window->mouseleave_function = 0;
@@ -533,10 +535,17 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
         break;
     }
 
-    if (window->mouseup_function && !mouse_buttons/* && window->last_button_state*/) {
+    if (window->mouseup_function && !(mouse_buttons & 2)) {
+        window->rmouseup_function(window, window->paint_function_args, mouse_x, mouse_y);
+    }
+    if (window->mousedown_function && (mouse_buttons & 2)) {
+        window->rmousedown_function(window, window->paint_function_args, mouse_x, mouse_y);
+    }
+
+    if (window->mouseup_function && !(mouse_buttons & 1)) {
         window->mouseup_function(window, window->paint_function_args, mouse_x, mouse_y);
     }
-    if (window->mousedown_function && mouse_buttons) {
+    if (window->mousedown_function && (mouse_buttons & 1)) {
         window->mousedown_function(window, window->paint_function_args, mouse_x, mouse_y);
     }
     if (window->mousemove_function) {

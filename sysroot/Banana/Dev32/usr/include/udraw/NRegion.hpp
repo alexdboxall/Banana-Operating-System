@@ -32,6 +32,9 @@ public:
     int y;
     
     int (*paintHandler)(NRegion* self);
+
+    void setRightMouseDownHandler(WindowMousedownHandler handler);
+    void setRightMouseUpHandler(WindowMousedownHandler handler);
     
     Context* getContext();
 

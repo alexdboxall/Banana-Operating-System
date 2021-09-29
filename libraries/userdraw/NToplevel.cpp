@@ -182,6 +182,8 @@ void NTopLevel::defaultEventHandler(NiEvent evnt)
     case EVENT_TYPE_MOUSE_DRAG:
     case EVENT_TYPE_MOUSE_DOWN:
     case EVENT_TYPE_MOUSE_UP:
+    case EVENT_TYPE_RMOUSE_DOWN:
+    case EVENT_TYPE_RMOUSE_UP:
     {
         processMouse(evnt);
         repaintFlush();

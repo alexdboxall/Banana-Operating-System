@@ -30,6 +30,17 @@ NRegion::NRegion(int _x, int _y, int w, int h, Context* context) {
     win->paint_function_args = (void*) this;
 }
 
+void NRegion::setRightMouseDownHandler(WindowMousedownHandler handler)
+{
+    win->rmousedown_function = handler;
+}
+
+void NRegion::setRightMouseUpHandler(WindowMousedownHandler handler)
+{
+    win->rmouseup_function = handler;
+}
+
+
 Context* NRegion::getContext() {
     return ctxt;
 }
