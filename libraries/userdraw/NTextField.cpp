@@ -305,25 +305,31 @@ retry:
         }
     }
 
-    for (int i = 0; i < poisonHiddenDataLength + 2; ++i) {
-        if (text[curStart - i] == poisonCharacterReverse) break;
-        if (text[curStart - i] == poisonCharacter) {
-            curStart -= i + 1;
-            goto retry;
+    if (curStart != 0) {
+        for (int i = 0; i < poisonHiddenDataLength + 2; ++i) {
+            if (text[curStart - i] == poisonCharacterReverse) break;
+            if (text[curStart - i] == poisonCharacter) {
+                curStart -= i + 1;
+                goto retry;
+            }
         }
-    }
+    } 
 
-    for (int i = 0; i < poisonHiddenDataLength + 2; ++i) {
-        if (text[curEnd - i] == poisonCharacterReverse) break;
-        if (text[curEnd - i] == poisonCharacter) {
-            curEnd -= i + 1;
-            goto retry;
+    if (curEnd != 0) {
+        for (int i = 0; i < poisonHiddenDataLength + 2; ++i) {
+            if (text[curEnd - i] == poisonCharacterReverse) break;
+            if (text[curEnd - i] == poisonCharacter) {
+                curEnd -= i + 1;
+                goto retry;
+            }
         }
     }
 }
 
 void NTextField::insert(int pos, char* inserted)
 {
+    if (pos < 0) return;
+
     char* txt = (char*) malloc(strlen(text) + strlen(inserted) + 4);
     for (int i = 0; i < pos; ++i) {
         txt[i] = text[i];
@@ -356,6 +362,8 @@ void NTextField::decCurEnd()
     while (text[--curEnd] == poisonCharacterReverse) {
         curEnd -= poisonHiddenDataLength + 1;
     }
+
+    if (curEnd < 0) curEnd = 0;
 }
 
 void NTextField::decCurStart()
@@ -363,6 +371,8 @@ void NTextField::decCurStart()
     while (text[--curStart] == poisonCharacterReverse) {
         curStart -= poisonHiddenDataLength + 1;
     }
+
+    if (curStart < 0) curStart = 0;
 }
 
 void textfieldKeyHandler(Window* w, void* self_, KeyStates key)

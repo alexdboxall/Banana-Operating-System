@@ -89,5 +89,6 @@ void Window_insert_child(Window* window, Window* child);
 void Window_invalidate(Window* window, int top, int left, int bottom, int right); 
 void Window_set_title(Window* window, char* new_title);                       
 void Window_append_title(Window* window, char* additional_chars);
+void Window_remove_child(Window* window, Window* child);
 
 #endif //WINDOW_H

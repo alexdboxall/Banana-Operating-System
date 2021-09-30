@@ -299,6 +299,16 @@ NiEvent NTopLevel::process() {
 
 void NTopLevel::add(NRegion* rgn) {
     Window_insert_child(win, rgn->win);
+    rgn->parent = this;
+}
+
+void NTopLevel::remove(NRegion* rgn)
+{
+    if (!win) return;
+    if (!rgn) return;
+    if (!rgn->win) return;
+    Window_remove_child(win, rgn->win);
+    rgn->parent = nullptr;
 }
 
 void NTopLevel::initialise()

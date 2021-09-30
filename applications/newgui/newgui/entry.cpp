@@ -175,6 +175,9 @@ bool firstClick = true;
 int GAME_WIDTH = 10;
 int GAME_HEIGHT = 10;
 
+bool canRightClick = true;
+bool gameLost = false;
+
 bool isMine(int x, int y)
 {
     if (x < 0 || y < 0 || x >= GAME_WIDTH || y >= GAME_HEIGHT) return false;
@@ -231,8 +234,22 @@ void setSafe(int x, int y)
             mines[y][x] = false;
 
         } else {
-            cells[y][x]->setText("*");
+            cells[y][x]->setText("");
+            cells[y][x]->setIcon("C:/Banana/Icons/minemine.tga");
             state[y][x] = CELL_STATE_EXPLOSION;
+            gameLost = true;
+
+            for (int y = 0; y < GAME_HEIGHT; ++y) {
+                for (int x = 0; x < GAME_WIDTH; ++x) {
+                    if (mines[y][x]) {
+                        if (state[y][x] == CELL_STATE_UNKNOWN || state[y][x] == CELL_STATE_QUESTION) {
+                            cells[y][x]->setIcon("C:/Banana/Icons/minemine2.tga");
+                        }
+                    } else if (state[y][x] == CELL_STATE_FLAGGED) {
+                        cells[y][x]->setIcon("C:/Banana/Icons/minewrong.tga");
+                    }
+                }
+            }
             return;
         }
     }
@@ -243,6 +260,7 @@ void setSafe(int x, int y)
 
     int nearby = getNearbyCount(x, y);
     if (nearby == 0) {
+        cells[y][x]->removeIcon();
         cells[y][x]->setText("-");
 
         setSafe(x - 1, y);
@@ -268,13 +286,24 @@ void setSafe(int x, int y)
 
         char txt[5];
         sprintf(txt, "%d", nearby);
+        cells[y][x]->removeIcon();
         cells[y][x]->setForegroundColour(fgcols[nearby - 1]);
         cells[y][x]->setText(txt);
     }
 }
 
+
+void rightClickUpCallback(Window* window, void* self_, int mx, int my)
+{
+    canRightClick = true;
+}
+
 void rightClickCallback(Window* window, void* self_, int mx, int my)
 {
+    if (gameLost) return;
+
+    if (!canRightClick) return;
+    canRightClick = false;
     NButton* btn = (NButton*) self_;
 
     int pos = findPosition(btn);
@@ -282,24 +311,31 @@ void rightClickCallback(Window* window, void* self_, int mx, int my)
     int y = pos / GAME_WIDTH;
 
     if (state[y][x] == CELL_STATE_UNKNOWN) {
+        state[y][x] = CELL_STATE_FLAGGED;
+        cells[y][x]->setIcon("C:/Banana/Icons/mineflag.tga");
+        cells[y][x]->setText("");
+
+    } else if (state[y][x] == CELL_STATE_FLAGGED) {
         state[y][x] = CELL_STATE_QUESTION;
+        cells[y][x]->removeIcon();
         cells[y][x]->setText("?");
 
     } else if (state[y][x] == CELL_STATE_QUESTION) {
-        state[y][x] = CELL_STATE_FLAGGED;
-        cells[y][x]->setText("F");
-
-    } else if (state[y][x] == CELL_STATE_FLAGGED) {
         state[y][x] = CELL_STATE_UNKNOWN;
-        cells[y][x]->setText(" ");
+        cells[y][x]->removeIcon();
+        cells[y][x]->setText("");
     }
 }
 
 int clickCallback(NButton* btn)
 {
+    if (gameLost) return 0;
+
     int pos = findPosition(btn);
     int x = pos % GAME_WIDTH;
     int y = pos / GAME_WIDTH;
+
+    if (state[y][x] == CELL_STATE_FLAGGED) return 0;
 
     setSafe(x, y);
 
@@ -309,8 +345,21 @@ int clickCallback(NButton* btn)
 NTopLevel* mainwin;
 void newGame(int w, int h)
 {
+    for (int y = 0; y < 30; ++y) {
+        for (int x = 0; x < 30; ++x) {
+            if (cells[y][x] != nullptr) {
+                mainwin->remove(cells[y][x]);
+                delete cells[y][x];
+                cells[y][x] = nullptr;
+            }
+        }
+    }
+
     GAME_WIDTH = w;
     GAME_HEIGHT = h;
+
+    gameLost = false;
+    canRightClick = true;
 
     int numMines = (GAME_WIDTH * GAME_HEIGHT) * 10 / 64 + 1;
 
@@ -323,7 +372,9 @@ void newGame(int w, int h)
             state[y][x] = CELL_STATE_UNKNOWN;
             cells[y][x] = new NButton(30 + x * 25, 90 + y * 25, 25, 25, mainwin, " ", ButtonStyle::AlwaysPopOut);
             cells[y][x]->setCommand(clickCallback);
+            cells[y][x]->enableBold();
             cells[y][x]->setRightMouseDownHandler(rightClickCallback);
+            cells[y][x]->setRightMouseUpHandler(rightClickUpCallback);
             mainwin->add(cells[y][x]);
         }
     }
@@ -356,6 +407,12 @@ int hardGame(NButton* btn)
 void gui2()
 {
     mainwin = new NTopLevel("Minesweeper", 750, 450);
+
+    for (int y = 0; y < 30; ++y) {
+        for (int x = 0; x < 30; ++x) {
+            cells[y][x] = nullptr;
+        }
+    }
 
     NButton* easy = new NButton(30, 30, 80, 28, mainwin, "Easy", ButtonStyle::AlwaysPopOut);
     NButton* nrml = new NButton(130, 30, 80, 28, mainwin, "Normal", ButtonStyle::AlwaysPopOut);
@@ -464,8 +521,6 @@ extern "C" int main() {
         btn->setStyle(ButtonStyle::PopOut);
         win->add(btn);
     }
-
-
 
 
     {

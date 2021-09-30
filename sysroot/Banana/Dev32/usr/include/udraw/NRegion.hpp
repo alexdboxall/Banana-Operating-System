@@ -23,7 +23,8 @@ protected:
     Context* ctxt;
     
     friend class NTopLevel;
-    
+    void* parent;
+
 public:
     Window* win;
     int width;
@@ -39,8 +40,10 @@ public:
     Context* getContext();
 
     NRegion(int x, int y, int w, int h, Context* context);
-    
+    ~NRegion();
+
     void add(NRegion* rgn);
+    void remove(NRegion* rgn);
   
     void fillRect(int x, int y, int w, int h, uint32_t col);
     void drawRect(int x, int y, int w, int h, uint32_t col);

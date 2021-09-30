@@ -84,14 +84,7 @@ void sendKeyboardToken(KeyboardToken kt)
 
 	bool keypadNum = false;
 
-	static bool globalScrolllock = 0;
 	static int buffering = 0;
-
-	if (kt.scrolllock != globalScrolllock) {
-		globalScrolllock = kt.scrolllock;
-
-		setTerminalScrollLock(globalScrolllock);
-	}
 	
 	if (kt.numlock) {
 		if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::Keypad0) kt.halScancode = (uint16_t) KeyboardSpecialKeys::Insert;
@@ -116,13 +109,6 @@ void sendKeyboardToken(KeyboardToken kt)
 		if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::Keypad7) { kt.halScancode = (uint16_t) '7'; keypadNum = true; }
 		if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::Keypad8) { kt.halScancode = (uint16_t) '8'; keypadNum = true; }
 		if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::Keypad9) { kt.halScancode = (uint16_t) '9'; keypadNum = true; }
-	}
-
-	if (globalScrolllock) {
-		/*if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::Up) scrollTerminalScrollLock(-1);
-		if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::Down) scrollTerminalScrollLock(1);
-		if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::PageUp) scrollTerminalScrollLock(-24);
-		if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::PageDown) scrollTerminalScrollLock(24);*/
 	}
 
 	static bool guiStated = false;

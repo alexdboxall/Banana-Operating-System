@@ -535,10 +535,10 @@ void Window_process_mouse(Window* window, uint16_t mouse_x,
         break;
     }
 
-    if (window->mouseup_function && !(mouse_buttons & 2)) {
+    if (window->rmouseup_function && !(mouse_buttons & 2)) {
         window->rmouseup_function(window, window->paint_function_args, mouse_x, mouse_y);
     }
-    if (window->mousedown_function && (mouse_buttons & 2)) {
+    if (window->rmousedown_function && (mouse_buttons & 2)) {
         window->rmousedown_function(window, window->paint_function_args, mouse_x, mouse_y);
     }
 
@@ -596,6 +596,23 @@ void Window_insert_child(Window* window, Window* child) {
     
     Window_update_context(child, window->context);
 }
+
+void Window_remove_child(Window* window, Window* child)
+{
+    for (int i = 0; i < window->children->count; ++i) {
+        Window* w = (Window*) List_get_at(window->children, i);
+        if (w == child) {
+            int cx = w->x;
+            int cy = w->y;
+            int cw = w->width;
+            int ch = w->height;
+            List_remove_at(window->children, i);
+            Window_invalidate(window, cx, cy, ch, cw);
+            return;
+        }
+    }
+}
+
 
 //A method to automatically create a new window in the provided parent window
 Window* Window_create_window(Window* window, int16_t x, int16_t y,  

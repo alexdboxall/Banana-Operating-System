@@ -58,11 +58,16 @@ protected:
 	uint32_t fgCol;
 	uint32_t bgCol;
 
+	bool bold;
+
 public:
 	NButton(int x, int y, int w, int h, Context* context, const char* text = "Button", ButtonStyle style = ButtonStyle::Standard);
 	NButton(int x, int y, int w, int h, NTopLevel* tl, const char* text = "Button", ButtonStyle style = ButtonStyle::Standard);
 	NButton(int x, int y, int w, int h, NRegion* rgn, const char* text = "Button", ButtonStyle style = ButtonStyle::Standard);
 	~NButton();
+	
+	void enableBold(bool on = true);
+	void disableBold();
 
 	bool isEnabled();
 	void enable(bool enabled = true);

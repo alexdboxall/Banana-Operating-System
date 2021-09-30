@@ -133,6 +133,9 @@ int standardButtonPainter(NRegion* _self)
         int w1 = (self->width - ww) / 2;
         if (self->fixedWidth != -1) w1 = self->fixedWidth;
         self->drawBasicText(w1, (self->height - hh) / 2, self->disabled ? 0x808080 : self->fgCol, self->text);
+        if (self->bold) {
+            self->drawBasicText(w1 + 1, (self->height - hh) / 2, self->disabled ? 0x808080 : self->fgCol, self->text);
+        }
     }
 
     return 0;
@@ -235,10 +238,23 @@ NButton::NButton(int x, int y, int w, int h, Context* context, const char* _text
     weNeedToDeleteNLoadedBitmap = false;
 	paintHandler = standardButtonPainter;
 
+    bold = false;
+
     win->mouseup_function    = buttonResetMouseDown;
     win->mousedown_function  = buttonSetMouseDown;
     win->mousemove_function  = buttonSetMouseOver;
     win->mouseleave_function = buttonResetMouseOver;
+}
+
+
+void NButton::enableBold(bool on)
+{
+    bold = on;
+}
+
+void NButton::disableBold()
+{
+    enableBold(false);
 }
 
 bool NButton::isEnabled()

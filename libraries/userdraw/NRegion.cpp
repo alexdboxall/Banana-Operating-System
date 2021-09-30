@@ -23,11 +23,20 @@ NRegion::NRegion(int _x, int _y, int w, int h, Context* context) {
     y = _y;
     width = w;
     height = h;
+
+    parent = nullptr;
     
     win = (Window*)malloc(sizeof(Window));
     Window_init((Window*)win, x, y, w, h, WIN_NODECORATION, ctxt);
     win->paint_function = Region_paint_handler;
     win->paint_function_args = (void*) this;
+}
+
+NRegion::~NRegion()
+{
+    if (win) {
+        free(win);
+    }
 }
 
 void NRegion::setRightMouseDownHandler(WindowMousedownHandler handler)
@@ -40,6 +49,11 @@ void NRegion::setRightMouseUpHandler(WindowMousedownHandler handler)
     win->rmouseup_function = handler;
 }
 
+void NRegion::remove(NRegion* rgn)
+{
+    Window_remove_child(win, rgn->win);
+    rgn->parent = nullptr;
+}
 
 Context* NRegion::getContext() {
     return ctxt;
@@ -47,6 +61,7 @@ Context* NRegion::getContext() {
 
 void NRegion::add(NRegion* rgn) {
     Window_insert_child(win, rgn->win);
+    rgn->parent = this;
 }
 
 void NRegion::fillRect(int x, int y, int w, int h, uint32_t col) {

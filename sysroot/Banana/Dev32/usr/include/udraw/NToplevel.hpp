@@ -68,7 +68,8 @@ public:
     void processKeyboard(NiEvent evnt);
 
     void defaultEventHandler(NiEvent evnt);
-    
+
+    void remove(NRegion* rgn);
     void add(NRegion* rgn);
 };
 
