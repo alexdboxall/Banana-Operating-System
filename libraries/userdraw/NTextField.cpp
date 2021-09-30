@@ -19,6 +19,7 @@ int textFieldEngine(NRegion* _self, int posi, int* xout, int* yout)
     //this function is arcane black magic
 
     NTextField* self = (NTextField*) _self;
+    self->invalidating = true;
 
     if (posi == -1) {
         int ml = self->marginLeft ? self->marginLeft - 1 : 0;
@@ -116,6 +117,7 @@ int textFieldEngine(NRegion* _self, int posi, int* xout, int* yout)
                 } else if (i == posi) {
                     *xout = xx;
                     *yout = ypos - self->scrollY + self->marginTop;
+                    self->invalidating = false;
                     return 0;
                 }
 
@@ -191,6 +193,7 @@ int textFieldEngine(NRegion* _self, int posi, int* xout, int* yout)
             } else if (i == posi) {
                 *xout = xpos - self->scrollX + self->marginLeft;
                 *yout = ypos - self->scrollY + self->marginTop;
+                self->invalidating = false;
                 return 0;
             }
         }
@@ -229,6 +232,7 @@ int textFieldEngine(NRegion* _self, int posi, int* xout, int* yout)
             }
         }*/
     }
+    self->invalidating = false;
     return posi == -1 ? 0 : -1;
 }
 
