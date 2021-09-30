@@ -19,6 +19,6 @@ int KeProcessExec(Process* prcss, const char* filename)
 {
 	delete prcss->vas;
 	prcss->vas = new VAS(false);
-	Thr::loadProgramIntoMemory(prcss, filepath);
+	Thr::loadProgramIntoMemory(prcss, filename);
 	return 0;
 }
