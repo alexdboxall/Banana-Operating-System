@@ -352,7 +352,7 @@ void VAS::setCPUSpecific(size_t physAddr)
 
 VAS::VAS(VAS* old)
 {
-	KePanic("VAS::VAS(VAS* old) not implemented");
+	
 }
 
 VAS::VAS(bool kernel)
@@ -556,6 +556,9 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 
 		size_t oldphys = (*entry) >> 12;
 		size_t newphys = Phys::allocatePage();
+
+		*entry |= PAGE_PRESENT;
+		HalFlushTLB();
 
 		uint8_t buffer[4096];
 		memcpy(buffer, (const void*) (faultAddr & ~0xFFF), 4096);

@@ -538,6 +538,22 @@ void textfieldKeyHandler(Window* w, void* self_, KeyStates key)
         return;
     }
 
+    while (1) {
+        int cx, cy;
+        self->getPositionFromIndex(self->curEnd, &cx, &cy);
+        if (cy - self->scrollY > self->height - 32) {
+            self->scrollY += 24;
+        } else if (cy - self->scrollY < 32) {
+            self->scrollY -= 24;
+            if (self->scrollY < 0) {
+                self->scrollY = 0;
+                break;
+            }
+        } else {
+            break;
+        }
+    }
+
     self->invalidate();
 }
 
