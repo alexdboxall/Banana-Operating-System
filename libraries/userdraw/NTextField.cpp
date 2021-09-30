@@ -19,7 +19,6 @@ int textFieldEngine(NRegion* _self, int posi, int* xout, int* yout)
     //this function is arcane black magic
 
     NTextField* self = (NTextField*) _self;
-    self->invalidating = true;
 
     if (posi == -1) {
         int ml = self->marginLeft ? self->marginLeft - 1 : 0;
@@ -117,7 +116,6 @@ int textFieldEngine(NRegion* _self, int posi, int* xout, int* yout)
                 } else if (i == posi) {
                     *xout = xx;
                     *yout = ypos - self->scrollY + self->marginTop;
-                    self->invalidating = false;
                     return 0;
                 }
 
@@ -193,7 +191,6 @@ int textFieldEngine(NRegion* _self, int posi, int* xout, int* yout)
             } else if (i == posi) {
                 *xout = xpos - self->scrollX + self->marginLeft;
                 *yout = ypos - self->scrollY + self->marginTop;
-                self->invalidating = false;
                 return 0;
             }
         }
@@ -232,7 +229,6 @@ int textFieldEngine(NRegion* _self, int posi, int* xout, int* yout)
             }
         }*/
     }
-    self->invalidating = false;
     return posi == -1 ? 0 : -1;
 }
 
@@ -249,14 +245,14 @@ int standardTextFieldPainter(NRegion* _self)
 void NTextField::setTextWrap(TextWrap wrap)
 {
     wrapMode = wrap;
-    invalidate();
+    internalInvalidate();
 }
 
 void NTextField::setUnderline(int width, uint8_t* pattern)
 {
     memcpy(underlinePattern, pattern, sizeof(underlinePattern));
     underlineWidth = width;
-    invalidate();
+    internalInvalidate();
 }
 
 int NTextField::getUnderline(uint8_t* pattern)
@@ -268,12 +264,6 @@ int NTextField::getUnderline(uint8_t* pattern)
 TextWrap NTextField::getTextWrap()
 {
     return wrapMode;
-}
-
-void NTextField::invalidate()
-{
-    if (invalidating) return;
-    Window_invalidate(win, 0, 0, win->height, win->width);
 }
 
 NTextField::NTextField(int x, int y, int w, int h, NTopLevel* tl, const char* text) : NTextField(x, y, w, h, tl->getContext(), text)
@@ -545,7 +535,6 @@ void textfieldKeyHandler(Window* w, void* self_, KeyStates key)
     }
 
     self->invalidate();
-
 }
 
 NTextField::NTextField(int x, int y, int w, int h, Context* context, const char* _text) :
@@ -558,8 +547,6 @@ NTextField::NTextField(int x, int y, int w, int h, Context* context, const char*
 
     scrollX = 0;
     scrollY = 0;
-
-    invalidating = false;
 
     lineSpacingTenths = 15;
     charSpacingPercent = 100;
@@ -643,12 +630,13 @@ void NTextField::selectText(int start, int end)
 {
     curStart = start;
     curEnd = end;
+    internalInvalidate();
 }
 
 void NTextField::setForegroundColour(uint32_t col)
 {
     fgCol = col;
-    invalidate();
+    internalInvalidate();
 }
 
 uint32_t NTextField::getForegroundColour()
@@ -679,7 +667,7 @@ void NTextField::disableUnderline()
 void NTextField::setBackgroundColour(uint32_t col)
 {
     bgCol = col;
-    invalidate();
+    internalInvalidate();
 }
 
 uint32_t NTextField::getBackgroundColour()
@@ -710,7 +698,7 @@ uint32_t NTextField::getHighlightForegroundColour()
 void NTextField::setCursorColour(uint32_t col)
 {
     cursorCol = col;
-    invalidate();
+    internalInvalidate();
 }
 
 uint32_t NTextField::getCursorColour()
@@ -721,7 +709,7 @@ uint32_t NTextField::getCursorColour()
 void NTextField::setUnderlineColour(uint32_t col)
 {
     underlineCol = col;
-    invalidate();
+    internalInvalidate();
 }
 
 uint32_t NTextField::getUnderlineColour()
@@ -732,7 +720,7 @@ uint32_t NTextField::getUnderlineColour()
 void NTextField::setAlignment(TextAlignment align)
 {
     alignment = align;
-    invalidate();
+    internalInvalidate();
 }
 
 TextAlignment NTextField::getAlignment()
@@ -756,7 +744,7 @@ void NTextField::setText(const char* _text)
     curStart = strlen(text);
     curEnd = strlen(text);
 
-    invalidate();
+    internalInvalidate();
 }
 
 NTextField::~NTextField()

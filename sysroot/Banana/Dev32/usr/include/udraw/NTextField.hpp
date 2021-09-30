@@ -80,8 +80,6 @@ protected:
 
 	NTextFieldFormattingCallback callback;
 
-	bool invalidating;
-
 	int poisonCharacter;
 	int poisonCharacterReverse;
 	int poisonHiddenDataLength;
@@ -123,8 +121,6 @@ public:
 
 	void setAlignment(TextAlignment align);
 	TextAlignment getAlignment();
-
-	void invalidate();
 
 	NTextFieldFormattingCallback getFormattingCallback();
 	void setFormattingCallback(NTextFieldFormattingCallback call);

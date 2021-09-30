@@ -25,6 +25,10 @@ protected:
     friend class NTopLevel;
     void* parent;
 
+    void internalInvalidate();
+    bool autoInvalidate;
+    bool invalidating;
+
 public:
     Window* win;
     int width;
@@ -45,6 +49,10 @@ public:
     void add(NRegion* rgn);
     void remove(NRegion* rgn);
   
+    void invalidate();
+    void disableAutomaticInvalidation();
+    void enableAutomaticInvalidation(bool on = true);
+
     void fillRect(int x, int y, int w, int h, uint32_t col);
     void drawRect(int x, int y, int w, int h, uint32_t col);
     void horizontalLine(int x, int y, int w, uint32_t col);

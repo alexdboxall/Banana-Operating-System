@@ -24,6 +24,9 @@ NRegion::NRegion(int _x, int _y, int w, int h, Context* context) {
     width = w;
     height = h;
 
+    autoInvalidate = true;
+    invalidating = false;
+
     parent = nullptr;
     
     win = (Window*)malloc(sizeof(Window));
@@ -31,6 +34,33 @@ NRegion::NRegion(int _x, int _y, int w, int h, Context* context) {
     win->paint_function = Region_paint_handler;
     win->paint_function_args = (void*) this;
 }
+
+
+void NRegion::internalInvalidate()
+{
+    if (autoInvalidate) {
+        invalidate();
+    }
+}
+
+void NRegion::invalidate()
+{
+    if (invalidating) return;       //prevent recursion
+    invalidating = true;
+    Window_invalidate(win, 0, 0, win->height, win->width);
+    invalidating = false;
+}
+
+void NRegion::disableAutomaticInvalidation()
+{
+    enableAutomaticInvalidation(false);
+}
+
+void NRegion::enableAutomaticInvalidation(bool on)
+{
+    autoInvalidate = on;
+}
+
 
 NRegion::~NRegion()
 {

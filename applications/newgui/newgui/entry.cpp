@@ -371,11 +371,13 @@ void newGame(int w, int h)
             mines[y][x] = false;
             state[y][x] = CELL_STATE_UNKNOWN;
             cells[y][x] = new NButton(30 + x * 25, 90 + y * 25, 25, 25, mainwin, " ", ButtonStyle::AlwaysPopOut);
+            cells[y][x]->disableAutomaticInvalidation();
             cells[y][x]->setCommand(clickCallback);
             cells[y][x]->enableBold();
             cells[y][x]->setRightMouseDownHandler(rightClickCallback);
             cells[y][x]->setRightMouseUpHandler(rightClickUpCallback);
             mainwin->add(cells[y][x]);
+            cells[y][x]->enableAutomaticInvalidation();
         }
     }
 
@@ -425,13 +427,13 @@ void gui2()
     mainwin->add(easy);
     mainwin->add(nrml);
     mainwin->add(hard);
+
 }
 
 extern "C" int main() {
     createSystemBrushes();
 
     gui2();
-    //return 0;
 
     NTopLevel* win = new NTopLevel("Sentences - *Untitled Document", 600, 400);
        

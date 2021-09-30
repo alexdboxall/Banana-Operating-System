@@ -144,7 +144,7 @@ int standardButtonPainter(NRegion* _self)
 void NButton::setBackgroundColour(uint32_t col)
 {
     bgCol = col;
-    invalidate();
+    internalInvalidate();
 }
 
 uint32_t NButton::getBackgroundColour()
@@ -155,17 +155,12 @@ uint32_t NButton::getBackgroundColour()
 void NButton::setForegroundColour(uint32_t col)
 {
     fgCol = col;
-    invalidate();
+    internalInvalidate();
 }
 
 uint32_t NButton::getForegroundColour()
 {
     return fgCol;
-}
-
-void NButton::invalidate()
-{
-    Window_invalidate(win, 0, 0, win->height, win->width);
 }
 
 void buttonSetMouseOver(Window* w, void* self_, int x, int y)
@@ -246,7 +241,6 @@ NButton::NButton(int x, int y, int w, int h, Context* context, const char* _text
     win->mouseleave_function = buttonResetMouseOver;
 }
 
-
 void NButton::enableBold(bool on)
 {
     bold = on;
@@ -265,7 +259,7 @@ bool NButton::isEnabled()
 void NButton::enable(bool enabled)
 {
     disabled = !enabled;
-    invalidate();
+    internalInvalidate();
 }
 
 void NButton::disable()
@@ -276,7 +270,7 @@ void NButton::disable()
 void NButton::setFixedWidth(int fw)
 {
     fixedWidth = fw;
-    invalidate();
+    internalInvalidate();
 }
 
 void NButton::setTextPositionAutomatically()
@@ -287,7 +281,7 @@ void NButton::setTextPositionAutomatically()
 void NButton::setIconFixedWidth(int fw)
 {
     iconFixedWidth = fw;
-    invalidate();
+    internalInvalidate();
 }
 
 void NButton::setIconPositionAutomatically()
@@ -306,25 +300,25 @@ void NButton::setText(const char* _text)
     text = (char*) malloc(strlen(_text) + 1);
     strcpy(text, _text);
 
-    invalidate();
+    internalInvalidate();
 }
 
 void NButton::setTextPadding(int padding)
 {
     textPadding = padding;
-    invalidate();
+    internalInvalidate();
 }
 
 void NButton::setIconPadding(int padding)
 {
     iconPadding = padding;
-    invalidate();
+    internalInvalidate();
 }
 
 void NButton::setStyle(ButtonStyle _style)
 {
     style = _style;
-    invalidate();
+    internalInvalidate();
 }
 
 ButtonStyle NButton::getStyle()
@@ -352,7 +346,7 @@ void NButton::invoke()
 void NButton::setIconPosition(ButtonIconPosition pos)
 {
     iconPos = pos;
-    invalidate();
+    internalInvalidate();
 }
 
 void NButton::setIcon(NLoadedBitmap* _bmp, ButtonIconPosition pos)
@@ -379,7 +373,7 @@ void NButton::removeIcon()
         delete bmp;
         bmp = nullptr;
     }
-    invalidate();
+    internalInvalidate();
 }
 
 NButton::~NButton()

@@ -73,7 +73,6 @@ public:
 	void enable(bool enabled = true);
 	void disable();
 
-	void invalidate();
 	void invoke();
 
 	void setBackgroundColour(uint32_t col);
