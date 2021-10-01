@@ -218,6 +218,7 @@ Discarded input sections
  .comment       0x0000000000000000       0x12 sys/wsbe.32
  .comment       0x0000000000000000       0x12 sys/yield.32
  .comment       0x0000000000000000       0x12 thr/elf.32
+ .comment       0x0000000000000000       0x12 thr/exec.32
  .group         0x0000000000000000        0x8 thr/prcssthr.32
  .group         0x0000000000000000        0x8 thr/prcssthr.32
  .group         0x0000000000000000        0x8 thr/prcssthr.32
@@ -433,6 +434,7 @@ LOAD sys/write.32
 LOAD sys/wsbe.32
 LOAD sys/yield.32
 LOAD thr/elf.32
+LOAD thr/exec.32
 LOAD thr/prcssthr.32
 LOAD vm86/vm8086.32
 LOAD arch/i386/hal.32
@@ -467,7 +469,7 @@ LOAD D:/Users/Alex/Desktop/Banana/kernel/libsoftfp.a
 LOAD D:/Users/Alex/Desktop/Banana/kernel/libk/libm32.a
                 0x00000000c0000000                . = 0xc0000000
 
-.text           0x00000000c0000000    0x2f18a
+.text           0x00000000c0000000    0x2f1aa
  *(.text)
  .text          0x00000000c0000000       0x20 D:/Users/Alex/Desktop/Banana/kernel/boot.32
  .text          0x00000000c0000020        0x0 crti.32
@@ -951,7 +953,7 @@ LOAD D:/Users/Alex/Desktop/Banana/kernel/libk/libm32.a
                 0x00000000c0018004                ReservedFilename::~ReservedFilename()
                 0x00000000c0018028                ReservedFilename::~ReservedFilename()
                 0x00000000c001804f                KeGetFileFromDescriptor(int)
- .text          0x00000000c001814c     0x1224 core/virtmgr.32
+ .text          0x00000000c001814c     0x1222 core/virtmgr.32
                 0x00000000c001814c                Virt::setPageState(unsigned long, Virt::VirtPageState)
                 0x00000000c0018186                Virt::getPageState(unsigned long)
                 0x00000000c00181a9                Virt::allocateKernelVirtualPages(int)
@@ -963,46 +965,47 @@ LOAD D:/Users/Alex/Desktop/Banana/kernel/libk/libm32.a
                 0x00000000c0018440                VAS::setCPUSpecific(unsigned long)
                 0x00000000c0018442                VAS::VAS(VAS*)
                 0x00000000c0018442                VAS::VAS(VAS*)
-                0x00000000c0018470                VAS::getForeignPageTableEntry(bool, unsigned long)
-                0x00000000c001849e                VAS::getPageTableEntry(unsigned long)
-                0x00000000c00184bd                Virt::freeKernelVirtualPages(unsigned long)
-                0x00000000c00185fa                VAS::freeAllocatedPages(unsigned long)
-                0x00000000c001861e                VAS::virtualToPhysical(unsigned long)
-                0x00000000c0018638                VAS::reflagRange(unsigned long, int, unsigned long, unsigned long)
-                0x00000000c001867a                VAS::VAS()
-                0x00000000c001867a                VAS::VAS()
-                0x00000000c00186e4                VAS::setToWriteCombining(unsigned long, int)
-                0x00000000c0018718                VAS::mapOtherVASIn(bool, VAS*)
-                0x00000000c0018744                VAS::~VAS()
-                0x00000000c0018744                VAS::~VAS()
-                0x00000000c00188b2                VAS::mapPage(unsigned long, unsigned long, int)
-                0x00000000c00189ba                VAS::allocatePages(int, int)
-                0x00000000c0018abc                VAS::mapRange(unsigned long, unsigned long, int, int)
-                0x00000000c0018b16                VAS::mapForeignPage(bool, VAS*, unsigned long, unsigned long, int)
-                0x00000000c0018c06                VAS::VAS(bool)
-                0x00000000c0018c06                VAS::VAS(bool)
-                0x00000000c0018e50                VAS::evict(unsigned long)
-                0x00000000c0018f2e                VAS::tryLoadBackOffDisk(unsigned long)
-                0x00000000c00190d2                VAS::allocateSharedMemoryWithKernel(unsigned long, unsigned long*)
-                0x00000000c0019146                VAS::freeSharedMemoryWithKernel(unsigned long, unsigned long)
-                0x00000000c0019172                VAS::scanForEviction()
-                0x00000000c0019275                mapVASFirstTime
- .text          0x00000000c0019370       0x5f coreobjs/c++.32
-                0x00000000c0019370                __cxa_atexit
-                0x00000000c0019373                __cxa_finalize
-                0x00000000c0019374                __stack_chk_fail
-                0x00000000c00193aa                __cxa_pure_virtual
-                0x00000000c00193bb                operator new[](unsigned long)
-                0x00000000c00193c0                operator delete(void*, unsigned long)
-                0x00000000c00193c5                operator delete[](void*)
-                0x00000000c00193ca                operator delete[](void*, unsigned long)
- .text          0x00000000c00193cf      0x225 dbg/kconsole.32
-                0x00000000c00193cf                Dbg::stringifyxWithBase(unsigned int, char*, int)
-                0x00000000c0019440                Dbg::logc(char)
-                0x00000000c0019460                Dbg::logs(char*)
-                0x00000000c001947f                Dbg::logWriteInt(unsigned int)
-                0x00000000c001949d                Dbg::logWriteIntBase(unsigned int, int)
-                0x00000000c00194be                Dbg::kprintf(char const*, ...)
+                0x00000000c001845a                VAS::getForeignPageTableEntry(bool, unsigned long)
+                0x00000000c0018488                VAS::getPageTableEntry(unsigned long)
+                0x00000000c00184a7                Virt::freeKernelVirtualPages(unsigned long)
+                0x00000000c00185e4                VAS::freeAllocatedPages(unsigned long)
+                0x00000000c0018608                VAS::virtualToPhysical(unsigned long)
+                0x00000000c0018622                VAS::reflagRange(unsigned long, int, unsigned long, unsigned long)
+                0x00000000c0018664                VAS::VAS()
+                0x00000000c0018664                VAS::VAS()
+                0x00000000c00186ce                VAS::setToWriteCombining(unsigned long, int)
+                0x00000000c0018702                VAS::mapOtherVASIn(bool, VAS*)
+                0x00000000c001872e                VAS::~VAS()
+                0x00000000c001872e                VAS::~VAS()
+                0x00000000c001889c                VAS::mapPage(unsigned long, unsigned long, int)
+                0x00000000c00189a4                VAS::allocatePages(int, int)
+                0x00000000c0018aa6                VAS::mapRange(unsigned long, unsigned long, int, int)
+                0x00000000c0018b00                VAS::mapForeignPage(bool, VAS*, unsigned long, unsigned long, int)
+                0x00000000c0018bf0                VAS::VAS(bool)
+                0x00000000c0018bf0                VAS::VAS(bool)
+                0x00000000c0018e3a                VAS::evict(unsigned long)
+                0x00000000c0018f18                VAS::tryLoadBackOffDisk(unsigned long)
+                0x00000000c00190d0                VAS::allocateSharedMemoryWithKernel(unsigned long, unsigned long*)
+                0x00000000c0019144                VAS::freeSharedMemoryWithKernel(unsigned long, unsigned long)
+                0x00000000c0019170                VAS::scanForEviction()
+                0x00000000c0019273                mapVASFirstTime
+ .text          0x00000000c001936e       0x5f coreobjs/c++.32
+                0x00000000c001936e                __cxa_atexit
+                0x00000000c0019371                __cxa_finalize
+                0x00000000c0019372                __stack_chk_fail
+                0x00000000c00193a8                __cxa_pure_virtual
+                0x00000000c00193b9                operator new[](unsigned long)
+                0x00000000c00193be                operator delete(void*, unsigned long)
+                0x00000000c00193c3                operator delete[](void*)
+                0x00000000c00193c8                operator delete[](void*, unsigned long)
+ .text          0x00000000c00193cd      0x225 dbg/kconsole.32
+                0x00000000c00193cd                Dbg::stringifyxWithBase(unsigned int, char*, int)
+                0x00000000c001943e                Dbg::logc(char)
+                0x00000000c001945e                Dbg::logs(char*)
+                0x00000000c001947d                Dbg::logWriteInt(unsigned int)
+                0x00000000c001949b                Dbg::logWriteIntBase(unsigned int, int)
+                0x00000000c00194bc                Dbg::kprintf(char const*, ...)
+ *fill*         0x00000000c00195f2        0x2 
  .text          0x00000000c00195f4      0x2d4 dbg/usban.32
                 0x00000000c00195f4                KiUbsanPrintDetails(char const*, void*)
                 0x00000000c0019660                __ubsan_handle_type_mismatch_v1
@@ -1155,1365 +1158,1365 @@ LOAD D:/Users/Alex/Desktop/Banana/kernel/libk/libm32.a
                 0x00000000c001bd17                uninstallIRQHandler(int, void (*)(regs*, void*), bool)
                 0x00000000c001bd8d                setupINTS()
                 0x00000000c001bdea                convertLegacyIRQNumber(int)
- .text          0x00000000c001be2c      0x8b6 hal/keybrd.32
+ .text          0x00000000c001be2c      0x888 hal/keybrd.32
                 0x00000000c001be2c                startGUI(void*)
                 0x00000000c001be96                startGUIVESA(void*)
                 0x00000000c001bf00                sendKeyToTerminal(unsigned char)
                 0x00000000c001bfdb                sendKeyboardToken(KeyboardToken)
-                0x00000000c001c4c5                clearInternalKeybuffer(VgaText*)
-                0x00000000c001c4fa                readKeyboard(VgaText*, char*, unsigned long)
-                0x00000000c001c658                Keyboard::Keyboard(char const*)
-                0x00000000c001c658                Keyboard::Keyboard(char const*)
-                0x00000000c001c694                Keyboard::~Keyboard()
-                0x00000000c001c694                Keyboard::~Keyboard()
-                0x00000000c001c6b8                Keyboard::~Keyboard()
- .text          0x00000000c001c6e2      0x3f8 hal/logidisk.32
-                0x00000000c001c6e2                LogicalDisk::close(int, int, void*)
-                0x00000000c001c6e6                LogicalDisk::~LogicalDisk()
-                0x00000000c001c6e6                LogicalDisk::~LogicalDisk()
-                0x00000000c001c70a                LogicalDisk::~LogicalDisk()
-                0x00000000c001c734                LogicalDisk::open(int, int, void*)
-                0x00000000c001c748                LogicalDisk::absoluteToRelative(unsigned long long)
-                0x00000000c001c780                LogicalDisk::relativeToAbsolute(unsigned long long)
-                0x00000000c001c7c6                LogicalDisk::LogicalDisk(char const*, PhysicalDisk*, unsigned long long, unsigned long long)
-                0x00000000c001c7c6                LogicalDisk::LogicalDisk(char const*, PhysicalDisk*, unsigned long long, unsigned long long)
-                0x00000000c001c886                LogicalDisk::assignDriveLetter()
-                0x00000000c001c940                LogicalDisk::mount()
-                0x00000000c001c988                LogicalDisk::unmount()
-                0x00000000c001c998                LogicalDisk::eject()
-                0x00000000c001c9ac                LogicalDisk::unassignDriveLetter()
-                0x00000000c001ca02                LogicalDisk::read(unsigned long long, int, void*)
-                0x00000000c001ca6e                LogicalDisk::write(unsigned long long, int, void*)
- *fill*         0x00000000c001cada        0x2 
- .text          0x00000000c001cadc       0x86 hal/mouse.32
-                0x00000000c001cadc                Mouse::Mouse(char const*)
-                0x00000000c001cadc                Mouse::Mouse(char const*)
-                0x00000000c001cb14                Mouse::~Mouse()
-                0x00000000c001cb14                Mouse::~Mouse()
-                0x00000000c001cb38                Mouse::~Mouse()
- .text          0x00000000c001cb62       0x90 hal/nic.32
-                0x00000000c001cb62                NIC::getMAC()
-                0x00000000c001cb68                NIC::write(int, unsigned char*, int*)
-                0x00000000c001cb6e                NIC::NIC(char const*)
-                0x00000000c001cb6e                NIC::NIC(char const*)
-                0x00000000c001cba4                NIC::~NIC()
-                0x00000000c001cba4                NIC::~NIC()
-                0x00000000c001cbc8                NIC::~NIC()
- .text          0x00000000c001cbf2      0x33b hal/partition.32
-                0x00000000c001cbf2                makePartition(PhysicalDisk*, unsigned long long, unsigned long long)
-                0x00000000c001cc9a                createPartitionsForDisk(PhysicalDisk*)
- *fill*         0x00000000c001cf2d        0x3 
- .text          0x00000000c001cf30       0x86 hal/serial.32
-                0x00000000c001cf30                Serial::Serial(char const*)
-                0x00000000c001cf30                Serial::Serial(char const*)
-                0x00000000c001cf68                Serial::~Serial()
-                0x00000000c001cf68                Serial::~Serial()
-                0x00000000c001cf8c                Serial::~Serial()
- *fill*         0x00000000c001cfb6        0x2 
- .text          0x00000000c001cfb8      0x230 hal/timer.32
-                0x00000000c001cfb8                Timer::Timer(char const*)
-                0x00000000c001cfb8                Timer::Timer(char const*)
-                0x00000000c001cff0                Timer::~Timer()
-                0x00000000c001cff0                Timer::~Timer()
-                0x00000000c001d014                Timer::~Timer()
-                0x00000000c001d03e                Timer::read()
-                0x00000000c001d049                setupTimer(int)
-                0x00000000c001d084                timerHandler(unsigned int)
- .text          0x00000000c001d1e8      0x444 hal/vcache.32
-                0x00000000c001d1e8                VCache::VCache(PhysicalDisk*)
-                0x00000000c001d1e8                VCache::VCache(PhysicalDisk*)
-                0x00000000c001d358                VCache::invalidateReadBuffer()
-                0x00000000c001d368                VCache::writeWriteBuffer()
-                0x00000000c001d3b4                VCache::~VCache()
-                0x00000000c001d3b4                VCache::~VCache()
-                0x00000000c001d40c                VCache::~VCache()
-                0x00000000c001d434                VCache::write(unsigned long long, int, void*)
-                0x00000000c001d524                VCache::read(unsigned long long, int, void*)
- .text          0x00000000c001d62c      0x71d hal/video.32
-                0x00000000c001d62c                Video::putrect(int, int, int, int, unsigned int)
-                0x00000000c001d678                Video::bitblit(int, int, int, int, int, int, int, unsigned int*)
-                0x00000000c001d6e8                Video::blit(unsigned int*, int, int, int, int)
-                0x00000000c001d778                Video::clearScreen(unsigned int)
-                0x00000000c001d7ac                Video::putpixel(int, int, unsigned int)
-                0x00000000c001d7ba                Video::readPixelApprox(int, int)
-                0x00000000c001d7ce                Video::Video(char const*)
-                0x00000000c001d7ce                Video::Video(char const*)
-                0x00000000c001d804                Video::~Video()
-                0x00000000c001d804                Video::~Video()
-                0x00000000c001d828                Video::~Video()
-                0x00000000c001d852                Video::isMonochrome()
-                0x00000000c001d85e                Video::getWidth()
-                0x00000000c001d86a                Video::getHeight()
-                0x00000000c001d876                Video::drawCursor(int, int, unsigned int*, int)
-                0x00000000c001d932                Video::tgaParse(unsigned char*, int, int*, int*)
-                0x00000000c001dcd8                Video::putTGA(int, int, unsigned char*, int)
- *fill*         0x00000000c001dd49        0x3 
- .text          0x00000000c001dd4c     0x135a hw/acpi.32
-                0x00000000c001dd4c                ACPI::close(int, int, void*)
-                0x00000000c001de88                findRSDP()
-                0x00000000c001df20                loadACPITables(unsigned char*)
-                0x00000000c001e18c                findRSDT(unsigned char*)
-                0x00000000c001e2e4                findDataTable(unsigned char*, char*)
-                0x00000000c001e364                scanMADT()
-                0x00000000c001e81c                ACPI::ACPI()
-                0x00000000c001e81c                ACPI::ACPI()
-                0x00000000c001e870                ACPI::getPCIIRQAssignment(unsigned char, unsigned short, unsigned char)
-                0x00000000c001e96c                ACPI::registerPCIIRQAssignment(void*, unsigned short, unsigned char, unsigned char)
-                0x00000000c001ea38                ACPI::setScreenBrightnessLevel(void*, int)
-                0x00000000c001ea40                ACPI::detectPCI()
-                0x00000000c001ec60                ACPI::writeSimpleBootFlag(SimpleBootFlagTable*)
-                0x00000000c001eca8                ACPI::sleep()
-                0x00000000c001ecc4                ACPI::open(int, int, void*)
- .text          0x00000000c001f0a6      0xbc5 hw/cpu.32
-                0x00000000c001f0a6                CPU::close(int, int, void*)
-                0x00000000c001f0aa                CPU::AMD_K6_write_msr(unsigned int, unsigned int, unsigned int, CPU::REGS*)
-                0x00000000c001f0c6                CPU::AMD_K6_read_msr(unsigned int, CPU::REGS*)
-                0x00000000c001f0de                CPU::AMD_K6_writeback(int, int, int)
-                0x00000000c001f152                CPU::cpuid(int, unsigned long*, unsigned long*, unsigned long*, unsigned long*)
-                0x00000000c001f1d6                CPU::cpuidCheckEDX(unsigned int)
-                0x00000000c001f204                CPU::cpuidCheckECX(unsigned int)
-                0x00000000c001f232                CPU::cpuidCheckExtendedEBX(unsigned int)
-                0x00000000c001f260                CPU::cpuidCheckExtendedECX(unsigned int)
-                0x00000000c001f28e                CPU::CPU()
-                0x00000000c001f28e                CPU::CPU()
-                0x00000000c001f31c                CPU::displayFeatures()
-                0x00000000c001f31e                CPU::detectFeatures()
-                0x00000000c001f9f2                CPU::setupSMEP()
-                0x00000000c001f9fe                CPU::setupUMIP()
-                0x00000000c001fa08                CPU::setupTSC()
-                0x00000000c001fa12                CPU::setupLargePages()
-                0x00000000c001fa1c                CPU::setupPAT()
-                0x00000000c001fa58                CPU::setupMTRR()
-                0x00000000c001fa5a                CPU::setupGlobalPages()
-                0x00000000c001fa64                CPU::allowUsermodeDataAccess()
-                0x00000000c001fa76                CPU::prohibitUsermodeDataAccess()
-                0x00000000c001fa88                CPU::setupSMAP()
-                0x00000000c001fa96                CPU::setupFeatures()
-                0x00000000c001fb62                CPU::open(int, int, void*)
- .text          0x00000000c001fc6b       0xb6 krnl/atexit.32
-                0x00000000c001fc6b                KeInitialiseAtexit()
-                0x00000000c001fc8a                KeRegisterAtexit(void (*)(void*), void*)
-                0x00000000c001fcbe                KeExecuteAtexit()
- .text          0x00000000c001fd21       0xdf krnl/bootmsg.32
-                0x00000000c001fd21                KeDisplaySplashScreen()
-                0x00000000c001fd9d                KeSetBootMessage(char const*)
- .text          0x00000000c001fe00       0x48 krnl/cdefs.32
-                0x00000000c001fe00                CUnlockScheduler
-                0x00000000c001fe1c                CLockScheduler
-                0x00000000c001fe2c                CPrintf
- .text          0x00000000c001fe48       0x1d krnl/compat.32
-                0x00000000c001fe48                Krnl::handlePowerButton()
-                0x00000000c001fe58                Krnl::handleSleepButton()
- .text          0x00000000c001fe65       0x2b krnl/crc32.32
-                0x00000000c001fe65                KeCalculateCRC32(unsigned char*, int)
- .text          0x00000000c001fe90      0x5bf krnl/env.32
-                0x00000000c001fe90                EnvVarContainer::getEnv(char const*)
-                0x00000000c001fece                EnvVarContainer::setEnv(char const*, char const*)
-                0x00000000c001ff90                EnvVarContainer::deleteEnv(char const*)
-                0x00000000c001ff92                EnvVarContainer::loadFrom(char const*, char const*)
-                0x00000000c00201b6                EnvVarContainer::__loadSystem()
-                0x00000000c00201d0                EnvVarContainer::__loadUser()
-                0x00000000c00201d2                EnvVarContainer::EnvVarContainer(Process*)
-                0x00000000c00201d2                EnvVarContainer::EnvVarContainer(Process*)
-                0x00000000c00201f4                EnvVarContainer::~EnvVarContainer()
-                0x00000000c00201f4                EnvVarContainer::~EnvVarContainer()
-                0x00000000c0020224                KeGetEnv(Process*, char const*)
-                0x00000000c0020289                KeSetEnvSystem(char const*, char const*)
-                0x00000000c00202a3                KeSetEnvUser(char const*, char const*)
-                0x00000000c00202c2                KeSetEnvProcess(Process*, char const*, char const*)
-                0x00000000c00202d5                KeDeleteEnvSystem(char const*)
-                0x00000000c00202d6                KeDeleteEnvUser(char const*)
-                0x00000000c00202d7                KeDeleteEnvProcess(Process*, char const*)
-                0x00000000c00202d8                KeNewProcessEnv(Process*)
-                0x00000000c00202fa                KeCopyProcessEnv(Process*, Process*)
-                0x00000000c0020346                KeLoadSystemEnv()
-                0x00000000c0020374                KeLoadUserEnv()
-                0x00000000c002039a                KeFlushEnv()
-                0x00000000c002039b                KeGetProcessTotalEnvCount(Process*)
-                0x00000000c00203bb                KeGetProcessEnvPair(Process*, int)
- .text          0x00000000c002044f       0x94 krnl/inlines.32
-                0x00000000c002044f                CPU::current()
-                0x00000000c002045b                operator new(unsigned long)
-                0x00000000c0020460                operator delete(void*)
-                0x00000000c0020465                disableIRQs()
-                0x00000000c0020467                enableIRQs()
-                0x00000000c0020469                lockScheduler()
-                0x00000000c0020471                unlockScheduler()
-                0x00000000c0020480                lockStuff()
-                0x00000000c002048e                unlockStuff()
-                0x00000000c00204c8                Virt::getAKernelVAS()
-                0x00000000c00204ce                __not_memcpy
- *fill*         0x00000000c00204e3        0x1 
- .text          0x00000000c00204e4      0x1e3 krnl/mailbox.32
-                0x00000000c00204e4                KeMailboxTryPost(Mailbox*, void*)
-                0x00000000c0020548                KeMailboxTryGet(Mailbox*, void**)
-                0x00000000c00205ac                KeMailboxCreate()
-                0x00000000c00205e0                KeMailboxPost(Mailbox*, void*)
-                0x00000000c0020648                KeMailboxGet(Mailbox*, void**)
-                0x00000000c00206b0                KeMailboxDestroy(Mailbox*)
- *fill*         0x00000000c00206c7        0x1 
- .text          0x00000000c00206c8       0x1a krnl/mutex.32
-                0x00000000c00206c8                Mutex::Mutex()
-                0x00000000c00206c8                Mutex::Mutex()
- .text          0x00000000c00206e2        0xc krnl/panic.32
-                0x00000000c00206e2                KePanic(char const*)
- .text          0x00000000c00206ee      0x142 krnl/powctrl.32
-                0x00000000c00206ee                KePowerThread(void*)
-                0x00000000c002071c                KeChangePowerSettings(PowerSettings)
-                0x00000000c0020732                KeUserIOReceived()
-                0x00000000c002073d                KeHandlePowerButton()
-                0x00000000c0020772                KeHandleSleepButton()
-                0x00000000c00207a7                KeSetupPowerManager()
- .text          0x00000000c0020830       0x9b krnl/random.32
-                0x00000000c0020830                KeRand()
-                0x00000000c0020870                KeSeedRand(unsigned int)
-                0x00000000c0020899                KeInitRand()
- *fill*         0x00000000c00208cb        0x1 
- .text          0x00000000c00208cc      0x1bc krnl/resolve.32
-                0x00000000c00208cc                KeResolveCompatibilitySymbol(char*)
- .text          0x00000000c0020a88      0x415 krnl/semaphore.32
-                0x00000000c0020a88                Semaphore::Semaphore(int)
-                0x00000000c0020a88                Semaphore::Semaphore(int)
-                0x00000000c0020ab8                Semaphore::tryAcquire()
-                0x00000000c0020b94                Semaphore::assertLocked(char const*)
-                0x00000000c0020c24                Semaphore::acquire(int)
-                0x00000000c0020dcc                Semaphore::acquire()
-                0x00000000c0020de8                Semaphore::release()
- .text          0x00000000c0020e9d      0x31f krnl/signal.32
-                0x00000000c0020e9d                KiSigKill(int)
-                0x00000000c0020eb1                KiDefaultSignalHandlerIgnore(int)
-                0x00000000c0020eb2                KiDefaultSignalHandlerPause(int)
-                0x00000000c0020ede                KiDefaultSignalHandlerResume(int)
-                0x00000000c0020f0a                KeDeinitSignals(SigHandlerBlock*)
-                0x00000000c0020f0f                KeInitSignals()
-                0x00000000c0020f5e                KeRegisterSignalHandler(SigHandlerBlock*, int, void (*)(int), unsigned int, int)
-                0x00000000c0020f94                KeRaiseSignal(SigHandlerBlock*, int)
-                0x00000000c0021011                KeCheckSignal(SigHandlerBlock*, int*)
-                0x00000000c0021108                KiCheckSignalZ
-                0x00000000c002114a                KeCompleteSignal(SigHandlerBlock*, int)
-                0x00000000c0021185                KiFinishSignalZ
- .text          0x00000000c00211bc      0xe32 krnl/syscalls.32
-                0x00000000c00211bc                SysSeekDir(regs*)
-                0x00000000c00211c1                SysTellDir(regs*)
-                0x00000000c00211c6                SysVerify(regs*)
-                0x00000000c00211d0                SysGetArgc(regs*)
-                0x00000000c00211e4                SysTTYName(regs*)
-                0x00000000c00211ec                SysFormatDisk(regs*)
-                0x00000000c0021253                SysSetDiskVolumeLabel(regs*)
-                0x00000000c00212a7                SysGetDiskVolumeLabel(regs*)
-                0x00000000c0021300                SysShutdown(regs*)
-                0x00000000c002138d                SysRealpath(regs*)
-                0x00000000c00213db                SysReadDir(regs*)
-                0x00000000c002145b                SysIsATTY(regs*)
-                0x00000000c00214b5                SysSeek(regs*)
-                0x00000000c002150f                SysTell(regs*)
-                0x00000000c002157c                SysSize(regs*)
-                0x00000000c00215ef                SysSizeFromFilename(regs*)
-                0x00000000c0021723                SysSizeFromFilenameNoSymlink(regs*)
-                0x00000000c0021857                SysClose(regs*)
-                0x00000000c00218b7                SysOpenDir(regs*)
-                0x00000000c0021934                SysMakeDir(regs*)
-                0x00000000c00219a2                SysCloseDir(regs*)
-                0x00000000c00219f1                SysWait(regs*)
-                0x00000000c0021a12                SysNotImpl(regs*)
-                0x00000000c0021a2d                SysPanic(regs*)
-                0x00000000c0021a48                SysRmdir(regs*)
-                0x00000000c0021aa6                SysUnlink(regs*)
-                0x00000000c0021b04                SysGetArgv(regs*)
-                0x00000000c0021b51                SysUSleep(regs*)
-                0x00000000c0021b7a                SysSpawn(regs*)
-                0x00000000c0021beb                SysGetEnv(regs*)
-                0x00000000c0021ca0                SysSetFatAttrib(regs*)
-                0x00000000c0021d09                SysPipe(regs*)
-                0x00000000c0021d4e                SysGetUnixTime(regs*)
-                0x00000000c0021d62                string_ends_with(char const*, char const*)
-                0x00000000c0021dad                SysOpen(regs*)
-                0x00000000c0021fac                KeSystemCall(regs*, void*)
- *fill*         0x00000000c0021fee        0x2 
- .text          0x00000000c0021ff0      0x159 net/ethernet.32
-                0x00000000c0021ff0                KeSwitchEndian16(unsigned short)
-                0x00000000c0022014                KeSwitchEndian32(unsigned int)
-                0x00000000c0022044                EthernetCRC32(unsigned char*, int)
-                0x00000000c00220e8                EthernetReceivedPacket(EthernetUnwrappedFrame*, unsigned short)
- *fill*         0x00000000c0022149        0x3 
- .text          0x00000000c002214c       0xf4 net/netosl.32
-                0x00000000c002214c                KeNetCreateSemaphore
-                0x00000000c0022190                KeNetFreeSemaphore
-                0x00000000c00221ac                KeNetSignalSemaphore
-                0x00000000c00221c8                KeNetWaitSemaphore
-                0x00000000c00221e8                KeNetCreateThread
-                0x00000000c002220c                KeCPanic
-                0x00000000c0022224                KeCPuts
- .text          0x00000000c0022240      0xd51 reg/cm.32
-                0x00000000c0022240                CmOpen(char const*)
-                0x00000000c002235e                CmClose(Reghive_Tag*)
-                0x00000000c0022374                CmReadExtent(Reghive_Tag*, int, unsigned char*)
-                0x00000000c00223b0                CmGetString(Reghive_Tag*, int, char*)
-                0x00000000c0022427                CmEnterDirectory(Reghive_Tag*, int)
-                0x00000000c0022466                CmGetNext(Reghive_Tag*, int)
-                0x00000000c0022498                CmWriteExtent(Reghive_Tag*, int, unsigned char*)
-                0x00000000c00224d4                CmFreeExtent(Reghive_Tag*, int)
-                0x00000000c00224fc                CmUpdateHeader(Reghive_Tag*)
-                0x00000000c002251d                CmExpand(Reghive_Tag*, int)
-                0x00000000c0022598                CmFindUnusedExtent(Reghive_Tag*)
-                0x00000000c002261e                CmCreateExtent(Reghive_Tag*, int, int, unsigned char*)
-                0x00000000c0022712                CmSetString(Reghive_Tag*, int, char const*)
-                0x00000000c002284a                CmGetMatch(char*, char*, bool, bool*)
-                0x00000000c00228ab                CmAddShift(unsigned int*, int*, unsigned char, int)
-                0x00000000c00228db                CmGetShift(unsigned int*, int*, int, bool*)
-                0x00000000c0022912                CmGetInteger(Reghive_Tag*, int, unsigned long long*)
-                0x00000000c002293c                CmSetInteger(Reghive_Tag*, int, unsigned long long)
-                0x00000000c002297c                CmConvertFromInternalFilename(unsigned char const*, char*)
-                0x00000000c0022a20                CmGetNameAndTypeFromExtent(Reghive_Tag*, int, char*)
-                0x00000000c0022a4e                CmConvertToInternalFilename(char const*, unsigned char*)
-                0x00000000c0022beb                CmCreateString(Reghive_Tag*, int, char const*)
-                0x00000000c0022c38                CmFindInDirectory(Reghive_Tag*, int, char const*)
-                0x00000000c0022cb2                CmCreateInteger(Reghive_Tag*, int, char const*, unsigned long long, int)
-                0x00000000c0022d05                CmCreateDirectory(Reghive_Tag*, int, char const*)
-                0x00000000c0022dc9                zStrtok(char*, char const*)
-                0x00000000c0022e3b                CmFindObjectFromPath(Reghive_Tag*, char const*)
-                0x00000000c0022ebc                CmDisplayTree(Reghive_Tag*, int, int)
-                0x00000000c0022f5f                CmSplitFinalSlashInPlace(char*)
- .text          0x00000000c0022f91      0x545 reg/registry.32
-                0x00000000c0022f91                Reg::findLineFromLoadedData(char*, char*, char*)
-                0x00000000c002311d                Reg::getLineFromRegistry(char*, char*, char*, char*)
-                0x00000000c0023272                Reg::getLine(char*, char*, char*)
-                0x00000000c00232a9                Reg::readInt(char*, char*, int*)
-                0x00000000c0023397                Reg::readString(char*, char*, char*, int)
-                0x00000000c0023418                Reg::readBool(char*, char*, bool*)
-                0x00000000c002343d                Reg::readBoolWithDefault(char*, char*, bool)
-                0x00000000c0023469                Reg::readIntWithDefault(char*, char*, int)
-                0x00000000c0023495                Reg::readStringWithDefault(char*, char*, char*, int, char*)
- .text          0x00000000c00234d6       0x36 sys/eject.32
-                0x00000000c00234d6                SysEject(regs*)
- .text          0x00000000c002350c       0x18 sys/exit.32
-                0x00000000c002350c                SysExit(regs*)
- .text          0x00000000c0023524       0x1f sys/getcwd.32
-                0x00000000c0023524                SysGetCwd(regs*)
- .text          0x00000000c0023543        0xc sys/getpid.32
-                0x00000000c0023543                SysGetPID(regs*)
- .text          0x00000000c002354f       0x1a sys/getramdata.32
-                0x00000000c002354f                SysGetRAMData(regs*)
- .text          0x00000000c0023569       0x82 sys/getvgaptr.32
-                0x00000000c0023569                SysGetVGAPtr(regs*)
- *fill*         0x00000000c00235eb        0x1 
- .text          0x00000000c00235ec       0xb9 sys/kill.32
-                0x00000000c00235ec                SysKill(regs*)
- .text          0x00000000c00236a5       0xa8 sys/loaddll.32
-                0x00000000c00236a5                SysLoadDLL(regs*)
- .text          0x00000000c002374d       0x68 sys/read.32
-                0x00000000c002374d                SysRead(regs*)
- .text          0x00000000c00237b5       0x29 sys/registersignal.32
-                0x00000000c00237b5                SysRegisterSignal(regs*)
- .text          0x00000000c00237de      0x19c sys/registry.32
-                0x00000000c00237de                SysRegistryGetTypeFromPath(regs*)
-                0x00000000c0023855                SysRegistryReadExtent(regs*)
-                0x00000000c002389d                SysRegistryPathToExtentLookup(regs*)
-                0x00000000c00238c5                SysRegistryEnterDirectory(regs*)
-                0x00000000c00238ed                SysRegistryGetNext(regs*)
-                0x00000000c0023915                SysRegistryGetNameAndTypeFromExtent(regs*)
-                0x00000000c002394f                SysRegistryOpen(regs*)
-                0x00000000c0023963                SysRegistryClose(regs*)
- .text          0x00000000c002397a       0x55 sys/sbrk.32
-                0x00000000c002397a                SysSbrk(regs*)
- .text          0x00000000c00239cf       0x1c sys/setcwd.32
-                0x00000000c00239cf                SysSetCwd(regs*)
- .text          0x00000000c00239eb       0x96 sys/settime.32
-                0x00000000c00239eb                SysSetTime(regs*)
- .text          0x00000000c0023a81       0x73 sys/symlink.32
-                0x00000000c0023a81                SysSymlink(regs*)
- .text          0x00000000c0023af4       0x3f sys/timezone.32
-                0x00000000c0023af4                SysTimezone(regs*)
- .text          0x00000000c0023b33       0xfc sys/truncate.32
-                0x00000000c0023b33                SysTruncate(regs*)
- .text          0x00000000c0023c2f       0x68 sys/write.32
-                0x00000000c0023c2f                SysWrite(regs*)
- .text          0x00000000c0023c97       0x62 sys/wsbe.32
-                0x00000000c0023c97                SysWsbe(regs*)
- .text          0x00000000c0023cf9       0x25 sys/yield.32
-                0x00000000c0023cf9                SysYield(regs*)
- .text          0x00000000c0023d1e     0x1224 thr/elf.32
-                0x00000000c0023d1e                Thr::allocateMemoryForTask(Process*, File*, unsigned long, unsigned long, unsigned long)
-                0x00000000c0023fa5                Thr::loadProgramIntoMemory(Process*, char const*)
-                0x00000000c00241c4                Thr::runtimeReferenceHelper()
-                0x00000000c00241d7                Thr::getAddressOfKernelSymbol(char const*)
-                0x00000000c0024226                Thr::loadKernelSymbolTable(char const*)
-                0x00000000c00244e4                Thr::loadDriverIntoMemory(char const*, unsigned long, bool)
-                0x00000000c0024c25                Thr::getDriverBaseFromAddress(unsigned long)
-                0x00000000c0024c57                Thr::getDriverNameFromAddress(unsigned long)
-                0x00000000c0024c8e                Thr::getDriverOffsetFromAddress(unsigned long)
-                0x00000000c0024ca8                Thr::loadDLL(char const*, bool)
-                0x00000000c0024f09                Thr::executeDLL(unsigned long, void*)
- *fill*         0x00000000c0024f42        0x2 
- .text          0x00000000c0024f44     0x1121 thr/prcssthr.32
-                0x00000000c0024f44                userModeEntryPoint(void*)
-                0x00000000c0024f6c                changeTSS
-                0x00000000c0024f9c                switchToThread(ThreadControlBlock*)
-                0x00000000c002504c                Process::addArgs(char**)
-                0x00000000c00250b8                Process::Process(char const*, Process*, char**)
-                0x00000000c00250b8                Process::Process(char const*, Process*, char**)
-                0x00000000c00252c4                Process::Process(bool, char const*, Process*, char**)
-                0x00000000c00252c4                Process::Process(bool, char const*, Process*, char**)
-                0x00000000c0025498                taskStartupFunction
-                0x00000000c00254a4                KeDisablePreemption()
-                0x00000000c00254cc                KeRestorePreemption()
-                0x00000000c00254ec                Process::createThread(void (*)(void*), void*, int)
-                0x00000000c00255f4                Process::createUserThread()
-                0x00000000c0025614                setupMultitasking(void (*)())
-                0x00000000c0025738                schedule()
-                0x00000000c00257cc                blockTaskWithSchedulerLockAlreadyHeld(TaskState)
-                0x00000000c00257f4                blockTask(TaskState)
-                0x00000000c002582c                waitTask(int, int*, int)
-                0x00000000c0025870                milliTenthSleepUntil(unsigned int)
-                0x00000000c0025910                milliTenthSleep(unsigned int)
-                0x00000000c0025924                sleep(unsigned int)
-                0x00000000c0025934                taskReturned
-                0x00000000c0025978                Thr::processFromPID(int)
-                0x00000000c0025a24                unblockTask(ThreadControlBlock*)
-                0x00000000c0025ad0                cleanupTerminatedTask(ThreadControlBlock*)
-                0x00000000c0025da4                cleanerTaskFunction(void*)
-                0x00000000c0025eac                terminateTask(int)
-                0x00000000c0025f98                Thr::terminateFromIRQ(int)
- .text          0x00000000c0026065      0xd08 vm86/vm8086.32
-                0x00000000c0026065                Vm::inbv(unsigned short)
-                0x00000000c0026078                Vm::outbv(unsigned short, unsigned char)
-                0x00000000c00260ae                Vm::realToLinear(unsigned short, unsigned short)
-                0x00000000c00260be                Vm::getSegment(unsigned int)
-                0x00000000c00260c6                Vm::getOffset(unsigned int)
-                0x00000000c00260cb                Vm::mainloop2()
-                0x00000000c0026105                Vm::mainVm8086Loop(void*)
-                0x00000000c0026115                Vm::mainloop3(unsigned long)
-                0x00000000c002613b                Vm::initialise8086()
-                0x00000000c002617e                Vm::resetConventionalMemory8086()
-                0x00000000c002617f                Vm::finish8086()
-                0x00000000c00261e0                Vm::getOutput8086(unsigned char*)
-                0x00000000c0026205                Vm::start8086FromBuffer(unsigned char*, int, unsigned short, unsigned short, unsigned short, unsigned short)
-                0x00000000c002632c                Vm::start8086(char const*, unsigned short, unsigned short, unsigned short, unsigned short)
-                0x00000000c0026532                Vm::doISR(regs*, int, unsigned char*, unsigned short, unsigned short)
-                0x00000000c00265cf                Vm::readByteFromReal(unsigned short, unsigned short)
-                0x00000000c00265e0                Vm::readWordFromReal(unsigned short, unsigned short)
-                0x00000000c00265f2                Vm::readDwordFromReal(unsigned short, unsigned short)
-                0x00000000c0026603                Vm::writeByteFromReal(unsigned short, unsigned short, unsigned char)
-                0x00000000c0026618                Vm::writeWordFromReal(unsigned short, unsigned short, unsigned short)
-                0x00000000c002662e                Vm::writeDwordFromReal(unsigned short, unsigned short, unsigned int)
-                0x00000000c0026643                Vm::faultHandler(regs*)
- .text          0x00000000c0026d6d      0xacb arch/i386/hal.32
-                0x00000000c0026d6d                noCopro(unsigned long)
-                0x00000000c0026d6e                nmiHandler(regs*, void*)
-                0x00000000c0026d87                doubleFault(regs*, void*)
-                0x00000000c0026da0                displayDebugInfo(regs*)
-                0x00000000c0027125                HalSystemIdle()
-                0x00000000c00271a1                displayProgramFault(char const*)
-                0x00000000c00271ed                gpFault(regs*, void*)
-                0x00000000c0027254                pgFault(regs*, void*)
-                0x00000000c00272dd                otherISRHandler(regs*, void*)
-                0x00000000c0027311                opcodeFault(regs*, void*)
-                0x00000000c0027394                i386SaveCoprocessor(void*)
-                0x00000000c00273a8                i386LoadCoprocessor(void*)
-                0x00000000c00273bc                x87EmulHandler(regs*, void*)
-                0x00000000c0027459                HalInitialiseCoprocessor()
-                0x00000000c00274e2                HalPanic(char const*)
-                0x00000000c00275f6                HalQueryPerformanceCounter()
-                0x00000000c0027611                HalInitialise()
-                0x00000000c00277c7                HalMakeBeep(int)
-                0x00000000c0027801                HalGetRand()
-                0x00000000c0027804                HalEndOfInterrupt(int)
-                0x00000000c0027835                HalRestart()
-                0x00000000c0027836                HalShutdown()
-                0x00000000c0027837                HalSleep()
- .text          0x00000000c0027838      0x2dc arch/i386/pic.32
-                0x00000000c0027838                picIoWait()
-                0x00000000c0027840                picDisable()
-                0x00000000c0027874                picGetIRQReg(int)
-                0x00000000c00278f0                picOpen()
-                0x00000000c0027a74                picEOI(int)
- .text          0x00000000c0027b14      0x66e arch/i386/rtc.32
-                0x00000000c0027b14                RTC::open(int, int, void*)
-                0x00000000c0027b18                RTC::close(int, int, void*)
-                0x00000000c0027b1c                RTC::timeInSecondsUTC()
-                0x00000000c0027b2e                RTC::timeInDatetimeUTC()
-                0x00000000c0027b54                RTC::setTimeInSecondsUTC(unsigned long long)
-                0x00000000c0027b92                RTC::~RTC()
-                0x00000000c0027b92                RTC::~RTC()
-                0x00000000c0027bb6                RTC::~RTC()
-                0x00000000c0027be0                RTC::get_update_in_progress_flag()
-                0x00000000c0027bfa                RTC::completeRTCRefresh()
-                0x00000000c0027ed4                RTC::setTimeInDatetimeUTC(datetime_t)
-                0x00000000c0028082                rtcIRQHandler(regs*, void*)
-                0x00000000c00280c8                RTC::RTC()
-                0x00000000c00280c8                RTC::RTC()
- *fill*         0x00000000c0028182        0x2 
- .text          0x00000000c0028184      0x1f4 arch/i386/vga.32
-                0x00000000c0028184                HalConsoleScroll(int, int)
-                0x00000000c002828c                HalConsoleWriteCharacter(char, int, int, int, int)
-                0x00000000c00282f0                HalConsoleCursorUpdate(int, int)
- .text          0x00000000c0028378     0x14f3 fs/fat/vfslink.32
-                0x00000000c0028378                FAT::getName()
-                0x00000000c0028380                FAT::tell(void*, unsigned long long*)
-                0x00000000c00283bc                FAT::stat(void*, unsigned long long*)
-                0x00000000c00283f8                FAT::~FAT()
-                0x00000000c00283f8                FAT::~FAT()
-                0x00000000c002841c                FAT::~FAT()
-                0x00000000c0028444                FAT::getlabel(LogicalDisk*, int, char*, unsigned int*)
-                0x00000000c00284e8                FAT::setlabel(LogicalDisk*, int, char*)
-                0x00000000c00285c8                FAT::format(LogicalDisk*, int, char const*, int)
-                0x00000000c00287ac                FAT::tryMount(LogicalDisk*, int)
-                0x00000000c00289c8                FAT::allocateSwapfile(char const*, int)
-                0x00000000c0028b88                FAT::readDir(void*, unsigned long, void*, int*)
-                0x00000000c0028cf8                FAT::read(void*, unsigned long, void*, int*)
-                0x00000000c0028d58                FAT::write(void*, unsigned long, void*, int*)
-                0x00000000c0028db8                FAT::close(void*)
-                0x00000000c0028e0c                FAT::closeDir(void*)
-                0x00000000c0028e60                FAT::truncate(void*, unsigned long long)
-                0x00000000c0028ecc                FAT::seek(void*, unsigned long long)
-                0x00000000c0028f24                fatWrapperReadDisk
-                0x00000000c0028f64                fatWrapperWriteDisk
-                0x00000000c0028fa4                fatWrapperIoctl
-                0x00000000c00290c4                FAT::FAT()
-                0x00000000c00290c4                FAT::FAT()
-                0x00000000c002911c                FAT::fixFilepath(char*)
-                0x00000000c002915c                FAT::open(char const*, void**, FileOpenMode)
-                0x00000000c00292d0                FAT::openDir(char const*, void**)
-                0x00000000c0029380                FAT::stat(char const*, unsigned long long*, bool*)
-                0x00000000c0029478                FAT::unlink(char const*)
-                0x00000000c00294f8                FAT::chfatattr(char const*, unsigned char, unsigned char)
-                0x00000000c00296b0                FAT::rename(char const*, char const*)
-                0x00000000c002977c                FAT::mkdir(char const*)
-                0x00000000c00297fc                FAT::exists(char const*)
- *fill*         0x00000000c002986b        0x1 
- .text          0x00000000c002986c       0x94 fs/iso9660/helper.32
-                0x00000000c002986c                isoReadDiscSectorHelper
-                0x00000000c00298c8                iso_kprintf
-                0x00000000c00298e4                iso_kprintfd
- .text          0x00000000c0029900      0x71a fs/iso9660/vfslink.32
-                0x00000000c0029900                ISO9660::format(LogicalDisk*, int, char const*, int)
-                0x00000000c0029906                ISO9660::truncate(void*, unsigned long long)
-                0x00000000c002990c                ISO9660::getName()
-                0x00000000c0029912                ISO9660::closeDir(void*)
-                0x00000000c002991c                ISO9660::chfatattr(char const*, unsigned char, unsigned char)
-                0x00000000c0029922                ISO9660::unlink(char const*)
-                0x00000000c0029928                ISO9660::write(void*, unsigned long, void*, int*)
-                0x00000000c002992e                ISO9660::rename(char const*, char const*)
-                0x00000000c0029934                ISO9660::mkdir(char const*)
-                0x00000000c002993a                ISO9660::~ISO9660()
-                0x00000000c002993a                ISO9660::~ISO9660()
-                0x00000000c002995e                ISO9660::~ISO9660()
-                0x00000000c0029986                ISO9660::exists(char const*)
-                0x00000000c002999a                ISO9660::open(char const*, void**, FileOpenMode)
-                0x00000000c0029a80                ISO9660::read(void*, unsigned long, void*, int*)
-                0x00000000c0029ac8                ISO9660::seek(void*, unsigned long long)
-                0x00000000c0029b0a                ISO9660::tell(void*, unsigned long long*)
-                0x00000000c0029b48                ISO9660::stat(void*, unsigned long long*)
-                0x00000000c0029b9a                ISO9660::stat(char const*, unsigned long long*, bool*)
-                0x00000000c0029cdc                ISO9660::close(void*)
-                0x00000000c0029d0c                ISO9660::openDir(char const*, void**)
-                0x00000000c0029de6                ISO9660::readDir(void*, unsigned long, void*, int*)
-                0x00000000c0029f01                readSectorFromCDROM(unsigned int, unsigned char*, char)
-                0x00000000c0029f80                ISO9660::tryMount(LogicalDisk*, int)
-                0x00000000c0029ff2                ISO9660::ISO9660()
-                0x00000000c0029ff2                ISO9660::ISO9660()
- .text          0x00000000c002a01a      0x26c hal/sound/sndcard.32
-                0x00000000c002a01a                SoundCard::beginPlayback()
-                0x00000000c002a028                SoundCard::stopPlayback()
-                0x00000000c002a036                SoundCard::SoundCard(char const*)
-                0x00000000c002a036                SoundCard::SoundCard(char const*)
-                0x00000000c002a0d4                SoundCard::~SoundCard()
-                0x00000000c002a0d4                SoundCard::~SoundCard()
-                0x00000000c002a0f8                SoundCard::~SoundCard()
-                0x00000000c002a122                SoundCard::configureRates(int, int, int)
-                0x00000000c002a152                SoundCard::getSamples16(int, short*)
-                0x00000000c002a1ae                SoundCard::getSamples32(int, int*)
-                0x00000000c002a234                SoundCard::addChannel(SoundPort*)
-                0x00000000c002a272                SoundCard::removeChannel(int)
- *fill*         0x00000000c002a286        0x2 
- .text          0x00000000c002a288      0x393 hal/sound/sndport.32
-                0x00000000c002a288                SoundPort::SoundPort(int, int, int, int)
-                0x00000000c002a288                SoundPort::SoundPort(int, int, int, int)
-                0x00000000c002a314                SoundPort::~SoundPort()
-                0x00000000c002a314                SoundPort::~SoundPort()
-                0x00000000c002a348                SoundPort::unpause()
-                0x00000000c002a354                SoundPort::pause()
-                0x00000000c002a360                SoundPort::getBufferUsed()
-                0x00000000c002a368                SoundPort::getBufferSize()
-                0x00000000c002a370                SoundPort::buffer16(short*, int)
-                0x00000000c002a3fc                SoundPort::buffer32(int*, int)
-                0x00000000c002a488                SoundPort::unbufferAndAdd16(int, short*, SoundCard*)
-                0x00000000c002a558                SoundPort::unbufferAndAdd32(int, int*, SoundCard*)
- .text          0x00000000c002a61b        0x0 hw/bus/isa.32
- *fill*         0x00000000c002a61b        0x1 
- .text          0x00000000c002a61c      0xc25 hw/bus/pci.32
-                0x00000000c002a61c                PCI::open(int, int, void*)
-                0x00000000c002a63a                PCI::close(int, int, void*)
-                0x00000000c002a63e                PCI::PCI()
-                0x00000000c002a63e                PCI::PCI()
-                0x00000000c002a6d6                PCI::readBAR8(unsigned int, int)
-                0x00000000c002a6f2                PCI::readBAR16(unsigned int, int)
-                0x00000000c002a710                PCI::readBAR32(unsigned int, int)
-                0x00000000c002a72c                PCI::writeBAR8(unsigned int, unsigned char, int)
-                0x00000000c002a74c                PCI::writeBAR16(unsigned int, unsigned short, int)
-                0x00000000c002a76e                PCI::writeBAR32(unsigned int, unsigned int, int)
-                0x00000000c002a78e                PCI::legacyMechanism(unsigned char, unsigned char, unsigned char, unsigned char)
-                0x00000000c002a804                PCI::pciReadWord(unsigned char, unsigned char, unsigned char, unsigned char)
-                0x00000000c002a8ae                PCI::getVendorID(unsigned char, unsigned char, unsigned char)
-                0x00000000c002a8d2                PCI::getHeaderType(unsigned char, unsigned char, unsigned char)
-                0x00000000c002a8fa                PCI::getClassCode(unsigned char, unsigned char, unsigned char)
-                0x00000000c002a944                PCI::getProgIF(unsigned char, unsigned char, unsigned char)
-                0x00000000c002a96c                PCI::getRevisionID(unsigned char, unsigned char, unsigned char)
-                0x00000000c002a990                PCI::getInterruptNumber(unsigned char, unsigned char, unsigned char)
-                0x00000000c002a9b4                PCI::getSecondaryBus(unsigned char, unsigned char, unsigned char)
-                0x00000000c002a9dc                PCI::getBARAddress(unsigned char, unsigned char, unsigned char, unsigned char)
-                0x00000000c002aa40                PCI::pciWriteWord(unsigned char, unsigned char, unsigned char, unsigned char, unsigned short)
-                0x00000000c002ab26                PCI::pciDetailsToFilepath(PCIDeviceInfo, char*)
-                0x00000000c002adf0                PCI::checkBus(unsigned char)
-                0x00000000c002ae14                PCI::foundDevice(PCIDeviceInfo)
-                0x00000000c002affa                PCI::getDeviceData(unsigned char, unsigned char, unsigned char)
-                0x00000000c002b176                PCI::checkDevice(unsigned char, unsigned char)
-                0x00000000c002b1e8                PCI::detect()
- *fill*         0x00000000c002b241        0x1 
- .text          0x00000000c002b242      0xe12 hw/diskctrl/ide.32
-                0x00000000c002b242                IDE::close(int, int, void*)
-                0x00000000c002b246                IDE::IDE()
-                0x00000000c002b246                IDE::IDE()
-                0x00000000c002b27a                IDE::prepareInterrupt(unsigned char)
-                0x00000000c002b28c                selectDrive(unsigned char, unsigned char)
-                0x00000000c002b28e                IDE::getBase(unsigned char)
-                0x00000000c002b2a0                IDE::write(unsigned char, unsigned char, unsigned char)
-                0x00000000c002b360                IDE::read(unsigned char, unsigned char)
-                0x00000000c002b414                IDE::waitInterrupt(unsigned char)
-                0x00000000c002b476                ideChannel0IRQHandler(regs*, void*)
-                0x00000000c002b492                ideChannel1IRQHandler(regs*, void*)
-                0x00000000c002b4ae                IDE::enableIRQs(unsigned char, bool)
-                0x00000000c002b4f8                IDE::open(int, int, void*)
-                0x00000000c002ba3c                IDE::readBuffer(unsigned char, unsigned char, unsigned int, unsigned int)
-                0x00000000c002bb0c                IDE::detect()
-                0x00000000c002bf46                IDE::printError(unsigned char, unsigned char, unsigned char)
-                0x00000000c002c000                IDE::polling(unsigned char, unsigned int)
- .text          0x00000000c002c054      0x33f hw/diskctrl/satabus.32
-                0x00000000c002c054                SATABus::close(int, int, void*)
-                0x00000000c002c058                SATABus::detect()
-                0x00000000c002c05a                SATABus::SATABus()
-                0x00000000c002c05a                SATABus::SATABus()
-                0x00000000c002c0e0                SATABus::findCmdslot(SATABus::tagHBA_PORT volatile*)
-                0x00000000c002c112                SATABus::checkType(SATABus::tagHBA_PORT volatile*)
-                0x00000000c002c15a                SATABus::startCmd(SATABus::tagHBA_PORT volatile*)
-                0x00000000c002c17a                SATABus::stopCmd(SATABus::tagHBA_PORT volatile*)
-                0x00000000c002c1a4                SATABus::portRebase(SATABus::tagHBA_PORT volatile*, int)
-                0x00000000c002c2b6                SATABus::probePort(SATABus::tagHBA_MEM volatile*)
-                0x00000000c002c360                SATABus::open(int, int, void*)
- *fill*         0x00000000c002c393        0x1 
- .text          0x00000000c002c394      0x9b5 hw/diskphys/ata.32
-                0x00000000c002c394                ATA::close(int, int, void*)
-                0x00000000c002c3b8                ATA::powerSaving(PowerSavingLevel)
-                0x00000000c002c3ba                ATA::ATA()
-                0x00000000c002c3ba                ATA::ATA()
-                0x00000000c002c3e8                ATA::flush(bool)
-                0x00000000c002c436                ATA::readyForCommand()
-                0x00000000c002c482                ATA::access(unsigned long long, int, void*, bool)
-                0x00000000c002c88e                ATA::detectCHS()
-                0x00000000c002c8b8                ATA::open(int, int, void*)
-                0x00000000c002c984                combineCharAndColour(char, unsigned char)
-                0x00000000c002c995                combineColours(unsigned char, unsigned char)
-                0x00000000c002c9a2                ATA::read(unsigned long long, int, void*)
-                0x00000000c002cb78                ATA::write(unsigned long long, int, void*)
- *fill*         0x00000000c002cd49        0x1 
- .text          0x00000000c002cd4a      0x612 hw/diskphys/atapi.32
-                0x00000000c002cd4a                ATAPI::write(unsigned long long, int, void*)
-                0x00000000c002cd50                ATAPI::close(int, int, void*)
-                0x00000000c002cd74                ATAPI::ATAPI()
-                0x00000000c002cd74                ATAPI::ATAPI()
-                0x00000000c002cda2                ATAPI::readyForCommand()
-                0x00000000c002cdf4                ATAPI::sendPacket(unsigned char*, int, bool, unsigned short*, int)
-                0x00000000c002d0b4                ATAPI::diskRemoved()
-                0x00000000c002d0ee                ATAPI::eject()
-                0x00000000c002d136                ATAPI::diskInserted()
-                0x00000000c002d142                ATAPI::detectMedia()
-                0x00000000c002d202                ATAPI::open(int, int, void*)
-                0x00000000c002d2e2                ATAPI::read(unsigned long long, int, void*)
- .text          0x00000000c002d35c      0x841 hw/diskphys/sata.32
-                0x00000000c002d35c                SATA::close(int, int, void*)
-                0x00000000c002d380                SATA::powerSaving(PowerSavingLevel)
-                0x00000000c002d382                SATA::open(int, int, void*)
-                0x00000000c002d43a                SATA::SATA()
-                0x00000000c002d43a                SATA::SATA()
-                0x00000000c002d468                SATA::access(unsigned long long, int, void*, bool)
-                0x00000000c002d6ee                SATA::read(unsigned long long, int, void*)
-                0x00000000c002d93e                SATA::write(unsigned long long, int, void*)
- *fill*         0x00000000c002db9d        0x1 
- .text          0x00000000c002db9e      0x5d8 hw/diskphys/satapi.32
-                0x00000000c002db9e                SATAPI::write(unsigned long long, int, void*)
-                0x00000000c002dba4                SATAPI::close(int, int, void*)
-                0x00000000c002dbc8                SATAPI::SATAPI()
-                0x00000000c002dbc8                SATAPI::SATAPI()
-                0x00000000c002dbf6                SATAPI::diskRemoved()
-                0x00000000c002dbf8                SATAPI::diskInserted()
-                0x00000000c002dc14                SATAPI::sendPacket(unsigned char*, int, unsigned long long, unsigned short*, int)
-                0x00000000c002defa                SATAPI::eject()
-                0x00000000c002df36                SATAPI::detectMedia()
-                0x00000000c002df8c                SATAPI::open(int, int, void*)
-                0x00000000c002e08c                SATAPI::read(unsigned long long, int, void*)
- .text          0x00000000c002e176      0x45b hw/intctrl/apic.32
-                0x00000000c002e176                IOAPIC::close(int, int, void*)
-                0x00000000c002e17c                apicGetBase()
-                0x00000000c002e1c2                IOAPIC::IOAPIC()
-                0x00000000c002e1c2                IOAPIC::IOAPIC()
-                0x00000000c002e1ea                apicOpen()
-                0x00000000c002e366                IOAPIC::handlesGSIWithNumber(unsigned int)
-                0x00000000c002e398                IOAPIC::read(int)
-                0x00000000c002e3c0                IOAPIC::open(int, int, void*)
-                0x00000000c002e4a6                IOAPIC::write(int, int)
-                0x00000000c002e4d2                IOAPIC::redirect(unsigned char, unsigned long long, unsigned char, bool, bool)
- *fill*         0x00000000c002e5d1        0x3 
- .text          0x00000000c002e5d4       0xf0 hw/timer/apictimer.32
-                0x00000000c002e5d4                APICTimer::close(int, int, void*)
-                0x00000000c002e5dc                apicTimerHandler(regs*, void*)
-                0x00000000c002e604                APICTimer::open(int, int, void*)
-                0x00000000c002e674                APICTimer::write(int)
-                0x00000000c002e69c                APICTimer::APICTimer()
-                0x00000000c002e69c                APICTimer::APICTimer()
- .text          0x00000000c002e6c4      0x1ad hw/timer/pit.32
-                0x00000000c002e6c4                PIT::write(int)
-                0x00000000c002e748                pitHandler(regs*, void*)
-                0x00000000c002e770                PIT::open(int, int, void*)
-                0x00000000c002e7c0                PIT::close(int, int, void*)
-                0x00000000c002e7f0                PIT::PIT()
-                0x00000000c002e7f0                PIT::PIT()
- *fill*         0x00000000c002e871        0xf 
- .text          0x00000000c002e880       0x6f arch/i386/avx.32
-                0x00000000c002e880                avxDetect
-                0x00000000c002e8aa                avxSave
-                0x00000000c002e8bb                avxLoad
-                0x00000000c002e8cc                avxInit
-                0x00000000c002e8ee                avxClose
- *fill*         0x00000000c002e8ef        0x1 
- .text          0x00000000c002e8f0      0x2ec arch/i386/interrupt.32
-                0x00000000c002e8f0                isr0
-                0x00000000c002e900                isr1
-                0x00000000c002e90a                isr2
-                0x00000000c002e914                isr3
-                0x00000000c002e91e                isr4
-                0x00000000c002e928                isr5
-                0x00000000c002e932                isr6
-                0x00000000c002e93c                isr7
-                0x00000000c002e946                isr8
-                0x00000000c002e94e                isr9
-                0x00000000c002e958                isr10
-                0x00000000c002e960                isr11
-                0x00000000c002e968                isr12
-                0x00000000c002e970                isr13
-                0x00000000c002e98a                isr14
-                0x00000000c002e992                isr15
-                0x00000000c002e99c                isr16
-                0x00000000c002e9a6                isr17
-                0x00000000c002e9b0                isr18
-                0x00000000c002e9ba                irq3
-                0x00000000c002e9c4                irq4
-                0x00000000c002e9ce                irq5
-                0x00000000c002e9d8                irq6
-                0x00000000c002e9e2                irq7
-                0x00000000c002e9ec                irq8
-                0x00000000c002e9f6                irq9
-                0x00000000c002ea00                irq10
-                0x00000000c002ea0a                irq11
-                0x00000000c002ea14                irq12
-                0x00000000c002ea1e                irq13
-                0x00000000c002ea28                irq14
-                0x00000000c002ea32                irq15
-                0x00000000c002ea3c                irq1
-                0x00000000c002ea43                irq2
-                0x00000000c002ea4a                isr96
-                0x00000000c002ea51                irq0
-                0x00000000c002ea56                int_common_stub
-                0x00000000c002ea88                syscall_common_stub
-                0x00000000c002eb8c                irq16
-                0x00000000c002eb96                irq17
-                0x00000000c002eba0                irq18
-                0x00000000c002ebaa                irq19
-                0x00000000c002ebb4                irq20
-                0x00000000c002ebbe                irq21
-                0x00000000c002ebc8                irq22
-                0x00000000c002ebd2                irq23
- *fill*         0x00000000c002ebdc        0x4 
- .text          0x00000000c002ebe0       0x10 arch/i386/rdrand.32
-                0x00000000c002ebe0                i386GetRDRAND
- .text          0x00000000c002ebf0       0x39 arch/i386/sse.32
-                0x00000000c002ebf0                sseDetect
-                0x00000000c002ec08                sseSave
-                0x00000000c002ec10                sseLoad
-                0x00000000c002ec18                sseInit
-                0x00000000c002ec28                sseClose
- *fill*         0x00000000c002ec29        0x7 
- .text          0x00000000c002ec30       0x49 arch/i386/x87.32
-                0x00000000c002ec36                x87Detect
-                0x00000000c002ec51                x87Save
-                0x00000000c002ec58                x87Load
-                0x00000000c002ec5f                x87Init
-                0x00000000c002ec78                x87Close
- *fill*         0x00000000c002ec79        0x3 
- .text          0x00000000c002ec7c       0x25 /cygdrive/d/Users/Alex/Desktop/Toolchain/Output/bin/../lib/gcc/i386-banana/8.1.0/crtend.o
- .text          0x00000000c002eca1        0x0 crtn.32
- *fill*         0x00000000c002eca1        0x3 
- .text          0x00000000c002eca4      0x14b /cygdrive/d/Users/Alex/Desktop/Toolchain/Output/bin/../lib/gcc/i386-banana/8.1.0/libkgcc.a(_divdi3.o)
-                0x00000000c002eca4                __divdi3
- *fill*         0x00000000c002edef        0x1 
- .text          0x00000000c002edf0      0x17e /cygdrive/d/Users/Alex/Desktop/Toolchain/Output/bin/../lib/gcc/i386-banana/8.1.0/libkgcc.a(_moddi3.o)
-                0x00000000c002edf0                __moddi3
- *fill*         0x00000000c002ef6e        0x2 
- .text          0x00000000c002ef70       0xff /cygdrive/d/Users/Alex/Desktop/Toolchain/Output/bin/../lib/gcc/i386-banana/8.1.0/libkgcc.a(_udivdi3.o)
-                0x00000000c002ef70                __udivdi3
- *fill*         0x00000000c002f06f        0x1 
- .text          0x00000000c002f070      0x11a /cygdrive/d/Users/Alex/Desktop/Toolchain/Output/bin/../lib/gcc/i386-banana/8.1.0/libkgcc.a(_umoddi3.o)
-                0x00000000c002f070                __umoddi3
+                0x00000000c001c497                clearInternalKeybuffer(VgaText*)
+                0x00000000c001c4cc                readKeyboard(VgaText*, char*, unsigned long)
+                0x00000000c001c62a                Keyboard::Keyboard(char const*)
+                0x00000000c001c62a                Keyboard::Keyboard(char const*)
+                0x00000000c001c666                Keyboard::~Keyboard()
+                0x00000000c001c666                Keyboard::~Keyboard()
+                0x00000000c001c68a                Keyboard::~Keyboard()
+ .text          0x00000000c001c6b4      0x3f8 hal/logidisk.32
+                0x00000000c001c6b4                LogicalDisk::close(int, int, void*)
+                0x00000000c001c6b8                LogicalDisk::~LogicalDisk()
+                0x00000000c001c6b8                LogicalDisk::~LogicalDisk()
+                0x00000000c001c6dc                LogicalDisk::~LogicalDisk()
+                0x00000000c001c706                LogicalDisk::open(int, int, void*)
+                0x00000000c001c71a                LogicalDisk::absoluteToRelative(unsigned long long)
+                0x00000000c001c752                LogicalDisk::relativeToAbsolute(unsigned long long)
+                0x00000000c001c798                LogicalDisk::LogicalDisk(char const*, PhysicalDisk*, unsigned long long, unsigned long long)
+                0x00000000c001c798                LogicalDisk::LogicalDisk(char const*, PhysicalDisk*, unsigned long long, unsigned long long)
+                0x00000000c001c858                LogicalDisk::assignDriveLetter()
+                0x00000000c001c912                LogicalDisk::mount()
+                0x00000000c001c95a                LogicalDisk::unmount()
+                0x00000000c001c96a                LogicalDisk::eject()
+                0x00000000c001c97e                LogicalDisk::unassignDriveLetter()
+                0x00000000c001c9d4                LogicalDisk::read(unsigned long long, int, void*)
+                0x00000000c001ca40                LogicalDisk::write(unsigned long long, int, void*)
+ .text          0x00000000c001caac       0x86 hal/mouse.32
+                0x00000000c001caac                Mouse::Mouse(char const*)
+                0x00000000c001caac                Mouse::Mouse(char const*)
+                0x00000000c001cae4                Mouse::~Mouse()
+                0x00000000c001cae4                Mouse::~Mouse()
+                0x00000000c001cb08                Mouse::~Mouse()
+ .text          0x00000000c001cb32       0x90 hal/nic.32
+                0x00000000c001cb32                NIC::getMAC()
+                0x00000000c001cb38                NIC::write(int, unsigned char*, int*)
+                0x00000000c001cb3e                NIC::NIC(char const*)
+                0x00000000c001cb3e                NIC::NIC(char const*)
+                0x00000000c001cb74                NIC::~NIC()
+                0x00000000c001cb74                NIC::~NIC()
+                0x00000000c001cb98                NIC::~NIC()
+ .text          0x00000000c001cbc2      0x33b hal/partition.32
+                0x00000000c001cbc2                makePartition(PhysicalDisk*, unsigned long long, unsigned long long)
+                0x00000000c001cc6a                createPartitionsForDisk(PhysicalDisk*)
+ *fill*         0x00000000c001cefd        0x3 
+ .text          0x00000000c001cf00       0x86 hal/serial.32
+                0x00000000c001cf00                Serial::Serial(char const*)
+                0x00000000c001cf00                Serial::Serial(char const*)
+                0x00000000c001cf38                Serial::~Serial()
+                0x00000000c001cf38                Serial::~Serial()
+                0x00000000c001cf5c                Serial::~Serial()
+ *fill*         0x00000000c001cf86        0x2 
+ .text          0x00000000c001cf88      0x230 hal/timer.32
+                0x00000000c001cf88                Timer::Timer(char const*)
+                0x00000000c001cf88                Timer::Timer(char const*)
+                0x00000000c001cfc0                Timer::~Timer()
+                0x00000000c001cfc0                Timer::~Timer()
+                0x00000000c001cfe4                Timer::~Timer()
+                0x00000000c001d00e                Timer::read()
+                0x00000000c001d019                setupTimer(int)
+                0x00000000c001d054                timerHandler(unsigned int)
+ .text          0x00000000c001d1b8      0x444 hal/vcache.32
+                0x00000000c001d1b8                VCache::VCache(PhysicalDisk*)
+                0x00000000c001d1b8                VCache::VCache(PhysicalDisk*)
+                0x00000000c001d328                VCache::invalidateReadBuffer()
+                0x00000000c001d338                VCache::writeWriteBuffer()
+                0x00000000c001d384                VCache::~VCache()
+                0x00000000c001d384                VCache::~VCache()
+                0x00000000c001d3dc                VCache::~VCache()
+                0x00000000c001d404                VCache::write(unsigned long long, int, void*)
+                0x00000000c001d4f4                VCache::read(unsigned long long, int, void*)
+ .text          0x00000000c001d5fc      0x71d hal/video.32
+                0x00000000c001d5fc                Video::putrect(int, int, int, int, unsigned int)
+                0x00000000c001d648                Video::bitblit(int, int, int, int, int, int, int, unsigned int*)
+                0x00000000c001d6b8                Video::blit(unsigned int*, int, int, int, int)
+                0x00000000c001d748                Video::clearScreen(unsigned int)
+                0x00000000c001d77c                Video::putpixel(int, int, unsigned int)
+                0x00000000c001d78a                Video::readPixelApprox(int, int)
+                0x00000000c001d79e                Video::Video(char const*)
+                0x00000000c001d79e                Video::Video(char const*)
+                0x00000000c001d7d4                Video::~Video()
+                0x00000000c001d7d4                Video::~Video()
+                0x00000000c001d7f8                Video::~Video()
+                0x00000000c001d822                Video::isMonochrome()
+                0x00000000c001d82e                Video::getWidth()
+                0x00000000c001d83a                Video::getHeight()
+                0x00000000c001d846                Video::drawCursor(int, int, unsigned int*, int)
+                0x00000000c001d902                Video::tgaParse(unsigned char*, int, int*, int*)
+                0x00000000c001dca8                Video::putTGA(int, int, unsigned char*, int)
+ *fill*         0x00000000c001dd19        0x3 
+ .text          0x00000000c001dd1c     0x135a hw/acpi.32
+                0x00000000c001dd1c                ACPI::close(int, int, void*)
+                0x00000000c001de58                findRSDP()
+                0x00000000c001def0                loadACPITables(unsigned char*)
+                0x00000000c001e15c                findRSDT(unsigned char*)
+                0x00000000c001e2b4                findDataTable(unsigned char*, char*)
+                0x00000000c001e334                scanMADT()
+                0x00000000c001e7ec                ACPI::ACPI()
+                0x00000000c001e7ec                ACPI::ACPI()
+                0x00000000c001e840                ACPI::getPCIIRQAssignment(unsigned char, unsigned short, unsigned char)
+                0x00000000c001e93c                ACPI::registerPCIIRQAssignment(void*, unsigned short, unsigned char, unsigned char)
+                0x00000000c001ea08                ACPI::setScreenBrightnessLevel(void*, int)
+                0x00000000c001ea10                ACPI::detectPCI()
+                0x00000000c001ec30                ACPI::writeSimpleBootFlag(SimpleBootFlagTable*)
+                0x00000000c001ec78                ACPI::sleep()
+                0x00000000c001ec94                ACPI::open(int, int, void*)
+ .text          0x00000000c001f076      0xbc5 hw/cpu.32
+                0x00000000c001f076                CPU::close(int, int, void*)
+                0x00000000c001f07a                CPU::AMD_K6_write_msr(unsigned int, unsigned int, unsigned int, CPU::REGS*)
+                0x00000000c001f096                CPU::AMD_K6_read_msr(unsigned int, CPU::REGS*)
+                0x00000000c001f0ae                CPU::AMD_K6_writeback(int, int, int)
+                0x00000000c001f122                CPU::cpuid(int, unsigned long*, unsigned long*, unsigned long*, unsigned long*)
+                0x00000000c001f1a6                CPU::cpuidCheckEDX(unsigned int)
+                0x00000000c001f1d4                CPU::cpuidCheckECX(unsigned int)
+                0x00000000c001f202                CPU::cpuidCheckExtendedEBX(unsigned int)
+                0x00000000c001f230                CPU::cpuidCheckExtendedECX(unsigned int)
+                0x00000000c001f25e                CPU::CPU()
+                0x00000000c001f25e                CPU::CPU()
+                0x00000000c001f2ec                CPU::displayFeatures()
+                0x00000000c001f2ee                CPU::detectFeatures()
+                0x00000000c001f9c2                CPU::setupSMEP()
+                0x00000000c001f9ce                CPU::setupUMIP()
+                0x00000000c001f9d8                CPU::setupTSC()
+                0x00000000c001f9e2                CPU::setupLargePages()
+                0x00000000c001f9ec                CPU::setupPAT()
+                0x00000000c001fa28                CPU::setupMTRR()
+                0x00000000c001fa2a                CPU::setupGlobalPages()
+                0x00000000c001fa34                CPU::allowUsermodeDataAccess()
+                0x00000000c001fa46                CPU::prohibitUsermodeDataAccess()
+                0x00000000c001fa58                CPU::setupSMAP()
+                0x00000000c001fa66                CPU::setupFeatures()
+                0x00000000c001fb32                CPU::open(int, int, void*)
+ .text          0x00000000c001fc3b       0xb6 krnl/atexit.32
+                0x00000000c001fc3b                KeInitialiseAtexit()
+                0x00000000c001fc5a                KeRegisterAtexit(void (*)(void*), void*)
+                0x00000000c001fc8e                KeExecuteAtexit()
+ .text          0x00000000c001fcf1       0xdf krnl/bootmsg.32
+                0x00000000c001fcf1                KeDisplaySplashScreen()
+                0x00000000c001fd6d                KeSetBootMessage(char const*)
+ .text          0x00000000c001fdd0       0x48 krnl/cdefs.32
+                0x00000000c001fdd0                CUnlockScheduler
+                0x00000000c001fdec                CLockScheduler
+                0x00000000c001fdfc                CPrintf
+ .text          0x00000000c001fe18       0x1d krnl/compat.32
+                0x00000000c001fe18                Krnl::handlePowerButton()
+                0x00000000c001fe28                Krnl::handleSleepButton()
+ .text          0x00000000c001fe35       0x2b krnl/crc32.32
+                0x00000000c001fe35                KeCalculateCRC32(unsigned char*, int)
+ .text          0x00000000c001fe60      0x5bf krnl/env.32
+                0x00000000c001fe60                EnvVarContainer::getEnv(char const*)
+                0x00000000c001fe9e                EnvVarContainer::setEnv(char const*, char const*)
+                0x00000000c001ff60                EnvVarContainer::deleteEnv(char const*)
+                0x00000000c001ff62                EnvVarContainer::loadFrom(char const*, char const*)
+                0x00000000c0020186                EnvVarContainer::__loadSystem()
+                0x00000000c00201a0                EnvVarContainer::__loadUser()
+                0x00000000c00201a2                EnvVarContainer::EnvVarContainer(Process*)
+                0x00000000c00201a2                EnvVarContainer::EnvVarContainer(Process*)
+                0x00000000c00201c4                EnvVarContainer::~EnvVarContainer()
+                0x00000000c00201c4                EnvVarContainer::~EnvVarContainer()
+                0x00000000c00201f4                KeGetEnv(Process*, char const*)
+                0x00000000c0020259                KeSetEnvSystem(char const*, char const*)
+                0x00000000c0020273                KeSetEnvUser(char const*, char const*)
+                0x00000000c0020292                KeSetEnvProcess(Process*, char const*, char const*)
+                0x00000000c00202a5                KeDeleteEnvSystem(char const*)
+                0x00000000c00202a6                KeDeleteEnvUser(char const*)
+                0x00000000c00202a7                KeDeleteEnvProcess(Process*, char const*)
+                0x00000000c00202a8                KeNewProcessEnv(Process*)
+                0x00000000c00202ca                KeCopyProcessEnv(Process*, Process*)
+                0x00000000c0020316                KeLoadSystemEnv()
+                0x00000000c0020344                KeLoadUserEnv()
+                0x00000000c002036a                KeFlushEnv()
+                0x00000000c002036b                KeGetProcessTotalEnvCount(Process*)
+                0x00000000c002038b                KeGetProcessEnvPair(Process*, int)
+ .text          0x00000000c002041f       0x94 krnl/inlines.32
+                0x00000000c002041f                CPU::current()
+                0x00000000c002042b                operator new(unsigned long)
+                0x00000000c0020430                operator delete(void*)
+                0x00000000c0020435                disableIRQs()
+                0x00000000c0020437                enableIRQs()
+                0x00000000c0020439                lockScheduler()
+                0x00000000c0020441                unlockScheduler()
+                0x00000000c0020450                lockStuff()
+                0x00000000c002045e                unlockStuff()
+                0x00000000c0020498                Virt::getAKernelVAS()
+                0x00000000c002049e                __not_memcpy
+ *fill*         0x00000000c00204b3        0x1 
+ .text          0x00000000c00204b4      0x1e3 krnl/mailbox.32
+                0x00000000c00204b4                KeMailboxTryPost(Mailbox*, void*)
+                0x00000000c0020518                KeMailboxTryGet(Mailbox*, void**)
+                0x00000000c002057c                KeMailboxCreate()
+                0x00000000c00205b0                KeMailboxPost(Mailbox*, void*)
+                0x00000000c0020618                KeMailboxGet(Mailbox*, void**)
+                0x00000000c0020680                KeMailboxDestroy(Mailbox*)
+ *fill*         0x00000000c0020697        0x1 
+ .text          0x00000000c0020698       0x1a krnl/mutex.32
+                0x00000000c0020698                Mutex::Mutex()
+                0x00000000c0020698                Mutex::Mutex()
+ .text          0x00000000c00206b2        0xc krnl/panic.32
+                0x00000000c00206b2                KePanic(char const*)
+ .text          0x00000000c00206be      0x142 krnl/powctrl.32
+                0x00000000c00206be                KePowerThread(void*)
+                0x00000000c00206ec                KeChangePowerSettings(PowerSettings)
+                0x00000000c0020702                KeUserIOReceived()
+                0x00000000c002070d                KeHandlePowerButton()
+                0x00000000c0020742                KeHandleSleepButton()
+                0x00000000c0020777                KeSetupPowerManager()
+ .text          0x00000000c0020800       0x9b krnl/random.32
+                0x00000000c0020800                KeRand()
+                0x00000000c0020840                KeSeedRand(unsigned int)
+                0x00000000c0020869                KeInitRand()
+ *fill*         0x00000000c002089b        0x1 
+ .text          0x00000000c002089c      0x1bc krnl/resolve.32
+                0x00000000c002089c                KeResolveCompatibilitySymbol(char*)
+ .text          0x00000000c0020a58      0x415 krnl/semaphore.32
+                0x00000000c0020a58                Semaphore::Semaphore(int)
+                0x00000000c0020a58                Semaphore::Semaphore(int)
+                0x00000000c0020a88                Semaphore::tryAcquire()
+                0x00000000c0020b64                Semaphore::assertLocked(char const*)
+                0x00000000c0020bf4                Semaphore::acquire(int)
+                0x00000000c0020d9c                Semaphore::acquire()
+                0x00000000c0020db8                Semaphore::release()
+ .text          0x00000000c0020e6d      0x31f krnl/signal.32
+                0x00000000c0020e6d                KiSigKill(int)
+                0x00000000c0020e81                KiDefaultSignalHandlerIgnore(int)
+                0x00000000c0020e82                KiDefaultSignalHandlerPause(int)
+                0x00000000c0020eae                KiDefaultSignalHandlerResume(int)
+                0x00000000c0020eda                KeDeinitSignals(SigHandlerBlock*)
+                0x00000000c0020edf                KeInitSignals()
+                0x00000000c0020f2e                KeRegisterSignalHandler(SigHandlerBlock*, int, void (*)(int), unsigned int, int)
+                0x00000000c0020f64                KeRaiseSignal(SigHandlerBlock*, int)
+                0x00000000c0020fe1                KeCheckSignal(SigHandlerBlock*, int*)
+                0x00000000c00210d8                KiCheckSignalZ
+                0x00000000c002111a                KeCompleteSignal(SigHandlerBlock*, int)
+                0x00000000c0021155                KiFinishSignalZ
+ .text          0x00000000c002118c      0xe32 krnl/syscalls.32
+                0x00000000c002118c                SysSeekDir(regs*)
+                0x00000000c0021191                SysTellDir(regs*)
+                0x00000000c0021196                SysVerify(regs*)
+                0x00000000c00211a0                SysGetArgc(regs*)
+                0x00000000c00211b4                SysTTYName(regs*)
+                0x00000000c00211bc                SysFormatDisk(regs*)
+                0x00000000c0021223                SysSetDiskVolumeLabel(regs*)
+                0x00000000c0021277                SysGetDiskVolumeLabel(regs*)
+                0x00000000c00212d0                SysShutdown(regs*)
+                0x00000000c002135d                SysRealpath(regs*)
+                0x00000000c00213ab                SysReadDir(regs*)
+                0x00000000c002142b                SysIsATTY(regs*)
+                0x00000000c0021485                SysSeek(regs*)
+                0x00000000c00214df                SysTell(regs*)
+                0x00000000c002154c                SysSize(regs*)
+                0x00000000c00215bf                SysSizeFromFilename(regs*)
+                0x00000000c00216f3                SysSizeFromFilenameNoSymlink(regs*)
+                0x00000000c0021827                SysClose(regs*)
+                0x00000000c0021887                SysOpenDir(regs*)
+                0x00000000c0021904                SysMakeDir(regs*)
+                0x00000000c0021972                SysCloseDir(regs*)
+                0x00000000c00219c1                SysWait(regs*)
+                0x00000000c00219e2                SysNotImpl(regs*)
+                0x00000000c00219fd                SysPanic(regs*)
+                0x00000000c0021a18                SysRmdir(regs*)
+                0x00000000c0021a76                SysUnlink(regs*)
+                0x00000000c0021ad4                SysGetArgv(regs*)
+                0x00000000c0021b21                SysUSleep(regs*)
+                0x00000000c0021b4a                SysSpawn(regs*)
+                0x00000000c0021bbb                SysGetEnv(regs*)
+                0x00000000c0021c70                SysSetFatAttrib(regs*)
+                0x00000000c0021cd9                SysPipe(regs*)
+                0x00000000c0021d1e                SysGetUnixTime(regs*)
+                0x00000000c0021d32                string_ends_with(char const*, char const*)
+                0x00000000c0021d7d                SysOpen(regs*)
+                0x00000000c0021f7c                KeSystemCall(regs*, void*)
+ *fill*         0x00000000c0021fbe        0x2 
+ .text          0x00000000c0021fc0      0x159 net/ethernet.32
+                0x00000000c0021fc0                KeSwitchEndian16(unsigned short)
+                0x00000000c0021fe4                KeSwitchEndian32(unsigned int)
+                0x00000000c0022014                EthernetCRC32(unsigned char*, int)
+                0x00000000c00220b8                EthernetReceivedPacket(EthernetUnwrappedFrame*, unsigned short)
+ *fill*         0x00000000c0022119        0x3 
+ .text          0x00000000c002211c       0xf4 net/netosl.32
+                0x00000000c002211c                KeNetCreateSemaphore
+                0x00000000c0022160                KeNetFreeSemaphore
+                0x00000000c002217c                KeNetSignalSemaphore
+                0x00000000c0022198                KeNetWaitSemaphore
+                0x00000000c00221b8                KeNetCreateThread
+                0x00000000c00221dc                KeCPanic
+                0x00000000c00221f4                KeCPuts
+ .text          0x00000000c0022210      0xd51 reg/cm.32
+                0x00000000c0022210                CmOpen(char const*)
+                0x00000000c002232e                CmClose(Reghive_Tag*)
+                0x00000000c0022344                CmReadExtent(Reghive_Tag*, int, unsigned char*)
+                0x00000000c0022380                CmGetString(Reghive_Tag*, int, char*)
+                0x00000000c00223f7                CmEnterDirectory(Reghive_Tag*, int)
+                0x00000000c0022436                CmGetNext(Reghive_Tag*, int)
+                0x00000000c0022468                CmWriteExtent(Reghive_Tag*, int, unsigned char*)
+                0x00000000c00224a4                CmFreeExtent(Reghive_Tag*, int)
+                0x00000000c00224cc                CmUpdateHeader(Reghive_Tag*)
+                0x00000000c00224ed                CmExpand(Reghive_Tag*, int)
+                0x00000000c0022568                CmFindUnusedExtent(Reghive_Tag*)
+                0x00000000c00225ee                CmCreateExtent(Reghive_Tag*, int, int, unsigned char*)
+                0x00000000c00226e2                CmSetString(Reghive_Tag*, int, char const*)
+                0x00000000c002281a                CmGetMatch(char*, char*, bool, bool*)
+                0x00000000c002287b                CmAddShift(unsigned int*, int*, unsigned char, int)
+                0x00000000c00228ab                CmGetShift(unsigned int*, int*, int, bool*)
+                0x00000000c00228e2                CmGetInteger(Reghive_Tag*, int, unsigned long long*)
+                0x00000000c002290c                CmSetInteger(Reghive_Tag*, int, unsigned long long)
+                0x00000000c002294c                CmConvertFromInternalFilename(unsigned char const*, char*)
+                0x00000000c00229f0                CmGetNameAndTypeFromExtent(Reghive_Tag*, int, char*)
+                0x00000000c0022a1e                CmConvertToInternalFilename(char const*, unsigned char*)
+                0x00000000c0022bbb                CmCreateString(Reghive_Tag*, int, char const*)
+                0x00000000c0022c08                CmFindInDirectory(Reghive_Tag*, int, char const*)
+                0x00000000c0022c82                CmCreateInteger(Reghive_Tag*, int, char const*, unsigned long long, int)
+                0x00000000c0022cd5                CmCreateDirectory(Reghive_Tag*, int, char const*)
+                0x00000000c0022d99                zStrtok(char*, char const*)
+                0x00000000c0022e0b                CmFindObjectFromPath(Reghive_Tag*, char const*)
+                0x00000000c0022e8c                CmDisplayTree(Reghive_Tag*, int, int)
+                0x00000000c0022f2f                CmSplitFinalSlashInPlace(char*)
+ .text          0x00000000c0022f61      0x545 reg/registry.32
+                0x00000000c0022f61                Reg::findLineFromLoadedData(char*, char*, char*)
+                0x00000000c00230ed                Reg::getLineFromRegistry(char*, char*, char*, char*)
+                0x00000000c0023242                Reg::getLine(char*, char*, char*)
+                0x00000000c0023279                Reg::readInt(char*, char*, int*)
+                0x00000000c0023367                Reg::readString(char*, char*, char*, int)
+                0x00000000c00233e8                Reg::readBool(char*, char*, bool*)
+                0x00000000c002340d                Reg::readBoolWithDefault(char*, char*, bool)
+                0x00000000c0023439                Reg::readIntWithDefault(char*, char*, int)
+                0x00000000c0023465                Reg::readStringWithDefault(char*, char*, char*, int, char*)
+ .text          0x00000000c00234a6       0x36 sys/eject.32
+                0x00000000c00234a6                SysEject(regs*)
+ .text          0x00000000c00234dc       0x18 sys/exit.32
+                0x00000000c00234dc                SysExit(regs*)
+ .text          0x00000000c00234f4       0x1f sys/getcwd.32
+                0x00000000c00234f4                SysGetCwd(regs*)
+ .text          0x00000000c0023513        0xc sys/getpid.32
+                0x00000000c0023513                SysGetPID(regs*)
+ .text          0x00000000c002351f       0x1a sys/getramdata.32
+                0x00000000c002351f                SysGetRAMData(regs*)
+ .text          0x00000000c0023539       0x82 sys/getvgaptr.32
+                0x00000000c0023539                SysGetVGAPtr(regs*)
+ *fill*         0x00000000c00235bb        0x1 
+ .text          0x00000000c00235bc       0xb9 sys/kill.32
+                0x00000000c00235bc                SysKill(regs*)
+ .text          0x00000000c0023675       0xa8 sys/loaddll.32
+                0x00000000c0023675                SysLoadDLL(regs*)
+ .text          0x00000000c002371d       0x68 sys/read.32
+                0x00000000c002371d                SysRead(regs*)
+ .text          0x00000000c0023785       0x29 sys/registersignal.32
+                0x00000000c0023785                SysRegisterSignal(regs*)
+ .text          0x00000000c00237ae      0x19c sys/registry.32
+                0x00000000c00237ae                SysRegistryGetTypeFromPath(regs*)
+                0x00000000c0023825                SysRegistryReadExtent(regs*)
+                0x00000000c002386d                SysRegistryPathToExtentLookup(regs*)
+                0x00000000c0023895                SysRegistryEnterDirectory(regs*)
+                0x00000000c00238bd                SysRegistryGetNext(regs*)
+                0x00000000c00238e5                SysRegistryGetNameAndTypeFromExtent(regs*)
+                0x00000000c002391f                SysRegistryOpen(regs*)
+                0x00000000c0023933                SysRegistryClose(regs*)
+ .text          0x00000000c002394a       0x55 sys/sbrk.32
+                0x00000000c002394a                SysSbrk(regs*)
+ .text          0x00000000c002399f       0x1c sys/setcwd.32
+                0x00000000c002399f                SysSetCwd(regs*)
+ .text          0x00000000c00239bb       0x96 sys/settime.32
+                0x00000000c00239bb                SysSetTime(regs*)
+ .text          0x00000000c0023a51       0x73 sys/symlink.32
+                0x00000000c0023a51                SysSymlink(regs*)
+ .text          0x00000000c0023ac4       0x3f sys/timezone.32
+                0x00000000c0023ac4                SysTimezone(regs*)
+ .text          0x00000000c0023b03       0xfc sys/truncate.32
+                0x00000000c0023b03                SysTruncate(regs*)
+ .text          0x00000000c0023bff       0x68 sys/write.32
+                0x00000000c0023bff                SysWrite(regs*)
+ .text          0x00000000c0023c67       0x62 sys/wsbe.32
+                0x00000000c0023c67                SysWsbe(regs*)
+ .text          0x00000000c0023cc9       0x25 sys/yield.32
+                0x00000000c0023cc9                SysYield(regs*)
+ .text          0x00000000c0023cee     0x1224 thr/elf.32
+                0x00000000c0023cee                Thr::allocateMemoryForTask(Process*, File*, unsigned long, unsigned long, unsigned long)
+                0x00000000c0023f75                Thr::loadProgramIntoMemory(Process*, char const*)
+                0x00000000c0024194                Thr::runtimeReferenceHelper()
+                0x00000000c00241a7                Thr::getAddressOfKernelSymbol(char const*)
+                0x00000000c00241f6                Thr::loadKernelSymbolTable(char const*)
+                0x00000000c00244b4                Thr::loadDriverIntoMemory(char const*, unsigned long, bool)
+                0x00000000c0024bf5                Thr::getDriverBaseFromAddress(unsigned long)
+                0x00000000c0024c27                Thr::getDriverNameFromAddress(unsigned long)
+                0x00000000c0024c5e                Thr::getDriverOffsetFromAddress(unsigned long)
+                0x00000000c0024c78                Thr::loadDLL(char const*, bool)
+                0x00000000c0024ed9                Thr::executeDLL(unsigned long, void*)
+ .text          0x00000000c0024f12       0x5a thr/exec.32
+                0x00000000c0024f12                KeProcessExec(Process*, char const*)
+ .text          0x00000000c0024f6c     0x1121 thr/prcssthr.32
+                0x00000000c0024f6c                userModeEntryPoint(void*)
+                0x00000000c0024f94                changeTSS
+                0x00000000c0024fc4                switchToThread(ThreadControlBlock*)
+                0x00000000c0025074                Process::addArgs(char**)
+                0x00000000c00250e0                Process::Process(char const*, Process*, char**)
+                0x00000000c00250e0                Process::Process(char const*, Process*, char**)
+                0x00000000c00252ec                Process::Process(bool, char const*, Process*, char**)
+                0x00000000c00252ec                Process::Process(bool, char const*, Process*, char**)
+                0x00000000c00254c0                taskStartupFunction
+                0x00000000c00254cc                KeDisablePreemption()
+                0x00000000c00254f4                KeRestorePreemption()
+                0x00000000c0025514                Process::createThread(void (*)(void*), void*, int)
+                0x00000000c002561c                Process::createUserThread()
+                0x00000000c002563c                setupMultitasking(void (*)())
+                0x00000000c0025760                schedule()
+                0x00000000c00257f4                blockTaskWithSchedulerLockAlreadyHeld(TaskState)
+                0x00000000c002581c                blockTask(TaskState)
+                0x00000000c0025854                waitTask(int, int*, int)
+                0x00000000c0025898                milliTenthSleepUntil(unsigned int)
+                0x00000000c0025938                milliTenthSleep(unsigned int)
+                0x00000000c002594c                sleep(unsigned int)
+                0x00000000c002595c                taskReturned
+                0x00000000c00259a0                Thr::processFromPID(int)
+                0x00000000c0025a4c                unblockTask(ThreadControlBlock*)
+                0x00000000c0025af8                cleanupTerminatedTask(ThreadControlBlock*)
+                0x00000000c0025dcc                cleanerTaskFunction(void*)
+                0x00000000c0025ed4                terminateTask(int)
+                0x00000000c0025fc0                Thr::terminateFromIRQ(int)
+ .text          0x00000000c002608d      0xd08 vm86/vm8086.32
+                0x00000000c002608d                Vm::inbv(unsigned short)
+                0x00000000c00260a0                Vm::outbv(unsigned short, unsigned char)
+                0x00000000c00260d6                Vm::realToLinear(unsigned short, unsigned short)
+                0x00000000c00260e6                Vm::getSegment(unsigned int)
+                0x00000000c00260ee                Vm::getOffset(unsigned int)
+                0x00000000c00260f3                Vm::mainloop2()
+                0x00000000c002612d                Vm::mainVm8086Loop(void*)
+                0x00000000c002613d                Vm::mainloop3(unsigned long)
+                0x00000000c0026163                Vm::initialise8086()
+                0x00000000c00261a6                Vm::resetConventionalMemory8086()
+                0x00000000c00261a7                Vm::finish8086()
+                0x00000000c0026208                Vm::getOutput8086(unsigned char*)
+                0x00000000c002622d                Vm::start8086FromBuffer(unsigned char*, int, unsigned short, unsigned short, unsigned short, unsigned short)
+                0x00000000c0026354                Vm::start8086(char const*, unsigned short, unsigned short, unsigned short, unsigned short)
+                0x00000000c002655a                Vm::doISR(regs*, int, unsigned char*, unsigned short, unsigned short)
+                0x00000000c00265f7                Vm::readByteFromReal(unsigned short, unsigned short)
+                0x00000000c0026608                Vm::readWordFromReal(unsigned short, unsigned short)
+                0x00000000c002661a                Vm::readDwordFromReal(unsigned short, unsigned short)
+                0x00000000c002662b                Vm::writeByteFromReal(unsigned short, unsigned short, unsigned char)
+                0x00000000c0026640                Vm::writeWordFromReal(unsigned short, unsigned short, unsigned short)
+                0x00000000c0026656                Vm::writeDwordFromReal(unsigned short, unsigned short, unsigned int)
+                0x00000000c002666b                Vm::faultHandler(regs*)
+ .text          0x00000000c0026d95      0xacb arch/i386/hal.32
+                0x00000000c0026d95                noCopro(unsigned long)
+                0x00000000c0026d96                nmiHandler(regs*, void*)
+                0x00000000c0026daf                doubleFault(regs*, void*)
+                0x00000000c0026dc8                displayDebugInfo(regs*)
+                0x00000000c002714d                HalSystemIdle()
+                0x00000000c00271c9                displayProgramFault(char const*)
+                0x00000000c0027215                gpFault(regs*, void*)
+                0x00000000c002727c                pgFault(regs*, void*)
+                0x00000000c0027305                otherISRHandler(regs*, void*)
+                0x00000000c0027339                opcodeFault(regs*, void*)
+                0x00000000c00273bc                i386SaveCoprocessor(void*)
+                0x00000000c00273d0                i386LoadCoprocessor(void*)
+                0x00000000c00273e4                x87EmulHandler(regs*, void*)
+                0x00000000c0027481                HalInitialiseCoprocessor()
+                0x00000000c002750a                HalPanic(char const*)
+                0x00000000c002761e                HalQueryPerformanceCounter()
+                0x00000000c0027639                HalInitialise()
+                0x00000000c00277ef                HalMakeBeep(int)
+                0x00000000c0027829                HalGetRand()
+                0x00000000c002782c                HalEndOfInterrupt(int)
+                0x00000000c002785d                HalRestart()
+                0x00000000c002785e                HalShutdown()
+                0x00000000c002785f                HalSleep()
+ .text          0x00000000c0027860      0x2dc arch/i386/pic.32
+                0x00000000c0027860                picIoWait()
+                0x00000000c0027868                picDisable()
+                0x00000000c002789c                picGetIRQReg(int)
+                0x00000000c0027918                picOpen()
+                0x00000000c0027a9c                picEOI(int)
+ .text          0x00000000c0027b3c      0x66e arch/i386/rtc.32
+                0x00000000c0027b3c                RTC::open(int, int, void*)
+                0x00000000c0027b40                RTC::close(int, int, void*)
+                0x00000000c0027b44                RTC::timeInSecondsUTC()
+                0x00000000c0027b56                RTC::timeInDatetimeUTC()
+                0x00000000c0027b7c                RTC::setTimeInSecondsUTC(unsigned long long)
+                0x00000000c0027bba                RTC::~RTC()
+                0x00000000c0027bba                RTC::~RTC()
+                0x00000000c0027bde                RTC::~RTC()
+                0x00000000c0027c08                RTC::get_update_in_progress_flag()
+                0x00000000c0027c22                RTC::completeRTCRefresh()
+                0x00000000c0027efc                RTC::setTimeInDatetimeUTC(datetime_t)
+                0x00000000c00280aa                rtcIRQHandler(regs*, void*)
+                0x00000000c00280f0                RTC::RTC()
+                0x00000000c00280f0                RTC::RTC()
+ *fill*         0x00000000c00281aa        0x2 
+ .text          0x00000000c00281ac      0x1f4 arch/i386/vga.32
+                0x00000000c00281ac                HalConsoleScroll(int, int)
+                0x00000000c00282b4                HalConsoleWriteCharacter(char, int, int, int, int)
+                0x00000000c0028318                HalConsoleCursorUpdate(int, int)
+ .text          0x00000000c00283a0     0x14f3 fs/fat/vfslink.32
+                0x00000000c00283a0                FAT::getName()
+                0x00000000c00283a8                FAT::tell(void*, unsigned long long*)
+                0x00000000c00283e4                FAT::stat(void*, unsigned long long*)
+                0x00000000c0028420                FAT::~FAT()
+                0x00000000c0028420                FAT::~FAT()
+                0x00000000c0028444                FAT::~FAT()
+                0x00000000c002846c                FAT::getlabel(LogicalDisk*, int, char*, unsigned int*)
+                0x00000000c0028510                FAT::setlabel(LogicalDisk*, int, char*)
+                0x00000000c00285f0                FAT::format(LogicalDisk*, int, char const*, int)
+                0x00000000c00287d4                FAT::tryMount(LogicalDisk*, int)
+                0x00000000c00289f0                FAT::allocateSwapfile(char const*, int)
+                0x00000000c0028bb0                FAT::readDir(void*, unsigned long, void*, int*)
+                0x00000000c0028d20                FAT::read(void*, unsigned long, void*, int*)
+                0x00000000c0028d80                FAT::write(void*, unsigned long, void*, int*)
+                0x00000000c0028de0                FAT::close(void*)
+                0x00000000c0028e34                FAT::closeDir(void*)
+                0x00000000c0028e88                FAT::truncate(void*, unsigned long long)
+                0x00000000c0028ef4                FAT::seek(void*, unsigned long long)
+                0x00000000c0028f4c                fatWrapperReadDisk
+                0x00000000c0028f8c                fatWrapperWriteDisk
+                0x00000000c0028fcc                fatWrapperIoctl
+                0x00000000c00290ec                FAT::FAT()
+                0x00000000c00290ec                FAT::FAT()
+                0x00000000c0029144                FAT::fixFilepath(char*)
+                0x00000000c0029184                FAT::open(char const*, void**, FileOpenMode)
+                0x00000000c00292f8                FAT::openDir(char const*, void**)
+                0x00000000c00293a8                FAT::stat(char const*, unsigned long long*, bool*)
+                0x00000000c00294a0                FAT::unlink(char const*)
+                0x00000000c0029520                FAT::chfatattr(char const*, unsigned char, unsigned char)
+                0x00000000c00296d8                FAT::rename(char const*, char const*)
+                0x00000000c00297a4                FAT::mkdir(char const*)
+                0x00000000c0029824                FAT::exists(char const*)
+ *fill*         0x00000000c0029893        0x1 
+ .text          0x00000000c0029894       0x94 fs/iso9660/helper.32
+                0x00000000c0029894                isoReadDiscSectorHelper
+                0x00000000c00298f0                iso_kprintf
+                0x00000000c002990c                iso_kprintfd
+ .text          0x00000000c0029928      0x71a fs/iso9660/vfslink.32
+                0x00000000c0029928                ISO9660::format(LogicalDisk*, int, char const*, int)
+                0x00000000c002992e                ISO9660::truncate(void*, unsigned long long)
+                0x00000000c0029934                ISO9660::getName()
+                0x00000000c002993a                ISO9660::closeDir(void*)
+                0x00000000c0029944                ISO9660::chfatattr(char const*, unsigned char, unsigned char)
+                0x00000000c002994a                ISO9660::unlink(char const*)
+                0x00000000c0029950                ISO9660::write(void*, unsigned long, void*, int*)
+                0x00000000c0029956                ISO9660::rename(char const*, char const*)
+                0x00000000c002995c                ISO9660::mkdir(char const*)
+                0x00000000c0029962                ISO9660::~ISO9660()
+                0x00000000c0029962                ISO9660::~ISO9660()
+                0x00000000c0029986                ISO9660::~ISO9660()
+                0x00000000c00299ae                ISO9660::exists(char const*)
+                0x00000000c00299c2                ISO9660::open(char const*, void**, FileOpenMode)
+                0x00000000c0029aa8                ISO9660::read(void*, unsigned long, void*, int*)
+                0x00000000c0029af0                ISO9660::seek(void*, unsigned long long)
+                0x00000000c0029b32                ISO9660::tell(void*, unsigned long long*)
+                0x00000000c0029b70                ISO9660::stat(void*, unsigned long long*)
+                0x00000000c0029bc2                ISO9660::stat(char const*, unsigned long long*, bool*)
+                0x00000000c0029d04                ISO9660::close(void*)
+                0x00000000c0029d34                ISO9660::openDir(char const*, void**)
+                0x00000000c0029e0e                ISO9660::readDir(void*, unsigned long, void*, int*)
+                0x00000000c0029f29                readSectorFromCDROM(unsigned int, unsigned char*, char)
+                0x00000000c0029fa8                ISO9660::tryMount(LogicalDisk*, int)
+                0x00000000c002a01a                ISO9660::ISO9660()
+                0x00000000c002a01a                ISO9660::ISO9660()
+ .text          0x00000000c002a042      0x26c hal/sound/sndcard.32
+                0x00000000c002a042                SoundCard::beginPlayback()
+                0x00000000c002a050                SoundCard::stopPlayback()
+                0x00000000c002a05e                SoundCard::SoundCard(char const*)
+                0x00000000c002a05e                SoundCard::SoundCard(char const*)
+                0x00000000c002a0fc                SoundCard::~SoundCard()
+                0x00000000c002a0fc                SoundCard::~SoundCard()
+                0x00000000c002a120                SoundCard::~SoundCard()
+                0x00000000c002a14a                SoundCard::configureRates(int, int, int)
+                0x00000000c002a17a                SoundCard::getSamples16(int, short*)
+                0x00000000c002a1d6                SoundCard::getSamples32(int, int*)
+                0x00000000c002a25c                SoundCard::addChannel(SoundPort*)
+                0x00000000c002a29a                SoundCard::removeChannel(int)
+ *fill*         0x00000000c002a2ae        0x2 
+ .text          0x00000000c002a2b0      0x393 hal/sound/sndport.32
+                0x00000000c002a2b0                SoundPort::SoundPort(int, int, int, int)
+                0x00000000c002a2b0                SoundPort::SoundPort(int, int, int, int)
+                0x00000000c002a33c                SoundPort::~SoundPort()
+                0x00000000c002a33c                SoundPort::~SoundPort()
+                0x00000000c002a370                SoundPort::unpause()
+                0x00000000c002a37c                SoundPort::pause()
+                0x00000000c002a388                SoundPort::getBufferUsed()
+                0x00000000c002a390                SoundPort::getBufferSize()
+                0x00000000c002a398                SoundPort::buffer16(short*, int)
+                0x00000000c002a424                SoundPort::buffer32(int*, int)
+                0x00000000c002a4b0                SoundPort::unbufferAndAdd16(int, short*, SoundCard*)
+                0x00000000c002a580                SoundPort::unbufferAndAdd32(int, int*, SoundCard*)
+ .text          0x00000000c002a643        0x0 hw/bus/isa.32
+ *fill*         0x00000000c002a643        0x1 
+ .text          0x00000000c002a644      0xc25 hw/bus/pci.32
+                0x00000000c002a644                PCI::open(int, int, void*)
+                0x00000000c002a662                PCI::close(int, int, void*)
+                0x00000000c002a666                PCI::PCI()
+                0x00000000c002a666                PCI::PCI()
+                0x00000000c002a6fe                PCI::readBAR8(unsigned int, int)
+                0x00000000c002a71a                PCI::readBAR16(unsigned int, int)
+                0x00000000c002a738                PCI::readBAR32(unsigned int, int)
+                0x00000000c002a754                PCI::writeBAR8(unsigned int, unsigned char, int)
+                0x00000000c002a774                PCI::writeBAR16(unsigned int, unsigned short, int)
+                0x00000000c002a796                PCI::writeBAR32(unsigned int, unsigned int, int)
+                0x00000000c002a7b6                PCI::legacyMechanism(unsigned char, unsigned char, unsigned char, unsigned char)
+                0x00000000c002a82c                PCI::pciReadWord(unsigned char, unsigned char, unsigned char, unsigned char)
+                0x00000000c002a8d6                PCI::getVendorID(unsigned char, unsigned char, unsigned char)
+                0x00000000c002a8fa                PCI::getHeaderType(unsigned char, unsigned char, unsigned char)
+                0x00000000c002a922                PCI::getClassCode(unsigned char, unsigned char, unsigned char)
+                0x00000000c002a96c                PCI::getProgIF(unsigned char, unsigned char, unsigned char)
+                0x00000000c002a994                PCI::getRevisionID(unsigned char, unsigned char, unsigned char)
+                0x00000000c002a9b8                PCI::getInterruptNumber(unsigned char, unsigned char, unsigned char)
+                0x00000000c002a9dc                PCI::getSecondaryBus(unsigned char, unsigned char, unsigned char)
+                0x00000000c002aa04                PCI::getBARAddress(unsigned char, unsigned char, unsigned char, unsigned char)
+                0x00000000c002aa68                PCI::pciWriteWord(unsigned char, unsigned char, unsigned char, unsigned char, unsigned short)
+                0x00000000c002ab4e                PCI::pciDetailsToFilepath(PCIDeviceInfo, char*)
+                0x00000000c002ae18                PCI::checkBus(unsigned char)
+                0x00000000c002ae3c                PCI::foundDevice(PCIDeviceInfo)
+                0x00000000c002b022                PCI::getDeviceData(unsigned char, unsigned char, unsigned char)
+                0x00000000c002b19e                PCI::checkDevice(unsigned char, unsigned char)
+                0x00000000c002b210                PCI::detect()
+ *fill*         0x00000000c002b269        0x1 
+ .text          0x00000000c002b26a      0xe12 hw/diskctrl/ide.32
+                0x00000000c002b26a                IDE::close(int, int, void*)
+                0x00000000c002b26e                IDE::IDE()
+                0x00000000c002b26e                IDE::IDE()
+                0x00000000c002b2a2                IDE::prepareInterrupt(unsigned char)
+                0x00000000c002b2b4                selectDrive(unsigned char, unsigned char)
+                0x00000000c002b2b6                IDE::getBase(unsigned char)
+                0x00000000c002b2c8                IDE::write(unsigned char, unsigned char, unsigned char)
+                0x00000000c002b388                IDE::read(unsigned char, unsigned char)
+                0x00000000c002b43c                IDE::waitInterrupt(unsigned char)
+                0x00000000c002b49e                ideChannel0IRQHandler(regs*, void*)
+                0x00000000c002b4ba                ideChannel1IRQHandler(regs*, void*)
+                0x00000000c002b4d6                IDE::enableIRQs(unsigned char, bool)
+                0x00000000c002b520                IDE::open(int, int, void*)
+                0x00000000c002ba64                IDE::readBuffer(unsigned char, unsigned char, unsigned int, unsigned int)
+                0x00000000c002bb34                IDE::detect()
+                0x00000000c002bf6e                IDE::printError(unsigned char, unsigned char, unsigned char)
+                0x00000000c002c028                IDE::polling(unsigned char, unsigned int)
+ .text          0x00000000c002c07c      0x33f hw/diskctrl/satabus.32
+                0x00000000c002c07c                SATABus::close(int, int, void*)
+                0x00000000c002c080                SATABus::detect()
+                0x00000000c002c082                SATABus::SATABus()
+                0x00000000c002c082                SATABus::SATABus()
+                0x00000000c002c108                SATABus::findCmdslot(SATABus::tagHBA_PORT volatile*)
+                0x00000000c002c13a                SATABus::checkType(SATABus::tagHBA_PORT volatile*)
+                0x00000000c002c182                SATABus::startCmd(SATABus::tagHBA_PORT volatile*)
+                0x00000000c002c1a2                SATABus::stopCmd(SATABus::tagHBA_PORT volatile*)
+                0x00000000c002c1cc                SATABus::portRebase(SATABus::tagHBA_PORT volatile*, int)
+                0x00000000c002c2de                SATABus::probePort(SATABus::tagHBA_MEM volatile*)
+                0x00000000c002c388                SATABus::open(int, int, void*)
+ *fill*         0x00000000c002c3bb        0x1 
+ .text          0x00000000c002c3bc      0x9b5 hw/diskphys/ata.32
+                0x00000000c002c3bc                ATA::close(int, int, void*)
+                0x00000000c002c3e0                ATA::powerSaving(PowerSavingLevel)
+                0x00000000c002c3e2                ATA::ATA()
+                0x00000000c002c3e2                ATA::ATA()
+                0x00000000c002c410                ATA::flush(bool)
+                0x00000000c002c45e                ATA::readyForCommand()
+                0x00000000c002c4aa                ATA::access(unsigned long long, int, void*, bool)
+                0x00000000c002c8b6                ATA::detectCHS()
+                0x00000000c002c8e0                ATA::open(int, int, void*)
+                0x00000000c002c9ac                combineCharAndColour(char, unsigned char)
+                0x00000000c002c9bd                combineColours(unsigned char, unsigned char)
+                0x00000000c002c9ca                ATA::read(unsigned long long, int, void*)
+                0x00000000c002cba0                ATA::write(unsigned long long, int, void*)
+ *fill*         0x00000000c002cd71        0x1 
+ .text          0x00000000c002cd72      0x612 hw/diskphys/atapi.32
+                0x00000000c002cd72                ATAPI::write(unsigned long long, int, void*)
+                0x00000000c002cd78                ATAPI::close(int, int, void*)
+                0x00000000c002cd9c                ATAPI::ATAPI()
+                0x00000000c002cd9c                ATAPI::ATAPI()
+                0x00000000c002cdca                ATAPI::readyForCommand()
+                0x00000000c002ce1c                ATAPI::sendPacket(unsigned char*, int, bool, unsigned short*, int)
+                0x00000000c002d0dc                ATAPI::diskRemoved()
+                0x00000000c002d116                ATAPI::eject()
+                0x00000000c002d15e                ATAPI::diskInserted()
+                0x00000000c002d16a                ATAPI::detectMedia()
+                0x00000000c002d22a                ATAPI::open(int, int, void*)
+                0x00000000c002d30a                ATAPI::read(unsigned long long, int, void*)
+ .text          0x00000000c002d384      0x841 hw/diskphys/sata.32
+                0x00000000c002d384                SATA::close(int, int, void*)
+                0x00000000c002d3a8                SATA::powerSaving(PowerSavingLevel)
+                0x00000000c002d3aa                SATA::open(int, int, void*)
+                0x00000000c002d462                SATA::SATA()
+                0x00000000c002d462                SATA::SATA()
+                0x00000000c002d490                SATA::access(unsigned long long, int, void*, bool)
+                0x00000000c002d716                SATA::read(unsigned long long, int, void*)
+                0x00000000c002d966                SATA::write(unsigned long long, int, void*)
+ *fill*         0x00000000c002dbc5        0x1 
+ .text          0x00000000c002dbc6      0x5d8 hw/diskphys/satapi.32
+                0x00000000c002dbc6                SATAPI::write(unsigned long long, int, void*)
+                0x00000000c002dbcc                SATAPI::close(int, int, void*)
+                0x00000000c002dbf0                SATAPI::SATAPI()
+                0x00000000c002dbf0                SATAPI::SATAPI()
+                0x00000000c002dc1e                SATAPI::diskRemoved()
+                0x00000000c002dc20                SATAPI::diskInserted()
+                0x00000000c002dc3c                SATAPI::sendPacket(unsigned char*, int, unsigned long long, unsigned short*, int)
+                0x00000000c002df22                SATAPI::eject()
+                0x00000000c002df5e                SATAPI::detectMedia()
+                0x00000000c002dfb4                SATAPI::open(int, int, void*)
+                0x00000000c002e0b4                SATAPI::read(unsigned long long, int, void*)
+ .text          0x00000000c002e19e      0x45b hw/intctrl/apic.32
+                0x00000000c002e19e                IOAPIC::close(int, int, void*)
+                0x00000000c002e1a4                apicGetBase()
+                0x00000000c002e1ea                IOAPIC::IOAPIC()
+                0x00000000c002e1ea                IOAPIC::IOAPIC()
+                0x00000000c002e212                apicOpen()
+                0x00000000c002e38e                IOAPIC::handlesGSIWithNumber(unsigned int)
+                0x00000000c002e3c0                IOAPIC::read(int)
+                0x00000000c002e3e8                IOAPIC::open(int, int, void*)
+                0x00000000c002e4ce                IOAPIC::write(int, int)
+                0x00000000c002e4fa                IOAPIC::redirect(unsigned char, unsigned long long, unsigned char, bool, bool)
+ *fill*         0x00000000c002e5f9        0x3 
+ .text          0x00000000c002e5fc       0xf0 hw/timer/apictimer.32
+                0x00000000c002e5fc                APICTimer::close(int, int, void*)
+                0x00000000c002e604                apicTimerHandler(regs*, void*)
+                0x00000000c002e62c                APICTimer::open(int, int, void*)
+                0x00000000c002e69c                APICTimer::write(int)
+                0x00000000c002e6c4                APICTimer::APICTimer()
+                0x00000000c002e6c4                APICTimer::APICTimer()
+ .text          0x00000000c002e6ec      0x1ad hw/timer/pit.32
+                0x00000000c002e6ec                PIT::write(int)
+                0x00000000c002e770                pitHandler(regs*, void*)
+                0x00000000c002e798                PIT::open(int, int, void*)
+                0x00000000c002e7e8                PIT::close(int, int, void*)
+                0x00000000c002e818                PIT::PIT()
+                0x00000000c002e818                PIT::PIT()
+ *fill*         0x00000000c002e899        0x7 
+ .text          0x00000000c002e8a0       0x6f arch/i386/avx.32
+                0x00000000c002e8a0                avxDetect
+                0x00000000c002e8ca                avxSave
+                0x00000000c002e8db                avxLoad
+                0x00000000c002e8ec                avxInit
+                0x00000000c002e90e                avxClose
+ *fill*         0x00000000c002e90f        0x1 
+ .text          0x00000000c002e910      0x2ec arch/i386/interrupt.32
+                0x00000000c002e910                isr0
+                0x00000000c002e920                isr1
+                0x00000000c002e92a                isr2
+                0x00000000c002e934                isr3
+                0x00000000c002e93e                isr4
+                0x00000000c002e948                isr5
+                0x00000000c002e952                isr6
+                0x00000000c002e95c                isr7
+                0x00000000c002e966                isr8
+                0x00000000c002e96e                isr9
+                0x00000000c002e978                isr10
+                0x00000000c002e980                isr11
+                0x00000000c002e988                isr12
+                0x00000000c002e990                isr13
+                0x00000000c002e9aa                isr14
+                0x00000000c002e9b2                isr15
+                0x00000000c002e9bc                isr16
+                0x00000000c002e9c6                isr17
+                0x00000000c002e9d0                isr18
+                0x00000000c002e9da                irq3
+                0x00000000c002e9e4                irq4
+                0x00000000c002e9ee                irq5
+                0x00000000c002e9f8                irq6
+                0x00000000c002ea02                irq7
+                0x00000000c002ea0c                irq8
+                0x00000000c002ea16                irq9
+                0x00000000c002ea20                irq10
+                0x00000000c002ea2a                irq11
+                0x00000000c002ea34                irq12
+                0x00000000c002ea3e                irq13
+                0x00000000c002ea48                irq14
+                0x00000000c002ea52                irq15
+                0x00000000c002ea5c                irq1
+                0x00000000c002ea63                irq2
+                0x00000000c002ea6a                isr96
+                0x00000000c002ea71                irq0
+                0x00000000c002ea76                int_common_stub
+                0x00000000c002eaa8                syscall_common_stub
+                0x00000000c002ebac                irq16
+                0x00000000c002ebb6                irq17
+                0x00000000c002ebc0                irq18
+                0x00000000c002ebca                irq19
+                0x00000000c002ebd4                irq20
+                0x00000000c002ebde                irq21
+                0x00000000c002ebe8                irq22
+                0x00000000c002ebf2                irq23
+ *fill*         0x00000000c002ebfc        0x4 
+ .text          0x00000000c002ec00       0x10 arch/i386/rdrand.32
+                0x00000000c002ec00                i386GetRDRAND
+ .text          0x00000000c002ec10       0x39 arch/i386/sse.32
+                0x00000000c002ec10                sseDetect
+                0x00000000c002ec28                sseSave
+                0x00000000c002ec30                sseLoad
+                0x00000000c002ec38                sseInit
+                0x00000000c002ec48                sseClose
+ *fill*         0x00000000c002ec49        0x7 
+ .text          0x00000000c002ec50       0x49 arch/i386/x87.32
+                0x00000000c002ec56                x87Detect
+                0x00000000c002ec71                x87Save
+                0x00000000c002ec78                x87Load
+                0x00000000c002ec7f                x87Init
+                0x00000000c002ec98                x87Close
+ *fill*         0x00000000c002ec99        0x3 
+ .text          0x00000000c002ec9c       0x25 /cygdrive/d/Users/Alex/Desktop/Toolchain/Output/bin/../lib/gcc/i386-banana/8.1.0/crtend.o
+ .text          0x00000000c002ecc1        0x0 crtn.32
+ *fill*         0x00000000c002ecc1        0x3 
+ .text          0x00000000c002ecc4      0x14b /cygdrive/d/Users/Alex/Desktop/Toolchain/Output/bin/../lib/gcc/i386-banana/8.1.0/libkgcc.a(_divdi3.o)
+                0x00000000c002ecc4                __divdi3
+ *fill*         0x00000000c002ee0f        0x1 
+ .text          0x00000000c002ee10      0x17e /cygdrive/d/Users/Alex/Desktop/Toolchain/Output/bin/../lib/gcc/i386-banana/8.1.0/libkgcc.a(_moddi3.o)
+                0x00000000c002ee10                __moddi3
+ *fill*         0x00000000c002ef8e        0x2 
+ .text          0x00000000c002ef90       0xff /cygdrive/d/Users/Alex/Desktop/Toolchain/Output/bin/../lib/gcc/i386-banana/8.1.0/libkgcc.a(_udivdi3.o)
+                0x00000000c002ef90                __udivdi3
+ *fill*         0x00000000c002f08f        0x1 
+ .text          0x00000000c002f090      0x11a /cygdrive/d/Users/Alex/Desktop/Toolchain/Output/bin/../lib/gcc/i386-banana/8.1.0/libkgcc.a(_umoddi3.o)
+                0x00000000c002f090                __umoddi3
  *(.gnu.linkonce.t*)
 
-.iplt           0x00000000c002f190        0x0
- .iplt          0x00000000c002f190        0x0 D:/Users/Alex/Desktop/Banana/kernel/boot.32
+.iplt           0x00000000c002f1b0        0x0
+ .iplt          0x00000000c002f1b0        0x0 D:/Users/Alex/Desktop/Banana/kernel/boot.32
 
-.init           0x00000000c002f18a        0xf
- .init          0x00000000c002f18a        0x3 crti.32
-                0x00000000c002f18a                _init
- .init          0x00000000c002f18d        0x5 /cygdrive/d/Users/Alex/Desktop/Toolchain/Output/bin/../lib/gcc/i386-banana/8.1.0/crtbegin.o
- .init          0x00000000c002f192        0x5 /cygdrive/d/Users/Alex/Desktop/Toolchain/Output/bin/../lib/gcc/i386-banana/8.1.0/crtend.o
- .init          0x00000000c002f197        0x2 crtn.32
+.init           0x00000000c002f1aa        0xf
+ .init          0x00000000c002f1aa        0x3 crti.32
+                0x00000000c002f1aa                _init
+ .init          0x00000000c002f1ad        0x5 /cygdrive/d/Users/Alex/Desktop/Toolchain/Output/bin/../lib/gcc/i386-banana/8.1.0/crtbegin.o
+ .init          0x00000000c002f1b2        0x5 /cygdrive/d/Users/Alex/Desktop/Toolchain/Output/bin/../lib/gcc/i386-banana/8.1.0/crtend.o
+ .init          0x00000000c002f1b7        0x2 crtn.32
 
-.fini           0x00000000c002f199        0xa
- .fini          0x00000000c002f199        0x3 crti.32
-                0x00000000c002f199                _fini
- .fini          0x00000000c002f19c        0x5 /cygdrive/d/Users/Alex/Desktop/Toolchain/Output/bin/../lib/gcc/i386-banana/8.1.0/crtbegin.o
- .fini          0x00000000c002f1a1        0x2 crtn.32
+.fini           0x00000000c002f1b9        0xa
+ .fini          0x00000000c002f1b9        0x3 crti.32
+                0x00000000c002f1b9                _fini
+ .fini          0x00000000c002f1bc        0x5 /cygdrive/d/Users/Alex/Desktop/Toolchain/Output/bin/../lib/gcc/i386-banana/8.1.0/crtbegin.o
+ .fini          0x00000000c002f1c1        0x2 crtn.32
 
 .text._ZN8ComputerD2Ev
-                0x00000000c002f1a4       0x23
+                0x00000000c002f1c4       0x23
  .text._ZN8ComputerD2Ev
-                0x00000000c002f1a4       0x23 core/computer.32
-                0x00000000c002f1a4                Computer::~Computer()
-                0x00000000c002f1a4                Computer::~Computer()
+                0x00000000c002f1c4       0x23 core/computer.32
+                0x00000000c002f1c4                Computer::~Computer()
+                0x00000000c002f1c4                Computer::~Computer()
 
 .text._ZN8ComputerD0Ev
-                0x00000000c002f1c8       0x2a
+                0x00000000c002f1e8       0x2a
  .text._ZN8ComputerD0Ev
-                0x00000000c002f1c8       0x2a core/computer.32
-                0x00000000c002f1c8                Computer::~Computer()
+                0x00000000c002f1e8       0x2a core/computer.32
+                0x00000000c002f1e8                Computer::~Computer()
 
 .text._Z10idleCommonv
-                0x00000000c002f1f2       0x21
+                0x00000000c002f212       0x21
  .text._Z10idleCommonv
-                0x00000000c002f1f2       0x21 core/idle.32
-                0x00000000c002f1f2                idleCommon()
+                0x00000000c002f212       0x21 core/idle.32
+                0x00000000c002f212                idleCommon()
 
 .text._ZN10LinkedListI8UnixFileED2Ev
-                0x00000000c002f214        0x2
+                0x00000000c002f234        0x2
  .text._ZN10LinkedListI8UnixFileED2Ev
-                0x00000000c002f214        0x2 core/unixfile.32
-                0x00000000c002f214                LinkedList<UnixFile>::~LinkedList()
-                0x00000000c002f214                LinkedList<UnixFile>::~LinkedList()
+                0x00000000c002f234        0x2 core/unixfile.32
+                0x00000000c002f234                LinkedList<UnixFile>::~LinkedList()
+                0x00000000c002f234                LinkedList<UnixFile>::~LinkedList()
 
 .text._ZN10LinkedListI8UnixFileEC2Ev
-                0x00000000c002f216       0x42
+                0x00000000c002f236       0x42
  .text._ZN10LinkedListI8UnixFileEC2Ev
-                0x00000000c002f216       0x42 core/unixfile.32
-                0x00000000c002f216                LinkedList<UnixFile>::LinkedList()
-                0x00000000c002f216                LinkedList<UnixFile>::LinkedList()
+                0x00000000c002f236       0x42 core/unixfile.32
+                0x00000000c002f236                LinkedList<UnixFile>::LinkedList()
+                0x00000000c002f236                LinkedList<UnixFile>::LinkedList()
 
 .text._ZN10LinkedListI8UnixFileE10addElementEPS0_
-                0x00000000c002f258       0xd3
+                0x00000000c002f278       0xd3
  .text._ZN10LinkedListI8UnixFileE10addElementEPS0_
-                0x00000000c002f258       0xd3 core/unixfile.32
-                0x00000000c002f258                LinkedList<UnixFile>::addElement(UnixFile*)
+                0x00000000c002f278       0xd3 core/unixfile.32
+                0x00000000c002f278                LinkedList<UnixFile>::addElement(UnixFile*)
 
 .text._ZN10LinkedListI8UnixFileE15getFirstElementEv
-                0x00000000c002f32c        0x7
+                0x00000000c002f34c        0x7
  .text._ZN10LinkedListI8UnixFileE15getFirstElementEv
-                0x00000000c002f32c        0x7 core/unixfile.32
-                0x00000000c002f32c                LinkedList<UnixFile>::getFirstElement()
+                0x00000000c002f34c        0x7 core/unixfile.32
+                0x00000000c002f34c                LinkedList<UnixFile>::getFirstElement()
 
 .text._ZN10LinkedListI8UnixFileE11removeFirstEv
-                0x00000000c002f334       0xa1
+                0x00000000c002f354       0xa1
  .text._ZN10LinkedListI8UnixFileE11removeFirstEv
-                0x00000000c002f334       0xa1 core/unixfile.32
-                0x00000000c002f334                LinkedList<UnixFile>::removeFirst()
+                0x00000000c002f354       0xa1 core/unixfile.32
+                0x00000000c002f354                LinkedList<UnixFile>::removeFirst()
 
 .text._ZN10LinkedListI8UnixFileE7getNextEPS0_
-                0x00000000c002f3d6        0x8
+                0x00000000c002f3f6        0x8
  .text._ZN10LinkedListI8UnixFileE7getNextEPS0_
-                0x00000000c002f3d6        0x8 core/unixfile.32
-                0x00000000c002f3d6                LinkedList<UnixFile>::getNext(UnixFile*)
+                0x00000000c002f3f6        0x8 core/unixfile.32
+                0x00000000c002f3f6                LinkedList<UnixFile>::getNext(UnixFile*)
 
 .text._ZN16DriverlessDeviceD2Ev
-                0x00000000c002f3de       0x1a
+                0x00000000c002f3fe       0x1a
  .text._ZN16DriverlessDeviceD2Ev
-                0x00000000c002f3de       0x1a hal/device.32
-                0x00000000c002f3de                DriverlessDevice::~DriverlessDevice()
-                0x00000000c002f3de                DriverlessDevice::~DriverlessDevice()
+                0x00000000c002f3fe       0x1a hal/device.32
+                0x00000000c002f3fe                DriverlessDevice::~DriverlessDevice()
+                0x00000000c002f3fe                DriverlessDevice::~DriverlessDevice()
 
 .text._ZN16DriverlessDeviceD0Ev
-                0x00000000c002f3f8       0x2a
+                0x00000000c002f418       0x2a
  .text._ZN16DriverlessDeviceD0Ev
-                0x00000000c002f3f8       0x2a hal/device.32
-                0x00000000c002f3f8                DriverlessDevice::~DriverlessDevice()
+                0x00000000c002f418       0x2a hal/device.32
+                0x00000000c002f418                DriverlessDevice::~DriverlessDevice()
 
 .text._ZN10LinkedListI6DeviceE10addElementEPS0_
-                0x00000000c002f422       0xdc
+                0x00000000c002f442       0xdc
  .text._ZN10LinkedListI6DeviceE10addElementEPS0_
-                0x00000000c002f422       0xdc hal/device.32
-                0x00000000c002f422                LinkedList<Device>::addElement(Device*)
+                0x00000000c002f442       0xdc hal/device.32
+                0x00000000c002f442                LinkedList<Device>::addElement(Device*)
 
 .text._ZN10LinkedListI6DeviceEC2Ev
-                0x00000000c002f4fe       0x42
+                0x00000000c002f51e       0x42
  .text._ZN10LinkedListI6DeviceEC2Ev
-                0x00000000c002f4fe       0x42 hal/device.32
-                0x00000000c002f4fe                LinkedList<Device>::LinkedList()
-                0x00000000c002f4fe                LinkedList<Device>::LinkedList()
+                0x00000000c002f51e       0x42 hal/device.32
+                0x00000000c002f51e                LinkedList<Device>::LinkedList()
+                0x00000000c002f51e                LinkedList<Device>::LinkedList()
 
 .text._ZN10LinkedListIV18ThreadControlBlockE7isEmptyEv
-                0x00000000c002f540       0x1c
+                0x00000000c002f560       0x1c
  .text._ZN10LinkedListIV18ThreadControlBlockE7isEmptyEv
-                0x00000000c002f540       0x1c hal/timer.32
-                0x00000000c002f540                LinkedList<ThreadControlBlock volatile>::isEmpty()
+                0x00000000c002f560       0x1c hal/timer.32
+                0x00000000c002f560                LinkedList<ThreadControlBlock volatile>::isEmpty()
 
 .text._ZN10LinkedListIV18ThreadControlBlockE15getFirstElementEv
-                0x00000000c002f55c        0x7
+                0x00000000c002f57c        0x7
  .text._ZN10LinkedListIV18ThreadControlBlockE15getFirstElementEv
-                0x00000000c002f55c        0x7 hal/timer.32
-                0x00000000c002f55c                LinkedList<ThreadControlBlock volatile>::getFirstElement()
+                0x00000000c002f57c        0x7 hal/timer.32
+                0x00000000c002f57c                LinkedList<ThreadControlBlock volatile>::getFirstElement()
 
 .text._ZN10LinkedListIV18ThreadControlBlockE11removeFirstEv
-                0x00000000c002f564       0xbc
+                0x00000000c002f584       0xbc
  .text._ZN10LinkedListIV18ThreadControlBlockE11removeFirstEv
-                0x00000000c002f564       0xbc hal/timer.32
-                0x00000000c002f564                LinkedList<ThreadControlBlock volatile>::removeFirst()
+                0x00000000c002f584       0xbc hal/timer.32
+                0x00000000c002f584                LinkedList<ThreadControlBlock volatile>::removeFirst()
 
 .text._ZN10LinkedListIV18ThreadControlBlockE10addElementEPS1_
-                0x00000000c002f620       0xda
+                0x00000000c002f640       0xda
  .text._ZN10LinkedListIV18ThreadControlBlockE10addElementEPS1_
-                0x00000000c002f620       0xda hal/timer.32
-                0x00000000c002f620                LinkedList<ThreadControlBlock volatile>::addElement(ThreadControlBlock volatile*)
+                0x00000000c002f640       0xda hal/timer.32
+                0x00000000c002f640                LinkedList<ThreadControlBlock volatile>::addElement(ThreadControlBlock volatile*)
 
 .text._ZN4ACPID2Ev
-                0x00000000c002f6fc       0x23
+                0x00000000c002f71c       0x23
  .text._ZN4ACPID2Ev
-                0x00000000c002f6fc       0x23 hw/acpi.32
-                0x00000000c002f6fc                ACPI::~ACPI()
-                0x00000000c002f6fc                ACPI::~ACPI()
+                0x00000000c002f71c       0x23 hw/acpi.32
+                0x00000000c002f71c                ACPI::~ACPI()
+                0x00000000c002f71c                ACPI::~ACPI()
 
 .text._ZN4ACPID0Ev
-                0x00000000c002f720       0x2a
+                0x00000000c002f740       0x2a
  .text._ZN4ACPID0Ev
-                0x00000000c002f720       0x2a hw/acpi.32
-                0x00000000c002f720                ACPI::~ACPI()
+                0x00000000c002f740       0x2a hw/acpi.32
+                0x00000000c002f740                ACPI::~ACPI()
 
 .text._ZN10LinkedListI6DeviceED2Ev
-                0x00000000c002f74c        0x2
+                0x00000000c002f76c        0x2
  .text._ZN10LinkedListI6DeviceED2Ev
-                0x00000000c002f74c        0x2 hw/acpi.32
-                0x00000000c002f74c                LinkedList<Device>::~LinkedList()
-                0x00000000c002f74c                LinkedList<Device>::~LinkedList()
+                0x00000000c002f76c        0x2 hw/acpi.32
+                0x00000000c002f76c                LinkedList<Device>::~LinkedList()
+                0x00000000c002f76c                LinkedList<Device>::~LinkedList()
 
 .text._ZN10LinkedListI6DeviceE7isEmptyEv
-                0x00000000c002f750       0x1c
+                0x00000000c002f770       0x1c
  .text._ZN10LinkedListI6DeviceE7isEmptyEv
-                0x00000000c002f750       0x1c hw/acpi.32
-                0x00000000c002f750                LinkedList<Device>::isEmpty()
+                0x00000000c002f770       0x1c hw/acpi.32
+                0x00000000c002f770                LinkedList<Device>::isEmpty()
 
 .text._ZN10LinkedListI6DeviceE15getFirstElementEv
-                0x00000000c002f76c        0x7
+                0x00000000c002f78c        0x7
  .text._ZN10LinkedListI6DeviceE15getFirstElementEv
-                0x00000000c002f76c        0x7 hw/acpi.32
-                0x00000000c002f76c                LinkedList<Device>::getFirstElement()
+                0x00000000c002f78c        0x7 hw/acpi.32
+                0x00000000c002f78c                LinkedList<Device>::getFirstElement()
 
 .text._ZN10LinkedListI6DeviceE11removeFirstEv
-                0x00000000c002f774       0xb8
+                0x00000000c002f794       0xb8
  .text._ZN10LinkedListI6DeviceE11removeFirstEv
-                0x00000000c002f774       0xb8 hw/acpi.32
-                0x00000000c002f774                LinkedList<Device>::removeFirst()
+                0x00000000c002f794       0xb8 hw/acpi.32
+                0x00000000c002f794                LinkedList<Device>::removeFirst()
 
 .text._ZN3CPUD2Ev
-                0x00000000c002f82c       0x23
+                0x00000000c002f84c       0x23
  .text._ZN3CPUD2Ev
-                0x00000000c002f82c       0x23 hw/cpu.32
-                0x00000000c002f82c                CPU::~CPU()
-                0x00000000c002f82c                CPU::~CPU()
+                0x00000000c002f84c       0x23 hw/cpu.32
+                0x00000000c002f84c                CPU::~CPU()
+                0x00000000c002f84c                CPU::~CPU()
 
 .text._ZN3CPUD0Ev
-                0x00000000c002f850       0x2a
+                0x00000000c002f870       0x2a
  .text._ZN3CPUD0Ev
-                0x00000000c002f850       0x2a hw/cpu.32
-                0x00000000c002f850                CPU::~CPU()
+                0x00000000c002f870       0x2a hw/cpu.32
+                0x00000000c002f870                CPU::~CPU()
 
 .text._ZN10LinkedListIV18ThreadControlBlockE7getNextEPS1_
-                0x00000000c002f87c        0x8
+                0x00000000c002f89c        0x8
  .text._ZN10LinkedListIV18ThreadControlBlockE7getNextEPS1_
-                0x00000000c002f87c        0x8 sys/kill.32
-                0x00000000c002f87c                LinkedList<ThreadControlBlock volatile>::getNext(ThreadControlBlock volatile*)
+                0x00000000c002f89c        0x8 sys/kill.32
+                0x00000000c002f89c                LinkedList<ThreadControlBlock volatile>::getNext(ThreadControlBlock volatile*)
 
 .text._ZN10LinkedListIV18ThreadControlBlockED2Ev
-                0x00000000c002f884        0x2
+                0x00000000c002f8a4        0x2
  .text._ZN10LinkedListIV18ThreadControlBlockED2Ev
-                0x00000000c002f884        0x2 thr/prcssthr.32
-                0x00000000c002f884                LinkedList<ThreadControlBlock volatile>::~LinkedList()
-                0x00000000c002f884                LinkedList<ThreadControlBlock volatile>::~LinkedList()
+                0x00000000c002f8a4        0x2 thr/prcssthr.32
+                0x00000000c002f8a4                LinkedList<ThreadControlBlock volatile>::~LinkedList()
+                0x00000000c002f8a4                LinkedList<ThreadControlBlock volatile>::~LinkedList()
 
 .text._ZN18ThreadControlBlockC2Ev
-                0x00000000c002f888       0x49
+                0x00000000c002f8a8       0x49
  .text._ZN18ThreadControlBlockC2Ev
-                0x00000000c002f888       0x49 thr/prcssthr.32
-                0x00000000c002f888                ThreadControlBlock::ThreadControlBlock()
-                0x00000000c002f888                ThreadControlBlock::ThreadControlBlock()
+                0x00000000c002f8a8       0x49 thr/prcssthr.32
+                0x00000000c002f8a8                ThreadControlBlock::ThreadControlBlock()
+                0x00000000c002f8a8                ThreadControlBlock::ThreadControlBlock()
 
 .text._ZN10LinkedListIV18ThreadControlBlockEC2Ev
-                0x00000000c002f8d4       0x42
+                0x00000000c002f8f4       0x42
  .text._ZN10LinkedListIV18ThreadControlBlockEC2Ev
-                0x00000000c002f8d4       0x42 thr/prcssthr.32
-                0x00000000c002f8d4                LinkedList<ThreadControlBlock volatile>::LinkedList()
-                0x00000000c002f8d4                LinkedList<ThreadControlBlock volatile>::LinkedList()
+                0x00000000c002f8f4       0x42 thr/prcssthr.32
+                0x00000000c002f8f4                LinkedList<ThreadControlBlock volatile>::LinkedList()
+                0x00000000c002f8f4                LinkedList<ThreadControlBlock volatile>::LinkedList()
 
 .text._ZN3PCID2Ev
-                0x00000000c002f916       0x23
+                0x00000000c002f936       0x23
  .text._ZN3PCID2Ev
-                0x00000000c002f916       0x23 hw/bus/pci.32
-                0x00000000c002f916                PCI::~PCI()
-                0x00000000c002f916                PCI::~PCI()
+                0x00000000c002f936       0x23 hw/bus/pci.32
+                0x00000000c002f936                PCI::~PCI()
+                0x00000000c002f936                PCI::~PCI()
 
 .text._ZN3PCID0Ev
-                0x00000000c002f93a       0x2a
+                0x00000000c002f95a       0x2a
  .text._ZN3PCID0Ev
-                0x00000000c002f93a       0x2a hw/bus/pci.32
-                0x00000000c002f93a                PCI::~PCI()
+                0x00000000c002f95a       0x2a hw/bus/pci.32
+                0x00000000c002f95a                PCI::~PCI()
 
 .text._ZN3IDED2Ev
-                0x00000000c002f964       0x23
+                0x00000000c002f984       0x23
  .text._ZN3IDED2Ev
-                0x00000000c002f964       0x23 hw/diskctrl/ide.32
-                0x00000000c002f964                IDE::~IDE()
-                0x00000000c002f964                IDE::~IDE()
+                0x00000000c002f984       0x23 hw/diskctrl/ide.32
+                0x00000000c002f984                IDE::~IDE()
+                0x00000000c002f984                IDE::~IDE()
 
 .text._ZN3IDED0Ev
-                0x00000000c002f988       0x2a
+                0x00000000c002f9a8       0x2a
  .text._ZN3IDED0Ev
-                0x00000000c002f988       0x2a hw/diskctrl/ide.32
-                0x00000000c002f988                IDE::~IDE()
+                0x00000000c002f9a8       0x2a hw/diskctrl/ide.32
+                0x00000000c002f9a8                IDE::~IDE()
 
 .text._ZN7SATABusD2Ev
-                0x00000000c002f9b2       0x23
+                0x00000000c002f9d2       0x23
  .text._ZN7SATABusD2Ev
-                0x00000000c002f9b2       0x23 hw/diskctrl/satabus.32
-                0x00000000c002f9b2                SATABus::~SATABus()
-                0x00000000c002f9b2                SATABus::~SATABus()
+                0x00000000c002f9d2       0x23 hw/diskctrl/satabus.32
+                0x00000000c002f9d2                SATABus::~SATABus()
+                0x00000000c002f9d2                SATABus::~SATABus()
 
 .text._ZN7SATABusD0Ev
-                0x00000000c002f9d6       0x2a
+                0x00000000c002f9f6       0x2a
  .text._ZN7SATABusD0Ev
-                0x00000000c002f9d6       0x2a hw/diskctrl/satabus.32
-                0x00000000c002f9d6                SATABus::~SATABus()
+                0x00000000c002f9f6       0x2a hw/diskctrl/satabus.32
+                0x00000000c002f9f6                SATABus::~SATABus()
 
 .text._ZN3ATAD2Ev
-                0x00000000c002fa00       0x23
+                0x00000000c002fa20       0x23
  .text._ZN3ATAD2Ev
-                0x00000000c002fa00       0x23 hw/diskphys/ata.32
-                0x00000000c002fa00                ATA::~ATA()
-                0x00000000c002fa00                ATA::~ATA()
+                0x00000000c002fa20       0x23 hw/diskphys/ata.32
+                0x00000000c002fa20                ATA::~ATA()
+                0x00000000c002fa20                ATA::~ATA()
 
 .text._ZN3ATAD0Ev
-                0x00000000c002fa24       0x2a
+                0x00000000c002fa44       0x2a
  .text._ZN3ATAD0Ev
-                0x00000000c002fa24       0x2a hw/diskphys/ata.32
-                0x00000000c002fa24                ATA::~ATA()
+                0x00000000c002fa44       0x2a hw/diskphys/ata.32
+                0x00000000c002fa44                ATA::~ATA()
 
 .text._ZN5ATAPID2Ev
-                0x00000000c002fa4e       0x23
+                0x00000000c002fa6e       0x23
  .text._ZN5ATAPID2Ev
-                0x00000000c002fa4e       0x23 hw/diskphys/atapi.32
-                0x00000000c002fa4e                ATAPI::~ATAPI()
-                0x00000000c002fa4e                ATAPI::~ATAPI()
+                0x00000000c002fa6e       0x23 hw/diskphys/atapi.32
+                0x00000000c002fa6e                ATAPI::~ATAPI()
+                0x00000000c002fa6e                ATAPI::~ATAPI()
 
 .text._ZN5ATAPID0Ev
-                0x00000000c002fa72       0x2a
+                0x00000000c002fa92       0x2a
  .text._ZN5ATAPID0Ev
-                0x00000000c002fa72       0x2a hw/diskphys/atapi.32
-                0x00000000c002fa72                ATAPI::~ATAPI()
+                0x00000000c002fa92       0x2a hw/diskphys/atapi.32
+                0x00000000c002fa92                ATAPI::~ATAPI()
 
 .text._ZN4SATAD2Ev
-                0x00000000c002fa9c       0x23
+                0x00000000c002fabc       0x23
  .text._ZN4SATAD2Ev
-                0x00000000c002fa9c       0x23 hw/diskphys/sata.32
-                0x00000000c002fa9c                SATA::~SATA()
-                0x00000000c002fa9c                SATA::~SATA()
+                0x00000000c002fabc       0x23 hw/diskphys/sata.32
+                0x00000000c002fabc                SATA::~SATA()
+                0x00000000c002fabc                SATA::~SATA()
 
 .text._ZN4SATAD0Ev
-                0x00000000c002fac0       0x2a
+                0x00000000c002fae0       0x2a
  .text._ZN4SATAD0Ev
-                0x00000000c002fac0       0x2a hw/diskphys/sata.32
-                0x00000000c002fac0                SATA::~SATA()
+                0x00000000c002fae0       0x2a hw/diskphys/sata.32
+                0x00000000c002fae0                SATA::~SATA()
 
 .text._ZN6SATAPID2Ev
-                0x00000000c002faea       0x23
+                0x00000000c002fb0a       0x23
  .text._ZN6SATAPID2Ev
-                0x00000000c002faea       0x23 hw/diskphys/satapi.32
-                0x00000000c002faea                SATAPI::~SATAPI()
-                0x00000000c002faea                SATAPI::~SATAPI()
+                0x00000000c002fb0a       0x23 hw/diskphys/satapi.32
+                0x00000000c002fb0a                SATAPI::~SATAPI()
+                0x00000000c002fb0a                SATAPI::~SATAPI()
 
 .text._ZN6SATAPID0Ev
-                0x00000000c002fb0e       0x2a
+                0x00000000c002fb2e       0x2a
  .text._ZN6SATAPID0Ev
-                0x00000000c002fb0e       0x2a hw/diskphys/satapi.32
-                0x00000000c002fb0e                SATAPI::~SATAPI()
+                0x00000000c002fb2e       0x2a hw/diskphys/satapi.32
+                0x00000000c002fb2e                SATAPI::~SATAPI()
 
 .text._ZN6IOAPICD2Ev
-                0x00000000c002fb38       0x23
+                0x00000000c002fb58       0x23
  .text._ZN6IOAPICD2Ev
-                0x00000000c002fb38       0x23 hw/intctrl/apic.32
-                0x00000000c002fb38                IOAPIC::~IOAPIC()
-                0x00000000c002fb38                IOAPIC::~IOAPIC()
+                0x00000000c002fb58       0x23 hw/intctrl/apic.32
+                0x00000000c002fb58                IOAPIC::~IOAPIC()
+                0x00000000c002fb58                IOAPIC::~IOAPIC()
 
 .text._ZN6IOAPICD0Ev
-                0x00000000c002fb5c       0x2a
+                0x00000000c002fb7c       0x2a
  .text._ZN6IOAPICD0Ev
-                0x00000000c002fb5c       0x2a hw/intctrl/apic.32
-                0x00000000c002fb5c                IOAPIC::~IOAPIC()
+                0x00000000c002fb7c       0x2a hw/intctrl/apic.32
+                0x00000000c002fb7c                IOAPIC::~IOAPIC()
 
 .text._ZN9APICTimerD2Ev
-                0x00000000c002fb88       0x23
+                0x00000000c002fba8       0x23
  .text._ZN9APICTimerD2Ev
-                0x00000000c002fb88       0x23 hw/timer/apictimer.32
-                0x00000000c002fb88                APICTimer::~APICTimer()
-                0x00000000c002fb88                APICTimer::~APICTimer()
+                0x00000000c002fba8       0x23 hw/timer/apictimer.32
+                0x00000000c002fba8                APICTimer::~APICTimer()
+                0x00000000c002fba8                APICTimer::~APICTimer()
 
 .text._ZN9APICTimerD0Ev
-                0x00000000c002fbac       0x2a
+                0x00000000c002fbcc       0x2a
  .text._ZN9APICTimerD0Ev
-                0x00000000c002fbac       0x2a hw/timer/apictimer.32
-                0x00000000c002fbac                APICTimer::~APICTimer()
+                0x00000000c002fbcc       0x2a hw/timer/apictimer.32
+                0x00000000c002fbcc                APICTimer::~APICTimer()
 
 .text._ZN3PITD2Ev
-                0x00000000c002fbd8       0x23
+                0x00000000c002fbf8       0x23
  .text._ZN3PITD2Ev
-                0x00000000c002fbd8       0x23 hw/timer/pit.32
-                0x00000000c002fbd8                PIT::~PIT()
-                0x00000000c002fbd8                PIT::~PIT()
+                0x00000000c002fbf8       0x23 hw/timer/pit.32
+                0x00000000c002fbf8                PIT::~PIT()
+                0x00000000c002fbf8                PIT::~PIT()
 
 .text._ZN3PITD0Ev
-                0x00000000c002fbfc       0x2a
+                0x00000000c002fc1c       0x2a
  .text._ZN3PITD0Ev
-                0x00000000c002fbfc       0x2a hw/timer/pit.32
-                0x00000000c002fbfc                PIT::~PIT()
+                0x00000000c002fc1c       0x2a hw/timer/pit.32
+                0x00000000c002fc1c                PIT::~PIT()
 
-.rodata         0x00000000c002fc26     0x49c2
-                0x00000000c002fc26                start_ctors = .
+.rodata         0x00000000c002fc46     0x49a2
+                0x00000000c002fc46                start_ctors = .
  *(SORT_BY_NAME(.ctors*))
- *fill*         0x00000000c002fc26        0x2 
- .ctors         0x00000000c002fc28        0x4 /cygdrive/d/Users/Alex/Desktop/Toolchain/Output/bin/../lib/gcc/i386-banana/8.1.0/crtbegin.o
- .ctors         0x00000000c002fc2c        0x4 core/unixfile.32
- .ctors         0x00000000c002fc30        0x4 thr/prcssthr.32
- .ctors         0x00000000c002fc34        0x4 /cygdrive/d/Users/Alex/Desktop/Toolchain/Output/bin/../lib/gcc/i386-banana/8.1.0/crtend.o
-                0x00000000c002fc38                end_ctors = .
-                0x00000000c002fc38                start_dtors = .
+ *fill*         0x00000000c002fc46        0x2 
+ .ctors         0x00000000c002fc48        0x4 /cygdrive/d/Users/Alex/Desktop/Toolchain/Output/bin/../lib/gcc/i386-banana/8.1.0/crtbegin.o
+ .ctors         0x00000000c002fc4c        0x4 core/unixfile.32
+ .ctors         0x00000000c002fc50        0x4 thr/prcssthr.32
+ .ctors         0x00000000c002fc54        0x4 /cygdrive/d/Users/Alex/Desktop/Toolchain/Output/bin/../lib/gcc/i386-banana/8.1.0/crtend.o
+                0x00000000c002fc58                end_ctors = .
+                0x00000000c002fc58                start_dtors = .
  *(SORT_BY_NAME(.dtors*))
- .dtors         0x00000000c002fc38        0x4 /cygdrive/d/Users/Alex/Desktop/Toolchain/Output/bin/../lib/gcc/i386-banana/8.1.0/crtbegin.o
- .dtors         0x00000000c002fc3c        0x4 /cygdrive/d/Users/Alex/Desktop/Toolchain/Output/bin/../lib/gcc/i386-banana/8.1.0/crtend.o
-                0x00000000c002fc3c                __DTOR_END__
-                0x00000000c002fc40                end_dtors = .
+ .dtors         0x00000000c002fc58        0x4 /cygdrive/d/Users/Alex/Desktop/Toolchain/Output/bin/../lib/gcc/i386-banana/8.1.0/crtbegin.o
+ .dtors         0x00000000c002fc5c        0x4 /cygdrive/d/Users/Alex/Desktop/Toolchain/Output/bin/../lib/gcc/i386-banana/8.1.0/crtend.o
+                0x00000000c002fc5c                __DTOR_END__
+                0x00000000c002fc60                end_dtors = .
  *(.rodata*)
- *fill*         0x00000000c002fc40        0x0 
- .rodata        0x00000000c002fc40      0x101 acpica/utclib.32
-                0x00000000c002fc40                AcpiGbl_Ctypes
- *fill*         0x00000000c002fd41        0x3 
+ *fill*         0x00000000c002fc60        0x0 
+ .rodata        0x00000000c002fc60      0x101 acpica/utclib.32
+                0x00000000c002fc60                AcpiGbl_Ctypes
+ *fill*         0x00000000c002fd61        0x3 
  .rodata.str1.4
-                0x00000000c002fd44       0x3b arch/sys_arch.32
+                0x00000000c002fd64       0x3b arch/sys_arch.32
  .rodata.str1.1
-                0x00000000c002fd7f       0x7f arch/sys_arch.32
- *fill*         0x00000000c002fdfe        0x2 
- .rodata        0x00000000c002fe00       0x18 core/malloc.32
+                0x00000000c002fd9f       0x7f arch/sys_arch.32
+ *fill*         0x00000000c002fe1e        0x2 
+ .rodata        0x00000000c002fe20       0x18 core/malloc.32
  .rodata.str1.1
-                0x00000000c002fe18       0x4a fs/fat/ff.32
+                0x00000000c002fe38       0x4a fs/fat/ff.32
                                          0x4e (size before relaxing)
- *fill*         0x00000000c002fe62       0x1e 
- .rodata        0x00000000c002fe80       0xed fs/fat/ff.32
- *fill*         0x00000000c002ff6d       0x13 
- .rodata        0x00000000c002ff80      0x400 fs/fat/ffunicode.32
+ *fill*         0x00000000c002fe82       0x1e 
+ .rodata        0x00000000c002fea0       0xed fs/fat/ff.32
+ *fill*         0x00000000c002ff8d       0x13 
+ .rodata        0x00000000c002ffa0      0x400 fs/fat/ffunicode.32
  .rodata.str1.1
-                0x00000000c0030380       0x6f fs/iso9660/iso9660.32
+                0x00000000c00303a0       0x6f fs/iso9660/iso9660.32
  .rodata.str1.1
-                0x00000000c00303ef       0xcf net/core/mem.32
- *fill*         0x00000000c00304be        0x2 
+                0x00000000c003040f       0xcf net/core/mem.32
+ *fill*         0x00000000c00304de        0x2 
  .rodata.str1.4
-                0x00000000c00304c0       0x7c net/core/mem.32
+                0x00000000c00304e0       0x7c net/core/mem.32
  .rodata.str1.1
-                0x00000000c003053c       0x1d net/core/memp.32
+                0x00000000c003055c       0x1d net/core/memp.32
                                          0x2a (size before relaxing)
- *fill*         0x00000000c0030559        0x3 
- .rodata        0x00000000c003055c       0x38 net/core/memp.32
+ *fill*         0x00000000c0030579        0x3 
+ .rodata        0x00000000c003057c       0x38 net/core/memp.32
  .rodata.str1.1
-                0x00000000c0030594       0x17 net/core/netif.32
+                0x00000000c00305b4       0x17 net/core/netif.32
                                          0x24 (size before relaxing)
- *fill*         0x00000000c00305ab        0x1 
+ *fill*         0x00000000c00305cb        0x1 
  .rodata.str1.4
-                0x00000000c00305ac      0x1db net/core/pbuf.32
+                0x00000000c00305cc      0x1db net/core/pbuf.32
  .rodata.str1.1
-                0x00000000c0030787      0x1ee net/core/pbuf.32
+                0x00000000c00307a7      0x1ee net/core/pbuf.32
                                         0x205 (size before relaxing)
- *fill*         0x00000000c0030975        0x3 
+ *fill*         0x00000000c0030995        0x3 
  .rodata.str1.4
-                0x00000000c0030978       0x26 net/core/raw.32
+                0x00000000c0030998       0x26 net/core/raw.32
  .rodata.str1.1
-                0x00000000c003099e        0xd net/core/raw.32
- *fill*         0x00000000c003099e        0x2 
+                0x00000000c00309be        0xd net/core/raw.32
+ *fill*         0x00000000c00309be        0x2 
  .rodata.str1.4
-                0x00000000c00309a0      0x234 net/core/tcp.32
+                0x00000000c00309c0      0x234 net/core/tcp.32
  .rodata.str1.1
-                0x00000000c0030bd4       0xdc net/core/tcp.32
+                0x00000000c0030bf4       0xdc net/core/tcp.32
                                          0xf0 (size before relaxing)
- *fill*         0x00000000c0030cb0       0x10 
- .rodata        0x00000000c0030cc0       0x8c net/core/tcp.32
-                0x00000000c0030ce0                tcp_pcb_lists
-                0x00000000c0030cf0                tcp_persist_backoff
-                0x00000000c0030cf8                tcp_backoff
-                0x00000000c0030d20                tcp_state_str
+ *fill*         0x00000000c0030cd0       0x10 
+ .rodata        0x00000000c0030ce0       0x8c net/core/tcp.32
+                0x00000000c0030d00                tcp_pcb_lists
+                0x00000000c0030d10                tcp_persist_backoff
+                0x00000000c0030d18                tcp_backoff
+                0x00000000c0030d40                tcp_state_str
  .rodata.str1.4
-                0x00000000c0030d4c      0x225 net/core/tcp_in.32
+                0x00000000c0030d6c      0x225 net/core/tcp_in.32
  .rodata.str1.1
-                0x00000000c0030f71       0x86 net/core/tcp_in.32
+                0x00000000c0030f91       0x86 net/core/tcp_in.32
                                          0x93 (size before relaxing)
- *fill*         0x00000000c0030ff7        0x1 
- .rodata        0x00000000c0030ff8       0x28 net/core/tcp_in.32
+ *fill*         0x00000000c0031017        0x1 
+ .rodata        0x00000000c0031018       0x28 net/core/tcp_in.32
  .rodata.str1.4
-                0x00000000c0031020      0x284 net/core/tcp_out.32
+                0x00000000c0031040      0x284 net/core/tcp_out.32
  .rodata.str1.1
-                0x00000000c00312a4       0x86 net/core/tcp_out.32
+                0x00000000c00312c4       0x86 net/core/tcp_out.32
                                          0x93 (size before relaxing)
- *fill*         0x00000000c003132a        0x2 
+ *fill*         0x00000000c003134a        0x2 
  .rodata.str1.4
-                0x00000000c003132c       0x3d net/core/timers.32
+                0x00000000c003134c       0x3d net/core/timers.32
  .rodata.str1.1
-                0x00000000c0031369        0xd net/core/timers.32
+                0x00000000c0031389        0xd net/core/timers.32
  .rodata.str1.1
-                0x00000000c0031369       0x34 net/core/udp.32
+                0x00000000c0031389       0x34 net/core/udp.32
                                          0x41 (size before relaxing)
- *fill*         0x00000000c003139d        0x3 
+ *fill*         0x00000000c00313bd        0x3 
  .rodata.str1.4
-                0x00000000c00313a0       0x2e net/core/udp.32
- *fill*         0x00000000c00313ce        0x2 
+                0x00000000c00313c0       0x2e net/core/udp.32
+ *fill*         0x00000000c00313ee        0x2 
  .rodata.str1.4
-                0x00000000c00313d0      0x179 net/netif/etharp.32
+                0x00000000c00313f0      0x179 net/netif/etharp.32
  .rodata.str1.1
-                0x00000000c0031549       0x52 net/netif/etharp.32
+                0x00000000c0031569       0x52 net/netif/etharp.32
                                          0x69 (size before relaxing)
- *fill*         0x00000000c003159b        0x1 
- .rodata        0x00000000c003159c        0xe net/netif/etharp.32
-                0x00000000c003159c                ethzero
-                0x00000000c00315a4                ethbroadcast
- *fill*         0x00000000c00315aa        0x2 
+ *fill*         0x00000000c00315bb        0x1 
+ .rodata        0x00000000c00315bc        0xe net/netif/etharp.32
+                0x00000000c00315bc                ethzero
+                0x00000000c00315c4                ethbroadcast
+ *fill*         0x00000000c00315ca        0x2 
  .rodata.str1.4
-                0x00000000c00315ac       0xf4 net/core/ipv4/icmp.32
+                0x00000000c00315cc       0xf4 net/core/ipv4/icmp.32
                                         0x118 (size before relaxing)
  .rodata.str1.1
-                0x00000000c00316a0        0xd net/core/ipv4/icmp.32
+                0x00000000c00316c0        0xd net/core/ipv4/icmp.32
  .rodata.str1.1
-                0x00000000c00316a0        0xa net/core/ipv4/inet_chksum.32
+                0x00000000c00316c0        0xa net/core/ipv4/inet_chksum.32
                                          0x17 (size before relaxing)
  .rodata.str1.1
-                0x00000000c00316aa        0xc net/core/ipv4/ip.32
+                0x00000000c00316ca        0xc net/core/ipv4/ip.32
                                          0x19 (size before relaxing)
- *fill*         0x00000000c00316b6        0x2 
+ *fill*         0x00000000c00316d6        0x2 
  .rodata.str1.4
-                0x00000000c00316b8       0x2d net/core/ipv4/ip.32
+                0x00000000c00316d8       0x2d net/core/ipv4/ip.32
  .rodata.str1.1
-                0x00000000c00316e5        0xa net/core/ipv4/ip_addr.32
+                0x00000000c0031705        0xa net/core/ipv4/ip_addr.32
                                          0x17 (size before relaxing)
- *fill*         0x00000000c00316ef        0x1 
- .rodata        0x00000000c00316f0       0x1c net/core/ipv4/ip_addr.32
-                0x00000000c0031704                ip_addr_broadcast
-                0x00000000c0031708                ip_addr_any
+ *fill*         0x00000000c003170f        0x1 
+ .rodata        0x00000000c0031710       0x1c net/core/ipv4/ip_addr.32
+                0x00000000c0031724                ip_addr_broadcast
+                0x00000000c0031728                ip_addr_any
  .rodata.str1.1
-                0x00000000c003170c       0xaf net/core/ipv4/ip_frag.32
+                0x00000000c003172c       0xaf net/core/ipv4/ip_frag.32
                                          0xc6 (size before relaxing)
- *fill*         0x00000000c00317bb        0x1 
+ *fill*         0x00000000c00317db        0x1 
  .rodata.str1.4
-                0x00000000c00317bc       0xac net/core/ipv4/ip_frag.32
+                0x00000000c00317dc       0xac net/core/ipv4/ip_frag.32
  .rodata.str1.1
-                0x00000000c0031868      0x11a core/computer.32
- *fill*         0x00000000c0031982        0x2 
+                0x00000000c0031888      0x11a core/computer.32
+ *fill*         0x00000000c00319a2        0x2 
  .rodata.str1.4
-                0x00000000c0031984       0x68 core/computer.32
+                0x00000000c00319a4       0x68 core/computer.32
  .rodata._ZTV8Computer
-                0x00000000c00319ec       0x2c core/computer.32
-                0x00000000c00319ec                vtable for Computer
+                0x00000000c0031a0c       0x2c core/computer.32
+                0x00000000c0031a0c                vtable for Computer
  .rodata.str1.4
-                0x00000000c0031a18       0x30 core/kheap.32
+                0x00000000c0031a38       0x30 core/kheap.32
  .rodata.str1.1
-                0x00000000c0031a48        0xf core/kheap.32
+                0x00000000c0031a68        0xf core/kheap.32
  .rodata.str1.1
-                0x00000000c0031a57       0x17 core/main.32
- *fill*         0x00000000c0031a6e        0x2 
+                0x00000000c0031a77       0x17 core/main.32
+ *fill*         0x00000000c0031a8e        0x2 
  .rodata.str1.4
-                0x00000000c0031a70       0xa5 core/physmgr.32
+                0x00000000c0031a90       0xa5 core/physmgr.32
  .rodata.str1.1
-                0x00000000c0031b15       0x58 core/physmgr.32
+                0x00000000c0031b35       0x58 core/physmgr.32
  .rodata.str1.1
-                0x00000000c0031b6d       0x39 core/pipe.32
- *fill*         0x00000000c0031ba6        0x2 
+                0x00000000c0031b8d       0x39 core/pipe.32
+ *fill*         0x00000000c0031bc6        0x2 
  .rodata._ZTV4Pipe
-                0x00000000c0031ba8       0x1c core/pipe.32
-                0x00000000c0031ba8                vtable for Pipe
+                0x00000000c0031bc8       0x1c core/pipe.32
+                0x00000000c0031bc8                vtable for Pipe
  .rodata.str1.1
-                0x00000000c0031bc4       0x2b core/terminal.32
- *fill*         0x00000000c0031bef        0x1 
+                0x00000000c0031be4       0x2b core/terminal.32
+ *fill*         0x00000000c0031c0f        0x1 
  .rodata._ZTV7VgaText
-                0x00000000c0031bf0       0x1c core/terminal.32
-                0x00000000c0031bf0                vtable for VgaText
+                0x00000000c0031c10       0x1c core/terminal.32
+                0x00000000c0031c10                vtable for VgaText
  .rodata._ZN10LinkedListI8UnixFileE10addElementEPS0_.str1.4
-                0x00000000c0031c0c       0x22 core/unixfile.32
+                0x00000000c0031c2c       0x22 core/unixfile.32
  .rodata._ZN10LinkedListI8UnixFileE10addElementEPS0_.str1.1
-                0x00000000c0031c2e       0x15 core/unixfile.32
- *fill*         0x00000000c0031c43        0x1 
+                0x00000000c0031c4e       0x15 core/unixfile.32
+ *fill*         0x00000000c0031c63        0x1 
  .rodata._ZN10LinkedListI8UnixFileE11removeFirstEv.str1.4
-                0x00000000c0031c44       0x4b core/unixfile.32
+                0x00000000c0031c64       0x4b core/unixfile.32
  .rodata._ZN10LinkedListI8UnixFileE11removeFirstEv.str1.1
-                0x00000000c0031c8f        0x8 core/unixfile.32
- *fill*         0x00000000c0031c97        0x1 
+                0x00000000c0031caf        0x8 core/unixfile.32
+ *fill*         0x00000000c0031cb7        0x1 
  .rodata.str1.4
-                0x00000000c0031c98       0x20 core/unixfile.32
+                0x00000000c0031cb8       0x20 core/unixfile.32
  .rodata._ZTV8UnixFile
-                0x00000000c0031cb8       0x1c core/unixfile.32
-                0x00000000c0031cb8                vtable for UnixFile
+                0x00000000c0031cd8       0x1c core/unixfile.32
+                0x00000000c0031cd8                vtable for UnixFile
  .rodata._ZTV16ReservedFilename
-                0x00000000c0031cd4       0x1c core/unixfile.32
-                0x00000000c0031cd4                vtable for ReservedFilename
+                0x00000000c0031cf4       0x1c core/unixfile.32
+                0x00000000c0031cf4                vtable for ReservedFilename
  .rodata.str1.4
-                0x00000000c0031cf0      0x294 core/virtmgr.32
+                0x00000000c0031d10      0x270 core/virtmgr.32
  .rodata.str1.1
-                0x00000000c0031f84      0x126 core/virtmgr.32
+                0x00000000c0031f80      0x126 core/virtmgr.32
  .rodata.str1.1
-                0x00000000c00320aa       0x33 coreobjs/c++.32
- *fill*         0x00000000c00320dd        0x3 
- .rodata        0x00000000c00320e0      0x150 dbg/kconsole.32
+                0x00000000c00320a6       0x33 coreobjs/c++.32
+ *fill*         0x00000000c00320d9        0x3 
+ .rodata        0x00000000c00320dc      0x150 dbg/kconsole.32
  .rodata.str1.1
-                0x00000000c0032230      0x169 dbg/usban.32
- *fill*         0x00000000c0032399        0x3 
+                0x00000000c003222c      0x169 dbg/usban.32
+ *fill*         0x00000000c0032395        0x3 
  .rodata.str1.4
-                0x00000000c003239c      0x137 dbg/usban.32
+                0x00000000c0032398      0x137 dbg/usban.32
  .rodata.str1.1
-                0x00000000c00324d3      0x19b fs/symlink.32
+                0x00000000c00324cf      0x19b fs/symlink.32
  .rodata.str1.1
-                0x00000000c003266e       0x41 fs/vfs.32
+                0x00000000c003266a       0x41 fs/vfs.32
                                          0x43 (size before relaxing)
- *fill*         0x00000000c00326af        0x1 
+ *fill*         0x00000000c00326ab        0x1 
  .rodata._ZTV10Filesystem
-                0x00000000c00326b0       0x6c fs/vfs.32
-                0x00000000c00326b0                vtable for Filesystem
+                0x00000000c00326ac       0x6c fs/vfs.32
+                0x00000000c00326ac                vtable for Filesystem
  .rodata._ZTV4File
-                0x00000000c003271c       0x1c fs/vfs.32
-                0x00000000c003271c                vtable for File
+                0x00000000c0032718       0x1c fs/vfs.32
+                0x00000000c0032718                vtable for File
  .rodata._ZTV9Directory
-                0x00000000c0032738       0x1c fs/vfs.32
-                0x00000000c0032738                vtable for Directory
+                0x00000000c0032734       0x1c fs/vfs.32
+                0x00000000c0032734                vtable for Directory
  .rodata._ZTV3Bus
-                0x00000000c0032754       0x2c hal/bus.32
-                0x00000000c0032754                vtable for Bus
+                0x00000000c0032750       0x2c hal/bus.32
+                0x00000000c0032750                vtable for Bus
  .rodata.str1.1
-                0x00000000c0032780       0x70 hal/clock.32
+                0x00000000c003277c       0x70 hal/clock.32
  .rodata._ZTV5Clock
-                0x00000000c00327f0       0x3c hal/clock.32
-                0x00000000c00327f0                vtable for Clock
- *fill*         0x00000000c003282c       0x14 
+                0x00000000c00327ec       0x3c hal/clock.32
+                0x00000000c00327ec                vtable for Clock
+ *fill*         0x00000000c0032828       0x18 
  .rodata        0x00000000c0032840       0x30 hal/clock.32
  .rodata.str1.1
                 0x00000000c0032870       0x64 hal/device.32
@@ -2923,6 +2926,7 @@ LOAD D:/Users/Alex/Desktop/Banana/kernel/libk/libm32.a
  .data          0x00000000c0034ee0        0x0 sys/wsbe.32
  .data          0x00000000c0034ee0        0x0 sys/yield.32
  .data          0x00000000c0034ee0        0x0 thr/elf.32
+ .data          0x00000000c0034ee0        0x0 thr/exec.32
  .data          0x00000000c0034ee0        0x4 thr/prcssthr.32
                 0x00000000c0034ee0                Thr::nextPID
  .data          0x00000000c0034ee4        0x0 vm86/vm8086.32
@@ -3265,12 +3269,12 @@ align_previous  0x00000000c0037000        0x1
  .bss           0x00000000c003df20     0x2000 hal/intctrl.32
                 0x00000000c003df20                INT_contexts
                 0x00000000c003ef20                INT_handlers
- .bss           0x00000000c003ff20      0x429 hal/keybrd.32
+ .bss           0x00000000c003ff20      0x428 hal/keybrd.32
                 0x00000000c003ff20                keyboardWaitingTaskList
                 0x00000000c003ff24                keyboardSetupYet
                 0x00000000c003ff28                guiKeyboardHandler
                 0x00000000c003ff40                keystates
- *fill*         0x00000000c0040349       0x17 
+ *fill*         0x00000000c0040348       0x18 
  .bss           0x00000000c0040360       0x88 hal/logidisk.32
                 0x00000000c0040360                diskAssignments
                 0x00000000c0040380                disks
@@ -3372,6 +3376,7 @@ align_previous  0x00000000c0037000        0x1
                 0x00000000c00410a0                Thr::kernelStringTable
                 0x00000000c0041120                Thr::kernelSymbolTable
                 0x00000000c00411a0                Thr::nextDLLSymbolIndex
+ .bss           0x00000000c00411a4        0x0 thr/exec.32
  *fill*         0x00000000c00411a4        0x4 
  .bss           0x00000000c00411a8       0x70 thr/prcssthr.32
                 0x00000000c00411a8                KiRestorePreemptionValue

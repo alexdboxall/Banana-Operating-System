@@ -49,6 +49,9 @@ public:
     int getY();
     int getWidth();
     int getHeight();
+
+    void setTitle(const char* name);
+    char* getTitle();
     
     void setX(int x);
     void setY(int y);

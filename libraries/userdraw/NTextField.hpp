@@ -33,10 +33,10 @@ typedef int (*NTextFieldFormattingCallback)(NTextField*, int);
 class NTextField : public NRegion
 {
 protected:
-	friend int textFieldEngine(NRegion* _self, int posi, int* x, int* y);
+	friend int textFieldEngine(NRegion* _self, int posi, int* x, int* y, int* lastHeight);
 	friend void textfieldKeyHandler(Window* w, void* self_, KeyStates key);
 
-	void getPositionFromIndex(int index, int* x, int* y);
+	void getPositionFromIndex(int index, int* x, int* y, int* lastHeight = nullptr);
 
 	char* text;
 	int textLength;

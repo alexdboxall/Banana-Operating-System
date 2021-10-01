@@ -14,7 +14,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-int textFieldEngine(NRegion* _self, int posi, int* xout, int* yout)
+int textFieldEngine(NRegion* _self, int posi, int* xout, int* yout, int* lastHeight = nullptr)
 {
     //this function is arcane black magic
 
@@ -117,6 +117,9 @@ int textFieldEngine(NRegion* _self, int posi, int* xout, int* yout)
                 } else if (i == posi) {
                     *xout = xx;
                     *yout = ypos - self->scrollY + self->marginTop;
+                    if (lastHeight) {
+                        *lastHeight = lastBiggest;
+                    }
                     self->invalidating = false;
                     return 0;
                 }
@@ -236,9 +239,9 @@ int textFieldEngine(NRegion* _self, int posi, int* xout, int* yout)
     return posi == -1 ? 0 : -1;
 }
 
-void NTextField::getPositionFromIndex(int index, int* x, int* y)
+void NTextField::getPositionFromIndex(int index, int* x, int* y, int* lastHeight)
 {
-    textFieldEngine(this, index, x, y);
+    textFieldEngine(this, index, x, y, lastHeight);
 }
 
 int standardTextFieldPainter(NRegion* _self)
@@ -539,12 +542,12 @@ void textfieldKeyHandler(Window* w, void* self_, KeyStates key)
     }
 
     while (1) {
-        int cx, cy;
-        self->getPositionFromIndex(self->curEnd, &cx, &cy);
-        if (cy - self->scrollY > self->height - 32) {
-            self->scrollY += 24;
-        } else if (cy - self->scrollY < 32) {
-            self->scrollY -= 24;
+        int cx, cy, lh;
+        self->getPositionFromIndex(self->curEnd, &cx, &cy, &lh);
+        if (cy > self->height - lh) {
+            self->scrollY += lh;
+        } else if (cy < 0) {
+            self->scrollY -= lh;
             if (self->scrollY < 0) {
                 self->scrollY = 0;
                 break;

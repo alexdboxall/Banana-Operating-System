@@ -88,6 +88,23 @@ void Toplevel_paint_handler(Window* desktop_window, void* v) {
     }
 }
 
+void NTopLevel::setTitle(const char* nam)
+{
+    if (name) {
+        free(name);
+        name = nullptr;
+    }
+
+    name = (char*) malloc(strlen(nam + 1));
+    strcpy(name, nam);
+    repaint();
+}
+
+char* NTopLevel::getTitle()
+{
+    return name;
+}
+
 Context* NTopLevel::getContext() {
     return win->context;
 }
@@ -97,7 +114,7 @@ NTopLevel::NTopLevel(const char* nam, int width, int height)
     w = width;
     h = height;
 
-    name = (char*) malloc(strlen(nam));
+    name = (char*) malloc(strlen(nam + 1));
     strcpy(name, nam);
 
     nxw = NxCreateWindow(w, h, name);

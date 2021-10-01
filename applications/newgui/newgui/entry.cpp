@@ -327,6 +327,8 @@ void rightClickCallback(Window* window, void* self_, int mx, int my)
     }
 }
 
+NTopLevel* mainwin;
+
 int clickCallback(NButton* btn)
 {
     if (gameLost) return 0;
@@ -339,10 +341,23 @@ int clickCallback(NButton* btn)
 
     setSafe(x, y);
 
+    bool done = true;
+    for (y = 0; y < GAME_HEIGHT; ++y) {
+        for (x = 0; x < GAME_WIDTH; ++x) {
+            if (state[y][x] != CELL_STATE_SAFE && !mines[y][x]) {
+                done = false;
+                break;
+            }
+        }
+    }
+
+    if (done) {
+        mainwin->setTitle("You won! :)");
+    }
+
     return 0;
 }
 
-NTopLevel* mainwin;
 void newGame(int w, int h)
 {
     for (int y = 0; y < 30; ++y) {
