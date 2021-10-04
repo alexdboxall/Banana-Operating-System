@@ -1,14 +1,10 @@
 
 D:
 cd D:/Users/Alex/Desktop/Banana
-cd kernel
-cp crti.322 crti.32
-cp crtn.322 crtn.32
-cd ..
 git add *.*
 git add COPYRIGHT
 git add LICENSE
-git add kernel -f
+git add kernel
 git add firmware
 git add applications
 git add bochs

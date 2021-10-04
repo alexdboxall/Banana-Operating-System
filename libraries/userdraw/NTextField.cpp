@@ -196,6 +196,9 @@ int textFieldEngine(NRegion* _self, int posi, int* xout, int* yout, int* lastHei
             } else if (i == posi) {
                 *xout = xpos - self->scrollX + self->marginLeft;
                 *yout = ypos - self->scrollY + self->marginTop;
+                if (lastHeight) {
+                    *lastHeight = ypos - self->scrollY + self->marginTop;
+                }
                 self->invalidating = false;
                 return 0;
             }
@@ -208,33 +211,19 @@ int textFieldEngine(NRegion* _self, int posi, int* xout, int* yout, int* lastHei
     }
 
     if (posi == -1) {
+        int i = strlen(self->text);
+        
+        if (self->curStart == i && self->curEnd == i) self->fillRect(xpos - self->scrollX - 1 + self->marginLeft, ypos - self->scrollY + self->marginTop, 1, yheight, self->cursorCol);
+        if (self->curStart == i) selectionOn ^= 1;
+        if (self->curEnd == i) selectionOn ^= 1;
+        if (selectionOn) self->fillRect(xpos - self->scrollX + self->marginLeft, ypos - self->scrollY - 1 + self->marginTop, xplus, yheight, self->selBgCol);
+
         self->fillRect(0, 0, self->width, self->marginTop, self->bgCol);
         self->fillRect(0, 0, self->marginLeft == 0 ? 0 : self->marginLeft - 1, self->height, self->bgCol);
         self->fillRect(0, self->height - self->marginBottom, self->width, self->marginBottom, self->bgCol);
         self->fillRect(self->width - self->marginRight, 0, self->marginRight, self->height, self->bgCol);
-
-        /*NFont* nf = new NFont();
-        int ret = nf->loadFont("C:/Banana/Fonts/SFN/SERIF.SFN");
-        if (ret != 0) {
-            self->bgCol = 0xFF0000;
-        } else {
-            ret = nf->setFont(16, SSFN_STYLE_REGULAR);
-            if (ret != 0) {
-                self->bgCol = 0x00FF00;
-            } else {
-                ret = nf->render("K", 50, 50, self);
-                if (ret != 0) {
-                    if (ret == -1) self->bgCol = 0x0000FF;
-                    if (ret == -2) self->bgCol = 0x000080;
-                    if (ret == -3) self->bgCol = 0x00FFFF;
-                    if (ret == -4) self->bgCol = 0x00FF80;
-                    if (ret == -5) self->bgCol = 0x0080FF;
-                    if (ret == -6) self->bgCol = 0x80FF80;
-                    if (ret == -7) self->bgCol = 0x8080FF;
-                }
-            }
-        }*/
     }
+
     self->invalidating = false;
     return posi == -1 ? 0 : -1;
 }
@@ -414,8 +403,12 @@ void textfieldKeyHandler(Window* w, void* self_, KeyStates key)
             int y3 = -1;
             self->getPositionFromIndex(self->curEnd, &x1, &y1);
             for (int i = self->curEnd; i != -1;) {
+                int cur = self->curEnd;
                 self->decCurEnd();
                 i = self->curEnd;
+                if (i == cur) {
+                    break;          //didn't change from last time
+                }
                 self->getPositionFromIndex(i, &x2, &y2);
                 if (y2 < y1) {
                     if (y3 == -1) y3 = y2;
@@ -442,8 +435,12 @@ void textfieldKeyHandler(Window* w, void* self_, KeyStates key)
             int y3 = -1;
             self->getPositionFromIndex(self->curEnd, &x1, &y1);
             for (int i = self->curEnd; self->text[i];) {
+                int cur = self->curEnd;
                 self->incCurEnd();
                 i = self->curEnd;
+                if (i == cur) {
+                    break;          //didn't change from last time
+                }
                 self->getPositionFromIndex(i, &x2, &y2);
                 if (y2 > y1) {
                     if (y3 == -1) y3 = y2;

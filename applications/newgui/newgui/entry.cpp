@@ -11,34 +11,15 @@ int disableBtn(NButton* btn)
 
 NTextField* txtf;
 
-int alignLeftCmd(NButton* btn)
-{
-    txtf->setAlignment(TextAlignment::Left); 
-    return 0;
-}
-
-int alignCentreCmd(NButton* btn)
-{
-    txtf->setAlignment(TextAlignment::Centre);
-    return 0;
-}
-
-int alignRightCmd(NButton* btn)
-{
-    txtf->setAlignment(TextAlignment::Right);
-    return 0;
-}
-
-int alignJustifyCmd(NButton* btn)
-{
-    txtf->setAlignment(TextAlignment::Justify);
-    return 0;
-}
-
-
 #define FMT_CMD_UNDERLINE       0
 #define FMT_CMD_FOREGROUND_COL  1
 #define FMT_CMD_BOLD            2
+#define FMT_CMD_SET_ALIGN       3
+
+#define FMT_ARG_ALIGN_LEFT      0
+#define FMT_ARG_ALIGN_CENTRE    1
+#define FMT_ARG_ALIGN_RIGHT     2
+#define FMT_ARG_ALIGN_JUSTIFY   3
 
 void insertCommand(uint16_t cmd, uint32_t arg, NTextField* t, int pos)
 {
@@ -58,6 +39,39 @@ void insertCommand(uint16_t cmd, uint32_t arg, NTextField* t, int pos)
     x[8] = 0;
 
     t->insert(pos, (char*) x);
+}
+
+
+int alignLeftCmd(NButton* btn)
+{
+    insertCommand(FMT_CMD_SET_ALIGN, FMT_ARG_ALIGN_LEFT, txtf, txtf->getCursorEnd());
+    
+    //txtf->setAlignment(TextAlignment::Left);
+    return 0;
+}
+
+int alignCentreCmd(NButton* btn)
+{
+    insertCommand(FMT_CMD_SET_ALIGN, FMT_ARG_ALIGN_CENTRE, txtf, txtf->getCursorEnd());
+
+    //txtf->setAlignment(TextAlignment::Centre);
+    return 0;
+}
+
+int alignRightCmd(NButton* btn)
+{
+    insertCommand(FMT_CMD_SET_ALIGN, FMT_ARG_ALIGN_RIGHT, txtf, txtf->getCursorEnd());
+
+    //txtf->setAlignment(TextAlignment::Right);
+    return 0;
+}
+
+int alignJustifyCmd(NButton* btn)
+{
+    insertCommand(FMT_CMD_SET_ALIGN, FMT_ARG_ALIGN_JUSTIFY, txtf, txtf->getCursorEnd());
+
+    //txtf->setAlignment(TextAlignment::Justify);
+    return 0;
 }
 
 int saveCmd(NButton* btn)
@@ -108,13 +122,16 @@ int formattingCallback(NTextField* t, int pos)
 {
     char* text = t->getText();
 
+    static int i = -1;
+
     static bool underline;
     static bool bold;
     static uint32_t colour;
-    static int i = -1;
+    static TextAlignment alignment;
 
     if (pos != i + 1 || i == -1) {
         i = 0;
+        alignment = TextAlignment::Left;
         underline = false;
         bold = false;
         colour = 0x000000;
@@ -144,14 +161,25 @@ int formattingCallback(NTextField* t, int pos)
             if (cmd == FMT_CMD_FOREGROUND_COL) {
                 colour = arg & 0xFFFFFF;
             }
+            if (cmd == FMT_CMD_SET_ALIGN) {
+                if (arg == FMT_ARG_ALIGN_CENTRE)    alignment = TextAlignment::Centre;
+                if (arg == FMT_ARG_ALIGN_JUSTIFY)   alignment = TextAlignment::Justify;
+                if (arg == FMT_ARG_ALIGN_LEFT)      alignment = TextAlignment::Left;
+                if (arg == FMT_ARG_ALIGN_RIGHT)     alignment = TextAlignment::Right;
+            }
             i += 7;
             continue;
         }
 
         if (i == pos) {
+            t->disableAutomaticInvalidation();
             t->enableUnderline(underline);
             t->setForegroundColour(colour);
             t->enableBold(bold);
+            t->setAlignment(alignment);
+            t->enableAutomaticInvalidation();
+            t->invalidate();
+
             break;
         }
     }
