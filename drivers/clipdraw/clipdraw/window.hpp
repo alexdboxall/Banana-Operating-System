@@ -26,8 +26,6 @@ public:
 
 	union
 	{
-		uint8_t* data8;
-		uint16_t* data16;
 		uint32_t* data32;
 	};
 

@@ -49,9 +49,9 @@ public:
 	void invalidateAllDueToFullscreen(NIWindow* ignoredWindow);
 
 	void completeRefresh();
-	void rangeRefresh(int top, int bottom, int left, int right);
+	void rangeRefresh(int top, int bottom, int left, int right, bool* boolBuf = nullptr);
 	void renderScanline(int line, int left, int right);
-	void refreshWindowBounds(NIWindow* window, int start = -1, int end = -1);
+	void refreshWindowBounds(NIWindow* window, int start = -1, int end = -1, bool* boolBuf = nullptr);
 
 	void handleMouse(int xdelta, int ydelta, int buttons, int z);
 

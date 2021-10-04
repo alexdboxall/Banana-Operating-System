@@ -155,9 +155,10 @@ void NIDesktop::deleteWindow(NIWindow* window)
 	refreshWindowBounds(window);
 }
 
-void NIDesktop::rangeRefresh(int top, int bottom, int left, int right)
+void NIDesktop::rangeRefresh(int top, int bottom, int left, int right, bool* boolBuf)
 {
 	for (int y = top; y < bottom; ++y) {
+		if (boolBuf && !boolBuf[y]) continue;
 		renderScanline(y, left, right);
 	}
 }
@@ -182,7 +183,7 @@ void NiShutdownHandler(void* v)
 	}
 }
 
-void NIDesktop::refreshWindowBounds(NIWindow* window, int start, int end)
+void NIDesktop::refreshWindowBounds(NIWindow* window, int start, int end, bool* boolBuf)
 {
 	rangeRefresh(mouseY, mouseY + MOUSE_HEIGHT, mouseX, mouseX + MOUSE_WIDTH);
 	
@@ -199,7 +200,7 @@ void NIDesktop::refreshWindowBounds(NIWindow* window, int start, int end)
 		b = window->ypos + end > ctxt->height - 6 ? ctxt->height - 1 : window->ypos + end + 5;
 	}
 
-	rangeRefresh(a, b, c, d);
+	rangeRefresh(a, b, c, d, boolBuf);
 	ctxt->screen->drawCursor(mouseX, mouseY, (uint32_t*) (___mouse_data + cursorOffset), 0);
 }
 

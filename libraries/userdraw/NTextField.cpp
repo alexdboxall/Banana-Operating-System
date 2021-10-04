@@ -540,6 +540,7 @@ void textfieldKeyHandler(Window* w, void* self_, KeyStates key)
 
     while (1) {
         int cx, cy, lh;
+        lh = 12;
         self->getPositionFromIndex(self->curEnd, &cx, &cy, &lh);
         if (cy > self->height - lh) {
             self->scrollY += lh;

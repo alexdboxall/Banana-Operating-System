@@ -228,8 +228,8 @@ void NIWindow::rerender()
 
 void NIWindow::invalidate()
 {
-	if (valid && renderTable && data8) {
-		free(data8);
+	if (valid && renderTable && data32) {
+		free(data32);
 		free(renderTable);
 	}
 
@@ -249,7 +249,5 @@ void NIWindow::request()
 
 void NIWindow::putpixel(int x, int y, uint32_t colour)
 {
-	if (bytesPerPixel == 4) data32[y * width + x] = colour;
-	else if (bytesPerPixel == 2) data16[y * width + x] = colour;
-	else data8[y * width + x] = colour;
+	 data32[y * width + x] = colour;
 }

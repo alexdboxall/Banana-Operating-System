@@ -61,6 +61,10 @@ uint64_t NiLinkCommandRedraw(size_t val, NiLinkWindowStruct* win)
 	return 0;
 }
 
+extern "C" {
+#include "libk/string.h"
+}
+
 uint64_t NiLinkCommandResupplyScanline(size_t val, NiLinkWindowStruct* win)
 {
 	NIWindow* realwin = (NIWindow*) win->krnlWindow;
@@ -75,11 +79,18 @@ uint64_t NiLinkCommandResupplyScanline(size_t val, NiLinkWindowStruct* win)
 		end = realwin->height;
 	}
 
+	bool boolBuff[2048];
+	memset(boolBuff, 0, sizeof(boolBuff));
+
 	int k = realwin->width * start;
 	for (int j = start; j < end; ++j) {
+		boolBuff[j] = false;
 		for (int i = 0; i < realwin->width; ++i) {
 			if (win->buffer[k] != 0xFFFFFFFF) {
-				realwin->putpixel(i, j, win->buffer[k]);
+				if (realwin->data32[k] != win->buffer[k]) {
+					realwin->data32[k] = win->buffer[k];
+					boolBuff[j] = true;
+				}
 			}
 			++k;
 		}
@@ -90,7 +101,7 @@ uint64_t NiLinkCommandResupplyScanline(size_t val, NiLinkWindowStruct* win)
 		realwin->drawResizeMarker();
 	}
 
-	desktop->refreshWindowBounds(realwin, start, end);
+	desktop->refreshWindowBounds(realwin, start, end, boolBuff);
 	return 0;
 }
 
