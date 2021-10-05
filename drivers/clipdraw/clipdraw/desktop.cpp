@@ -129,6 +129,20 @@ NIDesktop::NIDesktop(NIContext* context)
 	mouseY = 30;
 	cursorOffset = MOUSE_OFFSET_NORMAL;
 
+	for (int i = 0; i < 128; ++i) {
+		uint32_t r = (i >> 0) & 3;
+		uint32_t g = (i >> 2) & 7;
+		uint32_t b = (i >> 5) & 3;
+
+		r *= 255; r /= 3;				//R, B are from 0-3
+		b *= 255; b /= 3;
+		g *= 255; g /= 7;				//G is from 0-7
+
+		desktopDecode[i] = (r << 16) | (g << 8) | b;
+	}
+
+	desktopBuffer = (uint8_t*) malloc(ctxt->height * ctxt->width);
+
 	head = new List<NIWindow*>();
 
 	mouseDesktop = this;
@@ -492,6 +506,7 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 void NIDesktop::renderScanline(int line, int left, int right)
 {
 	int expectedBytes = right - left;
+	int lineOffset = line * ctxt->width;
 
 	memset(render + left, 0, expectedBytes);
 	memset(shadow + left, 128, expectedBytes);
@@ -580,7 +595,6 @@ void NIDesktop::renderScanline(int line, int left, int right)
 		
 
 		if (window->ypos <= line && line < window->ypos + window->height) {
-
 			int ls = window->renderTable[line - window->ypos].leftSkip;
 			int rs = window->renderTable[line - window->ypos].rightSkip;
 
@@ -627,9 +641,8 @@ void NIDesktop::renderScanline(int line, int left, int right)
 
 	for (int i = left; i < right; ++i) {
 		if (!render[i]) {
-
-			render[i] = 1;
-			renderData[i] = ctxt->width > 640 ? 0x55afff : 0x008080;
+			render[i]++;		//if it was zero, now it is one
+			renderData[i] = desktopDecode[desktopBuffer[i + lineOffset]];		// 0x55afff;
 			--expectedBytes;
 			if (expectedBytes == 0) {
 				goto done;

@@ -32,7 +32,7 @@ void NiInstallSysHooks()
 uint64_t NiLinkCommandCreateWindow(size_t val, NiLinkWindowStruct* win)
 {
 	NIWindow* realwin = new NIWindow(ctxt, win->x, win->y, win->w, win->h);
-	
+
 	for (int i = 0; i < WIN_MAX_FLAG_DWORDS; ++i) {
 		realwin->flags[i] = win->flags[i];
 	}
@@ -65,6 +65,21 @@ extern "C" {
 #include "libk/string.h"
 }
 
+uint64_t NiLinkCommandResupplyDesktop(size_t val, uint8_t* data)
+{
+	if (val == 0) {
+		memcpy(desktop->desktopBuffer, data, desktop->ctxt->width * desktop->ctxt->height);
+		return 0;
+
+	} else if (val == 1) {
+		memcpy(((uint8_t*) desktop->desktopDecode) + 128 * 4, data, 128 * 4);
+		return (desktop->ctxt->width << 16) | desktop->ctxt->height;
+	
+	}
+
+	return -1;
+}
+
 uint64_t NiLinkCommandResupplyScanline(size_t val, NiLinkWindowStruct* win)
 {
 	NIWindow* realwin = (NIWindow*) win->krnlWindow;
@@ -80,17 +95,17 @@ uint64_t NiLinkCommandResupplyScanline(size_t val, NiLinkWindowStruct* win)
 	}
 
 	bool boolBuff[2048];
-	memset(boolBuff, 0, sizeof(boolBuff));
 
 	int k = realwin->width * start;
 	for (int j = start; j < end; ++j) {
-		boolBuff[j] = false;
+		boolBuff[j + realwin->ypos] = false;
 		for (int i = 0; i < realwin->width; ++i) {
-			if (win->buffer[k] != 0xFFFFFFFF) {
-				if (realwin->data32[k] != win->buffer[k]) {
-					realwin->data32[k] = win->buffer[k];
-					boolBuff[j] = true;
+			uint32_t px = win->buffer[k];
+			if (px != 0xFFFFFFFF) {
+				if (realwin->data32[k] != px) {
+					boolBuff[j + realwin->ypos] = true;
 				}
+				realwin->data32[k] = px;
 			}
 			++k;
 		}
@@ -200,6 +215,8 @@ uint64_t NiSystemCallHandler(regs* r)
 	case LINKCMD_RESUPPLY_SCANLINE:
 		retv = NiLinkCommandResupplyScanline((size_t) r->ecx, (NiLinkWindowStruct*) r->edx);
 		break;
+	case LINKCMD_RESUPPLY_DESKTOP:
+		retv = NiLinkCommandResupplyDesktop((size_t) r->ecx, (uint8_t*) r->edx);
 	}
 	unlockScheduler();
 	return retv;

@@ -473,8 +473,34 @@ void gui2()
 
 }
 
+uint8_t* desktopBuffer;
+uint32_t desktopColours[128];
+int desktopWidth = 0;
+int desktopHeight = 0;
+
+extern "C" uint64_t SystemCall(size_t, size_t, size_t, size_t);
+
+void desktop()
+{
+    uint32_t wh = SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_DESKTOP, 1, (size_t) desktopColours);
+    desktopWidth = wh >> 16;
+    desktopHeight = wh & 0xFFFF;
+
+    desktopBuffer = (uint8_t*) malloc(desktopWidth * desktopHeight);
+    int i = 0;
+    for (int y = 0; y < desktopHeight; ++y) {
+        for (int x = 0; x < desktopWidth; ++x) {
+            desktopBuffer[i++] = (y / 3) == 2 ? 0 : y / 3;
+        }
+    }
+
+    SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_DESKTOP, 0, (size_t) desktopBuffer);
+}
+
 extern "C" int main() {
     createSystemBrushes();
+
+    desktop();
 
     gui2();
 

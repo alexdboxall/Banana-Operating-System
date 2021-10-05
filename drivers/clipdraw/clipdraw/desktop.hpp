@@ -33,6 +33,9 @@ protected:
 public:
 	NIContext* ctxt;
 	List<NIWindow*>* head;
+
+	uint32_t desktopDecode[256];
+	uint8_t* desktopBuffer;
 	
 	int mouseX;
 	int mouseY;
