@@ -2,6 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <udraw/banana.hpp>
+extern "C" {
+    #include <unistd.h>
+    #include <dirent.h>
+}
 
 int disableBtn(NButton* btn)
 {
@@ -480,7 +484,7 @@ int desktopHeight = 0;
 
 extern "C" uint64_t SystemCall(size_t, size_t, size_t, size_t);
 
-uint8_t encodeDesktopColour(uint32_t rgb)
+uint8_t encodeDesktopColour(uint32_t rgb, bool t)
 {
     int r = (rgb >> 16) & 0xFF;
     int g = (rgb >> 8) & 0xFF;
@@ -498,11 +502,16 @@ uint8_t encodeDesktopColour(uint32_t rgb)
     b *= 3;
     b /= 255;
 
-    return (r << 5) | (g << 2) | b;
+    uint32_t out = (r << 5) | (g << 2) | b;
+
+    return out;
 }
 
 void desktop()
 {
+    for (int i = 0; i < 128; ++i) {
+        desktopColours[i] = 0;
+    }
     uint32_t wh = SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_DESKTOP, 1, (size_t) desktopColours);
     desktopWidth = wh >> 16;
     desktopHeight = wh & 0xFFFF;
@@ -514,21 +523,87 @@ void desktop()
     int i = 0;
     for (int y = 0; y < desktopHeight; ++y) {
         for (int x = 0; x < desktopWidth; ++x) {
-            int ax = x * nbmp->width / desktopWidth;
-            int ay = y * nbmp->height / desktopHeight;
+            int ax = (x * nbmp->width) / desktopWidth;
+            int px = (x * nbmp->width) % desktopWidth;
+            int ay = (y * nbmp->height) / desktopHeight;
+            int py = (y * nbmp->height) % desktopHeight;
+
+            uint32_t norm = nbmp->data[ay * nbmp->width + ax];
+            uint32_t side = nbmp->data[ay * nbmp->width + ax + 1];
+            uint32_t down = nbmp->data[(ay + 1) * nbmp->width + ax];
+            uint32_t diag = nbmp->data[(ay + 1) * nbmp->width + ax + 1];
+
+            int rN = (norm >> 16) & 0xFF;
+            int rS = (side >> 16) & 0xFF;
+            int rD = (down >> 16) & 0xFF;
+            int rG = (diag >> 16) & 0xFF;
+
+            int gN = (norm >> 8) & 0xFF;
+            int gS = (side >> 8) & 0xFF;
+            int gD = (down >> 8) & 0xFF;
+            int gG = (diag >> 8) & 0xFF;
             
+            int bN = (norm >> 0) & 0xFF;
+            int bS = (side >> 0) & 0xFF;
+            int bD = (down >> 0) & 0xFF;
+            int bG = (diag >> 0) & 0xFF;
+
+            int npx = desktopWidth - px;
+            int npy = desktopHeight - py;
+            px = px * 256 / desktopWidth;
+            npx = npx * 256 / desktopWidth;
+            py = py * 256 / desktopHeight;
+            npy = npy * 256 / desktopHeight;
+
+            int mr = (rN * (npx + npy) + rS * (px + npy) + rD * (npx + py) + rG * (px + py)) / 1024;
+            int mg = (gN * (npx + npy) + gS * (px + npy) + gD * (npx + py) + gG * (px + py)) / 1024;
+            int mb = (bN * (npx + npy) + bS * (px + npy) + bD * (npx + py) + bG * (px + py)) / 1024;
+            desktopBuffer[i++] = encodeDesktopColour((mr << 16) | (mg << 8) | mb, (x + y) & 1);
+
             //desktopBuffer[i++] = 0x37;
-            desktopBuffer[i++] = encodeDesktopColour(nbmp->data[ay * nbmp->width + ax]);
+            //desktopBuffer[i++] = encodeDesktopColour(nbmp->data[ay * nbmp->width + ax]);
         }
     }
 
-    /*
-    for (int y = 0; y < nbmp->height; ++y) {
-        for (int x = 0; x < nbmp->width; ++x) {
-            desktopBuffer[y * desktopWidth + x] = encodeDesktopColour(nbmp->data[y * nbmp->width + x]);
+    delete nbmp->data;
+
+    //
+
+    
+    DIR* dir;
+    struct dirent* ent;
+    int diri = 0;
+    NLoadedBitmap* dirico = new NLoadedBitmap("C:/Banana/Icons/colour/folder.tga");
+    NLoadedBitmap* textico = new NLoadedBitmap("C:/Banana/Icons/colour/text.tga");
+
+    if ((dir = opendir("C:/Banana")) != NULL) {
+        while ((ent = readdir(dir)) != NULL) {        
+
+            int base = diri * 48;
+            int baseX = (base / desktopHeight) * 48;
+            int baseY = base % desktopHeight;
+
+            NLoadedBitmap* ico;
+            if (ent->d_type & DT_DIR) {
+                ico = dirico;
+            } else {
+                ico = textico;
+            }
+
+            for (int y = 0; y < ico->height; ++y) {
+                for (int x = 0; x < ico->width; ++x) {
+                    if (ico->data[y * ico->width + x] == 0) continue;
+                    desktopBuffer[(baseY + y) * desktopWidth + baseX + x] = encodeDesktopColour(ico->data[y * ico->width + x] & 0xFFFFFF, false);
+                }
+            }
+
+            ++diri;
         }
-    }*/
-    //delete nbmp->data;
+        closedir(dir);
+
+    } else {
+        
+    }
 
     SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_DESKTOP, 0, (size_t) desktopBuffer);
 }

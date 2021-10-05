@@ -88,10 +88,6 @@ uint64_t NiLinkCommandResupplyScanline(size_t val, NiLinkWindowStruct* win, bool
 
 	realwin->request();
 
-	if (!(realwin->flags[0] & WIN_FLAGS_0_INTERNAL_HAS_BEEN_INVALIDATED)) {
-		val = 0xFFFFFFFF;
-	}
-
 	int start = val & 0xFFFF;
 	int end = (val >> 16) & 0xFFFF;
 
