@@ -1,6 +1,6 @@
-# Banana
-Banana is a 32-bit hobby operating system written in C and C++ which can be ran on real hardware. The kernel is pre-emptive and supports loading ELF drivers and modules from the disk.
-It comes with an installer which can be run from floppies or a CD-ROM. Currently only has a command line shell, but is planned to also have a Win9x style GUI. 
+# Banana Operating System
+Banana is a 32-bit hobby operating system written for x86 and x86-64 comptuers, written in C and C++, which can be ran on real hardware. The kernel is pre-emptive and supports loading ELF drivers and modules from the disk.
+It comes with an installer which can be run from floppies or a CD-ROM. A GUI is currently also in development. 
 
 Released under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International license.
 See LICENSE and COPYRIGHT for the license and copyright notices. No warranties.
@@ -10,7 +10,7 @@ See LICENSE and COPYRIGHT for the license and copyright notices. No warranties.
 
 System Requirements:
  - 486 or better CPU
- - 8MB or more RAM (can technically be used with 4MB)
+ - 8MB or more RAM
  - 64MB hard drive space
  - Floppy or CD drive for installation
  - VGA compatible display
