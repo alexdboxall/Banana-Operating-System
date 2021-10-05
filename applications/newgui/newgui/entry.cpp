@@ -522,7 +522,7 @@ void desktop()
             desktopBuffer[y * desktopWidth + x] = encodeDesktopColour(nbmp->data[i++]);
         }
     }
-    delete nbmp;
+    //delete nbmp->data;
 
     SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_DESKTOP, 0, (size_t) desktopBuffer);
 }
