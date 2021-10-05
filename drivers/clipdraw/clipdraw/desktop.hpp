@@ -36,6 +36,8 @@ public:
 
 	uint32_t desktopDecode[256];
 	uint8_t* desktopBuffer;
+
+	uint64_t invalidateAllJustOccured;
 	
 	int mouseX;
 	int mouseY;

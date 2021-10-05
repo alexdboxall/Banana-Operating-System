@@ -237,6 +237,8 @@ void NIWindow::invalidate()
 	renderTableLength = 0;
 	valid = false;
 
+	hadFullRefreshSinceInvalidate = false;
+
 	flags[0] |= WIN_FLAGS_0_INTERNAL_HAS_BEEN_INVALIDATED;
 }
 

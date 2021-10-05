@@ -17,6 +17,7 @@
 #define EVENT_TYPE_KEYUP		9
 #define EVENT_TYPE_RMOUSE_DOWN	10
 #define EVENT_TYPE_RMOUSE_UP	11
+#define EVENT_TYPE_RESIZE_DOWN	12
 
 #define WIN_MAX_FLAG_DWORDS		1
 
@@ -30,6 +31,8 @@
 #define WIN_FLAGS_0_FORCE_RECTANGULAR					(1 << 7)
 #define WIN_FLAGS_0_DRAW_OUTLINE_INSTEAD_OF_SHADOW		(1 << 8)
 #define WIN_FLAGS_0_HIDDEN								(1 << 9)
+#define WIN_FLAGS_0_PRETTY								(1 << 10)
+#define WIN_FLAGS_0_INTERNAL_USERMODE_INIT_HELPER		(1 << 11)
 
 #define WIN_FLAGS_DEFAULT_0 (WIN_FLAGS_0_HIDDEN | WIN_FLAGS_0_DRAW_ON_INVALIDATE | WIN_FLAGS_0_DRAW_RESIZE_MARKER)
 
@@ -65,6 +68,7 @@ typedef struct NiLinkWindowStruct
 	uint32_t flags[WIN_MAX_FLAG_DWORDS];
 
 	uint32_t* buffer;
+	int bufferSize;
 
 	NiEvent evnt;
 

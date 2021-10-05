@@ -80,9 +80,13 @@ uint64_t NiLinkCommandResupplyDesktop(size_t val, uint8_t* data)
 	return -1;
 }
 
-uint64_t NiLinkCommandResupplyScanline(size_t val, NiLinkWindowStruct* win)
+extern uint64_t milliTenthsSinceBoot;
+
+uint64_t NiLinkCommandResupplyScanline(size_t val, NiLinkWindowStruct* win, bool paint)
 {
 	NIWindow* realwin = (NIWindow*) win->krnlWindow;
+
+	realwin->request();
 
 	int start = val & 0xFFFF;
 	int end = (val >> 16) & 0xFFFF;
@@ -116,30 +120,14 @@ uint64_t NiLinkCommandResupplyScanline(size_t val, NiLinkWindowStruct* win)
 		realwin->drawResizeMarker();
 	}
 
-	desktop->refreshWindowBounds(realwin, start, end, boolBuff);
+	if (paint) desktop->refreshWindowBounds(realwin, start, end, boolBuff);
 	return 0;
 }
 
 uint64_t NiLinkCommandResupplyFramebuffer(size_t val, NiLinkWindowStruct* win)
 {
-	NIWindow* realwin = (NIWindow*) win->krnlWindow;
-
-	int k = 0;
-	for (int j = 0; j < realwin->height; ++j) {
-		for (int i = 0; i < realwin->width; ++i) {
-			if (win->buffer[k] != 0xFFFFFFFF) {
-				realwin->putpixel(i, j, win->buffer[k]);
-			}
-			++k;
-		}
-	}
-
-	realwin->flags[0] &= ~WIN_FLAGS_0_INTERNAL_HAS_BEEN_INVALIDATED;
-	if (realwin->flags[0] & WIN_FLAGS_0_DRAW_RESIZE_MARKER) {
-		realwin->drawResizeMarker();
-	}
-
-	desktop->refreshWindowBounds(realwin);
+	NiLinkCommandResupplyScanline(0xFFFFFFFF, win, false);
+	desktop->completeRefresh();
 	return 0;
 }
 
@@ -148,7 +136,6 @@ uint64_t NiLinkCommandClearFramebuffer(size_t val, NiLinkWindowStruct* win)
 	NIWindow* realwin = (NIWindow*) win->krnlWindow;
 	realwin->request();
 	realwin->drawBasicWindow();
-
 	return 0;
 }
 
@@ -167,6 +154,7 @@ uint64_t NiLinkCommandGetEvents(size_t val, NiLinkWindowStruct* win)
 uint64_t NiLinkCommandReadFlags(size_t val, NiLinkWindowStruct* win)
 {
 	NIWindow* realwin = (NIWindow*) win->krnlWindow;
+
 	for (int i = 0; i < WIN_MAX_FLAG_DWORDS; ++i) {
 		win->flags[i] = realwin->flags[i];
 	}
@@ -180,6 +168,7 @@ uint64_t NiLinkCommandReadFlags(size_t val, NiLinkWindowStruct* win)
 uint64_t NiLinkCommandUpdateFlags(size_t val, NiLinkWindowStruct* win)
 {
 	NIWindow* realwin = (NIWindow*) win->krnlWindow;
+
 	for (int i = 0; i < WIN_MAX_FLAG_DWORDS; ++i) {
 		realwin->flags[i] = win->flags[i];
 	}
@@ -190,6 +179,7 @@ uint64_t NiSystemCallHandler(regs* r)
 {
 	lockScheduler();
 	uint64_t retv = -1;
+
 	switch (r->ebx) {
 	case LINKCMD_CREATE_WINDOW:
 		retv = NiLinkCommandCreateWindow((size_t) r->ecx, (NiLinkWindowStruct*) r->edx);
@@ -213,7 +203,7 @@ uint64_t NiSystemCallHandler(regs* r)
 		retv = NiLinkCommandReadFlags((size_t) r->ecx, (NiLinkWindowStruct*) r->edx);
 		break;
 	case LINKCMD_RESUPPLY_SCANLINE:
-		retv = NiLinkCommandResupplyScanline((size_t) r->ecx, (NiLinkWindowStruct*) r->edx);
+		retv = NiLinkCommandResupplyScanline((size_t) r->ecx, (NiLinkWindowStruct*) r->edx, true);
 		break;
 	case LINKCMD_RESUPPLY_DESKTOP:
 		retv = NiLinkCommandResupplyDesktop((size_t) r->ecx, (uint8_t*) r->edx);

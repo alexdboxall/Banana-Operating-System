@@ -29,6 +29,8 @@ public:
 		uint32_t* data32;
 	};
 
+	bool hadFullRefreshSinceInvalidate;
+
 	int numEvents;
 	int nextEventId;
 	int firstEventId;

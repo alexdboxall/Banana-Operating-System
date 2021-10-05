@@ -15,4 +15,4 @@ all: build
 
 build:
 	$(AS32) $(ASFLAGS) Resclink.s -o _R32.o
-	$(CC32) $(CCFLAGS) *.c -Wl,_R32.o -o $(OUTPUT32)
+	$(CC32) -s $(CCFLAGS) *.c -Wl,_R32.o -o $(OUTPUT32)

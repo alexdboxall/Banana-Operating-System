@@ -508,20 +508,26 @@ void desktop()
     desktopHeight = wh & 0xFFFF;
 
     desktopBuffer = (uint8_t*) malloc(desktopWidth * desktopHeight);
+    
+    NLoadedBitmap* nbmp = new NLoadedBitmap("C:/Banana/System/crisp.tga");
+
     int i = 0;
     for (int y = 0; y < desktopHeight; ++y) {
         for (int x = 0; x < desktopWidth; ++x) {
-            desktopBuffer[i++] = 0x37;
+            int ax = x * nbmp->width / desktopWidth;
+            int ay = y * nbmp->height / desktopHeight;
+            
+            //desktopBuffer[i++] = 0x37;
+            desktopBuffer[i++] = encodeDesktopColour(nbmp->data[ay * nbmp->width + ax]);
         }
     }
 
-    NLoadedBitmap* nbmp = new NLoadedBitmap("C:/Banana/System/crisp.tga");
-    i = 0;
+    /*
     for (int y = 0; y < nbmp->height; ++y) {
         for (int x = 0; x < nbmp->width; ++x) {
-            desktopBuffer[y * desktopWidth + x] = encodeDesktopColour(nbmp->data[i++]);
+            desktopBuffer[y * desktopWidth + x] = encodeDesktopColour(nbmp->data[y * nbmp->width + x]);
         }
-    }
+    }*/
     //delete nbmp->data;
 
     SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_DESKTOP, 0, (size_t) desktopBuffer);
@@ -534,7 +540,7 @@ extern "C" int main() {
 
     gui2();
 
-    NTopLevel* win = new NTopLevel("Sentences - *Untitled Document", 600, 400);
+    NTopLevel* win = new NTopLevel("Sentences - *Untitled Document", 600, 400, WIN_FLAGS_DEFAULT_0 | WIN_FLAGS_0_HIDDEN | WIN_FLAGS_0_PRETTY);
        
     txtf = new NTextField(15, 90, 570, 295, win, "When the master of the lamp says bow, you bow!\nYou forget who wears the pants around here now\nA man who knows just what to do\nAnd who to do it to\nWho's he? M-E!\n");
     txtf->setTextWrap(TextWrap::Word);

@@ -41,7 +41,7 @@ public:
     int (*paintHandler)(NTopLevel* self);
     int (*paintHandlerHook)(NTopLevel* self);
 
-    NTopLevel(const char* name = "Window", int width = 320, int height = 200);
+    NTopLevel(const char* name = "Window", int width = 320, int height = 200, int flags = -1);
     
     Context* getContext();
     

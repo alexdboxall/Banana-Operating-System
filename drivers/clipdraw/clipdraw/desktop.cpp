@@ -92,8 +92,6 @@ void NiLoadCursors()
 	}
 
 	int numCursors = size / 260;
-	kprintf("CURSORS: %d\n", numCursors);
-	kprintf((char*) curdata);
 	for (int i = 0; i < numCursors; ++i) {
 		int offset;
 		if (!memcmp(curdata + i * 4, "NRML", 4)) {
@@ -173,6 +171,7 @@ void NIDesktop::rangeRefresh(int top, int bottom, int left, int right, bool* boo
 {
 	for (int y = top; y < bottom; ++y) {
 		if (boolBuf && !boolBuf[y]) continue;
+		if (y >= ctxt->height) break;
 		renderScanline(y, left, right);
 	}
 }
@@ -218,6 +217,8 @@ void NIDesktop::refreshWindowBounds(NIWindow* window, int start, int end, bool* 
 	ctxt->screen->drawCursor(mouseX, mouseY, (uint32_t*) (___mouse_data + cursorOffset), 0);
 }
 
+extern uint64_t milliTenthsSinceBoot;
+
 void NIDesktop::invalidateAllDueToFullscreen(NIWindow* ignoredWindow)
 {
 	auto curr = head->getHead();
@@ -227,6 +228,7 @@ void NIDesktop::invalidateAllDueToFullscreen(NIWindow* ignoredWindow)
 
 		if (window && window != ignoredWindow) {
 			window->invalidate();
+			invalidateAllJustOccured = milliTenthsSinceBoot;
 			window->postEvent(NiCreateEvent(window, EVENT_TYPE_REPAINT, true));
 		}
 
@@ -270,7 +272,6 @@ NIWindow* movingWin = nullptr;
 
 int movingType = 0;
 
-extern uint64_t milliTenthsSinceBoot;
 
 void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 {
@@ -324,8 +325,12 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 		bool release = !(buttons & 1) && (previousButtons & 1);
 
 		for (int y = 1; y < movingWin->height - 1; ++y) {
+			if (!(y & 7)) {
+				//rangeRefresh(oldY - moveBaseY + y, oldY - moveBaseY + y + 1, oldX - moveBaseX + 1, oldX - moveBaseX + movingWin->width);
+			}
+
 			for (int x = 1; x < movingWin->width - 1; ++x) {
-				if (!((x + y) & 31) && !(y & 3)) {
+				if (!((x + y) & 63) && !(y & 7)) {
 					if (oldX - moveBaseX + x >= 0 && oldX - moveBaseX + x < ctxt->width) rangeRefresh(oldY - moveBaseY + y, oldY - moveBaseY + y + 1, oldX - moveBaseX + x, oldX - moveBaseX + x + 1);
 					if (!release && mouseX - moveBaseX + x >= 0 && mouseX - moveBaseX + x < ctxt->width) ctxt->screen->putpixel(mouseX - moveBaseX + x, mouseY - moveBaseY + y, 0);
 				}
@@ -388,7 +393,7 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 		int mxH = oldH > newH ? oldH : newH;
 		for (int y = 1; y < mxH; ++y) {
 			for (int x = 1; x < mxW; ++x) {
-				if (!((x + y) & 31) && !(y & 3)) {
+				if (!((x + y) & 63) && !(y & 7)) {
 					if (movingWin->xpos + x >= 0 && movingWin->xpos + x < ctxt->width) rangeRefresh(movingWin->ypos + y, movingWin->ypos + 1 + y, movingWin->xpos + x, movingWin->xpos + 1 + x);
 					if (!release && x < newW && y < newH && movingWin->xpos + x >= 0 && movingWin->xpos + x < ctxt->width) ctxt->screen->putpixel(movingWin->xpos + x, movingWin->ypos + y, 0);
 				}
@@ -435,7 +440,6 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 					clickon->ypos = clickon->rstry;
 					clickon->width = clickon->rstrw;
 					clickon->height = clickon->rstrh;
-
 					invalidateAllDueToFullscreen(clickon);
 
 				} else {
@@ -451,7 +455,7 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 				}
 				sincePrev = 0;
 				clickon->fullscreen ^= 1;
-				NiEvent evnt = NiCreateEvent(clickon, EVENT_TYPE_RESIZED, true);
+				NiEvent evnt = NiCreateEvent(clickon, EVENT_TYPE_RESIZE_DOWN, true);
 				clickon->postEvent(evnt);
 				clickon->rerender();
 				completeRefresh();
@@ -505,6 +509,10 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 
 void NIDesktop::renderScanline(int line, int left, int right)
 {
+	if (line < 0 || line >= ctxt->height) return;
+	if (left < 0 || left > ctxt->width) return;
+	if (right < 0 || right > ctxt->width) return;
+
 	int expectedBytes = right - left;
 	int lineOffset = line * ctxt->width;
 

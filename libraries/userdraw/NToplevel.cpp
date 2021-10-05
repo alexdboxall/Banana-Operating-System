@@ -43,15 +43,27 @@ void operator delete[](void* p, unsigned long)
 
 extern "C" uint64_t SystemCall(size_t, size_t, size_t, size_t);
 
-NxWindow NxCreateWindow(int w, int h, const char* name) {
+NxWindow NxCreateWindow(int w, int h, const char* name, int flags) {
     NiLinkWindowStruct krnlWin;
     krnlWin.x = 200;
     krnlWin.y = 200;
     krnlWin.w = w;
     krnlWin.h = h;
-    krnlWin.flags[0] = WIN_FLAGS_DEFAULT_0;
-    krnlWin.flags[0] |= WIN_FLAGS_0_HIDE_ON_INVALIDATE /* | WIN_FLAGS_0_DRAW_OUTLINE_INSTEAD_OF_SHADOW | WIN_FLAGS_0_FORCE_RECTANGULAR*/;
-    krnlWin.buffer = (uint32_t*) malloc(krnlWin.w * krnlWin.h * 4);
+    if (flags & WIN_FLAGS_0_INTERNAL_USERMODE_INIT_HELPER) {
+        krnlWin.flags[0] = WIN_FLAGS_DEFAULT_0;
+        krnlWin.flags[0] |= WIN_FLAGS_0_HIDE_ON_INVALIDATE /* | WIN_FLAGS_0_DRAW_OUTLINE_INSTEAD_OF_SHADOW | WIN_FLAGS_0_FORCE_RECTANGULAR*/;
+    } else {
+        krnlWin.flags[0] = flags;
+    }
+
+    if (krnlWin.flags[0] & WIN_FLAGS_0_PRETTY) {
+        krnlWin.buffer = (uint32_t*) malloc(2048 * 2048 * 4);       //TODO: get the real dimensions
+        krnlWin.bufferSize = 2048 * 2048;
+    } else {
+        krnlWin.buffer = (uint32_t*) malloc(krnlWin.w * krnlWin.h * 4);
+        krnlWin.bufferSize = krnlWin.w * krnlWin.h;
+    }
+    
     strcpy(krnlWin.name, "This is a test!");
     memset(krnlWin.buffer, 0xFF, krnlWin.w * krnlWin.h * 4);
     SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_CREATE_WINDOW, 0, (size_t) &krnlWin);
@@ -109,7 +121,7 @@ Context* NTopLevel::getContext() {
     return win->context;
 }
 
-NTopLevel::NTopLevel(const char* nam, int width, int height)
+NTopLevel::NTopLevel(const char* nam, int width, int height, int flags)
 {
     w = width;
     h = height;
@@ -117,7 +129,7 @@ NTopLevel::NTopLevel(const char* nam, int width, int height)
     name = (char*) malloc(strlen(nam + 1));
     strcpy(name, nam);
 
-    nxw = NxCreateWindow(w, h, name);
+    nxw = NxCreateWindow(w, h, name, flags);
 
     win = (Window*) malloc(sizeof(Window));
     Window_init((Window*) win, 0, 0, nxw.ctxt->width, nxw.ctxt->height, WIN_NODECORATION, nxw.ctxt);
@@ -179,8 +191,9 @@ void NTopLevel::sync() {
     x = nxw.krnlWin.x;
     y = nxw.krnlWin.y;
     
-    if (newSize > oldSize) {
+    if (newSize > oldSize && !(nxw.krnlWin.flags[0] & WIN_FLAGS_0_PRETTY)) {
         nxw.krnlWin.buffer = (uint32_t*) realloc(nxw.krnlWin.buffer, w * h * 4);
+        nxw.krnlWin.bufferSize = w * h;
         nxw.ctxt->buffer = nxw.krnlWin.buffer;
         nxw.framebuffer = nxw.krnlWin.buffer;
     }
@@ -204,6 +217,14 @@ void NTopLevel::defaultEventHandler(NiEvent evnt)
     {
         processMouse(evnt);
         repaintFlush();
+        break;
+    }
+
+    case EVENT_TYPE_RESIZE_DOWN:
+    case EVENT_TYPE_RESIZED:
+    {
+        repaint();
+        SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_FRAMEBUFFER, 1, (size_t) &nxw.krnlWin);
         break;
     }
 
