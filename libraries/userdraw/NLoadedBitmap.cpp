@@ -146,11 +146,15 @@ void putTGAFromData(int baseX, int baseY, uint8_t* tgaData, int tgaLen, uint32_t
 
 NLoadedBitmap::~NLoadedBitmap()
 {
-	free(data);
+	if (data2) {
+		free(data2);
+	}
 }
 
 NLoadedBitmap::NLoadedBitmap(const char* file)
 {
+	data2 = nullptr;
+
 	int tgaWidth;
 	int tgaHeight;
 	FILE* f = fopen(file, "rb");
@@ -164,6 +168,7 @@ NLoadedBitmap::NLoadedBitmap(const char* file)
 	free(tgaData);
 
 	data = parsed;
+	data2 = parsed;
 	width = tgaWidth;
 	height = tgaHeight;
 }

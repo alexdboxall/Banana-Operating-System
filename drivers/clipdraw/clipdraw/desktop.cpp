@@ -130,9 +130,9 @@ NIDesktop::NIDesktop(NIContext* context)
 	cursorOffset = MOUSE_OFFSET_NORMAL;
 
 	for (int i = 0; i < 128; ++i) {
-		uint32_t r = (i >> 0) & 3;
+		uint32_t b = (i >> 0) & 3;
 		uint32_t g = (i >> 2) & 7;
-		uint32_t b = (i >> 5) & 3;
+		uint32_t r = (i >> 5) & 3;
 
 		r *= 255; r /= 3;				//R, B are from 0-3
 		b *= 255; b /= 3;

@@ -17,6 +17,7 @@ public:
 	int width;
 	int height;
 	uint32_t* data;
+	uint32_t* data2;
 
 	NLoadedBitmap(const char* file);
 	~NLoadedBitmap();

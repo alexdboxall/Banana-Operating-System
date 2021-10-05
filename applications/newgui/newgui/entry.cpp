@@ -480,6 +480,27 @@ int desktopHeight = 0;
 
 extern "C" uint64_t SystemCall(size_t, size_t, size_t, size_t);
 
+uint8_t encodeDesktopColour(uint32_t rgb)
+{
+    int r = (rgb >> 16) & 0xFF;
+    int g = (rgb >> 8) & 0xFF;
+    int b = (rgb >> 0) & 0xFF;
+
+    r += 40;
+    r *= 3;
+    r /= 255;
+
+    g += 20;
+    g *= 7;
+    g /= 255;
+
+    b += 40;
+    b *= 3;
+    b /= 255;
+
+    return (r << 5) | (g << 2) | b;
+}
+
 void desktop()
 {
     uint32_t wh = SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_DESKTOP, 1, (size_t) desktopColours);
@@ -490,9 +511,18 @@ void desktop()
     int i = 0;
     for (int y = 0; y < desktopHeight; ++y) {
         for (int x = 0; x < desktopWidth; ++x) {
-            desktopBuffer[i++] = (y / 3) == 2 ? 0 : y / 3;
+            desktopBuffer[i++] = 0x37;
         }
     }
+
+    NLoadedBitmap* nbmp = new NLoadedBitmap("C:/Banana/System/crisp.tga");
+    i = 0;
+    for (int y = 0; y < nbmp->height; ++y) {
+        for (int x = 0; x < nbmp->width; ++x) {
+            desktopBuffer[y * desktopWidth + x] = encodeDesktopColour(nbmp->data[i++]);
+        }
+    }
+    delete nbmp;
 
     SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_DESKTOP, 0, (size_t) desktopBuffer);
 }
