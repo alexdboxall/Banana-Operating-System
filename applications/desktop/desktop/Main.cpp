@@ -388,8 +388,18 @@ extern "C" void __gxx_personality_v0()
 void deselectAllIcons()
 {
     for (int i = 0; i < MAX_DESKTOP_FILES; ++i) {
-        if (files[i].selected) {
+        if (files[i].selected && files[i].valid) {
             files[i].selected = false;
+            redrawIcon(i);
+        }
+    }
+}
+
+void selectAllIcons()
+{
+    for (int i = 0; i < MAX_DESKTOP_FILES; ++i) {
+        if (!files[i].selected && files[i].valid) {
+            files[i].selected = true;
             redrawIcon(i);
         }
     }
@@ -461,12 +471,25 @@ int main (int argc, char *argv[])
         }
 
         if (dummyWin.evnt.type == EVENT_TYPE_KEYDOWN) {
+            if (dummyWin.evnt.ctrl && (dummyWin.evnt.key == 'A' || dummyWin.evnt.key == 'a')) {
+                selectAllIcons();
+                partialDesktopUpdate();
+            }
+
+            if (dummyWin.evnt.key == (int) KeyboardSpecialKeys::Escape) {
+                deselectAllIcons();
+                partialDesktopUpdate();
+            }
+
             if (dummyWin.evnt.key == (int) KeyboardSpecialKeys::Tab) {
-                if (cs + iconsPerColumn < MAX_DESKTOP_FILES && files[cs + iconsPerColumn].valid) {
-                    cs = 0;
+                if (dummyWin.evnt.shift) {
+                    if (cs - 1 >= 0 && files[cs - 1].valid) cs -= 1;
+                    else cs = nextDesktopFile - 1;
                 } else {
-                    cs += iconsPerColumn;
+                    if (cs + 1 < MAX_DESKTOP_FILES && files[cs + 1].valid) cs += 1;
+                    else cs = 0;
                 }
+                
                 deselectAllIcons();
                 files[cs].selected = true;
                 redrawIcon(cs);
