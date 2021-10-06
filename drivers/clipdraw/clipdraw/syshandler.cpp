@@ -67,14 +67,24 @@ extern "C" {
 
 uint64_t NiLinkCommandResupplyDesktop(size_t val, uint8_t* data)
 {
-	if (val == 0) {
-		memcpy(desktop->desktopBuffer, data, desktop->ctxt->width * desktop->ctxt->height);
+	if (val == 0 || val >= 0x1000) {
+		if (val == 0) {
+			memcpy(desktop->desktopBuffer, data, desktop->ctxt->width * desktop->ctxt->height);
+		} else {
+			int offset = *((int*) val);
+			int size = *(((int*) val) + 1);
+			memcpy(desktop->desktopBuffer + offset, data, size);
+			return 4;
+		}
 		return 0;
 
 	} else if (val == 1) {
 		memcpy(((uint8_t*) desktop->desktopDecode) + 128 * 4, data, 128 * 4);
 		return (desktop->ctxt->width << 16) | desktop->ctxt->height;
 	
+	} else if (val == 2) {
+		desktop->completeRefresh();
+		return 2;
 	}
 
 	return -1;
@@ -175,6 +185,16 @@ uint64_t NiLinkCommandUpdateFlags(size_t val, NiLinkWindowStruct* win)
 	return 0;
 }
 
+uint8_t* desktopWindowDummy = nullptr;
+uint64_t NiLinkCommandBeTheDesktop(size_t val, uint8_t* win)
+{
+	if (desktopWindowDummy == nullptr) {
+		desktopWindowDummy = win;
+		return 0;
+	}
+	return 1;
+}
+
 uint64_t NiSystemCallHandler(regs* r)
 {
 	lockScheduler();
@@ -207,6 +227,10 @@ uint64_t NiSystemCallHandler(regs* r)
 		break;
 	case LINKCMD_RESUPPLY_DESKTOP:
 		retv = NiLinkCommandResupplyDesktop((size_t) r->ecx, (uint8_t*) r->edx);
+		break;
+	case LINKCMD_BE_THE_DESKTOP:
+		retv = NiLinkCommandBeTheDesktop((size_t) r->ecx, (uint8_t*) r->edx);
+		break;
 	}
 	unlockScheduler();
 	return retv;

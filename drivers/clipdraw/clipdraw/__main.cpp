@@ -50,8 +50,7 @@ void NiMain(void* s)
 	NIWindow* win0 = new NIWindow(ctxt, 0, 0, 1, 1);
 	desktop->addWindow(win0);
 	
-	desktop->completeRefresh();
-
+	(new Process("C:/Banana/System/desktop.exe"))->createUserThread();
 	(new Process("C:/Banana/System/newgui.exe"))->createUserThread();
 
 	while (1) {

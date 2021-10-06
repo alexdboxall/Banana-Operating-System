@@ -10,12 +10,17 @@
 
 //A structure for holding information about a framebuffer
 typedef struct Context_struct {  
-    uint32_t* buffer; //A pointer to our framebuffer
+    union
+    {
+        uint32_t* buffer; //A pointer to our framebuffer
+        uint8_t* desktopBuff8;
+    };
     uint16_t width; //The dimensions of the framebuffer
     uint16_t height; 
     int translate_x; //Our new translation values
     int translate_y;
     List* clip_rects;
+    uint8_t desktopCtxt;
     uint8_t clipping_on;
     uint8_t invalidatedScanlines[560];      //supports 8K monitors
 

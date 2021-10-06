@@ -84,3 +84,4 @@ typedef struct NiLinkWindowStruct
 #define LINKCMD_READ_FLAGS					9
 #define LINKCMD_RESUPPLY_SCANLINE			10
 #define LINKCMD_RESUPPLY_DESKTOP			11
+#define LINKCMD_BE_THE_DESKTOP				12

@@ -31,6 +31,15 @@ void NIWindow::postEvent(NiEvent evnt)
 	if (evnt.type == EVENT_TYPE_MOUSE_DRAG && nextEventId && events[nextEventId - 1].type == EVENT_TYPE_MOUSE_DRAG && evnt.mouseButtons == events[nextEventId - 1].mouseButtons) {
 		//return;
 	}
+	if (numEvents == MAX_EVENTS_PER_WINDOW) {
+		return;
+	}
+
+	kprintf("Posting event.\n");
+	kprintf("ID = %d\n", nextEventId);
+	kprintf("this = 0x%X\n", this);
+	kprintf("dest = 0x%X\n", &events[nextEventId]);
+	kprintf("src = 0x%X\n", &evnt);
 	events[nextEventId] = evnt;
 	nextEventId = (nextEventId + 1) % MAX_EVENTS_PER_WINDOW;
 	numEvents++;

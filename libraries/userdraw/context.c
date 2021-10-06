@@ -135,6 +135,7 @@ Context* Context_new(uint16_t width, uint16_t height, uint32_t* buffer) {
 
     //Finish assignments
     context->width = width; 
+    context->desktopCtxt = 0;
     context->height = height; 
     context->buffer = buffer;
     context->clipping_on = 0;
@@ -146,6 +147,30 @@ Context* Context_new(uint16_t width, uint16_t height, uint32_t* buffer) {
 static inline __attribute__((always_inline)) void Context_invalidate_scanline(Context* context, int line)
 {
     context->invalidatedScanlines[line >> 3] |= 1 << (line & 7);
+}
+
+
+uint8_t cdEncodeDesktopColour(uint32_t rgb)
+{
+    int r = (rgb >> 16) & 0xFF;
+    int g = (rgb >> 8) & 0xFF;
+    int b = (rgb >> 0) & 0xFF;
+
+    r += 40;
+    r *= 3;
+    r /= 255;
+
+    g += 20;
+    g *= 7;
+    g /= 255;
+
+    b += 40;
+    b *= 3;
+    b /= 255;
+
+    uint32_t out = (r << 5) | (g << 2) | b;
+
+    return out;
 }
 
 void Context_clipped_rect(Context* context, int x, int y, unsigned int width,
@@ -177,22 +202,43 @@ void Context_clipped_rect(Context* context, int x, int y, unsigned int width,
     //Draw the rectangle into the framebuffer line-by line
     //(bonus points if you write an assembly routine to do it faster)
     
-    if ((color >> 28) == 0xE) {
-        for (; y < max_y; y++) {
-            Context_invalidate_scanline(context, y);
-            for (cur_x = x; cur_x < max_x; cur_x++) {
-                context->buffer[y * context->width + cur_x] = patternColour(color, cur_x, y);
+    if (context->desktopCtxt) {
+        if ((color >> 28) == 0xE) {
+            for (; y < max_y; y++) {
+                Context_invalidate_scanline(context, y);
+                for (cur_x = x; cur_x < max_x; cur_x++) {
+                    context->desktopBuff8[y * context->width + cur_x] = cdEncodeDesktopColour(patternColour(color, cur_x, y));
+                }
+            }
+
+        } else {
+            for (; y < max_y; y++) {
+                Context_invalidate_scanline(context, y);
+                for (cur_x = x; cur_x < max_x; cur_x++) {
+                    context->desktopBuff8[y * context->width + cur_x] = cdEncodeDesktopColour(color);
+                }
             }
         }
-        
+
     } else {
-        for (; y < max_y; y++) {
-            Context_invalidate_scanline(context, y);
-            for (cur_x = x; cur_x < max_x; cur_x++) {
-                context->buffer[y * context->width + cur_x] = color;
+        if ((color >> 28) == 0xE) {
+            for (; y < max_y; y++) {
+                Context_invalidate_scanline(context, y);
+                for (cur_x = x; cur_x < max_x; cur_x++) {
+                    context->buffer[y * context->width + cur_x] = patternColour(color, cur_x, y);
+                }
             }
-        } 
+
+        } else {
+            for (; y < max_y; y++) {
+                Context_invalidate_scanline(context, y);
+                for (cur_x = x; cur_x < max_x; cur_x++) {
+                    context->buffer[y * context->width + cur_x] = color;
+                }
+            }
+        }
     }
+    
 }
 
 //Simple for-loop rectangle into a context
@@ -377,21 +423,40 @@ void Context_clear_clip_rects(Context* context) {
 
 void Context_bitblit(Context* context, int sx, int sy, int x, int y, int w, int h, int pitch, uint32_t* data)
 {
-    for (int yyy = 0; yyy < h; ++yyy) {
-        Context_invalidate_scanline(context, sy);
+    if (context->desktopCtxt) {
+        for (int yyy = 0; yyy < h; ++yyy) {
+            Context_invalidate_scanline(context, sy);
 
-        int tempx = sx;
-        uint32_t* database = data + ((y + yyy) * pitch + x);
-        for (int xxx = 0; xxx < w; ++xxx) {
-            uint32_t px = *database++;
-            if (px == 0x0) {
-            } else if (px) {
-                context->buffer[sy * context->width + tempx] = px & 0xFFFFFF;
+            int tempx = sx;
+            uint32_t* database = data + ((y + yyy) * pitch + x);
+            for (int xxx = 0; xxx < w; ++xxx) {
+                uint32_t px = *database++;
+                if (px == 0x0) {
+                } else if (px) {
+                    context->desktopBuff8[sy * context->width + tempx] = cdEncodeDesktopColour(px & 0xFFFFFF);
+                }
+                ++tempx;
             }
-            ++tempx;
+            ++sy;
         }
-        ++sy;
+    } else {
+        for (int yyy = 0; yyy < h; ++yyy) {
+            Context_invalidate_scanline(context, sy);
+
+            int tempx = sx;
+            uint32_t* database = data + ((y + yyy) * pitch + x);
+            for (int xxx = 0; xxx < w; ++xxx) {
+                uint32_t px = *database++;
+                if (px == 0x0) {
+                } else if (px) {
+                    context->buffer[sy * context->width + tempx] = px & 0xFFFFFF;
+                }
+                ++tempx;
+            }
+            ++sy;
+        }
     }
+    
 }
 
 void Context_draw_bitmap_clipped(Context* context, uint32_t* data, int x, int y, int w, int h, Rect* bound_rect)
@@ -464,30 +529,33 @@ void Context_draw_char_clipped(Context* context, char character, int x, int y,
     if((y + 12) > bound_rect->bottom)
         count_y = bound_rect->bottom - y + 1;
 
-    //Now we do the actual pixel plotting loop
-    for(font_y = off_y; font_y < count_y; font_y++) {
-        Context_invalidate_scanline(context, font_y + y);
+    if (context->desktopCtxt) {
+        for (font_y = off_y; font_y < count_y; font_y++) {
+            Context_invalidate_scanline(context, font_y + y);
+            shift_line = font_array[font_y * 128 + character];
+            shift_line <<= off_x;
+            for (font_x = off_x; font_x < count_x; font_x++) {
+                if (shift_line & 0x80) {
+                    context->desktopBuff8[(font_y + y) * context->width + (font_x + x)] = cdEncodeDesktopColour(color);
+                }
+                shift_line <<= 1;
+            }
+        }
 
-        //Capture the current line of the specified char
-        //Just a normal bmp[y * width + x], but in this
-        //case we're dealing with an array of 1bpp
-        //8-bit-wide character lines
-        shift_line = font_array[font_y * 128 + character];
-
-        //Pre-shift the line by the x-offset
-        shift_line <<= off_x;
-
-        for(font_x = off_x; font_x < count_x; font_x++) {
-
-            //Get the current leftmost bit of the current 
-            //line of the character and, if it's set, plot a pixel
-            if(shift_line & 0x80)
-                context->buffer[(font_y + y) * context->width + (font_x + x)] = color;
- 
-            //Shift in the next bit
-            shift_line <<= 1; 
+    } else {
+        for (font_y = off_y; font_y < count_y; font_y++) {
+            Context_invalidate_scanline(context, font_y + y);
+            shift_line = font_array[font_y * 128 + character];
+            shift_line <<= off_x;
+            for (font_x = off_x; font_x < count_x; font_x++) {
+                if (shift_line & 0x80) {
+                    context->buffer[(font_y + y) * context->width + (font_x + x)] = color;
+                }
+                shift_line <<= 1;
+            }
         }
     }
+    
 }
 
 //This will be a lot like Context_fill_rect, but on a bitmap font character
@@ -549,13 +617,38 @@ void Context_draw_bitmap(Context* context, uint32_t* data, int x, int y, int w, 
 //Draw a line of text with the specified font color at the specified coordinates
 void Context_draw_text(Context* context, char* string, int x, int y, uint32_t color) {
 
-    for( ; *string; x += 8)
-        Context_draw_char(context, *(string++), x, y, color);
+    for (int i = 0; string[i]; ++i) {
+        Context_draw_char(context, string[i], x - (string[i] == '.' || string[i] == 'i' || string[i] == 'l'), y, color);
+        if (string[i] == ' ')      x += 6;
+        else if (string[i] == '!') x += 7;
+        else if (string[i] == '.') x += 4;
+        else if (string[i] == ',') x += 6;
+        else if (string[i] == '\'') x += 6;
+        else if (string[i] == '`') x += 7;
+        else if (string[i] == 'l') x += 7;
+        else if (string[i] == 'i') x += 7;
+        else if (string[i] == '|') x += 7;
+        else x += 8;
+    }
 }
 
 
-void Context_bound_text(Context* context, char* string, int* x, int* y)
+void Context_bound_text(Context* context, char* string, int* xx, int* y)
 {
-    *x = strlen(string) * 8;
+    int x = 0;
+    for (int i = 0; string[i]; ++i) {
+        if (string[i] == ' ')      x += 6;
+        else if (string[i] == '!') x += 7;
+        else if (string[i] == '.') x += 4;
+        else if (string[i] == ',') x += 6;
+        else if (string[i] == '\'') x += 6;
+        else if (string[i] == '`') x += 7;
+        else if (string[i] == 'l') x += 7;
+        else if (string[i] == 'i') x += 7;
+        else if (string[i] == '|') x += 7;
+        else x += 8;
+    }
+
+    *xx = x;
     *y = 12;
 }

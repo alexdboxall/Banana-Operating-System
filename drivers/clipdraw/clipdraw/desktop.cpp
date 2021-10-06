@@ -64,6 +64,13 @@ void NiKeyhandler(KeyboardToken kt, bool* keystates)
 	evnt.alt = (keystates[(int) KeyboardSpecialKeys::Alt]);
 
 	win->postEvent(evnt);
+
+	extern uint8_t* desktopWindowDummy;
+
+	if (desktopWindowDummy) {
+		NIWindow* a = (NIWindow*) desktopWindowDummy;
+		a->postEvent(evnt);
+	}
 }
 
 void NiHandleMouse(int xdelta, int ydelta, int buttons, int z)
@@ -318,6 +325,30 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 
 		} else if (!(buttons & 2) && (oldButtons & 2)) {
 			clickon->postEvent(NiCreateEvent(clickon, EVENT_TYPE_RMOUSE_UP, false));
+		}
+	}
+
+	if (buttons & 1) {
+		extern uint8_t* desktopWindowDummy;
+
+		if (desktopWindowDummy) {
+			NIWindow* a = (NIWindow*) desktopWindowDummy;
+			if ((xdelta || ydelta) && (buttons & 1)) {
+				a->postEvent(NiCreateEvent(a, EVENT_TYPE_MOUSE_DRAG, false));
+
+			} else if ((buttons & 1) && !(oldButtons & 1)) {
+				a->postEvent(NiCreateEvent(a, EVENT_TYPE_MOUSE_DOWN, false));
+
+			} else if (!(buttons & 1) && (oldButtons & 1)) {
+				a->postEvent(NiCreateEvent(a, EVENT_TYPE_MOUSE_UP, false));
+			}
+
+			if ((buttons & 2) && !(oldButtons & 2)) {
+				a->postEvent(NiCreateEvent(a, EVENT_TYPE_RMOUSE_DOWN, false));
+
+			} else if (!(buttons & 2) && (oldButtons & 2)) {
+				a->postEvent(NiCreateEvent(a, EVENT_TYPE_RMOUSE_UP, false));
+			}
 		}
 	}
 

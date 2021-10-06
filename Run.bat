@@ -24,6 +24,7 @@ objdump -drwC -Mintel packages/banana/32/0002/ac97.sys >> disasms/disac97.txt
 objdump -drwC -Mintel packages/banana/32/0002/vesa.sys >> disasms/disvesa.txt
 objdump -drwC -Mintel packages/system/32/0001/command.exe >> disasms/discmd.txt
 objdump -drwC -Mintel packages/system/32/0001/system.dll >> disasms/dissys.txt
+objdump -drwC -Mintel packages/banana/32/0001/desktop.exe >> disasms/disdesktop.txt
 
 cd D:/Users/Alex/Desktop/Banana/firmware/BOOT2
 call build.bat
