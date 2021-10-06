@@ -33,6 +33,8 @@ struct DesktopFile
     char* filepath;
 };
 
+int iconsPerColumn;
+
 struct FileAssociaton
 {
     char extension[24];
@@ -134,6 +136,8 @@ void init()
 
     desktopContext = Context_new(desktopWidth, desktopHeight, (uint32_t*) desktopBuffer);
     desktopContext->desktopCtxt = 1;
+
+    iconsPerColumn = (desktopHeight - desktopTaskbarHeight - 4) / desktopCellHeight;
 }
 
 void drawBackground()
@@ -278,8 +282,6 @@ void refresh()
     DIR* dir;
     struct dirent* ent;
     int diri = 0;
-
-    int iconsPerColumn = (desktopHeight - desktopTaskbarHeight - 4) / desktopCellHeight;
 
     if ((dir = opendir("C:/Banana/System")) != NULL) {
         while ((ent = readdir(dir)) != NULL) {
@@ -459,11 +461,47 @@ int main (int argc, char *argv[])
         }
 
         if (dummyWin.evnt.type == EVENT_TYPE_KEYDOWN) {
-            if (1) {
+            if (dummyWin.evnt.key == (int) KeyboardSpecialKeys::Tab) {
+                if (cs + iconsPerColumn < MAX_DESKTOP_FILES && files[cs + iconsPerColumn].valid) {
+                    cs = 0;
+                } else {
+                    cs += iconsPerColumn;
+                }
                 deselectAllIcons();
-                if (!files[cs].valid) cs = 0;
                 files[cs].selected = true;
-                redrawIcon(cs++);
+                redrawIcon(cs);
+                partialDesktopUpdate();
+            }
+
+            if (dummyWin.evnt.key == (int) KeyboardSpecialKeys::Right && cs + iconsPerColumn < MAX_DESKTOP_FILES && files[cs + iconsPerColumn].valid) {
+                deselectAllIcons();
+                cs += iconsPerColumn;
+                files[cs].selected = true;
+                redrawIcon(cs);
+                partialDesktopUpdate();
+            }
+
+            if (dummyWin.evnt.key == (int) KeyboardSpecialKeys::Left && cs - iconsPerColumn >= 0 && files[cs - iconsPerColumn].valid) {
+                deselectAllIcons();
+                cs -= iconsPerColumn;
+                files[cs].selected = true;
+                redrawIcon(cs);
+                partialDesktopUpdate();
+            }
+
+            if (dummyWin.evnt.key == (int) KeyboardSpecialKeys::Down && cs + 1 < MAX_DESKTOP_FILES && files[cs + 1].valid) {
+                deselectAllIcons();
+                cs += 1;
+                files[cs].selected = true;
+                redrawIcon(cs);
+                partialDesktopUpdate();
+            }
+
+            if (dummyWin.evnt.key == (int) KeyboardSpecialKeys::Up && cs - 1 >= 0 && files[cs - 1].valid) {
+                deselectAllIcons();
+                cs -= 1;
+                files[cs].selected = true;
+                redrawIcon(cs);
                 partialDesktopUpdate();
             }
         }
