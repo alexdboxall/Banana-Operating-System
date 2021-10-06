@@ -627,7 +627,7 @@ void createUser(const char* name)
 
     strcpy(path, "C:/Users/");
     strcat(path, name);
-    strcat(path, "/Photos");
+    strcat(path, "/Pictures");
     mkdir(path, 0700);
 
     strcpy(path, "C:/Users/");
@@ -1807,7 +1807,15 @@ void begin(void* a)
         CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "BOOT");    
         CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "TIME");    
         CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "USERS");    
+        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "FILEASSOC");    
         CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/USERS")), regsafename);
+        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC")), "OPEN");
+        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC")), "EDIT");
+        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC")), "PRINT");
+        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC")), "ICON");
+        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC")), "DESCR");
+        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC")), "CUSTOMVERB");
+        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC")), "CUSTOMPROG");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/TIME")), "TIMEZONE");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "NAME");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "COMPANY");
@@ -1815,12 +1823,35 @@ void begin(void* a)
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, userBasePath)), "SALT");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, userBasePath)), "PASSWORD");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, userBasePath)), "DISPLAYNAME");
+        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, userBasePath)), "DESKTOP");
+        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, userBasePath)), "DOCUMENTS");
+        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, userBasePath)), "DOWNLOADS");
+        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, userBasePath)), "PICTURES");
+        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, userBasePath)), "MOVIES");
+        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, userBasePath)), "MUSIC");
+        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, userBasePath)), "RECYCLEBIN");
         CmCreateInteger(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/BOOT")), "AUTOGUI", modesel, EXTENT_INTEGER8);
         CmCreateInteger(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/TIME")), "TIMEZONEID", tzsel, EXTENT_INTEGER8);
         CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/TIME/TIMEZONE"), timezoneStrings[tzsel] + 1);
         CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/NAME"), currName);
         CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/COMPANY"), currComp);
         CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/PRODUCTKEY"), pkeybuf); 
+
+        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/ICON")), "TXT");
+        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/DESCR")), "TXT");
+        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/OPEN")), "TXT");
+        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/EDIT")), "TXT");
+        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/PRINT")), "TXT");
+        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/ICON/TXT"), "C:/Banana/Icons/colour/text.tga");
+        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/DESCR/TXT"), "Text Document");
+        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/OPEN/TXT"), "C:/Banana/System/te.exe");
+        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/EDIT/TXT"), "C:/Banana/System/te.exe");
+        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/PRINT/TXT"), "C:/Banana/System/te.exe");
+
+        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/ICON")), "ISO");
+        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/DESCR")), "ISO");
+        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/ICON/ISO"), "C:/Banana/Icons/colour/cd.tga");
+        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/DESCR/ISO"), "Disc Image File");
 
         strcpy(userBasePath, "BANANA/USERS/");
         strcat(userBasePath, regsafename);
@@ -1836,6 +1867,64 @@ void begin(void* a)
         strcat(userBasePath, regsafename);
         strcat(userBasePath, "/DISPLAYNAME");
         CmSetString(reg, CmFindObjectFromPath(reg, userBasePath), currName);
+
+
+        char userDesktop[256];
+        strcpy(userDesktop, "C:/Users/");
+        strcat(userDesktop, regsafename);
+        strcat(userDesktop, "/Desktop");
+        strcpy(userBasePath, "BANANA/USERS/");
+        strcat(userBasePath, regsafename);
+        strcat(userBasePath, "/DESKTOP");
+        CmSetString(reg, CmFindObjectFromPath(reg, userBasePath), userDesktop);
+
+        strcpy(userDesktop, "C:/Users/");
+        strcat(userDesktop, regsafename);
+        strcat(userDesktop, "/Documents");
+        strcpy(userBasePath, "BANANA/USERS/");
+        strcat(userBasePath, regsafename);
+        strcat(userBasePath, "/DOCUMENTS");
+        CmSetString(reg, CmFindObjectFromPath(reg, userBasePath), userDesktop);
+
+        strcpy(userDesktop, "C:/Users/");
+        strcat(userDesktop, regsafename);
+        strcat(userDesktop, "/Downloads");
+        strcpy(userBasePath, "BANANA/USERS/");
+        strcat(userBasePath, regsafename);
+        strcat(userBasePath, "/DOWNLOADS");
+        CmSetString(reg, CmFindObjectFromPath(reg, userBasePath), userDesktop);
+
+        strcpy(userDesktop, "C:/Users/");
+        strcat(userDesktop, regsafename);
+        strcat(userDesktop, "/Pictures");
+        strcpy(userBasePath, "BANANA/USERS/");
+        strcat(userBasePath, regsafename);
+        strcat(userBasePath, "/PICTURES");
+        CmSetString(reg, CmFindObjectFromPath(reg, userBasePath), userDesktop);
+
+        strcpy(userDesktop, "C:/Users/");
+        strcat(userDesktop, regsafename);
+        strcat(userDesktop, "/Movies");
+        strcpy(userBasePath, "BANANA/USERS/");
+        strcat(userBasePath, regsafename);
+        strcat(userBasePath, "/MOVIES");
+        CmSetString(reg, CmFindObjectFromPath(reg, userBasePath), userDesktop);
+
+        strcpy(userDesktop, "C:/Users/");
+        strcat(userDesktop, regsafename);
+        strcat(userDesktop, "/Music");
+        strcpy(userBasePath, "BANANA/USERS/");
+        strcat(userBasePath, regsafename);
+        strcat(userBasePath, "/MUSIC");
+        CmSetString(reg, CmFindObjectFromPath(reg, userBasePath), userDesktop);
+
+        strcpy(userDesktop, "C:/Users/");
+        strcat(userDesktop, regsafename);
+        strcat(userDesktop, "/Trash Bin");
+        strcpy(userBasePath, "BANANA/USERS/");
+        strcat(userBasePath, regsafename);
+        strcat(userBasePath, "/RECYCLEBIN");
+        CmSetString(reg, CmFindObjectFromPath(reg, userBasePath), userDesktop);
 
         CmClose(reg);
 

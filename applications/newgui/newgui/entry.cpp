@@ -481,6 +481,7 @@ uint8_t* desktopBuffer;
 uint32_t desktopColours[128];
 int desktopWidth = 0;
 int desktopHeight = 0;
+int desktopTaskbarHeight = 32;
 
 extern "C" uint64_t SystemCall(size_t, size_t, size_t, size_t);
 
@@ -512,6 +513,9 @@ void desktop()
     for (int i = 0; i < 128; ++i) {
         desktopColours[i] = 0;
     }
+    desktopColours[0] = 0x808080;
+    desktopColours[1] = 0xC0C0C0;
+
     uint32_t wh = SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_DESKTOP, 1, (size_t) desktopColours);
     desktopWidth = wh >> 16;
     desktopHeight = wh & 0xFFFF;
@@ -565,9 +569,7 @@ void desktop()
         }
     }
 
-    delete nbmp->data;
-
-    //
+    delete nbmp;
 
     
     DIR* dir;
@@ -575,19 +577,46 @@ void desktop()
     int diri = 0;
     NLoadedBitmap* dirico = new NLoadedBitmap("C:/Banana/Icons/colour/folder.tga");
     NLoadedBitmap* textico = new NLoadedBitmap("C:/Banana/Icons/colour/text.tga");
+    NLoadedBitmap* otherico = new NLoadedBitmap("C:/Banana/Icons/colour/file.tga");
+    NLoadedBitmap* exeico = new NLoadedBitmap("C:/Banana/Icons/colour/exe.tga");
 
-    if ((dir = opendir("C:/Banana")) != NULL) {
-        while ((ent = readdir(dir)) != NULL) {        
+    int iconsPerColumn = (desktopHeight - desktopTaskbarHeight - 16) / 64;
 
-            int base = diri * 48;
-            int baseX = (base / desktopHeight) * 48;
-            int baseY = base % desktopHeight;
+    if ((dir = opendir("C:/Banana/System")) != NULL) {
+        while ((ent = readdir(dir)) != NULL) {       
+
+            int lastFullStopPtr = -1;
+            for (int i = 0; ent->d_name[i]; ++i) {
+                if (ent->d_name[i] == '.') {
+                    lastFullStopPtr = i;
+                }
+            }
+
+            char ext[32];
+            memset(ext, 0, 32);
+            int j = 0;
+            if (lastFullStopPtr != -1) {
+                for (int i = lastFullStopPtr + 1; ent->d_name[i] && j < 31; ++i) {
+                    ext[j++] = ent->d_name[i];
+                }
+            }
+
+            int baseX = (diri / iconsPerColumn) * 64 + 25;
+            int baseY = (diri % iconsPerColumn) * 64 + 10;
 
             NLoadedBitmap* ico;
             if (ent->d_type & DT_DIR) {
                 ico = dirico;
             } else {
-                ico = textico;
+                if (!strcasecmp("TXT", ext)) {
+                    ico = textico;
+                } else if (!strcasecmp("EXE", ext)) {
+                    ico = exeico;
+                } else if (!strcasecmp("COM", ext)) {
+                    ico = exeico;
+                } else {
+                    ico = otherico;
+                }
             }
 
             for (int y = 0; y < ico->height; ++y) {
@@ -604,6 +633,19 @@ void desktop()
     } else {
         
     }
+
+    for (int y = desktopHeight - desktopTaskbarHeight; y < desktopHeight; ++y) {
+        for (int x = 0; x < desktopWidth; ++x) {
+            desktopBuffer[y * desktopWidth + x] = \
+                (y == desktopHeight - desktopTaskbarHeight) ? 128 : \
+                (y == desktopHeight - desktopTaskbarHeight + 1) ? 127 : 129;
+        }
+    }
+
+    delete exeico;
+    delete dirico;
+    delete textico;
+    delete otherico;
 
     SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_DESKTOP, 0, (size_t) desktopBuffer);
 }
