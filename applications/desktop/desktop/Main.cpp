@@ -340,6 +340,7 @@ void refresh()
     }
 
     SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_DESKTOP, 2, 0);
+    memset(desktopContext->invalidatedScanlines, 0, sizeof(desktopContext->invalidatedScanlines));
 }
 
 extern "C" void __gxx_personality_v0()
@@ -373,7 +374,7 @@ void partialDesktopUpdate()
                 int args[2];
                 args[0] = start * desktopWidth;
                 args[1] = (end - start) * desktopWidth;
-                SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_DESKTOP, (size_t) args, (size_t) desktopBuffer);
+                SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_DESKTOP, (size_t) args, (size_t) desktopBuffer + start * desktopWidth);
             }
         }
     }
@@ -382,7 +383,7 @@ void partialDesktopUpdate()
         int args[2];
         args[0] = start * desktopWidth;
         args[1] = (end - start) * desktopWidth;
-        SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_DESKTOP, (size_t) args, (size_t) desktopBuffer);
+        SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_DESKTOP, (size_t) args, (size_t) desktopBuffer + start * desktopWidth);
     }
 
     memset(desktopContext->invalidatedScanlines, 0, sizeof(desktopContext->invalidatedScanlines));
