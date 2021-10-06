@@ -73,7 +73,13 @@ uint64_t NiLinkCommandResupplyDesktop(size_t val, uint8_t* data)
 		} else {
 			int offset = *((int*) val);
 			int size = *(((int*) val) + 1);
+			int l = *(((int*) val) + 2);
+			int r = *(((int*) val) + 3);
 			memcpy(desktop->desktopBuffer + offset, data, size);
+			int startSc = offset / desktop->ctxt->width;
+			int endSc = (offset + size + desktop->ctxt->width - 1) / desktop->ctxt->width;
+			kprintf("Range refreshing desktop from %d to %d (%d->%d)\n", startSc, endSc, l, r);
+			desktop->rangeRefresh(startSc, endSc, l, r, nullptr);
 			return 4;
 		}
 		return 0;

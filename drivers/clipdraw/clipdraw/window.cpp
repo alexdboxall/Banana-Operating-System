@@ -35,11 +35,6 @@ void NIWindow::postEvent(NiEvent evnt)
 		return;
 	}
 
-	kprintf("Posting event.\n");
-	kprintf("ID = %d\n", nextEventId);
-	kprintf("this = 0x%X\n", this);
-	kprintf("dest = 0x%X\n", &events[nextEventId]);
-	kprintf("src = 0x%X\n", &evnt);
 	events[nextEventId] = evnt;
 	nextEventId = (nextEventId + 1) % MAX_EVENTS_PER_WINDOW;
 	numEvents++;

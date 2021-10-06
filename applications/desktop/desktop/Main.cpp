@@ -15,6 +15,9 @@ extern "C" {
 #define MAX_DESKTOP_FILES 512
 #define MAX_DESKTOP_DISPLAY_NAME_LENGTH 18
 
+int leftMostInvalid = -1;
+int rightMostInvalid = -1;
+
 struct DesktopFile
 {
     uint16_t iconX;
@@ -56,6 +59,28 @@ int desktopCellWidth = 84;
 int desktopCellHeight = 64;
 int desktopIconSize = 32;
 Context* desktopContext;
+
+
+void invalidateDesktopScanline(int line)
+{
+    desktopContext->invalidatedScanlines[line >> 3] |= 1 << (line & 7);
+}
+
+void invalidateLeftAndRight(int x)
+{
+    if (leftMostInvalid == -1) {
+        leftMostInvalid = x;
+        rightMostInvalid = x;
+        return;
+    }
+
+    if (x < leftMostInvalid) {
+        leftMostInvalid = x;
+    }
+    if (x > rightMostInvalid) {
+        rightMostInvalid = x;
+    }
+}
 
 extern "C" uint64_t SystemCall(size_t, size_t, size_t, size_t);
 
@@ -206,12 +231,17 @@ void redrawIcon(int id)
 
     bool selected = files[id].selected;
 
+    invalidateLeftAndRight(files[id].textX);
+    invalidateLeftAndRight(files[id].textX + files[id].boundW);
     Context_draw_text(desktopContext, drawname, files[id].textX, files[id].textY, selected ? 0xFFFFFF : 0x000000);
     
     NLoadedBitmap* ico = files[id].bmp;
     int baseX = files[id].iconX;
     int baseY = files[id].iconY;
+    invalidateLeftAndRight(baseX);
+    invalidateLeftAndRight(baseX + desktopIconSize);
     for (int y = 0; y < desktopIconSize; ++y) {
+        invalidateDesktopScanline(baseY + y);
         for (int x = 0; x < desktopIconSize; ++x) {
             if (ico->data[y * ico->width + x] == 0) continue;
             desktopBuffer[(baseY + y) * desktopWidth + baseX + x] = encodeDesktopColour(ico->data[y * ico->width + x] & 0xFFFFFF, selected);
@@ -318,7 +348,10 @@ void refresh()
         closedir(dir);
     }
 
+    invalidateLeftAndRight(0);
+    invalidateLeftAndRight(desktopWidth);
     for (int y = desktopHeight - desktopTaskbarHeight; y < desktopHeight; ++y) {
+        invalidateDesktopScanline(y);
         for (int x = 0; x < desktopWidth; ++x) {
             desktopBuffer[y * desktopWidth + x] = \
                 (y == desktopHeight - desktopTaskbarHeight) ? 128 : \
@@ -331,9 +364,11 @@ void refresh()
     //delete textico;
     //delete otherico;
 
-    int args[2];
+    int args[4];
     args[0] = 0;
     args[1] = desktopWidth * desktopHeight;
+    args[2] = 0;
+    args[3] = desktopWidth;
     int retv = SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_DESKTOP, (size_t) args, (size_t) desktopBuffer);
     if (retv != 4) {
         while (1);
@@ -371,21 +406,29 @@ void partialDesktopUpdate()
         } else {
             if (start != -1) {
                 int end = i;
-                int args[2];
+                int args[4];
                 args[0] = start * desktopWidth;
                 args[1] = (end - start) * desktopWidth;
+                args[2] = leftMostInvalid;
+                args[3] = rightMostInvalid;
                 SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_DESKTOP, (size_t) args, (size_t) desktopBuffer + start * desktopWidth);
+                start = -1;
             }
         }
     }
     if (start != -1) {
         int end = desktopHeight;
-        int args[2];
+        int args[4];
         args[0] = start * desktopWidth;
         args[1] = (end - start) * desktopWidth;
+        args[2] = leftMostInvalid;
+        args[3] = rightMostInvalid;
         SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_DESKTOP, (size_t) args, (size_t) desktopBuffer + start * desktopWidth);
+        start = -1;
     }
 
+    leftMostInvalid = -1;
+    rightMostInvalid = -1;
     memset(desktopContext->invalidatedScanlines, 0, sizeof(desktopContext->invalidatedScanlines));
 }
 
@@ -422,7 +465,6 @@ int main (int argc, char *argv[])
                 files[cs].selected = true;
                 redrawIcon(cs++);
                 partialDesktopUpdate();
-                SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_DESKTOP, 2, 0);
             }
         }
     }
