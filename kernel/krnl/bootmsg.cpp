@@ -14,7 +14,7 @@ uint8_t KiSplashScreen[] = { 0xDB, 0xDB, 0xDB, 0xDB, 0xDB, 0xDB, 0xBB, 0x20, 0x2
 void KeDisplaySplashScreen()
 {
 	for (int i = 0; "Starting Banana..."[i]; ++i) {
-		HalConsoleWriteCharacter("Starting Banana..."[i], 0xF, 0x0, 2, 1);
+		HalConsoleWriteCharacter("Starting Banana..."[i], 0xF, 0x0, 2 + i, 1);
 	}
 	return;
 
