@@ -13,6 +13,11 @@ uint8_t KiSplashScreen[] = { 0xDB, 0xDB, 0xDB, 0xDB, 0xDB, 0xDB, 0xBB, 0x20, 0x2
 
 void KeDisplaySplashScreen()
 {
+	for (int i = 0; "Starting Banana..."[i]; ++i) {
+		HalConsoleWriteCharacter("Starting Banana..."[i], 0xF, 0x0, 2, 1);
+	}
+	return;
+
 	int x = 0;
 	int y = 5;
 	int addx = 10;
@@ -37,7 +42,7 @@ void KeSetBootMessage(const char* msg)
 	memset((void*) vgatext, 0, sizeof(vgatext));
 	int xstart = (80 - strlen(msg)) / 2;
 	for (int i = 0; msg[i]; ++i) {
-		vgatext[xstart + i] = ((uint16_t) msg[i]) | 0x0F00;
+		vgatext[xstart + i] = ((uint16_t) msg[i]) | 0x0700;
 	}
 
 	uint16_t* b = (uint16_t*) 0xC20B8000;

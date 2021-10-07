@@ -444,6 +444,13 @@ void partialDesktopUpdate()
     memset(desktopContext->invalidatedScanlines, 0, sizeof(desktopContext->invalidatedScanlines));
 }
 
+int antBaseX;
+int antBaseY;
+int antPrevX;
+int antPrevY;
+bool drawAnts;
+bool firstAntDraw;
+
 int main (int argc, char *argv[])
 {
     NiLinkWindowStruct dummyWin;
@@ -452,8 +459,8 @@ int main (int argc, char *argv[])
     dummyWin.w = 40;
     dummyWin.h = 40;
     dummyWin.flags[0] = WIN_FLAGS_0_HIDDEN | WIN_FLAGS_0_HIDE_ON_INVALIDATE;
-    dummyWin.bufferSize = 40 * 40;
-    dummyWin.buffer = (uint32_t*) malloc(40 * 40 * 4);
+    dummyWin.bufferSize = 5 * 5;
+    dummyWin.buffer = (uint32_t*) malloc(5 * 5 * 4);
 
     strcpy(dummyWin.name, "DUMMY");
     SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_CREATE_WINDOW, 0, (size_t) &dummyWin);
@@ -468,6 +475,113 @@ int main (int argc, char *argv[])
         int events = SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_GET_EVENTS, 0, (size_t) &dummyWin);
         if (events < 0) {
             continue;
+        }
+
+        if (dummyWin.evnt.type == EVENT_TYPE_MOUSE_DOWN) {
+            drawAnts = true;
+            firstAntDraw = true;
+            antBaseX = dummyWin.evnt.mouseX;
+            antBaseY = dummyWin.evnt.mouseY;
+        }
+
+        if (dummyWin.evnt.type == EVENT_TYPE_MOUSE_UP) {
+            drawAnts = false;
+
+            int px1 = antPrevX;
+            int px2 = antBaseX;
+            int py1 = antPrevY;
+            int py2 = antBaseY;
+
+            if (px1 > px2) {
+                int temp = px2;
+                px2 = px1;
+                px1 = temp;
+            }
+            if (py1 > py2) {
+                int temp = py2;
+                py2 = py1;
+                py1 = temp;
+            }
+
+            for (int i = py1; i < py2; ++i) {
+                invalidateDesktopScanline(i);
+                for (int x = px1; x < px2; ++x) {
+                    if ((x + i) & 1) {
+                        desktopBuffer[i * desktopWidth + x] ^= 0x7F;
+                    }
+                }
+            }
+
+            invalidateLeftAndRight(px1);
+            invalidateLeftAndRight(px2);
+            partialDesktopUpdate();
+        }
+
+        if (dummyWin.evnt.type == EVENT_TYPE_MOUSE_DRAG && drawAnts) { 
+            int px1 = antPrevX;
+            int px2 = antBaseX;
+            int py1 = antPrevY;
+            int py2 = antBaseY;
+
+            if (px1 > px2) {
+                int temp = px2;
+                px2 = px1;
+                px1 = temp;
+            }
+            if (py1 > py2) {
+                int temp = py2;
+                py2 = py1;
+                py1 = temp;
+            }
+
+            int cx1 = dummyWin.evnt.mouseX;
+            int cx2 = antBaseX;
+            int cy1 = dummyWin.evnt.mouseY;
+            int cy2 = antBaseY;
+
+            if (cx1 > cx2) {
+                int temp = cx2;
+                cx2 = cx1;
+                cx1 = temp;
+            }
+            if (cy1 > cy2) {
+                int temp = cy2;
+                cy2 = cy1;
+                cy1 = temp;
+            }
+
+            invalidateLeftAndRight(px1);
+            invalidateLeftAndRight(px2);
+
+            //TODO: redraw what used to be underneath
+            if (!firstAntDraw) {
+                for (int i = py1; i < py2; ++i) {
+                    invalidateDesktopScanline(i);
+                    for (int x = px1; x < px2; ++x) {
+                        if ((x + i) & 1) {
+                            desktopBuffer[i * desktopWidth + x] ^= 0x7F;
+                        }
+                    }
+                }
+            }
+            firstAntDraw = false;
+
+            invalidateLeftAndRight(cx1);
+            invalidateLeftAndRight(cx2);
+
+            for (int i = cy1; i < cy2; ++i) {
+                invalidateDesktopScanline(i);
+                for (int x = cx1; x < cx2; ++x) {
+                    if ((x + i) & 1) {
+                        desktopBuffer[i * desktopWidth + x] ^= 0x7F;
+                    }
+                }
+            }
+
+            partialDesktopUpdate();
+
+            antPrevX = dummyWin.evnt.mouseX;
+            antPrevY = dummyWin.evnt.mouseY;
         }
 
         if (dummyWin.evnt.type == EVENT_TYPE_KEYDOWN) {
