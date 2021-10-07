@@ -121,7 +121,6 @@ void main()
 		clearScreenToColour(TCBlack);
 	} else {
 		setFgCol(TCBlack);
-		clearScreenToColour(TCBlack);
 	}
 
 	uint32_t s = readFATFileSectorStart("BANANA     /SYSTEM     /BOOTSET CFG");
