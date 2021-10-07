@@ -462,8 +462,8 @@ void main()
 
 		} while (key != '1' && key != '2' && key != '5');
 	}
-	clearScreen();
 	if (fulldebug) {
+		clearScreen();
 		writeString("\nPRESS ANY KEY (B)");
 		blockingKeyboard();
 	}
@@ -521,8 +521,8 @@ void main()
 	*((uint32_t*) 0x500) = data;
 	*((uint32_t*) 0x504) = data;
 	*((uint8_t*) 0x54C) = useSafeKernel ? 0xBB : 0x01;
-	clearScreen();
 	if (fulldebug) {
+		clearScreen();
 		writeString("\nPRESS ANY KEY (H)");
 		blockingKeyboard();
 	}
