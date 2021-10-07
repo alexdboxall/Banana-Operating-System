@@ -113,7 +113,14 @@ void main()
 	setFgCol(TCLightGrey);
 	writeString("  Hold ESC for boot settings");
 	millisleep(1000);
-
+	setFgCol(TCBlack);
+	clearScreenToColour(TCBlack);
+	setFgCol(TCWhite);
+	writeString("\n  Starting Banana...");
+	for (int i = 0; i < 22; ++i) {
+		writeString("\n");
+	}
+	setFgCol(TCLightGrey);
 	char key = nonBlockingKeyboard();
 	bool fulldebug = false;
 	if (key == '6' || key == '7' || key == '8' || key == '\e') {
