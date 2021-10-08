@@ -477,7 +477,7 @@ int main (int argc, char *argv[])
             continue;
         }
 
-        if (dummyWin.evnt.type == EVENT_TYPE_MOUSE_DOWN) {
+        /*if (dummyWin.evnt.type == EVENT_TYPE_MOUSE_DOWN) {
             drawAnts = true;
             firstAntDraw = true;
             antBaseX = dummyWin.evnt.mouseX;
@@ -583,7 +583,7 @@ int main (int argc, char *argv[])
             antPrevX = dummyWin.evnt.mouseX;
             antPrevY = dummyWin.evnt.mouseY;
         }
-
+        */
         if (dummyWin.evnt.type == EVENT_TYPE_KEYDOWN) {
             if (dummyWin.evnt.ctrl && (dummyWin.evnt.key == 'A' || dummyWin.evnt.key == 'a')) {
                 selectAllIcons();

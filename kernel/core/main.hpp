@@ -5,7 +5,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 
-#define KERNEL_DEBUG 
+#undef KERNEL_DEBUG 
 
 #pragma GCC diagnostic ignored "-Wsized-deallocation"
 #pragma GCC diagnostic ignored "-Wattributes"
