@@ -206,6 +206,9 @@ uint64_t NiSystemCallHandler(regs* r)
 	uint64_t retv = -1;
 
 	switch (r->ebx) {
+	case WSBE_FORCE_INIT_EBX:
+		retv = 4;
+		break;
 	case LINKCMD_CREATE_WINDOW:
 		retv = NiLinkCommandCreateWindow((size_t) r->ecx, (NiLinkWindowStruct*) r->edx);
 		break;

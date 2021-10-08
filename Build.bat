@@ -45,10 +45,10 @@ rm disasms/dislegacy.txt
 rm disasms/diswsbe.txt
 rm disasms/dis87.txt
 rm disasms/disboot.txt
-objdump -drwC -Mintel kernel/KERNEL32.EXE >> disasms/disasm.txt
-objdump -drwC -Mintel kernel/KRNLP2.EXE >> disasms/disasm2.txt
+objdump -drwC -Mintel kernel/KERNEL32.EXE >> disasms/disasm.lst
+objdump -drwC -Mintel kernel/KRNLP2.EXE >> disasms/disasm2.lst
 objdump -drwC -Mintel packages/banana/32/0002/acpica.sys >> disasms/disacpica.txt
 objdump -drwC -Mintel packages/system/32/0002/legacy.sys >> disasms/dislegacy.txt
-ndisasm -b16 kernel/STAGE1.BIN >> disboot.txt
+ndisasm -b16 kernel/STAGE1.BIN >> disboot.lst
 call Run
 pause

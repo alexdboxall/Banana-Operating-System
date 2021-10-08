@@ -453,6 +453,8 @@ bool firstAntDraw;
 
 int main (int argc, char *argv[])
 {
+    SystemCall((size_t) SystemCallNumber::WSBE, WSBE_FORCE_INIT_EBX, WSBE_FORCE_INIT_ECX, WSBE_FORCE_INIT_EDX);
+    
     NiLinkWindowStruct dummyWin;
     dummyWin.x = 6;
     dummyWin.y = 6;
