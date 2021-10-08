@@ -107,7 +107,7 @@ uint64_t SysRegistryClose(regs* r)
 
 uint64_t SysRegistryEasyReadString(regs* r)
 {
-	RegHive* reg = CmOpen((const char*) r->edx);
+	Reghive* reg = CmOpen((const char*) r->edx);
 	char* name = (char*) r->ecx;
 	char* name2 = (char*) r->ebx;
 	int spot = CmFindObjectFromPath(reg, name2);
@@ -119,12 +119,12 @@ uint64_t SysRegistryEasyReadString(regs* r)
 
 uint64_t SysRegistryEasyReadInteger(regs* r)
 {
-	RegHive* reg = CmOpen((const char*) r->edx);
+	Reghive* reg = CmOpen((const char*) r->edx);
 	char* name2 = (char*) r->ebx;
 	int spot = CmFindObjectFromPath(reg, name2);
 	if (spot <= 0) return 1;
 	
-	uint64_t* = (uint64_t*) r->ecx;
+	uint64_t* i = (uint64_t*) r->ecx;
 	CmGetInteger(reg, spot, i);
 
 	CmClose(reg);
