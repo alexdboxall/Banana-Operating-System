@@ -65,17 +65,18 @@ extern "C" {
 #include "libk/string.h"
 }
 
-uint64_t NiLinkCommandResupplyDesktop(size_t val, uint8_t* data)
+uint64_t NiLinkCommandResupplyDesktop(size_t val, uint16_t* data)
 {
 	if (val == 0 || val >= 0x1000) {
 		if (val == 0) {
-			memcpy(desktop->desktopBuffer, data, desktop->ctxt->width * desktop->ctxt->height);
+			memcpy(desktop->desktopBuffer, data, desktop->ctxt->width * desktop->ctxt->height * 2);
 		} else {
 			int offset = *((int*) val);
 			int size = *(((int*) val) + 1);
 			int l = *(((int*) val) + 2);
 			int r = *(((int*) val) + 3);
-			memcpy(desktop->desktopBuffer + offset, data, size);
+			kprintf("Uploading to the desktop. total size = %d, offset = %d\n", size * 2, offset * 2);
+			memcpy(desktop->desktopBuffer + offset, data, size * 2);
 			int startSc = offset / desktop->ctxt->width;
 			int endSc = (offset + size + desktop->ctxt->width - 1) / desktop->ctxt->width;
 			desktop->rangeRefresh(startSc, endSc, l, r, nullptr);
@@ -84,7 +85,7 @@ uint64_t NiLinkCommandResupplyDesktop(size_t val, uint8_t* data)
 		return 0;
 
 	} else if (val == 1) {
-		memcpy(((uint8_t*) desktop->desktopDecode) + 128 * 4, data, 128 * 4);
+		memcpy(((uint8_t*) desktop->desktopDecodeLow) + 128 * 4, data, 128 * 4);
 		return (desktop->ctxt->width << 16) | desktop->ctxt->height;
 	
 	} else if (val == 2) {
@@ -234,7 +235,7 @@ uint64_t NiSystemCallHandler(regs* r)
 		retv = NiLinkCommandResupplyScanline((size_t) r->ecx, (NiLinkWindowStruct*) r->edx, true);
 		break;
 	case LINKCMD_RESUPPLY_DESKTOP:
-		retv = NiLinkCommandResupplyDesktop((size_t) r->ecx, (uint8_t*) r->edx);
+		retv = NiLinkCommandResupplyDesktop((size_t) r->ecx, (uint16_t*) r->edx);
 		break;
 	case LINKCMD_BE_THE_DESKTOP:
 		retv = NiLinkCommandBeTheDesktop((size_t) r->ecx, (uint8_t*) r->edx);

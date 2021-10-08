@@ -13,7 +13,7 @@ typedef struct Context_struct {
     union
     {
         uint32_t* buffer; //A pointer to our framebuffer
-        uint8_t* desktopBuff8;
+        uint16_t* desktopBuff16;
     };
     uint16_t width; //The dimensions of the framebuffer
     uint16_t height; 

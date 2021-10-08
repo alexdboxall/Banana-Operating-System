@@ -150,7 +150,7 @@ static inline __attribute__((always_inline)) void Context_invalidate_scanline(Co
 }
 
 
-uint8_t cdEncodeDesktopColour(uint32_t rgb)
+uint16_t cdEncodeDesktopColour(uint32_t rgb)
 {
     int r = (rgb >> 16) & 0xFF;
     int g = (rgb >> 8) & 0xFF;
@@ -207,7 +207,7 @@ void Context_clipped_rect(Context* context, int x, int y, unsigned int width,
             for (; y < max_y; y++) {
                 Context_invalidate_scanline(context, y);
                 for (cur_x = x; cur_x < max_x; cur_x++) {
-                    context->desktopBuff8[y * context->width + cur_x] = cdEncodeDesktopColour(patternColour(color, cur_x, y));
+                    context->desktopBuff16[y * context->width + cur_x] = cdEncodeDesktopColour(patternColour(color, cur_x, y));
                 }
             }
 
@@ -215,7 +215,7 @@ void Context_clipped_rect(Context* context, int x, int y, unsigned int width,
             for (; y < max_y; y++) {
                 Context_invalidate_scanline(context, y);
                 for (cur_x = x; cur_x < max_x; cur_x++) {
-                    context->desktopBuff8[y * context->width + cur_x] = cdEncodeDesktopColour(color);
+                    context->desktopBuff16[y * context->width + cur_x] = cdEncodeDesktopColour(color);
                 }
             }
         }
@@ -433,7 +433,7 @@ void Context_bitblit(Context* context, int sx, int sy, int x, int y, int w, int 
                 uint32_t px = *database++;
                 if (px == 0x0) {
                 } else if (px) {
-                    context->desktopBuff8[sy * context->width + tempx] = cdEncodeDesktopColour(px & 0xFFFFFF);
+                    context->desktopBuff16[sy * context->width + tempx] = cdEncodeDesktopColour(px & 0xFFFFFF);
                 }
                 ++tempx;
             }
@@ -536,7 +536,7 @@ void Context_draw_char_clipped(Context* context, char character, int x, int y,
             shift_line <<= off_x;
             for (font_x = off_x; font_x < count_x; font_x++) {
                 if (shift_line & 0x80) {
-                    context->desktopBuff8[(font_y + y) * context->width + (font_x + x)] = cdEncodeDesktopColour(color);
+                    context->desktopBuff16[(font_y + y) * context->width + (font_x + x)] = cdEncodeDesktopColour(color);
                 }
                 shift_line <<= 1;
             }

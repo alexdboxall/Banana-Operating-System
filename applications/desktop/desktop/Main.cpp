@@ -52,7 +52,7 @@ FileAssociaton fileAssoc[MAX_DESKTOP_FILE_TYPES];
 int nextFileAssoc = 0;
 int nextDesktopFile = 0;
 
-uint8_t* desktopBuffer;
+uint16_t* desktopBuffer;
 uint32_t desktopColours[128];
 int desktopWidth = 0;
 int desktopHeight = 0;
@@ -86,7 +86,7 @@ void invalidateLeftAndRight(int x)
 
 extern "C" uint64_t SystemCall(size_t, size_t, size_t, size_t);
 
-uint8_t encodeDesktopColour(uint32_t rgb, bool blue)
+uint16_t encodeDesktopColour(uint32_t rgb, bool blue)
 {
     int r = (rgb >> 16) & 0xFF;
     int g = (rgb >> 8) & 0xFF;
@@ -132,7 +132,7 @@ void init()
     desktopWidth = wh >> 16;
     desktopHeight = wh & 0xFFFF;
 
-    desktopBuffer = (uint8_t*) malloc(desktopWidth * desktopHeight);
+    desktopBuffer = (uint16_t*) malloc(desktopWidth * desktopHeight * 2);
 
     desktopContext = Context_new(desktopWidth, desktopHeight, (uint32_t*) desktopBuffer);
     desktopContext->desktopCtxt = 1;
@@ -216,9 +216,14 @@ void loadIconBitmaps()
         fileAssoc[i].valid = false;
     }
 
-    fileAssoc[nextFileAssoc].valid = true;
-    strcpy(fileAssoc[nextFileAssoc].extension, "TXT");
-    fileAssoc[nextFileAssoc++].iconBitmap = new NLoadedBitmap("C:/Banana/Icons/colour/text.tga");
+    char str[800];
+    int failure = SystemCall((size_t) SystemCallNumber::RegistryEasyReadString, (size_t) "BANANA/FILEASSOC/ICON/TXT", (size_t) str, (size_t) "C:/Banana/Registry/System/SYSTEM.REG");
+
+    if (!failure) {
+        fileAssoc[nextFileAssoc].valid = true;
+        strcpy(fileAssoc[nextFileAssoc].extension, "TXT");
+        fileAssoc[nextFileAssoc++].iconBitmap = new NLoadedBitmap(str);
+    }
 
     fileAssoc[nextFileAssoc].valid = true;
     strcpy(fileAssoc[nextFileAssoc].extension, "EXE");
@@ -435,7 +440,7 @@ void partialDesktopUpdate()
                 args[1] = (end - start) * desktopWidth;
                 args[2] = leftMostInvalid;
                 args[3] = rightMostInvalid;
-                SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_DESKTOP, (size_t) args, (size_t) desktopBuffer + start * desktopWidth);
+                SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_DESKTOP, (size_t) args, (size_t) (desktopBuffer + start * desktopWidth));
                 start = -1;
             }
         }
@@ -447,7 +452,7 @@ void partialDesktopUpdate()
         args[1] = (end - start) * desktopWidth;
         args[2] = leftMostInvalid;
         args[3] = rightMostInvalid;
-        SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_DESKTOP, (size_t) args, (size_t) desktopBuffer + start * desktopWidth);
+        SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_DESKTOP, (size_t) args, (size_t) (desktopBuffer + start * desktopWidth));
         start = -1;
     }
 

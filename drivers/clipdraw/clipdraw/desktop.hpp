@@ -34,8 +34,9 @@ public:
 	NIContext* ctxt;
 	List<NIWindow*>* head;
 
-	uint32_t desktopDecode[256];
-	uint8_t* desktopBuffer;
+	uint32_t desktopDecode(int val);
+	uint8_t desktopDecodeLow[256];
+	uint16_t* desktopBuffer;
 
 	uint64_t invalidateAllJustOccured;
 	
