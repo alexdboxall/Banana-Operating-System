@@ -227,6 +227,18 @@ void loadIconBitmaps()
     fileAssoc[nextFileAssoc].valid = true;
     strcpy(fileAssoc[nextFileAssoc].extension, "COM");
     fileAssoc[nextFileAssoc++].iconBitmap = new NLoadedBitmap("C:/Banana/Icons/colour/exe.tga");
+
+    fileAssoc[nextFileAssoc].valid = true;
+    strcpy(fileAssoc[nextFileAssoc].extension, "ISO");
+    fileAssoc[nextFileAssoc++].iconBitmap = new NLoadedBitmap("C:/Banana/Icons/colour/iso.tga");
+
+    fileAssoc[nextFileAssoc].valid = true;
+    strcpy(fileAssoc[nextFileAssoc].extension, "CFG");
+    fileAssoc[nextFileAssoc++].iconBitmap = new NLoadedBitmap("C:/Banana/Icons/colour/cfg.tga");
+
+    fileAssoc[nextFileAssoc].valid = true;
+    strcpy(fileAssoc[nextFileAssoc].extension, "BAT");
+    fileAssoc[nextFileAssoc++].iconBitmap = new NLoadedBitmap("C:/Banana/Icons/colour/bat.tga");
 }
 
 void redrawIcon(int id)
