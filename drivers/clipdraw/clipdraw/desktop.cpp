@@ -129,6 +129,7 @@ void NiLoadCursors()
 uint32_t NIDesktop::desktopDecode(int val)
 {
 	if ((val & 0xFF) == val) {
+		kprintf("Desktop %d decodes to 0x%X\n", val, desktopDecodeLow[val]);
 		return desktopDecodeLow[val];
 	}
 
