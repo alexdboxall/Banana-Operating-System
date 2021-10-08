@@ -49,6 +49,8 @@ uint64_t SysRegistryOpen(regs* r);
 uint64_t SysRegistryClose(regs* r);
 uint64_t SysTruncate(regs* r);
 uint64_t SysSymlink(regs* r);
+uint64_t SysRegistryEasyReadString(regs* r);
+uint64_t SysRegistryEasyReadInteger(regs* r);
 
 int string_ends_with(const char* str, const char* suffix)
 {
@@ -730,6 +732,8 @@ uint64_t(*systemCallHandlers[])(regs* r) = {
 	SysTruncate,
 	SysSizeFromFilenameNoSymlink,
 	SysSymlink,
+	SysRegistryEasyReadString,
+	SysRegistryEasyReadInteger,
 };
 
 uint64_t KeSystemCall(regs* r, void* context)

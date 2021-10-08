@@ -277,9 +277,9 @@ NIWindow* movingWin = nullptr;
 #define MOVE_TYPE_RESIZE_B		3
 #define MOVE_TYPE_RESIZE_R		4
 
+//these should probably be within NIDesktop, but who cares for now
 int movingType = 0;
-
-
+NIWindow* clickonWhenMouseFirstClicked;
 void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 {
 	static int previousButtons = 0;
@@ -308,15 +308,20 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 	if (mouseY > ctxt->height - 1) mouseY = ctxt->height - 1;
 
 	NIWindow* clickon = getTopmostWindowAtPixel(mouseX, mouseY);
-
+	
+	extern uint8_t* desktopWindowDummy;
 	if (clickon) {
 		if (xdelta || ydelta) {
-			clickon->postEvent(NiCreateEvent(clickon, buttons & 1 ? EVENT_TYPE_MOUSE_DRAG : EVENT_TYPE_MOUSE_MOVE, false));
+			if (clickon == clickonWhenMouseFirstClicked) {
+				clickon->postEvent(NiCreateEvent(clickon, buttons & 1 ? EVENT_TYPE_MOUSE_DRAG : EVENT_TYPE_MOUSE_MOVE, false));
+			}
 
 		} else if ((buttons & 1) && !(oldButtons & 1)) {
+			clickonWhenMouseFirstClicked = clickon;
 			clickon->postEvent(NiCreateEvent(clickon, EVENT_TYPE_MOUSE_DOWN, false));
 
 		} else if (!(buttons & 1) && (oldButtons & 1)) {
+			clickonWhenMouseFirstClicked = nullptr;
 			clickon->postEvent(NiCreateEvent(clickon, EVENT_TYPE_MOUSE_UP, false));
 		}
 
@@ -326,11 +331,8 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 		} else if (!(buttons & 2) && (oldButtons & 2)) {
 			clickon->postEvent(NiCreateEvent(clickon, EVENT_TYPE_RMOUSE_UP, false));
 		}
-	}
 
-	extern uint8_t* desktopWindowDummy;
-
-	if (desktopWindowDummy) {
+	} else if (desktopWindowDummy) {
 		NIWindow* a = (NIWindow*) desktopWindowDummy;
 		if ((xdelta || ydelta) && (buttons & 1)) {
 			a->postEvent(NiCreateEvent(a, EVENT_TYPE_MOUSE_DRAG, false));
@@ -459,7 +461,7 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 		}
 	}
 
-	if ((buttons & 1) && clickon) {
+	if ((buttons & 1) && clickon && clickon == clickonWhenMouseFirstClicked) {
 		if (!(previousButtons & 1)) {
 			uint64_t sincePrev = milliTenthsSinceBoot - lastClick;
 

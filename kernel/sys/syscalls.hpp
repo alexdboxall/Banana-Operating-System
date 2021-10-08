@@ -10,6 +10,10 @@ uint64_t KeSystemCall(regs* r, void* context);
 uint64_t KeSystemCallFromUsermode(size_t a, size_t b, size_t c, size_t d);
 #endif
 
+#define WSBE_FORCE_INIT_EBX		0xA5347896
+#define WSBE_FORCE_INIT_ECX		0x4F777FF7
+#define WSBE_FORCE_INIT_EDX		0x11235555
+
 #define _APPSETTINGS_VALIDATION_V1			'N'
 
 #define _APPSETTINGS_MODE_UNKNOWN			0
@@ -108,6 +112,8 @@ SystemCallNumber
 	Truncate,
 	SizeFromFilenameNoSymlink,
 	Symlink,
+	RegistryEasyReadString,
+	RegistryEasyReadInteger,
 
 };
 
