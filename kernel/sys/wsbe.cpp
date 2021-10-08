@@ -24,7 +24,7 @@ uint64_t SysWsbe(regs* r)
 {
 	if (r->ebx == WSBE_FORCE_INIT_EBX && r->ecx == WSBE_FORCE_INIT_ECX && r->edx == WSBE_FORCE_INIT_EDX) {
 		kernelProcess->createThread(startGUIVESA, nullptr, 1);
-		return;
+		return 0;
 	}
 
 	int br;
