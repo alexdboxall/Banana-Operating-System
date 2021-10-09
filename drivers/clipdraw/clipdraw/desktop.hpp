@@ -35,7 +35,7 @@ public:
 	List<NIWindow*>* head;
 
 	uint32_t desktopDecode(int val);
-	uint8_t desktopDecodeLow[256];
+	uint32_t desktopDecodeLow[256];
 	uint16_t* desktopBuffer;
 
 	uint64_t invalidateAllJustOccured;

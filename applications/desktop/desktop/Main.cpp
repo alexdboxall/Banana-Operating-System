@@ -12,6 +12,10 @@ extern "C" {
 #include <stdint.h>
 
 
+uint64_t redAvg;
+uint64_t grnAvg;
+uint64_t bluAvg;
+
 #define MAX_DESKTOP_FILES 512
 #define MAX_DESKTOP_DISPLAY_NAME_LENGTH 18
 
@@ -57,7 +61,7 @@ uint32_t desktopColours[128];
 int desktopWidth = 0;
 int desktopHeight = 0;
 int desktopTaskbarHeight = 28;
-int desktopCellWidth = 84;
+int desktopCellWidth = 86;
 int desktopCellHeight = 64;
 int desktopIconSize = 32;
 Context* desktopContext;
@@ -99,7 +103,18 @@ uint16_t encodeDesktopColour(uint32_t rgb, bool blue)
         g /= 4;
     }
 
-    r += 40;
+    r += 5;
+    r *= 31;
+    r /= 255;
+    g += 5;
+    g *= 31;
+    g /= 255;
+    b += 5;
+    b *= 31;
+    b /= 255;
+
+    uint32_t out = 0x8000 | (r << 10) | (g << 5) | b;
+    /*r += 40;
     r *= 3;
     r /= 255;
 
@@ -110,8 +125,8 @@ uint16_t encodeDesktopColour(uint32_t rgb, bool blue)
     b += 40;
     b *= 3;
     b /= 255;
-
-    uint32_t out = (r << 5) | (g << 2) | b;
+    
+    uint32_t out = (r << 5) | (g << 2) | b;*/
 
     return out;
 }
@@ -144,6 +159,10 @@ void drawBackground()
 {
     NLoadedBitmap* nbmp = new NLoadedBitmap("C:/Banana/System/crisp.tga");
 
+    redAvg = 0;
+    grnAvg = 0;
+    bluAvg = 0;
+
     int i = 0;
     for (int y = 0; y < desktopHeight; ++y) {
         for (int x = 0; x < desktopWidth; ++x) {
@@ -174,20 +193,25 @@ void drawBackground()
 
             int npx = desktopWidth - px;
             int npy = desktopHeight - py;
-            px = px * 256 / desktopWidth;
-            npx = npx * 256 / desktopWidth;
-            py = py * 256 / desktopHeight;
-            npy = npy * 256 / desktopHeight;
+            px = px * 2048 / desktopWidth;
+            npx = npx * 2048 / desktopWidth;
+            py = py * 2048 / desktopHeight;
+            npy = npy * 2048 / desktopHeight;
 
-            int mr = (rN * (npx + npy) + rS * (px + npy) + rD * (npx + py) + rG * (px + py)) / 1024;
-            int mg = (gN * (npx + npy) + gS * (px + npy) + gD * (npx + py) + gG * (px + py)) / 1024;
-            int mb = (bN * (npx + npy) + bS * (px + npy) + bD * (npx + py) + bG * (px + py)) / 1024;
+            int mr = (rN * (npx + npy) + rS * (px + npy) + rD * (npx + py) + rG * (px + py)) / 8192;
+            int mg = (gN * (npx + npy) + gS * (px + npy) + gD * (npx + py) + gG * (px + py)) / 8192;
+            int mb = (bN * (npx + npy) + bS * (px + npy) + bD * (npx + py) + bG * (px + py)) / 8192;
+
+            redAvg += mr;
+            grnAvg += mg;
+            bluAvg += mb;
             desktopBuffer[i++] = encodeDesktopColour((mr << 16) | (mg << 8) | mb, false);
-
-            //desktopBuffer[i++] = 0x37;
-            //desktopBuffer[i++] = encodeDesktopColour(nbmp->data[ay * nbmp->width + ax]);
         }
     }
+
+    redAvg /= desktopWidth * desktopHeight;
+    grnAvg /= desktopWidth * desktopHeight;
+    bluAvg /= desktopWidth * desktopHeight;
 
     //delete nbmp;
 }
@@ -252,9 +276,41 @@ void redrawIcon(int id)
 
     bool selected = files[id].selected;
 
-    invalidateLeftAndRight(files[id].textX);
-    invalidateLeftAndRight(files[id].textX + files[id].boundW);
-    Context_draw_text(desktopContext, drawname, files[id].textX, files[id].textY, selected ? 0xFFFFFF : 0x000000);
+    invalidateLeftAndRight(files[id].textX - 1);
+    invalidateLeftAndRight(files[id].textX + files[id].boundW + 1);
+
+    if (redAvg >= 0xA0 && redAvg <= 0xD0 && grnAvg >= 0xA0 && grnAvg <= 0xD0 && bluAvg >= 0xA0 && bluAvg <= 0xD0) {
+        bluAvg = 0xC0;
+        grnAvg = 0xC0;
+        redAvg = 0xC0;
+    } else {
+        redAvg = redAvg < 0x30 ? 0x00 : redAvg < 0xC0 ? 0x80 : 0xFF;
+        grnAvg = grnAvg < 0x30 ? 0x00 : grnAvg < 0xC0 ? 0x80 : 0xFF;
+        bluAvg = bluAvg < 0x30 ? 0x00 : bluAvg < 0xC0 ? 0x80 : 0xFF;
+    }
+
+    if (desktopWidth <= 640) {
+        for (int i = 0; i < 2; ++i) {
+            if (redAvg == 0xFF && grnAvg == 0x80 && bluAvg == 0x00) grnAvg = 0x00;
+            if (redAvg == 0xFF && grnAvg == 0x80 && bluAvg == 0x80) bluAvg = 0x00;
+            if (redAvg == 0xFF && grnAvg == 0x00 && bluAvg == 0x80) bluAvg = 0xFF;
+            if (redAvg == 0xFF && grnAvg == 0xFF && bluAvg == 0x80) bluAvg = 0x00;
+            if (redAvg == 0xFF && grnAvg == 0x80 && bluAvg == 0xFF) grnAvg = 0x00;
+            if (grnAvg == 0xFF && redAvg == 0x80 && bluAvg == 0x00) redAvg = 0x00;
+            if (grnAvg == 0xFF && redAvg == 0x80 && bluAvg == 0x80) bluAvg = 0x00;
+            if (grnAvg == 0xFF && redAvg == 0x00 && bluAvg == 0x80) bluAvg = 0x00;
+            if (grnAvg == 0xFF && redAvg == 0x80 && bluAvg == 0xFF) redAvg = 0x00;
+            if (bluAvg == 0xFF && grnAvg == 0x80 && redAvg == 0x00) grnAvg = 0x00;
+            if (bluAvg == 0xFF && grnAvg == 0x80 && redAvg == 0x80) redAvg = 0x00;
+            if (bluAvg == 0xFF && grnAvg == 0x00 && redAvg == 0x80) bluAvg = 0x80;
+        }
+    }
+
+    uint32_t textBg = (redAvg << 16) | (grnAvg << 8) | bluAvg;
+    uint32_t textFg = (redAvg + grnAvg + bluAvg < 128 * 3) ? 0xFFFFFF : 0x000000;
+
+    Context_fill_rect(desktopContext, files[id].textX - 1, files[id].textY - 1, files[id].boundW + 2, files[id].boundH + 2, selected ? 0x000080 : textBg);
+    Context_draw_text(desktopContext, drawname, files[id].textX, files[id].textY, selected ? 0xFFFFFF : textFg);
     
     NLoadedBitmap* ico = files[id].bmp;
     int baseX = files[id].iconX;
@@ -290,6 +346,8 @@ int registerFile(char* filepath, char* displayName, NLoadedBitmap* bmp, int tx, 
     ++nextDesktopFile;
     return id;
 }
+
+
 
 void refresh()
 {
@@ -345,10 +403,12 @@ void refresh()
             }
             int bndx, bndy;
             Context_bound_text(desktopContext, drawname, &bndx, &bndy);
-            if (bndx > desktopCellWidth) {
+            if (bndx > desktopCellWidth - 2) {
+                //a lot of times there will be a dot for file extension, so without this 4 dots get displayed
+                while (strlen(drawname) >= 6 && drawname[strlen(drawname) - 4] == '.') drawname[strlen(drawname) - 1] = 0;
                 drawname[strlen(drawname) - 1] = '.';
                 drawname[strlen(drawname) - 2] = '.';
-                drawname[strlen(drawname) - 3] = '.';
+                drawname[strlen(drawname) - 3] = '.';        
 
                 while (1) {
                     Context_bound_text(desktopContext, drawname, &bndx, &bndy);
@@ -473,10 +533,10 @@ int main (int argc, char *argv[])
     SystemCall((size_t) SystemCallNumber::WSBE, WSBE_FORCE_INIT_EBX, WSBE_FORCE_INIT_ECX, WSBE_FORCE_INIT_EDX);
     
     NiLinkWindowStruct dummyWin;
-    dummyWin.x = 6;
-    dummyWin.y = 6;
-    dummyWin.w = 40;
-    dummyWin.h = 40;
+    dummyWin.x = 1;
+    dummyWin.y = 1;
+    dummyWin.w = 5;
+    dummyWin.h = 5;
     dummyWin.flags[0] = WIN_FLAGS_0_HIDDEN | WIN_FLAGS_0_HIDE_ON_INVALIDATE;
     dummyWin.bufferSize = 5 * 5;
     dummyWin.buffer = (uint32_t*) malloc(5 * 5 * 4);
@@ -496,7 +556,7 @@ int main (int argc, char *argv[])
             continue;
         }
 
-        /*if (dummyWin.evnt.type == EVENT_TYPE_MOUSE_DOWN) {
+        if (dummyWin.evnt.type == EVENT_TYPE_MOUSE_DOWN) {
             drawAnts = true;
             firstAntDraw = true;
             antBaseX = dummyWin.evnt.mouseX;
@@ -505,104 +565,41 @@ int main (int argc, char *argv[])
 
         if (dummyWin.evnt.type == EVENT_TYPE_MOUSE_UP) {
             drawAnts = false;
-
-            int px1 = antPrevX;
-            int px2 = antBaseX;
-            int py1 = antPrevY;
-            int py2 = antBaseY;
-
-            if (px1 > px2) {
-                int temp = px2;
-                px2 = px1;
-                px1 = temp;
-            }
-            if (py1 > py2) {
-                int temp = py2;
-                py2 = py1;
-                py1 = temp;
-            }
-
-            for (int i = py1; i < py2; ++i) {
-                invalidateDesktopScanline(i);
-                for (int x = px1; x < px2; ++x) {
-                    if ((x + i) & 1) {
-                        desktopBuffer[i * desktopWidth + x] ^= 0x7F;
-                    }
-                }
-            }
-
-            invalidateLeftAndRight(px1);
-            invalidateLeftAndRight(px2);
-            partialDesktopUpdate();
         }
 
-        if (dummyWin.evnt.type == EVENT_TYPE_MOUSE_DRAG && drawAnts) { 
-            int px1 = antPrevX;
-            int px2 = antBaseX;
-            int py1 = antPrevY;
-            int py2 = antBaseY;
+        if (drawAnts) { 
+            bool needsUpdate = false;
+            for (int i = 0; i < MAX_DESKTOP_FILES; ++i) {
+                if (!files[i].valid) continue;
 
-            if (px1 > px2) {
-                int temp = px2;
-                px2 = px1;
-                px1 = temp;
-            }
-            if (py1 > py2) {
-                int temp = py2;
-                py2 = py1;
-                py1 = temp;
-            }
+                int ax1 = files[i].iconX;
+                int ay1 = files[i].iconY;
+                int ax2 = files[i].iconX + desktopIconSize;
+                int ay2 = files[i].iconY + desktopIconSize;
 
-            int cx1 = dummyWin.evnt.mouseX;
-            int cx2 = antBaseX;
-            int cy1 = dummyWin.evnt.mouseY;
-            int cy2 = antBaseY;
+                int bx1 = antBaseX < dummyWin.evnt.mouseX ? antBaseX : dummyWin.evnt.mouseX;
+                int by1 = antBaseY < dummyWin.evnt.mouseY ? antBaseY : dummyWin.evnt.mouseY;
+                int bx2 = antBaseX < dummyWin.evnt.mouseX ? dummyWin.evnt.mouseX : antBaseX;
+                int by2 = antBaseY < dummyWin.evnt.mouseY ? dummyWin.evnt.mouseY : antBaseY;
 
-            if (cx1 > cx2) {
-                int temp = cx2;
-                cx2 = cx1;
-                cx1 = temp;
-            }
-            if (cy1 > cy2) {
-                int temp = cy2;
-                cy2 = cy1;
-                cy1 = temp;
-            }
+                bool overlap = (ax1 < bx2 && ax2 > bx1 && ay1 < by2 && ay2 > by1);
 
-            invalidateLeftAndRight(px1);
-            invalidateLeftAndRight(px2);
-
-            //TODO: redraw what used to be underneath
-            if (!firstAntDraw) {
-                for (int i = py1; i < py2; ++i) {
-                    invalidateDesktopScanline(i);
-                    for (int x = px1; x < px2; ++x) {
-                        if ((x + i) & 1) {
-                            desktopBuffer[i * desktopWidth + x] ^= 0x7F;
-                        }
-                    }
+                if (files[i].selected != overlap) {
+                    files[i].selected = overlap;
+                    redrawIcon(i);
+                    needsUpdate = true;
                 }
             }
+
+            if (needsUpdate) {
+                partialDesktopUpdate();
+            }
+
             firstAntDraw = false;
-
-            invalidateLeftAndRight(cx1);
-            invalidateLeftAndRight(cx2);
-
-            for (int i = cy1; i < cy2; ++i) {
-                invalidateDesktopScanline(i);
-                for (int x = cx1; x < cx2; ++x) {
-                    if ((x + i) & 1) {
-                        desktopBuffer[i * desktopWidth + x] ^= 0x7F;
-                    }
-                }
-            }
-
-            partialDesktopUpdate();
-
             antPrevX = dummyWin.evnt.mouseX;
             antPrevY = dummyWin.evnt.mouseY;
         }
-        */
+        
         if (dummyWin.evnt.type == EVENT_TYPE_KEYDOWN) {
             if (dummyWin.evnt.ctrl && (dummyWin.evnt.key == 'A' || dummyWin.evnt.key == 'a')) {
                 selectAllIcons();

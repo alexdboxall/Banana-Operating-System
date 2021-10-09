@@ -155,21 +155,17 @@ uint16_t cdEncodeDesktopColour(uint32_t rgb)
     int r = (rgb >> 16) & 0xFF;
     int g = (rgb >> 8) & 0xFF;
     int b = (rgb >> 0) & 0xFF;
-
-    r += 40;
-    r *= 3;
+    r += 5;
+    r *= 31;
     r /= 255;
-
-    g += 20;
-    g *= 7;
+    g += 5;
+    g *= 31;
     g /= 255;
-
-    b += 40;
-    b *= 3;
+    b += 5;
+    b *= 31;
     b /= 255;
 
-    uint32_t out = (r << 5) | (g << 2) | b;
-
+    uint32_t out = 0x8000 | (r << 10) | (g << 5) | b;
     return out;
 }
 

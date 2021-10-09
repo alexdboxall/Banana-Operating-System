@@ -128,12 +128,23 @@ void NiLoadCursors()
 
 uint32_t NIDesktop::desktopDecode(int val)
 {
-	if ((val & 0xFF) == val) {
-		kprintf("Desktop %d decodes to 0x%X\n", val, desktopDecodeLow[val]);
-		return desktopDecodeLow[val];
-	}
+	if (val & 0x8000) {
+		int b = (val >> 0) & 0x1F;
+		int g = (val >> 5) & 0x1F;
+		int r = (val >> 10) & 0x1F;
 
-	return 0xFF0000;
+		b *= 421;
+		g *= 421;
+		r *= 421;
+		b /= 51;
+		g /= 51;
+		r /= 51;
+
+		return (r << 16) | (g << 8) | b;
+
+	} else {
+		return desktopDecodeLow[val & 0xFF];
+	}
 }
 
 NIDesktop::NIDesktop(NIContext* context)

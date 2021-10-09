@@ -75,7 +75,6 @@ uint64_t NiLinkCommandResupplyDesktop(size_t val, uint16_t* data)
 			int size = *(((int*) val) + 1);
 			int l = *(((int*) val) + 2);
 			int r = *(((int*) val) + 3);
-			kprintf("Uploading to the desktop. total size = %d, offset = %d\n", size * 2, offset * 2);
 			memcpy(desktop->desktopBuffer + offset, data, size * 2);
 			int startSc = offset / desktop->ctxt->width;
 			int endSc = (offset + size + desktop->ctxt->width - 1) / desktop->ctxt->width;
