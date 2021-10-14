@@ -513,6 +513,14 @@ void main()
 	} else {
 		readFATFromHDD("BANANA     /SYSTEM     /KERNEL32EXE", (void*) KERNEL_SOURCE);
 	}
+	bool found = false;
+	for (int i = 0; i < 4096; ++i) {
+		uint8_t* spot = (uint8_t*) (KERNEL_SOURCE + i);
+		if (spot[0] == ' ' && spot[1] == 'N' && spot[2] == '.' && spot[3] == ' ' && spot[4] == 'I' && spot[5] == 'n' && spot[6] == 'g' && spot[7] == 'l' && spot[8] == 'i' && spot[9] == 's' && spot[10] == '\n') {
+			found = true;
+			break;
+		}
+	}
 	if (fulldebug) {
 		writeString("\nPRESS ANY KEY (F)");
 		blockingKeyboard();
@@ -522,12 +530,17 @@ void main()
 		writeString("\nPRESS ANY KEY (G)");
 		blockingKeyboard();
 	}
-	count = getRAMMap((void*) 0x600);
+	count = getRAMMap((void*) (found ? 0x600 : 0x601));
 	*((uint16_t*) 0x513) = count;
 	*((uint32_t*) 0x524) = highestFreeAddress;
 	*((uint32_t*) 0x500) = data;
 	*((uint32_t*) 0x504) = data;
 	*((uint8_t*) 0x54C) = useSafeKernel ? 0xBB : 0x01;
+
+	if (!found) {
+		*((uint16_t*) 0x513) /= 2;
+	}
+
 	if (fulldebug) {
 		clearScreen();
 		writeString("\nPRESS ANY KEY (H)");
