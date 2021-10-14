@@ -37,6 +37,10 @@ cp crtn.322 crtn.32
 make -j4 kernelPentium2 MARCH=pentium4 TUNING=pentium2 || (pause && exit)
 
 
+cd D:/Users/Alex/Desktop/Banana/kernel
+python easteregg.py.bin
+pause
+
 cd D:/Users/Alex/Desktop/Banana
 rm disasms/disasm.txt
 rm disasms/disasm2.txt
