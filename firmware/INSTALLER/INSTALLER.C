@@ -207,20 +207,6 @@ void windowWriteCol(Window* w, int x, int y, char* t, int col)
 	}
 }
 
-void licenseSummaryRepaint(Window* w)
-{
-	windowWriteCol(w, 0, 0, "This is a summary of the license, not a", TCRed);
-	windowWriteCol(w, 0, 1, "substitute for it.", TCRed);
-	windowWrite(w, 0, 3, "You are free to share, copy and redistribute this");
-	windowWrite(w, 0, 4, "software in any medium or format, so long as you");
-	windowWrite(w, 0, 5, "follow the license terms:");
-	windowWriteCol(w, 0, 7, "You must give appropriate credit, and provide a", TCBlue);
-	windowWriteCol(w, 0, 8, "link to the license. You may not use this", TCBlue);
-	windowWriteCol(w, 0, 9, "software for commerical purposes. If you remix,", TCBlue);
-	windowWriteCol(w, 0, 10, "transform, or build upon this software, you cannot", TCBlue);
-	windowWriteCol(w, 0, 11, "distribute the modified material. No warranties.", TCBlue);
-	windowWrite(w, 0, 13, "Press ENTER to close");
-}
 
 void reallyQuitRepaint(Window* w)
 {
@@ -311,16 +297,15 @@ void disclaimer3(Window* w)
 {
 	windowWriteCol(w, 0, 0, "License Agreement", TCRed);
 	windowWrite(w, 0, 2, "This work is licensed under the Creative Commons");
-	windowWrite(w, 0, 3, "Attribution-NonCommercial-NoDerivatives 4.0");
+	windowWrite(w, 0, 3, "Attribution-NonCommercial 4.0");
 	windowWrite(w, 0, 4, "International License.");
-	windowWrite(w, 0, 6, "To view a copy of this license, visit");
-	windowWrite(w, 0, 7, "http://creativecommons.org/licenses/by-nc-nd/4.0/");
-	windowWrite(w, 0, 9, "Portions of this software use open source libraries");
-	windowWrite(w, 0, 10, "and code. See C:/Banana/Legal/COPYRIGHT for details.");
-	windowWrite(w, 0, 11, "This file contains no additional terms to agree to.");
+	windowWrite(w, 0, 6, "To view a summary of this license, please visit:");
+	windowWrite(w, 0, 7, "http://creativecommons.org/licenses/by-nc/4.0/");
+	windowWriteCol(w, 0, 9, "To read the full license, press S", TCBlue);
 
-	windowWriteCol(w, 0, 13, "For a summary of (and not a substitute for)", TCBlue);
-	windowWriteCol(w, 0, 14, "the license, press S.", TCBlue);
+	windowWrite(w, 0, 11, "Portions of this software use open source libraries");
+	windowWrite(w, 0, 12, "and code. See C:/Banana/Legal/COPYRIGHT for details.");
+	windowWrite(w, 0, 13, "This file contains no additional terms to agree to.");
 
 	windowWriteCol(w, 0, 16, "To install and/or use this software you must agree to ", TCBlack);
 	windowWriteCol(w, 0, 17, "the above terms. Press ENTER to install, or ESC to quit.", TCBlack);
@@ -603,27 +588,311 @@ void exitInstall()
 	while (1);
 }
 
+char fulltext[] = "\
+ Creative Commons Attribution-NonCommercial 4.0 International Public License\n\
+ By exercising the Licensed Rights (defined below), You acceptand agree to be \n\
+ bound by the terms and conditions of this \n\
+ Creative Commons Attribution - NonCommercial 4.0 International Public License\n\
+ (\"Public License\"). To the extent this Public License may be interpreted as\n\
+ a contract, You are granted the Licensed Rights in consideration of Your \n\
+ acceptance of these termsand conditions, and the Licensor grants You such \n\
+ rights in consideration of benefits the Licensor receives from making the\n\
+ Licensed Material available under these termsand conditions.\n\
+\n\
+ Section 1 - Definitions.\n\
+\n\
+ a. Adapted Material means material subject to Copyright and Similar Rights\n\
+  that is derived from or based upon the Licensed Material and in which the\n\
+  Licensed Material is translated, altered, arranged, transformed, or otherwise\
+   modified in a manner requiring permission under the Copyright and Similar \n\
+  Rights held by the Licensor. For purposes of this Public License, where the\n\
+  Licensed Material is a musical work, performance, or sound recording, Adapted\
+   Material is always produced where the Licensed Material is synched in timed\n\
+  relation with a moving image.\n\
+ b. Adapter's License means the license You apply to Your Copyright and Similar\
+   Rights in Your contributions to Adapted Material in accordance with the \n\
+  terms and conditions of this Public License.\n\
+ c. Copyright and Similar Rights means copyright and /or similar rights closely\
+   related to copyright including, without limitation, performance, broadcast,\n\
+  sound recording, and Sui Generis Database Rights, without regard to how the\n\
+  rights are labeled or categorized.For purposes of this Public License, the \n\
+  rights specified in Section 2(b) (1) - (2) are not Copyright and Similar \n\
+  Rights.\n\
+ d. Effective Technological Measures means those measures that, in the absence\n\
+  of proper authority, may not be circumvented under laws fulfilling \n\
+  obligations under Article 11 of the WIPO Copyright Treaty adopted on \n\
+  December 20, 1996, and /or similar international agreements.\n\
+ e. Exceptions and Limitations means fair use, fair dealing, and /or any other\n\
+  exception or limitation to Copyright and Similar Rights that applies to Your\n\
+  use of the Licensed Material.\n\
+ f. Licensed Material means the artistic or literary work, database, or other \n\
+  material to which the Licensor applied this Public License.\n\
+ g. Licensed Rights means the rights granted to You subject to the terms and \n\
+  conditions of this Public License, which are limited to all Copyright and\n\
+  Similar Rights that apply to Your use of the Licensed Material and that the\n\
+  Licensor has authority to license.\n\
+ h. Licensor means the individual(s) or entity(ies) granting rights under this\n\
+  Public License.\n\
+ i. NonCommercial means not primarily intended for or directed towards \n\
+  commercial advantage or monetary compensation.For purposes of this Public \n\
+  License, the exchange of the Licensed Material for other material subject to\n\
+  Copyright and Similar Rights by digital file - sharing or similar means is \n\
+  NonCommercial provided there is no payment of monetary compensation in \n\
+  connection with the exchange.\n\
+ j. Share means to provide material to the public by any means or process that\n\
+  requires permission under the Licensed Rights, such as reproduction, public \n\
+  display, public performance, distribution, dissemination, communication, or \n\
+  importation, and to make material available to the public including in ways \n\
+  that members of the public may access the material from a placeand at a time\n\
+  individually chosen by them.\n\
+ k. Sui Generis Database Rights means rights other than copyright resulting \n\
+  from Directive 96/9/EC of the European Parliament and of the Council of \n\
+  11 March 1996 on the legal protection of databases, as amended and/or \n\
+  succeeded, as well as other essentially equivalent rights anywhere in the \n\
+  world.\n\
+ l. You means the individual or entity exercising the Licensed Rights under \n\
+  this Public License. Your has a corresponding meaning.\n\
+\n\
+ Section 2 - Scope.\n\
+\n\
+ a. License grant.\n\
+  1. Subject to the terms and conditions of this Public License, the Licensor\n\
+   hereby grants You a worldwide, royalty-free, non-sublicensable, \n\
+   non-exclusive, irrevocable license to exercise the Licensed Rights in the\n\
+   Licensed Material to:\n\
+   A. reproduce and Share the Licensed Material, in whole or in part, for \n\
+      NonCommercial purposes only; and\n\
+   B. produce, reproduce, and Share Adapted Material for NonCommercial\n\
+      purposes only.\n\
+  2. Exceptions and Limitations. For the avoidance of doubt, where Exceptions\n\
+   and Limitations apply to Your use, this Public License does not apply, and\n\
+   You do not need to comply with its terms and conditions.\n\
+  3. Term. The term of this Public License is specified in Section 6(a).\n\
+  4. Media and formats; technical modifications allowed. The Licensor \n\
+   authorizes You to exercise the Licensed Rights in all media and formats\n\
+   whether now known or hereafter created, and to make technical modifications\n\
+   necessary to do so. The Licensor waives and/or agrees not to assert any \n\
+   right or authority to forbid You from making technical modifications \n\
+   necessary to exercise the Licensed Rights, including technical modifications\
+    necessary to circumvent Effective Technological Measures. For purposes of\n\
+   this Public License, simply making modifications authorized by this \n\
+   Section 2(a) (4) never produces Adapted Material.\n\
+  5. Downstream recipients.\n\
+   A. Offer from the Licensor - Licensed Material. Every recipient of the\n\
+    Licensed Material automatically receives an offer from the Licensor to \n\
+    exercise the Licensed Rights under the terms and conditions of this Public\n\
+    License.\n\
+   B. No downstream restrictions. You may not offer or impose any additional \n\
+    or different terms or conditions on, or apply any Effective Technological\n\
+    Measures to, the Licensed Material if doing so restricts exercise of the\n\
+    Licensed Rights by any recipient of the Licensed Material.\n\
+  6. No endorsement. Nothing in this Public License constitutes or may be \n\
+   construed as permission to assert or imply that You are, or that Your use of\
+    the Licensed Material is, connected with, or sponsored, endorsed, or granted\
+    official status by, the Licensor or others designated to receive attribution\
+    as provided in Section 3(a) (1)(A)(i).\n\
+\n\
+  b. Other rights.\n\
+   1. Moral rights, such as the right of integrity, are not licensed under \n\
+    this Public License, nor are publicity, privacy, and /or other similar \n\
+    personality rights; however, to the extent possible, the Licensor waives\n\
+    and/or agrees not to assert any such rights held by the Licensor to the\n\
+    limited extent necessary to allow You to exercise the Licensed Rights, \n\
+    but not otherwise.\n\
+   2. Patent and trademark rights are not licensed under this Public License.\n\
+   3. To the extent possible, the Licensor waives any right to collect \n\
+    royalties from You for the exercise of the Licensed Rights, whether \n\
+    directly or through a collecting society under any voluntary or waivable\n\
+    statutory or compulsory licensing scheme.In all other cases the Licensor\n\
+    expressly reserves any right to collect such royalties, including when\n\
+    the Licensed Material is used other than for NonCommercial purposes.\n\
+\n\
+ Section 3 - License Conditions.\n\
+\n\
+ Your exercise of the Licensed Rights is expressly made subject to the \n\
+ following conditions.\n\
+\n\
+ a. Attribution.\n\
+  1. If You Share the Licensed Material(including in modified form), You must:\n\
+   A. retain the following if it is supplied by the Licensor with the Licensed\n\
+    Material:\n\
+     i. identification of the creator(s) of the Licensed Material and any \n\
+      others designated to receive attribution, in any reasonable manner \n\
+      requested by the Licensor (including by pseudonym if designated);\n\
+     ii. a copyright notice;\n\
+     iii. a notice that refers to this Public License;\n\
+     iv. a notice that refers to the disclaimer of warranties;\n\
+     v. a URI or hyperlink to the Licensed Material to the extent reasonably\n\
+      practicable;\n\
+   B. indicate if You modified the Licensed Materialand retain an indication\n\
+    of any previous modifications; and\n\
+   C. indicate the Licensed Material is licensed under this Public License, \n\
+    and include the text of, or the URI or hyperlink to, this Public License.\n\
+  2. You may satisfy the conditions in Section 3(a) (1) in any reasonable\n\
+   manner based on the medium, means, and context in which You Share the \n\
+   Licensed Material. For example, it may be reasonable to satisfy the \n\
+   conditions by providing a URI or hyperlink to a resource that includes \n\
+   the required information.\n\
+  3. If requested by the Licensor, You must remove any of the information\n\
+   required by Section 3(a) (1)(A) to the extent reasonably practicable.\n\
+  4. If You Share Adapted Material You produce, the Adapter's License You \n\
+   apply must not prevent recipients of the Adapted Material from complying\n\
+   with this Public License.\n\
+\n\
+ Section 4 - Sui Generis Database Rights.\n\
+\n\
+ Where the Licensed Rights include Sui Generis Database Rights that apply to\n\
+ Your use of the Licensed Material:\n\
+\n\
+  a. for the avoidance of doubt, Section 2(a) (1) grants You the right to \n\
+   extract, reuse, reproduce, and Share all or a substantial portion of the\n\
+   contents of the database for NonCommercial purposes only;\n\
+  b. if You include all or a substantial portion of the database contents in \n\
+   a database in which You have Sui Generis Database Rights, then the database\n\
+   in which You have Sui Generis Database Rights(but not its individual \n\
+   contents) is Adapted Material; and\n\
+  c. You must comply with the conditions in Section 3(a) if You Share all or a\n\
+   substantial portion of the contents of the database.\n\
+\n\
+ For the avoidance of doubt, this Section 4 supplements and does not replace \n\
+ Your obligations under this Public License where the Licensed Rights include\n\
+ other Copyright and Similar Rights.\n\
+\n\
+ Section 5 - Disclaimer of Warranties and Limitation of Liability.\n\
+\n\
+ a. Unless otherwise separately undertaken by the Licensor, to the extent \n\
+  possible, the Licensor offers the Licensed Material as - is and \n\
+  as - available, and makes no representations or warranties of any kind \n\
+  concerning the Licensed Material, whether express, implied, statutory, or \n\
+  other. This includes, without limitation, warranties of title,\n\
+  merchantability, fitness for a particular purpose, non - infringement, \n\
+  absence of latent or other defects, accuracy, or the presence or absence of\n\
+  errors, whether or not known or discoverable.Where disclaimers of warranties\n\
+  are not allowed in full or in part, this disclaimer may not apply to You.\n\
+ b. To the extent possible, in no event will the Licensor be liable to You \n\
+  on any legal theory (including, without limitation, negligence) or otherwise\n\
+  for any direct, special, indirect, incidental, consequential, punitive, \n\
+  exemplary, or other losses, costs, expenses, or damages arising out of this\n\
+  Public License or use of the Licensed Material, even if the Licensor has been\
+   advised of the possibility of such losses, costs, expenses, or damages. Where\
+    a limitation of liability is not allowed in full or in part, this limitation\n\
+  may not apply to You.\n\
+ c. The disclaimer of warranties and limitation of liability provided above \n\
+  shall be interpreted in a manner that, to the extent possible, most closely\n\
+  approximates an absolute disclaimerand waiver of all liability.\n\
+\n\
+ Section 6 - Term and Termination.\n\
+\n\
+ a. This Public License applies for the term of the Copyright and Similar\n\
+  Rights licensed here. However, if You fail to comply with this Public \n\
+  License, then Your rights under this Public License terminate automatically.\n\
+ b. Where Your right to use the Licensed Material has terminated under \n\
+  Section 6(a), it reinstates:\n\
+   1. automatically as of the date the violation is cured, provided it is \n\
+    cured within 30 days of Your discovery of the violation; or\n\
+   2. upon express reinstatement by the Licensor.\n\
+  For the avoidance of doubt, this Section 6(b) does not affect any right\n\
+  the Licensor may have to seek remedies for Your violations of this Public \n\
+  License.\n\
+ c. For the avoidance of doubt, the Licensor may also offer the Licensed \n\
+  Material under separate terms or conditions or stop distributing the \n\
+  Licensed Material at any time; however, doing so will not terminate this\n\
+  Public License.\n\
+ d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.\n\
+\n\
+ Section 7 - Other Terms and Conditions.\n\
+\n\
+ The Licensor shall not be bound by any additional or different terms or \n\
+ conditions communicated by You unless expressly agreed.\n\
+ Any arrangements, understandings, or agreements regarding the Licensed \n\
+ Material not stated herein are separate from and independent of the terms\n\
+ and conditions of this Public License.\n\
+\n\
+ Section 8 - Interpretation.\n\
+\n\
+ a. For the avoidance of doubt, this Public License does not, and shall not be\n\
+  interpreted to, reduce, limit, restrict, or impose conditions on any use of\n\
+  the Licensed Material that could lawfully be made without permission under \n\
+  this Public License.\n\
+ b. To the extent possible, if any provision of this Public License is deemed \n\
+  unenforceable, it shall be automatically reformed to the minimum extent\n\
+  necessary to make it enforceable.If the provision cannot be reformed, it \n\
+  shall be severed from this Public License without affecting the\n\
+  enforceability of the remaining termsand conditions.\n\
+ c. No term or condition of this Public License will be waived and no failure\n\
+  to comply consented to unless expressly agreed to by the Licensor.\n\
+ d. Nothing in this Public License constitutes or may be interpreted as a\n\
+  limitation upon, or waiver of, any privilegesand immunities that apply to\n\
+  the Licensor or You, including from the legal processes of any jurisdiction\n\
+  or authority.\n\n\
+  **END OF LICENSE**\n\n\n      Press ESC to close the license page.\n";
+
+bool displayLicensePage(int pg)
+{
+	setFgCol(TCLightGrey);
+	clearScreenToColour(TCBlack);
+
+	char ssstrp[] = "  ESC: Close the license     ENTER: Next page      BACKSPACE: Previous page    ";
+	for (int i = 0; ssstrp[i]; ++i) {
+		writeCharacter(i, 23, ssstrp[i], TCBlack, TCLightGrey);
+	}
+	writeCharacter(2, 24, 'P', TCLightGrey, TCBlack);
+	writeCharacter(3, 24, 'a', TCLightGrey, TCBlack);
+	writeCharacter(4, 24, 'g', TCLightGrey, TCBlack);
+	writeCharacter(5, 24, 'e', TCLightGrey, TCBlack);
+
+	if (pg > 8) writeCharacter(7, 24, (pg + 1) / 10 + '0', TCLightGrey, TCBlack);
+	writeCharacter(8, 24, (pg + 1) % 10 + '0', TCLightGrey, TCBlack);
+	writeCharacter(9, 24, '/', TCLightGrey, TCBlack);
+	writeCharacter(10, 24, '1', TCLightGrey, TCBlack);
+	writeCharacter(11, 24, '3', TCLightGrey, TCBlack);
+	cursorY = 1;
+
+	int newlines = 0;
+	bool display = false;
+	int x = 0;
+	int y = 0;
+	for (int i = 0; fulltext[i]; ++i) {
+		if (newlines == pg * 18) display = true;
+		if (newlines == pg * 18 + 18) return true;
+		
+		if (fulltext[i] == '\n') {
+			newlines++;
+			if (display) {
+				cursorX = 0;
+				cursorY++;
+			}
+		} else if (display) {
+			writeCharacter(cursorX++, cursorY, fulltext[i], TCLightGrey, TCBlack);
+			if (cursorX == 80) {
+				cursorX = 0;
+				cursorY++;
+			}
+		}
+	}
+	return false;
+}
+
 void licenseSummary()
 {
-	fadeWindows1And2 = true;
+	int page = 0;
 
-	Window wx;
-	wx.x = 5;
-	wx.y = 3;
-	wx.w = 54;
-	wx.h = 17;
-	wx.repaint = licenseSummaryRepaint;
-	__memcpy(wx.title, "   License Summary ", __strlen("   License Summary "));
-	windows[EXIT_POPUP] = &wx;
-	drawScreen();
+	displayLicensePage(page);
+
+	int lastPage = -1;
 
 	while (1) {
 		char c = blockingKeyboard();
-		if (c == '\n' || c == '\e') {
-			fadeWindows1And2 = false;
-			windows[EXIT_POPUP] = 0;
+		if (c == '\e') {
 			drawScreen();
 			return;
+		}
+		if (c == '\n' && page != lastPage) {
+			page++;
+			bool did = displayLicensePage(page);
+			if (!did) {
+				lastPage = page;
+			}
 		}
 	}
 }
