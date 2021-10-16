@@ -61,6 +61,7 @@ int Window_init(Window* window, int16_t x, int16_t y, uint16_t width,
     window->mouseup_function = 0;
     window->keydown_function = 0;
     window->mouseleave_function = 0;
+    window->mouseenter_function = 0;
     window->active_child = (Window*)0;
     window->title = (char*)0;
   

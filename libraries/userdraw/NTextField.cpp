@@ -14,6 +14,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+extern "C" uint64_t SystemCall(size_t, size_t, size_t, size_t);
+
 int textFieldEngine(NRegion* _self, int posi, int* xout, int* yout, int* lastHeight = nullptr)
 {
     //this function is arcane black magic
@@ -558,6 +560,19 @@ void textfieldKeyHandler(Window* w, void* self_, KeyStates key)
     self->invalidate();
 }
 
+void textfieldEnterHandler(Window* w, void* self_)
+{
+    NTextField* self = (NTextField*) w;
+    self->oldCursor = LINKCMD_CURSOR_NORMAL;
+    SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_SET_CURSOR, LINKCMD_CURSOR_TEXT, 0);
+}
+
+void textfieldLeaveHandler(Window* w, void* self_)
+{
+    NTextField* self = (NTextField*) w;
+    SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_SET_CURSOR, self->oldCursor, 0);
+}
+
 NTextField::NTextField(int x, int y, int w, int h, Context* context, const char* _text) :
 	NRegion(x, y, w, h, context)
 {
@@ -595,6 +610,8 @@ NTextField::NTextField(int x, int y, int w, int h, Context* context, const char*
     underlinePattern[3] = 0;
     underlineWidth = 1;
 
+    oldCursor = LINKCMD_CURSOR_NORMAL;
+
     tabStopPixels = 64;     //cannot be zero!!
 
     marginTop = 4;
@@ -606,6 +623,8 @@ NTextField::NTextField(int x, int y, int w, int h, Context* context, const char*
     curEnd = 36;
 
     win->keydown_function = textfieldKeyHandler;
+    win->mouseleave_function = textfieldLeaveHandler;
+    win->mouseenter_function = textfieldEnterHandler;
 
 	paintHandler = standardTextFieldPainter;
 }

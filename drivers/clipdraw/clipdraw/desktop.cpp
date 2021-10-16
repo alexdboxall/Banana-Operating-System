@@ -28,9 +28,9 @@ uint8_t ___mouse_data[CURSOR_DATA_SIZE * MAX_CURSOR_TYPES] = {
 	0x01, 0x01, 0x00, 0x00, 0x01, 0x02, 0x00, 0x00, 0xC1, 0x07, 0x00, 0x00, 0x49, 0x00, 0x00, 0x00,
 	0x95, 0x00, 0x00, 0x00, 0x93, 0x00, 0x00, 0x00, 0x21, 0x01, 0x00, 0x00, 0x20, 0x01, 0x00, 0x00,
 	0x40, 0x02, 0x00, 0x00, 0x40, 0x02, 0x00, 0x00, 0x80, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
 extern void (*guiMouseHandler) (int xdelta, int ydelta, int buttons, int z);
@@ -301,6 +301,8 @@ NIWindow* movingWin = nullptr;
 //these should probably be within NIDesktop, but who cares for now
 int movingType = 0;
 NIWindow* clickonWhenMouseFirstClicked;
+NIWindow* prevClickon;
+
 void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 {
 	static int previousButtons = 0;
@@ -331,26 +333,32 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 	NIWindow* clickon = getTopmostWindowAtPixel(mouseX, mouseY);
 	
 	extern uint8_t* desktopWindowDummy;
-	if (clickon) {
+	if (clickon || prevClickon) {
+		NIWindow* a = clickon;
+		if (!clickon) a = prevClickon;
+
 		if (xdelta || ydelta) {
-			if (clickon == clickonWhenMouseFirstClicked) {
-				clickon->postEvent(NiCreateEvent(clickon, buttons & 1 ? EVENT_TYPE_MOUSE_DRAG : EVENT_TYPE_MOUSE_MOVE, false));
+			if (a && (a == clickonWhenMouseFirstClicked || a == prevClickon)) {
+				a->postEvent(NiCreateEvent(a, buttons & 1 ? EVENT_TYPE_MOUSE_DRAG : EVENT_TYPE_MOUSE_MOVE, false));
+			} else if (clickon) {
+				clickonWhenMouseFirstClicked = a;
+				clickon->postEvent(NiCreateEvent(clickon, EVENT_TYPE_ENTER, false));
 			}
 
 		} else if ((buttons & 1) && !(oldButtons & 1)) {
-			clickonWhenMouseFirstClicked = clickon;
-			clickon->postEvent(NiCreateEvent(clickon, EVENT_TYPE_MOUSE_DOWN, false));
+			if (clickon) clickonWhenMouseFirstClicked = a;
+			a->postEvent(NiCreateEvent(a, EVENT_TYPE_MOUSE_DOWN, false));
 
 		} else if (!(buttons & 1) && (oldButtons & 1)) {
 			clickonWhenMouseFirstClicked = nullptr;
-			clickon->postEvent(NiCreateEvent(clickon, EVENT_TYPE_MOUSE_UP, false));
+			a->postEvent(NiCreateEvent(a, EVENT_TYPE_MOUSE_UP, false));
 		}
 
 		if ((buttons & 2) && !(oldButtons & 2)) {
-			clickon->postEvent(NiCreateEvent(clickon, EVENT_TYPE_RMOUSE_DOWN, false));
+			a->postEvent(NiCreateEvent(a, EVENT_TYPE_RMOUSE_DOWN, false));
 
 		} else if (!(buttons & 2) && (oldButtons & 2)) {
-			clickon->postEvent(NiCreateEvent(clickon, EVENT_TYPE_RMOUSE_UP, false));
+			a->postEvent(NiCreateEvent(a, EVENT_TYPE_RMOUSE_UP, false));
 		}
 
 	} else if (desktopWindowDummy) {
@@ -557,6 +565,7 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 	ctxt->screen->drawCursor(mouseX, mouseY, (uint32_t*) (___mouse_data + cursorOffset), 0);
 
 	previousButtons = buttons;
+	prevClickon = clickon;
 }
 
 void NIDesktop::renderScanline(int line, int left, int right)

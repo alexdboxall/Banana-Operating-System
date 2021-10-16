@@ -530,7 +530,7 @@ void main()
 		writeString("\nPRESS ANY KEY (G)");
 		blockingKeyboard();
 	}
-	count = getRAMMap((void*) (found ? 0x600 : 0x601));
+	count = getRAMMap((void*) 0x600);
 	*((uint16_t*) 0x513) = count;
 	*((uint32_t*) 0x524) = highestFreeAddress;
 	*((uint32_t*) 0x500) = data;
@@ -538,7 +538,11 @@ void main()
 	*((uint8_t*) 0x54C) = useSafeKernel ? 0xBB : 0x01;
 
 	if (!found) {
+		setFgCol(TCRed);
+		clearScreenToColour(TCRed);
+		setFgCol(TCRed);
 		*((uint16_t*) 0x513) /= 2;
+		*((uint32_t*) 0x524) /= 2;
 	}
 
 	if (fulldebug) {

@@ -200,6 +200,19 @@ uint64_t NiLinkCommandBeTheDesktop(size_t val, uint8_t* win)
 	return 1;
 }
 
+extern uint8_t ___mouse_data[CURSOR_DATA_SIZE * MAX_CURSOR_TYPES];
+uint64_t NiLinkCommandSetCursor(size_t val, NiLinkWindowStruct* win)
+{
+	if (val == LINKCMD_CURSOR_NORMAL)		desktop->cursorOffset = MOUSE_OFFSET_NORMAL;
+	if (val == LINKCMD_CURSOR_HOURGLASS)	desktop->cursorOffset = MOUSE_OFFSET_WAIT;
+	if (val == LINKCMD_CURSOR_TEXT)			desktop->cursorOffset = MOUSE_OFFSET_TEXT;
+
+	desktop->rangeRefresh(desktop->mouseY, desktop->mouseY + MOUSE_HEIGHT, desktop->mouseX, desktop->mouseX + MOUSE_WIDTH);
+	desktop->ctxt->screen->drawCursor(desktop->mouseX, desktop->mouseY, (uint32_t*) (___mouse_data + desktop->cursorOffset), 0);
+
+	return 0;
+}
+
 uint64_t NiSystemCallHandler(regs* r)
 {
 	lockScheduler();
@@ -238,6 +251,9 @@ uint64_t NiSystemCallHandler(regs* r)
 		break;
 	case LINKCMD_BE_THE_DESKTOP:
 		retv = NiLinkCommandBeTheDesktop((size_t) r->ecx, (uint8_t*) r->edx);
+		break;
+	case LINKCMD_SET_CURSOR:
+		retv = NiLinkCommandSetCursor((size_t) r->ecx, (NiLinkWindowStruct*) r->edx);
 		break;
 	}
 	unlockScheduler();

@@ -38,6 +38,7 @@ typedef void (*WindowPaintHandler)(struct Window_struct*, void*);
 typedef void (*WindowMousedownHandler)(struct Window_struct*, void*, int, int);
 typedef void (*WindowMousemoveHandler)(struct Window_struct*, void*, int, int);
 typedef void (*WindowMouseleaveHandler)(struct Window_struct*, void*);
+typedef void (*WindowMouseenterHandler)(struct Window_struct*, void*);
 typedef void (*WindowKeydownHandler)(struct Window_struct*, void*, KeyStates);
 
 typedef struct Window_struct {  
@@ -62,6 +63,7 @@ typedef struct Window_struct {
     WindowMousedownHandler rmouseup_function;
     WindowMousemoveHandler mousemove_function;
     WindowMouseleaveHandler mouseleave_function;
+    WindowMouseenterHandler mouseenter_function;
     WindowKeydownHandler keydown_function;
     char* title;
 } Window;

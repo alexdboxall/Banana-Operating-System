@@ -544,6 +544,7 @@ int main (int argc, char *argv[])
     strcpy(dummyWin.name, "DUMMY");
     SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_CREATE_WINDOW, 0, (size_t) &dummyWin);
     SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_BE_THE_DESKTOP, 0, (size_t) dummyWin.krnlWindow);
+    SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_SET_CURSOR, LINKCMD_CURSOR_NORMAL, (size_t) &dummyWin);
 
     init();
     loadIconBitmaps();

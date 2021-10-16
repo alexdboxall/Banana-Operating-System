@@ -35,6 +35,8 @@ class NTextField : public NRegion
 protected:
 	friend int textFieldEngine(NRegion* _self, int posi, int* x, int* y, int* lastHeight);
 	friend void textfieldKeyHandler(Window* w, void* self_, KeyStates key);
+	friend void textfieldEnterHandler(Window* w, void* self_);
+	friend void textfieldLeaveHandler(Window* w, void* self_);
 
 	void getPositionFromIndex(int index, int* x, int* y, int* lastHeight = nullptr);
 
@@ -43,6 +45,8 @@ protected:
 
 	int scrollX;
 	int scrollY;
+
+	int oldCursor;
 
 	int lastKnownCursorXPos;
 

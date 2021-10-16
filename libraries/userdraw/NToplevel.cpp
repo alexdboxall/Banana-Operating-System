@@ -208,6 +208,12 @@ void NTopLevel::sync() {
 void NTopLevel::defaultEventHandler(NiEvent evnt)
 {
     switch (evnt.type) {
+    case EVENT_TYPE_ENTER:
+    {
+        processMouse(evnt);
+        repaintFlush();
+        break;
+    }
     case EVENT_TYPE_MOUSE_MOVE:
     case EVENT_TYPE_MOUSE_DRAG:
     case EVENT_TYPE_MOUSE_DOWN:
