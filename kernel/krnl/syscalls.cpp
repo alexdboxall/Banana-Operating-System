@@ -740,9 +740,10 @@ uint64_t(*systemCallHandlers[])(regs* r) = {
 uint64_t KeSystemCall(regs* r, void* context)
 {
 	if (r->eax < sizeof(systemCallHandlers) / sizeof(systemCallHandlers[0]) && systemCallHandlers[r->eax]) {
+		int old = r->eax;
 		r->eax = systemCallHandlers[r->eax](r);
 
-		if (r->eax == (size_t) SystemCallNumber::WSBE) {
+		if (old == (size_t) SystemCallNumber::WSBE) {
 			kiKeyboardGUILatch = true;
 			kprintf("kiKeyboardGUILatch has been set.\n");
 		}
