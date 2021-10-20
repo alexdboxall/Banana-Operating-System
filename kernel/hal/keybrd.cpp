@@ -205,10 +205,6 @@ int readKeyboard(VgaText* terminal, char* buf, size_t count)
 		guiKeyboardHandler(kt, keystates);
 	}
 
-	if (kiKeyboardGUILock) {
-		kprintf("The keyboard is locked.\n");
-		return 0;
-	}
 	if (kiKeyboardGUILatch) {
 		kprintf("The keyboard is latched.\n");
 		kiKeyboardGUILock = true;
@@ -240,6 +236,9 @@ int readKeyboard(VgaText* terminal, char* buf, size_t count)
 		//blocked = true;
 
 		//put in the buffer
+		if (kiKeyboardGUILock) {
+			terminal->keybufferSent[0] = '\n';
+		}
 		*buf++ = terminal->keybufferSent[0];
 
 		char key = terminal->keybufferSent[0];
