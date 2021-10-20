@@ -2,7 +2,7 @@
 DISK_IMAGE_SECTOR equ 33
 ZEROS_SECTOR equ 2633
 FIRMWARE_SECTOR equ 2665
-APPLICATION_SECTOR equ 2670
+APPLICATION_SECTOR equ 2671
 
 org 0
 bits 16
@@ -77,8 +77,8 @@ setcs:
 	call resetDisk
 
 	;FIRMWARE.LIB TO BE LOADED AT 0xC000 (4KB loaded)
-	;FLOPPY.EXE TO BE LOADED AT 0x80000 (32KB loaded)
-	;ZEROS.SYS TO BE LOADED AT 0x8000 (16KB LOADED)
+	;FLOPPY.EXE TO BE LOADED AT 0x80000 (64KB loaded)
+	;ZEROS.SYS TO BE LOADED AT 0x8000 (48KB LOADED)
 
 
 	
@@ -97,7 +97,7 @@ setcs:
 	xor eax, eax
 	mov ax, APPLICATION_SECTOR
 	mov di, 0x5000
-	mov cx, 64
+	mov cx, 64 + 32
 .appRead:
 	call readSector
 	add di, 0x20
@@ -116,7 +116,6 @@ setcs:
 	add di, 0x20
 	inc ax
 	loop .firmwareRead
-
 
 	mov dl, [driveNumber]
 	push word 0x0000

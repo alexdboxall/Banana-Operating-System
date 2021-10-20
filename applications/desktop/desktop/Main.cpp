@@ -268,6 +268,25 @@ void loadIconBitmaps()
     fileAssoc[nextFileAssoc].valid = true;
     strcpy(fileAssoc[nextFileAssoc].extension, "BAT");
     fileAssoc[nextFileAssoc++].iconBitmap = new NLoadedBitmap("C:/Banana/Icons/colour/bat.tga");
+
+    fileAssoc[nextFileAssoc].valid = true;
+    strcpy(fileAssoc[nextFileAssoc].extension, "TGA");
+    fileAssoc[nextFileAssoc++].iconBitmap = new NLoadedBitmap("C:/Banana/Icons/colour/picture.tga");
+    fileAssoc[nextFileAssoc].valid = true;
+    strcpy(fileAssoc[nextFileAssoc].extension, "BMP");
+    fileAssoc[nextFileAssoc++].iconBitmap = new NLoadedBitmap("C:/Banana/Icons/colour/picture.tga");
+    fileAssoc[nextFileAssoc].valid = true;
+    strcpy(fileAssoc[nextFileAssoc].extension, "PNG");
+    fileAssoc[nextFileAssoc++].iconBitmap = new NLoadedBitmap("C:/Banana/Icons/colour/picture.tga");
+    fileAssoc[nextFileAssoc].valid = true;
+    strcpy(fileAssoc[nextFileAssoc].extension, "GIF");
+    fileAssoc[nextFileAssoc++].iconBitmap = new NLoadedBitmap("C:/Banana/Icons/colour/picture.tga");
+    fileAssoc[nextFileAssoc].valid = true;
+    strcpy(fileAssoc[nextFileAssoc].extension, "JPG");
+    fileAssoc[nextFileAssoc++].iconBitmap = new NLoadedBitmap("C:/Banana/Icons/colour/picture.tga");
+    fileAssoc[nextFileAssoc].valid = true;
+    strcpy(fileAssoc[nextFileAssoc].extension, "JPEG");
+    fileAssoc[nextFileAssoc++].iconBitmap = new NLoadedBitmap("C:/Banana/Icons/colour/picture.tga");
 }
 
 void redrawIcon(int id)

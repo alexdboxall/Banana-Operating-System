@@ -125,6 +125,10 @@ public:
 extern bool keyboardSetupYet;
 int readKeyboard(VgaText* terminal, char* buf, size_t count);
 void clearInternalKeybuffer(VgaText* terminal);
+
+extern bool kiKeyboardGUILatch;
+extern bool kiKeyboardGUILock;
+
 #endif
 
 #endif

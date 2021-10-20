@@ -16,6 +16,9 @@
 
 bool keystates[0x400];
 
+bool kiKeyboardGUILatch = false;
+bool kiKeyboardGUILock = false;
+
 void (*guiKeyboardHandler) (KeyboardToken kt, bool* keystates) = nullptr;
 
 bool keyboardSetupYet = false;
@@ -201,6 +204,9 @@ int readKeyboard(VgaText* terminal, char* buf, size_t count)
 		kt.halScancode = 0;
 		guiKeyboardHandler(kt, keystates);
 	}
+
+	if (kiKeyboardGUILock) return;
+	if (kiKeyboardGUILatch) kiKeyboardGUILock = true;
 
 	asm("sti");
 	int charsRead = 0;
