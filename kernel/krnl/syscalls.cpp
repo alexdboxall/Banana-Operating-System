@@ -11,6 +11,7 @@
 #include "core/pipe.hpp"
 #include "core/terminal.hpp"
 #include "hal/clock.hpp"
+#include "hal/keybrd.hpp"
 #include "fs/vfs.hpp"
 #include "hw/cpu.hpp"
 #include "fs/symlink.hpp"
