@@ -205,7 +205,7 @@ int readKeyboard(VgaText* terminal, char* buf, size_t count)
 		guiKeyboardHandler(kt, keystates);
 	}
 
-	if (kiKeyboardGUILock) return;
+	if (kiKeyboardGUILock) return 0;
 	if (kiKeyboardGUILatch) kiKeyboardGUILock = true;
 
 	asm("sti");
