@@ -206,26 +206,12 @@ int readKeyboard(VgaText* terminal, char* buf, size_t count)
 	}
 
 	if (kiKeyboardGUILatch) {
-		kprintf("The keyboard is latched.\n");
 		kiKeyboardGUILock = true;
 	}
 
 	asm("sti");
 	int charsRead = 0;
-	//bool blocked = false;
 	while (count) {
-		//block as much as we need to to get our first character
-		/*while (terminal->keybufferSent[0] == 0) {
-			if (!blocked) {
-				currentTaskTCB->next = (ThreadControlBlock*) keyboardWaitingTaskList;
-				keyboardWaitingTaskList = (ThreadControlBlock*) currentTaskTCB;
-				blockTask(TaskState::WaitingForKeyboard);
-			} else {
-				return charsRead;
-			}
-		}	
-		*/
-
 		while (terminal->keybufferSent[0] == 0) {
 			lockScheduler();
 			schedule();

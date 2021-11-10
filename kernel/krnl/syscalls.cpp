@@ -745,7 +745,6 @@ uint64_t KeSystemCall(regs* r, void* context)
 
 		if (old == (size_t) SystemCallNumber::WSBE) {
 			kiKeyboardGUILatch = true;
-			kprintf("kiKeyboardGUILatch has been set.\n");
 		}
 
 	} else {
