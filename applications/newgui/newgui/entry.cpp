@@ -455,7 +455,7 @@ int hardGame(NButton* btn)
 
 void gui2()
 {
-    mainwin = new NTopLevel("Minesweeper", 750, 450);
+    mainwin = new NTopLevel("Minesweeper", 750, 450, WIN_FLAGS_DEFAULT_0 | WIN_FLAGS_0_HIDDEN | WIN_FLAGS_0_PRETTY);
 
     for (int y = 0; y < 30; ++y) {
         for (int x = 0; x < 30; ++x) {
