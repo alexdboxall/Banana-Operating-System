@@ -17,16 +17,11 @@ void KeDisplayProgramFault(const char* text)
 	}
 }
 
-bool (*gpFaultIntercept)(void* r) = nullptr;
 
 void KeGeneralProtectionFault(void* r, void* context)
 {
-	gpFaultIntercept = Vm::faultHandler;
-	if (gpFaultIntercept) {
-		bool handled = gpFaultIntercept(r);
-		if (handled) {
-			return;
-		}
+	if (HalHandleGeneralProtectionFault(r, context)) {
+		return;
 	}
 
 	KeDisplayProgramFault("General protection fault");

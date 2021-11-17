@@ -91,6 +91,11 @@ void x86wrmsr(uint32_t msr_id, uint64_t msr_value)
 	asm volatile ("wrmsr" : : "c" (msr_id), "A" (msr_value));
 }
 
+bool HalHandleGeneralProtectionFault(void* rr, void* ctxt)
+{
+	return Vm::faultHandler((regs_t*) r);
+}
+
 bool HalHandlePageFault(void* rr, void* ctxt)
 {
 	return currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2());
