@@ -143,30 +143,6 @@ public:
 
 	void setupFeatures();
 
-	struct CPUFeatures
-	{
-		uint32_t hasRDRAND : 1;
-		uint32_t hasTSC : 1;
-		uint32_t hasPAE : 1;
-		uint32_t hasPSE : 1;
-		uint32_t hasGlobalPages : 1;
-		uint32_t hasPAT : 1;
-		uint32_t hasSMEP : 1;
-		uint32_t hasRDSEED : 1;
-		uint32_t hasINVLPG : 1;
-		uint32_t hasINVD : 1;
-		uint32_t hasWBINVD : 1;
-		uint32_t hasUMIP : 1;
-		uint32_t hasSMAP : 1;
-		uint32_t hasCR8 : 1;
-		uint32_t hasSysenter : 1;
-		uint32_t hasSyscall : 1;
-		uint32_t hasMTRR : 1;
-		uint32_t onboardFPU : 1;
-		uint32_t hasTPAUSE : 1;
-
-	} features;
-
 	bool opcodeDetectionMode = false;
 
 	static inline __attribute__((always_inline)) size_t readCR0()
