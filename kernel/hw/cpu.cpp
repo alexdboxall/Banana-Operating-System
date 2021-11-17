@@ -194,34 +194,8 @@ int CPU::open(int num, int b, void* vas_)
 	if (sysBootSettings & 32) {
 		setupFeatures();
 	}
-	displayFeatures();
 
 	return 0;
-}
-
-void CPU::displayFeatures()
-{
-	/*kprintf("CPU %d Features\n", cpuNum);
-	kprintf("    Vendor : %s\n", vendorIDString);
-	kprintf("    Family : %d\n", familyID);
-	kprintf("    Model  : %d\n", model);
-	kprintf("\n");
-	kprintf("    RDRAND       - %s\n", features.hasRDRAND ? "Yes" : "No");
-	kprintf("    RDSEED       - %s\n", features.hasRDSEED ? "Yes" : "No");
-	kprintf("    TSC          - %s\n", features.hasTSC ? "Yes" : "No");
-	kprintf("    PAE          - %s\n", features.hasPAE ? "Yes" : "No");
-	kprintf("    PSE          - %s\n", features.hasPSE ? "Yes" : "No");
-	kprintf("    Global pages - %s\n", features.hasGlobalPages ? "Yes" : "No");
-	kprintf("    PAT          - %s\n", features.hasPAT ? "Yes" : "No");
-	kprintf("    SMEP         - %s\n", features.hasSMEP ? "Yes" : "No");
-	kprintf("    SMAP         - %s\n", features.hasSMAP ? "Yes" : "No");
-	kprintf("    MTRR         - %s\n", features.hasMTRR ? "Yes" : "No");
-	kprintf("    UMIP         - %s\n", features.hasUMIP ? "Yes" : "No");
-	kprintf("    CR8          - %s\n", features.hasCR8 ? "Yes" : "No");
-	kprintf("    Sysenter     - %s\n", features.hasSysenter ? "Yes" : "No");
-	kprintf("    Syscall      - %s\n", features.hasSyscall ? "Yes" : "No");
-	kprintf("    TPAUSE       - %s\n", features.hasTPAUSE ? "Yes" : "No");
-	kprintf("    onboardFPU   - %s\n", features.onboardFPU ? "Yes" : "No");*/
 }
 
 extern "C" size_t is486();

@@ -141,7 +141,6 @@ public:
 	int open(int num, int b, void* vas);
 	int close(int, int, void*);
 
-	void displayFeatures();
 	void setupFeatures();
 
 	struct CPUFeatures
