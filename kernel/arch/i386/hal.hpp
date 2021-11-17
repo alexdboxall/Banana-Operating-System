@@ -21,7 +21,7 @@ void HalInitialiseCoprocessor();
 void HalReceivedNMI();
 
 
-void HalHandleOpcodeFault(void* regs, void* ctxt);
+bool HalHandleOpcodeFault(void* regs, void* ctxt);
 void HalDisplayDebugInfo(void* r);
 
 /// <summary>

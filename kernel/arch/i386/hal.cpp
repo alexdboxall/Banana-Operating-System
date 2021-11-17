@@ -91,7 +91,7 @@ void x86wrmsr(uint32_t msr_id, uint64_t msr_value)
 	asm volatile ("wrmsr" : : "c" (msr_id), "A" (msr_value));
 }
 
-void HalHandleOpcodeFault(void* rr, void* ctxt)
+bool HalHandleOpcodeFault(void* rr, void* ctxt)
 {
 	regs_t* r = (regs_t*) rr;
 
