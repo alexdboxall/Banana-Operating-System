@@ -2,7 +2,7 @@
 #define _HAL_DEVICE_HPP
 
 #include <stdint.h>
-#include <coreobjs/linkedlist.hpp>
+#include <krnl/linkedlist.hpp>
 class InterruptController;
 extern "C" {
 #include "acpica/acpi.h"
