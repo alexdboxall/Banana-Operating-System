@@ -43,7 +43,7 @@ void KePowerThread(void* context)
 
 		if (secondsSinceLastUserIO > sleepThreshold && sleepThreshold) {
 			//go to sleep
-			//computer->sleep();
+			//KeSleep();
 		}
 	}
 }
@@ -56,20 +56,20 @@ void KeUserIOReceived()
 void KeHandlePowerButton()
 {
 	if (currentPowerSettings.powerButton == PowerButtonOption::Shutdown) {
-		computer->shutdown();
+		KeShutdown();
 
 	} else if (currentPowerSettings.powerButton == PowerButtonOption::Sleep) {
-		computer->sleep();
+		KeSleep();
 	}
 }
 
 void KeHandleSleepButton()
 {
 	if (currentPowerSettings.sleepButton == PowerButtonOption::Shutdown) {
-		computer->shutdown();
+		KeShutdown();
 
 	} else if (currentPowerSettings.sleepButton == PowerButtonOption::Sleep) {
-		computer->sleep();
+		KeSleep();
 	}
 }
 
