@@ -93,7 +93,7 @@ void x86wrmsr(uint32_t msr_id, uint64_t msr_value)
 
 bool HalHandleGeneralProtectionFault(void* rr, void* ctxt)
 {
-	return Vm::faultHandler((regs_t*) r);
+	return Vm::faultHandler((regs*) r);
 }
 
 bool HalHandlePageFault(void* rr, void* ctxt)
@@ -103,7 +103,7 @@ bool HalHandlePageFault(void* rr, void* ctxt)
 
 bool HalHandleOpcodeFault(void* rr, void* ctxt)
 {
-	regs_t* r = (regs_t*) rr;
+	regs* r = (regs*) rr;
 
 	if (CPU::current()->opcodeDetectionMode) {
 		kprintf("Opcode detection: invalid opcode.\n");
@@ -116,7 +116,7 @@ bool HalHandleOpcodeFault(void* rr, void* ctxt)
 
 void HalDisplayDebugInfo(void* rr)
 {
-	regs_t* r = (regs_t*) rr;
+	regs* r = (regs*) rr;
 
 	size_t cr0;
 	asm volatile ("mov %%cr0, %0" : "=r"(cr0));
