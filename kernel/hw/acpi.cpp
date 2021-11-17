@@ -95,37 +95,15 @@ int nextAPICNMI;
 
 uint8_t* RSDPpointer;
 uint8_t* RSDTpointer;
-uint8_t* MADTpointer;
 bool usingXSDT;
 
 ACPITable acpiTables[64];
 int nextACPITable = 0;
 
-uint8_t* findRSDP()
-{
-	if (!computer->features.hasACPI) {
-		return 0;
-	}
-
-	if (Phys::usablePages < 2048) {
-		computer->features.hasACPI = false;
-		return 0;
-	}
-
-	uint8_t* ptr = (uint8_t*) (size_t) (VIRT_LOW_MEGS + 0x0);
-
-	for (; ptr < (uint8_t*) (size_t) (VIRT_LOW_MEGS + 0xFFFFF); ptr += 16) {
-		if (!memcmp((char*) ptr, "RSD PTR ", 8)) {
-			return ptr;
-		}
-	}
-
-	return 0;
-}
 
 void loadACPITables(uint8_t* ptr)
 {
-	if (!computer->features.hasACPI) return;
+	if (ptr == nullptr) return;
 
 	if (usingXSDT) {
 		struct XSDT* xsdt = (struct XSDT*) ptr;
@@ -173,9 +151,7 @@ void loadACPITables(uint8_t* ptr)
 
 uint8_t* findRSDT(uint8_t* ptr)
 {
-	if (!computer->features.hasACPI) {
-		return 0;
-	}
+	if (RSDPpointer == nullptr) return nullptr;
 
 	struct RSDPDescriptor20 a;
 	memcpy(&a, ptr, sizeof(a));
@@ -206,7 +182,7 @@ uint8_t* findRSDT(uint8_t* ptr)
 
 uint8_t* findDataTable(uint8_t* ptr, char name[])
 {
-	if (!computer->features.hasACPI) return 0;
+	if (ptr == nullptr) return 0;
 
 	for (int i = 0; i < nextACPITable; ++i) {
 		if (!memcmp(acpiTables[i].signature, name, 4)) {
@@ -219,23 +195,17 @@ uint8_t* findDataTable(uint8_t* ptr, char name[])
 
 extern uint32_t sysBootSettings;
 void scanMADT()
-{
-	if (sysBootSettings & 1024) {
-		computer->features.hasACPI = false;
-	}
-	if (!computer->features.hasACPI) {
-		return;
-	}
-	
-	RSDPpointer = findRSDP();
+{	
+	RSDPpointer = nullptr;
+	RSDTpointer = nullptr;
+
+	RSDPpointer = HalFindRSDP();
 	if (!RSDPpointer) {
-		computer->features.hasACPI = false;
 		return;
 	}
 
 	RSDTpointer = findRSDT(RSDPpointer);
 	if (!RSDTpointer) {
-		computer->features.hasACPI = false;
 		return;
 	}
 
@@ -243,7 +213,6 @@ void scanMADT()
 
 	struct MADTHeader* a = (struct MADTHeader*) findDataTable(RSDTpointer, (char*) "APIC");
 	if (!a) {
-		computer->features.hasAPIC = false;
 		return;
 	}
 
@@ -353,12 +322,10 @@ void ACPI::detectPCI()
 	bool pciDetected = false;
 	bool pciAccessMech1 = false;
 
-	if (computer->features.hasACPI) {
-		void* table = (void*) findDataTable(RSDTpointer, (char*) "MCFG");
-		if (table) {
-			pciDetected = true;
-			pciAccessMech1 = true;
-		}
+	void* table = (void*) findDataTable(RSDTpointer, (char*) "MCFG");
+	if (table) {
+		pciDetected = true;
+		pciAccessMech1 = true;
 	}
 
 	uint8_t* biosPCIDetect = (uint8_t*) 0xC5F;
@@ -463,7 +430,7 @@ int ACPI::open(int mode, int, void*)
 
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
 
-	if (computer->features.hasACPI) {
+	if (RSDTpointer && RSDPpointer) {
 		KeSetBootMessage("Loading the ACPICA driver...");
 		File* f = new File("C:/Banana/Drivers/acpica.sys", kernelProcess);
 		if (f && f->exists()) {

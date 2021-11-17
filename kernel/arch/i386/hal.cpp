@@ -209,6 +209,28 @@ bool HalHandleGeneralProtectionFault(void* rr, void* ctxt)
 	return Vm::faultHandler((regs*) rr);
 }
 
+uint8_t* HalFindRSDP()
+{
+	if (Phys::usablePages < 2048 || (sysBootSettings & 1024)) {
+		features.hasACPI = false;
+	}
+	if (!features.hasACPI) {
+		return 0;
+	}
+
+	uint8_t* ptr = (uint8_t*) (size_t) (VIRT_LOW_MEGS + 0x0);
+
+	for (; ptr < (uint8_t*) (size_t) (VIRT_LOW_MEGS + 0xFFFFF); ptr += 16) {
+		if (!memcmp((char*) ptr, "RSD PTR ", 8)) {
+			return ptr;
+		}
+	}
+
+	features.hasACPI = false;
+
+	return 0;
+}
+
 bool HalHandlePageFault(void* rr, void* ctxt)
 {
 	return currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2());

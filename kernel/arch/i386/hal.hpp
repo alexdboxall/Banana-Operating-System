@@ -24,7 +24,7 @@ void HalEnableNMI();
 void HalDisableNMI();
 bool HalGetNMIState();
 void HalDetectFeatures();
-
+uint8_t* HalFindRSDP();
 bool HalHandleOpcodeFault(void* regs, void* ctxt);
 bool HalHandleGeneralProtectionFault(void* regs, void* ctxt);
 bool HalHandlePageFault(void* regs, void* ctxt);
