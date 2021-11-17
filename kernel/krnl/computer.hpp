@@ -12,7 +12,7 @@ class FPU;
 class Clock;
 
 extern "C" void KeEntryPoint();
-extern void KeirstTask();
+extern void KeFirstTask();
 
 class Computer : public Device
 {
