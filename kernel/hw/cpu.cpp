@@ -403,7 +403,7 @@ void CPU::setupLargePages()
 
 void CPU::setupPAT()
 {
-	if (computer->features.hasMSR) {
+	/*if (computer->features.hasMSR) {
 		uint64_t pat = computer->rdmsr(0x277);
 
 		//first 4 entries
@@ -421,7 +421,7 @@ void CPU::setupPAT()
 		//write back the PAT
 		pat = (((uint64_t) highPat) << 32) | ((uint64_t) lowPat);
 		computer->wrmsr(0x277, pat);
-	}
+	}*/
 }
 
 void CPU::setupMTRR()

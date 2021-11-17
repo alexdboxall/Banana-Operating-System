@@ -71,6 +71,26 @@ char exceptionNames[][32] = {
 		"Virtualisation exception",
 };
 
+uint64_t x86rdmsr(uint32_t msr_id)
+{
+	if (!features.hasMSR) {
+		KePanic("RDMSR");
+	}
+
+	uint64_t msr_value;
+	asm volatile ("rdmsr" : "=A" (msr_value) : "c" (msr_id));
+	return msr_value;
+}
+
+void x86wrmsr(uint32_t msr_id, uint64_t msr_value)
+{
+	if (!features.hasMSR) {
+		KePanic("WRMSR");
+	}
+
+	asm volatile ("wrmsr" : : "c" (msr_id), "A" (msr_value));
+}
+
 void displayDebugInfo(regs* r)
 {
 	size_t cr0;
@@ -126,8 +146,8 @@ extern "C" void doTPAUSE();
 void HalSystemIdle()
 {
 	if (CPU::current()->features.hasTPAUSE) {
-		uint64_t msr = computer->rdmsr(0xE1);
-		computer->wrmsr(0xE1, msr & 2);	//only keep bit 1 as it is reserved
+		uint64_t msr = x86rdmsr(0xE1);
+		x86wrmsr(0xE1, msr & 2);	//only keep bit 1 as it is reserved
 		doTPAUSE();
 
 	} else {
@@ -497,7 +517,7 @@ uint32_t HalGetRand()
 void HalEndOfInterrupt(int irqNum)
 {
 	if (apic) {
-		uint64_t ret = computer->rdmsr(IA32_APIC_BASE_MSR);
+		uint64_t ret = x86rdmsr(IA32_APIC_BASE_MSR);
 		uint32_t* ptr = (uint32_t*) (size_t) ((ret & 0xfffff000) + 0xb0);
 		*ptr = 1;
 

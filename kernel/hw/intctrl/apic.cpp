@@ -22,8 +22,11 @@ uint32_t apicGetBase()
 		return 0;
 	}
 	
-	uint64_t ret = computer->rdmsr(IA32_APIC_BASE_MSR);
-	return (ret & 0xffff0000);
+	KePanic("APIC.cpp, MSR!");
+	return -1;
+	
+	//uint64_t ret = computer->rdmsr(IA32_APIC_BASE_MSR);
+	//return (ret & 0xffff0000);
 }
 
 void apicOpen() {

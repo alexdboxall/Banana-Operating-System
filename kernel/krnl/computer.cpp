@@ -156,50 +156,6 @@ void Computer::detectFeatures()
 	if (features.hasSSE) {
 		features.hasAVX = avxDetect();
 	}
-
-#endif
-}
-
-uint64_t Computer::rdmsr(uint32_t msr_id)
-{
-	if (!features.hasMSR) {
-		KePanic("RDMSR");
-	}
-#if PLATFORM_ID == 86
-	uint64_t msr_value;
-	asm volatile ("rdmsr" : "=A" (msr_value) : "c" (msr_id));
-	return msr_value;
-#elif PLATFORM_ID == 64
-	uint32_t low, high;
-	asm volatile (
-		"rdmsr"
-		: "=a"(low), "=d"(high)
-		: "c"(msr_id)
-		);
-	return ((uint64_t) high << 32) | low;
-#else
-#error "Platform not supported for WRMSR"
-#endif
-}
-
-void Computer::wrmsr(uint32_t msr_id, uint64_t msr_value)
-{
-	if (!features.hasMSR) {
-		KePanic("WRMSR");
-	}
-#if PLATFORM_ID == 86
-	asm volatile ("wrmsr" : : "c" (msr_id), "A" (msr_value));
-#elif PLATFORM_ID == 64
-	uint32_t low = msr_value & 0xFFFFFFFF;
-	uint32_t high = msr_value >> 32;
-	asm volatile (
-		"wrmsr"
-		:
-	: "c"(msr_id), "a"(low), "d"(high)
-		);
-#else
-#error "Platform not supported for WRMSR"
-#endif
 }
 
 int Computer::close(int a, int b, void* c)
