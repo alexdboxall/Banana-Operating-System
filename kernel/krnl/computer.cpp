@@ -81,7 +81,7 @@ int Computer::open(int a, int b, void* vas)
 	HalInitialiseCoprocessor();
 
 	KeSetBootMessage("Setting up multitasking...");
-	setupMultitasking(Krnl::firstTask);
+	setupMultitasking(KeFirstTask);
 	return -1;
 }
 
@@ -280,45 +280,42 @@ void Computer::disableNMI()
 
 extern "C" void lwip_init(void);
 
-namespace Krnl
+void KeFirstTask()
 {
-	void firstTask()
-	{
-		asm("sti");
+	HalEnableInterrupts();
 
-		KeSetBootMessage("Starting core threads...");
+	KeSetBootMessage("Starting core threads...");
 
-		//setup up the core processes and threads we need
-		Process* idleProcess = new Process(true, "Idle Process", kernelProcess);
-		idleProcess->createThread(idleFunction, nullptr, 255);
+	//setup up the core processes and threads we need
+	Process* idleProcess = new Process(true, "Idle Process", kernelProcess);
+	idleProcess->createThread(idleFunction, nullptr, 255);
 
-		cleanerThread = kernelProcess->createThread(cleanerTaskFunction, nullptr, 122);
+	cleanerThread = kernelProcess->createThread(cleanerTaskFunction, nullptr, 122);
 
-		KeSetBootMessage("Initialising system components...");
-		KeIsSchedulingOn = true;
-		KeInitRand();
-		Vm::initialise8086();
-		Fs::initVFS();
+	KeSetBootMessage("Initialising system components...");
+	KeIsSchedulingOn = true;
+	KeInitRand();
+	Vm::initialise8086();
+	Fs::initVFS();
 
-		KeSetBootMessage("Loading device drivers...");
-		computer->root->open(0, 0, nullptr);
+	KeSetBootMessage("Loading device drivers...");
+	computer->root->open(0, 0, nullptr);
 
-		KeSetBootMessage("Initialising system components...");
-		KeInitialiseSymlinks();
-		KeLoadSystemEnv();
-		KeSetupPowerManager();
+	KeSetBootMessage("Initialising system components...");
+	KeInitialiseSymlinks();
+	KeLoadSystemEnv();
+	KeSetupPowerManager();
 		
-		KeSetBootMessage("Loading more device drivers...");
-		computer->root->loadDriversForAll();
+	KeSetBootMessage("Loading more device drivers...");
+	computer->root->loadDriversForAll();
 		
-		lwip_init();
+	//lwip_init();
 
-		KeSetBootMessage("Getting ready...");
-		Thr::executeDLL(Thr::loadDLL("C:/Banana/System/system.dll"), computer);
+	KeSetBootMessage("Getting ready...");
+	Thr::executeDLL(Thr::loadDLL("C:/Banana/System/system.dll"), computer);
 
-		while (1) {
-			blockTask(TaskState::Paused);
-		}
+	while (1) {
+		blockTask(TaskState::Paused);
 	}
 }
 
