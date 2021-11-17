@@ -37,7 +37,7 @@ void KeGeneralProtectionFault(void* r, void* context)
 
 void KePageFault(void* r, void* context)
 {
-	if (currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2())) {
+	if (HalHandlePageFault(r, context)) {
 		return;
 	}
 

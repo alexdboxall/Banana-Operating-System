@@ -22,6 +22,7 @@ void HalReceivedNMI();
 
 
 bool HalHandleOpcodeFault(void* regs, void* ctxt);
+bool HalHandlePageFault(void* regs, void* ctxt);
 void HalDisplayDebugInfo(void* r);
 
 /// <summary>
