@@ -4,7 +4,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include "coreobjs/linkedlist.hpp"
+#include <krnl/linkedlist.hpp>
 #include "core/main.hpp"
 #include "core/pipe.hpp"
 #include "core/virtmgr.hpp"
