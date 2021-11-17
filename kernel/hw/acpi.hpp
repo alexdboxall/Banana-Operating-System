@@ -117,7 +117,6 @@ public:
 
 	virtual int open(int, int, void*);			//Opens the device (init code).
 	virtual int close(int, int, void*);			//Perform other commands
-	void sleep();								//Perform other commands
 
 	void registerPCIIRQAssignment(ACPI_HANDLE handle, uint16_t slot, uint8_t pin, uint8_t irq);
 

@@ -165,6 +165,10 @@ void KePrepareShutdown()
 	computer->root->closeAll();
 }
 
+void (*systemShutdownFunction)();
+void (*systemResetFunction)();
+void (*systemSleepFunction)();
+
 void KeShutdown()
 {
 	KePrepareShutdown();
@@ -178,12 +182,15 @@ void KeShutdown()
 
 void KeSleep()
 {
-	computer->root->sleep();
+	if (systemSleepFunction) {
+		systemSleepFunction();
+	}
 }
 
 void KeRestart()
 {
 	KePrepareShutdown();
+	
 	if (systemResetFunction) {
 		systemResetFunction();
 	}

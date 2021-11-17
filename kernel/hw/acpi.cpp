@@ -491,17 +491,6 @@ void ACPI::writeSimpleBootFlag(SimpleBootFlagTable* sbf)
 	//computer->writeCMOS(offset, 0x1);					//plug-n-play, last boot completed properly, don't run diagnostics
 }
 
-void (*systemShutdownFunction)();
-void (*systemResetFunction)();
-void (*systemSleepFunction)();
-
-void ACPI::sleep()
-{
-	if (systemSleepFunction) {
-		systemSleepFunction();
-	}
-}
-
 int ACPI::close(int mode, int b, void* c)
 {
 	return -1;
