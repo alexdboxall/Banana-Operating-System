@@ -42,29 +42,6 @@ public:
 	FPU* fpu;
 
 	ACPI* root;
-
-	struct ComputerFeatures
-	{
-		uint32_t hasAPIC : 1;
-		uint32_t hasCPUID : 1;
-		uint32_t hasACPI : 1;
-		uint32_t hasMSR : 1;
-		uint32_t hasx87 : 1;
-		uint32_t hasMMX : 1;
-		uint32_t has3DNow : 1;
-		uint32_t hasSSE : 1;
-		uint32_t hasSSE2 : 1;
-		uint32_t hasSSE3 : 1;
-		uint32_t hasSSE41 : 1;
-		uint32_t hasSSE42 : 1;
-		uint32_t hasSSSE3 : 1;
-		uint32_t hasAVX : 1;
-		uint32_t hasAVX512 : 1;
-		uint32_t hasMCE : 1;
-		uint32_t hasNXBit : 1;
-		uint32_t hasLongMode : 1;
-
-	} features;
 };
 
 namespace Krnl

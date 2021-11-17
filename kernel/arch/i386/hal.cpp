@@ -1,6 +1,7 @@
 #include <arch/i386/hal.hpp>
 #include <arch/i386/pic.hpp>
 #include <arch/i386/rtc.hpp>
+#include <arch/i386/x86.hpp>
 
 #include <hw/cpu.hpp>
 #include <vm86/x87em.hpp>
@@ -40,6 +41,81 @@ void x86WriteCMOS(uint8_t reg, uint8_t val)
 	outb(PORT_CMOS_BASE + 1, val);
 }
 
+
+void HalDetectFeatures()
+{
+	features.hasACPI = true;
+
+	features.hasAPIC = false;
+	features.hasCPUID = false;
+	features.hasMSR = false;
+	features.hasx87 = false;
+	features.hasMMX = false;
+	features.has3DNow = false;
+	features.hasSSE = false;
+	features.hasSSE2 = false;
+	features.hasSSE3 = false;
+	features.hasSSE41 = false;
+	features.hasSSE42 = false;
+	features.hasSSSE3 = false;
+	features.hasAVX = false;
+	features.hasAVX512 = false;
+	features.hasNXBit = false;
+	features.hasLongMode = false;
+	features.hasMCE = false;
+	features.hasCPUID = detectCPUID() ? true : false;
+
+	if (features.hasCPUID) {
+		features.hasMSR = cpuidCheckEDX(CPUID_FEAT_EDX_MSR);
+		features.hasSSE2 = cpuidCheckEDX(CPUID_FEAT_EDX_SSE2);
+		features.hasMCE = cpuidCheckEDX(CPUID_FEAT_EDX_MCE);
+		features.hasMMX = cpuidCheckEDX(CPUID_FEAT_EDX_MMX);
+
+		if ((sysBootSettings & 1) || (sysBootSettings & 1024)) {
+			features.hasAPIC = false;
+		} else {
+			features.hasAPIC = cpuidCheckEDX(CPUID_FEAT_EDX_APIC);
+		}
+
+		if (features.hasAPIC && !features.hasMSR) {
+			features.hasAPIC = false;
+		}
+
+		//features.hasAPIC = false;
+
+		bool ecxCanReturnFeatures = true;
+		ecxCanReturnFeatures = false;
+
+		if (ecxCanReturnFeatures) {
+			features.hasSSE3 = cpuidCheckECX(CPUID_FEAT_ECX_SSE3);
+			features.hasSSSE3 = cpuidCheckECX(CPUID_FEAT_ECX_SSSE3);
+			features.hasSSE41 = cpuidCheckECX(CPUID_FEAT_ECX_SSE4_1);
+			features.hasSSE42 = cpuidCheckECX(CPUID_FEAT_ECX_SSE4_2);
+		}
+
+		size_t eax, ebx, ecx, edx;
+		cpuid(0x80000000, &eax, &ebx, &ecx, &edx);
+		if (eax >= 0x80000001) {
+			cpuid(0x80000001, &eax, &ebx, &ecx, &edx);
+
+			features.has3DNow = edx & (1 << 31);
+			features.hasLongMode = edx & (1 << 29);
+			features.hasNXBit = edx & (1 << 20);
+		}
+	}
+
+	if (sysBootSettings & 1024) {
+		features.hasACPI = false;
+	}
+
+	features.hasx87 = x87Detect();
+	if (features.hasx87) {
+		features.hasSSE = sseDetect();
+	}
+	if (features.hasSSE) {
+		features.hasAVX = avxDetect();
+	}
+}
 void HalEnableNMI()
 {
 	nmi = true;
