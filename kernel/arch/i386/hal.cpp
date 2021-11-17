@@ -73,7 +73,7 @@ char exceptionNames[][32] = {
 
 uint64_t x86rdmsr(uint32_t msr_id)
 {
-	if (!features.hasMSR) {
+	if (!computer->features.hasMSR) {
 		KePanic("RDMSR");
 	}
 
@@ -84,7 +84,7 @@ uint64_t x86rdmsr(uint32_t msr_id)
 
 void x86wrmsr(uint32_t msr_id, uint64_t msr_value)
 {
-	if (!features.hasMSR) {
+	if (!computer->features.hasMSR) {
 		KePanic("WRMSR");
 	}
 
