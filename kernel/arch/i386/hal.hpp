@@ -20,6 +20,9 @@ void HalInitialiseCoprocessor();
 /// </summary>
 void HalReceivedNMI();
 
+void HalEnableNMI();
+void HalDisableNMI();
+bool HalGetNMIState();
 
 bool HalHandleOpcodeFault(void* regs, void* ctxt);
 bool HalHandleGeneralProtectionFault(void* regs, void* ctxt);

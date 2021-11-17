@@ -24,7 +24,38 @@
 
 #define PORT_SYSTEM_CONTROL_A	0x92
 #define PORT_SYSTEM_CONTROL_B	0x61
+#define PORT_CMOS_BASE			0x70	
 
+bool nmi = false;
+
+uint8_t x86ReadCMOS(uint8_t reg)
+{
+	outb(PORT_CMOS_BASE + 0, reg | (nmi ? 0 : 0x80));
+	return inb(PORT_CMOS_BASE + 1);
+}
+
+void x86WriteCMOS(uint8_t reg, uint8_t val)
+{
+	outb(PORT_CMOS_BASE + 0, reg | (nmi ? 0 : 0x80));
+	outb(PORT_CMOS_BASE + 1, val);
+}
+
+void HalEnableNMI()
+{
+	nmi = true;
+	x86ReadCMOS(0x10);
+}
+
+void HalDisableNMI()
+{
+	nmi = false;
+	x86ReadCMOS(0x10);
+}
+
+bool HalGetNMIState()
+{
+	return nmi;
+}
 
 #define ISR_DIV_BY_ZERO 0x00
 #define ISR_DEBUG 0x01
@@ -412,26 +443,26 @@ void HalInitialise()
 		apicOpen();
 	}
 
-	installISRHandler(ISR_DIV_BY_ZERO, (void (*)(void*, void*))KeOtherFault);
-	installISRHandler(ISR_DEBUG, (void (*)(void*, void*))KeOtherFault);
-	installISRHandler(ISR_NMI, (void (*)(void*, void*))KeNonMaskableInterrupt);
+	installISRHandler(ISR_DIV_BY_ZERO, (void (*)(regs*, void*))KeOtherFault);
+	installISRHandler(ISR_DEBUG, (void (*)(regs*, void*))KeOtherFault);
+	installISRHandler(ISR_NMI, (void (*)(regs*, void*))KeNonMaskableInterrupt);
 
-	installISRHandler(ISR_BREAKPOINT, (void (*)(void*, void*))KeOtherFault);
-	installISRHandler(ISR_OVERFLOW, (void (*)(void*, void*))KeOtherFault);
-	installISRHandler(ISR_BOUNDS, (void (*)(void*, void*))KeOtherFault);
+	installISRHandler(ISR_BREAKPOINT, (void (*)(regs*, void*))KeOtherFault);
+	installISRHandler(ISR_OVERFLOW, (void (*)(regs*, void*))KeOtherFault);
+	installISRHandler(ISR_BOUNDS, (void (*)(regs*, void*))KeOtherFault);
 
-	installISRHandler(ISR_INVALID_OPCODE, (void (*)(void*, void*))KeOpcodeFault);
-	installISRHandler(ISR_DOUBLE_FAULT, (void (*)(void*, void*))KeDoubleFault);
+	installISRHandler(ISR_INVALID_OPCODE, (void (*)(regs*, void*))KeOpcodeFault);
+	installISRHandler(ISR_DOUBLE_FAULT, (void (*)(regs*, void*))KeDoubleFault);
 
 	for (int i = ISR_COPROCESSOR_SEGMENT_OVERRUN; i < ISR_STACK_SEGMENT; ++i) {
-		installISRHandler(i, (void (*)(void*, void*))KeOtherFault);
+		installISRHandler(i, (void (*)(regs*, void*))KeOtherFault);
 	}
 
-	installISRHandler(ISR_GENERAL_PROTECTION, (void (*)(void*, void*))KeGeneralProtectionFault);
-	installISRHandler(ISR_PAGE_FAULT, (void (*)(void*, void*))KePageFault);
+	installISRHandler(ISR_GENERAL_PROTECTION, (void (*)(regs*, void*))KeGeneralProtectionFault);
+	installISRHandler(ISR_PAGE_FAULT, (void (*)(regs*, void*))KePageFault);
 
 	for (int i = ISR_RESERVED; i < ISR_SECURITY_EXCEPTION; ++i) {
-		installISRHandler(i, (void (*)(void*, void*))KeOtherFault);
+		installISRHandler(i, (void (*)(regs*, void*))KeOtherFault);
 	}
 
 

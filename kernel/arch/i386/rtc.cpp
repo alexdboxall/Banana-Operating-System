@@ -3,6 +3,9 @@
 #include "thr/prcssthr.hpp"
 #include "krnl/common.hpp"
 
+uint8_t x86ReadCMOS(uint8_t reg);
+void x86WriteCMOS(uint8_t reg, uint8_t val)
+
 #define CURRENT_YEAR 2020
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -38,14 +41,14 @@ bool RTC::setTimeInSecondsUTC(time_t t)
 
 bool RTC::get_update_in_progress_flag()
 {
-	return computer->readCMOS(0xA) & 0x80;
+	return x86ReadCMOS(0xA) & 0x80;
 }
 
 bool RTC::setTimeInDatetimeUTC(datetime_t d)
 {
 	//clear minutes and seconds so we know no imporant updates will take place
-	computer->writeCMOS(0x00, 0);
-	computer->writeCMOS(0x02, 0);
+	x86WriteCMOS(0x00, 0);
+	x86WriteCMOS(0x02, 0);
 
 	uint8_t second = d.second;
 	uint8_t minute = d.minute;
@@ -54,7 +57,7 @@ bool RTC::setTimeInDatetimeUTC(datetime_t d)
 	uint8_t month = d.month;
 	uint8_t year = d.year % 100;
 
-	uint8_t registerB = computer->readCMOS(0x0B);
+	uint8_t registerB = x86ReadCMOS(0x0B);
 
 	//convert binary to BCD
 	if (!(registerB & 0x04)) {
@@ -80,12 +83,12 @@ bool RTC::setTimeInDatetimeUTC(datetime_t d)
 		}
 	}
 
-	computer->writeCMOS(0x00, second);
-	computer->writeCMOS(0x02, minute);
-	computer->writeCMOS(0x04, hour);
-	computer->writeCMOS(0x07, day);
-	computer->writeCMOS(0x08, month);
-	computer->writeCMOS(0x09, year);
+	x86WriteCMOS(0x00, second);
+	x86WriteCMOS(0x02, minute);
+	x86WriteCMOS(0x04, hour);
+	x86WriteCMOS(0x07, day);
+	x86WriteCMOS(0x08, month);
+	x86WriteCMOS(0x09, year);
 
 	completeRTCRefresh();
 	return true;
@@ -112,12 +115,12 @@ void RTC::completeRTCRefresh()
 			break;
 		}
 	}
-	uint8_t second = computer->readCMOS(0x00);
-	uint8_t minute = computer->readCMOS(0x02);
-	uint8_t hour = computer->readCMOS(0x04);
-	uint8_t day = computer->readCMOS(0x07);
-	uint8_t month = computer->readCMOS(0x08);
-	uint32_t year = computer->readCMOS(0x09);
+	uint8_t second = x86ReadCMOS(0x00);
+	uint8_t minute = x86ReadCMOS(0x02);
+	uint8_t hour = x86ReadCMOS(0x04);
+	uint8_t day = x86ReadCMOS(0x07);
+	uint8_t month = x86ReadCMOS(0x08);
+	uint32_t year = x86ReadCMOS(0x09);
 
 	do {
 		last_second = second;
@@ -137,17 +140,17 @@ void RTC::completeRTCRefresh()
 			}
 		}
 
-		second = computer->readCMOS(0x00);
-		minute = computer->readCMOS(0x02);
-		hour = computer->readCMOS(0x04);
-		day = computer->readCMOS(0x07);
-		month = computer->readCMOS(0x08);
-		year = computer->readCMOS(0x09);
+		second = x86ReadCMOS(0x00);
+		minute = x86ReadCMOS(0x02);
+		hour = x86ReadCMOS(0x04);
+		day = x86ReadCMOS(0x07);
+		month = x86ReadCMOS(0x08);
+		year = x86ReadCMOS(0x09);
 
 	} while ((last_second != second) || (last_minute != minute) || (last_hour != hour) ||
 		(last_day != day) || (last_month != month) || (last_year != year));
 
-	registerB = computer->readCMOS(0x0B);
+	registerB = x86ReadCMOS(0x0B);
 
 	//convert BCD to binary
 	if (!(registerB & 0x04)) {
@@ -184,7 +187,7 @@ void rtcIRQHandler(regs* regs, void* context)
 	static uint16_t count = 0;
 
 	//must read status so the next IRQ will come
-	uint8_t val = computer->readCMOS(0x0C);
+	uint8_t val = x86ReadCMOS(0x0C);
 	
 	//we only want update IRQs (all others are disabled anyway though)
 	if (val & 0x80) {
@@ -206,8 +209,8 @@ RTC::RTC() : Clock("CMOS Real Time Clock")
 	disableIRQs();
 	
 	//enable RTC update IRQs
-	uint8_t prev = computer->readCMOS(0x0B);
-	computer->writeCMOS(0x0B, prev | 0x10);
+	uint8_t prev = x86ReadCMOS(0x0B);
+	x86WriteCMOS(0x0B, prev | 0x10);
 
 	completeRTCRefresh();
 	enableIRQs();

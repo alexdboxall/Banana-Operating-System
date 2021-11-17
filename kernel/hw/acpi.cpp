@@ -484,6 +484,8 @@ int ACPI::open(int mode, int, void*)
 
 void ACPI::writeSimpleBootFlag(SimpleBootFlagTable* sbf)
 {
+	KePanic("SIMPLE BOOT FLAG");
+	
 	uint8_t offset = sbf->cmosOffset;
 	uint8_t existing = computer->readCMOS(offset);
 	computer->writeCMOS(offset, 0x1);					//plug-n-play, last boot completed properly, don't run diagnostics

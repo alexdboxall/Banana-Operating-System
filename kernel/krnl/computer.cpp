@@ -24,7 +24,6 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-#define PORT_CMOS_BASE			0x70	
 
 bool KeIsSchedulingOn = false;
 bool KeIsPreemptionOn = false;
@@ -41,9 +40,9 @@ Computer::Computer() : Device("Computer")
 
 	features.hasACPI = true;
 
-	ports[noPorts].rangeStart = PORT_CMOS_BASE;
+	/*ports[noPorts].rangeStart = PORT_CMOS_BASE;
 	ports[noPorts].rangeLength = 2;
-	ports[noPorts++].width = 0;
+	ports[noPorts++].width = 0;*/
 }
 
 int Computer::open(int a, int b, void* vas)
@@ -194,22 +193,6 @@ void KeRestart()
 	outb(0x64, 0xFE);
 }
 
-bool Computer::nmiEnabled()
-{
-	return nmi;
-}
-
-void Computer::enableNMI(bool enable)
-{
-	nmi = enable;
-	readCMOS(0x10);		//dummy read to change the NMI settings
-}
-
-void Computer::disableNMI()
-{
-	enableNMI(false);
-}
-
 extern "C" void lwip_init(void);
 
 void KeFirstTask()
@@ -249,16 +232,4 @@ void KeFirstTask()
 	while (1) {
 		blockTask(TaskState::Paused);
 	}
-}
-
-uint8_t Computer::readCMOS(uint8_t reg)
-{
-	outb(PORT_CMOS_BASE + 0, reg | (nmi ? 0 : 0x80));
-	return inb(PORT_CMOS_BASE + 1);
-}
-
-void Computer::writeCMOS(uint8_t reg, uint8_t val)
-{
-	outb(PORT_CMOS_BASE + 0, reg | (nmi ? 0 : 0x80));
-	outb(PORT_CMOS_BASE + 1, val);
 }
