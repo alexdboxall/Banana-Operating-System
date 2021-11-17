@@ -32,13 +32,9 @@ public:
 	void restart();
 	void sleep();
 
-	void setBootMessage(const char* message);
-
 	bool nmiEnabled();
 	void enableNMI(bool enable = true);
 	void disableNMI();
-
-	void displayFeatures();
 
 	uint8_t readCMOS(uint8_t reg);
 	void writeCMOS(uint8_t reg, uint8_t val);

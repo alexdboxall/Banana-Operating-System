@@ -50,11 +50,6 @@ Computer::Computer() : Device("Computer")
 	ports[noPorts++].width = 0;
 }
 
-void Computer::setBootMessage(const char* message)
-{
-	
-}
-
 int Computer::open(int a, int b, void* vas)
 {
 	VgaText::hiddenOut = false;
@@ -68,7 +63,6 @@ int Computer::open(int a, int b, void* vas)
 	addChild(root);
 
 	detectFeatures();
-	displayFeatures();
 	enableNMI();
 
 	KeSetBootMessage("Configuring processors...");
@@ -169,31 +163,6 @@ void Computer::detectFeatures()
 	}
 
 #endif
-}
-
-
-void Computer::displayFeatures()
-{
-	/*kprintf("Computer Features\n");
-	kprintf("    APIC   - %s\n", features.hasAPIC ? "Yes" : "No");
-	kprintf("    ACPI   - %s\n", features.hasACPI ? "Yes" : "No");
-	kprintf("    CPUID  - %s\n", features.hasCPUID ? "Yes" : "No");
-	kprintf("    MSR    - %s\n", features.hasMSR ? "Yes" : "No");
-	kprintf("    x87    - %s\n", features.hasx87 ? "Yes" : "No");
-	kprintf("    MMX    - %s\n", features.hasMMX ? "Yes" : "No");
-	kprintf("    3DNow! - %s\n", features.has3DNow ? "Yes" : "No");
-	kprintf("    SSE    - %s\n", features.hasSSE ? "Yes" : "No");
-	kprintf("    SSE2   - %s\n", features.hasSSE2 ? "Yes" : "No");
-	kprintf("    SSE3   - %s\n", features.hasSSE3 ? "Yes" : "No");
-	kprintf("    SSSE3  - %s\n", features.hasSSSE3 ? "Yes" : "No");
-	kprintf("    SSE4.1 - %s\n", features.hasSSE41 ? "Yes" : "No");
-	kprintf("    SSE4.2 - %s\n", features.hasSSE42 ? "Yes" : "No");
-	kprintf("    AVX    - %s\n", features.hasAVX ? "Yes" : "No");
-	kprintf("    AVX512 - %s\n", features.hasAVX512 ? "Yes" : "No");
-	kprintf("    MCE    - %s\n", features.hasMCE ? "Yes" : "No");
-	kprintf("    x86-64 - %s\n", features.hasLongMode ? "Yes" : "No");
-	kprintf("    NX bit - %s\n", features.hasNXBit ? "Yes" : "No");
-	kprintf("\n");*/
 }
 
 uint64_t Computer::rdmsr(uint32_t msr_id)
