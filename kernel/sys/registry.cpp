@@ -5,7 +5,7 @@
 #include "hal/timer.hpp"
 #include "hal/device.hpp"
 #include "hal/vcache.hpp"
-#include <reg/cm.hpp>
+#include <krnl/cm.hpp>
 
 extern "C" {
 #include <libk/string.h>

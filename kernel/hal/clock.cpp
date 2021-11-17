@@ -1,6 +1,6 @@
 #include "fs/vfs.hpp"
 #include "hal/clock.hpp"
-#include "reg/cm.hpp"
+#include "krnl/cm.hpp"
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")

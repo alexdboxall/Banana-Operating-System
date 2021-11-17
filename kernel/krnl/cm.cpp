@@ -1,4 +1,4 @@
-#include <reg/cm.hpp>
+#include <krnl/cm.hpp>
 
 #include "krnl/common.hpp"
 #include "krnl/physmgr.hpp"

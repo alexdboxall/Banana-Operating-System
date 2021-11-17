@@ -77,8 +77,6 @@ public:
 namespace Krnl
 {
 	extern Computer* computer;
-	
-	void firstTask();
 }
 
 using Krnl::computer;

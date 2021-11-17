@@ -29,7 +29,7 @@ extern "C" {
 #include <krnl/random.hpp>
 #include <krnl/atexit.hpp>
 #include <krnl/crc32.hpp>
-#include <reg/cm.hpp>
+#include <krnl/cm.hpp>
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
