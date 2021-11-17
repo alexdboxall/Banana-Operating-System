@@ -13,6 +13,7 @@ git add doc
 git add packages -f
 git add sysroot
 git add ip
+git add disasms -f
 git add installer/*.txt -f
 git add installer/*.bat -f
 git add installer/*.s -f
