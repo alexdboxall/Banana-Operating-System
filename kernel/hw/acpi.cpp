@@ -502,34 +502,6 @@ void ACPI::sleep()
 
 int ACPI::close(int mode, int b, void* c)
 {
-	kprintf("ACPI::close 1\n");
-	if (b != 9999) {
-		kprintf("returning zero.\n");
-		return 0;
-	}
-	kprintf("ACPI::close 2\n");
-
-	if (mode == 0) {
-		kprintf("systemShutdownFunction: 0x%X\n", systemShutdownFunction);
-		if (systemShutdownFunction) {
-			systemShutdownFunction();
-		}
-		KePanic("You may now turn off your computer.");
-
-		return -1;
-
-	} else if (mode == 1) {
-		kprintf("systemResetFunction: 0x%X\n", systemShutdownFunction);
-		if (systemResetFunction) {
-			systemResetFunction();
-		}
-		kprintf("doing ps/2 reset\n");
-		uint8_t good = 0x02;
-		while (good & 0x02) good = inb(0x64);
-		outb(0x64, 0xFE);
-	}
-	kprintf("ACPI::close 3\n");
-
 	return -1;
 }
 

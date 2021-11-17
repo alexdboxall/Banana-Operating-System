@@ -28,10 +28,6 @@ protected:
 public:
 	int close(int a, int b, void* c);
 
-	void shutdown();
-	void restart();
-	void sleep();
-
 	bool nmiEnabled();
 	void enableNMI(bool enable = true);
 	void disableNMI();
@@ -83,5 +79,10 @@ using Krnl::computer;
 
 extern bool KeIsSchedulingOn;
 extern bool KeIsPreemptionOn;
+
+void KePrepareShutdown();
+void KeShutdown();
+void KeSleep();
+void KeRestart();
 
 #endif

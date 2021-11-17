@@ -208,26 +208,42 @@ void Computer::wrmsr(uint32_t msr_id, uint64_t msr_value)
 
 int Computer::close(int a, int b, void* c)
 {
-	KeExecuteAtexit();
-	root->closeAll();
-	root->close(a, 9999, c);
-	KePanic("COMPUTER::CLOSE ERROR");
 	return -1;
 }
 
-void Computer::shutdown()
+void KePrepareShutdown()
 {
-	close(0, 0, 0);
+	KeExecuteAtexit();
+	root->closeAll();
+	root->close(a, 9999, c);
 }
 
-void Computer::restart()
+void KeShutdown()
 {
-	close(1, 0, 0);
+	KePrepareShutdown();
+	
+	kprintf("systemShutdownFunction: 0x%X\n", systemShutdownFunction);
+	if (systemShutdownFunction) {
+		systemShutdownFunction();
+	}
+	KePanic("You may now turn off your computer.");
 }
 
-void Computer::sleep()
+void KeSleep()
 {
 	root->sleep();
+}
+
+void KeRestart()
+{
+	KePrepareShutdown();
+	if (systemResetFunction) {
+		systemResetFunction();
+	}
+	kprintf("doing ps/2 reset\n");
+	uint8_t good = 0x02;
+	while (good & 0x02) good = inb(0x64);
+	outb(0x64, 0xFE);
 }
 
 bool Computer::nmiEnabled()
