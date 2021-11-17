@@ -77,7 +77,6 @@ Parts of this are based on Minux:
 #include "krnl/hal.hpp"
 #include "hw/bus/pci.hpp"
 #include "hw/bus/isa.hpp"
-#include "reg/registry.hpp"
 #include "hw/diskctrl/ide.hpp"
 
 uint8_t processorID[MAX_IOAPICS];
@@ -433,7 +432,7 @@ int ACPI::open(int mode, int, void*)
 
 	if (!firstTime) {
 		KeSetBootMessage("Allocating the swapfile...");
-		int megabytes = Reg::readIntWithDefault((char*) "system", (char*) "@memory:swapfile", 12);
+		int megabytes = 12;	// Reg::readIntWithDefault((char*) "system", (char*) "@memory:swapfile", 12);
 		Virt::setupPageSwapping(megabytes);
 	}
 	
