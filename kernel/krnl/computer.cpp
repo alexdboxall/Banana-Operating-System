@@ -104,10 +104,6 @@ void Computer::detectFeatures()
 	features.hasNXBit = false;
 	features.hasLongMode = false;
 	features.hasMCE = false;
-
-#ifdef JUMPER32
-	features.hasCPUID = false;
-#else
 	features.hasCPUID = detectCPUID() ? true : false;
 
 	if (features.hasCPUID) {
