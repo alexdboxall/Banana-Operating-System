@@ -214,24 +214,23 @@ int Computer::close(int a, int b, void* c)
 void KePrepareShutdown()
 {
 	KeExecuteAtexit();
-	root->closeAll();
-	root->close(a, 9999, c);
+	computer->root->closeAll();
 }
 
 void KeShutdown()
 {
 	KePrepareShutdown();
 	
-	kprintf("systemShutdownFunction: 0x%X\n", systemShutdownFunction);
 	if (systemShutdownFunction) {
 		systemShutdownFunction();
 	}
+
 	KePanic("You may now turn off your computer.");
 }
 
 void KeSleep()
 {
-	root->sleep();
+	computer->root->sleep();
 }
 
 void KeRestart()
@@ -240,7 +239,7 @@ void KeRestart()
 	if (systemResetFunction) {
 		systemResetFunction();
 	}
-	kprintf("doing ps/2 reset\n");
+
 	uint8_t good = 0x02;
 	while (good & 0x02) good = inb(0x64);
 	outb(0x64, 0xFE);
