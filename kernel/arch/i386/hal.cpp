@@ -116,6 +116,7 @@ void HalDetectFeatures()
 		features.hasAVX = avxDetect();
 	}
 }
+
 void HalEnableNMI()
 {
 	nmi = true;

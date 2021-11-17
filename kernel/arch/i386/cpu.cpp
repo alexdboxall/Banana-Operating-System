@@ -224,7 +224,7 @@ void CPU::detectFeatures()
 
 	memset(vendorIDString, 0, 13);
 
-	if (computer->features.hasCPUID) {
+	if (features.hasCPUID) {
 		features.hasTSC = cpuidCheckEDX(CPUID_FEAT_EDX_TSC);
 		features.hasPAE = cpuidCheckEDX(CPUID_FEAT_EDX_PAE);
 		features.hasPSE = cpuidCheckEDX(CPUID_FEAT_EDX_PSE);
@@ -338,7 +338,7 @@ void CPU::detectFeatures()
 	}
 
 	if (features.onboardFPU) {
-		computer->features.hasx87 = true;
+		features.hasx87 = true;
 	}
 
 	opcodeDetectionMode = false;
@@ -377,8 +377,8 @@ void CPU::setupLargePages()
 
 void CPU::setupPAT()
 {
-	/*if (computer->features.hasMSR) {
-		uint64_t pat = computer->rdmsr(0x277);
+	if (features.hasMSR) {
+		uint64_t pat = x86rdmsr(0x277);
 
 		//first 4 entries
 		uint32_t lowPat = pat & 0xFFFFFFFF;
@@ -394,8 +394,8 @@ void CPU::setupPAT()
 
 		//write back the PAT
 		pat = (((uint64_t) highPat) << 32) | ((uint64_t) lowPat);
-		computer->wrmsr(0x277, pat);
-	}*/
+		x86wrmsr(0x277, pat);
+	}
 }
 
 void CPU::setupMTRR()

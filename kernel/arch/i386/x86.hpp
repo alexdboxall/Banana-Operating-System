@@ -29,3 +29,5 @@ extern x86Features features;
 
 uint8_t x86ReadCMOS(uint8_t reg);
 void x86WriteCMOS(uint8_t reg, uint8_t val);
+uint64_t x86rdmsr(uint32_t msr_id);
+void x86wrmsr(uint32_t msr_id, uint64_t msr_value);
