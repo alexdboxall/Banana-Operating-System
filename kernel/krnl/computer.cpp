@@ -4,7 +4,6 @@
 #include "krnl/physmgr.hpp"
 #include "thr/elf.hpp"
 #include "krnl/idle.hpp"
-#include "reg/registry.hpp"
 #include "hw/acpi.hpp"
 #include "hal/clock.hpp"
 #include "hw/cpu.hpp"
