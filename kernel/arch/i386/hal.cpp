@@ -91,8 +91,23 @@ void x86wrmsr(uint32_t msr_id, uint64_t msr_value)
 	asm volatile ("wrmsr" : : "c" (msr_id), "A" (msr_value));
 }
 
-void displayDebugInfo(regs* r)
+void HalHandleOpcodeFault(void* rr, void* ctxt)
 {
+	regs_t* r = (regs_t*) rr;
+
+	if (CPU::current()->opcodeDetectionMode) {
+		kprintf("Opcode detection: invalid opcode.\n");
+		r->eip += 25;
+		return true;
+	}
+
+	return false;
+}
+
+void HalDisplayDebugInfo(void* rr)
+{
+	regs_t* r = (regs_t*) rr;
+
 	size_t cr0;
 	asm volatile ("mov %%cr0, %0" : "=r"(cr0));
 	size_t cr2;
@@ -142,6 +157,26 @@ void displayDebugInfo(regs* r)
 	while (1);
 }
 
+void HalReceivedNMI()
+{
+	uint8_t sysA = inb(PORT_SYSTEM_CONTROL_A);
+	uint8_t sysB = inb(PORT_SYSTEM_CONTROL_B);
+
+	kprintf("RECEIVED AN NMI\n");
+
+	if (sysA & (1 << 4)) {
+		KePanic("WATCHDOG NMI");
+	}
+
+	if (sysB & (1 << 6)) {
+		KePanic("BUS ERROR");
+	}
+
+	if (sysB & (1 << 7)) {
+		KePanic("MEMORY ERROR");
+	}
+}
+
 extern "C" void doTPAUSE();
 void HalSystemIdle()
 {
@@ -154,88 +189,6 @@ void HalSystemIdle()
 		HalStallProcessor();
 	}
 }
-
-void displayProgramFault(const char* text)
-{
-	kprintf(text);
-	if (currentTaskTCB->processRelatedTo->terminal) {
-		currentTaskTCB->processRelatedTo->terminal->puts(text, VgaColour::White, VgaColour::Maroon);
-	}
-}
-
-bool (*gpFaultIntercept)(regs* r) = nullptr;
-
-void gpFault(regs* r, void* context)
-{
-	gpFaultIntercept = Vm::faultHandler;
-	if (gpFaultIntercept) {
-		bool handled = gpFaultIntercept(r);
-		if (handled) {
-			return;
-		}
-	}
-
-	displayProgramFault("General protection fault");
-	displayDebugInfo(r);
-
-	Thr::terminateFromIRQ();
-}
-
-void pgFault(regs* r, void* context)
-{
-	kprintf("PAGE FAULT AT ADDR: 0x%X. EIP = 0x%X\n", CPU::readCR2(), r->eip);
-
-	if (currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2())) {
-		return;
-	}
-
-	displayProgramFault("Page fault");
-	displayDebugInfo(r);
-
-	Thr::terminateFromIRQ();
-}
-
-void nmiHandler(regs* r, void* context)
-{
-	computer->handleNMI();
-}
-
-void otherISRHandler(regs* r, void* context)
-{
-	displayProgramFault("Unhandled exception - CHECK KERNEL LOGS");
-	displayDebugInfo(r);
-
-	Thr::terminateFromIRQ();
-}
-
-#pragma GCC diagnostic push
-#pragma GCC optimize ("O0")
-
-
-void opcodeFault(regs* r, void* context)
-{
-	kprintf("OPFAULT 0x%X\n", r->eip);
-
-	if (CPU::current()->opcodeDetectionMode) {
-		kprintf("Opcode detection: invalid opcode.\n");
-		r->eip += 25;
-		return;
-	}
-
-	displayProgramFault("Opcode fault");
-	displayDebugInfo(r);
-
-	Thr::terminateFromIRQ();
-}
-#pragma GCC diagnostic pop
-
-#pragma GCC diagnostic pop
-
-void doubleFault(regs* r, void* context)
-{
-	KePanic("DOUBLE FAULT");
-}
-
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -444,26 +397,26 @@ void HalInitialise()
 		apicOpen();
 	}
 
-	installISRHandler(ISR_DIV_BY_ZERO, otherISRHandler);
-	installISRHandler(ISR_DEBUG, otherISRHandler);
-	installISRHandler(ISR_NMI, nmiHandler);
+	installISRHandler(ISR_DIV_BY_ZERO, KeOtherFault);
+	installISRHandler(ISR_DEBUG, KeOtherFault);
+	installISRHandler(ISR_NMI, KeNonMaskableInterrupt);
 
-	installISRHandler(ISR_BREAKPOINT, otherISRHandler);
-	installISRHandler(ISR_OVERFLOW, otherISRHandler);
-	installISRHandler(ISR_BOUNDS, otherISRHandler);
+	installISRHandler(ISR_BREAKPOINT, KeOtherFault);
+	installISRHandler(ISR_OVERFLOW, KeOtherFault);
+	installISRHandler(ISR_BOUNDS, KeOtherFault);
 
-	installISRHandler(ISR_INVALID_OPCODE, opcodeFault);
-	installISRHandler(ISR_DOUBLE_FAULT, doubleFault);
+	installISRHandler(ISR_INVALID_OPCODE, KeOpcodeFault);
+	installISRHandler(ISR_DOUBLE_FAULT, KeDoubleFault);
 
 	for (int i = ISR_COPROCESSOR_SEGMENT_OVERRUN; i < ISR_STACK_SEGMENT; ++i) {
-		installISRHandler(i, otherISRHandler);
+		installISRHandler(i, KeOtherFault);
 	}
 
-	installISRHandler(ISR_GENERAL_PROTECTION, gpFault);
-	installISRHandler(ISR_PAGE_FAULT, pgFault);
+	installISRHandler(ISR_GENERAL_PROTECTION, KeGeneralProtectionFault);
+	installISRHandler(ISR_PAGE_FAULT, KePageFault);
 
 	for (int i = ISR_RESERVED; i < ISR_SECURITY_EXCEPTION; ++i) {
-		installISRHandler(i, otherISRHandler);
+		installISRHandler(i, KeOtherFault);
 	}
 
 

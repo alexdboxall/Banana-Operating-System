@@ -265,23 +265,3 @@ void Computer::writeCMOS(uint8_t reg, uint8_t val)
 	outb(PORT_CMOS_BASE + 0, reg | (nmi ? 0 : 0x80));
 	outb(PORT_CMOS_BASE + 1, val);
 }
-
-void Computer::handleNMI()
-{
-	uint8_t sysA = inb(PORT_SYSTEM_CONTROL_A);
-	uint8_t sysB = inb(PORT_SYSTEM_CONTROL_B);
-
-	kprintf("RECEIVED AN NMI\n");
-
-	if (sysA & (1 << 4)) {
-		KePanic("WATCHDOG NMI");
-	}
-
-	if (sysB & (1 << 6)) {
-		KePanic("BUS ERROR");
-	}
-
-	if (sysB & (1 << 7)) {
-		KePanic("MEMORY ERROR");
-	}
-}

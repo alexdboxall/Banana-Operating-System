@@ -16,6 +16,15 @@ void HalInitialise();
 void HalInitialiseCoprocessor();
 
 /// <summary>
+/// Called when the system receives an NMI.
+/// </summary>
+void HalReceivedNMI();
+
+
+void HalHandleOpcodeFault(void* regs, void* ctxt);
+void HalDisplayDebugInfo(void* r);
+
+/// <summary>
 /// Causes a stop error, for when the system detects an unrecoverable situation which requires a complete lockup of the system.
 /// </summary>
 /// <param name="message">The error message to display to the user.</param>
