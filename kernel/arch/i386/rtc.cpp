@@ -4,7 +4,7 @@
 #include "krnl/common.hpp"
 
 uint8_t x86ReadCMOS(uint8_t reg);
-void x86WriteCMOS(uint8_t reg, uint8_t val)
+void x86WriteCMOS(uint8_t reg, uint8_t val);
 
 #define CURRENT_YEAR 2020
 #pragma GCC optimize ("Os")
