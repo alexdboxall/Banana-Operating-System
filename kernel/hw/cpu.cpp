@@ -37,7 +37,7 @@ size_t lastD = 0;
 #define CPUID_VENDOR_PARALLELS    " lrpepyh vr"
 
 
-void CPU::AMD_K6_writeback(int family, int model, int stepping)
+void AMD_K6_writeback(int family, int model, int stepping)
 {
 	/* mem_end == top of memory in bytes */
 	int mem = (Phys::highestMem >> 20) / 4; /* turn into 4mb aligned pages */
@@ -74,7 +74,7 @@ void CPU::AMD_K6_writeback(int family, int model, int stepping)
 	}
 }
 
-void CPU::AMD_K6_write_msr(uint32_t msr, uint32_t v1, uint32_t v2, REGS* regs)
+void AMD_K6_write_msr(uint32_t msr, uint32_t v1, uint32_t v2, REGS* regs)
 {
 	asm __volatile__("pusha");
 	asm __volatile__(
@@ -92,7 +92,7 @@ void CPU::AMD_K6_write_msr(uint32_t msr, uint32_t v1, uint32_t v2, REGS* regs)
 
 }
 
-void CPU::AMD_K6_read_msr(uint32_t msr, REGS* regs)
+void AMD_K6_read_msr(uint32_t msr, REGS* regs)
 {
 	asm __volatile__("pusha");
 	asm __volatile__(
@@ -109,7 +109,7 @@ void CPU::AMD_K6_read_msr(uint32_t msr, REGS* regs)
 	asm __volatile__("popa");
 }
 
-void CPU::cpuid(int code, size_t* a, size_t* b, size_t* c, size_t* d)
+void cpuid(int code, size_t* a, size_t* b, size_t* c, size_t* d)
 {
 	if (code == lastCode) {
 		*a = lastA;
@@ -126,28 +126,28 @@ void CPU::cpuid(int code, size_t* a, size_t* b, size_t* c, size_t* d)
 	lastD = *d;
 }
 
-bool CPU::cpuidCheckEDX(uint32_t check)
+bool cpuidCheckEDX(uint32_t check)
 {
 	size_t eax, ebx, ecx, edx;
 	cpuid(CPUID_GETFEATURES, &eax, &ebx, &ecx, &edx);
 	return edx & check;
 }
 
-bool CPU::cpuidCheckECX(uint32_t check)
+bool cpuidCheckECX(uint32_t check)
 {
 	size_t eax, ebx, ecx, edx;
 	cpuid(CPUID_GETFEATURES, &eax, &ebx, &ecx, &edx);
 	return ecx & check;
 }
 
-bool CPU::cpuidCheckExtendedEBX(uint32_t check)
+bool cpuidCheckExtendedEBX(uint32_t check)
 {
 	size_t eax, ebx, ecx, edx;
 	cpuid(CPUID_GETEXTENDED, &eax, &ebx, &ecx, &edx);
 	return ebx & check;
 }
 
-bool CPU::cpuidCheckExtendedECX(uint32_t check)
+bool cpuidCheckExtendedECX(uint32_t check)
 {
 	size_t eax, ebx, ecx, edx;
 	cpuid(CPUID_GETEXTENDED, &eax, &ebx, &ecx, &edx);

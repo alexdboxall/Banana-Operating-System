@@ -305,31 +305,28 @@ public:
 
 	void allowUsermodeDataAccess();
 	void prohibitUsermodeDataAccess();
-
-	static uint8_t* decodeAddress(regs* r, int* instrLenOut, bool* registerOnlyOut, uint8_t* middleDigitOut);
-
-	static void cpuid(int code, size_t* a, size_t* b, size_t* c, size_t* d);
-	static bool cpuidCheckEDX(uint32_t check);
-	static bool cpuidCheckECX(uint32_t check);
-	static bool cpuidCheckExtendedEBX(uint32_t check);
-	static bool cpuidCheckExtendedECX(uint32_t check);
-
-	struct REGS
-	{
-		size_t eax;
-		size_t ebx;
-		size_t ecx;
-		size_t edx;
-	};
-
-	static void AMD_K6_write_msr(uint32_t msr, uint32_t v1, uint32_t v2, REGS* regs);
-	static void AMD_K6_read_msr(uint32_t msr, REGS* regs);
-	static void AMD_K6_writeback(int family, int model, int stepping);
-
-	static char* lookupAMDName(uint8_t a, uint8_t b);
-	static char* lookupIntelName(uint8_t a, uint8_t b);
 };
 
 
+void cpuid(int code, size_t* a, size_t* b, size_t* c, size_t* d);
+bool cpuidCheckEDX(uint32_t check);
+bool cpuidCheckECX(uint32_t check);
+bool cpuidCheckExtendedEBX(uint32_t check);
+bool cpuidCheckExtendedECX(uint32_t check);
+
+struct REGS
+{
+	size_t eax;
+	size_t ebx;
+	size_t ecx;
+	size_t edx;
+};
+
+void AMD_K6_write_msr(uint32_t msr, uint32_t v1, uint32_t v2, REGS* regs);
+void AMD_K6_read_msr(uint32_t msr, REGS* regs);
+void AMD_K6_writeback(int family, int model, int stepping);
+
+char* lookupAMDName(uint8_t a, uint8_t b);
+char* lookupIntelName(uint8_t a, uint8_t b);
 
 #endif
