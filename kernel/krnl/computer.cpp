@@ -58,7 +58,7 @@ int Computer::open(int a, int b, void* vas)
 	addChild(root);
 
 	detectFeatures();
-	enableNMI();
+	HalEnableNMI();
 
 	KeSetBootMessage("Configuring processors...");
 
