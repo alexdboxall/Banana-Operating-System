@@ -154,7 +154,7 @@ bool cpuidCheckExtendedECX(uint32_t check)
 	return ecx & check;
 }
 
-CPU::CPU(): Device("CPU")
+CPU::CPU() : Device("CPU")
 {
 	deviceType = DeviceType::CPU;
 }
