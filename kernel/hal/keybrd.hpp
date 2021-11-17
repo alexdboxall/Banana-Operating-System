@@ -120,7 +120,7 @@ public:
 	virtual void setRepeatDelay(int t) = 0;
 };
 
-#include "core/terminal.hpp"
+#include "krnl/terminal.hpp"
 
 extern bool keyboardSetupYet;
 int readKeyboard(VgaText* terminal, char* buf, size_t count);

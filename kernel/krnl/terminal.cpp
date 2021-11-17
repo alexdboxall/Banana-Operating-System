@@ -9,11 +9,11 @@ Something not working? Check:
 
 */
 
-#include "core/common.hpp"
-#include "core/terminal.hpp"
-#include "core/kheap.hpp"
-#include "core/virtmgr.hpp"
-#include "core/physmgr.hpp"
+#include "krnl/common.hpp"
+#include "krnl/terminal.hpp"
+#include "krnl/kheap.hpp"
+#include "krnl/virtmgr.hpp"
+#include "krnl/physmgr.hpp"
 #include "hal/keybrd.hpp"
 #include "hal/buzzer.hpp"
 #include "krnl/hal.hpp"

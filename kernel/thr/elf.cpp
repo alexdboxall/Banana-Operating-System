@@ -1,10 +1,10 @@
 #include <thr/elf.hpp>
 #include <thr/prcssthr.hpp>
-#include <core/physmgr.hpp>
-#include <core/virtmgr.hpp>
-#include <core/kheap.hpp>
+#include <krnl/physmgr.hpp>
+#include <krnl/virtmgr.hpp>
+#include <krnl/kheap.hpp>
 #include <libk/string.h>
-#include <core/physmgr.hpp>
+#include <krnl/physmgr.hpp>
 #include <hw/cpu.hpp>
 #include <krnl/unaligned.hpp>
 #include <krnl/resolve.hpp>

@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include "core/terminal.hpp"
+#include "krnl/terminal.hpp"
 #include "hal/clock.hpp"
 
 void rtcIRQHandler(regs* regs, void* context);

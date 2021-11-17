@@ -1,4 +1,4 @@
-#include "core/main.hpp"
+#include "krnl/main.hpp"
 #include "thr/prcssthr.hpp"
 #include "fs/vfs.hpp" 
 #include "fs/symlink.hpp" 

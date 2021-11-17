@@ -8,10 +8,10 @@
 #include <stdarg.h>
 #include <stdbool.h>
 
-#include <core/main.hpp>
-#include <core/kheap.hpp>
-#include <core/terminal.hpp>
-#include <core/computer.hpp>
+#include <krnl/main.hpp>
+#include <krnl/kheap.hpp>
+#include <krnl/terminal.hpp>
+#include <krnl/computer.hpp>
 #include <dbg/kconsole.hpp>
 
 extern "C" {

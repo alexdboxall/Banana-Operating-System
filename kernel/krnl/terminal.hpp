@@ -3,7 +3,7 @@
 #define _VGA_TEXT_HPP_
 
 #include <stdint.h>
-#include "core/unixfile.hpp"
+#include "krnl/unixfile.hpp"
 
 constexpr int TERMINAL_KEYBUFFER_IN_SIZE = 128;
 constexpr int TERMINAL_KEYBUFFER_OUT_SIZE = 128;

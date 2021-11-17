@@ -2,7 +2,7 @@
 #include "hw/diskctrl/ide.hpp"
 #include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
-#include "core/common.hpp"
+#include "krnl/common.hpp"
 #include "thr/prcssthr.hpp"
 #include "hal/vcache.hpp"
 #include "hal/logidisk.hpp"

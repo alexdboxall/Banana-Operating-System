@@ -1,6 +1,6 @@
 #include <krnl/mailbox.hpp>
 #include <thr/prcssthr.hpp>
-#include <core/kheap.hpp>
+#include <krnl/kheap.hpp>
 
 bool KeMailboxTryPost(Mailbox* mbox, void* itm)
 {

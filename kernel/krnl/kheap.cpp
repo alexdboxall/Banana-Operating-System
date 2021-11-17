@@ -1,10 +1,10 @@
-#include "core/common.hpp"
-#include "core/kheap.hpp"
+#include "krnl/common.hpp"
+#include "krnl/kheap.hpp"
 #include "thr/prcssthr.hpp"
-#include "core/virtmgr.hpp"
-#include "core/physmgr.hpp"
+#include "krnl/virtmgr.hpp"
+#include "krnl/physmgr.hpp"
 #include "libk/string.h"
-#include "core/malloc.h"
+#include "krnl/malloc.h"
 #include "hw/cpu.hpp"
 #include "krnl/hal.hpp"
 
@@ -38,7 +38,7 @@ extern "C" void* sbrk(ptrdiff_t increment)
 }
 
 #define MALLOC_H_WANT_INTERNAL_DEFINITIONS
-#include "core/malloc.h"
+#include "krnl/malloc.h"
 #undef MALLOC_H_WANT_INTERNAL_DEFINITIONS
 
 extern "C" void* sbrk_thunk(ptrdiff_t increment)

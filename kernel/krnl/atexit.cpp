@@ -1,6 +1,6 @@
-#include <core/common.hpp>
-#include <core/main.hpp>
-#include <core/computer.hpp>
+#include <krnl/common.hpp>
+#include <krnl/main.hpp>
+#include <krnl/computer.hpp>
 #include <krnl/hal.hpp>
 #include <krnl/panic.hpp>
 #include <krnl/random.hpp>

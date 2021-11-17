@@ -1,12 +1,12 @@
 #include "thr/prcssthr.hpp"
-#include "core/computer.hpp"
-#include "core/common.hpp"
-#include "core/terminal.hpp"
+#include "krnl/computer.hpp"
+#include "krnl/common.hpp"
+#include "krnl/terminal.hpp"
 #include "libk/string.h"
 #include "hw/cpu.hpp"
-#include "core/kheap.hpp"
+#include "krnl/kheap.hpp"
 #include "krnl/hal.hpp"
-#include "core/physmgr.hpp"
+#include "krnl/physmgr.hpp"
 #include "thr/elf.hpp"
 
 #pragma GCC optimize ("O2")

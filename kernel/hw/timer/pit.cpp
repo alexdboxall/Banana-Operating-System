@@ -2,7 +2,7 @@
 #include "hal/intctrl.hpp"
 #include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
-#include "core/common.hpp"
+#include "krnl/common.hpp"
 
 int pitFreq = 0;
 

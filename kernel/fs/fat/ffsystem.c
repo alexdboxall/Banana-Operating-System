@@ -5,7 +5,7 @@
 
 
 #include "ff.h"
-#include "core/kheap.hpp"
+#include "krnl/kheap.hpp"
 
 #if FF_USE_LFN == 3	/* Dynamic memory allocation */
 

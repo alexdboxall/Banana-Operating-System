@@ -1,7 +1,7 @@
-#include "core/unixfile.hpp"
-#include "core/main.hpp"
-#include "core/kheap.hpp"
-#include "coreobjs/linkedlist.hpp"
+#include "krnl/unixfile.hpp"
+#include "krnl/main.hpp"
+#include "krnl/kheap.hpp"
+#include <krnl/linkedlist.hpp>
 #include "thr/prcssthr.hpp"
 #include "dbg/kconsole.hpp"
 extern "C" {

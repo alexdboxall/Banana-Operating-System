@@ -1,7 +1,7 @@
 #include "reg/registry.hpp"
-#include "core/main.hpp"
+#include "krnl/main.hpp"
 #include "fs/vfs.hpp"
-#include "core/kheap.hpp"
+#include "krnl/kheap.hpp"
 
 extern "C" {
 	#include "libk/string.h"

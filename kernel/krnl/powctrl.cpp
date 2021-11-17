@@ -1,5 +1,5 @@
-#include "core/main.hpp"
-#include "core/common.hpp"
+#include "krnl/main.hpp"
+#include "krnl/common.hpp"
 #include "thr/prcssthr.hpp"
 #include "krnl/powctrl.hpp"
 

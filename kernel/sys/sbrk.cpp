@@ -1,6 +1,6 @@
 #include "thr/prcssthr.hpp"
 #include "sys/syscalls.hpp"
-#include "core/virtmgr.hpp"
+#include "krnl/virtmgr.hpp"
 #include "hal/intctrl.hpp"
 
 #pragma GCC optimize ("Os")

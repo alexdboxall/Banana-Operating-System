@@ -1,4 +1,4 @@
-#include "core/common.hpp"
+#include "krnl/common.hpp"
 #include "hal/intctrl.hpp"
 #include "hw/intctrl/apic.hpp"
 #include "hw/acpi.hpp"

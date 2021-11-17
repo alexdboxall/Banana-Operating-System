@@ -1,4 +1,4 @@
-#include "core/common.hpp"
+#include "krnl/common.hpp"
 #include "fs/vfs.hpp"
 #include "krnl/hal.hpp"
 #include "hw/acpi.hpp"

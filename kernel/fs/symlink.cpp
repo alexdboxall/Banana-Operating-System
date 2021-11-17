@@ -15,7 +15,7 @@
 		It also means that someone cannot just create a symlink in e.g. notepad.
 */
 
-#include "core/main.hpp"
+#include "krnl/main.hpp"
 #include "thr/prcssthr.hpp"
 #include "fs/vfs.hpp" 
 #include "hal/logidisk.hpp"

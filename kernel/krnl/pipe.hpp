@@ -3,7 +3,7 @@
 #ifndef _PIPE_HPP_
 #define _PIPE_HPP_
 
-#include "core/unixfile.hpp"
+#include "krnl/unixfile.hpp"
 
 class Pipe : public UnixFile
 {

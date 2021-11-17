@@ -1,4 +1,4 @@
-#include "core/main.hpp"
+#include "krnl/main.hpp"
 #include "hal/device.hpp"
 #include "hal/mouse.hpp"
 #pragma GCC optimize ("Os")

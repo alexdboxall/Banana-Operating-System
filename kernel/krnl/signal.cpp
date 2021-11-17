@@ -1,6 +1,6 @@
 #include <krnl/signal.hpp>
 #include <krnl/panic.hpp>
-#include <core/common.hpp>
+#include <krnl/common.hpp>
 #include <thr/prcssthr.hpp>
 #include <sys/syscalls.hpp>
 

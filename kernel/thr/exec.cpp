@@ -1,9 +1,9 @@
 #include <thr/prcssthr.hpp>
-#include <core/computer.hpp>
-#include <core/common.hpp>
-#include <core/kheap.hpp>
-#include <core/physmgr.hpp>
-#include <core/virtmgr.hpp>
+#include <krnl/computer.hpp>
+#include <krnl/common.hpp>
+#include <krnl/kheap.hpp>
+#include <krnl/physmgr.hpp>
+#include <krnl/virtmgr.hpp>
 #include <thr/elf.hpp>
 
 #include "libk/string.h"

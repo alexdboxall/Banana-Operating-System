@@ -1,4 +1,4 @@
-#include "core/main.hpp"
+#include "krnl/main.hpp"
 #include "hal/device.hpp"
 #include "hal/buzzer.hpp"
 #include "thr/prcssthr.hpp"

@@ -5,9 +5,9 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <krnl/linkedlist.hpp>
-#include "core/main.hpp"
-#include "core/pipe.hpp"
-#include "core/virtmgr.hpp"
+#include "krnl/main.hpp"
+#include "krnl/pipe.hpp"
+#include "krnl/virtmgr.hpp"
 #include "krnl/env.hpp"
 #include <krnl/signal.hpp>
 

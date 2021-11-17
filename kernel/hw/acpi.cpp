@@ -68,10 +68,10 @@ Parts of this are based on Minux:
 #pragma GCC diagnostic push
 #pragma GCC diagnostic warning "-Wcast-align"
 
-#include "core/common.hpp"
-#include "core/virtmgr.hpp"
+#include "krnl/common.hpp"
+#include "krnl/virtmgr.hpp"
 #include "thr/elf.hpp"
-#include "core/physmgr.hpp"
+#include "krnl/physmgr.hpp"
 #include "hw/acpi.hpp"
 #include "hw/cpu.hpp"
 #include "krnl/hal.hpp"

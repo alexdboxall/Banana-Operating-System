@@ -1,7 +1,7 @@
-#include "core/idt.hpp"
-#include "core/main.hpp"
-#include "core/tss.hpp"
-#include "core/virtmgr.hpp"
+#include "krnl/idt.hpp"
+#include "krnl/main.hpp"
+#include "krnl/tss.hpp"
+#include "krnl/virtmgr.hpp"
 #include "hw/cpu.hpp"
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")

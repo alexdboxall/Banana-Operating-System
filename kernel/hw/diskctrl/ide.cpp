@@ -1,4 +1,4 @@
-#include "core/common.hpp"
+#include "krnl/common.hpp"
 #include "thr/prcssthr.hpp"
 #include "hw/diskctrl/ide.hpp"
 #include "hw/diskphys/ata.hpp"

@@ -3,10 +3,10 @@
 #define _CPU_HPP_
 
 #include <stdint.h>
-#include "core/common.hpp"
-#include "core/gdt.hpp"
-#include "core/idt.hpp"
-#include "core/tss.hpp"
+#include "krnl/common.hpp"
+#include "krnl/gdt.hpp"
+#include "krnl/idt.hpp"
+#include "krnl/tss.hpp"
 #include "hal/intctrl.hpp"
 #include "hal/timer.hpp"
 

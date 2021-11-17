@@ -1,5 +1,5 @@
 #include "krnl/env.hpp"
-#include "core/common.hpp"
+#include "krnl/common.hpp"
 #include "thr/prcssthr.hpp"
 #include "dbg/kconsole.hpp"
 #include "fs/vfs.hpp"

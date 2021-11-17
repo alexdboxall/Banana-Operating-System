@@ -1,5 +1,5 @@
 #include "thr/prcssthr.hpp"
-#include "core/computer.hpp"
+#include "krnl/computer.hpp"
 #include "sys/syscalls.hpp"
 #include "thr/elf.hpp"
 #include "hal/intctrl.hpp"

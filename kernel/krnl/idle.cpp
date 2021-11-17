@@ -1,6 +1,6 @@
-#include "core/idle.hpp"
+#include "krnl/idle.hpp"
 #include "thr/prcssthr.hpp"
-#include "core/computer.hpp"
+#include "krnl/computer.hpp"
 #include "krnl/hal.hpp"
 #include "hw/cpu.hpp"
 #pragma GCC optimize ("Os")

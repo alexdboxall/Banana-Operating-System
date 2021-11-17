@@ -1,6 +1,6 @@
 #include "hw/cpu.hpp"
 #include "thr/prcssthr.hpp"
-#include "core/virtmgr.hpp"
+#include "krnl/virtmgr.hpp"
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")

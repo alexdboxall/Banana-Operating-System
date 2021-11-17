@@ -42,7 +42,7 @@ extern void iso_kprintfd(int d);
 #define MAX_ISO_FILES 16
 
 #include <fs/iso9660/iso9660.h>
-#include <core/kheap.hpp>
+#include <krnl/kheap.hpp>
 #include <libk/string.h>
 #include <libk/ctype.h>
 

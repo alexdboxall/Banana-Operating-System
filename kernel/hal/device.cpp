@@ -1,6 +1,6 @@
 #include "hal/device.hpp"
-#include "core/common.hpp"
-#include "core/computer.hpp"
+#include "krnl/common.hpp"
+#include "krnl/computer.hpp"
 #include "hal/intctrl.hpp"
 #include "hw/cpu.hpp"
 #include "thr/prcssthr.hpp"

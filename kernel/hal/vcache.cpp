@@ -1,5 +1,5 @@
-#include "core/common.hpp"
-#include "core/physmgr.hpp"
+#include "krnl/common.hpp"
+#include "krnl/physmgr.hpp"
 #include "hal/vcache.hpp"
 #include "hal/bus.hpp"
 #include "hal/diskphys.hpp"

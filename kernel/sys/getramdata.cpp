@@ -2,7 +2,7 @@
 #include "sys/syscalls.hpp"
 #include "hal/intctrl.hpp"
 #include "hal/timer.hpp"
-#include "core/physmgr.hpp"
+#include "krnl/physmgr.hpp"
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")

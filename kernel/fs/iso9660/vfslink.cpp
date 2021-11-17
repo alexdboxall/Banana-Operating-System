@@ -1,6 +1,6 @@
 #include "fs/iso9660/vfslink.hpp"
-#include "core/main.hpp"
-#include "core/kheap.hpp"
+#include "krnl/main.hpp"
+#include "krnl/kheap.hpp"
 #include "hal/logidisk.hpp"
 
 /*

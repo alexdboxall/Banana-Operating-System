@@ -3,7 +3,7 @@
 #include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
 #include "hw/intctrl/apic.hpp"
-#include "core/common.hpp"
+#include "krnl/common.hpp"
 #include "hw/cpu.hpp"
 
 #define APIC_REGISTER_LVT_TIMER					0x320

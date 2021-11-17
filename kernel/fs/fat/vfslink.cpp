@@ -1,6 +1,6 @@
 #include "fs/fat/vfslink.hpp"
-#include "core/main.hpp"
-#include "core/kheap.hpp"
+#include "krnl/main.hpp"
+#include "krnl/kheap.hpp"
 #include "hal/logidisk.hpp"
 #include "hal/diskphys.hpp"
 #include "krnl/hal.hpp"

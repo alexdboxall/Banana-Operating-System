@@ -1,7 +1,7 @@
 #include "hw/cpu.hpp"
 #include "krnl/hal.hpp"
-#include "core/virtmgr.hpp"
-#include "core/physmgr.hpp"
+#include "krnl/virtmgr.hpp"
+#include "krnl/physmgr.hpp"
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")

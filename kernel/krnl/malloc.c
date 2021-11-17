@@ -1,7 +1,7 @@
 #include "libk/string.h"
 
 #define MALLOC_H_WANT_INTERNAL_DEFINITIONS
-#include "core/malloc.h"
+#include "krnl/malloc.h"
 #undef MALLOC_H_WANT_INTERNAL_DEFINITIONS
 
 #pragma GCC diagnostic push

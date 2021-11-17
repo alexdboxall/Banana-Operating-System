@@ -1,7 +1,7 @@
 #include "hal/sound/sndport.hpp"
 #include "hal/sound/sndcard.hpp"
-#include "core/common.hpp"
-#include "core/kheap.hpp"
+#include "krnl/common.hpp"
+#include "krnl/kheap.hpp"
 #include "hal/device.hpp"
 #include "thr/prcssthr.hpp"
 

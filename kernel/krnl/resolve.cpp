@@ -1,4 +1,4 @@
-#include <core/computer.hpp>
+#include <krnl/computer.hpp>
 #include <krnl/panic.hpp>
 
 extern "C" {

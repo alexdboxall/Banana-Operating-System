@@ -4,8 +4,8 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include "core/main.hpp"
-#include "core/virtmgr.hpp"
+#include "krnl/main.hpp"
+#include "krnl/virtmgr.hpp"
 
 int KeProcessExec(Process* prcss, const char* filename);
 

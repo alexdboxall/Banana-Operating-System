@@ -1,8 +1,8 @@
-#include "core/common.hpp"
+#include "krnl/common.hpp"
 #include "krnl/powctrl.hpp"
 #include "hal/keybrd.hpp"
 #include "hal/device.hpp"
-#include "core/terminal.hpp"
+#include "krnl/terminal.hpp"
 #include "libk/string.h"
 #include "thr/prcssthr.hpp"
 #include <krnl/signal.hpp>

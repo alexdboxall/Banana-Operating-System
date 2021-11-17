@@ -1,6 +1,6 @@
-#include "core/physmgr.hpp"
-#include "core/common.hpp"
-#include "core/terminal.hpp"
+#include "krnl/physmgr.hpp"
+#include "krnl/common.hpp"
+#include "krnl/terminal.hpp"
 #include "hal/vcache.hpp"		//cache purging
 #include <krnl/unaligned.hpp>
 

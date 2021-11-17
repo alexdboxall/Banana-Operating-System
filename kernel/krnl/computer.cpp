@@ -1,9 +1,9 @@
-#include "core/computer.hpp"
+#include "krnl/computer.hpp"
 #include "thr/prcssthr.hpp"
 #include "sys/syscalls.hpp"
-#include "core/physmgr.hpp"
+#include "krnl/physmgr.hpp"
 #include "thr/elf.hpp"
-#include "core/idle.hpp"
+#include "krnl/idle.hpp"
 #include "reg/registry.hpp"
 #include "hw/acpi.hpp"
 #include "hal/clock.hpp"
@@ -63,6 +63,7 @@ int Computer::open(int a, int b, void* vas)
 		VgaText::hiddenOut = true;
 	}
 
+	KeSetBootMessage("Creating device tree...");
 	root = new ACPI();
 	addChild(root);
 
@@ -70,13 +71,17 @@ int Computer::open(int a, int b, void* vas)
 	displayFeatures();
 	enableNMI();
 
+	KeSetBootMessage("Configuring processors...");
+
 	cpu[0] = new CPU();
 	addChild(cpu[0]);
 	cpu[0]->open(0, 0, vas);		//FIRST ARG IS CPU NUMBER
 	
+	KeSetBootMessage("Detecting numerical coprocessors...");
 	HalInitialiseCoprocessor();
 
-	setupMultitasking(KeFirstTask);
+	KeSetBootMessage("Setting up multitasking...");
+	setupMultitasking(Krnl::firstTask);
 	return -1;
 }
 
@@ -275,35 +280,45 @@ void Computer::disableNMI()
 
 extern "C" void lwip_init(void);
 
-void KeFirstTask()
+namespace Krnl
 {
-	HalEnableInterrupts();
+	void firstTask()
+	{
+		asm("sti");
 
-	//setup up the core processes and threads we need
-	Process* idleProcess = new Process(true, "Idle Process", kernelProcess);
-	idleProcess->createThread(idleFunction, nullptr, 255);
+		KeSetBootMessage("Starting core threads...");
 
-	cleanerThread = kernelProcess->createThread(cleanerTaskFunction, nullptr, 122);
+		//setup up the core processes and threads we need
+		Process* idleProcess = new Process(true, "Idle Process", kernelProcess);
+		idleProcess->createThread(idleFunction, nullptr, 255);
 
-	KeIsSchedulingOn = true;
-	KeInitRand();
-	Vm::initialise8086();
-	Fs::initVFS();
+		cleanerThread = kernelProcess->createThread(cleanerTaskFunction, nullptr, 122);
 
-	computer->root->open(0, 0, nullptr);
+		KeSetBootMessage("Initialising system components...");
+		KeIsSchedulingOn = true;
+		KeInitRand();
+		Vm::initialise8086();
+		Fs::initVFS();
 
-	KeInitialiseSymlinks();
-	KeLoadSystemEnv();
-	KeSetupPowerManager();
+		KeSetBootMessage("Loading device drivers...");
+		computer->root->open(0, 0, nullptr);
+
+		KeSetBootMessage("Initialising system components...");
+		KeInitialiseSymlinks();
+		KeLoadSystemEnv();
+		KeSetupPowerManager();
 		
-	computer->root->loadDriversForAll();
+		KeSetBootMessage("Loading more device drivers...");
+		computer->root->loadDriversForAll();
 		
-	//lwip_init();
+		lwip_init();
 
-	Thr::executeDLL(Thr::loadDLL("C:/Banana/System/system.dll"), computer);
+		KeSetBootMessage("Getting ready...");
+		Thr::executeDLL(Thr::loadDLL("C:/Banana/System/system.dll"), computer);
 
-	while (1) {
-		blockTask(TaskState::Paused);
+		while (1) {
+			blockTask(TaskState::Paused);
+		}
 	}
 }
 

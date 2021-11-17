@@ -3,9 +3,9 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include "core/main.hpp"
+#include "krnl/main.hpp"
 #include "thr/prcssthr.hpp"
-#include "core/unixfile.hpp"
+#include "krnl/unixfile.hpp"
 #include "hal/logidisk.hpp"
 
 class LogicalDisk;

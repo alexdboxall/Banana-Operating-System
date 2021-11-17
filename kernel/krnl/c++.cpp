@@ -1,4 +1,4 @@
-#include "core/common.hpp"
+#include "krnl/common.hpp"
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")

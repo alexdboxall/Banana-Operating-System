@@ -3,7 +3,7 @@
 #ifndef _COMPUTER_HPP_
 #define _COMPUTER_HPP_
 
-#include "core/common.hpp"
+#include "krnl/common.hpp"
 #include "hal/device.hpp"
 
 class ACPI;
@@ -12,7 +12,7 @@ class FPU;
 class Clock;
 
 extern "C" void KeEntryPoint();
-extern void KeFirstTask();
+extern void firstTask();
 
 class Computer : public Device
 {

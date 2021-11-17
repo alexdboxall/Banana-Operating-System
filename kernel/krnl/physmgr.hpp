@@ -4,7 +4,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include "core/main.hpp"
+#include "krnl/main.hpp"
 
 namespace Phys
 {

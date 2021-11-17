@@ -1,5 +1,5 @@
 #include <krnl/panic.hpp>
-#include <core/common.hpp>
+#include <krnl/common.hpp>
 #include <stdint.h>
 
 // Alignment must be a power of 2.

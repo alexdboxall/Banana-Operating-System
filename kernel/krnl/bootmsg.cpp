@@ -1,4 +1,4 @@
-#include <core/common.hpp>
+#include <krnl/common.hpp>
 #include <krnl/bootmsg.hpp>
 #include <krnl/hal.hpp>
 

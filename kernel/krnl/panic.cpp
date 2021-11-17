@@ -1,5 +1,5 @@
 #include "dbg/kconsole.hpp"
-#include "core/common.hpp"
+#include "krnl/common.hpp"
 #include "thr/prcssthr.hpp"
 #include "thr/elf.hpp"
 #include "hw/cpu.hpp"
@@ -10,7 +10,7 @@
 #pragma GCC optimize ("-fno-align-jumps")
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
-#include "core/terminal.hpp"
+#include "krnl/terminal.hpp"
 
 bool KeIsKernelInPanic = false;
 

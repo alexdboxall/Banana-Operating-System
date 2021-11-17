@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <hal/diskctrl.hpp>
 #include <hal/logidisk.hpp>
-#include <core/terminal.hpp>
+#include <krnl/terminal.hpp>
 
 extern "C" int isoReadDiscSectorHelper(uint8_t* buffer, uint32_t sector, int count, char drvLetter)
 {

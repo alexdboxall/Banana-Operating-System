@@ -1,5 +1,5 @@
 ﻿#include "dbg/kconsole.hpp"
-#include "core/common.hpp"
+#include "krnl/common.hpp"
 #include "thr/prcssthr.hpp"
 #include "thr/elf.hpp"
 #include "hw/cpu.hpp"

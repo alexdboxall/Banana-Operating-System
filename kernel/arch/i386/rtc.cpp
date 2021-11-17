@@ -1,7 +1,7 @@
 #include "arch/i386/rtc.hpp"
-#include "core/computer.hpp"
+#include "krnl/computer.hpp"
 #include "thr/prcssthr.hpp"
-#include "core/common.hpp"
+#include "krnl/common.hpp"
 
 #define CURRENT_YEAR 2020
 #pragma GCC optimize ("Os")

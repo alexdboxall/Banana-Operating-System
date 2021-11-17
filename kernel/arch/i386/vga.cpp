@@ -7,7 +7,7 @@
 #include <krnl/panic.hpp>
 #include <thr/prcssthr.hpp>
 
-#include "core/common.hpp"
+#include "krnl/common.hpp"
 #include "krnl/panic.hpp"
 #include "sys/syscalls.hpp"
 #include "thr/prcssthr.hpp"

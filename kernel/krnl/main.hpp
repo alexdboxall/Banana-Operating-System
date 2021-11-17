@@ -111,7 +111,7 @@ constexpr size_t VIRT_ACPI_DRIVER				= 0xC2484000U;
 
 extern uint32_t sysBootSettings;
 
-#include "core/terminal.hpp"
+#include "krnl/terminal.hpp"
 
 
 #endif

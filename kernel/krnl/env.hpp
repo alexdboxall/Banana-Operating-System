@@ -1,7 +1,7 @@
 #ifndef _ENV_KRNL_HPP_
 #define _ENV_KRNL_HPP_
 
-#include "core/main.hpp"
+#include "krnl/main.hpp"
 
 class Process;
 

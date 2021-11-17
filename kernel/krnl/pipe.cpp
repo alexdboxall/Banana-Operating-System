@@ -1,5 +1,5 @@
-#include "core/pipe.hpp"
-#include "core/common.hpp"
+#include "krnl/pipe.hpp"
+#include "krnl/common.hpp"
 #include "thr/prcssthr.hpp"
 
 #pragma GCC optimize ("Os")

@@ -1,5 +1,5 @@
-#include "core/main.hpp"
-#include "core/kheap.hpp"
+#include "krnl/main.hpp"
+#include "krnl/kheap.hpp"
 #include "hal/device.hpp"
 #include "hal/video.hpp"
 

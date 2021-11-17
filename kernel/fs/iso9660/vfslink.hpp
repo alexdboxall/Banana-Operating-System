@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include "core/main.hpp"
+#include "krnl/main.hpp"
 #include "fs/vfs.hpp"
 
 typedef struct isoFile_t
