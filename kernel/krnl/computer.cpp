@@ -24,9 +24,6 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-#define PORT_SYSTEM_CONTROL_A	0x92
-#define PORT_SYSTEM_CONTROL_B	0x61
-
 #define PORT_CMOS_BASE			0x70	
 
 bool KeIsSchedulingOn = false;

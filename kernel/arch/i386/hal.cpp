@@ -1,25 +1,30 @@
-#include "arch/i386/hal.hpp"
-#include "arch/i386/pic.hpp"
-#include "arch/i386/rtc.hpp"
+#include <arch/i386/hal.hpp>
+#include <arch/i386/pic.hpp>
+#include <arch/i386/rtc.hpp>
 
 #include <hw/cpu.hpp>
-#include "vm86/x87em.hpp"
+#include <vm86/x87em.hpp>
 #include <krnl/panic.hpp>
 #include <thr/prcssthr.hpp>
 
-#include "krnl/common.hpp"
-#include "krnl/panic.hpp"
-#include "sys/syscalls.hpp"
-#include "thr/prcssthr.hpp"
-#include "thr/elf.hpp"
-#include "hal/intctrl.hpp"
-#include "hw/intctrl/pic.hpp"
-#include "hw/intctrl/apic.hpp"
-#include "hal/device.hpp"
-#include "hw/acpi.hpp"
-#include "krnl/hal.hpp"
-#include "hw/cpu.hpp"
-#include "vm86/vm8086.hpp"
+#include <krnl/common.hpp>
+#include <krnl/fault.hpp>
+#include <krnl/panic.hpp>
+#include <sys/syscalls.hpp>
+#include <thr/prcssthr.hpp>
+#include <thr/elf.hpp>
+#include <hal/intctrl.hpp>
+#include <hw/intctrl/pic.hpp>
+#include <hw/intctrl/apic.hpp>
+#include <hal/device.hpp>
+#include <hw/acpi.hpp>
+#include <krnl/hal.hpp>
+#include <hw/cpu.hpp>
+#include <vm86/vm8086.hpp>
+
+#define PORT_SYSTEM_CONTROL_A	0x92
+#define PORT_SYSTEM_CONTROL_B	0x61
+
 
 #define ISR_DIV_BY_ZERO 0x00
 #define ISR_DEBUG 0x01
@@ -93,7 +98,7 @@ void x86wrmsr(uint32_t msr_id, uint64_t msr_value)
 
 bool HalHandleGeneralProtectionFault(void* rr, void* ctxt)
 {
-	return Vm::faultHandler((regs*) r);
+	return Vm::faultHandler((regs*) rr);
 }
 
 bool HalHandlePageFault(void* rr, void* ctxt)
