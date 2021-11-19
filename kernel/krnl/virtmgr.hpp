@@ -5,14 +5,16 @@
 #define PAGE_READONLY       0
 #define PAGE_SUPERVISOR     0
 
+#include <arch/hal.hpp>
+
 #define PAGE_PRESENT        (1 << 0)
 #define PAGE_WRITABLE       (1 << 1)
 #define PAGE_USER           (1 << 2)
 #define PAGE_CACHE_DISABLE  (1 << 4)
 #define PAGE_ACCESSED		(1 << 5)
 #define PAGE_DIRTY			(1 << 6)
-#define PAGE_PAT		    (1 << 7)
-#define PAGE_GLOBAL		    (1 << 8)
+#define PAGE_PAT		    HalPageWriteCombiningFlag
+#define PAGE_GLOBAL			HalPageGlobalFlag
 #define PAGE_COPY_ON_WRITE	(1 << 9)
 #define PAGE_ALLOCATED      (1 << 10)
 #define PAGE_SWAPPABLE      (1 << 11)

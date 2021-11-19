@@ -1,6 +1,16 @@
 
-void KeDisplayProgramFault(const char* text);
+#pragma once
+
+struct regs;
+
+extern void (*keInterruptHandlers[256][4])(regs* r, void* context);
+extern void* keInterruptContexts[256][4];
+
 extern bool (*gpFaultIntercept)(void* r);
+
+void KeSetupInterrupts();
+
+void KeDisplayProgramFault(const char* text);
 
 void KeGeneralProtectionFault(void* r, void* context);
 void KePageFault(void* r, void* context);

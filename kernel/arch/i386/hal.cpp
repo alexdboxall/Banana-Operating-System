@@ -10,6 +10,7 @@
 
 #include <krnl/common.hpp>
 #include <krnl/fault.hpp>
+#include <krnl/physmgr.hpp>
 #include <krnl/panic.hpp>
 #include <sys/syscalls.hpp>
 #include <thr/prcssthr.hpp>
@@ -27,7 +28,26 @@
 #define PORT_SYSTEM_CONTROL_B	0x61
 #define PORT_CMOS_BASE			0x70	
 
+extern "C" int detectCPUID();
+extern "C" int  avxDetect();
+extern "C" void avxSave(size_t);
+extern "C" void avxLoad(size_t);
+extern "C" void avxInit();
+
+extern "C" int  sseDetect();
+extern "C" void sseSave(size_t);
+extern "C" void sseLoad(size_t);
+extern "C" void sseInit();
+
+extern "C" int  x87Detect();
+extern "C" void x87Save(size_t);
+extern "C" void x87Load(size_t);
+extern "C" void x87Init();
+
 bool nmi = false;
+
+size_t HalPageGlobalFlag = 0;
+size_t HalPageWriteCombiningFlag = 0;
 
 uint8_t x86ReadCMOS(uint8_t reg)
 {
@@ -186,7 +206,7 @@ char exceptionNames[][32] = {
 
 uint64_t x86rdmsr(uint32_t msr_id)
 {
-	if (!computer->features.hasMSR) {
+	if (!features.hasMSR) {
 		KePanic("RDMSR");
 	}
 
@@ -197,7 +217,7 @@ uint64_t x86rdmsr(uint32_t msr_id)
 
 void x86wrmsr(uint32_t msr_id, uint64_t msr_value)
 {
-	if (!computer->features.hasMSR) {
+	if (!features.hasMSR) {
 		KePanic("WRMSR");
 	}
 
@@ -325,7 +345,7 @@ void HalReceivedNMI()
 extern "C" void doTPAUSE();
 void HalSystemIdle()
 {
-	if (CPU::current()->features.hasTPAUSE) {
+	if (features.hasTPAUSE) {
 		uint64_t msr = x86rdmsr(0xE1);
 		x86wrmsr(0xE1, msr & 2);	//only keep bit 1 as it is reserved
 		doTPAUSE();
@@ -341,21 +361,6 @@ void HalSystemIdle()
 #pragma GCC optimize ("-fno-align-jumps")
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
-
-extern "C" int  avxDetect();
-extern "C" void avxSave(size_t);
-extern "C" void avxLoad(size_t);
-extern "C" void avxInit();
-
-extern "C" int  sseDetect();
-extern "C" void sseSave(size_t);
-extern "C" void sseLoad(size_t);
-extern "C" void sseInit();
-
-extern "C" int  x87Detect();
-extern "C" void x87Save(size_t);
-extern "C" void x87Load(size_t);
-extern "C" void x87Init();
 
 void (*coproSaveFunc)(size_t);
 void (*coproLoadFunc)(size_t);
@@ -413,12 +418,10 @@ void x87EmulHandler(regs* r, void* context)
 	Thr::terminateFromIRQ();
 }
 
-extern void setupINTS();
-
 void HalInitialiseCoprocessor()
 {
 	fpuOwner = nullptr;
-	installISRHandler(ISR_DEVICE_NOT_AVAILABLE, x87EmulHandler);
+	HalInstallISRHandler(ISR_DEVICE_NOT_AVAILABLE, x87EmulHandler);
 
 	/*if (avxDetect()) {
 		coproSaveFunc = avxSave;
@@ -509,7 +512,7 @@ void HalPanic(const char* message)
 
 uint64_t HalQueryPerformanceCounter()
 {
-	if (!CPU::current()->features.hasTSC) {
+	if (features.hasTSC) {
 		return 0;
 	}
 	uint64_t ret;
@@ -520,20 +523,18 @@ uint64_t HalQueryPerformanceCounter()
 bool apic = false;
 void HalInitialise()
 {
-	setupINTS();
-
 	//check if the APIC exists
 	if (ioapicDiscoveryNumber == 0) {
-		computer->features.hasAPIC = false;
+		features.hasAPIC = false;
 	}
 
 
 	/// DEBUG
-	computer->features.hasAPIC = false;
+	features.hasAPIC = false;
 	/// DEBUG
 
 
-	apic = computer->features.hasAPIC;
+	apic = features.hasAPIC;
 
 	picOpen();
 
@@ -542,32 +543,32 @@ void HalInitialise()
 		apicOpen();
 	}
 
-	installISRHandler(ISR_DIV_BY_ZERO, (void (*)(regs*, void*))KeOtherFault);
-	installISRHandler(ISR_DEBUG, (void (*)(regs*, void*))KeOtherFault);
-	installISRHandler(ISR_NMI, (void (*)(regs*, void*))KeNonMaskableInterrupt);
+	HalInstallISRHandler(ISR_DIV_BY_ZERO, (void (*)(regs*, void*))KeOtherFault);
+	HalInstallISRHandler(ISR_DEBUG, (void (*)(regs*, void*))KeOtherFault);
+	HalInstallISRHandler(ISR_NMI, (void (*)(regs*, void*))KeNonMaskableInterrupt);
 
-	installISRHandler(ISR_BREAKPOINT, (void (*)(regs*, void*))KeOtherFault);
-	installISRHandler(ISR_OVERFLOW, (void (*)(regs*, void*))KeOtherFault);
-	installISRHandler(ISR_BOUNDS, (void (*)(regs*, void*))KeOtherFault);
+	HalInstallISRHandler(ISR_BREAKPOINT, (void (*)(regs*, void*))KeOtherFault);
+	HalInstallISRHandler(ISR_OVERFLOW, (void (*)(regs*, void*))KeOtherFault);
+	HalInstallISRHandler(ISR_BOUNDS, (void (*)(regs*, void*))KeOtherFault);
 
-	installISRHandler(ISR_INVALID_OPCODE, (void (*)(regs*, void*))KeOpcodeFault);
-	installISRHandler(ISR_DOUBLE_FAULT, (void (*)(regs*, void*))KeDoubleFault);
+	HalInstallISRHandler(ISR_INVALID_OPCODE, (void (*)(regs*, void*))KeOpcodeFault);
+	HalInstallISRHandler(ISR_DOUBLE_FAULT, (void (*)(regs*, void*))KeDoubleFault);
 
 	for (int i = ISR_COPROCESSOR_SEGMENT_OVERRUN; i < ISR_STACK_SEGMENT; ++i) {
-		installISRHandler(i, (void (*)(regs*, void*))KeOtherFault);
+		HalInstallISRHandler(i, (void (*)(regs*, void*))KeOtherFault);
 	}
 
-	installISRHandler(ISR_GENERAL_PROTECTION, (void (*)(regs*, void*))KeGeneralProtectionFault);
-	installISRHandler(ISR_PAGE_FAULT, (void (*)(regs*, void*))KePageFault);
+	HalInstallISRHandler(ISR_GENERAL_PROTECTION, (void (*)(regs*, void*))KeGeneralProtectionFault);
+	HalInstallISRHandler(ISR_PAGE_FAULT, (void (*)(regs*, void*))KePageFault);
 
 	for (int i = ISR_RESERVED; i < ISR_SECURITY_EXCEPTION; ++i) {
-		installISRHandler(i, (void (*)(regs*, void*))KeOtherFault);
+		HalInstallISRHandler(i, (void (*)(regs*, void*))KeOtherFault);
 	}
 
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcast-function-type"
-	installISRHandler(96, reinterpret_cast<void(*)(regs*, void*)>(KeSystemCall));
+	HalInstallISRHandler(96, reinterpret_cast<void(*)(regs*, void*)>(KeSystemCall));
 #pragma GCC diagnostic pop
 
 	computer->clock = nullptr;

@@ -69,14 +69,19 @@ extern "C" void KeEntryPoint()
 	Virt::virtualMemorySetup();
 
 	KeInitialiseAtexit();
+	kprintf("Atexit done...\n");
 
 	{
 		VAS v;
 		firstVAS = &v;
+		kprintf("firstVAS done...\n");
 
 		_init();
+		kprintf("_init done...\n");
 
 		computer = new Computer();
+		kprintf("computer done...\n");
+
 		computer->open(0, 0, &v);
 	}
 }

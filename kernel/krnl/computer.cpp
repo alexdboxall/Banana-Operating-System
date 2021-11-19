@@ -73,11 +73,6 @@ int Computer::open(int a, int b, void* vas)
 }
 
 extern "C" size_t validateKey();
-extern "C" int detectCPUID();
-extern "C" size_t x87Detect();
-extern "C" size_t sseDetect();
-extern "C" size_t avxDetect();
-extern "C" size_t x87Detect();
 
 int Computer::close(int a, int b, void* c)
 {

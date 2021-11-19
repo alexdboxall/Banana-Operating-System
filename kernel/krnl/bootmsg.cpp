@@ -28,6 +28,7 @@ void KeSetBootMessage(const char* msg)
 
 	uint16_t* b = (uint16_t*) 0xC20B8000;
 	memcpy(b + 80 * 20, vgatext, sizeof(vgatext));
+	kprintf("\n--> msg: %s\n", msg);
 	
 	return;
 

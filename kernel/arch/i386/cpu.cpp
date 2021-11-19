@@ -2,6 +2,10 @@
 #include "krnl/hal.hpp"
 #include "krnl/virtmgr.hpp"
 #include "krnl/physmgr.hpp"
+#include <arch/i386/x86.hpp>
+
+x86Features features;
+
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
@@ -156,24 +160,35 @@ bool cpuidCheckExtendedECX(uint32_t check)
 
 CPU::CPU() : Device("CPU")
 {
+	KeSetBootMessage("Debug: !...");
+
 	deviceType = DeviceType::CPU;
 }
 
 int CPU::open(int num, int b, void* vas_)
 {
 	cpuNum = num;
+	KeSetBootMessage("Debug: GDT...");
 
 	gdt.setup();
+	KeSetBootMessage("Debug: TSS 1...");
+
 	tss.setup(0xDEADBEEF);
+	KeSetBootMessage("Debug: TSS 2...");
+
 	tss.flush();
+	KeSetBootMessage("Debug: IDT...");
+
 	idt.setup();
 	writeDR7(0x400);
 
 	cpuSpecificData = (CPUSpecificData*) VIRT_CPU_SPECIFIC;
+	KeSetBootMessage("Debug: A...");
 
 	cpuSpecificPhysAddr = (CPUSpecificData*) Phys::allocatePage();
 	cpuSpecificPhysAddr->cpuNumber = num;
 	cpuSpecificPhysAddr->cpuPointer = this;
+	KeSetBootMessage("Debug: B...");
 
 	VAS* vas = (VAS*) vas_;
 	if (vas) {
@@ -232,6 +247,13 @@ void CPU::detectFeatures()
 		features.hasPAT = cpuidCheckEDX(CPUID_FEAT_EDX_PAT);
 		features.onboardFPU = cpuidCheckEDX(CPUID_FEAT_EDX_FPU);
 		features.hasSysenter = cpuidCheckEDX(CPUID_FEAT_EDX_SEP);
+
+		if (features.hasGlobalPages) {
+			HalPageGlobalFlag = (1 << 8);
+		}
+		if (features.hasPAT) {
+			HalPageWriteCombiningFlag = (1 << 7);
+		}
 
 		size_t eax, ebx, ecx, edx;
 		cpuid(0, &eax, &ebx, &ecx, &edx);

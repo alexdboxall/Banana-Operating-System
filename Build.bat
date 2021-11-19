@@ -8,19 +8,19 @@ pause
 exit
 )
 
-D:
-cd D:/Users/Alex/Desktop/Banana
+C:
+cd C:/Users/Alex/Desktop/Banana
 
-rem git add *.*
-git add LICENSE
-git add COPYRIGHT
-git add README.md
-git add kernel -f
-git add firmware
-git add bochs
-git commit -a --allow-empty-message -m ""
-git remote add origin https://github.com/A22347/Banana.git
-rem git push -u origin main
+rem rem git add *.*
+rem git add LICENSE
+rem git add COPYRIGHT
+rem git add README.md
+rem git add kernel -f
+rem git add firmware
+rem git add bochs
+rem git commit -a --allow-empty-message -m ""
+rem git remote add origin https://github.com/A22347/Banana.git
+rem rem git push -u origin main
 
 cd kernel
 cp crti.322 crti.32
@@ -37,10 +37,10 @@ cp crtn.322 crtn.32
 make -j4 kernelPentium2 MARCH=pentium4 TUNING=pentium2 || (pause && exit)
 
 
-cd D:/Users/Alex/Desktop/Banana/kernel
+cd C:/Users/Alex/Desktop/Banana/kernel
 python easteregg.py.bin
 
-cd D:/Users/Alex/Desktop/Banana
+cd C:/Users/Alex/Desktop/Banana
 rm disasms/disasm.txt
 rm disasms/disasm2.txt
 rm disasms/disacpica.txt

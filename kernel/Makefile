@@ -4,12 +4,12 @@
 WARNINGS =  -Wall -Wextra -Wcast-align=strict -Wchar-subscripts -W -Wuninitialized -Wpointer-arith  -Wno-error=unused-variable -Wno-error=unused-parameter \
 	   -Wno-error=unused-const-variable -Wno-error=sign-compare -Wno-unused-parameter
 
-SOURCEDIR = D:/Users/Alex/Desktop/Banana/kernel
-MOREKRNLDIR = D:/Users/Alex/Desktop/Banana/packages/morekrnl/32/0001
+SOURCEDIR = C:/Users/Alex/Desktop/Banana/kernel
+MOREKRNLDIR = C:/Users/Alex/Desktop/Banana/packages/morekrnl/32/0001
 
-FIRMWAREDIR = D:/Users/Alex/Desktop/Banana/firmware
-SYSROOTDIR = D:/Users/Alex/Desktop/Banana/sysroot
-INCPATH = D:/Users/Alex/Desktop/Banana/kernel
+FIRMWAREDIR = C:/Users/Alex/Desktop/Banana/firmware
+SYSROOTDIR = C:/Users/Alex/Desktop/Banana/sysroot
+INCPATH = C:/Users/Alex/Desktop/Banana/kernel
 
 CC32 = i386-banana-gcc
 CXX32 = i386-banana-g++

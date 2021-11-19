@@ -30,6 +30,7 @@ void TSS::flush()
 int TSS::setup(size_t esp, size_t eip)
 {
 	entry = (TSSEntry*) malloc(sizeof(TSSEntry));
+	kprintf("Entry pointer at 0x%X\n", entry);
 	memset(entry, 0, sizeof(TSSEntry));
 
 	entry->iopb = sizeof(TSSEntry);

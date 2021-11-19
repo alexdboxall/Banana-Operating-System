@@ -1,6 +1,6 @@
 
-D:
-cd D:/Users/Alex/Desktop/Banana
+C:
+cd C:/Users/Alex/Desktop/Banana
 git add *.*
 git add COPYRIGHT
 git add LICENSE

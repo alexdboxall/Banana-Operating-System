@@ -56,7 +56,7 @@ void Device::preOpenACPI(ACPI_HANDLE h, char* namespaceName, char* pnpID)
 
 int Device::addIRQHandler(int num, void (*handler)(regs*, void*), bool legacy, void* context)
 {
-	return installIRQHandler(num, handler, legacy, context);
+	return HalInstallIRQHandler(num, handler, legacy, context);
 }
 
 Device* Device::getParent()
@@ -66,7 +66,7 @@ Device* Device::getParent()
 
 void Device::removeIRQHandler(int num, void (*handler)(regs*, void*), bool legacy)
 {
-	uninstallIRQHandler(num, handler, legacy);
+	HalUninstallIRQHandler(num, handler, legacy);
 }
 
 

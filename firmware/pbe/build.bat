@@ -1,5 +1,5 @@
 D:
-cd D:/Users/Alex/Desktop/Banana/firmware/pbe/objects || (pause & exit)
+cd C:/Users/Alex/Desktop/Banana/firmware/pbe/objects || (pause & exit)
 del *.* /Q
 
 cd ../common

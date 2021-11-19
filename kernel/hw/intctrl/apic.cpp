@@ -18,9 +18,9 @@ int noOfIOAPICs;
 //this local APIC stuff
 uint32_t apicGetBase()
 {
-	if (!computer->features.hasMSR) {
-		return 0;
-	}
+	//if (!computer->features.hasMSR) {
+	//	return 0;
+	//}
 	
 	KePanic("APIC.cpp, MSR!");
 	return -1;

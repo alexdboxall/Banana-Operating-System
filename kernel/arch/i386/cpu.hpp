@@ -125,14 +125,22 @@ public:
 	uint32_t familyID : 8;
 
 	char vendorIDString[13];
+	uint8_t padding1[16];
 
 	CPUSpecificData* cpuSpecificPhysAddr = nullptr;
 	CPUSpecificData* cpuSpecificData;
+	uint8_t padding2[16];
 
 	int cpuNum;
+	uint8_t padding3[16];
+
 	GDT gdt;
+	uint8_t padding4[16];
 	IDT idt;
+	uint8_t padding5[16];
 	TSS tss;
+	uint8_t padding6[16];
+
 	uint16_t doubleFaultSelector;
 
 	Timer* timer;

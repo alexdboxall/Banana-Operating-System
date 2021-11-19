@@ -20,6 +20,9 @@ void HalInitialiseCoprocessor();
 /// </summary>
 void HalReceivedNMI();
 
+extern size_t HalPageGlobalFlag;
+extern size_t HalPageWriteCombiningFlag;
+
 void HalEnableNMI();
 void HalDisableNMI();
 bool HalGetNMIState();
@@ -29,6 +32,14 @@ bool HalHandleOpcodeFault(void* regs, void* ctxt);
 bool HalHandleGeneralProtectionFault(void* regs, void* ctxt);
 bool HalHandlePageFault(void* regs, void* ctxt);
 void HalDisplayDebugInfo(void* r);
+
+struct regs;
+
+void HalInstallISRHandler(int num, void (*handler)(regs*, void*), void* context = 0);
+int HalInstallIRQHandler(int num, void (*handler)(regs*, void*), bool legacy, void* context = 0);
+void HalUninstallISRHandler(int num, void (*handler)(regs*, void*));
+void HalUninstallIRQHandler(int num, void (*handler)(regs*, void*), bool legacy);
+
 
 /// <summary>
 /// Causes a stop error, for when the system detects an unrecoverable situation which requires a complete lockup of the system.

@@ -244,7 +244,7 @@ size_t VAS::allocatePages(int count, int flags)
 {
 	if (supervisorVAS) {
 		size_t virt = Virt::allocateKernelVirtualPages(count);
-		if (virt >= VIRT_KERNEL_BASE && CPU::current()->features.hasGlobalPages) {
+		if (virt >= VIRT_KERNEL_BASE) {
 			flags |= PAGE_GLOBAL;
 		}
 		for (int i = 0; i < count; ++i) {
@@ -371,20 +371,20 @@ VAS::VAS(bool kernel)
 
 	//map in the kernel
 	for (int i = 768; i < 1024; ++i) {
-		pageDirectoryBase[i] = PAGE_PRESENT | PAGE_USER | (0x100000 + (i - 768) * 4096) | (CPU::current()->features.hasGlobalPages ? PAGE_GLOBAL : 0);
+		pageDirectoryBase[i] = PAGE_PRESENT | PAGE_USER | (0x100000 + (i - 768) * 4096) | PAGE_GLOBAL;
 
 		if (1 && (i - 768) >= 64 && (i - 768) < 64 * 3) {
 			pageDirectoryBase[i] = PAGE_NOT_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR;
 		}
 	}
 
-	pageDirectoryBase[0xC20 / 4] = 0x4003 | (CPU::current()->features.hasGlobalPages ? PAGE_GLOBAL : 0);
+	pageDirectoryBase[0xC20 / 4] = 0x4003 | PAGE_GLOBAL;
 
 	//the first VAS on each CPU gets called with a different constructor
 	setCPUSpecific((size_t) CPU::current()->cpuSpecificPhysAddr);
 
 	//set up recursive mapping (wizardry!)
-	pageDirectoryBase[1023] = (size_t) pageDirectoryBasePhysical | PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR | (CPU::current()->features.hasGlobalPages ? PAGE_GLOBAL : 0);
+	pageDirectoryBase[1023] = (size_t) pageDirectoryBasePhysical | PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR | PAGE_GLOBAL;
 
 	if (!strcmp(CPU::current()->getName(), "Intel Pentium")) {
 		HalDisableInterrupts();
@@ -434,9 +434,7 @@ void VAS::reflagRange(size_t virtualAddr, int pages, size_t andFlags, size_t orF
 
 void VAS::setToWriteCombining(size_t virtualAddr, int pages)
 {
-	if (CPU::current()->features.hasPAT) {
-		reflagRange(virtualAddr, pages, -1, PAGE_PAT);
-	}
+	reflagRange(virtualAddr, pages, -1, PAGE_PAT);
 }
 
 void VAS::mapOtherVASIn(bool secondSlot, VAS* other)
