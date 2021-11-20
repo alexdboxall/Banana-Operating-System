@@ -48,6 +48,8 @@ rm disasms/dislegacy.txt
 rm disasms/diswsbe.txt
 rm disasms/dis87.txt
 rm disasms/disboot.txt
+rm disasms/disasm.lst
+rm disasms/disasm2.lst
 objdump -drwC -Mintel kernel/KERNEL32.EXE >> disasms/disasm.lst
 objdump -drwC -Mintel kernel/KRNLP2.EXE >> disasms/disasm2.lst
 objdump -drwC -Mintel packages/banana/32/0002/acpica.sys >> disasms/disacpica.txt
