@@ -48,7 +48,10 @@ int TSS::setup(size_t esp, size_t eip)
 	entry->esp = esp;
 	entry->eflags = 0x2;
 
+	kprintf("A\n");
+
 	entry->cr3 = CPU::readCR3();
+	kprintf("B\n");
 
 	GDTEntry tssEnt;
 	tssEnt.setBase((size_t) entry);
@@ -56,9 +59,13 @@ int TSS::setup(size_t esp, size_t eip)
 	tssEnt.access = 0b10001001;
 	tssEnt.flags = 0;
 	tssEnt.size = PLATFORM_ID == 64 ? 0 : 1;
-
+	kprintf("C\n");
+	kprintf("CPU::current = 0x%X\n", CPU::current());
 	gdtEntry = CPU::current()->gdt.addEntry(tssEnt);
+	kprintf("D\n");
+
 	CPU::current()->gdt.flush();
+	kprintf("E\n");
 
 	return gdtEntry;
 }

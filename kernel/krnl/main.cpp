@@ -80,7 +80,7 @@ extern "C" void KeEntryPoint()
 		kprintf("_init done...\n");
 
 		computer = new Computer();
-		kprintf("computer done...\n");
+		kprintf("computer done... 0x%X\n", computer);
 
 		computer->open(0, 0, &v);
 	}

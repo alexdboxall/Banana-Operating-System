@@ -11,6 +11,9 @@ value_37E dw 0x37E
 value_37A dw 0x37A
 
 x87Detect:              ;RETURNS A SIZE_T, 0 OR 1
+    push ebx
+    push ecx
+    push edx
     mov eax, 0x1
     cpuid
     test edx, 1<<0
@@ -19,6 +22,9 @@ x87Detect:              ;RETURNS A SIZE_T, 0 OR 1
     ret
 .nox87:
     mov eax, 0
+    pop edx
+    pop ecx
+    pop ebx
     ret
 
 x87Save:

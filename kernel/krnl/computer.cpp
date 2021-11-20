@@ -37,10 +37,6 @@ Computer::Computer() : Device("Computer")
 {
 	deviceType = DeviceType::Bus;
 	parent = nullptr;
-
-	/*ports[noPorts].rangeStart = PORT_CMOS_BASE;
-	ports[noPorts].rangeLength = 2;
-	ports[noPorts++].width = 0;*/
 }
 
 int Computer::open(int a, int b, void* vas)
@@ -51,15 +47,17 @@ int Computer::open(int a, int b, void* vas)
 		VgaText::hiddenOut = true;
 	}
 
+	if (computer != this) {
+		KePanic("ASSERTION FAILED: MULTIPLE Computer OBJECTS");
+	}
+
 	KeSetBootMessage("Creating device tree...");
 	root = new ACPI();
 	addChild(root);
 
-	HalDetectFeatures();
-	HalEnableNMI();
-
 	KeSetBootMessage("Configuring processors...");
-
+	HalEnableNMI();
+	HalDetectFeatures();
 	cpu[0] = new CPU();
 	addChild(cpu[0]);
 	cpu[0]->open(0, 0, vas);		//FIRST ARG IS CPU NUMBER
@@ -71,8 +69,6 @@ int Computer::open(int a, int b, void* vas)
 	setupMultitasking(KeFirstTask);
 	return -1;
 }
-
-extern "C" size_t validateKey();
 
 int Computer::close(int a, int b, void* c)
 {
@@ -151,8 +147,6 @@ void KeFirstTask()
 	KeSetBootMessage("Loading more device drivers...");
 	computer->root->loadDriversForAll();
 		
-	//lwip_init();
-
 	KeSetBootMessage("Getting ready...");
 	Thr::executeDLL(Thr::loadDLL("C:/Banana/System/system.dll"), computer);
 
