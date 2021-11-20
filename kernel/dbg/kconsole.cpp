@@ -35,7 +35,7 @@ namespace Dbg
 
 	void logc(char c)
 	{
-		if (sysBootSettings & 16) return;
+		if (keBootSettings & 16) return;
 		while ((inb(0x3F8 + 5) & 0x20) == 0);
 		outb(0x3F8, c);
 	}
@@ -63,7 +63,7 @@ namespace Dbg
 		return;
 #endif
 
-		if (sysBootSettings & 16) return;
+		if (keBootSettings & 16) return;
 
 		va_list list;
 		va_start(list, format);

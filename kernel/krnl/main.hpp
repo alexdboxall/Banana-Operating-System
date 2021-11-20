@@ -14,9 +14,9 @@
 #define INLINE inline __attribute__((always_inline)) 
 
 #ifdef KERNEL_DEBUG
-#define KDEBUG_PAUSE(msg) if (sysBootSettings & 2048) {\
+#define KDEBUG_PAUSE(msg) if (keBootSettings & 2048) {\
 KeSetBootMessage(msg);\
-if (!(sysBootSettings & 128)) {\
+if (!(keBootSettings & 128)) {\
 	while (1) {\
 		uint8_t a = inb(0x60); \
 		if (a == 0x5A || a == 0x1C) break; \
@@ -109,7 +109,7 @@ constexpr size_t VIRT_ALLOCED_VIRT_PAGES		= VIRT_LOW_MEGS + 0x100000;
 
 constexpr size_t VIRT_ACPI_DRIVER				= 0xC2484000U;
 
-extern uint32_t sysBootSettings;
+extern uint32_t keBootSettings;
 
 #include "krnl/terminal.hpp"
 

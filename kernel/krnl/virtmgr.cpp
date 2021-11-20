@@ -6,7 +6,7 @@
 #include "thr/prcssthr.hpp"
 #include "thr/elf.hpp"
 
-VAS* firstVAS = nullptr;
+VAS* keFirstVAS = nullptr;
 #pragma GCC optimize ("O2")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
@@ -295,10 +295,10 @@ VAS::VAS()
 	extern int __start_userkernel;
 	extern int __stop_userkernel;
 
-	firstVAS = this;
+	keFirstVAS = this;
 
 	supervisorVAS = true;
-	specialFirstVAS = true;
+	specialkeFirstVAS = true;
 	pageDirectoryBase = (size_t*) VIRT_KRNL_PAGE_DIRECTORY;
 
 	reflagRange(((size_t) &__start_userkernel), \
@@ -701,13 +701,13 @@ extern "C" void mapVASFirstTime()
 		size_t* e = vas->getPageTableEntry(VIRT_APP_STACK_USER_TOP - 4096 * (1 + i) - threadNo * SIZE_APP_STACK_TOTAL);
 	}
 
-	vas->reflagRange(((size_t) &__start_userkernel), \
-		(((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, \
+	vas->reflagRange(((size_t)&__start_userkernel), \
+		(((size_t)&__stop_userkernel) - ((size_t)&__start_userkernel) + 4095) / 4096, \
 		- 1, \
 		PAGE_USER);
 
-	Virt::getAKernelVAS()->reflagRange(((size_t) &__start_userkernel), \
-		(((size_t) &__stop_userkernel) - ((size_t) &__start_userkernel) + 4095) / 4096, \
+	Virt::getAKernelVAS()->reflagRange(((size_t)&__start_userkernel), \
+		(((size_t)&__stop_userkernel) - ((size_t)&__start_userkernel) + 4095) / 4096, \
 		- 1, \
 		PAGE_USER);
 

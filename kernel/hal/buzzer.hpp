@@ -6,8 +6,6 @@
 #include <stddef.h>
 #include "hal/device.hpp"
 
-namespace Krnl {
-	void beep(int hertz, int millisecs, bool blocking = true);
-}
+void KeBeep(int hertz, int millisecs, bool blocking = true);
 
 #endif

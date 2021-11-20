@@ -43,7 +43,7 @@ int Computer::open(int a, int b, void* vas)
 {
 	VgaText::hiddenOut = false;
 
-	if (!(sysBootSettings & 4)) {
+	if (!(keBootSettings & 4)) {
 		VgaText::hiddenOut = true;
 	}
 

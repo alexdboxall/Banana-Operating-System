@@ -20,7 +20,7 @@
 #define PAGE_SWAPPABLE      (1 << 11)
 
 class VAS;
-extern VAS* firstVAS;
+extern VAS* keFirstVAS;
 
 namespace Virt
 {
@@ -41,7 +41,7 @@ namespace Virt
 
 	static inline __attribute__((always_inline)) VAS* getAKernelVAS()
 	{
-		return firstVAS;
+		return keFirstVAS;
 	}
 
 	void setupPageSwapping(int megs);
@@ -53,7 +53,7 @@ class VAS {
 private:
 	friend void KeEntryPoint();
 	VAS();
-	bool specialFirstVAS;
+	bool specialkeFirstVAS;
 
 protected:
 	

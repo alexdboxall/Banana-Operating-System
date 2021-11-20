@@ -11,7 +11,7 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-void beepThread(void* v)
+void KeBeepThread(void* v)
 {
 	unlockScheduler();
 
@@ -21,18 +21,15 @@ void beepThread(void* v)
 	blockTask(TaskState::Terminated);
 }
 
-namespace Krnl
+void KeBeep(int hertz, int millisecs, bool blocking)
 {
-	void beep(int hertz, int millisecs, bool blocking)
-	{
-		HalMakeBeep(hertz);
+	HalMakeBeep(hertz);
 
-		if (blocking) {
-			milliTenthSleep(10 * millisecs);
-			HalMakeBeep(0);
+	if (blocking) {
+		milliTenthSleep(10 * millisecs);
+		HalMakeBeep(0);
 
-		} else {
-			kernelProcess->createThread(beepThread, (void*) millisecs, 230);
-		}
+	} else {
+		kernelProcess->createThread(KeBeepThread, (void*) millisecs, 230);
 	}
 }

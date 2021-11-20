@@ -319,41 +319,8 @@ bool cpuidCheckExtendedECX(uint32_t check)
 
 void HalDetectFeatures()
 {
+	memset(&features, 0, sizeof(features));
 	features.hasACPI = true;
-
-	features.hasCR8 = false;
-	features.hasSMAP = false;
-	features.hasSysenter = false;
-	features.hasSyscall = false;
-	features.hasRDRAND = false;
-	features.hasTSC = false;
-	features.hasPAE = false;
-	features.hasPSE = false;
-	features.hasGlobalPages = false;
-	features.hasPAT = false;
-	features.hasSMEP = false;
-	features.hasRDSEED = false;
-	features.hasUMIP = false;
-	features.hasMTRR = false;
-	features.onboardFPU = false;
-	features.hasTPAUSE = false;
-	features.hasAPIC = false;
-	features.hasCPUID = false;
-	features.hasMSR = false;
-	features.hasx87 = false;
-	features.hasMMX = false;
-	features.has3DNow = false;
-	features.hasSSE = false;
-	features.hasSSE2 = false;
-	features.hasSSE3 = false;
-	features.hasSSE41 = false;
-	features.hasSSE42 = false;
-	features.hasSSSE3 = false;
-	features.hasAVX = false;
-	features.hasAVX512 = false;
-	features.hasNXBit = false;
-	features.hasLongMode = false;
-	features.hasMCE = false;
 	features.hasCPUID = detectCPUID() ? true : false;
 
 	if (features.hasCPUID) {
@@ -362,7 +329,7 @@ void HalDetectFeatures()
 		features.hasMCE = cpuidCheckEDX(CPUID_FEAT_EDX_MCE);
 		features.hasMMX = cpuidCheckEDX(CPUID_FEAT_EDX_MMX);
 
-		if ((sysBootSettings & 1) || (sysBootSettings & 1024)) {
+		if ((keBootSettings & 1) || (keBootSettings & 1024)) {
 			features.hasAPIC = false;
 		} else {
 			features.hasAPIC = cpuidCheckEDX(CPUID_FEAT_EDX_APIC);
@@ -395,7 +362,7 @@ void HalDetectFeatures()
 		}
 	}
 
-	if (sysBootSettings & 1024) {
+	if (keBootSettings & 1024) {
 		features.hasACPI = false;
 	}
 
@@ -529,10 +496,7 @@ void HalDetectFeatures()
 	if (!features.hasx87) {
 		features.hasx87 = x87Detect();
 	}
-	if (features.hasSSE2) features.hasSSE = true;
-	if (features.hasSSE3) features.hasSSE = true;
-	if (features.hasSSE41) features.hasSSE = true;
-	if (features.hasSSE42) features.hasSSE = true;
+	if (features.hasSSE2 || features.hasSSE3 || features.hasSSE41 || features.hasSSE42) features.hasSSE = true;
 
 	if (features.hasx87 && !features.hasSSE) {
 		features.hasSSE = sseDetect();
@@ -638,7 +602,7 @@ bool HalHandleGeneralProtectionFault(void* rr, void* ctxt)
 
 uint8_t* HalFindRSDP()
 {
-	if (Phys::usablePages < 2048 || (sysBootSettings & 1024)) {
+	if (Phys::usablePages < 2048 || (keBootSettings & 1024)) {
 		features.hasACPI = false;
 	}
 	if (!features.hasACPI) {
@@ -1080,9 +1044,9 @@ int CPU::open(int num, int b, void* vas_)
 	KeSetBootMessage("Starting the HAL...");
 	HalInitialise();
 
-	timer = setupTimer(sysBootSettings & 16 ? 30 : 100);
+	timer = setupTimer(keBootSettings & 16 ? 30 : 100);
 
-	if (sysBootSettings & 32) {
+	if (keBootSettings & 32) {
 		setupFeatures();
 	}
 

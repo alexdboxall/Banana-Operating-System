@@ -239,7 +239,7 @@ void VgaText::updateCursor()
 void VgaText::putchar(char c, enum VgaColour fg, enum VgaColour bg)
 {
 	if (c == '\a') {
-		Krnl::beep(440, 500, false);
+		KeBeep(440, 500, false);
 		return;
 	}
 	if (c == '\r') {
