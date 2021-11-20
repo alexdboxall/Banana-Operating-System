@@ -212,7 +212,7 @@ int SATA::read(uint64_t lba, int count, void* buffer)
 		return (int) DiskError::Failure;
 	}
 
-#ifdef KERNEL_DEBUG
+#if 0 //#ifdef KERNEL_DEBUG
 	extern int ataSectorsRead;
 	extern int ataSectorsWritten;
 	ataSectorsRead += count;
@@ -261,7 +261,7 @@ int SATA::write(uint64_t lba, int count, void* buffer)
 		return (int) DiskError::Failure;
 	}
 
-#ifdef KERNEL_DEBUG
+#if 0 //#ifdef KERNEL_DEBUG
 	extern int ataSectorsRead;
 	extern int ataSectorsWritten;
 	ataSectorsWritten += count;

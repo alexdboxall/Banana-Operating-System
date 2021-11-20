@@ -251,7 +251,7 @@ int ATA::read(uint64_t lba, int count, void* buffer)
 		return (int) DiskError::Failure;
 	}
 
-#ifdef KERNEL_DEBUG
+#if 0 //#ifdef KERNEL_DEBUG
 	ataSectorsRead += count;
 
 	uint16_t* p = (uint16_t*) 0xC20B8000;
@@ -291,7 +291,7 @@ int ATA::write(uint64_t lba, int count, void* buffer)
 		return (int) DiskError::Failure;
 	}
 
-#ifdef KERNEL_DEBUG
+#if 0 //#ifdef KERNEL_DEBUG
 	ataSectorsWritten += count;
 
 	uint16_t* p = (uint16_t*) 0xC20B8000;
