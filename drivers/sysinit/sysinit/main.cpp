@@ -1942,8 +1942,7 @@ void begin(void* a)
 
         term->setCursor(24, 12);
 
-        computer->close(1, 0, nullptr);
-        term->puts("PLEASE MANUALLY RESTART YOUR COMPUTER", VgaColour::Red, VgaColour::White);
+        KeRestart();
 
     } else {
         KeLoadClockSettings();
@@ -1981,8 +1980,7 @@ void begin(void* a)
 
             term->setCursor(24, 12);
 
-            computer->close(1, 0, nullptr);
-            term->puts("PLEASE MANUALLY RESTART YOUR COMPUTER", VgaColour::Red, VgaColour::White);
+            KeRestart();
         }
 
         showSidebar = false;

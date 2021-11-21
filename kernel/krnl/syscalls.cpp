@@ -624,18 +624,15 @@ uint64_t SysPanic(regs* r)
 uint64_t SysShutdown(regs* r)
 {
 	if (r->ebx == 0) {
-		computer->close(0, 0, nullptr);
+		KeShutdown();
 		return -1;
 
 	} else if (r->ebx == 1) {
-		extern void (*systemSleepFunction)();
-		if (systemSleepFunction) {
-			systemSleepFunction();
-		}
+		KeSleep();
 		return 0;
 
 	} else if (r->ebx == 2) {
-		computer->close(1, 0, nullptr);
+		KeRestart();
 		return -1;
 
 	}
