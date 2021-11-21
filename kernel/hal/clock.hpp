@@ -16,17 +16,14 @@ struct datetime_t
 	uint8_t second;		//0-59
 };
 
-time_t datetimeToSeconds(datetime_t dt);
-datetime_t secondsToDatetime(time_t tim);
+time_t KeDatetimeToSeconds(datetime_t dt);
+datetime_t KeSecondsToDatetime(time_t tim);
 
-namespace User
-{
-	extern int timezoneHourOffset;
-	extern bool timezoneHalfHourOffset;
-	extern bool dstOn;
+extern int keTimezoneHourOffset;
+extern bool keTimezoneHalfHourOffset;
+extern bool keDstOn;
 
-	void loadClockSettings();
-}
+void KeLoadClockSettings();
 
 class Clock: public Device
 {

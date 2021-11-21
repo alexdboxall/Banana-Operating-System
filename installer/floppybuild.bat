@@ -1,15 +1,15 @@
-D:
+C:
 
-cd D:/Users/alex/Desktop/Banana/kernel
+cd C:/Users/alex/Desktop/Banana/kernel
 nasm -O0 -f bin boot/FIRMWARE.ASM -o FIRMWARE.LIB -w+orphan-labels -i boot/ || pause
 
-cd D:/Users/Alex/Desktop/Banana/firmware/Installer
+cd C:/Users/Alex/Desktop/Banana/firmware/Installer
 call build.bat
 
-cd D:/Users/Alex/Desktop/Banana/firmware/FLOPPY
+cd C:/Users/Alex/Desktop/Banana/firmware/FLOPPY
 call build.bat
 
-cd D:/Users/Alex/Desktop/Banana/Installer
+cd C:/Users/Alex/Desktop/Banana/Installer
 
 del Floppy\DATA*.BIN
 
@@ -20,7 +20,7 @@ nasm -fbin fdboot.s -o Floppy/FBOOTSEC.BIN || pause
 
 del DISK*.IMG
 
-cd D:/Users/Alex/Desktop/Banana/Installer
+cd C:/Users/Alex/Desktop/Banana/Installer
 imdisk -a -o fd -f DISK1.IMG -p "/fs:fat /y /a:512" -s 1440K -m P: || pause
 copy Floppy\DATA1.BIN "P:/DISKETTE.001" || pause
 copy Floppy\ZEROS.SYS "P:/ZEROS.SYS" || pause
@@ -82,7 +82,7 @@ python floppyjoin.py
 if exist ..\qemuinhibit.txt (
     echo a
 ) else (
-    "D:\Program Files\qemu\qemu-system-i386.exe" -d guest_errors,cpu_reset -m 512 -boot d -serial file:log.txt -fda DISK1.IMG -soundhw all -monitor stdio -hda test.bin || pause
+    "C:\Program Files\qemu\qemu-system-i386.exe" -d guest_errors,cpu_reset -m 512 -boot d -serial file:log.txt -fda DISK1.IMG -soundhw all -monitor stdio -hda test.bin || pause
 )
 pause
 rem "D:\Users\Alex\VirtualBox VMs\Banana OS\NewVirtualDisk17.vdi",format=vdi

@@ -8,13 +8,12 @@ void beginx(void* a)
 
 #include "main.hpp"
 
-#include "core/main.hpp"
-#include "core/computer.hpp"
+#include "krnl/main.hpp"
+#include "krnl/computer.hpp"
 #include "thr/elf.hpp"
-#include "core/terminal.hpp"
-#include "core/physmgr.hpp"
-#include "reg/registry.hpp"
-#include "reg/cm.hpp"
+#include "krnl/terminal.hpp"
+#include "krnl/physmgr.hpp"
+#include "krnl/cm.hpp"
 #include "thr/prcssthr.hpp"
 #include "hal/buzzer.hpp"
 #include "hw/cpu.hpp"
@@ -1226,22 +1225,8 @@ char passwhash[80];*/
         milliTenthSleep(2000);
         drawBootScreen();
 
-        work = 7;
-        if (computer->features.hasMMX || computer->features.has3DNow) {
-            work = 8;
-        }
-        if (computer->features.hasSSE) {
-            work = 9;
-        }
-        if (computer->features.hasLongMode || computer->features.hasSSE2) {
-            work = 10;
-        }
-        if (computer->features.hasAVX) {
-            work = 11;
-        }
-        if (computer->features.hasAVX512) {
-            work = 12;
-        }
+        work = 8;
+
         _bcrypt_errno = 0;
         res = bcrypt_gensalt(work, saltbf);
         if (res || _bcrypt_errno) {
@@ -1462,20 +1447,20 @@ char passwhash[80];*/
             installKey = 0;
         }
         
-        User::dstOn = false;
-        User::timezoneHalfHourOffset = \
+        keDstOn = false;
+        keTimezoneHalfHourOffset = \
             (timezoneStrings[tzsel][3] == '.' && timezoneStrings[tzsel][4] == '5') ||
             (timezoneStrings[tzsel][4] == '.' && timezoneStrings[tzsel][5] == '5');
         
-        User::timezoneHourOffset = timezoneStrings[tzsel][2] - '0';
+        keTimezoneHourOffset = timezoneStrings[tzsel][2] - '0';
         if (timezoneStrings[tzsel][4] == '.') {
-            User::timezoneHourOffset *= 10;
-            User::timezoneHourOffset += timezoneStrings[tzsel][3] - '0';
+            keTimezoneHourOffset *= 10;
+            keTimezoneHourOffset += timezoneStrings[tzsel][3] - '0';
         }
         if (timezoneStrings[tzsel][1] == '-') {
-            User::timezoneHourOffset = -User::timezoneHourOffset;
+            keTimezoneHourOffset = -keTimezoneHourOffset;
         }
-        kprintf("TZHR: %d:%d\n", User::timezoneHourOffset, User::timezoneHalfHourOffset);
+        kprintf("TZHR: %d:%d\n", keTimezoneHourOffset, keTimezoneHalfHourOffset);
         computer->clock->setTimeInDatetimeLocal(dt);
 
         installKey = 0;
@@ -1656,7 +1641,8 @@ retryProductKey:
     drawBasicWindow(22, 5, 50, 13, "Finalising Installation");
 
     bootInstallTasks(0);
-    int megabytes = Reg::readIntWithDefault((char*) "system", (char*) "@memory:swapfile", 12);
+    kprintf("SYSTEM.DLL TODO: registry read\n");
+    int megabytes = 12;// Reg::readIntWithDefault((char*)"system", (char*)"@memory:swapfile", 12);
     Virt::setupPageSwapping(megabytes);
 
     bootInstallTasks(1);
@@ -1930,7 +1916,8 @@ void begin(void* a)
 
         //finishing touches go here
 
-        if (computer->features.hasSSE || (computer->features.hasMMX && CPU::current()->features.hasPAE)) {
+        kprintf("TODO: detect normal kernel vs KRNLP2\n");
+        if (0) { //(computer->features.hasSSE || (computer->features.hasMMX && CPU::current()->features.hasPAE)) {
             File* f = new File("C:/Banana/System/KERNEL32.EXE", kernelProcess);
             f->rename("C:/Banana/System/KRNLBKUP.EXE");
             delete f;
@@ -1959,7 +1946,7 @@ void begin(void* a)
         term->puts("PLEASE MANUALLY RESTART YOUR COMPUTER", VgaColour::Red, VgaColour::White);
 
     } else {
-        User::loadClockSettings();
+        KeLoadClockSettings();
 
         Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
         char pkey[500];

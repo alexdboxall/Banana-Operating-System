@@ -1,4 +1,4 @@
-f = open('D:/Users/Alex/Desktop/banana-os/basicimage.img', 'rb').read().decode('latin-1')
+f = open('C:/Users/Alex/Desktop/banana-os/basicimage.img', 'rb').read().decode('latin-1')
 out = open('Floppy/ZEROS.SYS', 'wb')
 
 CHUNK_SIZE = 512

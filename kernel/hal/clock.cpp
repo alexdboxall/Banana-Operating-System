@@ -9,50 +9,48 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-namespace User
+int keTimezoneHourOffset = 0;
+bool keTimezoneHalfHourOffset = false;
+bool keDstOn = false;
+
+void KeLoadClockSettings()
 {
-	int timezoneHourOffset = 0;
-	bool timezoneHalfHourOffset = false;
-	bool dstOn = false;
+	char tzstring[600];
+	tzstring[0] = 0;
 
-	void loadClockSettings()
-	{
-		char tzstring[600];
-		tzstring[0] = 0;
+	Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
+	int loc = CmFindObjectFromPath(reg, "BANANA/TIME/TIMEZONE");
+	kprintf("REGISTRY: %d\n", loc);
+	if (loc > 0) {
+		CmGetString(reg, loc, tzstring);
+	}		
+	CmClose(reg);
+	kprintf("tzstring = '%s', 0x%X\n", tzstring, tzstring[0]);
 
-		Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
-		int loc = CmFindObjectFromPath(reg, "BANANA/TIME/TIMEZONE");
-		kprintf("REGISTRY: %d\n", loc);
-		if (loc > 0) {
-			CmGetString(reg, loc, tzstring);
+	if (tzstring[0] == '+' || tzstring[0] == '-') {
+		keDstOn = false;
+		keTimezoneHalfHourOffset = \
+			(tzstring[2] == '.' && tzstring[3] == '5') ||
+			(tzstring[3] == '.' && tzstring[4] == '5');
+
+		keTimezoneHourOffset = tzstring[1] - '0';
+		if (tzstring[3] == '.') {
+			keTimezoneHourOffset *= 10;
+			keTimezoneHourOffset += tzstring[2] - '0';
 		}		
-		CmClose(reg);
-		kprintf("tzstring = '%s', 0x%X\n", tzstring, tzstring[0]);
-
-		if (tzstring[0] == '+' || tzstring[0] == '-') {
-			User::dstOn = false;
-			User::timezoneHalfHourOffset = \
-				(tzstring[2] == '.' && tzstring[3] == '5') ||
-				(tzstring[3] == '.' && tzstring[4] == '5');
-
-			User::timezoneHourOffset = tzstring[1] - '0';
-			if (tzstring[3] == '.') {
-				User::timezoneHourOffset *= 10;
-				User::timezoneHourOffset += tzstring[2] - '0';
-			}		
-			if (tzstring[0] == '-') {
-				User::timezoneHourOffset = -User::timezoneHourOffset;
-			}
-
-		} else {
-			User::dstOn = false;
-			User::timezoneHalfHourOffset = 0;
-			User::timezoneHourOffset = 0;
+		if (tzstring[0] == '-') {
+			keTimezoneHourOffset = -keTimezoneHourOffset;
 		}
 
-		kprintf("Timezone: %d.%d\n", User::timezoneHourOffset, (int) User::timezoneHalfHourOffset * 5);
+	} else {
+		keDstOn = false;
+		keTimezoneHalfHourOffset = 0;
+		keTimezoneHourOffset = 0;
 	}
+
+	kprintf("Timezone: %d.%d\n", keTimezoneHourOffset, (int) keTimezoneHalfHourOffset * 5);
 }
+
 
 Clock::Clock(const char* name): Device(name)
 {
@@ -67,25 +65,22 @@ Clock::~Clock()
 
 time_t Clock::timeInSecondsLocal()
 {
-	using namespace User;
-	return timeInSecondsUTC() + (timezoneHourOffset + dstOn) * 3600 + (timezoneHalfHourOffset ? 1800 : 0);
+	return timeInSecondsUTC() + (keTimezoneHourOffset + keDstOn) * 3600 + (keTimezoneHalfHourOffset ? 1800 : 0);
 }
 
 datetime_t Clock::timeInDatetimeLocal()
 {
-	return secondsToDatetime(timeInSecondsLocal());
+	return KeSecondsToDatetime(timeInSecondsLocal());
 }
 
 bool Clock::setTimeInSecondsLocal(time_t t)
 {
-	using namespace User;
-	return setTimeInSecondsUTC(t - (timezoneHourOffset + dstOn) * 3600 - (timezoneHalfHourOffset ? 1800 : 0));
+	return setTimeInSecondsUTC(t - (keTimezoneHourOffset + keDstOn) * 3600 - (keTimezoneHalfHourOffset ? 1800 : 0));
 }
 
 bool Clock::setTimeInDatetimeLocal(datetime_t d)
 {
-	using namespace User;
-	return setTimeInSecondsUTC(datetimeToSeconds(d) - (timezoneHourOffset + dstOn) * 3600 - (timezoneHalfHourOffset ? 1800 : 0));
+	return setTimeInSecondsUTC(KeDatetimeToSeconds(d) - (keTimezoneHourOffset + keDstOn) * 3600 - (keTimezoneHalfHourOffset ? 1800 : 0));
 }
 
 
@@ -157,7 +152,7 @@ static const int _DAYS_BEFORE_MONTH[12] =
 #define SECSPERDAY (3600 * 24)
 #define YEAR_BASE 1900
 
-time_t datetimeToSeconds(datetime_t dt)
+time_t KeDatetimeToSeconds(datetime_t dt)
 {
 	dt.year -= YEAR_BASE;
 	dt.month--;
@@ -191,7 +186,7 @@ time_t datetimeToSeconds(datetime_t dt)
 	return tim;
 }
 
-datetime_t secondsToDatetime(time_t lcltime)
+datetime_t KeSecondsToDatetime(time_t lcltime)
 {
 	datetime_t res;
 

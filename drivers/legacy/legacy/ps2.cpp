@@ -1,8 +1,7 @@
-#include "core/common.hpp"
+#include "krnl/common.hpp"
 #include "thr/elf.hpp"
 #include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
-#include "reg/registry.hpp"
 
 #include "ps2port.hpp"
 #include "ps2.hpp"

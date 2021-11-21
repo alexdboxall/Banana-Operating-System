@@ -104,7 +104,7 @@ int IDE::open(int a, int, void*)
 				// This device needs an IRQ assignment.
 				KeSetBootMessage("C");
 
-				KePanic("CHECK IF APIC EXISTS");
+				kprintf("CHECK IF APIC EXISTS");
 
 				if (false) {
 					interrupt = computer->root->getPCIIRQAssignment(pci.info.bus, pci.info.slot, pci.info.intPIN + 1).interrupt;

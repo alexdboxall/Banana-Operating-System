@@ -1,5 +1,5 @@
-OUTPUT32="D:/Users/Alex/Desktop/Banana/packages/system/32/0001/system.dll"
-OUTPUT64="D:/Users/Alex/Desktop/sysinit64.sys"
+OUTPUT32="C:/Users/Alex/Desktop/Banana/packages/system/32/0001/system.dll"
+OUTPUT64="C:/Users/Alex/Desktop/sysinit64.sys"
 
 AS32=i386-banana-as
 AS64=x86_64-banana-as
@@ -15,9 +15,9 @@ LD64=x86_64-banana-ld
 ASFLAGS=
 CFLAGS=-x c
 CXXFLAGS=-x c++
-LDFLAGS=-g -T D:/Users/Alex/Desktop/Banana/drivers/dlink.ld
+LDFLAGS=-g -T C:/Users/Alex/Desktop/Banana/drivers/dlink.ld
 
-DFIX=python D:/Users/Alex/Desktop/Banana/drivers/dfix.py
+DFIX=python C:/Users/Alex/Desktop/Banana/drivers/dfix.py
 
 CXXOBJECTS32 = $(patsubst %.cpp, %.32, $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp) $(wildcard */*/*/*.cpp) $(wildcard **/*.cpp))
 CXXOBJECTS64 = $(patsubst %.cpp, %.64, $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp) $(wildcard */*/*/*.cpp) $(wildcard **/*.cpp))
@@ -34,21 +34,21 @@ all: build32
 build32: $(TARGET32) 
 
 $(TARGET32): $(OBJECTS32)
-	$(LD32) $(LDFLAGS) -shared -q -o $(OUTPUT32) $^ -Map=D:/Users/Alex/Desktop/driver32.map
+	$(LD32) $(LDFLAGS) -shared -q -o $(OUTPUT32) $^ -Map=C:/Users/Alex/Desktop/driver32.map
 
 %.32: %.cpp
-	$(CXX32) $(CXXFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel -fno-exceptions -fno-rtti
+	$(CXX32) $(CXXFLAGS) -c $^ -o $@ -IC:/Users/Alex/Desktop/Banana/kernel -fno-exceptions -fno-rtti
 	
 %.32: %.c
-	$(CC32) $(CFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel
+	$(CC32) $(CFLAGS) -c $^ -o $@ -IC:/Users/Alex/Desktop/Banana/kernel
 
 
 $(TARGET64): $(OBJECTS64)
-	$(LD64) $(LDFLAGS) -shared -q -o $(OUTPUT64) $^ -Map=D:/Users/Alex/Desktop/driver64.map
+	$(LD64) $(LDFLAGS) -shared -q -o $(OUTPUT64) $^ -Map=C:/Users/Alex/Desktop/driver64.map
 
 %.64: %.cpp
-	$(CXX64) $(CXXFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel -fno-exceptions -fno-rtti
+	$(CXX64) $(CXXFLAGS) -c $^ -o $@ -IC:/Users/Alex/Desktop/Banana/kernel -fno-exceptions -fno-rtti
 	
 %.64: %.c
-	$(CC64) $(CFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel
+	$(CC64) $(CFLAGS) -c $^ -o $@ -IC:/Users/Alex/Desktop/Banana/kernel
 

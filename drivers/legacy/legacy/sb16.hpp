@@ -4,11 +4,11 @@
 
 #include <stdint.h>
 
-#include "core/main.hpp"
-#include "core/physmgr.hpp"
-#include "core/common.hpp"
-#include "core/kheap.hpp"
-#include "core/terminal.hpp"
+#include "krnl/main.hpp"
+#include "krnl/physmgr.hpp"
+#include "krnl/common.hpp"
+#include "krnl/kheap.hpp"
+#include "krnl/terminal.hpp"
 #include "hal/intctrl.hpp"
 #include "krnl/hal.hpp"
 #include "hw/acpi.hpp"

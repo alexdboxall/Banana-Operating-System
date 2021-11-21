@@ -1,4 +1,4 @@
-#include "core/main.hpp"
+#include "krnl/main.hpp"
 #include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
 #include "hal/intctrl.hpp"
@@ -513,8 +513,7 @@ int PS2Keyboard::open(int, int, void* ctrl)
 	interrupt = addIRQHandler(1, ps2KeyboardHandler, true, (void*) this);
 
 	//set the translation
-	extern uint32_t sysBootSettings;
-	badTranslation = (sysBootSettings & 4) ? false : true;
+	badTranslation = (keBootSettings & 4) ? false : true;
 
 	return 0;
 }

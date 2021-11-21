@@ -22,7 +22,6 @@ class CPU : public Device
 private:
 
 protected:
-	void detectFeatures();
 
 public:
 	
@@ -167,7 +166,6 @@ public:
 
 	static inline __attribute__((always_inline)) CPU* current()
 	{
-		kprintf("computer = 0x%X\n", computer);
 		return computer->cpu[0];
 	}
 

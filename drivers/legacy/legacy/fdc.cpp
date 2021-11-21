@@ -2,11 +2,10 @@
 
 #include "fdc.hpp"
 
-#include "core/main.hpp"
-#include "core/computer.hpp"
-#include "core/physmgr.hpp"
+#include "krnl/main.hpp"
+#include "krnl/computer.hpp"
+#include "krnl/physmgr.hpp"
 #include "thr/prcssthr.hpp"
-#include "reg/registry.hpp"
 #include "hal/intctrl.hpp"
 #include "krnl/hal.hpp"
 #include "hw/acpi.hpp" 
@@ -153,7 +152,8 @@ void Floppy::driveDetection()
 
 	//do some CMOS detection
 	if (base == 0x3F0) {
-		drvs = Krnl::computer->readCMOS(0x10);
+		KePanic("TODO: fdc.cpp, readCMOS");
+		drvs = 0;// Krnl::computer->readCMOS(0x10);
 
 		int drvA = drvs >> 4;
 		int drvB = drvs & 0xF;
@@ -890,7 +890,7 @@ bool _TEMP_allocated = false;
 bool hasCyl0Bf = false;
 int _TEMP_cyl = -1;
 
-#include "core/terminal.hpp"
+#include "krnl/terminal.hpp"
 
 int FloppyDrive::eject()
 {

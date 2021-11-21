@@ -14,12 +14,11 @@ void start(void* _parent)
 #include "ps2.hpp"
 #include "fdc.hpp"
 
-#include "core/common.hpp"
+#include "krnl/common.hpp"
 #include "thr/elf.hpp"
 #include "krnl/hal.hpp"
 #include "hal/video.hpp"
 #include "hw/acpi.hpp"
-#include "reg/registry.hpp"
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -105,7 +104,7 @@ void ISA::doGameport()
 
 void ISA::doFloppy()
 {
-	if (sysBootSettings & 8192) {
+	if (keBootSettings & 8192) {
 		KeSetBootMessage("Starting floppy driver...");
 
 		uint16_t* biosDataArea = (uint16_t*) (size_t) 0x410;
@@ -183,7 +182,7 @@ void ISA::detect()
 
 	detectDone = true;
 
-	bool needsSafeCheck = Reg::readBoolWithDefault((char*) str_isa, (char*) str_isadonesafe, true);
+	bool needsSafeCheck = false;	// Reg::readBoolWithDefault((char*)str_isa, (char*)str_isadonesafe, true);
 
 	for (int i = 0; i < 7; ++i) {
 		char key[32];
@@ -197,7 +196,7 @@ void ISA::detect()
 		if (i == 5) strcat(key, str_isaata);
 		if (i == 6) strcat(key, str_gp);
 
-		int val = Reg::readIntWithDefault((char*) str_isa, (char*) key, ISA_DEVICE_AUTO_DETECT);
+		int val = ISA_DEVICE_AUTO_DETECT;	// Reg::readIntWithDefault((char*)str_isa, (char*)key, ISA_DEVICE_AUTO_DETECT);
 		if (val != ISA_DEVICE_DISABLE) {
 			if (needsSafeCheck) {
 				//TODO:

@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#include "core/terminal.hpp"
+#include "krnl/terminal.hpp"
 #include "hal/device.hpp"
 #include "hal/diskctrl.hpp"
 #include "hal/diskphys.hpp"

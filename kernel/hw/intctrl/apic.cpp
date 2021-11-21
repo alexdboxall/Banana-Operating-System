@@ -23,13 +23,15 @@ uint32_t apicGetBase()
 	//}
 	
 	KePanic("APIC.cpp, MSR!");
-	return -1;
+	return 0;
 	
 	//uint64_t ret = computer->rdmsr(IA32_APIC_BASE_MSR);
 	//return (ret & 0xffff0000);
 }
 
 void apicOpen() {
+	kprintf("opening APIC.\n");
+
 	if (!IOAPICsSetupYet) {
 		//start the IO APICs
 

@@ -30,12 +30,12 @@ time_t RTC::timeInSecondsUTC()
 
 datetime_t RTC::timeInDatetimeUTC()
 {
-	return secondsToDatetime(timeInSecondsUTC());
+	return KeSecondsToDatetime(timeInSecondsUTC());
 }
 
 bool RTC::setTimeInSecondsUTC(time_t t)
 {
-	return setTimeInDatetimeUTC(secondsToDatetime(t));
+	return setTimeInDatetimeUTC(KeSecondsToDatetime(t));
 }
 
 bool RTC::get_update_in_progress_flag()
@@ -62,7 +62,7 @@ bool RTC::setTimeInDatetimeUTC(datetime_t d)
 	if (!(registerB & 0x04)) {
 		second = (second % 10) | ((second / 10) * 16);
 		minute = (minute % 10) | ((minute / 10) * 16);
-		hour = (hour % 10)	| ((hour / 10) * 16);
+		hour = (hour % 10) | ((hour / 10) * 16);
 		day = (day % 10) | ((day / 10) * 16);
 		month = (month % 10) | ((month / 10) * 16);
 		year = (year % 10) | ((year / 10) * 16);
@@ -76,7 +76,8 @@ bool RTC::setTimeInDatetimeUTC(datetime_t d)
 			//0-11 to 1-12
 			if (hour == 0) hour = 12;
 			hour |= 0x80;
-		} else {
+		}
+		else {
 			//0-11 to 1-12
 			if (hour == 0) hour = 12;
 		}
@@ -178,7 +179,7 @@ void RTC::completeRTCRefresh()
 	d.month = month;
 	d.year = year;
 
-	rtcTime = datetimeToSeconds(d);
+	rtcTime = KeDatetimeToSeconds(d);
 }
 
 void rtcIRQHandler(regs* regs, void* context)
@@ -187,10 +188,10 @@ void rtcIRQHandler(regs* regs, void* context)
 
 	//must read status so the next IRQ will come
 	uint8_t val = x86ReadCMOS(0x0C);
-	
+
 	//we only want update IRQs (all others are disabled anyway though)
 	if (val & 0x80) {
-		RTC* rtc = (RTC*) context;
+		RTC* rtc = (RTC*)context;
 		rtc->rtcTime++;
 
 		//get the actual values every 65536 seconds to account for drift caused by missed IRQs (18 hours)
@@ -203,10 +204,10 @@ void rtcIRQHandler(regs* regs, void* context)
 
 RTC::RTC() : Clock("CMOS Real Time Clock")
 {
-	interrupt = addIRQHandler(8, rtcIRQHandler, true, (void*) this);
+	interrupt = addIRQHandler(8, rtcIRQHandler, true, (void*)this);
 
 	disableIRQs();
-	
+
 	//enable RTC update IRQs
 	uint8_t prev = x86ReadCMOS(0x0B);
 	x86WriteCMOS(0x0B, prev | 0x10);

@@ -323,6 +323,9 @@ void HalDetectFeatures()
 	features.hasACPI = true;
 	features.hasCPUID = detectCPUID() ? true : false;
 
+	features.hasACPI = false;
+	kprintf("DEBUG A: hal.cpp\n");
+
 	if (features.hasCPUID) {
 		features.hasMSR = cpuidCheckEDX(CPUID_FEAT_EDX_MSR);
 		features.hasSSE2 = cpuidCheckEDX(CPUID_FEAT_EDX_SSE2);
@@ -339,7 +342,8 @@ void HalDetectFeatures()
 			features.hasAPIC = false;
 		}
 
-		//features.hasAPIC = false;
+		kprintf("DEBUG B: hal.cpp\n");
+		features.hasAPIC = false;
 
 		bool ecxCanReturnFeatures = true;
 		ecxCanReturnFeatures = false;
