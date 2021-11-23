@@ -36,6 +36,8 @@ uint8_t ___mouse_data[CURSOR_DATA_SIZE * MAX_CURSOR_TYPES] = {
 extern void (*guiMouseHandler) (int xdelta, int ydelta, int buttons, int z);
 NIDesktop* mouseDesktop;
 
+bool desktopHasFocus = false;
+
 NiEvent NiCreateEvent(NIWindow* win, int type, bool redraw)
 {
 	NiEvent evnt;
@@ -57,17 +59,19 @@ void NiKeyhandler(KeyboardToken kt, bool* keystates)
 	if (!win) return;
 
 	NiEvent evnt = NiCreateEvent(win, kt.release ? EVENT_TYPE_KEYUP : EVENT_TYPE_KEYDOWN, false);
-	evnt.key = (uint16_t) kt.halScancode;
+	evnt.key = (uint16_t)kt.halScancode;
 
-	evnt.ctrl = (keystates[(int) KeyboardSpecialKeys::Ctrl]);
-	evnt.shift = (keystates[(int) KeyboardSpecialKeys::Shift]);
-	evnt.alt = (keystates[(int) KeyboardSpecialKeys::Alt]);
+	evnt.ctrl = (keystates[(int)KeyboardSpecialKeys::Ctrl]);
+	evnt.shift = (keystates[(int)KeyboardSpecialKeys::Shift]);
+	evnt.alt = (keystates[(int)KeyboardSpecialKeys::Alt]);
 
-	win->postEvent(evnt);
+	if (!desktopHasFocus) {
+		win->postEvent(evnt);
+	}
 
 	extern uint8_t* desktopWindowDummy;
 
-	if (desktopWindowDummy) {
+	if (desktopWindowDummy && desktopHasFocus) {
 		NIWindow* a = (NIWindow*) desktopWindowDummy;
 		a->postEvent(evnt);
 	}
@@ -300,7 +304,6 @@ NIWindow* movingWin = nullptr;
 
 //these should probably be within NIDesktop, but who cares for now
 int movingType = 0;
-bool desktopHasFocus = false;
 NIWindow* clickonWhenMouseFirstClicked;
 NIWindow* prevClickon;
 
@@ -332,7 +335,6 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 	if (mouseY > ctxt->height - 1) mouseY = ctxt->height - 1;
 
 	NIWindow* clickon = getTopmostWindowAtPixel(mouseX, mouseY);
-	desktopHasFocus = clickon == nullptr;
 
 	extern uint8_t* desktopWindowDummy;
 	if (clickon || prevClickon) {
@@ -349,6 +351,7 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 
 		} else if ((buttons & 1) && !(oldButtons & 1)) {
 			if (clickon) clickonWhenMouseFirstClicked = a;
+			desktopHasFocus = false;
 			a->postEvent(NiCreateEvent(a, EVENT_TYPE_MOUSE_DOWN, false));
 
 		} else if (!(buttons & 1) && (oldButtons & 1)) {
@@ -363,12 +366,13 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 			a->postEvent(NiCreateEvent(a, EVENT_TYPE_RMOUSE_UP, false));
 		}
 
-	} else if (desktopWindowDummy && desktopHasFocus) {
+	} else if (desktopWindowDummy) {
 		NIWindow* a = (NIWindow*) desktopWindowDummy;
 		if ((xdelta || ydelta) && (buttons & 1)) {
 			a->postEvent(NiCreateEvent(a, EVENT_TYPE_MOUSE_DRAG, false));
 
 		} else if ((buttons & 1) && !(oldButtons & 1)) {
+			desktopHasFocus = true;
 			a->postEvent(NiCreateEvent(a, EVENT_TYPE_MOUSE_DOWN, false));
 
 		} else if (!(buttons & 1) && (oldButtons & 1)) {
