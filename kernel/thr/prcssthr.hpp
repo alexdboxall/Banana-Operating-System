@@ -162,7 +162,7 @@ static inline __attribute__((always_inline)) int getIRQNestingLevel(void)
 
 static inline __attribute__((always_inline)) void enableIRQs(void)
 {
-	irqDisableCounter--;
+	__sync_add_and_fetch(&irqDisableCounter, -1);
 	if (irqDisableCounter == 0) {
 		HalEnableInterrupts();
 	}

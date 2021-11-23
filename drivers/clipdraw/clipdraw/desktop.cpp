@@ -1,7 +1,7 @@
 #include "desktop.hpp"
 #include "window.hpp"
 #include <krnl/panic.hpp>
-#include <core/kheap.hpp>
+#include <krnl/kheap.hpp>
 #include <krnl/hal.hpp>
 #include <fs/vfs.hpp>
 #include <hal/keybrd.hpp>
@@ -300,6 +300,7 @@ NIWindow* movingWin = nullptr;
 
 //these should probably be within NIDesktop, but who cares for now
 int movingType = 0;
+bool desktopHasFocus = false;
 NIWindow* clickonWhenMouseFirstClicked;
 NIWindow* prevClickon;
 
@@ -331,7 +332,8 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 	if (mouseY > ctxt->height - 1) mouseY = ctxt->height - 1;
 
 	NIWindow* clickon = getTopmostWindowAtPixel(mouseX, mouseY);
-	
+	desktopHasFocus = clickon == nullptr;
+
 	extern uint8_t* desktopWindowDummy;
 	if (clickon || prevClickon) {
 		NIWindow* a = clickon;
@@ -361,7 +363,7 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 			a->postEvent(NiCreateEvent(a, EVENT_TYPE_RMOUSE_UP, false));
 		}
 
-	} else if (desktopWindowDummy) {
+	} else if (desktopWindowDummy && desktopHasFocus) {
 		NIWindow* a = (NIWindow*) desktopWindowDummy;
 		if ((xdelta || ydelta) && (buttons & 1)) {
 			a->postEvent(NiCreateEvent(a, EVENT_TYPE_MOUSE_DRAG, false));

@@ -2,8 +2,8 @@
 
 #include "main.hpp"
 
-#include "core/main.hpp"
-#include "core/physmgr.hpp"
+#include "krnl/main.hpp"
+#include "krnl/physmgr.hpp"
 #include "thr/prcssthr.hpp"
 #include "hal/intctrl.hpp"
 #include "hw/cpu.hpp"
@@ -88,8 +88,8 @@ int get_bios_area_video_type()
 int VGAVideo::open(int a, int b, void* c)
 {
 	mono = get_bios_area_video_type() == VIDEO_TYPE_MONOCHROME;
-	extern uint32_t sysBootSettings;
-	if (sysBootSettings & 2048) {
+	extern uint32_t keBootSettings;
+	if (keBootSettings & 2048) {
 		mono = true;
 	}
 

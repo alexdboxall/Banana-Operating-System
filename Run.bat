@@ -204,7 +204,9 @@ if exist Banana/qemuinhibit.txt (
 	rem qemu-system-i386
 	
 cd banana-os
-qemu-system-i386 -nic model=rtl8139 -soundhw pcspk,ac97 -vga std -cpu max -serial file:log3.txt -m 64 -rtc base=utc -d guest_errors,cpu_reset -monitor stdio -hda newimage.img
+
+rem -nic model=rtl8139			ac97
+qemu-system-i386 -soundhw pcspk -vga std -cpu max -serial file:log3.txt -m 64 -rtc base=utc -d guest_errors,cpu_reset -monitor stdio -hda newimage.img
 pause
 	rem -cdrom D:/Users/Alex/Desktop/banana-os/Installer/BANANA.ISO
 	rem  -cdrom D:/Users/Alex/Desktop/Banana/Installer/BANANA.ISO -drive file="banana-os/newimage.img",id=abcdefg,if=none -device ich9-ahci,id=ahci -device ide-drive,drive=abcdefg,bus=ahci.0 
@@ -214,7 +216,7 @@ pause
 )
 
 
-imdisk -a -f banana-os/newimage.img -m W:
+imdisk -a -f newimage.img -m W:
 rd /S /Q output 
 robocopy W:/ output /E
 imdisk -D -m W:

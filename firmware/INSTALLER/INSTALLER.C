@@ -1441,7 +1441,7 @@ void realInstallRedraw2(Window* w)
 
 void setupCompleteRepaint(Window* w)
 {
-	windowWrite(w, 0, 0, "Banana has been successfully installed");
+	windowWrite(w, 0, 0, "Banana has successfully installed");
 	windowWrite(w, 0, 1, "onto your computer.");
 	windowWrite(w, 0, 3, "Please restart your computer or press");
 	windowWrite(w, 0, 4, "ENTER to start Banana.");

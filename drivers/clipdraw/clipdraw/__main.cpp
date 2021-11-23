@@ -8,11 +8,10 @@ void NiBegin(void* s)
 	NiMain(s);
 }
 
-#include "core/main.hpp"
-#include "core/terminal.hpp"
-#include "core/physmgr.hpp"
+#include "krnl/main.hpp"
+#include "krnl/terminal.hpp"
+#include "krnl/physmgr.hpp"
 #include "thr/prcssthr.hpp"
-#include "reg/registry.hpp"
 #include "sys/syscalls.hpp"
 #include "hal/intctrl.hpp"
 #include "hw/acpi.hpp"

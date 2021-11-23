@@ -2,9 +2,9 @@
 
 #include "main.hpp"
 
-#include "core/main.hpp"
-#include "core/physmgr.hpp"
-#include "core/virtmgr.hpp"
+#include "krnl/main.hpp"
+#include "krnl/physmgr.hpp"
+#include "krnl/virtmgr.hpp"
 #include "thr/prcssthr.hpp"
 #include "hal/intctrl.hpp"
 #include "hw/cpu.hpp"

@@ -1,6 +1,6 @@
 #include "window.hpp"
 #include <krnl/panic.hpp>
-#include <core/kheap.hpp>
+#include <krnl/kheap.hpp>
 
 extern "C" {
 #include "libk/string.h"

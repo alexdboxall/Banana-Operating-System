@@ -1,5 +1,5 @@
-OUTPUT32="D:/Users/Alex/Desktop/Banana/packages/banana/32/0002/vga.sys"
-OUTPUT64="D:/Users/Alex/Desktop/VGA64.sys"
+OUTPUT32="C:/Users/Alex/Desktop/Banana/packages/banana/32/0002/vga.sys"
+OUTPUT64="C:/Users/Alex/Desktop/VGA64.sys"
 
 AS32=i386-banana-as
 AS64=x86_64-banana-as
@@ -14,7 +14,7 @@ LD64=x86_64-banana-ld
 
 ASFLAGS=
 CXXFLAGS=
-LDFLAGS=-g -T D:/Users/Alex/Desktop/Banana/drivers/dlink.ld
+LDFLAGS=-g -T C:/Users/Alex/Desktop/Banana/drivers/dlink.ld
 
 CXXOBJECTS32 = $(patsubst %.cpp, %.32, $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp) $(wildcard */*/*/*.cpp) $(wildcard **/*.cpp))
 CXXOBJECTS64 = $(patsubst %.cpp, %.64, $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp) $(wildcard */*/*/*.cpp) $(wildcard **/*.cpp))
@@ -31,21 +31,21 @@ all: build32
 build32: $(TARGET32) 
 
 $(TARGET32): $(OBJECTS32)
-	$(LD32) $(LDFLAGS) -shared -q -o $(OUTPUT32) $^ -Map=D:/Users/Alex/Desktop/driver32.map
+	$(LD32) $(LDFLAGS) -shared -q -o $(OUTPUT32) $^ -Map=C:/Users/Alex/Desktop/driver32.map
 
 %.32: %.cpp
-	$(CXX32) $(CXXFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel -fno-exceptions -fno-rtti
+	$(CXX32) $(CXXFLAGS) -c $^ -o $@ -IC:/Users/Alex/Desktop/Banana/kernel -fno-exceptions -fno-rtti
 	
 %.32: %.c
-	$(C32) $(CFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel
+	$(C32) $(CFLAGS) -c $^ -o $@ -IC:/Users/Alex/Desktop/Banana/kernel
 
 
 $(TARGET64): $(OBJECTS64)
-	$(LD64) $(LDFLAGS) -shared -q -o $(OUTPUT64) $^ -Map=D:/Users/Alex/Desktop/driver64.map
+	$(LD64) $(LDFLAGS) -shared -q -o $(OUTPUT64) $^ -Map=C:/Users/Alex/Desktop/driver64.map
 
 %.64: %.cpp
-	$(CXX64) $(CXXFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel -fno-exceptions -fno-rtti
+	$(CXX64) $(CXXFLAGS) -c $^ -o $@ -IC:/Users/Alex/Desktop/Banana/kernel -fno-exceptions -fno-rtti
 	
 %.64: %.c
-	$(C64) $(CFLAGS) -c $^ -o $@ -ID:/Users/Alex/Desktop/Banana/kernel
+	$(C64) $(CFLAGS) -c $^ -o $@ -IC:/Users/Alex/Desktop/Banana/kernel
 
