@@ -193,7 +193,7 @@ uint8_t* findDataTable(uint8_t* ptr, char name[])
 	return 0;
 }
 
-extern uint32_t sysBootSettings;
+extern uint32_t keBootSettings;
 void scanMADT()
 {	
 	RSDPpointer = nullptr;
@@ -464,4 +464,4 @@ int ACPI::close(int mode, int b, void* c)
 }
 
 
-#pragma GCC diagnostic pop
+#pragma GCC diagnostic popp

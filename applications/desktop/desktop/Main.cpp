@@ -35,14 +35,16 @@ struct DesktopFile
     NLoadedBitmap* bmp;
     char displayName[MAX_DESKTOP_DISPLAY_NAME_LENGTH];
     char* filepath;
+    int assocTypeID;
 };
 
 int iconsPerColumn;
 
 struct FileAssociaton
 {
-    char extension[24];
+    char extension[32];
     NLoadedBitmap* iconBitmap;
+    char* openProgram;
     bool valid;
 };
 
@@ -241,16 +243,22 @@ void loadIconBitmaps()
     }
 
     char str[800];
-    int failure = SystemCall((size_t) SystemCallNumber::RegistryEasyReadString, (size_t) "BANANA/FILEASSOC/ICON/TXT", (size_t) str, (size_t) "C:/Banana/Registry/System/SYSTEM.REG");
+    char str2[800];
+    int failure1 = SystemCall((size_t) SystemCallNumber::RegistryEasyReadString, (size_t) "BANANA/FILEASSOC/ICON/TXT", (size_t) str, (size_t) "C:/Banana/Registry/System/SYSTEM.REG");
+    int failure2 = SystemCall((size_t) SystemCallNumber::RegistryEasyReadString, (size_t) "BANANA/FILEASSOC/OPEN/TXT", (size_t) str2, (size_t) "C:/Banana/Registry/System/SYSTEM.REG");
 
-    if (!failure) {
+    if (!failure1 && !failure2) {
         fileAssoc[nextFileAssoc].valid = true;
         strcpy(fileAssoc[nextFileAssoc].extension, "TXT");
+        fileAssoc[nextFileAssoc].openProgram = (char*) malloc(strlen(str2) + 1);
+        strcpy(fileAssoc[nextFileAssoc].openProgram, str2);
         fileAssoc[nextFileAssoc++].iconBitmap = new NLoadedBitmap(str);
     }
 
     fileAssoc[nextFileAssoc].valid = true;
     strcpy(fileAssoc[nextFileAssoc].extension, "EXE");
+    fileAssoc[nextFileAssoc].openProgram = (char*)malloc(221);
+    strcpy(fileAssoc[nextFileAssoc].openProgram, "C:/Banana/System/conhost.exe");
     fileAssoc[nextFileAssoc++].iconBitmap = new NLoadedBitmap("C:/Banana/Icons/colour/exe.tga");
 
     fileAssoc[nextFileAssoc].valid = true;
@@ -345,7 +353,7 @@ void redrawIcon(int id)
     }
 }
 
-int registerFile(char* filepath, char* displayName, NLoadedBitmap* bmp, int tx, int ty, int ix, int iy, int bw, int bh)
+int registerFile(char* filepath, char* displayName, NLoadedBitmap* bmp, int tx, int ty, int ix, int iy, int bw, int bh, int assocType)
 {
     files[nextDesktopFile].bmp = bmp;
     files[nextDesktopFile].iconX = ix;
@@ -356,6 +364,7 @@ int registerFile(char* filepath, char* displayName, NLoadedBitmap* bmp, int tx, 
     files[nextDesktopFile].boundH = bh;
     files[nextDesktopFile].valid = true;
     files[nextDesktopFile].selected = false;
+    files[nextDesktopFile].assocTypeID = assocType;
 
     strcpy(files[nextDesktopFile].displayName, displayName);
     files[nextDesktopFile].filepath = (char*) malloc(strlen(filepath) + 1);
@@ -400,6 +409,8 @@ void refresh()
             int baseY = (diri % iconsPerColumn) * desktopCellHeight + 10;
 
             NLoadedBitmap* ico;
+            int fileAssocType = -1;
+
             if (ent->d_type & DT_DIR) {
                 ico = dirico;
             } else {
@@ -409,6 +420,7 @@ void refresh()
                     if (fileAssoc[j].valid) {
                         if (!strcasecmp(fileAssoc[j].extension, ext)) {
                             ico = fileAssoc[j].iconBitmap;
+                            fileAssocType = j;
                             break;
                         }
                     }
@@ -438,7 +450,7 @@ void refresh()
                 }
             }
 
-            int id = registerFile(ent->d_name, drawname, ico, baseX + desktopCellWidth / 2 - bndx / 2, baseY + desktopIconSize + 8, baseX + (desktopCellWidth - desktopIconSize) / 2, baseY, bndx, bndy);
+            int id = registerFile(ent->d_name, drawname, ico, baseX + desktopCellWidth / 2 - bndx / 2, baseY + desktopIconSize + 8, baseX + (desktopCellWidth - desktopIconSize) / 2, baseY, bndx, bndy, fileAssocType);
             redrawIcon(id);
 
             ++diri;
@@ -644,6 +656,19 @@ int main (int argc, char *argv[])
                 files[cs].selected = true;
                 redrawIcon(cs);
                 partialDesktopUpdate();
+            }
+
+            if (dummyWin.evnt.key == (int)KeyboardSpecialKeys::Enter) {
+                if (files[cs].assocTypeID != -1) {
+                    char* path = fileAssoc[files[cs].assocTypeID].openProgram;
+                    char* argvv[3];
+                    argvv[0] = path;
+                    argvv[1] = 0;
+                    int pid = SystemCall((size_t)SystemCallNumber::Spawn, 0, (size_t)argvv, (size_t)argvv[0]);
+
+                    deselectAllIcons();
+                    partialDesktopUpdate();
+                }
             }
 
             if (dummyWin.evnt.key == (int) KeyboardSpecialKeys::Right && cs + iconsPerColumn < MAX_DESKTOP_FILES && files[cs + iconsPerColumn].valid) {

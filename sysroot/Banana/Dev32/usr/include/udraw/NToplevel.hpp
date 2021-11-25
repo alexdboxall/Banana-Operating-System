@@ -12,8 +12,8 @@
 #include <stdio.h>
 
 extern "C" {
-    #include "D:\Users\Alex\Desktop\Banana\kernel\sys\syscalls.hpp"
-    #include "D:\Users\Alex\Desktop\Banana\drivers\clipdraw\clipdraw\userlink.h"
+    #include "C:\Users\Alex\Desktop\Banana\kernel\sys\syscalls.hpp"
+    #include "C:\Users\Alex\Desktop\Banana\drivers\clipdraw\clipdraw\userlink.h"
 }
 
 extern "C" {

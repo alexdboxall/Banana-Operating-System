@@ -1,5 +1,5 @@
-OUTPUT32="D:/Users/Alex/Desktop/Banana/packages/banana/32/0001/desktop.exe"
-OUTPUT64="D:/Users/Alex/Desktop/desktop64.exe"
+OUTPUT32="C:/Users/Alex/Desktop/Banana/packages/banana/32/0001/desktop.exe"
+OUTPUT64="C:/Users/Alex/Desktop/desktop64.exe"
 
 AS32=i386-banana-as
 CXX32=i386-banana-g++
