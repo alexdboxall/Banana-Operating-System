@@ -618,6 +618,7 @@ int main (int argc, char *argv[])
 
                 if (files[i].selected != overlap) {
                     files[i].selected = overlap;
+                    if (!needsUpdate) cs = i;
                     redrawIcon(i);
                     needsUpdate = true;
                 }

@@ -10,7 +10,7 @@ extern bool floppy;
 
 void _start()
 {
-	uint8_t* diskNumPtr = (uint8_t*) 0x6FFFF;
+	uint8_t* diskNumPtr = (uint8_t*)0x6FFFF;
 	floppy = *diskNumPtr == 0 || *diskNumPtr == 1;
 	main();
 }
@@ -24,7 +24,7 @@ int currentDiskette = 0;	//zero based
 
 bool isZero(uint32_t lbaOffsetWithinImage)
 {
-	uint8_t* spot = (uint8_t*) (0x8000 + lbaOffsetWithinImage / 8);
+	uint8_t* spot = (uint8_t*)(0x8000 + lbaOffsetWithinImage / 8);
 	uint8_t data = *spot;
 
 	int bit = 7 - (lbaOffsetWithinImage % 8);
@@ -138,7 +138,7 @@ void drawScreen()
 		for (int i = 0, x = 1; s[i]; ++i) { char c = s[i]; if (c == '\n') { x = 1; ++y; } else { writeCharacter(x++, y, c, installPhase == 123 ? TCYellow : TCWhite, TCBlack); } }
 		++y;
 	}
-	
+
 
 	for (int y = 1; y < 25; ++y) {
 		for (int x = 16; x < 80; ++x) {
@@ -175,7 +175,7 @@ void drawScreen()
 			}
 
 			int g = (windows[i]->w - __strlen(windows[i]->title)) / 2 - 1;
-			
+
 			for (int j = 0; j < __strlen(windows[i]->title); ++j) {
 				writeCharacter(windows[i]->x + 16 + g + j, windows[i]->y + 1, windows[i]->title[j], TCWhite, TCBlue);
 			}
@@ -285,7 +285,7 @@ void disclaimer(Window* w)
 	windowWrite(w, 0, 13, "use of this software, even if advised of the");
 	windowWrite(w, 0, 14, "possibility of such damage.");
 	windowWriteCol(w, 0, 16, "To install and/or use this software you must agree to ", TCBlue);
-	
+
 	if (disclaimPart2) {
 		windowWriteCol(w, 0, 17, "the above terms. Press ENTER to install, or ESC to quit.", TCBlue);
 	} else {
@@ -317,13 +317,13 @@ void disclaimer2(Window* w)
 	windowWrite(w, 0, 2, "This is software is to be used at the user's own risk.");
 	windowWrite(w, 0, 4, "These risks include, but are not limited to, ");
 	windowWrite(w, 0, 5, "the following:");
-	windowWriteCol(w, 0, 7,  "   - Irreversible damage to the computer's hardware", TCBlue);
-	windowWriteCol(w, 0, 8,  "   - Irreversible loss of user data", TCBlue);
-	windowWriteCol(w, 0, 9,  "   - Fire risks", TCBlue);
+	windowWriteCol(w, 0, 7, "   - Irreversible damage to the computer's hardware", TCBlue);
+	windowWriteCol(w, 0, 8, "   - Irreversible loss of user data", TCBlue);
+	windowWriteCol(w, 0, 9, "   - Fire risks", TCBlue);
 	windowWriteCol(w, 0, 10, "   - Monitor failures, which could lead to fire,", TCBlue);
 	windowWriteCol(w, 0, 11, "     explosions, electrocution, or radiation.", TCBlue);
 	windowWrite(w, 0, 13, "The user must accept the risks to install and/or");
-	
+
 	if (disclaimPart2) {
 		windowWrite(w, 0, 14, "use this software. To accept the risks and install");
 		windowWrite(w, 0, 15, "this software, press ENTER. Otherwise, press ESC.");
@@ -483,8 +483,8 @@ void floppyReadSector(uint32_t imageLBA, uint8_t* data)
 		bufferBase = -188;
 
 
-		readSector(0, (void*) 0x7C000, getFirstFloppy());
-		uint8_t* pos = (uint8_t*) (0x7C000 + 511);
+		readSector(0, (void*)0x7C000, getFirstFloppy());
+		uint8_t* pos = (uint8_t*)(0x7C000 + 511);
 
 		bool skip = false;
 
@@ -499,7 +499,7 @@ void floppyReadSector(uint32_t imageLBA, uint8_t* data)
 			skip = true;
 
 		} else {
-			
+
 		}
 
 		if (!skip) {
@@ -534,8 +534,8 @@ void floppyReadSector(uint32_t imageLBA, uint8_t* data)
 				char c = blockingKeyboard();
 
 				if (c == '\n') {
-					readSector(0, (void*) 0x7C000, getFirstFloppy());
-					uint8_t* pos = (uint8_t*) (0x7C000 + 511);
+					readSector(0, (void*)0x7C000, getFirstFloppy());
+					uint8_t* pos = (uint8_t*)(0x7C000 + 511);
 
 					if (floppyNum == 0 && (*pos == 0xAA || *pos == 0x55)) {
 					} else if (*pos == floppyNum + 1) {
@@ -564,7 +564,7 @@ void floppyReadSector(uint32_t imageLBA, uint8_t* data)
 		}
 	}
 
-	uint8_t* floppyBuffer = (uint8_t*) 0x7C000;
+	uint8_t* floppyBuffer = (uint8_t*)0x7C000;
 
 	if (!(floppySector >= bufferBase && floppySector < bufferBase + 18)) {
 		bufferBase = floppySector / 18;
@@ -855,7 +855,7 @@ bool displayLicensePage(int pg)
 	for (int i = 0; fulltext[i]; ++i) {
 		if (newlines == pg * 18) display = true;
 		if (newlines == pg * 18 + 18) return true;
-		
+
 		if (fulltext[i] == '\n') {
 			newlines++;
 			if (display) {
@@ -897,7 +897,8 @@ void licenseSummary()
 	}
 }
 
-void reallyQuit() {
+void reallyQuit()
+{
 	fadeWindows1And2 = true;
 
 	Window wx;
@@ -975,7 +976,7 @@ void continueOrExit()
 			millisleep(2000);
 		}
 
-		 if (c == '\n') {
+		if (c == '\n') {
 			break;
 		} else if (c == '\e') {
 			reallyQuit();
@@ -1115,11 +1116,11 @@ void setActivePartition()
 
 	if (partitions[partitionCursor].extended == 0 && !partitions[partitionCursor].free) {
 		readSector(0, firstSec, getFirstHDD());
-		*((uint8_t*) (firstSec + 0x1BE)) = 0;
-		*((uint8_t*) (firstSec + 0x1CE)) = 0;
-		*((uint8_t*) (firstSec + 0x1DE)) = 0;
-		*((uint8_t*) (firstSec + 0x1FE)) = 0;
-		*((uint8_t*) (firstSec + 0x1BE + partitions[partitionCursor].internalID * 16 + 0)) = 0x80;
+		*((uint8_t*)(firstSec + 0x1BE)) = 0;
+		*((uint8_t*)(firstSec + 0x1CE)) = 0;
+		*((uint8_t*)(firstSec + 0x1DE)) = 0;
+		*((uint8_t*)(firstSec + 0x1FE)) = 0;
+		*((uint8_t*)(firstSec + 0x1BE + partitions[partitionCursor].internalID * 16 + 0)) = 0x80;
 		writeSector(0, firstSec, getFirstHDD());
 	}
 }
@@ -1128,8 +1129,8 @@ void actualPartitionDelete()
 {
 	if (partitions[partitionCursor].extended == 0 && partitions[partitionCursor].sectorHeldIn == 0) {
 		readSector(0, firstSec, getFirstHDD());
-		*((uint32_t*) (firstSec + 0x1BE + partitions[partitionCursor].internalID * 16 + 8)) = 0;
-		*((uint32_t*) (firstSec + 0x1BE + partitions[partitionCursor].internalID * 16 + 12)) = 0;
+		*((uint32_t*)(firstSec + 0x1BE + partitions[partitionCursor].internalID * 16 + 8)) = 0;
+		*((uint32_t*)(firstSec + 0x1BE + partitions[partitionCursor].internalID * 16 + 12)) = 0;
 		writeSector(0, firstSec, getFirstHDD());
 	}
 }
@@ -1141,12 +1142,12 @@ void actualPartitionCreate(uint64_t size)
 	for (int i = 0; i < 4; ++i) {
 		uint8_t attrib = firstSec[0x1BE + i * 16 + 0];
 		uint8_t type = firstSec[0x1BE + i * 16 + 4];
-		uint32_t lba = *((uint32_t*) (firstSec + 0x1BE + i * 16 + 8));
-		uint32_t len = *((uint32_t*) (firstSec + 0x1BE + i * 16 + 12));
+		uint32_t lba = *((uint32_t*)(firstSec + 0x1BE + i * 16 + 8));
+		uint32_t len = *((uint32_t*)(firstSec + 0x1BE + i * 16 + 12));
 
 		if ((lba | len) == 0) {
-			*((uint32_t*) (firstSec + 0x1BE + i * 16 + 8)) = partitions[partitionCursor].lba;
-			*((uint32_t*) (firstSec + 0x1BE + i * 16 + 12)) = size;
+			*((uint32_t*)(firstSec + 0x1BE + i * 16 + 8)) = partitions[partitionCursor].lba;
+			*((uint32_t*)(firstSec + 0x1BE + i * 16 + 12)) = size;
 			writeSector(0, firstSec, getFirstHDD());
 			break;
 		}
@@ -1158,8 +1159,8 @@ void loadPartitions()
 	for (int i = 0; i < 4; ++i) {
 		uint8_t attrib = firstSec[0x1BE + i * 16 + 0];
 		uint8_t type = firstSec[0x1BE + i * 16 + 4];
-		uint32_t lba = *((uint32_t*) (firstSec + 0x1BE + i * 16 + 8));
-		uint32_t len = *((uint32_t*) (firstSec + 0x1BE + i * 16 + 12));
+		uint32_t lba = *((uint32_t*)(firstSec + 0x1BE + i * 16 + 8));
+		uint32_t len = *((uint32_t*)(firstSec + 0x1BE + i * 16 + 12));
 
 		if ((lba | len) != 0) {
 			partitionsTEMP[nextPartition].lba = lba;
@@ -1212,8 +1213,8 @@ uint64_t getHDDSize()
 void putFreeAreasInGaps()
 {
 	int oldNextPartition = nextPartition;
-	int j = 0; 
-	
+	int j = 0;
+
 	for (int i = 0; i < oldNextPartition; ++i) {
 		//sketchy!!!
 		if (partitionsTEMP[i].length && partitionsTEMP[i].lba) {
@@ -1301,7 +1302,7 @@ void partitionRepainter(Window* w)
 {
 	windowWrite(w, 0, 0, "Please select at partition to install");
 	windowWrite(w, 0, 1, "Banana on.");
-		
+
 	windowWrite(w, 0, 3, "Press C to create a partition in free space, ");
 	windowWrite(w, 0, 4, "D to delete a partition, and A to set a");
 	windowWrite(w, 0, 5, "partition as active.");
@@ -1407,7 +1408,7 @@ void realInstallRedraw1(Window* w)
 		writeCharacter(27, 13, '0', TCBlack, TCWhite);
 		writeCharacter(28, 13, '%', TCBlack, TCWhite);
 	}
-	
+
 	int filled = percent * 40 / 100;
 	if (filled > 40) filled = 40;
 	if (filled) for (int i = 0; i < filled; ++i) writeCharacter(25 + i, 15, ' ', TCBlue, TCBlue);
@@ -1461,8 +1462,8 @@ uint8_t xxinb(uint16_t port)
 {
 	uint8_t ret;
 	asm volatile ("inb %1, %0"
-				  : "=a"(ret)
-				  : "Nd"(port));
+		: "=a"(ret)
+		: "Nd"(port));
 	return ret;
 }
 
@@ -1499,19 +1500,19 @@ void realInstall()
 	read2KSectorFromInstallMedia(imageLba, bf);
 	read2KSectorFromInstallMedia(imageLba, bf);
 
-	uint32_t numSectors = *(uint32_t*) (bf + 0x20);
-	uint16_t reserved = *(uint16_t*) (bf + 0xE);
-	uint8_t numFATs = *(uint8_t*) (bf + 0x10);
+	uint32_t numSectors = *(uint32_t*)(bf + 0x20);
+	uint16_t reserved = *(uint16_t*)(bf + 0xE);
+	uint8_t numFATs = *(uint8_t*)(bf + 0x10);
 
 	uint32_t sectorsPerFATNew = (size - reserved) >> 7;
-	uint32_t sectorsPerFATOld = *(uint32_t*) (bf + 0x24);
+	uint32_t sectorsPerFATOld = *(uint32_t*)(bf + 0x24);
 
-	uint32_t oldDataStartOffset = numFATs * sectorsPerFATOld + (uint32_t) reserved;
-	uint32_t newDataStartOffset = numFATs * sectorsPerFATNew + (uint32_t) reserved;
+	uint32_t oldDataStartOffset = numFATs * sectorsPerFATOld + (uint32_t)reserved;
+	uint32_t newDataStartOffset = numFATs * sectorsPerFATNew + (uint32_t)reserved;
 
 	__memset(bf, 0, 512);
 
-	
+
 
 	uint8_t xx = 0;
 	if (!skipFormatting) {
@@ -1548,9 +1549,9 @@ void realInstall()
 
 	read2KSectorFromInstallMedia(imageLba, bf);
 
-	*(uint32_t*) (bf + 0x1C) = lba;
-	*(uint32_t*) (bf + 0x20) = size;
-	*(uint32_t*) (bf + 0x24) = sectorsPerFATNew;
+	*(uint32_t*)(bf + 0x1C) = lba;
+	*(uint32_t*)(bf + 0x20) = size;
+	*(uint32_t*)(bf + 0x24) = sectorsPerFATNew;
 
 	//put the filename string in
 	/*bf[0x34] = 'F';
@@ -1576,7 +1577,7 @@ void realInstall()
 	uint32_t count = (MAIN_DISK_MEGABYTES * 2 * 1024) / 4 - 1;
 	uint32_t inverseCount = 0;
 
-	
+
 	while (count) {
 		read2KSectorFromInstallMedia((MAIN_DISK_MEGABYTES * 2 * 1024) / 4 - count + MAIN_DISK_FIRST_SECTOR, bf);
 
@@ -1888,7 +1889,7 @@ void main()
 
 	int ramLength = getRAMMap(0x500);
 
-	uint64_t* ramTable = (uint64_t*) 0x500;
+	uint64_t* ramTable = (uint64_t*)0x500;
 	uint16_t ramTableLength = ramLength;
 
 	uint64_t totalRAM = 0;
@@ -1897,7 +1898,7 @@ void main()
 		uint64_t bottom = *(ramTable + 0);
 		uint64_t length = *(ramTable + 1);
 		uint64_t top = bottom + length;
-		uint64_t type = *(((uint32_t*) ramTable) + 4);
+		uint64_t type = *(((uint32_t*)ramTable) + 4);
 
 		//check that the high bits are clear
 		if ((bottom >> 32) || (top >> 32)) {
@@ -1907,7 +1908,7 @@ void main()
 		//check that it is usable, and that at least some of it is in the range
 		//we want it to be in
 		if (type == 1 && length >= 0x20000) {
-			totalRAM += length;		
+			totalRAM += length;
 			millisleep(200);
 		}
 

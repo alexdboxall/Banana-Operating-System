@@ -18,6 +18,7 @@
 /// 
 uint64_t SysGetPID(regs* r)
 {
+	kprintf("SysGetPID: %d\n", currentTaskTCB->processRelatedTo->pid);
 	return currentTaskTCB->processRelatedTo->pid;
 }
 

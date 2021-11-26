@@ -27,17 +27,21 @@ void drawVGAChar(Context* ctxt, int x, int y, int c, int fg, int bg)
     }
 }
 
-uint16_t vgaData[26][80];
+uint16_t vgaData[30][80];
 int vgaCurX = 0;
 int vgaCurY = 0;
+int taskPID = -1;
 
 extern "C" uint64_t SystemCall(size_t, size_t, size_t, size_t);
 
 void grabConsoleData() {
-    int pid = SystemCall((size_t)SystemCallNumber::GetPID, 0, 0, 0);
-    SystemCall((size_t)SystemCallNumber::GetVGAPtr, (size_t) vgaData, pid, 0);
+    int ret = SystemCall((size_t)SystemCallNumber::GetVGAPtr, (size_t) vgaData, taskPID, 1);
     vgaCurX = *(((int*)vgaData) + 1000);
     vgaCurY = *(((int*)vgaData) + 1001);
+    if (ret == 1) {
+        vgaCurX = 40;
+        vgaCurY = 22;
+    }
 }
 
 uint32_t vgaColourPalette[16] = {
@@ -83,7 +87,8 @@ int consolePaintHandler(NTopLevel* self) {
 extern "C" int main() {
     createSystemBrushes();
 
-    printf("Hello, world!\n\nThis is a test!");
+    char* argv[3] = { "C:/Banana/System/te.exe", 0 };
+    taskPID = SystemCall((size_t) SystemCallNumber::Spawn, 0, (size_t)argv, (size_t)argv[0]);
 
     NTopLevel* win = new NTopLevel("Console", 640, 440, WIN_FLAGS_DEFAULT_0 | WIN_FLAGS_0_HIDDEN | WIN_FLAGS_0_PRETTY);
     win->paintHandlerHook = consolePaintHandler;
@@ -91,11 +96,20 @@ extern "C" int main() {
 
     while (1) {        
         NiEvent evnt = win->process();
+
+        win->sync();
+        win->repaintFlush();
+        win->repaint();
+        
         switch (evnt.type) {
 
         default:
             win->defaultEventHandler(evnt);
             break;
+        }
+
+        if (evnt.type == EVENT_TYPE_KEYDOWN) {
+            win->repaint();
         }
     }
     

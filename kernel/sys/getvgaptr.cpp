@@ -27,9 +27,14 @@
 /// 
 uint64_t SysGetVGAPtr(regs* r)
 {
-	Process* prcss = Thr::processFromPID(r->ecx);
-	if (prcss == nullptr) {
-		return 1;
+	Process* prcss;
+	if (r->ecx != -1) {
+		prcss = Thr::processFromPID(r->ecx);
+		if (prcss == nullptr) {
+			return 1;
+		}
+	} else {
+		prcss = currentTaskTCB->processRelatedTo;
 	}
 
 	VgaText* terminal = prcss->terminal;
