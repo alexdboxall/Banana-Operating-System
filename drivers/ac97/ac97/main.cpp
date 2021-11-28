@@ -9,11 +9,10 @@ void begin(void* b)
 
 #include "main.hpp"
 
-#include "core/main.hpp"
-#include "core/terminal.hpp"
-#include "core/physmgr.hpp"
+#include "krnl/main.hpp"
+#include "krnl/terminal.hpp"
+#include "krnl/physmgr.hpp"
 #include "thr/prcssthr.hpp"
-#include "reg/registry.hpp"
 #include "hal/intctrl.hpp"
 #include "krnl/hal.hpp"
 #include "hw/bus/pci.hpp"
@@ -56,7 +55,7 @@ extern "C" {
 #include "libk/string.h"
 }
 
-int16_t buf[8192];
+int8_t buf[8192];
 
 void playThread(void* __);
 void start(Device* _dvl)
@@ -71,7 +70,7 @@ void start(Device* _dvl)
 	dev->preOpenPCI(driverless->pci.info);
 	dev->_open(0, 0, nullptr);
 
-	//kernelProcess->createThread(playThread, dev, 30);
+	kernelProcess->createThread(playThread, dev, 30);
 }
 
 void playThread(void* __)
@@ -80,20 +79,21 @@ void playThread(void* __)
 
 	SoundCard* card = (SoundCard*) __;
 
-	const int SOUND_HERTZ = 24000;
+	//SOUND CARD SETTINGS (not necessarily the WAV file's settings)
+	const int SOUND_HERTZ = 8000;
 	const int SOUND_BITS = 16;
 	const int SOUND_CHANNELS = 2;
 
 	SoundPort* port = new SoundPort(SOUND_HERTZ, SOUND_BITS, SOUND_CHANNELS, 65536 * 6);
 	bool started = false;
 
-	File* f = new File("C:/fluffy bluff.wav", kernelProcess);
+	File* f = new File("C:/flopside.wav", kernelProcess);
 	f->open(FileOpenMode::Read);
 
 	while (1) {
 		int bytesRead = 0;	
 		kprintf("about to read.\n");
-		FileStatus st = f->read(8192 * 2, buf, &bytesRead);
+		FileStatus st = f->read(8192, buf, &bytesRead);
 		kprintf("we just read.\n");
 
 		if (bytesRead == 0 || st != FileStatus::Success) {
@@ -110,14 +110,15 @@ void playThread(void* __)
 			card->beginPlayback();
 			started = true;
 		}
-
+		 
 		while (port->getBufferUsed() + bytesRead * 3 >= port->getBufferSize()) {
+			kprintf("%d + %d (%d) >= %d\n", port->getBufferUsed(), bytesRead * 3, port->getBufferUsed() + bytesRead * 3, port->getBufferSize());
 			lockScheduler();
 			schedule();
 			unlockScheduler();
 		}
 
-		port->buffer16(buf, bytesRead / 2);
+		port->buffer8(buf, bytesRead);
 	}
 
 	terminateTask(0);
@@ -282,10 +283,6 @@ void AC97::beginPlayback()
 	//set sample rate
 	setSampleRate(currentSampleRate);
 
-	if (currentBits != 16) {
-		KePanic("AC97::beginPlayback bits != 16 NOT SUPPORTED!");
-	}
-
 	if (currentChannels != 2) {
 		KePanic("AC97::beginPlayback channels != 2 NOT SUPPORTED!");
 	}
@@ -293,7 +290,6 @@ void AC97::beginPlayback()
 	//start transfer
 	uint8_t val = thePCI->readBAR8(nabm, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
 	val = (val & ~0x1F) | 0x1D;
-	kprintf("VAL = 0x%X\n", val);
 	thePCI->writeBAR8(nabm, val, NABM_PCM_OUTPUT_BASE + NABM_OFFSET_BUFFER_CNT);
 
 	playing = true;

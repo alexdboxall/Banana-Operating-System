@@ -62,6 +62,25 @@ int SoundPort::getBufferSize()
 	return buffSize;
 }
 
+int SoundPort::buffer8(int8_t* data, int samples)
+{
+	if (buffUsed == buffSize) {
+		return 0;
+	}
+
+	int i = 0;
+	for (; i < samples; ++i) {
+		buff[buffUsed++] = data[i] * 0xFFFFFF;
+
+		if (buffUsed == buffSize) {
+			//buffer full
+			return i + 1;
+		}
+	}
+
+	return i;
+}
+
 int SoundPort::buffer16(int16_t* data, int samples)
 {
 	if (buffUsed == buffSize) {
@@ -70,7 +89,7 @@ int SoundPort::buffer16(int16_t* data, int samples)
 
 	int i = 0;
 	for (; i < samples; ++i) {
-		buff[buffUsed++] = data[i] * 0x8000;
+		buff[buffUsed++] = data[i] * 0xFFFF;
 
 		if (buffUsed == buffSize) {
 			//buffer full

@@ -29,6 +29,7 @@ public:
 	void unpause();
 	void pause();
 
+	int buffer8(int8_t* data, int samples);
 	int buffer16(int16_t* data, int samples);
 	int buffer32(int32_t* data, int samples);
 

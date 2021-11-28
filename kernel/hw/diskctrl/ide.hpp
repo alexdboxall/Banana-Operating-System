@@ -28,6 +28,13 @@
 #define ATA_REG_ALTSTATUS  0x0C
 #define ATA_REG_DEVADDRESS 0x0D
 
+#define ATA_REG_BUSMSTR_COMMAND		0x0E
+#define ATA_REG_BUSMSTR_STATUS		0x10
+#define ATA_REG_BUSMSTR_PRDT0		0x12
+#define ATA_REG_BUSMSTR_PRDT1		0x13
+#define ATA_REG_BUSMSTR_PRDT2		0x14
+#define ATA_REG_BUSMSTR_PRDT3		0x15
+
 #define ATA_PRIMARY        0x00
 #define ATA_SECONDARY      0x01
 #define ATA_READ           0x00
@@ -123,6 +130,7 @@ public:
 
 		bool hasLBA;
 		bool hasLBA48;
+		bool hasDMA;
 
 	} devices[4];
 

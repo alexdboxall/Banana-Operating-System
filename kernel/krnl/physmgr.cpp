@@ -187,6 +187,8 @@ namespace Phys
 
 		lockScheduler();
 
+		kprintf("Phys::allocateContiguousPages CRITICAL: TODO: pages that we check should be freed if not used!\n");
+
 		int got = 0;
 		size_t base;
 		while (1) {

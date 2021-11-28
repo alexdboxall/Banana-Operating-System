@@ -18,6 +18,12 @@ protected:
 	int drive;
 	int ideDeviceNum;
 
+	size_t ataPhysAddr;
+	size_t ataVirtAddr;
+
+	size_t prdtPhysAddr;
+	size_t prdtVirtAddr;
+
 	int access(uint64_t sector, int count, void* buffer, bool write);
 	bool readyForCommand();
 	void flush(bool lba48);

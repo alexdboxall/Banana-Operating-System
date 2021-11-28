@@ -3,6 +3,8 @@
 #include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
 #include "krnl/common.hpp"
+#include "krnl/physmgr.hpp"
+#include "krnl/virtmgr.hpp"
 #include "thr/prcssthr.hpp"
 #include "hal/vcache.hpp"
 #include "hal/logidisk.hpp"
@@ -20,7 +22,7 @@ int ataSectorsWritten = 0;
 
 ATA::ATA() : PhysicalDisk("ATA Hard Drive", 512)
 {
-
+	
 }
 
 void ATA::flush(bool lba48)
@@ -50,6 +52,8 @@ bool ATA::readyForCommand()
 #define MODE_CHS	0
 #define MODE_LBA28	1
 #define MODE_LBA48	2
+#define MODE_DMA28	3
+#define MODE_DMA48	4
 
 int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 {
@@ -59,47 +63,69 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 	uint8_t command;
 
 	bool hasLBA = ide->devices[ideDeviceNum].hasLBA;
+	bool hasDMA = 0 && ide->devices[ideDeviceNum].hasDMA && (count >= 8 && count < 64);
 
 	//sort out the what LBA values will be sent depending on
 	//the features supported by this drive
-	if (hasLBA && (lba >> 28)) {
-		//LBA48
-		lbaMode = MODE_LBA48;
 
-		for (int i = 0; i < 6; ++i) {
-			lbaIO[i] = (lba >> (i << 3)) & 0xFF;
+	if (!hasDMA) {
+		if (hasLBA && (lba >> 28)) {
+			//LBA48
+			lbaMode = MODE_LBA48;
+
+			for (int i = 0; i < 6; ++i) {
+				lbaIO[i] = (lba >> (i << 3)) & 0xFF;
+			}
+
+			head = 0;
+
+		} else if (hasLBA) {
+			//LBA28
+			lbaMode = MODE_LBA28;
+
+			lbaIO[0] = (lba >> 0) & 0xFF;
+			lbaIO[1] = (lba >> 8) & 0xFF;
+			lbaIO[2] = (lba >> 16) & 0xFF;
+			lbaIO[3] = 0;
+			lbaIO[4] = 0;
+			lbaIO[5] = 0;
+
+			head = (lba >> 24) & 0xF;
+
+		} else {
+			//CHS
+			lbaMode = MODE_CHS;
+
+			uint8_t sect = (lba % 63) + 1;
+			uint16_t cyl = lba / (16 * 63);
+
+			lbaIO[0] = sect;
+			lbaIO[1] = (cyl >> 0) & 0xFF;
+			lbaIO[2] = (cyl >> 8) & 0xFF;
+			lbaIO[3] = 0;
+			lbaIO[4] = 0;
+			lbaIO[5] = 0;
+
+			head = (lba / 63) % 16;
 		}
 
-		head = 0;
+	} else {		
+		//LBA28 (for now...)
 
-	} else if (hasLBA) {
-		//LBA28
-		lbaMode = MODE_LBA28;
+		if (lba >> 28) {
 
-		lbaIO[0] = (lba >> 0) & 0xFF;
-		lbaIO[1] = (lba >> 8) & 0xFF;
-		lbaIO[2] = (lba >> 16) & 0xFF;
-		lbaIO[3] = 0;
-		lbaIO[4] = 0;
-		lbaIO[5] = 0;
+		} else {
+			lbaMode = MODE_DMA28;
 
-		head = (lba >> 24) & 0xF;
-	
-	} else {
-		//CHS
-		lbaMode = MODE_CHS;
+			lbaIO[0] = (lba >> 0) & 0xFF;
+			lbaIO[1] = (lba >> 8) & 0xFF;
+			lbaIO[2] = (lba >> 16) & 0xFF;
+			lbaIO[3] = 0;
+			lbaIO[4] = 0;
+			lbaIO[5] = 0;
 
-		uint8_t sect = (lba % 63) + 1;
-		uint16_t cyl = lba / (16 * 63);
-
-		lbaIO[0] = sect;
-		lbaIO[1] = (cyl >> 0) & 0xFF;
-		lbaIO[2] = (cyl >> 8) & 0xFF;
-		lbaIO[3] = 0;
-		lbaIO[4] = 0;
-		lbaIO[5] = 0;
-
-		head = (lba / 63) % 16;	
+			head = (lba >> 24) & 0xF;
+		}
 	}
 
 	//disable IRQs
@@ -120,8 +146,29 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 		ide->write(channel, ATA_REG_HDDEVSEL, 0xE0 | (drive << 4) | head);
 	}
 
-	//set PIO mode
-	ide->write(channel, ATA_REG_FEATURES, 0);
+	if (hasDMA) {
+		uint64_t* prdt = (uint64_t*) prdtVirtAddr;
+		*prdt = (1ULL << 63ULL);
+		*prdt |= ataPhysAddr;
+		*prdt |= (count * 512) << 32;
+
+		if (write) {
+			memcpy((void*)ataVirtAddr, buffer, 512 * count);
+		}
+
+		ide->write(channel, ATA_REG_BUSMSTR_COMMAND, write ? 0 : 8);
+
+		uint8_t status = ide->read(channel, ATA_REG_BUSMSTR_STATUS);
+		status &= ~(1 << 1);		//clear error flag
+		status &= ~(1 << 2);		//clear IRQ received flag
+		ide->write(channel, ATA_REG_BUSMSTR_STATUS, status);
+
+		ide->write(channel, ATA_REG_FEATURES, 0);
+
+	} else {
+		//set PIO mode
+		ide->write(channel, ATA_REG_FEATURES, 0);
+	}
 
 	//write LBA48 data
 	if (lbaMode == MODE_LBA48) {
@@ -139,9 +186,11 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 
 	//determine which command to send
 	if (write && lbaMode == MODE_LBA48) command = ATA_CMD_WRITE_PIO_EXT;
-	else if (write && lbaMode != MODE_LBA48) command = ATA_CMD_WRITE_PIO;
+	else if (write && lbaMode == MODE_LBA28) command = ATA_CMD_WRITE_PIO;
+	else if (write && lbaMode == MODE_DMA28) command = ATA_CMD_WRITE_DMA;
 	else if (!write && lbaMode == MODE_LBA48) command = ATA_CMD_READ_PIO_EXT;
-	else if (!write && lbaMode != MODE_LBA48) command = ATA_CMD_READ_PIO;
+	else if (!write && lbaMode == MODE_LBA28) command = ATA_CMD_READ_PIO;
+	else if (!write && lbaMode == MODE_DMA28) command = ATA_CMD_READ_DMA;
 	else {
 		return 1;
 	}
@@ -150,34 +199,49 @@ int ATA::access(uint64_t lba, int count, void* buffer, bool write)
 	ide->write(channel, ATA_REG_COMMAND, command);
 	unlockScheduler();
 
-	//for each sector
-	int ogcount = count;
-	while (count--) {
-		uint16_t* buffer16 = (uint16_t*) buffer;
+	if (hasDMA) {
+		ide->write(channel, ATA_REG_BUSMSTR_COMMAND, 1 | (write ? 0 : 8));
+	}
 
-		//wait for the device to be ready
-		uint8_t err = ide->polling(channel, 1);
+	if (!hasDMA) {
+		int ogcount = count;
+		while (count--) {
+			uint16_t* buffer16 = (uint16_t*)buffer;
 
-		if (err) {
-			ide->printError(channel, drive, err);
-			return err;
-		}
+			//wait for the device to be ready
+			uint8_t err = ide->polling(channel, 1);
 
-		//read/write data
-		if (write) {
-			lockScheduler();
-			for (int i = 0; i < 256; ++i) {
-				outw(ide->getBase(channel), *buffer16++);
+			if (err) {
+				ide->printError(channel, drive, err);
+				return err;
 			}
-			unlockScheduler();
 
-		} else {
-			lockScheduler();
-			asm("cld; rep insw" : : "c"(256), "d"(ide->getBase(channel)), "D"(buffer16) : "flags", "memory");
-			unlockScheduler();
+			//read/write data
+			if (write) {
+				lockScheduler();
+				for (int i = 0; i < 256; ++i) {
+					outw(ide->getBase(channel), *buffer16++);
+				}
+				unlockScheduler();
+
+			} else {
+				lockScheduler();
+				asm("cld; rep insw" : : "c"(256), "d"(ide->getBase(channel)), "D"(buffer16) : "flags", "memory");
+				unlockScheduler();
+			}
+
+			buffer = (void*)(((uint8_t*)buffer) + 512);
 		}
 
-		buffer = (void*) (((uint8_t*) buffer) + 512);
+	} else {
+		ide->waitInterrupt(channel);
+
+		uint8_t status = ide->read(channel, ATA_REG_BUSMSTR_STATUS);
+		ide->write(channel, ATA_REG_BUSMSTR_COMMAND, 0);
+
+		if (!write) {
+			memcpy(buffer, (const void*)ataVirtAddr, 512 * count);
+		}
 	}
 
 	if (write) {
@@ -214,6 +278,23 @@ int ATA::open(int __a, int _ideDeviceNum, void* _ide)
 	asm("nop; nop");
 	ide->write(channel, ATA_REG_CONTROL, 0);
 
+	if (ide->devices[ideDeviceNum].hasDMA) {
+		ataPhysAddr = Phys::allocateContiguousPages(8);
+		kprintf("DEBUG! FATAL ERROR ensure doesn't cross 64K boundary!!!\n");
+		ataVirtAddr = Virt::allocateKernelVirtualPages(2);
+		Virt::getAKernelVAS()->mapPage(ataPhysAddr, ataVirtAddr, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
+	
+		prdtPhysAddr = Phys::allocatePage();
+		prdtVirtAddr = Virt::allocateKernelVirtualPages(1);
+		Virt::getAKernelVAS()->mapPage(prdtPhysAddr, prdtVirtAddr, PAGE_PRESENT | PAGE_WRITABLE | PAGE_SUPERVISOR);
+
+		kprintf("DEBUG! FATAL ERROR if two devices on same channel, as they need to share the PRDT, not create seperate ones!!!\n");
+		ide->write(channel, ATA_REG_BUSMSTR_PRDT0, (prdtPhysAddr >> 0) & 0xFF);
+		ide->write(channel, ATA_REG_BUSMSTR_PRDT1, (prdtPhysAddr >> 8) & 0xFF);
+		ide->write(channel, ATA_REG_BUSMSTR_PRDT2, (prdtPhysAddr >> 16) & 0xFF);
+		ide->write(channel, ATA_REG_BUSMSTR_PRDT3, (prdtPhysAddr >> 24) & 0xFF);
+	}
+	
 	//set up logical disks
 	startCache();
 	createPartitionsForDisk(this);

@@ -323,8 +323,8 @@ void HalDetectFeatures()
 	features.hasACPI = true;
 	features.hasCPUID = detectCPUID() ? true : false;
 
-	features.hasACPI = false;
-	kprintf("DEBUG A: hal.cpp\n");
+	//features.hasACPI = false;
+	//kprintf("DEBUG A: hal.cpp\n");
 
 	if (features.hasCPUID) {
 		features.hasMSR = cpuidCheckEDX(CPUID_FEAT_EDX_MSR);

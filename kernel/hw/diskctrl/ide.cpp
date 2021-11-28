@@ -72,6 +72,7 @@ int IDE::open(int a, int, void*)
 	legacyIRQs = false;
 
 	if (detectionType == DetectionType::PCI) {
+		
 		if ((pci.info.progIF & 0x7F) == 0x05 || (pci.info.progIF & 0x7F) == 0x0A || (pci.info.progIF & 0x7F) == 0x0F) {
 			channels[0].base = pci.info.bar[0] & ~3;
 			channels[0].ctrl = pci.info.bar[1] & ~3;
@@ -140,6 +141,11 @@ int IDE::open(int a, int, void*)
 		if (pci.info.progIF & 0x80) {
 			channels[0].busMastering = pci.info.bar[4] & ~3;
 			channels[1].busMastering = channels[0].busMastering + 8;
+
+			kprintf("Enabling Bus Mastering\n");
+			//enable bus mastering
+			uint16_t w = thePCI->pciReadWord(pci.info.bus, pci.info.slot, pci.info.function, 0x4);
+			thePCI->pciWriteWord(pci.info.bus, pci.info.slot, pci.info.function, 0x4, w | 7);
 		}
 
 	} else {
@@ -497,6 +503,7 @@ void IDE::detect()
 			devices[deviceCount].model[40] = 0;
 
 			devices[deviceCount].hasLBA = devices[deviceCount].capabilities & 0x200;
+			devices[deviceCount].hasDMA = (devices[deviceCount].capabilities & 0x100) && channels[i].busMastering;
 			KeSetBootMessage(".14");
 
 			if (type == IDE_ATA && devices[deviceCount].size) {
