@@ -68,11 +68,13 @@ void timerHandler(uint32_t milliTenths)
 {
 	milliTenthsSinceBoot += milliTenths;
 
-	if (!KeIsSchedulingOn) return;
+	if (!KeIsSchedulingOn) {
+		return;
+	}
 
 	ThreadControlBlock* next_task;
 	ThreadControlBlock* this_task = nullptr;
-	lockStuff();
+	lockScheduler();	// lockStuff();
 
 	if (!sleepingTaskList.isEmpty()) {
 		ThreadControlBlock* first = (ThreadControlBlock*) sleepingTaskList.getFirstElement();
@@ -96,15 +98,15 @@ void timerHandler(uint32_t milliTenths)
 
 	//do preemption
 	if (currentTaskTCB->timeSliceRemaining != 0 && KeIsPreemptionOn) {
-		lockScheduler();		
+		//lockScheduler();	
 		currentTaskTCB->timeSliceRemaining -= milliTenths;
 		if (currentTaskTCB->timeSliceRemaining <= milliTenthsSinceBoot) {
 			schedule();
 		}
-		unlockScheduler();
+		//unlockScheduler();
 	}
 
 	// Done, unlock the scheduler (and do any postponed task switches!)
 
-	unlockStuff();
+	unlockScheduler();		// unlockStuff();
 }

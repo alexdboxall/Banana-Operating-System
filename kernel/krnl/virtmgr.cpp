@@ -510,6 +510,8 @@ int twswaps = 0;
 
 void VAS::evict(size_t virt)
 {
+	extern int irqDisableCounter; kprintf("    --> evict A: %d\n", irqDisableCounter);
+
 	size_t id = Virt::allocateSwapfilePage();
 
 	for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
@@ -529,21 +531,31 @@ void VAS::evict(size_t virt)
 
 	HalFlushTLB();
 
-	kprintf("evicting phys 0x%X, virt 0x%X, swap balance %d\n", physAddr, virt, swapBalance);
-	kprintf("Total swaps: %d\n", twswaps++);
+	kprintf("\nevicting phys 0x%X, virt 0x%X, swap balance %d\n", physAddr, virt, swapBalance);
+	kprintf("Total swaps: %d\n\n", twswaps++);
+	extern int irqDisableCounter; kprintf("    --> evict B: %d\n", irqDisableCounter);
+
 }
 
 bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 {
+	extern int KiPreemptionDisableCounter;
+
 	if (faultAddr >= 0xFFC00000U) {
 		KePanic("NESTED PAGE FAULT");
 	}
-	kprintf("fault addr = 0x%x\n", faultAddr);
+	kprintf("\nloading back off due to fault at addr = 0x%x\n", faultAddr);
+	kprintf("A: KiPreemptionDisableCounter = %d\n", KiPreemptionDisableCounter);
+	extern int irqDisableCounter; kprintf("    --> tryLoadBackOffDisk A: %d\n", irqDisableCounter);
+
 	bool onPageBoundary = (faultAddr & 0xFFF) > 0xFE0;
 
 	faultAddr &= ~0xFFF;
 	size_t* entry = getPageTableEntry(faultAddr);
 	if (!faultAddr) {
+		kprintf("E: KiPreemptionDisableCounter = %d\n", KiPreemptionDisableCounter);
+		extern int irqDisableCounter; kprintf("    --> tryLoadBackOffDisk E: %d\n", irqDisableCounter);
+
 		return false;
 	}
 
@@ -571,12 +583,19 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 
 		memcpy((void*) (faultAddr & ~0xFFF), buffer, 4096);
 
+		kprintf("D: KiPreemptionDisableCounter = %d\n", KiPreemptionDisableCounter);
+		extern int irqDisableCounter; kprintf("    --> tryLoadBackOffDisk D: %d\n", irqDisableCounter);
+
 		return true;
 	}
 
 	if (entry && ((*entry) & PAGE_ALLOCATED) && !((*entry) & PAGE_PRESENT)) {
 		size_t id = (*entry) >> 12;				//we need the ID
+
+		extern int irqDisableCounter; kprintf("    --> tryLoadBackOffDisk H: %d\n", irqDisableCounter);
+
 		size_t phys = Phys::allocatePage();		//get a new physical page
+		extern int irqDisableCounter; kprintf("    --> tryLoadBackOffDisk I: %d\n", irqDisableCounter);
 
 		*entry &= 0xFFF;						//clear address
 		*entry |= PAGE_PRESENT;					//it is now present
@@ -585,19 +604,33 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		*entry |= phys;
 
 		for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
+			extern int irqDisableCounter; kprintf("    --> tryLoadBackOffDisk J: %d\n", irqDisableCounter);
 			disks[Virt::swapfileDrive - 'A']->read(Virt::swapIDToSector(id) + i, 1, ((uint8_t*) faultAddr) + 512 * i);
+			extern int irqDisableCounter; kprintf("    --> tryLoadBackOffDisk K: %d\n", irqDisableCounter);
 		}
+
+		extern int irqDisableCounter; kprintf("    --> tryLoadBackOffDisk L: %d\n", irqDisableCounter);
 
 		--swapBalance;
 		kprintf("reloading: 0x%X, %d\n", faultAddr, swapBalance);
 
 		Virt::freeSwapfilePage(id);
-		unlockScheduler();
+		extern int irqDisableCounter; kprintf("    --> tryLoadBackOffDisk M: %d\n", irqDisableCounter);
+
+		//unlockScheduler();
 
 		HalFlushTLB();
 
+		kprintf("done.\n");
+
+		kprintf("B: KiPreemptionDisableCounter = %d\n", KiPreemptionDisableCounter);
+		extern int irqDisableCounter; kprintf("    --> tryLoadBackOffDisk B: %d\n", irqDisableCounter);
+
 		return true;
 	}
+
+	kprintf("C: KiPreemptionDisableCounter = %d\n", KiPreemptionDisableCounter);
+	extern int irqDisableCounter; kprintf("    --> tryLoadBackOffDisk C: %d\n", irqDisableCounter);
 
 	return false;
 }
@@ -629,6 +662,9 @@ void VAS::freeSharedMemoryWithKernel(size_t vaddr, size_t krnlVirt)
 
 size_t VAS::scanForEviction()
 {
+	extern int irqDisableCounter; kprintf("    --> scanForEviction 1: %d\n", irqDisableCounter);
+
+	kprintf("*** scanning for eviction.\n");
 	int runs = 0;
 	while (1) {
 		//first check that this page directory is present
@@ -656,6 +692,9 @@ size_t VAS::scanForEviction()
 					kprintf("did evict... 0x%X\n", evictionScanner);
 					kprintf("ret... 0x%X\n", ret);
 					evictionScanner += 4096;		//saves a check the next time this gets called
+
+					extern int irqDisableCounter; kprintf("    --> scanForEviction 2: %d\n", irqDisableCounter);
+
 					return ret;
 				}
 			}

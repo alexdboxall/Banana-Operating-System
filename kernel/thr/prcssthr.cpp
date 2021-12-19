@@ -281,6 +281,7 @@ void schedule()
 		switchToThread(task);
 	}
 }
+
 void cleanupTerminatedTask(ThreadControlBlock* task)
 {
 	for (int i = 0; i < task->processRelatedTo->argc; ++i) {
@@ -413,6 +414,8 @@ void cleanerTaskFunction(void* context)
 
 void terminateTask(int returnCode)
 {
+	kprintf("terminating task.\n");
+
 	extern int irqDisableCounter;
 	extern int postponeTaskSwitchesCounter;
 	extern int taskSwitchesPostponedFlag;
@@ -460,6 +463,7 @@ void blockTaskWithSchedulerLockAlreadyHeld(enum TaskState reason)
 void blockTask(enum TaskState reason)
 {
 	lockScheduler();
+	kprintf("blockTask -> %d.\n", (int)reason);
 	currentTaskTCB->state = reason;
 	schedule();
 	unlockScheduler();

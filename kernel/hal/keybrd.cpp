@@ -16,9 +16,6 @@
 
 bool keystates[0x400];
 
-bool kiKeyboardGUILatch = false;
-bool kiKeyboardGUILock = false;
-
 void (*guiKeyboardHandler) (KeyboardToken kt, bool* keystates) = nullptr;
 
 bool keyboardSetupYet = false;
@@ -205,10 +202,6 @@ int readKeyboard(VgaText* terminal, char* buf, size_t count)
 		guiKeyboardHandler(kt, keystates);
 	}
 
-	if (kiKeyboardGUILatch) {
-		kiKeyboardGUILock = true;
-	}
-
 	asm("sti");
 	int charsRead = 0;
 	while (count) {
@@ -222,9 +215,6 @@ int readKeyboard(VgaText* terminal, char* buf, size_t count)
 		//blocked = true;
 
 		//put in the buffer
-		if (kiKeyboardGUILock) {
-			terminal->keybufferSent[0] = '\n';
-		}
 		*buf++ = terminal->keybufferSent[0];
 
 		char key = terminal->keybufferSent[0];
@@ -242,7 +232,7 @@ int readKeyboard(VgaText* terminal, char* buf, size_t count)
 		--count;
 		++charsRead;
 
-		if (key == '\n' || key == '\3' || key == '\x1C' || kiKeyboardGUILatch) {
+		if (key == '\n' || key == '\3' || key == '\x1C') {
 			return charsRead;
 		}
 	}

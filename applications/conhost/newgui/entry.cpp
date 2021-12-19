@@ -36,12 +36,11 @@ extern "C" uint64_t SystemCall(size_t, size_t, size_t, size_t);
 
 void grabConsoleData() {
     int ret = SystemCall((size_t)SystemCallNumber::GetVGAPtr, (size_t) vgaData, taskPID, 1);
+    if (ret) {
+        exit(0);
+    }
     vgaCurX = *(((int*)vgaData) + 1000);
     vgaCurY = *(((int*)vgaData) + 1001);
-    if (ret == 1) {
-        vgaCurX = 40;
-        vgaCurY = 22;
-    }
 }
 
 uint32_t vgaColourPalette[16] = {
@@ -84,11 +83,12 @@ int consolePaintHandler(NTopLevel* self) {
     return 0;
 }
 
-extern "C" int main() {
+extern "C" int main(int argc, char** argv) {
+    if (argc != 2) return 1;
     createSystemBrushes();
 
-    char* argv[3] = { "C:/Banana/System/te.exe", 0 };
-    taskPID = SystemCall((size_t) SystemCallNumber::Spawn, 0, (size_t)argv, (size_t)argv[0]);
+    char* argvv[3] = { argv[1], 0 };
+    taskPID = SystemCall((size_t) SystemCallNumber::Spawn, 0, (size_t)argvv, (size_t)argvv[0]);
 
     NTopLevel* win = new NTopLevel("Console", 640, 440, WIN_FLAGS_DEFAULT_0 | WIN_FLAGS_0_HIDDEN | WIN_FLAGS_0_PRETTY);
     win->paintHandlerHook = consolePaintHandler;
@@ -100,17 +100,6 @@ extern "C" int main() {
         win->sync();
         win->repaintFlush();
         win->repaint();
-        
-        switch (evnt.type) {
-
-        default:
-            win->defaultEventHandler(evnt);
-            break;
-        }
-
-        if (evnt.type == EVENT_TYPE_KEYDOWN) {
-            win->repaint();
-        }
     }
     
     return 0;

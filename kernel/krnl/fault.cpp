@@ -53,11 +53,15 @@ extern "C" uint64_t int_handler(struct regs* r)
 #pragma GCC diagnostic pop
 				return retV;
 			} else {
+				extern int KiPreemptionDisableCounter;
+				extern bool KiRestorePreemptionValue;
+				extern bool KeIsPreemptionOn;
 				handleList[i](r, contextList[i]);
 			}
 		}
 	}
 
+	kprintf("*\n");
 	return 0;
 }
 
@@ -85,6 +89,7 @@ void KeGeneralProtectionFault(void* r, void* context)
 
 void KePageFault(void* r, void* context)
 {
+	kprintf("page fault.\n");
 	if (HalHandlePageFault(r, context)) {
 		return;
 	}

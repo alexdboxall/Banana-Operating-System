@@ -43,7 +43,7 @@ void NiMain(void* s)
 
 #ifdef KERNEL_DEBUG
 	extern void NiDisplayRAM(void*);
-	//kernelProcess->createThread(NiDisplayRAM);
+	kernelProcess->createThread(NiDisplayRAM);
 #endif
 
 	NIWindow* win0 = new NIWindow(ctxt, 0, 0, 1, 1);

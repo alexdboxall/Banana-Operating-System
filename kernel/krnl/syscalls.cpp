@@ -270,6 +270,8 @@ uint64_t SysSize(regs* r)
 		file = KeGetFileFromDescriptor(r->ebx);
 	}
 
+	if (file == nullptr) return -1;
+
 	bool dummy;
 	FileStatus st = ((File*) file)->stat((uint64_t*) r->ecx, &dummy);
 
@@ -294,6 +296,13 @@ uint64_t SysClose(regs* r)
 		return -1;
 	} else {
 		file = KeGetFileFromDescriptor(r->ebx);
+	}
+
+	if (file == nullptr) {
+		kprintf("CANNOT FIND (AND HENCE CLOSE) THE FILE: r->ebx = %d\n", r->ebx);
+		return -1;
+	} else {
+		kprintf("CLOSE: %d\n", r->ebx);
 	}
 
 	((File*) file)->close();
@@ -390,6 +399,13 @@ uint64_t SysCloseDir(regs* r)
 		return -1;
 	} else {
 		file = KeGetFileFromDescriptor(r->ebx);
+	}
+
+	if (file == nullptr) {
+		kprintf("CANNOT FIND (AND HENCE CLOSE) THE DIRECTORY: r->ebx = %d\n", r->ebx);
+		return -1;
+	} else {
+		kprintf("CLOSEDIR: %d\n", r->ebx);
 	}
 
 	((Directory*) file)->close();
@@ -737,12 +753,8 @@ uint64_t(*systemCallHandlers[])(regs* r) = {
 uint64_t KeSystemCall(regs* r, void* context)
 {
 	if (r->eax < sizeof(systemCallHandlers) / sizeof(systemCallHandlers[0]) && systemCallHandlers[r->eax]) {
-		int old = r->eax;
+		kprintf("===== System call: %d =====\n", r->eax);
 		r->eax = systemCallHandlers[r->eax](r);
-
-		if (old == (size_t) SystemCallNumber::WSBE) {
-			kiKeyboardGUILatch = true;
-		}
 
 	} else {
 		kprintf("Invalid syscall %d\n", r->eax);

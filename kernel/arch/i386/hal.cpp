@@ -628,7 +628,14 @@ uint8_t* HalFindRSDP()
 
 bool HalHandlePageFault(void* rr, void* ctxt)
 {
-	return currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2());
+	kprintf("\n-------------------------\n---> returning to 0x%X?\n", ((regs*) rr)->eip);
+	kprintf("---> eflags is 0x%X\n", ((regs*) rr)->eflags);
+	bool value = currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2());
+
+	kprintf("\n###> returning to 0x%X?\n", ((regs*) rr)->eip);
+	kprintf("###> eflags is 0x%X\n", ((regs*) rr)-> eflags);
+	kprintf("value = %d\n", value);
+	return value;
 }
 
 bool HalHandleOpcodeFault(void* rr, void* ctxt)

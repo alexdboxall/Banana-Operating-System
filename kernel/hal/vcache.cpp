@@ -101,6 +101,9 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 		} else {
 			int retv = disk->write(lba, count, ptr);
 			KeRestorePreemption();
+			if (retv) {
+				kprintf("::: disk write failure\n");
+			}
 			return retv;
 		}
 	}
@@ -135,7 +138,11 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 			//ATA does it blatantly
 
 			int retV = disk->read((lba & ~(READ_BUFFER_BLOCK_SIZE - 1)), READ_BUFFER_BLOCK_SIZE, readCacheBuffer);
-			if (retV) return retV;
+			if (retV) {
+				kprintf("::: VCache::read: disk->read failed.\n");
+				KeRestorePreemption();
+				return retV;
+			}
 		}
 
 		memcpy(ptr, readCacheBuffer + (lba & (READ_BUFFER_BLOCK_SIZE - 1)) * disk->sectorSize, disk->sectorSize);

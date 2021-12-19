@@ -16,6 +16,8 @@ uint64_t redAvg;
 uint64_t grnAvg;
 uint64_t bluAvg;
 
+char desktopBasePath[256] = "C:/Banana/System";
+
 #define MAX_DESKTOP_FILES 512
 #define MAX_DESKTOP_DISPLAY_NAME_LENGTH 18
 
@@ -386,7 +388,7 @@ void refresh()
     struct dirent* ent;
     int diri = 0;
 
-    if ((dir = opendir("C:/Banana/System")) != NULL) {
+    if ((dir = opendir(desktopBasePath)) != NULL) {
         while ((ent = readdir(dir)) != NULL) {
 
             int lastFullStopPtr = -1;
@@ -662,9 +664,13 @@ int main (int argc, char *argv[])
             if (dummyWin.evnt.key == (int)KeyboardSpecialKeys::Enter) {
                 if (files[cs].assocTypeID != -1) {
                     char* path = fileAssoc[files[cs].assocTypeID].openProgram;
+
+                    char progPath[256];
+                    sprintf(progPath, "%s/%s", desktopBasePath, files[cs].filepath);
                     char* argvv[3];
                     argvv[0] = path;
-                    argvv[1] = 0;
+                    argvv[1] = progPath;
+                    argvv[2] = 0;
                     int pid = SystemCall((size_t)SystemCallNumber::Spawn, 0, (size_t)argvv, (size_t)argvv[0]);
 
                     deselectAllIcons();

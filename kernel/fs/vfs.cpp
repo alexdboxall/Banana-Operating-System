@@ -206,6 +206,8 @@ File::File(const char* filename, Process* process, bool followSymlinks) : UnixFi
 {
 	Fs::standardiseFiles(this->filepath, filename, process->cwd, followSymlinks && (process != kernelProcess));
 
+	kprintf("CREATED FILE %s, FD %d\n", this->filepath, fd);
+
 	this->driveNo = this->filepath[0] - 'A';
 	fileOpen = false;
 

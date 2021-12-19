@@ -206,7 +206,7 @@ if exist Banana/qemuinhibit.txt (
 cd banana-os
 
 rem -nic model=rtl8139
-qemu-system-i386 -soundhw pcspk,ac97 -vga std -cpu max -serial file:log3.txt -m 128 -rtc base=utc -d guest_errors,cpu_reset -monitor stdio -drive file=newimage.img,id=abcdefg,if=none -device ich9-ahci,id=ahci -device ide-hd,drive=abcdefg,bus=ahci.0 
+qemu-system-i386 -soundhw pcspk -vga std -cpu max -serial file:log3.txt -m 32 -rtc base=utc -d guest_errors,cpu_reset -monitor stdio -drive file=newimage.img,id=abcdefg,if=none -device ich9-ahci,id=ahci -device ide-hd,drive=abcdefg,bus=ahci.0 
 pause
 	rem -cdrom D:/Users/Alex/Desktop/banana-os/Installer/BANANA.ISO
 	rem  -cdrom D:/Users/Alex/Desktop/Banana/Installer/BANANA.ISO -drive file="banana-os/newimage.img",id=abcdefg,if=none -device ich9-ahci,id=ahci -device ide-drive,drive=abcdefg,bus=ahci.0 

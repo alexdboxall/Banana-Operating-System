@@ -169,6 +169,7 @@ namespace Phys
 
 				size_t evict = currentTaskTCB->processRelatedTo->vas->scanForEviction();
 				if (evict) {
+					++usedPages;
 					setPageState(evict / 4096, STATE_ALLOCATED);
 					return evict;
 				}

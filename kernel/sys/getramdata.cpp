@@ -20,6 +20,8 @@
 /// 
 uint64_t SysGetRAMData(regs* r)
 {
-	int percent = Phys::usedPages * 200 / Phys::usablePages;
+	extern int swapBalance;
+
+	int percent = (Phys::usedPages + swapBalance) * 200 / Phys::usablePages;
 	return Phys::usablePages | (percent << 24);
 }
