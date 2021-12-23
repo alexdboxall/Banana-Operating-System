@@ -55,7 +55,9 @@ void KeLoadClockSettings()
 Clock::Clock(const char* name): Device(name)
 {
 	deviceType = DeviceType::Clock;
-
+	if (sizeof(time_t) != 8) {
+		KePanic("sizeof(time_t) != 8");
+	}
 }
 
 Clock::~Clock()
@@ -80,7 +82,9 @@ bool Clock::setTimeInSecondsLocal(time_t t)
 
 bool Clock::setTimeInDatetimeLocal(datetime_t d)
 {
-	return setTimeInSecondsUTC(KeDatetimeToSeconds(d) - (keTimezoneHourOffset + keDstOn) * 3600 - (keTimezoneHalfHourOffset ? 1800 : 0));
+	time_t secs = KeDatetimeToSeconds(d) - (keTimezoneHourOffset + keDstOn) * 3600 - (keTimezoneHalfHourOffset ? 1800 : 0);
+	kprintf("secs 0x%X 0x%X\n", secs & 0xFFFFFFFF, secs >> 32);
+	return setTimeInSecondsUTC(secs);
 }
 
 
@@ -221,7 +225,7 @@ datetime_t KeSecondsToDatetime(time_t lcltime)
 	month += month < 10 ? 2 : -10;
 	year = ADJUSTED_EPOCH_YEAR + erayear + era * YEARS_PER_ERA + (month <= 1);
 
-	res.year = year;
+	res.year = year + 70;
 	res.month = month + 1;
 	res.day = day;
 

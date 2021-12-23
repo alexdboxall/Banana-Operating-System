@@ -145,6 +145,11 @@ void VgaText::scrollScreen()
 
 void VgaText::writeCharacter(char c, enum VgaColour fg, enum VgaColour bg, int x, int y)
 {
+	if (!this->displayData) {
+		KePanic("NULL TERMINAL B");
+		return;
+	}
+
 	uint16_t word = combineCharAndColour(c, combineColours((uint8_t) fg, (uint8_t) bg));
 
 	uint16_t pos = (y * VgaText::width + x);
@@ -160,6 +165,10 @@ void VgaText::writeCharacter(char c, enum VgaColour fg, enum VgaColour bg, int x
 
 void VgaText::puts(const char* c, enum VgaColour fg, enum VgaColour bg)
 {
+	if (!this->displayData) {
+		KePanic("NULL TERMINAL C");
+		return;
+	}
 	noUpdate = true;
 
 	bool needsRepainting = false;
@@ -483,6 +492,8 @@ VgaText::~VgaText()
 
 VgaText::VgaText(const char* n)
 {
+	kprintf("Created terminal.\n");
+
 	terminalDisplayHeight = bufferHeight;
 
 	displayData = (uint16_t*) Virt::allocateKernelVirtualPages(1);

@@ -469,6 +469,7 @@ void main()
 
 		} while (key != '1' && key != '2' && key != '5');
 	}
+	clearScreen();
 	if (fulldebug) {
 		clearScreen();
 		writeString("\nPRESS ANY KEY (B)");

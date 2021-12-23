@@ -89,12 +89,10 @@ UnixFile* KeGetFileFromDescriptor(int fdIn)
 
 	if (fdIn < RESERVED_FD_START) {
 		UnixFile* f = unixFileLinkedList.getFirstElement();
-		kprintf("HERE -> : f = 0x%X\n", f);
 		while (f) {
 			if ((size_t) f == (size_t) -1ULL) {
 				return nullptr;
 			}
-			kprintf("here, f = 0x%X\n", f);
 			if (f->fd == fdIn) {
 				return f;
 			}

@@ -42,7 +42,8 @@ public:
     int (*paintHandlerHook)(NTopLevel* self);
 
     NTopLevel(const char* name = "Window", int width = 320, int height = 200, int flags = -1);
-    
+    virtual ~NTopLevel();
+
     Context* getContext();
     
     int getX();

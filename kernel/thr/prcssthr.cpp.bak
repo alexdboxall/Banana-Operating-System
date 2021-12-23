@@ -56,7 +56,9 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 		//Priority 0  : 51ms	(old was 58ms)
 		//Priority 128: 45ms	(old was 51ms)
 		//Priority 254: 38ms	(old was 42ms)
+		kprintf("TSR: 0x%X\n", nextThreadToRun->timeSliceRemaining);
 		nextThreadToRun->timeSliceRemaining += (1024 - nextThreadToRun->priority) >> 1;
+				kprintf("TSR: 0x%X\n", nextThreadToRun->timeSliceRemaining);
 	}
 
 
@@ -71,6 +73,7 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 	currentTaskTCB->timeKeeping += elapsed;
 
 	HalSaveCoprocessor(currentTaskTCB->fpuState);
+	kprintf("switching to %d\n", nextThreadToRun->processRelatedTo->pid);
 	switchToThreadASM(nextThreadToRun);
 	HalLoadCoprocessor(currentTaskTCB->fpuState);
 }
@@ -107,7 +110,6 @@ ThreadControlBlock* Process::createThread(void (*where)(void*), void* context, i
 	threads[threadNo].esp = VIRT_APP_STACK_USER_TOP - SIZE_APP_STACK_TOTAL * threadNo - STACK_LEEWAY;
 	threads[threadNo].priority = pri;
 	threads[threadNo].rtid = threadNo;
-	threads[threadNo].timeSliceRemaining = 0;
 	threads[threadNo].processRelatedTo = this;
 	threads[threadNo].state = TaskState::ReadyToRun;
 	threads[threadNo].firstTimeEIP = (size_t) where;
@@ -183,11 +185,14 @@ Process::Process(const char* _filepath, Process* _parent, char** _argv)
 	signals = KeInitSignals();
 
 	if (parent) {
+		kprintf("the task %s has a parent\n", _filepath);
 		terminal = parent->terminal;
 		strcpy(cwd, parent->cwd);
 
 	} else {
+		kprintf("created terminal for new task: %s\n", _filepath);
 		terminal = new VgaText(_filepath);
+		kprintf("terminal is at 0x%X\n", terminal);
 		addToTerminalCycle(terminal);
 		setActiveTerminal(terminal);
 		strcpy(cwd, "C:/");
@@ -212,10 +217,12 @@ Process::Process(bool _kernel, const char* _name, Process* _parent, char** _argv
 	signals = KeInitSignals();
 
 	if (parent) {
+		kprintf("the task %s has a parent (B)\n", _name);
 		terminal = parent->terminal;
 		strcpy(cwd, parent->cwd);
 
 	} else {
+		kprintf("created terminal for new task (B): %s\n", _name);
 		terminal = new VgaText(_name);
 		addToTerminalCycle(terminal);
 		setActiveTerminal(terminal);
@@ -417,6 +424,8 @@ void cleanerTaskFunction(void* context)
 
 void terminateTask(int returnCode)
 {
+	kprintf("terminating task.\n");
+
 	extern int irqDisableCounter;
 	extern int postponeTaskSwitchesCounter;
 	extern int taskSwitchesPostponedFlag;
@@ -464,6 +473,7 @@ void blockTaskWithSchedulerLockAlreadyHeld(enum TaskState reason)
 void blockTask(enum TaskState reason)
 {
 	lockScheduler();
+	kprintf("blockTask -> %d.\n", (int)reason);
 	currentTaskTCB->state = reason;
 	schedule();
 	unlockScheduler();

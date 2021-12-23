@@ -67,6 +67,11 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 	KeDisablePreemption();
 
 	///TODO:	get all touchy-feely AND LOCK THE MEMORY (aka. ensure the buffer is in actual RAM, not the swapfile)
+	
+	bool lockingPages = Virt::getAKernelVAS()->canLockPages((size_t) ptr, (count * diskSectorSize + 4095) / 4096);
+	if (lockingPages) {
+		Virt::getAKernelVAS()->lockPages((size_t) ptr, (count * diskSectorSize + 4095) / 4096);
+	}
 
 	//mutex->acquire();
 
@@ -100,6 +105,7 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 		//otherwise, just write it
 		} else {
 			int retv = disk->write(lba, count, ptr);
+			if (lockingPages) Virt::getAKernelVAS()->unlockPages((size_t) ptr, (count * diskSectorSize + 4095) / 4096);
 			KeRestorePreemption();
 			if (retv) {
 				kprintf("::: disk write failure\n");
@@ -108,6 +114,7 @@ int VCache::write(uint64_t lba, int count, void* ptr)
 		}
 	}
 
+	if (lockingPages) Virt::getAKernelVAS()->unlockPages((size_t) ptr, (count * diskSectorSize + 4095) / 4096);
 	KeRestorePreemption();
 	//mutex->release();
 	return 0;
@@ -118,6 +125,11 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 	KeDisablePreemption();
 
 	///TODO:	get all touchy-feely AND LOCK THE MEMORY (aka. ensure the buffer is in actual RAM, not the swapfile)
+
+	bool lockingPages = Virt::getAKernelVAS()->canLockPages((size_t) ptr, (count * diskSectorSize + 4095) / 4096);
+	if (lockingPages) {
+		Virt::getAKernelVAS()->lockPages((size_t) ptr, (count * diskSectorSize + 4095) / 4096);
+	}
 
 	//mutex->acquire();
 
@@ -140,23 +152,27 @@ int VCache::read(uint64_t lba, int count, void* ptr)
 			int retV = disk->read((lba & ~(READ_BUFFER_BLOCK_SIZE - 1)), READ_BUFFER_BLOCK_SIZE, readCacheBuffer);
 			if (retV) {
 				kprintf("::: VCache::read: disk->read failed.\n");
+				if (lockingPages) Virt::getAKernelVAS()->unlockPages((size_t) ptr, (count * diskSectorSize + 4095) / 4096);
 				KeRestorePreemption();
 				return retV;
 			}
 		}
 
 		memcpy(ptr, readCacheBuffer + (lba & (READ_BUFFER_BLOCK_SIZE - 1)) * disk->sectorSize, disk->sectorSize);
+		if (lockingPages) Virt::getAKernelVAS()->unlockPages((size_t) ptr, (count * diskSectorSize + 4095) / 4096);
 		KeRestorePreemption();
 		return 0;
 
 	} else {
 		invalidateReadBuffer();
 		int retv = disk->read(lba, count, ptr);
+		if (lockingPages) Virt::getAKernelVAS()->unlockPages((size_t) ptr, (count * diskSectorSize + 4095) / 4096);
 		KeRestorePreemption();
 		return retv;
 	}
 
 	//mutex->release();
+	if (lockingPages) Virt::getAKernelVAS()->unlockPages((size_t) ptr, (count * diskSectorSize + 4095) / 4096);
 	KeRestorePreemption();
 	return 0;
 }

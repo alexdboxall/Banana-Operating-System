@@ -1065,10 +1065,18 @@ extern "C" uint32_t _bcrypt_rand()
 
 int _bcrypt_errno = 0;
 int tzsel;
+bool createNewUserMode = false;
 int modesel;
 void firstRun(bool onlyPkey)
 {
     showSidebar = !onlyPkey;
+    if (createNewUserMode) {
+        showSidebar = false;
+        strcpy(currName, "");
+        strcpy(currComp, "");
+        strcpy(passwbufA, "");
+        strcpy(passwbufB, "");
+    }
 
     guiKeyboardHandler = bootInstallKeybrd;
 
@@ -1107,11 +1115,14 @@ void firstRun(bool onlyPkey)
         drawBootScreen();
         sel = 0;
         installKey = 0;
-        drawBasicWindow(22, 3, 50, 18, "Banana Setup");
+        drawBasicWindow(22, 3, 50, 18, createNewUserMode ? "Create New User" : "Banana Setup");
         term->setCursor(24, 6); term->puts("Please enter your details. Press TAB to switch");
-        term->setCursor(24, 7); term->puts("between fields.");
+        term->setCursor(24, 7); term->puts(!createNewUserMode ? "between fields." : "between fields, or ESC to cancel.");
         term->setCursor(24, 9); term->puts("Name");
-        term->setCursor(24, 11); term->puts("Company");
+        if (!createNewUserMode) {
+            term->setCursor(24, 11);
+            term->puts("Company");
+        }
         term->setCursor(24, 13); term->puts("Password");
         term->setCursor(24, 15); term->puts("Confirm");
         term->setCursor(24, 16); term->puts("password");
@@ -1122,17 +1133,20 @@ char passwbufB[48] = "";
 char passwhash[80];*/
 
         while (1) {
+
             term->setCursor(33, 9);
             term->puts("                                    ", VgaColour::Black, VgaColour::LightGrey);
             term->puts(sel == 0 ? " \x11" : "   ", VgaColour::Black, VgaColour::White);
             term->setCursorX(33);
             term->puts(currName, VgaColour::Black, VgaColour::LightGrey);
 
-            term->setCursor(33, 11);
-            term->puts("                                    ", VgaColour::Black, VgaColour::LightGrey);
-            term->puts(sel == 1 ? " \x11" : "   ", VgaColour::Black, VgaColour::White);
-            term->setCursorX(33);
-            term->puts(currComp, VgaColour::Black, VgaColour::LightGrey);
+            if (!createNewUserMode) {
+                term->setCursor(33, 11);
+                term->puts("                                    ", VgaColour::Black, VgaColour::LightGrey);
+                term->puts(sel == 1 ? " \x11" : "   ", VgaColour::Black, VgaColour::White);
+                term->setCursorX(33);
+                term->puts(currComp, VgaColour::Black, VgaColour::LightGrey);
+            }
 
             term->setCursor(33, 13);
             term->puts("                                    ", VgaColour::Black, VgaColour::LightGrey);
@@ -1174,7 +1188,13 @@ char passwhash[80];*/
                     installKey = 0;
 
                     if (!strcmp(passwbufA, passwbufB)) {
-                        break;
+
+                        if (strlen(currName) < 1) {
+                            sel = 0;
+                        } else {
+                            break;
+                        }
+
                     } else {
                         sel = 2;
                         memset(passwbufA, 0, 48);
@@ -1182,6 +1202,7 @@ char passwhash[80];*/
                     }
                 } else {
                     sel += 1;
+                    if (createNewUserMode && sel == 1) sel = 2;
                     if (sel == 5) sel = 0;
                 }
                 
@@ -1203,6 +1224,10 @@ char passwhash[80];*/
                 if (sel == 2 && strlen(passwbufA) < 35) strcat(passwbufA, ss);
                 if (sel == 3 && strlen(passwbufB) < 35) strcat(passwbufB, ss);
 
+            } else if (installKey == '\e' && createNewUserMode) {
+                createNewUserMode = false;
+                return;
+
             } else if (installKey == '\b') {
                 if (sel == 0 && strlen(currName)) currName[strlen(currName) - 1] = 0;
                 if (sel == 1 && strlen(currComp)) currComp[strlen(currComp) - 1] = 0;
@@ -1213,6 +1238,9 @@ char passwhash[80];*/
                 // Shift + TAB
                 sel--;
                 if (sel == -1) {
+                    sel = 0;
+                }
+                if (sel == 1 && createNewUserMode) {
                     sel = 0;
                 }
                 milliTenthSleep(300);
@@ -1250,6 +1278,11 @@ char passwhash[80];*/
 
         memset(passwbufA, 0, 80);
         memset(passwbufB, 0, 80);
+
+        if (createNewUserMode) {
+            createUser(currName);
+            return;
+        }
 
         milliTenthSleep(2000);
     screen2:
@@ -1695,8 +1728,10 @@ void getRegsafeName(char* in, char* out)
         if (out[i] >= 'a' && out[i] <= 'z') {
             out[i] -= 'a';
             out[i] += 'A';
-        } else if (out[i] == ' ') {
-            out[i] = '_';
+        } else if (out[i] >= 'A' && out[i] <= 'Z') {
+
+        } else {
+            out[i] = 'Z';
         }
     }
 }
@@ -1735,6 +1770,11 @@ void begin(void* a)
     Process* usertask;
 
     char* argvv[] = { "C:/Banana/System/command.exe", "call", "C:/Banana/System/init.bat", 0 };
+    Reghive* reg;
+    char regsafename[64];
+    char userBasePath[128];
+    char pkey[500];
+    uint64_t autogui;
 
     if (firstTime) {
         usertask = new Process("C:/Banana/System/command.exe", nullptr, argvv);
@@ -1776,36 +1816,38 @@ void begin(void* a)
         //backupTree("C:/Banana/System/", 0xEEEE);
         //backupTree("C:/Banana/Registry/", 0xFFFF);
 
-        bootInstallTasks(5);
-        Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
-        CmCreateDirectory(reg, 0, "BANANA");
+    createNewUserGoto:
 
-        char regsafename[64];
+        bootInstallTasks(5);
+        reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
+        if (!createNewUserMode) CmCreateDirectory(reg, 0, "BANANA");
+
         getRegsafeName(currName, regsafename);
         kprintf("regsafename = %s\n", regsafename);
 
-        char userBasePath[128];
         strcpy(userBasePath, "BANANA/USERS/");
         strcat(userBasePath, regsafename);
         kprintf("userBasePath = %s\n", userBasePath);
 
-        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "SETUP");        
-        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "BOOT");    
-        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "TIME");    
-        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "USERS");    
-        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "FILEASSOC");    
+        if (!createNewUserMode) {
+            CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "SETUP");
+            CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "BOOT");
+            CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "TIME");
+            CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "USERS");
+            CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA")), "FILEASSOC");
+            CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC")), "OPEN");
+            CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC")), "EDIT");
+            CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC")), "PRINT");
+            CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC")), "ICON");
+            CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC")), "DESCR");
+            CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC")), "CUSTOMVERB");
+            CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC")), "CUSTOMPROG");
+            CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/TIME")), "TIMEZONE");
+            CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "NAME");
+            CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "COMPANY");
+            CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "PRODUCTKEY");
+        }
         CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/USERS")), regsafename);
-        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC")), "OPEN");
-        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC")), "EDIT");
-        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC")), "PRINT");
-        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC")), "ICON");
-        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC")), "DESCR");
-        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC")), "CUSTOMVERB");
-        CmCreateDirectory(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC")), "CUSTOMPROG");
-        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/TIME")), "TIMEZONE");
-        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "NAME");
-        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "COMPANY");
-        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/SETUP")), "PRODUCTKEY");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, userBasePath)), "SALT");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, userBasePath)), "PASSWORD");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, userBasePath)), "DISPLAYNAME");
@@ -1816,28 +1858,30 @@ void begin(void* a)
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, userBasePath)), "MOVIES");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, userBasePath)), "MUSIC");
         CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, userBasePath)), "RECYCLEBIN");
-        CmCreateInteger(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/BOOT")), "AUTOGUI", modesel, EXTENT_INTEGER8);
-        CmCreateInteger(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/TIME")), "TIMEZONEID", tzsel, EXTENT_INTEGER8);
-        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/TIME/TIMEZONE"), timezoneStrings[tzsel] + 1);
-        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/NAME"), currName);
-        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/COMPANY"), currComp);
-        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/PRODUCTKEY"), pkeybuf); 
+        if (!createNewUserMode) {
+            CmCreateInteger(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/BOOT")), "AUTOGUI", modesel, EXTENT_INTEGER8);
+            CmCreateInteger(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/TIME")), "TIMEZONEID", tzsel, EXTENT_INTEGER8);
+            CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/TIME/TIMEZONE"), timezoneStrings[tzsel] + 1);
+            CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/NAME"), currName);
+            CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/COMPANY"), currComp);
+            CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/PRODUCTKEY"), pkeybuf);
 
-        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/ICON")), "TXT");
-        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/DESCR")), "TXT");
-        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/OPEN")), "TXT");
-        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/EDIT")), "TXT");
-        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/PRINT")), "TXT");
-        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/ICON/TXT"), "C:/Banana/Icons/colour/text.tga");
-        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/DESCR/TXT"), "Text Document");
-        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/OPEN/TXT"), "C:/Banana/System/te.exe");
-        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/EDIT/TXT"), "C:/Banana/System/te.exe");
-        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/PRINT/TXT"), "C:/Banana/System/te.exe");
+            CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/ICON")), "TXT");
+            CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/DESCR")), "TXT");
+            CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/OPEN")), "TXT");
+            CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/EDIT")), "TXT");
+            CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/PRINT")), "TXT");
+            CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/ICON/TXT"), "C:/Banana/Icons/colour/text.tga");
+            CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/DESCR/TXT"), "Text Document");
+            CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/OPEN/TXT"), "C:/Banana/System/te.exe");
+            CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/EDIT/TXT"), "C:/Banana/System/te.exe");
+            CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/PRINT/TXT"), "C:/Banana/System/te.exe");
 
-        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/ICON")), "ISO");
-        CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/DESCR")), "ISO");
-        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/ICON/ISO"), "C:/Banana/Icons/colour/cd.tga");
-        CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/DESCR/ISO"), "Disc Image File");
+            CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/ICON")), "ISO");
+            CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/DESCR")), "ISO");
+            CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/ICON/ISO"), "C:/Banana/Icons/colour/cd.tga");
+            CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/DESCR/ISO"), "Disc Image File");
+        }
 
         strcpy(userBasePath, "BANANA/USERS/");
         strcat(userBasePath, regsafename);
@@ -1913,6 +1957,9 @@ void begin(void* a)
         CmSetString(reg, CmFindObjectFromPath(reg, userBasePath), userDesktop);
 
         CmClose(reg);
+        if (createNewUserMode) {
+            goto finishCreateNewUserGoto;
+        }
 
         //finishing touches go here
 
@@ -1947,9 +1994,8 @@ void begin(void* a)
     } else {
         KeLoadClockSettings();
 
-        Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
-        char pkey[500];
-        uint64_t autogui;
+        reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
+       
         CmGetString(reg, CmFindObjectFromPath(reg, "BANANA/SETUP/PRODUCTKEY"), pkey);
         CmGetInteger(reg, CmFindObjectFromPath(reg, "BANANA/BOOT/AUTOGUI"), &autogui);
         CmClose(reg);
@@ -1994,9 +2040,10 @@ void begin(void* a)
         char* userStrings[32];
         char* userStringsA[32];
         
+        usersel = 0;
+
     selectUsernameStart:
         numEntries = 0;
-        usersel = 0;
         installKey = 0;
         memset(userStrings, 0, sizeof(userStrings));
         memset(userStringsA, 0, sizeof(userStringsA));
@@ -2077,9 +2124,18 @@ void begin(void* a)
         }
 
         if (usersel == numEntries - 1) {
-            //createNewUser();
-            installKey = 0;
-            while (installKey == 0);
+            createNewUserMode = true;
+            firstRun(false);
+            if (!createNewUserMode) {
+                memset(term->keybufferInternal, 0, 4);
+                memset(term->keybufferSent, 0, 4);
+                installKey = 0;
+                --usersel;
+                goto selectUsernameStart;
+            }
+            goto createNewUserGoto;
+        finishCreateNewUserGoto:
+            createNewUserMode = false;
             memset(term->keybufferInternal, 0, 4);
             memset(term->keybufferSent, 0, 4);
             installKey = 0;

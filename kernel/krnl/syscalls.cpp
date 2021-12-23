@@ -144,6 +144,10 @@ uint64_t SysSeek(regs* r)
 		file = KeGetFileFromDescriptor(r->ebx);
 	}
 
+	if (file == nullptr) {
+		return -1;
+	}
+
 	FileStatus st = ((File*) file)->seek(r->ecx);
 
 	if (st != FileStatus::Success) {
@@ -164,6 +168,10 @@ uint64_t SysTell(regs* r)
 		return 0;
 	} else {
 		file = KeGetFileFromDescriptor(r->ebx);
+	}
+
+	if (file == nullptr) {
+		return -1;
 	}
 
 	FileStatus st = ((File*) file)->tell((uint64_t*) r->ecx);
@@ -189,6 +197,10 @@ uint64_t SysSizeFromFilename(regs* r)
 		return 0;
 	} else {
 		file = new File(filename, currentTaskTCB->processRelatedTo, true);
+	}
+
+	if (file == nullptr) {
+		return -1;
 	}
 
 	bool dir;
@@ -230,6 +242,10 @@ uint64_t SysSizeFromFilenameNoSymlink(regs* r)
 		return 0;
 	} else {
 		file = new File(filename, currentTaskTCB->processRelatedTo, false);
+	}
+
+	if (file == nullptr) {
+		return -1;
 	}
 
 	bool dir;
@@ -298,12 +314,7 @@ uint64_t SysClose(regs* r)
 		file = KeGetFileFromDescriptor(r->ebx);
 	}
 
-	if (file == nullptr) {
-		kprintf("CANNOT FIND (AND HENCE CLOSE) THE FILE: r->ebx = %d\n", r->ebx);
-		return -1;
-	} else {
-		kprintf("CLOSE: %d\n", r->ebx);
-	}
+	if (file == nullptr) return -1;
 
 	((File*) file)->close();
 	delete ((File*) file);
@@ -401,12 +412,7 @@ uint64_t SysCloseDir(regs* r)
 		file = KeGetFileFromDescriptor(r->ebx);
 	}
 
-	if (file == nullptr) {
-		kprintf("CANNOT FIND (AND HENCE CLOSE) THE DIRECTORY: r->ebx = %d\n", r->ebx);
-		return -1;
-	} else {
-		kprintf("CLOSEDIR: %d\n", r->ebx);
-	}
+	if (file == nullptr) return -1;
 
 	((Directory*) file)->close();
 	delete ((Directory*) file);
@@ -550,7 +556,7 @@ uint64_t SysSpawn(regs* r)
 {
 	if (!r->edx) return 0;
 
-	Process* p = new Process((const char*) r->edx, r->ebx ? nullptr : currentTaskTCB->processRelatedTo, (char**) r->ecx);
+	Process* p = new Process((const char*) r->edx, r->ebx ? currentTaskTCB->processRelatedTo : nullptr, (char**) r->ecx);
 	if (p->failedToLoadProgram) {
 		return 0;
 	}
@@ -683,7 +689,7 @@ uint64_t SysGetUnixTime(regs* r)
 #pragma GCC optimize ("-fno-align-functions")
 
 uint64_t(*systemCallHandlers[])(regs* r) = {
-	SysYield,
+	SysYield,			//0
 	SysExit,
 	SysSbrk,
 	SysWrite,
@@ -693,7 +699,7 @@ uint64_t(*systemCallHandlers[])(regs* r) = {
 	SysSetCwd,
 	SysOpen,
 	SysClose,
-	SysOpenDir,
+	SysOpenDir,			//10
 	SysReadDir,
 	SysSeekDir,
 	SysTellDir,
@@ -703,7 +709,7 @@ uint64_t(*systemCallHandlers[])(regs* r) = {
 	SysTell,
 	SysSize,
 	SysVerify,
-	SysWait,
+	SysWait,			//20
 	SysNotImpl,
 	SysNotImpl,
 	SysRmdir,
@@ -713,7 +719,7 @@ uint64_t(*systemCallHandlers[])(regs* r) = {
 	SysRealpath,
 	SysTTYName,
 	SysIsATTY,
-	SysUSleep,
+	SysUSleep,			//30
 	SysSizeFromFilename,
 	SysSpawn,
 	SysGetEnv,
@@ -723,17 +729,17 @@ uint64_t(*systemCallHandlers[])(regs* r) = {
 	SysGetDiskVolumeLabel,
 	SysSetFatAttrib,
 	SysPanic,
-	SysShutdown,
+	SysShutdown,		//40
 	SysPipe,
 	SysGetUnixTime,
 	SysLoadDLL,
 	SysSetTime,
 	SysTimezone,
 	SysEject,
-	SysWsbe,
+	SysWsbe,			//47
 	SysGetRAMData,
 	SysGetVGAPtr,
-	SysRegisterSignal,
+	SysRegisterSignal,	//50
 	SysKill,
 	SysRegistryGetTypeFromPath,
 	SysRegistryReadExtent,
@@ -743,7 +749,7 @@ uint64_t(*systemCallHandlers[])(regs* r) = {
 	SysRegistryGetNameAndTypeFromExtent,
 	SysRegistryOpen,
 	SysRegistryClose,
-	SysTruncate,
+	SysTruncate,		//60
 	SysSizeFromFilenameNoSymlink,
 	SysSymlink,
 	SysRegistryEasyReadString,
@@ -753,7 +759,6 @@ uint64_t(*systemCallHandlers[])(regs* r) = {
 uint64_t KeSystemCall(regs* r, void* context)
 {
 	if (r->eax < sizeof(systemCallHandlers) / sizeof(systemCallHandlers[0]) && systemCallHandlers[r->eax]) {
-		kprintf("===== System call: %d =====\n", r->eax);
 		r->eax = systemCallHandlers[r->eax](r);
 
 	} else {

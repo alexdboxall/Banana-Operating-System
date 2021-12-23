@@ -29,8 +29,21 @@ void NiInstallSysHooks()
 	systemCallHandlers[(int) SystemCallNumber::WSBE] = NiSystemCallHandler;
 }
 
+uint64_t NiLinkCommandDestroyWindow(size_t val, NiLinkWindowStruct* win)
+{
+	kprintf("NiLinkCommandDestroyWindow\n");
+
+	NIWindow* realwin = (NIWindow*) win->krnlWindow;
+
+	desktop->deleteWindow(realwin);
+	desktop->completeRefresh();
+
+	return 0;
+}
+
 uint64_t NiLinkCommandCreateWindow(size_t val, NiLinkWindowStruct* win)
 {
+	kprintf("NiLinkCommandCreateWindow\n");
 	NIWindow* realwin = new NIWindow(ctxt, win->x, win->y, win->w, win->h);
 
 	for (int i = 0; i < WIN_MAX_FLAG_DWORDS; ++i) {
@@ -224,6 +237,9 @@ uint64_t NiSystemCallHandler(regs* r)
 		break;
 	case LINKCMD_CREATE_WINDOW:
 		retv = NiLinkCommandCreateWindow((size_t) r->ecx, (NiLinkWindowStruct*) r->edx);
+		break;
+	case LINKCMD_DESTROY_WINDOW:
+		retv = NiLinkCommandDestroyWindow((size_t) r->ecx, (NiLinkWindowStruct*) r->edx);
 		break;
 	case LINKCMD_RESUPPLY_FRAMEBUFFER:
 		retv = NiLinkCommandResupplyFramebuffer((size_t) r->ecx, (NiLinkWindowStruct*) r->edx);

@@ -13,6 +13,14 @@
 #pragma GCC optimize ("-fno-align-functions")
 
 
+/*
+extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
+		uint32_t b = seconds + minute * 60 + hour * 3600;
+		uint32_t c = (day - 1) + (month - 1) * 32;
+		uint32_t d = year;
+		int res = SystemCall(SetTime, b, c, d);
+		*/
+
 /// <summary>
 /// Sets the system time.
 /// </summary>
@@ -39,10 +47,13 @@ uint64_t SysSetTime(regs* r)
 	datetime_t dt;
 	dt.day = day;
 	dt.month = month;
-	dt.year = year - 1900;
+	dt.year = year;
 	dt.second = seconds;
 	dt.minute = minutes;
 	dt.hour = hours;
+
+	kprintf("Setting to (A) %d/%d/%d %d:%d:%d\n", day, month, year, hours, minutes, seconds);
+	kprintf("Setting to (B) %d/%d/%d %d:%d:%d\n", dt.day, dt.month, dt.year, dt.hour, dt.minute, dt.second);
 
 	return !computer->clock->setTimeInDatetimeLocal(dt);
 }

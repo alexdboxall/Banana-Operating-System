@@ -68,7 +68,9 @@ void timerHandler(uint32_t milliTenths)
 {
 	milliTenthsSinceBoot += milliTenths;
 
+	kprintf("timer.\n");
 	if (!KeIsSchedulingOn) {
+		kprintf("NO TIMER SCHEDULING!\n");
 		return;
 	}
 
@@ -99,8 +101,9 @@ void timerHandler(uint32_t milliTenths)
 	//do preemption
 	if (currentTaskTCB->timeSliceRemaining != 0 && KeIsPreemptionOn) {
 		//lockScheduler();	
+		bool doPreempt = currentTaskTCB->timeSliceRemaining <= milliTenths;
 		currentTaskTCB->timeSliceRemaining -= milliTenths;
-		if (currentTaskTCB->timeSliceRemaining <= milliTenthsSinceBoot) {
+		if (doPreempt) {
 			schedule();
 		}
 		//unlockScheduler();

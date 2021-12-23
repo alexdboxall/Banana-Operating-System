@@ -140,6 +140,17 @@ NTopLevel::NTopLevel(const char* nam, int width, int height, int flags)
     paintHandlerHook = nullptr;
 }
 
+NTopLevel::~NTopLevel()
+{
+    SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_DESTROY_WINDOW, 0, (size_t) &nxw.krnlWin);
+
+    //TODO: free more things
+    //          e.g. win->children
+    //               whatever's in nxw? 
+
+    //free(win);
+}
+
 int NTopLevel::getX() {
     return x;
 }

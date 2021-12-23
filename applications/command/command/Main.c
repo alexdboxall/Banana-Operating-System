@@ -12,9 +12,9 @@
 #include <sys/wait.h>
 #include <sys/banana.h>
 #include "tinyexpr.h"
-#include "uwsbe/krnllink.h"
+//#include "uwsbe/krnllink.h"
 
-#include "D:/Users/Alex/Desktop/Banana/kernel/sys/syscalls.hpp"
+#include "C:/Users/Alex/Desktop/Banana/kernel/sys/syscalls.hpp"
 
 typedef struct VESAModeInfo
 {
@@ -1052,9 +1052,6 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 			fprintf(stderr, "Not a terminal.\n");
 		}
 
-	} else if (!strcasecmp(argv[0], "testwsbe")) {
-		wsbeCreateWindow(300, 75, 250, 150, WIN_TOPLEVELWIN);
-
 	} else if (!strcasecmp(argv[0], "calc")) {
 		char* joinedargs = malloc(512);
 		memset(joinedargs, 0, 512);
@@ -1441,7 +1438,7 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 
 		extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
 		uint32_t b = seconds + minute * 60 + hour * 3600;
-		uint32_t c = (day - 1) + month * 32;
+		uint32_t c = (day - 1) + (month - 1) * 32;
 		uint32_t d = year;
 		int res = SystemCall(SetTime, b, c, d);
 		if (res) {
@@ -1761,7 +1758,7 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 
 			extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
 			argv[0] = possibleExecutableName;
-			pid = SystemCall(Spawn, 0, (size_t) argv, (size_t) argv[0]);
+			pid = SystemCall(Spawn, 1, (size_t) argv, (size_t) argv[0]);
 			if (pid && waitForChild) {
 				waitpid(pid, &errorLevel, 0);
 			} else {

@@ -537,6 +537,65 @@ void VAS::evict(size_t virt)
 
 }
 
+bool VAS::canLockPage(size_t virtualAddr)
+{
+	size_t* entryPtr = getPageTableEntry(virtualAddr);
+	return ((*entryPtr) & PAGE_SWAPPABLE);
+}
+
+void VAS::lockPage(size_t virtualAddr)
+{
+	size_t* entryPtr = getPageTableEntry(virtualAddr);
+
+	if (!((*entryPtr) & PAGE_PRESENT)) {
+		bool wasReloaded = VAS::tryLoadBackOffDisk(*entryPtr & ~0xFFF);
+		if (!wasReloaded) {
+			KePanic("PAGE CANNOT BE LOCKED, NOT PRESENT OR ON DISK");
+		}
+	}
+
+	if ((*entryPtr) & PAGE_SWAPPABLE) {
+		*entryPtr &= ~PAGE_SWAPPABLE;
+	} else {
+		KePanic("PAGE CANNOT BE LOCKED, USE canLockPage FIRST");
+	}
+}
+
+void VAS::unlockPage(size_t virtualAddr)
+{
+	size_t* entryPtr = getPageTableEntry(virtualAddr);
+	if ((*entryPtr) & PAGE_SWAPPABLE) {
+		KePanic("PAGE CANNOT BE LOCKED, USE canLockPage FIRST");
+	} else {
+		*entryPtr |= PAGE_SWAPPABLE;
+	}
+}
+
+bool VAS::canLockPages(size_t virtualAddr, int pages)
+{
+	for (int i = 0; i < pages; ++i) {
+		if (!canLockPage(virtualAddr)) return false;
+		virtualAddr += 4096;
+	}
+	return true;
+}
+
+void VAS::lockPages(size_t virtualAddr, int pages)
+{
+	for (int i = 0; i < pages; ++i) {
+		lockPage(virtualAddr);
+		virtualAddr += 4096;
+	}
+}
+
+void VAS::unlockPages(size_t virtualAddr, int pages)
+{
+	for (int i = 0; i < pages; ++i) {
+		unlockPage(virtualAddr);
+		virtualAddr += 4096;
+	}
+}
+
 bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 {
 	extern int KiPreemptionDisableCounter;

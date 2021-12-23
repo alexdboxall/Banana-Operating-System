@@ -75,6 +75,15 @@ public:
 	size_t scanForEviction();
 	bool tryLoadBackOffDisk(size_t faultAddr);
 
+	bool canLockPage(size_t virtualAddr);
+	bool canLockPages(size_t virtualAddr, int pages);
+
+	void lockPage(size_t virtualAddr);
+	void unlockPage(size_t virtualAddr);
+
+	void lockPages(size_t virtualAddr, int pages);
+	void unlockPages(size_t virtualAddr, int pages);
+
 	void evict(size_t virt);
 
 	size_t* getForeignPageTableEntry(bool secondSlot, size_t virt);

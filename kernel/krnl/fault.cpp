@@ -61,7 +61,6 @@ extern "C" uint64_t int_handler(struct regs* r)
 		}
 	}
 
-	kprintf("*\n");
 	return 0;
 }
 

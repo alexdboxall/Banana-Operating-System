@@ -76,7 +76,7 @@ typedef struct NiLinkWindowStruct
 } NiLinkWindowStruct;
 
 #define LINKCMD_CREATE_WINDOW				0
-#define LINKCMD_DESTROY_WNIDOW				3
+#define LINKCMD_DESTROY_WINDOW				3
 #define LINKCMD_RESUPPLY_FRAMEBUFFER		4
 #define LINKCMD_CLEAR_FRAMEBUFFER			5
 #define LINKCMD_GET_EVENTS					6
