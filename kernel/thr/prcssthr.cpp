@@ -330,7 +330,6 @@ void cleanupTerminatedTask(ThreadControlBlock* task)
 		}
 
 		if (task->processRelatedTo->terminal != nullptr && task->processRelatedTo->parent->terminal != task->processRelatedTo->terminal) {
-
 			//next check for any threads using our terminal
 			ThreadControlBlock* first = (ThreadControlBlock*) taskList.getFirstElement();
 			if (!taskList.isEmpty()) {
@@ -565,9 +564,6 @@ namespace Thr
 		unlockScheduler();
 
 		return nullptr;
-
-		//taskList;
-		//LinkedList<volatile ThreadControlBlock> sleepingTaskList;
 	}
 }
 

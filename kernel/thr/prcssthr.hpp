@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <krnl/linkedlist.hpp>
+#include <krnl/cpplist.hpp>
 #include "krnl/main.hpp"
 #include "krnl/pipe.hpp"
 #include "krnl/virtmgr.hpp"

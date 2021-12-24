@@ -756,8 +756,10 @@ uint64_t(*systemCallHandlers[])(regs* r) = {
 	SysRegistryEasyReadInteger,
 };
 
+#include <krnl/assert.hpp>
 uint64_t KeSystemCall(regs* r, void* context)
 {
+	assert(0);
 	if (r->eax < sizeof(systemCallHandlers) / sizeof(systemCallHandlers[0]) && systemCallHandlers[r->eax]) {
 		r->eax = systemCallHandlers[r->eax](r);
 

@@ -4,6 +4,7 @@
 #include <krnl/hal.hpp>
 #include <krnl/panic.hpp>
 #include <krnl/intlformat.hpp>
+#include <krnl/intops.hpp>
 #include <krnl/atexit.hpp>
 #include <fs/vfs.hpp>
 
@@ -15,16 +16,6 @@
 #pragma GCC optimize ("-fno-align-functions")
 
 klocale_t keLocale;
-
-int KeGetDigitsInNumber(long long int n)
-{
-	int digits = 0;
-	while (n) {
-		n /= 10;
-		++digits;
-	}
-	return digits;
-}
 
 void KeInitialiseLocale()
 {
@@ -131,7 +122,7 @@ void KeSetLocale(klocale_t l)
 	keLocale = l;
 }
 
-void KeFormatCurrency(char* output, int bufferSize, long long int dollars, int cents)
+void KeFormatCurrency(char* output, int bufferSize, long long int dollars, long long int decimals)
 {
 	
 }

@@ -1066,6 +1066,7 @@ extern "C" uint32_t _bcrypt_rand()
 int _bcrypt_errno = 0;
 int tzsel;
 bool createNewUserMode = false;
+bool firstTimeEnteringTimezone = true;
 int modesel;
 void firstRun(bool onlyPkey)
 {
@@ -1405,14 +1406,20 @@ char passwhash[80];*/
                 else if (ii >= 60) timePtr = 14;
                 else if (ss >= 60) timePtr = 17;
                 else {
-                    // TODO: actually set the time
+                    dt.minute = ii;
+                    dt.second = ss;
+                    dt.hour = hh;
+                    dt.day = dd;
+                    dt.month = mm;
+                    dt.year = yy;
+                    computer->clock->setTimeInDatetimeUTC(dt);
                     break;
                 }
             } else if (installKey == '\e') {
                 goto screen1;
             }
 
-            milliTenthSleep(1100);
+            milliTenthSleep(500);
             installKey = 0;
         }
 
@@ -1420,6 +1427,12 @@ char passwhash[80];*/
         milliTenthSleep(4000);
     screen3:
         installKey = 0;
+
+        if (firstTimeEnteringTimezone) {
+            firstTimeEnteringTimezone = false;
+            tzsel = 59;
+            scroll = 48;
+        }
 
         drawBootScreen();
         drawBasicWindow(18, 1, 60, 20, "Date and Time");
