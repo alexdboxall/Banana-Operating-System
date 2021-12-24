@@ -9,6 +9,7 @@ void beginx(void* a)
 #include "main.hpp"
 
 #include "krnl/main.hpp"
+#include "krnl/intlformat.hpp"
 #include "krnl/computer.hpp"
 #include "thr/elf.hpp"
 #include "krnl/terminal.hpp"
@@ -1970,6 +1971,11 @@ void begin(void* a)
         CmSetString(reg, CmFindObjectFromPath(reg, userBasePath), userDesktop);
 
         CmClose(reg);
+
+        KeSetTimezone(tzsel);
+        size_t utc = computer->clock->timeInSecondsUTC();
+        computer->clock->setTimeInSecondsLocal(utc);
+
         if (createNewUserMode) {
             goto finishCreateNewUserGoto;
         }
@@ -2005,7 +2011,8 @@ void begin(void* a)
         KeRestart();
 
     } else {
-        KeLoadClockSettings();
+        KeLoadTimezone();
+        KeInitialiseLocale();
 
         reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
        

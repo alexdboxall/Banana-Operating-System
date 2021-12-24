@@ -23,6 +23,12 @@ extern int keTimezoneHourOffset;
 extern bool keTimezoneHalfHourOffset;
 extern bool keDstOn;
 
+void KeLoadTimezone();
+void KeSetTimezone(const char* tzstring);
+bool KeSetTimezone(int id);
+void KeUpdateTimezone(const char* tzstring);
+const char* KeGetTimezoneStringFromID(int id);
+
 void KeLoadClockSettings();
 
 class Clock: public Device

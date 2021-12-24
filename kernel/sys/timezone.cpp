@@ -28,9 +28,8 @@ uint64_t SysTimezone(regs* r)
 
 	} else {
 		//set the timezone
-		kprintf("TODO: unimplemented, sc_timezone.cpp: TODO! WRITE TO REGISTRY\n");
-		//User::loadClockSettings(r->ebx);
-		return 1;
+		bool worked = KeSetTimezone(r->ebx);
+		return worked ? 0 : 1;
 	}
 }
 

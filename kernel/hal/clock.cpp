@@ -13,20 +13,79 @@ int keTimezoneHourOffset = 0;
 bool keTimezoneHalfHourOffset = false;
 bool keDstOn = false;
 
-void KeLoadClockSettings()
+char* keTimezoneStrings[200];
+int keNumberOfTimezones = 0;
+bool keLoadedTimezones = false;
+
+int KeLoadTimezoneStrings()
 {
-	char tzstring[600];
-	tzstring[0] = 0;
+	keLoadedTimezones = true;
 
-	Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
-	int loc = CmFindObjectFromPath(reg, "BANANA/TIME/TIMEZONE");
-	kprintf("REGISTRY: %d\n", loc);
-	if (loc > 0) {
-		CmGetString(reg, loc, tzstring);
-	}		
-	CmClose(reg);
-	kprintf("tzstring = '%s', 0x%X\n", tzstring, tzstring[0]);
+	File* f = new File("C:/Banana/System/timezones.txt", kernelProcess);
+	f->open(FileOpenMode::Read);
+	uint64_t siz;
+	bool dir;
+	f->stat(&siz, &dir);
+	int br;
+	char* bf = (char*) malloc(siz);
+	memset(bf, 0, siz);
+	f->read(siz, bf, &br);
+	f->close();
 
+	int num = 0;
+	for (int i = 0; i < 200; ++i) {
+		keTimezoneStrings[i] = (char*) malloc(120);
+		strcpy(keTimezoneStrings[i], " ");
+	}
+	int j = 0;
+
+	while (1) {
+		char s[2];
+		s[0] = bf[j++];
+		s[1] = 0;
+		if (s[0] == '\r') continue;
+		if (s[0] == '\t') {
+			while (strlen(keTimezoneStrings[num]) < 9) {
+				strcat(keTimezoneStrings[num], " ");
+			}
+
+			continue;
+		}
+		if (s[0] == '\n') {
+			while (strlen(keTimezoneStrings[num]) < 54) {
+				strcat(keTimezoneStrings[num], " ");
+			}
+			num++;
+			if (j >= siz) break;
+			continue;
+		}
+		if (strlen(keTimezoneStrings[num]) < 50) {
+			strcat(keTimezoneStrings[num], s);
+		} else if (strlen(keTimezoneStrings[num]) == 50) {
+			strcat(keTimezoneStrings[num], "... ");
+
+		}
+	}
+
+	free(bf);
+
+	keNumberOfTimezones = num;
+}
+
+const char* KeGetTimezoneStringFromID(int id)
+{
+	if (!keLoadedTimezones) {
+		KeLoadTimezoneStrings();
+	}
+	if (id >= keNumberOfTimezones) {
+		return nullptr;
+	}
+	return keTimezoneStrings[id] + 1;
+}
+
+
+void KeUpdateTimezone(const char* tzstring)
+{
 	if (tzstring[0] == '+' || tzstring[0] == '-') {
 		keDstOn = false;
 		keTimezoneHalfHourOffset = \
@@ -37,7 +96,7 @@ void KeLoadClockSettings()
 		if (tzstring[3] == '.') {
 			keTimezoneHourOffset *= 10;
 			keTimezoneHourOffset += tzstring[2] - '0';
-		}		
+		}
 		if (tzstring[0] == '-') {
 			keTimezoneHourOffset = -keTimezoneHourOffset;
 		}
@@ -47,8 +106,39 @@ void KeLoadClockSettings()
 		keTimezoneHalfHourOffset = 0;
 		keTimezoneHourOffset = 0;
 	}
+}
 
-	kprintf("Timezone: %d.%d\n", keTimezoneHourOffset, (int) keTimezoneHalfHourOffset * 5);
+bool KeSetTimezone(int id)
+{
+	const char* name = KeGetTimezoneStringFromID(id);
+	if (name) {
+		KeSetTimezone(name);
+		return true;
+	}
+	return false;
+}
+
+void KeSetTimezone(const char* tzstring) {
+	Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
+	CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/TIME/TIMEZONE"), timezone);
+	CmClose(reg);
+
+	KeUpdateTimezone((const char*) tzstring);
+}
+
+void KeLoadTimezone()
+{
+	char tzstring[600];
+	tzstring[0] = 0;
+
+	Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
+	int loc = CmFindObjectFromPath(reg, "BANANA/TIME/TIMEZONE");
+	if (loc > 0) {
+		CmGetString(reg, loc, tzstring);
+	}		
+	CmClose(reg);
+
+	KeUpdateTimezone((const char*) tzstring);
 }
 
 
