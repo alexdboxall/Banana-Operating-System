@@ -1,6 +1,10 @@
 #include "fs/vfs.hpp"
 #include "hal/clock.hpp"
 #include "krnl/cm.hpp"
+#include <krnl/kheap.hpp>
+extern "C" {
+#include <libk/string.h>
+}
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -120,7 +124,7 @@ bool KeSetTimezone(int id)
 
 void KeSetTimezone(const char* tzstring) {
 	Reghive* reg = CmOpen("C:/Banana/Registry/System/SYSTEM.REG");
-	CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/TIME/TIMEZONE"), timezone);
+	CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/TIME/TIMEZONE"), tzstring);
 	CmClose(reg);
 
 	KeUpdateTimezone((const char*) tzstring);
