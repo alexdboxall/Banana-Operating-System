@@ -1356,41 +1356,47 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 	} else if (!strcasecmp(argv[0], "settimezone") || !strcasecmp(argv[0], "settz") || !strcasecmp(argv[0], "timezone")) {
 		FILE* f = fopen("C:/Banana/System/timezone.txt", "r");
 
-		fprintf(out, "Please find the ID number of your timezone:\n\n");
-
-		char buffer[256];
-		int lineNum = 0;
-		while (fgets(buffer, 255, f)) {
-			fprintf(out, "    %d: ", lineNum + 1);
-			for (int i = 0; buffer[i]; ++i) {
-				if (buffer[i] == '\n' || buffer[i] == '\r') break;
-				if (buffer[i] == '\t') {
-					fprintf(out, ", ");
-					continue;
-				}
-				fputc(buffer[i], out);
-			}
-			fputc('\n', out);
-
-			if ((lineNum % 15) == 14) {
-				fprintf(out, "\nPress ENTER to continue\n");
-				int c = getchar();
-				if (c != '\n') while ((c = getchar()) != '\n' && c != EOF) {}
-			}
-
-			++lineNum;
-		}
-
-		fclose(f);
-		fflush(stdin);
-		fprintf(out, "\nEnter your timezone ID: ");
-
-		char num[32];
 		int tzID = -1;
-		fgets(num, 31, stdin);
-		sscanf(num, "%d", &tzID);
+		if (argc == 2) {
+			sscanf(argv[2], "%d", &tzID);
+
+		} else {
+			fprintf(out, "Please find the ID number of your timezone:\n\n");
+
+			char buffer[256];
+			int lineNum = 0;
+			while (fgets(buffer, 255, f)) {
+				fprintf(out, "    %d: ", lineNum + 1);
+				for (int i = 0; buffer[i]; ++i) {
+					if (buffer[i] == '\n' || buffer[i] == '\r') break;
+					if (buffer[i] == '\t') {
+						fprintf(out, ", ");
+						continue;
+					}
+					fputc(buffer[i], out);
+				}
+				fputc('\n', out);
+
+				if ((lineNum % 15) == 14) {
+					fprintf(out, "\nPress ENTER to continue\n");
+					int c = getchar();
+					if (c != '\n') while ((c = getchar()) != '\n' && c != EOF) {}
+				}
+
+				++lineNum;
+			}
+
+			fclose(f);
+			fflush(stdin);
+			fprintf(out, "\nEnter your timezone ID: ");
+
+			char num[32];
+			fgets(num, 31, stdin);
+			sscanf(num, "%d", &tzID);
+		}
+		
 		tzID -= 1;
-		if (tzID == -1 || tzID < 0 || tzID >= lineNum) {
+		if (tzID == -1 || tzID < 0) {
 			fprintf(out, "The timezone was not set.\n");
 		} else {
 			extern uint64_t SystemCall(size_t, size_t, size_t, size_t);
