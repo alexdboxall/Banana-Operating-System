@@ -2,11 +2,12 @@
 #include "hal/clock.hpp"
 #include "krnl/cm.hpp"
 #include <krnl/kheap.hpp>
+#include <krnl/panic.hpp>
 extern "C" {
 #include <libk/string.h>
 }
 
-#pragma GCC optimize ("Os")
+#pragma GCC optimize ("O0")		//don't bother!
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
 #pragma GCC optimize ("-fno-align-jumps")
@@ -26,15 +27,21 @@ int KeLoadTimezoneStrings()
 	keLoadedTimezones = true;
 
 	File* f = new File("C:/Banana/System/timezones.txt", kernelProcess);
+	if (!f) {
+		KePanic("CANNOT LOAD TIMEZONES");
+	}
 	f->open(FileOpenMode::Read);
 	uint64_t siz;
 	bool dir;
 	f->stat(&siz, &dir);
+	kprintf("file size = %d\n", (int) siz);
 	int br;
-	char* bf = (char*) malloc(siz);
+	char* bf = (char*) malloc(siz + 1);
 	memset(bf, 0, siz);
 	f->read(siz, bf, &br);
+	kprintf("br = %d\n", br);
 	f->close();
+	delete f;
 
 	int num = 0;
 	for (int i = 0; i < 200; ++i) {
@@ -52,7 +59,6 @@ int KeLoadTimezoneStrings()
 			while (strlen(keTimezoneStrings[num]) < 9) {
 				strcat(keTimezoneStrings[num], " ");
 			}
-
 			continue;
 		}
 		if (s[0] == '\n') {
@@ -67,23 +73,33 @@ int KeLoadTimezoneStrings()
 			strcat(keTimezoneStrings[num], s);
 		} else if (strlen(keTimezoneStrings[num]) == 50) {
 			strcat(keTimezoneStrings[num], "... ");
-
 		}
 	}
 
-	free(bf);
+	//free(bf);
 
 	keNumberOfTimezones = num;
+	kprintf("found %d timezones.\n", num);
+	kprintf("%d\n", keNumberOfTimezones);
+	
+	for (int i = 0; i < keNumberOfTimezones; ++i) {
+		kprintf("%d vs %d. %d\n", i, keNumberOfTimezones, i < keNumberOfTimezones);
+		kprintf("%d : %s\n", i, keTimezoneStrings[i]);
+	}
 }
 
 const char* KeGetTimezoneStringFromID(int id)
 {
+	kprintf("KeGetTimezoneStringFromID %d\n", id);
 	if (!keLoadedTimezones) {
 		KeLoadTimezoneStrings();
+		kprintf("loaded strings.\n");
 	}
-	if (id >= keNumberOfTimezones) {
+	kprintf("id = %d, num = %d\n", id, keNumberOfTimezones);
+	if (id >= keNumberOfTimezones || id <= -1) {
 		return nullptr;
 	}
+	kprintf("Tz %d = %s\n", id, keTimezoneStrings[id] + 1);
 	return keTimezoneStrings[id] + 1;
 }
 
@@ -319,7 +335,7 @@ datetime_t KeSecondsToDatetime(time_t lcltime)
 	month += month < 10 ? 2 : -10;
 	year = ADJUSTED_EPOCH_YEAR + erayear + era * YEARS_PER_ERA + (month <= 1);
 
-	res.year = year + 70;
+	res.year = year;
 	res.month = month + 1;
 	res.day = day;
 

@@ -5,7 +5,7 @@
 #include "krnl/common.hpp"
 
 
-#define CURRENT_YEAR 2020
+#define EARLIEST_YEAR_CLOCK_CAN_BE_SET_TO 1970
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
@@ -166,8 +166,8 @@ void RTC::completeRTCRefresh()
 		hour = ((hour & 0x7F) + 12) % 24;
 	}
 
-	year += (CURRENT_YEAR / 100) * 100;
-	if (year < CURRENT_YEAR) {
+	year += (EARLIEST_YEAR_CLOCK_CAN_BE_SET_TO / 100) * 100;
+	if (year < EARLIEST_YEAR_CLOCK_CAN_BE_SET_TO) {
 		year += 100;
 	}
 

@@ -1494,21 +1494,7 @@ char passwhash[80];*/
             installKey = 0;
         }
         
-        keDstOn = false;
-        keTimezoneHalfHourOffset = \
-            (timezoneStrings[tzsel][3] == '.' && timezoneStrings[tzsel][4] == '5') ||
-            (timezoneStrings[tzsel][4] == '.' && timezoneStrings[tzsel][5] == '5');
-        
-        keTimezoneHourOffset = timezoneStrings[tzsel][2] - '0';
-        if (timezoneStrings[tzsel][4] == '.') {
-            keTimezoneHourOffset *= 10;
-            keTimezoneHourOffset += timezoneStrings[tzsel][3] - '0';
-        }
-        if (timezoneStrings[tzsel][1] == '-') {
-            keTimezoneHourOffset = -keTimezoneHourOffset;
-        }
-        kprintf("TZHR: %d:%d\n", keTimezoneHourOffset, keTimezoneHalfHourOffset);
-        computer->clock->setTimeInDatetimeLocal(dt);
+      
 
         installKey = 0;
         milliTenthSleep(4000);
@@ -1972,12 +1958,13 @@ void begin(void* a)
 
         CmClose(reg);
 
-        KeSetTimezone(tzsel);
-        size_t utc = computer->clock->timeInSecondsUTC();
-        computer->clock->setTimeInSecondsLocal(utc);
-
+       
         if (createNewUserMode) {
             goto finishCreateNewUserGoto;
+        } else {
+            size_t utc = computer->clock->timeInSecondsUTC();
+            KeSetTimezone(tzsel);
+            computer->clock->setTimeInSecondsLocal(utc);
         }
 
         //finishing touches go here
