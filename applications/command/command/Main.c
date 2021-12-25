@@ -1358,7 +1358,7 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 
 		int tzID = -1;
 		if (argc == 2) {
-			sscanf(argv[2], "%d", &tzID);
+			sscanf(argv[1], "%d", &tzID);
 
 		} else {
 			fprintf(out, "Please find the ID number of your timezone:\n\n");
