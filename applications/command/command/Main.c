@@ -1354,7 +1354,7 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 		}
 
 	} else if (!strcasecmp(argv[0], "settimezone") || !strcasecmp(argv[0], "settz") || !strcasecmp(argv[0], "timezone")) {
-		FILE* f = fopen("C:/Banana/System/timezone.txt", "r");
+		FILE* f = fopen("C:/Banana/System/timezones.txt", "r");
 
 		int tzID = -1;
 		if (argc == 2) {
