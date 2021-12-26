@@ -16,6 +16,33 @@
 
 #include "C:/Users/Alex/Desktop/Banana/kernel/sys/syscalls.hpp"
 
+
+#include <signal.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include <unistd.h>
+
+volatile sig_atomic_t print_flag = false;
+
+void handle_alarm(int sig)
+{
+	print_flag = true;
+}
+
+int testalarm()
+{
+	signal(SIGALRM, handle_alarm); // Install handler first,
+	alarm(2); // before scheduling it to be called.
+	for (;;) {
+		pause();
+		if (print_flag) {
+			printf("Hello\n");
+			print_flag = false;
+			alarm(2); // Reschedule.
+		}
+	}
+}
+
 typedef struct VESAModeInfo
 {
 	//VM8086 gives us this
@@ -1180,6 +1207,9 @@ int parse(int argc, char* argv[], FILE* out, Label labels[64], int batchNesting)
 				fprintf(out, "Could not get volume label.\n");
 			}
 		}
+
+	} else if (!strcasecmp(argv[0], "alarmtest")) {
+		testalarm();
 
 	} else if (!strcasecmp(argv[0], "install")) {
 		extern int installmain(int argc, char* argv[]);

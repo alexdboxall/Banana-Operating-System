@@ -8,6 +8,7 @@
 #include "krnl/hal.hpp"
 #include "krnl/physmgr.hpp"
 #include "thr/elf.hpp"
+#include <thr/alarm.hpp>
 
 #pragma GCC optimize ("O2")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -56,6 +57,7 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 		//Priority 0  : 51ms	(old was 58ms)
 		//Priority 128: 45ms	(old was 51ms)
 		//Priority 254: 38ms	(old was 42ms)
+		kprintf("priority: %d\n", nextThreadToRun->priority);
 		nextThreadToRun->timeSliceRemaining += (1024 - nextThreadToRun->priority) >> 1;
 	}
 
@@ -72,7 +74,9 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 
 	HalSaveCoprocessor(currentTaskTCB->fpuState);
 	switchToThreadASM(nextThreadToRun);
+	kprintf("Switch.\n");
 	HalLoadCoprocessor(currentTaskTCB->fpuState);
+	KeCheckAlarm(currentTaskTCB);
 }
 
 ThreadControlBlock* Process::createUserThread()
@@ -112,6 +116,7 @@ ThreadControlBlock* Process::createThread(void (*where)(void*), void* context, i
 	threads[threadNo].state = TaskState::ReadyToRun;
 	threads[threadNo].firstTimeEIP = (size_t) where;
 	threads[threadNo].timeKeeping = 0;
+	threads[threadNo].alarm = 0;
 	threads[threadNo].signalStateHandler = (size_t) malloc(256);
 
 	taskList.addElement(&threads[threadNo]);
@@ -157,6 +162,7 @@ void setupMultitasking(void (*where)())
 	p->threads[0].processRelatedTo = p;
 	p->threads[0].timeSliceRemaining = 50000000;
 	p->threads[0].signalStateHandler = (size_t) malloc(256);
+	p->threads[0].alarm = 0;
 
 	currentTaskTCB = &p->threads[0];
 
@@ -494,7 +500,7 @@ void unblockTask(ThreadControlBlock* task)
 	unlockScheduler();
 }
 
-void milliTenthSleepUntil(uint32_t when)
+void milliTenthSleepUntil(uint64_t when)
 {
 	if (when < milliTenthsSinceBoot) {
 		return;
@@ -509,6 +515,16 @@ void milliTenthSleepUntil(uint32_t when)
 }
 
 
+void milliTenthSleep(uint64_t mtens)
+{
+	milliTenthSleepUntil(milliTenthsSinceBoot + mtens);
+}
+
+void sleep(uint64_t seconds)
+{
+	milliTenthSleep(seconds * 10000);
+}
+
 void milliTenthSleep(uint32_t mtens)
 {
 	milliTenthSleepUntil(milliTenthsSinceBoot + mtens);
@@ -516,7 +532,7 @@ void milliTenthSleep(uint32_t mtens)
 
 void sleep(uint32_t seconds)
 {
-	milliTenthSleep(seconds * 10000);
+	milliTenthSleep(((uint64_t) seconds) * 10000);
 }
 
 extern "C" void taskReturned()

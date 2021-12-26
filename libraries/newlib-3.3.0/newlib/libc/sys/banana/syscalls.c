@@ -12,7 +12,7 @@
 #pragma GCC push_options
 #pragma GCC optimize ("O0")
 
-#include "D:/Users/Alex/Desktop/Banana/kernel/sys/syscalls.hpp"
+#include "C:/Users/Alex/Desktop/Banana/kernel/sys/syscalls.hpp"
 
 uint64_t SystemCall(size_t a, size_t b, size_t c, size_t d)
 {
@@ -83,6 +83,11 @@ int fchmod(int __fd, mode_t __mode)
 {
 	errno = ENOMEM;
 	return -1;
+}
+
+unsigned alarm(unsigned secs)
+{
+	return (SystemCall(Alarm, secs * 10000, 0, 0) + 9999) / 10000;
 }
 
 int fork()
@@ -287,6 +292,13 @@ int lstat(const char* file, struct stat* st)
 	
 
 	return res;
+}
+
+int pause()
+{
+	SystemCall(Pause, 0, 0, 0);
+	errno = EINTR;
+	return -1;
 }
 
 clock_t times(struct tms* buf)

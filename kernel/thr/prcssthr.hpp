@@ -24,6 +24,7 @@ enum class TaskState: size_t
 	WaitingForLock = 5,
 	WaitingForKeyboard = 6,
 	WaitPID = 7,
+	PausedForSignal,
 };
 
 #pragma pack(push,1)
@@ -42,7 +43,7 @@ struct ThreadControlBlock
 	volatile ThreadControlBlock* volatile prev = nullptr;
 	volatile ThreadControlBlock* volatile nextForNonSchedulingThings = nullptr;
 
-	volatile uint32_t sleepExpiry;
+	volatile uint64_t sleepExpiry;
 	int forkret;
 
 	size_t timeSliceRemaining;
@@ -75,6 +76,8 @@ struct ThreadControlBlock
 	
 	bool vm86VIE = false;
 	bool vm86Task = false;
+
+	uint64_t alarm;
 };
 
 struct Process
@@ -139,8 +142,8 @@ void schedule();
 void blockTask(enum TaskState reason);
 void blockTaskWithSchedulerLockAlreadyHeld(enum TaskState reason);
 void unblockTask(ThreadControlBlock* task);
-void sleep(uint32_t seconds);
-void milliTenthSleep(uint32_t mtenth);
+void sleep(uint64_t seconds);
+void milliTenthSleep(uint64_t mtenth);
 void cleanerTaskFunction(void* context);
 int waitTask(int pid, int* wstatus, int options);
 

@@ -52,6 +52,8 @@ uint64_t SysTruncate(regs* r);
 uint64_t SysSymlink(regs* r);
 uint64_t SysRegistryEasyReadString(regs* r);
 uint64_t SysRegistryEasyReadInteger(regs* r);
+uint64_t SysAlarm(regs* r);
+uint64_t SysPause(regs* r);
 
 int string_ends_with(const char* str, const char* suffix)
 {
@@ -754,6 +756,8 @@ uint64_t(*systemCallHandlers[])(regs* r) = {
 	SysSymlink,
 	SysRegistryEasyReadString,
 	SysRegistryEasyReadInteger,
+	SysAlarm,
+	SysPause,
 };
 
 #include <krnl/assert.hpp>

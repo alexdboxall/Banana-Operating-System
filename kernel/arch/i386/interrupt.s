@@ -265,6 +265,8 @@ isr96:
 global int_common_stub
 global syscall_common_stub
 extern int_handler
+extern KiCheckSignalZ
+extern KiFinishSignalZ
 
 irq0:
     cli
@@ -272,38 +274,6 @@ irq0:
     push byte 32
 
 int_common_stub:
-    pushad
-
-    push ds
-    push es
-    push fs
-    push gs
-
-    mov ax, 0x10   ; Load the Kernel Data Segment descriptor!
-    mov ds, ax
-    mov es, ax
-    mov fs, ax
-    mov gs, ax
-
-    push esp
-    cld             ; the kernel will "have a fit" if userspace has the direction flag set when we interrupt
-    call int_handler
-    add esp, 4
-
-	pop gs
-    pop fs
-    pop es
-    pop ds
-
-	popa
-    add esp, 8     ; Cleans up the pushed error code and pushed ISR number
-
-    iret
-
-
-extern KiCheckSignalZ
-extern KiFinishSignalZ
-
 syscall_common_stub:
     pushad
 
@@ -329,9 +299,14 @@ syscall_common_stub:
     pop ds
 
     call KiCheckSignalZ
-    cmp eax, 0
-	je skipSignals
+    test eax, eax
+	jne doSignals
 
+    popa
+    add esp, 8     ; Cleans up the pushed error code and pushed ISR number
+    iret
+
+doSignals:
     mov [currentTaskTCB + 0x8], eax
 
     popa
@@ -411,18 +386,6 @@ finishSignal2:
     mov esi, [ebp + SIG_STATE_STRUCT.ssi]
     mov edi, [ebp + SIG_STATE_STRUCT.sdi]
     mov ebp, [ebp + SIG_STATE_STRUCT.sbp]
-
-    iret
-
-    ;sub esp, 32                     ;black magic
-    ;popa
-    ;add esp, 8
-    ;iret
-
-    ;NOW DO THE ORIGINAL INTERRUPT
-skipSignals:
-	popa
-    add esp, 8     ; Cleans up the pushed error code and pushed ISR number
 
     iret
 

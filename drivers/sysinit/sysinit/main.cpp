@@ -1418,7 +1418,7 @@ char passwhash[80];*/
                 }
             } else if (installKey == '\e') {
                 goto screen1;
-            }
+            } 
 
             milliTenthSleep(500);
             installKey = 0;

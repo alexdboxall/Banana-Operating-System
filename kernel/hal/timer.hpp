@@ -23,6 +23,6 @@ public:
 Timer* setupTimer(int hz);
 void timerHandler(uint32_t milliTenths);
 
-extern uint32_t milliTenthsSinceBoot;
+extern uint64_t milliTenthsSinceBoot;
 
 #endif

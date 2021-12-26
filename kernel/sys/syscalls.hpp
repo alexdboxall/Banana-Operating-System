@@ -114,6 +114,8 @@ SystemCallNumber
 	Symlink,
 	RegistryEasyReadString,
 	RegistryEasyReadInteger,
+	Alarm,
+	Pause,
 
 };
 
