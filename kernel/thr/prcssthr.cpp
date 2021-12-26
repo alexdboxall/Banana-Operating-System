@@ -57,7 +57,6 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 		//Priority 0  : 51ms	(old was 58ms)
 		//Priority 128: 45ms	(old was 51ms)
 		//Priority 254: 38ms	(old was 42ms)
-		kprintf("priority: %d\n", nextThreadToRun->priority);
 		nextThreadToRun->timeSliceRemaining += (1024 - nextThreadToRun->priority) >> 1;
 	}
 
@@ -74,7 +73,6 @@ void switchToThread(ThreadControlBlock* nextThreadToRun)
 
 	HalSaveCoprocessor(currentTaskTCB->fpuState);
 	switchToThreadASM(nextThreadToRun);
-	kprintf("Switch.\n");
 	HalLoadCoprocessor(currentTaskTCB->fpuState);
 	KeCheckAlarm(currentTaskTCB);
 }

@@ -27,6 +27,8 @@ extern "C" {
 }
 //MAIN SCRIPT
 
+bool safemode = false;
+
 #define ACPI_SIZE size_t
 
 int
@@ -656,7 +658,7 @@ VgaText* term;
 bool showSidebar = true;
 void drawBootScreen()
 {
-    term->setDefaultBgColour(VgaColour::Cyan);
+    term->setDefaultBgColour(safemode ? VgaColour::Black : VgaColour::Cyan);
     term->setDefaultFgColour(VgaColour::Black);
     term->clearScreen();
     term->setTitle("");
@@ -674,8 +676,12 @@ void drawBootScreen()
             }
         }
         term->setCursor(1, 1);
-        term->puts("Checking\n system\n requirements\n\n Legal\n notices\n\n Choosing a\n partition\n\n Formatting\n\n Copying files\n\n Restarting\n your computer\n\n", VgaColour::White, VgaColour::Black);
-        term->puts(" Finalising the\n installation", VgaColour::Yellow, VgaColour::Black);
+        if (!safemode) term->puts("Checking\n system\n requirements\n\n Legal\n notices\n\n Choosing a\n partition\n\n Formatting\n\n Copying files\n\n Restarting\n your computer\n\n", VgaColour::White, VgaColour::Black);
+        term->puts(" Finalising the\n installation", safemode ? VgaColour::White : VgaColour::Yellow, VgaColour::Black);
+
+        if (safemode) {
+            term->puts("\n\n\n\n\n\n\n\n   SAFE MODE", safemode ? VgaColour::White : VgaColour::Yellow, VgaColour::Black);
+        }
     }
     term->setDefaultBgColour(VgaColour::White);
     term->setDefaultFgColour(VgaColour::Black);
@@ -694,17 +700,17 @@ void drawBasicWindowX(int wx, int wy, int ww, int wh, const char* wtitle, bool g
 
     term->setCursor(wx, wy);
     for (int x = 0; x < ww; ++x) {
-        term->putchar(' ', VgaColour::Blue, VgaColour::Blue);
+        term->putchar(' ', safemode ? VgaColour::Black : VgaColour::Blue, safemode ? VgaColour::Black : VgaColour::Blue);
     }
 
     term->setCursor(wx + 1, wy + wh);
     for (int x = 0; x < ww; ++x) {
-        term->putchar(' ', VgaColour::Teal, VgaColour::Teal);
+        term->putchar(' ', safemode ? VgaColour::Black : VgaColour::Teal, safemode ? VgaColour::Black : VgaColour::Teal);
     }
 
     for (int x = wy; x < wy + wh; ++x) {
         term->setCursor(ww + wx, 1 + x);
-        term->putchar(' ', VgaColour::Teal, VgaColour::Teal);
+        term->putchar(' ', safemode ? VgaColour::Black : VgaColour::Teal, safemode ? VgaColour::Black : VgaColour::Teal);
 
         if (x != wy + wh - 1) {
             term->setCursor(wx, 1 + x);
@@ -715,7 +721,7 @@ void drawBasicWindowX(int wx, int wy, int ww, int wh, const char* wtitle, bool g
     int g = (ww - strlen(wtitle)) / 2 - 1;
     term->setCursor(wx + g, wy);
     for (int j = 0; j < strlen(wtitle); ++j) {
-        term->putchar(wtitle[j], VgaColour::White, VgaColour::Blue);
+        term->putchar(wtitle[j], VgaColour::White, safemode ? VgaColour::Black : VgaColour::Blue);
     }
 }
 
@@ -728,8 +734,248 @@ void drawBasicWindow(int wx, int wy, int ww, int wh, const char* wtitle)
 
 extern void (*guiKeyboardHandler) (KeyboardToken kt, bool* keystates);
 volatile char installKey = 0;
+bool blockUserTyping = false;
+
+/*
+sx          SET x
+Sxyyy       SETVARxyyy
+axx         SETASCII xx
++x          INCVARx
+-x          DECVARx
+<xy         COPYVARxy
+>xy         SUBVARxy
+0x          CLEARVARx
+c           CLEARKEY
+b           BACKSPACE
+n           NEWLINE
+u           UP
+d           DOWN
+l           LEFT       
+r           RIGHT
+p           PAGEUP
+P           PAGEDOWN     
+e           ESCAPE
+t           TAB
+T           SHIFTTAB
+w           WAITCLEAR
+k           READKEY
+/           WAITPRESS
+Wxx         WAIT (xx * 100) milliseconds
+N           NOP
+X           TERMINATE
+gxxxx       GOTO byte xxxx
+{           TYPE        the end of the message is delimited with a }. if you need to type a }, write the first half with this, use the next statement, then use a second { statement to finish the message
+q           TYPE }      types a }
+fxyyy       WAITFOR X = YYY
+Fxyyy       SKIPIF X = YYY (3 digit hex), skips next 5 bytes if true
+                    X      
+                    0       USERKEY
+                    1       USERVAR1
+                    2       USERVAR2
+                    3       USERVAR3
+                    4       TASK NUMBER
+                    5       CURSORX
+                    6       CURSORY
+                    7       SEL
+                    8       TZSEL
+                    9       SCROLL
+
+*/
+
+const char* remoteInstallScript = "%W08<15wbwbwbw>15F1000g0004{Alex}wnw<15wbwbwbw>15F1000g0024{Company Name}wnwwnwwnwwnwwnwwnwwnwwnwwnwwnwwnwwnwwnw$X     ";
+bool remoteInstall = true;
+
+int lookupHex(char c)
+{
+    if (c >= '0' && c <= '9') return c - '0';
+    else if (c >= 'A' && c <= 'F') return c + 10 - 'A';
+    else return c + 10 - 'a';
+}
+
+void runRemoteInstall(void* v)
+{
+    unlockScheduler();
+
+    int remotePos = 0;
+
+    int USERKEY;
+    int uvar[3];
+    memset(uvar, 0, sizeof(uvar));
+
+    while (1) {
+        char c0 = remoteInstallScript[remotePos];
+        char c1 = remoteInstallScript[remotePos + 1];
+        char c2 = remoteInstallScript[remotePos + 2];
+        char c3 = remoteInstallScript[remotePos + 3];
+        char c4 = remoteInstallScript[remotePos + 4];
+
+        kprintf("%c: %c%c%c%c\n", c0, c1, c2, c3, c4);
+
+        if (c0 == 's') {
+            installKey = c1;
+            remotePos += 2;
+        } else if (c0 == 'F' || c0 == 'f') {
+            int val = 0;
+            retry:
+            val = lookupHex(c2) * 0x100;
+            val += lookupHex(c3) * 0x10;
+            val += lookupHex(c4) * 0x1;
+            remotePos += 5;
+
+            int comp = 0;
+            if (c1 == '0') comp = USERKEY;
+            if (c1 == '1') comp = uvar[0];
+            if (c1 == '2') comp = uvar[1];
+            if (c1 == '3') comp = uvar[2];
+            if (c1 == '4') comp = term->cursorX;
+            if (c1 == '5') comp = term->cursorY;
+
+            if (c0 == 'F' && comp == val) {
+                remotePos += 5;
+            } else if (c0 == 'f' && comp != val) {
+                milliTenthSleep(100);
+                goto retry;
+            }
+
+        } else if (c0 == '{') {
+            ++remotePos;
+
+            while (true) {
+                char c = remoteInstallScript[remotePos++];
+                if (c == '}') break;
+                installKey = c;
+                while (installKey) { milliTenthSleep(100); }
+            }
+
+        } else if (c0 == 'q') {
+            remotePos += 1;
+            installKey = '}';
+            while (installKey) { milliTenthSleep(100); }
+        } else if (c0 == 'W') {
+            int delay = lookupHex(c1) * 0x10;
+            delay += lookupHex(c2) * 0x1;
+            remotePos += 3;
+            kprintf("waiting %d millisec\n", delay * 100);
+            milliTenthSleep(delay * 1000);
+        } else if (c0 == 'g') {
+            int delay = lookupHex(c1) * 0x1000;
+            delay += lookupHex(c2) * 0x100;
+            delay += lookupHex(c3) * 0x10;
+            delay += lookupHex(c4) * 0x1;
+            remotePos = delay;
+        } else if (c0 == 'N') {
+            remotePos += 1;
+        } else if (c0 == 'X') {
+            remoteInstall = false;
+            blockUserTyping = false;
+            break;
+        } else if (c0 == 'S') {
+            uvar[c1 - '1'] = lookupHex(c2) * 0x100;
+            uvar[c1 - '1'] += lookupHex(c3) * 0x10;
+            uvar[c1 - '1'] += lookupHex(c4) * 0x1;
+            remotePos += 5;
+        } else if (c0 == '+') {
+            uvar[c1 - '1']++;
+            remotePos += 2;
+        } else if (c0 == '-') {
+            uvar[c1 - '1']--;
+            remotePos += 2;
+        } else if (c0 == '0') {
+            uvar[c1 - '1'] = 0;
+            remotePos += 2;
+        } else if (c0 == '<') {
+            int comp = 0;
+            if (c2 == '0') comp = USERKEY;
+            if (c2 == '1') comp = uvar[0];
+            if (c2 == '2') comp = uvar[1];
+            if (c2 == '3') comp = uvar[2];
+            if (c2 == '5') comp = term->cursorX;
+            if (c2 == '6') comp = term->cursorY;
+            if (c1 == '1') uvar[0] = comp;
+            if (c1 == '2') uvar[1] = comp;
+            if (c1 == '3') uvar[2] = comp;
+            remotePos += 3;
+        } else if (c0 == '>') {
+            int comp = 0;
+            if (c2 == '0') comp = USERKEY;
+            if (c2 == '1') comp = uvar[0];
+            if (c2 == '2') comp = uvar[1];
+            if (c2 == '3') comp = uvar[2];
+            if (c2 == '5') comp = term->cursorX;
+            if (c2 == '6') comp = term->cursorY;
+            if (c1 == '1') uvar[0] -= comp;
+            if (c1 == '2') uvar[1] -= comp;
+            if (c1 == '3') uvar[2] -= comp;
+            remotePos += 3;
+        } else if (c0 == 'c') {
+            installKey = 0;
+            remotePos += 1;
+        } else if (c0 == 'b') {
+            installKey = '\b';
+            remotePos += 1;
+        } else if (c0 == 'n') {
+            installKey = '\n';
+            remotePos += 1;
+        } else if (c0 == '%') {
+            blockUserTyping = true;
+            ++remotePos;
+        } else if (c0 == '$') {
+            blockUserTyping = false;
+            ++remotePos;
+        } else if (c0 == 'u') {
+            installKey = 1;
+            remotePos += 1;
+        } else if (c0 == 'd') {
+            installKey = 2;
+            remotePos += 1;
+        } else if (c0 == 'l') {
+            installKey = 3;
+            remotePos += 1;
+        } else if (c0 == 'r') {
+            installKey = 4;
+            remotePos += 1;
+        } else if (c0 == 'p') {
+            installKey = 125;
+            remotePos += 1;
+        } else if (c0 == 'P') {
+            installKey = 126;
+            remotePos += 1;
+        } else if (c0 == 't') {
+            installKey = '\t';
+            remotePos += 1;
+        } else if (c0 == 'T') {
+            installKey = 127;
+            remotePos += 1;
+        } else if (c0 == 'e') {
+            installKey = '\e';
+            remotePos += 1;
+        } else if (c0 == 'k') {
+            USERKEY = installKey;
+            remotePos += 1;
+        } else if (c0 == 'w') {
+            remotePos += 1;
+            while (installKey) {
+                milliTenthSleep(50);
+            }
+        } else if (c0 == '/') {
+            remotePos += 1;
+            while (!installKey) {
+                milliTenthSleep(50);
+            }
+        }
+    }
+
+    blockUserTyping = false;
+
+    while (1) {
+        sleep(5);
+    }
+}
+
 void bootInstallKeybrd(KeyboardToken kt, bool* keystates)
 {
+    if (blockUserTyping) return;
+
     if (keystates[(int) KeyboardSpecialKeys::Shift] && kt.halScancode == '\t') {
         installKey = 127;
         return;
@@ -755,7 +1001,7 @@ void bootInstallKeybrd(KeyboardToken kt, bool* keystates)
         installKey = 2;
         return;
     }
-    if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::PageDown) {
+    if (kt.halScancode == (uint16_t) KeyboardSpecialKeys::PageUp) {
         installKey = 125;
         return;
     }
@@ -1071,6 +1317,10 @@ bool firstTimeEnteringTimezone = true;
 int modesel;
 void firstRun(bool onlyPkey)
 {
+    if (remoteInstall) {
+        currentTaskTCB->processRelatedTo->createThread(runRemoteInstall, nullptr, 128);
+    }
+
     showSidebar = !onlyPkey;
     if (createNewUserMode) {
         showSidebar = false;
@@ -1167,13 +1417,13 @@ char passwhash[80];*/
             }
 
             term->setCursor(24, 20);
-            term->puts(sel == 4 ? "Press ENTER to submit" : "                      ", VgaColour::DarkGrey, VgaColour::White);
+            term->puts(sel == 4 ? "Press ENTER to submit" : "                      ", safemode ? VgaColour::Black : VgaColour::DarkGrey, VgaColour::White);
             //term->setCursor(24, 19);
             //term->puts(sel == 4 ? "" : "           ", VgaColour::DarkGrey, VgaColour::White);
 
             term->setCursor(60, 20);
             if (sel != 4) term->puts("   OK   ", VgaColour::White, VgaColour::DarkGrey);
-            else          term->puts("   OK   ", VgaColour::White, VgaColour::Blue);
+            else          term->puts("   OK   ", VgaColour::White, safemode ? VgaColour::Black : VgaColour::Blue);
             term->puts(sel == 4 ? "  \x11" : "   ", VgaColour::Black, VgaColour::White);
 
             if (sel == 0) term->setCursor(33 + strlen(currName), 9);
@@ -1317,7 +1567,7 @@ char passwhash[80];*/
         term->setCursor(24, 6); term->puts("and then press ENTER.");
         term->setCursor(26, 9); term->puts("DD/MM/YYYY HH:MM:SS", VgaColour::LightGrey, VgaColour::White);
 
-        term->setCursor(17, 24); term->puts("ESC: Go back a screen", VgaColour::Teal, VgaColour::Cyan);
+        term->setCursor(17, 24); term->puts("ESC: Go back a screen", safemode ? VgaColour::White : VgaColour::Teal, safemode ? VgaColour::Black : VgaColour::Cyan);
         while (1) {
             term->setCursor(26, 8); term->puts(dateTime);
             term->setCursor(26 + timePtr, 8);
@@ -1438,7 +1688,7 @@ char passwhash[80];*/
         drawBootScreen();
         drawBasicWindow(18, 1, 60, 20, "Date and Time");
         term->setCursor(20, 4); term->puts("Please select your timezone and then press ENTER.");
-        term->setCursor(17, 24); term->puts("ESC: Go back a screen", VgaColour::Teal, VgaColour::Cyan);
+        term->setCursor(17, 24); term->puts("ESC: Go back a screen", safemode ? VgaColour::White : VgaColour::Teal, safemode ? VgaColour::Black : VgaColour::Cyan);
 
         numEntries = loadTimezoneStrings();
         barHeight = 15 * 14 / numEntries;
@@ -1507,7 +1757,7 @@ char passwhash[80];*/
         drawBasicWindow(20, 3, 55, 16, "User Interface");
         term->setCursor(22, 6); term->puts("Please select the user interface you want Banana");
         term->setCursor(22, 7); term->puts("to boot into by default when you start the computer.");
-        term->setCursor(17, 24); term->puts("ESC: Go back a screen", VgaColour::Teal, VgaColour::Cyan);
+        term->setCursor(17, 24); term->puts("ESC: Go back a screen", safemode ? VgaColour::White : VgaColour::Teal, safemode ? VgaColour::Black : VgaColour::Cyan);
 
         numEntries = 3;
 
@@ -1577,7 +1827,7 @@ retryProductKey:
 
     drawBootScreen();
     drawBasicWindow(22, 2, 50, 14, "Product Key");
-    term->setCursor(17, 24); term->puts("ESC: Go back a screen", VgaColour::Teal, VgaColour::Cyan);
+    term->setCursor(17, 24); term->puts("ESC: Go back a screen", safemode ? VgaColour::White : VgaColour::Teal, safemode ? VgaColour::Black : VgaColour::Cyan);
 
  
     term->setCursor(24, 5); term->puts("Please enter your product key below,");
@@ -1689,7 +1939,7 @@ retryProductKey:
     createUser(currName);
 
     bootInstallTasks(3);
-    VgaText::hiddenOut = true;
+    VgaText::hiddenOut = !safemode;
 }
 
 void loadExtensions()
@@ -1739,6 +1989,8 @@ void getRegsafeName(char* in, char* out)
 void begin(void* a)
 {
     bool firstTime = false;
+    extern uint32_t keBootSettings;
+    safemode = keBootSettings & 2;
 
     File* f = new File("C:/Banana/System/setupisd.one", kernelProcess);
     if (!f) {
@@ -1785,8 +2037,12 @@ void begin(void* a)
         drawBootScreen();
         drawBasicWindow(22, 5, 50, 13, "Finalising Installation");
         bootInstallTasks(3);
-        VgaText::hiddenOut = true;
-
+        VgaText::hiddenOut = !safemode;
+        if (safemode) {
+            setActiveTerminal(usertask->terminal);
+            usertask->terminal->setDefaultBgColour(VgaColour::Black);
+            usertask->terminal->setDefaultFgColour(VgaColour::White);
+        }
         while (1) {
             File* f = new File("C:/DE.BUG", kernelProcess);
             FileStatus fs = f->open(FileOpenMode::Read);
@@ -2254,14 +2510,24 @@ void begin(void* a)
                 HalConsoleWriteCharacter(' ', 7, 0, x, y);
             }
         }
+
+        extern uint32_t keBootSettings;
+        if (safemode) {
+            for (int i = 0; " SAFE MODE"[i]; ++i) {
+                HalConsoleWriteCharacter(" SAFE MODE"[i], 15, 0, 68 + i, 23);
+            }
+        }
        
         usertask->createUserThread();
 
         extern void startGUI(void* a);
         extern void startGUIVESA(void* a);
-        if (autogui == 1) kernelProcess->createThread(startGUI, nullptr, 1);
-        if (autogui == 2) kernelProcess->createThread(startGUIVESA, nullptr, 1);
 
+        if (!safemode) {
+            if (autogui == 1) kernelProcess->createThread(startGUI, nullptr, 1);
+            if (autogui == 2) kernelProcess->createThread(startGUIVESA, nullptr, 1);
+        } 
+        
         int wstatus;
         waitTask(usertask->pid, &wstatus, 0);
     }

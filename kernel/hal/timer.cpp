@@ -73,8 +73,6 @@ void timerHandler(uint32_t milliTenths)
 		return;
 	}
 
-	kprintf("timer.\n");
-
 	ThreadControlBlock* next_task;
 	ThreadControlBlock* this_task = nullptr;
 	lockScheduler();	// lockStuff();
@@ -102,7 +100,6 @@ void timerHandler(uint32_t milliTenths)
 	//do preemption
 	if (currentTaskTCB->timeSliceRemaining != 0 && KeIsPreemptionOn) {
 		//lockScheduler();	
-		kprintf("Preempt. 0x%X\n", currentTaskTCB->timeSliceRemaining);
 		if (currentTaskTCB->timeSliceRemaining > 1000) {
 			kprintf("         *** FIXING BAD TIMESLICE LENGTH *** \n");
 			currentTaskTCB->timeSliceRemaining = 1000;
@@ -110,7 +107,6 @@ void timerHandler(uint32_t milliTenths)
 		bool doPreempt = currentTaskTCB->timeSliceRemaining <= milliTenths;
 		currentTaskTCB->timeSliceRemaining -= milliTenths;
 		if (doPreempt) {
-			kprintf("Preempt switch.\n");
 			schedule();
 		}
 		//unlockScheduler();

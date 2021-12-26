@@ -289,7 +289,6 @@ int lstat(const char* file, struct stat* st)
 	} else {
 		st->st_mode = S_IFREG;
 	}
-	
 
 	return res;
 }
