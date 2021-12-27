@@ -480,7 +480,7 @@ void gui2()
 extern "C" int main() {
     createSystemBrushes();
 
-    gui2();
+    //gui2();
 
     NTopLevel* win = new NTopLevel("Sentences - *Untitled Document", 600, 400, WIN_FLAGS_DEFAULT_0 | WIN_FLAGS_0_HIDDEN | WIN_FLAGS_0_PRETTY);
        
@@ -637,10 +637,10 @@ extern "C" int main() {
 
     win->initialise();
 
-    mainwin->initialise();
+    //mainwin->initialise();
 
     while (1) {
-        mainwin->defaultEventHandler(mainwin->process());
+        //mainwin->defaultEventHandler(mainwin->process());
         
         NiEvent evnt = win->process();
         switch (evnt.type) {

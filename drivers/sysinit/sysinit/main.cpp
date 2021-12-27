@@ -782,8 +782,8 @@ Fxyyy       SKIPIF X = YYY (3 digit hex), skips next 5 bytes if true
 
 */
 
-const char* remoteInstallScript = "%W08<15wbwbwbw>15F1000g0004{Alex}wnw<15wbwbwbw>15F1000g0024{Company Name}wnwwnwwnwwnwwnwwnwwnwwnwwnwwnwwnwwnwwnw$X     ";
-bool remoteInstall = true;
+char* remoteInstallScript;// = "%W08<15wbwbwbw>15F1000g0004{Alex}wnw<15wbwbwbw>15F1000g0024{Company Name}wnwwnwwnwwnwwnwwnwwnwwnwwnwwnwwnwwnwwnw$X     ";
+bool remoteInstall;
 
 int lookupHex(char c)
 {
@@ -795,6 +795,8 @@ int lookupHex(char c)
 void runRemoteInstall(void* v)
 {
     unlockScheduler();
+
+    remoteInstallScript = (char*) 0x2800;
 
     int remotePos = 0;
 
@@ -1313,10 +1315,13 @@ extern "C" uint32_t _bcrypt_rand()
 int _bcrypt_errno = 0;
 int tzsel;
 bool createNewUserMode = false;
-bool firstTimeEnteringTimezone = true;
+bool firstTimeEnteringTimezone = true; 
 int modesel;
 void firstRun(bool onlyPkey)
 {
+    extern uint32_t keBootSettings;
+    remoteInstall = keBootSettings & 32768;
+    remoteInstall = false;
     if (remoteInstall) {
         currentTaskTCB->processRelatedTo->createThread(runRemoteInstall, nullptr, 128);
     }

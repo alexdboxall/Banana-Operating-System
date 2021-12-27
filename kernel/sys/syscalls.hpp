@@ -116,7 +116,12 @@ SystemCallNumber
 	RegistryEasyReadInteger,
 	Alarm,
 	Pause,
-
+	PthreadCreate,
+	PthreadJoin,
+	PthreadExit,
+	PthreadGetTID,
+	InternalPthreadGetContext,
+	InternalPthreadGetStartLocation,
 };
 
 

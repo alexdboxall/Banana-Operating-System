@@ -82,7 +82,7 @@ python floppyjoin.py
 if exist ..\qemuinhibit.txt (
     echo a
 ) else (
-    "C:\Program Files\qemu\qemu-system-i386.exe" -d guest_errors,cpu_reset -m 512 -boot d -serial file:log.txt -fda DISK1.IMG -soundhw all -monitor stdio -hda test.bin || pause
+    "C:\Program Files\qemu\qemu-system-i386.exe" -serial COM4 -d guest_errors,cpu_reset -m 512 -boot d -fda DISK1.IMG -soundhw all -hda test.bin || pause
 )
 pause
 rem "D:\Users\Alex\VirtualBox VMs\Banana OS\NewVirtualDisk17.vdi",format=vdi

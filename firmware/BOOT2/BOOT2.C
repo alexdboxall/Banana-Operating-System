@@ -43,6 +43,7 @@ uint32_t getBootData()
 	data |= vm86Debug ? 4096 : 0;
 	data |= floppyDrvEnable ? 8192 : 0;
 	data |= noFPUSaveLoad ? 16384 : 0;
+	//data |= allowRemoteSetup ? 32768 : 0;
 
 	return data;
 }
@@ -469,10 +470,23 @@ void main()
 
 		} while (key != '1' && key != '2' && key != '5');
 	}
-	setFgCol(TCBlack);
+
 	clearScreenToColour(TCBlack);
 	setFgCol(TCWhite);
 	writeString("\n  Starting Banana...");
+	/*if (!slowDownClock && secdata[1] != 0) {
+		setFgCol(TCLightGrey);
+		writeString(" loading remote setup");
+
+		uint32_t filesec = readFATFileSectorStart("BANANA     /AUTOINSTALL");
+		readSector(filesec, (void*) 0x2800, getFirstHDD());
+		readSector(filesec + 1, (void*) 0x2A00, getFirstHDD());
+		readSector(filesec + 2, (void*) 0x2C00, getFirstHDD());
+		readSector(filesec + 3, (void*) 0x2E00, getFirstHDD());
+
+		allowRemoteSetup = true;
+	}*/
+
 	if (fulldebug) {
 		clearScreen();
 		writeString("\nPRESS ANY KEY (B)");

@@ -102,13 +102,14 @@ void KeDeinitSignals(SigHandlerBlock* block)
 SigHandlerBlock* KeInitSignals()
 {
 	SigHandlerBlock* obj = (SigHandlerBlock*) malloc(sizeof(SigHandlerBlock));
+	memset(obj, 0, sizeof(obj));
 	obj->pendingBase = 0;
 	obj->current = 0;
 	obj->checkSignals = false;
 
 	memset(obj->pending, 0, sizeof(obj->pending));
 	memset(obj->handler, 0, sizeof(obj->handler));
-	memset(obj->flags , 0, sizeof(obj->flags));
+	memset(obj->flags, 0, sizeof(obj->flags));
 
 	return obj;
 }
@@ -158,6 +159,9 @@ extern "C" void KiFinishSignalZ(uint32_t* ptr)
 
 extern "C" size_t KiCheckSignalZ()
 {
+	extern bool KeIsPreemptionOn;
+	if (!KeIsPreemptionOn) return 0;
+
 	int num;
 	uint64_t sigaddr = KeCheckSignal(currentTaskTCB->processRelatedTo->signals, &num);
 	if (!sigaddr) return 0;
@@ -167,30 +171,23 @@ extern "C" size_t KiCheckSignalZ()
 	sigState[1] = sigaddr >> 32;
 	sigState[2] = num;
 
-	kprintf("sigState: 0x%X, 0x%X, 0x%X\n", sigState[0], sigState[1], sigState[2]);
 	return (size_t) sigState;
 }
 
 size_t KeCheckSignal(SigHandlerBlock* shb, int* num)
 {
-	kprintf("check signal.\n");
 	if (!shb) return 0;
 	if (!shb->checkSignals) {
-		kprintf("check signals flag = false\n");
 		return 0;
 	}
 
-	kprintf("Checking signal...\n");
-
 	for (int i = 0; i < MAX_PENDING_SIGNALS; ++i) {
-		kprintf("examining %d... %d\n", (shb->pendingBase + i) % MAX_PENDING_SIGNALS, shb->pending[(shb->pendingBase + i) % MAX_PENDING_SIGNALS]);
 		if (shb->pending[(shb->pendingBase + i) % MAX_PENDING_SIGNALS]) {
 			int sig = shb->pending[(shb->pendingBase + i) % MAX_PENDING_SIGNALS];
 
 			for (int j = 0; j < __MAX_SIGNALS__; ++j) {
 				if ((shb->current & (1 << j)) && (shb->masks[j] & (1 << sig))) {
 					//blocked for now
-					kprintf("signal is blocked.\n");
 					return 0;
 				}
 			}
@@ -210,7 +207,6 @@ size_t KeCheckSignal(SigHandlerBlock* shb, int* num)
 
 			size_t handler = (size_t) shb->handler[sig];
 			*num = sig;
-			kprintf("handler = 0x%X\n", handler);
 
 			if (sig == SIGKILL) {
 				kprintf("SIGKILL.\n");

@@ -78,6 +78,8 @@ struct ThreadControlBlock
 	bool vm86Task = false;
 
 	uint64_t alarm;
+	size_t pthreadStartLocation;
+	void* pthreadContext;
 };
 
 struct Process

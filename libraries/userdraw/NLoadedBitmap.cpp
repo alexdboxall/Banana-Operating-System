@@ -151,6 +151,22 @@ NLoadedBitmap::~NLoadedBitmap()
 	}
 }
 
+NLoadedBitmap::NLoadedBitmap(uint8_t* d, int length)
+{
+	data2 = nullptr;
+
+	int tgaWidth;
+	int tgaHeight;
+	long tgaLen = length;
+	uint8_t* tgaData = d;
+	uint32_t* parsed = tgaParse(tgaData, tgaLen, &tgaWidth, &tgaHeight);
+
+	data = parsed;
+	data2 = parsed;
+	width = tgaWidth;
+	height = tgaHeight;
+}
+
 NLoadedBitmap::NLoadedBitmap(const char* file)
 {
 	data2 = nullptr;

@@ -20,6 +20,7 @@ public:
 	uint32_t* data2;
 
 	NLoadedBitmap(const char* file);
+	NLoadedBitmap(uint8_t* data, int length);
 	~NLoadedBitmap();
 };
 

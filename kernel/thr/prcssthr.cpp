@@ -291,17 +291,16 @@ void schedule()
 
 void cleanupTerminatedTask(ThreadControlBlock* task)
 {
-	for (int i = 0; i < task->processRelatedTo->argc; ++i) {
-		free(task->processRelatedTo->argv[i]);
-	}
-
-	task->processRelatedTo->argc = 0;
-
 	//clear our thread bit
 	task->processRelatedTo->threadUsage &= ~(1 << task->rtid);
 
 	//check if all threads have finished
 	if (task->processRelatedTo->threadUsage == 0) {
+		for (int i = 0; i < task->processRelatedTo->argc; ++i) {
+			free(task->processRelatedTo->argv[i]);
+		}
+
+		task->processRelatedTo->argc = 0;
 
 		delete task->processRelatedTo->env;
 

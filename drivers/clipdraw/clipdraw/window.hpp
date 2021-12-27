@@ -52,6 +52,8 @@ public:
 	int rstrw;
 	int rstrh;
 
+	int titlebarShift = 0;
+
 	uint32_t flags[WIN_MAX_FLAG_DWORDS];
 
 	void rerender();

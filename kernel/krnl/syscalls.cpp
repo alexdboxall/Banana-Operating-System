@@ -54,6 +54,12 @@ uint64_t SysRegistryEasyReadString(regs* r);
 uint64_t SysRegistryEasyReadInteger(regs* r);
 uint64_t SysAlarm(regs* r);
 uint64_t SysPause(regs* r);
+uint64_t SysPthreadCreate(regs* r);
+uint64_t SysPthreadJoin(regs* r);
+uint64_t SysPthreadExit(regs* r);
+uint64_t SysPthreadGetTID(regs* r);
+uint64_t SysInternalPthreadGetContext(regs* r);
+uint64_t SysInternalPthreadGetStartLocation(regs* r);
 
 int string_ends_with(const char* str, const char* suffix)
 {
@@ -758,6 +764,12 @@ uint64_t(*systemCallHandlers[])(regs* r) = {
 	SysRegistryEasyReadInteger,
 	SysAlarm,
 	SysPause,
+	SysPthreadCreate,
+	SysPthreadJoin,
+	SysPthreadExit,
+	SysPthreadGetTID,
+	SysInternalPthreadGetContext,
+	SysInternalPthreadGetStartLocation,
 };
 
 #include <krnl/assert.hpp>

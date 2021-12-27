@@ -88,7 +88,7 @@ int defaultToplevelPainter(NTopLevel* self) {
     }
     
     Context_fill_rect(ctxt, 0, 0, ctxt->width, 25, 0xFFFFFF);
-    Context_draw_text(ctxt, self->name, 15, 6, 0x000000);
+    Context_draw_text(ctxt, self->name, self->winIcon ? 31 : 15, 6, 0x000000);
     
     return 0;
 }
@@ -149,6 +149,16 @@ NTopLevel::~NTopLevel()
     //               whatever's in nxw? 
 
     //free(win);
+}
+
+void NTopLevel::setIcon(NLoadedBitmap* icn)
+{
+    winIcon = icn;
+}
+
+void NTopLevel::removeIcon()
+{
+    winIcon = nullptr;
 }
 
 int NTopLevel::getX() {
@@ -333,6 +343,9 @@ void NTopLevel::repaintFlush()
 
 void NTopLevel::repaint() {
     Window_paint(win, (List*)0, 1);
+    if (winIcon) {
+        Context_draw_bitmap(win->context, winIcon->data, 7, 5, 16, 16);
+    }
     repaintFlush();
 }
 

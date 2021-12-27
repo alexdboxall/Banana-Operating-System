@@ -17,17 +17,27 @@ void _start() {
     _init_signal();
     _environ_setup();
 
-	int argc = SystemCall(GetArgc, 0, 0, 0);
-	char** argv = malloc((argc + 2) * sizeof(char*));
+	int rtid = SystemCall(PthreadGetTID, 0, 0, 0);
+	if (rtid == 0) {
+		int argc = SystemCall(GetArgc, 0, 0, 0);
+		char** argv = malloc((argc + 2) * sizeof(char*));
 
-	for (int i = 0; i < argc; ++i) {
-		argv[i] = calloc(512, 1);
-		int r = SystemCall(GetArgv, i, 0, (size_t) argv[i]);
-		if (r != 0) break;
+		for (int i = 0; i < argc; ++i) {
+			argv[i] = calloc(512, 1);
+			int r = SystemCall(GetArgv, i, 0, (size_t) argv[i]);
+			if (r != 0) break;
+		}
+
+		int ex = main(argc, argv);
+		exit(ex);
+
+	} else {
+		void (*start)(void*) = (void(*)(void*))SystemCall(InternalPthreadGetStartLocation, 0, 0, 0);
+		void* ctxt = (void*) SystemCall(InternalPthreadGetContext, 0, 0, 0);
+
+		start(ctxt);
+
 	}
-
-    int ex = main(argc, argv);
-    exit(ex);
 }
 
 #include <signal.h>

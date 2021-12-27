@@ -1,5 +1,5 @@
-OUTPUT32="D:/Users/Alex/Desktop/Banana/packages/banana/32/0001/newgui.exe"
-OUTPUT64="D:/Users/Alex/Desktop/Banana/packages/banana/64/0001/newgui.exe"
+OUTPUT32="C:/Users/Alex/Desktop/Banana/packages/banana/32/0001/newgui.exe"
+OUTPUT64="C:/Users/Alex/Desktop/Banana/packages/banana/64/0001/newgui.exe"
 
 AS32=i386-banana-as
 AS64=x86_64-banana-as
@@ -20,7 +20,7 @@ OBJECTS32 = $(COBJECTS32) $(CXXOBJECTS32)
 
 build: $(OBJECTS32)
 	$(AS32) $(ASFLAGS) Resclink.s -o _R32.o
-	$(CC32) -s -Wl,_R32.o -Wl,-Map=D:/Users/Alex/Desktop/app32.map -o $(OUTPUT32) $^ -lm -ludraw
+	$(CC32) -s -Wl,_R32.o -Wl,-Map=C:/Users/Alex/Desktop/app32.map -o $(OUTPUT32) $^ -lm -ludraw
 
 %.o: %.c
 	$(CC32) -Os $(CCFLAGS) $^ -o $@

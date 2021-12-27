@@ -21,6 +21,8 @@ extern "C" {
     #include "window.h"
 }
 
+#include "NLoadedBitmap.hpp"
+
 class NRegion;
 
 struct NxWindow {
@@ -31,10 +33,14 @@ struct NxWindow {
 
 class NTopLevel {
 protected:
+    friend int defaultToplevelPainter(NTopLevel* self);
+    
     NxWindow nxw;
     Window* win;
     
     int x, y, w, h;
+
+    NLoadedBitmap* winIcon = nullptr;
     
 public:
     char* name;
@@ -45,6 +51,9 @@ public:
     virtual ~NTopLevel();
 
     Context* getContext();
+
+    void setIcon(NLoadedBitmap* icn);
+    void removeIcon();
     
     int getX();
     int getY();
