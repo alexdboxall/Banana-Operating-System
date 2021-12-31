@@ -2031,7 +2031,7 @@ int main(int argc, char* argv[])
 		mathVars[i] = 0;
 	}
 
-	printf("\n%s\n    (C)Copyright Alex Boxall 2016-2021\n\n", VERSION_STRING);
+	printf("\n%s\n    (C)Copyright Alex Boxall 2016-2022\n\n", VERSION_STRING);
 
 	if (!getenv("PATH")) {
 		printf("Warning: The PATH is not set.\n\n");
