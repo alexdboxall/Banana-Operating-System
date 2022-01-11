@@ -31,6 +31,8 @@ extern "C" {
 NIContext* ctxt;
 NIDesktop* desktop;
 
+
+
 void NiMain(void* s)
 {
 	extern Video* screen;
@@ -46,11 +48,13 @@ void NiMain(void* s)
 	kernelProcess->createThread(NiDisplayRAM);
 #endif
 
+	extern void NiClockEventThread(void*);
+	kernelProcess->createThread(NiClockEventThread);
+
 	NIWindow* win0 = new NIWindow(ctxt, 0, 0, 1, 1);
 	desktop->addWindow(win0);
 	
 	(new Process("C:/Banana/System/desktop.exe"))->createUserThread();
-	(new Process("C:/Banana/System/newgui.exe"))->createUserThread();
 
 	while (1) {
 		blockTask(TaskState::Paused);

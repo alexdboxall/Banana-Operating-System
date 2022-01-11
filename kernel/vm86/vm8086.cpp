@@ -6,7 +6,7 @@
 #include "hw/cpu.hpp"
 #include <krnl/unaligned.hpp>
 
-#pragma GCC optimize ("Os")
+#pragma GCC optimize ("O2")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
 #pragma GCC optimize ("-fno-align-jumps")
@@ -26,6 +26,7 @@ namespace Vm
 
 	uint8_t inbv(uint16_t port)
 	{
+		//kprintf("<inbv> 0x%X\n", port);
 		if (port == 0xFEFE) {
 			return vmToHostCommsPtr;
 		}
@@ -34,6 +35,8 @@ namespace Vm
 
 	void outbv(uint16_t port, uint8_t val)
 	{
+		//kprintf("<outb> 0x%X\n", port, val);
+
 		if (port == 0xFEFE) {
 			vmToHostComms[vmToHostCommsPtr++] = val;
 			if (vmToHostCommsPtr == 32) {
@@ -332,6 +335,7 @@ namespace Vm
 				}
 			}
 		}*/
+		
 		//kprintf("<%X, %X %X%X%X> ", r->cs * 16 + r->eip, ip, ip[0], ip[1], ip[2]);
 
 		bool operand32 = false;

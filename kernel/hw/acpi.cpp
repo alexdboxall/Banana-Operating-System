@@ -199,15 +199,21 @@ void scanMADT()
 	RSDPpointer = nullptr;
 	RSDTpointer = nullptr;
 
+	kprintf("Scanning MADT");
+
 	RSDPpointer = HalFindRSDP();
 	if (!RSDPpointer) {
 		return;
 	}
 
+	kprintf("Finding RSDT.\n");
+
 	RSDTpointer = findRSDT(RSDPpointer);
 	if (!RSDTpointer) {
 		return;
 	}
+
+	kprintf("Got RSDP at 0x%X, got RSDT at 0x%X\n", RSDPpointer, RSDTpointer);
 
 	loadACPITables(RSDTpointer);
 
@@ -434,7 +440,7 @@ int ACPI::open(int mode, int, void*)
 		KeSetBootMessage("Loading the ACPICA driver...");
 		File* f = new File("C:/Banana/Drivers/acpica.sys", kernelProcess);
 		if (f && f->exists()) {
-			Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/acpica.sys"), this);
+			//Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/acpica.sys"), this);
 		}
 		if (f) {
 			delete f;

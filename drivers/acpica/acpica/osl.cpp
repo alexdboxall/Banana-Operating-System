@@ -1,14 +1,16 @@
 
-#include "core/kheap.hpp"
-#include "core/virtmgr.hpp"
-#include "core/common.hpp"
-#include "hw/cpu.hpp"
+#include "krnl/kheap.hpp"
+#include "krnl/virtmgr.hpp"
+#include "krnl/computer.hpp"
+#include "krnl/common.hpp"
 #include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
 #include "hal/timer.hpp"
-#include "core/main.hpp"
+#include "krnl/main.hpp"
 #include "thr/prcssthr.hpp"
 #include "hal/intctrl.hpp"
+#include "hw/cpu.hpp"
+
 #include <stdarg.h>
 
 ////#pragma GCC optimize ("O2")
@@ -333,32 +335,15 @@ extern "C" {
 	}
 
 	void* AcpiOsMapMemory(ACPI_PHYSICAL_ADDRESS PhysicalAddress, ACPI_SIZE Length)
-	{
-		bool invlpg = CPU::current()->features.hasINVLPG;
-		
+	{		
 		int pages = (Length + 4096) / 4096;
 		size_t virt = Virt::allocateKernelVirtualPages(pages);
 
 		for (int i = 0; i < pages; ++i) {
 			Virt::getAKernelVAS()->mapPage((PhysicalAddress & ~0xFFF) + i * 4096, virt + i * 4096, PAGE_PRESENT | PAGE_SUPERVISOR);
-			
-			if (invlpg) {
-				asm volatile ("invlpg (%0)" : : "b"((void*) (virt + i * 4096)) : "memory");
-			}
 		}
 		
-		if (!invlpg) {
-			CPU::writeCR3(CPU::readCR3());
-		} else {
-			//invalidate the recursive structure
-			size_t invaddrLow = (0xFFC00000 + ((virt / 0x400) & ~0xFFF));
-			size_t invaddrHigh = (0xFFC00000 + (((virt + pages * 4096) / 0x400) & ~0xFFF));
-
-			while (invaddrLow <= invaddrHigh) {
-				asm volatile ("invlpg (%0)" : : "b"((void*) invaddrLow) : "memory");
-				invaddrLow += 4096;
-			}
-		}
+		CPU::writeCR3(CPU::readCR3());
 
 		return (void*) (virt | (PhysicalAddress & 0xFFF));
 	}
@@ -445,8 +430,6 @@ extern "C" {
 
 	ACPI_STATUS AcpiOsWaitSemaphore(ACPI_SEMAPHORE Handle, UINT32 Units, UINT16 Timeout)
 	{
-		//kprintf("TODO: AcpiOsWaitSemaphore\n");
-
 		if (Units > 1) {
 			kprintf("AcpiOsWaitSemaphore units > 1\n");
 			return AE_SUPPORT;
@@ -527,7 +510,7 @@ extern "C" {
 		ctx[0] = reinterpret_cast<size_t>(Handler);
 		ctx[1] = (size_t) Context;
 
-		installIRQHandler(InterruptLevel, (void(*)(struct regs*, void*))Subhandler, false, ctx);
+		HalInstallIRQHandler(InterruptLevel, (void(*)(struct regs*, void*))Subhandler, false, ctx);
 		return AE_OK;
 	}
 

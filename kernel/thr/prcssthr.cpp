@@ -161,6 +161,7 @@ void setupMultitasking(void (*where)())
 	p->threads[0].timeSliceRemaining = 50000000;
 	p->threads[0].signalStateHandler = (size_t) malloc(256);
 	p->threads[0].alarm = 0;
+	p->threads[0].guiTask = false;
 
 	currentTaskTCB = &p->threads[0];
 
@@ -199,6 +200,8 @@ Process::Process(const char* _filepath, Process* _parent, char** _argv)
 
 	strcpy(taskname, _filepath);
 	addArgs(_argv);
+
+	threads[0].guiTask = false;
 
 	bool f = Thr::loadProgramIntoMemory(this, _filepath);
 	failedToLoadProgram = !f;

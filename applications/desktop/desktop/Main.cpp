@@ -7,6 +7,8 @@ extern "C" {
 #include <stdlib.h>
 #include <unistd.h>
 #include <dirent.h>
+#include <signal.h>
+#include <time.h>
 }
 
 #include <stdint.h>
@@ -32,7 +34,8 @@ struct DesktopFile
     uint16_t textY;
     uint16_t boundW : 15;
     uint16_t valid : 1;
-    uint16_t boundH : 15;
+    uint16_t boundH : 14;
+    uint16_t app : 1;
     uint16_t selected : 1;
     NLoadedBitmap* bmp;
     char displayName[MAX_DESKTOP_DISPLAY_NAME_LENGTH];
@@ -60,7 +63,7 @@ FileAssociaton fileAssoc[MAX_DESKTOP_FILE_TYPES];
 int nextFileAssoc = 0;
 int nextDesktopFile = 0;
 
-uint16_t* desktopBuffer;
+uint32_t* desktopBuffer;
 uint32_t desktopColours[128];
 int desktopWidth = 0;
 int desktopHeight = 0;
@@ -94,7 +97,7 @@ void invalidateLeftAndRight(int x)
 
 extern "C" uint64_t SystemCall(size_t, size_t, size_t, size_t);
 
-uint16_t encodeDesktopColour(uint32_t rgb, bool blue)
+uint32_t encodeDesktopColour(uint32_t rgb, bool blue)
 {
     int r = (rgb >> 16) & 0xFF;
     int g = (rgb >> 8) & 0xFF;
@@ -107,33 +110,12 @@ uint16_t encodeDesktopColour(uint32_t rgb, bool blue)
         g /= 4;
     }
 
-    r += 5;
-    r *= 31;
-    r /= 255;
-    g += 5;
-    g *= 31;
-    g /= 255;
-    b += 5;
-    b *= 31;
-    b /= 255;
-
-    uint32_t out = 0x8000 | (r << 10) | (g << 5) | b;
-    /*r += 40;
-    r *= 3;
-    r /= 255;
-
-    g += 20;
-    g *= 7;
-    g /= 255;
-
-    b += 40;
-    b *= 3;
-    b /= 255;
-    
-    uint32_t out = (r << 5) | (g << 2) | b;*/
+    uint32_t out = 0x40000000 | (r << 16) | (g << 8) | b;
 
     return out;
 }
+
+NLoadedBitmap* backgroundBitmap;
 
 void init()
 {
@@ -151,18 +133,19 @@ void init()
     desktopWidth = wh >> 16;
     desktopHeight = wh & 0xFFFF;
 
-    desktopBuffer = (uint16_t*) malloc(desktopWidth * desktopHeight * 2);
+    desktopBuffer = (uint32_t*) malloc(desktopWidth * desktopHeight * 4);
 
     desktopContext = Context_new(desktopWidth, desktopHeight, (uint32_t*) desktopBuffer);
     desktopContext->desktopCtxt = 1;
+    desktopContext->desktopBuff32 = desktopBuffer;
+
+    backgroundBitmap = new NLoadedBitmap("C:/Banana/System/crisp.tga");
 
     iconsPerColumn = (desktopHeight - desktopTaskbarHeight - 4) / desktopCellHeight;
 }
 
 void drawBackground()
 {
-    NLoadedBitmap* nbmp = new NLoadedBitmap("C:/Banana/System/crisp.tga");
-
     redAvg = 0;
     grnAvg = 0;
     bluAvg = 0;
@@ -170,15 +153,15 @@ void drawBackground()
     int i = 0;
     for (int y = 0; y < desktopHeight; ++y) {
         for (int x = 0; x < desktopWidth; ++x) {
-            int ax = (x * nbmp->width) / desktopWidth;
-            int px = (x * nbmp->width) % desktopWidth;
-            int ay = (y * nbmp->height) / desktopHeight;
-            int py = (y * nbmp->height) % desktopHeight;
+            int ax = (x * backgroundBitmap->width) / desktopWidth;
+            int px = (x * backgroundBitmap->width) % desktopWidth;
+            int ay = (y * backgroundBitmap->height) / desktopHeight;
+            int py = (y * backgroundBitmap->height) % desktopHeight;
 
-            uint32_t norm = nbmp->data[ay * nbmp->width + ax];
-            uint32_t side = nbmp->data[ay * nbmp->width + ax + 1];
-            uint32_t down = nbmp->data[(ay + 1) * nbmp->width + ax];
-            uint32_t diag = nbmp->data[(ay + 1) * nbmp->width + ax + 1];
+            uint32_t norm = backgroundBitmap->data[ay * backgroundBitmap->width + ax];
+            uint32_t side = backgroundBitmap->data[ay * backgroundBitmap->width + ax + 1];
+            uint32_t down = backgroundBitmap->data[(ay + 1) * backgroundBitmap->width + ax];
+            uint32_t diag = backgroundBitmap->data[(ay + 1) * backgroundBitmap->width + ax + 1];
 
             int rN = (norm >> 16) & 0xFF;
             int rS = (side >> 16) & 0xFF;
@@ -217,7 +200,6 @@ void drawBackground()
     grnAvg /= desktopWidth * desktopHeight;
     bluAvg /= desktopWidth * desktopHeight;
 
-    //delete nbmp;
 }
 
 
@@ -230,6 +212,10 @@ void deregisterFiles()
             if (files[i].filepath) {
                 free(files[i].filepath);
                 files[i].filepath = nullptr;
+            }
+
+            if (files[i].app && files[i].bmp) {
+                delete files[i].bmp;
             }
         }
     }
@@ -280,11 +266,15 @@ void loadIconBitmaps()
     fileAssoc[nextFileAssoc++].iconBitmap = new NLoadedBitmap("C:/Banana/Icons/colour/bat.tga");
 
     fileAssoc[nextFileAssoc].valid = true;
-    strcpy(fileAssoc[nextFileAssoc].extension, "TGA");
-    fileAssoc[nextFileAssoc++].iconBitmap = new NLoadedBitmap("C:/Banana/Icons/colour/picture.tga");
-    fileAssoc[nextFileAssoc].valid = true;
     strcpy(fileAssoc[nextFileAssoc].extension, "BMP");
     fileAssoc[nextFileAssoc++].iconBitmap = new NLoadedBitmap("C:/Banana/Icons/colour/picture.tga");
+
+    fileAssoc[nextFileAssoc].valid = true;
+    strcpy(fileAssoc[nextFileAssoc].extension, "TGA");
+    fileAssoc[nextFileAssoc].openProgram = (char*) malloc(221);
+    strcpy(fileAssoc[nextFileAssoc].openProgram, "C:/Banana/System/photoview.app/program.exe");
+    fileAssoc[nextFileAssoc++].iconBitmap = new NLoadedBitmap("C:/Banana/Icons/colour/picture.tga");
+    
     fileAssoc[nextFileAssoc].valid = true;
     strcpy(fileAssoc[nextFileAssoc].extension, "PNG");
     fileAssoc[nextFileAssoc++].iconBitmap = new NLoadedBitmap("C:/Banana/Icons/colour/picture.tga");
@@ -302,7 +292,6 @@ void loadIconBitmaps()
 void redrawIcon(int id)
 {
     char* drawname = files[id].displayName;
-
     bool selected = files[id].selected;
 
     invalidateLeftAndRight(files[id].textX - 1);
@@ -367,17 +356,89 @@ int registerFile(char* filepath, char* displayName, NLoadedBitmap* bmp, int tx, 
     files[nextDesktopFile].valid = true;
     files[nextDesktopFile].selected = false;
     files[nextDesktopFile].assocTypeID = assocType;
+    files[nextDesktopFile].app = false;
 
     strcpy(files[nextDesktopFile].displayName, displayName);
     files[nextDesktopFile].filepath = (char*) malloc(strlen(filepath) + 1);
     strcpy(files[nextDesktopFile].filepath, filepath);
+
+    char* drawname = files[nextDesktopFile].filepath;
+    if (drawname[strlen(drawname) - 1] == 'p' && drawname[strlen(drawname) - 2] == 'p' && drawname[strlen(drawname) - 3] == 'a' && drawname[strlen(drawname) - 4] == '.') {
+        drawname[strlen(drawname) - 4] = 0;
+
+        char iconFilepath[256];
+        sprintf(iconFilepath, "%s/%s/icon32.tga", desktopBasePath, filepath);
+        files[nextDesktopFile].bmp = new NLoadedBitmap(iconFilepath);
+        files[nextDesktopFile].app = true;
+    }
 
     int id = nextDesktopFile;
     ++nextDesktopFile;
     return id;
 }
 
+void partialDesktopUpdate();
 
+void drawTime()
+{
+    time_t rawtime;
+    time(&rawtime);
+
+    static char previousTimeString[80];
+    static bool firstTime = true;
+
+    struct tm* timeinfo = localtime(&rawtime);
+
+    char timeString[80];
+
+    int hour = timeinfo->tm_hour;
+    bool pm = false;
+    if (hour == 0) {
+        hour = 12;
+    } else if (hour == 12) {
+        pm = true;
+    } else if (hour > 12) {
+        hour -= 12;
+        pm = true;
+    }
+
+    sprintf(timeString, "%d:%02d:%02d %cM", hour, timeinfo->tm_min, timeinfo->tm_sec, pm ? 'P' : 'A');
+    if (!strcmp(timeString, previousTimeString) && !firstTime) {
+        return;
+    }
+    firstTime = false;
+    strcpy(previousTimeString, timeString);
+
+    int baseX = desktopWidth - 95;
+    int baseY = desktopHeight - desktopTaskbarHeight + 7;
+
+    Context_fill_rect(desktopContext, baseX, baseY, 100, desktopHeight - baseY, 0xC0C0C0);
+    Context_draw_text(desktopContext, timeString, baseX, baseY, 0x000000);
+
+    invalidateLeftAndRight(baseX);
+    invalidateLeftAndRight(desktopWidth);
+    for (int y = baseY; y < desktopTaskbarHeight; ++y) {
+        invalidateDesktopScanline(y);
+    }
+
+    partialDesktopUpdate();
+}
+
+void drawTaskbar()
+{
+    invalidateLeftAndRight(0);
+    invalidateLeftAndRight(desktopWidth);
+    for (int y = desktopHeight - desktopTaskbarHeight; y < desktopHeight; ++y) {
+        invalidateDesktopScanline(y);
+        for (int x = 0; x < desktopWidth; ++x) {
+            desktopBuffer[y * desktopWidth + x] = \
+                (y == desktopHeight - desktopTaskbarHeight) ? 128 : \
+                (y == desktopHeight - desktopTaskbarHeight + 1) ? 127 : 129;
+        }
+    }
+
+    drawTime();
+}
 
 void refresh()
 {
@@ -460,21 +521,7 @@ void refresh()
         closedir(dir);
     }
 
-    invalidateLeftAndRight(0);
-    invalidateLeftAndRight(desktopWidth);
-    for (int y = desktopHeight - desktopTaskbarHeight; y < desktopHeight; ++y) {
-        invalidateDesktopScanline(y);
-        for (int x = 0; x < desktopWidth; ++x) {
-            desktopBuffer[y * desktopWidth + x] = \
-                (y == desktopHeight - desktopTaskbarHeight) ? 128 : \
-                (y == desktopHeight - desktopTaskbarHeight + 1) ? 127 : 129;
-        }
-    }
-
-    //delete exeico;
-    //delete dirico;
-    //delete textico;
-    //delete otherico;
+    drawTaskbar();
 
     int args[4];
     args[0] = 0;
@@ -590,6 +637,8 @@ int main (int argc, char *argv[])
             continue;
         }
 
+        drawTime();
+
         if (dummyWin.evnt.type == EVENT_TYPE_MOUSE_DOWN) {
             drawAnts = true;
             firstAntDraw = true;
@@ -662,11 +711,17 @@ int main (int argc, char *argv[])
             }
 
             if (dummyWin.evnt.key == (int)KeyboardSpecialKeys::Enter) {
-                if (files[cs].assocTypeID != -1) {
-                    char* path = fileAssoc[files[cs].assocTypeID].openProgram;
-
+                if (files[cs].assocTypeID != -1 || files[cs].app) {
                     char progPath[256];
-                    sprintf(progPath, "%s/%s", desktopBasePath, files[cs].filepath);
+                    char* path;
+                    if (files[cs].app) {
+                        sprintf(progPath, "%s/%s.app/program.exe", desktopBasePath, files[cs].filepath);
+                        path = progPath;
+                    } else {
+                        path = fileAssoc[files[cs].assocTypeID].openProgram;
+                        sprintf(progPath, "%s/%s", desktopBasePath, files[cs].filepath);
+                    }
+                    
                     char* argvv[3];
                     argvv[0] = path;
                     argvv[1] = progPath;

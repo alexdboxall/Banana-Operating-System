@@ -63,6 +63,10 @@ namespace Dbg
 #ifndef KERNEL_DEBUG
 		return;
 #endif
+		if (format == nullptr) {
+			kprintf("<< (nullptr) >>\n");
+			return;
+		}
 
 		if (keBootSettings & 16) return;
 

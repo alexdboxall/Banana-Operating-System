@@ -76,7 +76,21 @@ void NiDisplayRAM(void* a)
 	}
 }
 
+void NiClockEventThread(void* a)
+{
+	unlockScheduler();
 
+	extern uint8_t* desktopWindowDummy;
+
+	while (1) {
+		NIWindow* a = (NIWindow*) desktopWindowDummy;
+		if (a) {
+			a->postEvent(NiCreateEvent(a, EVENT_TYPE_WALLCLOCK, false));
+		}
+
+		milliTenthSleep(3333);
+	}
+}
 
 
 

@@ -76,6 +76,8 @@ void KeDisplayProgramFault(const char* text)
 
 void KeGeneralProtectionFault(void* r, void* context)
 {
+	kprintf("GP FAULT!\n");
+
 	if (HalHandleGeneralProtectionFault(r, context)) {
 		return;
 	}

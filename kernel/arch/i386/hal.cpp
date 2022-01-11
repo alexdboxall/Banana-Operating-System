@@ -323,9 +323,6 @@ void HalDetectFeatures()
 	features.hasACPI = true;
 	features.hasCPUID = detectCPUID() ? true : false;
 
-	//features.hasACPI = false;
-	//kprintf("DEBUG A: hal.cpp\n");
-
 	if (features.hasCPUID) {
 		features.hasMSR = cpuidCheckEDX(CPUID_FEAT_EDX_MSR);
 		features.hasSSE2 = cpuidCheckEDX(CPUID_FEAT_EDX_SSE2);
@@ -367,6 +364,7 @@ void HalDetectFeatures()
 	}
 
 	if (keBootSettings & 1024) {
+		kprintf("NO ACPI HERE.\n");
 		features.hasACPI = false;
 	}
 
@@ -608,8 +606,10 @@ uint8_t* HalFindRSDP()
 {
 	if (Phys::usablePages < 2048 || (keBootSettings & 1024)) {
 		features.hasACPI = false;
+		kprintf("Settings bad.\n");
 	}
 	if (!features.hasACPI) {
+		kprintf("No ACPI.\n");
 		return 0;
 	}
 
@@ -621,6 +621,7 @@ uint8_t* HalFindRSDP()
 		}
 	}
 
+	kprintf("No table.\n");
 	features.hasACPI = false;
 
 	return 0;
@@ -628,14 +629,7 @@ uint8_t* HalFindRSDP()
 
 bool HalHandlePageFault(void* rr, void* ctxt)
 {
-	kprintf("\n-------------------------\n---> returning to 0x%X?\n", ((regs*) rr)->eip);
-	kprintf("---> eflags is 0x%X\n", ((regs*) rr)->eflags);
-	bool value = currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2());
-
-	kprintf("\n###> returning to 0x%X?\n", ((regs*) rr)->eip);
-	kprintf("###> eflags is 0x%X\n", ((regs*) rr)-> eflags);
-	kprintf("value = %d\n", value);
-	return value;
+	return currentTaskTCB->processRelatedTo->vas->tryLoadBackOffDisk(CPU::readCR2());
 }
 
 bool HalHandleOpcodeFault(void* rr, void* ctxt)

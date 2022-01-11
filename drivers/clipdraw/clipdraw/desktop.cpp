@@ -132,19 +132,8 @@ void NiLoadCursors()
 
 uint32_t NIDesktop::desktopDecode(int val)
 {
-	if (val & 0x8000) {
-		int b = (val >> 0) & 0x1F;
-		int g = (val >> 5) & 0x1F;
-		int r = (val >> 10) & 0x1F;
-
-		b *= 421;
-		g *= 421;
-		r *= 421;
-		b /= 51;
-		g /= 51;
-		r /= 51;
-
-		return (r << 16) | (g << 8) | b;
+	if (val >= 0x1000) {
+		return val & 0xFFFFFF;
 
 	} else {
 		return desktopDecodeLow[val & 0xFF];
@@ -171,7 +160,7 @@ NIDesktop::NIDesktop(NIContext* context)
 		desktopDecodeLow[i] = (r << 16) | (g << 8) | b;
 	}
 
-	desktopBuffer = (uint16_t*) malloc(2 * ctxt->height * ctxt->width);
+	desktopBuffer = (uint32_t*) malloc(4 * ctxt->height * ctxt->width);
 
 	head = new List<NIWindow*>();
 
@@ -354,6 +343,11 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 			desktopHasFocus = false;
 			a->postEvent(NiCreateEvent(a, EVENT_TYPE_MOUSE_DOWN, false));
 
+			if (!(a->flags[0] & WIN_FLAGS_0_NO_CLOSE) && mouseY > a->ypos && mouseY < a->ypos + 25 && mouseX > a->xpos + a->width - 22 && mouseX < a->xpos + a->width - 3) {
+				a->postEvent(NiCreateEvent(a, EVENT_TYPE_DESTROY, false));
+
+			}
+
 		} else if (!(buttons & 1) && (oldButtons & 1)) {
 			clickonWhenMouseFirstClicked = nullptr;
 			a->postEvent(NiCreateEvent(a, EVENT_TYPE_MOUSE_UP, false));
@@ -398,7 +392,7 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 			for (int x = 1; x < movingWin->width - 1; ++x) {
 				if (!((x + y) & 63) && !(y & 7)) {
 					if (oldX - moveBaseX + x >= 0 && oldX - moveBaseX + x < ctxt->width) rangeRefresh(oldY - moveBaseY + y, oldY - moveBaseY + y + 1, oldX - moveBaseX + x, oldX - moveBaseX + x + 1);
-					if (!release && mouseX - moveBaseX + x >= 0 && mouseX - moveBaseX + x < ctxt->width) ctxt->screen->putpixel(mouseX - moveBaseX + x, mouseY - moveBaseY + y, 0);
+					if (!release && mouseX - moveBaseX + x >= 0 && mouseX - moveBaseX + x < ctxt->width && mouseY - moveBaseY + y < ctxt->height) ctxt->screen->putpixel(mouseX - moveBaseX + x, mouseY - moveBaseY + y, 0);
 				}
 			}
 		}
@@ -422,8 +416,8 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 				rangeRefresh(oldY - moveBaseY, oldY - moveBaseY + 1, ox1, ox1 + ox2);
 				rangeRefresh(oldY - moveBaseY + movingWin->height - 1, oldY - moveBaseY + movingWin->height, ox1, ox1 + ox2);
 
-				ctxt->screen->putrect(x1, mouseY - moveBaseY, x2, 1, 0);
-				ctxt->screen->putrect(x1, mouseY - moveBaseY + movingWin->height - 1, x2, 1, 0);
+				if (mouseY - moveBaseY < ctxt->height) ctxt->screen->putrect(x1, mouseY - moveBaseY, x2, 1, 0);
+				if (mouseY - moveBaseY + movingWin->height - 1 < ctxt->height) ctxt->screen->putrect(x1, mouseY - moveBaseY + movingWin->height - 1, x2, 1, 0);
 			}
 		}
 
@@ -461,7 +455,7 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 			for (int x = 1; x < mxW; ++x) {
 				if (!((x + y) & 63) && !(y & 7)) {
 					if (movingWin->xpos + x >= 0 && movingWin->xpos + x < ctxt->width) rangeRefresh(movingWin->ypos + y, movingWin->ypos + 1 + y, movingWin->xpos + x, movingWin->xpos + 1 + x);
-					if (!release && x < newW && y < newH && movingWin->xpos + x >= 0 && movingWin->xpos + x < ctxt->width) ctxt->screen->putpixel(movingWin->xpos + x, movingWin->ypos + y, 0);
+					if (!release && x < newW && y < newH && movingWin->xpos + x >= 0 && movingWin->xpos + x < ctxt->width && movingWin->ypos + y < ctxt->height) ctxt->screen->putpixel(movingWin->xpos + x, movingWin->ypos + y, 0);
 				}
 			}
 		}
@@ -469,14 +463,14 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 		if (!release) {
 			if (movingWin->xpos < 0) {
 				rangeRefresh(movingWin->ypos, movingWin->ypos + 1, 0, movingWin->xpos + oldW);
-				ctxt->screen->putrect(0, movingWin->ypos, newW + movingWin->xpos, 1, 0);
+				if (movingWin->ypos < ctxt->height) ctxt->screen->putrect(0, movingWin->ypos, newW + movingWin->xpos, 1, 0);
 				rangeRefresh(movingWin->ypos + oldH, movingWin->ypos + 1 + oldH, 0, movingWin->xpos + oldW);
-				ctxt->screen->putrect(0, movingWin->ypos + newH, newW + movingWin->xpos, 1, 0);
+				if (movingWin->ypos + newH < ctxt->height) ctxt->screen->putrect(0, movingWin->ypos + newH, newW + movingWin->xpos, 1, 0);
 			} else {
 				rangeRefresh(movingWin->ypos, movingWin->ypos + 1, movingWin->xpos, movingWin->xpos + oldW);
-				ctxt->screen->putrect(movingWin->xpos, movingWin->ypos, newW, 1, 0);
+				if (movingWin->ypos < ctxt->height) ctxt->screen->putrect(movingWin->xpos, movingWin->ypos, newW, 1, 0);
 				rangeRefresh(movingWin->ypos + oldH, movingWin->ypos + 1 + oldH, movingWin->xpos, movingWin->xpos + oldW);
-				ctxt->screen->putrect(movingWin->xpos, movingWin->ypos + newH, newW, 1, 0);
+				if (movingWin->ypos + newH < ctxt->height) ctxt->screen->putrect(movingWin->xpos, movingWin->ypos + newH, newW, 1, 0);
 			}
 		}
 

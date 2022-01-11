@@ -77,7 +77,8 @@ struct ThreadControlBlock
 	bool vm86VIE = false;
 	bool vm86Task = false;
 
-	uint64_t alarm;
+	uint64_t alarm : 63;
+	uint64_t guiTask : 1;
 	size_t pthreadStartLocation;
 	void* pthreadContext;
 };

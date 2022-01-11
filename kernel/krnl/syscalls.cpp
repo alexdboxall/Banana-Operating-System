@@ -776,6 +776,7 @@ uint64_t(*systemCallHandlers[])(regs* r) = {
 uint64_t KeSystemCall(regs* r, void* context)
 {
 	if (r->eax < sizeof(systemCallHandlers) / sizeof(systemCallHandlers[0]) && systemCallHandlers[r->eax]) {
+		kprintf("Sc: %d\n", r->eax);
 		r->eax = systemCallHandlers[r->eax](r);
 
 	} else {
@@ -792,7 +793,7 @@ uint64_t __attribute__((__section__("userkernel"))) KeSystemCallFromUsermode(siz
 
 	asm volatile (
 		"int $96"  :			//assembly
-	"=d" (resD),				//output
+		"=d" (resD),			//output
 		"=a" (resA) :			//output
 		"a" (a),				//input
 		"b" (b),				//input

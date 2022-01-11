@@ -89,6 +89,12 @@ int defaultToplevelPainter(NTopLevel* self) {
     
     Context_fill_rect(ctxt, 0, 0, ctxt->width, 25, 0xFFFFFF);
     Context_draw_text(ctxt, self->name, self->winIcon ? 31 : 15, 6, 0x000000);
+
+
+    for (int i = 0; i < 9; ++i) {
+        Context_draw_rect(ctxt, ctxt->width - 20 + i, 7 + i, 1, 1, 0x000000);
+        Context_draw_rect(ctxt, ctxt->width - 20 + i, 15 - i, 1, 1, 0x000000);
+    }
     
     return 0;
 }
@@ -140,9 +146,17 @@ NTopLevel::NTopLevel(const char* nam, int width, int height, int flags)
     paintHandlerHook = nullptr;
 }
 
-NTopLevel::~NTopLevel()
+void NTopLevel::destroy()
 {
     SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_DESTROY_WINDOW, 0, (size_t) &nxw.krnlWin);
+    destroyed = true;
+}
+
+NTopLevel::~NTopLevel()
+{
+    if (!destroyed) {
+        destroy();
+    }
 
     //TODO: free more things
     //          e.g. win->children
@@ -179,26 +193,56 @@ int NTopLevel::getHeight() {
     
 void NTopLevel::setX(int _x) {
     x = _x;
-
-    //you need to write an upsync() function
+    upsync();
 }
 
 void NTopLevel::setY(int _y) {
     y = _y;
+    upsync();
+}
 
-    //you need to write an upsync() function
+void NTopLevel::setPosition(int _x, int _y)
+{
+    x = _x;
+    y = _y;
+    upsync();
+}
+
+void NTopLevel::setSize(int width, int height)
+{
+    w = width;
+    h = height;
+    upsync();
 }
 
 void NTopLevel::setWidth(int width) {
     w = width;
-
-    //you need to write an upsync() function
+    upsync();
 }
 
 void NTopLevel::setHeight(int height) {
     h = height;
+    upsync();
+}
 
-    //you need to write an upsync() function
+void NTopLevel::upsync()
+{
+    win->width = w;
+    win->height = h;
+
+    int oldSize = nxw.krnlWin.w * nxw.krnlWin.h;
+    int newSize = w * h;
+
+    nxw.krnlWin.w = w;
+    nxw.krnlWin.h = h;
+    nxw.krnlWin.x = x;
+    nxw.krnlWin.y = y;
+    nxw.ctxt->width = w;
+    nxw.ctxt->height = h;
+
+    SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_UPSYNC, 0, (size_t) &nxw.krnlWin);
+    repaint();
+    SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_RESUPPLY_FRAMEBUFFER, 1, (size_t) &nxw.krnlWin);
 }
 
 void NTopLevel::sync() {
@@ -229,6 +273,12 @@ void NTopLevel::sync() {
 void NTopLevel::defaultEventHandler(NiEvent evnt)
 {
     switch (evnt.type) {
+    case EVENT_TYPE_DESTROY:
+    {
+        destroy();
+        exit(0);
+        break;
+    }
     case EVENT_TYPE_ENTER:
     {
         processMouse(evnt);

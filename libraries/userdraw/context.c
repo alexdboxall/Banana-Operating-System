@@ -150,22 +150,9 @@ static inline __attribute__((always_inline)) void Context_invalidate_scanline(Co
 }
 
 
-uint16_t cdEncodeDesktopColour(uint32_t rgb)
+uint32_t cdEncodeDesktopColour(uint32_t rgb)
 {
-    int r = (rgb >> 16) & 0xFF;
-    int g = (rgb >> 8) & 0xFF;
-    int b = (rgb >> 0) & 0xFF;
-    r += 5;
-    r *= 31;
-    r /= 255;
-    g += 5;
-    g *= 31;
-    g /= 255;
-    b += 5;
-    b *= 31;
-    b /= 255;
-
-    uint32_t out = 0x8000 | (r << 10) | (g << 5) | b;
+    uint32_t out = 0x40000000 | rgb;
     return out;
 }
 
@@ -203,7 +190,7 @@ void Context_clipped_rect(Context* context, int x, int y, unsigned int width,
             for (; y < max_y; y++) {
                 Context_invalidate_scanline(context, y);
                 for (cur_x = x; cur_x < max_x; cur_x++) {
-                    context->desktopBuff16[y * context->width + cur_x] = cdEncodeDesktopColour(patternColour(color, cur_x, y));
+                    context->desktopBuff32[y * context->width + cur_x] = cdEncodeDesktopColour(patternColour(color, cur_x, y));
                 }
             }
 
@@ -211,7 +198,7 @@ void Context_clipped_rect(Context* context, int x, int y, unsigned int width,
             for (; y < max_y; y++) {
                 Context_invalidate_scanline(context, y);
                 for (cur_x = x; cur_x < max_x; cur_x++) {
-                    context->desktopBuff16[y * context->width + cur_x] = cdEncodeDesktopColour(color);
+                    context->desktopBuff32[y * context->width + cur_x] = cdEncodeDesktopColour(color);
                 }
             }
         }
@@ -429,7 +416,7 @@ void Context_bitblit(Context* context, int sx, int sy, int x, int y, int w, int 
                 uint32_t px = *database++;
                 if (px == 0x0) {
                 } else if (px) {
-                    context->desktopBuff16[sy * context->width + tempx] = cdEncodeDesktopColour(px & 0xFFFFFF);
+                    context->desktopBuff32[sy * context->width + tempx] = cdEncodeDesktopColour(px & 0xFFFFFF);
                 }
                 ++tempx;
             }
@@ -532,7 +519,7 @@ void Context_draw_char_clipped(Context* context, char character, int x, int y,
             shift_line <<= off_x;
             for (font_x = off_x; font_x < count_x; font_x++) {
                 if (shift_line & 0x80) {
-                    context->desktopBuff16[(font_y + y) * context->width + (font_x + x)] = cdEncodeDesktopColour(color);
+                    context->desktopBuff32[(font_y + y) * context->width + (font_x + x)] = cdEncodeDesktopColour(color);
                 }
                 shift_line <<= 1;
             }

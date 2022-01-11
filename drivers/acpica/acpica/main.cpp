@@ -2,20 +2,20 @@
 
 #include "main.hpp"
 
-#include "core/main.hpp"
-#include "core/terminal.hpp"
-#include "core/physmgr.hpp"
+#include "krnl/main.hpp"
+#include "krnl/terminal.hpp"
+#include "krnl/physmgr.hpp"
 #include "hal/intctrl.hpp"
 #include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
 #include "thr/prcssthr.hpp"
-#include "reg/registry.hpp"
+#include "krnl/cm.hpp"
 #include "fs/vfs.hpp"
-#include "core/common.hpp"
-#include "core/virtmgr.hpp"
+#include "krnl/common.hpp"
+#include "krnl/virtmgr.hpp"
 #include "krnl/powctrl.hpp"
 #include "thr/elf.hpp"
-#include "core/physmgr.hpp"
+#include "krnl/physmgr.hpp"
 #include "hw/acpi.hpp"
 #include "hw/cpu.hpp"
 #include "hw/bus/pci.hpp"
@@ -26,11 +26,15 @@ extern "C" {
 }
 
 void start(void* s);
+void acpiGlobalEventHandler(uint32_t type, ACPI_HANDLE device, uint32_t number, void* context);
+
 void begin(void* s)
 {
 	kprintf("begin ACPICA. s = 0x%X\n", s);
 	kprintf("a.\n");
 	kprintf("start = 0x%X\n", start);
+	kprintf("acpiGlobalEventHandler = 0x%X\n", acpiGlobalEventHandler);
+
 	start(s);
 }
 
@@ -384,7 +388,7 @@ void acpicaReset()
 
 void start(void* xxa)
 {
-	kprintf("test.\n");
+	kprintf(nullptr);
 
 	ACPI* ths = (ACPI*) xxa;
 
@@ -425,7 +429,8 @@ void start(void* xxa)
 	if (ACPI_FAILURE(a)) KePanic("FAILURE AcpiInitializeObjects");
 
 	ACPI_STATUS status;
-	if (computer->features.hasAPIC) {
+	kprintf("TODO: DEBUG: @@@ ACPICA ASSUMING NO APIC\n");
+	if (0) {//computer->features.hasAPIC) {
 		ACPI_OBJECT_LIST params;
 		ACPI_OBJECT arg;
 
@@ -433,7 +438,7 @@ void start(void* xxa)
 		params.Pointer = &arg;
 
 		arg.Type = ACPI_TYPE_INTEGER;
-		arg.Integer.Value = computer->features.hasAPIC;
+		arg.Integer.Value = 0;// computer->features.hasAPIC;
 		kprintf("value = %d\n", arg.Integer.Value);
 
 		status = AcpiEvaluateObject(NULL, (ACPI_STRING) "\\_PIC", &params, NULL);

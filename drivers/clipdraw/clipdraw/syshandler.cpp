@@ -82,13 +82,13 @@ uint64_t NiLinkCommandResupplyDesktop(size_t val, uint16_t* data)
 {
 	if (val == 0 || val >= 0x1000) {
 		if (val == 0) {
-			memcpy(desktop->desktopBuffer, data, desktop->ctxt->width * desktop->ctxt->height * 2);
+			memcpy(desktop->desktopBuffer, data, desktop->ctxt->width * desktop->ctxt->height * 4);
 		} else {
 			int offset = *((int*) val);
 			int size = *(((int*) val) + 1);
 			int l = *(((int*) val) + 2);
 			int r = *(((int*) val) + 3);
-			memcpy(desktop->desktopBuffer + offset, data, size * 2);
+			memcpy(desktop->desktopBuffer + offset, data, size * 4);
 			int startSc = offset / desktop->ctxt->width;
 			int endSc = (offset + size + desktop->ctxt->width - 1) / desktop->ctxt->width;
 			desktop->rangeRefresh(startSc, endSc, l, r, nullptr);
@@ -179,6 +179,17 @@ uint64_t NiLinkCommandGetEvents(size_t val, NiLinkWindowStruct* win)
 	return realwin->getEventCount();
 }
 
+uint64_t NiLinkCommandUpsync(size_t val, NiLinkWindowStruct* win)
+{
+	NIWindow* realwin = (NIWindow*) win->krnlWindow;
+	realwin->xpos = win->x;
+	realwin->ypos = win->y;
+	realwin->width = win->w;
+	realwin->height = win->h;
+	realwin->rerender();
+	return 0;
+}
+
 uint64_t NiLinkCommandReadFlags(size_t val, NiLinkWindowStruct* win)
 {
 	NIWindow* realwin = (NIWindow*) win->krnlWindow;
@@ -231,6 +242,8 @@ uint64_t NiSystemCallHandler(regs* r)
 	lockScheduler();
 	uint64_t retv = -1;
 
+	currentTaskTCB->processRelatedTo->threads[0].guiTask = true;
+
 	switch (r->ebx) {
 	case WSBE_FORCE_INIT_EBX:
 		retv = 4;
@@ -270,6 +283,9 @@ uint64_t NiSystemCallHandler(regs* r)
 		break;
 	case LINKCMD_SET_CURSOR:
 		retv = NiLinkCommandSetCursor((size_t) r->ecx, (NiLinkWindowStruct*) r->edx);
+		break;
+	case LINKCMD_UPSYNC:
+		retv = NiLinkCommandUpsync((size_t) r->ecx, (NiLinkWindowStruct*) r->edx);
 		break;
 	}
 	unlockScheduler();

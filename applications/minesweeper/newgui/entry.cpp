@@ -248,6 +248,7 @@ void newGame(int w, int h)
         createMine();
     }
 
+    mainwin->setSize(w * 25 + 70, h * 25 + 120);
     mainwin->repaint();
 }
 
@@ -274,7 +275,7 @@ int hardGame(NButton* btn)
 extern "C" int main() {
     createSystemBrushes();
 
-    mainwin = new NTopLevel("Minesweeper", 750, 450, WIN_FLAGS_DEFAULT_0 | WIN_FLAGS_0_HIDDEN | WIN_FLAGS_0_PRETTY);
+    mainwin = new NTopLevel("Minesweeper", 320, 370, WIN_FLAGS_DEFAULT_0 | WIN_FLAGS_0_HIDDEN | WIN_FLAGS_0_PRETTY | WIN_FLAGS_0_NO_RESIZE);
 
     for (int y = 0; y < 30; ++y) {
         for (int x = 0; x < 30; ++x) {
@@ -296,6 +297,8 @@ extern "C" int main() {
     mainwin->add(hard);
     mainwin->setIcon(bmp);
     mainwin->initialise();
+
+    newGame(10, 10);
 
     while (1) {
         mainwin->defaultEventHandler(mainwin->process());

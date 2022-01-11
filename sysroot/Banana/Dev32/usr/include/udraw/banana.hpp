@@ -11,6 +11,7 @@ extern "C" {
 #include "NButton.hpp"
 #include "NLoadedBitmap.hpp"
 #include "NFont.hpp"
+#include "NImageViewer.hpp"
 #include "NTextField.hpp"
 
 #endif //CONTEXT_H

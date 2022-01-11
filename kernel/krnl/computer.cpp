@@ -51,16 +51,16 @@ int Computer::open(int a, int b, void* vas)
 		KePanic("ASSERTION FAILED: MULTIPLE Computer OBJECTS");
 	}
 
+	KeSetBootMessage("Configuring processors...");
+	HalEnableNMI();
+	cpu[0] = new CPU();
+	cpu[0]->open(0, 0, vas);		//FIRST ARG IS CPU NUMBER
+	HalDetectFeatures();
+
 	KeSetBootMessage("Creating device tree...");
 	root = new ACPI();
 	addChild(root);
-
-	KeSetBootMessage("Configuring processors...");
-	HalEnableNMI();
-	HalDetectFeatures();
-	cpu[0] = new CPU();
 	addChild(cpu[0]);
-	cpu[0]->open(0, 0, vas);		//FIRST ARG IS CPU NUMBER
 	
 	KeSetBootMessage("Detecting numerical coprocessors...");
 	HalInitialiseCoprocessor();

@@ -1,4 +1,4 @@
-OUTPUT32="C:/Users/Alex/Desktop/Banana/packages/banana/32/0001/newgui.exe"
+OUTPUT32="C:/Users/Alex/Desktop/Banana/packages/banana/32/0001/sentences.app/program.exe"
 OUTPUT64="C:/Users/Alex/Desktop/Banana/packages/banana/64/0001/newgui.exe"
 
 AS32=i386-banana-as

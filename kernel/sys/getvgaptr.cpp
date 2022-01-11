@@ -20,7 +20,7 @@
 /// <summary>
 /// Returns a task's terminal data for use by CONHOST.EXE.
 /// </summary>
-/// <param name="ebx">Pointer to store 4096 bytes of data, 4000 of characters, then width (4 bytes) and height (4 bytes). After that is the terminal's name.</param>
+/// <param name="ebx">Pointer to store 4096 bytes of data, 4000 of characters, then width (4 bytes), height (4 bytes) and GUI state (0 = terminal, 1 = GUI) (4 bytes). After that is the terminal's name.</param>
 /// <param name="ecx">The PID of the task.</param>
 /// <param name="edx">If this is set to a non-zero value, the terminal will become the active terminal.</param>
 /// <returns>0 if good, 1 if bad.</returns>
@@ -45,6 +45,8 @@ uint64_t SysGetVGAPtr(regs* r)
 	memcpy((void*) r->ebx, (const char*) terminal->displayData, 4000);
 	*((int*) (r->ebx + 4000)) = terminal->cursorX;
 	*((int*) (r->ebx + 4004)) = terminal->cursorY;
-	strcpy((char*) (r->ebx + 4008), "<NO NAME>");
+	*((int*) (r->ebx + 4008)) = prcss->threads[0].guiTask ? 1 : 0;
+	kprintf("GUI? %d\n", *((int*) (r->ebx + 4008)));
+	strcpy((char*) (r->ebx + 4012), "<NO NAME>");
 	return 0;
 }

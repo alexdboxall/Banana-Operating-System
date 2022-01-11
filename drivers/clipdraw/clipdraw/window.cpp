@@ -255,5 +255,7 @@ void NIWindow::request()
 
 void NIWindow::putpixel(int x, int y, uint32_t colour)
 {
-	 data32[y * width + x] = colour;
+	int pos = y * width + x;
+	if (pos > renderTableLength * width) return;
+	data32[pos] = colour;
 }

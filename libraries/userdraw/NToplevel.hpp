@@ -31,6 +31,14 @@ struct NxWindow {
     Context* ctxt;
 };
 
+enum class NWindowCloseType
+{
+    TerminateAlways,
+    TerminateIfLast,
+    Destroy,
+    Ignore,
+};
+
 class NTopLevel {
 protected:
     friend int defaultToplevelPainter(NTopLevel* self);
@@ -42,6 +50,8 @@ protected:
 
     NLoadedBitmap* winIcon = nullptr;
     
+    bool destroyed = false;
+
 public:
     char* name;
     int (*paintHandler)(NTopLevel* self);
@@ -54,6 +64,8 @@ public:
 
     void setIcon(NLoadedBitmap* icn);
     void removeIcon();
+
+    void destroy();
     
     int getX();
     int getY();
@@ -67,10 +79,13 @@ public:
     void setY(int y);
     void setWidth(int width);
     void setHeight(int height);
+    void setPosition(int x, int y);
+    void setSize(int width, int height);
 
     void simpleMainloop();
 
     void sync();
+    void upsync();
     void repaint();
     void repaintFlush();
     NiEvent process();

@@ -140,7 +140,25 @@ namespace Thr
 		ELFSectionHeader64* sectHeaders = (ELFSectionHeader64*) malloc(elf->shNum * elf->shSize);
 		f->read(elf->shNum * elf->shSize, (void*) sectHeaders, &actual);
 #endif
+		for (uint16_t i = 0; i < elf->shNum; ++i) {
+			size_t fileOffset = (sectHeaders + i)->sh_offset;
+			size_t addr = (sectHeaders + elf->strtabIndex)->sh_offset + (sectHeaders + i)->sh_name;
 
+			f->seek(addr);
+
+			char namebuffer[32];
+			memset(namebuffer, 0, 32);
+
+			int actual;
+			f->read(31, namebuffer, &actual);
+
+			if (!strcmp("._bna_gui_sect", namebuffer)) {
+				p->threads[0].guiTask = true;
+				kprintf("gui task = true.\n");
+			}
+
+			kprintf("Section with name: %s\n", namebuffer);
+		}
 
 		//LOAD PROGRAM HEADERS
 		if (!elf->phOffset) {
@@ -165,10 +183,6 @@ namespace Thr
 #endif
 
 		//LOOK AT PROG SEGMENTS
-
-		//this whole thing isn't loading the file from the disk right. the code is sound, it's just the vfs
-		//however! the vfs_file_t might be in bad form before it gets here...
-
 		for (uint16_t i = 0; i < elf->phNum; ++i) {
 			size_t addr = (progHeaders + i)->p_vaddr;
 			size_t fileOffset = (progHeaders + i)->p_offset;
@@ -511,17 +525,18 @@ namespace Thr
 
 				size_t addr = symbolTab[symbolNum].st_value;
 
-				//kprintf("\nSymbol: %s, addr = 0x%X, pos = 0x%X, info = 0x%X\n", ((char*) stringTab) + symbolTab[symbolNum].st_name, addr, pos, info);
+				char* symbolName = ((char*) stringTab) + symbolTab[symbolNum].st_name;
+				kprintf("\nSymbol: %s, addr = 0x%X, pos = 0x%X, info = 0x%X\n", symbolName, addr, pos, info);
 				
 				bool dynamic = false;
 				if (addr == 0) {
-					addr = getAddressOfKernelSymbol(((char*) stringTab) + symbolTab[symbolNum].st_name);
+					addr = getAddressOfKernelSymbol(symbolName);
 					dynamic = true;
 					if (addr == 0) {
-						addr = KeResolveCompatibilitySymbol(((char*) stringTab) + symbolTab[symbolNum].st_name);
+						addr = KeResolveCompatibilitySymbol(symbolName);
 
 						if (addr == 0) {
-							kprintf("UNDEFINED DLL SYMBOL: %s\n", ((char*) stringTab) + symbolTab[symbolNum].st_name);
+							kprintf("UNDEFINED DLL SYMBOL: %s\n", symbolName);
 							char msg[256];
 							strcpy(msg, "UNDEFINED DLL SYMBOL '");
 							strcat(msg, ((char*) stringTab) + symbolTab[symbolNum].st_name);
@@ -549,6 +564,7 @@ namespace Thr
 					uint32_t* entry = (uint32_t*) (pos - entryPoint + relocationPoint);		//0xF0063B6C
 					uint32_t x;
 					if (dynamic) {
+						kprintf("dynamic.\n");
 						x = addr + KeReadUnaligned32(entry);
 						if (info == 0x101 || info == 0x401 || (info >> 8) < (elf->shNum > 0xC ? 0xC : elf->shNum)) {
 							if (critical) {
@@ -569,13 +585,19 @@ namespace Thr
 					} else {
 						if (info == 0x101 || info == 0x401 || (info >> 8) < elf->shNum) {
 							x = KeReadUnaligned32(entry) - entryPoint + relocationPoint;
+							kprintf("mode 1.\n");
 
 						} else {
 							x = addr - entryPoint + relocationPoint + KeReadUnaligned32(entry);
+							kprintf("mode 2.\n");
+						}
+						
+						if (x >= 0xD8000000U && x <= 0xD8FFFFFF) {
+							x = KeReadUnaligned32(entry) - entryPoint + relocationPoint;
 						}
 					}
-					//kprintf("    R_386_32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
-					//kprintf("    addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
+					kprintf("    R_386_32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
+					kprintf("    addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
 					KeWriteUnaligned32(entry, x);
 
 				} else if (type == 2 && sizeof(size_t) == 4) {			//R_386_PC32
@@ -583,8 +605,8 @@ namespace Thr
 					uint32_t x;
 
 					if (info == 0x101 || info == 0x401 || (info >> 8) < (elf->shNum - 4 > 0xA ? 0xA : elf->shNum - 4)) {
-						//kprintf("    R_386_PC32	Modifying symbol 0x%X at 0x%X to become 0x???\n", *entry, entry);
-						//kprintf("    addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
+						kprintf("    R_386_PC32	Modifying symbol 0x%X at 0x%X to become 0x???\n", *entry, entry);
+						kprintf("    addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
 						
 						if (critical) {
 							KePanic("RELOCATION UNHANDLED CASE 2");
@@ -607,8 +629,13 @@ namespace Thr
 					} else {
 						x = addr - pos + KeReadUnaligned32(entry);
 					}
-					//kprintf("    R_386_PC32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
-					//kprintf("    addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
+
+					if (*entry < 0xFFFFF) {
+						x = *entry;
+					}
+
+					kprintf("    R_386_PC32	Modifying symbol 0x%X at 0x%X to become 0x%X\n", *entry, entry, x);
+					kprintf("    addr 0x%X entryPoint 0x%X reloc 0x%X *entry 0x%X\n", addr, entryPoint, relocationPoint, *entry);
 					
 					KeWriteUnaligned32(entry, x);
 
