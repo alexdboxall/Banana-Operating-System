@@ -53,6 +53,8 @@ public:
     void disableAutomaticInvalidation();
     void enableAutomaticInvalidation(bool on = true);
 
+    void resize(int w, int h);
+
     void fillRect(int x, int y, int w, int h, uint32_t col);
     void drawRect(int x, int y, int w, int h, uint32_t col);
     void horizontalLine(int x, int y, int w, uint32_t col);

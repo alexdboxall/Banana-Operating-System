@@ -1,5 +1,6 @@
 #include <arch/i386/hal.hpp>
 #include <arch/i386/pic.hpp>
+#include <arch/i386/apic.hpp>
 #include <arch/i386/rtc.hpp>
 #include <arch/i386/x86.hpp>
 
@@ -12,13 +13,12 @@
 #include <krnl/panic.hpp>
 #include <krnl/virtmgr.hpp>
 #include <krnl/hal.hpp>
+#include <krnl/bootflags.hpp>
 
 #include <sys/syscalls.hpp>
 #include <thr/elf.hpp>
 #include <thr/prcssthr.hpp>
 #include <hal/intctrl.hpp>
-#include <hw/intctrl/pic.hpp>
-#include <hw/intctrl/apic.hpp>
 #include <hal/device.hpp>
 #include <hw/acpi.hpp>
 #include <hw/cpu.hpp>
@@ -321,6 +321,7 @@ void HalDetectFeatures()
 {
 	memset(&features, 0, sizeof(features));
 	features.hasACPI = true;
+	kprintf("hasACPI set to true\n");
 	features.hasCPUID = detectCPUID() ? true : false;
 
 	if (features.hasCPUID) {
@@ -329,7 +330,7 @@ void HalDetectFeatures()
 		features.hasMCE = cpuidCheckEDX(CPUID_FEAT_EDX_MCE);
 		features.hasMMX = cpuidCheckEDX(CPUID_FEAT_EDX_MMX);
 
-		if ((keBootSettings & 1) || (keBootSettings & 1024)) {
+		if (KeGetBootConfigurationFlag(BootConfigurationFlag::DisableAPIC) || KeGetBootConfigurationFlag(BootConfigurationFlag::DisableAPICAndACPI)) {
 			features.hasAPIC = false;
 		} else {
 			features.hasAPIC = cpuidCheckEDX(CPUID_FEAT_EDX_APIC);
@@ -338,9 +339,6 @@ void HalDetectFeatures()
 		if (features.hasAPIC && !features.hasMSR) {
 			features.hasAPIC = false;
 		}
-
-		kprintf("DEBUG B: hal.cpp\n");
-		features.hasAPIC = false;
 
 		bool ecxCanReturnFeatures = true;
 		ecxCanReturnFeatures = false;
@@ -363,8 +361,7 @@ void HalDetectFeatures()
 		}
 	}
 
-	if (keBootSettings & 1024) {
-		kprintf("NO ACPI HERE.\n");
+	if (KeGetBootConfigurationFlag(BootConfigurationFlag::DisableAPICAndACPI)) {
 		features.hasACPI = false;
 	}
 
@@ -604,7 +601,7 @@ bool HalHandleGeneralProtectionFault(void* rr, void* ctxt)
 
 uint8_t* HalFindRSDP()
 {
-	if (Phys::usablePages < 2048 || (keBootSettings & 1024)) {
+	if (Phys::usablePages < 2048 || KeGetBootConfigurationFlag(BootConfigurationFlag::DisableAPICAndACPI)) {
 		features.hasACPI = false;
 		kprintf("Settings bad.\n");
 	}
@@ -899,16 +896,14 @@ uint64_t HalQueryPerformanceCounter()
 bool apic = false;
 void HalInitialise()
 {
+	HalDetectFeatures();
+
+	scanMADT();
+
 	//check if the APIC exists
 	if (ioapicDiscoveryNumber == 0) {
 		features.hasAPIC = false;
 	}
-
-
-	/// DEBUG
-	features.hasAPIC = false;
-	/// DEBUG
-
 
 	apic = features.hasAPIC;
 
@@ -1049,9 +1044,9 @@ int CPU::open(int num, int b, void* vas_)
 	KeSetBootMessage("Starting the HAL...");
 	HalInitialise();
 
-	timer = setupTimer(keBootSettings & 16 ? 30 : 100);
+	timer = setupTimer(KeGetBootConfigurationFlag(BootConfigurationFlag::OptimiseForOldComputers) ? 30 : 100);
 
-	if (keBootSettings & 32) {
+	if (KeGetBootConfigurationFlag(BootConfigurationFlag::EnableCPUFeatures)) {
 		setupFeatures();
 	}
 

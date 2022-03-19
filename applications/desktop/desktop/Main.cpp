@@ -9,6 +9,7 @@ extern "C" {
 #include <dirent.h>
 #include <signal.h>
 #include <time.h>
+#include <sys/time.h>
 }
 
 #include <stdint.h>
@@ -608,6 +609,31 @@ int antPrevY;
 bool drawAnts;
 bool firstAntDraw;
 
+
+void openProgram(int cs)
+{
+    if (files[cs].assocTypeID != -1 || files[cs].app) {
+        char progPath[256];
+        char* path;
+        if (files[cs].app) {
+            sprintf(progPath, "%s/%s.app/program.exe", desktopBasePath, files[cs].filepath);
+            path = progPath;
+        } else {
+            path = fileAssoc[files[cs].assocTypeID].openProgram;
+            sprintf(progPath, "%s/%s", desktopBasePath, files[cs].filepath);
+        }
+
+        char* argvv[3];
+        argvv[0] = path;
+        argvv[1] = progPath;
+        argvv[2] = 0;
+        int pid = SystemCall((size_t) SystemCallNumber::Spawn, 0, (size_t) argvv, (size_t) argvv[0]);
+
+        deselectAllIcons();
+        partialDesktopUpdate();
+    }
+}
+
 int main (int argc, char *argv[])
 {
     SystemCall((size_t) SystemCallNumber::WSBE, WSBE_FORCE_INIT_EBX, WSBE_FORCE_INIT_ECX, WSBE_FORCE_INIT_EDX);
@@ -630,8 +656,12 @@ int main (int argc, char *argv[])
     loadIconBitmaps();
     refresh();
 
+    uint64_t lastClickMicrosecond = 0;
+
     int cs = 0;
     while (1) {
+        bool doubleClickIntervalDetected = false;
+
         int events = SystemCall((size_t) SystemCallNumber::WSBE, LINKCMD_GET_EVENTS, 0, (size_t) &dummyWin);
         if (events < 0) {
             continue;
@@ -644,6 +674,14 @@ int main (int argc, char *argv[])
             firstAntDraw = true;
             antBaseX = dummyWin.evnt.mouseX;
             antBaseY = dummyWin.evnt.mouseY;
+
+            uint64_t mouseClickMicrosecond = SystemCall((size_t) SystemCallNumber::GetUnixTime, 2, 0, 0);
+            
+            if (mouseClickMicrosecond - lastClickMicrosecond < 500000 && files[cs].valid && files[cs].selected) {
+                doubleClickIntervalDetected = true;
+            }
+            
+            lastClickMicrosecond = mouseClickMicrosecond;
         }
 
         if (dummyWin.evnt.type == EVENT_TYPE_MOUSE_UP) {
@@ -652,6 +690,7 @@ int main (int argc, char *argv[])
 
         if (drawAnts) { 
             bool needsUpdate = false;
+            bool anyFilesAreSelected = false;
             for (int i = 0; i < MAX_DESKTOP_FILES; ++i) {
                 if (!files[i].valid) continue;
 
@@ -669,12 +708,21 @@ int main (int argc, char *argv[])
 
                 if (files[i].selected != overlap) {
                     files[i].selected = overlap;
+                    if (files[i].selected) {
+                        anyFilesAreSelected = true;
+                    }
                     if (!needsUpdate) cs = i;
                     redrawIcon(i);
                     needsUpdate = true;
                 }
             }
 
+            if (doubleClickIntervalDetected) {
+                if (files[cs].valid && files[cs].selected) {
+                    openProgram(cs);
+                    lastClickMicrosecond = 0;
+                }
+            }
             if (needsUpdate) {
                 partialDesktopUpdate();
             }
@@ -682,6 +730,8 @@ int main (int argc, char *argv[])
             firstAntDraw = false;
             antPrevX = dummyWin.evnt.mouseX;
             antPrevY = dummyWin.evnt.mouseY;
+
+            
         }
         
         if (dummyWin.evnt.type == EVENT_TYPE_KEYDOWN) {
@@ -711,26 +761,7 @@ int main (int argc, char *argv[])
             }
 
             if (dummyWin.evnt.key == (int)KeyboardSpecialKeys::Enter) {
-                if (files[cs].assocTypeID != -1 || files[cs].app) {
-                    char progPath[256];
-                    char* path;
-                    if (files[cs].app) {
-                        sprintf(progPath, "%s/%s.app/program.exe", desktopBasePath, files[cs].filepath);
-                        path = progPath;
-                    } else {
-                        path = fileAssoc[files[cs].assocTypeID].openProgram;
-                        sprintf(progPath, "%s/%s", desktopBasePath, files[cs].filepath);
-                    }
-                    
-                    char* argvv[3];
-                    argvv[0] = path;
-                    argvv[1] = progPath;
-                    argvv[2] = 0;
-                    int pid = SystemCall((size_t)SystemCallNumber::Spawn, 0, (size_t)argvv, (size_t)argvv[0]);
-
-                    deselectAllIcons();
-                    partialDesktopUpdate();
-                }
+                openProgram(cs);
             }
 
             if (dummyWin.evnt.key == (int) KeyboardSpecialKeys::Right && cs + iconsPerColumn < MAX_DESKTOP_FILES && files[cs + iconsPerColumn].valid) {

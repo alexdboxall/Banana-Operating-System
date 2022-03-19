@@ -2,7 +2,6 @@
 #include "hal/intctrl.hpp"
 #include "krnl/hal.hpp"
 #include "hw/acpi.hpp"
-#include "hw/intctrl/apic.hpp"
 #include "krnl/common.hpp"
 #include "hw/cpu.hpp"
 

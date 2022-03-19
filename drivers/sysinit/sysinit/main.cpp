@@ -2134,9 +2134,9 @@ void begin(void* a)
             CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/PRINT")), "TXT");
             CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/ICON/TXT"), "C:/Banana/Icons/colour/text.tga");
             CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/DESCR/TXT"), "Text Document");
-            CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/OPEN/TXT"), "C:/Banana/System/te.exe");
-            CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/EDIT/TXT"), "C:/Banana/System/te.exe");
-            CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/PRINT/TXT"), "C:/Banana/System/te.exe");
+            CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/OPEN/TXT"), "C:/Banana/System/typewriter.app/program.exe");
+            CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/EDIT/TXT"), "C:/Banana/System/typewriter.app/program.exe");
+            CmSetString(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/PRINT/TXT"), "C:/Banana/System/typewriter.app/program.exe");
 
             CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/ICON")), "ISO");
             CmCreateString(reg, CmEnterDirectory(reg, CmFindObjectFromPath(reg, "BANANA/FILEASSOC/DESCR")), "ISO");

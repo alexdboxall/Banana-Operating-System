@@ -571,8 +571,16 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 void NIDesktop::renderScanline(int line, int left, int right)
 {
 	if (line < 0 || line >= ctxt->height) return;
-	if (left < 0 || left > ctxt->width) return;
-	if (right < 0 || right > ctxt->width) return;
+
+	if (left < 0) left = 0;
+	if (left >= ctxt->width) left = ctxt->width - 1;
+	if (right < 0) right = 0;
+	if (right >= ctxt->width) right = ctxt->width - 1;
+	if (left > right) {
+		int temp = left;
+		left = right;
+		right = temp;
+	}
 
 	int expectedBytes = right - left;
 	int lineOffset = line * ctxt->width;

@@ -45,7 +45,7 @@ void NiMain(void* s)
 
 #ifdef KERNEL_DEBUG
 	extern void NiDisplayRAM(void*);
-	kernelProcess->createThread(NiDisplayRAM);
+	//kernelProcess->createThread(NiDisplayRAM);
 #endif
 
 	extern void NiClockEventThread(void*);

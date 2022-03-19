@@ -41,21 +41,15 @@ Computer::Computer() : Device("Computer")
 
 int Computer::open(int a, int b, void* vas)
 {
-	VgaText::hiddenOut = false;
-
-	if (!(keBootSettings & 4)) {
-		VgaText::hiddenOut = true;
-	}
-
 	if (computer != this) {
 		KePanic("ASSERTION FAILED: MULTIPLE Computer OBJECTS");
 	}
 
 	KeSetBootMessage("Configuring processors...");
 	HalEnableNMI();
+
 	cpu[0] = new CPU();
 	cpu[0]->open(0, 0, vas);		//FIRST ARG IS CPU NUMBER
-	HalDetectFeatures();
 
 	KeSetBootMessage("Creating device tree...");
 	root = new ACPI();

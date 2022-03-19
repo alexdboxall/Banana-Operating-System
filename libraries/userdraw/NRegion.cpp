@@ -35,6 +35,14 @@ NRegion::NRegion(int _x, int _y, int w, int h, Context* context) {
     win->paint_function_args = (void*) this;
 }
 
+void NRegion::resize(int _w, int _h)
+{
+    width = _w;
+    height = _h;
+    win->width = width;
+    win->height = height;
+    invalidate();
+}
 
 void NRegion::internalInvalidate()
 {

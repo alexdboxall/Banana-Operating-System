@@ -4,7 +4,6 @@
 #include "hal/timer.hpp"
 #include "hal/device.hpp"
 #include "hw/timer/pit.hpp"
-#include "hw/intctrl/apic.hpp"
 #include "hw/timer/apictimer.hpp"
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")

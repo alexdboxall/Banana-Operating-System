@@ -4,6 +4,7 @@
 #include "thr/elf.hpp"
 #include "hw/cpu.hpp"
 #include "krnl/hal.hpp"
+#include <krnl/bootflags.hpp>
 
 #pragma GCC optimize ("O2")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -36,7 +37,7 @@ namespace Dbg
 
 	void logc(char c)
 	{
-		if (keBootSettings & 16) return;
+		if (KeGetBootConfigurationFlag(BootConfigurationFlag::OptimiseForOldComputers)) return;
 		while ((inb(0x3F8 + 5) & 0x20) == 0);
 		outb(0x3F8, c);
 	}
@@ -64,11 +65,11 @@ namespace Dbg
 		return;
 #endif
 		if (format == nullptr) {
-			kprintf("<< (nullptr) >>\n");
+			kprintf("<< kprintf called with NULLPTR as its format string >>\n");
 			return;
 		}
 
-		if (keBootSettings & 16) return;
+		if (KeGetBootConfigurationFlag(BootConfigurationFlag::OptimiseForOldComputers)) return;
 
 		va_list list;
 		va_start(list, format);

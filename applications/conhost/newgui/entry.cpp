@@ -3,8 +3,8 @@
 #include <string.h>
 #include <udraw/banana.hpp>
 extern "C" {
-    #include <unistd.h>
-    #include <dirent.h>
+#include <unistd.h>
+#include <dirent.h>
 }
 
 /*
@@ -15,20 +15,20 @@ uint8_t cp[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0
 
 void drawVGAChar(Context* ctxt, int x, int y, int c, int fg, int bg)
 {
-    x = x * 8;
-    y = 32 + y * 16;
+	x = x * 8;
+	y = 32 + y * 16;
 
-    Context_fill_rect(ctxt, x, y, 8, 16, bg);
+	Context_fill_rect(ctxt, x, y, 8, 16, bg);
 
-    for (int i = 0; i < 16; ++i) {
-        uint8_t val = cp[c * 16 + i];
-        for (int j = 0; j < 8; ++j) {
-            if (val & 0x80) {
-                Context_fill_rect(ctxt, x + j, y + i, 1, 1, fg);
-            }
-            val <<= 1;
-        }
-    }
+	for (int i = 0; i < 16; ++i) {
+		uint8_t val = cp[c * 16 + i];
+		for (int j = 0; j < 8; ++j) {
+			if (val & 0x80) {
+				Context_fill_rect(ctxt, x + j, y + i, 1, 1, fg);
+			}
+			val <<= 1;
+		}
+	}
 }
 
 uint16_t vgaData[30][80];
@@ -39,85 +39,92 @@ NTopLevel* win;
 
 extern "C" uint64_t SystemCall(size_t, size_t, size_t, size_t);
 
-void grabConsoleData() {
-    int ret = SystemCall((size_t)SystemCallNumber::GetVGAPtr, (size_t) vgaData, taskPID, 1);
-    if (ret) {
-        delete win;
-        exit(0);
-    }
-    vgaCurX = *(((int*)vgaData) + 1000);
-    vgaCurY = *(((int*)vgaData) + 1001);
+void grabConsoleData()
+{
+	int ret = SystemCall((size_t) SystemCallNumber::GetVGAPtr, (size_t) vgaData, taskPID, 1);
+	if (ret) {
+		delete win;
+		exit(0);
+	}
+	vgaCurX = *(((int*) vgaData) + 1000);
+	vgaCurY = *(((int*) vgaData) + 1001);
 }
 
 uint32_t vgaColourPalette[16] = {
-    0x000000,
-    0x0000AA,
-    0x00AA00,
-    0x00AAAA,
-    0xAA0000,
-    0xAA00AA,
-    0xAAAA00,
-    0xC0C0C0,
-    0x808080,
-    0x5555FF,
-    0x55FF55,
-    0x55FFFF,
-    0xFF5555,
-    0xFF55FF,
-    0xFFFF55,
-    0xFFFFFF
+	0x000000,
+	0x0000AA,
+	0x00AA00,
+	0x00AAAA,
+	0xAA0000,
+	0xAA00AA,
+	0xAAAA00,
+	0xC0C0C0,
+	0x808080,
+	0x5555FF,
+	0x55FF55,
+	0x55FFFF,
+	0xFF5555,
+	0xFF55FF,
+	0xFFFF55,
+	0xFFFFFF
 };
 
-int consolePaintHandler(NTopLevel* self) {
-    grabConsoleData();
+int consolePaintHandler(NTopLevel* self)
+{
+	grabConsoleData();
 
-    Context* ctxt = self->getContext();
-    Context_fill_rect(ctxt, 0, 32, 80 * 8, 25 * 16, 0x000000);
+	Context* ctxt = self->getContext();
+	Context_fill_rect(ctxt, 0, 32, 80 * 8, 25 * 16, 0x000000);
 
-    for (int i = 0; i < 9; ++i) {
-        Context_draw_rect(ctxt, ctxt->width - 20 + i, 7 + i, 1, 1, 0x000000);
-        Context_draw_rect(ctxt, ctxt->width - 20 + i, 15 - i, 1, 1, 0x000000);
-    }
+	for (int i = 0; i < 9; ++i) {
+		Context_draw_rect(ctxt, ctxt->width - 20 + i, 7 + i, 1, 1, 0x000000);
+		Context_draw_rect(ctxt, ctxt->width - 20 + i, 15 - i, 1, 1, 0x000000);
+	}
 
-    for (int y = 0; y < 25; ++y) {
-        for (int x = 0; x < 80; ++x) {
-            int cols = (vgaData[y][x] >> 8) & 0xFF;
+	for (int y = 0; y < 25; ++y) {
+		for (int x = 0; x < 80; ++x) {
+			int cols = (vgaData[y][x] >> 8) & 0xFF;
 
-            drawVGAChar(ctxt, x, y, vgaData[y][x] & 0xFF, 
-                vgaColourPalette[cols & 0xF], 
-                vgaColourPalette[cols >> 4]);
-        }
-    }
+			drawVGAChar(ctxt, x, y, vgaData[y][x] & 0xFF,
+				vgaColourPalette[cols & 0xF],
+				vgaColourPalette[cols >> 4]);
+		}
+	}
 
-    Context_fill_rect(ctxt, vgaCurX * 8, vgaCurY * 16 + 32 + 12, 8, 4, 0xC0C0C0);
+	Context_fill_rect(ctxt, vgaCurX * 8, vgaCurY * 16 + 32 + 12, 8, 4, 0xC0C0C0);
 
-    return 0;
+	return 0;
 }
 
-extern "C" int main(int argc, char** argv) {
-    if (argc != 2) return 1;
-    createSystemBrushes();
+extern "C" int main(int argc, char** argv)
+{
+	if (argc != 2) return 1;
+	createSystemBrushes();
 
-    char* argvv[3] = { argv[1], 0 };
-    taskPID = SystemCall((size_t) SystemCallNumber::Spawn, 1, (size_t)argvv, (size_t)argvv[0]);
+	char* argvv[3] = { argv[1], 0 };
+	taskPID = SystemCall((size_t) SystemCallNumber::Spawn, 1, (size_t) argvv, (size_t) argvv[0]);
 
-    SystemCall((size_t) SystemCallNumber::GetVGAPtr, (size_t) vgaData, taskPID, 1);
-    int guiTask = *(((int*) vgaData) + 1002);
-    if (guiTask) {
-        return 0;
-    }
+	SystemCall((size_t) SystemCallNumber::GetVGAPtr, (size_t) vgaData, taskPID, 1);
+	int guiTask = *(((int*) vgaData) + 1002);
+	if (guiTask) {
+		return 0;
+	}
 
-    win = new NTopLevel("Console", 640, 440, WIN_FLAGS_DEFAULT_0 | WIN_FLAGS_0_HIDDEN | WIN_FLAGS_0_PRETTY | WIN_FLAGS_0_NO_RESIZE);
-    win->paintHandlerHook = consolePaintHandler;
-    win->initialise();
+	win = new NTopLevel("Console", 640, 440, WIN_FLAGS_DEFAULT_0 | WIN_FLAGS_0_HIDDEN | WIN_FLAGS_0_PRETTY | WIN_FLAGS_0_NO_RESIZE);
+	win->paintHandlerHook = consolePaintHandler;
+	win->initialise();
 
-    while (1) {
-        NiEvent evnt = win->process();
-        win->sync();
-        win->repaintFlush();
-        win->repaint();
-    }
-    
-    return 0;
+	while (1) {
+		NiEvent evnt = win->process();
+		if (evnt.type == EVENT_TYPE_DESTROY) {
+			win->destroy();
+			return 0;
+		}
+		win->sync();
+		win->repaintFlush();
+		win->repaint();
+	}
+
+	return 0;
 }
 

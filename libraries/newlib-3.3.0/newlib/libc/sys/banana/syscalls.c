@@ -324,8 +324,9 @@ int write(int file, char* ptr, int len)
 int gettimeofday(struct timeval* __restrict p, void* __restrict z)
 {
 	if (p != NULL) { 
-		p->tv_usec = 0;										//microseconds;
-		p->tv_sec = SystemCall(GetUnixTime, 0, 0, 0);		//seconds since Unix Epoch
+		uint64_t time = SystemCall(GetUnixTime, 1, 0, 0);
+		p->tv_usec = time % 1000000;		//microseconds;
+		p->tv_sec = time / 1000000;		//seconds since Unix Epoch
 	}
 
 	/*if (z != NULL) {

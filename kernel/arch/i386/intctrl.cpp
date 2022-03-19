@@ -4,14 +4,13 @@
 #include "thr/prcssthr.hpp"
 #include "thr/elf.hpp"
 #include "hal/intctrl.hpp"
-#include "hw/intctrl/pic.hpp"
-#include "hw/intctrl/apic.hpp"
 #include "hal/device.hpp"
 #include "hw/acpi.hpp"
 #include "krnl/hal.hpp"
 #include "hw/cpu.hpp"
 #include "vm86/vm8086.hpp"
 #include <arch/i386/x86.hpp>
+#include <arch/i386/apic.hpp>
 
 #pragma GCC optimize ("O2")
 #pragma GCC optimize ("-fno-strict-aliasing")

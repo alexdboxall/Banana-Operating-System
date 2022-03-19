@@ -14,9 +14,9 @@
 #define INLINE inline __attribute__((always_inline)) 
 
 #ifdef KERNEL_DEBUG
-#define KDEBUG_PAUSE(msg) if (keBootSettings & 2048) {\
+#define KDEBUG_PAUSE(msg) if (KeGetBootConfigurationFlag(BootConfigurationFlag::ShowDebugAndMonochrome)) {\
 KeSetBootMessage(msg);\
-if (!(keBootSettings & 128)) {\
+if (!KeGetBootConfigurationFlag(BootConfigurationFlag::DontNeedKeypressForDebugMessages)) {\
 	while (1) {\
 		uint8_t a = inb(0x60); \
 		if (a == 0x5A || a == 0x1C) break; \
@@ -96,7 +96,7 @@ constexpr size_t SIZE_APP_STACK_USER			= 0x180000;
 constexpr size_t SIZE_APP_STACK_KRNL			= 0x80000;
 constexpr size_t SIZE_APP_STACK_TOTAL			= SIZE_APP_STACK_USER + SIZE_APP_STACK_KRNL;
 
-constexpr size_t VIRT_APP_DATA					= 0x10000000;		//TODO will be changed to 0x2000000 after we rebuild / tweak the linker 
+constexpr size_t VIRT_APP_DATA					= 0x10000000;
 constexpr size_t VIRT_APP_STACK_USER_TOP		= 0x2000000;
 constexpr size_t VIRT_APP_STACK_KRNL_TOP		= VIRT_APP_STACK_USER_TOP - SIZE_APP_STACK_USER;
 
@@ -108,8 +108,6 @@ constexpr size_t VIRT_SBRK_MAX					= 0xFFC00000U;
 constexpr size_t VIRT_ALLOCED_VIRT_PAGES		= VIRT_LOW_MEGS + 0x100000;
 
 constexpr size_t VIRT_ACPI_DRIVER				= 0xC2484000U;
-
-extern uint32_t keBootSettings;
 
 #include "krnl/terminal.hpp"
 

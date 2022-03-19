@@ -76,7 +76,6 @@ Parts of this are based on Minux:
 #include "hw/cpu.hpp"
 #include "krnl/hal.hpp"
 #include "hw/bus/pci.hpp"
-#include "hw/bus/isa.hpp"
 #include "hw/diskctrl/ide.hpp"
 
 uint8_t processorID[MAX_IOAPICS];
@@ -193,7 +192,6 @@ uint8_t* findDataTable(uint8_t* ptr, char name[])
 	return 0;
 }
 
-extern uint32_t keBootSettings;
 void scanMADT()
 {	
 	RSDPpointer = nullptr;
@@ -245,6 +243,7 @@ void scanMADT()
 			ioapicGSIBase[ioapicDiscoveryNumber] = a->data[pointingTo] | a->data[pointingTo + 1] << 8 | a->data[pointingTo + 2] << 16 | a->data[pointingTo + 3] << 24;
 			pointingTo += 4;
 			ioapicDiscoveryNumber++;
+			kprintf("ioapicDiscoveryNumber = %d\n", ioapicDiscoveryNumber);
 
 		} else if (type == 2) {
 			uint8_t busSource = a->data[pointingTo++];
@@ -278,7 +277,7 @@ void scanMADT()
 
 ACPI::ACPI(): Device("ACPI")
 {
-	scanMADT();
+	
 }
 
  
@@ -440,7 +439,7 @@ int ACPI::open(int mode, int, void*)
 		KeSetBootMessage("Loading the ACPICA driver...");
 		File* f = new File("C:/Banana/Drivers/acpica.sys", kernelProcess);
 		if (f && f->exists()) {
-			//Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/acpica.sys"), this);
+			Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/acpica.sys"), this);
 		}
 		if (f) {
 			delete f;

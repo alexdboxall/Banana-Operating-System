@@ -1,9 +1,12 @@
 #include "krnl/common.hpp"
 #include "hal/intctrl.hpp"
-#include "hw/intctrl/apic.hpp"
 #include "hw/acpi.hpp"
 #include "hw/cpu.hpp"
 #include "krnl/hal.hpp"
+
+#include <arch/i386/apic.hpp>
+#include <arch/i386/x86.hpp>
+
 #pragma GCC optimize ("O0")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
@@ -18,15 +21,12 @@ int noOfIOAPICs;
 //this local APIC stuff
 uint32_t apicGetBase()
 {
-	//if (!computer->features.hasMSR) {
-	//	return 0;
-	//}
-	
-	KePanic("APIC.cpp, MSR!");
-	return 0;
-	
-	//uint64_t ret = computer->rdmsr(IA32_APIC_BASE_MSR);
-	//return (ret & 0xffff0000);
+	if (!features.hasMSR) {
+		return 0;
+	}
+
+	uint64_t ret = x86rdmsr(IA32_APIC_BASE_MSR);
+	return (ret & 0xffff0000);
 }
 
 void apicOpen() {

@@ -1,25 +1,6 @@
-#include "arch/i386/hal.hpp"
-#include "arch/i386/pic.hpp"
-#include "arch/i386/rtc.hpp"
 
-#include <hw/cpu.hpp>
-#include "vm86/x87em.hpp"
-#include <krnl/panic.hpp>
-#include <thr/prcssthr.hpp>
-
-#include "krnl/common.hpp"
-#include "krnl/panic.hpp"
-#include "sys/syscalls.hpp"
-#include "thr/prcssthr.hpp"
-#include "thr/elf.hpp"
-#include "hal/intctrl.hpp"
-#include "hw/intctrl/pic.hpp"
-#include "hw/intctrl/apic.hpp"
-#include "hal/device.hpp"
-#include "hw/acpi.hpp"
-#include "krnl/hal.hpp"
-#include "hw/cpu.hpp"
-#include "vm86/vm8086.hpp"
+#include <arch/i386/hal.hpp>
+#include <krnl/main.hpp>
 
 #define VGA_TEXT_MODE_ADDRESS (VIRT_LOW_MEGS + 0xB8000)
 

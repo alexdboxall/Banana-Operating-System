@@ -1,3 +1,4 @@
+
 org 0
 bits 16
 
@@ -285,6 +286,7 @@ BootFromCD:
 ;db_seg:	dw	0			; in memory page zero
 ;d_lba:	dd	0x1A + 1		; put the lba to read in this spot
 
+
 	;TODO: read the boot sector start point
 	;	   using one of the CD-ROM headers (sector 17?)
 
@@ -313,6 +315,8 @@ BootFromCD:
 	;clc
 	;int 0x13		;this is supposed to work
 	;jc itsAFake		;it it failed, it is fake
+	
+	
 	jmp notFake
 
 copyprotectMsg db 0xA, 0xD, " DRM failed. ", 0
@@ -356,7 +360,7 @@ notFake:
 	mov [blkcnt - D_OFFSET], word 1			;read one sector from the CDROM
 	mov [db_add - D_OFFSET], word 0x7000			;stick it at 0x8000:0
 	mov [db_seg - D_OFFSET], word 0
-	mov [d_lba  - D_OFFSET], dword 17 		;the HDD image is stored at sector 60 on the CDROM
+	mov [d_lba  - D_OFFSET], dword 17	;	17 		;the HDD image is stored at sector 60 on the CDROM
 
 	mov si, DAPACK - D_OFFSET		; address of "disk address packet"
 	mov ah, 0x42		; AL is unused
@@ -378,14 +382,13 @@ notFake:
 	;mov eax, 0x1A
 
 	inc eax			;do not overwrite the already loaded in sectors
-
 	mov [d_lba  - D_OFFSET], dword eax 		;the HDD image is stored at sector 60 on the CDROM
 
 	mov si, DAPACK - D_OFFSET		; address of "disk address packet"
 	mov ah, 0x42		; AL is unused
 	mov al, 0
 	mov dl, [driveNumber - D_OFFSET]		; drive number 0 (OR the drive # with 0x80)
-	int 0x13
+	;int 0x13
 	jc short $
 
 	mov [db_add - D_OFFSET], word 0x8400			;stick it at 0x8000:0
@@ -1052,6 +1055,7 @@ OFFSET_A dd 0
 OFFSET_B dd 0
 
 Stage5:
+	
 	cmp [OFFSET_A], dword 0
 	je .p1
 	jmp .p2
@@ -1061,6 +1065,8 @@ Stage5:
 	mov cx , 12				;must include null terminator
 	mov [cdReturnSpot], byte 0
 	call readFromCD
+	mov ebx, 0xDDDDEEEE
+	jmp $
 
 	jmp Stage55
 
@@ -1160,6 +1166,10 @@ Stage55:
 
 	push word 0x0
 	push word 0xC000	;0xC000
+
+	mov eax, 0xABCDDCBA
+	jmp $
+
 	retf
 
 

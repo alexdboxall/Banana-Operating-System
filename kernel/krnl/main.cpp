@@ -1,12 +1,13 @@
-﻿#include "krnl/main.hpp"
-#include "krnl/physmgr.hpp"
-#include "krnl/virtmgr.hpp"
-#include "krnl/kheap.hpp"
-#include "dbg/kconsole.hpp"
-#include "krnl/computer.hpp"
-#include "krnl/hal.hpp"
-#include "krnl/bootmsg.hpp"
-#include "krnl/atexit.hpp"
+﻿#include <krnl/main.hpp>
+#include <krnl/physmgr.hpp>
+#include <krnl/virtmgr.hpp>
+#include <krnl/kheap.hpp>
+#include <dbg/kconsole.hpp>
+#include <krnl/computer.hpp>
+#include <krnl/hal.hpp>
+#include <krnl/bootmsg.hpp>
+#include <krnl/atexit.hpp>
+#include <krnl/bootflags.hpp>
 
 #pragma GCC optimize ("O0")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -31,11 +32,8 @@ Minimum System Requirements:
 	If the computer was made in the 80s, it'll be more intersting
 */
 
-extern "C" {
-#include "libk/string.h"
-}
 
-uint32_t keBootSettings = 0;
+
 extern "C" void _init();
 extern VAS* keFirstVAS;
 
@@ -49,39 +47,42 @@ extern VAS* keFirstVAS;
 
 extern "C" void KeEntryPoint()
 {
-	keBootSettings = *((uint32_t*) 0x500);
+	// Store the boot configuration settings passed to us by the bootloader
+	KeInitialiseBootConfigurationFlags();
 
+	// Sets up the first serial port for kernel debugging at 37400 baud
 #ifdef KERNEL_DEBUG
-	outb(0x3f8 + 1, 0x00);    // Disable all interrupts
-	outb(0x3f8 + 3, 0x80);    // Enable DLAB (set baud rate divisor)
-	outb(0x3f8 + 0, 0x03);    // Set divisor to 3 (lo byte) 38400 baud
-	outb(0x3f8 + 1, 0x00);    //                  (hi byte)
-	outb(0x3f8 + 3, 0x03);    // 8 bits, no parity, one stop bit
-	outb(0x3f8 + 2, 0xC7);    // Enable FIFO, clear them, with 14-byte threshold
-	outb(0x3f8 + 4, 0x0B);    // IRQs enabled, RTS/DSR set
+	outb(0x3F8 + 1, 0x00);
+	outb(0x3F8 + 3, 0x80);
+	outb(0x3F8 + 0, 0x03); 
+	outb(0x3F8 + 1, 0x00);
+	outb(0x3F8 + 3, 0x03);
+	outb(0x3F8 + 2, 0xC7);
+	outb(0x3F8 + 4, 0x0B);
 #endif
 
 	kprintf("\n\nKERNEL HAS STARTED.\n");
-
 	KeDisplaySplashScreen();
 
-	Phys::physicalMemorySetup(((*((uint32_t*) 0x524)) + 4095) & ~0xFFF);		//cryptic one-liner
+	// The bootloader passes us the highest address used by the kernel image and other boot time things
+	// in address 0x524. This is then rounded up to the nearest page, and used as the lowest address we
+	// can start allocating from.
+	Phys::physicalMemorySetup(((*((uint32_t*) 0x524)) + 4095) & ~0xFFF);
 	Virt::virtualMemorySetup();
 
 	KeInitialiseAtexit();
-	kprintf("Atexit done...\n");
 
 	{
+		// Due to the nested scope, the VAS initialisation will only occur when
+		// we get to here. Reaching this declaration actually sets up the VAS.
 		VAS v;
 		keFirstVAS = &v;
-		kprintf("keFirstVAS done...\n");
 
+		// Call global constructors
 		_init();
-		kprintf("_init done...\n");
 
+		// Start everything else up. Should never return from computer->open
 		computer = new Computer();
-		kprintf("computer done... 0x%X\n", computer);
-
 		computer->open(0, 0, &v);
 	}
 }
