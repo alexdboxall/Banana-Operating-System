@@ -5,7 +5,7 @@ It comes with an installer which can be run from floppies or a CD-ROM. A GUI is 
 Released under the Creative Commons Attribution-NonCommercial 4.0 International license.
 See LICENSE and COPYRIGHT for the license and copyright notices. No warranties.
 
-![Banana GUI (VESA)](https://github.com/A22347/Banana-Operating-System/blob/main/doc/images/bna_vesa6.PNG "Banana GUI (VESA)")
+![Banana GUI (VESA)](https://github.com/A22347/Banana-Operating-System/blob/main/doc/images/bna_vesa6.png "Banana GUI (VESA)")
 ![Banana command line](https://github.com/A22347/Banana-Operating-System/blob/main/doc/images/bna_prompt.PNG "Banana command line")
 
 System Requirements:
