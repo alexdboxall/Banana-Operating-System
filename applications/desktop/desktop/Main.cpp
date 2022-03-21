@@ -33,7 +33,8 @@ struct DesktopFile
     uint16_t iconY;
     uint16_t textX;
     uint16_t textY;
-    uint16_t boundW : 15;
+    uint16_t boundW : 14;
+    uint16_t directory : 1;
     uint16_t valid : 1;
     uint16_t boundH : 14;
     uint16_t app : 1;
@@ -358,6 +359,7 @@ int registerFile(char* filepath, char* displayName, NLoadedBitmap* bmp, int tx, 
     files[nextDesktopFile].selected = false;
     files[nextDesktopFile].assocTypeID = assocType;
     files[nextDesktopFile].app = false;
+    files[nextDesktopFile].directory = bmp == dirico;
 
     strcpy(files[nextDesktopFile].displayName, displayName);
     files[nextDesktopFile].filepath = (char*) malloc(strlen(filepath) + 1);
@@ -612,20 +614,25 @@ bool firstAntDraw;
 
 void openProgram(int cs)
 {
-    if (files[cs].assocTypeID != -1 || files[cs].app) {
+    if (files[cs].directory || files[cs].assocTypeID != -1 || files[cs].app) {
         char progPath[256];
-        char* path;
-        if (files[cs].app) {
-            sprintf(progPath, "%s/%s.app/program.exe", desktopBasePath, files[cs].filepath);
-            path = progPath;
+        char path[256];
+        if (files[cs].directory && !files[cs].app) {
+            strcpy(path, "C:/Banana/System/cabinet.app/program.exe");
+            sprintf(progPath, "%s/%s", desktopBasePath, files[cs].filepath);
+
+        } else if (files[cs].app) {
+            sprintf(path, "%s/%s.app/program.exe", desktopBasePath, files[cs].filepath);
+            sprintf(progPath, "");
+
         } else {
-            path = fileAssoc[files[cs].assocTypeID].openProgram;
+            strcpy(path, fileAssoc[files[cs].assocTypeID].openProgram);
             sprintf(progPath, "%s/%s", desktopBasePath, files[cs].filepath);
         }
 
         char* argvv[3];
         argvv[0] = path;
-        argvv[1] = progPath;
+        argvv[1] = files[cs].app ? nullptr : progPath;
         argvv[2] = 0;
         int pid = SystemCall((size_t) SystemCallNumber::Spawn, 0, (size_t) argvv, (size_t) argvv[0]);
 

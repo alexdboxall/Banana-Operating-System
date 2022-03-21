@@ -1,41 +1,26 @@
-﻿#include <krnl/main.hpp>
+﻿
+//
+// Kernel entry point and the initial kernel task
+//
+
+#include <krnl/main.hpp>
 #include <krnl/physmgr.hpp>
 #include <krnl/virtmgr.hpp>
 #include <krnl/kheap.hpp>
-#include <dbg/kconsole.hpp>
 #include <krnl/computer.hpp>
 #include <krnl/hal.hpp>
 #include <krnl/bootmsg.hpp>
 #include <krnl/atexit.hpp>
 #include <krnl/bootflags.hpp>
-
-#pragma GCC optimize ("O0")
-#pragma GCC optimize ("-fno-strict-aliasing")
-#pragma GCC optimize ("-fno-align-labels")
-#pragma GCC optimize ("-fno-align-jumps")
-#pragma GCC optimize ("-fno-align-loops")
-#pragma GCC optimize ("-fno-align-functions")
-
-/*
-
-Minimum System Requirements:
-
-	CPU:	Intel 486 or better (Pentium recommended)
-	RAM:	8 MB (16 MB to run the GUI)
-	HDD:	64 MB
-
-	VGA compatible video card;
-	VGA compatible, or MDA monitor;
-	USB or PS/2 keyboard
-
-	If the computer was made in the 90s, you'll be fine
-	If the computer was made in the 80s, it'll be more intersting
-*/
-
-
-
-extern "C" void _init();
-extern VAS* keFirstVAS;
+#include <krnl/random.hpp>
+#include <krnl/powctrl.hpp>
+#include <krnl/idle.hpp>
+#include <fs/symlink.hpp>
+#include <fs/vfs.hpp>
+#include <dbg/kconsole.hpp>
+#include <thr/prcssthr.hpp>
+#include <thr/elf.hpp>
+#include <vm86/vm8086.hpp>
 
 #pragma GCC optimize ("O2")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -45,9 +30,61 @@ extern VAS* keFirstVAS;
 #pragma GCC optimize ("-fno-align-functions")
 
 
+/// <summary>
+/// The main kernel thread's entry point. Initialises the main kernel subsystems.
+/// 
+/// Only designed to be started once as the initial task, and cannot be started as a
+/// regular task or called as a function.
+/// </summary>
+void KeFirstTask()
+{
+	HalEnableInterrupts();
+	HalEnableNMI();
+
+	KeSetBootMessage("Starting core threads...");
+
+	// Start the idle task
+	Process* idleProcess = new Process(true, "Idle Process", kernelProcess);
+	idleProcess->createThread(idleFunction, nullptr, 255);
+
+	// Start the task termination cleanup thread
+	cleanerThread = kernelProcess->createThread(cleanerTaskFunction, nullptr, 122);
+
+	// These do not require the filesystem to be working
+	KeSetBootMessage("Initialising system components...");
+	KeIsSchedulingOn = true;
+	KeInitRand();
+	Vm::initialise8086();
+	Fs::initVFS();
+
+	// Scan the device tree, which also sets up the filesystem
+	KeSetBootMessage("Loading device drivers...");
+	computer->root->open(0, 0, nullptr);
+
+	// Now we have a filesystem, we can set up more complicated subsystems
+	KeSetBootMessage("Initialising system components...");
+	KeInitialiseSymlinks();
+	KeLoadSystemEnv();
+	KeSetupPowerManager();
+
+	// Hand over control to the login task
+	KeSetBootMessage("Getting ready...");
+	Thr::executeDLL(Thr::loadDLL("C:/Banana/System/system.dll"), computer);
+
+	// This thread now does not do anything actively
+	while (1) {
+		blockTask(TaskState::Paused);
+	}
+}
+
+extern "C" void _init();			// global constructors (implemented in assembly)
+//extern VAS* keFirstVAS;
+
+/// <summary>
+/// The entry point for the entire C/C++ kernel. It is reponsible for initialising the entire kernel.
+/// </summary>
 extern "C" void KeEntryPoint()
 {
-	// Store the boot configuration settings passed to us by the bootloader
 	KeInitialiseBootConfigurationFlags();
 
 	// Sets up the first serial port for kernel debugging at 37400 baud
@@ -75,14 +112,26 @@ extern "C" void KeEntryPoint()
 	{
 		// Due to the nested scope, the VAS initialisation will only occur when
 		// we get to here. Reaching this declaration actually sets up the VAS.
-		VAS v;
-		keFirstVAS = &v;
+		// This is required as the physical and virtual memory setup needs to be
+		// done first.
+		VAS vas;
+		keFirstVAS = &vas;
 
 		// Call global constructors
 		_init();
 
-		// Start everything else up. Should never return from computer->open
+		KeSetBootMessage("Configuring processors...");
 		computer = new Computer();
-		computer->open(0, 0, &v);
+		computer->open(0, 0, keFirstVAS);
+
+		KeSetBootMessage("Detecting numerical coprocessors...");
+		HalInitialiseCoprocessor();
+
+		// Start the main kernel task, as well as the scheduler and multitasking subsystem
+		// This function never returns.
+		KeSetBootMessage("Setting up multitasking...");
+		setupMultitasking(KeFirstTask);
 	}
+
+	// We should never get here.
 }

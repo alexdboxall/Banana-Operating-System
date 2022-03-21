@@ -85,8 +85,6 @@ UnixFile* KeGetFileFromDescriptor(int fdIn)
 	//even though newlib truncates to a SIGNED SHORT!
 	fdIn &= 0x0FFFFFFF;
 
-	kprintf("KeGetFileFromDescriptor: fd = %d\n", fdIn);
-
 	if (fdIn < RESERVED_FD_START) {
 		UnixFile* f = unixFileLinkedList.getFirstElement();
 		while (f) {

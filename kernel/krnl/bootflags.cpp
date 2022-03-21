@@ -26,16 +26,24 @@ Bit		Mask	Description
 14		16384	nothing???				noFPUSaveLoad ??
 15		32768	If true, enables remote setup (FORCED TO FALSE at the moment, sysinit/main.cpp, line 1324)
 16+				reserved
-
 */
 uint32_t keBootSettings = 0;
 
-
+/// <summary>
+/// Loads the kernel boot settings into memory, allowing them to be read. 
+/// This must be invoked before any calls to KeGetBootConfigurationFlag
+/// </summary>
 bool KeGetBootConfigurationFlag(BootConfigurationFlag flag)
 {
 	return keBootSettings & ((int) flag);
 }
 
+/// <summary>
+/// Returns whether a given kernel configuration flag is set or not. All flags are constant and will never change.
+/// KeInitialiseBootConfigurationFlags must be invoked before this function is called.
+/// </summary>
+/// <param name="flag">The flag to check.</param>
+/// <returns>True if the flag is set, otherwise false.</returns>
 void KeInitialiseBootConfigurationFlags()
 {
 	// the bootloader puts the flags at the 4 byte at 0x500

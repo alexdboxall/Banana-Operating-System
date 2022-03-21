@@ -15,6 +15,7 @@
 #include "fs/vfs.hpp"
 #include "hw/cpu.hpp"
 #include "fs/symlink.hpp"
+#include <krnl/powctrl.hpp>
 
 #pragma GCC optimize ("O2")
 #pragma GCC optimize ("-fno-strict-aliasing")

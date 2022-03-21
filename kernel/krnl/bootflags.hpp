@@ -29,19 +29,8 @@ enum class BootConfigurationFlag
 
 };
 
-/// <summary>
-/// Loads the kernel boot settings into memory, allowing them to be read. 
-/// This must be invoked before any calls to KeGetBootConfigurationFlag
-/// </summary>
+
 void KeInitialiseBootConfigurationFlags();
-
-/// <summary>
-/// Returns whether a given kernel configuration flag is set or not. All flags are constant and will never change.
-/// KeInitialiseBootConfigurationFlags must be invoked before this function is called.
-/// </summary>
-/// <param name="flag">The flag to check.</param>
-/// <returns>True if the flag is set, otherwise false.</returns>
-
 bool KeGetBootConfigurationFlag(BootConfigurationFlag flag);
 
 #endif

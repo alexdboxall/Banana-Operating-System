@@ -1,6 +1,9 @@
+
+// Unfortunate hacks to allow old drivers to use old symbol names that
+// don't actually exist anymore.
+
 #include <krnl/computer.hpp>
 #include <krnl/panic.hpp>
-
 extern "C" {
 #include <libk/string.h>
 }
@@ -10,14 +13,22 @@ extern "C" long __divdi3(long, long);
 extern "C" unsigned long __umoddi3(unsigned long, unsigned long);
 extern "C" long __moddi3(long, long);
 
-
+/// <summary>
+/// Given an kernel symbol name which doesn't exist anymore, returns a pointer
+/// to the object if it still exists under a new name.
+/// </summary>
+/// <param name="name">The old kernel symbol name as a string (mangled C++ names)</param>
+/// <returns>A pointer to the object if it still exists, otherwise zero.</returns>
 size_t KeResolveCompatibilitySymbol(char* name)
 {
 	if (!strcmp(name, "computer")) {
-		return (size_t) (&Krnl::computer);
+		return (size_t) (&computer);
 
 	} else if (!strcmp(name, "__udivdi3")) {
 		return (size_t) __udivdi3;
+
+	} else if (!strcmp(name, "_ZN4Krnl8computerE")) {
+		return (size_t) (&computer);
 
 	} else if (!strcmp(name, "__divdi3")) {
 		return (size_t) __divdi3;

@@ -44,7 +44,7 @@
 #include "main.hpp"
 
 #include "thr/prcssthr.hpp"
-#include "core/physmgr.hpp"
+#include "krnl/physmgr.hpp"
 #include "krnl/hal.hpp"
 #include "fs/vfs.hpp"
 #pragma GCC optimize ("Os")
@@ -54,7 +54,8 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-int16_t buf[4096];
+int8_t buf[4096 * 2];
+int16_t buf2[4096];
 
 void sb16Demo(void* __)
 {
@@ -62,15 +63,21 @@ void sb16Demo(void* __)
 
 	SoundCard* card = (SoundCard*) __;
 
-	SoundPort* port = new SoundPort(22050, 16, 2, 65536);
+	SoundPort* port = new SoundPort(8000, 16, 1, 65536);
+	SoundPort* port2 = new SoundPort(8000, 16, 1, 65536);
+
 	bool started = false;
 
-	File* f = new File("C:/Banana/Audio/win98snd.wav", kernelProcess);
+	File* f = new File("C:/flopside.wav", kernelProcess);
 	f->open(FileOpenMode::Read);
+
+	File* f2 = new File("C:/night11025.wav", kernelProcess);
+	f2->open(FileOpenMode::Read);
 
 	while (1) {
 		int bytesRead = 0;
 		FileStatus st = f->read(4096 * 2, buf, &bytesRead);
+		st = f2->read(4096 * 2, buf2, &bytesRead);
 
 		if (bytesRead == 0 || st != FileStatus::Success) {
 			kprintf("SONG SHOULD BE DONE.\n");
@@ -83,12 +90,15 @@ void sb16Demo(void* __)
 			unlockScheduler();
 		}
 
-		port->buffer16(buf, bytesRead / 2);
+		port->buffer8(buf, bytesRead);
+		port2->buffer16(buf2, bytesRead / 2);
 
 		if (!started) {
-			card->configureRates(22050, 16, 2);
+			card->configureRates(8000, 16, 1);
 			card->addChannel(port);
+			//card->addChannel(port2);
 			port->unpause();
+			port2->unpause();
 			card->beginPlayback();
 			started = true;
 		}

@@ -9,6 +9,7 @@ void beginx(void* a)
 #include "main.hpp"
 
 #include "krnl/main.hpp"
+#include "krnl/powctrl.hpp"
 #include "krnl/intlformat.hpp"
 #include "krnl/computer.hpp"
 #include "thr/elf.hpp"

@@ -35,9 +35,15 @@ extern bool powCtrlOnBattery;
 void KeChangePowerSettings(PowerSettings settings);
 void KeSetupPowerManager();
 void KeUserIOReceived();
-void KePowCtrlSetPowerState(bool battery);
 
 void KeHandlePowerButton();
 void KeHandleSleepButton();
+
+void KeRegisterShutdownHandler(void (*shutdownFunc)());
+void KeRegisterRestartHandler(void (*restartFunc)());
+void KeRegisterSleepHandler(void (*sleepFunc)());
+void KeShutdown();
+void KeSleep();
+void KeRestart();
 
 #endif

@@ -14,6 +14,7 @@
 #include <krnl/virtmgr.hpp>
 #include <krnl/hal.hpp>
 #include <krnl/bootflags.hpp>
+#include <krnl/powctrl.hpp>
 
 #include <sys/syscalls.hpp>
 #include <thr/elf.hpp>
@@ -23,7 +24,6 @@
 #include <hw/acpi.hpp>
 #include <hw/cpu.hpp>
 #include <vm86/vm8086.hpp>
-
 
 x86Features features;
 
@@ -75,20 +75,20 @@ extern "C" void x87Save(size_t);
 extern "C" void x87Load(size_t);
 extern "C" void x87Init();
 
-bool nmi = false;
+bool keNMIEnabled = false;
 
 size_t HalPageGlobalFlag = 0;
 size_t HalPageWriteCombiningFlag = 0;
 
 uint8_t x86ReadCMOS(uint8_t reg)
 {
-	outb(PORT_CMOS_BASE + 0, reg | (nmi ? 0 : 0x80));
+	outb(PORT_CMOS_BASE + 0, reg | (keNMIEnabled ? 0 : 0x80));
 	return inb(PORT_CMOS_BASE + 1);
 }
 
 void x86WriteCMOS(uint8_t reg, uint8_t val)
 {
-	outb(PORT_CMOS_BASE + 0, reg | (nmi ? 0 : 0x80));
+	outb(PORT_CMOS_BASE + 0, reg | (keNMIEnabled ? 0 : 0x80));
 	outb(PORT_CMOS_BASE + 1, val);
 }
 
@@ -509,19 +509,19 @@ void HalDetectFeatures()
 
 void HalEnableNMI()
 {
-	nmi = true;
+	keNMIEnabled = true;
 	x86ReadCMOS(0x10);
 }
 
 void HalDisableNMI()
 {
-	nmi = false;
+	keNMIEnabled = false;
 	x86ReadCMOS(0x10);
 }
 
 bool HalGetNMIState()
 {
-	return nmi;
+	return keNMIEnabled;
 }
 
 #define ISR_DIV_BY_ZERO 0x00
@@ -720,7 +720,7 @@ void HalSystemIdle()
 {
 	if (features.hasTPAUSE) {
 		uint64_t msr = x86rdmsr(0xE1);
-		x86wrmsr(0xE1, msr & 2);	//only keep bit 1 as it is reserved
+		x86wrmsr(0xE1, msr & 2);			//only keep bit 1 as it is reserved
 		doTPAUSE();
 
 	} else {
@@ -853,34 +853,6 @@ void HalPanic(const char* message)
 	}
 
 	while (1);
-
-	char* drvName = Thr::getDriverNameFromAddress((size_t) __builtin_return_address(0));
-	if (drvName) {
-		activeTerminal->puts("      The currently executing driver was:\n\n");
-		activeTerminal->puts("          ");
-		activeTerminal->puts(drvName);
-	} else {
-		activeTerminal->puts("      The currently executing task was:\n\n");
-		activeTerminal->puts("          ");
-		activeTerminal->puts(currentTaskTCB->processRelatedTo->taskname);
-	}
-
-	activeTerminal->puts("\n\n\n");
-	activeTerminal->puts("      Please restart your computer or press RETURN. If this\n");
-	activeTerminal->puts("      screen appears again, hold the 7 key on startup and disable\n");
-	activeTerminal->puts("      APIC and ACPI.\n\n\n");
-
-	//endlessly loop
-	while (1) {
-		char c = inb(0x60);
-		if (c == 0x1C || c == 0x5A) {
-			uint8_t good = 0x02;
-			while (good & 0x02) good = inb(0x64);
-			outb(0x64, 0xFE);
-
-			asm("cli; hlt");
-		}
-	}
 }
 
 uint64_t HalQueryPerformanceCounter()
@@ -893,10 +865,13 @@ uint64_t HalQueryPerformanceCounter()
 	return ret;
 }
 
-bool apic = false;
 void HalInitialise()
 {
 	HalDetectFeatures();
+
+	KeRegisterRestartHandler(HalRestart);
+	KeRegisterShutdownHandler(HalShutdown);
+	KeRegisterSleepHandler(HalSleep);
 
 	scanMADT();
 
@@ -905,33 +880,31 @@ void HalInitialise()
 		features.hasAPIC = false;
 	}
 
-	apic = features.hasAPIC;
-
 	picOpen();
 
-	if (apic) {
+	if (features.hasAPIC) {
 		picDisable();
 		apicOpen();
 	}
 
-	HalInstallISRHandler(ISR_DIV_BY_ZERO, (void (*)(regs*, void*))KeOtherFault);
-	HalInstallISRHandler(ISR_DEBUG, (void (*)(regs*, void*))KeOtherFault);
-	HalInstallISRHandler(ISR_NMI, (void (*)(regs*, void*))KeNonMaskableInterrupt);
+	// Fill in the specific handlers
+	HalInstallISRHandler(ISR_NMI,				(void (*)(regs*, void*))KeNonMaskableInterrupt);
+	HalInstallISRHandler(ISR_INVALID_OPCODE,	(void (*)(regs*, void*))KeOpcodeFault);
+	HalInstallISRHandler(ISR_DOUBLE_FAULT,		(void (*)(regs*, void*))KeDoubleFault);
+	HalInstallISRHandler(ISR_GENERAL_PROTECTION,(void (*)(regs*, void*))KeGeneralProtectionFault);
+	HalInstallISRHandler(ISR_PAGE_FAULT,		(void (*)(regs*, void*))KePageFault);
 
-	HalInstallISRHandler(ISR_BREAKPOINT, (void (*)(regs*, void*))KeOtherFault);
-	HalInstallISRHandler(ISR_OVERFLOW, (void (*)(regs*, void*))KeOtherFault);
-	HalInstallISRHandler(ISR_BOUNDS, (void (*)(regs*, void*))KeOtherFault);
-
-	HalInstallISRHandler(ISR_INVALID_OPCODE, (void (*)(regs*, void*))KeOpcodeFault);
-	HalInstallISRHandler(ISR_DOUBLE_FAULT, (void (*)(regs*, void*))KeDoubleFault);
-
+	// Fill in all the rest
+	HalInstallISRHandler(ISR_DIV_BY_ZERO,		(void (*)(regs*, void*))KeOtherFault);
+	HalInstallISRHandler(ISR_DEBUG,				(void (*)(regs*, void*))KeOtherFault);
+	HalInstallISRHandler(ISR_BREAKPOINT,		(void (*)(regs*, void*))KeOtherFault);
+	HalInstallISRHandler(ISR_OVERFLOW,			(void (*)(regs*, void*))KeOtherFault);
+	HalInstallISRHandler(ISR_BOUNDS,			(void (*)(regs*, void*))KeOtherFault);
+	HalInstallISRHandler(ISR_DIV_BY_ZERO,		(void (*)(regs*, void*))KeOtherFault);
+	HalInstallISRHandler(ISR_DEBUG,				(void (*)(regs*, void*))KeOtherFault);
 	for (int i = ISR_COPROCESSOR_SEGMENT_OVERRUN; i < ISR_STACK_SEGMENT; ++i) {
 		HalInstallISRHandler(i, (void (*)(regs*, void*))KeOtherFault);
 	}
-
-	HalInstallISRHandler(ISR_GENERAL_PROTECTION, (void (*)(regs*, void*))KeGeneralProtectionFault);
-	HalInstallISRHandler(ISR_PAGE_FAULT, (void (*)(regs*, void*))KePageFault);
-
 	for (int i = ISR_RESERVED; i < ISR_SECURITY_EXCEPTION; ++i) {
 		HalInstallISRHandler(i, (void (*)(regs*, void*))KeOtherFault);
 	}
@@ -957,10 +930,12 @@ void HalInitialise()
 void HalMakeBeep(int hertz)
 {
 	if (hertz == 0) {
+		// Stop the speaker
 		uint8_t tmp = inb(0x61) & 0xFC;
 		outb(0x61, tmp);
 
 	} else {
+		// Start the speaker
 		uint32_t div = 1193180 / hertz;
 
 		outb(0x43, 0xB6);
@@ -986,7 +961,7 @@ uint32_t HalGetRand()
 
 void HalEndOfInterrupt(int irqNum)
 {
-	if (apic) {
+	if (features.hasAPIC) {
 		uint64_t ret = x86rdmsr(IA32_APIC_BASE_MSR);
 		uint32_t* ptr = (uint32_t*) (size_t) ((ret & 0xfffff000) + 0xb0);
 		*ptr = 1;
@@ -998,17 +973,19 @@ void HalEndOfInterrupt(int irqNum)
 
 void HalRestart()
 {
-
+	uint8_t good = 0x02;
+	while (good & 0x02) good = inb(0x64);
+	outb(0x64, 0xFE);
 }
 
 void HalShutdown()
 {
-
+	// Not supported by default, ACPICA may fill it in if it is supported
 }
 
 void HalSleep()
 {
-
+	// Not supported by default, ACPICA may fill it in if it is supported
 }
 
 

@@ -21,21 +21,8 @@ private:
 	Computer();
 	int open(int a, int b, void* c);
 
-protected:
-	bool nmi;
-	void detectFeatures();
-
 public:
 	int close(int a, int b, void* c);
-
-	bool nmiEnabled();
-	void enableNMI(bool enable = true);
-	void disableNMI();
-
-	uint8_t readCMOS(uint8_t reg);
-	void writeCMOS(uint8_t reg, uint8_t val);
-
-	void handleNMI();
 
 	Clock* clock;
 	CPU* cpu[1];
@@ -44,19 +31,9 @@ public:
 	ACPI* root;
 };
 
-namespace Krnl
-{
-	extern Computer* computer;
-}
-
-using Krnl::computer;
+extern Computer* computer;
 
 extern bool KeIsSchedulingOn;
 extern bool KeIsPreemptionOn;
-
-void KePrepareShutdown();
-void KeShutdown();
-void KeSleep();
-void KeRestart();
 
 #endif

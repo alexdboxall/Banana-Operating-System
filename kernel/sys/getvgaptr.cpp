@@ -46,7 +46,6 @@ uint64_t SysGetVGAPtr(regs* r)
 	*((int*) (r->ebx + 4000)) = terminal->cursorX;
 	*((int*) (r->ebx + 4004)) = terminal->cursorY;
 	*((int*) (r->ebx + 4008)) = prcss->threads[0].guiTask ? 1 : 0;
-	kprintf("GUI? %d\n", *((int*) (r->ebx + 4008)));
 	strcpy((char*) (r->ebx + 4012), "<NO NAME>");
 	return 0;
 }

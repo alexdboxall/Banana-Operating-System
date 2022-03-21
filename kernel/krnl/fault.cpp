@@ -53,9 +53,6 @@ extern "C" uint64_t int_handler(struct regs* r)
 #pragma GCC diagnostic pop
 				return retV;
 			} else {
-				extern int KiPreemptionDisableCounter;
-				extern bool KiRestorePreemptionValue;
-				extern bool KeIsPreemptionOn;
 				handleList[i](r, contextList[i]);
 			}
 		}
