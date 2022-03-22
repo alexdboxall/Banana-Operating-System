@@ -31,6 +31,6 @@ uint64_t SysWsbe(regs* r)
 	int br;
 	char noGUI[] = "This program requires a GUI driver to run.\n";
 	currentTaskTCB->processRelatedTo->terminal->write(strlen(noGUI), (void*) noGUI, &br);
-	terminateTask(r->edx);
+	KeTerminateCurrentThread(r->edx);
 	return 0xDEADBEEF;
 }

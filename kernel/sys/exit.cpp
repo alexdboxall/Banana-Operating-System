@@ -17,6 +17,6 @@
 /// 
 uint64_t SysExit(regs* r)
 {
-	terminateTask(r->ebx);
+	KeTerminateCurrentThread(r->ebx);
 	return -1;
 }

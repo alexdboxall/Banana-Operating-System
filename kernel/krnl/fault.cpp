@@ -1,13 +1,12 @@
 #include <krnl/panic.hpp>
+#include <krnl/common.hpp>
+#include <krnl/panic.hpp>
+#include <krnl/hal.hpp>
+#include <sys/syscalls.hpp>
 #include <thr/prcssthr.hpp>
-#include "krnl/common.hpp"
-#include "krnl/panic.hpp"
-#include "sys/syscalls.hpp"
-#include "thr/prcssthr.hpp"
-#include "thr/elf.hpp"
-#include "hal/intctrl.hpp"
-#include "hal/device.hpp"
-#include "krnl/hal.hpp"
+#include <thr/elf.hpp>
+#include <hal/intctrl.hpp>
+#include <hal/device.hpp>
 
 void (*keInterruptHandlers[256][4])(regs* r, void* context);
 void* keInterruptContexts[256][4];
@@ -22,7 +21,6 @@ void KeSetupInterrupts()
 		}
 	}
 }
-
 
 extern "C" uint64_t int_handler(struct regs* r)
 {
@@ -61,6 +59,10 @@ extern "C" uint64_t int_handler(struct regs* r)
 	return 0;
 }
 
+#define RETURN_CODE_ON_OPCODE_FAULT					124
+#define RETURN_CODE_ON_OTHER_FAULT					125
+#define RETURN_CODE_ON_GENERAL_PROTECTION_FAULT		126
+#define RETURN_CODE_ON_PAGE_FAULT					127
 
 void KeDisplayProgramFault(const char* text)
 {
@@ -69,7 +71,6 @@ void KeDisplayProgramFault(const char* text)
 		currentTaskTCB->processRelatedTo->terminal->puts(text, VgaColour::White, VgaColour::Maroon);
 	}
 }
-
 
 void KeGeneralProtectionFault(void* r, void* context)
 {
@@ -82,7 +83,7 @@ void KeGeneralProtectionFault(void* r, void* context)
 	KeDisplayProgramFault("General protection fault");
 	HalDisplayDebugInfo(r);
 
-	Thr::terminateFromIRQ();
+	KeTerminateCurrentThread(RETURN_CODE_ON_GENERAL_PROTECTION_FAULT);
 }
 
 void KePageFault(void* r, void* context)
@@ -95,9 +96,8 @@ void KePageFault(void* r, void* context)
 	KeDisplayProgramFault("Page fault");
 	HalDisplayDebugInfo(r);
 
-	Thr::terminateFromIRQ();
+	KeTerminateCurrentThread(RETURN_CODE_ON_PAGE_FAULT);
 }
-
 
 void KeNonMaskableInterrupt(void* r, void* context)
 {
@@ -109,7 +109,7 @@ void KeOtherFault(void* r, void* context)
 	KeDisplayProgramFault("Unhandled exception - CHECK KERNEL LOGS");
 	HalDisplayDebugInfo(r);
 
-	Thr::terminateFromIRQ();
+	KeTerminateCurrentThread(RETURN_CODE_ON_OTHER_FAULT);
 }
 
 #pragma GCC diagnostic push
@@ -125,8 +125,9 @@ void KeOpcodeFault(void* r, void* context)
 	KeDisplayProgramFault("Opcode fault");
 	HalDisplayDebugInfo(r);
 
-	Thr::terminateFromIRQ();
+	KeTerminateCurrentThread(RETURN_CODE_ON_OPCODE_FAULT);
 }
+
 #pragma GCC diagnostic pop
 
 #pragma GCC diagnostic pop

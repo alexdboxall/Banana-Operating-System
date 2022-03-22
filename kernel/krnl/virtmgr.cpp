@@ -598,23 +598,15 @@ void VAS::unlockPages(size_t virtualAddr, int pages)
 
 bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 {
-	extern int KiPreemptionDisableCounter;
-
 	if (faultAddr >= 0xFFC00000U) {
 		KePanic("NESTED PAGE FAULT");
 	}
-	kprintf("\nloading back off due to fault at addr = 0x%x\n", faultAddr);
-	kprintf("A: KiPreemptionDisableCounter = %d\n", KiPreemptionDisableCounter);
-	extern int irqDisableCounter; kprintf("    --> tryLoadBackOffDisk A: %d\n", irqDisableCounter);
 
 	bool onPageBoundary = (faultAddr & 0xFFF) > 0xFE0;
 
 	faultAddr &= ~0xFFF;
 	size_t* entry = getPageTableEntry(faultAddr);
 	if (!faultAddr) {
-		kprintf("E: KiPreemptionDisableCounter = %d\n", KiPreemptionDisableCounter);
-		extern int irqDisableCounter; kprintf("    --> tryLoadBackOffDisk E: %d\n", irqDisableCounter);
-
 		return false;
 	}
 
@@ -623,14 +615,14 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 
 		kprintf("Copy on write handler called.\n");
 
-		size_t oldphys = (*entry) >> 12;
+		size_t oldphys = (*entry) & ~0xFFF;
 		size_t newphys = Phys::allocatePage();
 
 		*entry |= PAGE_PRESENT;
 		HalFlushTLB();
 
 		uint8_t buffer[4096];
-		memcpy(buffer, (const void*) (faultAddr & ~0xFFF), 4096);
+		memcpy(buffer, (const void*) (oldphys), 4096);			// faultAddr & ~0xFFF instead of oldphys???
 
 		*entry &= ~PAGE_COPY_ON_WRITE;
 		*entry |= PAGE_WRITABLE;
@@ -642,19 +634,12 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 
 		memcpy((void*) (faultAddr & ~0xFFF), buffer, 4096);
 
-		kprintf("D: KiPreemptionDisableCounter = %d\n", KiPreemptionDisableCounter);
-		extern int irqDisableCounter; kprintf("    --> tryLoadBackOffDisk D: %d\n", irqDisableCounter);
-
 		return true;
 	}
 
 	if (entry && ((*entry) & PAGE_ALLOCATED) && !((*entry) & PAGE_PRESENT)) {
 		size_t id = (*entry) >> 12;				//we need the ID
-
-		extern int irqDisableCounter; kprintf("    --> tryLoadBackOffDisk H: %d\n", irqDisableCounter);
-
 		size_t phys = Phys::allocatePage();		//get a new physical page
-		extern int irqDisableCounter; kprintf("    --> tryLoadBackOffDisk I: %d\n", irqDisableCounter);
 
 		*entry &= 0xFFF;						//clear address
 		*entry |= PAGE_PRESENT;					//it is now present
@@ -663,33 +648,18 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		*entry |= phys;
 
 		for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
-			extern int irqDisableCounter; kprintf("    --> tryLoadBackOffDisk J: %d\n", irqDisableCounter);
 			disks[Virt::swapfileDrive - 'A']->read(Virt::swapIDToSector(id) + i, 1, ((uint8_t*) faultAddr) + 512 * i);
-			extern int irqDisableCounter; kprintf("    --> tryLoadBackOffDisk K: %d\n", irqDisableCounter);
 		}
-
-		extern int irqDisableCounter; kprintf("    --> tryLoadBackOffDisk L: %d\n", irqDisableCounter);
 
 		--swapBalance;
 		kprintf("reloading: 0x%X, %d\n", faultAddr, swapBalance);
 
 		Virt::freeSwapfilePage(id);
-		extern int irqDisableCounter; kprintf("    --> tryLoadBackOffDisk M: %d\n", irqDisableCounter);
-
 		//unlockScheduler();
-
 		HalFlushTLB();
-
-		kprintf("done.\n");
-
-		kprintf("B: KiPreemptionDisableCounter = %d\n", KiPreemptionDisableCounter);
-		extern int irqDisableCounter; kprintf("    --> tryLoadBackOffDisk B: %d\n", irqDisableCounter);
 
 		return true;
 	}
-
-	kprintf("C: KiPreemptionDisableCounter = %d\n", KiPreemptionDisableCounter);
-	extern int irqDisableCounter; kprintf("    --> tryLoadBackOffDisk C: %d\n", irqDisableCounter);
 
 	return false;
 }

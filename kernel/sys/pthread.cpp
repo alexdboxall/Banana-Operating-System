@@ -65,6 +65,6 @@ uint64_t SysPthreadJoin(regs* r)
 
 uint64_t SysPthreadExit(regs* r)
 {
-	terminateTask(r->ebx);
+	KeTerminateCurrentThread(r->ebx);
 	return -1;
 }

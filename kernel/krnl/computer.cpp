@@ -25,11 +25,10 @@
 #pragma GCC optimize ("-fno-align-functions")
 
 
-bool KeIsSchedulingOn = false;
-bool KeIsPreemptionOn = false;
+bool keIsSchedulingOn = false;
+bool keIsPreemptionOn = false;
 
 Computer* computer;
-
 
 Computer::Computer() : Device("Computer")
 {

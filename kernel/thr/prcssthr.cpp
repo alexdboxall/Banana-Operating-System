@@ -19,10 +19,7 @@
 
 #define STACK_LEEWAY 32
 
-namespace Thr
-{
-	int nextPID = 1;
-};
+int keNextPID = 1;
 
 Process* kernelProcess = nullptr;
 LinkedList<volatile ThreadControlBlock> taskList;
@@ -181,7 +178,7 @@ Process::Process(const char* _filepath, Process* _parent, char** _argv)
 {
 	env = KeNewProcessEnv(this);
 	threadUsage = 0;
-	pid = Thr::nextPID++;
+	pid = keNextPID++;
 	vas = new VAS(false);
 	argc = 0;
 	parent = _parent;
@@ -212,7 +209,7 @@ Process::Process(bool _kernel, const char* _name, Process* _parent, char** _argv
 {
 	env = KeNewProcessEnv(this);
 	threadUsage = 0;
-	pid = Thr::nextPID++;
+	pid = keNextPID++;
 	vas = new VAS(_kernel);
 	argc = 0;
 	parent = _parent;
@@ -420,7 +417,7 @@ void cleanerTaskFunction(void* context)
 	}
 }
 
-void terminateTask(int returnCode)
+void KeTerminateCurrentThread(int returnCode)
 {
 	extern int irqDisableCounter;
 	extern int postponeTaskSwitchesCounter;
@@ -549,56 +546,47 @@ extern "C" void taskReturned()
 
 ThreadControlBlock* cleanerThread = nullptr;
 
-
-namespace Thr
+Process* KeProcessFromPID(int pid)
 {
-	void terminateFromIRQ(int returnCode)
-	{
-		terminateTask(returnCode);
-	}
+	lockScheduler();
+	auto first = taskList.getFirstElement();
 
-	Process* processFromPID(int pid)
-	{
-		lockScheduler();
-		auto first = taskList.getFirstElement();
+	while (1) {
+		auto tcb = taskList.getFirstElement();
+		taskList.removeFirst();
+		taskList.addElement(tcb);
 
-		while (1) {
-			auto tcb = taskList.getFirstElement();
-			taskList.removeFirst();
-			taskList.addElement(tcb);
-
-			if (tcb->processRelatedTo->pid == pid) {
-				unlockScheduler();
-				return tcb->processRelatedTo;
-			}
-
-			if (taskList.getFirstElement() == first) {
-				break;
-			}
+		if (tcb->processRelatedTo->pid == pid) {
+			unlockScheduler();
+			return tcb->processRelatedTo;
 		}
 
-		unlockScheduler();
-
-		return nullptr;
+		if (taskList.getFirstElement() == first) {
+			break;
+		}
 	}
+
+	unlockScheduler();
+
+	return nullptr;
 }
 
-int KiPreemptionDisableCounter = 0;
-bool KiRestorePreemptionValue = false;
+int kePreemptionDisableCounter = 0;
+bool keRestorePreemptionValue = false;
 
 void KeDisablePreemption()
 {
-	if (KiPreemptionDisableCounter == 0) {
-		KiRestorePreemptionValue = KeIsPreemptionOn;
-		KeIsPreemptionOn = false;
+	if (kePreemptionDisableCounter == 0) {
+		keRestorePreemptionValue = keIsPreemptionOn;
+		keIsPreemptionOn = false;
 	}
-	KiPreemptionDisableCounter++;
+	kePreemptionDisableCounter++;
 }
 
 void KeRestorePreemption()
 {
-	KiPreemptionDisableCounter--;
-	if (KiPreemptionDisableCounter == 0) {
-		KeIsPreemptionOn = KiRestorePreemptionValue;
+	kePreemptionDisableCounter--;
+	if (kePreemptionDisableCounter == 0) {
+		keIsPreemptionOn = keRestorePreemptionValue;
 	}
 }

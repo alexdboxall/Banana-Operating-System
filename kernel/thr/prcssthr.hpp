@@ -217,12 +217,7 @@ extern ThreadControlBlock* cleanerThread;
 extern LinkedList<volatile ThreadControlBlock> sleepingTaskList;
 extern LinkedList<volatile ThreadControlBlock> taskList;
 
-extern void terminateTask(int returnCode = 0);
-
-namespace Thr
-{
-	void terminateFromIRQ(int returnCode = 0);
-	Process* processFromPID(int pid);
-}
+void KeTerminateCurrentThread(int returnCode = 0);
+Process* KeProcessFromPID(int pid);
 
 #endif

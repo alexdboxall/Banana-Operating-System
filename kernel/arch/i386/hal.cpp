@@ -788,7 +788,7 @@ void x87EmulHandler(regs* r, void* context)
 	}
 
 	kprintf("Device not available\n");
-	Thr::terminateFromIRQ();
+	KeTerminateCurrentThread(1);
 }
 
 void HalInitialiseCoprocessor()

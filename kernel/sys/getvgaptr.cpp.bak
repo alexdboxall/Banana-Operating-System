@@ -29,7 +29,7 @@ uint64_t SysGetVGAPtr(regs* r)
 {
 	Process* prcss;
 	if (r->ecx != -1) {
-		prcss = Thr::processFromPID(r->ecx);
+		prcss = KeProcessFromPID(r->ecx);
 		if (prcss == nullptr) {
 			return 1;
 		}

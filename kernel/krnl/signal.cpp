@@ -1,5 +1,6 @@
 #include <krnl/signal.hpp>
 #include <krnl/panic.hpp>
+#include <krnl/computer.hpp>
 #include <krnl/common.hpp>
 #include <thr/prcssthr.hpp>
 #include <sys/syscalls.hpp>
@@ -159,8 +160,7 @@ extern "C" void KiFinishSignalZ(uint32_t* ptr)
 
 extern "C" size_t KiCheckSignalZ()
 {
-	extern bool KeIsPreemptionOn;
-	if (!KeIsPreemptionOn) return 0;
+	if (!keIsPreemptionOn) return 0;
 
 	int num;
 	uint64_t sigaddr = KeCheckSignal(currentTaskTCB->processRelatedTo->signals, &num);
