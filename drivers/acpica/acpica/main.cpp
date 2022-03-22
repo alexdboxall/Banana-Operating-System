@@ -15,11 +15,10 @@
 #include "krnl/virtmgr.hpp"
 #include "krnl/powctrl.hpp"
 #include "thr/elf.hpp"
-#include "krnl/physmgr.hpp"
+#include "krnl/powctrl.hpp"
 #include "hw/acpi.hpp"
 #include "hw/cpu.hpp"
 #include "hw/bus/pci.hpp"
-#include "hw/bus/isa.hpp"
 
 extern "C" {
 	#include "libk/string.h"
@@ -381,7 +380,7 @@ void acpicaShutdown()
 	a = AcpiEnterSleepState(5);
 }
 
-void acpicaReset()
+void acpicaRestart()
 {
 	AcpiReset();
 }
@@ -393,9 +392,10 @@ void start(void* xxa)
 	ACPI* ths = (ACPI*) xxa;
 
 	kprintf("ACPICA init.\n");
-	systemSleepFunction = acpicaSleep;
-	systemResetFunction = acpicaReset;
-	systemShutdownFunction = acpicaShutdown;
+
+	KeRegisterRestartHandler(acpicaRestart);
+	KeRegisterShutdownHandler(acpicaShutdown);
+	KeRegisterSleepHandler(acpicaSleep);
 
 	ths->acpi2 = true;
 	ths->nextPCIIRQAssignment = 0;

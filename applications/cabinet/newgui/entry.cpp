@@ -14,8 +14,13 @@ int gridSizeH = 85;
 
 void drawIcon(int pos, struct dirent* entry)
 {
-    int gridX = pos % gridSizeW;
-    int gridY = pos / gridSizeW;
+    int windowWidth = rootWindow->getWidth();
+    int windowHeight = rootWindow->getHeight();
+
+    int iconsWide = windowWidth / gridSizeW;
+
+    int gridX = pos % iconsWide;
+    int gridY = pos / iconsWide;
 
     int pixelX = gridX * gridSizeW + 30;
     int pixelY = gridY * gridSizeH + 50;
@@ -49,12 +54,6 @@ void drawIcon(int pos, struct dirent* entry)
 
 int handlePaint(NTopLevel* self)
 {
-    int windowWidth = rootWindow->getWidth();
-    int windowHeight = rootWindow->getHeight();
-
-    int iconsWide = windowWidth / gridSizeW;
-    int iconsHigh = windowHeight / gridSizeH;
-
     struct dirent* dp;
     DIR* dirp = opendir(currentDirectory);
     int i = 0;
