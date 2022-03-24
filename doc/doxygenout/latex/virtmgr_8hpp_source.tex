@@ -1,0 +1,116 @@
+\hypertarget{virtmgr_8hpp_source}{}\doxysection{virtmgr.\+hpp}
+\label{virtmgr_8hpp_source}\index{C:/Users/Alex/Desktop/Banana/kernel/krnl/virtmgr.hpp@{C:/Users/Alex/Desktop/Banana/kernel/krnl/virtmgr.hpp}}
+\mbox{\hyperlink{virtmgr_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_VIRTMGR\_HPP}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_VIRTMGR\_HPP}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#define PAGE\_NOT\_PRESENT    0}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#define PAGE\_READONLY       0}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#define PAGE\_SUPERVISOR     0}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <\mbox{\hyperlink{arch_2hal_8hpp}{arch/hal.hpp}}>}}
+\DoxyCodeLine{9 }
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#define PAGE\_PRESENT        (1 << 0)}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#define PAGE\_WRITABLE       (1 << 1)}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#define PAGE\_USER           (1 << 2)}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#define PAGE\_CACHE\_DISABLE  (1 << 4)}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#define PAGE\_ACCESSED       (1 << 5)}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#define PAGE\_DIRTY          (1 << 6)}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#define PAGE\_PAT            HalPageWriteCombiningFlag}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#define PAGE\_GLOBAL         HalPageGlobalFlag}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#define PAGE\_COPY\_ON\_WRITE  (1 << 9)}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#define PAGE\_ALLOCATED      (1 << 10)}}
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#define PAGE\_SWAPPABLE      (1 << 11)}}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22 \textcolor{keyword}{class }\mbox{\hyperlink{class_v_a_s}{VAS}};}
+\DoxyCodeLine{23 \textcolor{keyword}{extern} \mbox{\hyperlink{class_v_a_s}{VAS}}* \mbox{\hyperlink{virtmgr_8hpp_a42691a7b3be17462bd2ec72e70c50887}{keFirstVAS}};}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespace_virt}{Virt}}}
+\DoxyCodeLine{26 \{}
+\DoxyCodeLine{27     \textcolor{keyword}{extern} \textcolor{keywordtype}{char} \mbox{\hyperlink{namespace_virt_ab27a17ccd8838954c9f2df9854dea716}{swapfileDrive}};}
+\DoxyCodeLine{28     \textcolor{keyword}{extern} \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{namespace_virt_a0d29adea0625d0a9807bce922e90dfb4}{swapfileSector}};         \textcolor{comment}{//base LBA}}
+\DoxyCodeLine{29     \textcolor{keyword}{extern} \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{namespace_virt_a4aa13e38af6e220ce631d490a5bb2f73}{swapfileLength}};         \textcolor{comment}{//length is sectors}}
+\DoxyCodeLine{30     \textcolor{keyword}{extern} \textcolor{keywordtype}{int} \mbox{\hyperlink{namespace_virt_ad5d4ba80af6048dc526a86968c046902}{swapfileSectorsPerPage}};}
+\DoxyCodeLine{31     \textcolor{keyword}{extern} \textcolor{keywordtype}{size\_t}* \mbox{\hyperlink{namespace_virt_a2ee5fc5c055dc526c3b22d4562d8cd95}{swapfileBitmap}};}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33     \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{namespace_virt_aaf924688810ec3bf42eb94afe8347b6b}{swapIDToSector}}(\textcolor{keywordtype}{size\_t} \textcolor{keywordtype}{id});}
+\DoxyCodeLine{34     \textcolor{keywordtype}{void} \mbox{\hyperlink{namespace_virt_a243cc3cbcacac311e1fac709346579aa}{freeSwapfilePage}}(\textcolor{keywordtype}{size\_t} \textcolor{keywordtype}{id});}
+\DoxyCodeLine{35     \textcolor{keywordtype}{void} \mbox{\hyperlink{namespace_virt_aec160dbe986870b94d37e1286a01ca82}{allocateSwapfilePage}}(\textcolor{keywordtype}{size\_t}* sectorOut, \textcolor{keywordtype}{size\_t}* idOut);}
+\DoxyCodeLine{36 }
+\DoxyCodeLine{37     \textcolor{keywordtype}{void} \mbox{\hyperlink{namespace_virt_a98f977765591627d283d7573fb288819}{freeKernelVirtualPages}}(\textcolor{keywordtype}{size\_t} address);}
+\DoxyCodeLine{38     \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{namespace_virt_aff1d9ec899fbac42dfb426957433c5a1}{allocateKernelVirtualPages}}(\textcolor{keywordtype}{int} pages);}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40     \textcolor{keywordtype}{void} \mbox{\hyperlink{namespace_virt_ad8241ef9d97d7bf0f5640079609c8e80}{virtualMemorySetup}}();}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42     \textcolor{keyword}{static} \textcolor{keyword}{inline} \mbox{\hyperlink{struct____attribute____}{\_\_attribute\_\_}}((always\_inline)) \mbox{\hyperlink{class_v_a_s}{VAS}}* getAKernelVAS()}
+\DoxyCodeLine{43     \{}
+\DoxyCodeLine{44         \textcolor{keywordflow}{return} \mbox{\hyperlink{virtmgr_8hpp_a42691a7b3be17462bd2ec72e70c50887}{keFirstVAS}};}
+\DoxyCodeLine{45     \}}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47     \textcolor{keywordtype}{void} \mbox{\hyperlink{namespace_virt_afb1c9e876b4d13eafdb56f9390388649}{setupPageSwapping}}(\textcolor{keywordtype}{int} megs);}
+\DoxyCodeLine{48 \}}
+\DoxyCodeLine{49 }
+\DoxyCodeLine{50 \textcolor{keyword}{extern} \textcolor{stringliteral}{"{}C"{}} \textcolor{keywordtype}{void} \mbox{\hyperlink{virtmgr_8hpp_ac8e77e0b2a8751b9e853e966e04e9e24}{KeEntryPoint}}();}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52 \textcolor{keyword}{class }\mbox{\hyperlink{class_v_a_s}{VAS}} \{}
+\DoxyCodeLine{53 \textcolor{keyword}{private}:}
+\DoxyCodeLine{54     \textcolor{keyword}{friend} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_v_a_s_ac8e77e0b2a8751b9e853e966e04e9e24}{KeEntryPoint}}();}
+\DoxyCodeLine{55     \mbox{\hyperlink{class_v_a_s}{VAS}}();}
+\DoxyCodeLine{56     \textcolor{keywordtype}{bool} specialkeFirstVAS;}
+\DoxyCodeLine{57 }
+\DoxyCodeLine{58 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{59     }
+\DoxyCodeLine{60 }
+\DoxyCodeLine{61 \textcolor{keyword}{public}:}
+\DoxyCodeLine{62     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_v_a_s_a394c97dee618e26aad918951f232fbbd}{supervisorVAS}};}
+\DoxyCodeLine{63 }
+\DoxyCodeLine{64     \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{class_v_a_s_a4834471942c835292325afd666fdcba5}{sbrk}} = 0;}
+\DoxyCodeLine{65     \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{class_v_a_s_a548c8af21cbac6c4489b1d2ff87a9ab6}{evictionScanner}} = 0;}
+\DoxyCodeLine{66     }
+\DoxyCodeLine{67     \textcolor{keywordtype}{size\_t}* \mbox{\hyperlink{class_v_a_s_a04b0a1243e5021315d5060f8b7093a33}{pageDirectoryBase}};}
+\DoxyCodeLine{68     \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{class_v_a_s_a50b0cad037cba4df1bbd78196651e897}{pageDirectoryBasePhysical}};}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{70     \mbox{\hyperlink{class_v_a_s}{VAS}}(\mbox{\hyperlink{class_v_a_s}{VAS}}* vas);}
+\DoxyCodeLine{71     \mbox{\hyperlink{class_v_a_s}{VAS}}(\textcolor{keywordtype}{bool} kernel);}
+\DoxyCodeLine{72     \mbox{\hyperlink{class_v_a_s_a3036886a6cc6f1be6e698afed8732224}{\string~VAS}}();}
+\DoxyCodeLine{73     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_v_a_s_a97eb64428906cb3d4d3c12f4dc318393}{setCPUSpecific}}(\textcolor{keywordtype}{size\_t} phys);}
+\DoxyCodeLine{74 }
+\DoxyCodeLine{75     \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{class_v_a_s_a59d8f2981f78e30102285f616184eaa5}{scanForEviction}}();}
+\DoxyCodeLine{76     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_v_a_s_ab493ee41d21c3290eecf531bf8103817}{tryLoadBackOffDisk}}(\textcolor{keywordtype}{size\_t} faultAddr);}
+\DoxyCodeLine{77 }
+\DoxyCodeLine{78     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_v_a_s_ab0d07af2a69cc8be0c1de0bbcca806af}{canLockPage}}(\textcolor{keywordtype}{size\_t} virtualAddr);}
+\DoxyCodeLine{79     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_v_a_s_ace7ee3c8dbc239135ea66b7205990995}{canLockPages}}(\textcolor{keywordtype}{size\_t} virtualAddr, \textcolor{keywordtype}{int} pages);}
+\DoxyCodeLine{80 }
+\DoxyCodeLine{81     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_v_a_s_a7e421f5a48779e261d2acb1fc0300215}{lockPage}}(\textcolor{keywordtype}{size\_t} virtualAddr);}
+\DoxyCodeLine{82     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_v_a_s_aa1f5a92bef3b3636d32abdeeafab343d}{unlockPage}}(\textcolor{keywordtype}{size\_t} virtualAddr);}
+\DoxyCodeLine{83 }
+\DoxyCodeLine{84     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_v_a_s_a25cd17ce5cdad58aacb48c14441593bc}{lockPages}}(\textcolor{keywordtype}{size\_t} virtualAddr, \textcolor{keywordtype}{int} pages);}
+\DoxyCodeLine{85     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_v_a_s_a79f310ddc0a606ebf178f20306268e95}{unlockPages}}(\textcolor{keywordtype}{size\_t} virtualAddr, \textcolor{keywordtype}{int} pages);}
+\DoxyCodeLine{86 }
+\DoxyCodeLine{87     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_v_a_s_a4b68953bcf32fd806e7228d018103128}{evict}}(\textcolor{keywordtype}{size\_t} virt);}
+\DoxyCodeLine{88 }
+\DoxyCodeLine{89     \textcolor{keywordtype}{size\_t}* \mbox{\hyperlink{class_v_a_s_a8f8f0018bbe547ed30f9126a1c098424}{getForeignPageTableEntry}}(\textcolor{keywordtype}{bool} secondSlot, \textcolor{keywordtype}{size\_t} virt);}
+\DoxyCodeLine{90     \textcolor{keywordtype}{size\_t}* \mbox{\hyperlink{class_v_a_s_abc3c3278f7b7d2628f076f965bb2e67c}{getPageTableEntry}}(\textcolor{keywordtype}{size\_t} virt);}
+\DoxyCodeLine{91     \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{class_v_a_s_ac94f702825c66b03a52143d5e54daed9}{virtualToPhysical}}(\textcolor{keywordtype}{size\_t} virt);}
+\DoxyCodeLine{92     \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{class_v_a_s_a98db86ad3b9bf59765eae5ea2e7effb7}{allocatePages}}(\textcolor{keywordtype}{int} count, \textcolor{keywordtype}{int} \mbox{\hyperlink{acpi_8hpp_a773b39d480759f67926cb18ae2219281}{flags}});}
+\DoxyCodeLine{93     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_v_a_s_ad3b46a1b4d6bc0ef6cb96be3f36d3845}{freeAllocatedPages}}(\textcolor{keywordtype}{size\_t} virt);}
+\DoxyCodeLine{94     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_v_a_s_a79caaeb3113d3e78271d4c5e3d0c9502}{mapPage}}(\textcolor{keywordtype}{size\_t} physicalAddr, \textcolor{keywordtype}{size\_t} virtualAddr, \textcolor{keywordtype}{int} \mbox{\hyperlink{acpi_8hpp_a773b39d480759f67926cb18ae2219281}{flags}});}
+\DoxyCodeLine{95     \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{class_v_a_s_ab7383addbb99bf08f68bd8a777ff7980}{mapRange}}(\textcolor{keywordtype}{size\_t} physicalAddr, \textcolor{keywordtype}{size\_t} virtualAddr, \textcolor{keywordtype}{int} pages, \textcolor{keywordtype}{int} \mbox{\hyperlink{acpi_8hpp_a773b39d480759f67926cb18ae2219281}{flags}});}
+\DoxyCodeLine{96 }
+\DoxyCodeLine{97     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_v_a_s_ae7acbf1de414bdc78a4ef5a6b2b87a14}{reflagRange}}(\textcolor{keywordtype}{size\_t} virtualAddr, \textcolor{keywordtype}{int} pages, \textcolor{keywordtype}{size\_t} andFlags, \textcolor{keywordtype}{size\_t} orFlags);}
+\DoxyCodeLine{98     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_v_a_s_a09014ef3cc12c9f39984887feb994053}{setToWriteCombining}}(\textcolor{keywordtype}{size\_t} virtualAddr, \textcolor{keywordtype}{int} pages);}
+\DoxyCodeLine{99 }
+\DoxyCodeLine{100     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_v_a_s_a582f649b4dab75cf26da700ddd1c3100}{mapOtherVASIn}}(\textcolor{keywordtype}{bool} secondSlot, \mbox{\hyperlink{class_v_a_s}{VAS}}* other);}
+\DoxyCodeLine{101     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_v_a_s_a2616b09090ebde910fb13e8f4f82ac8e}{mapForeignPage}}(\textcolor{keywordtype}{bool} secondSlot, \mbox{\hyperlink{class_v_a_s}{VAS}}* other, \textcolor{keywordtype}{size\_t} physicalAddr, \textcolor{keywordtype}{size\_t} virtualAddr, \textcolor{keywordtype}{int} \mbox{\hyperlink{acpi_8hpp_a773b39d480759f67926cb18ae2219281}{flags}});}
+\DoxyCodeLine{102 }
+\DoxyCodeLine{103     \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{class_v_a_s_a7b5add6e7a5b596ce9a3e8f7157e5162}{allocateSharedMemoryWithKernel}}(\textcolor{keywordtype}{size\_t} pageCount, \textcolor{keywordtype}{size\_t}* krnlVirt);}
+\DoxyCodeLine{104     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_v_a_s_adccec5f63a2aab6f73e68ef666201d94}{freeSharedMemoryWithKernel}}(\textcolor{keywordtype}{size\_t} vaddr, \textcolor{keywordtype}{size\_t} krnlVirt);}
+\DoxyCodeLine{105 \};}
+\DoxyCodeLine{106 }
+\DoxyCodeLine{107 \textcolor{keyword}{extern} \textcolor{stringliteral}{"{}C"{}} \textcolor{keywordtype}{void} \mbox{\hyperlink{virtmgr_8hpp_a13763a87ebee1e5eb31d764ef0e885d1}{mapVASFirstTime}}();}
+\DoxyCodeLine{108 }
+\DoxyCodeLine{109 }
+\DoxyCodeLine{110 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

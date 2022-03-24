@@ -1,0 +1,959 @@
+\hypertarget{actbl3_8h_source}{}\doxysection{actbl3.\+h}
+\label{actbl3_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/acpica/actbl3.h@{C:/Users/Alex/Desktop/Banana/kernel/acpica/actbl3.h}}
+\mbox{\hyperlink{actbl3_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{2 \textcolor{comment}{ *}}
+\DoxyCodeLine{3 \textcolor{comment}{ * Name: actbl3.h -\/ ACPI Table Definitions}}
+\DoxyCodeLine{4 \textcolor{comment}{ *}}
+\DoxyCodeLine{5 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{8 \textcolor{comment}{ *}}
+\DoxyCodeLine{9 \textcolor{comment}{ * 1. Copyright Notice}}
+\DoxyCodeLine{10 \textcolor{comment}{ *}}
+\DoxyCodeLine{11 \textcolor{comment}{ * Some or all of this work -\/ Copyright (c) 1999 -\/ 2019, Intel Corp.}}
+\DoxyCodeLine{12 \textcolor{comment}{ * All rights reserved.}}
+\DoxyCodeLine{13 \textcolor{comment}{ *}}
+\DoxyCodeLine{14 \textcolor{comment}{ * 2. License}}
+\DoxyCodeLine{15 \textcolor{comment}{ *}}
+\DoxyCodeLine{16 \textcolor{comment}{ * 2.1. This is your license from Intel Corp. under its intellectual property}}
+\DoxyCodeLine{17 \textcolor{comment}{ * rights. You may have additional license terms from the party that provided}}
+\DoxyCodeLine{18 \textcolor{comment}{ * you this software, covering your right to use that party's intellectual}}
+\DoxyCodeLine{19 \textcolor{comment}{ * property rights.}}
+\DoxyCodeLine{20 \textcolor{comment}{ *}}
+\DoxyCodeLine{21 \textcolor{comment}{ * 2.2. Intel grants, free of charge, to any person ("{}Licensee"{}) obtaining a}}
+\DoxyCodeLine{22 \textcolor{comment}{ * copy of the source code appearing in this file ("{}Covered Code"{}) an}}
+\DoxyCodeLine{23 \textcolor{comment}{ * irrevocable, perpetual, worldwide license under Intel's copyrights in the}}
+\DoxyCodeLine{24 \textcolor{comment}{ * base code distributed originally by Intel ("{}Original Intel Code"{}) to copy,}}
+\DoxyCodeLine{25 \textcolor{comment}{ * make derivatives, distribute, use and display any portion of the Covered}}
+\DoxyCodeLine{26 \textcolor{comment}{ * Code in any form, with the right to sublicense such rights; and}}
+\DoxyCodeLine{27 \textcolor{comment}{ *}}
+\DoxyCodeLine{28 \textcolor{comment}{ * 2.3. Intel grants Licensee a non-\/exclusive and non-\/transferable patent}}
+\DoxyCodeLine{29 \textcolor{comment}{ * license (with the right to sublicense), under only those claims of Intel}}
+\DoxyCodeLine{30 \textcolor{comment}{ * patents that are infringed by the Original Intel Code, to make, use, sell,}}
+\DoxyCodeLine{31 \textcolor{comment}{ * offer to sell, and import the Covered Code and derivative works thereof}}
+\DoxyCodeLine{32 \textcolor{comment}{ * solely to the minimum extent necessary to exercise the above copyright}}
+\DoxyCodeLine{33 \textcolor{comment}{ * license, and in no event shall the patent license extend to any additions}}
+\DoxyCodeLine{34 \textcolor{comment}{ * to or modifications of the Original Intel Code. No other license or right}}
+\DoxyCodeLine{35 \textcolor{comment}{ * is granted directly or by implication, estoppel or otherwise;}}
+\DoxyCodeLine{36 \textcolor{comment}{ *}}
+\DoxyCodeLine{37 \textcolor{comment}{ * The above copyright and patent license is granted only if the following}}
+\DoxyCodeLine{38 \textcolor{comment}{ * conditions are met:}}
+\DoxyCodeLine{39 \textcolor{comment}{ *}}
+\DoxyCodeLine{40 \textcolor{comment}{ * 3. Conditions}}
+\DoxyCodeLine{41 \textcolor{comment}{ *}}
+\DoxyCodeLine{42 \textcolor{comment}{ * 3.1. Redistribution of Source with Rights to Further Distribute Source.}}
+\DoxyCodeLine{43 \textcolor{comment}{ * Redistribution of source code of any substantial portion of the Covered}}
+\DoxyCodeLine{44 \textcolor{comment}{ * Code or modification with rights to further distribute source must include}}
+\DoxyCodeLine{45 \textcolor{comment}{ * the above Copyright Notice, the above License, this list of Conditions,}}
+\DoxyCodeLine{46 \textcolor{comment}{ * and the following Disclaimer and Export Compliance provision. In addition,}}
+\DoxyCodeLine{47 \textcolor{comment}{ * Licensee must cause all Covered Code to which Licensee contributes to}}
+\DoxyCodeLine{48 \textcolor{comment}{ * contain a file documenting the changes Licensee made to create that Covered}}
+\DoxyCodeLine{49 \textcolor{comment}{ * Code and the date of any change. Licensee must include in that file the}}
+\DoxyCodeLine{50 \textcolor{comment}{ * documentation of any changes made by any predecessor Licensee. Licensee}}
+\DoxyCodeLine{51 \textcolor{comment}{ * must include a prominent statement that the modification is derived,}}
+\DoxyCodeLine{52 \textcolor{comment}{ * directly or indirectly, from Original Intel Code.}}
+\DoxyCodeLine{53 \textcolor{comment}{ *}}
+\DoxyCodeLine{54 \textcolor{comment}{ * 3.2. Redistribution of Source with no Rights to Further Distribute Source.}}
+\DoxyCodeLine{55 \textcolor{comment}{ * Redistribution of source code of any substantial portion of the Covered}}
+\DoxyCodeLine{56 \textcolor{comment}{ * Code or modification without rights to further distribute source must}}
+\DoxyCodeLine{57 \textcolor{comment}{ * include the following Disclaimer and Export Compliance provision in the}}
+\DoxyCodeLine{58 \textcolor{comment}{ * documentation and/or other materials provided with distribution. In}}
+\DoxyCodeLine{59 \textcolor{comment}{ * addition, Licensee may not authorize further sublicense of source of any}}
+\DoxyCodeLine{60 \textcolor{comment}{ * portion of the Covered Code, and must include terms to the effect that the}}
+\DoxyCodeLine{61 \textcolor{comment}{ * license from Licensee to its licensee is limited to the intellectual}}
+\DoxyCodeLine{62 \textcolor{comment}{ * property embodied in the software Licensee provides to its licensee, and}}
+\DoxyCodeLine{63 \textcolor{comment}{ * not to intellectual property embodied in modifications its licensee may}}
+\DoxyCodeLine{64 \textcolor{comment}{ * make.}}
+\DoxyCodeLine{65 \textcolor{comment}{ *}}
+\DoxyCodeLine{66 \textcolor{comment}{ * 3.3. Redistribution of Executable. Redistribution in executable form of any}}
+\DoxyCodeLine{67 \textcolor{comment}{ * substantial portion of the Covered Code or modification must reproduce the}}
+\DoxyCodeLine{68 \textcolor{comment}{ * above Copyright Notice, and the following Disclaimer and Export Compliance}}
+\DoxyCodeLine{69 \textcolor{comment}{ * provision in the documentation and/or other materials provided with the}}
+\DoxyCodeLine{70 \textcolor{comment}{ * distribution.}}
+\DoxyCodeLine{71 \textcolor{comment}{ *}}
+\DoxyCodeLine{72 \textcolor{comment}{ * 3.4. Intel retains all right, title, and interest in and to the Original}}
+\DoxyCodeLine{73 \textcolor{comment}{ * Intel Code.}}
+\DoxyCodeLine{74 \textcolor{comment}{ *}}
+\DoxyCodeLine{75 \textcolor{comment}{ * 3.5. Neither the name Intel nor any other trademark owned or controlled by}}
+\DoxyCodeLine{76 \textcolor{comment}{ * Intel shall be used in advertising or otherwise to promote the sale, use or}}
+\DoxyCodeLine{77 \textcolor{comment}{ * other dealings in products derived from or relating to the Covered Code}}
+\DoxyCodeLine{78 \textcolor{comment}{ * without prior written authorization from Intel.}}
+\DoxyCodeLine{79 \textcolor{comment}{ *}}
+\DoxyCodeLine{80 \textcolor{comment}{ * 4. Disclaimer and Export Compliance}}
+\DoxyCodeLine{81 \textcolor{comment}{ *}}
+\DoxyCodeLine{82 \textcolor{comment}{ * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED}}
+\DoxyCodeLine{83 \textcolor{comment}{ * HERE. ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE}}
+\DoxyCodeLine{84 \textcolor{comment}{ * IS PROVIDED "{}AS IS,"{} AND INTEL WILL NOT PROVIDE ANY SUPPORT, ASSISTANCE,}}
+\DoxyCodeLine{85 \textcolor{comment}{ * INSTALLATION, TRAINING OR OTHER SERVICES. INTEL WILL NOT PROVIDE ANY}}
+\DoxyCodeLine{86 \textcolor{comment}{ * UPDATES, ENHANCEMENTS OR EXTENSIONS. INTEL SPECIFICALLY DISCLAIMS ANY}}
+\DoxyCodeLine{87 \textcolor{comment}{ * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A}}
+\DoxyCodeLine{88 \textcolor{comment}{ * PARTICULAR PURPOSE.}}
+\DoxyCodeLine{89 \textcolor{comment}{ *}}
+\DoxyCodeLine{90 \textcolor{comment}{ * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES}}
+\DoxyCodeLine{91 \textcolor{comment}{ * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR}}
+\DoxyCodeLine{92 \textcolor{comment}{ * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,}}
+\DoxyCodeLine{93 \textcolor{comment}{ * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY}}
+\DoxyCodeLine{94 \textcolor{comment}{ * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL}}
+\DoxyCodeLine{95 \textcolor{comment}{ * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES. THESE LIMITATIONS}}
+\DoxyCodeLine{96 \textcolor{comment}{ * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY}}
+\DoxyCodeLine{97 \textcolor{comment}{ * LIMITED REMEDY.}}
+\DoxyCodeLine{98 \textcolor{comment}{ *}}
+\DoxyCodeLine{99 \textcolor{comment}{ * 4.3. Licensee shall not export, either directly or indirectly, any of this}}
+\DoxyCodeLine{100 \textcolor{comment}{ * software or system incorporating such software without first obtaining any}}
+\DoxyCodeLine{101 \textcolor{comment}{ * required license or other approval from the U. S. Department of Commerce or}}
+\DoxyCodeLine{102 \textcolor{comment}{ * any other agency or department of the United States Government. In the}}
+\DoxyCodeLine{103 \textcolor{comment}{ * event Licensee exports any such software from the United States or}}
+\DoxyCodeLine{104 \textcolor{comment}{ * re-\/exports any such software from a foreign destination, Licensee shall}}
+\DoxyCodeLine{105 \textcolor{comment}{ * ensure that the distribution and export/re-\/export of the software is in}}
+\DoxyCodeLine{106 \textcolor{comment}{ * compliance with all laws, regulations, orders, or other restrictions of the}}
+\DoxyCodeLine{107 \textcolor{comment}{ * U.S. Export Administration Regulations. Licensee agrees that neither it nor}}
+\DoxyCodeLine{108 \textcolor{comment}{ * any of its subsidiaries will export/re-\/export any technical data, process,}}
+\DoxyCodeLine{109 \textcolor{comment}{ * software, or service, directly or indirectly, to any country for which the}}
+\DoxyCodeLine{110 \textcolor{comment}{ * United States government or any agency thereof requires an export license,}}
+\DoxyCodeLine{111 \textcolor{comment}{ * other governmental approval, or letter of assurance, without first obtaining}}
+\DoxyCodeLine{112 \textcolor{comment}{ * such license, approval or letter.}}
+\DoxyCodeLine{113 \textcolor{comment}{ *}}
+\DoxyCodeLine{114 \textcolor{comment}{ *****************************************************************************}}
+\DoxyCodeLine{115 \textcolor{comment}{ *}}
+\DoxyCodeLine{116 \textcolor{comment}{ * Alternatively, you may choose to be licensed under the terms of the}}
+\DoxyCodeLine{117 \textcolor{comment}{ * following license:}}
+\DoxyCodeLine{118 \textcolor{comment}{ *}}
+\DoxyCodeLine{119 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{120 \textcolor{comment}{ * modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{121 \textcolor{comment}{ * are met:}}
+\DoxyCodeLine{122 \textcolor{comment}{ * 1. Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{123 \textcolor{comment}{ *    notice, this list of conditions, and the following disclaimer,}}
+\DoxyCodeLine{124 \textcolor{comment}{ *    without modification.}}
+\DoxyCodeLine{125 \textcolor{comment}{ * 2. Redistributions in binary form must reproduce at minimum a disclaimer}}
+\DoxyCodeLine{126 \textcolor{comment}{ *    substantially similar to the "{}NO WARRANTY"{} disclaimer below}}
+\DoxyCodeLine{127 \textcolor{comment}{ *    ("{}Disclaimer"{}) and any redistribution must be conditioned upon}}
+\DoxyCodeLine{128 \textcolor{comment}{ *    including a substantially similar Disclaimer requirement for further}}
+\DoxyCodeLine{129 \textcolor{comment}{ *    binary redistribution.}}
+\DoxyCodeLine{130 \textcolor{comment}{ * 3. Neither the names of the above-\/listed copyright holders nor the names}}
+\DoxyCodeLine{131 \textcolor{comment}{ *    of any contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{132 \textcolor{comment}{ *    from this software without specific prior written permission.}}
+\DoxyCodeLine{133 \textcolor{comment}{ *}}
+\DoxyCodeLine{134 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS}}
+\DoxyCodeLine{135 \textcolor{comment}{ * "{}AS IS"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT}}
+\DoxyCodeLine{136 \textcolor{comment}{ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR}}
+\DoxyCodeLine{137 \textcolor{comment}{ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT}}
+\DoxyCodeLine{138 \textcolor{comment}{ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,}}
+\DoxyCodeLine{139 \textcolor{comment}{ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT}}
+\DoxyCodeLine{140 \textcolor{comment}{ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,}}
+\DoxyCodeLine{141 \textcolor{comment}{ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY}}
+\DoxyCodeLine{142 \textcolor{comment}{ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{143 \textcolor{comment}{ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{144 \textcolor{comment}{ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{145 \textcolor{comment}{ *}}
+\DoxyCodeLine{146 \textcolor{comment}{ * Alternatively, you may choose to be licensed under the terms of the}}
+\DoxyCodeLine{147 \textcolor{comment}{ * GNU General Public License ("{}GPL"{}) version 2 as published by the Free}}
+\DoxyCodeLine{148 \textcolor{comment}{ * Software Foundation.}}
+\DoxyCodeLine{149 \textcolor{comment}{ *}}
+\DoxyCodeLine{150 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{151 }
+\DoxyCodeLine{152 \textcolor{preprocessor}{\#ifndef \_\_ACTBL3\_H\_\_}}
+\DoxyCodeLine{153 \textcolor{preprocessor}{\#define \_\_ACTBL3\_H\_\_}}
+\DoxyCodeLine{154 }
+\DoxyCodeLine{155 }
+\DoxyCodeLine{156 \textcolor{comment}{/*******************************************************************************}}
+\DoxyCodeLine{157 \textcolor{comment}{ *}}
+\DoxyCodeLine{158 \textcolor{comment}{ * Additional ACPI Tables}}
+\DoxyCodeLine{159 \textcolor{comment}{ *}}
+\DoxyCodeLine{160 \textcolor{comment}{ * These tables are not consumed directly by the ACPICA subsystem, but are}}
+\DoxyCodeLine{161 \textcolor{comment}{ * included here to support device drivers and the AML disassembler.}}
+\DoxyCodeLine{162 \textcolor{comment}{ *}}
+\DoxyCodeLine{163 \textcolor{comment}{ ******************************************************************************/}}
+\DoxyCodeLine{164 }
+\DoxyCodeLine{165 }
+\DoxyCodeLine{166 \textcolor{comment}{/*}}
+\DoxyCodeLine{167 \textcolor{comment}{ * Values for description table header signatures for tables defined in this}}
+\DoxyCodeLine{168 \textcolor{comment}{ * file. Useful because they make it more difficult to inadvertently type in}}
+\DoxyCodeLine{169 \textcolor{comment}{ * the wrong signature.}}
+\DoxyCodeLine{170 \textcolor{comment}{ */}}
+\DoxyCodeLine{171 \textcolor{preprocessor}{\#define ACPI\_SIG\_SLIC           "{}SLIC"{}}      \textcolor{comment}{/* Software Licensing Description Table */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{172 \textcolor{preprocessor}{\#define ACPI\_SIG\_SLIT           "{}SLIT"{}}      \textcolor{comment}{/* System Locality Distance Information Table */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{173 \textcolor{preprocessor}{\#define ACPI\_SIG\_SPCR           "{}SPCR"{}}      \textcolor{comment}{/* Serial Port Console Redirection table */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{174 \textcolor{preprocessor}{\#define ACPI\_SIG\_SPMI           "{}SPMI"{}}      \textcolor{comment}{/* Server Platform Management Interface table */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{175 \textcolor{preprocessor}{\#define ACPI\_SIG\_SRAT           "{}SRAT"{}}      \textcolor{comment}{/* System Resource Affinity Table */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{176 \textcolor{preprocessor}{\#define ACPI\_SIG\_STAO           "{}STAO"{}}      \textcolor{comment}{/* Status Override table */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{177 \textcolor{preprocessor}{\#define ACPI\_SIG\_TCPA           "{}TCPA"{}}      \textcolor{comment}{/* Trusted Computing Platform Alliance table */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{178 \textcolor{preprocessor}{\#define ACPI\_SIG\_TPM2           "{}TPM2"{}}      \textcolor{comment}{/* Trusted Platform Module 2.0 H/W interface table */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{179 \textcolor{preprocessor}{\#define ACPI\_SIG\_UEFI           "{}UEFI"{}}      \textcolor{comment}{/* Uefi Boot Optimization Table */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{180 \textcolor{preprocessor}{\#define ACPI\_SIG\_VRTC           "{}VRTC"{}}      \textcolor{comment}{/* Virtual Real Time Clock Table */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{181 \textcolor{preprocessor}{\#define ACPI\_SIG\_WAET           "{}WAET"{}}      \textcolor{comment}{/* Windows ACPI Emulated devices Table */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{182 \textcolor{preprocessor}{\#define ACPI\_SIG\_WDAT           "{}WDAT"{}}      \textcolor{comment}{/* Watchdog Action Table */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{183 \textcolor{preprocessor}{\#define ACPI\_SIG\_WDDT           "{}WDDT"{}}      \textcolor{comment}{/* Watchdog Timer Description Table */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{184 \textcolor{preprocessor}{\#define ACPI\_SIG\_WDRT           "{}WDRT"{}}      \textcolor{comment}{/* Watchdog Resource Table */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{185 \textcolor{preprocessor}{\#define ACPI\_SIG\_WPBT           "{}WPBT"{}}      \textcolor{comment}{/* Windows Platform Binary Table */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{186 \textcolor{preprocessor}{\#define ACPI\_SIG\_WSMT           "{}WSMT"{}}      \textcolor{comment}{/* Windows SMM Security Migrations Table */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{187 \textcolor{preprocessor}{\#define ACPI\_SIG\_XENV           "{}XENV"{}}      \textcolor{comment}{/* Xen Environment table */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{188 \textcolor{preprocessor}{\#define ACPI\_SIG\_XXXX           "{}XXXX"{}}      \textcolor{comment}{/* Intermediate AML header for ASL/ASL+ converter */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{189 }
+\DoxyCodeLine{190 \textcolor{comment}{/*}}
+\DoxyCodeLine{191 \textcolor{comment}{ * All tables must be byte-\/packed to match the ACPI specification, since}}
+\DoxyCodeLine{192 \textcolor{comment}{ * the tables are provided by the system BIOS.}}
+\DoxyCodeLine{193 \textcolor{comment}{ */}}
+\DoxyCodeLine{194 \textcolor{preprocessor}{\#pragma pack(1)}}
+\DoxyCodeLine{195 }
+\DoxyCodeLine{196 \textcolor{comment}{/*}}
+\DoxyCodeLine{197 \textcolor{comment}{ * Note: C bitfields are not used for this reason:}}
+\DoxyCodeLine{198 \textcolor{comment}{ *}}
+\DoxyCodeLine{199 \textcolor{comment}{ * "{}Bitfields are great and easy to read, but unfortunately the C language}}
+\DoxyCodeLine{200 \textcolor{comment}{ * does not specify the layout of bitfields in memory, which means they are}}
+\DoxyCodeLine{201 \textcolor{comment}{ * essentially useless for dealing with packed data in on-\/disk formats or}}
+\DoxyCodeLine{202 \textcolor{comment}{ * binary wire protocols."{} (Or ACPI tables and buffers.) "{}If you ask me,}}
+\DoxyCodeLine{203 \textcolor{comment}{ * this decision was a design error in C. Ritchie could have picked an order}}
+\DoxyCodeLine{204 \textcolor{comment}{ * and stuck with it."{} Norman Ramsey.}}
+\DoxyCodeLine{205 \textcolor{comment}{ * See http://stackoverflow.com/a/1053662/41661}}
+\DoxyCodeLine{206 \textcolor{comment}{ */}}
+\DoxyCodeLine{207 }
+\DoxyCodeLine{208 }
+\DoxyCodeLine{209 \textcolor{comment}{/*******************************************************************************}}
+\DoxyCodeLine{210 \textcolor{comment}{ *}}
+\DoxyCodeLine{211 \textcolor{comment}{ * SLIC -\/ Software Licensing Description Table}}
+\DoxyCodeLine{212 \textcolor{comment}{ *}}
+\DoxyCodeLine{213 \textcolor{comment}{ * Conforms to "{}Microsoft Software Licensing Tables (SLIC and MSDM)"{},}}
+\DoxyCodeLine{214 \textcolor{comment}{ * November 29, 2011. Copyright 2011 Microsoft}}
+\DoxyCodeLine{215 \textcolor{comment}{ *}}
+\DoxyCodeLine{216 \textcolor{comment}{ ******************************************************************************/}}
+\DoxyCodeLine{217 }
+\DoxyCodeLine{218 \textcolor{comment}{/* Basic SLIC table is only the common ACPI header */}}
+\DoxyCodeLine{219 }
+\DoxyCodeLine{220 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__table__slic}{acpi\_table\_slic}}}
+\DoxyCodeLine{221 \{}
+\DoxyCodeLine{222     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       \mbox{\hyperlink{structacpi__table__slic_a2a56e0e6403eac98da15a0bb38715f8f}{Header}};             \textcolor{comment}{/* Common ACPI table header */}}
+\DoxyCodeLine{223 }
+\DoxyCodeLine{224 \} \mbox{\hyperlink{actbl3_8h_a3af05086437ca0e0d9bc2e76edb47dbf}{ACPI\_TABLE\_SLIC}};}
+\DoxyCodeLine{225 }
+\DoxyCodeLine{226 }
+\DoxyCodeLine{227 \textcolor{comment}{/*******************************************************************************}}
+\DoxyCodeLine{228 \textcolor{comment}{ *}}
+\DoxyCodeLine{229 \textcolor{comment}{ * SLIT -\/ System Locality Distance Information Table}}
+\DoxyCodeLine{230 \textcolor{comment}{ *        Version 1}}
+\DoxyCodeLine{231 \textcolor{comment}{ *}}
+\DoxyCodeLine{232 \textcolor{comment}{ ******************************************************************************/}}
+\DoxyCodeLine{233 }
+\DoxyCodeLine{234 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__table__slit}{acpi\_table\_slit}}}
+\DoxyCodeLine{235 \{}
+\DoxyCodeLine{236     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       \mbox{\hyperlink{structacpi__table__slit_a236d4e11650c8e34c9345a807911cfee}{Header}};             \textcolor{comment}{/* Common ACPI table header */}}
+\DoxyCodeLine{237     \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}                  \mbox{\hyperlink{structacpi__table__slit_a599e8ce809655862428781a49aa520b8}{LocalityCount}};}
+\DoxyCodeLine{238     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__slit_ae603172a53b6354712b5c7c94fc94f6d}{Entry}}[1];           \textcolor{comment}{/* Real size = localities\string^2 */}}
+\DoxyCodeLine{239 }
+\DoxyCodeLine{240 \} \mbox{\hyperlink{actbl3_8h_a29b5eb31ad0a2c628fe8349009030eb1}{ACPI\_TABLE\_SLIT}};}
+\DoxyCodeLine{241 }
+\DoxyCodeLine{242 }
+\DoxyCodeLine{243 \textcolor{comment}{/*******************************************************************************}}
+\DoxyCodeLine{244 \textcolor{comment}{ *}}
+\DoxyCodeLine{245 \textcolor{comment}{ * SPCR -\/ Serial Port Console Redirection table}}
+\DoxyCodeLine{246 \textcolor{comment}{ *        Version 2}}
+\DoxyCodeLine{247 \textcolor{comment}{ *}}
+\DoxyCodeLine{248 \textcolor{comment}{ * Conforms to "{}Serial Port Console Redirection Table"{},}}
+\DoxyCodeLine{249 \textcolor{comment}{ * Version 1.03, August 10, 2015}}
+\DoxyCodeLine{250 \textcolor{comment}{ *}}
+\DoxyCodeLine{251 \textcolor{comment}{ ******************************************************************************/}}
+\DoxyCodeLine{252 }
+\DoxyCodeLine{253 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__table__spcr}{acpi\_table\_spcr}}}
+\DoxyCodeLine{254 \{}
+\DoxyCodeLine{255     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       \mbox{\hyperlink{structacpi__table__spcr_a05a4f3fc2efa395156fef1f8ccd05389}{Header}};             \textcolor{comment}{/* Common ACPI table header */}}
+\DoxyCodeLine{256     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spcr_aeec115b5ea7db0befeb86bcaf605286b}{InterfaceType}};      \textcolor{comment}{/* 0=full 16550, 1=subset of 16550 */}}
+\DoxyCodeLine{257     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spcr_ad5391045ea3c482921102eb24ff6a70e}{Reserved}}[3];}
+\DoxyCodeLine{258     \mbox{\hyperlink{structacpi__generic__address}{ACPI\_GENERIC\_ADDRESS}}    \mbox{\hyperlink{structacpi__table__spcr_a6fc96d856b4aa18186cc70ec229f5623}{SerialPort}};}
+\DoxyCodeLine{259     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spcr_a676938fc33894ce39ec5b91abe8d6ebf}{InterruptType}};}
+\DoxyCodeLine{260     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spcr_a79ed0c888d25895e14f0575b8413977b}{PcInterrupt}};}
+\DoxyCodeLine{261     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__table__spcr_af2498b04cb019c2490e5298ab1d6bbae}{Interrupt}};}
+\DoxyCodeLine{262     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spcr_a70f9a0d3a43d3c384e211abb0f92f95e}{BaudRate}};}
+\DoxyCodeLine{263     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spcr_ac77b1fdc372805f5b21526c6663a0049}{Parity}};}
+\DoxyCodeLine{264     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spcr_acc90527c5df44be8edfad5f9f3b031d8}{StopBits}};}
+\DoxyCodeLine{265     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spcr_a33dd1e26ec2f8307be2e82bdaecc2826}{FlowControl}};}
+\DoxyCodeLine{266     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spcr_ac25459a59f175d79098b95f4ade27035}{TerminalType}};}
+\DoxyCodeLine{267     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spcr_a20f973fb18d9f6a2c49ff57f4e40a724}{Reserved1}};}
+\DoxyCodeLine{268     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__table__spcr_a5b77bc278f32489d915a2e901b11f64c}{PciDeviceId}};}
+\DoxyCodeLine{269     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__table__spcr_a1ab736a97489109c42f07d8a6c0c20f4}{PciVendorId}};}
+\DoxyCodeLine{270     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spcr_a8775c85a7e950c2ba818d88edcc03474}{PciBus}};}
+\DoxyCodeLine{271     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spcr_a52682ac0edaa8bb0930ce9bc2c7d351b}{PciDevice}};}
+\DoxyCodeLine{272     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spcr_a95e255775f911f48360287e7f30caed3}{PciFunction}};}
+\DoxyCodeLine{273     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__table__spcr_aa742c0d41fd9b38de42f91ff69442514}{PciFlags}};}
+\DoxyCodeLine{274     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spcr_a53f60871cd85cfb1de53c2f51f8eab10}{PciSegment}};}
+\DoxyCodeLine{275     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__table__spcr_ae2965862679552b739c83dea6b8d5941}{Reserved2}};}
+\DoxyCodeLine{276 }
+\DoxyCodeLine{277 \} \mbox{\hyperlink{actbl3_8h_a4b60cb8bc22f844c277980463ffb1571}{ACPI\_TABLE\_SPCR}};}
+\DoxyCodeLine{278 }
+\DoxyCodeLine{279 \textcolor{comment}{/* Masks for PciFlags field above */}}
+\DoxyCodeLine{280 }
+\DoxyCodeLine{281 \textcolor{preprocessor}{\#define ACPI\_SPCR\_DO\_NOT\_DISABLE    (1)}}
+\DoxyCodeLine{282 }
+\DoxyCodeLine{283 \textcolor{comment}{/* Values for Interface Type: See the definition of the DBG2 table */}}
+\DoxyCodeLine{284 }
+\DoxyCodeLine{285 }
+\DoxyCodeLine{286 \textcolor{comment}{/*******************************************************************************}}
+\DoxyCodeLine{287 \textcolor{comment}{ *}}
+\DoxyCodeLine{288 \textcolor{comment}{ * SPMI -\/ Server Platform Management Interface table}}
+\DoxyCodeLine{289 \textcolor{comment}{ *        Version 5}}
+\DoxyCodeLine{290 \textcolor{comment}{ *}}
+\DoxyCodeLine{291 \textcolor{comment}{ * Conforms to "{}Intelligent Platform Management Interface Specification}}
+\DoxyCodeLine{292 \textcolor{comment}{ * Second Generation v2.0"{}, Document Revision 1.0, February 12, 2004 with}}
+\DoxyCodeLine{293 \textcolor{comment}{ * June 12, 2009 markup.}}
+\DoxyCodeLine{294 \textcolor{comment}{ *}}
+\DoxyCodeLine{295 \textcolor{comment}{ ******************************************************************************/}}
+\DoxyCodeLine{296 }
+\DoxyCodeLine{297 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__table__spmi}{acpi\_table\_spmi}}}
+\DoxyCodeLine{298 \{}
+\DoxyCodeLine{299     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       \mbox{\hyperlink{structacpi__table__spmi_a14f3c3ef65785cbb4c5bfdd6f41e81bf}{Header}};             \textcolor{comment}{/* Common ACPI table header */}}
+\DoxyCodeLine{300     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spmi_acb89f0771cbc0ec29fc192f4c2e67d67}{InterfaceType}};}
+\DoxyCodeLine{301     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spmi_af216ecfcd3295ce47550ccb5d95fdc80}{Reserved}};           \textcolor{comment}{/* Must be 1 */}}
+\DoxyCodeLine{302     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__table__spmi_a28e43a2d86493f2e337a19659cbc7299}{SpecRevision}};       \textcolor{comment}{/* Version of IPMI */}}
+\DoxyCodeLine{303     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spmi_a61aca26d9e5579e5fa9a35ac84235a47}{InterruptType}};}
+\DoxyCodeLine{304     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spmi_a1a9f695e903cdf386d5fd9d106c0023d}{GpeNumber}};          \textcolor{comment}{/* GPE assigned */}}
+\DoxyCodeLine{305     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spmi_a0c44c3c48b649bd63615de4d9f030616}{Reserved1}};}
+\DoxyCodeLine{306     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spmi_a8402aa9e664cc405076aaaf777d79444}{PciDeviceFlag}};}
+\DoxyCodeLine{307     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__table__spmi_a0531e897ece7c9576240d9458c7c18be}{Interrupt}};}
+\DoxyCodeLine{308     \mbox{\hyperlink{structacpi__generic__address}{ACPI\_GENERIC\_ADDRESS}}    \mbox{\hyperlink{structacpi__table__spmi_a0d8a337ce1982f233807c5652b386f9e}{IpmiRegister}};}
+\DoxyCodeLine{309     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spmi_af48f097a4b301a7b0a1b7ddb31c4b8c4}{PciSegment}};}
+\DoxyCodeLine{310     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spmi_ae91f40e0d60e35def26f85b5d9c3c1e9}{PciBus}};}
+\DoxyCodeLine{311     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spmi_a628c6c35090317f528c954ec69857003}{PciDevice}};}
+\DoxyCodeLine{312     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spmi_a37f1c146d688bd83ae470ef2279e2d8f}{PciFunction}};}
+\DoxyCodeLine{313     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__spmi_a575208e0570a6b5e2cb7f550ac71a334}{Reserved2}};}
+\DoxyCodeLine{314 }
+\DoxyCodeLine{315 \} \mbox{\hyperlink{actbl3_8h_af056846e9de7b1186b21af31348bea16}{ACPI\_TABLE\_SPMI}};}
+\DoxyCodeLine{316 }
+\DoxyCodeLine{317 \textcolor{comment}{/* Values for InterfaceType above */}}
+\DoxyCodeLine{318 }
+\DoxyCodeLine{319 \textcolor{keyword}{enum} \mbox{\hyperlink{actbl3_8h_af71a8cc00c94a5383395770ae210412b}{AcpiSpmiInterfaceTypes}}}
+\DoxyCodeLine{320 \{}
+\DoxyCodeLine{321     \mbox{\hyperlink{actbl3_8h_af71a8cc00c94a5383395770ae210412bacad865ca60dba626d2cec22c518d2656}{ACPI\_SPMI\_NOT\_USED}}              = 0,}
+\DoxyCodeLine{322     \mbox{\hyperlink{actbl3_8h_af71a8cc00c94a5383395770ae210412ba087ed50f38e939dc399f2a3432afd61f}{ACPI\_SPMI\_KEYBOARD}}              = 1,}
+\DoxyCodeLine{323     \mbox{\hyperlink{actbl3_8h_af71a8cc00c94a5383395770ae210412baaa571e8df5b0ad1c4af7ed919a194853}{ACPI\_SPMI\_SMI}}                   = 2,}
+\DoxyCodeLine{324     \mbox{\hyperlink{actbl3_8h_af71a8cc00c94a5383395770ae210412baa322ae259cddaf87a0262b1c7afc6300}{ACPI\_SPMI\_BLOCK\_TRANSFER}}        = 3,}
+\DoxyCodeLine{325     \mbox{\hyperlink{actbl3_8h_af71a8cc00c94a5383395770ae210412bab1ee9c7d6a7cd7a8ef7c676ccc0c9b85}{ACPI\_SPMI\_SMBUS}}                 = 4,}
+\DoxyCodeLine{326     \mbox{\hyperlink{actbl3_8h_af71a8cc00c94a5383395770ae210412ba749690ad04ecd808ff7b874c03358fbd}{ACPI\_SPMI\_RESERVED}}              = 5         \textcolor{comment}{/* 5 and above are reserved */}}
+\DoxyCodeLine{327 \};}
+\DoxyCodeLine{328 }
+\DoxyCodeLine{329 }
+\DoxyCodeLine{330 \textcolor{comment}{/*******************************************************************************}}
+\DoxyCodeLine{331 \textcolor{comment}{ *}}
+\DoxyCodeLine{332 \textcolor{comment}{ * SRAT -\/ System Resource Affinity Table}}
+\DoxyCodeLine{333 \textcolor{comment}{ *        Version 3}}
+\DoxyCodeLine{334 \textcolor{comment}{ *}}
+\DoxyCodeLine{335 \textcolor{comment}{ ******************************************************************************/}}
+\DoxyCodeLine{336 }
+\DoxyCodeLine{337 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__table__srat}{acpi\_table\_srat}}}
+\DoxyCodeLine{338 \{}
+\DoxyCodeLine{339     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       \mbox{\hyperlink{structacpi__table__srat_a2d49c312c7475fcebb4b732dd10c9946}{Header}};             \textcolor{comment}{/* Common ACPI table header */}}
+\DoxyCodeLine{340     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__table__srat_a5bdb2f7b3431b469306cf94794bfdc38}{TableRevision}};      \textcolor{comment}{/* Must be value '1' */}}
+\DoxyCodeLine{341     \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}                  \mbox{\hyperlink{structacpi__table__srat_a85587f407cf14e36a5233b95658e35e2}{Reserved}};           \textcolor{comment}{/* Reserved, must be zero */}}
+\DoxyCodeLine{342 }
+\DoxyCodeLine{343 \} \mbox{\hyperlink{actbl3_8h_a940b4a6adbafb9e1e242ea1a4d1b2fcb}{ACPI\_TABLE\_SRAT}};}
+\DoxyCodeLine{344 }
+\DoxyCodeLine{345 \textcolor{comment}{/* Values for subtable type in ACPI\_SUBTABLE\_HEADER */}}
+\DoxyCodeLine{346 }
+\DoxyCodeLine{347 \textcolor{keyword}{enum} \mbox{\hyperlink{actbl3_8h_a520d42740c1449ff802133731d917a43}{AcpiSratType}}}
+\DoxyCodeLine{348 \{}
+\DoxyCodeLine{349     \mbox{\hyperlink{actbl3_8h_a520d42740c1449ff802133731d917a43ad596d5a08508f9b7dc455b8563149e57}{ACPI\_SRAT\_TYPE\_CPU\_AFFINITY}}         = 0,}
+\DoxyCodeLine{350     \mbox{\hyperlink{actbl3_8h_a520d42740c1449ff802133731d917a43acf1a25a423a716a832806f3b79d5b44b}{ACPI\_SRAT\_TYPE\_MEMORY\_AFFINITY}}      = 1,}
+\DoxyCodeLine{351     \mbox{\hyperlink{actbl3_8h_a520d42740c1449ff802133731d917a43a487ecff59aca773d26cdab171ed8b964}{ACPI\_SRAT\_TYPE\_X2APIC\_CPU\_AFFINITY}}  = 2,}
+\DoxyCodeLine{352     \mbox{\hyperlink{actbl3_8h_a520d42740c1449ff802133731d917a43afc58976301fe148d684ffeea0bd609aa}{ACPI\_SRAT\_TYPE\_GICC\_AFFINITY}}        = 3,}
+\DoxyCodeLine{353     \mbox{\hyperlink{actbl3_8h_a520d42740c1449ff802133731d917a43a4beb5a098db684a68ade3993828fde9a}{ACPI\_SRAT\_TYPE\_GIC\_ITS\_AFFINITY}}     = 4, \textcolor{comment}{/* ACPI 6.2 */}}
+\DoxyCodeLine{354     \mbox{\hyperlink{actbl3_8h_a520d42740c1449ff802133731d917a43a6a8ffa3123da8ce87149facb29c6bfb1}{ACPI\_SRAT\_TYPE\_GENERIC\_AFFINITY}}     = 5, \textcolor{comment}{/* ACPI 6.3 */}}
+\DoxyCodeLine{355     \mbox{\hyperlink{actbl3_8h_a520d42740c1449ff802133731d917a43a615bc68a1fee6826d800b9a9c731dc47}{ACPI\_SRAT\_TYPE\_RESERVED}}             = 6  \textcolor{comment}{/* 5 and greater are reserved */}}
+\DoxyCodeLine{356 \};}
+\DoxyCodeLine{357 }
+\DoxyCodeLine{358 \textcolor{comment}{/*}}
+\DoxyCodeLine{359 \textcolor{comment}{ * SRAT Subtables, correspond to Type in ACPI\_SUBTABLE\_HEADER}}
+\DoxyCodeLine{360 \textcolor{comment}{ */}}
+\DoxyCodeLine{361 }
+\DoxyCodeLine{362 \textcolor{comment}{/* 0: Processor Local APIC/SAPIC Affinity */}}
+\DoxyCodeLine{363 }
+\DoxyCodeLine{364 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__srat__cpu__affinity}{acpi\_srat\_cpu\_affinity}}}
+\DoxyCodeLine{365 \{}
+\DoxyCodeLine{366     \mbox{\hyperlink{structacpi__subtable__header}{ACPI\_SUBTABLE\_HEADER}}    \mbox{\hyperlink{structacpi__srat__cpu__affinity_a519407256b8ea88ce18fe1c335b4ff70}{Header}};}
+\DoxyCodeLine{367     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__srat__cpu__affinity_a4cb2814c396612de4cdccd73793d6946}{ProximityDomainLo}};}
+\DoxyCodeLine{368     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__srat__cpu__affinity_a209eb39247c5b48d6aa52bb352aa21a7}{ApicId}};}
+\DoxyCodeLine{369     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__srat__cpu__affinity_a734194e7ef90e60ff4f0f1c5ec036fd6}{Flags}};}
+\DoxyCodeLine{370     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__srat__cpu__affinity_ac33d28a4dce358c10e5e7e9c727ab339}{LocalSapicEid}};}
+\DoxyCodeLine{371     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__srat__cpu__affinity_a85639c963eb470c65336ec54f9495123}{ProximityDomainHi}}[3];}
+\DoxyCodeLine{372     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__srat__cpu__affinity_a7ec821ad66dc8376853bb2c013c39e9f}{ClockDomain}};}
+\DoxyCodeLine{373 }
+\DoxyCodeLine{374 \} \mbox{\hyperlink{actbl3_8h_a8d834e2dfe36b7569d6bf1c1c04b2317}{ACPI\_SRAT\_CPU\_AFFINITY}};}
+\DoxyCodeLine{375 }
+\DoxyCodeLine{376 \textcolor{comment}{/* Flags */}}
+\DoxyCodeLine{377 }
+\DoxyCodeLine{378 \textcolor{preprocessor}{\#define ACPI\_SRAT\_CPU\_USE\_AFFINITY  (1)         }\textcolor{comment}{/* 00: Use affinity structure */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{379 }
+\DoxyCodeLine{380 }
+\DoxyCodeLine{381 \textcolor{comment}{/* 1: Memory Affinity */}}
+\DoxyCodeLine{382 }
+\DoxyCodeLine{383 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__srat__mem__affinity}{acpi\_srat\_mem\_affinity}}}
+\DoxyCodeLine{384 \{}
+\DoxyCodeLine{385     \mbox{\hyperlink{structacpi__subtable__header}{ACPI\_SUBTABLE\_HEADER}}    \mbox{\hyperlink{structacpi__srat__mem__affinity_af9be034b63c670287ed034a8972bb7b4}{Header}};}
+\DoxyCodeLine{386     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__srat__mem__affinity_ab405d653fe1c11e116eae0834dcafdc9}{ProximityDomain}};}
+\DoxyCodeLine{387     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__srat__mem__affinity_a1aa7129c37d7c96e4a46db1d027025b5}{Reserved}};           \textcolor{comment}{/* Reserved, must be zero */}}
+\DoxyCodeLine{388     \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}                  \mbox{\hyperlink{structacpi__srat__mem__affinity_a201c2324cc37c4a7ab45b478c8ffa3dd}{BaseAddress}};}
+\DoxyCodeLine{389     \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}                  \mbox{\hyperlink{structacpi__srat__mem__affinity_a0c0ea8d9c8380d5639a8e723b017fb8b}{Length}};}
+\DoxyCodeLine{390     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__srat__mem__affinity_a44b4550984972c5c64f346194a4516f0}{Reserved1}};}
+\DoxyCodeLine{391     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__srat__mem__affinity_a24201f1121a471b70e0508cb8cf38afb}{Flags}};}
+\DoxyCodeLine{392     \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}                  \mbox{\hyperlink{structacpi__srat__mem__affinity_a099da59b78aa2447748298ab8dad18af}{Reserved2}};          \textcolor{comment}{/* Reserved, must be zero */}}
+\DoxyCodeLine{393 }
+\DoxyCodeLine{394 \} \mbox{\hyperlink{actbl3_8h_a63ac18bac36124a8f5dcff645757fd6d}{ACPI\_SRAT\_MEM\_AFFINITY}};}
+\DoxyCodeLine{395 }
+\DoxyCodeLine{396 \textcolor{comment}{/* Flags */}}
+\DoxyCodeLine{397 }
+\DoxyCodeLine{398 \textcolor{preprocessor}{\#define ACPI\_SRAT\_MEM\_ENABLED       (1)         }\textcolor{comment}{/* 00: Use affinity structure */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{399 \textcolor{preprocessor}{\#define ACPI\_SRAT\_MEM\_HOT\_PLUGGABLE (1<<1)      }\textcolor{comment}{/* 01: Memory region is hot pluggable */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{400 \textcolor{preprocessor}{\#define ACPI\_SRAT\_MEM\_NON\_VOLATILE  (1<<2)      }\textcolor{comment}{/* 02: Memory region is non-\/volatile */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{401 }
+\DoxyCodeLine{402 }
+\DoxyCodeLine{403 \textcolor{comment}{/* 2: Processor Local X2\_APIC Affinity (ACPI 4.0) */}}
+\DoxyCodeLine{404 }
+\DoxyCodeLine{405 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__srat__x2apic__cpu__affinity}{acpi\_srat\_x2apic\_cpu\_affinity}}}
+\DoxyCodeLine{406 \{}
+\DoxyCodeLine{407     \mbox{\hyperlink{structacpi__subtable__header}{ACPI\_SUBTABLE\_HEADER}}    \mbox{\hyperlink{structacpi__srat__x2apic__cpu__affinity_ab44b489117e8ab2843a399433bf01dff}{Header}};}
+\DoxyCodeLine{408     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__srat__x2apic__cpu__affinity_adb5a7d8810b70c5f8d2a0d6fc0a2198f}{Reserved}};           \textcolor{comment}{/* Reserved, must be zero */}}
+\DoxyCodeLine{409     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__srat__x2apic__cpu__affinity_a555d9018f714f87b56a63503ac986ea3}{ProximityDomain}};}
+\DoxyCodeLine{410     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__srat__x2apic__cpu__affinity_aebd15521bc5715221bdc207867ff8dbe}{ApicId}};}
+\DoxyCodeLine{411     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__srat__x2apic__cpu__affinity_aa386dede105a4d8c2958417d00630146}{Flags}};}
+\DoxyCodeLine{412     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__srat__x2apic__cpu__affinity_a570cffb14e4fa35d7e768b514c816d53}{ClockDomain}};}
+\DoxyCodeLine{413     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__srat__x2apic__cpu__affinity_afb161e857936c838eb8c8c206fea8b84}{Reserved2}};}
+\DoxyCodeLine{414 }
+\DoxyCodeLine{415 \} \mbox{\hyperlink{actbl3_8h_a3593cddfaa987efa703dd31a0f904f10}{ACPI\_SRAT\_X2APIC\_CPU\_AFFINITY}};}
+\DoxyCodeLine{416 }
+\DoxyCodeLine{417 \textcolor{comment}{/* Flags for ACPI\_SRAT\_CPU\_AFFINITY and ACPI\_SRAT\_X2APIC\_CPU\_AFFINITY */}}
+\DoxyCodeLine{418 }
+\DoxyCodeLine{419 \textcolor{preprocessor}{\#define ACPI\_SRAT\_CPU\_ENABLED       (1)         }\textcolor{comment}{/* 00: Use affinity structure */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{420 }
+\DoxyCodeLine{421 }
+\DoxyCodeLine{422 \textcolor{comment}{/* 3: GICC Affinity (ACPI 5.1) */}}
+\DoxyCodeLine{423 }
+\DoxyCodeLine{424 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__srat__gicc__affinity}{acpi\_srat\_gicc\_affinity}}}
+\DoxyCodeLine{425 \{}
+\DoxyCodeLine{426     \mbox{\hyperlink{structacpi__subtable__header}{ACPI\_SUBTABLE\_HEADER}}    \mbox{\hyperlink{structacpi__srat__gicc__affinity_a7ea966e41a8a900a6290d351931c5a8d}{Header}};}
+\DoxyCodeLine{427     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__srat__gicc__affinity_a5e652139c914097a36250d4cf86ad2e7}{ProximityDomain}};}
+\DoxyCodeLine{428     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__srat__gicc__affinity_a496afed465a3e8f0707a2b2525f7b257}{AcpiProcessorUid}};}
+\DoxyCodeLine{429     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__srat__gicc__affinity_ab216c3e6db657337bb5ab0e5b2cece8e}{Flags}};}
+\DoxyCodeLine{430     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__srat__gicc__affinity_a07dcc0dafa35a8251f5135a5e5e12cf5}{ClockDomain}};}
+\DoxyCodeLine{431 }
+\DoxyCodeLine{432 \} \mbox{\hyperlink{actbl3_8h_a49661e45efb3cb8629025a40d23569ac}{ACPI\_SRAT\_GICC\_AFFINITY}};}
+\DoxyCodeLine{433 }
+\DoxyCodeLine{434 \textcolor{comment}{/* Flags for ACPI\_SRAT\_GICC\_AFFINITY */}}
+\DoxyCodeLine{435 }
+\DoxyCodeLine{436 \textcolor{preprocessor}{\#define ACPI\_SRAT\_GICC\_ENABLED     (1)         }\textcolor{comment}{/* 00: Use affinity structure */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{437 }
+\DoxyCodeLine{438 }
+\DoxyCodeLine{439 \textcolor{comment}{/* 4: GCC ITS Affinity (ACPI 6.2) */}}
+\DoxyCodeLine{440 }
+\DoxyCodeLine{441 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__srat__gic__its__affinity}{acpi\_srat\_gic\_its\_affinity}}}
+\DoxyCodeLine{442 \{}
+\DoxyCodeLine{443     \mbox{\hyperlink{structacpi__subtable__header}{ACPI\_SUBTABLE\_HEADER}}    \mbox{\hyperlink{structacpi__srat__gic__its__affinity_a0a41aef0407a86e15321588f6b69d116}{Header}};}
+\DoxyCodeLine{444     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__srat__gic__its__affinity_a0bf7429ea958f8e1c3265e5f6ce1ef51}{ProximityDomain}};}
+\DoxyCodeLine{445     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__srat__gic__its__affinity_abbe3925b24385ab0508fe6091e3865bc}{Reserved}};}
+\DoxyCodeLine{446     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__srat__gic__its__affinity_a147e091beb6bd90d6020f4db890fe2ee}{ItsId}};}
+\DoxyCodeLine{447 }
+\DoxyCodeLine{448 \} \mbox{\hyperlink{actbl3_8h_ab81e8eda69d07cff11a8e861bd8d48bb}{ACPI\_SRAT\_GIC\_ITS\_AFFINITY}};}
+\DoxyCodeLine{449 }
+\DoxyCodeLine{450 }
+\DoxyCodeLine{451 \textcolor{comment}{/* 5: Generic Initiator Affinity Structure (ACPI 6.3) */}}
+\DoxyCodeLine{452 }
+\DoxyCodeLine{453 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__srat__generic__affinity}{acpi\_srat\_generic\_affinity}}}
+\DoxyCodeLine{454 \{}
+\DoxyCodeLine{455     \mbox{\hyperlink{structacpi__subtable__header}{ACPI\_SUBTABLE\_HEADER}}    \mbox{\hyperlink{structacpi__srat__generic__affinity_a0ed93b9998499cea5ed4f634c7c3fbe6}{Header}};}
+\DoxyCodeLine{456     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__srat__generic__affinity_a2da3084860fbc697e6ecdfb5cceb458c}{Reserved}};}
+\DoxyCodeLine{457     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__srat__generic__affinity_a782db3cd0323684c8588b1a17d6f37a0}{DeviceHandleType}};}
+\DoxyCodeLine{458     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__srat__generic__affinity_a440b06f1551d2d6f41d0c5c8c1407d9f}{ProximityDomain}};}
+\DoxyCodeLine{459     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__srat__generic__affinity_aefadd8f4541151aa1431042871e9fc67}{DeviceHandle}}[16];}
+\DoxyCodeLine{460     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__srat__generic__affinity_a062ceb9dfdcda352f792231583e9ab1b}{Flags}};}
+\DoxyCodeLine{461     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__srat__generic__affinity_ad88e1cab09e7d157141aae944b802243}{Reserved1}};}
+\DoxyCodeLine{462 }
+\DoxyCodeLine{463 \} \mbox{\hyperlink{actbl3_8h_ab62276dae3720cfc7af57d9c0bb05645}{ACPI\_SRAT\_GENERIC\_AFFINITY}};}
+\DoxyCodeLine{464 }
+\DoxyCodeLine{465 \textcolor{comment}{/* Flags for ACPI\_SRAT\_GENERIC\_AFFINITY */}}
+\DoxyCodeLine{466 }
+\DoxyCodeLine{467 \textcolor{preprocessor}{\#define ACPI\_SRAT\_GENERIC\_AFFINITY\_ENABLED (1) }\textcolor{comment}{/* 00: Use affinity structure */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{468 }
+\DoxyCodeLine{469 \textcolor{comment}{/*******************************************************************************}}
+\DoxyCodeLine{470 \textcolor{comment}{ *}}
+\DoxyCodeLine{471 \textcolor{comment}{ * STAO -\/ Status Override Table (\_STA override) -\/ ACPI 6.0}}
+\DoxyCodeLine{472 \textcolor{comment}{ *        Version 1}}
+\DoxyCodeLine{473 \textcolor{comment}{ *}}
+\DoxyCodeLine{474 \textcolor{comment}{ * Conforms to "{}ACPI Specification for Status Override Table"{}}}
+\DoxyCodeLine{475 \textcolor{comment}{ * 6 January 2015}}
+\DoxyCodeLine{476 \textcolor{comment}{ *}}
+\DoxyCodeLine{477 \textcolor{comment}{ ******************************************************************************/}}
+\DoxyCodeLine{478 }
+\DoxyCodeLine{479 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__table__stao}{acpi\_table\_stao}}}
+\DoxyCodeLine{480 \{}
+\DoxyCodeLine{481     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       \mbox{\hyperlink{structacpi__table__stao_afeca1ea90194519c00ded0f4ca2234af}{Header}};             \textcolor{comment}{/* Common ACPI table header */}}
+\DoxyCodeLine{482     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__stao_a067127af1099696a392c98b083ff7997}{IgnoreUart}};}
+\DoxyCodeLine{483 }
+\DoxyCodeLine{484 \} \mbox{\hyperlink{actbl3_8h_aeb2cc1828f8627cdad87c0acf5437df3}{ACPI\_TABLE\_STAO}};}
+\DoxyCodeLine{485 }
+\DoxyCodeLine{486 }
+\DoxyCodeLine{487 \textcolor{comment}{/*******************************************************************************}}
+\DoxyCodeLine{488 \textcolor{comment}{ *}}
+\DoxyCodeLine{489 \textcolor{comment}{ * TCPA -\/ Trusted Computing Platform Alliance table}}
+\DoxyCodeLine{490 \textcolor{comment}{ *        Version 2}}
+\DoxyCodeLine{491 \textcolor{comment}{ *}}
+\DoxyCodeLine{492 \textcolor{comment}{ * TCG Hardware Interface Table for TPM 1.2 Clients and Servers}}
+\DoxyCodeLine{493 \textcolor{comment}{ *}}
+\DoxyCodeLine{494 \textcolor{comment}{ * Conforms to "{}TCG ACPI Specification, Family 1.2 and 2.0"{},}}
+\DoxyCodeLine{495 \textcolor{comment}{ * Version 1.2, Revision 8}}
+\DoxyCodeLine{496 \textcolor{comment}{ * February 27, 2017}}
+\DoxyCodeLine{497 \textcolor{comment}{ *}}
+\DoxyCodeLine{498 \textcolor{comment}{ * NOTE: There are two versions of the table with the same signature -\/-\/}}
+\DoxyCodeLine{499 \textcolor{comment}{ * the client version and the server version. The common PlatformClass}}
+\DoxyCodeLine{500 \textcolor{comment}{ * field is used to differentiate the two types of tables.}}
+\DoxyCodeLine{501 \textcolor{comment}{ *}}
+\DoxyCodeLine{502 \textcolor{comment}{ ******************************************************************************/}}
+\DoxyCodeLine{503 }
+\DoxyCodeLine{504 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__table__tcpa__hdr}{acpi\_table\_tcpa\_hdr}}}
+\DoxyCodeLine{505 \{}
+\DoxyCodeLine{506     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       \mbox{\hyperlink{structacpi__table__tcpa__hdr_a82302b45282da1d653725b354d5b066e}{Header}};             \textcolor{comment}{/* Common ACPI table header */}}
+\DoxyCodeLine{507     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__table__tcpa__hdr_aa41c25385f1f8ac7ac820bf51664b897}{PlatformClass}};}
+\DoxyCodeLine{508 }
+\DoxyCodeLine{509 \} \mbox{\hyperlink{actbl3_8h_afc43fc89b6e5162df3de32e89c58d9bf}{ACPI\_TABLE\_TCPA\_HDR}};}
+\DoxyCodeLine{510 }
+\DoxyCodeLine{511 \textcolor{comment}{/*}}
+\DoxyCodeLine{512 \textcolor{comment}{ * Values for PlatformClass above.}}
+\DoxyCodeLine{513 \textcolor{comment}{ * This is how the client and server subtables are differentiated}}
+\DoxyCodeLine{514 \textcolor{comment}{ */}}
+\DoxyCodeLine{515 \textcolor{preprocessor}{\#define ACPI\_TCPA\_CLIENT\_TABLE          0}}
+\DoxyCodeLine{516 \textcolor{preprocessor}{\#define ACPI\_TCPA\_SERVER\_TABLE          1}}
+\DoxyCodeLine{517 }
+\DoxyCodeLine{518 }
+\DoxyCodeLine{519 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__table__tcpa__client}{acpi\_table\_tcpa\_client}}}
+\DoxyCodeLine{520 \{}
+\DoxyCodeLine{521     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__table__tcpa__client_a2a7ed0221456bf1a7028675537e2116d}{MinimumLogLength}};   \textcolor{comment}{/* Minimum length for the event log area */}}
+\DoxyCodeLine{522     \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}                  \mbox{\hyperlink{structacpi__table__tcpa__client_a78a193960cc387ab0aacdad6e355e630}{LogAddress}};         \textcolor{comment}{/* Address of the event log area */}}
+\DoxyCodeLine{523 }
+\DoxyCodeLine{524 \} \mbox{\hyperlink{actbl3_8h_a7487429b6fc99debf6eacfe972c27a71}{ACPI\_TABLE\_TCPA\_CLIENT}};}
+\DoxyCodeLine{525 }
+\DoxyCodeLine{526 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__table__tcpa__server}{acpi\_table\_tcpa\_server}}}
+\DoxyCodeLine{527 \{}
+\DoxyCodeLine{528     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__table__tcpa__server_a562acf7a1c317ab7a09cbb760a297fad}{Reserved}};}
+\DoxyCodeLine{529     \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}                  \mbox{\hyperlink{structacpi__table__tcpa__server_a354105574d869922093fea701f35a24b}{MinimumLogLength}};   \textcolor{comment}{/* Minimum length for the event log area */}}
+\DoxyCodeLine{530     \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}                  \mbox{\hyperlink{structacpi__table__tcpa__server_a5430217ac41d1ed07c4a131118fbb032}{LogAddress}};         \textcolor{comment}{/* Address of the event log area */}}
+\DoxyCodeLine{531     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__table__tcpa__server_aae201499ae0d918885abdc178c64f672}{SpecRevision}};}
+\DoxyCodeLine{532     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__tcpa__server_a770e5919593a0feaa7e6fdd9ffc776b7}{DeviceFlags}};}
+\DoxyCodeLine{533     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__tcpa__server_ab45cd04e13997107ba566cded9967a93}{InterruptFlags}};}
+\DoxyCodeLine{534     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__tcpa__server_a508d4ec93b11a535ec3a0a9197c6947b}{GpeNumber}};}
+\DoxyCodeLine{535     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__tcpa__server_a7274c3faea1dbc206ea0102e535a0145}{Reserved2}}[3];}
+\DoxyCodeLine{536     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__table__tcpa__server_ab623bf0dd467e569aacb837aff3e0e96}{GlobalInterrupt}};}
+\DoxyCodeLine{537     \mbox{\hyperlink{structacpi__generic__address}{ACPI\_GENERIC\_ADDRESS}}    \mbox{\hyperlink{structacpi__table__tcpa__server_a5879ee354c530d0f8c4af59ce9f9de8b}{Address}};}
+\DoxyCodeLine{538     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__table__tcpa__server_a1e3920a7a9dd5800a43a64bac10e2b1e}{Reserved3}};}
+\DoxyCodeLine{539     \mbox{\hyperlink{structacpi__generic__address}{ACPI\_GENERIC\_ADDRESS}}    \mbox{\hyperlink{structacpi__table__tcpa__server_ab35fa89f9eddc2d22cfc7b4144b2c044}{ConfigAddress}};}
+\DoxyCodeLine{540     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__tcpa__server_ad11d95221eba94b9d8b3f9779cbeafa2}{Group}};}
+\DoxyCodeLine{541     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__tcpa__server_ac8e97444fa1c34aa6af3d6a0fb6e36be}{Bus}};                \textcolor{comment}{/* PCI Bus/Segment/Function numbers */}}
+\DoxyCodeLine{542     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__tcpa__server_ab7ee2eaba077228b2a11cd123e681823}{Device}};}
+\DoxyCodeLine{543     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__tcpa__server_abcf72ba3568e1003724b318bc46f7739}{Function}};}
+\DoxyCodeLine{544 }
+\DoxyCodeLine{545 \} \mbox{\hyperlink{actbl3_8h_af99467145f6ab3482be2d82d4da7b4e9}{ACPI\_TABLE\_TCPA\_SERVER}};}
+\DoxyCodeLine{546 }
+\DoxyCodeLine{547 \textcolor{comment}{/* Values for DeviceFlags above */}}
+\DoxyCodeLine{548 }
+\DoxyCodeLine{549 \textcolor{preprocessor}{\#define ACPI\_TCPA\_PCI\_DEVICE            (1)}}
+\DoxyCodeLine{550 \textcolor{preprocessor}{\#define ACPI\_TCPA\_BUS\_PNP               (1<<1)}}
+\DoxyCodeLine{551 \textcolor{preprocessor}{\#define ACPI\_TCPA\_ADDRESS\_VALID         (1<<2)}}
+\DoxyCodeLine{552 }
+\DoxyCodeLine{553 \textcolor{comment}{/* Values for InterruptFlags above */}}
+\DoxyCodeLine{554 }
+\DoxyCodeLine{555 \textcolor{preprocessor}{\#define ACPI\_TCPA\_INTERRUPT\_MODE        (1)}}
+\DoxyCodeLine{556 \textcolor{preprocessor}{\#define ACPI\_TCPA\_INTERRUPT\_POLARITY    (1<<1)}}
+\DoxyCodeLine{557 \textcolor{preprocessor}{\#define ACPI\_TCPA\_SCI\_VIA\_GPE           (1<<2)}}
+\DoxyCodeLine{558 \textcolor{preprocessor}{\#define ACPI\_TCPA\_GLOBAL\_INTERRUPT      (1<<3)}}
+\DoxyCodeLine{559 }
+\DoxyCodeLine{560 }
+\DoxyCodeLine{561 \textcolor{comment}{/*******************************************************************************}}
+\DoxyCodeLine{562 \textcolor{comment}{ *}}
+\DoxyCodeLine{563 \textcolor{comment}{ * TPM2 -\/ Trusted Platform Module (TPM) 2.0 Hardware Interface Table}}
+\DoxyCodeLine{564 \textcolor{comment}{ *        Version 4}}
+\DoxyCodeLine{565 \textcolor{comment}{ *}}
+\DoxyCodeLine{566 \textcolor{comment}{ * TCG Hardware Interface Table for TPM 2.0 Clients and Servers}}
+\DoxyCodeLine{567 \textcolor{comment}{ *}}
+\DoxyCodeLine{568 \textcolor{comment}{ * Conforms to "{}TCG ACPI Specification, Family 1.2 and 2.0"{},}}
+\DoxyCodeLine{569 \textcolor{comment}{ * Version 1.2, Revision 8}}
+\DoxyCodeLine{570 \textcolor{comment}{ * February 27, 2017}}
+\DoxyCodeLine{571 \textcolor{comment}{ *}}
+\DoxyCodeLine{572 \textcolor{comment}{ ******************************************************************************/}}
+\DoxyCodeLine{573 }
+\DoxyCodeLine{574 \textcolor{comment}{/* Revision 3 */}}
+\DoxyCodeLine{575 }
+\DoxyCodeLine{576 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__table__tpm23}{acpi\_table\_tpm23}}}
+\DoxyCodeLine{577 \{}
+\DoxyCodeLine{578     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       \mbox{\hyperlink{structacpi__table__tpm23_a83979cc312cd4acaaab92f8aa2bf7dc3}{Header}};             \textcolor{comment}{/* Common ACPI table header */}}
+\DoxyCodeLine{579     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__table__tpm23_a703229e77009dfe7c407d1275b08670a}{Reserved}};}
+\DoxyCodeLine{580     \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}                  \mbox{\hyperlink{structacpi__table__tpm23_ad80f6fb420637c591640d786f893948e}{ControlAddress}};}
+\DoxyCodeLine{581     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__table__tpm23_adeda10a2f2b9499a5289d33f2ce4861e}{StartMethod}};}
+\DoxyCodeLine{582 }
+\DoxyCodeLine{583 \} \mbox{\hyperlink{actbl3_8h_a9fd0b44058dd522638a558df237b97a9}{ACPI\_TABLE\_TPM23}};}
+\DoxyCodeLine{584 }
+\DoxyCodeLine{585 \textcolor{comment}{/* Value for StartMethod above */}}
+\DoxyCodeLine{586 }
+\DoxyCodeLine{587 \textcolor{preprocessor}{\#define ACPI\_TPM23\_ACPI\_START\_METHOD                 2}}
+\DoxyCodeLine{588 }
+\DoxyCodeLine{589 \textcolor{comment}{/*}}
+\DoxyCodeLine{590 \textcolor{comment}{ * Optional trailer for revision 3. If start method is 2, there is a 4 byte}}
+\DoxyCodeLine{591 \textcolor{comment}{ * reserved area of all zeros.}}
+\DoxyCodeLine{592 \textcolor{comment}{ */}}
+\DoxyCodeLine{593 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__tmp23__trailer}{acpi\_tmp23\_trailer}}}
+\DoxyCodeLine{594 \{}
+\DoxyCodeLine{595     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__tmp23__trailer_ab0ecbce1dcfdfaf9967db5b943ce38de}{Reserved}};}
+\DoxyCodeLine{596 }
+\DoxyCodeLine{597 \} \mbox{\hyperlink{actbl3_8h_ab7bceeacd6c7821dbb4825d131115f6f}{ACPI\_TPM23\_TRAILER}};}
+\DoxyCodeLine{598 }
+\DoxyCodeLine{599 }
+\DoxyCodeLine{600 \textcolor{comment}{/* Revision 4 */}}
+\DoxyCodeLine{601 }
+\DoxyCodeLine{602 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__table__tpm2}{acpi\_table\_tpm2}}}
+\DoxyCodeLine{603 \{}
+\DoxyCodeLine{604     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       \mbox{\hyperlink{structacpi__table__tpm2_a33eb52ae979f3206e7a2412ae5d2275e}{Header}};             \textcolor{comment}{/* Common ACPI table header */}}
+\DoxyCodeLine{605     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__table__tpm2_aff5f71135154d96a32620aa2a39a9abe}{PlatformClass}};}
+\DoxyCodeLine{606     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__table__tpm2_a0be643364ed9070c3f6db8aab9b97053}{Reserved}};}
+\DoxyCodeLine{607     \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}                  \mbox{\hyperlink{structacpi__table__tpm2_a44f7d48891c77292732b43c9163be718}{ControlAddress}};}
+\DoxyCodeLine{608     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__table__tpm2_af1d366159ad21b9f74423665644fed3b}{StartMethod}};}
+\DoxyCodeLine{609 }
+\DoxyCodeLine{610     \textcolor{comment}{/* Platform-\/specific data follows */}}
+\DoxyCodeLine{611 }
+\DoxyCodeLine{612 \} \mbox{\hyperlink{actbl3_8h_a3406dd353565b0d7828b33ad30dd7861}{ACPI\_TABLE\_TPM2}};}
+\DoxyCodeLine{613 }
+\DoxyCodeLine{614 \textcolor{comment}{/* Values for StartMethod above */}}
+\DoxyCodeLine{615 }
+\DoxyCodeLine{616 \textcolor{preprocessor}{\#define ACPI\_TPM2\_NOT\_ALLOWED                       0}}
+\DoxyCodeLine{617 \textcolor{preprocessor}{\#define ACPI\_TPM2\_RESERVED1                         1}}
+\DoxyCodeLine{618 \textcolor{preprocessor}{\#define ACPI\_TPM2\_START\_METHOD                      2}}
+\DoxyCodeLine{619 \textcolor{preprocessor}{\#define ACPI\_TPM2\_RESERVED3                         3}}
+\DoxyCodeLine{620 \textcolor{preprocessor}{\#define ACPI\_TPM2\_RESERVED4                         4}}
+\DoxyCodeLine{621 \textcolor{preprocessor}{\#define ACPI\_TPM2\_RESERVED5                         5}}
+\DoxyCodeLine{622 \textcolor{preprocessor}{\#define ACPI\_TPM2\_MEMORY\_MAPPED                     6}}
+\DoxyCodeLine{623 \textcolor{preprocessor}{\#define ACPI\_TPM2\_COMMAND\_BUFFER                    7}}
+\DoxyCodeLine{624 \textcolor{preprocessor}{\#define ACPI\_TPM2\_COMMAND\_BUFFER\_WITH\_START\_METHOD  8}}
+\DoxyCodeLine{625 \textcolor{preprocessor}{\#define ACPI\_TPM2\_RESERVED9                         9}}
+\DoxyCodeLine{626 \textcolor{preprocessor}{\#define ACPI\_TPM2\_RESERVED10                        10}}
+\DoxyCodeLine{627 \textcolor{preprocessor}{\#define ACPI\_TPM2\_COMMAND\_BUFFER\_WITH\_ARM\_SMC       11  }\textcolor{comment}{/* V1.2 Rev 8 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{628 \textcolor{preprocessor}{\#define ACPI\_TPM2\_RESERVED                          12}}
+\DoxyCodeLine{629 }
+\DoxyCodeLine{630 }
+\DoxyCodeLine{631 \textcolor{comment}{/* Optional trailer appears after any StartMethod subtables */}}
+\DoxyCodeLine{632 }
+\DoxyCodeLine{633 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__tpm2__trailer}{acpi\_tpm2\_trailer}}}
+\DoxyCodeLine{634 \{}
+\DoxyCodeLine{635     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__tpm2__trailer_a2b2fb400103edb5ea909fb98c2427322}{MethodParameters}}[12];}
+\DoxyCodeLine{636     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__tpm2__trailer_af1a24cdb85bf23e2c14e8645a27e898d}{MinimumLogLength}};   \textcolor{comment}{/* Minimum length for the event log area */}}
+\DoxyCodeLine{637     \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}                  \mbox{\hyperlink{structacpi__tpm2__trailer_ab67f6bfe83cb2d108db9b8a3c9e5d432}{LogAddress}};         \textcolor{comment}{/* Address of the event log area */}}
+\DoxyCodeLine{638 }
+\DoxyCodeLine{639 \} \mbox{\hyperlink{actbl3_8h_a119ddc334a73ba11102703a5931ce1aa}{ACPI\_TPM2\_TRAILER}};}
+\DoxyCodeLine{640 }
+\DoxyCodeLine{641 }
+\DoxyCodeLine{642 \textcolor{comment}{/*}}
+\DoxyCodeLine{643 \textcolor{comment}{ * Subtables (StartMethod-\/specific)}}
+\DoxyCodeLine{644 \textcolor{comment}{ */}}
+\DoxyCodeLine{645 }
+\DoxyCodeLine{646 \textcolor{comment}{/* 11: Start Method for ARM SMC (V1.2 Rev 8) */}}
+\DoxyCodeLine{647 }
+\DoxyCodeLine{648 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__tpm2__arm__smc}{acpi\_tpm2\_arm\_smc}}}
+\DoxyCodeLine{649 \{}
+\DoxyCodeLine{650     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__tpm2__arm__smc_a273f4643d49eae891a4916728de262bc}{GlobalInterrupt}};}
+\DoxyCodeLine{651     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__tpm2__arm__smc_aa74a212102a0980a877097d02b880e99}{InterruptFlags}};}
+\DoxyCodeLine{652     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__tpm2__arm__smc_a247dadc17d26760d27f0629bfbc34765}{OperationFlags}};}
+\DoxyCodeLine{653     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__tpm2__arm__smc_a6166daf0887fcf5d8f61c1ab7b5c5848}{Reserved}};}
+\DoxyCodeLine{654     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__tpm2__arm__smc_aaa85c02a8618c2aacab602f62c4b183c}{FunctionId}};}
+\DoxyCodeLine{655 }
+\DoxyCodeLine{656 \} \mbox{\hyperlink{actbl3_8h_aa90487517c5e5f28ab49556ae30fa462}{ACPI\_TPM2\_ARM\_SMC}};}
+\DoxyCodeLine{657 }
+\DoxyCodeLine{658 \textcolor{comment}{/* Values for InterruptFlags above */}}
+\DoxyCodeLine{659 }
+\DoxyCodeLine{660 \textcolor{preprocessor}{\#define ACPI\_TPM2\_INTERRUPT\_SUPPORT     (1)}}
+\DoxyCodeLine{661 }
+\DoxyCodeLine{662 \textcolor{comment}{/* Values for OperationFlags above */}}
+\DoxyCodeLine{663 }
+\DoxyCodeLine{664 \textcolor{preprocessor}{\#define ACPI\_TPM2\_IDLE\_SUPPORT          (1)}}
+\DoxyCodeLine{665 }
+\DoxyCodeLine{666 }
+\DoxyCodeLine{667 \textcolor{comment}{/*******************************************************************************}}
+\DoxyCodeLine{668 \textcolor{comment}{ *}}
+\DoxyCodeLine{669 \textcolor{comment}{ * UEFI -\/ UEFI Boot optimization Table}}
+\DoxyCodeLine{670 \textcolor{comment}{ *        Version 1}}
+\DoxyCodeLine{671 \textcolor{comment}{ *}}
+\DoxyCodeLine{672 \textcolor{comment}{ * Conforms to "{}Unified Extensible Firmware Interface Specification"{},}}
+\DoxyCodeLine{673 \textcolor{comment}{ * Version 2.3, May 8, 2009}}
+\DoxyCodeLine{674 \textcolor{comment}{ *}}
+\DoxyCodeLine{675 \textcolor{comment}{ ******************************************************************************/}}
+\DoxyCodeLine{676 }
+\DoxyCodeLine{677 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__table__uefi}{acpi\_table\_uefi}}}
+\DoxyCodeLine{678 \{}
+\DoxyCodeLine{679     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       \mbox{\hyperlink{structacpi__table__uefi_a0c4178f7f7567d93137e09a4882e0e40}{Header}};             \textcolor{comment}{/* Common ACPI table header */}}
+\DoxyCodeLine{680     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__uefi_a197f69ea787b4c7ddeefb4446c625585}{Identifier}}[16];     \textcolor{comment}{/* UUID identifier */}}
+\DoxyCodeLine{681     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__table__uefi_a58bbaf0340cde041f51678cfcc1850f8}{DataOffset}};         \textcolor{comment}{/* Offset of remaining data in table */}}
+\DoxyCodeLine{682 }
+\DoxyCodeLine{683 \} \mbox{\hyperlink{actbl3_8h_af7ad2f56ea53543b433d362fd49c9887}{ACPI\_TABLE\_UEFI}};}
+\DoxyCodeLine{684 }
+\DoxyCodeLine{685 }
+\DoxyCodeLine{686 \textcolor{comment}{/*******************************************************************************}}
+\DoxyCodeLine{687 \textcolor{comment}{ *}}
+\DoxyCodeLine{688 \textcolor{comment}{ * VRTC -\/ Virtual Real Time Clock Table}}
+\DoxyCodeLine{689 \textcolor{comment}{ *        Version 1}}
+\DoxyCodeLine{690 \textcolor{comment}{ *}}
+\DoxyCodeLine{691 \textcolor{comment}{ * Conforms to "{}Simple Firmware Interface Specification"{},}}
+\DoxyCodeLine{692 \textcolor{comment}{ * Draft 0.8.2, Oct 19, 2010}}
+\DoxyCodeLine{693 \textcolor{comment}{ * NOTE: The ACPI VRTC is equivalent to The SFI MRTC table.}}
+\DoxyCodeLine{694 \textcolor{comment}{ *}}
+\DoxyCodeLine{695 \textcolor{comment}{ ******************************************************************************/}}
+\DoxyCodeLine{696 }
+\DoxyCodeLine{697 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__table__vrtc}{acpi\_table\_vrtc}}}
+\DoxyCodeLine{698 \{}
+\DoxyCodeLine{699     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       \mbox{\hyperlink{structacpi__table__vrtc_a9269355b742aa387bb9c424b5c898c94}{Header}};             \textcolor{comment}{/* Common ACPI table header */}}
+\DoxyCodeLine{700 }
+\DoxyCodeLine{701 \} \mbox{\hyperlink{actbl3_8h_abc364ad53bbc306fa072917380a88a8d}{ACPI\_TABLE\_VRTC}};}
+\DoxyCodeLine{702 }
+\DoxyCodeLine{703 \textcolor{comment}{/* VRTC entry */}}
+\DoxyCodeLine{704 }
+\DoxyCodeLine{705 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__vrtc__entry}{acpi\_vrtc\_entry}}}
+\DoxyCodeLine{706 \{}
+\DoxyCodeLine{707     \mbox{\hyperlink{structacpi__generic__address}{ACPI\_GENERIC\_ADDRESS}}    \mbox{\hyperlink{structacpi__vrtc__entry_a3b68057f994fb7555cbebc21fb542115}{PhysicalAddress}};}
+\DoxyCodeLine{708     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__vrtc__entry_a413a2590d3986f02a5eb01c74c420473}{Irq}};}
+\DoxyCodeLine{709 }
+\DoxyCodeLine{710 \} \mbox{\hyperlink{actbl3_8h_a5ed8fb76348c31ba364c9bdff03e0670}{ACPI\_VRTC\_ENTRY}};}
+\DoxyCodeLine{711 }
+\DoxyCodeLine{712 }
+\DoxyCodeLine{713 \textcolor{comment}{/*******************************************************************************}}
+\DoxyCodeLine{714 \textcolor{comment}{ *}}
+\DoxyCodeLine{715 \textcolor{comment}{ * WAET -\/ Windows ACPI Emulated devices Table}}
+\DoxyCodeLine{716 \textcolor{comment}{ *        Version 1}}
+\DoxyCodeLine{717 \textcolor{comment}{ *}}
+\DoxyCodeLine{718 \textcolor{comment}{ * Conforms to "{}Windows ACPI Emulated Devices Table"{}, version 1.0, April 6, 2009}}
+\DoxyCodeLine{719 \textcolor{comment}{ *}}
+\DoxyCodeLine{720 \textcolor{comment}{ ******************************************************************************/}}
+\DoxyCodeLine{721 }
+\DoxyCodeLine{722 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__table__waet}{acpi\_table\_waet}}}
+\DoxyCodeLine{723 \{}
+\DoxyCodeLine{724     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       \mbox{\hyperlink{structacpi__table__waet_ad00a59129a7af80a01fff3da0f892ea6}{Header}};             \textcolor{comment}{/* Common ACPI table header */}}
+\DoxyCodeLine{725     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__table__waet_a1757065fd9afee10db8d3c657e9e418c}{Flags}};}
+\DoxyCodeLine{726 }
+\DoxyCodeLine{727 \} \mbox{\hyperlink{actbl3_8h_a059de09187614cb4c8eb55286c2d4204}{ACPI\_TABLE\_WAET}};}
+\DoxyCodeLine{728 }
+\DoxyCodeLine{729 \textcolor{comment}{/* Masks for Flags field above */}}
+\DoxyCodeLine{730 }
+\DoxyCodeLine{731 \textcolor{preprocessor}{\#define ACPI\_WAET\_RTC\_NO\_ACK        (1)         }\textcolor{comment}{/* RTC requires no int acknowledge */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{732 \textcolor{preprocessor}{\#define ACPI\_WAET\_TIMER\_ONE\_READ    (1<<1)      }\textcolor{comment}{/* PM timer requires only one read */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{733 }
+\DoxyCodeLine{734 }
+\DoxyCodeLine{735 \textcolor{comment}{/*******************************************************************************}}
+\DoxyCodeLine{736 \textcolor{comment}{ *}}
+\DoxyCodeLine{737 \textcolor{comment}{ * WDAT -\/ Watchdog Action Table}}
+\DoxyCodeLine{738 \textcolor{comment}{ *        Version 1}}
+\DoxyCodeLine{739 \textcolor{comment}{ *}}
+\DoxyCodeLine{740 \textcolor{comment}{ * Conforms to "{}Hardware Watchdog Timers Design Specification"{},}}
+\DoxyCodeLine{741 \textcolor{comment}{ * Copyright 2006 Microsoft Corporation.}}
+\DoxyCodeLine{742 \textcolor{comment}{ *}}
+\DoxyCodeLine{743 \textcolor{comment}{ ******************************************************************************/}}
+\DoxyCodeLine{744 }
+\DoxyCodeLine{745 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__table__wdat}{acpi\_table\_wdat}}}
+\DoxyCodeLine{746 \{}
+\DoxyCodeLine{747     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       \mbox{\hyperlink{structacpi__table__wdat_a22dc5878dd14a8d6944e1f31f2f4e8cb}{Header}};             \textcolor{comment}{/* Common ACPI table header */}}
+\DoxyCodeLine{748     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__table__wdat_aa6f100c284493cc965d948400293e48f}{HeaderLength}};       \textcolor{comment}{/* Watchdog Header Length */}}
+\DoxyCodeLine{749     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__table__wdat_a6f7053cf036bc802aa4bfbbe954b66bd}{PciSegment}};         \textcolor{comment}{/* PCI Segment number */}}
+\DoxyCodeLine{750     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__wdat_a4ae69d3df435cb526cf55509f1b49e57}{PciBus}};             \textcolor{comment}{/* PCI Bus number */}}
+\DoxyCodeLine{751     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__wdat_aca0428de9f85a40e4a712b340bb968fe}{PciDevice}};          \textcolor{comment}{/* PCI Device number */}}
+\DoxyCodeLine{752     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__wdat_ac3770d65df85bfdc7597a8c9401f5793}{PciFunction}};        \textcolor{comment}{/* PCI Function number */}}
+\DoxyCodeLine{753     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__wdat_a956e1ceba5cae3b5f8975c76b30697dc}{Reserved}}[3];}
+\DoxyCodeLine{754     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__table__wdat_af9e41e811dbdeaec8c15cc3f40eed878}{TimerPeriod}};        \textcolor{comment}{/* Period of one timer count (msec) */}}
+\DoxyCodeLine{755     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__table__wdat_afc1130c052d52834d6eda2742d65fc9d}{MaxCount}};           \textcolor{comment}{/* Maximum counter value supported */}}
+\DoxyCodeLine{756     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__table__wdat_ae4431bb40b6662091062fdee22ae94ed}{MinCount}};           \textcolor{comment}{/* Minimum counter value */}}
+\DoxyCodeLine{757     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__wdat_ad93536de4c04ccc5c2e065b31441d031}{Flags}};}
+\DoxyCodeLine{758     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__wdat_a6b8e1b0ea26c3876fd0b67468d9d3527}{Reserved2}}[3];}
+\DoxyCodeLine{759     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__table__wdat_a401dca1b5816954e9132afd4b2bb7661}{Entries}};            \textcolor{comment}{/* Number of watchdog entries that follow */}}
+\DoxyCodeLine{760 }
+\DoxyCodeLine{761 \} \mbox{\hyperlink{actbl3_8h_a4d8e80fff178cc8c4b6c02aa91957bcd}{ACPI\_TABLE\_WDAT}};}
+\DoxyCodeLine{762 }
+\DoxyCodeLine{763 \textcolor{comment}{/* Masks for Flags field above */}}
+\DoxyCodeLine{764 }
+\DoxyCodeLine{765 \textcolor{preprocessor}{\#define ACPI\_WDAT\_ENABLED           (1)}}
+\DoxyCodeLine{766 \textcolor{preprocessor}{\#define ACPI\_WDAT\_STOPPED           0x80}}
+\DoxyCodeLine{767 }
+\DoxyCodeLine{768 }
+\DoxyCodeLine{769 \textcolor{comment}{/* WDAT Instruction Entries (actions) */}}
+\DoxyCodeLine{770 }
+\DoxyCodeLine{771 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__wdat__entry}{acpi\_wdat\_entry}}}
+\DoxyCodeLine{772 \{}
+\DoxyCodeLine{773     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__wdat__entry_a4c447a51064382ff2db974a64bcf8cba}{Action}};}
+\DoxyCodeLine{774     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__wdat__entry_a8d6e84278648ac5c719a3cea8064e78e}{Instruction}};}
+\DoxyCodeLine{775     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__wdat__entry_a028f7d1c8a5ac3e78e9be96ac1c06f76}{Reserved}};}
+\DoxyCodeLine{776     \mbox{\hyperlink{structacpi__generic__address}{ACPI\_GENERIC\_ADDRESS}}    \mbox{\hyperlink{structacpi__wdat__entry_a31ce5a6ee1a214333348b0a0f69be728}{RegisterRegion}};}
+\DoxyCodeLine{777     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__wdat__entry_a044da1c17f42f6f0c298766a946062a0}{Value}};              \textcolor{comment}{/* Value used with Read/Write register */}}
+\DoxyCodeLine{778     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__wdat__entry_a38c14150f92e0718c95cbc48dfa8faf6}{Mask}};               \textcolor{comment}{/* Bitmask required for this register instruction */}}
+\DoxyCodeLine{779 }
+\DoxyCodeLine{780 \} \mbox{\hyperlink{actbl3_8h_a92ff47292d87954687980a61fa288f3a}{ACPI\_WDAT\_ENTRY}};}
+\DoxyCodeLine{781 }
+\DoxyCodeLine{782 \textcolor{comment}{/* Values for Action field above */}}
+\DoxyCodeLine{783 }
+\DoxyCodeLine{784 \textcolor{keyword}{enum} \mbox{\hyperlink{actbl3_8h_abd6666eacf0182368b1bd0f9de96ee0c}{AcpiWdatActions}}}
+\DoxyCodeLine{785 \{}
+\DoxyCodeLine{786     \mbox{\hyperlink{actbl3_8h_abd6666eacf0182368b1bd0f9de96ee0ca6ca7714294ff72370673808f1d954b0a}{ACPI\_WDAT\_RESET}}                 = 1,}
+\DoxyCodeLine{787     \mbox{\hyperlink{actbl3_8h_abd6666eacf0182368b1bd0f9de96ee0ca03328c75f1ec4a18369452145f54e79a}{ACPI\_WDAT\_GET\_CURRENT\_COUNTDOWN}} = 4,}
+\DoxyCodeLine{788     \mbox{\hyperlink{actbl3_8h_abd6666eacf0182368b1bd0f9de96ee0ca0c725f58ca45d00b96d52a58ab1fc61f}{ACPI\_WDAT\_GET\_COUNTDOWN}}         = 5,}
+\DoxyCodeLine{789     \mbox{\hyperlink{actbl3_8h_abd6666eacf0182368b1bd0f9de96ee0cacb70e93446f7c1d72aaac9408e757d84}{ACPI\_WDAT\_SET\_COUNTDOWN}}         = 6,}
+\DoxyCodeLine{790     \mbox{\hyperlink{actbl3_8h_abd6666eacf0182368b1bd0f9de96ee0ca49b0e607bc6e164cf20606e767360a25}{ACPI\_WDAT\_GET\_RUNNING\_STATE}}     = 8,}
+\DoxyCodeLine{791     \mbox{\hyperlink{actbl3_8h_abd6666eacf0182368b1bd0f9de96ee0cae60ff5a5c3d5e453650f64df33658394}{ACPI\_WDAT\_SET\_RUNNING\_STATE}}     = 9,}
+\DoxyCodeLine{792     \mbox{\hyperlink{actbl3_8h_abd6666eacf0182368b1bd0f9de96ee0cade924697846adf3d1f59d1fab714bd7d}{ACPI\_WDAT\_GET\_STOPPED\_STATE}}     = 10,}
+\DoxyCodeLine{793     \mbox{\hyperlink{actbl3_8h_abd6666eacf0182368b1bd0f9de96ee0cadccf422b0d33b7cc74ab3048cc1eac1c}{ACPI\_WDAT\_SET\_STOPPED\_STATE}}     = 11,}
+\DoxyCodeLine{794     \mbox{\hyperlink{actbl3_8h_abd6666eacf0182368b1bd0f9de96ee0caf00f77f6dbf690ac131fbc65e159fac5}{ACPI\_WDAT\_GET\_REBOOT}}            = 16,}
+\DoxyCodeLine{795     \mbox{\hyperlink{actbl3_8h_abd6666eacf0182368b1bd0f9de96ee0cafc56c8eb2a7b13fd8ee2113034713939}{ACPI\_WDAT\_SET\_REBOOT}}            = 17,}
+\DoxyCodeLine{796     \mbox{\hyperlink{actbl3_8h_abd6666eacf0182368b1bd0f9de96ee0cafabf0ac944bdbe7f89d896725eec4e36}{ACPI\_WDAT\_GET\_SHUTDOWN}}          = 18,}
+\DoxyCodeLine{797     \mbox{\hyperlink{actbl3_8h_abd6666eacf0182368b1bd0f9de96ee0ca606c5f2939ec61fcf28002ac7fde3b7b}{ACPI\_WDAT\_SET\_SHUTDOWN}}          = 19,}
+\DoxyCodeLine{798     \mbox{\hyperlink{actbl3_8h_abd6666eacf0182368b1bd0f9de96ee0ca11b01d3d31e4545238553934a6a9b881}{ACPI\_WDAT\_GET\_STATUS}}            = 32,}
+\DoxyCodeLine{799     \mbox{\hyperlink{actbl3_8h_abd6666eacf0182368b1bd0f9de96ee0cad01437246bdd34474ab1a6c0879bd424}{ACPI\_WDAT\_SET\_STATUS}}            = 33,}
+\DoxyCodeLine{800     \mbox{\hyperlink{actbl3_8h_abd6666eacf0182368b1bd0f9de96ee0ca2f79e5c876eb605a4be77130f1958173}{ACPI\_WDAT\_ACTION\_RESERVED}}       = 34    \textcolor{comment}{/* 34 and greater are reserved */}}
+\DoxyCodeLine{801 \};}
+\DoxyCodeLine{802 }
+\DoxyCodeLine{803 \textcolor{comment}{/* Values for Instruction field above */}}
+\DoxyCodeLine{804 }
+\DoxyCodeLine{805 \textcolor{keyword}{enum} \mbox{\hyperlink{actbl3_8h_a9442014a15b8749d2f2606211a6e861a}{AcpiWdatInstructions}}}
+\DoxyCodeLine{806 \{}
+\DoxyCodeLine{807     \mbox{\hyperlink{actbl3_8h_a9442014a15b8749d2f2606211a6e861aa1ec33080d4bf38c6b4bcc0b445124505}{ACPI\_WDAT\_READ\_VALUE}}            = 0,}
+\DoxyCodeLine{808     \mbox{\hyperlink{actbl3_8h_a9442014a15b8749d2f2606211a6e861aa0a650256cba22f718133634f429a6fbb}{ACPI\_WDAT\_READ\_COUNTDOWN}}        = 1,}
+\DoxyCodeLine{809     \mbox{\hyperlink{actbl3_8h_a9442014a15b8749d2f2606211a6e861aa370bea104792eec68c7927bae3c384d6}{ACPI\_WDAT\_WRITE\_VALUE}}           = 2,}
+\DoxyCodeLine{810     \mbox{\hyperlink{actbl3_8h_a9442014a15b8749d2f2606211a6e861aaa3218a36dc6f056a8b648963bb94c737}{ACPI\_WDAT\_WRITE\_COUNTDOWN}}       = 3,}
+\DoxyCodeLine{811     \mbox{\hyperlink{actbl3_8h_a9442014a15b8749d2f2606211a6e861aacac870d24155237da5c3214029ef64e3}{ACPI\_WDAT\_INSTRUCTION\_RESERVED}}  = 4,    \textcolor{comment}{/* 4 and greater are reserved */}}
+\DoxyCodeLine{812     \mbox{\hyperlink{actbl3_8h_a9442014a15b8749d2f2606211a6e861aa685f9d2861bfb63469ba82a69727358e}{ACPI\_WDAT\_PRESERVE\_REGISTER}}     = 0x80  \textcolor{comment}{/* Except for this value */}}
+\DoxyCodeLine{813 \};}
+\DoxyCodeLine{814 }
+\DoxyCodeLine{815 }
+\DoxyCodeLine{816 \textcolor{comment}{/*******************************************************************************}}
+\DoxyCodeLine{817 \textcolor{comment}{ *}}
+\DoxyCodeLine{818 \textcolor{comment}{ * WDDT -\/ Watchdog Descriptor Table}}
+\DoxyCodeLine{819 \textcolor{comment}{ *        Version 1}}
+\DoxyCodeLine{820 \textcolor{comment}{ *}}
+\DoxyCodeLine{821 \textcolor{comment}{ * Conforms to "{}Using the Intel ICH Family Watchdog Timer (WDT)"{},}}
+\DoxyCodeLine{822 \textcolor{comment}{ * Version 001, September 2002}}
+\DoxyCodeLine{823 \textcolor{comment}{ *}}
+\DoxyCodeLine{824 \textcolor{comment}{ ******************************************************************************/}}
+\DoxyCodeLine{825 }
+\DoxyCodeLine{826 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__table__wddt}{acpi\_table\_wddt}}}
+\DoxyCodeLine{827 \{}
+\DoxyCodeLine{828     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       \mbox{\hyperlink{structacpi__table__wddt_a4ab0885df3c0e3b918d59328de04e839}{Header}};             \textcolor{comment}{/* Common ACPI table header */}}
+\DoxyCodeLine{829     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__table__wddt_af252f1d2cf953a649372ca72218655a3}{SpecVersion}};}
+\DoxyCodeLine{830     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__table__wddt_ae6eb35fdd875ca555313e8efa6cbbcdb}{TableVersion}};}
+\DoxyCodeLine{831     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__table__wddt_a1b47a1fad0edc653328368b39886427e}{PciVendorId}};}
+\DoxyCodeLine{832     \mbox{\hyperlink{structacpi__generic__address}{ACPI\_GENERIC\_ADDRESS}}    \mbox{\hyperlink{structacpi__table__wddt_ab732627a567ac72cc4c5514b1f05aa7d}{Address}};}
+\DoxyCodeLine{833     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__table__wddt_a96bcdbcf79f77c74d17c32c2948e6c3a}{MaxCount}};           \textcolor{comment}{/* Maximum counter value supported */}}
+\DoxyCodeLine{834     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__table__wddt_a8753aa057980f5737cbd79da71b69106}{MinCount}};           \textcolor{comment}{/* Minimum counter value supported */}}
+\DoxyCodeLine{835     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__table__wddt_a06bce76049ca7d79b6a182f8399d09cf}{Period}};}
+\DoxyCodeLine{836     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__table__wddt_a2f626c5929430e4b42ec0b9ae59f7c51}{Status}};}
+\DoxyCodeLine{837     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__table__wddt_a2f559c8dc9f7e23dd4f1bff32ed78b8f}{Capability}};}
+\DoxyCodeLine{838 }
+\DoxyCodeLine{839 \} \mbox{\hyperlink{actbl3_8h_ab2aa0da6e993b46d59b3675f642c3140}{ACPI\_TABLE\_WDDT}};}
+\DoxyCodeLine{840 }
+\DoxyCodeLine{841 \textcolor{comment}{/* Flags for Status field above */}}
+\DoxyCodeLine{842 }
+\DoxyCodeLine{843 \textcolor{preprocessor}{\#define ACPI\_WDDT\_AVAILABLE     (1)}}
+\DoxyCodeLine{844 \textcolor{preprocessor}{\#define ACPI\_WDDT\_ACTIVE        (1<<1)}}
+\DoxyCodeLine{845 \textcolor{preprocessor}{\#define ACPI\_WDDT\_TCO\_OS\_OWNED  (1<<2)}}
+\DoxyCodeLine{846 \textcolor{preprocessor}{\#define ACPI\_WDDT\_USER\_RESET    (1<<11)}}
+\DoxyCodeLine{847 \textcolor{preprocessor}{\#define ACPI\_WDDT\_WDT\_RESET     (1<<12)}}
+\DoxyCodeLine{848 \textcolor{preprocessor}{\#define ACPI\_WDDT\_POWER\_FAIL    (1<<13)}}
+\DoxyCodeLine{849 \textcolor{preprocessor}{\#define ACPI\_WDDT\_UNKNOWN\_RESET (1<<14)}}
+\DoxyCodeLine{850 }
+\DoxyCodeLine{851 \textcolor{comment}{/* Flags for Capability field above */}}
+\DoxyCodeLine{852 }
+\DoxyCodeLine{853 \textcolor{preprocessor}{\#define ACPI\_WDDT\_AUTO\_RESET    (1)}}
+\DoxyCodeLine{854 \textcolor{preprocessor}{\#define ACPI\_WDDT\_ALERT\_SUPPORT (1<<1)}}
+\DoxyCodeLine{855 }
+\DoxyCodeLine{856 }
+\DoxyCodeLine{857 \textcolor{comment}{/*******************************************************************************}}
+\DoxyCodeLine{858 \textcolor{comment}{ *}}
+\DoxyCodeLine{859 \textcolor{comment}{ * WDRT -\/ Watchdog Resource Table}}
+\DoxyCodeLine{860 \textcolor{comment}{ *        Version 1}}
+\DoxyCodeLine{861 \textcolor{comment}{ *}}
+\DoxyCodeLine{862 \textcolor{comment}{ * Conforms to "{}Watchdog Timer Hardware Requirements for Windows Server 2003"{},}}
+\DoxyCodeLine{863 \textcolor{comment}{ * Version 1.01, August 28, 2006}}
+\DoxyCodeLine{864 \textcolor{comment}{ *}}
+\DoxyCodeLine{865 \textcolor{comment}{ ******************************************************************************/}}
+\DoxyCodeLine{866 }
+\DoxyCodeLine{867 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__table__wdrt}{acpi\_table\_wdrt}}}
+\DoxyCodeLine{868 \{}
+\DoxyCodeLine{869     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       \mbox{\hyperlink{structacpi__table__wdrt_a0d66ca3cc846cfbc4c365844076c7f5c}{Header}};             \textcolor{comment}{/* Common ACPI table header */}}
+\DoxyCodeLine{870     \mbox{\hyperlink{structacpi__generic__address}{ACPI\_GENERIC\_ADDRESS}}    \mbox{\hyperlink{structacpi__table__wdrt_a6f5ec3733291af45138144dfd590024c}{ControlRegister}};}
+\DoxyCodeLine{871     \mbox{\hyperlink{structacpi__generic__address}{ACPI\_GENERIC\_ADDRESS}}    \mbox{\hyperlink{structacpi__table__wdrt_a9dbd7978f2072a2da47900d3349f452b}{CountRegister}};}
+\DoxyCodeLine{872     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__table__wdrt_a3f08e025e94c375558553ef05d507878}{PciDeviceId}};}
+\DoxyCodeLine{873     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__table__wdrt_acdd9c0f963e22308ae69efb480851b9b}{PciVendorId}};}
+\DoxyCodeLine{874     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__wdrt_a869dd7b9a326d2686dcfb35bc525f385}{PciBus}};             \textcolor{comment}{/* PCI Bus number */}}
+\DoxyCodeLine{875     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__wdrt_a4f2f12a8a7fbeaeaab1d021466a05746}{PciDevice}};          \textcolor{comment}{/* PCI Device number */}}
+\DoxyCodeLine{876     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__wdrt_a08ed578055add7fd8b717d75c9d21767}{PciFunction}};        \textcolor{comment}{/* PCI Function number */}}
+\DoxyCodeLine{877     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__wdrt_a7041d3cba8eacf64e3623b0484a0b30f}{PciSegment}};         \textcolor{comment}{/* PCI Segment number */}}
+\DoxyCodeLine{878     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__table__wdrt_a7229cf9ea4181cc42cf9f5c7112f5e28}{MaxCount}};           \textcolor{comment}{/* Maximum counter value supported */}}
+\DoxyCodeLine{879     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__wdrt_a1022eea000982a1119d065dfde7afb52}{Units}};}
+\DoxyCodeLine{880 }
+\DoxyCodeLine{881 \} \mbox{\hyperlink{actbl3_8h_a07588151df31fa00fe7fb35f21547b9e}{ACPI\_TABLE\_WDRT}};}
+\DoxyCodeLine{882 }
+\DoxyCodeLine{883 }
+\DoxyCodeLine{884 \textcolor{comment}{/*******************************************************************************}}
+\DoxyCodeLine{885 \textcolor{comment}{ *}}
+\DoxyCodeLine{886 \textcolor{comment}{ * WPBT -\/ Windows Platform Environment Table (ACPI 6.0)}}
+\DoxyCodeLine{887 \textcolor{comment}{ *        Version 1}}
+\DoxyCodeLine{888 \textcolor{comment}{ *}}
+\DoxyCodeLine{889 \textcolor{comment}{ * Conforms to "{}Windows Platform Binary Table (WPBT)"{} 29 November 2011}}
+\DoxyCodeLine{890 \textcolor{comment}{ *}}
+\DoxyCodeLine{891 \textcolor{comment}{ ******************************************************************************/}}
+\DoxyCodeLine{892 }
+\DoxyCodeLine{893 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__table__wpbt}{acpi\_table\_wpbt}}}
+\DoxyCodeLine{894 \{}
+\DoxyCodeLine{895     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       \mbox{\hyperlink{structacpi__table__wpbt_ac79f42568d7fe9ee6ae5692f7f882f8a}{Header}};             \textcolor{comment}{/* Common ACPI table header */}}
+\DoxyCodeLine{896     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__table__wpbt_aa97edc86d170440c1d9b54844073ad72}{HandoffSize}};}
+\DoxyCodeLine{897     \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}                  \mbox{\hyperlink{structacpi__table__wpbt_ae8bfb6eafc0c0fb62a44b6cb321cdc20}{HandoffAddress}};}
+\DoxyCodeLine{898     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__wpbt_a16766c34bddd46993220623a8999d9ce}{Layout}};}
+\DoxyCodeLine{899     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__wpbt_a6c17c990bb955f9eb42768f130d0c40c}{Type}};}
+\DoxyCodeLine{900     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{structacpi__table__wpbt_a710504f9bb1713544c3aa2116c3b6b8e}{ArgumentsLength}};}
+\DoxyCodeLine{901 }
+\DoxyCodeLine{902 \} \mbox{\hyperlink{actbl3_8h_a961efa104eb204fc675e5747c276011f}{ACPI\_TABLE\_WPBT}};}
+\DoxyCodeLine{903 }
+\DoxyCodeLine{904 }
+\DoxyCodeLine{905 \textcolor{comment}{/*******************************************************************************}}
+\DoxyCodeLine{906 \textcolor{comment}{ *}}
+\DoxyCodeLine{907 \textcolor{comment}{ * WSMT -\/ Windows SMM Security Migrations Table}}
+\DoxyCodeLine{908 \textcolor{comment}{ *        Version 1}}
+\DoxyCodeLine{909 \textcolor{comment}{ *}}
+\DoxyCodeLine{910 \textcolor{comment}{ * Conforms to "{}Windows SMM Security Migrations Table"{},}}
+\DoxyCodeLine{911 \textcolor{comment}{ * Version 1.0, April 18, 2016}}
+\DoxyCodeLine{912 \textcolor{comment}{ *}}
+\DoxyCodeLine{913 \textcolor{comment}{ ******************************************************************************/}}
+\DoxyCodeLine{914 }
+\DoxyCodeLine{915 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__table__wsmt}{acpi\_table\_wsmt}}}
+\DoxyCodeLine{916 \{}
+\DoxyCodeLine{917     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       \mbox{\hyperlink{structacpi__table__wsmt_a52cc22600f2877cc2bd9420d8f732417}{Header}};             \textcolor{comment}{/* Common ACPI table header */}}
+\DoxyCodeLine{918     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__table__wsmt_ac434966cfa9873f1205ef3347473d3f9}{ProtectionFlags}};}
+\DoxyCodeLine{919 }
+\DoxyCodeLine{920 \} \mbox{\hyperlink{actbl3_8h_a236b172c1c8c44aaa573c463306914ab}{ACPI\_TABLE\_WSMT}};}
+\DoxyCodeLine{921 }
+\DoxyCodeLine{922 \textcolor{comment}{/* Flags for ProtectionFlags field above */}}
+\DoxyCodeLine{923 }
+\DoxyCodeLine{924 \textcolor{preprocessor}{\#define ACPI\_WSMT\_FIXED\_COMM\_BUFFERS                (1)}}
+\DoxyCodeLine{925 \textcolor{preprocessor}{\#define ACPI\_WSMT\_COMM\_BUFFER\_NESTED\_PTR\_PROTECTION (2)}}
+\DoxyCodeLine{926 \textcolor{preprocessor}{\#define ACPI\_WSMT\_SYSTEM\_RESOURCE\_PROTECTION        (4)}}
+\DoxyCodeLine{927 }
+\DoxyCodeLine{928 }
+\DoxyCodeLine{929 \textcolor{comment}{/*******************************************************************************}}
+\DoxyCodeLine{930 \textcolor{comment}{ *}}
+\DoxyCodeLine{931 \textcolor{comment}{ * XENV -\/ Xen Environment Table (ACPI 6.0)}}
+\DoxyCodeLine{932 \textcolor{comment}{ *        Version 1}}
+\DoxyCodeLine{933 \textcolor{comment}{ *}}
+\DoxyCodeLine{934 \textcolor{comment}{ * Conforms to "{}ACPI Specification for Xen Environment Table"{} 4 January 2015}}
+\DoxyCodeLine{935 \textcolor{comment}{ *}}
+\DoxyCodeLine{936 \textcolor{comment}{ ******************************************************************************/}}
+\DoxyCodeLine{937 }
+\DoxyCodeLine{938 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__table__xenv}{acpi\_table\_xenv}}}
+\DoxyCodeLine{939 \{}
+\DoxyCodeLine{940     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       \mbox{\hyperlink{structacpi__table__xenv_aa8e39d19efa8893702ab45703c5809eb}{Header}};             \textcolor{comment}{/* Common ACPI table header */}}
+\DoxyCodeLine{941     \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}                  \mbox{\hyperlink{structacpi__table__xenv_afc6df5be2dad454a0acaf7a6d0e09540}{GrantTableAddress}};}
+\DoxyCodeLine{942     \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}                  \mbox{\hyperlink{structacpi__table__xenv_ac04e2e79647189bd0fa33993c9df71da}{GrantTableSize}};}
+\DoxyCodeLine{943     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__table__xenv_a8e516e4708206851bc3f2199cc9f8b75}{EventInterrupt}};}
+\DoxyCodeLine{944     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__table__xenv_a9cbc1d6a585c65975d78020c6fbacc32}{EventFlags}};}
+\DoxyCodeLine{945 }
+\DoxyCodeLine{946 \} \mbox{\hyperlink{actbl3_8h_a04f3b071d40fed06402339fa91681e06}{ACPI\_TABLE\_XENV}};}
+\DoxyCodeLine{947 }
+\DoxyCodeLine{948 }
+\DoxyCodeLine{949 \textcolor{comment}{/* Reset to default packing */}}
+\DoxyCodeLine{950 }
+\DoxyCodeLine{951 \textcolor{preprocessor}{\#pragma pack()}}
+\DoxyCodeLine{952 }
+\DoxyCodeLine{953 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_ACTBL3\_H\_\_ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

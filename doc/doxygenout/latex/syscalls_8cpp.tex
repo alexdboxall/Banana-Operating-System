@@ -1,0 +1,1034 @@
+\hypertarget{syscalls_8cpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/krnl/syscalls.cpp File Reference}
+\label{syscalls_8cpp}\index{C:/Users/Alex/Desktop/Banana/kernel/krnl/syscalls.cpp@{C:/Users/Alex/Desktop/Banana/kernel/krnl/syscalls.cpp}}
+{\ttfamily \#include \char`\"{}sys/syscalls.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/common.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/kheap.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}libk/string.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}thr/prcssthr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hal/intctrl.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/virtmgr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}thr/elf.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hal/timer.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/unixfile.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/pipe.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/terminal.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hal/clock.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hal/keybrd.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}fs/vfs.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/cpu.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}fs/symlink.\+hpp\char`\"{}}\newline
+{\ttfamily \#include $<$krnl/powctrl.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/assert.\+hpp$>$}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_af76e84b8a09c1f5f60a5663f1dbcfad2}{Sys\+Yield}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Yields the currently running thread\textquotesingle{}s timeslice. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a48a8ec2306952befd2b9e5de2ccd4753}{Sys\+Exit}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Terminates the currently running thread. If this is the last running thread, the entire process will be terminated. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_ad6c3796e42cf959540f86046e631255c}{Sys\+Sbrk}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Changes and/or returns the location of the process\textquotesingle{} system break by a certain number of bytes, allocating new memory if needed. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a0852c4f1dc38d40d30a110f4ec537923}{Sys\+Write}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Writes data to a file. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_accef097b53af7d5bc36f76efa54aba4d}{Sys\+Read}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Reads data from a file. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a9b55f3e7f1f2c80c48f9468db292c33a}{Sys\+Get\+PID}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Returns the process ID of the calling process. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a93cedfab2a7cb9e3b2cdf5fd0ade551d}{Sys\+Get\+Cwd}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Sets the current working directory for the process. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a3d15ebabc4d85ee1d0f89ce7b1ec8dab}{Sys\+Set\+Cwd}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Sets the current working directory for the current process. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_acf8da6380d79d1fa02ab8cda34d546ec}{Sys\+Load\+DLL}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Loads a kernel-\/mode dynamic link library or driver. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a5240670d2226bac49e8e744463d0b725}{Sys\+Set\+Time}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Sets the system time. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a55eb490e120b84fd19ec4428c8c6643c}{Sys\+Timezone}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Gets or sets the timezone. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_acd317f3461b2a91000755a8eef6ad324}{Sys\+Eject}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Ejects a disk such as a CD. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a490fccfd514a3bfa07b942351d29a63e}{Sys\+Wsbe}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Makes a call to the GUI driver. If not loaded yet, it will print a message and terminate the program with exit code specified. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a1fc0a35c74faedb04dc77212910d08ec}{Sys\+Get\+RAMData}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Returns the total amount of RAM and the current amount of RAM available. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_add2a10c6050718e604690b8e987beb4e}{Sys\+Get\+VGAPtr}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Returns a task\textquotesingle{}s terminal data for use by CONHOST.\+EXE. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a39111658c38f959676b60ec6b64a4772}{Sys\+Register\+Signal}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Sets a signal handler for the current process. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a2a585b3ca8e46cd17becbe91a12de1f8}{Sys\+Kill}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Sends a signal to another process. Blame POSIX for the misleading name. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a41b39650dd84ff0023dd67da77a4a07d}{Sys\+Registry\+Get\+Type\+From\+Path}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Gets the registry type from a path. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_aa58625b6c4d475a29ae6d080e467d648}{Sys\+Registry\+Read\+Extent}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Reads data. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_ad02441ba39d08df0d2e6736b39fe568f}{Sys\+Registry\+Path\+To\+Extent\+Lookup}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Gets the registry extent number from a path. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a20c6343827eaa7c25ae019d56f6b586b}{Sys\+Registry\+Enter\+Directory}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Gets the subdirectory registry extent number from an extent number. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_aa400413c5af60305ddc861f52daf1523}{Sys\+Registry\+Get\+Next}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_ab360b0eb9f5c05464a969e7b662714d1}{Sys\+Registry\+Get\+Name\+And\+Type\+From\+Extent}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a133fc05d1cf61b895d065b0587b69492}{Sys\+Registry\+Open}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_ae61c15dc7a2157f07a46942aa7b4f2a4}{Sys\+Registry\+Close}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a5557f26cd62c01fee9770e2f9642e834}{Sys\+Truncate}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Truncates a file to a certain size. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a9238f74b1636f83bdb88a2159fc8afd8}{Sys\+Symlink}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Creates a symbolic link for a file or folder. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_af78c318436d0a09eb0cbb07a58825159}{Sys\+Registry\+Easy\+Read\+String}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_acd492450e19080dfea470adaa20755d4}{Sys\+Registry\+Easy\+Read\+Integer}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_acea2406e8396fb28d5a80316155107a9}{Sys\+Alarm}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Sets an alarm, causing SIGALRM to be called after a specified number of millitenths (100 microseconds). \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_ac1430b2247939f79116835425f839eab}{Sys\+Pause}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Blocks a task until the next signal arrives. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a0207d8adbb72b44ba55b33784b87ab22}{Sys\+Pthread\+Create}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Creates a new thread. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a72246fe8f63f6b80cebcfed1ee376aa2}{Sys\+Pthread\+Join}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_aee4637a066ecdc8a711efba5c1d18b8b}{Sys\+Pthread\+Exit}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a557b4eed16e10d64769252c5a86b62f8}{Sys\+Pthread\+Get\+TID}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Returns the relative thread ID of the currently running thread. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_ac006ad3610d0742d05ac1e250c2df207}{Sys\+Internal\+Pthread\+Get\+Context}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_affecc5e35b421999263daaa3a3acfbdd}{Sys\+Internal\+Pthread\+Get\+Start\+Location}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+int \mbox{\hyperlink{syscalls_8cpp_a487054acef3a55e304c2c944898423a0}{string\+\_\+ends\+\_\+with}} (const char $\ast$str, const char $\ast$suffix)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_aa6c66b6fbfd31ac2a98fe16b438a37e5}{Sys\+Open}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a5949a53e3f6dc1e4b7bae27ca0c5fed2}{Sys\+Seek}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a539cf0a3591396ae1e2db29f87386f3d}{Sys\+Tell}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_aee161c77a4aaf4eeed2d6937a6ff733d}{Sys\+Size\+From\+Filename}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a4c5dc5478f71abffdd9e48046813e37b}{Sys\+Size\+From\+Filename\+No\+Symlink}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a2ac54af5f75db357b2de4c03de620cff}{Sys\+Size}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a4e24e36ac5067d5f08d41e58d1d4121c}{Sys\+Close}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a88a8e122ed5b89d9e729a3340adb28a0}{Sys\+Open\+Dir}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_ac95635ae3b82d33973bfb3734ded447d}{Sys\+Read\+Dir}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a8bac80c0886f4266e2d2f91c91d53aae}{Sys\+Seek\+Dir}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_ad7498cbf13040f5cd65535c382970531}{Sys\+Tell\+Dir}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_ae3738a39eb2242f536621a7483afd110}{Sys\+Make\+Dir}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_aa2a3da1f2aeb25a514c119671204d009}{Sys\+Close\+Dir}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_aee51f1193550b058f24ec83640346a4c}{Sys\+Verify}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_acaf1ce02a8ed1f92a08948ce43ad4797}{Sys\+Wait}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a4866c5c371cf00db257a56bea4e9451b}{Sys\+Not\+Impl}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a58bffe2bc9d5f4aa0c2ab8c03dae57e5}{Sys\+Rmdir}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_aa1f12d60e40da4ffa8babacc8281286d}{Sys\+Unlink}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_ad3ba057da32e992cd51ca42ad7568bb6}{Sys\+Get\+Argc}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a76903173cffac3758f502b04df06c48f}{Sys\+Get\+Argv}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a4cd333ea1f531abca9d33168e5217c33}{Sys\+Realpath}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a3076b0053d3ae37ff07d903457b2780a}{Sys\+TTYName}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a47131fb5c2107fd92f959c46f80259a0}{Sys\+Is\+ATTY}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a2bb2d3444acd4f484744363a402cad31}{Sys\+USleep}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_abcb7039a2dd19201bf79070f13ee2dfa}{Sys\+Spawn}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a028cbd98e54ab760f8793a01e3464e43}{Sys\+Get\+Env}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a9e31baedf1776222807e938ade7569a3}{Sys\+Format\+Disk}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a6a647ce3a14470e371d9b3b78a852844}{Sys\+Set\+Disk\+Volume\+Label}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a39ee32587bfefc4656f8d3bf80578dca}{Sys\+Get\+Disk\+Volume\+Label}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a2f0ba910b3a381adcd072d2876752e9a}{Sys\+Set\+Fat\+Attrib}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_adc9858af87c48d3b3f4cbca759dad36b}{Sys\+Panic}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_aae89209d61ab2cc45402ff6797cdd4f5}{Sys\+Shutdown}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_ad7a75bcc1242ca064fd5377813376eac}{Sys\+Pipe}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a77d79a531c8b80d57d98f9d0db5e7d1e}{Sys\+Get\+Unix\+Time}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_aacd51727902e0436a03d66f3b5138478}{Ke\+System\+Call}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r, void $\ast$context)
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a5e0c68a94557366647114c3262341de1}{\+\_\+\+\_\+attribute\+\_\+\+\_\+}} ((\+\_\+\+\_\+section\+\_\+\+\_\+(\char`\"{}userkernel\char`\"{}))) Ke\+System\+Call\+From\+Usermode(size\+\_\+t a
+\item 
+asm \mbox{\hyperlink{syscalls_8cpp_a1c78a4ac1b28ed8b6386b105ad5ba0f6}{volatile}} (\char`\"{}int \$96\char`\"{} \+:\char`\"{}=\mbox{\hyperlink{syscalls_8cpp_ab0ea24539a2252176fffac31d88365ba}{d}}\char`\"{}(resD), \char`\"{}=a\char`\"{}(resA) \+:\char`\"{}a\char`\"{}(a), \char`\"{}b\char`\"{}(b), \char`\"{}c\char`\"{}(c), \char`\"{}d\char`\"{}(d) \+:\char`\"{}memory\char`\"{}, \char`\"{}cc\char`\"{})
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+uint64\+\_\+t($\ast$ \mbox{\hyperlink{syscalls_8cpp_aa20740c87cefc75d0af55928ee3fc817}{system\+Call\+Handlers}} \mbox{[}$\,$\mbox{]})(\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+uint64\+\_\+t size\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a99ed6187132780a335e6db030a0115e7}{b}}
+\item 
+uint64\+\_\+t size\+\_\+t size\+\_\+t \mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}
+\item 
+uint64\+\_\+t size\+\_\+t size\+\_\+t size\+\_\+t \mbox{\hyperlink{syscalls_8cpp_ab0ea24539a2252176fffac31d88365ba}{d}}
+\item 
+\mbox{\hyperlink{string_8h_ae808eb4555d62ce4d882d1e293728d01}{volatile}} uint32\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a578cebc3fdfea5cd33c9656e25078607}{resD}}
+\item 
+uint64\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}} = (uint64\+\_\+t) \mbox{\hyperlink{syscalls_8cpp_a578cebc3fdfea5cd33c9656e25078607}{resD}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{syscalls_8cpp_a5e0c68a94557366647114c3262341de1}\label{syscalls_8cpp_a5e0c68a94557366647114c3262341de1}} 
+\index{syscalls.cpp@{syscalls.cpp}!\_\_attribute\_\_@{\_\_attribute\_\_}}
+\index{\_\_attribute\_\_@{\_\_attribute\_\_}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{\_\_attribute\_\_()}{\_\_attribute\_\_()}}
+{\footnotesize\ttfamily uint64\+\_\+t \mbox{\hyperlink{struct____attribute____}{\+\_\+\+\_\+attribute\+\_\+\+\_\+}} (\begin{DoxyParamCaption}\item[{(\+\_\+\+\_\+section\+\_\+\+\_\+(\char`\"{}userkernel\char`\"{}))}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_aacd51727902e0436a03d66f3b5138478}\label{syscalls_8cpp_aacd51727902e0436a03d66f3b5138478}} 
+\index{syscalls.cpp@{syscalls.cpp}!KeSystemCall@{KeSystemCall}}
+\index{KeSystemCall@{KeSystemCall}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{KeSystemCall()}{KeSystemCall()}}
+{\footnotesize\ttfamily uint64\+\_\+t Ke\+System\+Call (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r,  }\item[{void $\ast$}]{context }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a487054acef3a55e304c2c944898423a0}\label{syscalls_8cpp_a487054acef3a55e304c2c944898423a0}} 
+\index{syscalls.cpp@{syscalls.cpp}!string\_ends\_with@{string\_ends\_with}}
+\index{string\_ends\_with@{string\_ends\_with}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{string\_ends\_with()}{string\_ends\_with()}}
+{\footnotesize\ttfamily int string\+\_\+ends\+\_\+with (\begin{DoxyParamCaption}\item[{const char $\ast$}]{str,  }\item[{const char $\ast$}]{suffix }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_acea2406e8396fb28d5a80316155107a9}\label{syscalls_8cpp_acea2406e8396fb28d5a80316155107a9}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysAlarm@{SysAlarm}}
+\index{SysAlarm@{SysAlarm}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysAlarm()}{SysAlarm()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Alarm (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Sets an alarm, causing SIGALRM to be called after a specified number of millitenths (100 microseconds). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ebx} & The number of millitenths to wait, or zero to cancel the alarm.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns in how many millitenths the previous alarm would have gone off, or zero if non was scheduled.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_a4e24e36ac5067d5f08d41e58d1d4121c}\label{syscalls_8cpp_a4e24e36ac5067d5f08d41e58d1d4121c}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysClose@{SysClose}}
+\index{SysClose@{SysClose}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysClose()}{SysClose()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Close (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_aa2a3da1f2aeb25a514c119671204d009}\label{syscalls_8cpp_aa2a3da1f2aeb25a514c119671204d009}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysCloseDir@{SysCloseDir}}
+\index{SysCloseDir@{SysCloseDir}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysCloseDir()}{SysCloseDir()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Close\+Dir (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_acd317f3461b2a91000755a8eef6ad324}\label{syscalls_8cpp_acd317f3461b2a91000755a8eef6ad324}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysEject@{SysEject}}
+\index{SysEject@{SysEject}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysEject()}{SysEject()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Eject (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Ejects a disk such as a CD. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ebx} & The drive number.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns 0 on success, or -\/1 if non-\/removable disk, -\/2 is a non-\/existant disk or a positive non-\/zero integer if the operation failed.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_a48a8ec2306952befd2b9e5de2ccd4753}\label{syscalls_8cpp_a48a8ec2306952befd2b9e5de2ccd4753}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysExit@{SysExit}}
+\index{SysExit@{SysExit}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysExit()}{SysExit()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Exit (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Terminates the currently running thread. If this is the last running thread, the entire process will be terminated. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ebx} & The exit code for the thread.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This system call should not return. If it does, it will return -\/1.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_a9e31baedf1776222807e938ade7569a3}\label{syscalls_8cpp_a9e31baedf1776222807e938ade7569a3}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysFormatDisk@{SysFormatDisk}}
+\index{SysFormatDisk@{SysFormatDisk}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysFormatDisk()}{SysFormatDisk()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Format\+Disk (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_ad3ba057da32e992cd51ca42ad7568bb6}\label{syscalls_8cpp_ad3ba057da32e992cd51ca42ad7568bb6}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysGetArgc@{SysGetArgc}}
+\index{SysGetArgc@{SysGetArgc}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysGetArgc()}{SysGetArgc()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Get\+Argc (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a76903173cffac3758f502b04df06c48f}\label{syscalls_8cpp_a76903173cffac3758f502b04df06c48f}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysGetArgv@{SysGetArgv}}
+\index{SysGetArgv@{SysGetArgv}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysGetArgv()}{SysGetArgv()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Get\+Argv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a93cedfab2a7cb9e3b2cdf5fd0ade551d}\label{syscalls_8cpp_a93cedfab2a7cb9e3b2cdf5fd0ade551d}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysGetCwd@{SysGetCwd}}
+\index{SysGetCwd@{SysGetCwd}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysGetCwd()}{SysGetCwd()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Get\+Cwd (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Sets the current working directory for the process. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ebx} & A pointer to where the current working directory should be stored.\\
+\hline
+{\em ecx} & The maximum number of bytes to copy to the buffer.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns the return code.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_a39ee32587bfefc4656f8d3bf80578dca}\label{syscalls_8cpp_a39ee32587bfefc4656f8d3bf80578dca}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysGetDiskVolumeLabel@{SysGetDiskVolumeLabel}}
+\index{SysGetDiskVolumeLabel@{SysGetDiskVolumeLabel}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysGetDiskVolumeLabel()}{SysGetDiskVolumeLabel()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Get\+Disk\+Volume\+Label (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a028cbd98e54ab760f8793a01e3464e43}\label{syscalls_8cpp_a028cbd98e54ab760f8793a01e3464e43}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysGetEnv@{SysGetEnv}}
+\index{SysGetEnv@{SysGetEnv}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysGetEnv()}{SysGetEnv()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Get\+Env (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a9b55f3e7f1f2c80c48f9468db292c33a}\label{syscalls_8cpp_a9b55f3e7f1f2c80c48f9468db292c33a}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysGetPID@{SysGetPID}}
+\index{SysGetPID@{SysGetPID}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysGetPID()}{SysGetPID()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Get\+PID (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Returns the process ID of the calling process. 
+
+\begin{DoxyReturn}{Returns}
+Returns the process ID.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_a1fc0a35c74faedb04dc77212910d08ec}\label{syscalls_8cpp_a1fc0a35c74faedb04dc77212910d08ec}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysGetRAMData@{SysGetRAMData}}
+\index{SysGetRAMData@{SysGetRAMData}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysGetRAMData()}{SysGetRAMData()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Get\+RAMData (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Returns the total amount of RAM and the current amount of RAM available. 
+
+\begin{DoxyReturn}{Returns}
+Returns the amount of 4KiB pages the system has in the low 3 bytes, and the twice the percentage used in the high byte.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_a77d79a531c8b80d57d98f9d0db5e7d1e}\label{syscalls_8cpp_a77d79a531c8b80d57d98f9d0db5e7d1e}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysGetUnixTime@{SysGetUnixTime}}
+\index{SysGetUnixTime@{SysGetUnixTime}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysGetUnixTime()}{SysGetUnixTime()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Get\+Unix\+Time (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_add2a10c6050718e604690b8e987beb4e}\label{syscalls_8cpp_add2a10c6050718e604690b8e987beb4e}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysGetVGAPtr@{SysGetVGAPtr}}
+\index{SysGetVGAPtr@{SysGetVGAPtr}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysGetVGAPtr()}{SysGetVGAPtr()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Get\+VGAPtr (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Returns a task\textquotesingle{}s terminal data for use by CONHOST.\+EXE. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ebx} & Pointer to store 4096 bytes of data, 4000 of characters, then width (4 bytes), height (4 bytes) and GUI state (0 = terminal, 1 = GUI) (4 bytes). After that is the terminal\textquotesingle{}s name.\\
+\hline
+{\em ecx} & The PID of the task.\\
+\hline
+{\em edx} & If this is set to a non-\/zero value, the terminal will become the active terminal.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if good, 1 if bad.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_ac006ad3610d0742d05ac1e250c2df207}\label{syscalls_8cpp_ac006ad3610d0742d05ac1e250c2df207}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysInternalPthreadGetContext@{SysInternalPthreadGetContext}}
+\index{SysInternalPthreadGetContext@{SysInternalPthreadGetContext}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysInternalPthreadGetContext()}{SysInternalPthreadGetContext()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Internal\+Pthread\+Get\+Context (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_affecc5e35b421999263daaa3a3acfbdd}\label{syscalls_8cpp_affecc5e35b421999263daaa3a3acfbdd}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysInternalPthreadGetStartLocation@{SysInternalPthreadGetStartLocation}}
+\index{SysInternalPthreadGetStartLocation@{SysInternalPthreadGetStartLocation}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysInternalPthreadGetStartLocation()}{SysInternalPthreadGetStartLocation()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Internal\+Pthread\+Get\+Start\+Location (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a47131fb5c2107fd92f959c46f80259a0}\label{syscalls_8cpp_a47131fb5c2107fd92f959c46f80259a0}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysIsATTY@{SysIsATTY}}
+\index{SysIsATTY@{SysIsATTY}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysIsATTY()}{SysIsATTY()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Is\+ATTY (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a2a585b3ca8e46cd17becbe91a12de1f8}\label{syscalls_8cpp_a2a585b3ca8e46cd17becbe91a12de1f8}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysKill@{SysKill}}
+\index{SysKill@{SysKill}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysKill()}{SysKill()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Kill (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Sends a signal to another process. Blame POSIX for the misleading name. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ebx} & The signal number to send.\\
+\hline
+{\em ecx} & The process ID to send the signal to. A negative value sends the signal to all possible processes.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns 0 on success, or non-\/zero on failure.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_acf8da6380d79d1fa02ab8cda34d546ec}\label{syscalls_8cpp_acf8da6380d79d1fa02ab8cda34d546ec}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysLoadDLL@{SysLoadDLL}}
+\index{SysLoadDLL@{SysLoadDLL}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysLoadDLL()}{SysLoadDLL()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Load\+DLL (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Loads a kernel-\/mode dynamic link library or driver. 
+
+$<$remark$>$ Loading dynamic link libraries or drivers which have already been loaded could cause system instability. $<$/remark$>$ 
+\begin{DoxyParams}{Parameters}
+{\em ebx} & The filename to load.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns zero on success, or non-\/zero on failure.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_ae3738a39eb2242f536621a7483afd110}\label{syscalls_8cpp_ae3738a39eb2242f536621a7483afd110}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysMakeDir@{SysMakeDir}}
+\index{SysMakeDir@{SysMakeDir}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysMakeDir()}{SysMakeDir()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Make\+Dir (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a4866c5c371cf00db257a56bea4e9451b}\label{syscalls_8cpp_a4866c5c371cf00db257a56bea4e9451b}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysNotImpl@{SysNotImpl}}
+\index{SysNotImpl@{SysNotImpl}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysNotImpl()}{SysNotImpl()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Not\+Impl (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_aa6c66b6fbfd31ac2a98fe16b438a37e5}\label{syscalls_8cpp_aa6c66b6fbfd31ac2a98fe16b438a37e5}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysOpen@{SysOpen}}
+\index{SysOpen@{SysOpen}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysOpen()}{SysOpen()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Open (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a88a8e122ed5b89d9e729a3340adb28a0}\label{syscalls_8cpp_a88a8e122ed5b89d9e729a3340adb28a0}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysOpenDir@{SysOpenDir}}
+\index{SysOpenDir@{SysOpenDir}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysOpenDir()}{SysOpenDir()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Open\+Dir (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_adc9858af87c48d3b3f4cbca759dad36b}\label{syscalls_8cpp_adc9858af87c48d3b3f4cbca759dad36b}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysPanic@{SysPanic}}
+\index{SysPanic@{SysPanic}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysPanic()}{SysPanic()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Panic (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_ac1430b2247939f79116835425f839eab}\label{syscalls_8cpp_ac1430b2247939f79116835425f839eab}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysPause@{SysPause}}
+\index{SysPause@{SysPause}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysPause()}{SysPause()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Pause (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Blocks a task until the next signal arrives. 
+
+\begin{DoxyReturn}{Returns}
+Returns zero.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_ad7a75bcc1242ca064fd5377813376eac}\label{syscalls_8cpp_ad7a75bcc1242ca064fd5377813376eac}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysPipe@{SysPipe}}
+\index{SysPipe@{SysPipe}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysPipe()}{SysPipe()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Pipe (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a0207d8adbb72b44ba55b33784b87ab22}\label{syscalls_8cpp_a0207d8adbb72b44ba55b33784b87ab22}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysPthreadCreate@{SysPthreadCreate}}
+\index{SysPthreadCreate@{SysPthreadCreate}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysPthreadCreate()}{SysPthreadCreate()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Pthread\+Create (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Creates a new thread. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ebx} & The argument to pass to the start function.\\
+\hline
+{\em ecx} & The attributes of the new thread.\\
+\hline
+{\em edx} & The start function.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns zero on success, and non-\/zero otherwise.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_aee4637a066ecdc8a711efba5c1d18b8b}\label{syscalls_8cpp_aee4637a066ecdc8a711efba5c1d18b8b}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysPthreadExit@{SysPthreadExit}}
+\index{SysPthreadExit@{SysPthreadExit}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysPthreadExit()}{SysPthreadExit()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Pthread\+Exit (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a557b4eed16e10d64769252c5a86b62f8}\label{syscalls_8cpp_a557b4eed16e10d64769252c5a86b62f8}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysPthreadGetTID@{SysPthreadGetTID}}
+\index{SysPthreadGetTID@{SysPthreadGetTID}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysPthreadGetTID()}{SysPthreadGetTID()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Pthread\+Get\+TID (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Returns the relative thread ID of the currently running thread. 
+
+\begin{DoxyReturn}{Returns}
+Returns the relative thread ID.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_a72246fe8f63f6b80cebcfed1ee376aa2}\label{syscalls_8cpp_a72246fe8f63f6b80cebcfed1ee376aa2}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysPthreadJoin@{SysPthreadJoin}}
+\index{SysPthreadJoin@{SysPthreadJoin}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysPthreadJoin()}{SysPthreadJoin()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Pthread\+Join (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_accef097b53af7d5bc36f76efa54aba4d}\label{syscalls_8cpp_accef097b53af7d5bc36f76efa54aba4d}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysRead@{SysRead}}
+\index{SysRead@{SysRead}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysRead()}{SysRead()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Read (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Reads data from a file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ebx} & The file number.\\
+\hline
+{\em ecx} & Maximum number of bytes to read.\\
+\hline
+{\em edx} & Pointer to store read data.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of bytes read, or -\/1 on failure.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_ac95635ae3b82d33973bfb3734ded447d}\label{syscalls_8cpp_ac95635ae3b82d33973bfb3734ded447d}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysReadDir@{SysReadDir}}
+\index{SysReadDir@{SysReadDir}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysReadDir()}{SysReadDir()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Read\+Dir (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a4cd333ea1f531abca9d33168e5217c33}\label{syscalls_8cpp_a4cd333ea1f531abca9d33168e5217c33}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysRealpath@{SysRealpath}}
+\index{SysRealpath@{SysRealpath}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysRealpath()}{SysRealpath()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Realpath (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a39111658c38f959676b60ec6b64a4772}\label{syscalls_8cpp_a39111658c38f959676b60ec6b64a4772}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysRegisterSignal@{SysRegisterSignal}}
+\index{SysRegisterSignal@{SysRegisterSignal}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysRegisterSignal()}{SysRegisterSignal()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Register\+Signal (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Sets a signal handler for the current process. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ebx} & The signal number.\\
+\hline
+{\em edx} & The signal handler, which is either a pointer to a user function, or SIG\+\_\+\+DFL for default handling, or SIG\+\_\+\+IGN for no handling.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns zero on success, and non-\/zero on failure.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_ae61c15dc7a2157f07a46942aa7b4f2a4}\label{syscalls_8cpp_ae61c15dc7a2157f07a46942aa7b4f2a4}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysRegistryClose@{SysRegistryClose}}
+\index{SysRegistryClose@{SysRegistryClose}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysRegistryClose()}{SysRegistryClose()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Registry\+Close (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_acd492450e19080dfea470adaa20755d4}\label{syscalls_8cpp_acd492450e19080dfea470adaa20755d4}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysRegistryEasyReadInteger@{SysRegistryEasyReadInteger}}
+\index{SysRegistryEasyReadInteger@{SysRegistryEasyReadInteger}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysRegistryEasyReadInteger()}{SysRegistryEasyReadInteger()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Registry\+Easy\+Read\+Integer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_af78c318436d0a09eb0cbb07a58825159}\label{syscalls_8cpp_af78c318436d0a09eb0cbb07a58825159}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysRegistryEasyReadString@{SysRegistryEasyReadString}}
+\index{SysRegistryEasyReadString@{SysRegistryEasyReadString}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysRegistryEasyReadString()}{SysRegistryEasyReadString()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Registry\+Easy\+Read\+String (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a20c6343827eaa7c25ae019d56f6b586b}\label{syscalls_8cpp_a20c6343827eaa7c25ae019d56f6b586b}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysRegistryEnterDirectory@{SysRegistryEnterDirectory}}
+\index{SysRegistryEnterDirectory@{SysRegistryEnterDirectory}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysRegistryEnterDirectory()}{SysRegistryEnterDirectory()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Registry\+Enter\+Directory (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Gets the subdirectory registry extent number from an extent number. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ebx} & The registry pointer.\\
+\hline
+{\em ecx} & The extent.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns the extent number.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_ab360b0eb9f5c05464a969e7b662714d1}\label{syscalls_8cpp_ab360b0eb9f5c05464a969e7b662714d1}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysRegistryGetNameAndTypeFromExtent@{SysRegistryGetNameAndTypeFromExtent}}
+\index{SysRegistryGetNameAndTypeFromExtent@{SysRegistryGetNameAndTypeFromExtent}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysRegistryGetNameAndTypeFromExtent()}{SysRegistryGetNameAndTypeFromExtent()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Registry\+Get\+Name\+And\+Type\+From\+Extent (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_aa400413c5af60305ddc861f52daf1523}\label{syscalls_8cpp_aa400413c5af60305ddc861f52daf1523}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysRegistryGetNext@{SysRegistryGetNext}}
+\index{SysRegistryGetNext@{SysRegistryGetNext}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysRegistryGetNext()}{SysRegistryGetNext()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Registry\+Get\+Next (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a41b39650dd84ff0023dd67da77a4a07d}\label{syscalls_8cpp_a41b39650dd84ff0023dd67da77a4a07d}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysRegistryGetTypeFromPath@{SysRegistryGetTypeFromPath}}
+\index{SysRegistryGetTypeFromPath@{SysRegistryGetTypeFromPath}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysRegistryGetTypeFromPath()}{SysRegistryGetTypeFromPath()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Registry\+Get\+Type\+From\+Path (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Gets the registry type from a path. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ebx} & The registry pointer.\\
+\hline
+{\em edx} & The path.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns the type ID or -\/1 on failure.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_a133fc05d1cf61b895d065b0587b69492}\label{syscalls_8cpp_a133fc05d1cf61b895d065b0587b69492}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysRegistryOpen@{SysRegistryOpen}}
+\index{SysRegistryOpen@{SysRegistryOpen}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysRegistryOpen()}{SysRegistryOpen()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Registry\+Open (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_ad02441ba39d08df0d2e6736b39fe568f}\label{syscalls_8cpp_ad02441ba39d08df0d2e6736b39fe568f}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysRegistryPathToExtentLookup@{SysRegistryPathToExtentLookup}}
+\index{SysRegistryPathToExtentLookup@{SysRegistryPathToExtentLookup}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysRegistryPathToExtentLookup()}{SysRegistryPathToExtentLookup()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Registry\+Path\+To\+Extent\+Lookup (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Gets the registry extent number from a path. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ebx} & The registry pointer.\\
+\hline
+{\em edx} & The path.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns the extent number.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_aa58625b6c4d475a29ae6d080e467d648}\label{syscalls_8cpp_aa58625b6c4d475a29ae6d080e467d648}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysRegistryReadExtent@{SysRegistryReadExtent}}
+\index{SysRegistryReadExtent@{SysRegistryReadExtent}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysRegistryReadExtent()}{SysRegistryReadExtent()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Registry\+Read\+Extent (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Reads data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ebx} & The registry pointer.\\
+\hline
+{\em ecx} & The extent number, with the 31st bit determining whether to read an integer (bit set), or a string (bit clear).\\
+\hline
+{\em edx} & The path to write string data.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns the integer data, else 0 if success, or non-\/zero on failure.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_a58bffe2bc9d5f4aa0c2ab8c03dae57e5}\label{syscalls_8cpp_a58bffe2bc9d5f4aa0c2ab8c03dae57e5}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysRmdir@{SysRmdir}}
+\index{SysRmdir@{SysRmdir}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysRmdir()}{SysRmdir()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Rmdir (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_ad6c3796e42cf959540f86046e631255c}\label{syscalls_8cpp_ad6c3796e42cf959540f86046e631255c}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysSbrk@{SysSbrk}}
+\index{SysSbrk@{SysSbrk}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysSbrk()}{SysSbrk()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Sbrk (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Changes and/or returns the location of the process\textquotesingle{} system break by a certain number of bytes, allocating new memory if needed. 
+
+$<$remark$>$ This system call does not check that there is enough physical memory or virtual memory in the kernel to successfully make this call, so requesting an excessive amount of memory will cause a kernel panic. $<$/remark$>$ 
+\begin{DoxyParams}{Parameters}
+{\em ebx} & If zero, non changes are made, and the location of the system break is returned. If greater than zero, the system break increases by at least this many bytes if possible (the actual amount may be more). If less than zero, the system break may shrink by up to this many bytes. The call will fail if this value is greater than 64MiB.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+On success, the updated system break value is returned. On error, it returns -\/1.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_a5949a53e3f6dc1e4b7bae27ca0c5fed2}\label{syscalls_8cpp_a5949a53e3f6dc1e4b7bae27ca0c5fed2}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysSeek@{SysSeek}}
+\index{SysSeek@{SysSeek}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysSeek()}{SysSeek()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Seek (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a8bac80c0886f4266e2d2f91c91d53aae}\label{syscalls_8cpp_a8bac80c0886f4266e2d2f91c91d53aae}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysSeekDir@{SysSeekDir}}
+\index{SysSeekDir@{SysSeekDir}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysSeekDir()}{SysSeekDir()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Seek\+Dir (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a3d15ebabc4d85ee1d0f89ce7b1ec8dab}\label{syscalls_8cpp_a3d15ebabc4d85ee1d0f89ce7b1ec8dab}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysSetCwd@{SysSetCwd}}
+\index{SysSetCwd@{SysSetCwd}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysSetCwd()}{SysSetCwd()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Set\+Cwd (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Sets the current working directory for the current process. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ebx} & The directory name to switch to.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns the return code.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_a6a647ce3a14470e371d9b3b78a852844}\label{syscalls_8cpp_a6a647ce3a14470e371d9b3b78a852844}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysSetDiskVolumeLabel@{SysSetDiskVolumeLabel}}
+\index{SysSetDiskVolumeLabel@{SysSetDiskVolumeLabel}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysSetDiskVolumeLabel()}{SysSetDiskVolumeLabel()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Set\+Disk\+Volume\+Label (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a2f0ba910b3a381adcd072d2876752e9a}\label{syscalls_8cpp_a2f0ba910b3a381adcd072d2876752e9a}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysSetFatAttrib@{SysSetFatAttrib}}
+\index{SysSetFatAttrib@{SysSetFatAttrib}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysSetFatAttrib()}{SysSetFatAttrib()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Set\+Fat\+Attrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a5240670d2226bac49e8e744463d0b725}\label{syscalls_8cpp_a5240670d2226bac49e8e744463d0b725}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysSetTime@{SysSetTime}}
+\index{SysSetTime@{SysSetTime}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysSetTime()}{SysSetTime()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Set\+Time (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Sets the system time. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ebx} & The number of seconds since midnight of the current day.\\
+\hline
+{\em ecx} & This is equal to DAY\+\_\+\+OF\+\_\+\+MONTH + MONTH $\ast$ 32, both are zero based.\\
+\hline
+{\em edx} & The year is stored in the low word. The high word is reserved.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns zero on success, non-\/zero otherwise.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_aae89209d61ab2cc45402ff6797cdd4f5}\label{syscalls_8cpp_aae89209d61ab2cc45402ff6797cdd4f5}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysShutdown@{SysShutdown}}
+\index{SysShutdown@{SysShutdown}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysShutdown()}{SysShutdown()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Shutdown (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a2ac54af5f75db357b2de4c03de620cff}\label{syscalls_8cpp_a2ac54af5f75db357b2de4c03de620cff}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysSize@{SysSize}}
+\index{SysSize@{SysSize}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysSize()}{SysSize()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Size (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_aee161c77a4aaf4eeed2d6937a6ff733d}\label{syscalls_8cpp_aee161c77a4aaf4eeed2d6937a6ff733d}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysSizeFromFilename@{SysSizeFromFilename}}
+\index{SysSizeFromFilename@{SysSizeFromFilename}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysSizeFromFilename()}{SysSizeFromFilename()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Size\+From\+Filename (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a4c5dc5478f71abffdd9e48046813e37b}\label{syscalls_8cpp_a4c5dc5478f71abffdd9e48046813e37b}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysSizeFromFilenameNoSymlink@{SysSizeFromFilenameNoSymlink}}
+\index{SysSizeFromFilenameNoSymlink@{SysSizeFromFilenameNoSymlink}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysSizeFromFilenameNoSymlink()}{SysSizeFromFilenameNoSymlink()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Size\+From\+Filename\+No\+Symlink (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_abcb7039a2dd19201bf79070f13ee2dfa}\label{syscalls_8cpp_abcb7039a2dd19201bf79070f13ee2dfa}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysSpawn@{SysSpawn}}
+\index{SysSpawn@{SysSpawn}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysSpawn()}{SysSpawn()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Spawn (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a9238f74b1636f83bdb88a2159fc8afd8}\label{syscalls_8cpp_a9238f74b1636f83bdb88a2159fc8afd8}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysSymlink@{SysSymlink}}
+\index{SysSymlink@{SysSymlink}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysSymlink()}{SysSymlink()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Symlink (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Creates a symbolic link for a file or folder. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ecx} & A pointer to the target filename string.\\
+\hline
+{\em edx} & A pointer to the new symlink filename string.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns zero on success, 2 on ELOOP, and non-\/zero otherwise.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_a539cf0a3591396ae1e2db29f87386f3d}\label{syscalls_8cpp_a539cf0a3591396ae1e2db29f87386f3d}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysTell@{SysTell}}
+\index{SysTell@{SysTell}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysTell()}{SysTell()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Tell (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_ad7498cbf13040f5cd65535c382970531}\label{syscalls_8cpp_ad7498cbf13040f5cd65535c382970531}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysTellDir@{SysTellDir}}
+\index{SysTellDir@{SysTellDir}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysTellDir()}{SysTellDir()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Tell\+Dir (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a55eb490e120b84fd19ec4428c8c6643c}\label{syscalls_8cpp_a55eb490e120b84fd19ec4428c8c6643c}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysTimezone@{SysTimezone}}
+\index{SysTimezone@{SysTimezone}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysTimezone()}{SysTimezone()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Timezone (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Gets or sets the timezone. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ebx} & When setting the timezone, this is the timezone ID. This is the zero-\/based line number in the timezones file.\\
+\hline
+{\em ecx} & Set to zero if getting the time zone, or any other value to set.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If setting the timezone, returns zero on success, or non-\/zero on failure. If getting the timezone, it returns the timezone ID, or -\/1 if this cannot be found.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_a5557f26cd62c01fee9770e2f9642e834}\label{syscalls_8cpp_a5557f26cd62c01fee9770e2f9642e834}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysTruncate@{SysTruncate}}
+\index{SysTruncate@{SysTruncate}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysTruncate()}{SysTruncate()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Truncate (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Truncates a file to a certain size. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ebx} & The number of bytes the file should be truncated to.\\
+\hline
+{\em ecx} & Set to zero if a file descriptor is in ecx, or 1 if a file path is used.\\
+\hline
+{\em edx} & The file descriptor or a pointer to a file path string.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns zero on success, non-\/zero otherwise.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_a3076b0053d3ae37ff07d903457b2780a}\label{syscalls_8cpp_a3076b0053d3ae37ff07d903457b2780a}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysTTYName@{SysTTYName}}
+\index{SysTTYName@{SysTTYName}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysTTYName()}{SysTTYName()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+TTYName (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_aa1f12d60e40da4ffa8babacc8281286d}\label{syscalls_8cpp_aa1f12d60e40da4ffa8babacc8281286d}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysUnlink@{SysUnlink}}
+\index{SysUnlink@{SysUnlink}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysUnlink()}{SysUnlink()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Unlink (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a2bb2d3444acd4f484744363a402cad31}\label{syscalls_8cpp_a2bb2d3444acd4f484744363a402cad31}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysUSleep@{SysUSleep}}
+\index{SysUSleep@{SysUSleep}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysUSleep()}{SysUSleep()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+USleep (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_aee51f1193550b058f24ec83640346a4c}\label{syscalls_8cpp_aee51f1193550b058f24ec83640346a4c}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysVerify@{SysVerify}}
+\index{SysVerify@{SysVerify}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysVerify()}{SysVerify()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Verify (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_acaf1ce02a8ed1f92a08948ce43ad4797}\label{syscalls_8cpp_acaf1ce02a8ed1f92a08948ce43ad4797}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysWait@{SysWait}}
+\index{SysWait@{SysWait}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysWait()}{SysWait()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Wait (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syscalls_8cpp_a0852c4f1dc38d40d30a110f4ec537923}\label{syscalls_8cpp_a0852c4f1dc38d40d30a110f4ec537923}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysWrite@{SysWrite}}
+\index{SysWrite@{SysWrite}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysWrite()}{SysWrite()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Write (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Writes data to a file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ebx} & The file number.\\
+\hline
+{\em ecx} & Maximum number of bytes to write.\\
+\hline
+{\em edx} & Pointer to write data to.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of bytes read, or -\/1 on failure.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_a490fccfd514a3bfa07b942351d29a63e}\label{syscalls_8cpp_a490fccfd514a3bfa07b942351d29a63e}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysWsbe@{SysWsbe}}
+\index{SysWsbe@{SysWsbe}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysWsbe()}{SysWsbe()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Wsbe (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Makes a call to the GUI driver. If not loaded yet, it will print a message and terminate the program with exit code specified. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ebx} & Driver dependent, or the return code if no driver loaded.\\
+\hline
+{\em ecx} & Driver dependent.\\
+\hline
+{\em edx} & Driver dependent.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Driver dependent.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_af76e84b8a09c1f5f60a5663f1dbcfad2}\label{syscalls_8cpp_af76e84b8a09c1f5f60a5663f1dbcfad2}} 
+\index{syscalls.cpp@{syscalls.cpp}!SysYield@{SysYield}}
+\index{SysYield@{SysYield}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{SysYield()}{SysYield()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Yield (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Yields the currently running thread\textquotesingle{}s timeslice. 
+
+\begin{DoxyReturn}{Returns}
+Returns zero.
+\end{DoxyReturn}
+\mbox{\Hypertarget{syscalls_8cpp_a1c78a4ac1b28ed8b6386b105ad5ba0f6}\label{syscalls_8cpp_a1c78a4ac1b28ed8b6386b105ad5ba0f6}} 
+\index{syscalls.cpp@{syscalls.cpp}!volatile@{volatile}}
+\index{volatile@{volatile}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{volatile()}{volatile()}}
+{\footnotesize\ttfamily asm volatile (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{syscalls_8cpp_a99ed6187132780a335e6db030a0115e7}\label{syscalls_8cpp_a99ed6187132780a335e6db030a0115e7}} 
+\index{syscalls.cpp@{syscalls.cpp}!b@{b}}
+\index{b@{b}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{b}{b}}
+{\footnotesize\ttfamily uint64\+\_\+t size\+\_\+t b}
+
+\mbox{\Hypertarget{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}\label{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}} 
+\index{syscalls.cpp@{syscalls.cpp}!c@{c}}
+\index{c@{c}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{c}{c}}
+{\footnotesize\ttfamily uint64\+\_\+t size\+\_\+t size\+\_\+t c}
+
+\mbox{\Hypertarget{syscalls_8cpp_ab0ea24539a2252176fffac31d88365ba}\label{syscalls_8cpp_ab0ea24539a2252176fffac31d88365ba}} 
+\index{syscalls.cpp@{syscalls.cpp}!d@{d}}
+\index{d@{d}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{d}{d}}
+{\footnotesize\ttfamily uint64\+\_\+t size\+\_\+t size\+\_\+t size\+\_\+t d}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{    \textcolor{keyword}{volatile} uint32\_t resA}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}\label{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}} 
+\index{syscalls.cpp@{syscalls.cpp}!res@{res}}
+\index{res@{res}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{res}{res}}
+{\footnotesize\ttfamily uint64\+\_\+t res = (uint64\+\_\+t) \mbox{\hyperlink{syscalls_8cpp_a578cebc3fdfea5cd33c9656e25078607}{resD}}}
+
+\mbox{\Hypertarget{syscalls_8cpp_a578cebc3fdfea5cd33c9656e25078607}\label{syscalls_8cpp_a578cebc3fdfea5cd33c9656e25078607}} 
+\index{syscalls.cpp@{syscalls.cpp}!resD@{resD}}
+\index{resD@{resD}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{resD}{resD}}
+{\footnotesize\ttfamily \mbox{\hyperlink{string_8h_ae808eb4555d62ce4d882d1e293728d01}{volatile}} uint32\+\_\+t resD}
+
+\mbox{\Hypertarget{syscalls_8cpp_aa20740c87cefc75d0af55928ee3fc817}\label{syscalls_8cpp_aa20740c87cefc75d0af55928ee3fc817}} 
+\index{syscalls.cpp@{syscalls.cpp}!systemCallHandlers@{systemCallHandlers}}
+\index{systemCallHandlers@{systemCallHandlers}!syscalls.cpp@{syscalls.cpp}}
+\doxysubsubsection{\texorpdfstring{systemCallHandlers}{systemCallHandlers}}
+{\footnotesize\ttfamily uint64\+\_\+t($\ast$ system\+Call\+Handlers\mbox{[}$\,$\mbox{]})(\mbox{\hyperlink{structregs}{regs}} $\ast$r) (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+

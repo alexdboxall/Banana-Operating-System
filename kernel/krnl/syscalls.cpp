@@ -683,21 +683,17 @@ uint64_t SysPipe(regs* r)
 	return 0;
 }
 
-//if r->ebx == 1, we multiply the seconds by 1,000,000 and then add the microseconds
 //if r->ebx == 2, return total microseconds (only to be used for calculating differences between two times)
 uint64_t SysGetUnixTime(regs* r)
 {
-	if (r->ebx == 1) {
-		//subtract 70 years, because we use a 1900 epoch, unix has a 1970 epoch
-		uint64_t secs = computer->clock->timeInSecondsLocal();
-		secs *= 1000000;
-		return secs + 0;
+	kprintf("SysGetUnixTime: %d\n", r->ebx);
 
-	} else if (r->ebx == 2) {
+	if (r->ebx == 2) {
 		return milliTenthsSinceBoot * 100;
 
 	} else {
 		//subtract 70 years, because we use a 1900 epoch, unix has a 1970 epoch
+		kprintf("-> %d\n", computer->clock->timeInSecondsLocal());
 		return computer->clock->timeInSecondsLocal();
 	}
 }

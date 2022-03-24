@@ -1,0 +1,391 @@
+\hypertarget{prcssthr_8cpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/thr/prcssthr.cpp File Reference}
+\label{prcssthr_8cpp}\index{C:/Users/Alex/Desktop/Banana/kernel/thr/prcssthr.cpp@{C:/Users/Alex/Desktop/Banana/kernel/thr/prcssthr.cpp}}
+{\ttfamily \#include \char`\"{}thr/prcssthr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/computer.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/common.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/terminal.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}libk/string.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/cpu.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/kheap.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/hal.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/physmgr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}thr/elf.\+hpp\char`\"{}}\newline
+{\ttfamily \#include $<$thr/alarm.\+hpp$>$}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{prcssthr_8cpp_a36469ffe54ca35a4e773a33f5d031ed3}{STACK\+\_\+\+LEEWAY}}~32
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{prcssthr_8cpp_a177f58c318ccaeac7f32279006ecfbe0}{switch\+To\+Thread\+ASM}} (\mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}} $\ast$next\+Thread\+To\+Run)
+\item 
+void \mbox{\hyperlink{prcssthr_8cpp_a7339ba9702d26cbacc0d1c4aff5a70c2}{switch\+To\+Thread\+ASMFirst\+Time}} (\mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}} $\ast$next\+Thread\+To\+Run)
+\item 
+void \mbox{\hyperlink{prcssthr_8cpp_a76b76ab91c60ed5d9031dc8fc90cac89}{change\+TSS}} ()
+\item 
+void \mbox{\hyperlink{prcssthr_8cpp_a0b207772ad06bb6fea072fbc5d1cd536}{switch\+To\+Thread}} (\mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}} $\ast$next\+Thread\+To\+Run)
+\item 
+void \mbox{\hyperlink{prcssthr_8cpp_af27290ca9db0306b5e78382e25f1810b}{setup\+Multitasking}} (void($\ast$where)())
+\item 
+unsigned long \mbox{\hyperlink{prcssthr_8cpp_a08692c68a3dccff37823d18bf7407098}{asm\+Acquire\+Lock}} (size\+\_\+t $\ast$)
+\item 
+void \mbox{\hyperlink{prcssthr_8cpp_af3250d55ee17c874c7846622ec6ccc30}{asm\+Release\+Lock}} (size\+\_\+t $\ast$, size\+\_\+t)
+\item 
+void \mbox{\hyperlink{prcssthr_8cpp_a3e1109bf9dd1b99d3efcb6a37d34f6cb}{go\+To\+Usermode}} (size\+\_\+t loc)
+\item 
+void \mbox{\hyperlink{prcssthr_8cpp_a7a55a6c0a16ac18ecca3585c29e95c54}{user\+Mode\+Entry\+Point}} (void $\ast$context)
+\item 
+size\+\_\+t \mbox{\hyperlink{prcssthr_8cpp_a175068b9a22718149a42a5b1e92b5ae7}{task\+Startup\+Function}} ()
+\item 
+void \mbox{\hyperlink{prcssthr_8cpp_a7d06701ac073c331c83519e3909b7fce}{schedule}} ()
+\item 
+void \mbox{\hyperlink{prcssthr_8cpp_a0f504429bf2c6b4e5a57f01104efa1ce}{cleanup\+Terminated\+Task}} (\mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}} $\ast$task)
+\item 
+int \mbox{\hyperlink{prcssthr_8cpp_a313106e627f546db544d0bc6b3880f7b}{wait\+Task}} (int pid, int $\ast$wstatus, int options)
+\item 
+void \mbox{\hyperlink{prcssthr_8cpp_a6f40acf966bedafff130d714624e28a4}{cleaner\+Task\+Function}} (void $\ast$context)
+\item 
+void \mbox{\hyperlink{prcssthr_8cpp_ad1e8851e35d7f6bf4cd32e7ff1c8f8fb}{Ke\+Terminate\+Current\+Thread}} (int return\+Code)
+\item 
+void \mbox{\hyperlink{prcssthr_8cpp_a9624816104533944388bb3ed9e882f5b}{block\+Task\+With\+Scheduler\+Lock\+Already\+Held}} (enum \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146a}{Task\+State}} reason)
+\item 
+void \mbox{\hyperlink{prcssthr_8cpp_af8fb1c1d7f605794cc36c0247a3e5da4}{block\+Task}} (enum \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146a}{Task\+State}} reason)
+\item 
+void \mbox{\hyperlink{prcssthr_8cpp_a167b5d78dff13a05a3e86fc808d55006}{unblock\+Task}} (\mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}} $\ast$task)
+\item 
+void \mbox{\hyperlink{prcssthr_8cpp_a97f5543e5a7c67fec43dfb839bd83711}{milli\+Tenth\+Sleep\+Until}} (uint64\+\_\+t when)
+\item 
+void \mbox{\hyperlink{prcssthr_8cpp_a68f79e1b5db6dbdb97bbb0f3ac1e281e}{milli\+Tenth\+Sleep}} (uint64\+\_\+t mtens)
+\item 
+void \mbox{\hyperlink{prcssthr_8cpp_a1a9b00640198135cb10b164753f48945}{sleep}} (uint64\+\_\+t seconds)
+\item 
+void \mbox{\hyperlink{prcssthr_8cpp_a33d1f3d2f490cfc2931d22b8756a2294}{milli\+Tenth\+Sleep}} (uint32\+\_\+t mtens)
+\item 
+void \mbox{\hyperlink{prcssthr_8cpp_a27b4f772c3fd054acf869e0c38be0371}{sleep}} (uint32\+\_\+t seconds)
+\item 
+void \mbox{\hyperlink{prcssthr_8cpp_abeb546360097f990000a417e765e19fc}{task\+Returned}} ()
+\item 
+\mbox{\hyperlink{struct_process}{Process}} $\ast$ \mbox{\hyperlink{prcssthr_8cpp_a1fd5c5e2c9ae0fa5f79521c2f22fab76}{Ke\+Process\+From\+PID}} (int pid)
+\item 
+void \mbox{\hyperlink{prcssthr_8cpp_a37b35e38927395fbbdd56b230b0d1f10}{Ke\+Disable\+Preemption}} ()
+\item 
+void \mbox{\hyperlink{prcssthr_8cpp_a04db5fa598ffff8247a58896630500f0}{Ke\+Restore\+Preemption}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{prcssthr_8cpp_acced729434ba3f97b39a7dbb4fd9926d}{ke\+Next\+PID}} = 1
+\item 
+\mbox{\hyperlink{struct_process}{Process}} $\ast$ \mbox{\hyperlink{prcssthr_8cpp_af519b7792515d6313de94093d644ee43}{kernel\+Process}} = nullptr
+\item 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{string_8h_ae808eb4555d62ce4d882d1e293728d01}{volatile}} \mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}} $>$ \mbox{\hyperlink{prcssthr_8cpp_a36012ed054984b258aeebf8ef7a3412f}{task\+List}}
+\item 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{string_8h_ae808eb4555d62ce4d882d1e293728d01}{volatile}} \mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}} $>$ \mbox{\hyperlink{prcssthr_8cpp_a10014531226330497516750f7c86306e}{sleeping\+Task\+List}}
+\item 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{string_8h_ae808eb4555d62ce4d882d1e293728d01}{volatile}} \mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}} $>$ \mbox{\hyperlink{prcssthr_8cpp_a4cf6bf36be26751eb0717b261b21c36f}{terminated\+Task\+List}}
+\item 
+int \mbox{\hyperlink{prcssthr_8cpp_a1a5cba0a3973366468a97c8c1287e4c2}{irq\+Disable\+Counter}} = 0
+\item 
+int \mbox{\hyperlink{prcssthr_8cpp_ad30ff4b0042251417a011a9b04032b70}{postpone\+Task\+Switches\+Counter}} = 0
+\item 
+int \mbox{\hyperlink{prcssthr_8cpp_a2f5e57527fe35c435507948bbf78a1aa}{task\+Switches\+Postponed\+Flag}} = 0
+\item 
+size\+\_\+t \mbox{\hyperlink{prcssthr_8cpp_af96fff26da718abf9130153443cee7f4}{scheduler\+Lock}}
+\item 
+size\+\_\+t \mbox{\hyperlink{prcssthr_8cpp_a23fc35880e7e3b1a1de2fa2abe71fb26}{lock\+Stuff\+Lock}}
+\item 
+size\+\_\+t \mbox{\hyperlink{prcssthr_8cpp_a4f7ec26ea505a65b3d54ec7d620d6f77}{ret\+Val\+Sched\+Lock}}
+\item 
+size\+\_\+t \mbox{\hyperlink{prcssthr_8cpp_afec1af5d9745950483e7efa896086a32}{ret\+Val\+Lock\+Stuff}}
+\item 
+bool \mbox{\hyperlink{prcssthr_8cpp_a816967ebad69c52a2bc002624cc16142}{display\+Cli\+Sti}}
+\item 
+bool \mbox{\hyperlink{prcssthr_8cpp_a5d0ad01447def6eba23c2e020a0546dc}{we\+Need\+The\+Cleaner\+To\+Not\+Block}} = false
+\item 
+\mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}} $\ast$ \mbox{\hyperlink{prcssthr_8cpp_ab2c1684634155e534bbd515972ca6c43}{cleaner\+Thread}} = nullptr
+\item 
+int \mbox{\hyperlink{prcssthr_8cpp_a407185a70d0e7aba17bbe15eee217256}{ke\+Preemption\+Disable\+Counter}} = 0
+\item 
+bool \mbox{\hyperlink{prcssthr_8cpp_a8a90aa674fee5bb79003b35482b60d5e}{ke\+Restore\+Preemption\+Value}} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{prcssthr_8cpp_a36469ffe54ca35a4e773a33f5d031ed3}\label{prcssthr_8cpp_a36469ffe54ca35a4e773a33f5d031ed3}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!STACK\_LEEWAY@{STACK\_LEEWAY}}
+\index{STACK\_LEEWAY@{STACK\_LEEWAY}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{STACK\_LEEWAY}{STACK\_LEEWAY}}
+{\footnotesize\ttfamily \#define STACK\+\_\+\+LEEWAY~32}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{prcssthr_8cpp_a08692c68a3dccff37823d18bf7407098}\label{prcssthr_8cpp_a08692c68a3dccff37823d18bf7407098}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!asmAcquireLock@{asmAcquireLock}}
+\index{asmAcquireLock@{asmAcquireLock}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{asmAcquireLock()}{asmAcquireLock()}}
+{\footnotesize\ttfamily unsigned long asm\+Acquire\+Lock (\begin{DoxyParamCaption}\item[{size\+\_\+t $\ast$}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_af3250d55ee17c874c7846622ec6ccc30}\label{prcssthr_8cpp_af3250d55ee17c874c7846622ec6ccc30}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!asmReleaseLock@{asmReleaseLock}}
+\index{asmReleaseLock@{asmReleaseLock}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{asmReleaseLock()}{asmReleaseLock()}}
+{\footnotesize\ttfamily void asm\+Release\+Lock (\begin{DoxyParamCaption}\item[{size\+\_\+t $\ast$}]{,  }\item[{size\+\_\+t}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_af8fb1c1d7f605794cc36c0247a3e5da4}\label{prcssthr_8cpp_af8fb1c1d7f605794cc36c0247a3e5da4}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!blockTask@{blockTask}}
+\index{blockTask@{blockTask}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{blockTask()}{blockTask()}}
+{\footnotesize\ttfamily void block\+Task (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146a}{Task\+State}}}]{reason }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a9624816104533944388bb3ed9e882f5b}\label{prcssthr_8cpp_a9624816104533944388bb3ed9e882f5b}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!blockTaskWithSchedulerLockAlreadyHeld@{blockTaskWithSchedulerLockAlreadyHeld}}
+\index{blockTaskWithSchedulerLockAlreadyHeld@{blockTaskWithSchedulerLockAlreadyHeld}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{blockTaskWithSchedulerLockAlreadyHeld()}{blockTaskWithSchedulerLockAlreadyHeld()}}
+{\footnotesize\ttfamily void block\+Task\+With\+Scheduler\+Lock\+Already\+Held (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146a}{Task\+State}}}]{reason }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a76b76ab91c60ed5d9031dc8fc90cac89}\label{prcssthr_8cpp_a76b76ab91c60ed5d9031dc8fc90cac89}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!changeTSS@{changeTSS}}
+\index{changeTSS@{changeTSS}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{changeTSS()}{changeTSS()}}
+{\footnotesize\ttfamily void change\+TSS (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a6f40acf966bedafff130d714624e28a4}\label{prcssthr_8cpp_a6f40acf966bedafff130d714624e28a4}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!cleanerTaskFunction@{cleanerTaskFunction}}
+\index{cleanerTaskFunction@{cleanerTaskFunction}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{cleanerTaskFunction()}{cleanerTaskFunction()}}
+{\footnotesize\ttfamily void cleaner\+Task\+Function (\begin{DoxyParamCaption}\item[{void $\ast$}]{context }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a0f504429bf2c6b4e5a57f01104efa1ce}\label{prcssthr_8cpp_a0f504429bf2c6b4e5a57f01104efa1ce}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!cleanupTerminatedTask@{cleanupTerminatedTask}}
+\index{cleanupTerminatedTask@{cleanupTerminatedTask}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{cleanupTerminatedTask()}{cleanupTerminatedTask()}}
+{\footnotesize\ttfamily void cleanup\+Terminated\+Task (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}} $\ast$}]{task }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a3e1109bf9dd1b99d3efcb6a37d34f6cb}\label{prcssthr_8cpp_a3e1109bf9dd1b99d3efcb6a37d34f6cb}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!goToUsermode@{goToUsermode}}
+\index{goToUsermode@{goToUsermode}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{goToUsermode()}{goToUsermode()}}
+{\footnotesize\ttfamily void go\+To\+Usermode (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{loc }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a37b35e38927395fbbdd56b230b0d1f10}\label{prcssthr_8cpp_a37b35e38927395fbbdd56b230b0d1f10}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!KeDisablePreemption@{KeDisablePreemption}}
+\index{KeDisablePreemption@{KeDisablePreemption}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{KeDisablePreemption()}{KeDisablePreemption()}}
+{\footnotesize\ttfamily void Ke\+Disable\+Preemption (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a1fd5c5e2c9ae0fa5f79521c2f22fab76}\label{prcssthr_8cpp_a1fd5c5e2c9ae0fa5f79521c2f22fab76}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!KeProcessFromPID@{KeProcessFromPID}}
+\index{KeProcessFromPID@{KeProcessFromPID}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{KeProcessFromPID()}{KeProcessFromPID()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_process}{Process}} $\ast$ Ke\+Process\+From\+PID (\begin{DoxyParamCaption}\item[{int}]{pid }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a04db5fa598ffff8247a58896630500f0}\label{prcssthr_8cpp_a04db5fa598ffff8247a58896630500f0}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!KeRestorePreemption@{KeRestorePreemption}}
+\index{KeRestorePreemption@{KeRestorePreemption}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{KeRestorePreemption()}{KeRestorePreemption()}}
+{\footnotesize\ttfamily void Ke\+Restore\+Preemption (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_ad1e8851e35d7f6bf4cd32e7ff1c8f8fb}\label{prcssthr_8cpp_ad1e8851e35d7f6bf4cd32e7ff1c8f8fb}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!KeTerminateCurrentThread@{KeTerminateCurrentThread}}
+\index{KeTerminateCurrentThread@{KeTerminateCurrentThread}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{KeTerminateCurrentThread()}{KeTerminateCurrentThread()}}
+{\footnotesize\ttfamily void Ke\+Terminate\+Current\+Thread (\begin{DoxyParamCaption}\item[{int}]{return\+Code }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a33d1f3d2f490cfc2931d22b8756a2294}\label{prcssthr_8cpp_a33d1f3d2f490cfc2931d22b8756a2294}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!milliTenthSleep@{milliTenthSleep}}
+\index{milliTenthSleep@{milliTenthSleep}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{milliTenthSleep()}{milliTenthSleep()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void milli\+Tenth\+Sleep (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{mtens }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a68f79e1b5db6dbdb97bbb0f3ac1e281e}\label{prcssthr_8cpp_a68f79e1b5db6dbdb97bbb0f3ac1e281e}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!milliTenthSleep@{milliTenthSleep}}
+\index{milliTenthSleep@{milliTenthSleep}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{milliTenthSleep()}{milliTenthSleep()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void milli\+Tenth\+Sleep (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{mtens }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a97f5543e5a7c67fec43dfb839bd83711}\label{prcssthr_8cpp_a97f5543e5a7c67fec43dfb839bd83711}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!milliTenthSleepUntil@{milliTenthSleepUntil}}
+\index{milliTenthSleepUntil@{milliTenthSleepUntil}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{milliTenthSleepUntil()}{milliTenthSleepUntil()}}
+{\footnotesize\ttfamily void milli\+Tenth\+Sleep\+Until (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{when }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a7d06701ac073c331c83519e3909b7fce}\label{prcssthr_8cpp_a7d06701ac073c331c83519e3909b7fce}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!schedule@{schedule}}
+\index{schedule@{schedule}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{schedule()}{schedule()}}
+{\footnotesize\ttfamily void schedule (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_af27290ca9db0306b5e78382e25f1810b}\label{prcssthr_8cpp_af27290ca9db0306b5e78382e25f1810b}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!setupMultitasking@{setupMultitasking}}
+\index{setupMultitasking@{setupMultitasking}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{setupMultitasking()}{setupMultitasking()}}
+{\footnotesize\ttfamily void setup\+Multitasking (\begin{DoxyParamCaption}\item[{void($\ast$)()}]{where }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a27b4f772c3fd054acf869e0c38be0371}\label{prcssthr_8cpp_a27b4f772c3fd054acf869e0c38be0371}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!sleep@{sleep}}
+\index{sleep@{sleep}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{sleep()}{sleep()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void sleep (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{seconds }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a1a9b00640198135cb10b164753f48945}\label{prcssthr_8cpp_a1a9b00640198135cb10b164753f48945}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!sleep@{sleep}}
+\index{sleep@{sleep}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{sleep()}{sleep()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void sleep (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{seconds }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a0b207772ad06bb6fea072fbc5d1cd536}\label{prcssthr_8cpp_a0b207772ad06bb6fea072fbc5d1cd536}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!switchToThread@{switchToThread}}
+\index{switchToThread@{switchToThread}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{switchToThread()}{switchToThread()}}
+{\footnotesize\ttfamily void switch\+To\+Thread (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}} $\ast$}]{next\+Thread\+To\+Run }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a177f58c318ccaeac7f32279006ecfbe0}\label{prcssthr_8cpp_a177f58c318ccaeac7f32279006ecfbe0}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!switchToThreadASM@{switchToThreadASM}}
+\index{switchToThreadASM@{switchToThreadASM}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{switchToThreadASM()}{switchToThreadASM()}}
+{\footnotesize\ttfamily void switch\+To\+Thread\+ASM (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}} $\ast$}]{next\+Thread\+To\+Run }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a7339ba9702d26cbacc0d1c4aff5a70c2}\label{prcssthr_8cpp_a7339ba9702d26cbacc0d1c4aff5a70c2}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!switchToThreadASMFirstTime@{switchToThreadASMFirstTime}}
+\index{switchToThreadASMFirstTime@{switchToThreadASMFirstTime}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{switchToThreadASMFirstTime()}{switchToThreadASMFirstTime()}}
+{\footnotesize\ttfamily void switch\+To\+Thread\+ASMFirst\+Time (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}} $\ast$}]{next\+Thread\+To\+Run }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_abeb546360097f990000a417e765e19fc}\label{prcssthr_8cpp_abeb546360097f990000a417e765e19fc}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!taskReturned@{taskReturned}}
+\index{taskReturned@{taskReturned}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{taskReturned()}{taskReturned()}}
+{\footnotesize\ttfamily void task\+Returned (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a175068b9a22718149a42a5b1e92b5ae7}\label{prcssthr_8cpp_a175068b9a22718149a42a5b1e92b5ae7}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!taskStartupFunction@{taskStartupFunction}}
+\index{taskStartupFunction@{taskStartupFunction}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{taskStartupFunction()}{taskStartupFunction()}}
+{\footnotesize\ttfamily size\+\_\+t task\+Startup\+Function (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a167b5d78dff13a05a3e86fc808d55006}\label{prcssthr_8cpp_a167b5d78dff13a05a3e86fc808d55006}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!unblockTask@{unblockTask}}
+\index{unblockTask@{unblockTask}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{unblockTask()}{unblockTask()}}
+{\footnotesize\ttfamily void unblock\+Task (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}} $\ast$}]{task }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a7a55a6c0a16ac18ecca3585c29e95c54}\label{prcssthr_8cpp_a7a55a6c0a16ac18ecca3585c29e95c54}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!userModeEntryPoint@{userModeEntryPoint}}
+\index{userModeEntryPoint@{userModeEntryPoint}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{userModeEntryPoint()}{userModeEntryPoint()}}
+{\footnotesize\ttfamily void user\+Mode\+Entry\+Point (\begin{DoxyParamCaption}\item[{void $\ast$}]{context }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a313106e627f546db544d0bc6b3880f7b}\label{prcssthr_8cpp_a313106e627f546db544d0bc6b3880f7b}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!waitTask@{waitTask}}
+\index{waitTask@{waitTask}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{waitTask()}{waitTask()}}
+{\footnotesize\ttfamily int wait\+Task (\begin{DoxyParamCaption}\item[{int}]{pid,  }\item[{int $\ast$}]{wstatus,  }\item[{int}]{options }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{prcssthr_8cpp_ab2c1684634155e534bbd515972ca6c43}\label{prcssthr_8cpp_ab2c1684634155e534bbd515972ca6c43}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!cleanerThread@{cleanerThread}}
+\index{cleanerThread@{cleanerThread}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{cleanerThread}{cleanerThread}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}}$\ast$ cleaner\+Thread = nullptr}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a816967ebad69c52a2bc002624cc16142}\label{prcssthr_8cpp_a816967ebad69c52a2bc002624cc16142}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!displayCliSti@{displayCliSti}}
+\index{displayCliSti@{displayCliSti}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{displayCliSti}{displayCliSti}}
+{\footnotesize\ttfamily bool display\+Cli\+Sti\hspace{0.3cm}{\ttfamily [extern]}}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a1a5cba0a3973366468a97c8c1287e4c2}\label{prcssthr_8cpp_a1a5cba0a3973366468a97c8c1287e4c2}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!irqDisableCounter@{irqDisableCounter}}
+\index{irqDisableCounter@{irqDisableCounter}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{irqDisableCounter}{irqDisableCounter}}
+{\footnotesize\ttfamily int irq\+Disable\+Counter = 0}
+
+\mbox{\Hypertarget{prcssthr_8cpp_acced729434ba3f97b39a7dbb4fd9926d}\label{prcssthr_8cpp_acced729434ba3f97b39a7dbb4fd9926d}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!keNextPID@{keNextPID}}
+\index{keNextPID@{keNextPID}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{keNextPID}{keNextPID}}
+{\footnotesize\ttfamily int ke\+Next\+PID = 1}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a407185a70d0e7aba17bbe15eee217256}\label{prcssthr_8cpp_a407185a70d0e7aba17bbe15eee217256}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!kePreemptionDisableCounter@{kePreemptionDisableCounter}}
+\index{kePreemptionDisableCounter@{kePreemptionDisableCounter}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{kePreemptionDisableCounter}{kePreemptionDisableCounter}}
+{\footnotesize\ttfamily int ke\+Preemption\+Disable\+Counter = 0}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a8a90aa674fee5bb79003b35482b60d5e}\label{prcssthr_8cpp_a8a90aa674fee5bb79003b35482b60d5e}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!keRestorePreemptionValue@{keRestorePreemptionValue}}
+\index{keRestorePreemptionValue@{keRestorePreemptionValue}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{keRestorePreemptionValue}{keRestorePreemptionValue}}
+{\footnotesize\ttfamily bool ke\+Restore\+Preemption\+Value = false}
+
+\mbox{\Hypertarget{prcssthr_8cpp_af519b7792515d6313de94093d644ee43}\label{prcssthr_8cpp_af519b7792515d6313de94093d644ee43}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!kernelProcess@{kernelProcess}}
+\index{kernelProcess@{kernelProcess}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{kernelProcess}{kernelProcess}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_process}{Process}}$\ast$ kernel\+Process = nullptr}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a23fc35880e7e3b1a1de2fa2abe71fb26}\label{prcssthr_8cpp_a23fc35880e7e3b1a1de2fa2abe71fb26}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!lockStuffLock@{lockStuffLock}}
+\index{lockStuffLock@{lockStuffLock}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{lockStuffLock}{lockStuffLock}}
+{\footnotesize\ttfamily size\+\_\+t lock\+Stuff\+Lock}
+
+\mbox{\Hypertarget{prcssthr_8cpp_ad30ff4b0042251417a011a9b04032b70}\label{prcssthr_8cpp_ad30ff4b0042251417a011a9b04032b70}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!postponeTaskSwitchesCounter@{postponeTaskSwitchesCounter}}
+\index{postponeTaskSwitchesCounter@{postponeTaskSwitchesCounter}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{postponeTaskSwitchesCounter}{postponeTaskSwitchesCounter}}
+{\footnotesize\ttfamily int postpone\+Task\+Switches\+Counter = 0}
+
+\mbox{\Hypertarget{prcssthr_8cpp_afec1af5d9745950483e7efa896086a32}\label{prcssthr_8cpp_afec1af5d9745950483e7efa896086a32}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!retValLockStuff@{retValLockStuff}}
+\index{retValLockStuff@{retValLockStuff}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{retValLockStuff}{retValLockStuff}}
+{\footnotesize\ttfamily size\+\_\+t ret\+Val\+Lock\+Stuff}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a4f7ec26ea505a65b3d54ec7d620d6f77}\label{prcssthr_8cpp_a4f7ec26ea505a65b3d54ec7d620d6f77}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!retValSchedLock@{retValSchedLock}}
+\index{retValSchedLock@{retValSchedLock}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{retValSchedLock}{retValSchedLock}}
+{\footnotesize\ttfamily size\+\_\+t ret\+Val\+Sched\+Lock}
+
+\mbox{\Hypertarget{prcssthr_8cpp_af96fff26da718abf9130153443cee7f4}\label{prcssthr_8cpp_af96fff26da718abf9130153443cee7f4}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!schedulerLock@{schedulerLock}}
+\index{schedulerLock@{schedulerLock}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{schedulerLock}{schedulerLock}}
+{\footnotesize\ttfamily size\+\_\+t scheduler\+Lock}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a10014531226330497516750f7c86306e}\label{prcssthr_8cpp_a10014531226330497516750f7c86306e}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!sleepingTaskList@{sleepingTaskList}}
+\index{sleepingTaskList@{sleepingTaskList}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{sleepingTaskList}{sleepingTaskList}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$\mbox{\hyperlink{string_8h_ae808eb4555d62ce4d882d1e293728d01}{volatile}} \mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}}$>$ sleeping\+Task\+List}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a36012ed054984b258aeebf8ef7a3412f}\label{prcssthr_8cpp_a36012ed054984b258aeebf8ef7a3412f}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!taskList@{taskList}}
+\index{taskList@{taskList}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{taskList}{taskList}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$\mbox{\hyperlink{string_8h_ae808eb4555d62ce4d882d1e293728d01}{volatile}} \mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}}$>$ task\+List}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a2f5e57527fe35c435507948bbf78a1aa}\label{prcssthr_8cpp_a2f5e57527fe35c435507948bbf78a1aa}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!taskSwitchesPostponedFlag@{taskSwitchesPostponedFlag}}
+\index{taskSwitchesPostponedFlag@{taskSwitchesPostponedFlag}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{taskSwitchesPostponedFlag}{taskSwitchesPostponedFlag}}
+{\footnotesize\ttfamily int task\+Switches\+Postponed\+Flag = 0}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a4cf6bf36be26751eb0717b261b21c36f}\label{prcssthr_8cpp_a4cf6bf36be26751eb0717b261b21c36f}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!terminatedTaskList@{terminatedTaskList}}
+\index{terminatedTaskList@{terminatedTaskList}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{terminatedTaskList}{terminatedTaskList}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$\mbox{\hyperlink{string_8h_ae808eb4555d62ce4d882d1e293728d01}{volatile}} \mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}}$>$ terminated\+Task\+List}
+
+\mbox{\Hypertarget{prcssthr_8cpp_a5d0ad01447def6eba23c2e020a0546dc}\label{prcssthr_8cpp_a5d0ad01447def6eba23c2e020a0546dc}} 
+\index{prcssthr.cpp@{prcssthr.cpp}!weNeedTheCleanerToNotBlock@{weNeedTheCleanerToNotBlock}}
+\index{weNeedTheCleanerToNotBlock@{weNeedTheCleanerToNotBlock}!prcssthr.cpp@{prcssthr.cpp}}
+\doxysubsubsection{\texorpdfstring{weNeedTheCleanerToNotBlock}{weNeedTheCleanerToNotBlock}}
+{\footnotesize\ttfamily bool we\+Need\+The\+Cleaner\+To\+Not\+Block = false}
+

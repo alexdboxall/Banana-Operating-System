@@ -1,0 +1,236 @@
+\hypertarget{openlibm__fenv__arm_8h_source}{}\doxysection{openlibm\+\_\+fenv\+\_\+arm.\+h}
+\label{openlibm__fenv__arm_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/libk/\_mathinc/openlibm\_fenv\_arm.h@{C:/Users/Alex/Desktop/Banana/kernel/libk/\_mathinc/openlibm\_fenv\_arm.h}}
+\mbox{\hyperlink{openlibm__fenv__arm_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*-\/}}
+\DoxyCodeLine{2 \textcolor{comment}{ * Copyright (c) 2004-\/2005 David Schultz <das@FreeBSD.ORG>}}
+\DoxyCodeLine{3 \textcolor{comment}{ * All rights reserved.}}
+\DoxyCodeLine{4 \textcolor{comment}{ *}}
+\DoxyCodeLine{5 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{6 \textcolor{comment}{ * modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{7 \textcolor{comment}{ * are met:}}
+\DoxyCodeLine{8 \textcolor{comment}{ * 1. Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{9 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{10 \textcolor{comment}{ * 2. Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{11 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer in the}}
+\DoxyCodeLine{12 \textcolor{comment}{ *    documentation and/or other materials provided with the distribution.}}
+\DoxyCodeLine{13 \textcolor{comment}{ *}}
+\DoxyCodeLine{14 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND}}
+\DoxyCodeLine{15 \textcolor{comment}{ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE}}
+\DoxyCodeLine{16 \textcolor{comment}{ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE}}
+\DoxyCodeLine{17 \textcolor{comment}{ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE}}
+\DoxyCodeLine{18 \textcolor{comment}{ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL}}
+\DoxyCodeLine{19 \textcolor{comment}{ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS}}
+\DoxyCodeLine{20 \textcolor{comment}{ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)}}
+\DoxyCodeLine{21 \textcolor{comment}{ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT}}
+\DoxyCodeLine{22 \textcolor{comment}{ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY}}
+\DoxyCodeLine{23 \textcolor{comment}{ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF}}
+\DoxyCodeLine{24 \textcolor{comment}{ * SUCH DAMAGE.}}
+\DoxyCodeLine{25 \textcolor{comment}{ *}}
+\DoxyCodeLine{26 \textcolor{comment}{ * \$FreeBSD: src/lib/msun/arm/fenv.h,v 1.6 2011/10/10 15:43:09 das Exp \$}}
+\DoxyCodeLine{27 \textcolor{comment}{ */}}
+\DoxyCodeLine{28 }
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#ifndef \_FENV\_H\_}}
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#define \_FENV\_H\_}}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{cdefs-compat_8h}{cdefs-\/compat.h}}"{}}}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#ifndef \_\_fenv\_static}}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#define \_\_fenv\_static   static}}
+\DoxyCodeLine{38 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40 \textcolor{keyword}{typedef} uint32\_t    \mbox{\hyperlink{openlibm__fenv__arm_8h_a359f63a64379745584b4b4c9c742aff8}{fenv\_t}};}
+\DoxyCodeLine{41 \textcolor{keyword}{typedef} uint32\_t    \mbox{\hyperlink{openlibm__fenv__arm_8h_a50de133bb7c75bc6dc210701e63d2a89}{fexcept\_t}};}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43 \textcolor{comment}{/* Exception flags */}}
+\DoxyCodeLine{44 \textcolor{preprocessor}{\#define FE\_INVALID  0x0001}}
+\DoxyCodeLine{45 \textcolor{preprocessor}{\#define FE\_DIVBYZERO    0x0002}}
+\DoxyCodeLine{46 \textcolor{preprocessor}{\#define FE\_OVERFLOW 0x0004}}
+\DoxyCodeLine{47 \textcolor{preprocessor}{\#define FE\_UNDERFLOW    0x0008}}
+\DoxyCodeLine{48 \textcolor{preprocessor}{\#define FE\_INEXACT  0x0010}}
+\DoxyCodeLine{49 \textcolor{preprocessor}{\#define FE\_ALL\_EXCEPT   (FE\_DIVBYZERO | FE\_INEXACT | \(\backslash\)}}
+\DoxyCodeLine{50 \textcolor{preprocessor}{             FE\_INVALID | FE\_OVERFLOW | FE\_UNDERFLOW)}}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52 \textcolor{comment}{/* Rounding modes */}}
+\DoxyCodeLine{53 \textcolor{preprocessor}{\#define FE\_TONEAREST    0x0000}}
+\DoxyCodeLine{54 \textcolor{preprocessor}{\#define FE\_TOWARDZERO   0x0001}}
+\DoxyCodeLine{55 \textcolor{preprocessor}{\#define FE\_UPWARD   0x0002}}
+\DoxyCodeLine{56 \textcolor{preprocessor}{\#define FE\_DOWNWARD 0x0003}}
+\DoxyCodeLine{57 \textcolor{preprocessor}{\#define \_ROUND\_MASK (FE\_TONEAREST | FE\_DOWNWARD | \(\backslash\)}}
+\DoxyCodeLine{58 \textcolor{preprocessor}{             FE\_UPWARD | FE\_TOWARDZERO)}}
+\DoxyCodeLine{59 \mbox{\hyperlink{cdefs-compat_8h_a568e6bde99652b7fd271ad206cfe38f5}{\_\_BEGIN\_DECLS}}}
+\DoxyCodeLine{60 }
+\DoxyCodeLine{61 \textcolor{comment}{/* Default floating-\/point environment */}}
+\DoxyCodeLine{62 \textcolor{keyword}{extern} \textcolor{keyword}{const} \mbox{\hyperlink{structfenv__t}{fenv\_t}}   \mbox{\hyperlink{openlibm__fenv__arm_8h_aaf5b925e20d433d1de3810f92994e01c}{\_\_fe\_dfl\_env}};}
+\DoxyCodeLine{63 \textcolor{preprocessor}{\#define FE\_DFL\_ENV  (\&\_\_fe\_dfl\_env)}}
+\DoxyCodeLine{64 }
+\DoxyCodeLine{65 \textcolor{comment}{/* We need to be able to map status flag positions to mask flag positions */}}
+\DoxyCodeLine{66 \textcolor{preprocessor}{\#define \_FPUSW\_SHIFT    16}}
+\DoxyCodeLine{67 \textcolor{preprocessor}{\#define \_ENABLE\_MASK    (FE\_ALL\_EXCEPT << \_FPUSW\_SHIFT)}}
+\DoxyCodeLine{68 }
+\DoxyCodeLine{69 \textcolor{preprocessor}{\#if defined(\_\_aarch64\_\_)}}
+\DoxyCodeLine{70 \textcolor{preprocessor}{\#define \_\_rfs(\_\_fpsr)   \_\_asm \_\_volatile("{}mrs \%0,fpsr"{}} : "{}=r"{} (*(\_\_fpsr)))}
+\DoxyCodeLine{71 \textcolor{preprocessor}{\#define \_\_wfs(\_\_fpsr)   \_\_asm \_\_volatile("{}msr fpsr,\%0"{}} : : "{}r"{} (\_\_fpsr))}
+\DoxyCodeLine{72 \textcolor{comment}{/* Test for hardware support for ARM floating point operations, explicitly}}
+\DoxyCodeLine{73 \textcolor{comment}{checking for float and double support, see "{}ARM C Language Extensions"{}, 6.5.1 */}}
+\DoxyCodeLine{74 \textcolor{preprocessor}{\#elif defined(\_\_ARM\_FP) \&\& (\_\_ARM\_FP \& 0x0C) != 0}}
+\DoxyCodeLine{75 \textcolor{preprocessor}{\#define \_\_rfs(\_\_fpsr)   \_\_asm \_\_volatile("{}vmrs \%0,fpscr"{}} : "{}=\&r"{} (*(\_\_fpsr)))}
+\DoxyCodeLine{76 \textcolor{preprocessor}{\#define \_\_wfs(\_\_fpsr)   \_\_asm \_\_volatile("{}vmsr fpscr,\%0"{}} : : "{}r"{} (\_\_fpsr))}
+\DoxyCodeLine{77 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{78 \textcolor{preprocessor}{\#define \_\_rfs(\_\_fpsr)   (*(\_\_fpsr) = 0)}}
+\DoxyCodeLine{79 \textcolor{preprocessor}{\#define \_\_wfs(\_\_fpsr)}}
+\DoxyCodeLine{80 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{81 }
+\DoxyCodeLine{82 \mbox{\hyperlink{openlibm__fenv__arm_8h_a56f7e74b3772e12653b98fa2c6c5380d}{\_\_fenv\_static}} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{83 \mbox{\hyperlink{openlibm__fenv__arm_8h_aea4e8c7d3cc52dfc74d4dfdb1e795082}{feclearexcept}}(\textcolor{keywordtype}{int} \_\_excepts)}
+\DoxyCodeLine{84 \{}
+\DoxyCodeLine{85     \mbox{\hyperlink{openlibm__fenv__amd64_8h_af5be3a86f74aba2a00dc666fcfb158ea}{fexcept\_t}} \_\_fpsr;}
+\DoxyCodeLine{86 }
+\DoxyCodeLine{87     \mbox{\hyperlink{openlibm__fenv__arm_8h_a67993d18379487827c12a221d0f9e3b5}{\_\_rfs}}(\&\_\_fpsr);}
+\DoxyCodeLine{88     \_\_fpsr \&= \string~\_\_excepts;}
+\DoxyCodeLine{89     \mbox{\hyperlink{openlibm__fenv__arm_8h_a25364c6b07a5e0ed3b40b253ee2e1e1c}{\_\_wfs}}(\_\_fpsr);}
+\DoxyCodeLine{90     \textcolor{keywordflow}{return} (0);}
+\DoxyCodeLine{91 \}}
+\DoxyCodeLine{92 }
+\DoxyCodeLine{93 \mbox{\hyperlink{openlibm__fenv__arm_8h_a56f7e74b3772e12653b98fa2c6c5380d}{\_\_fenv\_static}} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{94 \mbox{\hyperlink{openlibm__fenv__arm_8h_a8f9f0ea0d8d4237d189a284e6b14da11}{fegetexceptflag}}(\mbox{\hyperlink{openlibm__fenv__amd64_8h_af5be3a86f74aba2a00dc666fcfb158ea}{fexcept\_t}} *\_\_flagp, \textcolor{keywordtype}{int} \_\_excepts)}
+\DoxyCodeLine{95 \{}
+\DoxyCodeLine{96     \mbox{\hyperlink{openlibm__fenv__amd64_8h_af5be3a86f74aba2a00dc666fcfb158ea}{fexcept\_t}} \_\_fpsr;}
+\DoxyCodeLine{97 }
+\DoxyCodeLine{98     \mbox{\hyperlink{openlibm__fenv__arm_8h_a67993d18379487827c12a221d0f9e3b5}{\_\_rfs}}(\&\_\_fpsr);}
+\DoxyCodeLine{99     *\_\_flagp = \_\_fpsr \& \_\_excepts;}
+\DoxyCodeLine{100     \textcolor{keywordflow}{return} (0);}
+\DoxyCodeLine{101 \}}
+\DoxyCodeLine{102 }
+\DoxyCodeLine{103 \mbox{\hyperlink{openlibm__fenv__arm_8h_a56f7e74b3772e12653b98fa2c6c5380d}{\_\_fenv\_static}} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{104 \mbox{\hyperlink{openlibm__fenv__arm_8h_ad6691b75f79b65fe543329fa53c707f3}{fesetexceptflag}}(\textcolor{keyword}{const} \mbox{\hyperlink{openlibm__fenv__amd64_8h_af5be3a86f74aba2a00dc666fcfb158ea}{fexcept\_t}} *\_\_flagp, \textcolor{keywordtype}{int} \_\_excepts)}
+\DoxyCodeLine{105 \{}
+\DoxyCodeLine{106     \mbox{\hyperlink{openlibm__fenv__amd64_8h_af5be3a86f74aba2a00dc666fcfb158ea}{fexcept\_t}} \_\_fpsr;}
+\DoxyCodeLine{107 }
+\DoxyCodeLine{108     \mbox{\hyperlink{openlibm__fenv__arm_8h_a67993d18379487827c12a221d0f9e3b5}{\_\_rfs}}(\&\_\_fpsr);}
+\DoxyCodeLine{109     \_\_fpsr \&= \string~\_\_excepts;}
+\DoxyCodeLine{110     \_\_fpsr |= *\_\_flagp \& \_\_excepts;}
+\DoxyCodeLine{111     \mbox{\hyperlink{openlibm__fenv__arm_8h_a25364c6b07a5e0ed3b40b253ee2e1e1c}{\_\_wfs}}(\_\_fpsr);}
+\DoxyCodeLine{112     \textcolor{keywordflow}{return} (0);}
+\DoxyCodeLine{113 \}}
+\DoxyCodeLine{114 }
+\DoxyCodeLine{115 \mbox{\hyperlink{openlibm__fenv__arm_8h_a56f7e74b3772e12653b98fa2c6c5380d}{\_\_fenv\_static}} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{116 \mbox{\hyperlink{openlibm__fenv__arm_8h_a026937b9d4367562c87a0ccb43b67a44}{feraiseexcept}}(\textcolor{keywordtype}{int} \_\_excepts)}
+\DoxyCodeLine{117 \{}
+\DoxyCodeLine{118     \mbox{\hyperlink{openlibm__fenv__amd64_8h_af5be3a86f74aba2a00dc666fcfb158ea}{fexcept\_t}} \_\_ex = \_\_excepts;}
+\DoxyCodeLine{119 }
+\DoxyCodeLine{120     \mbox{\hyperlink{openlibm__fenv__arm_8h_ad6691b75f79b65fe543329fa53c707f3}{fesetexceptflag}}(\&\_\_ex, \_\_excepts);   \textcolor{comment}{/* XXX */}}
+\DoxyCodeLine{121     \textcolor{keywordflow}{return} (0);}
+\DoxyCodeLine{122 \}}
+\DoxyCodeLine{123 }
+\DoxyCodeLine{124 \mbox{\hyperlink{openlibm__fenv__arm_8h_a56f7e74b3772e12653b98fa2c6c5380d}{\_\_fenv\_static}} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{125 \mbox{\hyperlink{openlibm__fenv__arm_8h_a34873ef7d06f9459a9f7c64b7c966bb2}{fetestexcept}}(\textcolor{keywordtype}{int} \_\_excepts)}
+\DoxyCodeLine{126 \{}
+\DoxyCodeLine{127     \mbox{\hyperlink{openlibm__fenv__amd64_8h_af5be3a86f74aba2a00dc666fcfb158ea}{fexcept\_t}} \_\_fpsr;}
+\DoxyCodeLine{128 }
+\DoxyCodeLine{129     \mbox{\hyperlink{openlibm__fenv__arm_8h_a67993d18379487827c12a221d0f9e3b5}{\_\_rfs}}(\&\_\_fpsr);}
+\DoxyCodeLine{130     \textcolor{keywordflow}{return} (\_\_fpsr \& \_\_excepts);}
+\DoxyCodeLine{131 \}}
+\DoxyCodeLine{132 }
+\DoxyCodeLine{133 \mbox{\hyperlink{openlibm__fenv__arm_8h_a56f7e74b3772e12653b98fa2c6c5380d}{\_\_fenv\_static}} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{134 \mbox{\hyperlink{openlibm__fenv__arm_8h_aba60129e080204b37209f72adedecee7}{fegetround}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{135 \{}
+\DoxyCodeLine{136 }
+\DoxyCodeLine{137     \textcolor{comment}{/*}}
+\DoxyCodeLine{138 \textcolor{comment}{     * Apparently, the rounding mode is specified as part of the}}
+\DoxyCodeLine{139 \textcolor{comment}{     * instruction format on ARM, so the dynamic rounding mode is}}
+\DoxyCodeLine{140 \textcolor{comment}{     * indeterminate.  Some FPUs may differ.}}
+\DoxyCodeLine{141 \textcolor{comment}{     */}}
+\DoxyCodeLine{142     \textcolor{keywordflow}{return} (-\/1);}
+\DoxyCodeLine{143 \}}
+\DoxyCodeLine{144 }
+\DoxyCodeLine{145 \mbox{\hyperlink{openlibm__fenv__arm_8h_a56f7e74b3772e12653b98fa2c6c5380d}{\_\_fenv\_static}} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{146 \mbox{\hyperlink{openlibm__fenv__arm_8h_a09d68f60f8870d93bf471f492e6acad3}{fesetround}}(\textcolor{keywordtype}{int} \_\_round)}
+\DoxyCodeLine{147 \{}
+\DoxyCodeLine{148 }
+\DoxyCodeLine{149     \textcolor{keywordflow}{return} (-\/1);}
+\DoxyCodeLine{150 \}}
+\DoxyCodeLine{151 }
+\DoxyCodeLine{152 \mbox{\hyperlink{openlibm__fenv__arm_8h_a56f7e74b3772e12653b98fa2c6c5380d}{\_\_fenv\_static}} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{153 \mbox{\hyperlink{openlibm__fenv__arm_8h_ad2db3a71a6aa8b2330ec2463cbd8fac2}{fegetenv}}(\mbox{\hyperlink{structfenv__t}{fenv\_t}} *\_\_envp)}
+\DoxyCodeLine{154 \{}
+\DoxyCodeLine{155 }
+\DoxyCodeLine{156     \mbox{\hyperlink{openlibm__fenv__arm_8h_a67993d18379487827c12a221d0f9e3b5}{\_\_rfs}}(\_\_envp);}
+\DoxyCodeLine{157     \textcolor{keywordflow}{return} (0);}
+\DoxyCodeLine{158 \}}
+\DoxyCodeLine{159 }
+\DoxyCodeLine{160 \mbox{\hyperlink{openlibm__fenv__arm_8h_a56f7e74b3772e12653b98fa2c6c5380d}{\_\_fenv\_static}} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{161 \mbox{\hyperlink{openlibm__fenv__arm_8h_a18df0a8e1a442f2bd11a0206342d9672}{feholdexcept}}(\mbox{\hyperlink{structfenv__t}{fenv\_t}} *\_\_envp)}
+\DoxyCodeLine{162 \{}
+\DoxyCodeLine{163     \mbox{\hyperlink{structfenv__t}{fenv\_t}} \_\_env;}
+\DoxyCodeLine{164 }
+\DoxyCodeLine{165     \mbox{\hyperlink{openlibm__fenv__arm_8h_a67993d18379487827c12a221d0f9e3b5}{\_\_rfs}}(\&\_\_env);}
+\DoxyCodeLine{166     *\_\_envp = \_\_env;}
+\DoxyCodeLine{167     \_\_env \&= \string~(\mbox{\hyperlink{openlibm__fenv__arm_8h_a09e405b3782b934813075e48366dda9a}{FE\_ALL\_EXCEPT}} | \mbox{\hyperlink{openlibm__fenv__arm_8h_a2a4611f70a567ad98073333fa188712e}{\_ENABLE\_MASK}});}
+\DoxyCodeLine{168     \mbox{\hyperlink{openlibm__fenv__arm_8h_a25364c6b07a5e0ed3b40b253ee2e1e1c}{\_\_wfs}}(\_\_env);}
+\DoxyCodeLine{169     \textcolor{keywordflow}{return} (0);}
+\DoxyCodeLine{170 \}}
+\DoxyCodeLine{171 }
+\DoxyCodeLine{172 \mbox{\hyperlink{openlibm__fenv__arm_8h_a56f7e74b3772e12653b98fa2c6c5380d}{\_\_fenv\_static}} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{173 \mbox{\hyperlink{openlibm__fenv__arm_8h_abdaa8f700bdb653319f063979cd983d5}{fesetenv}}(\textcolor{keyword}{const} \mbox{\hyperlink{structfenv__t}{fenv\_t}} *\_\_envp)}
+\DoxyCodeLine{174 \{}
+\DoxyCodeLine{175 }
+\DoxyCodeLine{176     \mbox{\hyperlink{openlibm__fenv__arm_8h_a25364c6b07a5e0ed3b40b253ee2e1e1c}{\_\_wfs}}(*\_\_envp);}
+\DoxyCodeLine{177     \textcolor{keywordflow}{return} (0);}
+\DoxyCodeLine{178 \}}
+\DoxyCodeLine{179 }
+\DoxyCodeLine{180 \mbox{\hyperlink{openlibm__fenv__arm_8h_a56f7e74b3772e12653b98fa2c6c5380d}{\_\_fenv\_static}} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{181 \mbox{\hyperlink{openlibm__fenv__arm_8h_aa0b243183d29631478097e40f2f653d1}{feupdateenv}}(\textcolor{keyword}{const} \mbox{\hyperlink{structfenv__t}{fenv\_t}} *\_\_envp)}
+\DoxyCodeLine{182 \{}
+\DoxyCodeLine{183     \mbox{\hyperlink{openlibm__fenv__amd64_8h_af5be3a86f74aba2a00dc666fcfb158ea}{fexcept\_t}} \_\_fpsr;}
+\DoxyCodeLine{184 }
+\DoxyCodeLine{185     \mbox{\hyperlink{openlibm__fenv__arm_8h_a67993d18379487827c12a221d0f9e3b5}{\_\_rfs}}(\&\_\_fpsr);}
+\DoxyCodeLine{186     \mbox{\hyperlink{openlibm__fenv__arm_8h_a25364c6b07a5e0ed3b40b253ee2e1e1c}{\_\_wfs}}(*\_\_envp);}
+\DoxyCodeLine{187     \mbox{\hyperlink{openlibm__fenv__arm_8h_a026937b9d4367562c87a0ccb43b67a44}{feraiseexcept}}(\_\_fpsr \& \mbox{\hyperlink{openlibm__fenv__arm_8h_a09e405b3782b934813075e48366dda9a}{FE\_ALL\_EXCEPT}});}
+\DoxyCodeLine{188     \textcolor{keywordflow}{return} (0);}
+\DoxyCodeLine{189 \}}
+\DoxyCodeLine{190 }
+\DoxyCodeLine{191 \textcolor{preprocessor}{\#if \_\_BSD\_VISIBLE}}
+\DoxyCodeLine{192 }
+\DoxyCodeLine{193 \textcolor{comment}{/* We currently provide no external definitions of the functions below. */}}
+\DoxyCodeLine{194 }
+\DoxyCodeLine{195 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{196 feenableexcept(\textcolor{keywordtype}{int} \_\_mask)}
+\DoxyCodeLine{197 \{}
+\DoxyCodeLine{198     \mbox{\hyperlink{structfenv__t}{fenv\_t}} \_\_old\_fpsr, \_\_new\_fpsr;}
+\DoxyCodeLine{199 }
+\DoxyCodeLine{200     \mbox{\hyperlink{openlibm__fenv__arm_8h_a67993d18379487827c12a221d0f9e3b5}{\_\_rfs}}(\&\_\_old\_fpsr);}
+\DoxyCodeLine{201     \_\_new\_fpsr = \_\_old\_fpsr | (\_\_mask \& \mbox{\hyperlink{openlibm__fenv__arm_8h_a09e405b3782b934813075e48366dda9a}{FE\_ALL\_EXCEPT}}) << \mbox{\hyperlink{openlibm__fenv__arm_8h_a394464c7bf4464ea0038cd3cc643a7fc}{\_FPUSW\_SHIFT}};}
+\DoxyCodeLine{202     \mbox{\hyperlink{openlibm__fenv__arm_8h_a25364c6b07a5e0ed3b40b253ee2e1e1c}{\_\_wfs}}(\_\_new\_fpsr);}
+\DoxyCodeLine{203     \textcolor{keywordflow}{return} ((\_\_old\_fpsr >> \mbox{\hyperlink{openlibm__fenv__arm_8h_a394464c7bf4464ea0038cd3cc643a7fc}{\_FPUSW\_SHIFT}}) \& \mbox{\hyperlink{openlibm__fenv__arm_8h_a09e405b3782b934813075e48366dda9a}{FE\_ALL\_EXCEPT}});}
+\DoxyCodeLine{204 \}}
+\DoxyCodeLine{205 }
+\DoxyCodeLine{206 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{207 fedisableexcept(\textcolor{keywordtype}{int} \_\_mask)}
+\DoxyCodeLine{208 \{}
+\DoxyCodeLine{209     \mbox{\hyperlink{structfenv__t}{fenv\_t}} \_\_old\_fpsr, \_\_new\_fpsr;}
+\DoxyCodeLine{210 }
+\DoxyCodeLine{211     \mbox{\hyperlink{openlibm__fenv__arm_8h_a67993d18379487827c12a221d0f9e3b5}{\_\_rfs}}(\&\_\_old\_fpsr);}
+\DoxyCodeLine{212     \_\_new\_fpsr = \_\_old\_fpsr \& \string~((\_\_mask \& \mbox{\hyperlink{openlibm__fenv__arm_8h_a09e405b3782b934813075e48366dda9a}{FE\_ALL\_EXCEPT}}) << \mbox{\hyperlink{openlibm__fenv__arm_8h_a394464c7bf4464ea0038cd3cc643a7fc}{\_FPUSW\_SHIFT}});}
+\DoxyCodeLine{213     \mbox{\hyperlink{openlibm__fenv__arm_8h_a25364c6b07a5e0ed3b40b253ee2e1e1c}{\_\_wfs}}(\_\_new\_fpsr);}
+\DoxyCodeLine{214     \textcolor{keywordflow}{return} ((\_\_old\_fpsr >> \mbox{\hyperlink{openlibm__fenv__arm_8h_a394464c7bf4464ea0038cd3cc643a7fc}{\_FPUSW\_SHIFT}}) \& \mbox{\hyperlink{openlibm__fenv__arm_8h_a09e405b3782b934813075e48366dda9a}{FE\_ALL\_EXCEPT}});}
+\DoxyCodeLine{215 \}}
+\DoxyCodeLine{216 }
+\DoxyCodeLine{217 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{218 fegetexcept(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{219 \{}
+\DoxyCodeLine{220     \mbox{\hyperlink{structfenv__t}{fenv\_t}} \_\_fpsr;}
+\DoxyCodeLine{221 }
+\DoxyCodeLine{222     \mbox{\hyperlink{openlibm__fenv__arm_8h_a67993d18379487827c12a221d0f9e3b5}{\_\_rfs}}(\&\_\_fpsr);}
+\DoxyCodeLine{223     \textcolor{keywordflow}{return} ((\_\_fpsr \& \mbox{\hyperlink{openlibm__fenv__arm_8h_a2a4611f70a567ad98073333fa188712e}{\_ENABLE\_MASK}}) >> \mbox{\hyperlink{openlibm__fenv__arm_8h_a394464c7bf4464ea0038cd3cc643a7fc}{\_FPUSW\_SHIFT}});}
+\DoxyCodeLine{224 \}}
+\DoxyCodeLine{225 }
+\DoxyCodeLine{226 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_BSD\_VISIBLE */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{227 }
+\DoxyCodeLine{228 \mbox{\hyperlink{cdefs-compat_8h_a115472f6d0d1035f1885658ce0821537}{\_\_END\_DECLS}}}
+\DoxyCodeLine{229 }
+\DoxyCodeLine{230 \textcolor{preprocessor}{\#endif  }\textcolor{comment}{/* !\_FENV\_H\_ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

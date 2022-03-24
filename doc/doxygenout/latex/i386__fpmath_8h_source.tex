@@ -1,0 +1,60 @@
+\hypertarget{i386__fpmath_8h_source}{}\doxysection{i386\+\_\+fpmath.\+h}
+\label{i386__fpmath_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/libk/\_mathinc/i386\_fpmath.h@{C:/Users/Alex/Desktop/Banana/kernel/libk/\_mathinc/i386\_fpmath.h}}
+\mbox{\hyperlink{i386__fpmath_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*-\/}}
+\DoxyCodeLine{2 \textcolor{comment}{ * Copyright (c) 2002, 2003 David Schultz <das@FreeBSD.ORG>}}
+\DoxyCodeLine{3 \textcolor{comment}{ * All rights reserved.}}
+\DoxyCodeLine{4 \textcolor{comment}{ *}}
+\DoxyCodeLine{5 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{6 \textcolor{comment}{ * modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{7 \textcolor{comment}{ * are met:}}
+\DoxyCodeLine{8 \textcolor{comment}{ * 1. Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{9 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{10 \textcolor{comment}{ * 2. Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{11 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer in the}}
+\DoxyCodeLine{12 \textcolor{comment}{ *    documentation and/or other materials provided with the distribution.}}
+\DoxyCodeLine{13 \textcolor{comment}{ *}}
+\DoxyCodeLine{14 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND}}
+\DoxyCodeLine{15 \textcolor{comment}{ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE}}
+\DoxyCodeLine{16 \textcolor{comment}{ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE}}
+\DoxyCodeLine{17 \textcolor{comment}{ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE}}
+\DoxyCodeLine{18 \textcolor{comment}{ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL}}
+\DoxyCodeLine{19 \textcolor{comment}{ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS}}
+\DoxyCodeLine{20 \textcolor{comment}{ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)}}
+\DoxyCodeLine{21 \textcolor{comment}{ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT}}
+\DoxyCodeLine{22 \textcolor{comment}{ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY}}
+\DoxyCodeLine{23 \textcolor{comment}{ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF}}
+\DoxyCodeLine{24 \textcolor{comment}{ * SUCH DAMAGE.}}
+\DoxyCodeLine{25 \textcolor{comment}{ *}}
+\DoxyCodeLine{26 \textcolor{comment}{ * \$FreeBSD: src/lib/libc/i386/\_fpmath.h,v 1.6 2008/01/17 16:39:06 bde Exp \$}}
+\DoxyCodeLine{27 \textcolor{comment}{ */}}
+\DoxyCodeLine{28 }
+\DoxyCodeLine{29 \textcolor{keyword}{union }\mbox{\hyperlink{union_i_e_e_el2bits}{IEEEl2bits}} \{}
+\DoxyCodeLine{30     \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{union_i_e_e_el2bits_adb932579cbb1f00d419a6e805afd66dc}{e}};}
+\DoxyCodeLine{31     \textcolor{keyword}{struct }\{}
+\DoxyCodeLine{32         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}    \mbox{\hyperlink{union_i_e_e_el2bits_a1dc5506c126cccbdb9cb6683e7cebbf4}{manl}}    :32;}
+\DoxyCodeLine{33         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}    \mbox{\hyperlink{union_i_e_e_el2bits_a24d101eb3e37f941235329377ca20721}{manh}}    :32;}
+\DoxyCodeLine{34         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}    \mbox{\hyperlink{union_i_e_e_el2bits_abe599f3db1286d0a76d88be45fd962d5}{exp}}  :15;}
+\DoxyCodeLine{35         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}    \mbox{\hyperlink{union_i_e_e_el2bits_a2d7a9b61d685c176aa2111712f59ed6b}{sign}}    :1;}
+\DoxyCodeLine{36         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}    \mbox{\hyperlink{union_i_e_e_el2bits_a80169c3d19ef9d6eb1150fa432d917cc}{junk}}    :16;}
+\DoxyCodeLine{37     \} \mbox{\hyperlink{union_i_e_e_el2bits_ac6749bed4da5fba8fc9ea819b617e66a}{bits}};}
+\DoxyCodeLine{38     \textcolor{keyword}{struct }\{}
+\DoxyCodeLine{39         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \mbox{\hyperlink{union_i_e_e_el2bits_ada10055cf35365ec4950bdfda58c94c4}{man}}   :64;}
+\DoxyCodeLine{40         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}    \mbox{\hyperlink{union_i_e_e_el2bits_a63dc055ac080ed5225878f385231ced8}{expsign}}  :16;}
+\DoxyCodeLine{41         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}    \mbox{\hyperlink{union_i_e_e_el2bits_a51f9d7e4405cb265113bcb8b624fd7c6}{junk}}    :16;}
+\DoxyCodeLine{42     \} \mbox{\hyperlink{union_i_e_e_el2bits_a6080944b4d607634fd33d19b0ea0a3bc}{xbits}};}
+\DoxyCodeLine{43 \};}
+\DoxyCodeLine{44 }
+\DoxyCodeLine{45 \textcolor{preprocessor}{\#define LDBL\_NBIT   0x80000000}}
+\DoxyCodeLine{46 \textcolor{preprocessor}{\#define mask\_nbit\_l(u)  ((u).bits.manh \&= \string~LDBL\_NBIT)}}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{48 \textcolor{preprocessor}{\#define LDBL\_MANH\_SIZE  32}}
+\DoxyCodeLine{49 \textcolor{preprocessor}{\#define LDBL\_MANL\_SIZE  32}}
+\DoxyCodeLine{50 }
+\DoxyCodeLine{51 \textcolor{preprocessor}{\#define LDBL\_TO\_ARRAY32(u, a) do \{          \(\backslash\)}}
+\DoxyCodeLine{52 \textcolor{preprocessor}{    (a)[0] = (uint32\_t)(u).bits.manl;       \(\backslash\)}}
+\DoxyCodeLine{53 \textcolor{preprocessor}{    (a)[1] = (uint32\_t)(u).bits.manh;       \(\backslash\)}}
+\DoxyCodeLine{54 \textcolor{preprocessor}{\} while (0)}}
+
+\end{DoxyCode}

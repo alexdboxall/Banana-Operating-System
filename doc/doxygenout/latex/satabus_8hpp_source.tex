@@ -1,0 +1,334 @@
+\hypertarget{satabus_8hpp_source}{}\doxysection{satabus.\+hpp}
+\label{satabus_8hpp_source}\index{C:/Users/Alex/Desktop/Banana/kernel/hw/diskctrl/satabus.hpp@{C:/Users/Alex/Desktop/Banana/kernel/hw/diskctrl/satabus.hpp}}
+\mbox{\hyperlink{satabus_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#ifndef \_SATAB\_HPP\_}}
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#define \_SATAB\_HPP\_}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{diskctrl_8hpp}{hal/diskctrl.hpp}}"{}}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{pci_8hpp}{hw/bus/pci.hpp}}"{}}}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{keyword}{class }\mbox{\hyperlink{class_s_a_t_a_bus}{SATABus}} : \textcolor{keyword}{public} \mbox{\hyperlink{class_hard_disk_controller}{HardDiskController}}}
+\DoxyCodeLine{10 \{}
+\DoxyCodeLine{11 \textcolor{keyword}{private}:}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{13 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{14 }
+\DoxyCodeLine{15 \textcolor{keyword}{public}:}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17     \textcolor{keyword}{typedef} \textcolor{keyword}{enum}}
+\DoxyCodeLine{18     \{}
+\DoxyCodeLine{19         \mbox{\hyperlink{class_s_a_t_a_bus_ac88092e7053c218630112f244ed9b127aff902cc6e26822409f66d37ee15f383a}{FIS\_TYPE\_REG\_H2D}} = 0x27,    \textcolor{comment}{// Register FIS -\/ host to device}}
+\DoxyCodeLine{20         \mbox{\hyperlink{class_s_a_t_a_bus_ac88092e7053c218630112f244ed9b127a9b71e3473a84e518ac6587da618d9225}{FIS\_TYPE\_REG\_D2H}} = 0x34,    \textcolor{comment}{// Register FIS -\/ device to host}}
+\DoxyCodeLine{21         \mbox{\hyperlink{class_s_a_t_a_bus_ac88092e7053c218630112f244ed9b127aae0b34874f8b656b26066890c733f090}{FIS\_TYPE\_DMA\_ACT}} = 0x39,    \textcolor{comment}{// DMA activate FIS -\/ device to host}}
+\DoxyCodeLine{22         \mbox{\hyperlink{class_s_a_t_a_bus_ac88092e7053c218630112f244ed9b127a0e86e17794beb64ac565b693e68cc0b7}{FIS\_TYPE\_DMA\_SETUP}} = 0x41,    \textcolor{comment}{// DMA setup FIS -\/ bidirectional}}
+\DoxyCodeLine{23         \mbox{\hyperlink{class_s_a_t_a_bus_ac88092e7053c218630112f244ed9b127a6c8202b5055b7eea8c084d594d4d3eeb}{FIS\_TYPE\_DATA}} = 0x46,  \textcolor{comment}{// Data FIS -\/ bidirectional}}
+\DoxyCodeLine{24         \mbox{\hyperlink{class_s_a_t_a_bus_ac88092e7053c218630112f244ed9b127a7eaeec8c9e0cbbe72721f52f63a0fbf4}{FIS\_TYPE\_BIST}} = 0x58,  \textcolor{comment}{// BIST activate FIS -\/ bidirectional}}
+\DoxyCodeLine{25         \mbox{\hyperlink{class_s_a_t_a_bus_ac88092e7053c218630112f244ed9b127a310c8e8c25a707b61077967ac51b373e}{FIS\_TYPE\_PIO\_SETUP}} = 0x5F,    \textcolor{comment}{// PIO setup FIS -\/ device to host}}
+\DoxyCodeLine{26         \mbox{\hyperlink{class_s_a_t_a_bus_ac88092e7053c218630112f244ed9b127a50859abc8845efa8db16251a23a9db3c}{FIS\_TYPE\_DEV\_BITS}} = 0xA1,  \textcolor{comment}{// Set device bits FIS -\/ device to host}}
+\DoxyCodeLine{27     \} \mbox{\hyperlink{class_s_a_t_a_bus_ac88092e7053c218630112f244ed9b127}{FIS\_TYPE}};}
+\DoxyCodeLine{28 }
+\DoxyCodeLine{29     \textcolor{keyword}{typedef} \textcolor{keyword}{volatile} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t}{tagHBA\_PORT}}}
+\DoxyCodeLine{30     \{}
+\DoxyCodeLine{31         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t_ac3efc1c3396cc66222deb8bac6beaecf}{clb}};        \textcolor{comment}{// 0x00, command list base address, 1K-\/byte aligned}}
+\DoxyCodeLine{32         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t_a73cd4ecb58ae82e9146aef64eb783fb4}{clbu}};      \textcolor{comment}{// 0x04, command list base address upper 32 bits}}
+\DoxyCodeLine{33         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t_a12802ad752b6133e694bd3f80f70ee80}{fb}};      \textcolor{comment}{// 0x08, FIS base address, 256-\/byte aligned}}
+\DoxyCodeLine{34         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t_a08344898d3b4e796a91088641efba791}{fbu}};        \textcolor{comment}{// 0x0C, FIS base address upper 32 bits}}
+\DoxyCodeLine{35         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t_aa38da39b488806c2edf5f8a37f57502f}{is}};      \textcolor{comment}{// 0x10, interrupt status}}
+\DoxyCodeLine{36         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t_ad87405e4ec8aa1a50c5457a317ad3d5f}{ie}};      \textcolor{comment}{// 0x14, interrupt enable}}
+\DoxyCodeLine{37         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t_a9eab3afec2e7ede7979e26dfbeda947e}{cmd}};        \textcolor{comment}{// 0x18, command and status}}
+\DoxyCodeLine{38         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t_aaebf07bd54828ab3db223c8f5e0ecaba}{rsv0}};      \textcolor{comment}{// 0x1C, Reserved}}
+\DoxyCodeLine{39         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t_a04318d4a8b01cc6ad549413d8f5fabfd}{tfd}};        \textcolor{comment}{// 0x20, task file data}}
+\DoxyCodeLine{40         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t_add871ca1bf6f01842b2fd0fbfaced3f5}{sig}};        \textcolor{comment}{// 0x24, signature}}
+\DoxyCodeLine{41         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t_a70f5db87c1aeeb65c49197fd998acfbe}{ssts}};      \textcolor{comment}{// 0x28, SATA status (SCR0:SStatus)}}
+\DoxyCodeLine{42         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t_a4148f53ab5a0754873d6bf36bf5d6f3d}{sctl}};      \textcolor{comment}{// 0x2C, SATA control (SCR2:SControl)}}
+\DoxyCodeLine{43         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t_a688ec739d9f169d453d57b852c3cfa4e}{serr}};      \textcolor{comment}{// 0x30, SATA error (SCR1:SError)}}
+\DoxyCodeLine{44         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t_a37e7e880beba97a0c8f66d548c9f440f}{sact}};      \textcolor{comment}{// 0x34, SATA active (SCR3:SActive)}}
+\DoxyCodeLine{45         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t_a00c4f0e010283a43090a0c066a0480c9}{ci}};      \textcolor{comment}{// 0x38, command issue}}
+\DoxyCodeLine{46         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t_a4b3854587f5ec7a55c7286c6c622039e}{sntf}};      \textcolor{comment}{// 0x3C, SATA notification (SCR4:SNotification)}}
+\DoxyCodeLine{47         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t_ac1748349557f18c2d6298b28cfb67e21}{fbs}};        \textcolor{comment}{// 0x40, FIS-\/based switch control}}
+\DoxyCodeLine{48         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t_af0ec12cc55c22b4f5aac31aa253c9e64}{rsv1}}[11];  \textcolor{comment}{// 0x44 \string~ 0x6F, Reserved}}
+\DoxyCodeLine{49         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t_a7b6d6a3be5d1ec1743045e6c5cb86acf}{vendor}}[4];   \textcolor{comment}{// 0x70 \string~ 0x7F, vendor specific}}
+\DoxyCodeLine{50     \} \mbox{\hyperlink{class_s_a_t_a_bus_a4d3ad7871d275039c1430ab11b362138}{HBA\_PORT}};}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52     \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___h2_d}{tagFIS\_REG\_H2D}}}
+\DoxyCodeLine{53     \{}
+\DoxyCodeLine{54         \textcolor{comment}{// DWORD 0}}
+\DoxyCodeLine{55         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___h2_d_a2e9b2b3cc3be3c6c8e3b5047bffd4b10}{fis\_type}};  \textcolor{comment}{// FIS\_TYPE\_REG\_H2D}}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___h2_d_a26af19f7d9ccc6ceed772d0c70840d54}{pmport}} : 4;  \textcolor{comment}{// Port multiplier}}
+\DoxyCodeLine{58         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___h2_d_a9309554d30b97e1167b6d2c242cf4040}{rsv0}} : 3;      \textcolor{comment}{// Reserved}}
+\DoxyCodeLine{59         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___h2_d_a5aca8f1c0e9a38dcc1959eb11b1c186b}{c}} : 1;        \textcolor{comment}{// 1: Command, 0: Control}}
+\DoxyCodeLine{60 }
+\DoxyCodeLine{61         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___h2_d_a1b988c6fc8c2c782ce3114e1c122bb92}{command}};    \textcolor{comment}{// Command register}}
+\DoxyCodeLine{62         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___h2_d_a58ae4b904d9439a8db91daf778876635}{featurel}};  \textcolor{comment}{// Feature register, 7:0}}
+\DoxyCodeLine{63 }
+\DoxyCodeLine{64         \textcolor{comment}{// DWORD 1}}
+\DoxyCodeLine{65         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___h2_d_ad928d9f753e7e4deec4963cad9884135}{lba0}};      \textcolor{comment}{// LBA low register, 7:0}}
+\DoxyCodeLine{66         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___h2_d_aabf1adfb5ed8b445e750435551abec30}{lba1}};      \textcolor{comment}{// LBA mid register, 15:8}}
+\DoxyCodeLine{67         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___h2_d_ac97e5e7fe251a28cf8d347585c18bb2b}{lba2}};      \textcolor{comment}{// LBA high register, 23:16}}
+\DoxyCodeLine{68         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___h2_d_ad6e4c3e8686223f8a1bdfaa8af0af38c}{device}};      \textcolor{comment}{// Device register}}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{70         \textcolor{comment}{// DWORD 2}}
+\DoxyCodeLine{71         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___h2_d_ac602401e03dcbadfe965f9422f40a52c}{lba3}};      \textcolor{comment}{// LBA register, 31:24}}
+\DoxyCodeLine{72         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___h2_d_aa15cad6985cfa87e3689143b4059bfb7}{lba4}};      \textcolor{comment}{// LBA register, 39:32}}
+\DoxyCodeLine{73         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___h2_d_afb89f85457e5046dc9dfb6bce66cf9a6}{lba5}};      \textcolor{comment}{// LBA register, 47:40}}
+\DoxyCodeLine{74         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___h2_d_a49ce5034dcd764df2aed83cc3f6dfcdf}{featureh}};  \textcolor{comment}{// Feature register, 15:8}}
+\DoxyCodeLine{75 }
+\DoxyCodeLine{76         \textcolor{comment}{// DWORD 3}}
+\DoxyCodeLine{77         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___h2_d_a56d0b2994db08315dd5796597d3fe303}{countl}};      \textcolor{comment}{// Count register, 7:0}}
+\DoxyCodeLine{78         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___h2_d_aa150aa5fdd03cc5f64de4230ebba452a}{counth}};      \textcolor{comment}{// Count register, 15:8}}
+\DoxyCodeLine{79         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___h2_d_ab211e47afacc4531cc9b9e97ee49f387}{icc}};        \textcolor{comment}{// Isochronous command completion}}
+\DoxyCodeLine{80         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___h2_d_a86ae60e09e8461a07bbf5559b3a601db}{control}};    \textcolor{comment}{// Control register}}
+\DoxyCodeLine{81 }
+\DoxyCodeLine{82         \textcolor{comment}{// DWORD 4}}
+\DoxyCodeLine{83         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___h2_d_ac83f7cd7444c076ecb1bb6c5be3c9a6b}{rsv1}}[4];   \textcolor{comment}{// Reserved}}
+\DoxyCodeLine{84     \} \mbox{\hyperlink{class_s_a_t_a_bus_aeaf3a630fe27f696e47f120312ed3618}{FIS\_REG\_H2D}};}
+\DoxyCodeLine{85 }
+\DoxyCodeLine{86     \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___d2_h}{tagFIS\_REG\_D2H}}}
+\DoxyCodeLine{87     \{}
+\DoxyCodeLine{88         \textcolor{comment}{// DWORD 0}}
+\DoxyCodeLine{89         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___d2_h_af1d9c3158df5f881ce94030ed3ade1dc}{fis\_type}};    \textcolor{comment}{// FIS\_TYPE\_REG\_D2H}}
+\DoxyCodeLine{90 }
+\DoxyCodeLine{91         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___d2_h_a6ac587f8a4f0b76dd273e717a2c3d598}{pmport}} : 4;    \textcolor{comment}{// Port multiplier}}
+\DoxyCodeLine{92         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___d2_h_af206ae6609d4e5736e4707f9f3c90bc2}{rsv0}} : 2;      \textcolor{comment}{// Reserved}}
+\DoxyCodeLine{93         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___d2_h_ad4363171d3d1d311f40bf404cda3b664}{i}} : 1;         \textcolor{comment}{// Interrupt bit}}
+\DoxyCodeLine{94         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___d2_h_aeba52cb20984328f0e129a3251b65f4b}{rsv1}} : 1;      \textcolor{comment}{// Reserved}}
+\DoxyCodeLine{95 }
+\DoxyCodeLine{96         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___d2_h_a17e79d3e646422cf6a040d49a15825fe}{status}};      \textcolor{comment}{// Status register}}
+\DoxyCodeLine{97         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___d2_h_a3c275797888527dd2ce830bf779d0f79}{error}};       \textcolor{comment}{// Error register}}
+\DoxyCodeLine{98 }
+\DoxyCodeLine{99         \textcolor{comment}{// DWORD 1}}
+\DoxyCodeLine{100         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___d2_h_a74441aea835b154eb851060ec8d42df1}{lba0}};        \textcolor{comment}{// LBA low register, 7:0}}
+\DoxyCodeLine{101         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___d2_h_a4d4259019653a3648945ff3e7e164be9}{lba1}};        \textcolor{comment}{// LBA mid register, 15:8}}
+\DoxyCodeLine{102         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___d2_h_a6e39611d96f448e2684c4485d8a6a149}{lba2}};        \textcolor{comment}{// LBA high register, 23:16}}
+\DoxyCodeLine{103         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___d2_h_ae9563b9932f48b28fdb52c6e2460a960}{device}};      \textcolor{comment}{// Device register}}
+\DoxyCodeLine{104 }
+\DoxyCodeLine{105         \textcolor{comment}{// DWORD 2}}
+\DoxyCodeLine{106         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___d2_h_a49bc11b7d30f3d6984f1981229321782}{lba3}};        \textcolor{comment}{// LBA register, 31:24}}
+\DoxyCodeLine{107         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___d2_h_a0f5d37e9a819bd77e8e419d8dc8c9743}{lba4}};        \textcolor{comment}{// LBA register, 39:32}}
+\DoxyCodeLine{108         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___d2_h_a6ba07963b49df698a680fb648a62a0aa}{lba5}};        \textcolor{comment}{// LBA register, 47:40}}
+\DoxyCodeLine{109         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___d2_h_ac058f695d8fb611713e9913c936c2927}{rsv2}};        \textcolor{comment}{// Reserved}}
+\DoxyCodeLine{110 }
+\DoxyCodeLine{111         \textcolor{comment}{// DWORD 3}}
+\DoxyCodeLine{112         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___d2_h_afdf2a5cde96d6b0611b61bc09345f30a}{countl}};      \textcolor{comment}{// Count register, 7:0}}
+\DoxyCodeLine{113         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___d2_h_ac720b22ca20f8ac6207a15ded973a8ea}{counth}};      \textcolor{comment}{// Count register, 15:8}}
+\DoxyCodeLine{114         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___d2_h_a752586a5ff555066b5e2dfb9296020f0}{rsv3}}[2];     \textcolor{comment}{// Reserved}}
+\DoxyCodeLine{115 }
+\DoxyCodeLine{116         \textcolor{comment}{// DWORD 4}}
+\DoxyCodeLine{117         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___d2_h_a9bf5f5924570be670e10bcc374784d85}{rsv4}}[4];     \textcolor{comment}{// Reserved}}
+\DoxyCodeLine{118     \} \mbox{\hyperlink{class_s_a_t_a_bus_ab1ad111a812b2cc7bbdbffa7a4fef58d}{FIS\_REG\_D2H}};}
+\DoxyCodeLine{119 }
+\DoxyCodeLine{120     \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___d_a_t_a}{tagFIS\_DATA}}}
+\DoxyCodeLine{121     \{}
+\DoxyCodeLine{122         \textcolor{comment}{// DWORD 0}}
+\DoxyCodeLine{123         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___d_a_t_a_a0f31c397a6dabf354e2c9b6c1d55eba3}{fis\_type}};  \textcolor{comment}{// FIS\_TYPE\_DATA}}
+\DoxyCodeLine{124 }
+\DoxyCodeLine{125         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___d_a_t_a_a023017c8d096d7fc37e6ed9c69fe0b1f}{pmport}} : 4;  \textcolor{comment}{// Port multiplier}}
+\DoxyCodeLine{126         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___d_a_t_a_a0fc9ef6f39e3a768b4dc0e06cb79ce67}{rsv0}} : 4;      \textcolor{comment}{// Reserved}}
+\DoxyCodeLine{127 }
+\DoxyCodeLine{128         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___d_a_t_a_a05c979adf01fd53047194ef0abccfdda}{rsv1}}[2];   \textcolor{comment}{// Reserved}}
+\DoxyCodeLine{129 }
+\DoxyCodeLine{130         \textcolor{comment}{// DWORD 1 \string~ N}}
+\DoxyCodeLine{131         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___d_a_t_a_a510430555bc63db23a58772c3aaaf5c8}{data}}[1];   \textcolor{comment}{// Payload}}
+\DoxyCodeLine{132     \} \mbox{\hyperlink{class_s_a_t_a_bus_a04edee3ee46ce9c2f1fe599084966cc4}{FIS\_DATA}};}
+\DoxyCodeLine{133 }
+\DoxyCodeLine{134     \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___p_i_o___s_e_t_u_p}{tagFIS\_PIO\_SETUP}}}
+\DoxyCodeLine{135     \{}
+\DoxyCodeLine{136         \textcolor{comment}{// DWORD 0}}
+\DoxyCodeLine{137         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___p_i_o___s_e_t_u_p_a785fb94060fb3ac3c2acf88e4abd76a5}{fis\_type}};  \textcolor{comment}{// FIS\_TYPE\_PIO\_SETUP}}
+\DoxyCodeLine{138 }
+\DoxyCodeLine{139         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___p_i_o___s_e_t_u_p_a08e2c2dc136cf41e80d9ddb5f804cbfc}{pmport}} : 4;  \textcolor{comment}{// Port multiplier}}
+\DoxyCodeLine{140         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___p_i_o___s_e_t_u_p_ac559c34ce5ec2bdc77bd4d307cf135ef}{rsv0}} : 1;      \textcolor{comment}{// Reserved}}
+\DoxyCodeLine{141         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___p_i_o___s_e_t_u_p_ab3e0aaaaf0eea91c8d92b33199c1b3e3}{d}} : 1;        \textcolor{comment}{// Data transfer direction, 1 -\/ device to host}}
+\DoxyCodeLine{142         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___p_i_o___s_e_t_u_p_adda23bb5e8b8e19964f1ac59cef28cef}{i}} : 1;        \textcolor{comment}{// Interrupt bit}}
+\DoxyCodeLine{143         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___p_i_o___s_e_t_u_p_a0472c99dad97162f1c51feed8f0eaf02}{rsv1}} : 1;}
+\DoxyCodeLine{144 }
+\DoxyCodeLine{145         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___p_i_o___s_e_t_u_p_ad3706a89dc4c079afe7c7694ccb68616}{status}};      \textcolor{comment}{// Status register}}
+\DoxyCodeLine{146         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___p_i_o___s_e_t_u_p_a6e863d2bb99d03a4e72dfe1dd13d7a59}{error}};        \textcolor{comment}{// Error register}}
+\DoxyCodeLine{147 }
+\DoxyCodeLine{148         \textcolor{comment}{// DWORD 1}}
+\DoxyCodeLine{149         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___p_i_o___s_e_t_u_p_a07304c333258809dfe3c0fe355ca7082}{lba0}};      \textcolor{comment}{// LBA low register, 7:0}}
+\DoxyCodeLine{150         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___p_i_o___s_e_t_u_p_ab80fa9bc89055f15f1fa7d795baa08e5}{lba1}};      \textcolor{comment}{// LBA mid register, 15:8}}
+\DoxyCodeLine{151         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___p_i_o___s_e_t_u_p_a05b70f3f5a4d42a7244ab2d48808d994}{lba2}};      \textcolor{comment}{// LBA high register, 23:16}}
+\DoxyCodeLine{152         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___p_i_o___s_e_t_u_p_ae90df52a9267f909772428a9b68e8e20}{device}};      \textcolor{comment}{// Device register}}
+\DoxyCodeLine{153 }
+\DoxyCodeLine{154         \textcolor{comment}{// DWORD 2}}
+\DoxyCodeLine{155         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___p_i_o___s_e_t_u_p_a80e98c5513b720d450cd02812750c560}{lba3}};      \textcolor{comment}{// LBA register, 31:24}}
+\DoxyCodeLine{156         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___p_i_o___s_e_t_u_p_a816c5f3c894998a522feb8dc9946e6c0}{lba4}};      \textcolor{comment}{// LBA register, 39:32}}
+\DoxyCodeLine{157         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___p_i_o___s_e_t_u_p_a79111db7e397ddf4b55350c1d1c70c94}{lba5}};      \textcolor{comment}{// LBA register, 47:40}}
+\DoxyCodeLine{158         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___p_i_o___s_e_t_u_p_ac2b9ed44af86116eeae871c8d6774a05}{rsv2}};      \textcolor{comment}{// Reserved}}
+\DoxyCodeLine{159 }
+\DoxyCodeLine{160         \textcolor{comment}{// DWORD 3}}
+\DoxyCodeLine{161         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___p_i_o___s_e_t_u_p_ae3b9e9612d9172c7f7724c3d7ca52320}{countl}};      \textcolor{comment}{// Count register, 7:0}}
+\DoxyCodeLine{162         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___p_i_o___s_e_t_u_p_a97e96295f57576f35e5915ee3a0569eb}{counth}};      \textcolor{comment}{// Count register, 15:8}}
+\DoxyCodeLine{163         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___p_i_o___s_e_t_u_p_aa1f80b33d2c21a06174ae13ceeaac497}{rsv3}};      \textcolor{comment}{// Reserved}}
+\DoxyCodeLine{164         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___p_i_o___s_e_t_u_p_a96d25e5d6f3b9b54486d40cc24a6a6f6}{e\_status}};  \textcolor{comment}{// New value of status register}}
+\DoxyCodeLine{165 }
+\DoxyCodeLine{166         \textcolor{comment}{// DWORD 4}}
+\DoxyCodeLine{167         uint16\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___p_i_o___s_e_t_u_p_a7e75220203cca78dbc5b5f4c50645da5}{tc}};      \textcolor{comment}{// Transfer count}}
+\DoxyCodeLine{168         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___p_i_o___s_e_t_u_p_ad9a74d95bb2dc4c93d095ea281fd06c7}{rsv4}}[2];   \textcolor{comment}{// Reserved}}
+\DoxyCodeLine{169     \} \mbox{\hyperlink{class_s_a_t_a_bus_a93f71d5f095bf2da6fc8dd8ba3ce1151}{FIS\_PIO\_SETUP}};}
+\DoxyCodeLine{170 }
+\DoxyCodeLine{171     \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___d_m_a___s_e_t_u_p}{tagFIS\_DMA\_SETUP}}}
+\DoxyCodeLine{172     \{}
+\DoxyCodeLine{173         \textcolor{comment}{// DWORD 0}}
+\DoxyCodeLine{174         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___d_m_a___s_e_t_u_p_a0c0963f5708343784b1efb1a83f9f721}{fis\_type}};  \textcolor{comment}{// FIS\_TYPE\_DMA\_SETUP}}
+\DoxyCodeLine{175 }
+\DoxyCodeLine{176         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___d_m_a___s_e_t_u_p_a81a8cd492ea575d5d69fcca90061656d}{pmport}} : 4;  \textcolor{comment}{// Port multiplier}}
+\DoxyCodeLine{177         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___d_m_a___s_e_t_u_p_a2c5b4e07deb0a1ca2497d7cae0e6f9bc}{rsv0}} : 1;      \textcolor{comment}{// Reserved}}
+\DoxyCodeLine{178         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___d_m_a___s_e_t_u_p_a3aa94f94e377b00802b03cb4b060bac0}{d}} : 1;        \textcolor{comment}{// Data transfer direction, 1 -\/ device to host}}
+\DoxyCodeLine{179         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___d_m_a___s_e_t_u_p_a05d986a453874fdd82032650c9573cda}{i}} : 1;        \textcolor{comment}{// Interrupt bit}}
+\DoxyCodeLine{180         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___d_m_a___s_e_t_u_p_a255229bcdd2675d31b982b507d05474f}{a}} : 1;            \textcolor{comment}{// Auto-\/activate. Specifies if DMA Activate FIS is needed}}
+\DoxyCodeLine{181 }
+\DoxyCodeLine{182         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___d_m_a___s_e_t_u_p_a985abc9120e597d4c49366d0395d8ae4}{rsved}}[2];       \textcolor{comment}{// Reserved}}
+\DoxyCodeLine{183 }
+\DoxyCodeLine{184         \textcolor{comment}{//DWORD 1\&2}}
+\DoxyCodeLine{185 }
+\DoxyCodeLine{186         uint64\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___d_m_a___s_e_t_u_p_aa83d0d5f92830ce5972c9f5d862c06ba}{DMAbufferID}};    \textcolor{comment}{// DMA Buffer Identifier. Used to Identify DMA buffer in host memory. SATA Spec says host specific and not in Spec. Trying AHCI spec might work.}}
+\DoxyCodeLine{187 }
+\DoxyCodeLine{188         \textcolor{comment}{//DWORD 3}}
+\DoxyCodeLine{189         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___d_m_a___s_e_t_u_p_a7a37d494fb697f13f00e86a99e50d721}{rsvd}};           \textcolor{comment}{//More reserved}}
+\DoxyCodeLine{190 }
+\DoxyCodeLine{191         \textcolor{comment}{//DWORD 4}}
+\DoxyCodeLine{192         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___d_m_a___s_e_t_u_p_a585c1ba0e2d21354f496d06c11662fee}{DMAbufOffset}};   \textcolor{comment}{//Byte offset into buffer. First 2 bits must be 0}}
+\DoxyCodeLine{193 }
+\DoxyCodeLine{194         \textcolor{comment}{//DWORD 5}}
+\DoxyCodeLine{195         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___d_m_a___s_e_t_u_p_a64704abbf4356c06b6e7ca09825799aa}{TransferCount}};  \textcolor{comment}{//Number of bytes to transfer. Bit 0 must be 0}}
+\DoxyCodeLine{196 }
+\DoxyCodeLine{197         \textcolor{comment}{//DWORD 6}}
+\DoxyCodeLine{198         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___d_m_a___s_e_t_u_p_a361addb197a98443cfa19a90421708eb}{resvd}};          \textcolor{comment}{//Reserved}}
+\DoxyCodeLine{199 }
+\DoxyCodeLine{200     \} \mbox{\hyperlink{class_s_a_t_a_bus_ade51ee4cae23fbcd3af8ae4e8e219a1b}{FIS\_DMA\_SETUP}};}
+\DoxyCodeLine{201 }
+\DoxyCodeLine{202     \textcolor{keyword}{typedef} \textcolor{keyword}{volatile} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___m_e_m}{tagHBA\_MEM}}}
+\DoxyCodeLine{203     \{}
+\DoxyCodeLine{204         \textcolor{comment}{// 0x00 -\/ 0x2B, Generic Host Control}}
+\DoxyCodeLine{205         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___m_e_m_a8482520a875901fea7ea3966f5e11037}{cap}};        \textcolor{comment}{// 0x00, Host capability}}
+\DoxyCodeLine{206         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___m_e_m_a0581928ff94edddb69585c27ad713286}{ghc}};        \textcolor{comment}{// 0x04, Global host control}}
+\DoxyCodeLine{207         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___m_e_m_add7560e309d3c1d216d49a198ddb8279}{is}};      \textcolor{comment}{// 0x08, Interrupt status}}
+\DoxyCodeLine{208         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___m_e_m_aa0d3876d4ec99aa1400a4933c130ee13}{pi}};      \textcolor{comment}{// 0x0C, Port implemented}}
+\DoxyCodeLine{209         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___m_e_m_a02f3f28ae6ac7344c97da71ca4298378}{vs}};      \textcolor{comment}{// 0x10, Version}}
+\DoxyCodeLine{210         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___m_e_m_afc2a3b0276d227523ce4a9542661474d}{ccc\_ctl}};    \textcolor{comment}{// 0x14, Command completion coalescing control}}
+\DoxyCodeLine{211         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___m_e_m_a2c4a51bc9ab2fdd7a7e79802b2ef56a7}{ccc\_pts}};    \textcolor{comment}{// 0x18, Command completion coalescing ports}}
+\DoxyCodeLine{212         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___m_e_m_ab9517c09366f1dc1d6323ab0963b6831}{em\_loc}};      \textcolor{comment}{// 0x1C, Enclosure management location}}
+\DoxyCodeLine{213         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___m_e_m_a59efdd4941172ce994dc036ec56c36e1}{em\_ctl}};      \textcolor{comment}{// 0x20, Enclosure management control}}
+\DoxyCodeLine{214         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___m_e_m_a0f5e54fb34358c75b7eb766fdcf85680}{cap2}};      \textcolor{comment}{// 0x24, Host capabilities extended}}
+\DoxyCodeLine{215         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___m_e_m_af19ccfbfc8422df6a68786015a258787}{bohc}};      \textcolor{comment}{// 0x28, BIOS/OS handoff control and status}}
+\DoxyCodeLine{216 }
+\DoxyCodeLine{217         \textcolor{comment}{// 0x2C -\/ 0x9F, Reserved}}
+\DoxyCodeLine{218         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___m_e_m_a8c9502fa084f95da7cb6c57813e5339a}{rsv}}[0xA0 -\/ 0x2C];}
+\DoxyCodeLine{219 }
+\DoxyCodeLine{220         \textcolor{comment}{// 0xA0 -\/ 0xFF, Vendor specific registers}}
+\DoxyCodeLine{221         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___m_e_m_a172c86d002c0126ecbbe4079865e87a0}{vendor}}[0x100 -\/ 0xA0];}
+\DoxyCodeLine{222 }
+\DoxyCodeLine{223         \textcolor{comment}{// 0x100 -\/ 0x10FF, Port control registers}}
+\DoxyCodeLine{224         \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t}{HBA\_PORT}}    \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___m_e_m_a514afa9c1f50dd06dfbed90e0c06833f}{ports}}[1];  \textcolor{comment}{// 1 \string~ 32}}
+\DoxyCodeLine{225     \} \mbox{\hyperlink{class_s_a_t_a_bus_afe8d1ce63a7996d9b3e48d83d8c12028}{HBA\_MEM}};}
+\DoxyCodeLine{226 }
+\DoxyCodeLine{227     \textcolor{keyword}{typedef} \textcolor{keyword}{volatile} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___f_i_s}{tagHBA\_FIS}}}
+\DoxyCodeLine{228     \{}
+\DoxyCodeLine{229         \textcolor{comment}{// 0x00}}
+\DoxyCodeLine{230         \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___d_m_a___s_e_t_u_p}{FIS\_DMA\_SETUP}}  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___f_i_s_a9b60ae819834aed6a7ef7281237dcc71}{dsfis}};     \textcolor{comment}{// DMA Setup FIS}}
+\DoxyCodeLine{231         uint8\_t         \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___f_i_s_a78bfaf7678d29f6f3c2d105fe94ec584}{pad0}}[4];}
+\DoxyCodeLine{232 }
+\DoxyCodeLine{233         \textcolor{comment}{// 0x20}}
+\DoxyCodeLine{234         \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___p_i_o___s_e_t_u_p}{FIS\_PIO\_SETUP}}  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___f_i_s_a758bf881f06f037732aa81e3f5b0a063}{psfis}};     \textcolor{comment}{// PIO Setup FIS}}
+\DoxyCodeLine{235         uint8\_t         \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___f_i_s_a18e1d71561fb7d41fc26fc1c5a0d28ad}{pad1}}[12];}
+\DoxyCodeLine{236 }
+\DoxyCodeLine{237         \textcolor{comment}{// 0x40}}
+\DoxyCodeLine{238         \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_f_i_s___r_e_g___d2_h}{FIS\_REG\_D2H}}  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___f_i_s_a5fe17db1e2ea5c5c1bab36f5896a1a22}{rfis}};       \textcolor{comment}{// Register – Device to Host FIS}}
+\DoxyCodeLine{239         uint8\_t         \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___f_i_s_aeeb003a678fd2b4ac27ecc07fa355e53}{pad2}}[4];}
+\DoxyCodeLine{240 }
+\DoxyCodeLine{241         \textcolor{comment}{// 0x58}}
+\DoxyCodeLine{242         uint64\_t    \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___f_i_s_a8afee3fa110bd5860afb67358446b3e9}{sdbfis}};       \textcolor{comment}{// Set Device Bit FIS}}
+\DoxyCodeLine{243 }
+\DoxyCodeLine{244         \textcolor{comment}{// 0x60}}
+\DoxyCodeLine{245         uint8\_t         \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___f_i_s_abc2f7bc7788d9fb927dcb7930113be06}{ufis}}[64];}
+\DoxyCodeLine{246 }
+\DoxyCodeLine{247         \textcolor{comment}{// 0xA0}}
+\DoxyCodeLine{248         uint8\_t     \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___f_i_s_abb01b1b264b22ad9bac99a8d0b58f94c}{rsv}}[0x100 -\/ 0xA0];}
+\DoxyCodeLine{249     \} \mbox{\hyperlink{class_s_a_t_a_bus_a6ff15587cdcc464fa2d7752cac946c65}{HBA\_FIS}};}
+\DoxyCodeLine{250 }
+\DoxyCodeLine{251     \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___c_m_d___h_e_a_d_e_r}{tagHBA\_CMD\_HEADER}}}
+\DoxyCodeLine{252     \{}
+\DoxyCodeLine{253         \textcolor{comment}{// DW0}}
+\DoxyCodeLine{254         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___c_m_d___h_e_a_d_e_r_ab02b55f0258dd0461ff058113bfe7df7}{cfl}} : 5;        \textcolor{comment}{// Command FIS length in DWORDS, 2 \string~ 16}}
+\DoxyCodeLine{255         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___c_m_d___h_e_a_d_e_r_a6d78f8534b24d91af9fd77533e749595}{a}} : 1;        \textcolor{comment}{// ATAPI}}
+\DoxyCodeLine{256         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___c_m_d___h_e_a_d_e_r_a64327cf2ffdd7c45eb1752a469590077}{w}} : 1;        \textcolor{comment}{// Write, 1: H2D, 0: D2H}}
+\DoxyCodeLine{257         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___c_m_d___h_e_a_d_e_r_a0b468b671f23b3cdba15867c38fb703f}{p}} : 1;        \textcolor{comment}{// Prefetchable}}
+\DoxyCodeLine{258 }
+\DoxyCodeLine{259         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___c_m_d___h_e_a_d_e_r_ade6a67b33d124d2de155a6cff63f0351}{r}} : 1;        \textcolor{comment}{// Reset}}
+\DoxyCodeLine{260         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___c_m_d___h_e_a_d_e_r_a7f883ceb1cabf513af220290d5d391e6}{b}} : 1;        \textcolor{comment}{// BIST}}
+\DoxyCodeLine{261         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___c_m_d___h_e_a_d_e_r_a4fc7775fdc47604dcf611eeb15c0e785}{c}} : 1;        \textcolor{comment}{// Clear busy upon R\_OK}}
+\DoxyCodeLine{262         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___c_m_d___h_e_a_d_e_r_a87b941c09d8b5954a66a456e5ee239ec}{rsv0}} : 1;      \textcolor{comment}{// Reserved}}
+\DoxyCodeLine{263         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___c_m_d___h_e_a_d_e_r_aaebcc4206f2355b089f0a5ecc38d4320}{pmp}} : 4;        \textcolor{comment}{// Port multiplier port}}
+\DoxyCodeLine{264 }
+\DoxyCodeLine{265         uint16\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___c_m_d___h_e_a_d_e_r_ab04949447b6e15c2c1ffff0a9db906d6}{prdtl}};        \textcolor{comment}{// Physical region descriptor table length in entries}}
+\DoxyCodeLine{266 }
+\DoxyCodeLine{267         \textcolor{comment}{// DW1}}
+\DoxyCodeLine{268         \textcolor{keyword}{volatile}}
+\DoxyCodeLine{269             uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___c_m_d___h_e_a_d_e_r_a5812e15ebb3fd5e92641020ee236198c}{prdbc}};        \textcolor{comment}{// Physical region descriptor byte count transferred}}
+\DoxyCodeLine{270 }
+\DoxyCodeLine{271             \textcolor{comment}{// DW2, 3}}
+\DoxyCodeLine{272         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___c_m_d___h_e_a_d_e_r_a18534ac14bbad200fa044b28809f35ab}{ctba}};      \textcolor{comment}{// Command table descriptor base address}}
+\DoxyCodeLine{273         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___c_m_d___h_e_a_d_e_r_a3f912ee5a931470255f677e409ed0a5e}{ctbau}};        \textcolor{comment}{// Command table descriptor base address upper 32 bits}}
+\DoxyCodeLine{274 }
+\DoxyCodeLine{275         \textcolor{comment}{// DW4 -\/ 7}}
+\DoxyCodeLine{276         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___c_m_d___h_e_a_d_e_r_a17ce9ff1a46b8878ca01edf69a801a3b}{rsv1}}[4];   \textcolor{comment}{// Reserved}}
+\DoxyCodeLine{277     \} \mbox{\hyperlink{class_s_a_t_a_bus_ab21f07feb11bd192d8f239be14c8b513}{HBA\_CMD\_HEADER}};}
+\DoxyCodeLine{278 }
+\DoxyCodeLine{279     \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_r_d_t___e_n_t_r_y}{tagHBA\_PRDT\_ENTRY}}}
+\DoxyCodeLine{280     \{}
+\DoxyCodeLine{281         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_r_d_t___e_n_t_r_y_a3926aa66a0941a098b165f16bc7a5a82}{dba}};        \textcolor{comment}{// Data base address}}
+\DoxyCodeLine{282         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_r_d_t___e_n_t_r_y_a49f34db220ee97e331b6889f1b38d37a}{dbau}};      \textcolor{comment}{// Data base address upper 32 bits}}
+\DoxyCodeLine{283         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_r_d_t___e_n_t_r_y_a54e94cafaa298b8e79f5f76cd899818d}{rsv0}};      \textcolor{comment}{// Reserved}}
+\DoxyCodeLine{284 }
+\DoxyCodeLine{285         \textcolor{comment}{// DW3}}
+\DoxyCodeLine{286         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_r_d_t___e_n_t_r_y_a19977fd2ab32d2b30a142db347040801}{dbc}} : 22;       \textcolor{comment}{// Byte count, 4M max}}
+\DoxyCodeLine{287         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_r_d_t___e_n_t_r_y_a1f61eb90a57094a5f14c66b35d6386b6}{rsv1}} : 9;      \textcolor{comment}{// Reserved}}
+\DoxyCodeLine{288         uint32\_t \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_r_d_t___e_n_t_r_y_a310b6eccebf9da5ea09f02a324f5789c}{i}} : 1;        \textcolor{comment}{// Interrupt on completion}}
+\DoxyCodeLine{289     \} \mbox{\hyperlink{class_s_a_t_a_bus_acfbfe3d8672c20fe4c36bc5110c2a0a5}{HBA\_PRDT\_ENTRY}};}
+\DoxyCodeLine{290 }
+\DoxyCodeLine{291     \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___c_m_d___t_b_l}{tagHBA\_CMD\_TBL}}}
+\DoxyCodeLine{292     \{}
+\DoxyCodeLine{293         \textcolor{comment}{// 0x00}}
+\DoxyCodeLine{294         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___c_m_d___t_b_l_afa7c5585cc493d491a3f978943f8df9b}{cfis}}[64];  \textcolor{comment}{// Command FIS}}
+\DoxyCodeLine{295 }
+\DoxyCodeLine{296         \textcolor{comment}{// 0x40}}
+\DoxyCodeLine{297         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___c_m_d___t_b_l_a656e39f19d5689cb7da5b6e10036f310}{acmd}}[16];  \textcolor{comment}{// ATAPI command, 12 or 16 bytes}}
+\DoxyCodeLine{298 }
+\DoxyCodeLine{299         \textcolor{comment}{// 0x50}}
+\DoxyCodeLine{300         uint8\_t  \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___c_m_d___t_b_l_aa05913671d7fce6c222a6595e4a8b3e4}{rsv}}[48];    \textcolor{comment}{// Reserved}}
+\DoxyCodeLine{301 }
+\DoxyCodeLine{302         \textcolor{comment}{// 0x80}}
+\DoxyCodeLine{303         \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_r_d_t___e_n_t_r_y}{HBA\_PRDT\_ENTRY}}    \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___c_m_d___t_b_l_a2d521942ea10ab8bf9e527fd0bee3908}{prdt\_entry}}[1];    \textcolor{comment}{// Physical region descriptor table entries, 0 \string~ 65535}}
+\DoxyCodeLine{304     \} \mbox{\hyperlink{class_s_a_t_a_bus_a5f0e473bb8c9847c248be2c0aec62e60}{HBA\_CMD\_TBL}};}
+\DoxyCodeLine{305 }
+\DoxyCodeLine{306     uint32\_t \mbox{\hyperlink{class_s_a_t_a_bus_a93cce758d6418c5b3c67fc00ee19bcd9}{AHCI\_BASE\_VIRT}};}
+\DoxyCodeLine{307     uint32\_t \mbox{\hyperlink{class_s_a_t_a_bus_afe224ca9730ed0d3f0180c58383a4746}{AHCI\_BASE\_PHYS}};}
+\DoxyCodeLine{308 }
+\DoxyCodeLine{309     \mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___m_e_m}{HBA\_MEM}}* \mbox{\hyperlink{class_s_a_t_a_bus_a44ef183f714a56a40bfa92a50f244478}{abar}};}
+\DoxyCodeLine{310 }
+\DoxyCodeLine{311     \mbox{\hyperlink{class_s_a_t_a_bus_a328be0ab55d14220c9ad0fa463373cc1}{SATABus}}();}
+\DoxyCodeLine{312 }
+\DoxyCodeLine{313     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_s_a_t_a_bus_ac55d1200699d20392ba5f9bd26460113}{open}}(\textcolor{keywordtype}{int}, \textcolor{keywordtype}{int}, \textcolor{keywordtype}{void}*);}
+\DoxyCodeLine{314     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_s_a_t_a_bus_a079dc6fde50bb621c1b0d08319952cc3}{close}}(\textcolor{keywordtype}{int}, \textcolor{keywordtype}{int}, \textcolor{keywordtype}{void}*);}
+\DoxyCodeLine{315 }
+\DoxyCodeLine{316     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_s_a_t_a_bus_a3d9e7504f5bb2800f0c34a1f3cec97eb}{findCmdslot}}(\mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t}{HBA\_PORT}}* port);}
+\DoxyCodeLine{317 }
+\DoxyCodeLine{318     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_s_a_t_a_bus_a84b14749a016b604a146ee97bd96c9f7}{probePort}}(\mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___m_e_m}{HBA\_MEM}}* \mbox{\hyperlink{class_s_a_t_a_bus_a44ef183f714a56a40bfa92a50f244478}{abar}});}
+\DoxyCodeLine{319     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_s_a_t_a_bus_ae387cec3d0e0fdcb4b3a2a60285a2a3c}{checkType}}(\mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t}{HBA\_PORT}}* port);}
+\DoxyCodeLine{320 }
+\DoxyCodeLine{321     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_s_a_t_a_bus_a3d845561579a471167fce371a820477c}{portRebase}}(\mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t}{HBA\_PORT}}* port, \textcolor{keywordtype}{int} portNo);}
+\DoxyCodeLine{322     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_s_a_t_a_bus_ae17a437493edfa2af9f53d5061b1b3fb}{startCmd}}(\mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t}{HBA\_PORT}}* port);}
+\DoxyCodeLine{323     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_s_a_t_a_bus_a4406a48fac9425f763de0a10319b570f}{stopCmd}}(\mbox{\hyperlink{struct_s_a_t_a_bus_1_1tag_h_b_a___p_o_r_t}{HBA\_PORT}}* port);}
+\DoxyCodeLine{324 }
+\DoxyCodeLine{325     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_s_a_t_a_bus_ae077f502a550d7f89bffca96bab3cf35}{detect}}();}
+\DoxyCodeLine{326 \};}
+\DoxyCodeLine{327 }
+\DoxyCodeLine{328 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

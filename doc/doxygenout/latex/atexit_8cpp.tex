@@ -1,0 +1,109 @@
+\hypertarget{atexit_8cpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/krnl/atexit.cpp File Reference}
+\label{atexit_8cpp}\index{C:/Users/Alex/Desktop/Banana/kernel/krnl/atexit.cpp@{C:/Users/Alex/Desktop/Banana/kernel/krnl/atexit.cpp}}
+{\ttfamily \#include $<$krnl/common.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/main.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/computer.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/hal.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/panic.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/random.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/atexit.\+hpp$>$}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{atexit_8cpp_a27c11d08609d1a99c6ca8104d141c400}{MAX\+\_\+\+ATEXIT\+\_\+\+HANDLERS}}~32
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{atexit_8cpp_a7300a6a4cc3ec83ea4590b2d07387b76}{Ke\+Initialise\+Atexit}} ()
+\begin{DoxyCompactList}\small\item\em Initialises the table which stores handlers to run on system shutdown and restart. Must only be called once by an early part of the kernel. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{atexit_8cpp_a9e7956c6fab8a8bcc181bcba4256ba1e}{Ke\+Register\+Atexit}} (void($\ast$handler)(void $\ast$), void $\ast$context)
+\begin{DoxyCompactList}\small\item\em Registers a handler to be called on system shutdown or restart. It will fail and panic if there are too many handlers (MAX\+\_\+\+ATEXIT\+\_\+\+HANDLERS) already registered. 
+\begin{DoxyParams}{Parameters}
+{\em handler} & A handler to run. It will be passed \textquotesingle{}context\textquotesingle{} as an argument.\\
+\hline
+{\em context} & An argument to be passed to the handler.\\
+\hline
+\end{DoxyParams}
+\end{DoxyCompactList}\item 
+void \mbox{\hyperlink{atexit_8cpp_a1528676c3ea5af6978b7d717c3e9ce3c}{Ke\+Execute\+Atexit}} ()
+\begin{DoxyCompactList}\small\item\em Runs the registered atexit handlers. Should only be called on system shutdown or restart. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+void($\ast$ \mbox{\hyperlink{atexit_8cpp_a979390cbf3c6dfd55e22d9eadb240284}{ki\+Atexit\+Handlers}} \mbox{[}\mbox{\hyperlink{atexit_8cpp_a27c11d08609d1a99c6ca8104d141c400}{MAX\+\_\+\+ATEXIT\+\_\+\+HANDLERS}}\mbox{]})(void $\ast$)
+\item 
+void $\ast$ \mbox{\hyperlink{atexit_8cpp_a2076bbe8c3cc9980460b1a8cd1fd94bf}{ki\+Atexit\+Contexts}} \mbox{[}\mbox{\hyperlink{atexit_8cpp_a27c11d08609d1a99c6ca8104d141c400}{MAX\+\_\+\+ATEXIT\+\_\+\+HANDLERS}}\mbox{]}
+\item 
+int \mbox{\hyperlink{atexit_8cpp_af56c31fd733000b66effed138d805e0c}{ki\+Next\+Atexit\+Handler}} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{atexit_8cpp_a27c11d08609d1a99c6ca8104d141c400}\label{atexit_8cpp_a27c11d08609d1a99c6ca8104d141c400}} 
+\index{atexit.cpp@{atexit.cpp}!MAX\_ATEXIT\_HANDLERS@{MAX\_ATEXIT\_HANDLERS}}
+\index{MAX\_ATEXIT\_HANDLERS@{MAX\_ATEXIT\_HANDLERS}!atexit.cpp@{atexit.cpp}}
+\doxysubsubsection{\texorpdfstring{MAX\_ATEXIT\_HANDLERS}{MAX\_ATEXIT\_HANDLERS}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+ATEXIT\+\_\+\+HANDLERS~32}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{atexit_8cpp_a1528676c3ea5af6978b7d717c3e9ce3c}\label{atexit_8cpp_a1528676c3ea5af6978b7d717c3e9ce3c}} 
+\index{atexit.cpp@{atexit.cpp}!KeExecuteAtexit@{KeExecuteAtexit}}
+\index{KeExecuteAtexit@{KeExecuteAtexit}!atexit.cpp@{atexit.cpp}}
+\doxysubsubsection{\texorpdfstring{KeExecuteAtexit()}{KeExecuteAtexit()}}
+{\footnotesize\ttfamily void Ke\+Execute\+Atexit (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Runs the registered atexit handlers. Should only be called on system shutdown or restart. 
+
+\mbox{\Hypertarget{atexit_8cpp_a7300a6a4cc3ec83ea4590b2d07387b76}\label{atexit_8cpp_a7300a6a4cc3ec83ea4590b2d07387b76}} 
+\index{atexit.cpp@{atexit.cpp}!KeInitialiseAtexit@{KeInitialiseAtexit}}
+\index{KeInitialiseAtexit@{KeInitialiseAtexit}!atexit.cpp@{atexit.cpp}}
+\doxysubsubsection{\texorpdfstring{KeInitialiseAtexit()}{KeInitialiseAtexit()}}
+{\footnotesize\ttfamily void Ke\+Initialise\+Atexit (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Initialises the table which stores handlers to run on system shutdown and restart. Must only be called once by an early part of the kernel. 
+
+\mbox{\Hypertarget{atexit_8cpp_a9e7956c6fab8a8bcc181bcba4256ba1e}\label{atexit_8cpp_a9e7956c6fab8a8bcc181bcba4256ba1e}} 
+\index{atexit.cpp@{atexit.cpp}!KeRegisterAtexit@{KeRegisterAtexit}}
+\index{KeRegisterAtexit@{KeRegisterAtexit}!atexit.cpp@{atexit.cpp}}
+\doxysubsubsection{\texorpdfstring{KeRegisterAtexit()}{KeRegisterAtexit()}}
+{\footnotesize\ttfamily void Ke\+Register\+Atexit (\begin{DoxyParamCaption}\item[{void($\ast$)(void $\ast$)}]{handler,  }\item[{void $\ast$}]{context }\end{DoxyParamCaption})}
+
+
+
+Registers a handler to be called on system shutdown or restart. It will fail and panic if there are too many handlers (MAX\+\_\+\+ATEXIT\+\_\+\+HANDLERS) already registered. 
+\begin{DoxyParams}{Parameters}
+{\em handler} & A handler to run. It will be passed \textquotesingle{}context\textquotesingle{} as an argument.\\
+\hline
+{\em context} & An argument to be passed to the handler.\\
+\hline
+\end{DoxyParams}
+
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{atexit_8cpp_a2076bbe8c3cc9980460b1a8cd1fd94bf}\label{atexit_8cpp_a2076bbe8c3cc9980460b1a8cd1fd94bf}} 
+\index{atexit.cpp@{atexit.cpp}!kiAtexitContexts@{kiAtexitContexts}}
+\index{kiAtexitContexts@{kiAtexitContexts}!atexit.cpp@{atexit.cpp}}
+\doxysubsubsection{\texorpdfstring{kiAtexitContexts}{kiAtexitContexts}}
+{\footnotesize\ttfamily void$\ast$ ki\+Atexit\+Contexts\mbox{[}\mbox{\hyperlink{atexit_8cpp_a27c11d08609d1a99c6ca8104d141c400}{MAX\+\_\+\+ATEXIT\+\_\+\+HANDLERS}}\mbox{]}}
+
+\mbox{\Hypertarget{atexit_8cpp_a979390cbf3c6dfd55e22d9eadb240284}\label{atexit_8cpp_a979390cbf3c6dfd55e22d9eadb240284}} 
+\index{atexit.cpp@{atexit.cpp}!kiAtexitHandlers@{kiAtexitHandlers}}
+\index{kiAtexitHandlers@{kiAtexitHandlers}!atexit.cpp@{atexit.cpp}}
+\doxysubsubsection{\texorpdfstring{kiAtexitHandlers}{kiAtexitHandlers}}
+{\footnotesize\ttfamily void($\ast$ ki\+Atexit\+Handlers\mbox{[}\mbox{\hyperlink{atexit_8cpp_a27c11d08609d1a99c6ca8104d141c400}{MAX\+\_\+\+ATEXIT\+\_\+\+HANDLERS}}\mbox{]})(void $\ast$) (\begin{DoxyParamCaption}\item[{void $\ast$}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{atexit_8cpp_af56c31fd733000b66effed138d805e0c}\label{atexit_8cpp_af56c31fd733000b66effed138d805e0c}} 
+\index{atexit.cpp@{atexit.cpp}!kiNextAtexitHandler@{kiNextAtexitHandler}}
+\index{kiNextAtexitHandler@{kiNextAtexitHandler}!atexit.cpp@{atexit.cpp}}
+\doxysubsubsection{\texorpdfstring{kiNextAtexitHandler}{kiNextAtexitHandler}}
+{\footnotesize\ttfamily int ki\+Next\+Atexit\+Handler = 0}
+

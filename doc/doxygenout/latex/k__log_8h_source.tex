@@ -1,0 +1,106 @@
+\hypertarget{k__log_8h_source}{}\doxysection{k\+\_\+log.\+h}
+\label{k__log_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/libk/\_mathinc/k\_log.h@{C:/Users/Alex/Desktop/Banana/kernel/libk/\_mathinc/k\_log.h}}
+\mbox{\hyperlink{k__log_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{2 \textcolor{comment}{/* @(\#)e\_log.c 1.3 95/01/18 */}}
+\DoxyCodeLine{3 \textcolor{comment}{/*}}
+\DoxyCodeLine{4 \textcolor{comment}{ * ====================================================}}
+\DoxyCodeLine{5 \textcolor{comment}{ * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.}}
+\DoxyCodeLine{6 \textcolor{comment}{ *}}
+\DoxyCodeLine{7 \textcolor{comment}{ * Developed at SunSoft, a Sun Microsystems, Inc. business.}}
+\DoxyCodeLine{8 \textcolor{comment}{ * Permission to use, copy, modify, and distribute this}}
+\DoxyCodeLine{9 \textcolor{comment}{ * software is freely granted, provided that this notice }}
+\DoxyCodeLine{10 \textcolor{comment}{ * is preserved.}}
+\DoxyCodeLine{11 \textcolor{comment}{ * ====================================================}}
+\DoxyCodeLine{12 \textcolor{comment}{ */}}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{cdefs-compat_8h}{cdefs-\/compat.h}}"{}}}
+\DoxyCodeLine{15 \textcolor{comment}{//\_\_FBSDID("{}\$FreeBSD: src/lib/msun/src/k\_log.h,v 1.2 2011/10/15 05:23:28 das Exp \$"{});}}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \textcolor{comment}{/*}}
+\DoxyCodeLine{18 \textcolor{comment}{ * k\_log1p(f):}}
+\DoxyCodeLine{19 \textcolor{comment}{ * Return log(1+f) -\/ f for 1+f in \string~[sqrt(2)/2, sqrt(2)].}}
+\DoxyCodeLine{20 \textcolor{comment}{ *}}
+\DoxyCodeLine{21 \textcolor{comment}{ * The following describes the overall strategy for computing}}
+\DoxyCodeLine{22 \textcolor{comment}{ * logarithms in base e.  The argument reduction and adding the final}}
+\DoxyCodeLine{23 \textcolor{comment}{ * term of the polynomial are done by the caller for increased accuracy}}
+\DoxyCodeLine{24 \textcolor{comment}{ * when different bases are used.}}
+\DoxyCodeLine{25 \textcolor{comment}{ *}}
+\DoxyCodeLine{26 \textcolor{comment}{ * Method :                  }}
+\DoxyCodeLine{27 \textcolor{comment}{ *   1. Argument Reduction: find k and f such that }}
+\DoxyCodeLine{28 \textcolor{comment}{ *          x = 2\string^k * (1+f), }}
+\DoxyCodeLine{29 \textcolor{comment}{ *     where  sqrt(2)/2 < 1+f < sqrt(2) .}}
+\DoxyCodeLine{30 \textcolor{comment}{ *}}
+\DoxyCodeLine{31 \textcolor{comment}{ *   2. Approximation of log(1+f).}}
+\DoxyCodeLine{32 \textcolor{comment}{ *  Let s = f/(2+f) ; based on log(1+f) = log(1+s) -\/ log(1-\/s)}}
+\DoxyCodeLine{33 \textcolor{comment}{ *       = 2s + 2/3 s**3 + 2/5 s**5 + .....,}}
+\DoxyCodeLine{34 \textcolor{comment}{ *           = 2s + s*R}}
+\DoxyCodeLine{35 \textcolor{comment}{ *      We use a special Reme algorithm on [0,0.1716] to generate }}
+\DoxyCodeLine{36 \textcolor{comment}{ *  a polynomial of degree 14 to approximate R The maximum error }}
+\DoxyCodeLine{37 \textcolor{comment}{ *  of this polynomial approximation is bounded by 2**-\/58.45. In}}
+\DoxyCodeLine{38 \textcolor{comment}{ *  other words,}}
+\DoxyCodeLine{39 \textcolor{comment}{ *              2      4      6      8      10      12      14}}
+\DoxyCodeLine{40 \textcolor{comment}{ *      R(z) \string~ Lg1*s +Lg2*s +Lg3*s +Lg4*s +Lg5*s  +Lg6*s  +Lg7*s}}
+\DoxyCodeLine{41 \textcolor{comment}{ *      (the values of Lg1 to Lg7 are listed in the program)}}
+\DoxyCodeLine{42 \textcolor{comment}{ *  and}}
+\DoxyCodeLine{43 \textcolor{comment}{ *      |      2          14          |     -\/58.45}}
+\DoxyCodeLine{44 \textcolor{comment}{ *      | Lg1*s +...+Lg7*s    -\/  R(z) | <= 2 }}
+\DoxyCodeLine{45 \textcolor{comment}{ *      |                             |}}
+\DoxyCodeLine{46 \textcolor{comment}{ *  Note that 2s = f -\/ s*f = f -\/ hfsq + s*hfsq, where hfsq = f*f/2.}}
+\DoxyCodeLine{47 \textcolor{comment}{ *  In order to guarantee error in log below 1ulp, we compute log}}
+\DoxyCodeLine{48 \textcolor{comment}{ *  by}}
+\DoxyCodeLine{49 \textcolor{comment}{ *      log(1+f) = f -\/ s*(f -\/ R)    (if f is not too large)}}
+\DoxyCodeLine{50 \textcolor{comment}{ *      log(1+f) = f -\/ (hfsq -\/ s*(hfsq+R)). (better accuracy)}}
+\DoxyCodeLine{51 \textcolor{comment}{ *  }}
+\DoxyCodeLine{52 \textcolor{comment}{ *  3. Finally,  log(x) = k*ln2 + log(1+f).  }}
+\DoxyCodeLine{53 \textcolor{comment}{ *              = k*ln2\_hi+(f-\/(hfsq-\/(s*(hfsq+R)+k*ln2\_lo)))}}
+\DoxyCodeLine{54 \textcolor{comment}{ *     Here ln2 is split into two floating point number: }}
+\DoxyCodeLine{55 \textcolor{comment}{ *          ln2\_hi + ln2\_lo,}}
+\DoxyCodeLine{56 \textcolor{comment}{ *     where n*ln2\_hi is always exact for |n| < 2000.}}
+\DoxyCodeLine{57 \textcolor{comment}{ *}}
+\DoxyCodeLine{58 \textcolor{comment}{ * Special cases:}}
+\DoxyCodeLine{59 \textcolor{comment}{ *  log(x) is NaN with signal if x < 0 (including -\/INF) ; }}
+\DoxyCodeLine{60 \textcolor{comment}{ *  log(+INF) is +INF; log(0) is -\/INF with signal;}}
+\DoxyCodeLine{61 \textcolor{comment}{ *  log(NaN) is that NaN with no signal.}}
+\DoxyCodeLine{62 \textcolor{comment}{ *}}
+\DoxyCodeLine{63 \textcolor{comment}{ * Accuracy:}}
+\DoxyCodeLine{64 \textcolor{comment}{ *  according to an error analysis, the error is always less than}}
+\DoxyCodeLine{65 \textcolor{comment}{ *  1 ulp (unit in the last place).}}
+\DoxyCodeLine{66 \textcolor{comment}{ *}}
+\DoxyCodeLine{67 \textcolor{comment}{ * Constants:}}
+\DoxyCodeLine{68 \textcolor{comment}{ * The hexadecimal values are the intended ones for the following }}
+\DoxyCodeLine{69 \textcolor{comment}{ * constants. The decimal values may be used, provided that the }}
+\DoxyCodeLine{70 \textcolor{comment}{ * compiler will convert from decimal to binary accurately enough }}
+\DoxyCodeLine{71 \textcolor{comment}{ * to produce the hexadecimal values shown.}}
+\DoxyCodeLine{72 \textcolor{comment}{ */}}
+\DoxyCodeLine{73 }
+\DoxyCodeLine{74 \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{double}}
+\DoxyCodeLine{75 Lg1 = 6.666666666666735130e-\/01,  \textcolor{comment}{/* 3FE55555 55555593 */}}
+\DoxyCodeLine{76 Lg2 = 3.999999999940941908e-\/01,  \textcolor{comment}{/* 3FD99999 9997FA04 */}}
+\DoxyCodeLine{77 Lg3 = 2.857142874366239149e-\/01,  \textcolor{comment}{/* 3FD24924 94229359 */}}
+\DoxyCodeLine{78 Lg4 = 2.222219843214978396e-\/01,  \textcolor{comment}{/* 3FCC71C5 1D8E78AF */}}
+\DoxyCodeLine{79 Lg5 = 1.818357216161805012e-\/01,  \textcolor{comment}{/* 3FC74664 96CB03DE */}}
+\DoxyCodeLine{80 Lg6 = 1.531383769920937332e-\/01,  \textcolor{comment}{/* 3FC39A09 D078C69F */}}
+\DoxyCodeLine{81 Lg7 = 1.479819860511658591e-\/01;  \textcolor{comment}{/* 3FC2F112 DF3E5244 */}}
+\DoxyCodeLine{82 }
+\DoxyCodeLine{83 \textcolor{comment}{/*}}
+\DoxyCodeLine{84 \textcolor{comment}{ * We always inline k\_log1p(), since doing so produces a}}
+\DoxyCodeLine{85 \textcolor{comment}{ * substantial performance improvement (\string~40\% on amd64).}}
+\DoxyCodeLine{86 \textcolor{comment}{ */}}
+\DoxyCodeLine{87 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{double}}
+\DoxyCodeLine{88 k\_log1p(\textcolor{keywordtype}{double} f)}
+\DoxyCodeLine{89 \{}
+\DoxyCodeLine{90     \textcolor{keywordtype}{double} hfsq,s,z,R,w,t1,t2;}
+\DoxyCodeLine{91 }
+\DoxyCodeLine{92     s = f/(2.0+f);}
+\DoxyCodeLine{93     z = s*s;}
+\DoxyCodeLine{94     w = z*z;}
+\DoxyCodeLine{95     t1= w*(Lg2+w*(Lg4+w*Lg6));}
+\DoxyCodeLine{96     t2= z*(Lg1+w*(Lg3+w*(Lg5+w*Lg7)));}
+\DoxyCodeLine{97     R = t2+t1;}
+\DoxyCodeLine{98     hfsq=0.5*f*f;}
+\DoxyCodeLine{99     \textcolor{keywordflow}{return} s*(hfsq+R);}
+\DoxyCodeLine{100 \}}
+
+\end{DoxyCode}

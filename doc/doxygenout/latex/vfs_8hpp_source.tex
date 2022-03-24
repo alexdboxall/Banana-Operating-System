@@ -1,0 +1,183 @@
+\hypertarget{vfs_8hpp_source}{}\doxysection{vfs.\+hpp}
+\label{vfs_8hpp_source}\index{C:/Users/Alex/Desktop/Banana/kernel/fs/vfs.hpp@{C:/Users/Alex/Desktop/Banana/kernel/fs/vfs.hpp}}
+\mbox{\hyperlink{vfs_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_\_VFS\_HPP\_\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_\_VFS\_HPP\_\_}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <stddef.h>}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{main_8hpp}{krnl/main.hpp}}"{}}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{prcssthr_8hpp}{thr/prcssthr.hpp}}"{}}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{unixfile_8hpp}{krnl/unixfile.hpp}}"{}}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{logidisk_8hpp}{hal/logidisk.hpp}}"{}}}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{keyword}{class }\mbox{\hyperlink{class_logical_disk}{LogicalDisk}};}
+\DoxyCodeLine{12 \textcolor{keyword}{class }\mbox{\hyperlink{class_physical_disk}{PhysicalDisk}};}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14 \textcolor{comment}{//do not change the order or apps will become confused}}
+\DoxyCodeLine{15 \textcolor{keyword}{enum class} \mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64}{FileOpenMode}}}
+\DoxyCodeLine{16 \{}
+\DoxyCodeLine{17     \mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a7a1a5f3e79fdc91edf2f5ead9d66abb4}{Read}} = 1,}
+\DoxyCodeLine{18     \mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a1129c0e4d43f2d121652a7302712cff6}{Write}} = 2,}
+\DoxyCodeLine{19     \mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a3ac4692f3935a49a0b243eecf529faa9}{Append}} = 4,}
+\DoxyCodeLine{20     \mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a16aad4508a33afcd497d9cb37480722f}{CreateNew}} = 8,}
+\DoxyCodeLine{21     \mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a5007129116ac317941eafb99b92b62d7}{CreateAlways}} = 16,}
+\DoxyCodeLine{22 \};}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24 \textcolor{comment}{//do not change the order or apps will become confused}}
+\DoxyCodeLine{25 \textcolor{keyword}{enum class} \mbox{\hyperlink{vfs_8hpp_a41784127deb5b1139a8aeb933b9b6ede}{FATAttribute}}}
+\DoxyCodeLine{26 \{}
+\DoxyCodeLine{27     \mbox{\hyperlink{vfs_8hpp_a41784127deb5b1139a8aeb933b9b6edea131fb182a881796e7606ed6da27f1197}{ReadOnly}} = 1,}
+\DoxyCodeLine{28     \mbox{\hyperlink{vfs_8hpp_a41784127deb5b1139a8aeb933b9b6edeae727b00944f81e1d0a95c12886ac4641}{Archive}} = 2,}
+\DoxyCodeLine{29     \mbox{\hyperlink{vfs_8hpp_a41784127deb5b1139a8aeb933b9b6edeaa45da96d0bf6575970f2d27af22be28a}{System}} = 4,}
+\DoxyCodeLine{30     \mbox{\hyperlink{vfs_8hpp_a41784127deb5b1139a8aeb933b9b6edea7acdf85c69cc3c5305456a293524386e}{Hidden}} = 8,}
+\DoxyCodeLine{31 \};}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#define FILE\_OPEN\_READ FileOpenMode::Read}}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#define FILE\_OPEN\_WRITE\_EXISTING FileOpenMode::Write}}
+\DoxyCodeLine{35 \textcolor{preprocessor}{\#define FILE\_OPEN\_WRITE\_NORMAL ((FileOpenMode) (((int) FileOpenMode::Write) | ((int) FileOpenMode::CreateAlways)))}}
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#define FILE\_OPEN\_APPEND ((FileOpenMode) (((int) FileOpenMode::Write) | ((int) FileOpenMode::Append)))}}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38 \textcolor{keyword}{class }\mbox{\hyperlink{class_filesystem}{Filesystem}}}
+\DoxyCodeLine{39 \{}
+\DoxyCodeLine{40 \textcolor{keyword}{private}:}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44 \textcolor{keyword}{public}:}
+\DoxyCodeLine{45     \mbox{\hyperlink{class_filesystem}{Filesystem}}* \mbox{\hyperlink{class_filesystem_abe57df028a071a8f3ee3d4ca082d2e48}{next}};}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47     \textcolor{keyword}{virtual} \textcolor{keywordtype}{char}* \mbox{\hyperlink{class_filesystem_ad3e11db9f6dfd5526c245b0a2baaf309}{getName}}() = 0;}
+\DoxyCodeLine{48 }
+\DoxyCodeLine{49     \mbox{\hyperlink{class_filesystem_ab6246f0873c3d83845b993859d108fdd}{Filesystem}}();}
+\DoxyCodeLine{50     \textcolor{keyword}{virtual} \mbox{\hyperlink{class_filesystem_a8d4d73d3d4e56fd6792bdb83f6c5dfd8}{\string~Filesystem}}();}
+\DoxyCodeLine{51     \textcolor{keyword}{virtual} \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_filesystem_a063e993f4872c9aa4d4d745aca978adf}{tryMount}}(\mbox{\hyperlink{class_logical_disk}{LogicalDisk}}* disk, \textcolor{keywordtype}{int} diskNum) = 0;}
+\DoxyCodeLine{52     \textcolor{keyword}{virtual} \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_filesystem_a74b4d8c88e1a27625011b35907f678ca}{open}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* filename, \textcolor{keywordtype}{void}** \mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}}, \mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64}{FileOpenMode}} mode) = 0;}
+\DoxyCodeLine{53     \textcolor{keyword}{virtual} \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_filesystem_a4020287026ac93b27bb160ab38e25e71}{read}}(\textcolor{keywordtype}{void}* \mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}}, \textcolor{keywordtype}{size\_t} bytes, \textcolor{keywordtype}{void}* where, \textcolor{keywordtype}{int}* bytesRead) = 0;}
+\DoxyCodeLine{54     \textcolor{keyword}{virtual} \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_filesystem_aac66ba8d2db04f4246d48d30dea8f1c2}{write}}(\textcolor{keywordtype}{void}* \mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}}, \textcolor{keywordtype}{size\_t} bytes, \textcolor{keywordtype}{void}* where, \textcolor{keywordtype}{int}* bytesWritten) = 0;}
+\DoxyCodeLine{55     \textcolor{keyword}{virtual} \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_filesystem_a90461c030710ed288258c6333c5a85af}{close}}(\textcolor{keywordtype}{void}* \mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}}) = 0;}
+\DoxyCodeLine{56     \textcolor{keyword}{virtual} \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_filesystem_afc3076c283ca812ab4882d256497c5a4}{closeDir}}(\textcolor{keywordtype}{void}* \mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}}) = 0;}
+\DoxyCodeLine{57     \textcolor{keyword}{virtual} \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_filesystem_a8a52c8c103adcc8badbdb08b88926c25}{seek}}(\textcolor{keywordtype}{void}* \mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}}, uint64\_t offset) = 0;}
+\DoxyCodeLine{58     \textcolor{keyword}{virtual} \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_filesystem_a16ede21e066a79201988e3cb0a853526}{tell}}(\textcolor{keywordtype}{void}* \mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}}, uint64\_t* pos) = 0;}
+\DoxyCodeLine{59     \textcolor{keyword}{virtual} \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_filesystem_a19dc5669eabd545803ae47ee28943cc8}{truncate}}(\textcolor{keywordtype}{void}* \mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}}, uint64\_t bytes) = 0;}
+\DoxyCodeLine{60 }
+\DoxyCodeLine{61     \textcolor{keyword}{virtual} \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_filesystem_a306e45b5189e73aba5aa94bccfa0ac3a}{stat}}(\textcolor{keywordtype}{void}* \mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}}, uint64\_t* \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}}) = 0;}
+\DoxyCodeLine{62     \textcolor{keyword}{virtual} \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_filesystem_aefe565d09f6bbeaeda9dc58360ca2d41}{stat}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* filename, uint64\_t* \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}}, \textcolor{keywordtype}{bool}* directory) = 0;}
+\DoxyCodeLine{63     }
+\DoxyCodeLine{64     \textcolor{keyword}{virtual} \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_filesystem_a35391be60b9102ca0ae804bfb18d7076}{chfatattr}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* path, uint8\_t andMask, uint8\_t orFlags) = 0;}
+\DoxyCodeLine{65     \textcolor{keyword}{virtual} \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_filesystem_a5db03cf673420ea1ec87eeba2dce6f68}{unlink}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* file) = 0;}
+\DoxyCodeLine{66     \textcolor{keyword}{virtual} \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_filesystem_a38a78c7393a846f0d21af204c50daeca}{mkdir}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* file) = 0;}
+\DoxyCodeLine{67     \textcolor{keyword}{virtual} \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_filesystem_a574f4f2bb7274df224ad019a2a4e3e25}{rename}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* old, \textcolor{keyword}{const} \textcolor{keywordtype}{char}* \_new) = 0;}
+\DoxyCodeLine{68     \textcolor{keyword}{virtual} \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_filesystem_a2aef6f66747bac66a6393f3d23045b9a}{exists}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* file) = 0;}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{70     \textcolor{keyword}{virtual} \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_filesystem_af646703ab01814d20b7ef1ee72103ed8}{format}}(\mbox{\hyperlink{class_logical_disk}{LogicalDisk}}* disk, \textcolor{keywordtype}{int} disknum, \textcolor{keyword}{const} \textcolor{keywordtype}{char}* type, \textcolor{keywordtype}{int} allocationUnit) = 0;}
+\DoxyCodeLine{71 }
+\DoxyCodeLine{72     \textcolor{keyword}{virtual} \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_filesystem_a35d0d100fdc17929b90b31a28ac9f42c}{openDir}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* filename, \textcolor{keywordtype}{void}** \mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}}) = 0;}
+\DoxyCodeLine{73     \textcolor{keyword}{virtual} \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_filesystem_a2078f7020ad7770eb4ee422a430b9594}{readDir}}(\textcolor{keywordtype}{void}* \mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}}, \textcolor{keywordtype}{size\_t} bytes, \textcolor{keywordtype}{void}* where, \textcolor{keywordtype}{int}* bytesRead) = 0;}
+\DoxyCodeLine{74 }
+\DoxyCodeLine{75     \textcolor{keyword}{virtual} \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_filesystem_a0666821b7a60c053b5207f3648fd9b00}{getlabel}}(\mbox{\hyperlink{class_logical_disk}{LogicalDisk}}* disk, \textcolor{keywordtype}{int} diskNum, \textcolor{keywordtype}{char}* returnBuffer, uint32\_t* serial);}
+\DoxyCodeLine{76     \textcolor{keyword}{virtual} \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_filesystem_ae422937a1b888ac0c3b2b3a5f186c533}{setlabel}}(\mbox{\hyperlink{class_logical_disk}{LogicalDisk}}* disk, \textcolor{keywordtype}{int} diskNum, \textcolor{keywordtype}{char}* label);}
+\DoxyCodeLine{77 }
+\DoxyCodeLine{78     \textcolor{keyword}{virtual} uint64\_t \mbox{\hyperlink{class_filesystem_a4e986a510c33af2b0b9f5f3d799405a7}{allocateSwapfile}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* filename, \textcolor{keywordtype}{int} megs);}
+\DoxyCodeLine{79 \};}
+\DoxyCodeLine{80 }
+\DoxyCodeLine{81 \textcolor{keyword}{extern} \mbox{\hyperlink{class_filesystem}{Filesystem}}* \mbox{\hyperlink{vfs_8hpp_a655b8583ec32c28a37e5281b15fad669}{installedFilesystems}};}
+\DoxyCodeLine{82 }
+\DoxyCodeLine{83 \textcolor{keyword}{class }\mbox{\hyperlink{class_file}{File}} : \textcolor{keyword}{public} \mbox{\hyperlink{class_unix_file}{UnixFile}}}
+\DoxyCodeLine{84 \{}
+\DoxyCodeLine{85 \textcolor{keyword}{private}:}
+\DoxyCodeLine{86         }
+\DoxyCodeLine{87 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{88     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_file_a97ec1c74062efcb8e38cfa4b095bee7a}{fileOpen}};}
+\DoxyCodeLine{89 }
+\DoxyCodeLine{90     \textcolor{keywordtype}{char} \mbox{\hyperlink{class_file_a5a5c5ff7f68aa92d2b4640724c12cb00}{filepath}}[256];}
+\DoxyCodeLine{91     uint8\_t \mbox{\hyperlink{class_file_a200b4acd5203acab7726fd68f568ca38}{driveNo}};}
+\DoxyCodeLine{92 }
+\DoxyCodeLine{93 \textcolor{keyword}{public}:}
+\DoxyCodeLine{94     \textcolor{keywordtype}{void}* \mbox{\hyperlink{class_file_a740e5f59883e37a51fa9068c31092fd7}{fsSpecificData}};}
+\DoxyCodeLine{95 }
+\DoxyCodeLine{96     \mbox{\hyperlink{class_file_a0107e36a122aff4ff83d0511cd05ab87}{File}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* filename, \mbox{\hyperlink{struct_process}{Process}}* process, \textcolor{keywordtype}{bool} followSymlinks);}
+\DoxyCodeLine{97     \mbox{\hyperlink{class_file_a0107e36a122aff4ff83d0511cd05ab87}{File}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* filename, \mbox{\hyperlink{struct_process}{Process}}* process);}
+\DoxyCodeLine{98     \mbox{\hyperlink{class_file_ac704ebdf5f57d7a1c5ddf409d797fb69}{\string~File}}();}
+\DoxyCodeLine{99     \textcolor{keyword}{virtual} \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_file_ad6f32f9bc567dd7c5b971401122ee8bd}{isAtty}}();}
+\DoxyCodeLine{100 }
+\DoxyCodeLine{101     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_file_a1dc6fc4d203b08cdc794bd1765230cbb}{open}}(\mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64}{FileOpenMode}} mode);}
+\DoxyCodeLine{102 }
+\DoxyCodeLine{103     \textcolor{comment}{//these rely on the file being OPEN}}
+\DoxyCodeLine{104     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_file_a31a8f3f016858d8bccdcc7f694aa9c55}{read}}(uint64\_t bytes, \textcolor{keywordtype}{void}* where, \textcolor{keywordtype}{int}* bytesRead);}
+\DoxyCodeLine{105     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_file_a0462f1e70a9d0b01f38803dc7bd5a7a8}{write}}(uint64\_t bytes, \textcolor{keywordtype}{void}* where, \textcolor{keywordtype}{int}* bytesWritten);}
+\DoxyCodeLine{106     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_file_a2898dd41bc2cc897fa85bbe62798a62c}{close}}();}
+\DoxyCodeLine{107     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_file_ac7f6b2f21575cf3120ea8c5b19579297}{rewind}}();}
+\DoxyCodeLine{108     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_file_a710a8daba543cf9699037573bde251a2}{seek}}(uint64\_t offset);}
+\DoxyCodeLine{109     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_file_a6b12c133f463b5dc65ffbe521a6eb373}{tell}}(uint64\_t* pos);}
+\DoxyCodeLine{110     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_file_a41813b87644417b64abefb189b5ffd52}{truncate}}(uint64\_t bytes);}
+\DoxyCodeLine{111 }
+\DoxyCodeLine{112     \textcolor{comment}{//these rely on the file being CLOSED}}
+\DoxyCodeLine{113     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_file_aa17c250937860feeb22ac2c79aa25954}{unlink}}();}
+\DoxyCodeLine{114     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_file_a939a57e1af8def0872d8eda7029c1cc8}{rename}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* new\_);}
+\DoxyCodeLine{115     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_file_a8dcfcd617b0dfdc12ad573ad54a35c6b}{chfatattr}}(uint8\_t clearBits, uint8\_t setBits);}
+\DoxyCodeLine{116 }
+\DoxyCodeLine{117     \textcolor{comment}{//this can be called either}}
+\DoxyCodeLine{118     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_file_abf7743c858eb60e7dd56c6cf9f66d8d7}{stat}}(uint64\_t* \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}}, \textcolor{keywordtype}{bool}* directory);}
+\DoxyCodeLine{119 }
+\DoxyCodeLine{120     \textcolor{comment}{//don't know about this one}}
+\DoxyCodeLine{121     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_file_a4260fca380a387a8347b83bb4bee91b5}{exists}}();}
+\DoxyCodeLine{122 \};}
+\DoxyCodeLine{123 }
+\DoxyCodeLine{124 \textcolor{keyword}{typedef} uint64\_t \mbox{\hyperlink{vfs_8hpp_a02ad034d26db2c14b7e295b0c50fc11d}{time\_t}};}
+\DoxyCodeLine{125 }
+\DoxyCodeLine{126 \textcolor{keyword}{extern} \textcolor{stringliteral}{"{}C"{}} \{}
+\DoxyCodeLine{127 \textcolor{preprocessor}{\#define \_\_KERNEL\_DIRENT\_INCLUDE}}
+\DoxyCodeLine{128 \textcolor{preprocessor}{\#define \_TIME\_T\_DECLARED}}
+\DoxyCodeLine{129 \textcolor{preprocessor}{\#include "{}../libraries/newlib-\/3.3.0/newlib/libc/sys/banana/sys/dirent.h"{}}}
+\DoxyCodeLine{130 \textcolor{preprocessor}{\#undef \_\_KERNEL\_DIRENT\_INCLUDE}}
+\DoxyCodeLine{131 \}}
+\DoxyCodeLine{132 }
+\DoxyCodeLine{133 \textcolor{keyword}{class }\mbox{\hyperlink{class_directory}{Directory}}: \textcolor{keyword}{public} \mbox{\hyperlink{class_unix_file}{UnixFile}}}
+\DoxyCodeLine{134 \{}
+\DoxyCodeLine{135 \textcolor{keyword}{private}:}
+\DoxyCodeLine{136 }
+\DoxyCodeLine{137 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{138     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_directory_a4053db2344b8b3f51607d35596526096}{fileOpen}};}
+\DoxyCodeLine{139 }
+\DoxyCodeLine{140     \textcolor{keywordtype}{char} \mbox{\hyperlink{class_directory_a121d8da29404c32ab8383a25cabfe783}{filepath}}[256];}
+\DoxyCodeLine{141     uint8\_t \mbox{\hyperlink{class_directory_ac208b0362c68b11e58dd9592fa83c300}{driveNo}};}
+\DoxyCodeLine{142 }
+\DoxyCodeLine{143     \textcolor{keywordtype}{void}* \mbox{\hyperlink{class_directory_a0e174dce9499b2598ddcd1c84b01d378}{fsSpecificData}};}
+\DoxyCodeLine{144 }
+\DoxyCodeLine{145 \textcolor{keyword}{public}:}
+\DoxyCodeLine{146     \textcolor{keyword}{virtual} \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_directory_a1c8804e244b2903a3694d25754496149}{isAtty}}();}
+\DoxyCodeLine{147 }
+\DoxyCodeLine{148     \mbox{\hyperlink{class_directory_a82050fa9e832f2932da3a7dca5ae610b}{Directory}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* filename, \mbox{\hyperlink{struct_process}{Process}}* process);      \textcolor{comment}{//process required to obtain the trust certificates}}
+\DoxyCodeLine{149     \mbox{\hyperlink{class_directory_affbde8714685c61601421097d621341d}{\string~Directory}}();}
+\DoxyCodeLine{150 }
+\DoxyCodeLine{151     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_directory_ab4558dac4b79a143043bb64e058c41ff}{open}}();}
+\DoxyCodeLine{152 }
+\DoxyCodeLine{153     \textcolor{comment}{//these rely on the file being OPEN}}
+\DoxyCodeLine{154     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_directory_ab66ff5c76c726f7b1bc3da594fc15a9a}{read}}(uint64\_t bytes, \textcolor{keywordtype}{void}* where, \textcolor{keywordtype}{int}* bytesRead);}
+\DoxyCodeLine{155     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_directory_ab66ff5c76c726f7b1bc3da594fc15a9a}{read}}(\textcolor{keyword}{struct} \mbox{\hyperlink{iso9660_8c_a5e6da6fcd3227bf755e2c60ddd265f7a}{dirent}}* \mbox{\hyperlink{unaligned_8hpp_a3fb79589b732956ce35d008fa4c8def8}{p}});}
+\DoxyCodeLine{156     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_directory_a6216f685fbb756e2a602b16b17f06623}{write}}(uint64\_t bytes, \textcolor{keywordtype}{void}* where, \textcolor{keywordtype}{int}* bytesWritten);}
+\DoxyCodeLine{157     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_directory_a4f4220b4bd31d3b859d2224f32993fa9}{close}}();}
+\DoxyCodeLine{158 }
+\DoxyCodeLine{159     \textcolor{comment}{//these rely on the file being CLOSED}}
+\DoxyCodeLine{160     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_directory_a434986e616a6c264174bbf6eaa994b95}{unlink}}();}
+\DoxyCodeLine{161     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_directory_a96c98f41c4b4debb9174505fd008d9b3}{rename}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* new\_);}
+\DoxyCodeLine{162     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_directory_aba34ff21f2ef902d37bd58f5f622fa99}{create}}();}
+\DoxyCodeLine{163 }
+\DoxyCodeLine{164     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_directory_aa91b138da56318b57f2328ba06c7f3b5}{exists}}();}
+\DoxyCodeLine{165 \};}
+\DoxyCodeLine{166 }
+\DoxyCodeLine{167 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespace_fs}{Fs}}}
+\DoxyCodeLine{168 \{}
+\DoxyCodeLine{169     \textcolor{keywordtype}{int} \mbox{\hyperlink{namespace_fs_aca5d49753ce8e9650ae290713e1d0dd5}{getcwd}}(\mbox{\hyperlink{struct_process}{Process}}* process, \textcolor{keywordtype}{char}* buffer, \textcolor{keywordtype}{int} bytes);}
+\DoxyCodeLine{170     \textcolor{keywordtype}{int} \mbox{\hyperlink{namespace_fs_ac00dde3a82bf4d0e3f35a43862403a99}{setcwd}}(\mbox{\hyperlink{struct_process}{Process}}* process, \textcolor{keywordtype}{char}* buffer);}
+\DoxyCodeLine{171 }
+\DoxyCodeLine{172     \textcolor{keywordtype}{void} \mbox{\hyperlink{namespace_fs_a423b59bad53fa15e902c2d371e88dad6}{standardiseFiles}}(\textcolor{keywordtype}{char}* outBuffer, \textcolor{keyword}{const} \textcolor{keywordtype}{char}* filename, \textcolor{keyword}{const} \textcolor{keywordtype}{char}* cwd, \textcolor{keywordtype}{bool} followSymlinks = \textcolor{keyword}{false});}
+\DoxyCodeLine{173     \textcolor{keywordtype}{void} \mbox{\hyperlink{namespace_fs_af5c3fa95602360ba42d72bf288194c21}{initVFS}}();}
+\DoxyCodeLine{174 \}}
+\DoxyCodeLine{175 }
+\DoxyCodeLine{176 }
+\DoxyCodeLine{177 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

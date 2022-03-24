@@ -118,6 +118,7 @@ uint32_t encodeDesktopColour(uint32_t rgb, bool blue)
 }
 
 NLoadedBitmap* backgroundBitmap;
+uint32_t* desktopBuffer2;
 
 void init()
 {
@@ -136,6 +137,7 @@ void init()
     desktopHeight = wh & 0xFFFF;
 
     desktopBuffer = (uint32_t*) malloc(desktopWidth * desktopHeight * 4);
+    desktopBuffer2 = (uint32_t*) malloc(desktopWidth * desktopHeight * 4);
 
     desktopContext = Context_new(desktopWidth, desktopHeight, (uint32_t*) desktopBuffer);
     desktopContext->desktopCtxt = 1;
@@ -386,11 +388,10 @@ void drawTime()
 {
     time_t rawtime;
     time(&rawtime);
+    struct tm* timeinfo = localtime(&rawtime);
 
     static char previousTimeString[80];
     static bool firstTime = true;
-
-    struct tm* timeinfo = localtime(&rawtime);
 
     char timeString[80];
 
@@ -730,6 +731,7 @@ int main (int argc, char *argv[])
                     lastClickMicrosecond = 0;
                 }
             }
+
             if (needsUpdate) {
                 partialDesktopUpdate();
             }
@@ -737,8 +739,6 @@ int main (int argc, char *argv[])
             firstAntDraw = false;
             antPrevX = dummyWin.evnt.mouseX;
             antPrevY = dummyWin.evnt.mouseY;
-
-            
         }
         
         if (dummyWin.evnt.type == EVENT_TYPE_KEYDOWN) {

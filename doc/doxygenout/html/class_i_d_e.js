@@ -1,0 +1,26 @@
+var class_i_d_e =
+[
+    [ "IDEChannels", "struct_i_d_e_1_1_i_d_e_channels.html", "struct_i_d_e_1_1_i_d_e_channels" ],
+    [ "IDEDevice", "struct_i_d_e_1_1_i_d_e_device.html", "struct_i_d_e_1_1_i_d_e_device" ],
+    [ "IDE", "class_i_d_e.html#a7f50dedd46414c75c4a580d0b1e2fd99", null ],
+    [ "close", "class_i_d_e.html#a15a30770efe68e3e4fba11ac10e07448", null ],
+    [ "detect", "class_i_d_e.html#aa71bbab36c0d479d0ff4f43f44a40525", null ],
+    [ "enableIRQs", "class_i_d_e.html#aa27578ea8456118b6cb09bcbd4038d2c", null ],
+    [ "getBase", "class_i_d_e.html#a3cea9cd491a69f8481925ff1a05207e8", null ],
+    [ "open", "class_i_d_e.html#aebae9d0ee81361567e3661a3ee4bd606", null ],
+    [ "polling", "class_i_d_e.html#a47c3be634196ce67b5b140cdf0d9f548", null ],
+    [ "prepareInterrupt", "class_i_d_e.html#a48144ef5d37424fdc49cefa788aaad92", null ],
+    [ "printError", "class_i_d_e.html#a47c2bbe6b4b8fe41a07c6990698c83ba", null ],
+    [ "read", "class_i_d_e.html#a62fe0e51234b204c64eb6c160f426eb1", null ],
+    [ "readBuffer", "class_i_d_e.html#abc1206ec43d86da70f38fdb74506bf0d", null ],
+    [ "selectDrive", "class_i_d_e.html#a5105aab02e3b4cd1dbd12eb17cd49bee", null ],
+    [ "waitInterrupt", "class_i_d_e.html#a30a565320cd8641b2658f6da60e17457", null ],
+    [ "write", "class_i_d_e.html#aa6e0bafc86778ba4ae24453b0dba7669", null ],
+    [ "ideChannel0IRQHandler", "class_i_d_e.html#a3c3911d5c24358345f82a590bf4f2626", null ],
+    [ "ideChannel1IRQHandler", "class_i_d_e.html#a5e527b2a449be9e57f60189ab9b9ad2a", null ],
+    [ "channels", "class_i_d_e.html#a7ffb71a740e391da8d6ca3a69a40647b", null ],
+    [ "detectDone", "class_i_d_e.html#a84cc9a99697dece5b90dc5c8f86ae871", null ],
+    [ "devices", "class_i_d_e.html#ae016a535c32406d3c7567a7cc94a85f5", null ],
+    [ "irqInvoked", "class_i_d_e.html#a784e7d3ceb015b54d6c5185e2fa3e7d9", null ],
+    [ "legacyIRQs", "class_i_d_e.html#a264376f1e67d2b75101955a677cf799c", null ]
+];

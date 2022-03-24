@@ -1,0 +1,20 @@
+var searchData=
+[
+  ['x_0',['x',['../struct____attribute____.html#a6f0994a3c8da759cd6a615da491c9843',1,'__attribute__::x()'],['../struct_extent___tag.html#a80e07afcadff26d959ce6108e63235b3',1,'Extent_Tag::x()']]],
+  ['xbits_1',['xbits',['../union_i_e_e_el2bits.html#a6080944b4d607634fd33d19b0ea0a3bc',1,'IEEEl2bits::xbits()'],['../union_i_e_e_el2bits.html#ac7ec38137b740f19a2a534093aec4f87',1,'IEEEl2bits::xbits()'],['../union_i_e_e_el2bits.html#a01c02a4b55875abb067afd6badc59851',1,'IEEEl2bits::xbits()']]],
+  ['xdsdt_2',['XDsdt',['../structacpi__table__fadt.html#a95c2f6d94e9105fc0bfefc2b9534a424',1,'acpi_table_fadt']]],
+  ['xfacs_3',['XFacs',['../structacpi__table__fadt.html#a6c8221e47755515ed7c24bcbc3c01c66',1,'acpi_table_fadt']]],
+  ['xfirmwarewakingvector_4',['XFirmwareWakingVector',['../structacpi__table__facs.html#ab055215c67df90d96db90d68067f3e92',1,'acpi_table_facs']]],
+  ['xgpe0block_5',['XGpe0Block',['../structacpi__table__fadt.html#a7b773230d742d90daf6dee3139ead3fb',1,'acpi_table_fadt']]],
+  ['xgpe1block_6',['XGpe1Block',['../structacpi__table__fadt.html#a393bc3395a53e65df1796ba462220164',1,'acpi_table_fadt']]],
+  ['xparts_7',['xparts',['../unionieee__double__shape__type.html#aa833264ce83640e3ea8a952db6aaaada',1,'ieee_double_shape_type::xparts()'],['../unionieee__double__shape__type.html#a90b4621a5cf5cf2ae9a2f635906d441a',1,'ieee_double_shape_type::xparts()']]],
+  ['xpm1acontrolblock_8',['XPm1aControlBlock',['../structacpi__table__fadt.html#ad825b01fb0ebe15062e9679c2d3c6296',1,'acpi_table_fadt']]],
+  ['xpm1aeventblock_9',['XPm1aEventBlock',['../structacpi__table__fadt.html#a3660e86e39d14f5597415f83fa743b4c',1,'acpi_table_fadt']]],
+  ['xpm1bcontrolblock_10',['XPm1bControlBlock',['../structacpi__table__fadt.html#a37fbb0b82adcaa50beb1ce9a815ee185',1,'acpi_table_fadt']]],
+  ['xpm1beventblock_11',['XPm1bEventBlock',['../structacpi__table__fadt.html#ab5b69d98ab481c6430a2aec1e705350c',1,'acpi_table_fadt']]],
+  ['xpm2controlblock_12',['XPm2ControlBlock',['../structacpi__table__fadt.html#a260d0d0f3667ed1349ef3632ca7ea450',1,'acpi_table_fadt']]],
+  ['xpmtimerblock_13',['XPmTimerBlock',['../structacpi__table__fadt.html#ade66002fba9545be6328fea97ca25afa',1,'acpi_table_fadt']]],
+  ['xruptblock_14',['XruptBlock',['../structacpi__gpe__block__info.html#ae52b7e5744d85606c4184fc4270d7a32',1,'acpi_gpe_block_info']]],
+  ['xsdtaddress_15',['XsdtAddress',['../struct_r_s_d_p_descriptor20.html#abf107de569405ed9aca817b160a3086c',1,'RSDPDescriptor20::XsdtAddress()'],['../acpi_8hpp.html#a9b9a9e2994860f31d3f38248daa196d6',1,'XsdtAddress():&#160;acpi.hpp']]],
+  ['xsdtphysicaladdress_16',['XsdtPhysicalAddress',['../structacpi__table__rsdp.html#a28ad77494b4b3e479a51fe5dc1f4a744',1,'acpi_table_rsdp::XsdtPhysicalAddress()'],['../structacpi__rsdp__extension.html#a2bebc52aa4be7a3b87841203693f3c5c',1,'acpi_rsdp_extension::XsdtPhysicalAddress()']]]
+];

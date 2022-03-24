@@ -1,0 +1,1354 @@
+\hypertarget{acdisasm_8h_source}{}\doxysection{acdisasm.\+h}
+\label{acdisasm_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/acpica/acdisasm.h@{C:/Users/Alex/Desktop/Banana/kernel/acpica/acdisasm.h}}
+\mbox{\hyperlink{acdisasm_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{2 \textcolor{comment}{ *}}
+\DoxyCodeLine{3 \textcolor{comment}{ * Name: acdisasm.h -\/ AML disassembler}}
+\DoxyCodeLine{4 \textcolor{comment}{ *}}
+\DoxyCodeLine{5 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{8 \textcolor{comment}{ *}}
+\DoxyCodeLine{9 \textcolor{comment}{ * 1. Copyright Notice}}
+\DoxyCodeLine{10 \textcolor{comment}{ *}}
+\DoxyCodeLine{11 \textcolor{comment}{ * Some or all of this work -\/ Copyright (c) 1999 -\/ 2019, Intel Corp.}}
+\DoxyCodeLine{12 \textcolor{comment}{ * All rights reserved.}}
+\DoxyCodeLine{13 \textcolor{comment}{ *}}
+\DoxyCodeLine{14 \textcolor{comment}{ * 2. License}}
+\DoxyCodeLine{15 \textcolor{comment}{ *}}
+\DoxyCodeLine{16 \textcolor{comment}{ * 2.1. This is your license from Intel Corp. under its intellectual property}}
+\DoxyCodeLine{17 \textcolor{comment}{ * rights. You may have additional license terms from the party that provided}}
+\DoxyCodeLine{18 \textcolor{comment}{ * you this software, covering your right to use that party's intellectual}}
+\DoxyCodeLine{19 \textcolor{comment}{ * property rights.}}
+\DoxyCodeLine{20 \textcolor{comment}{ *}}
+\DoxyCodeLine{21 \textcolor{comment}{ * 2.2. Intel grants, free of charge, to any person ("{}Licensee"{}) obtaining a}}
+\DoxyCodeLine{22 \textcolor{comment}{ * copy of the source code appearing in this file ("{}Covered Code"{}) an}}
+\DoxyCodeLine{23 \textcolor{comment}{ * irrevocable, perpetual, worldwide license under Intel's copyrights in the}}
+\DoxyCodeLine{24 \textcolor{comment}{ * base code distributed originally by Intel ("{}Original Intel Code"{}) to copy,}}
+\DoxyCodeLine{25 \textcolor{comment}{ * make derivatives, distribute, use and display any portion of the Covered}}
+\DoxyCodeLine{26 \textcolor{comment}{ * Code in any form, with the right to sublicense such rights; and}}
+\DoxyCodeLine{27 \textcolor{comment}{ *}}
+\DoxyCodeLine{28 \textcolor{comment}{ * 2.3. Intel grants Licensee a non-\/exclusive and non-\/transferable patent}}
+\DoxyCodeLine{29 \textcolor{comment}{ * license (with the right to sublicense), under only those claims of Intel}}
+\DoxyCodeLine{30 \textcolor{comment}{ * patents that are infringed by the Original Intel Code, to make, use, sell,}}
+\DoxyCodeLine{31 \textcolor{comment}{ * offer to sell, and import the Covered Code and derivative works thereof}}
+\DoxyCodeLine{32 \textcolor{comment}{ * solely to the minimum extent necessary to exercise the above copyright}}
+\DoxyCodeLine{33 \textcolor{comment}{ * license, and in no event shall the patent license extend to any additions}}
+\DoxyCodeLine{34 \textcolor{comment}{ * to or modifications of the Original Intel Code. No other license or right}}
+\DoxyCodeLine{35 \textcolor{comment}{ * is granted directly or by implication, estoppel or otherwise;}}
+\DoxyCodeLine{36 \textcolor{comment}{ *}}
+\DoxyCodeLine{37 \textcolor{comment}{ * The above copyright and patent license is granted only if the following}}
+\DoxyCodeLine{38 \textcolor{comment}{ * conditions are met:}}
+\DoxyCodeLine{39 \textcolor{comment}{ *}}
+\DoxyCodeLine{40 \textcolor{comment}{ * 3. Conditions}}
+\DoxyCodeLine{41 \textcolor{comment}{ *}}
+\DoxyCodeLine{42 \textcolor{comment}{ * 3.1. Redistribution of Source with Rights to Further Distribute Source.}}
+\DoxyCodeLine{43 \textcolor{comment}{ * Redistribution of source code of any substantial portion of the Covered}}
+\DoxyCodeLine{44 \textcolor{comment}{ * Code or modification with rights to further distribute source must include}}
+\DoxyCodeLine{45 \textcolor{comment}{ * the above Copyright Notice, the above License, this list of Conditions,}}
+\DoxyCodeLine{46 \textcolor{comment}{ * and the following Disclaimer and Export Compliance provision. In addition,}}
+\DoxyCodeLine{47 \textcolor{comment}{ * Licensee must cause all Covered Code to which Licensee contributes to}}
+\DoxyCodeLine{48 \textcolor{comment}{ * contain a file documenting the changes Licensee made to create that Covered}}
+\DoxyCodeLine{49 \textcolor{comment}{ * Code and the date of any change. Licensee must include in that file the}}
+\DoxyCodeLine{50 \textcolor{comment}{ * documentation of any changes made by any predecessor Licensee. Licensee}}
+\DoxyCodeLine{51 \textcolor{comment}{ * must include a prominent statement that the modification is derived,}}
+\DoxyCodeLine{52 \textcolor{comment}{ * directly or indirectly, from Original Intel Code.}}
+\DoxyCodeLine{53 \textcolor{comment}{ *}}
+\DoxyCodeLine{54 \textcolor{comment}{ * 3.2. Redistribution of Source with no Rights to Further Distribute Source.}}
+\DoxyCodeLine{55 \textcolor{comment}{ * Redistribution of source code of any substantial portion of the Covered}}
+\DoxyCodeLine{56 \textcolor{comment}{ * Code or modification without rights to further distribute source must}}
+\DoxyCodeLine{57 \textcolor{comment}{ * include the following Disclaimer and Export Compliance provision in the}}
+\DoxyCodeLine{58 \textcolor{comment}{ * documentation and/or other materials provided with distribution. In}}
+\DoxyCodeLine{59 \textcolor{comment}{ * addition, Licensee may not authorize further sublicense of source of any}}
+\DoxyCodeLine{60 \textcolor{comment}{ * portion of the Covered Code, and must include terms to the effect that the}}
+\DoxyCodeLine{61 \textcolor{comment}{ * license from Licensee to its licensee is limited to the intellectual}}
+\DoxyCodeLine{62 \textcolor{comment}{ * property embodied in the software Licensee provides to its licensee, and}}
+\DoxyCodeLine{63 \textcolor{comment}{ * not to intellectual property embodied in modifications its licensee may}}
+\DoxyCodeLine{64 \textcolor{comment}{ * make.}}
+\DoxyCodeLine{65 \textcolor{comment}{ *}}
+\DoxyCodeLine{66 \textcolor{comment}{ * 3.3. Redistribution of Executable. Redistribution in executable form of any}}
+\DoxyCodeLine{67 \textcolor{comment}{ * substantial portion of the Covered Code or modification must reproduce the}}
+\DoxyCodeLine{68 \textcolor{comment}{ * above Copyright Notice, and the following Disclaimer and Export Compliance}}
+\DoxyCodeLine{69 \textcolor{comment}{ * provision in the documentation and/or other materials provided with the}}
+\DoxyCodeLine{70 \textcolor{comment}{ * distribution.}}
+\DoxyCodeLine{71 \textcolor{comment}{ *}}
+\DoxyCodeLine{72 \textcolor{comment}{ * 3.4. Intel retains all right, title, and interest in and to the Original}}
+\DoxyCodeLine{73 \textcolor{comment}{ * Intel Code.}}
+\DoxyCodeLine{74 \textcolor{comment}{ *}}
+\DoxyCodeLine{75 \textcolor{comment}{ * 3.5. Neither the name Intel nor any other trademark owned or controlled by}}
+\DoxyCodeLine{76 \textcolor{comment}{ * Intel shall be used in advertising or otherwise to promote the sale, use or}}
+\DoxyCodeLine{77 \textcolor{comment}{ * other dealings in products derived from or relating to the Covered Code}}
+\DoxyCodeLine{78 \textcolor{comment}{ * without prior written authorization from Intel.}}
+\DoxyCodeLine{79 \textcolor{comment}{ *}}
+\DoxyCodeLine{80 \textcolor{comment}{ * 4. Disclaimer and Export Compliance}}
+\DoxyCodeLine{81 \textcolor{comment}{ *}}
+\DoxyCodeLine{82 \textcolor{comment}{ * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED}}
+\DoxyCodeLine{83 \textcolor{comment}{ * HERE. ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE}}
+\DoxyCodeLine{84 \textcolor{comment}{ * IS PROVIDED "{}AS IS,"{} AND INTEL WILL NOT PROVIDE ANY SUPPORT, ASSISTANCE,}}
+\DoxyCodeLine{85 \textcolor{comment}{ * INSTALLATION, TRAINING OR OTHER SERVICES. INTEL WILL NOT PROVIDE ANY}}
+\DoxyCodeLine{86 \textcolor{comment}{ * UPDATES, ENHANCEMENTS OR EXTENSIONS. INTEL SPECIFICALLY DISCLAIMS ANY}}
+\DoxyCodeLine{87 \textcolor{comment}{ * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A}}
+\DoxyCodeLine{88 \textcolor{comment}{ * PARTICULAR PURPOSE.}}
+\DoxyCodeLine{89 \textcolor{comment}{ *}}
+\DoxyCodeLine{90 \textcolor{comment}{ * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES}}
+\DoxyCodeLine{91 \textcolor{comment}{ * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR}}
+\DoxyCodeLine{92 \textcolor{comment}{ * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,}}
+\DoxyCodeLine{93 \textcolor{comment}{ * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY}}
+\DoxyCodeLine{94 \textcolor{comment}{ * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL}}
+\DoxyCodeLine{95 \textcolor{comment}{ * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES. THESE LIMITATIONS}}
+\DoxyCodeLine{96 \textcolor{comment}{ * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY}}
+\DoxyCodeLine{97 \textcolor{comment}{ * LIMITED REMEDY.}}
+\DoxyCodeLine{98 \textcolor{comment}{ *}}
+\DoxyCodeLine{99 \textcolor{comment}{ * 4.3. Licensee shall not export, either directly or indirectly, any of this}}
+\DoxyCodeLine{100 \textcolor{comment}{ * software or system incorporating such software without first obtaining any}}
+\DoxyCodeLine{101 \textcolor{comment}{ * required license or other approval from the U. S. Department of Commerce or}}
+\DoxyCodeLine{102 \textcolor{comment}{ * any other agency or department of the United States Government. In the}}
+\DoxyCodeLine{103 \textcolor{comment}{ * event Licensee exports any such software from the United States or}}
+\DoxyCodeLine{104 \textcolor{comment}{ * re-\/exports any such software from a foreign destination, Licensee shall}}
+\DoxyCodeLine{105 \textcolor{comment}{ * ensure that the distribution and export/re-\/export of the software is in}}
+\DoxyCodeLine{106 \textcolor{comment}{ * compliance with all laws, regulations, orders, or other restrictions of the}}
+\DoxyCodeLine{107 \textcolor{comment}{ * U.S. Export Administration Regulations. Licensee agrees that neither it nor}}
+\DoxyCodeLine{108 \textcolor{comment}{ * any of its subsidiaries will export/re-\/export any technical data, process,}}
+\DoxyCodeLine{109 \textcolor{comment}{ * software, or service, directly or indirectly, to any country for which the}}
+\DoxyCodeLine{110 \textcolor{comment}{ * United States government or any agency thereof requires an export license,}}
+\DoxyCodeLine{111 \textcolor{comment}{ * other governmental approval, or letter of assurance, without first obtaining}}
+\DoxyCodeLine{112 \textcolor{comment}{ * such license, approval or letter.}}
+\DoxyCodeLine{113 \textcolor{comment}{ *}}
+\DoxyCodeLine{114 \textcolor{comment}{ *****************************************************************************}}
+\DoxyCodeLine{115 \textcolor{comment}{ *}}
+\DoxyCodeLine{116 \textcolor{comment}{ * Alternatively, you may choose to be licensed under the terms of the}}
+\DoxyCodeLine{117 \textcolor{comment}{ * following license:}}
+\DoxyCodeLine{118 \textcolor{comment}{ *}}
+\DoxyCodeLine{119 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{120 \textcolor{comment}{ * modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{121 \textcolor{comment}{ * are met:}}
+\DoxyCodeLine{122 \textcolor{comment}{ * 1. Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{123 \textcolor{comment}{ *    notice, this list of conditions, and the following disclaimer,}}
+\DoxyCodeLine{124 \textcolor{comment}{ *    without modification.}}
+\DoxyCodeLine{125 \textcolor{comment}{ * 2. Redistributions in binary form must reproduce at minimum a disclaimer}}
+\DoxyCodeLine{126 \textcolor{comment}{ *    substantially similar to the "{}NO WARRANTY"{} disclaimer below}}
+\DoxyCodeLine{127 \textcolor{comment}{ *    ("{}Disclaimer"{}) and any redistribution must be conditioned upon}}
+\DoxyCodeLine{128 \textcolor{comment}{ *    including a substantially similar Disclaimer requirement for further}}
+\DoxyCodeLine{129 \textcolor{comment}{ *    binary redistribution.}}
+\DoxyCodeLine{130 \textcolor{comment}{ * 3. Neither the names of the above-\/listed copyright holders nor the names}}
+\DoxyCodeLine{131 \textcolor{comment}{ *    of any contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{132 \textcolor{comment}{ *    from this software without specific prior written permission.}}
+\DoxyCodeLine{133 \textcolor{comment}{ *}}
+\DoxyCodeLine{134 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS}}
+\DoxyCodeLine{135 \textcolor{comment}{ * "{}AS IS"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT}}
+\DoxyCodeLine{136 \textcolor{comment}{ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR}}
+\DoxyCodeLine{137 \textcolor{comment}{ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT}}
+\DoxyCodeLine{138 \textcolor{comment}{ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,}}
+\DoxyCodeLine{139 \textcolor{comment}{ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT}}
+\DoxyCodeLine{140 \textcolor{comment}{ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,}}
+\DoxyCodeLine{141 \textcolor{comment}{ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY}}
+\DoxyCodeLine{142 \textcolor{comment}{ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{143 \textcolor{comment}{ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{144 \textcolor{comment}{ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{145 \textcolor{comment}{ *}}
+\DoxyCodeLine{146 \textcolor{comment}{ * Alternatively, you may choose to be licensed under the terms of the}}
+\DoxyCodeLine{147 \textcolor{comment}{ * GNU General Public License ("{}GPL"{}) version 2 as published by the Free}}
+\DoxyCodeLine{148 \textcolor{comment}{ * Software Foundation.}}
+\DoxyCodeLine{149 \textcolor{comment}{ *}}
+\DoxyCodeLine{150 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{151 }
+\DoxyCodeLine{152 \textcolor{preprocessor}{\#ifndef \_\_ACDISASM\_H\_\_}}
+\DoxyCodeLine{153 \textcolor{preprocessor}{\#define \_\_ACDISASM\_H\_\_}}
+\DoxyCodeLine{154 }
+\DoxyCodeLine{155 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{amlresrc_8h}{amlresrc.h}}"{}}}
+\DoxyCodeLine{156 }
+\DoxyCodeLine{157 }
+\DoxyCodeLine{158 \textcolor{preprocessor}{\#define BLOCK\_NONE              0}}
+\DoxyCodeLine{159 \textcolor{preprocessor}{\#define BLOCK\_PAREN             1}}
+\DoxyCodeLine{160 \textcolor{preprocessor}{\#define BLOCK\_BRACE             2}}
+\DoxyCodeLine{161 \textcolor{preprocessor}{\#define BLOCK\_COMMA\_LIST        4}}
+\DoxyCodeLine{162 \textcolor{preprocessor}{\#define ACPI\_DEFAULT\_RESNAME    *(UINT32 *) "{}\_\_RD"{}}}
+\DoxyCodeLine{163 }
+\DoxyCodeLine{164 \textcolor{comment}{/*}}
+\DoxyCodeLine{165 \textcolor{comment}{ * Raw table data header. Used by disassembler and data table compiler.}}
+\DoxyCodeLine{166 \textcolor{comment}{ * Do not change.}}
+\DoxyCodeLine{167 \textcolor{comment}{ */}}
+\DoxyCodeLine{168 \textcolor{preprocessor}{\#define ACPI\_RAW\_TABLE\_DATA\_HEADER      "{}Raw Table Data"{}}}
+\DoxyCodeLine{169 }
+\DoxyCodeLine{170 }
+\DoxyCodeLine{171 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__dmtable__info}{acpi\_dmtable\_info}}}
+\DoxyCodeLine{172 \{}
+\DoxyCodeLine{173     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                       \mbox{\hyperlink{structacpi__dmtable__info_a6afddc9843594226594c2db4b12ca525}{Opcode}};}
+\DoxyCodeLine{174     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                      \mbox{\hyperlink{structacpi__dmtable__info_ad6b3b8593cba83da7054e278b4c118a6}{Offset}};}
+\DoxyCodeLine{175     \textcolor{keywordtype}{char}                        *\mbox{\hyperlink{structacpi__dmtable__info_abf720a4849f381177544e785c68d8062}{Name}};}
+\DoxyCodeLine{176     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                       \mbox{\hyperlink{structacpi__dmtable__info_af12d79a614d4657e200783bee1d64d68}{Flags}};}
+\DoxyCodeLine{177 }
+\DoxyCodeLine{178 \} \mbox{\hyperlink{acdisasm_8h_af075fe78bbef6df430f69b36902ae88a}{ACPI\_DMTABLE\_INFO}};}
+\DoxyCodeLine{179 }
+\DoxyCodeLine{180 \textcolor{comment}{/* Values for Flags field above */}}
+\DoxyCodeLine{181 }
+\DoxyCodeLine{182 \textcolor{preprocessor}{\#define DT\_LENGTH                       0x01    }\textcolor{comment}{/* Field is a subtable length */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{183 \textcolor{preprocessor}{\#define DT\_FLAG                         0x02    }\textcolor{comment}{/* Field is a flag value */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{184 \textcolor{preprocessor}{\#define DT\_NON\_ZERO                     0x04    }\textcolor{comment}{/* Field must be non-\/zero */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{185 \textcolor{preprocessor}{\#define DT\_OPTIONAL                     0x08    }\textcolor{comment}{/* Field is optional */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{186 \textcolor{preprocessor}{\#define DT\_DESCRIBES\_OPTIONAL           0x10    }\textcolor{comment}{/* Field describes an optional field (length, etc.) */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{187 \textcolor{preprocessor}{\#define DT\_COUNT                        0x20    }\textcolor{comment}{/* Currently not used */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{188 }
+\DoxyCodeLine{189 \textcolor{comment}{/*}}
+\DoxyCodeLine{190 \textcolor{comment}{ * Values for Opcode above.}}
+\DoxyCodeLine{191 \textcolor{comment}{ * Note: 0-\/7 must not change, they are used as a flag shift value. Other}}
+\DoxyCodeLine{192 \textcolor{comment}{ * than those, new values can be added wherever appropriate.}}
+\DoxyCodeLine{193 \textcolor{comment}{ */}}
+\DoxyCodeLine{194 \textcolor{keyword}{typedef} \textcolor{keyword}{enum}}
+\DoxyCodeLine{195 \{}
+\DoxyCodeLine{196     \textcolor{comment}{/* Simple Data Types */}}
+\DoxyCodeLine{197 }
+\DoxyCodeLine{198     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacaac71be410a026d6af67b0beea4ba4b26}{ACPI\_DMT\_FLAG0}}          = 0,}
+\DoxyCodeLine{199     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca79af53ca769ca35c5ccc111d19dc3093}{ACPI\_DMT\_FLAG1}}          = 1,}
+\DoxyCodeLine{200     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacaea4c8c1f2790b7ed3a99616626128032}{ACPI\_DMT\_FLAG2}}          = 2,}
+\DoxyCodeLine{201     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacaa0557746640940995754a709a4297cab}{ACPI\_DMT\_FLAG3}}          = 3,}
+\DoxyCodeLine{202     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca7e2b0a1104e2f51b08edf8a065d6a959}{ACPI\_DMT\_FLAG4}}          = 4,}
+\DoxyCodeLine{203     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca9eadc706ab640f892c8914cd7936ee15}{ACPI\_DMT\_FLAG5}}          = 5,}
+\DoxyCodeLine{204     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacaa75235ee566086b0e6cf5231ec8857a9}{ACPI\_DMT\_FLAG6}}          = 6,}
+\DoxyCodeLine{205     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca58cc27af1e2c95edee4f4e7ac9d471ce}{ACPI\_DMT\_FLAG7}}          = 7,}
+\DoxyCodeLine{206     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca991d0686b82d396e3152c2be3b252862}{ACPI\_DMT\_FLAGS0}},}
+\DoxyCodeLine{207     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca8449c2a3a4bf289e87833151fce49545}{ACPI\_DMT\_FLAGS1}},}
+\DoxyCodeLine{208     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca24b40726b3082caa8262e685e6ced4ac}{ACPI\_DMT\_FLAGS2}},}
+\DoxyCodeLine{209     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca099fcdfd47d0654e65d4494a015e7cd0}{ACPI\_DMT\_FLAGS4}},}
+\DoxyCodeLine{210     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca4c7aa5987d2dd4ba7f6b49ceb75907a2}{ACPI\_DMT\_FLAGS4\_0}},}
+\DoxyCodeLine{211     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacae1e59dfe52c788ff45019b35327d824f}{ACPI\_DMT\_FLAGS4\_4}},}
+\DoxyCodeLine{212     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacac433614baad2a461008b354ce104ceb9}{ACPI\_DMT\_FLAGS4\_8}},}
+\DoxyCodeLine{213     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca2aa0ab0d12e577c6410bcdf040c8395b}{ACPI\_DMT\_FLAGS4\_12}},}
+\DoxyCodeLine{214     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca084ce2e561aa5af04342e5384a507c5e}{ACPI\_DMT\_FLAGS16\_16}},}
+\DoxyCodeLine{215     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca12d439ace62e129efecb3a9ea80d864c}{ACPI\_DMT\_UINT8}},}
+\DoxyCodeLine{216     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca1b4e76afb85df1720e58a1bb45a7c4ff}{ACPI\_DMT\_UINT16}},}
+\DoxyCodeLine{217     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacaeb63d7f9b4f06d3c71399a8468d375d8}{ACPI\_DMT\_UINT24}},}
+\DoxyCodeLine{218     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca8e4331c8c539a3c1bf800ab7c2a60d04}{ACPI\_DMT\_UINT32}},}
+\DoxyCodeLine{219     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacaf3bb7c40856c2d369b1d78babf4d3fc7}{ACPI\_DMT\_UINT40}},}
+\DoxyCodeLine{220     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca0c75eb328063a815890b20c9b72de042}{ACPI\_DMT\_UINT48}},}
+\DoxyCodeLine{221     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca760de0cce207a548f257b716d121a829}{ACPI\_DMT\_UINT56}},}
+\DoxyCodeLine{222     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacafd68cebf51cc999a79735f66ba0a8e16}{ACPI\_DMT\_UINT64}},}
+\DoxyCodeLine{223     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca5a1554bd087fb320ae5c014c66ba36d3}{ACPI\_DMT\_BUF7}},}
+\DoxyCodeLine{224     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca8b4b240afac048f5da20acaca5a49b70}{ACPI\_DMT\_BUF10}},}
+\DoxyCodeLine{225     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca94950842618c89753fbc575a4dd2a763}{ACPI\_DMT\_BUF12}},}
+\DoxyCodeLine{226     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca032c6873440b7a02f79688b2553188b4}{ACPI\_DMT\_BUF16}},}
+\DoxyCodeLine{227     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca86fc48cce2e4ec097eed8357213cd9a2}{ACPI\_DMT\_BUF128}},}
+\DoxyCodeLine{228     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacab7276a5880c0d1d99923f2e477fb60bb}{ACPI\_DMT\_SIG}},}
+\DoxyCodeLine{229     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacab52066c2dbf0a126453bccea110cbef1}{ACPI\_DMT\_STRING}},}
+\DoxyCodeLine{230     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacad20e3ac356d0d633e615851be30ea790}{ACPI\_DMT\_NAME4}},}
+\DoxyCodeLine{231     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacafeda21e86229947d3fc0aef2cf6c8fbf}{ACPI\_DMT\_NAME6}},}
+\DoxyCodeLine{232     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca563cdfaac837dfae118f74b7fbb48fd1}{ACPI\_DMT\_NAME8}},}
+\DoxyCodeLine{233 }
+\DoxyCodeLine{234     \textcolor{comment}{/* Types that are decoded to strings and miscellaneous */}}
+\DoxyCodeLine{235 }
+\DoxyCodeLine{236     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca1d73d039bab620720b910d5e5e08d3a5}{ACPI\_DMT\_ACCWIDTH}},}
+\DoxyCodeLine{237     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacad3cfcf20985490cdc3a8cacfe86cffbb}{ACPI\_DMT\_CHKSUM}},}
+\DoxyCodeLine{238     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca1c095e9d4357bd66eed09130d8dbe830}{ACPI\_DMT\_GAS}},}
+\DoxyCodeLine{239     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacaabe3c0e1b30e29ce3a55ecc581af6a79}{ACPI\_DMT\_SPACEID}},}
+\DoxyCodeLine{240     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacaf095aee46de546f2ca96525bd80d3484}{ACPI\_DMT\_UNICODE}},}
+\DoxyCodeLine{241     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca7f68cfe962f11209a0e661e20ec60f4d}{ACPI\_DMT\_UUID}},}
+\DoxyCodeLine{242 }
+\DoxyCodeLine{243     \textcolor{comment}{/* Types used only for the Data Table Compiler */}}
+\DoxyCodeLine{244 }
+\DoxyCodeLine{245     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca594c6603579393877608367342c23ff3}{ACPI\_DMT\_BUFFER}},}
+\DoxyCodeLine{246     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca95b4dfba1e4bb3dc669b2f6dc655d777}{ACPI\_DMT\_RAW\_BUFFER}},  \textcolor{comment}{/* Large, multiple line buffer */}}
+\DoxyCodeLine{247     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca5fb6c2147f1593f336b8a6d380ac902a}{ACPI\_DMT\_DEVICE\_PATH}},}
+\DoxyCodeLine{248     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca5867a8330106870c4286e2c6b0f748b5}{ACPI\_DMT\_LABEL}},}
+\DoxyCodeLine{249     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca485e47d2bd130e8a39f899d4953f1ae1}{ACPI\_DMT\_PCI\_PATH}},}
+\DoxyCodeLine{250 }
+\DoxyCodeLine{251     \textcolor{comment}{/* Types that are specific to particular ACPI tables */}}
+\DoxyCodeLine{252 }
+\DoxyCodeLine{253     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca94733ee53eac733d9d564e2511f016f4}{ACPI\_DMT\_ASF}},}
+\DoxyCodeLine{254     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca2917df9f556d275abb7fbee6cc3433c3}{ACPI\_DMT\_DMAR}},}
+\DoxyCodeLine{255     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca1764c75d965b834e74c554f92443a9a1}{ACPI\_DMT\_DMAR\_SCOPE}},}
+\DoxyCodeLine{256     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca46771fe2a84d5224ded489a28c7aaff1}{ACPI\_DMT\_EINJACT}},}
+\DoxyCodeLine{257     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca3f7655bebca99584bfcad9ca83ac2f53}{ACPI\_DMT\_EINJINST}},}
+\DoxyCodeLine{258     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca03300d25fec452a3ab93f747e80440b6}{ACPI\_DMT\_ERSTACT}},}
+\DoxyCodeLine{259     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacaa6275a285168593581eda5e1ea3216a1}{ACPI\_DMT\_ERSTINST}},}
+\DoxyCodeLine{260     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca703f2d861b9b3123ef006f88c85e907a}{ACPI\_DMT\_FADTPM}},}
+\DoxyCodeLine{261     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacab55ce38c9593ff4f4914f75da0c6650e}{ACPI\_DMT\_GTDT}},}
+\DoxyCodeLine{262     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacabff2f8aabfc71be474ed7f784f1c6176}{ACPI\_DMT\_HEST}},}
+\DoxyCodeLine{263     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacab36b2d0ae31711403b90421dd7aac683}{ACPI\_DMT\_HESTNTFY}},}
+\DoxyCodeLine{264     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacafb225c18f3bd2cb21258f0d689d63c17}{ACPI\_DMT\_HESTNTYP}},}
+\DoxyCodeLine{265     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca892f578c97dc6bc15ed3e0f29a7207fd}{ACPI\_DMT\_HMAT}},}
+\DoxyCodeLine{266     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca9c8a9a3aeeae7953f1abf4adec69723d}{ACPI\_DMT\_IORTMEM}},}
+\DoxyCodeLine{267     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca006376f3310005e74f801a511cb3893e}{ACPI\_DMT\_IVRS}},}
+\DoxyCodeLine{268     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacadffa9be584710e12833c381b3bcddceb}{ACPI\_DMT\_LPIT}},}
+\DoxyCodeLine{269     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacad885026f8ef4ad6ede0a3dafd58b0909}{ACPI\_DMT\_MADT}},}
+\DoxyCodeLine{270     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca97a202f68eb161cdbc6edca7be9dd0d8}{ACPI\_DMT\_NFIT}},}
+\DoxyCodeLine{271     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacacee33332ee7f5810efe81a1ac0b5e57d}{ACPI\_DMT\_PCCT}},}
+\DoxyCodeLine{272     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca0bfaf883bfafc62f40df4830707db4d1}{ACPI\_DMT\_PMTT}},}
+\DoxyCodeLine{273     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca3ce6307e9ccf7fbfce31af02cf64ec64}{ACPI\_DMT\_PPTT}},}
+\DoxyCodeLine{274     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacadcf642590f679692b6450ec02d5db860}{ACPI\_DMT\_SDEI}},}
+\DoxyCodeLine{275     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca4c6ed239e1485c2a35037e1f9ccfe1fa}{ACPI\_DMT\_SDEV}},}
+\DoxyCodeLine{276     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca4a6b44b3b6b3cc55ea762264deca553a}{ACPI\_DMT\_SLIC}},}
+\DoxyCodeLine{277     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca58e72b116d7a931d7b91055509c67c08}{ACPI\_DMT\_SRAT}},}
+\DoxyCodeLine{278     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604caca0062fb32ba6baaf79170a8cf979b037e}{ACPI\_DMT\_TPM2}},}
+\DoxyCodeLine{279 }
+\DoxyCodeLine{280     \textcolor{comment}{/* Special opcodes */}}
+\DoxyCodeLine{281 }
+\DoxyCodeLine{282     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacabf72cf6e0fb9630ab2ab084e1d30520e}{ACPI\_DMT\_EXTRA\_TEXT}},}
+\DoxyCodeLine{283     \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cacae7eef0fbc48fc9975710411a72773387}{ACPI\_DMT\_EXIT}}}
+\DoxyCodeLine{284 }
+\DoxyCodeLine{285 \} \mbox{\hyperlink{acdisasm_8h_a6e94b5e811ccf28163b30fee81604cac}{ACPI\_ENTRY\_TYPES}};}
+\DoxyCodeLine{286 }
+\DoxyCodeLine{287 \textcolor{keyword}{typedef}}
+\DoxyCodeLine{288 void (*\mbox{\hyperlink{acdisasm_8h_ac6e8c3bcb663e746fdb87b574b1210cd}{ACPI\_DMTABLE\_HANDLER}}) (}
+\DoxyCodeLine{289     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{290 }
+\DoxyCodeLine{291 \textcolor{keyword}{typedef}}
+\DoxyCodeLine{292 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}} (*\mbox{\hyperlink{acdisasm_8h_aaf4470a1f8e4e43165dd87d0a0eb3f33}{ACPI\_CMTABLE\_HANDLER}}) (}
+\DoxyCodeLine{293     \textcolor{keywordtype}{void}                    **PFieldList);}
+\DoxyCodeLine{294 }
+\DoxyCodeLine{295 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__dmtable__data}{acpi\_dmtable\_data}}}
+\DoxyCodeLine{296 \{}
+\DoxyCodeLine{297     \textcolor{keywordtype}{char}                    *\mbox{\hyperlink{structacpi__dmtable__data_a27a2c7a6bec71820119c242c62ca8372}{Signature}};}
+\DoxyCodeLine{298     \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}       *\mbox{\hyperlink{structacpi__dmtable__data_a9b2a0b7f485fdb362c6302f622924a1e}{TableInfo}};}
+\DoxyCodeLine{299     \mbox{\hyperlink{acdisasm_8h_ac6e8c3bcb663e746fdb87b574b1210cd}{ACPI\_DMTABLE\_HANDLER}}    \mbox{\hyperlink{structacpi__dmtable__data_a4923d0236adb1296e3a21ca2d32eecac}{TableHandler}};}
+\DoxyCodeLine{300     \mbox{\hyperlink{acdisasm_8h_aaf4470a1f8e4e43165dd87d0a0eb3f33}{ACPI\_CMTABLE\_HANDLER}}    \mbox{\hyperlink{structacpi__dmtable__data_a1f4a07fbc26660d2c1bd7095a701eb87}{CmTableHandler}};}
+\DoxyCodeLine{301     \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char}     *\mbox{\hyperlink{structacpi__dmtable__data_a8c25a1a0d9680b6fb6ca5993ec92bd9e}{Template}};}
+\DoxyCodeLine{302 }
+\DoxyCodeLine{303 \} \mbox{\hyperlink{acdisasm_8h_a16fc41e6578fb32117329062348e3086}{ACPI\_DMTABLE\_DATA}};}
+\DoxyCodeLine{304 }
+\DoxyCodeLine{305 }
+\DoxyCodeLine{306 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__op__walk__info}{acpi\_op\_walk\_info}}}
+\DoxyCodeLine{307 \{}
+\DoxyCodeLine{308     \mbox{\hyperlink{structacpi__walk__state}{ACPI\_WALK\_STATE}}         *\mbox{\hyperlink{structacpi__op__walk__info_a6649f1acf2f6f07d3cafadee32ffea8b}{WalkState}};}
+\DoxyCodeLine{309     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *\mbox{\hyperlink{structacpi__op__walk__info_a6b131a305352031396190d67d7580b4d}{MappingOp}};}
+\DoxyCodeLine{310     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   *\mbox{\hyperlink{structacpi__op__walk__info_a5540fda5ad2bcae257587e41158f5728}{PreviousAml}};}
+\DoxyCodeLine{311     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   *\mbox{\hyperlink{structacpi__op__walk__info_a4c1d20b3c1888d672710238c3880b1f4}{StartAml}};}
+\DoxyCodeLine{312     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__op__walk__info_ae146879d425a3c72344294111736093e}{Level}};}
+\DoxyCodeLine{313     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__op__walk__info_a3c0610d488688e6a5f738af9fbe416cc}{LastLevel}};}
+\DoxyCodeLine{314     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__op__walk__info_a86dec68fdf0fb5a467e0d60408fc55e6}{Count}};}
+\DoxyCodeLine{315     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__op__walk__info_ad347156ffdc04bd81362ebc107132ea2}{BitOffset}};}
+\DoxyCodeLine{316     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__op__walk__info_a465adc14e933668031d28916b8da9019}{Flags}};}
+\DoxyCodeLine{317     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__op__walk__info_a170f593bb1e81039992653debeffcb24}{AmlOffset}};}
+\DoxyCodeLine{318 }
+\DoxyCodeLine{319 \} \mbox{\hyperlink{acdisasm_8h_a40fb5498f6c1660552255c54e841a464}{ACPI\_OP\_WALK\_INFO}};}
+\DoxyCodeLine{320 }
+\DoxyCodeLine{321 \textcolor{comment}{/*}}
+\DoxyCodeLine{322 \textcolor{comment}{ * TBD -\/ another copy of this is in asltypes.h, fix}}
+\DoxyCodeLine{323 \textcolor{comment}{ */}}
+\DoxyCodeLine{324 \textcolor{preprocessor}{\#ifndef ASL\_WALK\_CALLBACK\_DEFINED}}
+\DoxyCodeLine{325 \textcolor{keyword}{typedef}}
+\DoxyCodeLine{326 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}} (*\mbox{\hyperlink{acdisasm_8h_a4263983a4bed782be170fd571c88e778}{ASL\_WALK\_CALLBACK}}) (}
+\DoxyCodeLine{327     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}           *Op,}
+\DoxyCodeLine{328     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                      \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}},}
+\DoxyCodeLine{329     \textcolor{keywordtype}{void}                        *\mbox{\hyperlink{acevents_8h_a97d06ff39d7dfbebc4998842382a0d4a}{Context}});}
+\DoxyCodeLine{330 \textcolor{preprocessor}{\#define ASL\_WALK\_CALLBACK\_DEFINED}}
+\DoxyCodeLine{331 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{332 }
+\DoxyCodeLine{333 \textcolor{keyword}{typedef}}
+\DoxyCodeLine{334 void (*\mbox{\hyperlink{acdisasm_8h_ab2e1febe1a00d27a7745040d93e4a12e}{ACPI\_RESOURCE\_HANDLER}}) (}
+\DoxyCodeLine{335     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{336     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{337     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{338     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{339 }
+\DoxyCodeLine{340 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__resource__tag}{acpi\_resource\_tag}}}
+\DoxyCodeLine{341 \{}
+\DoxyCodeLine{342     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__resource__tag_a0230e531fda7e4d95528a8cc8fda4845}{BitIndex}};}
+\DoxyCodeLine{343     \textcolor{keywordtype}{char}                    *\mbox{\hyperlink{structacpi__resource__tag_a1723bd4e37fba0225a91b9828e69659d}{Tag}};}
+\DoxyCodeLine{344 }
+\DoxyCodeLine{345 \} \mbox{\hyperlink{acdisasm_8h_aafb4b2587e8cebe2709ded58d87ad172}{ACPI\_RESOURCE\_TAG}};}
+\DoxyCodeLine{346 }
+\DoxyCodeLine{347 \textcolor{comment}{/* Strings used for decoding flags to ASL keywords */}}
+\DoxyCodeLine{348 }
+\DoxyCodeLine{349 \textcolor{keyword}{extern} \textcolor{keyword}{const} \textcolor{keywordtype}{char}               *\mbox{\hyperlink{acdisasm_8h_a2946158280c8cd73758518a693d92c9b}{AcpiGbl\_WordDecode}}[];}
+\DoxyCodeLine{350 \textcolor{keyword}{extern} \textcolor{keyword}{const} \textcolor{keywordtype}{char}               *\mbox{\hyperlink{acdisasm_8h_ada46e201b7113ead69dab0b7edd95739}{AcpiGbl\_IrqDecode}}[];}
+\DoxyCodeLine{351 \textcolor{keyword}{extern} \textcolor{keyword}{const} \textcolor{keywordtype}{char}               *\mbox{\hyperlink{acdisasm_8h_a274e7e743283041276ee9910b6a4f89f}{AcpiGbl\_LockRule}}[];}
+\DoxyCodeLine{352 \textcolor{keyword}{extern} \textcolor{keyword}{const} \textcolor{keywordtype}{char}               *\mbox{\hyperlink{acdisasm_8h_a3fe92260a45df80fc728931769207719}{AcpiGbl\_AccessTypes}}[];}
+\DoxyCodeLine{353 \textcolor{keyword}{extern} \textcolor{keyword}{const} \textcolor{keywordtype}{char}               *\mbox{\hyperlink{acdisasm_8h_ac9d476c1399497a23485c5a58477247f}{AcpiGbl\_UpdateRules}}[];}
+\DoxyCodeLine{354 \textcolor{keyword}{extern} \textcolor{keyword}{const} \textcolor{keywordtype}{char}               *\mbox{\hyperlink{acdisasm_8h_a17125366135a63b8e9617c7d097a1512}{AcpiGbl\_MatchOps}}[];}
+\DoxyCodeLine{355 }
+\DoxyCodeLine{356 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a348bc6c5f42bef3073069c236371aa06}{AcpiDmTableInfoAsf0}}[];}
+\DoxyCodeLine{357 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a9944f09ea107239d028b14f3a73b4eea}{AcpiDmTableInfoAsf1}}[];}
+\DoxyCodeLine{358 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a9a041780f586caea2f2a49588a62647a}{AcpiDmTableInfoAsf1a}}[];}
+\DoxyCodeLine{359 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ac6cad583679768c5c210668b557815e0}{AcpiDmTableInfoAsf2}}[];}
+\DoxyCodeLine{360 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a64a871f6db8e1fd441a67de89e78c46b}{AcpiDmTableInfoAsf2a}}[];}
+\DoxyCodeLine{361 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a6b95e3651a80872c7b59e683d0b26273}{AcpiDmTableInfoAsf3}}[];}
+\DoxyCodeLine{362 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a671b2d0305e9844c748b6e3de2947aab}{AcpiDmTableInfoAsf4}}[];}
+\DoxyCodeLine{363 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a8823ff811e96708bf549da1fb7861947}{AcpiDmTableInfoAsfHdr}}[];}
+\DoxyCodeLine{364 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_af13e488eed7a51abc8ddc84bc26d0a55}{AcpiDmTableInfoBoot}}[];}
+\DoxyCodeLine{365 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ac5ff377145ab52e71026b50897798493}{AcpiDmTableInfoBert}}[];}
+\DoxyCodeLine{366 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a7c2ed4066bc075d8a0a1938765d0fe1a}{AcpiDmTableInfoBgrt}}[];}
+\DoxyCodeLine{367 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a0ef727b230ca036d41540d7ec68c8682}{AcpiDmTableInfoCpep}}[];}
+\DoxyCodeLine{368 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a56f567498e958b7aa1f8e06f0c7da7a3}{AcpiDmTableInfoCpep0}}[];}
+\DoxyCodeLine{369 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a1ef4d63cea098ada27c4178495518680}{AcpiDmTableInfoCsrt0}}[];}
+\DoxyCodeLine{370 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_aa99934c9bcd25cfe98b88492eda346b3}{AcpiDmTableInfoCsrt1}}[];}
+\DoxyCodeLine{371 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a61e69bf1ba8cb066fedbf2e61a5b45e6}{AcpiDmTableInfoCsrt2}}[];}
+\DoxyCodeLine{372 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a89fadf9ef28afd94012e203bd225be71}{AcpiDmTableInfoCsrt2a}}[];}
+\DoxyCodeLine{373 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ab08444afa505915f2fda5af88379dc12}{AcpiDmTableInfoDbg2}}[];}
+\DoxyCodeLine{374 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a2f497a986f1cc255a2a6842d9a58f836}{AcpiDmTableInfoDbg2Device}}[];}
+\DoxyCodeLine{375 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a16a90327b4ee285bdaa6bcf9c3223a6b}{AcpiDmTableInfoDbg2Addr}}[];}
+\DoxyCodeLine{376 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ad456864a59a8c08846851f43c4475b3e}{AcpiDmTableInfoDbg2Size}}[];}
+\DoxyCodeLine{377 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_afb2a71f478abe1e12ee0fc76b235ae89}{AcpiDmTableInfoDbg2Name}}[];}
+\DoxyCodeLine{378 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_aa7a37b2c143a7145edfc76e01863977e}{AcpiDmTableInfoDbg2OemData}}[];}
+\DoxyCodeLine{379 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a0203c866c501ec254ac50be050f78717}{AcpiDmTableInfoDbgp}}[];}
+\DoxyCodeLine{380 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a39de5f5daa8568a37b9bc4f0b98d79cc}{AcpiDmTableInfoDmar}}[];}
+\DoxyCodeLine{381 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a7776263ff11edc184e76ba3da91d2629}{AcpiDmTableInfoDmarHdr}}[];}
+\DoxyCodeLine{382 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_aff5f3462259447377c616d19669d8776}{AcpiDmTableInfoDmarScope}}[];}
+\DoxyCodeLine{383 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_adbd74975a36d29ade13b12c57f30d536}{AcpiDmTableInfoDmar0}}[];}
+\DoxyCodeLine{384 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a720c07c1ae6b2853bfae5483960f4909}{AcpiDmTableInfoDmar1}}[];}
+\DoxyCodeLine{385 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ab9bca12146969271fb58396149a20861}{AcpiDmTableInfoDmar2}}[];}
+\DoxyCodeLine{386 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_af30f78bf331831d00c3db6f2a37b612c}{AcpiDmTableInfoDmar3}}[];}
+\DoxyCodeLine{387 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_aae5c28f74af69ae8e8645b109278552b}{AcpiDmTableInfoDmar4}}[];}
+\DoxyCodeLine{388 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ada88e95bb779db5ee8581ecf29df2c16}{AcpiDmTableInfoDrtm}}[];}
+\DoxyCodeLine{389 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_aafbdf30e0bccd21e6b1c6a87ad104238}{AcpiDmTableInfoDrtm0}}[];}
+\DoxyCodeLine{390 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_aa4d88c7298d946a81f2962fad6792b84}{AcpiDmTableInfoDrtm0a}}[];}
+\DoxyCodeLine{391 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_aeec07a51a95ee62d587c62575fbbdf2c}{AcpiDmTableInfoDrtm1}}[];}
+\DoxyCodeLine{392 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_adddbc4fe3de29f70f2dbda84eab8cf2a}{AcpiDmTableInfoDrtm1a}}[];}
+\DoxyCodeLine{393 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_aed4d5aec4e91ddc16a5226c96b6e8f6e}{AcpiDmTableInfoDrtm2}}[];}
+\DoxyCodeLine{394 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_aa488d61a9e8301cc4ba40fa2125047fa}{AcpiDmTableInfoEcdt}}[];}
+\DoxyCodeLine{395 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_aa40f0ea1c2efd2ea394a6c58359af87f}{AcpiDmTableInfoEinj}}[];}
+\DoxyCodeLine{396 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a8dfe568d113a17118a3789a7f7fbb426}{AcpiDmTableInfoEinj0}}[];}
+\DoxyCodeLine{397 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a08958a55b8e6d001531899e4bb3b8233}{AcpiDmTableInfoErst}}[];}
+\DoxyCodeLine{398 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a77f53fd0e752d2a8eb65cd34be5ee16e}{AcpiDmTableInfoErst0}}[];}
+\DoxyCodeLine{399 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ae44e5483434d148f81bd3fb97b50d71b}{AcpiDmTableInfoFacs}}[];}
+\DoxyCodeLine{400 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a09aa8589a2e6895960fa76ccbae863d7}{AcpiDmTableInfoFadt1}}[];}
+\DoxyCodeLine{401 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_aaa7fd661bad8901a5e38ee0947bdff4c}{AcpiDmTableInfoFadt2}}[];}
+\DoxyCodeLine{402 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a49b0f1cd6ae2c05628d6d67918da7b0c}{AcpiDmTableInfoFadt3}}[];}
+\DoxyCodeLine{403 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a74d7cc7425c7f28e28a1e21f055cedde}{AcpiDmTableInfoFadt5}}[];}
+\DoxyCodeLine{404 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a1fe7ac98c98c42254c212708b16e26fa}{AcpiDmTableInfoFadt6}}[];}
+\DoxyCodeLine{405 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a429bb0731eaf343d47ab3eb3db806ad0}{AcpiDmTableInfoFpdt}}[];}
+\DoxyCodeLine{406 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a50cbddef4983a1834ef0fdbbb761bb99}{AcpiDmTableInfoFpdtHdr}}[];}
+\DoxyCodeLine{407 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ad6548f820880c74da367e4a7eb57b554}{AcpiDmTableInfoFpdt0}}[];}
+\DoxyCodeLine{408 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a8801d6f6ef776fa530f7d275338fc833}{AcpiDmTableInfoFpdt1}}[];}
+\DoxyCodeLine{409 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ab935346f6eace6831a298ac85606712f}{AcpiDmTableInfoGas}}[];}
+\DoxyCodeLine{410 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a47eb3d2233c968029b4c3f3cd261290c}{AcpiDmTableInfoGtdt}}[];}
+\DoxyCodeLine{411 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a05d8561c74139b71bccc1d962dc3a457}{AcpiDmTableInfoGtdtHdr}}[];}
+\DoxyCodeLine{412 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a78395ffc19fa6cc1966d291ac89c8117}{AcpiDmTableInfoGtdtEl2}}[];}
+\DoxyCodeLine{413 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a4c8cc83011010119a6287f8562cdbeaf}{AcpiDmTableInfoGtdt0}}[];}
+\DoxyCodeLine{414 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a54e4fc7668de22f6c47246822f9ca008}{AcpiDmTableInfoGtdt0a}}[];}
+\DoxyCodeLine{415 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ace07492b20fd9025a5b49979f363b5e8}{AcpiDmTableInfoGtdt1}}[];}
+\DoxyCodeLine{416 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a6520852a8c03347b97578848dd7e4ef5}{AcpiDmTableInfoHeader}}[];}
+\DoxyCodeLine{417 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_afb4a5b431f884b06a4014456fb9ffbce}{AcpiDmTableInfoHest}}[];}
+\DoxyCodeLine{418 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_abbb9eb43220da680864981408120b8d7}{AcpiDmTableInfoHest0}}[];}
+\DoxyCodeLine{419 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a9d045c65a2bf43fa6cb8366dfd9a8cf6}{AcpiDmTableInfoHest1}}[];}
+\DoxyCodeLine{420 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a96eaf1605b9afaaf2ecb7906ca249a6d}{AcpiDmTableInfoHest2}}[];}
+\DoxyCodeLine{421 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a3a886eb8ee4f7b95f13faec4fa902305}{AcpiDmTableInfoHest6}}[];}
+\DoxyCodeLine{422 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ab7022c798585ac99d918c4175eee2921}{AcpiDmTableInfoHest7}}[];}
+\DoxyCodeLine{423 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a8eb36a75ba2c91a793a300d0bbd4951b}{AcpiDmTableInfoHest8}}[];}
+\DoxyCodeLine{424 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ac4311e9e5347c452b2a57769fcd00f36}{AcpiDmTableInfoHest9}}[];}
+\DoxyCodeLine{425 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a687ce9a2cd0d25dfd760baa89e16f968}{AcpiDmTableInfoHest10}}[];}
+\DoxyCodeLine{426 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a2e64f8649a8d0e3f249b1038b7cca5d9}{AcpiDmTableInfoHest11}}[];}
+\DoxyCodeLine{427 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ada90e71135486e278f7e3afd2c437d04}{AcpiDmTableInfoHestNotify}}[];}
+\DoxyCodeLine{428 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a352ee2ee81cd0f30157f18c5e694f932}{AcpiDmTableInfoHestBank}}[];}
+\DoxyCodeLine{429 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_afd843e81e2ecc4d3934cb5ca7640e264}{AcpiDmTableInfoHpet}}[];}
+\DoxyCodeLine{430 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ac4203a0976c6daf79a67b68927060505}{AcpiDmTableInfoLpitHdr}}[];}
+\DoxyCodeLine{431 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ad53a81e9e3ce6768f7dec555f0078167}{AcpiDmTableInfoLpit0}}[];}
+\DoxyCodeLine{432 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a7a10ba96c2af09275320116cfc8ecd99}{AcpiDmTableInfoLpit1}}[];}
+\DoxyCodeLine{433 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_aefef049a89595ebd0fbb5ceb500c706b}{AcpiDmTableInfoHmat}}[];}
+\DoxyCodeLine{434 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a2f635bba4fd59dec0b01821642b50153}{AcpiDmTableInfoHmat0}}[];}
+\DoxyCodeLine{435 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a0ae27b7fc6e9596b3c19a9210f03c94a}{AcpiDmTableInfoHmat1}}[];}
+\DoxyCodeLine{436 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a918ffc64f9d33878c540a77694d6712d}{AcpiDmTableInfoHmat1a}}[];}
+\DoxyCodeLine{437 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_adecce7c07abf3f6e33756dc3a493af28}{AcpiDmTableInfoHmat1b}}[];}
+\DoxyCodeLine{438 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_abb9dcf958c530afcb87ad86c979495dd}{AcpiDmTableInfoHmat1c}}[];}
+\DoxyCodeLine{439 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a24c65aa09abcec2fc0521b9acba46ba8}{AcpiDmTableInfoHmat2}}[];}
+\DoxyCodeLine{440 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ae4a9bc446a50c79690c7bb18acd79f94}{AcpiDmTableInfoHmat2a}}[];}
+\DoxyCodeLine{441 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a9a152d92a94ad2dbe5d7329db0f8dcaf}{AcpiDmTableInfoHmatHdr}}[];}
+\DoxyCodeLine{442 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a532cb19319d3d04653ed72792dcb7106}{AcpiDmTableInfoIort}}[];}
+\DoxyCodeLine{443 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a1e5c4719c420e5ebdb8fa1daab691713}{AcpiDmTableInfoIort0}}[];}
+\DoxyCodeLine{444 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ab955d8378c2dceecf0c030cdb184247c}{AcpiDmTableInfoIort0a}}[];}
+\DoxyCodeLine{445 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ade0e2cbb27929d0156d67271949c57d1}{AcpiDmTableInfoIort1}}[];}
+\DoxyCodeLine{446 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_af6a8d0395fa4feecfcdd54718baf081c}{AcpiDmTableInfoIort1a}}[];}
+\DoxyCodeLine{447 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_af0bca9be06c81b86a481d00b7fa4caea}{AcpiDmTableInfoIort2}}[];}
+\DoxyCodeLine{448 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a85407c6dd0a22119e3b88da1ab9bb55f}{AcpiDmTableInfoIort3}}[];}
+\DoxyCodeLine{449 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_aef88d1222f3d498da252a16bd713a148}{AcpiDmTableInfoIort3a}}[];}
+\DoxyCodeLine{450 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ac0e23298a0c818c19f8f17d95718a631}{AcpiDmTableInfoIort3b}}[];}
+\DoxyCodeLine{451 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a7163d05d11e18d60e76f359231c76f5f}{AcpiDmTableInfoIort3c}}[];}
+\DoxyCodeLine{452 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a54a89a4cf5367e8ee4f93e121f161ba4}{AcpiDmTableInfoIort4}}[];}
+\DoxyCodeLine{453 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a4c96c5ecd78cb564462fc5b304b80a23}{AcpiDmTableInfoIort5}}[];}
+\DoxyCodeLine{454 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a4e7f82ad72116580a1c6853a1bc8dbe6}{AcpiDmTableInfoIortAcc}}[];}
+\DoxyCodeLine{455 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a0a6baa04398e6271d6a0f3280a1f108e}{AcpiDmTableInfoIortHdr}}[];}
+\DoxyCodeLine{456 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ab3c6f7bb1828f596b0c93cb37fe80c4a}{AcpiDmTableInfoIortMap}}[];}
+\DoxyCodeLine{457 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a47243fa7bef3404bc71cac6ec8704248}{AcpiDmTableInfoIortPad}}[];}
+\DoxyCodeLine{458 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a2c7a1e8680167f1f9a9eb336d67e4b52}{AcpiDmTableInfoIvrs}}[];}
+\DoxyCodeLine{459 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a79ec3c3053d497ad344cc39a37ffc581}{AcpiDmTableInfoIvrs0}}[];}
+\DoxyCodeLine{460 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a620be3a9f8790c70a6e8b3156822cf6f}{AcpiDmTableInfoIvrs1}}[];}
+\DoxyCodeLine{461 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a68bbbea99a78ee0a7eacbe37bb41ade4}{AcpiDmTableInfoIvrs4}}[];}
+\DoxyCodeLine{462 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a548057ade0238a77bb39fc5bd925b121}{AcpiDmTableInfoIvrs8a}}[];}
+\DoxyCodeLine{463 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a6112b07d00f89a707d2354e68dc1a342}{AcpiDmTableInfoIvrs8b}}[];}
+\DoxyCodeLine{464 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a971def885fe9172ac5ef209009588562}{AcpiDmTableInfoIvrs8c}}[];}
+\DoxyCodeLine{465 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a38efbb80796c4330c5f2087d7eb0b174}{AcpiDmTableInfoIvrsHdr}}[];}
+\DoxyCodeLine{466 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ae787938bf51ff2d9f1f98b10c89c6768}{AcpiDmTableInfoMadt}}[];}
+\DoxyCodeLine{467 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ae02beae7a8cf3f4c6ff39bd74756693e}{AcpiDmTableInfoMadt0}}[];}
+\DoxyCodeLine{468 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a37aa1e0259399de5fe170b243f80235a}{AcpiDmTableInfoMadt1}}[];}
+\DoxyCodeLine{469 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a955f35c8e6d976d36bab9475cb0deeb7}{AcpiDmTableInfoMadt2}}[];}
+\DoxyCodeLine{470 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_aa74d2cea2df103687576d236d2d40b2c}{AcpiDmTableInfoMadt3}}[];}
+\DoxyCodeLine{471 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ac70bf393df2444291cecf65de5ef8c17}{AcpiDmTableInfoMadt4}}[];}
+\DoxyCodeLine{472 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_adc6a9716f41f4177fe67a22b5f70bfdf}{AcpiDmTableInfoMadt5}}[];}
+\DoxyCodeLine{473 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a36929628e838ab534241fa3c622898d0}{AcpiDmTableInfoMadt6}}[];}
+\DoxyCodeLine{474 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_af9075ab2582a7bdb27613dc55179daeb}{AcpiDmTableInfoMadt7}}[];}
+\DoxyCodeLine{475 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_aac39645845ac8cee061d2960b1d82e09}{AcpiDmTableInfoMadt8}}[];}
+\DoxyCodeLine{476 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_adecae91bf2d59c376284f5c9ff70bbe3}{AcpiDmTableInfoMadt9}}[];}
+\DoxyCodeLine{477 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ae26355802da0e6bce9ee1ed6d9702f2e}{AcpiDmTableInfoMadt10}}[];}
+\DoxyCodeLine{478 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a6d3f40ebe9301448c34a6ccda82540ca}{AcpiDmTableInfoMadt11}}[];}
+\DoxyCodeLine{479 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ae86ac8ccc16bf7d1e5cc8e5a8e76bffd}{AcpiDmTableInfoMadt12}}[];}
+\DoxyCodeLine{480 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a58fd19b2d2bb238f9c3f2c08ffa745d5}{AcpiDmTableInfoMadt13}}[];}
+\DoxyCodeLine{481 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a0bfd611cff6405398f6aca3ab82849fd}{AcpiDmTableInfoMadt14}}[];}
+\DoxyCodeLine{482 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a88722da984b820696cd87fe03375dd25}{AcpiDmTableInfoMadt15}}[];}
+\DoxyCodeLine{483 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a213add41be6518f41b5bb5e08e05d020}{AcpiDmTableInfoMadtHdr}}[];}
+\DoxyCodeLine{484 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a4c3d83d40fca4fdb20aaa46b8d1e799a}{AcpiDmTableInfoMcfg}}[];}
+\DoxyCodeLine{485 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a541e51b16459e914cdae3fc6311132fa}{AcpiDmTableInfoMcfg0}}[];}
+\DoxyCodeLine{486 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ad03a55c345f4589e15c13a2050455e92}{AcpiDmTableInfoMchi}}[];}
+\DoxyCodeLine{487 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ae9adb561804ff41f33d75c485ffa9c70}{AcpiDmTableInfoMpst}}[];}
+\DoxyCodeLine{488 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ab5ee8f8e081df6199cbca01ffe6f0858}{AcpiDmTableInfoMpst0}}[];}
+\DoxyCodeLine{489 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ab9b8b302418c0501fa2f6b98536ebd60}{AcpiDmTableInfoMpst0A}}[];}
+\DoxyCodeLine{490 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a4a10d836e2a637d07c874fc1cdc7b0b2}{AcpiDmTableInfoMpst0B}}[];}
+\DoxyCodeLine{491 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a16846f18fd7c5960f9df18e1aedf4528}{AcpiDmTableInfoMpst1}}[];}
+\DoxyCodeLine{492 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a011b837b2bfc7d8210c439cbba2fc131}{AcpiDmTableInfoMpst2}}[];}
+\DoxyCodeLine{493 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_af5558bb035d7d4cd45af6781d81ba909}{AcpiDmTableInfoMsct}}[];}
+\DoxyCodeLine{494 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_abf9db9cbe7bff957ae776320c18043f5}{AcpiDmTableInfoMsct0}}[];}
+\DoxyCodeLine{495 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a9441d36de8f793bab3b0ae5d6824cb8f}{AcpiDmTableInfoMtmr}}[];}
+\DoxyCodeLine{496 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_af3fdb5ed9695a53d58773283feb2b078}{AcpiDmTableInfoMtmr0}}[];}
+\DoxyCodeLine{497 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a5b7d0b36cfdffcf65cee9f27509fb826}{AcpiDmTableInfoNfit}}[];}
+\DoxyCodeLine{498 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a6708c490c5c37ab3f43efee11773f77a}{AcpiDmTableInfoNfitHdr}}[];}
+\DoxyCodeLine{499 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a916e743b99479b7e20a67bb6c8dd1ec5}{AcpiDmTableInfoNfit0}}[];}
+\DoxyCodeLine{500 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a47082995921d012c0f9aa2f54ee09c7b}{AcpiDmTableInfoNfit1}}[];}
+\DoxyCodeLine{501 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ae72180cd3d3204ef6aad597946a18100}{AcpiDmTableInfoNfit2}}[];}
+\DoxyCodeLine{502 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ad911e9872ce4db81aceca475216959a6}{AcpiDmTableInfoNfit2a}}[];}
+\DoxyCodeLine{503 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a4cdc1128226f21e2ed4a23c66685384c}{AcpiDmTableInfoNfit3}}[];}
+\DoxyCodeLine{504 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_aeb2607aed699b66afcdb67c1369e8d0a}{AcpiDmTableInfoNfit3a}}[];}
+\DoxyCodeLine{505 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ace2b39390ed39bd33247434a5410e355}{AcpiDmTableInfoNfit4}}[];}
+\DoxyCodeLine{506 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a149bfb0c607a1022d20f138f244d0b3b}{AcpiDmTableInfoNfit5}}[];}
+\DoxyCodeLine{507 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_aade4808bb11bb0b7ba6fad81d2d45d45}{AcpiDmTableInfoNfit6}}[];}
+\DoxyCodeLine{508 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ad36b2a378b4698c62ff9a2e932b383b5}{AcpiDmTableInfoNfit6a}}[];}
+\DoxyCodeLine{509 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a4527113f58ee99281f6cc0120141d0d1}{AcpiDmTableInfoNfit7}}[];}
+\DoxyCodeLine{510 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_aa0e23c4191bcc5b830532cb3fa60b029}{AcpiDmTableInfoPdtt}}[];}
+\DoxyCodeLine{511 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ac5027f36b753d95d6005f5428dae2940}{AcpiDmTableInfoPmtt}}[];}
+\DoxyCodeLine{512 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_acef2c838b88a76ee513a6a29a4218702}{AcpiDmTableInfoPmtt0}}[];}
+\DoxyCodeLine{513 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a2d9ed920a2603228d94da799992d52d0}{AcpiDmTableInfoPmtt1}}[];}
+\DoxyCodeLine{514 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ad693b2689759b48345a6cf8a4e975b10}{AcpiDmTableInfoPmtt1a}}[];}
+\DoxyCodeLine{515 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_abc436edae58907d7c66b3eebf6c42c98}{AcpiDmTableInfoPmtt2}}[];}
+\DoxyCodeLine{516 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a7bbc512dc79549391b1182a68442713c}{AcpiDmTableInfoPmttHdr}}[];}
+\DoxyCodeLine{517 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_acaaa00f7f03cef6892d530cb8631870e}{AcpiDmTableInfoPcct}}[];}
+\DoxyCodeLine{518 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ae4eebbcfcb7004bcc8a09e1a0c742dad}{AcpiDmTableInfoPcctHdr}}[];}
+\DoxyCodeLine{519 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a5a64832c1a45df1491843bcca2541c5c}{AcpiDmTableInfoPcct0}}[];}
+\DoxyCodeLine{520 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a51695bba450ce7bac1b9afa69be7b7c0}{AcpiDmTableInfoPcct1}}[];}
+\DoxyCodeLine{521 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a40f3f3a429997512a31338d0c4dc5150}{AcpiDmTableInfoPcct2}}[];}
+\DoxyCodeLine{522 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a456f4b6135d893e47450334ddb680c7c}{AcpiDmTableInfoPcct3}}[];}
+\DoxyCodeLine{523 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a6f03ec03b33bc61bf652a4ee90513321}{AcpiDmTableInfoPcct4}}[];}
+\DoxyCodeLine{524 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a25486240055f5cfea33d166eb3ea1153}{AcpiDmTableInfoPdtt0}}[];}
+\DoxyCodeLine{525 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a701bc4a9583eb9e53a33628e3d42cc9b}{AcpiDmTableInfoPptt0}}[];}
+\DoxyCodeLine{526 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a5417f99dca2faf6df8f81ae352ee4271}{AcpiDmTableInfoPptt0a}}[];}
+\DoxyCodeLine{527 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a320ff5eea9876b2d63bd5d490c968234}{AcpiDmTableInfoPptt1}}[];}
+\DoxyCodeLine{528 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_aae6312207834f1220009daa8a71665e5}{AcpiDmTableInfoPptt2}}[];}
+\DoxyCodeLine{529 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a1c313e4f3ffeaecc836ee75bd147773c}{AcpiDmTableInfoPpttHdr}}[];}
+\DoxyCodeLine{530 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_acc3079ce208d8f1226dbc03d3aa9edfc}{AcpiDmTableInfoRasf}}[];}
+\DoxyCodeLine{531 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a8c6798f6004d6fe924f6f216a933b6d8}{AcpiDmTableInfoRsdp1}}[];}
+\DoxyCodeLine{532 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ac9bb31fb0c8c4b957ee9b9f89e9f98d5}{AcpiDmTableInfoRsdp2}}[];}
+\DoxyCodeLine{533 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_af399263a69bbcaf1394697dbc4dd961a}{AcpiDmTableInfoS3pt}}[];}
+\DoxyCodeLine{534 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_afd3d579d85a078a46e6244f22ed62e77}{AcpiDmTableInfoS3ptHdr}}[];}
+\DoxyCodeLine{535 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a9c5dcbb11e4d1592235a050c3e260f1e}{AcpiDmTableInfoS3pt0}}[];}
+\DoxyCodeLine{536 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a117ff771e5056e851251c7d6b38032ea}{AcpiDmTableInfoS3pt1}}[];}
+\DoxyCodeLine{537 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a3bfe1875411b04c0e7a953aa5a077422}{AcpiDmTableInfoSbst}}[];}
+\DoxyCodeLine{538 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a152b6159973dfee4b18071b578d817a9}{AcpiDmTableInfoSdei}}[];}
+\DoxyCodeLine{539 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a93029a20aaecf846ba97f94c6346826d}{AcpiDmTableInfoSdev}}[];}
+\DoxyCodeLine{540 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a54030f39bfa6b0f349dceb8e5ea552e6}{AcpiDmTableInfoSdevHdr}}[];}
+\DoxyCodeLine{541 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a185dab8b5e6509d033b5c41a2339c788}{AcpiDmTableInfoSdev0}}[];}
+\DoxyCodeLine{542 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a319b7f0578489f76a8820e7dcd3367c6}{AcpiDmTableInfoSdev0a}}[];}
+\DoxyCodeLine{543 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a04032934c0051a7d6afc7afe61bec84d}{AcpiDmTableInfoSdev1}}[];}
+\DoxyCodeLine{544 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a6b61b13276ae50aad971097f418a8bca}{AcpiDmTableInfoSdev1a}}[];}
+\DoxyCodeLine{545 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a0a9f2620390a681ed7cd31964bb418b3}{AcpiDmTableInfoSdev1b}}[];}
+\DoxyCodeLine{546 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a58301136d01893988c3bf3f154be3c26}{AcpiDmTableInfoSlic}}[];}
+\DoxyCodeLine{547 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a13a9da267cc3c24738038b02d6e01ef6}{AcpiDmTableInfoSlit}}[];}
+\DoxyCodeLine{548 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a26ed0eb381fd2f268c39664fb25f2edc}{AcpiDmTableInfoSpcr}}[];}
+\DoxyCodeLine{549 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a276423ef9fe5f601ab2324e8b571d081}{AcpiDmTableInfoSpmi}}[];}
+\DoxyCodeLine{550 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a00cff16b76e8e1ff3b0585dfa455103a}{AcpiDmTableInfoSrat}}[];}
+\DoxyCodeLine{551 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ae06bfa7c8533a3f675f4e478268359fb}{AcpiDmTableInfoSratHdr}}[];}
+\DoxyCodeLine{552 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a37ea1d9abfadfbe50728a46f680b40ae}{AcpiDmTableInfoSrat0}}[];}
+\DoxyCodeLine{553 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a2ef264bcd250bc422ee92e673b62f40d}{AcpiDmTableInfoSrat1}}[];}
+\DoxyCodeLine{554 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_abfa2e33f7973f4629dc0ca04a7413ad3}{AcpiDmTableInfoSrat2}}[];}
+\DoxyCodeLine{555 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_afe07fc4ec1a959983d0197626df18e98}{AcpiDmTableInfoSrat3}}[];}
+\DoxyCodeLine{556 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a86d698d457d887668f542fea621565b6}{AcpiDmTableInfoSrat4}}[];}
+\DoxyCodeLine{557 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a4d22c4bc487458713a4ed5a688296bae}{AcpiDmTableInfoSrat5}}[];}
+\DoxyCodeLine{558 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a7d0d66bfdc2add2e1e8abb5139784dde}{AcpiDmTableInfoStao}}[];}
+\DoxyCodeLine{559 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_afaea4cce25192f6f42e1a85617db8dfd}{AcpiDmTableInfoStaoStr}}[];}
+\DoxyCodeLine{560 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_adeb49cac629a9ab6e817f9703198de9b}{AcpiDmTableInfoTcpaHdr}}[];}
+\DoxyCodeLine{561 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a35b66366e0327b5b1621bc10fd76652d}{AcpiDmTableInfoTcpaClient}}[];}
+\DoxyCodeLine{562 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ab5b767f45646a3faf5103e76c6d13a59}{AcpiDmTableInfoTcpaServer}}[];}
+\DoxyCodeLine{563 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a9e256561b26fe232e6809d79e461d5aa}{AcpiDmTableInfoTpm2}}[];}
+\DoxyCodeLine{564 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a66be21b5d49219a8bbf0a7ff8744bf0d}{AcpiDmTableInfoTpm2a}}[];}
+\DoxyCodeLine{565 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a974db2228b8206ae88f3dd0dc7f91644}{AcpiDmTableInfoTpm211}}[];}
+\DoxyCodeLine{566 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a5c4094d39b002083781a9a00e8e29336}{AcpiDmTableInfoTpm23}}[];}
+\DoxyCodeLine{567 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a62d8322acf2e06537563713c6ef843a8}{AcpiDmTableInfoTpm23a}}[];}
+\DoxyCodeLine{568 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a4d174afe33c5c3405822b8c87e6bd11f}{AcpiDmTableInfoUefi}}[];}
+\DoxyCodeLine{569 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a9f1bb728a6bf96287290ad8173dfc156}{AcpiDmTableInfoVrtc}}[];}
+\DoxyCodeLine{570 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a7a6f22c8e890a863b514101e787c62bc}{AcpiDmTableInfoVrtc0}}[];}
+\DoxyCodeLine{571 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a99e1faa61b6fb9380dd463c5c03fcfbb}{AcpiDmTableInfoWaet}}[];}
+\DoxyCodeLine{572 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_aa91825ce706eefebc89217d3e2e554d9}{AcpiDmTableInfoWdat}}[];}
+\DoxyCodeLine{573 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a7295194adcfe7b4108e5923f3574d40f}{AcpiDmTableInfoWdat0}}[];}
+\DoxyCodeLine{574 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a7fa2124cf8121ebe96700b372090ebbf}{AcpiDmTableInfoWddt}}[];}
+\DoxyCodeLine{575 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a3dcf500dde260f17bbe591b14738aab8}{AcpiDmTableInfoWdrt}}[];}
+\DoxyCodeLine{576 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a63afb69769c77f516b0477074cb63529}{AcpiDmTableInfoWpbt}}[];}
+\DoxyCodeLine{577 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_af2e587e315a407563d02941cacee414c}{AcpiDmTableInfoWpbt0}}[];}
+\DoxyCodeLine{578 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a7e6c2ea73b4145c34f336de5841adcb8}{AcpiDmTableInfoWsmt}}[];}
+\DoxyCodeLine{579 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_ac36ab96f3694761ed569b38430c994e1}{AcpiDmTableInfoXenv}}[];}
+\DoxyCodeLine{580 }
+\DoxyCodeLine{581 \textcolor{keyword}{extern} \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        \mbox{\hyperlink{acdisasm_8h_a92ff779308a1ac942cda3a015212e159}{AcpiDmTableInfoGeneric}}[][2];}
+\DoxyCodeLine{582 }
+\DoxyCodeLine{583 \textcolor{comment}{/*}}
+\DoxyCodeLine{584 \textcolor{comment}{ * dmtable and ahtable}}
+\DoxyCodeLine{585 \textcolor{comment}{ */}}
+\DoxyCodeLine{586 \textcolor{keyword}{extern} \textcolor{keyword}{const} \mbox{\hyperlink{structacpi__dmtable__data}{ACPI\_DMTABLE\_DATA}}  \mbox{\hyperlink{acdisasm_8h_aac6c5c39112715fc7fd562243e5e51da}{AcpiDmTableData}}[];}
+\DoxyCodeLine{587 \textcolor{keyword}{extern} \textcolor{keyword}{const} \mbox{\hyperlink{structah__table}{AH\_TABLE}}           \mbox{\hyperlink{acdisasm_8h_ad2b753971b29e1ccef1a877a9d6e5ac8}{AcpiGbl\_SupportedTables}}[];}
+\DoxyCodeLine{588 }
+\DoxyCodeLine{589 \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}}
+\DoxyCodeLine{590 \mbox{\hyperlink{acdisasm_8h_ad108557dbbc457faf685b40b7a5c134f}{AcpiDmGenerateChecksum}} (}
+\DoxyCodeLine{591     \textcolor{keywordtype}{void}                    *Table,}
+\DoxyCodeLine{592     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{593     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   OriginalChecksum);}
+\DoxyCodeLine{594 }
+\DoxyCodeLine{595 \textcolor{keyword}{const} \mbox{\hyperlink{structacpi__dmtable__data}{ACPI\_DMTABLE\_DATA}} *}
+\DoxyCodeLine{596 \mbox{\hyperlink{acdisasm_8h_ab8efa84ae66f70203c6c032d8838fc13}{AcpiDmGetTableData}} (}
+\DoxyCodeLine{597     \textcolor{keywordtype}{char}                    *\mbox{\hyperlink{acpi_8hpp_a5ec67df9ee3474ea9b15652a47362df0}{Signature}});}
+\DoxyCodeLine{598 }
+\DoxyCodeLine{599 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{600 \mbox{\hyperlink{acdisasm_8h_a4823eb1daca47adac13c5a6b51198b7d}{AcpiDmDumpDataTable}} (}
+\DoxyCodeLine{601     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{602 }
+\DoxyCodeLine{603 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{604 \mbox{\hyperlink{acdisasm_8h_aa5b4b9402bc2693771efa17a0689adc8}{AcpiDmDumpTable}} (}
+\DoxyCodeLine{605     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  TableLength,}
+\DoxyCodeLine{606     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  TableOffset,}
+\DoxyCodeLine{607     \textcolor{keywordtype}{void}                    *Table,}
+\DoxyCodeLine{608     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  SubtableLength,}
+\DoxyCodeLine{609     \mbox{\hyperlink{structacpi__dmtable__info}{ACPI\_DMTABLE\_INFO}}        *Info);}
+\DoxyCodeLine{610 }
+\DoxyCodeLine{611 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{612 \mbox{\hyperlink{acdisasm_8h_addf550da929551dcc40db1d8d1ae38b5}{AcpiDmLineHeader}} (}
+\DoxyCodeLine{613     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Offset,}
+\DoxyCodeLine{614     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  ByteLength,}
+\DoxyCodeLine{615     \textcolor{keywordtype}{char}                    *\mbox{\hyperlink{acpixf_8h_a5e6f9eb1e980275f44f308f43bff476e}{Name}});}
+\DoxyCodeLine{616 }
+\DoxyCodeLine{617 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{618 \mbox{\hyperlink{acdisasm_8h_aed2f642ec0e74b5848da248f5695a56c}{AcpiDmLineHeader2}} (}
+\DoxyCodeLine{619     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Offset,}
+\DoxyCodeLine{620     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  ByteLength,}
+\DoxyCodeLine{621     \textcolor{keywordtype}{char}                    *\mbox{\hyperlink{acpixf_8h_a5e6f9eb1e980275f44f308f43bff476e}{Name}},}
+\DoxyCodeLine{622     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Value);}
+\DoxyCodeLine{623 }
+\DoxyCodeLine{624 }
+\DoxyCodeLine{625 \textcolor{comment}{/*}}
+\DoxyCodeLine{626 \textcolor{comment}{ * dmtbdump}}
+\DoxyCodeLine{627 \textcolor{comment}{ */}}
+\DoxyCodeLine{628 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{629 \mbox{\hyperlink{acdisasm_8h_a081b20d3968e5ca03d9354045c68c8da}{AcpiDmDumpBuffer}} (}
+\DoxyCodeLine{630     \textcolor{keywordtype}{void}                    *Table,}
+\DoxyCodeLine{631     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  BufferOffset,}
+\DoxyCodeLine{632     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{633     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  AbsoluteOffset,}
+\DoxyCodeLine{634     \textcolor{keywordtype}{char}                    *Header);}
+\DoxyCodeLine{635 }
+\DoxyCodeLine{636 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{637 \mbox{\hyperlink{acdisasm_8h_a5609111fe76a32b2072d644d3e009b0c}{AcpiDmDumpUnicode}} (}
+\DoxyCodeLine{638     \textcolor{keywordtype}{void}                    *Table,}
+\DoxyCodeLine{639     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  BufferOffset,}
+\DoxyCodeLine{640     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  ByteLength);}
+\DoxyCodeLine{641 }
+\DoxyCodeLine{642 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{643 \mbox{\hyperlink{acdisasm_8h_ad15201ef279b15446994d2160fec13fd}{AcpiDmDumpAsf}} (}
+\DoxyCodeLine{644     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{645 }
+\DoxyCodeLine{646 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{647 \mbox{\hyperlink{acdisasm_8h_a7435525eb0dcd071746c9bf6027480b2}{AcpiDmDumpCpep}} (}
+\DoxyCodeLine{648     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{649 }
+\DoxyCodeLine{650 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{651 \mbox{\hyperlink{acdisasm_8h_ae16de312e5eca52d5ae23ec3670a443e}{AcpiDmDumpCsrt}} (}
+\DoxyCodeLine{652     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{653 }
+\DoxyCodeLine{654 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{655 \mbox{\hyperlink{acdisasm_8h_ada1751a066b4210104b84b121fc0e500}{AcpiDmDumpDbg2}} (}
+\DoxyCodeLine{656     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{657 }
+\DoxyCodeLine{658 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{659 \mbox{\hyperlink{acdisasm_8h_a0d684b7ab1238f62626f1bdb35d3965c}{AcpiDmDumpDmar}} (}
+\DoxyCodeLine{660     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{661 }
+\DoxyCodeLine{662 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{663 \mbox{\hyperlink{acdisasm_8h_a8521b710c5ab1b971d53d05159342952}{AcpiDmDumpDrtm}} (}
+\DoxyCodeLine{664     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{665 }
+\DoxyCodeLine{666 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{667 \mbox{\hyperlink{acdisasm_8h_a1b40d7b681f80008b913d30a96b72f9a}{AcpiDmDumpEinj}} (}
+\DoxyCodeLine{668     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{669 }
+\DoxyCodeLine{670 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{671 \mbox{\hyperlink{acdisasm_8h_a90b36a0527db52607eb624cfd3e7f283}{AcpiDmDumpErst}} (}
+\DoxyCodeLine{672     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{673 }
+\DoxyCodeLine{674 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{675 \mbox{\hyperlink{acdisasm_8h_a8e0a7b1bc0173fc4fe35a109659314f0}{AcpiDmDumpFadt}} (}
+\DoxyCodeLine{676     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{677 }
+\DoxyCodeLine{678 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{679 \mbox{\hyperlink{acdisasm_8h_a7955dd06feed93112f569bb05a0340af}{AcpiDmDumpFpdt}} (}
+\DoxyCodeLine{680     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{681 }
+\DoxyCodeLine{682 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{683 \mbox{\hyperlink{acdisasm_8h_acbf73348cf1f1b1dc2c288f210e18863}{AcpiDmDumpGtdt}} (}
+\DoxyCodeLine{684     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{685 }
+\DoxyCodeLine{686 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{687 \mbox{\hyperlink{acdisasm_8h_affa644144be1a3d99f49b4e0ce0b436e}{AcpiDmDumpHest}} (}
+\DoxyCodeLine{688     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{689 }
+\DoxyCodeLine{690 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{691 \mbox{\hyperlink{acdisasm_8h_a7f1de30b8686aea9038e4d04ce536236}{AcpiDmDumpHmat}} (}
+\DoxyCodeLine{692     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{693 }
+\DoxyCodeLine{694 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{695 \mbox{\hyperlink{acdisasm_8h_a90f131ad3cd4c67d2a5604de4a407b3b}{AcpiDmDumpIort}} (}
+\DoxyCodeLine{696     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{697 }
+\DoxyCodeLine{698 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{699 \mbox{\hyperlink{acdisasm_8h_a90fe3d26ad99ec9697069f47210143f1}{AcpiDmDumpIvrs}} (}
+\DoxyCodeLine{700     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{701 }
+\DoxyCodeLine{702 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{703 \mbox{\hyperlink{acdisasm_8h_ac9d9f3022a22409b4f650b87575a844c}{AcpiDmDumpLpit}} (}
+\DoxyCodeLine{704     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{705 }
+\DoxyCodeLine{706 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{707 \mbox{\hyperlink{acdisasm_8h_a727b26eb04cf85c29ded2a2ada23027d}{AcpiDmDumpMadt}} (}
+\DoxyCodeLine{708     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{709 }
+\DoxyCodeLine{710 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{711 \mbox{\hyperlink{acdisasm_8h_afd513c94ea9b079e30d3bca0dcf9cdeb}{AcpiDmDumpMcfg}} (}
+\DoxyCodeLine{712     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{713 }
+\DoxyCodeLine{714 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{715 \mbox{\hyperlink{acdisasm_8h_aab6e42ed4dd413d470dcd284b93b95bf}{AcpiDmDumpMpst}} (}
+\DoxyCodeLine{716     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{717 }
+\DoxyCodeLine{718 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{719 \mbox{\hyperlink{acdisasm_8h_ab0ffdd9d49f0a662cfefd61370b06376}{AcpiDmDumpMsct}} (}
+\DoxyCodeLine{720     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{721 }
+\DoxyCodeLine{722 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{723 \mbox{\hyperlink{acdisasm_8h_ad78659c8cf662ae182751f94e37ef009}{AcpiDmDumpMtmr}} (}
+\DoxyCodeLine{724     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{725 }
+\DoxyCodeLine{726 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{727 \mbox{\hyperlink{acdisasm_8h_a6ec587816c2087a5ffe07090b8b55d6f}{AcpiDmDumpNfit}} (}
+\DoxyCodeLine{728     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{729 }
+\DoxyCodeLine{730 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{731 \mbox{\hyperlink{acdisasm_8h_a642fd00ba81b4350b9e4df427f418bb1}{AcpiDmDumpPcct}} (}
+\DoxyCodeLine{732     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{733 }
+\DoxyCodeLine{734 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{735 \mbox{\hyperlink{acdisasm_8h_ae79bb7b6c014980f1fbd546ceebc7e0d}{AcpiDmDumpPdtt}} (}
+\DoxyCodeLine{736     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{737 }
+\DoxyCodeLine{738 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{739 \mbox{\hyperlink{acdisasm_8h_a704d22c6c6e3be1ede5b3012f3da0921}{AcpiDmDumpPmtt}} (}
+\DoxyCodeLine{740     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{741 }
+\DoxyCodeLine{742 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{743 \mbox{\hyperlink{acdisasm_8h_a4be047436d8d4c9fdb90dbfac956b476}{AcpiDmDumpPptt}} (}
+\DoxyCodeLine{744     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{745 }
+\DoxyCodeLine{746 \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}}
+\DoxyCodeLine{747 \mbox{\hyperlink{acdisasm_8h_adfeeb58700aa4ffeea67f4c20820e238}{AcpiDmDumpRsdp}} (}
+\DoxyCodeLine{748     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{749 }
+\DoxyCodeLine{750 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{751 \mbox{\hyperlink{acdisasm_8h_a58720701c34e80f348cb94591322f7fc}{AcpiDmDumpRsdt}} (}
+\DoxyCodeLine{752     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{753 }
+\DoxyCodeLine{754 \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}}
+\DoxyCodeLine{755 \mbox{\hyperlink{acdisasm_8h_aa5167c3d5afeb62e2a0abd3eab101ca0}{AcpiDmDumpS3pt}} (}
+\DoxyCodeLine{756     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{757 }
+\DoxyCodeLine{758 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{759 \mbox{\hyperlink{acdisasm_8h_a846013cb0070de1cb15843691a5d31f5}{AcpiDmDumpSdev}} (}
+\DoxyCodeLine{760     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{761 }
+\DoxyCodeLine{762 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{763 \mbox{\hyperlink{acdisasm_8h_a9d58dd7888e4938087f6310537823d1c}{AcpiDmDumpSlic}} (}
+\DoxyCodeLine{764     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{765 }
+\DoxyCodeLine{766 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{767 \mbox{\hyperlink{acdisasm_8h_a456296ef37929c5b357ff42ca8bbaeda}{AcpiDmDumpSlit}} (}
+\DoxyCodeLine{768     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{769 }
+\DoxyCodeLine{770 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{771 \mbox{\hyperlink{acdisasm_8h_a3aac31184069c203393a1019931ae53a}{AcpiDmDumpSrat}} (}
+\DoxyCodeLine{772     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{773 }
+\DoxyCodeLine{774 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{775 \mbox{\hyperlink{acdisasm_8h_a478b3c1faf4e8fe9e9d8751e9de9f3bd}{AcpiDmDumpStao}} (}
+\DoxyCodeLine{776     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{777 }
+\DoxyCodeLine{778 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{779 \mbox{\hyperlink{acdisasm_8h_a7ecb85da53d87596317428d455c97293}{AcpiDmDumpTcpa}} (}
+\DoxyCodeLine{780     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{781 }
+\DoxyCodeLine{782 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{783 \mbox{\hyperlink{acdisasm_8h_a3dacf3d1ac8a5493478769602252a9ab}{AcpiDmDumpTpm2}} (}
+\DoxyCodeLine{784     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{785 }
+\DoxyCodeLine{786 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{787 \mbox{\hyperlink{acdisasm_8h_a27e2863f3e54253f014246032d8e2109}{AcpiDmDumpVrtc}} (}
+\DoxyCodeLine{788     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{789 }
+\DoxyCodeLine{790 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{791 \mbox{\hyperlink{acdisasm_8h_a58109b54127e7503a02f5672f05d0e65}{AcpiDmDumpWdat}} (}
+\DoxyCodeLine{792     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{793 }
+\DoxyCodeLine{794 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{795 \mbox{\hyperlink{acdisasm_8h_a5a01202ffcea4d5268070f73d73dc23d}{AcpiDmDumpWpbt}} (}
+\DoxyCodeLine{796     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{797 }
+\DoxyCodeLine{798 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{799 \mbox{\hyperlink{acdisasm_8h_a9d71c4192d915a91332a7031f9e116cf}{AcpiDmDumpXsdt}} (}
+\DoxyCodeLine{800     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{801 }
+\DoxyCodeLine{802 }
+\DoxyCodeLine{803 \textcolor{comment}{/*}}
+\DoxyCodeLine{804 \textcolor{comment}{ * dmwalk}}
+\DoxyCodeLine{805 \textcolor{comment}{ */}}
+\DoxyCodeLine{806 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{807 \mbox{\hyperlink{acdisasm_8h_adc8fed806d4b51b973f97f6c1c3021c9}{AcpiDmDisassemble}} (}
+\DoxyCodeLine{808     \mbox{\hyperlink{structacpi__walk__state}{ACPI\_WALK\_STATE}}         *WalkState,}
+\DoxyCodeLine{809     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Origin,}
+\DoxyCodeLine{810     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  NumOpcodes);}
+\DoxyCodeLine{811 }
+\DoxyCodeLine{812 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{813 \mbox{\hyperlink{acdisasm_8h_ac6189ec4a581aaa03cbfc7dfdd43f109}{AcpiDmWalkParseTree}} (}
+\DoxyCodeLine{814     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op,}
+\DoxyCodeLine{815     \mbox{\hyperlink{acdisasm_8h_a4263983a4bed782be170fd571c88e778}{ASL\_WALK\_CALLBACK}}       \mbox{\hyperlink{acpixf_8h_a0329a8f424037834e7e2cd8495eeed88}{DescendingCallback}},}
+\DoxyCodeLine{816     \mbox{\hyperlink{acdisasm_8h_a4263983a4bed782be170fd571c88e778}{ASL\_WALK\_CALLBACK}}       \mbox{\hyperlink{acpixf_8h_ada13cc05b1b4aa8b745311dc56452a3b}{AscendingCallback}},}
+\DoxyCodeLine{817     \textcolor{keywordtype}{void}                    *\mbox{\hyperlink{acevents_8h_a97d06ff39d7dfbebc4998842382a0d4a}{Context}});}
+\DoxyCodeLine{818 }
+\DoxyCodeLine{819 }
+\DoxyCodeLine{820 \textcolor{comment}{/*}}
+\DoxyCodeLine{821 \textcolor{comment}{ * dmopcode}}
+\DoxyCodeLine{822 \textcolor{comment}{ */}}
+\DoxyCodeLine{823 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{824 \mbox{\hyperlink{acdisasm_8h_ad76ad285cbed010d98063a945b931c1f}{AcpiDmDisassembleOneOp}} (}
+\DoxyCodeLine{825     \mbox{\hyperlink{structacpi__walk__state}{ACPI\_WALK\_STATE}}         *WalkState,}
+\DoxyCodeLine{826     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{827     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{828 }
+\DoxyCodeLine{829 \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}}
+\DoxyCodeLine{830 \mbox{\hyperlink{acdisasm_8h_a9b6317a8bf723d18ee349521021e249e}{AcpiDmListType}} (}
+\DoxyCodeLine{831     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{832 }
+\DoxyCodeLine{833 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{834 \mbox{\hyperlink{acdisasm_8h_a86a38e46d7c55765552982ce0081daef}{AcpiDmMethodFlags}} (}
+\DoxyCodeLine{835     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{836 }
+\DoxyCodeLine{837 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{838 \mbox{\hyperlink{acdisasm_8h_a4300ec5e25c600c14a12feb0e0cffd9f}{AcpiDmDisplayTargetPathname}} (}
+\DoxyCodeLine{839     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{840 }
+\DoxyCodeLine{841 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{842 \mbox{\hyperlink{acdisasm_8h_acb2f690a8cd2662810bb7e6aac918564}{AcpiDmNotifyDescription}} (}
+\DoxyCodeLine{843     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{844 }
+\DoxyCodeLine{845 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{846 \mbox{\hyperlink{acdisasm_8h_abdd5340a9470277570a79134cde55859}{AcpiDmPredefinedDescription}} (}
+\DoxyCodeLine{847     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{848 }
+\DoxyCodeLine{849 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{850 \mbox{\hyperlink{acdisasm_8h_a659a185e0987270a0f87497c85ac7fc3}{AcpiDmFieldPredefinedDescription}} (}
+\DoxyCodeLine{851     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{852 }
+\DoxyCodeLine{853 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{854 \mbox{\hyperlink{acdisasm_8h_aaf4362adc4e9423edad3bf206a749cc2}{AcpiDmFieldFlags}} (}
+\DoxyCodeLine{855     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{856 }
+\DoxyCodeLine{857 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{858 \mbox{\hyperlink{acdisasm_8h_a41b3c14c1e3d74e26a5f48e17a0ff577}{AcpiDmAddressSpace}} (}
+\DoxyCodeLine{859     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{acpixf_8h_a0df5282b23ac94747db62e24f5d63d68}{SpaceId}});}
+\DoxyCodeLine{860 }
+\DoxyCodeLine{861 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{862 \mbox{\hyperlink{acdisasm_8h_a19bd00305c6e4e719d69d8ed02e36fad}{AcpiDmRegionFlags}} (}
+\DoxyCodeLine{863     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{864 }
+\DoxyCodeLine{865 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{866 \mbox{\hyperlink{acdisasm_8h_afb760c00559e1829c093c7e95124ceac}{AcpiDmMatchOp}} (}
+\DoxyCodeLine{867     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{868 }
+\DoxyCodeLine{869 }
+\DoxyCodeLine{870 \textcolor{comment}{/*}}
+\DoxyCodeLine{871 \textcolor{comment}{ * dmnames}}
+\DoxyCodeLine{872 \textcolor{comment}{ */}}
+\DoxyCodeLine{873 \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}}
+\DoxyCodeLine{874 \mbox{\hyperlink{acdisasm_8h_acac0e60e830a0e86c4a5c7d62a27159b}{AcpiDmDumpName}} (}
+\DoxyCodeLine{875     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_a5e6f9eb1e980275f44f308f43bff476e}{Name}});}
+\DoxyCodeLine{876 }
+\DoxyCodeLine{877 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{878 \mbox{\hyperlink{acdisasm_8h_adb85b3181344bd55b5305550a618ba78}{AcpiPsDisplayObjectPathname}} (}
+\DoxyCodeLine{879     \mbox{\hyperlink{structacpi__walk__state}{ACPI\_WALK\_STATE}}         *WalkState,}
+\DoxyCodeLine{880     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{881 }
+\DoxyCodeLine{882 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{883 \mbox{\hyperlink{acdisasm_8h_a1a7850190046dc652ff94beda37dfdf1}{AcpiDmNamestring}} (}
+\DoxyCodeLine{884     \textcolor{keywordtype}{char}                    *\mbox{\hyperlink{acpixf_8h_a5e6f9eb1e980275f44f308f43bff476e}{Name}});}
+\DoxyCodeLine{885 }
+\DoxyCodeLine{886 }
+\DoxyCodeLine{887 \textcolor{comment}{/*}}
+\DoxyCodeLine{888 \textcolor{comment}{ * dmbuffer}}
+\DoxyCodeLine{889 \textcolor{comment}{ */}}
+\DoxyCodeLine{890 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{891 \mbox{\hyperlink{acdisasm_8h_aa0337ecf632969e3f11ce7378c961391}{AcpiDmDisasmByteList}} (}
+\DoxyCodeLine{892     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}},}
+\DoxyCodeLine{893     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   *ByteData,}
+\DoxyCodeLine{894     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  ByteCount);}
+\DoxyCodeLine{895 }
+\DoxyCodeLine{896 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{897 \mbox{\hyperlink{acdisasm_8h_a3420df5a3ef8940c5f0c40475c0d3f08}{AcpiDmByteList}} (}
+\DoxyCodeLine{898     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{899     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{900 }
+\DoxyCodeLine{901 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{902 \mbox{\hyperlink{acdisasm_8h_aa5957d115b384dc3a66dd3e987eb7c90}{AcpiDmCheckForHardwareId}} (}
+\DoxyCodeLine{903     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{904 }
+\DoxyCodeLine{905 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{906 \mbox{\hyperlink{acdisasm_8h_a5ef043c7852ac90119d0d2103355d16b}{AcpiDmDecompressEisaId}} (}
+\DoxyCodeLine{907     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  EncodedId);}
+\DoxyCodeLine{908 }
+\DoxyCodeLine{909 \mbox{\hyperlink{actypes_8h_a112e3146cb38b6ee95e64d85842e380a}{BOOLEAN}}}
+\DoxyCodeLine{910 \mbox{\hyperlink{acdisasm_8h_a8074ef79e542cbb1a9d52a37c0305ee7}{AcpiDmIsUuidBuffer}} (}
+\DoxyCodeLine{911     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{912 }
+\DoxyCodeLine{913 \mbox{\hyperlink{actypes_8h_a112e3146cb38b6ee95e64d85842e380a}{BOOLEAN}}}
+\DoxyCodeLine{914 \mbox{\hyperlink{acdisasm_8h_a385759cac0fe07ae912754f1b9996206}{AcpiDmIsUnicodeBuffer}} (}
+\DoxyCodeLine{915     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{916 }
+\DoxyCodeLine{917 \mbox{\hyperlink{actypes_8h_a112e3146cb38b6ee95e64d85842e380a}{BOOLEAN}}}
+\DoxyCodeLine{918 \mbox{\hyperlink{acdisasm_8h_a895b07448daab2f03d674840d7f11e80}{AcpiDmIsStringBuffer}} (}
+\DoxyCodeLine{919     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{920 }
+\DoxyCodeLine{921 \mbox{\hyperlink{actypes_8h_a112e3146cb38b6ee95e64d85842e380a}{BOOLEAN}}}
+\DoxyCodeLine{922 \mbox{\hyperlink{acdisasm_8h_a8311eb9b8f04b43859d30f9b2076d164}{AcpiDmIsPldBuffer}} (}
+\DoxyCodeLine{923     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{924 }
+\DoxyCodeLine{925 }
+\DoxyCodeLine{926 \textcolor{comment}{/*}}
+\DoxyCodeLine{927 \textcolor{comment}{ * dmdeferred}}
+\DoxyCodeLine{928 \textcolor{comment}{ */}}
+\DoxyCodeLine{929 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{930 \mbox{\hyperlink{acdisasm_8h_a7e7dd14964a2fb93c8e6f30c61400d55}{AcpiDmParseDeferredOps}} (}
+\DoxyCodeLine{931     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Root);}
+\DoxyCodeLine{932 }
+\DoxyCodeLine{933 }
+\DoxyCodeLine{934 \textcolor{comment}{/*}}
+\DoxyCodeLine{935 \textcolor{comment}{ * dmextern}}
+\DoxyCodeLine{936 \textcolor{comment}{ */}}
+\DoxyCodeLine{937 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{938 \mbox{\hyperlink{acdisasm_8h_a555274e6ea5501fb6d1be7d5443c9e94}{AcpiDmAddToExternalFileList}} (}
+\DoxyCodeLine{939     \textcolor{keywordtype}{char}                    *PathList);}
+\DoxyCodeLine{940 }
+\DoxyCodeLine{941 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{942 \mbox{\hyperlink{acdisasm_8h_a52bca96887431643cd62c842896e887a}{AcpiDmClearExternalFileList}} (}
+\DoxyCodeLine{943     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{944 }
+\DoxyCodeLine{945 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{946 \mbox{\hyperlink{acdisasm_8h_a3d05bddaa5e0278e34de68f023ddcce7}{AcpiDmAddOpToExternalList}} (}
+\DoxyCodeLine{947     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op,}
+\DoxyCodeLine{948     \textcolor{keywordtype}{char}                    *Path,}
+\DoxyCodeLine{949     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{acpixf_8h_ab361d6187ad6230bccbce7d8dbe49abc}{Type}},}
+\DoxyCodeLine{950     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Value,}
+\DoxyCodeLine{951     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{acdebug_8h_a4f38d8eec414bbac21fe17e446586ef4}{Flags}});}
+\DoxyCodeLine{952 }
+\DoxyCodeLine{953 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{954 \mbox{\hyperlink{acdisasm_8h_af7c6218984972ced4ca5511b4e878fb1}{AcpiDmCreateSubobjectForExternal}} (}
+\DoxyCodeLine{955     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{acpixf_8h_ab361d6187ad6230bccbce7d8dbe49abc}{Type}},}
+\DoxyCodeLine{956     \mbox{\hyperlink{structacpi__namespace__node}{ACPI\_NAMESPACE\_NODE}}     **Node,}
+\DoxyCodeLine{957     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Value);}
+\DoxyCodeLine{958 }
+\DoxyCodeLine{959 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{960 \mbox{\hyperlink{acdisasm_8h_ac7da1aeda10d926c35ce057097de35fb}{AcpiDmAddNodeToExternalList}} (}
+\DoxyCodeLine{961     \mbox{\hyperlink{structacpi__namespace__node}{ACPI\_NAMESPACE\_NODE}}     *Node,}
+\DoxyCodeLine{962     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{acpixf_8h_ab361d6187ad6230bccbce7d8dbe49abc}{Type}},}
+\DoxyCodeLine{963     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Value,}
+\DoxyCodeLine{964     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{acdebug_8h_a4f38d8eec414bbac21fe17e446586ef4}{Flags}});}
+\DoxyCodeLine{965 }
+\DoxyCodeLine{966 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{967 \mbox{\hyperlink{acdisasm_8h_ab04ef958a444a41c629ed39c5a8fb4ca}{AcpiDmAddExternalListToNamespace}} (}
+\DoxyCodeLine{968     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{969 }
+\DoxyCodeLine{970 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{971 \mbox{\hyperlink{acdisasm_8h_a528a573da9b10af7a2b1b09dcb2c0fb0}{AcpiDmAddOneExternalToNamespace}} (}
+\DoxyCodeLine{972     \textcolor{keywordtype}{char}                    *Path,}
+\DoxyCodeLine{973     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{acpixf_8h_ab361d6187ad6230bccbce7d8dbe49abc}{Type}},}
+\DoxyCodeLine{974     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Value);}
+\DoxyCodeLine{975 }
+\DoxyCodeLine{976 \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}}
+\DoxyCodeLine{977 \mbox{\hyperlink{acdisasm_8h_a61cc93c61512bea8a7bbbb2182bd1a36}{AcpiDmGetUnresolvedExternalMethodCount}} (}
+\DoxyCodeLine{978     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{979 }
+\DoxyCodeLine{980 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{981 \mbox{\hyperlink{acdisasm_8h_a12c1e0c2941f2590e06814b5b8a7feee}{AcpiDmClearExternalList}} (}
+\DoxyCodeLine{982     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{983 }
+\DoxyCodeLine{984 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{985 \mbox{\hyperlink{acdisasm_8h_a443d34c1f387a2437f245d86d359bfd4}{AcpiDmEmitExternals}} (}
+\DoxyCodeLine{986     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{987 }
+\DoxyCodeLine{988 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{989 \mbox{\hyperlink{acdisasm_8h_a09b9c292f72315f9f2384fbee754f743}{AcpiDmEmitExternal}} (}
+\DoxyCodeLine{990     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *NameOp,}
+\DoxyCodeLine{991     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *TypeOp);}
+\DoxyCodeLine{992 }
+\DoxyCodeLine{993 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{994 \mbox{\hyperlink{acdisasm_8h_a1204001d9172cabc34f1240c2db63705}{AcpiDmUnresolvedWarning}} (}
+\DoxyCodeLine{995     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{acpixf_8h_ab361d6187ad6230bccbce7d8dbe49abc}{Type}});}
+\DoxyCodeLine{996 }
+\DoxyCodeLine{997 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{998 \mbox{\hyperlink{acdisasm_8h_a162d003d4e66f7e9ca7f6aae5b33ba1c}{AcpiDmGetExternalsFromFile}} (}
+\DoxyCodeLine{999     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{1000 }
+\DoxyCodeLine{1001 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1002 \mbox{\hyperlink{acdisasm_8h_acd32571df647af79ec45a21370e6ad98}{AcpiDmMarkExternalConflict}} (}
+\DoxyCodeLine{1003     \mbox{\hyperlink{structacpi__namespace__node}{ACPI\_NAMESPACE\_NODE}}     *Node);}
+\DoxyCodeLine{1004 }
+\DoxyCodeLine{1005 }
+\DoxyCodeLine{1006 \textcolor{comment}{/*}}
+\DoxyCodeLine{1007 \textcolor{comment}{ * dmresrc}}
+\DoxyCodeLine{1008 \textcolor{comment}{ */}}
+\DoxyCodeLine{1009 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1010 \mbox{\hyperlink{acdisasm_8h_afa0b82fce343b94c79a4c7c2ac60cf6c}{AcpiDmDumpInteger8}} (}
+\DoxyCodeLine{1011     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   Value,}
+\DoxyCodeLine{1012     \textcolor{keyword}{const} \textcolor{keywordtype}{char}              *\mbox{\hyperlink{acpixf_8h_a5e6f9eb1e980275f44f308f43bff476e}{Name}});}
+\DoxyCodeLine{1013 }
+\DoxyCodeLine{1014 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1015 \mbox{\hyperlink{acdisasm_8h_ad98d88d5ccff662213b21ea11f429b56}{AcpiDmDumpInteger16}} (}
+\DoxyCodeLine{1016     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  Value,}
+\DoxyCodeLine{1017     \textcolor{keyword}{const} \textcolor{keywordtype}{char}              *\mbox{\hyperlink{acpixf_8h_a5e6f9eb1e980275f44f308f43bff476e}{Name}});}
+\DoxyCodeLine{1018 }
+\DoxyCodeLine{1019 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1020 \mbox{\hyperlink{acdisasm_8h_adcdcafae1bb2fe3aeb3031f24ba60352}{AcpiDmDumpInteger32}} (}
+\DoxyCodeLine{1021     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Value,}
+\DoxyCodeLine{1022     \textcolor{keyword}{const} \textcolor{keywordtype}{char}              *\mbox{\hyperlink{acpixf_8h_a5e6f9eb1e980275f44f308f43bff476e}{Name}});}
+\DoxyCodeLine{1023 }
+\DoxyCodeLine{1024 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1025 \mbox{\hyperlink{acdisasm_8h_a313d56b76d30ccfe4a2b63b3232bd9c7}{AcpiDmDumpInteger64}} (}
+\DoxyCodeLine{1026     \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}                  Value,}
+\DoxyCodeLine{1027     \textcolor{keyword}{const} \textcolor{keywordtype}{char}              *\mbox{\hyperlink{acpixf_8h_a5e6f9eb1e980275f44f308f43bff476e}{Name}});}
+\DoxyCodeLine{1028 }
+\DoxyCodeLine{1029 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1030 \mbox{\hyperlink{acdisasm_8h_aded2f54e5a91fe761b85580875a2a8d2}{AcpiDmResourceTemplate}} (}
+\DoxyCodeLine{1031     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1032     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op,}
+\DoxyCodeLine{1033     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   *ByteData,}
+\DoxyCodeLine{1034     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  ByteCount);}
+\DoxyCodeLine{1035 }
+\DoxyCodeLine{1036 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{1037 \mbox{\hyperlink{acdisasm_8h_a2849ce2c5a044c3e0dfff88aed017958}{AcpiDmIsResourceTemplate}} (}
+\DoxyCodeLine{1038     \mbox{\hyperlink{structacpi__walk__state}{ACPI\_WALK\_STATE}}         *WalkState,}
+\DoxyCodeLine{1039     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{1040 }
+\DoxyCodeLine{1041 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1042 \mbox{\hyperlink{acdisasm_8h_a8172292c2f4cf80748a2e143129a2309}{AcpiDmBitList}} (}
+\DoxyCodeLine{1043     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  Mask);}
+\DoxyCodeLine{1044 }
+\DoxyCodeLine{1045 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1046 \mbox{\hyperlink{acdisasm_8h_a5462e65281b78c5d7eaa5cb70a8ba7dd}{AcpiDmDescriptorName}} (}
+\DoxyCodeLine{1047     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{1048 }
+\DoxyCodeLine{1049 }
+\DoxyCodeLine{1050 \textcolor{comment}{/*}}
+\DoxyCodeLine{1051 \textcolor{comment}{ * dmresrcl}}
+\DoxyCodeLine{1052 \textcolor{comment}{ */}}
+\DoxyCodeLine{1053 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1054 \mbox{\hyperlink{acdisasm_8h_a8336baba47373eb2827712c4053cc30c}{AcpiDmWordDescriptor}} (}
+\DoxyCodeLine{1055     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1056     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1057     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1058     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1059 }
+\DoxyCodeLine{1060 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1061 \mbox{\hyperlink{acdisasm_8h_a5706d3851ef2c613d62c558c662554ee}{AcpiDmDwordDescriptor}} (}
+\DoxyCodeLine{1062     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1063     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1064     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1065     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1066 }
+\DoxyCodeLine{1067 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1068 \mbox{\hyperlink{acdisasm_8h_a0e241161c6cf93167c5cf9ddf2d937c3}{AcpiDmExtendedDescriptor}} (}
+\DoxyCodeLine{1069     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1070     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1071     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1072     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1073 }
+\DoxyCodeLine{1074 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1075 \mbox{\hyperlink{acdisasm_8h_a37a7ba2f3352a9f466248905d28bd130}{AcpiDmQwordDescriptor}} (}
+\DoxyCodeLine{1076     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1077     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1078     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1079     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1080 }
+\DoxyCodeLine{1081 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1082 \mbox{\hyperlink{acdisasm_8h_a6282108c17eeaec6a25ef46ee3536597}{AcpiDmMemory24Descriptor}} (}
+\DoxyCodeLine{1083     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1084     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1085     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1086     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1087 }
+\DoxyCodeLine{1088 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1089 \mbox{\hyperlink{acdisasm_8h_a16befb5e243cf0d9fce44e12542556a1}{AcpiDmMemory32Descriptor}} (}
+\DoxyCodeLine{1090     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1091     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1092     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1093     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1094 }
+\DoxyCodeLine{1095 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1096 \mbox{\hyperlink{acdisasm_8h_a006e610c09c15c253791802704c11c0c}{AcpiDmFixedMemory32Descriptor}} (}
+\DoxyCodeLine{1097     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1098     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1099     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1100     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1101 }
+\DoxyCodeLine{1102 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1103 \mbox{\hyperlink{acdisasm_8h_a4bf18cf39406e79688d6b48b3409adf2}{AcpiDmGenericRegisterDescriptor}} (}
+\DoxyCodeLine{1104     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1105     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1106     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1107     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1108 }
+\DoxyCodeLine{1109 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1110 \mbox{\hyperlink{acdisasm_8h_a87d9a992273f777fee50266d26367379}{AcpiDmInterruptDescriptor}} (}
+\DoxyCodeLine{1111     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1112     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1113     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1114     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1115 }
+\DoxyCodeLine{1116 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1117 \mbox{\hyperlink{acdisasm_8h_aec6e359d7e2680b3a84743223b00bfd0}{AcpiDmVendorLargeDescriptor}} (}
+\DoxyCodeLine{1118     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1119     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1120     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1121     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1122 }
+\DoxyCodeLine{1123 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1124 \mbox{\hyperlink{acdisasm_8h_a8d2836d68f13d497ea0e048ce8fac70d}{AcpiDmGpioDescriptor}} (}
+\DoxyCodeLine{1125     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1126     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1127     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1128     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1129 }
+\DoxyCodeLine{1130 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1131 \mbox{\hyperlink{acdisasm_8h_a22231739cb2d934344deebe73a795ae7}{AcpiDmPinFunctionDescriptor}} (}
+\DoxyCodeLine{1132     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1133     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1134     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1135     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1136 }
+\DoxyCodeLine{1137 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1138 \mbox{\hyperlink{acdisasm_8h_ae086c59863d8061d3c5c43ddf65a254a}{AcpiDmPinConfigDescriptor}} (}
+\DoxyCodeLine{1139     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1140     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1141     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1142     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1143 }
+\DoxyCodeLine{1144 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1145 \mbox{\hyperlink{acdisasm_8h_a584b6edb5d1c880288d83f8a4302f47c}{AcpiDmPinGroupDescriptor}} (}
+\DoxyCodeLine{1146     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1147     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1148     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1149     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1150 }
+\DoxyCodeLine{1151 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1152 \mbox{\hyperlink{acdisasm_8h_a4f36c2fc93a8a4956356b743f7a41c58}{AcpiDmPinGroupFunctionDescriptor}} (}
+\DoxyCodeLine{1153     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1154     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1155     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1156     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1157 }
+\DoxyCodeLine{1158 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1159 \mbox{\hyperlink{acdisasm_8h_a0b9affeb92bba10fb7f79a64d6f54e37}{AcpiDmPinGroupConfigDescriptor}} (}
+\DoxyCodeLine{1160     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1161     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1162     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1163     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1164 }
+\DoxyCodeLine{1165 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1166 \mbox{\hyperlink{acdisasm_8h_a75398e8e2ec982ed243b1eb2be9fa3c8}{AcpiDmSerialBusDescriptor}} (}
+\DoxyCodeLine{1167     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1168     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1169     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1170     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1171 }
+\DoxyCodeLine{1172 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1173 \mbox{\hyperlink{acdisasm_8h_aacb8737d60c010cc3d58cd825c85a683}{AcpiDmVendorCommon}} (}
+\DoxyCodeLine{1174     \textcolor{keyword}{const} \textcolor{keywordtype}{char}              *\mbox{\hyperlink{acpixf_8h_a5e6f9eb1e980275f44f308f43bff476e}{Name}},}
+\DoxyCodeLine{1175     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   *ByteData,}
+\DoxyCodeLine{1176     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1177     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1178 }
+\DoxyCodeLine{1179 }
+\DoxyCodeLine{1180 \textcolor{comment}{/*}}
+\DoxyCodeLine{1181 \textcolor{comment}{ * dmresrcs}}
+\DoxyCodeLine{1182 \textcolor{comment}{ */}}
+\DoxyCodeLine{1183 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1184 \mbox{\hyperlink{acdisasm_8h_afdafe450e96b643b4710fb4162ef22d1}{AcpiDmIrqDescriptor}} (}
+\DoxyCodeLine{1185     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1186     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1187     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1188     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1189 }
+\DoxyCodeLine{1190 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1191 \mbox{\hyperlink{acdisasm_8h_a84e468796ff5ef43a9e7dd8ceebace6d}{AcpiDmDmaDescriptor}} (}
+\DoxyCodeLine{1192     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1193     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1194     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1195     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1196 }
+\DoxyCodeLine{1197 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1198 \mbox{\hyperlink{acdisasm_8h_af5bc291af96e975bfc4f0ed083835d26}{AcpiDmFixedDmaDescriptor}} (}
+\DoxyCodeLine{1199     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1200     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1201     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1202     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1203 }
+\DoxyCodeLine{1204 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1205 \mbox{\hyperlink{acdisasm_8h_a98d93857f6b8892dd05536acfc43cb33}{AcpiDmIoDescriptor}} (}
+\DoxyCodeLine{1206     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1207     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1208     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1209     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1210 }
+\DoxyCodeLine{1211 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1212 \mbox{\hyperlink{acdisasm_8h_a19b13e630453399c60d6a707c1d6803d}{AcpiDmFixedIoDescriptor}} (}
+\DoxyCodeLine{1213     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1214     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1215     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1216     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1217 }
+\DoxyCodeLine{1218 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1219 \mbox{\hyperlink{acdisasm_8h_acff3fce5bad61fb7b749e7d618c60128}{AcpiDmStartDependentDescriptor}} (}
+\DoxyCodeLine{1220     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1221     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1222     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1223     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1224 }
+\DoxyCodeLine{1225 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1226 \mbox{\hyperlink{acdisasm_8h_a181f7a10e718a94edc596a2afefa9e91}{AcpiDmEndDependentDescriptor}} (}
+\DoxyCodeLine{1227     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1228     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1229     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1230     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1231 }
+\DoxyCodeLine{1232 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1233 \mbox{\hyperlink{acdisasm_8h_ab3fb6f3aa4fcd13f39981739e550bbce}{AcpiDmVendorSmallDescriptor}} (}
+\DoxyCodeLine{1234     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info,}
+\DoxyCodeLine{1235     \mbox{\hyperlink{unionaml__resource}{AML\_RESOURCE}}            *Resource,}
+\DoxyCodeLine{1236     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}},}
+\DoxyCodeLine{1237     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1238 }
+\DoxyCodeLine{1239 }
+\DoxyCodeLine{1240 \textcolor{comment}{/*}}
+\DoxyCodeLine{1241 \textcolor{comment}{ * dmutils}}
+\DoxyCodeLine{1242 \textcolor{comment}{ */}}
+\DoxyCodeLine{1243 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1244 \mbox{\hyperlink{acdisasm_8h_adf3bf3eecd68bb170f0bbb284bc824d1}{AcpiDmDecodeAttribute}} (}
+\DoxyCodeLine{1245     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   Attribute);}
+\DoxyCodeLine{1246 }
+\DoxyCodeLine{1247 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1248 \mbox{\hyperlink{acdisasm_8h_afad1b77511033d08c5c168bf09c1d06d}{AcpiDmIndent}} (}
+\DoxyCodeLine{1249     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{1250 }
+\DoxyCodeLine{1251 \mbox{\hyperlink{actypes_8h_a112e3146cb38b6ee95e64d85842e380a}{BOOLEAN}}}
+\DoxyCodeLine{1252 \mbox{\hyperlink{acdisasm_8h_a04c4d1acef3165b755561d873ecd06fe}{AcpiDmCommaIfListMember}} (}
+\DoxyCodeLine{1253     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{1254 }
+\DoxyCodeLine{1255 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1256 \mbox{\hyperlink{acdisasm_8h_a1d786f168ffe79088ade1037240864cc}{AcpiDmCommaIfFieldMember}} (}
+\DoxyCodeLine{1257     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{1258 }
+\DoxyCodeLine{1259 }
+\DoxyCodeLine{1260 \textcolor{comment}{/*}}
+\DoxyCodeLine{1261 \textcolor{comment}{ * dmrestag}}
+\DoxyCodeLine{1262 \textcolor{comment}{ */}}
+\DoxyCodeLine{1263 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1264 \mbox{\hyperlink{acdisasm_8h_a44549a65c12e8226d1d51256593683bc}{AcpiDmFindResources}} (}
+\DoxyCodeLine{1265     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Root);}
+\DoxyCodeLine{1266 }
+\DoxyCodeLine{1267 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1268 \mbox{\hyperlink{acdisasm_8h_aedeb63eb2e68f9d7428f83ea313910a9}{AcpiDmCheckResourceReference}} (}
+\DoxyCodeLine{1269     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op,}
+\DoxyCodeLine{1270     \mbox{\hyperlink{structacpi__walk__state}{ACPI\_WALK\_STATE}}         *WalkState);}
+\DoxyCodeLine{1271 }
+\DoxyCodeLine{1272 }
+\DoxyCodeLine{1273 \textcolor{comment}{/*}}
+\DoxyCodeLine{1274 \textcolor{comment}{ * dmcstyle}}
+\DoxyCodeLine{1275 \textcolor{comment}{ */}}
+\DoxyCodeLine{1276 \mbox{\hyperlink{actypes_8h_a112e3146cb38b6ee95e64d85842e380a}{BOOLEAN}}}
+\DoxyCodeLine{1277 \mbox{\hyperlink{acdisasm_8h_a3596e0670d17477b85510ab263c6b496}{AcpiDmCheckForSymbolicOpcode}} (}
+\DoxyCodeLine{1278     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op,}
+\DoxyCodeLine{1279     \mbox{\hyperlink{structacpi__op__walk__info}{ACPI\_OP\_WALK\_INFO}}       *Info);}
+\DoxyCodeLine{1280 }
+\DoxyCodeLine{1281 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1282 \mbox{\hyperlink{acdisasm_8h_ade30988cabf9239f634ae5dddcd84f25}{AcpiDmCloseOperator}} (}
+\DoxyCodeLine{1283     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{1284 }
+\DoxyCodeLine{1285 }
+\DoxyCodeLine{1286 \textcolor{comment}{/*}}
+\DoxyCodeLine{1287 \textcolor{comment}{ * dmtables}}
+\DoxyCodeLine{1288 \textcolor{comment}{ */}}
+\DoxyCodeLine{1289 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{1290 \mbox{\hyperlink{acdisasm_8h_aa7c51f2db777bab0ab755c85c42c4ce1}{AcpiDmProcessSwitch}} (}
+\DoxyCodeLine{1291     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{1292 }
+\DoxyCodeLine{1293 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1294 \mbox{\hyperlink{acdisasm_8h_ab9965ff4778b5ce5d83cb39fccb75a56}{AcpiDmClearTempList}}(}
+\DoxyCodeLine{1295     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{1296 }
+\DoxyCodeLine{1297 \textcolor{comment}{/*}}
+\DoxyCodeLine{1298 \textcolor{comment}{ * dmtables}}
+\DoxyCodeLine{1299 \textcolor{comment}{ */}}
+\DoxyCodeLine{1300 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{1301 \mbox{\hyperlink{acdisasm_8h_a36a636098d35b7e10160ceddbd4c652d}{AdDisassemblerHeader}} (}
+\DoxyCodeLine{1302     \textcolor{keywordtype}{char}                    *Filename,}
+\DoxyCodeLine{1303     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   TableType);}
+\DoxyCodeLine{1304 }
+\DoxyCodeLine{1305 \textcolor{preprocessor}{\#define ACPI\_IS\_AML\_TABLE   0}}
+\DoxyCodeLine{1306 \textcolor{preprocessor}{\#define ACPI\_IS\_DATA\_TABLE  1}}
+\DoxyCodeLine{1307 }
+\DoxyCodeLine{1308 }
+\DoxyCodeLine{1309 \textcolor{comment}{/*}}
+\DoxyCodeLine{1310 \textcolor{comment}{ * adisasm}}
+\DoxyCodeLine{1311 \textcolor{comment}{ */}}
+\DoxyCodeLine{1312 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{1313 \mbox{\hyperlink{acdisasm_8h_a9f1f6b1385862848c44b77199f40fc14}{AdAmlDisassemble}} (}
+\DoxyCodeLine{1314     \mbox{\hyperlink{actypes_8h_a112e3146cb38b6ee95e64d85842e380a}{BOOLEAN}}                 OutToFile,}
+\DoxyCodeLine{1315     \textcolor{keywordtype}{char}                    *Filename,}
+\DoxyCodeLine{1316     \textcolor{keywordtype}{char}                    *Prefix,}
+\DoxyCodeLine{1317     \textcolor{keywordtype}{char}                    **OutFilename);}
+\DoxyCodeLine{1318 }
+\DoxyCodeLine{1319 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{1320 \mbox{\hyperlink{acdisasm_8h_aa9e2b112182b51eeb9d49acf8d09bf8a}{AdGetLocalTables}} (}
+\DoxyCodeLine{1321     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{1322 }
+\DoxyCodeLine{1323 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{1324 \mbox{\hyperlink{acdisasm_8h_a6a074550345b097debba89c0e1e736f8}{AdParseTable}} (}
+\DoxyCodeLine{1325     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table,}
+\DoxyCodeLine{1326     \mbox{\hyperlink{actypes_8h_ad92f0865ab9ce9800c267468b6a5a064}{ACPI\_OWNER\_ID}}           *OwnerId,}
+\DoxyCodeLine{1327     \mbox{\hyperlink{actypes_8h_a112e3146cb38b6ee95e64d85842e380a}{BOOLEAN}}                 LoadTable,}
+\DoxyCodeLine{1328     \mbox{\hyperlink{actypes_8h_a112e3146cb38b6ee95e64d85842e380a}{BOOLEAN}}                 External);}
+\DoxyCodeLine{1329 }
+\DoxyCodeLine{1330 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{1331 \mbox{\hyperlink{acdisasm_8h_a19e04acf1df6b3237d6b3132a3701706}{AdDisplayTables}} (}
+\DoxyCodeLine{1332     \textcolor{keywordtype}{char}                    *Filename,}
+\DoxyCodeLine{1333     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *Table);}
+\DoxyCodeLine{1334 }
+\DoxyCodeLine{1335 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{1336 \mbox{\hyperlink{acdisasm_8h_a7fbc3ede566d4e1c09f8549d377db91c}{AdDisplayStatistics}} (}
+\DoxyCodeLine{1337     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{1338 }
+\DoxyCodeLine{1339 }
+\DoxyCodeLine{1340 \textcolor{comment}{/*}}
+\DoxyCodeLine{1341 \textcolor{comment}{ * dmwalk}}
+\DoxyCodeLine{1342 \textcolor{comment}{ */}}
+\DoxyCodeLine{1343 \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}}
+\DoxyCodeLine{1344 \mbox{\hyperlink{acdisasm_8h_ab46998def95e70d88e4fc64ae05e48b0}{AcpiDmBlockType}} (}
+\DoxyCodeLine{1345     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{1346 }
+\DoxyCodeLine{1347 }
+\DoxyCodeLine{1348 \textcolor{preprocessor}{\#endif  }\textcolor{comment}{/* \_\_ACDISASM\_H\_\_ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

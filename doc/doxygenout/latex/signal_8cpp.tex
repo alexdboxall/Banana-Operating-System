@@ -1,0 +1,299 @@
+\hypertarget{signal_8cpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/krnl/signal.cpp File Reference}
+\label{signal_8cpp}\index{C:/Users/Alex/Desktop/Banana/kernel/krnl/signal.cpp@{C:/Users/Alex/Desktop/Banana/kernel/krnl/signal.cpp}}
+{\ttfamily \#include $<$krnl/signal.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/panic.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/computer.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/common.\+hpp$>$}\newline
+{\ttfamily \#include $<$thr/prcssthr.\+hpp$>$}\newline
+{\ttfamily \#include $<$sys/syscalls.\+hpp$>$}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{signal_8cpp_a136c64ec2d1306de745e39d6aee362ca}{SIGHUP}}~1  /$\ast$ hangup $\ast$/
+\item 
+\#define \mbox{\hyperlink{signal_8cpp_a487309e3e9e0527535644115204a639a}{SIGINT}}~2  /$\ast$ interrupt $\ast$/
+\item 
+\#define \mbox{\hyperlink{signal_8cpp_a62045b465be11891160d53c10861b16c}{SIGQUIT}}~3  /$\ast$ quit $\ast$/
+\item 
+\#define \mbox{\hyperlink{signal_8cpp_a4c9c5284f8c8d146bd7a93d25017fc62}{SIGILL}}~4  /$\ast$ illegal instruction (not reset when caught) $\ast$/
+\item 
+\#define \mbox{\hyperlink{signal_8cpp_aa2beb906ab1b46676e63823f4e773c38}{SIGTRAP}}~5  /$\ast$ trace trap (not reset when caught) $\ast$/
+\item 
+\#define \mbox{\hyperlink{signal_8cpp_ab12271d5e5911f8a85dc7c3f0e2364c7}{SIGIOT}}~6  /$\ast$ IOT instruction $\ast$/
+\item 
+\#define \mbox{\hyperlink{signal_8cpp_aa86c630133e5b5174ac970227b273446}{SIGABRT}}~6  /$\ast$ used by abort, replace \mbox{\hyperlink{signaldef_8h_ab12271d5e5911f8a85dc7c3f0e2364c7}{SIGIOT}} in the future $\ast$/
+\item 
+\#define \mbox{\hyperlink{signal_8cpp_ab43f07f46430ee328387ac0ef274a974}{SIGEMT}}~7  /$\ast$ EMT instruction $\ast$/
+\item 
+\#define \mbox{\hyperlink{signal_8cpp_a7fbba29aec3e4a8daae12935299df92d}{SIGFPE}}~8  /$\ast$ floating point exception $\ast$/
+\item 
+\#define \mbox{\hyperlink{signal_8cpp_addd8dcd406ce514ab3b4f576a5343d42}{SIGKILL}}~9  /$\ast$ kill (cannot be caught or ignored) $\ast$/
+\item 
+\#define \mbox{\hyperlink{signal_8cpp_aead3d488474201acf18c4b63d91edc3c}{SIGBUS}}~10  /$\ast$ bus error $\ast$/
+\item 
+\#define \mbox{\hyperlink{signal_8cpp_ae20b4f7171a09516ea73c9d2745bd596}{SIGSEGV}}~11  /$\ast$ segmentation violation $\ast$/
+\item 
+\#define \mbox{\hyperlink{signal_8cpp_a8bacf9eb18fd539099c1bb4666c45d60}{SIGSYS}}~12  /$\ast$ bad argument to system call $\ast$/
+\item 
+\#define \mbox{\hyperlink{signal_8cpp_a57e9c8c5fa13bf86bc779a9f6f408b7c}{SIGPIPE}}~13  /$\ast$ write on a pipe with no one to read it $\ast$/
+\item 
+\#define \mbox{\hyperlink{signal_8cpp_aa6946723c6b7a86ec3c33caaf832840b}{SIGALRM}}~14  /$\ast$ alarm clock $\ast$/
+\item 
+\#define \mbox{\hyperlink{signal_8cpp_a682182a5e5f38fd61f4311501e9dac5d}{SIGTERM}}~15  /$\ast$ software termination signal from kill $\ast$/
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{signal_8cpp_a9df11ad1374c533f730b7a0e9e3fc2e2}{\+\_\+\+\_\+attribute\+\_\+\+\_\+}} ((\+\_\+\+\_\+section\+\_\+\+\_\+(\char`\"{}align\+\_\+previous\char`\"{}))) DO\+\_\+\+NOT\+\_\+\+DELETE()
+\item 
+void \mbox{\hyperlink{signal_8cpp_aa5ba9f29851e8b652d2753e34dc24d23}{\+\_\+\+\_\+attribute\+\_\+\+\_\+}} ((\+\_\+\+\_\+section\+\_\+\+\_\+(\char`\"{}userkernel\char`\"{}))) Ki\+Default\+Signal\+Handler\+Abort(int sig)
+\item 
+void \mbox{\hyperlink{signal_8cpp_ace56bad6cadc230a8639b7c582528b8e}{Ki\+Default\+Signal\+Handler\+Ignore}} (int sig)
+\item 
+void \mbox{\hyperlink{signal_8cpp_a2ee460968418b9b3baeaf27da3f50096}{Ki\+Default\+Signal\+Handler\+Pause}} (int sig)
+\item 
+void \mbox{\hyperlink{signal_8cpp_a21acae9cf71071e3004bbb9a9e6af777}{Ki\+Default\+Signal\+Handler\+Resume}} (int sig)
+\item 
+void \mbox{\hyperlink{signal_8cpp_a0a37a478033334692d1ca37d8178a1e0}{Ki\+Sig\+Kill}} (int sig)
+\item 
+void \mbox{\hyperlink{signal_8cpp_a5789c892065f92ef84cf81176f62e576}{Ke\+Deinit\+Signals}} (\mbox{\hyperlink{struct_sig_handler_block}{Sig\+Handler\+Block}} $\ast$block)
+\item 
+\mbox{\hyperlink{struct_sig_handler_block}{Sig\+Handler\+Block}} $\ast$ \mbox{\hyperlink{signal_8cpp_a78ad025104c344c35215d7265225f779}{Ke\+Init\+Signals}} ()
+\item 
+int \mbox{\hyperlink{signal_8cpp_a834c8207af38954a570d1c928a761f33}{Ke\+Register\+Signal\+Handler}} (\mbox{\hyperlink{struct_sig_handler_block}{Sig\+Handler\+Block}} $\ast$shb, int sig, \mbox{\hyperlink{signaldef_8h_a265fd11dae26d737705a864e12eb7e98}{sig\+\_\+handler\+\_\+bna\+\_\+t}} handler, uint32\+\_\+t mask, int \mbox{\hyperlink{acpi_8hpp_a773b39d480759f67926cb18ae2219281}{flags}})
+\item 
+int \mbox{\hyperlink{signal_8cpp_a3120aa4bb29f9cd0df8c0116d69aee74}{Ke\+Raise\+Signal}} (\mbox{\hyperlink{struct_sig_handler_block}{Sig\+Handler\+Block}} $\ast$shb, int sig)
+\item 
+void \mbox{\hyperlink{signal_8cpp_ae87f37d5696ac9f7c73353d2cb113726}{Ki\+Finish\+SignalZ}} (uint32\+\_\+t $\ast$\mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}})
+\item 
+size\+\_\+t \mbox{\hyperlink{signal_8cpp_a1bb8447217ebfc251fae9e2ab55575e4}{Ki\+Check\+SignalZ}} ()
+\item 
+size\+\_\+t \mbox{\hyperlink{signal_8cpp_af34b514d7aef56b59f5cbcc627e5504c}{Ke\+Check\+Signal}} (\mbox{\hyperlink{struct_sig_handler_block}{Sig\+Handler\+Block}} $\ast$shb, int $\ast$num)
+\item 
+void \mbox{\hyperlink{signal_8cpp_acec9caa6a19fc04bcd9ca5c0defa3cd6}{Ke\+Complete\+Signal}} (\mbox{\hyperlink{struct_sig_handler_block}{Sig\+Handler\+Block}} $\ast$shb, int sig)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{signaldef_8h_a265fd11dae26d737705a864e12eb7e98}{sig\+\_\+handler\+\_\+bna\+\_\+t}} \mbox{\hyperlink{signal_8cpp_ac7e2bb758cd811ea688686ad0442f303}{Ki\+Default\+Signal\+Handlers}} \mbox{[}$\,$\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{signal_8cpp_aa86c630133e5b5174ac970227b273446}\label{signal_8cpp_aa86c630133e5b5174ac970227b273446}} 
+\index{signal.cpp@{signal.cpp}!SIGABRT@{SIGABRT}}
+\index{SIGABRT@{SIGABRT}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{SIGABRT}{SIGABRT}}
+{\footnotesize\ttfamily \#define SIGABRT~6  /$\ast$ used by abort, replace \mbox{\hyperlink{signaldef_8h_ab12271d5e5911f8a85dc7c3f0e2364c7}{SIGIOT}} in the future $\ast$/}
+
+\mbox{\Hypertarget{signal_8cpp_aa6946723c6b7a86ec3c33caaf832840b}\label{signal_8cpp_aa6946723c6b7a86ec3c33caaf832840b}} 
+\index{signal.cpp@{signal.cpp}!SIGALRM@{SIGALRM}}
+\index{SIGALRM@{SIGALRM}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{SIGALRM}{SIGALRM}}
+{\footnotesize\ttfamily \#define SIGALRM~14  /$\ast$ alarm clock $\ast$/}
+
+\mbox{\Hypertarget{signal_8cpp_aead3d488474201acf18c4b63d91edc3c}\label{signal_8cpp_aead3d488474201acf18c4b63d91edc3c}} 
+\index{signal.cpp@{signal.cpp}!SIGBUS@{SIGBUS}}
+\index{SIGBUS@{SIGBUS}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{SIGBUS}{SIGBUS}}
+{\footnotesize\ttfamily \#define SIGBUS~10  /$\ast$ bus error $\ast$/}
+
+\mbox{\Hypertarget{signal_8cpp_ab43f07f46430ee328387ac0ef274a974}\label{signal_8cpp_ab43f07f46430ee328387ac0ef274a974}} 
+\index{signal.cpp@{signal.cpp}!SIGEMT@{SIGEMT}}
+\index{SIGEMT@{SIGEMT}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{SIGEMT}{SIGEMT}}
+{\footnotesize\ttfamily \#define SIGEMT~7  /$\ast$ EMT instruction $\ast$/}
+
+\mbox{\Hypertarget{signal_8cpp_a7fbba29aec3e4a8daae12935299df92d}\label{signal_8cpp_a7fbba29aec3e4a8daae12935299df92d}} 
+\index{signal.cpp@{signal.cpp}!SIGFPE@{SIGFPE}}
+\index{SIGFPE@{SIGFPE}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{SIGFPE}{SIGFPE}}
+{\footnotesize\ttfamily \#define SIGFPE~8  /$\ast$ floating point exception $\ast$/}
+
+\mbox{\Hypertarget{signal_8cpp_a136c64ec2d1306de745e39d6aee362ca}\label{signal_8cpp_a136c64ec2d1306de745e39d6aee362ca}} 
+\index{signal.cpp@{signal.cpp}!SIGHUP@{SIGHUP}}
+\index{SIGHUP@{SIGHUP}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{SIGHUP}{SIGHUP}}
+{\footnotesize\ttfamily \#define SIGHUP~1  /$\ast$ hangup $\ast$/}
+
+\mbox{\Hypertarget{signal_8cpp_a4c9c5284f8c8d146bd7a93d25017fc62}\label{signal_8cpp_a4c9c5284f8c8d146bd7a93d25017fc62}} 
+\index{signal.cpp@{signal.cpp}!SIGILL@{SIGILL}}
+\index{SIGILL@{SIGILL}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{SIGILL}{SIGILL}}
+{\footnotesize\ttfamily \#define SIGILL~4  /$\ast$ illegal instruction (not reset when caught) $\ast$/}
+
+\mbox{\Hypertarget{signal_8cpp_a487309e3e9e0527535644115204a639a}\label{signal_8cpp_a487309e3e9e0527535644115204a639a}} 
+\index{signal.cpp@{signal.cpp}!SIGINT@{SIGINT}}
+\index{SIGINT@{SIGINT}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{SIGINT}{SIGINT}}
+{\footnotesize\ttfamily \#define SIGINT~2  /$\ast$ interrupt $\ast$/}
+
+\mbox{\Hypertarget{signal_8cpp_ab12271d5e5911f8a85dc7c3f0e2364c7}\label{signal_8cpp_ab12271d5e5911f8a85dc7c3f0e2364c7}} 
+\index{signal.cpp@{signal.cpp}!SIGIOT@{SIGIOT}}
+\index{SIGIOT@{SIGIOT}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{SIGIOT}{SIGIOT}}
+{\footnotesize\ttfamily \#define SIGIOT~6  /$\ast$ IOT instruction $\ast$/}
+
+\mbox{\Hypertarget{signal_8cpp_addd8dcd406ce514ab3b4f576a5343d42}\label{signal_8cpp_addd8dcd406ce514ab3b4f576a5343d42}} 
+\index{signal.cpp@{signal.cpp}!SIGKILL@{SIGKILL}}
+\index{SIGKILL@{SIGKILL}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{SIGKILL}{SIGKILL}}
+{\footnotesize\ttfamily \#define SIGKILL~9  /$\ast$ kill (cannot be caught or ignored) $\ast$/}
+
+\mbox{\Hypertarget{signal_8cpp_a57e9c8c5fa13bf86bc779a9f6f408b7c}\label{signal_8cpp_a57e9c8c5fa13bf86bc779a9f6f408b7c}} 
+\index{signal.cpp@{signal.cpp}!SIGPIPE@{SIGPIPE}}
+\index{SIGPIPE@{SIGPIPE}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{SIGPIPE}{SIGPIPE}}
+{\footnotesize\ttfamily \#define SIGPIPE~13  /$\ast$ write on a pipe with no one to read it $\ast$/}
+
+\mbox{\Hypertarget{signal_8cpp_a62045b465be11891160d53c10861b16c}\label{signal_8cpp_a62045b465be11891160d53c10861b16c}} 
+\index{signal.cpp@{signal.cpp}!SIGQUIT@{SIGQUIT}}
+\index{SIGQUIT@{SIGQUIT}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{SIGQUIT}{SIGQUIT}}
+{\footnotesize\ttfamily \#define SIGQUIT~3  /$\ast$ quit $\ast$/}
+
+\mbox{\Hypertarget{signal_8cpp_ae20b4f7171a09516ea73c9d2745bd596}\label{signal_8cpp_ae20b4f7171a09516ea73c9d2745bd596}} 
+\index{signal.cpp@{signal.cpp}!SIGSEGV@{SIGSEGV}}
+\index{SIGSEGV@{SIGSEGV}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{SIGSEGV}{SIGSEGV}}
+{\footnotesize\ttfamily \#define SIGSEGV~11  /$\ast$ segmentation violation $\ast$/}
+
+\mbox{\Hypertarget{signal_8cpp_a8bacf9eb18fd539099c1bb4666c45d60}\label{signal_8cpp_a8bacf9eb18fd539099c1bb4666c45d60}} 
+\index{signal.cpp@{signal.cpp}!SIGSYS@{SIGSYS}}
+\index{SIGSYS@{SIGSYS}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{SIGSYS}{SIGSYS}}
+{\footnotesize\ttfamily \#define SIGSYS~12  /$\ast$ bad argument to system call $\ast$/}
+
+\mbox{\Hypertarget{signal_8cpp_a682182a5e5f38fd61f4311501e9dac5d}\label{signal_8cpp_a682182a5e5f38fd61f4311501e9dac5d}} 
+\index{signal.cpp@{signal.cpp}!SIGTERM@{SIGTERM}}
+\index{SIGTERM@{SIGTERM}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{SIGTERM}{SIGTERM}}
+{\footnotesize\ttfamily \#define SIGTERM~15  /$\ast$ software termination signal from kill $\ast$/}
+
+\mbox{\Hypertarget{signal_8cpp_aa2beb906ab1b46676e63823f4e773c38}\label{signal_8cpp_aa2beb906ab1b46676e63823f4e773c38}} 
+\index{signal.cpp@{signal.cpp}!SIGTRAP@{SIGTRAP}}
+\index{SIGTRAP@{SIGTRAP}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{SIGTRAP}{SIGTRAP}}
+{\footnotesize\ttfamily \#define SIGTRAP~5  /$\ast$ trace trap (not reset when caught) $\ast$/}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{signal_8cpp_a9df11ad1374c533f730b7a0e9e3fc2e2}\label{signal_8cpp_a9df11ad1374c533f730b7a0e9e3fc2e2}} 
+\index{signal.cpp@{signal.cpp}!\_\_attribute\_\_@{\_\_attribute\_\_}}
+\index{\_\_attribute\_\_@{\_\_attribute\_\_}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{\_\_attribute\_\_()}{\_\_attribute\_\_()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void \mbox{\hyperlink{struct____attribute____}{\+\_\+\+\_\+attribute\+\_\+\+\_\+}} (\begin{DoxyParamCaption}\item[{(\+\_\+\+\_\+section\+\_\+\+\_\+(\char`\"{}align\+\_\+previous\char`\"{}))}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{signal_8cpp_aa5ba9f29851e8b652d2753e34dc24d23}\label{signal_8cpp_aa5ba9f29851e8b652d2753e34dc24d23}} 
+\index{signal.cpp@{signal.cpp}!\_\_attribute\_\_@{\_\_attribute\_\_}}
+\index{\_\_attribute\_\_@{\_\_attribute\_\_}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{\_\_attribute\_\_()}{\_\_attribute\_\_()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void \mbox{\hyperlink{struct____attribute____}{\+\_\+\+\_\+attribute\+\_\+\+\_\+}} (\begin{DoxyParamCaption}\item[{(\+\_\+\+\_\+section\+\_\+\+\_\+(\char`\"{}userkernel\char`\"{}))}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{signal_8cpp_af34b514d7aef56b59f5cbcc627e5504c}\label{signal_8cpp_af34b514d7aef56b59f5cbcc627e5504c}} 
+\index{signal.cpp@{signal.cpp}!KeCheckSignal@{KeCheckSignal}}
+\index{KeCheckSignal@{KeCheckSignal}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{KeCheckSignal()}{KeCheckSignal()}}
+{\footnotesize\ttfamily size\+\_\+t Ke\+Check\+Signal (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_sig_handler_block}{Sig\+Handler\+Block}} $\ast$}]{shb,  }\item[{int $\ast$}]{num }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{signal_8cpp_acec9caa6a19fc04bcd9ca5c0defa3cd6}\label{signal_8cpp_acec9caa6a19fc04bcd9ca5c0defa3cd6}} 
+\index{signal.cpp@{signal.cpp}!KeCompleteSignal@{KeCompleteSignal}}
+\index{KeCompleteSignal@{KeCompleteSignal}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{KeCompleteSignal()}{KeCompleteSignal()}}
+{\footnotesize\ttfamily void Ke\+Complete\+Signal (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_sig_handler_block}{Sig\+Handler\+Block}} $\ast$}]{shb,  }\item[{int}]{sig }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{signal_8cpp_a5789c892065f92ef84cf81176f62e576}\label{signal_8cpp_a5789c892065f92ef84cf81176f62e576}} 
+\index{signal.cpp@{signal.cpp}!KeDeinitSignals@{KeDeinitSignals}}
+\index{KeDeinitSignals@{KeDeinitSignals}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{KeDeinitSignals()}{KeDeinitSignals()}}
+{\footnotesize\ttfamily void Ke\+Deinit\+Signals (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_sig_handler_block}{Sig\+Handler\+Block}} $\ast$}]{block }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{signal_8cpp_a78ad025104c344c35215d7265225f779}\label{signal_8cpp_a78ad025104c344c35215d7265225f779}} 
+\index{signal.cpp@{signal.cpp}!KeInitSignals@{KeInitSignals}}
+\index{KeInitSignals@{KeInitSignals}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{KeInitSignals()}{KeInitSignals()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_sig_handler_block}{Sig\+Handler\+Block}} $\ast$ Ke\+Init\+Signals (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{signal_8cpp_a3120aa4bb29f9cd0df8c0116d69aee74}\label{signal_8cpp_a3120aa4bb29f9cd0df8c0116d69aee74}} 
+\index{signal.cpp@{signal.cpp}!KeRaiseSignal@{KeRaiseSignal}}
+\index{KeRaiseSignal@{KeRaiseSignal}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{KeRaiseSignal()}{KeRaiseSignal()}}
+{\footnotesize\ttfamily int Ke\+Raise\+Signal (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_sig_handler_block}{Sig\+Handler\+Block}} $\ast$}]{shb,  }\item[{int}]{sig }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{signal_8cpp_a834c8207af38954a570d1c928a761f33}\label{signal_8cpp_a834c8207af38954a570d1c928a761f33}} 
+\index{signal.cpp@{signal.cpp}!KeRegisterSignalHandler@{KeRegisterSignalHandler}}
+\index{KeRegisterSignalHandler@{KeRegisterSignalHandler}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{KeRegisterSignalHandler()}{KeRegisterSignalHandler()}}
+{\footnotesize\ttfamily int Ke\+Register\+Signal\+Handler (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_sig_handler_block}{Sig\+Handler\+Block}} $\ast$}]{shb,  }\item[{int}]{sig,  }\item[{\mbox{\hyperlink{signaldef_8h_a265fd11dae26d737705a864e12eb7e98}{sig\+\_\+handler\+\_\+bna\+\_\+t}}}]{handler,  }\item[{uint32\+\_\+t}]{mask,  }\item[{int}]{flags }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{signal_8cpp_a1bb8447217ebfc251fae9e2ab55575e4}\label{signal_8cpp_a1bb8447217ebfc251fae9e2ab55575e4}} 
+\index{signal.cpp@{signal.cpp}!KiCheckSignalZ@{KiCheckSignalZ}}
+\index{KiCheckSignalZ@{KiCheckSignalZ}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{KiCheckSignalZ()}{KiCheckSignalZ()}}
+{\footnotesize\ttfamily size\+\_\+t Ki\+Check\+SignalZ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{signal_8cpp_ace56bad6cadc230a8639b7c582528b8e}\label{signal_8cpp_ace56bad6cadc230a8639b7c582528b8e}} 
+\index{signal.cpp@{signal.cpp}!KiDefaultSignalHandlerIgnore@{KiDefaultSignalHandlerIgnore}}
+\index{KiDefaultSignalHandlerIgnore@{KiDefaultSignalHandlerIgnore}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{KiDefaultSignalHandlerIgnore()}{KiDefaultSignalHandlerIgnore()}}
+{\footnotesize\ttfamily void Ki\+Default\+Signal\+Handler\+Ignore (\begin{DoxyParamCaption}\item[{int}]{sig }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{signal_8cpp_a2ee460968418b9b3baeaf27da3f50096}\label{signal_8cpp_a2ee460968418b9b3baeaf27da3f50096}} 
+\index{signal.cpp@{signal.cpp}!KiDefaultSignalHandlerPause@{KiDefaultSignalHandlerPause}}
+\index{KiDefaultSignalHandlerPause@{KiDefaultSignalHandlerPause}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{KiDefaultSignalHandlerPause()}{KiDefaultSignalHandlerPause()}}
+{\footnotesize\ttfamily void Ki\+Default\+Signal\+Handler\+Pause (\begin{DoxyParamCaption}\item[{int}]{sig }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{signal_8cpp_a21acae9cf71071e3004bbb9a9e6af777}\label{signal_8cpp_a21acae9cf71071e3004bbb9a9e6af777}} 
+\index{signal.cpp@{signal.cpp}!KiDefaultSignalHandlerResume@{KiDefaultSignalHandlerResume}}
+\index{KiDefaultSignalHandlerResume@{KiDefaultSignalHandlerResume}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{KiDefaultSignalHandlerResume()}{KiDefaultSignalHandlerResume()}}
+{\footnotesize\ttfamily void Ki\+Default\+Signal\+Handler\+Resume (\begin{DoxyParamCaption}\item[{int}]{sig }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{signal_8cpp_ae87f37d5696ac9f7c73353d2cb113726}\label{signal_8cpp_ae87f37d5696ac9f7c73353d2cb113726}} 
+\index{signal.cpp@{signal.cpp}!KiFinishSignalZ@{KiFinishSignalZ}}
+\index{KiFinishSignalZ@{KiFinishSignalZ}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{KiFinishSignalZ()}{KiFinishSignalZ()}}
+{\footnotesize\ttfamily void Ki\+Finish\+SignalZ (\begin{DoxyParamCaption}\item[{uint32\+\_\+t $\ast$}]{ptr }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{signal_8cpp_a0a37a478033334692d1ca37d8178a1e0}\label{signal_8cpp_a0a37a478033334692d1ca37d8178a1e0}} 
+\index{signal.cpp@{signal.cpp}!KiSigKill@{KiSigKill}}
+\index{KiSigKill@{KiSigKill}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{KiSigKill()}{KiSigKill()}}
+{\footnotesize\ttfamily void Ki\+Sig\+Kill (\begin{DoxyParamCaption}\item[{int}]{sig }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{signal_8cpp_ac7e2bb758cd811ea688686ad0442f303}\label{signal_8cpp_ac7e2bb758cd811ea688686ad0442f303}} 
+\index{signal.cpp@{signal.cpp}!KiDefaultSignalHandlers@{KiDefaultSignalHandlers}}
+\index{KiDefaultSignalHandlers@{KiDefaultSignalHandlers}!signal.cpp@{signal.cpp}}
+\doxysubsubsection{\texorpdfstring{KiDefaultSignalHandlers}{KiDefaultSignalHandlers}}
+{\footnotesize\ttfamily \mbox{\hyperlink{signaldef_8h_a265fd11dae26d737705a864e12eb7e98}{sig\+\_\+handler\+\_\+bna\+\_\+t}} Ki\+Default\+Signal\+Handlers\mbox{[}$\,$\mbox{]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    KiDefaultSignalHandlerAbort,            }
+\DoxyCodeLine{    KiDefaultSignalHandlerTerminate,        }
+\DoxyCodeLine{    KiDefaultSignalHandlerTerminate,        }
+\DoxyCodeLine{    KiDefaultSignalHandlerAbort,            }
+\DoxyCodeLine{    KiDefaultSignalHandlerAbort,            }
+\DoxyCodeLine{    KiDefaultSignalHandlerAbort,            }
+\DoxyCodeLine{    KiDefaultSignalHandlerAbort,            }
+\DoxyCodeLine{    KiDefaultSignalHandlerAbort,            }
+\DoxyCodeLine{    KiDefaultSignalHandlerAbort,            }
+\DoxyCodeLine{    KiDefaultSignalHandlerAbort,            }
+\DoxyCodeLine{    \mbox{\hyperlink{signal_8cpp_a0a37a478033334692d1ca37d8178a1e0}{KiSigKill}},                             }
+\DoxyCodeLine{    KiDefaultSignalHandlerAbort,            }
+\DoxyCodeLine{    KiDefaultSignalHandlerAbort,            }
+\DoxyCodeLine{    KiDefaultSignalHandlerAbort,            }
+\DoxyCodeLine{    KiDefaultSignalHandlerTerminate,        }
+\DoxyCodeLine{    KiDefaultSignalHandlerTerminate,        }
+\DoxyCodeLine{    KiDefaultSignalHandlerTerminate,        }
+\DoxyCodeLine{    KiDefaultSignalHandlerAbort,            }
+\DoxyCodeLine{    KiDefaultSignalHandlerAbort,            }
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}

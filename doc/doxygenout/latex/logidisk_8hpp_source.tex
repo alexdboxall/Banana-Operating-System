@@ -1,0 +1,62 @@
+\hypertarget{logidisk_8hpp_source}{}\doxysection{logidisk.\+hpp}
+\label{logidisk_8hpp_source}\index{C:/Users/Alex/Desktop/Banana/kernel/hal/logidisk.hpp@{C:/Users/Alex/Desktop/Banana/kernel/hal/logidisk.hpp}}
+\mbox{\hyperlink{logidisk_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_LOGIDISK\_HPP\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_LOGIDISK\_HPP\_}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <stddef.h>}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{device_8hpp}{hal/device.hpp}}"{}}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{vcache_8hpp}{hal/vcache.hpp}}"{}}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{vfs_8hpp}{fs/vfs.hpp}}"{}}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{kconsole_8hpp}{dbg/kconsole.hpp}}"{}}}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#define MAX\_DISK\_COUNT 26}}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{13 \textcolor{keyword}{class }\mbox{\hyperlink{class_filesystem}{Filesystem}};}
+\DoxyCodeLine{14 \textcolor{keyword}{class }\mbox{\hyperlink{class_physical_disk}{PhysicalDisk}};}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{16 \textcolor{keyword}{class }\mbox{\hyperlink{class_logical_disk}{LogicalDisk}} : \textcolor{keyword}{public} \mbox{\hyperlink{class_device}{Device}}}
+\DoxyCodeLine{17 \{}
+\DoxyCodeLine{18 \textcolor{keyword}{private}:}
+\DoxyCodeLine{19 }
+\DoxyCodeLine{20 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{21     uint64\_t \mbox{\hyperlink{class_logical_disk_abaaab2eeddfa8e64ce6fab2e5345c810}{partitionLBA}};}
+\DoxyCodeLine{22     uint64\_t \mbox{\hyperlink{class_logical_disk_a4b52fadd0951ed95d67d04a5aa6a1ada}{partitionLength}};}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24     \textcolor{keywordtype}{char} \mbox{\hyperlink{class_logical_disk_aade1be911394e8ad0064356b76260b3b}{mounted}} = 0;}
+\DoxyCodeLine{25 }
+\DoxyCodeLine{26 \textcolor{keyword}{public}:     }
+\DoxyCodeLine{27     \mbox{\hyperlink{class_physical_disk}{PhysicalDisk}}* \mbox{\hyperlink{class_logical_disk_a0e8c5f31510af7a5fe9426c618a23ec6}{physDisk}};}
+\DoxyCodeLine{28     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_logical_disk_a6063e8975110ee2fb1cdbeef2a4e2f1c}{diskChanged}} = \textcolor{keyword}{false};}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30     \mbox{\hyperlink{class_filesystem}{Filesystem}}* \mbox{\hyperlink{class_logical_disk_a036f28e29278c58f871aff289839bef5}{fs}};}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32     uint64\_t \mbox{\hyperlink{class_logical_disk_aa352c520fa3a3e9b5d7358e83461701d}{absoluteToRelative}}(uint64\_t abs);}
+\DoxyCodeLine{33     uint64\_t \mbox{\hyperlink{class_logical_disk_a00d3e2cb69bc3b326bfe2865849e809f}{relativeToAbsolute}}(uint64\_t rel);}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{35     \mbox{\hyperlink{class_logical_disk_a47a6429b3e47dfa2b2655cd391b60fb9}{LogicalDisk}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* name, \mbox{\hyperlink{class_physical_disk}{PhysicalDisk}}* phys, uint64\_t lowLBA, uint64\_t sectors);}
+\DoxyCodeLine{36     \textcolor{keyword}{virtual} \mbox{\hyperlink{class_logical_disk_a9d360de1780d79176cc270646b75b43b}{\string~LogicalDisk}}();}
+\DoxyCodeLine{37     }
+\DoxyCodeLine{38     \textcolor{keywordtype}{char} \mbox{\hyperlink{class_logical_disk_a0c425a13ba224fea2e8fcdc08e165f35}{assignDriveLetter}}();}
+\DoxyCodeLine{39     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_logical_disk_a6dd32fb2a9e8520d616c9179220968b5}{unassignDriveLetter}}();}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_logical_disk_a23d8d4f277db6bad8c440b8bab59e80e}{mount}}();}
+\DoxyCodeLine{42     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_logical_disk_a2aa454b97337497a72b7139084074788}{unmount}}();}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_logical_disk_afe82a4c72cefc7bdc6aae2d46b082223}{eject}}();}
+\DoxyCodeLine{45 }
+\DoxyCodeLine{46     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_logical_disk_a09a5f947260f3f497fc218e85e350ae9}{open}}(\textcolor{keywordtype}{int} a, \textcolor{keywordtype}{int} \mbox{\hyperlink{syscalls_8cpp_a99ed6187132780a335e6db030a0115e7}{b}}, \textcolor{keywordtype}{void}* \mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}});}
+\DoxyCodeLine{47     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_logical_disk_a680049ffdc98db9ffc7f763f33598cf2}{close}}(\textcolor{keywordtype}{int} a, \textcolor{keywordtype}{int} \mbox{\hyperlink{syscalls_8cpp_a99ed6187132780a335e6db030a0115e7}{b}}, \textcolor{keywordtype}{void}* \mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}});}
+\DoxyCodeLine{48     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_logical_disk_aca68f248c74be4fb0dead94ac2ff0a7d}{read}}(uint64\_t lba, \textcolor{keywordtype}{int} count, \textcolor{keywordtype}{void}* \mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}});}
+\DoxyCodeLine{49     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_logical_disk_adbe779806c06c0c42e15b446cd73844f}{write}}(uint64\_t lba, \textcolor{keywordtype}{int} count, \textcolor{keywordtype}{void}* \mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}});}
+\DoxyCodeLine{50 \};}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52 \textcolor{keyword}{extern} \mbox{\hyperlink{class_logical_disk}{LogicalDisk}}* \mbox{\hyperlink{logidisk_8hpp_a897ddb729f89bd8511bdaa73cbb0afcd}{disks}}[\mbox{\hyperlink{logidisk_8hpp_a5b1dd037c40fc04aae2e151dae8219b9}{MAX\_DISK\_COUNT}}];}
+\DoxyCodeLine{53 }
+\DoxyCodeLine{54 \textcolor{keywordtype}{void} \mbox{\hyperlink{logidisk_8hpp_afbabcb960ae01b7b741e24fe6cd1e501}{detectPartitions}}(\mbox{\hyperlink{class_physical_disk}{PhysicalDisk}}* phys);}
+\DoxyCodeLine{55 }
+\DoxyCodeLine{56 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

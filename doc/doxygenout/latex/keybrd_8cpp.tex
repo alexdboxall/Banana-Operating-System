@@ -1,0 +1,104 @@
+\hypertarget{keybrd_8cpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/hal/keybrd.cpp File Reference}
+\label{keybrd_8cpp}\index{C:/Users/Alex/Desktop/Banana/kernel/hal/keybrd.cpp@{C:/Users/Alex/Desktop/Banana/kernel/hal/keybrd.cpp}}
+{\ttfamily \#include \char`\"{}krnl/common.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/powctrl.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hal/keybrd.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hal/device.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/terminal.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}libk/string.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}thr/prcssthr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include $<$krnl/signal.\+hpp$>$}\newline
+{\ttfamily \#include \char`\"{}hal/video.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}thr/elf.\+hpp\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{keybrd_8cpp_ad7ac7c7c01619207852d6bd2b814600b}{send\+Key\+To\+Terminal}} (uint8\+\_\+t code)
+\item 
+void \mbox{\hyperlink{keybrd_8cpp_aa6cc2af0467df17058927446528511c4}{start\+GUI}} (void $\ast$a)
+\item 
+void \mbox{\hyperlink{keybrd_8cpp_a64d698c7413fd8d719f422bb37b33d1a}{start\+GUIVESA}} (void $\ast$a)
+\item 
+void \mbox{\hyperlink{keybrd_8cpp_a7ddb05278453861bdf1d32f748c88c19}{send\+Keyboard\+Token}} (\mbox{\hyperlink{struct_keyboard_token}{Keyboard\+Token}} kt)
+\item 
+void \mbox{\hyperlink{keybrd_8cpp_a0e3223ce8b86c23883a212fb066cf1a2}{clear\+Internal\+Keybuffer}} (\mbox{\hyperlink{class_vga_text}{Vga\+Text}} $\ast$terminal)
+\item 
+int \mbox{\hyperlink{keybrd_8cpp_a3f52aee49412c3cdf73767493f77d495}{read\+Keyboard}} (\mbox{\hyperlink{class_vga_text}{Vga\+Text}} $\ast$terminal, char $\ast$buf, size\+\_\+t count)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{keybrd_8cpp_ae316ba3cc5b5e3387c60946a21e534e5}{keystates}} \mbox{[}0x400\mbox{]}
+\item 
+void($\ast$ \mbox{\hyperlink{keybrd_8cpp_a6bba23cf9458c2df9132f3202d0a4659}{gui\+Keyboard\+Handler}} )(\mbox{\hyperlink{struct_keyboard_token}{Keyboard\+Token}} kt, bool $\ast$\mbox{\hyperlink{keybrd_8hpp_ae316ba3cc5b5e3387c60946a21e534e5}{keystates}}) = nullptr
+\item 
+bool \mbox{\hyperlink{keybrd_8cpp_ad92cef17c6a0ffef0d8b8b6f0c022f47}{keyboard\+Setup\+Yet}} = false
+\item 
+\mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}} $\ast$ \mbox{\hyperlink{keybrd_8cpp_a55f043692c8fbea52209f51b986ddc84}{keyboard\+Waiting\+Task\+List}} = nullptr
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{keybrd_8cpp_a0e3223ce8b86c23883a212fb066cf1a2}\label{keybrd_8cpp_a0e3223ce8b86c23883a212fb066cf1a2}} 
+\index{keybrd.cpp@{keybrd.cpp}!clearInternalKeybuffer@{clearInternalKeybuffer}}
+\index{clearInternalKeybuffer@{clearInternalKeybuffer}!keybrd.cpp@{keybrd.cpp}}
+\doxysubsubsection{\texorpdfstring{clearInternalKeybuffer()}{clearInternalKeybuffer()}}
+{\footnotesize\ttfamily void clear\+Internal\+Keybuffer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_vga_text}{Vga\+Text}} $\ast$}]{terminal }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{keybrd_8cpp_a3f52aee49412c3cdf73767493f77d495}\label{keybrd_8cpp_a3f52aee49412c3cdf73767493f77d495}} 
+\index{keybrd.cpp@{keybrd.cpp}!readKeyboard@{readKeyboard}}
+\index{readKeyboard@{readKeyboard}!keybrd.cpp@{keybrd.cpp}}
+\doxysubsubsection{\texorpdfstring{readKeyboard()}{readKeyboard()}}
+{\footnotesize\ttfamily int read\+Keyboard (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_vga_text}{Vga\+Text}} $\ast$}]{terminal,  }\item[{char $\ast$}]{buf,  }\item[{size\+\_\+t}]{count }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{keybrd_8cpp_a7ddb05278453861bdf1d32f748c88c19}\label{keybrd_8cpp_a7ddb05278453861bdf1d32f748c88c19}} 
+\index{keybrd.cpp@{keybrd.cpp}!sendKeyboardToken@{sendKeyboardToken}}
+\index{sendKeyboardToken@{sendKeyboardToken}!keybrd.cpp@{keybrd.cpp}}
+\doxysubsubsection{\texorpdfstring{sendKeyboardToken()}{sendKeyboardToken()}}
+{\footnotesize\ttfamily void send\+Keyboard\+Token (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_keyboard_token}{Keyboard\+Token}}}]{kt }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{keybrd_8cpp_ad7ac7c7c01619207852d6bd2b814600b}\label{keybrd_8cpp_ad7ac7c7c01619207852d6bd2b814600b}} 
+\index{keybrd.cpp@{keybrd.cpp}!sendKeyToTerminal@{sendKeyToTerminal}}
+\index{sendKeyToTerminal@{sendKeyToTerminal}!keybrd.cpp@{keybrd.cpp}}
+\doxysubsubsection{\texorpdfstring{sendKeyToTerminal()}{sendKeyToTerminal()}}
+{\footnotesize\ttfamily void send\+Key\+To\+Terminal (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{code }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{keybrd_8cpp_aa6cc2af0467df17058927446528511c4}\label{keybrd_8cpp_aa6cc2af0467df17058927446528511c4}} 
+\index{keybrd.cpp@{keybrd.cpp}!startGUI@{startGUI}}
+\index{startGUI@{startGUI}!keybrd.cpp@{keybrd.cpp}}
+\doxysubsubsection{\texorpdfstring{startGUI()}{startGUI()}}
+{\footnotesize\ttfamily void start\+GUI (\begin{DoxyParamCaption}\item[{void $\ast$}]{a }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{keybrd_8cpp_a64d698c7413fd8d719f422bb37b33d1a}\label{keybrd_8cpp_a64d698c7413fd8d719f422bb37b33d1a}} 
+\index{keybrd.cpp@{keybrd.cpp}!startGUIVESA@{startGUIVESA}}
+\index{startGUIVESA@{startGUIVESA}!keybrd.cpp@{keybrd.cpp}}
+\doxysubsubsection{\texorpdfstring{startGUIVESA()}{startGUIVESA()}}
+{\footnotesize\ttfamily void start\+GUIVESA (\begin{DoxyParamCaption}\item[{void $\ast$}]{a }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{keybrd_8cpp_a6bba23cf9458c2df9132f3202d0a4659}\label{keybrd_8cpp_a6bba23cf9458c2df9132f3202d0a4659}} 
+\index{keybrd.cpp@{keybrd.cpp}!guiKeyboardHandler@{guiKeyboardHandler}}
+\index{guiKeyboardHandler@{guiKeyboardHandler}!keybrd.cpp@{keybrd.cpp}}
+\doxysubsubsection{\texorpdfstring{guiKeyboardHandler}{guiKeyboardHandler}}
+{\footnotesize\ttfamily void($\ast$ gui\+Keyboard\+Handler) (\mbox{\hyperlink{struct_keyboard_token}{Keyboard\+Token}} kt, bool $\ast$\mbox{\hyperlink{keybrd_8hpp_ae316ba3cc5b5e3387c60946a21e534e5}{keystates}}) (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_keyboard_token}{Keyboard\+Token}}}]{kt,  }\item[{bool $\ast$}]{keystates }\end{DoxyParamCaption}) = nullptr}
+
+\mbox{\Hypertarget{keybrd_8cpp_ad92cef17c6a0ffef0d8b8b6f0c022f47}\label{keybrd_8cpp_ad92cef17c6a0ffef0d8b8b6f0c022f47}} 
+\index{keybrd.cpp@{keybrd.cpp}!keyboardSetupYet@{keyboardSetupYet}}
+\index{keyboardSetupYet@{keyboardSetupYet}!keybrd.cpp@{keybrd.cpp}}
+\doxysubsubsection{\texorpdfstring{keyboardSetupYet}{keyboardSetupYet}}
+{\footnotesize\ttfamily bool keyboard\+Setup\+Yet = false}
+
+\mbox{\Hypertarget{keybrd_8cpp_a55f043692c8fbea52209f51b986ddc84}\label{keybrd_8cpp_a55f043692c8fbea52209f51b986ddc84}} 
+\index{keybrd.cpp@{keybrd.cpp}!keyboardWaitingTaskList@{keyboardWaitingTaskList}}
+\index{keyboardWaitingTaskList@{keyboardWaitingTaskList}!keybrd.cpp@{keybrd.cpp}}
+\doxysubsubsection{\texorpdfstring{keyboardWaitingTaskList}{keyboardWaitingTaskList}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}}$\ast$ keyboard\+Waiting\+Task\+List = nullptr}
+
+\mbox{\Hypertarget{keybrd_8cpp_ae316ba3cc5b5e3387c60946a21e534e5}\label{keybrd_8cpp_ae316ba3cc5b5e3387c60946a21e534e5}} 
+\index{keybrd.cpp@{keybrd.cpp}!keystates@{keystates}}
+\index{keystates@{keystates}!keybrd.cpp@{keybrd.cpp}}
+\doxysubsubsection{\texorpdfstring{keystates}{keystates}}
+{\footnotesize\ttfamily bool keystates\mbox{[}0x400\mbox{]}}
+

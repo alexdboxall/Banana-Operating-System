@@ -1,0 +1,148 @@
+\hypertarget{fault_8cpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/krnl/fault.cpp File Reference}
+\label{fault_8cpp}\index{C:/Users/Alex/Desktop/Banana/kernel/krnl/fault.cpp@{C:/Users/Alex/Desktop/Banana/kernel/krnl/fault.cpp}}
+{\ttfamily \#include $<$krnl/panic.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/common.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/hal.\+hpp$>$}\newline
+{\ttfamily \#include $<$sys/syscalls.\+hpp$>$}\newline
+{\ttfamily \#include $<$thr/prcssthr.\+hpp$>$}\newline
+{\ttfamily \#include $<$thr/elf.\+hpp$>$}\newline
+{\ttfamily \#include $<$hal/intctrl.\+hpp$>$}\newline
+{\ttfamily \#include $<$hal/device.\+hpp$>$}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{fault_8cpp_a5682e97f44af310ce8ebcae90182574f}{RETURN\+\_\+\+CODE\+\_\+\+ON\+\_\+\+OPCODE\+\_\+\+FAULT}}~124
+\item 
+\#define \mbox{\hyperlink{fault_8cpp_a418f4064966cc26bba9917c4d73fe56e}{RETURN\+\_\+\+CODE\+\_\+\+ON\+\_\+\+OTHER\+\_\+\+FAULT}}~125
+\item 
+\#define \mbox{\hyperlink{fault_8cpp_a48f9b55f7232ee43963d13108e2f71e1}{RETURN\+\_\+\+CODE\+\_\+\+ON\+\_\+\+GENERAL\+\_\+\+PROTECTION\+\_\+\+FAULT}}~126
+\item 
+\#define \mbox{\hyperlink{fault_8cpp_abac93bb44e14385c4968dc8e9ee4ff93}{RETURN\+\_\+\+CODE\+\_\+\+ON\+\_\+\+PAGE\+\_\+\+FAULT}}~127
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{fault_8cpp_ac42a1cb14cef7fdb98daaeace25ac820}{Ke\+Setup\+Interrupts}} ()
+\item 
+uint64\+\_\+t \mbox{\hyperlink{fault_8cpp_ae6e19088685467db0595adce69b91402}{int\+\_\+handler}} (struct \mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\item 
+void \mbox{\hyperlink{fault_8cpp_ae091ba3fff2cfc5164620da9c6762b7b}{Ke\+Display\+Program\+Fault}} (const char $\ast$text)
+\item 
+void \mbox{\hyperlink{fault_8cpp_a36371b0d7475d55cf8c0fc253def3442}{Ke\+General\+Protection\+Fault}} (void $\ast$r, void $\ast$context)
+\item 
+void \mbox{\hyperlink{fault_8cpp_a7edbe1d0f43dd71ce6bd3c39c2341761}{Ke\+Page\+Fault}} (void $\ast$r, void $\ast$context)
+\item 
+void \mbox{\hyperlink{fault_8cpp_a272575af0b5766547e1be0d8bde9fec1}{Ke\+Non\+Maskable\+Interrupt}} (void $\ast$r, void $\ast$context)
+\item 
+void \mbox{\hyperlink{fault_8cpp_a264fa4fb29972557f800763e778808a6}{Ke\+Other\+Fault}} (void $\ast$r, void $\ast$context)
+\item 
+void \mbox{\hyperlink{fault_8cpp_aab6ee7ea19cc8b24a3685febbf8b4e41}{Ke\+Opcode\+Fault}} (void $\ast$r, void $\ast$context)
+\item 
+void \mbox{\hyperlink{fault_8cpp_aa60ab83f2f5aab31f1d7f2f7d7ebd21a}{Ke\+Double\+Fault}} (void $\ast$r, void $\ast$context)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+void($\ast$ \mbox{\hyperlink{fault_8cpp_a9a682facbf5ee8a17b217669f90026c4}{ke\+Interrupt\+Handlers}} \mbox{[}256\mbox{]}\mbox{[}4\mbox{]})(\mbox{\hyperlink{structregs}{regs}} $\ast$r, void $\ast$context)
+\item 
+void $\ast$ \mbox{\hyperlink{fault_8cpp_a18436c908eb74ef3189d4e79179b577f}{ke\+Interrupt\+Contexts}} \mbox{[}256\mbox{]}\mbox{[}4\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{fault_8cpp_a48f9b55f7232ee43963d13108e2f71e1}\label{fault_8cpp_a48f9b55f7232ee43963d13108e2f71e1}} 
+\index{fault.cpp@{fault.cpp}!RETURN\_CODE\_ON\_GENERAL\_PROTECTION\_FAULT@{RETURN\_CODE\_ON\_GENERAL\_PROTECTION\_FAULT}}
+\index{RETURN\_CODE\_ON\_GENERAL\_PROTECTION\_FAULT@{RETURN\_CODE\_ON\_GENERAL\_PROTECTION\_FAULT}!fault.cpp@{fault.cpp}}
+\doxysubsubsection{\texorpdfstring{RETURN\_CODE\_ON\_GENERAL\_PROTECTION\_FAULT}{RETURN\_CODE\_ON\_GENERAL\_PROTECTION\_FAULT}}
+{\footnotesize\ttfamily \#define RETURN\+\_\+\+CODE\+\_\+\+ON\+\_\+\+GENERAL\+\_\+\+PROTECTION\+\_\+\+FAULT~126}
+
+\mbox{\Hypertarget{fault_8cpp_a5682e97f44af310ce8ebcae90182574f}\label{fault_8cpp_a5682e97f44af310ce8ebcae90182574f}} 
+\index{fault.cpp@{fault.cpp}!RETURN\_CODE\_ON\_OPCODE\_FAULT@{RETURN\_CODE\_ON\_OPCODE\_FAULT}}
+\index{RETURN\_CODE\_ON\_OPCODE\_FAULT@{RETURN\_CODE\_ON\_OPCODE\_FAULT}!fault.cpp@{fault.cpp}}
+\doxysubsubsection{\texorpdfstring{RETURN\_CODE\_ON\_OPCODE\_FAULT}{RETURN\_CODE\_ON\_OPCODE\_FAULT}}
+{\footnotesize\ttfamily \#define RETURN\+\_\+\+CODE\+\_\+\+ON\+\_\+\+OPCODE\+\_\+\+FAULT~124}
+
+\mbox{\Hypertarget{fault_8cpp_a418f4064966cc26bba9917c4d73fe56e}\label{fault_8cpp_a418f4064966cc26bba9917c4d73fe56e}} 
+\index{fault.cpp@{fault.cpp}!RETURN\_CODE\_ON\_OTHER\_FAULT@{RETURN\_CODE\_ON\_OTHER\_FAULT}}
+\index{RETURN\_CODE\_ON\_OTHER\_FAULT@{RETURN\_CODE\_ON\_OTHER\_FAULT}!fault.cpp@{fault.cpp}}
+\doxysubsubsection{\texorpdfstring{RETURN\_CODE\_ON\_OTHER\_FAULT}{RETURN\_CODE\_ON\_OTHER\_FAULT}}
+{\footnotesize\ttfamily \#define RETURN\+\_\+\+CODE\+\_\+\+ON\+\_\+\+OTHER\+\_\+\+FAULT~125}
+
+\mbox{\Hypertarget{fault_8cpp_abac93bb44e14385c4968dc8e9ee4ff93}\label{fault_8cpp_abac93bb44e14385c4968dc8e9ee4ff93}} 
+\index{fault.cpp@{fault.cpp}!RETURN\_CODE\_ON\_PAGE\_FAULT@{RETURN\_CODE\_ON\_PAGE\_FAULT}}
+\index{RETURN\_CODE\_ON\_PAGE\_FAULT@{RETURN\_CODE\_ON\_PAGE\_FAULT}!fault.cpp@{fault.cpp}}
+\doxysubsubsection{\texorpdfstring{RETURN\_CODE\_ON\_PAGE\_FAULT}{RETURN\_CODE\_ON\_PAGE\_FAULT}}
+{\footnotesize\ttfamily \#define RETURN\+\_\+\+CODE\+\_\+\+ON\+\_\+\+PAGE\+\_\+\+FAULT~127}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{fault_8cpp_ae6e19088685467db0595adce69b91402}\label{fault_8cpp_ae6e19088685467db0595adce69b91402}} 
+\index{fault.cpp@{fault.cpp}!int\_handler@{int\_handler}}
+\index{int\_handler@{int\_handler}!fault.cpp@{fault.cpp}}
+\doxysubsubsection{\texorpdfstring{int\_handler()}{int\_handler()}}
+{\footnotesize\ttfamily uint64\+\_\+t int\+\_\+handler (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{fault_8cpp_ae091ba3fff2cfc5164620da9c6762b7b}\label{fault_8cpp_ae091ba3fff2cfc5164620da9c6762b7b}} 
+\index{fault.cpp@{fault.cpp}!KeDisplayProgramFault@{KeDisplayProgramFault}}
+\index{KeDisplayProgramFault@{KeDisplayProgramFault}!fault.cpp@{fault.cpp}}
+\doxysubsubsection{\texorpdfstring{KeDisplayProgramFault()}{KeDisplayProgramFault()}}
+{\footnotesize\ttfamily void Ke\+Display\+Program\+Fault (\begin{DoxyParamCaption}\item[{const char $\ast$}]{text }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{fault_8cpp_aa60ab83f2f5aab31f1d7f2f7d7ebd21a}\label{fault_8cpp_aa60ab83f2f5aab31f1d7f2f7d7ebd21a}} 
+\index{fault.cpp@{fault.cpp}!KeDoubleFault@{KeDoubleFault}}
+\index{KeDoubleFault@{KeDoubleFault}!fault.cpp@{fault.cpp}}
+\doxysubsubsection{\texorpdfstring{KeDoubleFault()}{KeDoubleFault()}}
+{\footnotesize\ttfamily void Ke\+Double\+Fault (\begin{DoxyParamCaption}\item[{void $\ast$}]{r,  }\item[{void $\ast$}]{context }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{fault_8cpp_a36371b0d7475d55cf8c0fc253def3442}\label{fault_8cpp_a36371b0d7475d55cf8c0fc253def3442}} 
+\index{fault.cpp@{fault.cpp}!KeGeneralProtectionFault@{KeGeneralProtectionFault}}
+\index{KeGeneralProtectionFault@{KeGeneralProtectionFault}!fault.cpp@{fault.cpp}}
+\doxysubsubsection{\texorpdfstring{KeGeneralProtectionFault()}{KeGeneralProtectionFault()}}
+{\footnotesize\ttfamily void Ke\+General\+Protection\+Fault (\begin{DoxyParamCaption}\item[{void $\ast$}]{r,  }\item[{void $\ast$}]{context }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{fault_8cpp_a272575af0b5766547e1be0d8bde9fec1}\label{fault_8cpp_a272575af0b5766547e1be0d8bde9fec1}} 
+\index{fault.cpp@{fault.cpp}!KeNonMaskableInterrupt@{KeNonMaskableInterrupt}}
+\index{KeNonMaskableInterrupt@{KeNonMaskableInterrupt}!fault.cpp@{fault.cpp}}
+\doxysubsubsection{\texorpdfstring{KeNonMaskableInterrupt()}{KeNonMaskableInterrupt()}}
+{\footnotesize\ttfamily void Ke\+Non\+Maskable\+Interrupt (\begin{DoxyParamCaption}\item[{void $\ast$}]{r,  }\item[{void $\ast$}]{context }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{fault_8cpp_aab6ee7ea19cc8b24a3685febbf8b4e41}\label{fault_8cpp_aab6ee7ea19cc8b24a3685febbf8b4e41}} 
+\index{fault.cpp@{fault.cpp}!KeOpcodeFault@{KeOpcodeFault}}
+\index{KeOpcodeFault@{KeOpcodeFault}!fault.cpp@{fault.cpp}}
+\doxysubsubsection{\texorpdfstring{KeOpcodeFault()}{KeOpcodeFault()}}
+{\footnotesize\ttfamily void Ke\+Opcode\+Fault (\begin{DoxyParamCaption}\item[{void $\ast$}]{r,  }\item[{void $\ast$}]{context }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{fault_8cpp_a264fa4fb29972557f800763e778808a6}\label{fault_8cpp_a264fa4fb29972557f800763e778808a6}} 
+\index{fault.cpp@{fault.cpp}!KeOtherFault@{KeOtherFault}}
+\index{KeOtherFault@{KeOtherFault}!fault.cpp@{fault.cpp}}
+\doxysubsubsection{\texorpdfstring{KeOtherFault()}{KeOtherFault()}}
+{\footnotesize\ttfamily void Ke\+Other\+Fault (\begin{DoxyParamCaption}\item[{void $\ast$}]{r,  }\item[{void $\ast$}]{context }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{fault_8cpp_a7edbe1d0f43dd71ce6bd3c39c2341761}\label{fault_8cpp_a7edbe1d0f43dd71ce6bd3c39c2341761}} 
+\index{fault.cpp@{fault.cpp}!KePageFault@{KePageFault}}
+\index{KePageFault@{KePageFault}!fault.cpp@{fault.cpp}}
+\doxysubsubsection{\texorpdfstring{KePageFault()}{KePageFault()}}
+{\footnotesize\ttfamily void Ke\+Page\+Fault (\begin{DoxyParamCaption}\item[{void $\ast$}]{r,  }\item[{void $\ast$}]{context }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{fault_8cpp_ac42a1cb14cef7fdb98daaeace25ac820}\label{fault_8cpp_ac42a1cb14cef7fdb98daaeace25ac820}} 
+\index{fault.cpp@{fault.cpp}!KeSetupInterrupts@{KeSetupInterrupts}}
+\index{KeSetupInterrupts@{KeSetupInterrupts}!fault.cpp@{fault.cpp}}
+\doxysubsubsection{\texorpdfstring{KeSetupInterrupts()}{KeSetupInterrupts()}}
+{\footnotesize\ttfamily void Ke\+Setup\+Interrupts (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{fault_8cpp_a18436c908eb74ef3189d4e79179b577f}\label{fault_8cpp_a18436c908eb74ef3189d4e79179b577f}} 
+\index{fault.cpp@{fault.cpp}!keInterruptContexts@{keInterruptContexts}}
+\index{keInterruptContexts@{keInterruptContexts}!fault.cpp@{fault.cpp}}
+\doxysubsubsection{\texorpdfstring{keInterruptContexts}{keInterruptContexts}}
+{\footnotesize\ttfamily void$\ast$ ke\+Interrupt\+Contexts\mbox{[}256\mbox{]}\mbox{[}4\mbox{]}}
+
+\mbox{\Hypertarget{fault_8cpp_a9a682facbf5ee8a17b217669f90026c4}\label{fault_8cpp_a9a682facbf5ee8a17b217669f90026c4}} 
+\index{fault.cpp@{fault.cpp}!keInterruptHandlers@{keInterruptHandlers}}
+\index{keInterruptHandlers@{keInterruptHandlers}!fault.cpp@{fault.cpp}}
+\doxysubsubsection{\texorpdfstring{keInterruptHandlers}{keInterruptHandlers}}
+{\footnotesize\ttfamily void($\ast$ ke\+Interrupt\+Handlers\mbox{[}256\mbox{]}\mbox{[}4\mbox{]})(\mbox{\hyperlink{structregs}{regs}} $\ast$r, void $\ast$context) (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r,  }\item[{void $\ast$}]{context }\end{DoxyParamCaption})}
+

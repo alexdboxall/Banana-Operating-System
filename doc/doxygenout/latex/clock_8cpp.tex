@@ -1,0 +1,298 @@
+\hypertarget{clock_8cpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/hal/clock.cpp File Reference}
+\label{clock_8cpp}\index{C:/Users/Alex/Desktop/Banana/kernel/hal/clock.cpp@{C:/Users/Alex/Desktop/Banana/kernel/hal/clock.cpp}}
+{\ttfamily \#include \char`\"{}fs/vfs.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hal/clock.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/cm.\+hpp\char`\"{}}\newline
+{\ttfamily \#include $<$krnl/kheap.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/panic.\+hpp$>$}\newline
+{\ttfamily \#include $<$libk/string.\+h$>$}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{clock_8cpp_a8f490149ca6af2098360c251b4eee1bd}{\+\_\+\+SEC\+\_\+\+IN\+\_\+\+MINUTE}}~60L
+\item 
+\#define \mbox{\hyperlink{clock_8cpp_ae888bf4d42d8b67a65fc8d766064519d}{\+\_\+\+SEC\+\_\+\+IN\+\_\+\+HOUR}}~3600L
+\item 
+\#define \mbox{\hyperlink{clock_8cpp_a8cc099b11bbcf419f19f0f9b3b7d90ee}{\+\_\+\+SEC\+\_\+\+IN\+\_\+\+DAY}}~86400L
+\item 
+\#define \mbox{\hyperlink{clock_8cpp_a9baf38039c12c7c2e11d0c0797087cb7}{\+\_\+\+DAYS\+\_\+\+IN\+\_\+\+MONTH}}(x)~((x == 1) ? days\+\_\+in\+\_\+feb \+: DAYS\+\_\+\+IN\+\_\+\+MONTH\mbox{[}x\mbox{]})
+\item 
+\#define \mbox{\hyperlink{clock_8cpp_a029a61bcbd776a809fc882c0a9e09558}{\+\_\+\+ISLEAP}}(y)~(((y) \% 4) == 0 \&\& (((y) \% 100) != 0 $\vert$$\vert$ (((y)+1900) \% 400) == 0))
+\item 
+\#define \mbox{\hyperlink{clock_8cpp_a7991ffff6eb91916ee65fac2630e0656}{\+\_\+\+DAYS\+\_\+\+IN\+\_\+\+YEAR}}(year)~(\mbox{\hyperlink{clock_8cpp_a029a61bcbd776a809fc882c0a9e09558}{\+\_\+\+ISLEAP}}(year) ? 366 \+: 365)
+\item 
+\#define \mbox{\hyperlink{clock_8cpp_aed1b47217b5c175d8c7bd70feeaf54e5}{EPOCH\+\_\+\+ADJUSTMENT\+\_\+\+DAYS}}~719468L
+\item 
+\#define \mbox{\hyperlink{clock_8cpp_a8b29c36beee5e1413430d23b9c243338}{ADJUSTED\+\_\+\+EPOCH\+\_\+\+YEAR}}~0
+\item 
+\#define \mbox{\hyperlink{clock_8cpp_af4013e1838291f00c42a575c40c5cbd2}{ADJUSTED\+\_\+\+EPOCH\+\_\+\+WDAY}}~3
+\item 
+\#define \mbox{\hyperlink{clock_8cpp_a0a171e8314114b57c27064c63684cf68}{DAYS\+\_\+\+PER\+\_\+\+ERA}}~146097L
+\item 
+\#define \mbox{\hyperlink{clock_8cpp_a2a44fdc74813baa6a6568f7fb205786d}{DAYS\+\_\+\+PER\+\_\+\+CENTURY}}~36524L
+\item 
+\#define \mbox{\hyperlink{clock_8cpp_a27fa7632862e084e7f00ea72da20bb75}{DAYS\+\_\+\+PER\+\_\+4\+\_\+\+YEARS}}~(3 $\ast$ 365 + 366)
+\item 
+\#define \mbox{\hyperlink{clock_8cpp_ab8b198f8809cbf6e5135c0a7750b3b45}{DAYS\+\_\+\+PER\+\_\+\+YEAR}}~365
+\item 
+\#define \mbox{\hyperlink{clock_8cpp_a25d97fa8623c48905829a208c6ff83e0}{DAYS\+\_\+\+IN\+\_\+\+JANUARY}}~31
+\item 
+\#define \mbox{\hyperlink{clock_8cpp_a7edca746e03d47772edef518bdb69296}{DAYS\+\_\+\+IN\+\_\+\+FEBRUARY}}~28
+\item 
+\#define \mbox{\hyperlink{clock_8cpp_a15a3bbb0fbb22c8c0a68af052cb5ca38}{YEARS\+\_\+\+PER\+\_\+\+ERA}}~400
+\item 
+\#define \mbox{\hyperlink{clock_8cpp_a4fbe1b6bbb5e5f3ff7300e9ea9991f36}{SECSPERMIN}}~60
+\item 
+\#define \mbox{\hyperlink{clock_8cpp_a235e72e63a254ecde04f29148b3333fb}{SECSPERHOUR}}~3600
+\item 
+\#define \mbox{\hyperlink{clock_8cpp_a0711b3fc9ababc38239df227d1bd1e62}{SECSPERDAY}}~(3600 $\ast$ 24)
+\item 
+\#define \mbox{\hyperlink{clock_8cpp_a74e90d7f01ed63dbee9560eaa7d4a1bb}{YEAR\+\_\+\+BASE}}~1900
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{clock_8cpp_ae4f7f04060ab76c4e4939c7b6b3cbefd}{Ke\+Load\+Timezone\+Strings}} ()
+\item 
+const char $\ast$ \mbox{\hyperlink{clock_8cpp_a352c63f6471fef56a75df162f5f36495}{Ke\+Get\+Timezone\+String\+From\+ID}} (int id)
+\item 
+void \mbox{\hyperlink{clock_8cpp_ab3734c29e2c4520ac5e002cf05c41c85}{Ke\+Update\+Timezone}} (const char $\ast$tzstring)
+\item 
+bool \mbox{\hyperlink{clock_8cpp_a3fbbf2e92324fcc1b4ff71004b89f8e4}{Ke\+Set\+Timezone}} (int id)
+\item 
+void \mbox{\hyperlink{clock_8cpp_acbbbc19be42d71d6f3d2d9e1d8281df1}{Ke\+Set\+Timezone}} (const char $\ast$tzstring)
+\item 
+void \mbox{\hyperlink{clock_8cpp_a5889b426694e6af4913289f51bf8e4d6}{Ke\+Load\+Timezone}} ()
+\item 
+\mbox{\hyperlink{vfs_8hpp_a02ad034d26db2c14b7e295b0c50fc11d}{time\+\_\+t}} \mbox{\hyperlink{clock_8cpp_ab6341e545ddb6b43a00250ec3f2eec06}{Ke\+Datetime\+To\+Seconds}} (\mbox{\hyperlink{structdatetime__t}{datetime\+\_\+t}} dt)
+\item 
+\mbox{\hyperlink{structdatetime__t}{datetime\+\_\+t}} \mbox{\hyperlink{clock_8cpp_aa0abf3b1890827d46a75d708a5632788}{Ke\+Seconds\+To\+Datetime}} (\mbox{\hyperlink{vfs_8hpp_a02ad034d26db2c14b7e295b0c50fc11d}{time\+\_\+t}} lcltime)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{clock_8cpp_a728cc442d1f423699a50cb3c1e534e28}{ke\+Timezone\+Hour\+Offset}} = 0
+\item 
+bool \mbox{\hyperlink{clock_8cpp_a51e0de773077d71e688e9034bc35a5b1}{ke\+Timezone\+Half\+Hour\+Offset}} = false
+\item 
+bool \mbox{\hyperlink{clock_8cpp_a2a4f80bc438e05e12e89b9da57a62a1d}{ke\+Dst\+On}} = false
+\item 
+char $\ast$ \mbox{\hyperlink{clock_8cpp_a09e6279fee23ed59ae24a6b7cf5bfe20}{ke\+Timezone\+Strings}} \mbox{[}200\mbox{]}
+\item 
+int \mbox{\hyperlink{clock_8cpp_a3258b67d893426342cc4b2eddf95a449}{ke\+Number\+Of\+Timezones}} = 0
+\item 
+bool \mbox{\hyperlink{clock_8cpp_abd082ab1a479b93e749bc98de9cc1ef2}{ke\+Loaded\+Timezones}} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{clock_8cpp_a9baf38039c12c7c2e11d0c0797087cb7}\label{clock_8cpp_a9baf38039c12c7c2e11d0c0797087cb7}} 
+\index{clock.cpp@{clock.cpp}!\_DAYS\_IN\_MONTH@{\_DAYS\_IN\_MONTH}}
+\index{\_DAYS\_IN\_MONTH@{\_DAYS\_IN\_MONTH}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{\_DAYS\_IN\_MONTH}{\_DAYS\_IN\_MONTH}}
+{\footnotesize\ttfamily \#define \+\_\+\+DAYS\+\_\+\+IN\+\_\+\+MONTH(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~((x == 1) ? days\+\_\+in\+\_\+feb \+: DAYS\+\_\+\+IN\+\_\+\+MONTH\mbox{[}x\mbox{]})}
+
+\mbox{\Hypertarget{clock_8cpp_a7991ffff6eb91916ee65fac2630e0656}\label{clock_8cpp_a7991ffff6eb91916ee65fac2630e0656}} 
+\index{clock.cpp@{clock.cpp}!\_DAYS\_IN\_YEAR@{\_DAYS\_IN\_YEAR}}
+\index{\_DAYS\_IN\_YEAR@{\_DAYS\_IN\_YEAR}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{\_DAYS\_IN\_YEAR}{\_DAYS\_IN\_YEAR}}
+{\footnotesize\ttfamily \#define \+\_\+\+DAYS\+\_\+\+IN\+\_\+\+YEAR(\begin{DoxyParamCaption}\item[{}]{year }\end{DoxyParamCaption})~(\mbox{\hyperlink{clock_8cpp_a029a61bcbd776a809fc882c0a9e09558}{\+\_\+\+ISLEAP}}(year) ? 366 \+: 365)}
+
+\mbox{\Hypertarget{clock_8cpp_a029a61bcbd776a809fc882c0a9e09558}\label{clock_8cpp_a029a61bcbd776a809fc882c0a9e09558}} 
+\index{clock.cpp@{clock.cpp}!\_ISLEAP@{\_ISLEAP}}
+\index{\_ISLEAP@{\_ISLEAP}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{\_ISLEAP}{\_ISLEAP}}
+{\footnotesize\ttfamily \#define \+\_\+\+ISLEAP(\begin{DoxyParamCaption}\item[{}]{y }\end{DoxyParamCaption})~(((y) \% 4) == 0 \&\& (((y) \% 100) != 0 $\vert$$\vert$ (((y)+1900) \% 400) == 0))}
+
+\mbox{\Hypertarget{clock_8cpp_a8cc099b11bbcf419f19f0f9b3b7d90ee}\label{clock_8cpp_a8cc099b11bbcf419f19f0f9b3b7d90ee}} 
+\index{clock.cpp@{clock.cpp}!\_SEC\_IN\_DAY@{\_SEC\_IN\_DAY}}
+\index{\_SEC\_IN\_DAY@{\_SEC\_IN\_DAY}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{\_SEC\_IN\_DAY}{\_SEC\_IN\_DAY}}
+{\footnotesize\ttfamily \#define \+\_\+\+SEC\+\_\+\+IN\+\_\+\+DAY~86400L}
+
+\mbox{\Hypertarget{clock_8cpp_ae888bf4d42d8b67a65fc8d766064519d}\label{clock_8cpp_ae888bf4d42d8b67a65fc8d766064519d}} 
+\index{clock.cpp@{clock.cpp}!\_SEC\_IN\_HOUR@{\_SEC\_IN\_HOUR}}
+\index{\_SEC\_IN\_HOUR@{\_SEC\_IN\_HOUR}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{\_SEC\_IN\_HOUR}{\_SEC\_IN\_HOUR}}
+{\footnotesize\ttfamily \#define \+\_\+\+SEC\+\_\+\+IN\+\_\+\+HOUR~3600L}
+
+\mbox{\Hypertarget{clock_8cpp_a8f490149ca6af2098360c251b4eee1bd}\label{clock_8cpp_a8f490149ca6af2098360c251b4eee1bd}} 
+\index{clock.cpp@{clock.cpp}!\_SEC\_IN\_MINUTE@{\_SEC\_IN\_MINUTE}}
+\index{\_SEC\_IN\_MINUTE@{\_SEC\_IN\_MINUTE}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{\_SEC\_IN\_MINUTE}{\_SEC\_IN\_MINUTE}}
+{\footnotesize\ttfamily \#define \+\_\+\+SEC\+\_\+\+IN\+\_\+\+MINUTE~60L}
+
+\mbox{\Hypertarget{clock_8cpp_af4013e1838291f00c42a575c40c5cbd2}\label{clock_8cpp_af4013e1838291f00c42a575c40c5cbd2}} 
+\index{clock.cpp@{clock.cpp}!ADJUSTED\_EPOCH\_WDAY@{ADJUSTED\_EPOCH\_WDAY}}
+\index{ADJUSTED\_EPOCH\_WDAY@{ADJUSTED\_EPOCH\_WDAY}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{ADJUSTED\_EPOCH\_WDAY}{ADJUSTED\_EPOCH\_WDAY}}
+{\footnotesize\ttfamily \#define ADJUSTED\+\_\+\+EPOCH\+\_\+\+WDAY~3}
+
+\mbox{\Hypertarget{clock_8cpp_a8b29c36beee5e1413430d23b9c243338}\label{clock_8cpp_a8b29c36beee5e1413430d23b9c243338}} 
+\index{clock.cpp@{clock.cpp}!ADJUSTED\_EPOCH\_YEAR@{ADJUSTED\_EPOCH\_YEAR}}
+\index{ADJUSTED\_EPOCH\_YEAR@{ADJUSTED\_EPOCH\_YEAR}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{ADJUSTED\_EPOCH\_YEAR}{ADJUSTED\_EPOCH\_YEAR}}
+{\footnotesize\ttfamily \#define ADJUSTED\+\_\+\+EPOCH\+\_\+\+YEAR~0}
+
+\mbox{\Hypertarget{clock_8cpp_a7edca746e03d47772edef518bdb69296}\label{clock_8cpp_a7edca746e03d47772edef518bdb69296}} 
+\index{clock.cpp@{clock.cpp}!DAYS\_IN\_FEBRUARY@{DAYS\_IN\_FEBRUARY}}
+\index{DAYS\_IN\_FEBRUARY@{DAYS\_IN\_FEBRUARY}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{DAYS\_IN\_FEBRUARY}{DAYS\_IN\_FEBRUARY}}
+{\footnotesize\ttfamily \#define DAYS\+\_\+\+IN\+\_\+\+FEBRUARY~28}
+
+\mbox{\Hypertarget{clock_8cpp_a25d97fa8623c48905829a208c6ff83e0}\label{clock_8cpp_a25d97fa8623c48905829a208c6ff83e0}} 
+\index{clock.cpp@{clock.cpp}!DAYS\_IN\_JANUARY@{DAYS\_IN\_JANUARY}}
+\index{DAYS\_IN\_JANUARY@{DAYS\_IN\_JANUARY}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{DAYS\_IN\_JANUARY}{DAYS\_IN\_JANUARY}}
+{\footnotesize\ttfamily \#define DAYS\+\_\+\+IN\+\_\+\+JANUARY~31}
+
+\mbox{\Hypertarget{clock_8cpp_a27fa7632862e084e7f00ea72da20bb75}\label{clock_8cpp_a27fa7632862e084e7f00ea72da20bb75}} 
+\index{clock.cpp@{clock.cpp}!DAYS\_PER\_4\_YEARS@{DAYS\_PER\_4\_YEARS}}
+\index{DAYS\_PER\_4\_YEARS@{DAYS\_PER\_4\_YEARS}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{DAYS\_PER\_4\_YEARS}{DAYS\_PER\_4\_YEARS}}
+{\footnotesize\ttfamily \#define DAYS\+\_\+\+PER\+\_\+4\+\_\+\+YEARS~(3 $\ast$ 365 + 366)}
+
+\mbox{\Hypertarget{clock_8cpp_a2a44fdc74813baa6a6568f7fb205786d}\label{clock_8cpp_a2a44fdc74813baa6a6568f7fb205786d}} 
+\index{clock.cpp@{clock.cpp}!DAYS\_PER\_CENTURY@{DAYS\_PER\_CENTURY}}
+\index{DAYS\_PER\_CENTURY@{DAYS\_PER\_CENTURY}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{DAYS\_PER\_CENTURY}{DAYS\_PER\_CENTURY}}
+{\footnotesize\ttfamily \#define DAYS\+\_\+\+PER\+\_\+\+CENTURY~36524L}
+
+\mbox{\Hypertarget{clock_8cpp_a0a171e8314114b57c27064c63684cf68}\label{clock_8cpp_a0a171e8314114b57c27064c63684cf68}} 
+\index{clock.cpp@{clock.cpp}!DAYS\_PER\_ERA@{DAYS\_PER\_ERA}}
+\index{DAYS\_PER\_ERA@{DAYS\_PER\_ERA}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{DAYS\_PER\_ERA}{DAYS\_PER\_ERA}}
+{\footnotesize\ttfamily \#define DAYS\+\_\+\+PER\+\_\+\+ERA~146097L}
+
+\mbox{\Hypertarget{clock_8cpp_ab8b198f8809cbf6e5135c0a7750b3b45}\label{clock_8cpp_ab8b198f8809cbf6e5135c0a7750b3b45}} 
+\index{clock.cpp@{clock.cpp}!DAYS\_PER\_YEAR@{DAYS\_PER\_YEAR}}
+\index{DAYS\_PER\_YEAR@{DAYS\_PER\_YEAR}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{DAYS\_PER\_YEAR}{DAYS\_PER\_YEAR}}
+{\footnotesize\ttfamily \#define DAYS\+\_\+\+PER\+\_\+\+YEAR~365}
+
+\mbox{\Hypertarget{clock_8cpp_aed1b47217b5c175d8c7bd70feeaf54e5}\label{clock_8cpp_aed1b47217b5c175d8c7bd70feeaf54e5}} 
+\index{clock.cpp@{clock.cpp}!EPOCH\_ADJUSTMENT\_DAYS@{EPOCH\_ADJUSTMENT\_DAYS}}
+\index{EPOCH\_ADJUSTMENT\_DAYS@{EPOCH\_ADJUSTMENT\_DAYS}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{EPOCH\_ADJUSTMENT\_DAYS}{EPOCH\_ADJUSTMENT\_DAYS}}
+{\footnotesize\ttfamily \#define EPOCH\+\_\+\+ADJUSTMENT\+\_\+\+DAYS~719468L}
+
+\mbox{\Hypertarget{clock_8cpp_a0711b3fc9ababc38239df227d1bd1e62}\label{clock_8cpp_a0711b3fc9ababc38239df227d1bd1e62}} 
+\index{clock.cpp@{clock.cpp}!SECSPERDAY@{SECSPERDAY}}
+\index{SECSPERDAY@{SECSPERDAY}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{SECSPERDAY}{SECSPERDAY}}
+{\footnotesize\ttfamily \#define SECSPERDAY~(3600 $\ast$ 24)}
+
+\mbox{\Hypertarget{clock_8cpp_a235e72e63a254ecde04f29148b3333fb}\label{clock_8cpp_a235e72e63a254ecde04f29148b3333fb}} 
+\index{clock.cpp@{clock.cpp}!SECSPERHOUR@{SECSPERHOUR}}
+\index{SECSPERHOUR@{SECSPERHOUR}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{SECSPERHOUR}{SECSPERHOUR}}
+{\footnotesize\ttfamily \#define SECSPERHOUR~3600}
+
+\mbox{\Hypertarget{clock_8cpp_a4fbe1b6bbb5e5f3ff7300e9ea9991f36}\label{clock_8cpp_a4fbe1b6bbb5e5f3ff7300e9ea9991f36}} 
+\index{clock.cpp@{clock.cpp}!SECSPERMIN@{SECSPERMIN}}
+\index{SECSPERMIN@{SECSPERMIN}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{SECSPERMIN}{SECSPERMIN}}
+{\footnotesize\ttfamily \#define SECSPERMIN~60}
+
+\mbox{\Hypertarget{clock_8cpp_a74e90d7f01ed63dbee9560eaa7d4a1bb}\label{clock_8cpp_a74e90d7f01ed63dbee9560eaa7d4a1bb}} 
+\index{clock.cpp@{clock.cpp}!YEAR\_BASE@{YEAR\_BASE}}
+\index{YEAR\_BASE@{YEAR\_BASE}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{YEAR\_BASE}{YEAR\_BASE}}
+{\footnotesize\ttfamily \#define YEAR\+\_\+\+BASE~1900}
+
+\mbox{\Hypertarget{clock_8cpp_a15a3bbb0fbb22c8c0a68af052cb5ca38}\label{clock_8cpp_a15a3bbb0fbb22c8c0a68af052cb5ca38}} 
+\index{clock.cpp@{clock.cpp}!YEARS\_PER\_ERA@{YEARS\_PER\_ERA}}
+\index{YEARS\_PER\_ERA@{YEARS\_PER\_ERA}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{YEARS\_PER\_ERA}{YEARS\_PER\_ERA}}
+{\footnotesize\ttfamily \#define YEARS\+\_\+\+PER\+\_\+\+ERA~400}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{clock_8cpp_ab6341e545ddb6b43a00250ec3f2eec06}\label{clock_8cpp_ab6341e545ddb6b43a00250ec3f2eec06}} 
+\index{clock.cpp@{clock.cpp}!KeDatetimeToSeconds@{KeDatetimeToSeconds}}
+\index{KeDatetimeToSeconds@{KeDatetimeToSeconds}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{KeDatetimeToSeconds()}{KeDatetimeToSeconds()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{vfs_8hpp_a02ad034d26db2c14b7e295b0c50fc11d}{time\+\_\+t}} Ke\+Datetime\+To\+Seconds (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structdatetime__t}{datetime\+\_\+t}}}]{dt }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{clock_8cpp_a352c63f6471fef56a75df162f5f36495}\label{clock_8cpp_a352c63f6471fef56a75df162f5f36495}} 
+\index{clock.cpp@{clock.cpp}!KeGetTimezoneStringFromID@{KeGetTimezoneStringFromID}}
+\index{KeGetTimezoneStringFromID@{KeGetTimezoneStringFromID}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{KeGetTimezoneStringFromID()}{KeGetTimezoneStringFromID()}}
+{\footnotesize\ttfamily const char $\ast$ Ke\+Get\+Timezone\+String\+From\+ID (\begin{DoxyParamCaption}\item[{int}]{id }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{clock_8cpp_a5889b426694e6af4913289f51bf8e4d6}\label{clock_8cpp_a5889b426694e6af4913289f51bf8e4d6}} 
+\index{clock.cpp@{clock.cpp}!KeLoadTimezone@{KeLoadTimezone}}
+\index{KeLoadTimezone@{KeLoadTimezone}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{KeLoadTimezone()}{KeLoadTimezone()}}
+{\footnotesize\ttfamily void Ke\+Load\+Timezone (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{clock_8cpp_ae4f7f04060ab76c4e4939c7b6b3cbefd}\label{clock_8cpp_ae4f7f04060ab76c4e4939c7b6b3cbefd}} 
+\index{clock.cpp@{clock.cpp}!KeLoadTimezoneStrings@{KeLoadTimezoneStrings}}
+\index{KeLoadTimezoneStrings@{KeLoadTimezoneStrings}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{KeLoadTimezoneStrings()}{KeLoadTimezoneStrings()}}
+{\footnotesize\ttfamily int Ke\+Load\+Timezone\+Strings (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{clock_8cpp_aa0abf3b1890827d46a75d708a5632788}\label{clock_8cpp_aa0abf3b1890827d46a75d708a5632788}} 
+\index{clock.cpp@{clock.cpp}!KeSecondsToDatetime@{KeSecondsToDatetime}}
+\index{KeSecondsToDatetime@{KeSecondsToDatetime}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{KeSecondsToDatetime()}{KeSecondsToDatetime()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structdatetime__t}{datetime\+\_\+t}} Ke\+Seconds\+To\+Datetime (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{vfs_8hpp_a02ad034d26db2c14b7e295b0c50fc11d}{time\+\_\+t}}}]{lcltime }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{clock_8cpp_acbbbc19be42d71d6f3d2d9e1d8281df1}\label{clock_8cpp_acbbbc19be42d71d6f3d2d9e1d8281df1}} 
+\index{clock.cpp@{clock.cpp}!KeSetTimezone@{KeSetTimezone}}
+\index{KeSetTimezone@{KeSetTimezone}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{KeSetTimezone()}{KeSetTimezone()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Ke\+Set\+Timezone (\begin{DoxyParamCaption}\item[{const char $\ast$}]{tzstring }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{clock_8cpp_a3fbbf2e92324fcc1b4ff71004b89f8e4}\label{clock_8cpp_a3fbbf2e92324fcc1b4ff71004b89f8e4}} 
+\index{clock.cpp@{clock.cpp}!KeSetTimezone@{KeSetTimezone}}
+\index{KeSetTimezone@{KeSetTimezone}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{KeSetTimezone()}{KeSetTimezone()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily bool Ke\+Set\+Timezone (\begin{DoxyParamCaption}\item[{int}]{id }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{clock_8cpp_ab3734c29e2c4520ac5e002cf05c41c85}\label{clock_8cpp_ab3734c29e2c4520ac5e002cf05c41c85}} 
+\index{clock.cpp@{clock.cpp}!KeUpdateTimezone@{KeUpdateTimezone}}
+\index{KeUpdateTimezone@{KeUpdateTimezone}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{KeUpdateTimezone()}{KeUpdateTimezone()}}
+{\footnotesize\ttfamily void Ke\+Update\+Timezone (\begin{DoxyParamCaption}\item[{const char $\ast$}]{tzstring }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{clock_8cpp_a2a4f80bc438e05e12e89b9da57a62a1d}\label{clock_8cpp_a2a4f80bc438e05e12e89b9da57a62a1d}} 
+\index{clock.cpp@{clock.cpp}!keDstOn@{keDstOn}}
+\index{keDstOn@{keDstOn}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{keDstOn}{keDstOn}}
+{\footnotesize\ttfamily bool ke\+Dst\+On = false}
+
+\mbox{\Hypertarget{clock_8cpp_abd082ab1a479b93e749bc98de9cc1ef2}\label{clock_8cpp_abd082ab1a479b93e749bc98de9cc1ef2}} 
+\index{clock.cpp@{clock.cpp}!keLoadedTimezones@{keLoadedTimezones}}
+\index{keLoadedTimezones@{keLoadedTimezones}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{keLoadedTimezones}{keLoadedTimezones}}
+{\footnotesize\ttfamily bool ke\+Loaded\+Timezones = false}
+
+\mbox{\Hypertarget{clock_8cpp_a3258b67d893426342cc4b2eddf95a449}\label{clock_8cpp_a3258b67d893426342cc4b2eddf95a449}} 
+\index{clock.cpp@{clock.cpp}!keNumberOfTimezones@{keNumberOfTimezones}}
+\index{keNumberOfTimezones@{keNumberOfTimezones}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{keNumberOfTimezones}{keNumberOfTimezones}}
+{\footnotesize\ttfamily int ke\+Number\+Of\+Timezones = 0}
+
+\mbox{\Hypertarget{clock_8cpp_a51e0de773077d71e688e9034bc35a5b1}\label{clock_8cpp_a51e0de773077d71e688e9034bc35a5b1}} 
+\index{clock.cpp@{clock.cpp}!keTimezoneHalfHourOffset@{keTimezoneHalfHourOffset}}
+\index{keTimezoneHalfHourOffset@{keTimezoneHalfHourOffset}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{keTimezoneHalfHourOffset}{keTimezoneHalfHourOffset}}
+{\footnotesize\ttfamily bool ke\+Timezone\+Half\+Hour\+Offset = false}
+
+\mbox{\Hypertarget{clock_8cpp_a728cc442d1f423699a50cb3c1e534e28}\label{clock_8cpp_a728cc442d1f423699a50cb3c1e534e28}} 
+\index{clock.cpp@{clock.cpp}!keTimezoneHourOffset@{keTimezoneHourOffset}}
+\index{keTimezoneHourOffset@{keTimezoneHourOffset}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{keTimezoneHourOffset}{keTimezoneHourOffset}}
+{\footnotesize\ttfamily int ke\+Timezone\+Hour\+Offset = 0}
+
+\mbox{\Hypertarget{clock_8cpp_a09e6279fee23ed59ae24a6b7cf5bfe20}\label{clock_8cpp_a09e6279fee23ed59ae24a6b7cf5bfe20}} 
+\index{clock.cpp@{clock.cpp}!keTimezoneStrings@{keTimezoneStrings}}
+\index{keTimezoneStrings@{keTimezoneStrings}!clock.cpp@{clock.cpp}}
+\doxysubsubsection{\texorpdfstring{keTimezoneStrings}{keTimezoneStrings}}
+{\footnotesize\ttfamily char$\ast$ ke\+Timezone\+Strings\mbox{[}200\mbox{]}}
+

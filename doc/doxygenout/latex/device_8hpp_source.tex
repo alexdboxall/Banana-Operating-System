@@ -1,0 +1,203 @@
+\hypertarget{device_8hpp_source}{}\doxysection{device.\+hpp}
+\label{device_8hpp_source}\index{C:/Users/Alex/Desktop/Banana/kernel/hal/device.hpp@{C:/Users/Alex/Desktop/Banana/kernel/hal/device.hpp}}
+\mbox{\hyperlink{device_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_HAL\_DEVICE\_HPP}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_HAL\_DEVICE\_HPP}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <\mbox{\hyperlink{linkedlist_8hpp}{krnl/linkedlist.hpp}}>}}
+\DoxyCodeLine{6 \textcolor{keyword}{class }InterruptController;}
+\DoxyCodeLine{7 \textcolor{keyword}{extern} \textcolor{stringliteral}{"{}C"{}} \{}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{acpi_8h}{acpica/acpi.h}}"{}}}
+\DoxyCodeLine{9 \}}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{keyword}{enum class} \mbox{\hyperlink{device_8hpp_a147d130be5b6b2720d9e08cca8f2b524}{PowerSavingLevel}}}
+\DoxyCodeLine{12 \{}
+\DoxyCodeLine{13     \mbox{\hyperlink{device_8hpp_a147d130be5b6b2720d9e08cca8f2b524a4d3d769b812b6faa6b76e1a8abaece2d}{Active}},}
+\DoxyCodeLine{14     \mbox{\hyperlink{device_8hpp_a147d130be5b6b2720d9e08cca8f2b524a2dbec34a65724db94f81e8533ee18192}{Standby}},}
+\DoxyCodeLine{15     \mbox{\hyperlink{device_8hpp_a147d130be5b6b2720d9e08cca8f2b524a243924bfd56a682be235638b53961e09}{Sleep}}}
+\DoxyCodeLine{16 \};}
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18 \textcolor{keyword}{enum class} \mbox{\hyperlink{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1}{DetectionType}}}
+\DoxyCodeLine{19 \{}
+\DoxyCodeLine{20     \mbox{\hyperlink{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1ae1ba155a9f2e8c3be94020eef32a0301}{Manual}},}
+\DoxyCodeLine{21     \mbox{\hyperlink{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1affceb42d71b819d2006589b24d2876c9}{ISAProbe}},}
+\DoxyCodeLine{22     \mbox{\hyperlink{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1ac89b74e7544d782dd33c25fdaae40b8f}{PCI}},}
+\DoxyCodeLine{23     \mbox{\hyperlink{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1a970d747229841c61b3c063fb45baa9e7}{ACPI}},}
+\DoxyCodeLine{24     \mbox{\hyperlink{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1a7aca5ec618f7317328dcd7014cf9bdcf}{USB}}}
+\DoxyCodeLine{25 \};}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{27 \textcolor{keyword}{struct }\mbox{\hyperlink{struct_port_range}{PortRange}}}
+\DoxyCodeLine{28 \{}
+\DoxyCodeLine{29     uint16\_t \mbox{\hyperlink{struct_port_range_a243cb7bef1e9b99d3017c82aebdac616}{rangeStart}};}
+\DoxyCodeLine{30     uint8\_t \mbox{\hyperlink{struct_port_range_a709207bff8efd4e2c2b63004d1decce2}{rangeLength}}; \textcolor{comment}{//0 = not used}}
+\DoxyCodeLine{31     uint8\_t \mbox{\hyperlink{struct_port_range_ada4c776c2da5e7a1c21b812582b53720}{alignment}} : 6; \textcolor{comment}{//used by Windows, no idea what it does}}
+\DoxyCodeLine{32     uint8\_t \mbox{\hyperlink{struct_port_range_afbe99650da63d8c3b1e1d7167f45c438}{width}} : 2;     \textcolor{comment}{//in bytes: e.g 0 = 1, 1 = 2, 2 = 4, 3 = 8}}
+\DoxyCodeLine{33 \};}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{35 \textcolor{keyword}{struct }\mbox{\hyperlink{struct_memory_range}{MemoryRange}}}
+\DoxyCodeLine{36 \{}
+\DoxyCodeLine{37     uint64\_t \mbox{\hyperlink{struct_memory_range_a08c451adcdc1c7904c48b9b176101d43}{rangeStart}}  : 40;}
+\DoxyCodeLine{38     uint64\_t \mbox{\hyperlink{struct_memory_range_ad291fb447be19db510e0b60ad5f30464}{rangeLength}} : 24;}
+\DoxyCodeLine{39 \};}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41 \textcolor{keyword}{class }\mbox{\hyperlink{class_device}{Device}};}
+\DoxyCodeLine{42 \textcolor{keyword}{struct }\mbox{\hyperlink{struct_device_node}{DeviceNode}}}
+\DoxyCodeLine{43 \{}
+\DoxyCodeLine{44     \mbox{\hyperlink{struct_device_node}{DeviceNode}}* \mbox{\hyperlink{struct_device_node_af74f8f6c68b9546ca2fccbbac67f05ca}{next}};}
+\DoxyCodeLine{45     \mbox{\hyperlink{class_device}{Device}}* \mbox{\hyperlink{struct_device_node_ac9943262909e2d044d0f9be7172d6df2}{child}};}
+\DoxyCodeLine{46 \};}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{48 \textcolor{keyword}{enum class} \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9}{DeviceType}}}
+\DoxyCodeLine{49 \{}
+\DoxyCodeLine{50     \mbox{\hyperlink{class_bus}{Bus}},}
+\DoxyCodeLine{51     \mbox{\hyperlink{class_clock}{Clock}},}
+\DoxyCodeLine{52     \mbox{\hyperlink{class_physical_disk}{PhysicalDisk}},}
+\DoxyCodeLine{53     \mbox{\hyperlink{class_logical_disk}{LogicalDisk}},}
+\DoxyCodeLine{54     \mbox{\hyperlink{class_hard_disk_controller}{HardDiskController}},}
+\DoxyCodeLine{55     \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a1162b85b7b993e2edf7da29dd8abf7e2}{Joystick}},}
+\DoxyCodeLine{56     \mbox{\hyperlink{class_keyboard}{Keyboard}},}
+\DoxyCodeLine{57     \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a37fe93164a9c7b7622bab12c349b98c8}{Printer}},}
+\DoxyCodeLine{58     \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a60aaf44d4b562252c04db7f98497e9aa}{Port}},}
+\DoxyCodeLine{59     \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9ab22f0418e8ac915eb66f829d262d14a2}{Audio}},}
+\DoxyCodeLine{60     \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a2fc3359e12b2a9104121dcf04246f6a0}{Screen}},}
+\DoxyCodeLine{61     \mbox{\hyperlink{class_mouse}{Mouse}},}
+\DoxyCodeLine{62     \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9ac912c68146b55c36bff65edbac3cf26d}{Buzzer}},}
+\DoxyCodeLine{63     \mbox{\hyperlink{class_n_i_c}{NIC}},}
+\DoxyCodeLine{64 }
+\DoxyCodeLine{65     \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a5ba3bb3a7a3c65b436e21454580970fd}{Intctrl}},}
+\DoxyCodeLine{66     \mbox{\hyperlink{class_timer}{Timer}},}
+\DoxyCodeLine{67     \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a11e4d339cb835db9884cd4a4e0c3dbb7}{FPU}},}
+\DoxyCodeLine{68     \mbox{\hyperlink{class_c_p_u}{CPU}},}
+\DoxyCodeLine{69     \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a0044b1a89dc28e9fbcf89c1080879716}{SystemDevice}},}
+\DoxyCodeLine{70 }
+\DoxyCodeLine{71     \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a28f16b372700b1c4652a06d34b14177f}{Driverless}},}
+\DoxyCodeLine{72 }
+\DoxyCodeLine{73     \mbox{\hyperlink{hal_8cpp_aa333875790e538e1ed3dfe456632635ca88183b946cc5f0e8c96b2e66e1c74a7e}{Unknown}},}
+\DoxyCodeLine{74 \};}
+\DoxyCodeLine{75 }
+\DoxyCodeLine{76 \textcolor{keyword}{struct }\mbox{\hyperlink{structregs}{regs}};}
+\DoxyCodeLine{77 }
+\DoxyCodeLine{78 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_p_c_i_device_info}{PCIDeviceInfo}}}
+\DoxyCodeLine{79 \{}
+\DoxyCodeLine{80     uint8\_t \mbox{\hyperlink{struct_p_c_i_device_info_ae79c6bd1ddb5fb12a275b6c6944c9b82}{classCode}};}
+\DoxyCodeLine{81     uint8\_t \mbox{\hyperlink{struct_p_c_i_device_info_a6dfc3d204ee39966e6b6b6f353c4144f}{subClass}};}
+\DoxyCodeLine{82     uint16\_t \mbox{\hyperlink{struct_p_c_i_device_info_a12db364bcefd83de6c24d05e7e18ad3b}{vendorID}};}
+\DoxyCodeLine{83 }
+\DoxyCodeLine{84     uint8\_t \mbox{\hyperlink{struct_p_c_i_device_info_ac24e9f933317badc4e003930a78d224c}{bus}};}
+\DoxyCodeLine{85     uint8\_t \mbox{\hyperlink{struct_p_c_i_device_info_a9f845f810e9df8f4b348d2c9413380b1}{slot}};}
+\DoxyCodeLine{86     uint8\_t \mbox{\hyperlink{struct_p_c_i_device_info_a20294fd10e3b1254feba5258e14d2387}{function}};}
+\DoxyCodeLine{87     uint8\_t \mbox{\hyperlink{struct_p_c_i_device_info_a2ddcac3f906687f2f15511346d859595}{progIF}};}
+\DoxyCodeLine{88 }
+\DoxyCodeLine{89     uint32\_t \mbox{\hyperlink{struct_p_c_i_device_info_add496663de918f60e304b62becf7d24c}{bar}}[6];}
+\DoxyCodeLine{90 }
+\DoxyCodeLine{91     uint8\_t \mbox{\hyperlink{struct_p_c_i_device_info_a412874104748a14baa56166543a8902c}{interrrupt}};}
+\DoxyCodeLine{92     uint8\_t \mbox{\hyperlink{struct_p_c_i_device_info_a58b3c3d92662c9e918e8e249a3146b10}{intPIN}};}
+\DoxyCodeLine{93 }
+\DoxyCodeLine{94     uint16\_t \mbox{\hyperlink{struct_p_c_i_device_info_a801f8e251d66d3f6ab0741ea852a9a00}{deviceID}};}
+\DoxyCodeLine{95 }
+\DoxyCodeLine{96 \} \mbox{\hyperlink{device_8hpp_a2faf9e37bc9112dc3b217f1c56aa15cd}{PCIDeviceInfo}};}
+\DoxyCodeLine{97 }
+\DoxyCodeLine{98 \textcolor{keyword}{class }\mbox{\hyperlink{class_device}{Device}}}
+\DoxyCodeLine{99 \{}
+\DoxyCodeLine{100 \textcolor{keyword}{private}:}
+\DoxyCodeLine{101 }
+\DoxyCodeLine{102 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{103     \mbox{\hyperlink{struct_port_range}{PortRange}} \mbox{\hyperlink{class_device_a1ca55da8437b6508f537da71d1d5b960}{ports}}[16];}
+\DoxyCodeLine{104     \mbox{\hyperlink{struct_memory_range}{MemoryRange}} \mbox{\hyperlink{class_device_a59791ce220d60f1d91b1b5878baf06c6}{memory}}[16];}
+\DoxyCodeLine{105     uint8\_t \mbox{\hyperlink{class_device_ab402244dd5f6f54d2b5f67a8e2ad298a}{noPorts}};}
+\DoxyCodeLine{106     uint8\_t \mbox{\hyperlink{class_device_ad603fc67f4e83c799aea8e25870b4a01}{noMems}};}
+\DoxyCodeLine{107 }
+\DoxyCodeLine{108     \mbox{\hyperlink{class_device}{Device}}* \mbox{\hyperlink{class_device_aecd13daa880fd52ea0f02e0ed755c480}{parent}};}
+\DoxyCodeLine{109     \mbox{\hyperlink{struct_device_node}{DeviceNode}}* \mbox{\hyperlink{class_device_a5ed3bc858b58a189f28493870295f7ba}{children}};}
+\DoxyCodeLine{110 }
+\DoxyCodeLine{111     \textcolor{keywordtype}{char} \mbox{\hyperlink{class_device_a2edef1f3508efa9811a90f85672d91f7}{humanName}}[64];}
+\DoxyCodeLine{112     \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9}{DeviceType}} \mbox{\hyperlink{class_device_abad7e829cba9e74e5f09e7737d502412}{deviceType}};}
+\DoxyCodeLine{113 }
+\DoxyCodeLine{114 \textcolor{keyword}{public}:}
+\DoxyCodeLine{115     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_device_abe2b559017ce12fe5202f53b9bb169f3}{preOpenPCI}}(\mbox{\hyperlink{struct_p_c_i_device_info}{PCIDeviceInfo}} \mbox{\hyperlink{class_device_a3d1d3c3826ce5380536415d6d7e23441}{info}});}
+\DoxyCodeLine{116     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_device_a033fc3da26fb7b9446e7b49c40717808}{preOpenACPI}}(\mbox{\hyperlink{actypes_8h_ab4373cbcb448c2617629232a16e8de72}{ACPI\_HANDLE}} h, \textcolor{keywordtype}{char}* \mbox{\hyperlink{class_device_aa3e737417f0cc7161dd4dc631d4f1678}{namespaceName}}, \textcolor{keywordtype}{char}* \mbox{\hyperlink{class_device_ac2b99cc83fb102aa324fc7d0353467c0}{pnpID}});}
+\DoxyCodeLine{117 }
+\DoxyCodeLine{118     \mbox{\hyperlink{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1}{DetectionType}} \mbox{\hyperlink{class_device_a98ad3dd620e29d6fd97dde1d80e667fb}{detectionType}} = \mbox{\hyperlink{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1ae1ba155a9f2e8c3be94020eef32a0301}{DetectionType::Manual}};}
+\DoxyCodeLine{119     \textcolor{keyword}{union}}
+\DoxyCodeLine{120     \{}
+\DoxyCodeLine{121         \textcolor{keyword}{struct}}
+\DoxyCodeLine{122         \{}
+\DoxyCodeLine{123             \mbox{\hyperlink{struct_p_c_i_device_info}{PCIDeviceInfo}} \mbox{\hyperlink{class_device_a3d1d3c3826ce5380536415d6d7e23441}{info}};}
+\DoxyCodeLine{124         \} \mbox{\hyperlink{class_device_ae90304f5c06d6a33433cc197fb3e0bc1}{pci}};}
+\DoxyCodeLine{125 }
+\DoxyCodeLine{126         \textcolor{keyword}{struct}}
+\DoxyCodeLine{127         \{}
+\DoxyCodeLine{128             \mbox{\hyperlink{actypes_8h_ab4373cbcb448c2617629232a16e8de72}{ACPI\_HANDLE}} \mbox{\hyperlink{class_device_abe9d5aa8d04c7dea7b280456efebd111}{handle}};}
+\DoxyCodeLine{129             \textcolor{keywordtype}{char} \mbox{\hyperlink{class_device_aa3e737417f0cc7161dd4dc631d4f1678}{namespaceName}}[30];}
+\DoxyCodeLine{130             \textcolor{keywordtype}{char} \mbox{\hyperlink{class_device_ac2b99cc83fb102aa324fc7d0353467c0}{pnpID}}[14];}
+\DoxyCodeLine{131         \} \mbox{\hyperlink{class_device_a615d317c19877cd8831fafa6c1235ce1}{acpi}};}
+\DoxyCodeLine{132 }
+\DoxyCodeLine{133         \textcolor{keyword}{struct}}
+\DoxyCodeLine{134         \{}
+\DoxyCodeLine{135             uint16\_t \mbox{\hyperlink{class_device_a475d68936968e35dee3e5306837aa720}{probeBaseA}};}
+\DoxyCodeLine{136             uint16\_t \mbox{\hyperlink{class_device_a1a5242e3a135568ea48913d825721987}{probeBaseB}};}
+\DoxyCodeLine{137 }
+\DoxyCodeLine{138         \} \mbox{\hyperlink{class_device_a4cd26939320454a0161c2a685a92289d}{isaprobe}};}
+\DoxyCodeLine{139     \};}
+\DoxyCodeLine{140 }
+\DoxyCodeLine{141     \mbox{\hyperlink{class_device}{Device}}* \mbox{\hyperlink{class_device_a8b9abbac5e655959a512bcf1c254cf3f}{next}};     \textcolor{comment}{//used for linked list enumeration}}
+\DoxyCodeLine{142 }
+\DoxyCodeLine{143     \mbox{\hyperlink{class_device_a7d861b21256b7ba30041c841927f42b2}{Device}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* name = \textcolor{stringliteral}{"{}Unknown Hardware"{}});}
+\DoxyCodeLine{144     \textcolor{keyword}{virtual} \mbox{\hyperlink{class_device_a9dabc419c8d8df3a686c33ce042bc99a}{\string~Device}}();}
+\DoxyCodeLine{145 }
+\DoxyCodeLine{146     \mbox{\hyperlink{class_device}{Device}}* \mbox{\hyperlink{class_device_a8267440a3169488eaba89ea78c7d5d37}{getParent}}();}
+\DoxyCodeLine{147 }
+\DoxyCodeLine{148     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_device_a45249de232f21abf276efc739aad19df}{addChild}}(\mbox{\hyperlink{class_device}{Device}}* child);                 \textcolor{comment}{//Called to add a new child}}
+\DoxyCodeLine{149     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_device_abf61bedcca9575e7c8a842a656203fa4}{removeAllChildren}}();}
+\DoxyCodeLine{150 }
+\DoxyCodeLine{151     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} \mbox{\hyperlink{class_device_ae0dc8baaa35d3cc35a27025a8415866a}{open}}(\textcolor{keywordtype}{int}, \textcolor{keywordtype}{int}, \textcolor{keywordtype}{void}*) = 0;      \textcolor{comment}{//Opens the device (init code).}}
+\DoxyCodeLine{152     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} \mbox{\hyperlink{class_device_a48ac2721de08ceda89220d4f9f9207b0}{close}}(\textcolor{keywordtype}{int}, \textcolor{keywordtype}{int}, \textcolor{keywordtype}{void}*) = 0;        \textcolor{comment}{//Perform other commands}}
+\DoxyCodeLine{153 }
+\DoxyCodeLine{154     \textcolor{comment}{//These only need to worry about themselves}}
+\DoxyCodeLine{155     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_device_aa2a0b7b25131d67e038606367b344fdb}{hibernate}}();                  \textcolor{comment}{//Get into hibernate state}}
+\DoxyCodeLine{156     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_device_a23a27642435cbaa655accbc76e21eae2}{wake}}();                        \textcolor{comment}{//Get out of hibernate state}}
+\DoxyCodeLine{157     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_device_a42dfa43d12ba66e93a9f3533f728784f}{detect}}();                        \textcolor{comment}{//Detect any children}}
+\DoxyCodeLine{158     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_device_a8bc393d4ea4b83725455ec20fc892cb0}{disableLegacy}}();              \textcolor{comment}{//Disable anything legacy}}
+\DoxyCodeLine{159     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_device_a4bec01e3b4238380eada219f3149e770}{powerSaving}}(\mbox{\hyperlink{device_8hpp_a147d130be5b6b2720d9e08cca8f2b524}{PowerSavingLevel}} level);}
+\DoxyCodeLine{160     }
+\DoxyCodeLine{161     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_device_ae1306d837ac8548c2973b60ba9cdff4a}{findAndLoadDriver}}();}
+\DoxyCodeLine{162 }
+\DoxyCodeLine{163     \textcolor{comment}{//These call the functions above on all children}}
+\DoxyCodeLine{164     \textcolor{comment}{//should not be overriden}}
+\DoxyCodeLine{165     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_device_a6a2601508fff133d5ca52360c9da6c89}{loadDriversForAll}}();}
+\DoxyCodeLine{166     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_device_a43bedfd1ba4f4425a8c614d2fc7cd79b}{hibernateAll}}();}
+\DoxyCodeLine{167     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_device_acebe382004b756ce9740415bb2814f46}{wakeAll}}();}
+\DoxyCodeLine{168     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_device_a995cb732045b3c3b1a809838d6b0a0b3}{closeAll}}();}
+\DoxyCodeLine{169     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_device_a0f6c56f153a9f37ff39f08940861fbd7}{detectAll}}();}
+\DoxyCodeLine{170     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_device_aedbc94c265b681b1750c9d96519efaa1}{disableLegacyAll}}();}
+\DoxyCodeLine{171     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_device_a79edf4fab7d85d85acffa08ea3e53978}{powerSavingAll}}(\mbox{\hyperlink{device_8hpp_a147d130be5b6b2720d9e08cca8f2b524}{PowerSavingLevel}} level);}
+\DoxyCodeLine{172 }
+\DoxyCodeLine{173     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_device_a25dbb257dc92f345079f17c831963a97}{dmaChannel}} = -\/1;}
+\DoxyCodeLine{174     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_device_a77fe832b86ac3f79e4c5bc29ea0f0206}{interrupt}} = -\/1;}
+\DoxyCodeLine{175     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_device_a01de148af97a4a14b20a9edb633f4236}{interrupt2}} = -\/1;}
+\DoxyCodeLine{176 }
+\DoxyCodeLine{177     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_device_aecc474aa9f336e6db5fd4bed33130292}{setName}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* name);}
+\DoxyCodeLine{178     \textcolor{keywordtype}{char}* \mbox{\hyperlink{class_device_aeebef4e877ec421367d27df2da3a9ec8}{getName}}();}
+\DoxyCodeLine{179 }
+\DoxyCodeLine{180     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_device_adc58a464830ed4eb8a4a83e2f87c5f0a}{addToLinkedList}}(\mbox{\hyperlink{class_linked_list}{LinkedList<Device>}}\& \mbox{\hyperlink{classlist}{list}}, \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9}{DeviceType}} devType);}
+\DoxyCodeLine{181 }
+\DoxyCodeLine{182     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_device_a60e3098c903763acbd2416ae756bc684}{addIRQHandler}}(\textcolor{keywordtype}{int} num, \textcolor{keywordtype}{void} (*handler)(\mbox{\hyperlink{structregs}{regs}}*, \textcolor{keywordtype}{void}*), \textcolor{keywordtype}{bool} legacy, \textcolor{keywordtype}{void}* context = \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{183     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_device_acefaa3dcf93a64d096aee0a28ec78ca8}{removeIRQHandler}}(\textcolor{keywordtype}{int} num, \textcolor{keywordtype}{void} (*handler)(\mbox{\hyperlink{structregs}{regs}}*, \textcolor{keywordtype}{void}*), \textcolor{keywordtype}{bool} legacy);}
+\DoxyCodeLine{184 \};}
+\DoxyCodeLine{185 }
+\DoxyCodeLine{186 \mbox{\hyperlink{class_linked_list}{LinkedList<Device>}} \mbox{\hyperlink{device_8hpp_aa4d9203d50069f57f78a128d06b8ec25}{getDevicesOfType}}(\mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9}{DeviceType}} devType);}
+\DoxyCodeLine{187 }
+\DoxyCodeLine{188 \textcolor{keyword}{class }\mbox{\hyperlink{class_driverless_device}{DriverlessDevice}}: \textcolor{keyword}{public} \mbox{\hyperlink{class_device}{Device}}}
+\DoxyCodeLine{189 \{}
+\DoxyCodeLine{190 \textcolor{keyword}{public}:}
+\DoxyCodeLine{191     \mbox{\hyperlink{class_driverless_device_a6c140b50cbb5babc62e862d8adee8364}{DriverlessDevice}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* name = \textcolor{stringliteral}{"{}Unknown Hardware"{}});}
+\DoxyCodeLine{192     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} \mbox{\hyperlink{class_driverless_device_ae556e6fa836ec482aed5f0ef475386fe}{open}}(\textcolor{keywordtype}{int}, \textcolor{keywordtype}{int}, \textcolor{keywordtype}{void}*);          \textcolor{comment}{//Opens the device (init code).}}
+\DoxyCodeLine{193     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} \mbox{\hyperlink{class_driverless_device_a228fb3599a4691713462953fa9d721bf}{close}}(\textcolor{keywordtype}{int}, \textcolor{keywordtype}{int}, \textcolor{keywordtype}{void}*);            \textcolor{comment}{//Perform other commands}}
+\DoxyCodeLine{194     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_driverless_device_a8f153e8a87ab047f8568ef157b33b390}{detect}}();                        \textcolor{comment}{//Detect any children}}
+\DoxyCodeLine{195 \};}
+\DoxyCodeLine{196 }
+\DoxyCodeLine{197 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

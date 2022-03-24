@@ -1,0 +1,124 @@
+\hypertarget{fpmath_8h_source}{}\doxysection{fpmath.\+h}
+\label{fpmath_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/libk/\_mathinc/fpmath.h@{C:/Users/Alex/Desktop/Banana/kernel/libk/\_mathinc/fpmath.h}}
+\mbox{\hyperlink{fpmath_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*-\/}}
+\DoxyCodeLine{2 \textcolor{comment}{ * Copyright (c) 2003 Mike Barcroft <mike@FreeBSD.org>}}
+\DoxyCodeLine{3 \textcolor{comment}{ * Copyright (c) 2002 David Schultz <das@FreeBSD.ORG>}}
+\DoxyCodeLine{4 \textcolor{comment}{ * All rights reserved.}}
+\DoxyCodeLine{5 \textcolor{comment}{ *}}
+\DoxyCodeLine{6 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{7 \textcolor{comment}{ * modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{8 \textcolor{comment}{ * are met:}}
+\DoxyCodeLine{9 \textcolor{comment}{ * 1. Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{10 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{11 \textcolor{comment}{ * 2. Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{12 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer in the}}
+\DoxyCodeLine{13 \textcolor{comment}{ *    documentation and/or other materials provided with the distribution.}}
+\DoxyCodeLine{14 \textcolor{comment}{ *}}
+\DoxyCodeLine{15 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND}}
+\DoxyCodeLine{16 \textcolor{comment}{ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE}}
+\DoxyCodeLine{17 \textcolor{comment}{ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE}}
+\DoxyCodeLine{18 \textcolor{comment}{ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE}}
+\DoxyCodeLine{19 \textcolor{comment}{ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL}}
+\DoxyCodeLine{20 \textcolor{comment}{ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS}}
+\DoxyCodeLine{21 \textcolor{comment}{ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)}}
+\DoxyCodeLine{22 \textcolor{comment}{ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT}}
+\DoxyCodeLine{23 \textcolor{comment}{ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY}}
+\DoxyCodeLine{24 \textcolor{comment}{ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF}}
+\DoxyCodeLine{25 \textcolor{comment}{ * SUCH DAMAGE.}}
+\DoxyCodeLine{26 \textcolor{comment}{ *}}
+\DoxyCodeLine{27 \textcolor{comment}{ * \$FreeBSD: src/lib/libc/include/fpmath.h,v 1.4 2008/12/23 22:20:59 marcel Exp \$}}
+\DoxyCodeLine{28 \textcolor{comment}{ */}}
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#ifndef \_FPMATH\_H\_}}
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#define \_FPMATH\_H\_}}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32 \textcolor{preprocessor}{\#if defined(\_\_aarch64\_\_)}}
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{aarch64__fpmath_8h}{aarch64\_fpmath.h}}"{}}}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#elif defined(\_\_i386\_\_) || defined(\_\_x86\_64\_\_)}}
+\DoxyCodeLine{35 \textcolor{preprocessor}{\#ifdef \_\_LP64\_\_}}
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{amd64__fpmath_8h}{amd64\_fpmath.h}}"{}}}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#else }}
+\DoxyCodeLine{38 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{i386__fpmath_8h}{i386\_fpmath.h}}"{}}}
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{40 \textcolor{preprocessor}{\#elif defined(\_\_powerpc\_\_)}}
+\DoxyCodeLine{41 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{powerpc__fpmath_8h}{powerpc\_fpmath.h}}"{}}}
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#elif defined(\_\_mips\_\_)}}
+\DoxyCodeLine{43 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{mips__fpmath_8h}{mips\_fpmath.h}}"{}}}
+\DoxyCodeLine{44 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{45 }
+\DoxyCodeLine{46 \textcolor{comment}{/* Definitions provided directly by GCC and Clang. */}}
+\DoxyCodeLine{47 \textcolor{preprocessor}{\#if !(defined(\_\_BYTE\_ORDER\_\_) \&\& defined(\_\_ORDER\_LITTLE\_ENDIAN\_\_) \&\& defined(\_\_ORDER\_BIG\_ENDIAN\_\_))}}
+\DoxyCodeLine{48 }
+\DoxyCodeLine{49 \textcolor{preprocessor}{\#if defined(\_\_GLIBC\_\_)}}
+\DoxyCodeLine{50 }
+\DoxyCodeLine{51 \textcolor{preprocessor}{\#include <features.h>}}
+\DoxyCodeLine{52 \textcolor{preprocessor}{\#include <endian.h>}}
+\DoxyCodeLine{53 \textcolor{preprocessor}{\#define \_\_ORDER\_LITTLE\_ENDIAN\_\_  \_\_LITTLE\_ENDIAN}}
+\DoxyCodeLine{54 \textcolor{preprocessor}{\#define \_\_ORDER\_BIG\_ENDIAN\_\_     \_\_BIG\_ENDIAN}}
+\DoxyCodeLine{55 \textcolor{preprocessor}{\#define \_\_BYTE\_ORDER\_\_           \_\_BYTE\_ORDER}}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57 \textcolor{preprocessor}{\#elif defined(\_\_APPLE\_\_)}}
+\DoxyCodeLine{58 }
+\DoxyCodeLine{59 \textcolor{preprocessor}{\#include <machine/endian.h>}}
+\DoxyCodeLine{60 \textcolor{preprocessor}{\#define \_\_ORDER\_LITTLE\_ENDIAN\_\_  LITTLE\_ENDIAN}}
+\DoxyCodeLine{61 \textcolor{preprocessor}{\#define \_\_ORDER\_BIG\_ENDIAN\_\_     BIG\_ENDIAN}}
+\DoxyCodeLine{62 \textcolor{preprocessor}{\#define \_\_BYTE\_ORDER\_\_           BYTE\_ORDER}}
+\DoxyCodeLine{63 }
+\DoxyCodeLine{64 \textcolor{preprocessor}{\#elif defined(\_WIN32)}}
+\DoxyCodeLine{65 }
+\DoxyCodeLine{66 \textcolor{preprocessor}{\#define \_\_ORDER\_LITTLE\_ENDIAN\_\_  1234}}
+\DoxyCodeLine{67 \textcolor{preprocessor}{\#define \_\_ORDER\_BIG\_ENDIAN\_\_     4321}}
+\DoxyCodeLine{68 \textcolor{preprocessor}{\#define \_\_BYTE\_ORDER\_\_           \_\_ORDER\_LITTLE\_ENDIAN\_\_}}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{70 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{71 }
+\DoxyCodeLine{72 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_BYTE\_ORDER\_\_, \_\_ORDER\_LITTLE\_ENDIAN\_\_ and \_\_ORDER\_BIG\_ENDIAN\_\_ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{73 }
+\DoxyCodeLine{74 \textcolor{preprocessor}{\#ifndef \_\_FLOAT\_WORD\_ORDER\_\_}}
+\DoxyCodeLine{75 \textcolor{preprocessor}{\#define \_\_FLOAT\_WORD\_ORDER\_\_     \_\_BYTE\_ORDER\_\_}}
+\DoxyCodeLine{76 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{77 }
+\DoxyCodeLine{78 \textcolor{keyword}{union }\mbox{\hyperlink{union_i_e_e_ef2bits}{IEEEf2bits}} \{}
+\DoxyCodeLine{79     \textcolor{keywordtype}{float}   \mbox{\hyperlink{union_i_e_e_ef2bits_ae6d6e95cf3d677688f6528608f48c780}{f}};}
+\DoxyCodeLine{80     \textcolor{keyword}{struct }\{}
+\DoxyCodeLine{81 \textcolor{preprocessor}{\#if \_\_BYTE\_ORDER\_\_ == \_\_ORDER\_LITTLE\_ENDIAN\_\_}}
+\DoxyCodeLine{82         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}    \mbox{\hyperlink{union_i_e_e_ef2bits_ad6b2320a4cfc43bc01cbc1a4f001302e}{man}}  :23;}
+\DoxyCodeLine{83         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}    \mbox{\hyperlink{union_i_e_e_ef2bits_a25316f1e89f29fe59b1a6544010c53a6}{exp}}  :8;}
+\DoxyCodeLine{84         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}    \mbox{\hyperlink{union_i_e_e_ef2bits_a0bfd4c6a86772ebd96cc8108108c1027}{sign}}    :1;}
+\DoxyCodeLine{85 \textcolor{preprocessor}{\#else }\textcolor{comment}{/* \_BIG\_ENDIAN */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{86         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}    \mbox{\hyperlink{union_i_e_e_ef2bits_a0bfd4c6a86772ebd96cc8108108c1027}{sign}}    :1;}
+\DoxyCodeLine{87         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}    \mbox{\hyperlink{union_i_e_e_ef2bits_a25316f1e89f29fe59b1a6544010c53a6}{exp}}  :8;}
+\DoxyCodeLine{88         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}    \mbox{\hyperlink{union_i_e_e_ef2bits_ad6b2320a4cfc43bc01cbc1a4f001302e}{man}}  :23;}
+\DoxyCodeLine{89 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{90     \} \mbox{\hyperlink{union_i_e_e_ef2bits_a68a4e2d7dafde418bcd6a785f522b1bc}{bits}};}
+\DoxyCodeLine{91 \};}
+\DoxyCodeLine{92 }
+\DoxyCodeLine{93 \textcolor{preprocessor}{\#define DBL\_MANH\_SIZE   20}}
+\DoxyCodeLine{94 \textcolor{preprocessor}{\#define DBL\_MANL\_SIZE   32}}
+\DoxyCodeLine{95 }
+\DoxyCodeLine{96 \textcolor{keyword}{union }\mbox{\hyperlink{union_i_e_e_ed2bits}{IEEEd2bits}} \{}
+\DoxyCodeLine{97     \textcolor{keywordtype}{double}  \mbox{\hyperlink{union_i_e_e_ed2bits_a33c7c3c2262532e75937397d13c1d82a}{d}};}
+\DoxyCodeLine{98     \textcolor{keyword}{struct }\{}
+\DoxyCodeLine{99 \textcolor{preprocessor}{\#if \_\_BYTE\_ORDER\_\_ == \_\_ORDER\_LITTLE\_ENDIAN\_\_}}
+\DoxyCodeLine{100 \textcolor{preprocessor}{\#if \_\_FLOAT\_WORD\_ORDER\_\_ == \_\_ORDER\_LITTLE\_ENDIAN\_\_}}
+\DoxyCodeLine{101         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}    \mbox{\hyperlink{union_i_e_e_ed2bits_a4a36676e60642d708b92f151f28bcc3f}{manl}}    :32;}
+\DoxyCodeLine{102 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{103         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}    \mbox{\hyperlink{union_i_e_e_ed2bits_a07170fd686fb8c40c646b338760e0def}{manh}}    :20;}
+\DoxyCodeLine{104         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}    \mbox{\hyperlink{union_i_e_e_ed2bits_ab2986e1e5afafed7862f424a4864921f}{exp}}  :11;}
+\DoxyCodeLine{105         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}    \mbox{\hyperlink{union_i_e_e_ed2bits_afc7b8efaa2a6da0110aff4fac3da89f9}{sign}}    :1;}
+\DoxyCodeLine{106 \textcolor{preprocessor}{\#if \_\_FLOAT\_WORD\_ORDER\_\_ == \_\_ORDER\_BIG\_ENDIAN\_\_}}
+\DoxyCodeLine{107         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}    \mbox{\hyperlink{union_i_e_e_ed2bits_a4a36676e60642d708b92f151f28bcc3f}{manl}}    :32;}
+\DoxyCodeLine{108 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{109 \textcolor{preprocessor}{\#else }\textcolor{comment}{/* \_BIG\_ENDIAN */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{110         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}    \mbox{\hyperlink{union_i_e_e_ed2bits_afc7b8efaa2a6da0110aff4fac3da89f9}{sign}}    :1;}
+\DoxyCodeLine{111         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}    \mbox{\hyperlink{union_i_e_e_ed2bits_ab2986e1e5afafed7862f424a4864921f}{exp}}  :11;}
+\DoxyCodeLine{112         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}    \mbox{\hyperlink{union_i_e_e_ed2bits_a07170fd686fb8c40c646b338760e0def}{manh}}    :20;}
+\DoxyCodeLine{113         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}    \mbox{\hyperlink{union_i_e_e_ed2bits_a4a36676e60642d708b92f151f28bcc3f}{manl}}    :32;}
+\DoxyCodeLine{114 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{115     \} \mbox{\hyperlink{union_i_e_e_ed2bits_a67234989e190113516feb9f14c81e7a1}{bits}};}
+\DoxyCodeLine{116 \};}
+\DoxyCodeLine{117 }
+\DoxyCodeLine{118 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

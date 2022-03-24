@@ -1,0 +1,103 @@
+\hypertarget{ata_8cpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/hw/diskphys/ata.cpp File Reference}
+\label{ata_8cpp}\index{C:/Users/Alex/Desktop/Banana/kernel/hw/diskphys/ata.cpp@{C:/Users/Alex/Desktop/Banana/kernel/hw/diskphys/ata.cpp}}
+{\ttfamily \#include \char`\"{}hw/diskphys/ata.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/diskctrl/ide.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/hal.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/acpi.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/common.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/physmgr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/virtmgr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}thr/prcssthr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hal/vcache.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hal/logidisk.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/cpu.\+hpp\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{ata_8cpp_a0bcf0b9a9c95f2560ae31185e409e5c4}{MODE\+\_\+\+CHS}}~0
+\item 
+\#define \mbox{\hyperlink{ata_8cpp_a5366097fe4d717f5338eaa71a43c3c5b}{MODE\+\_\+\+LBA28}}~1
+\item 
+\#define \mbox{\hyperlink{ata_8cpp_a61b9cb67d0c9e9318cab1d827f69b1c6}{MODE\+\_\+\+LBA48}}~2
+\item 
+\#define \mbox{\hyperlink{ata_8cpp_acdfa5498f8ad2240defee7c4b2c3bcc6}{MODE\+\_\+\+DMA28}}~3
+\item 
+\#define \mbox{\hyperlink{ata_8cpp_ab377595b809dbe7a24128c37efc6c022}{MODE\+\_\+\+DMA48}}~4
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{ata_8cpp_a0d226f6357648d4208ab902e2f23b267}{combine\+Char\+And\+Colour}} (char \mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}, uint8\+\_\+t \mbox{\hyperlink{syscalls_8cpp_ab0ea24539a2252176fffac31d88365ba}{d}})
+\item 
+uint8\+\_\+t \mbox{\hyperlink{ata_8cpp_a878a1bb7ade834f730fdc37aaee0aff5}{combine\+Colours}} (uint8\+\_\+t a, uint8\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a99ed6187132780a335e6db030a0115e7}{b}})
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{ata_8cpp_a9e0c1101b4e09b097f4540f6493369fa}{ata\+Sectors\+Read}} = 0
+\item 
+int \mbox{\hyperlink{ata_8cpp_a2e7d9fc8508a1d46109414d4fb410acd}{ata\+Sectors\+Written}} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{ata_8cpp_a0bcf0b9a9c95f2560ae31185e409e5c4}\label{ata_8cpp_a0bcf0b9a9c95f2560ae31185e409e5c4}} 
+\index{ata.cpp@{ata.cpp}!MODE\_CHS@{MODE\_CHS}}
+\index{MODE\_CHS@{MODE\_CHS}!ata.cpp@{ata.cpp}}
+\doxysubsubsection{\texorpdfstring{MODE\_CHS}{MODE\_CHS}}
+{\footnotesize\ttfamily \#define MODE\+\_\+\+CHS~0}
+
+\mbox{\Hypertarget{ata_8cpp_acdfa5498f8ad2240defee7c4b2c3bcc6}\label{ata_8cpp_acdfa5498f8ad2240defee7c4b2c3bcc6}} 
+\index{ata.cpp@{ata.cpp}!MODE\_DMA28@{MODE\_DMA28}}
+\index{MODE\_DMA28@{MODE\_DMA28}!ata.cpp@{ata.cpp}}
+\doxysubsubsection{\texorpdfstring{MODE\_DMA28}{MODE\_DMA28}}
+{\footnotesize\ttfamily \#define MODE\+\_\+\+DMA28~3}
+
+\mbox{\Hypertarget{ata_8cpp_ab377595b809dbe7a24128c37efc6c022}\label{ata_8cpp_ab377595b809dbe7a24128c37efc6c022}} 
+\index{ata.cpp@{ata.cpp}!MODE\_DMA48@{MODE\_DMA48}}
+\index{MODE\_DMA48@{MODE\_DMA48}!ata.cpp@{ata.cpp}}
+\doxysubsubsection{\texorpdfstring{MODE\_DMA48}{MODE\_DMA48}}
+{\footnotesize\ttfamily \#define MODE\+\_\+\+DMA48~4}
+
+\mbox{\Hypertarget{ata_8cpp_a5366097fe4d717f5338eaa71a43c3c5b}\label{ata_8cpp_a5366097fe4d717f5338eaa71a43c3c5b}} 
+\index{ata.cpp@{ata.cpp}!MODE\_LBA28@{MODE\_LBA28}}
+\index{MODE\_LBA28@{MODE\_LBA28}!ata.cpp@{ata.cpp}}
+\doxysubsubsection{\texorpdfstring{MODE\_LBA28}{MODE\_LBA28}}
+{\footnotesize\ttfamily \#define MODE\+\_\+\+LBA28~1}
+
+\mbox{\Hypertarget{ata_8cpp_a61b9cb67d0c9e9318cab1d827f69b1c6}\label{ata_8cpp_a61b9cb67d0c9e9318cab1d827f69b1c6}} 
+\index{ata.cpp@{ata.cpp}!MODE\_LBA48@{MODE\_LBA48}}
+\index{MODE\_LBA48@{MODE\_LBA48}!ata.cpp@{ata.cpp}}
+\doxysubsubsection{\texorpdfstring{MODE\_LBA48}{MODE\_LBA48}}
+{\footnotesize\ttfamily \#define MODE\+\_\+\+LBA48~2}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{ata_8cpp_a0d226f6357648d4208ab902e2f23b267}\label{ata_8cpp_a0d226f6357648d4208ab902e2f23b267}} 
+\index{ata.cpp@{ata.cpp}!combineCharAndColour@{combineCharAndColour}}
+\index{combineCharAndColour@{combineCharAndColour}!ata.cpp@{ata.cpp}}
+\doxysubsubsection{\texorpdfstring{combineCharAndColour()}{combineCharAndColour()}}
+{\footnotesize\ttfamily uint16\+\_\+t combine\+Char\+And\+Colour (\begin{DoxyParamCaption}\item[{char}]{c,  }\item[{uint8\+\_\+t}]{d }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ata_8cpp_a878a1bb7ade834f730fdc37aaee0aff5}\label{ata_8cpp_a878a1bb7ade834f730fdc37aaee0aff5}} 
+\index{ata.cpp@{ata.cpp}!combineColours@{combineColours}}
+\index{combineColours@{combineColours}!ata.cpp@{ata.cpp}}
+\doxysubsubsection{\texorpdfstring{combineColours()}{combineColours()}}
+{\footnotesize\ttfamily uint8\+\_\+t combine\+Colours (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{a,  }\item[{uint8\+\_\+t}]{b }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{ata_8cpp_a9e0c1101b4e09b097f4540f6493369fa}\label{ata_8cpp_a9e0c1101b4e09b097f4540f6493369fa}} 
+\index{ata.cpp@{ata.cpp}!ataSectorsRead@{ataSectorsRead}}
+\index{ataSectorsRead@{ataSectorsRead}!ata.cpp@{ata.cpp}}
+\doxysubsubsection{\texorpdfstring{ataSectorsRead}{ataSectorsRead}}
+{\footnotesize\ttfamily int ata\+Sectors\+Read = 0}
+
+\mbox{\Hypertarget{ata_8cpp_a2e7d9fc8508a1d46109414d4fb410acd}\label{ata_8cpp_a2e7d9fc8508a1d46109414d4fb410acd}} 
+\index{ata.cpp@{ata.cpp}!ataSectorsWritten@{ataSectorsWritten}}
+\index{ataSectorsWritten@{ataSectorsWritten}!ata.cpp@{ata.cpp}}
+\doxysubsubsection{\texorpdfstring{ataSectorsWritten}{ataSectorsWritten}}
+{\footnotesize\ttfamily int ata\+Sectors\+Written = 0}
+

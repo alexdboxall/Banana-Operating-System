@@ -1,0 +1,25 @@
+var struct_process =
+[
+    [ "Process", "struct_process.html#ac837be5846b3ba51e704497e46325d75", null ],
+    [ "Process", "struct_process.html#a5dc76665c68e3c0e07cfd53ae1affb3a", null ],
+    [ "addArgs", "struct_process.html#aad29f15b5ec45955faf8629e6b0fe80c", null ],
+    [ "createThread", "struct_process.html#af9c954d4cab25dcf102ba87948e98d78", null ],
+    [ "createUserThread", "struct_process.html#a45eb83fc16f21bd67da79824db5e3df0", null ],
+    [ "argc", "struct_process.html#aaa092fc728cb2bac76af4fd8e343c46c", null ],
+    [ "argv", "struct_process.html#ad0443e3dfc398ff2d21db865c5cabc89", null ],
+    [ "cwd", "struct_process.html#a97d01d6f48ad397fc44db84250fcfec9", null ],
+    [ "env", "struct_process.html#aef394e9d185b1f88ec4ac80a9fd22917", null ],
+    [ "failedToLoadProgram", "struct_process.html#a8d8a58ab39414a0ee7e268ce6b04d542", null ],
+    [ "gotCtrlC", "struct_process.html#aca4c1751a647947d3185dafedb156f91", null ],
+    [ "nextDeletablePointer", "struct_process.html#a34a5257f099c9a4bf066b2e7f8ad941e", null ],
+    [ "parent", "struct_process.html#adcdfdd16c388ce086d429557337b560d", null ],
+    [ "pid", "struct_process.html#a595b4f93d83869f5cc3681cfeebc5609", null ],
+    [ "pointersToDelete", "struct_process.html#a941edb06ca7aa4e2ac8550b6caf1e3ec", null ],
+    [ "signals", "struct_process.html#a19c943c825c08c3b1678bd84cca1d906", null ],
+    [ "taskname", "struct_process.html#aff764866680a0ae411add0afea8af3ab", null ],
+    [ "terminal", "struct_process.html#aee13d8ecd96969594e8b642c2efd3d94", null ],
+    [ "threads", "struct_process.html#a81349af3902f2fa2c845aedf73808427", null ],
+    [ "threadUsage", "struct_process.html#aacfc46945783bb90ce85c8ea96482d2b", null ],
+    [ "usermodeEntryPoint", "struct_process.html#ad65efb478be4aa1868477b85ecc52a50", null ],
+    [ "vas", "struct_process.html#af4b8d958a3bb28ff8cec077ced861b52", null ]
+];

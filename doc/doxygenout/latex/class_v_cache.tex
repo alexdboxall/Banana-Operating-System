@@ -1,0 +1,209 @@
+\hypertarget{class_v_cache}{}\doxysection{VCache Class Reference}
+\label{class_v_cache}\index{VCache@{VCache}}
+
+
+{\ttfamily \#include $<$vcache.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_v_cache_aef210ae2b0ac3fb5d79251fd0b30e2a8}{write\+Write\+Buffer}} ()
+\item 
+void \mbox{\hyperlink{class_v_cache_a02cf7a9f17e310adbe4b22ee74b3bf95}{invalidate\+Read\+Buffer}} ()
+\item 
+\mbox{\hyperlink{class_v_cache_a254a3f246af43997a8e7f9133cbabdb1}{VCache}} (\mbox{\hyperlink{class_physical_disk}{Physical\+Disk}} $\ast$\mbox{\hyperlink{class_v_cache_a4c329f36540d59c552104ed44a7491ae}{disk}})
+\item 
+virtual \mbox{\hyperlink{class_v_cache_a399cacd6e7a662631829f0e5c81531cf}{$\sim$\+VCache}} ()
+\item 
+int \mbox{\hyperlink{class_v_cache_a6a3ccf77b4bc9f4322524ac55536d11a}{read}} (uint64\+\_\+t lba, int count, void $\ast$\mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}})
+\item 
+int \mbox{\hyperlink{class_v_cache_ac3f6bc5937d2f48783a1b7a79f34a24c}{write}} (uint64\+\_\+t lba, int count, void $\ast$\mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}})
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_mutex}{Mutex}} $\ast$ \mbox{\hyperlink{class_v_cache_a6deee1a297e42e57672ac04e136aa93f}{mutex}}
+\item 
+\mbox{\hyperlink{class_physical_disk}{Physical\+Disk}} $\ast$ \mbox{\hyperlink{class_v_cache_a4c329f36540d59c552104ed44a7491ae}{disk}}
+\item 
+int \mbox{\hyperlink{class_v_cache_a83374895cab3b4c32d1b1868f9cf9f98}{disk\+Sector\+Size}} = 512
+\item 
+int \mbox{\hyperlink{class_v_cache_a5fc305aecbb6efe248c36da46205c3fd}{block\+Size\+In\+Sectors}} = 4
+\item 
+uint64\+\_\+t \mbox{\hyperlink{class_v_cache_a448e609816f2d9d6f01da12820a57820}{disk\+Size\+KBs}} = 64
+\item 
+uint64\+\_\+t \mbox{\hyperlink{class_v_cache_a54035127c04ec475ab399b91e3799ed1}{write\+Cache\+LBA}} = 0
+\item 
+int \mbox{\hyperlink{class_v_cache_af25fd838fa7044c85da74c1929cdefdc}{write\+Cache\+Sectors}} = 0
+\item 
+uint8\+\_\+t $\ast$ \mbox{\hyperlink{class_v_cache_a859a309af7c0457e10d279797ed75dbd}{write\+Cache\+Buffer}}
+\item 
+bool \mbox{\hyperlink{class_v_cache_a67d0cd2ce81ba9f2900f731114dc003b}{write\+Cache\+Valid}} = false
+\item 
+uint64\+\_\+t \mbox{\hyperlink{class_v_cache_a675e3c6217c76b6fbd7b6dcdca8da4bb}{read\+Cache\+LBA}} = 0
+\item 
+uint8\+\_\+t $\ast$ \mbox{\hyperlink{class_v_cache_a5eb81046850cbf2c8382ed0dad7bd8cd}{read\+Cache\+Buffer}}
+\item 
+bool \mbox{\hyperlink{class_v_cache_ad1731f80b29429627a7094c162fb19c2}{read\+Cache\+Valid}} = false
+\item 
+bool \mbox{\hyperlink{class_v_cache_a9ae282fd94d572e404164c0310efa15f}{hit\+Block\+End}} = false
+\item 
+bool \mbox{\hyperlink{class_v_cache_a8ae7a2637c0d7a8f2f86c98970cba453}{increase\+Next\+Time}} = false
+\item 
+int \mbox{\hyperlink{class_v_cache_a088bc01837c0862166d12d69b8ebb8f6}{READ\+\_\+\+BUFFER\+\_\+\+BLOCK\+\_\+\+SIZE}} = 4
+\end{DoxyCompactItemize}
+\doxysubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_v_cache_a35a4ee445534e96a39c67160a05d1ef3}{vcache\+Dispatcher}} (void $\ast$context)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_v_cache_a254a3f246af43997a8e7f9133cbabdb1}\label{class_v_cache_a254a3f246af43997a8e7f9133cbabdb1}} 
+\index{VCache@{VCache}!VCache@{VCache}}
+\index{VCache@{VCache}!VCache@{VCache}}
+\doxysubsubsection{\texorpdfstring{VCache()}{VCache()}}
+{\footnotesize\ttfamily VCache\+::\+VCache (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_physical_disk}{Physical\+Disk}} $\ast$}]{disk }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_v_cache_a399cacd6e7a662631829f0e5c81531cf}\label{class_v_cache_a399cacd6e7a662631829f0e5c81531cf}} 
+\index{VCache@{VCache}!````~VCache@{$\sim$VCache}}
+\index{````~VCache@{$\sim$VCache}!VCache@{VCache}}
+\doxysubsubsection{\texorpdfstring{$\sim$VCache()}{~VCache()}}
+{\footnotesize\ttfamily VCache\+::$\sim$\+VCache (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_v_cache_a02cf7a9f17e310adbe4b22ee74b3bf95}\label{class_v_cache_a02cf7a9f17e310adbe4b22ee74b3bf95}} 
+\index{VCache@{VCache}!invalidateReadBuffer@{invalidateReadBuffer}}
+\index{invalidateReadBuffer@{invalidateReadBuffer}!VCache@{VCache}}
+\doxysubsubsection{\texorpdfstring{invalidateReadBuffer()}{invalidateReadBuffer()}}
+{\footnotesize\ttfamily void VCache\+::invalidate\+Read\+Buffer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_v_cache_a6a3ccf77b4bc9f4322524ac55536d11a}\label{class_v_cache_a6a3ccf77b4bc9f4322524ac55536d11a}} 
+\index{VCache@{VCache}!read@{read}}
+\index{read@{read}!VCache@{VCache}}
+\doxysubsubsection{\texorpdfstring{read()}{read()}}
+{\footnotesize\ttfamily int VCache\+::read (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{lba,  }\item[{int}]{count,  }\item[{void $\ast$}]{ptr }\end{DoxyParamCaption})}
+
+TODO\+: get all touchy-\/feely AND LOCK THE MEMORY (aka. ensure the buffer is in actual RAM, not the swapfile)\mbox{\Hypertarget{class_v_cache_ac3f6bc5937d2f48783a1b7a79f34a24c}\label{class_v_cache_ac3f6bc5937d2f48783a1b7a79f34a24c}} 
+\index{VCache@{VCache}!write@{write}}
+\index{write@{write}!VCache@{VCache}}
+\doxysubsubsection{\texorpdfstring{write()}{write()}}
+{\footnotesize\ttfamily int VCache\+::write (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{lba,  }\item[{int}]{count,  }\item[{void $\ast$}]{ptr }\end{DoxyParamCaption})}
+
+TODO\+: get all touchy-\/feely AND LOCK THE MEMORY (aka. ensure the buffer is in actual RAM, not the swapfile)\mbox{\Hypertarget{class_v_cache_aef210ae2b0ac3fb5d79251fd0b30e2a8}\label{class_v_cache_aef210ae2b0ac3fb5d79251fd0b30e2a8}} 
+\index{VCache@{VCache}!writeWriteBuffer@{writeWriteBuffer}}
+\index{writeWriteBuffer@{writeWriteBuffer}!VCache@{VCache}}
+\doxysubsubsection{\texorpdfstring{writeWriteBuffer()}{writeWriteBuffer()}}
+{\footnotesize\ttfamily void VCache\+::write\+Write\+Buffer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Friends And Related Function Documentation}
+\mbox{\Hypertarget{class_v_cache_a35a4ee445534e96a39c67160a05d1ef3}\label{class_v_cache_a35a4ee445534e96a39c67160a05d1ef3}} 
+\index{VCache@{VCache}!vcacheDispatcher@{vcacheDispatcher}}
+\index{vcacheDispatcher@{vcacheDispatcher}!VCache@{VCache}}
+\doxysubsubsection{\texorpdfstring{vcacheDispatcher}{vcacheDispatcher}}
+{\footnotesize\ttfamily void vcache\+Dispatcher (\begin{DoxyParamCaption}\item[{void $\ast$}]{context }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_v_cache_a5fc305aecbb6efe248c36da46205c3fd}\label{class_v_cache_a5fc305aecbb6efe248c36da46205c3fd}} 
+\index{VCache@{VCache}!blockSizeInSectors@{blockSizeInSectors}}
+\index{blockSizeInSectors@{blockSizeInSectors}!VCache@{VCache}}
+\doxysubsubsection{\texorpdfstring{blockSizeInSectors}{blockSizeInSectors}}
+{\footnotesize\ttfamily int VCache\+::block\+Size\+In\+Sectors = 4\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_v_cache_a4c329f36540d59c552104ed44a7491ae}\label{class_v_cache_a4c329f36540d59c552104ed44a7491ae}} 
+\index{VCache@{VCache}!disk@{disk}}
+\index{disk@{disk}!VCache@{VCache}}
+\doxysubsubsection{\texorpdfstring{disk}{disk}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_physical_disk}{Physical\+Disk}}$\ast$ VCache\+::disk\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_v_cache_a83374895cab3b4c32d1b1868f9cf9f98}\label{class_v_cache_a83374895cab3b4c32d1b1868f9cf9f98}} 
+\index{VCache@{VCache}!diskSectorSize@{diskSectorSize}}
+\index{diskSectorSize@{diskSectorSize}!VCache@{VCache}}
+\doxysubsubsection{\texorpdfstring{diskSectorSize}{diskSectorSize}}
+{\footnotesize\ttfamily int VCache\+::disk\+Sector\+Size = 512\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_v_cache_a448e609816f2d9d6f01da12820a57820}\label{class_v_cache_a448e609816f2d9d6f01da12820a57820}} 
+\index{VCache@{VCache}!diskSizeKBs@{diskSizeKBs}}
+\index{diskSizeKBs@{diskSizeKBs}!VCache@{VCache}}
+\doxysubsubsection{\texorpdfstring{diskSizeKBs}{diskSizeKBs}}
+{\footnotesize\ttfamily uint64\+\_\+t VCache\+::disk\+Size\+KBs = 64\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_v_cache_a9ae282fd94d572e404164c0310efa15f}\label{class_v_cache_a9ae282fd94d572e404164c0310efa15f}} 
+\index{VCache@{VCache}!hitBlockEnd@{hitBlockEnd}}
+\index{hitBlockEnd@{hitBlockEnd}!VCache@{VCache}}
+\doxysubsubsection{\texorpdfstring{hitBlockEnd}{hitBlockEnd}}
+{\footnotesize\ttfamily bool VCache\+::hit\+Block\+End = false\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_v_cache_a8ae7a2637c0d7a8f2f86c98970cba453}\label{class_v_cache_a8ae7a2637c0d7a8f2f86c98970cba453}} 
+\index{VCache@{VCache}!increaseNextTime@{increaseNextTime}}
+\index{increaseNextTime@{increaseNextTime}!VCache@{VCache}}
+\doxysubsubsection{\texorpdfstring{increaseNextTime}{increaseNextTime}}
+{\footnotesize\ttfamily bool VCache\+::increase\+Next\+Time = false\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_v_cache_a6deee1a297e42e57672ac04e136aa93f}\label{class_v_cache_a6deee1a297e42e57672ac04e136aa93f}} 
+\index{VCache@{VCache}!mutex@{mutex}}
+\index{mutex@{mutex}!VCache@{VCache}}
+\doxysubsubsection{\texorpdfstring{mutex}{mutex}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_mutex}{Mutex}}$\ast$ VCache\+::mutex\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_v_cache_a088bc01837c0862166d12d69b8ebb8f6}\label{class_v_cache_a088bc01837c0862166d12d69b8ebb8f6}} 
+\index{VCache@{VCache}!READ\_BUFFER\_BLOCK\_SIZE@{READ\_BUFFER\_BLOCK\_SIZE}}
+\index{READ\_BUFFER\_BLOCK\_SIZE@{READ\_BUFFER\_BLOCK\_SIZE}!VCache@{VCache}}
+\doxysubsubsection{\texorpdfstring{READ\_BUFFER\_BLOCK\_SIZE}{READ\_BUFFER\_BLOCK\_SIZE}}
+{\footnotesize\ttfamily int VCache\+::\+READ\+\_\+\+BUFFER\+\_\+\+BLOCK\+\_\+\+SIZE = 4\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_v_cache_a5eb81046850cbf2c8382ed0dad7bd8cd}\label{class_v_cache_a5eb81046850cbf2c8382ed0dad7bd8cd}} 
+\index{VCache@{VCache}!readCacheBuffer@{readCacheBuffer}}
+\index{readCacheBuffer@{readCacheBuffer}!VCache@{VCache}}
+\doxysubsubsection{\texorpdfstring{readCacheBuffer}{readCacheBuffer}}
+{\footnotesize\ttfamily uint8\+\_\+t$\ast$ VCache\+::read\+Cache\+Buffer\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_v_cache_a675e3c6217c76b6fbd7b6dcdca8da4bb}\label{class_v_cache_a675e3c6217c76b6fbd7b6dcdca8da4bb}} 
+\index{VCache@{VCache}!readCacheLBA@{readCacheLBA}}
+\index{readCacheLBA@{readCacheLBA}!VCache@{VCache}}
+\doxysubsubsection{\texorpdfstring{readCacheLBA}{readCacheLBA}}
+{\footnotesize\ttfamily uint64\+\_\+t VCache\+::read\+Cache\+LBA = 0\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_v_cache_ad1731f80b29429627a7094c162fb19c2}\label{class_v_cache_ad1731f80b29429627a7094c162fb19c2}} 
+\index{VCache@{VCache}!readCacheValid@{readCacheValid}}
+\index{readCacheValid@{readCacheValid}!VCache@{VCache}}
+\doxysubsubsection{\texorpdfstring{readCacheValid}{readCacheValid}}
+{\footnotesize\ttfamily bool VCache\+::read\+Cache\+Valid = false\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_v_cache_a859a309af7c0457e10d279797ed75dbd}\label{class_v_cache_a859a309af7c0457e10d279797ed75dbd}} 
+\index{VCache@{VCache}!writeCacheBuffer@{writeCacheBuffer}}
+\index{writeCacheBuffer@{writeCacheBuffer}!VCache@{VCache}}
+\doxysubsubsection{\texorpdfstring{writeCacheBuffer}{writeCacheBuffer}}
+{\footnotesize\ttfamily uint8\+\_\+t$\ast$ VCache\+::write\+Cache\+Buffer\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_v_cache_a54035127c04ec475ab399b91e3799ed1}\label{class_v_cache_a54035127c04ec475ab399b91e3799ed1}} 
+\index{VCache@{VCache}!writeCacheLBA@{writeCacheLBA}}
+\index{writeCacheLBA@{writeCacheLBA}!VCache@{VCache}}
+\doxysubsubsection{\texorpdfstring{writeCacheLBA}{writeCacheLBA}}
+{\footnotesize\ttfamily uint64\+\_\+t VCache\+::write\+Cache\+LBA = 0\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_v_cache_af25fd838fa7044c85da74c1929cdefdc}\label{class_v_cache_af25fd838fa7044c85da74c1929cdefdc}} 
+\index{VCache@{VCache}!writeCacheSectors@{writeCacheSectors}}
+\index{writeCacheSectors@{writeCacheSectors}!VCache@{VCache}}
+\doxysubsubsection{\texorpdfstring{writeCacheSectors}{writeCacheSectors}}
+{\footnotesize\ttfamily int VCache\+::write\+Cache\+Sectors = 0\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_v_cache_a67d0cd2ce81ba9f2900f731114dc003b}\label{class_v_cache_a67d0cd2ce81ba9f2900f731114dc003b}} 
+\index{VCache@{VCache}!writeCacheValid@{writeCacheValid}}
+\index{writeCacheValid@{writeCacheValid}!VCache@{VCache}}
+\doxysubsubsection{\texorpdfstring{writeCacheValid}{writeCacheValid}}
+{\footnotesize\ttfamily bool VCache\+::write\+Cache\+Valid = false\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/hal/\mbox{\hyperlink{vcache_8hpp}{vcache.\+hpp}}\item 
+C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/hal/\mbox{\hyperlink{vcache_8cpp}{vcache.\+cpp}}\end{DoxyCompactItemize}

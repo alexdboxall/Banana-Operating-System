@@ -1,0 +1,166 @@
+\hypertarget{common_8h_source}{}\doxysection{common.\+h}
+\label{common_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/hal/libresample/common.h@{C:/Users/Alex/Desktop/Banana/kernel/hal/libresample/common.h}}
+\mbox{\hyperlink{common_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*}}
+\DoxyCodeLine{2 \textcolor{comment}{** Copyright (c) 2002-\/2016, Erik de Castro Lopo <erikd@mega-\/nerd.com>}}
+\DoxyCodeLine{3 \textcolor{comment}{** All rights reserved.}}
+\DoxyCodeLine{4 \textcolor{comment}{**}}
+\DoxyCodeLine{5 \textcolor{comment}{** This code is released under 2-\/clause BSD license. Please see the}}
+\DoxyCodeLine{6 \textcolor{comment}{** file at : https://github.com/erikd/libsamplerate/blob/master/COPYING}}
+\DoxyCodeLine{7 \textcolor{comment}{*/}}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#ifndef COMMON\_H\_INCLUDED}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#define COMMON\_H\_INCLUDED}}
+\DoxyCodeLine{11 }
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#ifdef HAVE\_STDINT\_H}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#elif (SIZEOF\_INT == 4)}}
+\DoxyCodeLine{15 \textcolor{keyword}{typedef} \textcolor{keywordtype}{int}     int32\_t ;}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#elif (SIZEOF\_LONG == 4)}}
+\DoxyCodeLine{17 \textcolor{keyword}{typedef} \textcolor{keywordtype}{long}    int32\_t ;}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{19 }
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#define SRC\_MAX\_RATIO           256}}
+\DoxyCodeLine{21 \textcolor{preprocessor}{\#define SRC\_MAX\_RATIO\_STR       "{}256"{}}}
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23 \textcolor{preprocessor}{\#define SRC\_MIN\_RATIO\_DIFF      (1e-\/20)}}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25 \textcolor{preprocessor}{\#define MAX(a,b)    (((a) > (b)) ? (a) : (b))}}
+\DoxyCodeLine{26 \textcolor{preprocessor}{\#define MIN(a,b)    (((a) < (b)) ? (a) : (b))}}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#define ARRAY\_LEN(x)            ((int) (sizeof (x) / sizeof ((x) [0])))}}
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#define OFFSETOF(type,member)   ((int) (\&((type*) 0)-\/>member))}}
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31 \textcolor{preprocessor}{\#define MAKE\_MAGIC(a,b,c,d,e,f) ((a) + ((b) << 4) + ((c) << 8) + ((d) << 12) + ((e) << 16) + ((f) << 20))}}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33 \textcolor{comment}{/*}}
+\DoxyCodeLine{34 \textcolor{comment}{** Inspiration : http://sourcefrog.net/weblog/software/languages/C/unused.html}}
+\DoxyCodeLine{35 \textcolor{comment}{*/}}
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#ifdef UNUSED}}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#elif defined (\_\_GNUC\_\_)}}
+\DoxyCodeLine{38 \textcolor{preprocessor}{\#   define UNUSED(x) UNUSED\_ \#\# x \_\_attribute\_\_ ((unused))}}
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#elif defined (\_\_LCLINT\_\_)}}
+\DoxyCodeLine{40 \textcolor{preprocessor}{\#   define UNUSED(x) }\textcolor{comment}{/*@unused@*/}\textcolor{preprocessor}{ x}}
+\DoxyCodeLine{41 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#   define UNUSED(x) x}}
+\DoxyCodeLine{43 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{44 }
+\DoxyCodeLine{45 \textcolor{preprocessor}{\#ifdef \_\_GNUC\_\_}}
+\DoxyCodeLine{46 \textcolor{preprocessor}{\#   define WARN\_UNUSED  \_\_attribute\_\_ ((warn\_unused\_result))}}
+\DoxyCodeLine{47 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{48 \textcolor{preprocessor}{\#   define WARN\_UNUSED}}
+\DoxyCodeLine{49 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{50 }
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{samplerate_8h}{samplerate.h}}"{}}}
+\DoxyCodeLine{53 }
+\DoxyCodeLine{54 \textcolor{keyword}{enum}}
+\DoxyCodeLine{55 \{   \mbox{\hyperlink{common_8h_a80155586fa275b28773c9b203f52cabaa4faf2fd531cebb1cd32539990712b784}{SRC\_FALSE}}  = 0,}
+\DoxyCodeLine{56     \mbox{\hyperlink{common_8h_a80155586fa275b28773c9b203f52cabaad103752c6379b69158a58cd0efc699d9}{SRC\_TRUE}}    = 1,}
+\DoxyCodeLine{57 }
+\DoxyCodeLine{58     \mbox{\hyperlink{common_8h_a80155586fa275b28773c9b203f52cabaa046588446262f1243677dc1172f0414f}{SRC\_MODE\_PROCESS}}    = 555,}
+\DoxyCodeLine{59     \mbox{\hyperlink{common_8h_a80155586fa275b28773c9b203f52cabaa018608ae653c94346f15e57628adfb0e}{SRC\_MODE\_CALLBACK}}  = 556}
+\DoxyCodeLine{60 \} ;}
+\DoxyCodeLine{61 }
+\DoxyCodeLine{62 \textcolor{keyword}{enum}}
+\DoxyCodeLine{63 \{   \mbox{\hyperlink{common_8h_a6b7b47dd702d9e331586d485013fd1eaa2e96002f018a3e9361e1be9409668e03}{SRC\_ERR\_NO\_ERROR}} = 0,}
+\DoxyCodeLine{64 }
+\DoxyCodeLine{65     \mbox{\hyperlink{common_8h_a6b7b47dd702d9e331586d485013fd1eaaf9c83190c12b565d1fc823bf96b5d1cd}{SRC\_ERR\_MALLOC\_FAILED}},}
+\DoxyCodeLine{66     \mbox{\hyperlink{common_8h_a6b7b47dd702d9e331586d485013fd1eaa7a0e54db94f06741b8f4ad658d40f97d}{SRC\_ERR\_BAD\_STATE}},}
+\DoxyCodeLine{67     \mbox{\hyperlink{common_8h_a6b7b47dd702d9e331586d485013fd1eaae5d19a5ceb0cc59eeb2e6bd3303fcb5a}{SRC\_ERR\_BAD\_DATA}},}
+\DoxyCodeLine{68     \mbox{\hyperlink{common_8h_a6b7b47dd702d9e331586d485013fd1eaa6ed983015c1579f6f4f53169b08a6728}{SRC\_ERR\_BAD\_DATA\_PTR}},}
+\DoxyCodeLine{69     \mbox{\hyperlink{common_8h_a6b7b47dd702d9e331586d485013fd1eaabbfc2bc0b1e0e27b2d851fa51c731bee}{SRC\_ERR\_NO\_PRIVATE}},}
+\DoxyCodeLine{70     \mbox{\hyperlink{common_8h_a6b7b47dd702d9e331586d485013fd1eaa7d440a0163e93a59d2edb67ed02b0c52}{SRC\_ERR\_BAD\_SRC\_RATIO}},}
+\DoxyCodeLine{71     \mbox{\hyperlink{common_8h_a6b7b47dd702d9e331586d485013fd1eaa615eac02796a90d6b91160a6b1cd3594}{SRC\_ERR\_BAD\_PROC\_PTR}},}
+\DoxyCodeLine{72     \mbox{\hyperlink{common_8h_a6b7b47dd702d9e331586d485013fd1eaac04599856bc37170c7a9844001fb49b0}{SRC\_ERR\_SHIFT\_BITS}},}
+\DoxyCodeLine{73     \mbox{\hyperlink{common_8h_a6b7b47dd702d9e331586d485013fd1eaa210afa92ca57701c903da53be4dca72e}{SRC\_ERR\_FILTER\_LEN}},}
+\DoxyCodeLine{74     \mbox{\hyperlink{common_8h_a6b7b47dd702d9e331586d485013fd1eaaa849d086628177945cf3af1092273ec4}{SRC\_ERR\_BAD\_CONVERTER}},}
+\DoxyCodeLine{75     \mbox{\hyperlink{common_8h_a6b7b47dd702d9e331586d485013fd1eaa8935412442e48bd1ef6890565133d2e9}{SRC\_ERR\_BAD\_CHANNEL\_COUNT}},}
+\DoxyCodeLine{76     \mbox{\hyperlink{common_8h_a6b7b47dd702d9e331586d485013fd1eaaacca73b05af4b492690e9ffd53cd34d4}{SRC\_ERR\_SINC\_BAD\_BUFFER\_LEN}},}
+\DoxyCodeLine{77     \mbox{\hyperlink{common_8h_a6b7b47dd702d9e331586d485013fd1eaa12cf46f6cb33512f243f855a4f37d5b6}{SRC\_ERR\_SIZE\_INCOMPATIBILITY}},}
+\DoxyCodeLine{78     \mbox{\hyperlink{common_8h_a6b7b47dd702d9e331586d485013fd1eaaf84604d65f9e6cd189556cbabb0c8bd1}{SRC\_ERR\_BAD\_PRIV\_PTR}},}
+\DoxyCodeLine{79     \mbox{\hyperlink{common_8h_a6b7b47dd702d9e331586d485013fd1eaa5fddbad6b0de0fc670bf9986090c7af0}{SRC\_ERR\_BAD\_SINC\_STATE}},}
+\DoxyCodeLine{80     \mbox{\hyperlink{common_8h_a6b7b47dd702d9e331586d485013fd1eaa0c69aaf6f15074607019b855e64152af}{SRC\_ERR\_DATA\_OVERLAP}},}
+\DoxyCodeLine{81     \mbox{\hyperlink{common_8h_a6b7b47dd702d9e331586d485013fd1eaaf55fa30b6b9badb3394ddd94c87f021a}{SRC\_ERR\_BAD\_CALLBACK}},}
+\DoxyCodeLine{82     \mbox{\hyperlink{common_8h_a6b7b47dd702d9e331586d485013fd1eaa9789b8464acd9d0ceb55a4f2d05f04ad}{SRC\_ERR\_BAD\_MODE}},}
+\DoxyCodeLine{83     \mbox{\hyperlink{common_8h_a6b7b47dd702d9e331586d485013fd1eaa7f5739f53ddc73084933ef119928c116}{SRC\_ERR\_NULL\_CALLBACK}},}
+\DoxyCodeLine{84     \mbox{\hyperlink{common_8h_a6b7b47dd702d9e331586d485013fd1eaa2e47383ee2d7ac94f06b0ed8e61e251c}{SRC\_ERR\_NO\_VARIABLE\_RATIO}},}
+\DoxyCodeLine{85     \mbox{\hyperlink{common_8h_a6b7b47dd702d9e331586d485013fd1eaaa624a799949926d0bb5749389751a706}{SRC\_ERR\_SINC\_PREPARE\_DATA\_BAD\_LEN}},}
+\DoxyCodeLine{86     \mbox{\hyperlink{common_8h_a6b7b47dd702d9e331586d485013fd1eaa6e68769c16c5d56e8de524749bc91d89}{SRC\_ERR\_BAD\_INTERNAL\_STATE}},}
+\DoxyCodeLine{87 }
+\DoxyCodeLine{88     \textcolor{comment}{/* This must be the last error number. */}}
+\DoxyCodeLine{89     \mbox{\hyperlink{common_8h_a6b7b47dd702d9e331586d485013fd1eaa759e6636f80c541c331b8386aefb0b16}{SRC\_ERR\_MAX\_ERROR}}}
+\DoxyCodeLine{90 \} ;}
+\DoxyCodeLine{91 }
+\DoxyCodeLine{92 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_s_r_c___p_r_i_v_a_t_e__tag}{SRC\_PRIVATE\_tag}}}
+\DoxyCodeLine{93 \{   \textcolor{keywordtype}{double}  \mbox{\hyperlink{struct_s_r_c___p_r_i_v_a_t_e__tag_a71e4bdb7cd2c35fd0895dade14077e6d}{last\_ratio}}, \mbox{\hyperlink{struct_s_r_c___p_r_i_v_a_t_e__tag_a10ccd6a1340e514d54da30a7998585a2}{last\_position}} ;}
+\DoxyCodeLine{94 }
+\DoxyCodeLine{95     \textcolor{keywordtype}{int}     \mbox{\hyperlink{struct_s_r_c___p_r_i_v_a_t_e__tag_ae55eb429609e3fb9bd559f0e086717ce}{error}} ;}
+\DoxyCodeLine{96     \textcolor{keywordtype}{int}     \mbox{\hyperlink{struct_s_r_c___p_r_i_v_a_t_e__tag_ac7715580fb50e8d4ab5d8b0461cdf142}{channels}} ;}
+\DoxyCodeLine{97 }
+\DoxyCodeLine{98     \textcolor{comment}{/* SRC\_MODE\_PROCESS or SRC\_MODE\_CALLBACK */}}
+\DoxyCodeLine{99     \textcolor{keywordtype}{int}     \mbox{\hyperlink{struct_s_r_c___p_r_i_v_a_t_e__tag_abc5f0ce591dd69f13d85fad5a37c7680}{mode}} ;}
+\DoxyCodeLine{100 }
+\DoxyCodeLine{101     \textcolor{comment}{/* Pointer to data to converter specific data. */}}
+\DoxyCodeLine{102     \textcolor{keywordtype}{void}    *\mbox{\hyperlink{struct_s_r_c___p_r_i_v_a_t_e__tag_acb63a826e7a4e9f952eebcc83e9eb1e2}{private\_data}} ;}
+\DoxyCodeLine{103 }
+\DoxyCodeLine{104     \textcolor{comment}{/* Varispeed process function. */}}
+\DoxyCodeLine{105     int     (*\mbox{\hyperlink{struct_s_r_c___p_r_i_v_a_t_e__tag_a50a66aa3d2af6413e2d57c79d47c0a6a}{vari\_process}}) (\textcolor{keyword}{struct }\mbox{\hyperlink{struct_s_r_c___p_r_i_v_a_t_e__tag}{SRC\_PRIVATE\_tag}} *psrc, \mbox{\hyperlink{struct_s_r_c___d_a_t_a}{SRC\_DATA}} *\mbox{\hyperlink{acpi_8hpp_abbaff690fbbced9e133675b72b3c46e9}{data}}) ;}
+\DoxyCodeLine{106 }
+\DoxyCodeLine{107     \textcolor{comment}{/* Constant speed process function. */}}
+\DoxyCodeLine{108     int     (*\mbox{\hyperlink{struct_s_r_c___p_r_i_v_a_t_e__tag_a3d546808bd5549d825a6f7a199de1cdb}{const\_process}}) (\textcolor{keyword}{struct }\mbox{\hyperlink{struct_s_r_c___p_r_i_v_a_t_e__tag}{SRC\_PRIVATE\_tag}} *psrc, \mbox{\hyperlink{struct_s_r_c___d_a_t_a}{SRC\_DATA}} *\mbox{\hyperlink{acpi_8hpp_abbaff690fbbced9e133675b72b3c46e9}{data}}) ;}
+\DoxyCodeLine{109 }
+\DoxyCodeLine{110     \textcolor{comment}{/* State reset. */}}
+\DoxyCodeLine{111     void    (*\mbox{\hyperlink{struct_s_r_c___p_r_i_v_a_t_e__tag_ac42a9d641fe361f861875ef3a2666214}{reset}}) (\textcolor{keyword}{struct }\mbox{\hyperlink{struct_s_r_c___p_r_i_v_a_t_e__tag}{SRC\_PRIVATE\_tag}} *psrc) ;}
+\DoxyCodeLine{112 }
+\DoxyCodeLine{113     \textcolor{comment}{/* Data specific to SRC\_MODE\_CALLBACK. */}}
+\DoxyCodeLine{114     \mbox{\hyperlink{samplerate_8h_aff8534c2cb863b5f377817bfe0aa1d28}{src\_callback\_t}}    \mbox{\hyperlink{struct_s_r_c___p_r_i_v_a_t_e__tag_ab987911aef6230a455860df798575052}{callback\_func}} ;}
+\DoxyCodeLine{115     \textcolor{keywordtype}{void}            *\mbox{\hyperlink{struct_s_r_c___p_r_i_v_a_t_e__tag_abda4ba73f5fde4f69f68ebd5edc14a7b}{user\_callback\_data}} ;}
+\DoxyCodeLine{116     \textcolor{keywordtype}{long}            \mbox{\hyperlink{struct_s_r_c___p_r_i_v_a_t_e__tag_a257ea097951eeed80f35df79f65d83ee}{saved\_frames}} ;}
+\DoxyCodeLine{117     \textcolor{keyword}{const} \textcolor{keywordtype}{float}     *\mbox{\hyperlink{struct_s_r_c___p_r_i_v_a_t_e__tag_aa3d41c644f59e58d23a5bc402ded6157}{saved\_data}} ;}
+\DoxyCodeLine{118 \} \mbox{\hyperlink{common_8h_ac309a3d4a2ee943e7db36856c2999ff2}{SRC\_PRIVATE}} ;}
+\DoxyCodeLine{119 }
+\DoxyCodeLine{120 \textcolor{comment}{/* In src\_sinc.c */}}
+\DoxyCodeLine{121 \textcolor{keyword}{const} \textcolor{keywordtype}{char}* \mbox{\hyperlink{common_8h_aba086219697ab1a377d3ed155460d146}{sinc\_get\_name}} (\textcolor{keywordtype}{int} src\_enum) ;}
+\DoxyCodeLine{122 \textcolor{keyword}{const} \textcolor{keywordtype}{char}* \mbox{\hyperlink{common_8h_a2f1e3bcfa3e73841cab6417f1c0dc3d7}{sinc\_get\_description}} (\textcolor{keywordtype}{int} src\_enum) ;}
+\DoxyCodeLine{123 }
+\DoxyCodeLine{124 \textcolor{keywordtype}{int} \mbox{\hyperlink{common_8h_a3c5815e350b66c6796ec42eb199fa2fb}{sinc\_set\_converter}} (\mbox{\hyperlink{struct_s_r_c___p_r_i_v_a_t_e__tag}{SRC\_PRIVATE}} *psrc, \textcolor{keywordtype}{int} src\_enum) ;}
+\DoxyCodeLine{125 }
+\DoxyCodeLine{126 \textcolor{comment}{/* In src\_linear.c */}}
+\DoxyCodeLine{127 \textcolor{keyword}{const} \textcolor{keywordtype}{char}* \mbox{\hyperlink{common_8h_ade1fa2264b5869293106794ee8a7964b}{linear\_get\_name}} (\textcolor{keywordtype}{int} src\_enum) ;}
+\DoxyCodeLine{128 \textcolor{keyword}{const} \textcolor{keywordtype}{char}* \mbox{\hyperlink{common_8h_af866ec86175b546a47d29dcf16c28d5d}{linear\_get\_description}} (\textcolor{keywordtype}{int} src\_enum) ;}
+\DoxyCodeLine{129 }
+\DoxyCodeLine{130 \textcolor{keywordtype}{int} \mbox{\hyperlink{common_8h_aad401b1c14dba3e725b9c22ab8050fe1}{linear\_set\_converter}} (\mbox{\hyperlink{struct_s_r_c___p_r_i_v_a_t_e__tag}{SRC\_PRIVATE}} *psrc, \textcolor{keywordtype}{int} src\_enum) ;}
+\DoxyCodeLine{131 }
+\DoxyCodeLine{132 \textcolor{comment}{/* In src\_zoh.c */}}
+\DoxyCodeLine{133 \textcolor{keyword}{const} \textcolor{keywordtype}{char}* \mbox{\hyperlink{common_8h_a9a0beb906983b07f6c89d6ba87820cc5}{zoh\_get\_name}} (\textcolor{keywordtype}{int} src\_enum) ;}
+\DoxyCodeLine{134 \textcolor{keyword}{const} \textcolor{keywordtype}{char}* \mbox{\hyperlink{common_8h_a3051820e99980a0e8589ba1b60bfa1df}{zoh\_get\_description}} (\textcolor{keywordtype}{int} src\_enum) ;}
+\DoxyCodeLine{135 }
+\DoxyCodeLine{136 \textcolor{keywordtype}{int} \mbox{\hyperlink{common_8h_ae05aab784c0ecd5aa8ffe3804109724d}{zoh\_set\_converter}} (\mbox{\hyperlink{struct_s_r_c___p_r_i_v_a_t_e__tag}{SRC\_PRIVATE}} *psrc, \textcolor{keywordtype}{int} src\_enum) ;}
+\DoxyCodeLine{137 }
+\DoxyCodeLine{138 \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{139 \textcolor{comment}{**  Common static inline functions.}}
+\DoxyCodeLine{140 \textcolor{comment}{*/}}
+\DoxyCodeLine{141 }
+\DoxyCodeLine{142 \textcolor{keyword}{static} \textcolor{keyword}{inline} \mbox{\hyperlink{struct____attribute____}{\_\_attribute\_\_}}((always\_inline)) \textcolor{keywordtype}{double}}
+\DoxyCodeLine{143 fmod\_one (\textcolor{keywordtype}{double} x)}
+\DoxyCodeLine{144 \{   \textcolor{keywordtype}{double} \mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}} ;}
+\DoxyCodeLine{145 }
+\DoxyCodeLine{146     \mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}} = x -\/ \mbox{\hyperlink{openlibm__math_8h_a4e67c0d6d9bf9781d677095a240909fd}{lrint}} (x) ;}
+\DoxyCodeLine{147     \textcolor{keywordflow}{if} (\mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}} < 0.0)}
+\DoxyCodeLine{148         \textcolor{keywordflow}{return} \mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}} + 1.0 ;}
+\DoxyCodeLine{149 }
+\DoxyCodeLine{150     \textcolor{keywordflow}{return} \mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}} ;}
+\DoxyCodeLine{151 \} \textcolor{comment}{/* fmod\_one */}}
+\DoxyCodeLine{152 }
+\DoxyCodeLine{153 \textcolor{keyword}{static} \textcolor{keyword}{inline} \mbox{\hyperlink{struct____attribute____}{\_\_attribute\_\_}}((always\_inline)) \textcolor{keywordtype}{int}}
+\DoxyCodeLine{154 is\_bad\_src\_ratio (\textcolor{keywordtype}{double} ratio)}
+\DoxyCodeLine{155 \{   \textcolor{keywordflow}{return} (ratio < (1.0 / \mbox{\hyperlink{common_8h_a2a9b8fef1ef4f79e7ea2590ccd3f3efb}{SRC\_MAX\_RATIO}}) || ratio > (1.0 * \mbox{\hyperlink{common_8h_a2a9b8fef1ef4f79e7ea2590ccd3f3efb}{SRC\_MAX\_RATIO}})) ;}
+\DoxyCodeLine{156 \} \textcolor{comment}{/* is\_bad\_src\_ratio */}}
+\DoxyCodeLine{157 }
+\DoxyCodeLine{158 }
+\DoxyCodeLine{159 \textcolor{preprocessor}{\#endif  }\textcolor{comment}{/* COMMON\_H\_INCLUDED */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{160 }
+
+\end{DoxyCode}

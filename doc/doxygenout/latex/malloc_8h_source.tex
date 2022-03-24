@@ -1,0 +1,673 @@
+\hypertarget{malloc_8h_source}{}\doxysection{malloc.\+h}
+\label{malloc_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/krnl/malloc.h@{C:/Users/Alex/Desktop/Banana/kernel/krnl/malloc.h}}
+\mbox{\hyperlink{malloc_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*}}
+\DoxyCodeLine{2 \textcolor{comment}{  Default header file for malloc-\/2.7.2, written by Doug Lea}}
+\DoxyCodeLine{3 \textcolor{comment}{  and released to the public domain.  Use, modify, and redistribute}}
+\DoxyCodeLine{4 \textcolor{comment}{  this code without permission or acknowledgement in any way you wish.}}
+\DoxyCodeLine{5 \textcolor{comment}{  Send questions, comments, complaints, performance data, etc to}}
+\DoxyCodeLine{6 \textcolor{comment}{  dl@cs.oswego.edu.}}
+\DoxyCodeLine{7 \textcolor{comment}{ }}
+\DoxyCodeLine{8 \textcolor{comment}{  last update: Sun Feb 25 18:38:11 2001  Doug Lea  (dl at gee)}}
+\DoxyCodeLine{9 \textcolor{comment}{}}
+\DoxyCodeLine{10 \textcolor{comment}{  This header is for ANSI C/C++ only.  You can set either of}}
+\DoxyCodeLine{11 \textcolor{comment}{  the following \#defines before including:}}
+\DoxyCodeLine{12 \textcolor{comment}{}}
+\DoxyCodeLine{13 \textcolor{comment}{  * If USE\_DL\_PREFIX is defined, it is assumed that malloc.c }}
+\DoxyCodeLine{14 \textcolor{comment}{    was also compiled with this option, so all routines}}
+\DoxyCodeLine{15 \textcolor{comment}{    have names starting with "{}dl"{}.}}
+\DoxyCodeLine{16 \textcolor{comment}{}}
+\DoxyCodeLine{17 \textcolor{comment}{  * If HAVE\_USR\_INCLUDE\_MALLOC\_H is defined, it is assumed that this}}
+\DoxyCodeLine{18 \textcolor{comment}{    file will be \#included AFTER <malloc.h>. This is needed only if}}
+\DoxyCodeLine{19 \textcolor{comment}{    your system defines a struct mallinfo that is incompatible with the}}
+\DoxyCodeLine{20 \textcolor{comment}{    standard one declared here.  Otherwise, you can include this file}}
+\DoxyCodeLine{21 \textcolor{comment}{    INSTEAD of your system system <malloc.h>.  At least on ANSI, all}}
+\DoxyCodeLine{22 \textcolor{comment}{    declarations should be compatible with system versions}}
+\DoxyCodeLine{23 \textcolor{comment}{*/}}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25 \textcolor{preprocessor}{\#define USE\_DL\_PREFIX}}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{27 \textcolor{preprocessor}{\#ifdef MALLOC\_H\_WANT\_INTERNAL\_DEFINITIONS}}
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#define PROT\_READ  1}}
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#define PROT\_WRITE 2}}
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#define MAP\_PRIVATE 4}}
+\DoxyCodeLine{31 \textcolor{preprocessor}{\#define MAP\_ANONYMOUS 8}}
+\DoxyCodeLine{32 \textcolor{preprocessor}{\#define MMAP\_MIN\_SIZE (4096 * 12)}}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#ifndef MALLOC\_270\_H}}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#define MALLOC\_270\_H}}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#ifdef \_\_cplusplus}}
+\DoxyCodeLine{40 \textcolor{keyword}{extern} \textcolor{stringliteral}{"{}C"{}} \{}
+\DoxyCodeLine{41 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43 \textcolor{preprocessor}{\#include <stddef.h>}   \textcolor{comment}{/* for size\_t */}}
+\DoxyCodeLine{44 }
+\DoxyCodeLine{45 \textcolor{comment}{/*}}
+\DoxyCodeLine{46 \textcolor{comment}{  malloc(size\_t n)}}
+\DoxyCodeLine{47 \textcolor{comment}{  Returns a pointer to a newly allocated chunk of at least n bytes, or}}
+\DoxyCodeLine{48 \textcolor{comment}{  null if no space is available. Additionally, on failure, errno is}}
+\DoxyCodeLine{49 \textcolor{comment}{  set to ENOMEM on ANSI C systems.}}
+\DoxyCodeLine{50 \textcolor{comment}{}}
+\DoxyCodeLine{51 \textcolor{comment}{  If n is zero, malloc returns a minimum-\/sized chunk. The minimum size}}
+\DoxyCodeLine{52 \textcolor{comment}{  is 16 bytes on most 32bit systems, and either 24 or 32 bytes on}}
+\DoxyCodeLine{53 \textcolor{comment}{  64bit systems, depending on internal size and alignment restrictions.}}
+\DoxyCodeLine{54 \textcolor{comment}{}}
+\DoxyCodeLine{55 \textcolor{comment}{  On most systems, size\_t is an unsigned type.  Calls with values of n}}
+\DoxyCodeLine{56 \textcolor{comment}{  that appear "{}negative"{} when signed are interpreted as requests for}}
+\DoxyCodeLine{57 \textcolor{comment}{  huge amounts of space, which will most often fail.}}
+\DoxyCodeLine{58 \textcolor{comment}{}}
+\DoxyCodeLine{59 \textcolor{comment}{  The maximum allowed value of n differs across systems, but is in all}}
+\DoxyCodeLine{60 \textcolor{comment}{  cases less (typically by 8K) than the maximum representable value of}}
+\DoxyCodeLine{61 \textcolor{comment}{  a size\_t. Requests greater than this value result in failure.}}
+\DoxyCodeLine{62 \textcolor{comment}{*/}}
+\DoxyCodeLine{63 }
+\DoxyCodeLine{64 \textcolor{preprocessor}{\#ifndef USE\_DL\_PREFIX}}
+\DoxyCodeLine{65 \textcolor{keywordtype}{void}*  \mbox{\hyperlink{kheap_8cpp_a9c36d0fe3ec4675cbffdc9b52f5fb399}{malloc}}(\textcolor{keywordtype}{size\_t});}
+\DoxyCodeLine{66 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{67 \textcolor{keywordtype}{void}*  \mbox{\hyperlink{malloc_8h_a018ffd885ac72f4cb8ac0f972f6b4900}{dlmalloc}}(\textcolor{keywordtype}{size\_t});}
+\DoxyCodeLine{68 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{70 \textcolor{comment}{/*}}
+\DoxyCodeLine{71 \textcolor{comment}{  free(void* p)}}
+\DoxyCodeLine{72 \textcolor{comment}{  Releases the chunk of memory pointed to by p, that had been previously}}
+\DoxyCodeLine{73 \textcolor{comment}{  allocated using malloc or a related routine such as realloc.}}
+\DoxyCodeLine{74 \textcolor{comment}{  It has no effect if p is null. It can have arbitrary (and bad!)}}
+\DoxyCodeLine{75 \textcolor{comment}{  effects if p has already been freed or was not obtained via malloc.}}
+\DoxyCodeLine{76 \textcolor{comment}{}}
+\DoxyCodeLine{77 \textcolor{comment}{  Unless disabled using mallopt, freeing very large spaces will,}}
+\DoxyCodeLine{78 \textcolor{comment}{  when possible, automatically trigger operations that give}}
+\DoxyCodeLine{79 \textcolor{comment}{  back unused memory to the system, thus reducing program footprint.}}
+\DoxyCodeLine{80 \textcolor{comment}{*/}}
+\DoxyCodeLine{81 \textcolor{preprocessor}{\#ifndef USE\_DL\_PREFIX}}
+\DoxyCodeLine{82 \textcolor{keywordtype}{void}     \mbox{\hyperlink{kheap_8cpp_ac05083502fd3521c02cdfc72075ce53f}{free}}(\textcolor{keywordtype}{void}*);}
+\DoxyCodeLine{83 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{84 \textcolor{keywordtype}{void}     \mbox{\hyperlink{malloc_8h_a1b80f9ee2d497077e4741029c8e23700}{dlfree}}(\textcolor{keywordtype}{void}*);}
+\DoxyCodeLine{85 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{86 }
+\DoxyCodeLine{87 \textcolor{comment}{/*}}
+\DoxyCodeLine{88 \textcolor{comment}{  calloc(size\_t n\_elements, size\_t element\_size);}}
+\DoxyCodeLine{89 \textcolor{comment}{  Returns a pointer to n\_elements * element\_size bytes, with all locations}}
+\DoxyCodeLine{90 \textcolor{comment}{  set to zero.}}
+\DoxyCodeLine{91 \textcolor{comment}{*/}}
+\DoxyCodeLine{92 \textcolor{preprocessor}{\#ifndef USE\_DL\_PREFIX}}
+\DoxyCodeLine{93 \textcolor{keywordtype}{void}*  \mbox{\hyperlink{kheap_8cpp_af6befd054103fbf412781924afa082bc}{calloc}}(\textcolor{keywordtype}{size\_t}, \textcolor{keywordtype}{size\_t});}
+\DoxyCodeLine{94 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{95 \textcolor{keywordtype}{void}*  \mbox{\hyperlink{malloc_8h_a557252c43fb14a209ead0e6dfe6216ad}{dlcalloc}}(\textcolor{keywordtype}{size\_t}, \textcolor{keywordtype}{size\_t});}
+\DoxyCodeLine{96 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{97 }
+\DoxyCodeLine{98 \textcolor{comment}{/*}}
+\DoxyCodeLine{99 \textcolor{comment}{  realloc(void* p, size\_t n)}}
+\DoxyCodeLine{100 \textcolor{comment}{  Returns a pointer to a chunk of size n that contains the same data}}
+\DoxyCodeLine{101 \textcolor{comment}{  as does chunk p up to the minimum of (n, p's size) bytes.}}
+\DoxyCodeLine{102 \textcolor{comment}{}}
+\DoxyCodeLine{103 \textcolor{comment}{  The returned pointer may or may not be the same as p. The algorithm}}
+\DoxyCodeLine{104 \textcolor{comment}{  prefers extending p when possible, otherwise it employs the}}
+\DoxyCodeLine{105 \textcolor{comment}{  equivalent of a malloc-\/copy-\/free sequence.}}
+\DoxyCodeLine{106 \textcolor{comment}{}}
+\DoxyCodeLine{107 \textcolor{comment}{  If p is null, realloc is equivalent to malloc.  }}
+\DoxyCodeLine{108 \textcolor{comment}{}}
+\DoxyCodeLine{109 \textcolor{comment}{  If space is not available, realloc returns null, errno is set (if on}}
+\DoxyCodeLine{110 \textcolor{comment}{  ANSI) and p is NOT freed.}}
+\DoxyCodeLine{111 \textcolor{comment}{}}
+\DoxyCodeLine{112 \textcolor{comment}{  if n is for fewer bytes than already held by p, the newly unused}}
+\DoxyCodeLine{113 \textcolor{comment}{  space is lopped off and freed if possible.  Unless the \#define}}
+\DoxyCodeLine{114 \textcolor{comment}{  REALLOC\_ZERO\_BYTES\_FREES is set, realloc with a size argument of}}
+\DoxyCodeLine{115 \textcolor{comment}{  zero (re)allocates a minimum-\/sized chunk.}}
+\DoxyCodeLine{116 \textcolor{comment}{}}
+\DoxyCodeLine{117 \textcolor{comment}{  Large chunks that were internally obtained via mmap will always}}
+\DoxyCodeLine{118 \textcolor{comment}{  be reallocated using malloc-\/copy-\/free sequences unless}}
+\DoxyCodeLine{119 \textcolor{comment}{  the system supports MREMAP (currently only linux).}}
+\DoxyCodeLine{120 \textcolor{comment}{}}
+\DoxyCodeLine{121 \textcolor{comment}{  The old unix realloc convention of allowing the last-\/free'd chunk}}
+\DoxyCodeLine{122 \textcolor{comment}{  to be used as an argument to realloc is not supported.}}
+\DoxyCodeLine{123 \textcolor{comment}{*/}}
+\DoxyCodeLine{124 }
+\DoxyCodeLine{125 \textcolor{preprocessor}{\#ifndef USE\_DL\_PREFIX}}
+\DoxyCodeLine{126 \textcolor{keywordtype}{void}*  \mbox{\hyperlink{kheap_8cpp_ad28fed1039f35d754710633141b4edf0}{realloc}}(\textcolor{keywordtype}{void}*, \textcolor{keywordtype}{size\_t});}
+\DoxyCodeLine{127 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{128 \textcolor{keywordtype}{void}*  \mbox{\hyperlink{malloc_8h_a79e7e77bbc6d5208678b007bf89aab61}{dlrealloc}}(\textcolor{keywordtype}{void}*, \textcolor{keywordtype}{size\_t});}
+\DoxyCodeLine{129 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{130 }
+\DoxyCodeLine{131 \textcolor{comment}{/*}}
+\DoxyCodeLine{132 \textcolor{comment}{  memalign(size\_t alignment, size\_t n);}}
+\DoxyCodeLine{133 \textcolor{comment}{  Returns a pointer to a newly allocated chunk of n bytes, aligned}}
+\DoxyCodeLine{134 \textcolor{comment}{  in accord with the alignment argument.}}
+\DoxyCodeLine{135 \textcolor{comment}{}}
+\DoxyCodeLine{136 \textcolor{comment}{  The alignment argument should be a power of two. If the argument is}}
+\DoxyCodeLine{137 \textcolor{comment}{  not a power of two, the nearest greater power is used.}}
+\DoxyCodeLine{138 \textcolor{comment}{  8-\/byte alignment is guaranteed by normal malloc calls, so don't}}
+\DoxyCodeLine{139 \textcolor{comment}{  bother calling memalign with an argument of 8 or less.}}
+\DoxyCodeLine{140 \textcolor{comment}{}}
+\DoxyCodeLine{141 \textcolor{comment}{  Overreliance on memalign is a sure way to fragment space.}}
+\DoxyCodeLine{142 \textcolor{comment}{*/}}
+\DoxyCodeLine{143 }
+\DoxyCodeLine{144 \textcolor{preprocessor}{\#ifndef USE\_DL\_PREFIX}}
+\DoxyCodeLine{145 \textcolor{keywordtype}{void}*  memalign(\textcolor{keywordtype}{size\_t}, \textcolor{keywordtype}{size\_t});}
+\DoxyCodeLine{146 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{147 \textcolor{keywordtype}{void}*  \mbox{\hyperlink{malloc_8h_a789f1726140c8d0ef5b54d893d806262}{dlmemalign}}(\textcolor{keywordtype}{size\_t}, \textcolor{keywordtype}{size\_t});}
+\DoxyCodeLine{148 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{149 }
+\DoxyCodeLine{150 }
+\DoxyCodeLine{151 \textcolor{comment}{/*}}
+\DoxyCodeLine{152 \textcolor{comment}{  valloc(size\_t n);}}
+\DoxyCodeLine{153 \textcolor{comment}{  Allocates a page-\/aligned chunk of at least n bytes.}}
+\DoxyCodeLine{154 \textcolor{comment}{  Equivalent to memalign(pagesize, n), where pagesize is the page}}
+\DoxyCodeLine{155 \textcolor{comment}{  size of the system. If the pagesize is unknown, 4096 is used.}}
+\DoxyCodeLine{156 \textcolor{comment}{*/}}
+\DoxyCodeLine{157 }
+\DoxyCodeLine{158 \textcolor{preprocessor}{\#ifndef USE\_DL\_PREFIX}}
+\DoxyCodeLine{159 \textcolor{keywordtype}{void}*  valloc(\textcolor{keywordtype}{size\_t});}
+\DoxyCodeLine{160 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{161 \textcolor{keywordtype}{void}*  \mbox{\hyperlink{malloc_8h_ab3764c29825f2f5caf6bb138e6f2dc12}{dlvalloc}}(\textcolor{keywordtype}{size\_t});}
+\DoxyCodeLine{162 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{163 }
+\DoxyCodeLine{164 }
+\DoxyCodeLine{165 \textcolor{comment}{/*}}
+\DoxyCodeLine{166 \textcolor{comment}{  independent\_calloc(size\_t n\_elements, size\_t element\_size, void* chunks[]);}}
+\DoxyCodeLine{167 \textcolor{comment}{}}
+\DoxyCodeLine{168 \textcolor{comment}{  independent\_calloc is similar to calloc, but instead of returning a}}
+\DoxyCodeLine{169 \textcolor{comment}{  single cleared space, it returns an array of pointers to n\_elements}}
+\DoxyCodeLine{170 \textcolor{comment}{  independent elements, each of which can hold contents of size}}
+\DoxyCodeLine{171 \textcolor{comment}{  elem\_size.  Each element starts out cleared, and can be}}
+\DoxyCodeLine{172 \textcolor{comment}{  independently freed, realloc'ed etc. The elements are guaranteed to}}
+\DoxyCodeLine{173 \textcolor{comment}{  be adjacently allocated (this is not guaranteed to occur with}}
+\DoxyCodeLine{174 \textcolor{comment}{  multiple callocs or mallocs), which may also improve cache locality}}
+\DoxyCodeLine{175 \textcolor{comment}{  in some applications.}}
+\DoxyCodeLine{176 \textcolor{comment}{}}
+\DoxyCodeLine{177 \textcolor{comment}{  The "{}chunks"{} argument is optional (i.e., may be null, which is}}
+\DoxyCodeLine{178 \textcolor{comment}{  probably the most typical usage). If it is null, the returned array}}
+\DoxyCodeLine{179 \textcolor{comment}{  is itself dynamically allocated and should also be freed when it is}}
+\DoxyCodeLine{180 \textcolor{comment}{  no longer needed. Otherwise, the chunks array must be of at least}}
+\DoxyCodeLine{181 \textcolor{comment}{  n\_elements in length. It is filled in with the pointers to the}}
+\DoxyCodeLine{182 \textcolor{comment}{  chunks.}}
+\DoxyCodeLine{183 \textcolor{comment}{}}
+\DoxyCodeLine{184 \textcolor{comment}{  In either case, independent\_calloc returns this pointer array, or}}
+\DoxyCodeLine{185 \textcolor{comment}{  null if the allocation failed.  If n\_elements is zero and "{}chunks"{}}}
+\DoxyCodeLine{186 \textcolor{comment}{  is null, it returns a chunk representing an array with zero elements}}
+\DoxyCodeLine{187 \textcolor{comment}{  (which should be freed if not wanted).}}
+\DoxyCodeLine{188 \textcolor{comment}{}}
+\DoxyCodeLine{189 \textcolor{comment}{  Each element must be individually freed when it is no longer}}
+\DoxyCodeLine{190 \textcolor{comment}{  needed. If you'd like to instead be able to free all at once, you}}
+\DoxyCodeLine{191 \textcolor{comment}{  should instead use regular calloc and assign pointers into this}}
+\DoxyCodeLine{192 \textcolor{comment}{  space to represent elements.  (In this case though, you cannot}}
+\DoxyCodeLine{193 \textcolor{comment}{  independently free elements.)}}
+\DoxyCodeLine{194 \textcolor{comment}{  }}
+\DoxyCodeLine{195 \textcolor{comment}{  independent\_calloc simplifies and speeds up implementations of many}}
+\DoxyCodeLine{196 \textcolor{comment}{  kinds of pools.  It may also be useful when constructing large data}}
+\DoxyCodeLine{197 \textcolor{comment}{  structures that initially have a fixed number of fixed-\/sized nodes,}}
+\DoxyCodeLine{198 \textcolor{comment}{  but the number is not known at compile time, and some of the nodes}}
+\DoxyCodeLine{199 \textcolor{comment}{  may later need to be freed. For example:}}
+\DoxyCodeLine{200 \textcolor{comment}{}}
+\DoxyCodeLine{201 \textcolor{comment}{  struct Node \{ int item; struct Node* next; \};}}
+\DoxyCodeLine{202 \textcolor{comment}{  }}
+\DoxyCodeLine{203 \textcolor{comment}{  struct Node* build\_list() \{}}
+\DoxyCodeLine{204 \textcolor{comment}{    struct Node** pool;}}
+\DoxyCodeLine{205 \textcolor{comment}{    int n = read\_number\_of\_nodes\_needed();}}
+\DoxyCodeLine{206 \textcolor{comment}{    if (n <= 0) return 0;}}
+\DoxyCodeLine{207 \textcolor{comment}{    pool = (struct Node**)(independent\_calloc(n, sizeof(struct Node), 0);}}
+\DoxyCodeLine{208 \textcolor{comment}{    if (pool == 0) return 0; // failure}}
+\DoxyCodeLine{209 \textcolor{comment}{    // organize into a linked list... }}
+\DoxyCodeLine{210 \textcolor{comment}{    struct Node* first = pool[0];}}
+\DoxyCodeLine{211 \textcolor{comment}{    for (i = 0; i < n-\/1; ++i) }}
+\DoxyCodeLine{212 \textcolor{comment}{      pool[i]-\/>next = pool[i+1];}}
+\DoxyCodeLine{213 \textcolor{comment}{    free(pool);     // Can now free the array (or not, if it is needed later)}}
+\DoxyCodeLine{214 \textcolor{comment}{    return first;}}
+\DoxyCodeLine{215 \textcolor{comment}{  \}}}
+\DoxyCodeLine{216 \textcolor{comment}{*/}}
+\DoxyCodeLine{217 }
+\DoxyCodeLine{218 \textcolor{preprocessor}{\#ifndef USE\_DL\_PREFIX}}
+\DoxyCodeLine{219 \textcolor{keywordtype}{void}** independent\_calloc(\textcolor{keywordtype}{size\_t}, \textcolor{keywordtype}{size\_t}, \textcolor{keywordtype}{void}**);}
+\DoxyCodeLine{220 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{221 \textcolor{keywordtype}{void}** \mbox{\hyperlink{malloc_8h_a2d0363c74cf96e8d816e1a59613d90a2}{dlindependent\_calloc}}(\textcolor{keywordtype}{size\_t}, \textcolor{keywordtype}{size\_t}, \textcolor{keywordtype}{void}**);}
+\DoxyCodeLine{222 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{223 }
+\DoxyCodeLine{224 \textcolor{comment}{/*}}
+\DoxyCodeLine{225 \textcolor{comment}{  independent\_comalloc(size\_t n\_elements, size\_t sizes[], void* chunks[]);}}
+\DoxyCodeLine{226 \textcolor{comment}{}}
+\DoxyCodeLine{227 \textcolor{comment}{  independent\_comalloc allocates, all at once, a set of n\_elements}}
+\DoxyCodeLine{228 \textcolor{comment}{  chunks with sizes indicated in the "{}sizes"{} array.    It returns}}
+\DoxyCodeLine{229 \textcolor{comment}{  an array of pointers to these elements, each of which can be}}
+\DoxyCodeLine{230 \textcolor{comment}{  independently freed, realloc'ed etc. The elements are guaranteed to}}
+\DoxyCodeLine{231 \textcolor{comment}{  be adjacently allocated (this is not guaranteed to occur with}}
+\DoxyCodeLine{232 \textcolor{comment}{  multiple callocs or mallocs), which may also improve cache locality}}
+\DoxyCodeLine{233 \textcolor{comment}{  in some applications.}}
+\DoxyCodeLine{234 \textcolor{comment}{}}
+\DoxyCodeLine{235 \textcolor{comment}{  The "{}chunks"{} argument is optional (i.e., may be null). If it is null}}
+\DoxyCodeLine{236 \textcolor{comment}{  the returned array is itself dynamically allocated and should also}}
+\DoxyCodeLine{237 \textcolor{comment}{  be freed when it is no longer needed. Otherwise, the chunks array}}
+\DoxyCodeLine{238 \textcolor{comment}{  must be of at least n\_elements in length. It is filled in with the}}
+\DoxyCodeLine{239 \textcolor{comment}{  pointers to the chunks.}}
+\DoxyCodeLine{240 \textcolor{comment}{}}
+\DoxyCodeLine{241 \textcolor{comment}{  In either case, independent\_comalloc returns this pointer array, or}}
+\DoxyCodeLine{242 \textcolor{comment}{  null if the allocation failed.  If n\_elements is zero and chunks is}}
+\DoxyCodeLine{243 \textcolor{comment}{  null, it returns a chunk representing an array with zero elements}}
+\DoxyCodeLine{244 \textcolor{comment}{  (which should be freed if not wanted).}}
+\DoxyCodeLine{245 \textcolor{comment}{  }}
+\DoxyCodeLine{246 \textcolor{comment}{  Each element must be individually freed when it is no longer}}
+\DoxyCodeLine{247 \textcolor{comment}{  needed. If you'd like to instead be able to free all at once, you}}
+\DoxyCodeLine{248 \textcolor{comment}{  should instead use a single regular malloc, and assign pointers at}}
+\DoxyCodeLine{249 \textcolor{comment}{  particular offsets in the aggregate space. (In this case though, you }}
+\DoxyCodeLine{250 \textcolor{comment}{  cannot independently free elements.)}}
+\DoxyCodeLine{251 \textcolor{comment}{}}
+\DoxyCodeLine{252 \textcolor{comment}{  independent\_comallac differs from independent\_calloc in that each}}
+\DoxyCodeLine{253 \textcolor{comment}{  element may have a different size, and also that it does not}}
+\DoxyCodeLine{254 \textcolor{comment}{  automatically clear elements.}}
+\DoxyCodeLine{255 \textcolor{comment}{}}
+\DoxyCodeLine{256 \textcolor{comment}{  independent\_comalloc can be used to speed up allocation in cases}}
+\DoxyCodeLine{257 \textcolor{comment}{  where several structs or objects must always be allocated at the}}
+\DoxyCodeLine{258 \textcolor{comment}{  same time.  For example:}}
+\DoxyCodeLine{259 \textcolor{comment}{}}
+\DoxyCodeLine{260 \textcolor{comment}{  struct Head \{ ... \}}}
+\DoxyCodeLine{261 \textcolor{comment}{  struct Foot \{ ... \}}}
+\DoxyCodeLine{262 \textcolor{comment}{}}
+\DoxyCodeLine{263 \textcolor{comment}{  void send\_message(char* msg) \{}}
+\DoxyCodeLine{264 \textcolor{comment}{    int msglen = strlen(msg);}}
+\DoxyCodeLine{265 \textcolor{comment}{    size\_t sizes[3] = \{ sizeof(struct Head), msglen, sizeof(struct Foot) \};}}
+\DoxyCodeLine{266 \textcolor{comment}{    void* chunks[3];}}
+\DoxyCodeLine{267 \textcolor{comment}{    if (independent\_comalloc(3, sizes, chunks) == 0)}}
+\DoxyCodeLine{268 \textcolor{comment}{      die();}}
+\DoxyCodeLine{269 \textcolor{comment}{    struct Head* head = (struct Head*)(chunks[0]);}}
+\DoxyCodeLine{270 \textcolor{comment}{    char*        body = (char*)(chunks[1]);}}
+\DoxyCodeLine{271 \textcolor{comment}{    struct Foot* foot = (struct Foot*)(chunks[2]);}}
+\DoxyCodeLine{272 \textcolor{comment}{    // ...}}
+\DoxyCodeLine{273 \textcolor{comment}{  \}}}
+\DoxyCodeLine{274 \textcolor{comment}{}}
+\DoxyCodeLine{275 \textcolor{comment}{  In general though, independent\_comalloc is worth using only for}}
+\DoxyCodeLine{276 \textcolor{comment}{  larger values of n\_elements. For small values, you probably won't}}
+\DoxyCodeLine{277 \textcolor{comment}{  detect enough difference from series of malloc calls to bother.}}
+\DoxyCodeLine{278 \textcolor{comment}{}}
+\DoxyCodeLine{279 \textcolor{comment}{  Overuse of independent\_comalloc can increase overall memory usage,}}
+\DoxyCodeLine{280 \textcolor{comment}{  since it cannot reuse existing noncontiguous small chunks that}}
+\DoxyCodeLine{281 \textcolor{comment}{  might be available for some of the elements.}}
+\DoxyCodeLine{282 \textcolor{comment}{*/}}
+\DoxyCodeLine{283 }
+\DoxyCodeLine{284 \textcolor{preprocessor}{\#ifndef USE\_DL\_PREFIX}}
+\DoxyCodeLine{285 \textcolor{keywordtype}{void}** independent\_comalloc(\textcolor{keywordtype}{size\_t}, \textcolor{keywordtype}{size\_t}*, \textcolor{keywordtype}{void}**);}
+\DoxyCodeLine{286 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{287 \textcolor{keywordtype}{void}** \mbox{\hyperlink{malloc_8h_af92733b7aeb4b18533b20df52000f7d4}{dlindependent\_comalloc}}(\textcolor{keywordtype}{size\_t}, \textcolor{keywordtype}{size\_t}*, \textcolor{keywordtype}{void}**);}
+\DoxyCodeLine{288 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{289 }
+\DoxyCodeLine{290 }
+\DoxyCodeLine{291 \textcolor{comment}{/*}}
+\DoxyCodeLine{292 \textcolor{comment}{  pvalloc(size\_t n);}}
+\DoxyCodeLine{293 \textcolor{comment}{  Equivalent to valloc(minimum-\/page-\/that-\/holds(n)), that is,}}
+\DoxyCodeLine{294 \textcolor{comment}{  round up n to nearest pagesize.}}
+\DoxyCodeLine{295 \textcolor{comment}{ */}}
+\DoxyCodeLine{296 }
+\DoxyCodeLine{297 \textcolor{preprocessor}{\#ifndef USE\_DL\_PREFIX}}
+\DoxyCodeLine{298 \textcolor{keywordtype}{void}*  pvalloc(\textcolor{keywordtype}{size\_t});}
+\DoxyCodeLine{299 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{300 \textcolor{keywordtype}{void}*  \mbox{\hyperlink{malloc_8h_ade3c6d7e2b557fe3af01a7f6979e9396}{dlpvalloc}}(\textcolor{keywordtype}{size\_t});}
+\DoxyCodeLine{301 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{302 }
+\DoxyCodeLine{303 \textcolor{comment}{/*}}
+\DoxyCodeLine{304 \textcolor{comment}{  cfree(void* p);}}
+\DoxyCodeLine{305 \textcolor{comment}{  Equivalent to free(p).}}
+\DoxyCodeLine{306 \textcolor{comment}{}}
+\DoxyCodeLine{307 \textcolor{comment}{  cfree is needed/defined on some systems that pair it with calloc,}}
+\DoxyCodeLine{308 \textcolor{comment}{  for odd historical reasons (such as: cfree is used in example }}
+\DoxyCodeLine{309 \textcolor{comment}{  code in the first edition of K\&R).}}
+\DoxyCodeLine{310 \textcolor{comment}{*/}}
+\DoxyCodeLine{311 }
+\DoxyCodeLine{312 \textcolor{preprocessor}{\#ifndef USE\_DL\_PREFIX}}
+\DoxyCodeLine{313 \textcolor{keywordtype}{void}     cfree(\textcolor{keywordtype}{void}*);}
+\DoxyCodeLine{314 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{315 \textcolor{keywordtype}{void}     \mbox{\hyperlink{malloc_8h_ae46651b808e7d487971ed0c98090c56f}{dlcfree}}(\textcolor{keywordtype}{void}*);}
+\DoxyCodeLine{316 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{317 }
+\DoxyCodeLine{318 }
+\DoxyCodeLine{319 \textcolor{comment}{/*}}
+\DoxyCodeLine{320 \textcolor{comment}{  malloc\_trim(size\_t pad);}}
+\DoxyCodeLine{321 \textcolor{comment}{}}
+\DoxyCodeLine{322 \textcolor{comment}{  If possible, gives memory back to the system (via negative}}
+\DoxyCodeLine{323 \textcolor{comment}{  arguments to sbrk) if there is unused memory at the `high' end of}}
+\DoxyCodeLine{324 \textcolor{comment}{  the malloc pool. You can call this after freeing large blocks of}}
+\DoxyCodeLine{325 \textcolor{comment}{  memory to potentially reduce the system-\/level memory requirements}}
+\DoxyCodeLine{326 \textcolor{comment}{  of a program. However, it cannot guarantee to reduce memory. Under}}
+\DoxyCodeLine{327 \textcolor{comment}{  some allocation patterns, some large free blocks of memory will be}}
+\DoxyCodeLine{328 \textcolor{comment}{  locked between two used chunks, so they cannot be given back to}}
+\DoxyCodeLine{329 \textcolor{comment}{  the system.}}
+\DoxyCodeLine{330 \textcolor{comment}{  }}
+\DoxyCodeLine{331 \textcolor{comment}{  The `pad' argument to malloc\_trim represents the amount of free}}
+\DoxyCodeLine{332 \textcolor{comment}{  trailing space to leave untrimmed. If this argument is zero,}}
+\DoxyCodeLine{333 \textcolor{comment}{  only the minimum amount of memory to maintain internal data}}
+\DoxyCodeLine{334 \textcolor{comment}{  structures will be left (one page or less). Non-\/zero arguments}}
+\DoxyCodeLine{335 \textcolor{comment}{  can be supplied to maintain enough trailing space to service}}
+\DoxyCodeLine{336 \textcolor{comment}{  future expected allocations without having to re-\/obtain memory}}
+\DoxyCodeLine{337 \textcolor{comment}{  from the system.}}
+\DoxyCodeLine{338 \textcolor{comment}{  }}
+\DoxyCodeLine{339 \textcolor{comment}{  Malloc\_trim returns 1 if it actually released any memory, else 0.}}
+\DoxyCodeLine{340 \textcolor{comment}{  On systems that do not support "{}negative sbrks"{}, it will always}}
+\DoxyCodeLine{341 \textcolor{comment}{  return 0.}}
+\DoxyCodeLine{342 \textcolor{comment}{*/}}
+\DoxyCodeLine{343 }
+\DoxyCodeLine{344 \textcolor{preprocessor}{\#ifndef USE\_DL\_PREFIX}}
+\DoxyCodeLine{345 \textcolor{keywordtype}{int}      malloc\_trim(\textcolor{keywordtype}{size\_t});}
+\DoxyCodeLine{346 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{347 \textcolor{keywordtype}{int}      \mbox{\hyperlink{malloc_8h_a0cb0780a1d244f7541f85d2ece3999fc}{dlmalloc\_trim}}(\textcolor{keywordtype}{size\_t});}
+\DoxyCodeLine{348 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{349 }
+\DoxyCodeLine{350 }
+\DoxyCodeLine{351 \textcolor{comment}{/*}}
+\DoxyCodeLine{352 \textcolor{comment}{  malloc\_usable\_size(void* p);}}
+\DoxyCodeLine{353 \textcolor{comment}{}}
+\DoxyCodeLine{354 \textcolor{comment}{  Returns the number of bytes you can actually use in an allocated}}
+\DoxyCodeLine{355 \textcolor{comment}{  chunk, which may be more than you requested (although often not) due}}
+\DoxyCodeLine{356 \textcolor{comment}{  to alignment and minimum size constraints.  You can use this many}}
+\DoxyCodeLine{357 \textcolor{comment}{  bytes without worrying about overwriting other allocated}}
+\DoxyCodeLine{358 \textcolor{comment}{  objects. This is not a particularly great programming practice. But}}
+\DoxyCodeLine{359 \textcolor{comment}{  malloc\_usable\_size can be more useful in debugging and assertions,}}
+\DoxyCodeLine{360 \textcolor{comment}{  for example:}}
+\DoxyCodeLine{361 \textcolor{comment}{}}
+\DoxyCodeLine{362 \textcolor{comment}{  p = malloc(n);}}
+\DoxyCodeLine{363 \textcolor{comment}{  assert(malloc\_usable\_size(p) >= 256);}}
+\DoxyCodeLine{364 \textcolor{comment}{*/}}
+\DoxyCodeLine{365 }
+\DoxyCodeLine{366 \textcolor{preprocessor}{\#ifndef USE\_DL\_PREFIX}}
+\DoxyCodeLine{367 \textcolor{keywordtype}{size\_t}   malloc\_usable\_size(\textcolor{keywordtype}{void}*);}
+\DoxyCodeLine{368 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{369 \textcolor{keywordtype}{size\_t}   \mbox{\hyperlink{malloc_8h_a8923af8a1039983906f9617a57022e98}{dlmalloc\_usable\_size}}(\textcolor{keywordtype}{void}*);}
+\DoxyCodeLine{370 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{371 }
+\DoxyCodeLine{372 }
+\DoxyCodeLine{373 \textcolor{comment}{/*}}
+\DoxyCodeLine{374 \textcolor{comment}{  malloc\_stats();}}
+\DoxyCodeLine{375 \textcolor{comment}{  Prints on stderr the amount of space obtained from the system (both}}
+\DoxyCodeLine{376 \textcolor{comment}{  via sbrk and mmap), the maximum amount (which may be more than}}
+\DoxyCodeLine{377 \textcolor{comment}{  current if malloc\_trim and/or munmap got called), and the current}}
+\DoxyCodeLine{378 \textcolor{comment}{  number of bytes allocated via malloc (or realloc, etc) but not yet}}
+\DoxyCodeLine{379 \textcolor{comment}{  freed. Note that this is the number of bytes allocated, not the}}
+\DoxyCodeLine{380 \textcolor{comment}{  number requested. It will be larger than the number requested}}
+\DoxyCodeLine{381 \textcolor{comment}{  because of alignment and bookkeeping overhead. Because it includes}}
+\DoxyCodeLine{382 \textcolor{comment}{  alignment wastage as being in use, this figure may be greater than}}
+\DoxyCodeLine{383 \textcolor{comment}{  zero even when no user-\/level chunks are allocated.}}
+\DoxyCodeLine{384 \textcolor{comment}{}}
+\DoxyCodeLine{385 \textcolor{comment}{  The reported current and maximum system memory can be inaccurate if}}
+\DoxyCodeLine{386 \textcolor{comment}{  a program makes other calls to system memory allocation functions}}
+\DoxyCodeLine{387 \textcolor{comment}{  (normally sbrk) outside of malloc.}}
+\DoxyCodeLine{388 \textcolor{comment}{}}
+\DoxyCodeLine{389 \textcolor{comment}{  malloc\_stats prints only the most commonly interesting statistics.}}
+\DoxyCodeLine{390 \textcolor{comment}{  More information can be obtained by calling mallinfo.}}
+\DoxyCodeLine{391 \textcolor{comment}{*/}}
+\DoxyCodeLine{392 }
+\DoxyCodeLine{393 \textcolor{preprocessor}{\#ifndef USE\_DL\_PREFIX}}
+\DoxyCodeLine{394 \textcolor{keywordtype}{void}     malloc\_stats(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{395 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{396 \textcolor{keywordtype}{void}     \mbox{\hyperlink{malloc_8h_a6bf6239987d42c9885191675f584d14a}{dlmalloc\_stats}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{397 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{398 }
+\DoxyCodeLine{399 \textcolor{comment}{/*}}
+\DoxyCodeLine{400 \textcolor{comment}{  mallinfo()}}
+\DoxyCodeLine{401 \textcolor{comment}{  Returns (by copy) a struct containing various summary statistics:}}
+\DoxyCodeLine{402 \textcolor{comment}{}}
+\DoxyCodeLine{403 \textcolor{comment}{  arena:     current total non-\/mmapped bytes allocated from system }}
+\DoxyCodeLine{404 \textcolor{comment}{  ordblks:   the number of free chunks }}
+\DoxyCodeLine{405 \textcolor{comment}{  smblks:    the number of fastbin blocks (i.e., small chunks that}}
+\DoxyCodeLine{406 \textcolor{comment}{               have been freed but not use resused or consolidated)}}
+\DoxyCodeLine{407 \textcolor{comment}{  hblks:     current number of mmapped regions }}
+\DoxyCodeLine{408 \textcolor{comment}{  hblkhd:    total bytes held in mmapped regions }}
+\DoxyCodeLine{409 \textcolor{comment}{  usmblks:   the maximum total allocated space. This will be greater}}
+\DoxyCodeLine{410 \textcolor{comment}{                than current total if trimming has occurred.}}
+\DoxyCodeLine{411 \textcolor{comment}{  fsmblks:   total bytes held in fastbin blocks }}
+\DoxyCodeLine{412 \textcolor{comment}{  uordblks:  current total allocated space (normal or mmapped)}}
+\DoxyCodeLine{413 \textcolor{comment}{  fordblks:  total free space }}
+\DoxyCodeLine{414 \textcolor{comment}{  keepcost:  the maximum number of bytes that could ideally be released}}
+\DoxyCodeLine{415 \textcolor{comment}{               back to system via malloc\_trim. ("{}ideally"{} means that}}
+\DoxyCodeLine{416 \textcolor{comment}{               it ignores page restrictions etc.)}}
+\DoxyCodeLine{417 \textcolor{comment}{}}
+\DoxyCodeLine{418 \textcolor{comment}{  The names of some of these fields don't bear much relation with}}
+\DoxyCodeLine{419 \textcolor{comment}{  their contents because this struct was defined as standard in}}
+\DoxyCodeLine{420 \textcolor{comment}{  SVID/XPG so reflects the malloc implementation that was then used}}
+\DoxyCodeLine{421 \textcolor{comment}{  in SystemV Unix.  }}
+\DoxyCodeLine{422 \textcolor{comment}{}}
+\DoxyCodeLine{423 \textcolor{comment}{  The original SVID version of this struct, defined on most systems}}
+\DoxyCodeLine{424 \textcolor{comment}{  with mallinfo, declares all fields as ints. But some others define}}
+\DoxyCodeLine{425 \textcolor{comment}{  as unsigned long. If your system defines the fields using a type of}}
+\DoxyCodeLine{426 \textcolor{comment}{  different width than listed here, you should \#include your system}}
+\DoxyCodeLine{427 \textcolor{comment}{  version before including this file.  The struct declaration is}}
+\DoxyCodeLine{428 \textcolor{comment}{  suppressed if \_MALLOC\_H is defined (which is done in most system}}
+\DoxyCodeLine{429 \textcolor{comment}{  malloc.h files). You can also suppress it by defining}}
+\DoxyCodeLine{430 \textcolor{comment}{  HAVE\_USR\_INCLUDE\_MALLOC\_H.}}
+\DoxyCodeLine{431 \textcolor{comment}{}}
+\DoxyCodeLine{432 \textcolor{comment}{  Because these fields are ints, but internal bookkeeping is done with}}
+\DoxyCodeLine{433 \textcolor{comment}{  unsigned longs, the reported values may appear as negative, and may}}
+\DoxyCodeLine{434 \textcolor{comment}{  wrap around zero and thus be inaccurate.}}
+\DoxyCodeLine{435 \textcolor{comment}{*/}}
+\DoxyCodeLine{436 }
+\DoxyCodeLine{437 \textcolor{comment}{/*}}
+\DoxyCodeLine{438 \textcolor{comment}{  mallopt(int parameter\_number, int parameter\_value)}}
+\DoxyCodeLine{439 \textcolor{comment}{  Sets tunable parameters The format is to provide a}}
+\DoxyCodeLine{440 \textcolor{comment}{  (parameter-\/number, parameter-\/value) pair.  mallopt then sets the}}
+\DoxyCodeLine{441 \textcolor{comment}{  corresponding parameter to the argument value if it can (i.e., so}}
+\DoxyCodeLine{442 \textcolor{comment}{  long as the value is meaningful), and returns 1 if successful else}}
+\DoxyCodeLine{443 \textcolor{comment}{  0.  SVID/XPG defines four standard param numbers for mallopt,}}
+\DoxyCodeLine{444 \textcolor{comment}{  normally defined in malloc.h.  Only one of these (M\_MXFAST) is used}}
+\DoxyCodeLine{445 \textcolor{comment}{  in this malloc. The others (M\_NLBLKS, M\_GRAIN, M\_KEEP) don't apply,}}
+\DoxyCodeLine{446 \textcolor{comment}{  so setting them has no effect. But this malloc also supports four}}
+\DoxyCodeLine{447 \textcolor{comment}{  other options in mallopt. See below for details.  Briefly, supported}}
+\DoxyCodeLine{448 \textcolor{comment}{  parameters are as follows (listed defaults are for "{}typical"{}}}
+\DoxyCodeLine{449 \textcolor{comment}{  configurations).}}
+\DoxyCodeLine{450 \textcolor{comment}{}}
+\DoxyCodeLine{451 \textcolor{comment}{  Symbol            param \#   default    allowed param values}}
+\DoxyCodeLine{452 \textcolor{comment}{  M\_MXFAST          1         64         0-\/80  (0 disables fastbins)}}
+\DoxyCodeLine{453 \textcolor{comment}{  M\_TRIM\_THRESHOLD -\/1         128*1024   any   (-\/1U disables trimming)}}
+\DoxyCodeLine{454 \textcolor{comment}{  M\_TOP\_PAD        -\/2         0          any  }}
+\DoxyCodeLine{455 \textcolor{comment}{  M\_MMAP\_THRESHOLD -\/3         128*1024   any   (or 0 if no MMAP support)}}
+\DoxyCodeLine{456 \textcolor{comment}{  M\_MMAP\_MAX       -\/4         65536      any   (0 disables use of mmap)}}
+\DoxyCodeLine{457 \textcolor{comment}{*/}}
+\DoxyCodeLine{458 }
+\DoxyCodeLine{459 \textcolor{preprocessor}{\#ifndef USE\_DL\_PREFIX}}
+\DoxyCodeLine{460 \textcolor{keywordtype}{int}  mallopt(\textcolor{keywordtype}{int}, \textcolor{keywordtype}{int});}
+\DoxyCodeLine{461 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{462 \textcolor{keywordtype}{int}  \mbox{\hyperlink{malloc_8h_a5fa93d3a16f6cd853ca26b8796112770}{dlmallopt}}(\textcolor{keywordtype}{int}, \textcolor{keywordtype}{int});}
+\DoxyCodeLine{463 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{464 }
+\DoxyCodeLine{465 \textcolor{comment}{/* Descriptions of tuning options */}}
+\DoxyCodeLine{466 }
+\DoxyCodeLine{467 \textcolor{comment}{/*}}
+\DoxyCodeLine{468 \textcolor{comment}{  M\_MXFAST is the maximum request size used for "{}fastbins"{}, special bins}}
+\DoxyCodeLine{469 \textcolor{comment}{  that hold returned chunks without consolidating their spaces. This}}
+\DoxyCodeLine{470 \textcolor{comment}{  enables future requests for chunks of the same size to be handled}}
+\DoxyCodeLine{471 \textcolor{comment}{  very quickly, but can increase fragmentation, and thus increase the}}
+\DoxyCodeLine{472 \textcolor{comment}{  overall memory footprint of a program.}}
+\DoxyCodeLine{473 \textcolor{comment}{}}
+\DoxyCodeLine{474 \textcolor{comment}{  This malloc manages fastbins very conservatively yet still}}
+\DoxyCodeLine{475 \textcolor{comment}{  efficiently, so fragmentation is rarely a problem for values less}}
+\DoxyCodeLine{476 \textcolor{comment}{  than or equal to the default.  The maximum supported value of MXFAST}}
+\DoxyCodeLine{477 \textcolor{comment}{  is 80. You wouldn't want it any higher than this anyway.  Fastbins}}
+\DoxyCodeLine{478 \textcolor{comment}{  are designed especially for use with many small structs, objects or}}
+\DoxyCodeLine{479 \textcolor{comment}{  strings -\/-\/ the default handles structs/objects/arrays with sizes up}}
+\DoxyCodeLine{480 \textcolor{comment}{  to 8 4byte fields, or small strings representing words, tokens,}}
+\DoxyCodeLine{481 \textcolor{comment}{  etc. Using fastbins for larger objects normally worsens}}
+\DoxyCodeLine{482 \textcolor{comment}{  fragmentation without improving speed.}}
+\DoxyCodeLine{483 \textcolor{comment}{}}
+\DoxyCodeLine{484 \textcolor{comment}{  You can reduce M\_MXFAST to 0 to disable all use of fastbins.  This}}
+\DoxyCodeLine{485 \textcolor{comment}{  causes the malloc algorithm to be a closer approximation of}}
+\DoxyCodeLine{486 \textcolor{comment}{  fifo-\/best-\/fit in all cases, not just for larger requests, but will}}
+\DoxyCodeLine{487 \textcolor{comment}{  generally cause it to be slower.}}
+\DoxyCodeLine{488 \textcolor{comment}{*/}}
+\DoxyCodeLine{489 }
+\DoxyCodeLine{490 \textcolor{preprocessor}{\#ifndef M\_MXFAST}}
+\DoxyCodeLine{491 \textcolor{preprocessor}{\#define M\_MXFAST  1}}
+\DoxyCodeLine{492 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{493 }
+\DoxyCodeLine{494 \textcolor{comment}{/*}}
+\DoxyCodeLine{495 \textcolor{comment}{  M\_TRIM\_THRESHOLD is the maximum amount of unused top-\/most memory}}
+\DoxyCodeLine{496 \textcolor{comment}{  to keep before releasing via malloc\_trim in free().}}
+\DoxyCodeLine{497 \textcolor{comment}{}}
+\DoxyCodeLine{498 \textcolor{comment}{  Automatic trimming is mainly useful in long-\/lived programs.}}
+\DoxyCodeLine{499 \textcolor{comment}{  Because trimming via sbrk can be slow on some systems, and can}}
+\DoxyCodeLine{500 \textcolor{comment}{  sometimes be wasteful (in cases where programs immediately}}
+\DoxyCodeLine{501 \textcolor{comment}{  afterward allocate more large chunks) the value should be high}}
+\DoxyCodeLine{502 \textcolor{comment}{  enough so that your overall system performance would improve by}}
+\DoxyCodeLine{503 \textcolor{comment}{  releasing this much memory.}}
+\DoxyCodeLine{504 \textcolor{comment}{}}
+\DoxyCodeLine{505 \textcolor{comment}{  The trim threshold and the mmap control parameters (see below)}}
+\DoxyCodeLine{506 \textcolor{comment}{  can be traded off with one another. Trimming and mmapping are}}
+\DoxyCodeLine{507 \textcolor{comment}{  two different ways of releasing unused memory back to the}}
+\DoxyCodeLine{508 \textcolor{comment}{  system. Between these two, it is often possible to keep}}
+\DoxyCodeLine{509 \textcolor{comment}{  system-\/level demands of a long-\/lived program down to a bare}}
+\DoxyCodeLine{510 \textcolor{comment}{  minimum. For example, in one test suite of sessions measuring}}
+\DoxyCodeLine{511 \textcolor{comment}{  the XF86 X server on Linux, using a trim threshold of 128K and a}}
+\DoxyCodeLine{512 \textcolor{comment}{  mmap threshold of 192K led to near-\/minimal long term resource}}
+\DoxyCodeLine{513 \textcolor{comment}{  consumption.}}
+\DoxyCodeLine{514 \textcolor{comment}{}}
+\DoxyCodeLine{515 \textcolor{comment}{  If you are using this malloc in a long-\/lived program, it should}}
+\DoxyCodeLine{516 \textcolor{comment}{  pay to experiment with these values.  As a rough guide, you}}
+\DoxyCodeLine{517 \textcolor{comment}{  might set to a value close to the average size of a process}}
+\DoxyCodeLine{518 \textcolor{comment}{  (program) running on your system.  Releasing this much memory}}
+\DoxyCodeLine{519 \textcolor{comment}{  would allow such a process to run in memory.  Generally, it's}}
+\DoxyCodeLine{520 \textcolor{comment}{  worth it to tune for trimming rather tham memory mapping when a}}
+\DoxyCodeLine{521 \textcolor{comment}{  program undergoes phases where several large chunks are}}
+\DoxyCodeLine{522 \textcolor{comment}{  allocated and released in ways that can reuse each other's}}
+\DoxyCodeLine{523 \textcolor{comment}{  storage, perhaps mixed with phases where there are no such}}
+\DoxyCodeLine{524 \textcolor{comment}{  chunks at all.  And in well-\/behaved long-\/lived programs,}}
+\DoxyCodeLine{525 \textcolor{comment}{  controlling release of large blocks via trimming versus mapping}}
+\DoxyCodeLine{526 \textcolor{comment}{  is usually faster.}}
+\DoxyCodeLine{527 \textcolor{comment}{}}
+\DoxyCodeLine{528 \textcolor{comment}{  However, in most programs, these parameters serve mainly as}}
+\DoxyCodeLine{529 \textcolor{comment}{  protection against the system-\/level effects of carrying around}}
+\DoxyCodeLine{530 \textcolor{comment}{  massive amounts of unneeded memory. Since frequent calls to}}
+\DoxyCodeLine{531 \textcolor{comment}{  sbrk, mmap, and munmap otherwise degrade performance, the default}}
+\DoxyCodeLine{532 \textcolor{comment}{  parameters are set to relatively high values that serve only as}}
+\DoxyCodeLine{533 \textcolor{comment}{  safeguards.}}
+\DoxyCodeLine{534 \textcolor{comment}{}}
+\DoxyCodeLine{535 \textcolor{comment}{  The trim value It must be greater than page size to have any useful}}
+\DoxyCodeLine{536 \textcolor{comment}{  effect.  To disable trimming completely, you can set to }}
+\DoxyCodeLine{537 \textcolor{comment}{  (unsigned long)(-\/1)}}
+\DoxyCodeLine{538 \textcolor{comment}{}}
+\DoxyCodeLine{539 \textcolor{comment}{  Trim settings interact with fastbin (MXFAST) settings: Unless}}
+\DoxyCodeLine{540 \textcolor{comment}{  compiled with TRIM\_FASTBINS defined, automatic trimming never takes}}
+\DoxyCodeLine{541 \textcolor{comment}{  place upon freeing a chunk with size less than or equal to}}
+\DoxyCodeLine{542 \textcolor{comment}{  MXFAST. Trimming is instead delayed until subsequent freeing of}}
+\DoxyCodeLine{543 \textcolor{comment}{  larger chunks. However, you can still force an attempted trim by}}
+\DoxyCodeLine{544 \textcolor{comment}{  calling malloc\_trim.}}
+\DoxyCodeLine{545 \textcolor{comment}{}}
+\DoxyCodeLine{546 \textcolor{comment}{  Also, trimming is not generally possible in cases where}}
+\DoxyCodeLine{547 \textcolor{comment}{  the main arena is obtained via mmap.}}
+\DoxyCodeLine{548 \textcolor{comment}{}}
+\DoxyCodeLine{549 \textcolor{comment}{  Note that the trick some people use of mallocing a huge space and}}
+\DoxyCodeLine{550 \textcolor{comment}{  then freeing it at program startup, in an attempt to reserve system}}
+\DoxyCodeLine{551 \textcolor{comment}{  memory, doesn't have the intended effect under automatic trimming,}}
+\DoxyCodeLine{552 \textcolor{comment}{  since that memory will immediately be returned to the system.}}
+\DoxyCodeLine{553 \textcolor{comment}{*/}}
+\DoxyCodeLine{554 }
+\DoxyCodeLine{555 \textcolor{preprocessor}{\#define M\_TRIM\_THRESHOLD    -\/1}}
+\DoxyCodeLine{556 }
+\DoxyCodeLine{557 \textcolor{comment}{/*}}
+\DoxyCodeLine{558 \textcolor{comment}{  M\_TOP\_PAD is the amount of extra `padding' space to allocate or}}
+\DoxyCodeLine{559 \textcolor{comment}{  retain whenever sbrk is called. It is used in two ways internally:}}
+\DoxyCodeLine{560 \textcolor{comment}{}}
+\DoxyCodeLine{561 \textcolor{comment}{  * When sbrk is called to extend the top of the arena to satisfy}}
+\DoxyCodeLine{562 \textcolor{comment}{  a new malloc request, this much padding is added to the sbrk}}
+\DoxyCodeLine{563 \textcolor{comment}{  request.}}
+\DoxyCodeLine{564 \textcolor{comment}{}}
+\DoxyCodeLine{565 \textcolor{comment}{  * When malloc\_trim is called automatically from free(),}}
+\DoxyCodeLine{566 \textcolor{comment}{  it is used as the `pad' argument.}}
+\DoxyCodeLine{567 \textcolor{comment}{}}
+\DoxyCodeLine{568 \textcolor{comment}{  In both cases, the actual amount of padding is rounded}}
+\DoxyCodeLine{569 \textcolor{comment}{  so that the end of the arena is always a system page boundary.}}
+\DoxyCodeLine{570 \textcolor{comment}{}}
+\DoxyCodeLine{571 \textcolor{comment}{  The main reason for using padding is to avoid calling sbrk so}}
+\DoxyCodeLine{572 \textcolor{comment}{  often. Having even a small pad greatly reduces the likelihood}}
+\DoxyCodeLine{573 \textcolor{comment}{  that nearly every malloc request during program start-\/up (or}}
+\DoxyCodeLine{574 \textcolor{comment}{  after trimming) will invoke sbrk, which needlessly wastes}}
+\DoxyCodeLine{575 \textcolor{comment}{  time.}}
+\DoxyCodeLine{576 \textcolor{comment}{}}
+\DoxyCodeLine{577 \textcolor{comment}{  Automatic rounding-\/up to page-\/size units is normally sufficient}}
+\DoxyCodeLine{578 \textcolor{comment}{  to avoid measurable overhead, so the default is 0.  However, in}}
+\DoxyCodeLine{579 \textcolor{comment}{  systems where sbrk is relatively slow, it can pay to increase}}
+\DoxyCodeLine{580 \textcolor{comment}{  this value, at the expense of carrying around more memory than}}
+\DoxyCodeLine{581 \textcolor{comment}{  the program needs.}}
+\DoxyCodeLine{582 \textcolor{comment}{*/}}
+\DoxyCodeLine{583 }
+\DoxyCodeLine{584 \textcolor{preprocessor}{\#define M\_TOP\_PAD           -\/2}}
+\DoxyCodeLine{585 }
+\DoxyCodeLine{586 }
+\DoxyCodeLine{587 \textcolor{comment}{/*}}
+\DoxyCodeLine{588 \textcolor{comment}{  M\_MMAP\_THRESHOLD is the request size threshold for using mmap()}}
+\DoxyCodeLine{589 \textcolor{comment}{  to service a request. Requests of at least this size that cannot}}
+\DoxyCodeLine{590 \textcolor{comment}{  be allocated using already-\/existing space will be serviced via mmap.}}
+\DoxyCodeLine{591 \textcolor{comment}{  (If enough normal freed space already exists it is used instead.)}}
+\DoxyCodeLine{592 \textcolor{comment}{}}
+\DoxyCodeLine{593 \textcolor{comment}{  Using mmap segregates relatively large chunks of memory so that}}
+\DoxyCodeLine{594 \textcolor{comment}{  they can be individually obtained and released from the host}}
+\DoxyCodeLine{595 \textcolor{comment}{  system. A request serviced through mmap is never reused by any}}
+\DoxyCodeLine{596 \textcolor{comment}{  other request (at least not directly; the system may just so}}
+\DoxyCodeLine{597 \textcolor{comment}{  happen to remap successive requests to the same locations).}}
+\DoxyCodeLine{598 \textcolor{comment}{}}
+\DoxyCodeLine{599 \textcolor{comment}{  Segregating space in this way has the benefits that:}}
+\DoxyCodeLine{600 \textcolor{comment}{}}
+\DoxyCodeLine{601 \textcolor{comment}{   1. Mmapped space can ALWAYS be individually released back }}
+\DoxyCodeLine{602 \textcolor{comment}{      to the system, which helps keep the system level memory }}
+\DoxyCodeLine{603 \textcolor{comment}{      demands of a long-\/lived program low. }}
+\DoxyCodeLine{604 \textcolor{comment}{   2. Mapped memory can never become `locked' between}}
+\DoxyCodeLine{605 \textcolor{comment}{      other chunks, as can happen with normally allocated chunks, which}}
+\DoxyCodeLine{606 \textcolor{comment}{      means that even trimming via malloc\_trim would not release them.}}
+\DoxyCodeLine{607 \textcolor{comment}{   3. On some systems with "{}holes"{} in address spaces, mmap can obtain}}
+\DoxyCodeLine{608 \textcolor{comment}{      memory that sbrk cannot.}}
+\DoxyCodeLine{609 \textcolor{comment}{}}
+\DoxyCodeLine{610 \textcolor{comment}{  However, it has the disadvantages that:}}
+\DoxyCodeLine{611 \textcolor{comment}{}}
+\DoxyCodeLine{612 \textcolor{comment}{   1. The space cannot be reclaimed, consolidated, and then}}
+\DoxyCodeLine{613 \textcolor{comment}{      used to service later requests, as happens with normal chunks.}}
+\DoxyCodeLine{614 \textcolor{comment}{   2. It can lead to more wastage because of mmap page alignment}}
+\DoxyCodeLine{615 \textcolor{comment}{      requirements}}
+\DoxyCodeLine{616 \textcolor{comment}{   3. It causes malloc performance to be more dependent on host}}
+\DoxyCodeLine{617 \textcolor{comment}{      system memory management support routines.}}
+\DoxyCodeLine{618 \textcolor{comment}{}}
+\DoxyCodeLine{619 \textcolor{comment}{  The advantages of mmap nearly always outweigh disadvantages for}}
+\DoxyCodeLine{620 \textcolor{comment}{  "{}large"{} chunks, but the value of "{}large"{} varies across systems.  The}}
+\DoxyCodeLine{621 \textcolor{comment}{  default is an empirically derived value that works well in most}}
+\DoxyCodeLine{622 \textcolor{comment}{  systems.}}
+\DoxyCodeLine{623 \textcolor{comment}{*/}}
+\DoxyCodeLine{624 }
+\DoxyCodeLine{625 \textcolor{preprocessor}{\#define M\_MMAP\_THRESHOLD    -\/3}}
+\DoxyCodeLine{626 }
+\DoxyCodeLine{627 \textcolor{comment}{/*}}
+\DoxyCodeLine{628 \textcolor{comment}{  M\_MMAP\_MAX is the maximum number of requests to simultaneously}}
+\DoxyCodeLine{629 \textcolor{comment}{  service using mmap. This parameter exists because}}
+\DoxyCodeLine{630 \textcolor{comment}{  some systems have a limited number of internal tables for}}
+\DoxyCodeLine{631 \textcolor{comment}{  use by mmap, and using more than a few of them may degrade}}
+\DoxyCodeLine{632 \textcolor{comment}{  performance.}}
+\DoxyCodeLine{633 \textcolor{comment}{}}
+\DoxyCodeLine{634 \textcolor{comment}{  The default is set to a value that serves only as a safeguard.}}
+\DoxyCodeLine{635 \textcolor{comment}{  Setting to 0 disables use of mmap for servicing large requests.  If}}
+\DoxyCodeLine{636 \textcolor{comment}{  mmap is not supported on a system, the default value is 0, and}}
+\DoxyCodeLine{637 \textcolor{comment}{  attempts to set it to non-\/zero values in mallopt will fail.}}
+\DoxyCodeLine{638 \textcolor{comment}{*/}}
+\DoxyCodeLine{639 }
+\DoxyCodeLine{640 \textcolor{preprocessor}{\#define M\_MMAP\_MAX          -\/4}}
+\DoxyCodeLine{641 }
+\DoxyCodeLine{642 }
+\DoxyCodeLine{643 \textcolor{comment}{/* Unused SVID2/XPG mallopt options, listed for completeness */}}
+\DoxyCodeLine{644 }
+\DoxyCodeLine{645 \textcolor{preprocessor}{\#ifndef M\_NBLKS}}
+\DoxyCodeLine{646 \textcolor{preprocessor}{\#define M\_NLBLKS  2    }\textcolor{comment}{/* UNUSED in this malloc */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{647 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{648 \textcolor{preprocessor}{\#ifndef M\_GRAIN}}
+\DoxyCodeLine{649 \textcolor{preprocessor}{\#define M\_GRAIN   3    }\textcolor{comment}{/* UNUSED in this malloc */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{650 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{651 \textcolor{preprocessor}{\#ifndef M\_KEEP}}
+\DoxyCodeLine{652 \textcolor{preprocessor}{\#define M\_KEEP    4    }\textcolor{comment}{/* UNUSED in this malloc */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{653 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{654 }
+\DoxyCodeLine{655 \textcolor{comment}{/* }}
+\DoxyCodeLine{656 \textcolor{comment}{  Some malloc.h's declare alloca, even though it is not part of malloc.}}
+\DoxyCodeLine{657 \textcolor{comment}{*/}}
+\DoxyCodeLine{658 }
+\DoxyCodeLine{659 \textcolor{preprocessor}{\#ifndef \_ALLOCA\_H}}
+\DoxyCodeLine{660 \textcolor{keyword}{extern} \textcolor{keywordtype}{void}* \mbox{\hyperlink{malloc_8h_a5012bd13ced50e415a5a8d9149f4518c}{alloca}}(\textcolor{keywordtype}{size\_t});}
+\DoxyCodeLine{661 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{662 }
+\DoxyCodeLine{663 \textcolor{preprocessor}{\#ifdef \_\_cplusplus}}
+\DoxyCodeLine{664 \};  \textcolor{comment}{/* end of extern "{}C"{} */}}
+\DoxyCodeLine{665 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{666 }
+\DoxyCodeLine{667 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* MALLOC\_270\_H */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

@@ -1,0 +1,143 @@
+\hypertarget{kheap_8cpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/krnl/kheap.cpp File Reference}
+\label{kheap_8cpp}\index{C:/Users/Alex/Desktop/Banana/kernel/krnl/kheap.cpp@{C:/Users/Alex/Desktop/Banana/kernel/krnl/kheap.cpp}}
+{\ttfamily \#include \char`\"{}krnl/common.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/kheap.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}thr/prcssthr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/virtmgr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/physmgr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}libk/string.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/malloc.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/cpu.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/hal.\+hpp\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{kheap_8cpp_a32c32d80fde66e08bb43221b6f88f537}{USE\+\_\+\+MY\+\_\+\+ALLOC}}
+\item 
+\#define \mbox{\hyperlink{kheap_8cpp_a79b225cc7b0ff19c2719aee539d3fadc}{MALLOC\+\_\+\+H\+\_\+\+WANT\+\_\+\+INTERNAL\+\_\+\+DEFINITIONS}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void $\ast$ \mbox{\hyperlink{kheap_8cpp_a62d6a388838a559f8d802ea73e1a58ef}{sbrk}} (ptrdiff\+\_\+t increment)
+\item 
+void $\ast$ \mbox{\hyperlink{kheap_8cpp_a6e573f1ca7aee79d798ccb24d38a7476}{sbrk\+\_\+thunk}} (ptrdiff\+\_\+t increment)
+\item 
+void $\ast$ \mbox{\hyperlink{kheap_8cpp_affe9009b5f2a144a9bd5199bda74a653}{mmap}} (void $\ast$addr, size\+\_\+t length, int prot, int \mbox{\hyperlink{acpi_8hpp_a773b39d480759f67926cb18ae2219281}{flags}}, int fd, size\+\_\+t offset)
+\item 
+int \mbox{\hyperlink{kheap_8cpp_a1343e4aa663c9e8bb7d1b16d367f0b08}{munmap}} (void $\ast$addr, size\+\_\+t length)
+\item 
+int \mbox{\hyperlink{kheap_8cpp_a8b5670e4594b0b6f8be78fe17f0c3b53}{liballoc\+\_\+lock}} ()
+\item 
+int \mbox{\hyperlink{kheap_8cpp_aedc23f198b2882d41d0caa316453967b}{liballoc\+\_\+unlock}} ()
+\item 
+size\+\_\+t \mbox{\hyperlink{kheap_8cpp_ac891ea6fb4513fed58362344067c5f5a}{liballoc\+\_\+alloc}} (int pages)
+\item 
+int \mbox{\hyperlink{kheap_8cpp_aee2dc12f19409f4a76b2aa36f5ab1316}{liballoc\+\_\+free}} (void $\ast$\mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}}, int pages)
+\item 
+void $\ast$ \mbox{\hyperlink{kheap_8cpp_ad28fed1039f35d754710633141b4edf0}{realloc}} (void $\ast$\mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}}, size\+\_\+t \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}})
+\item 
+void $\ast$ \mbox{\hyperlink{kheap_8cpp_a9c36d0fe3ec4675cbffdc9b52f5fb399}{malloc}} (size\+\_\+t \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}})
+\item 
+void \mbox{\hyperlink{kheap_8cpp_ac05083502fd3521c02cdfc72075ce53f}{free}} (void $\ast$\+\_\+\+\_\+addr)
+\item 
+void \mbox{\hyperlink{kheap_8cpp_acb615d0d73858d73933776462b18c3b7}{rfree}} (void $\ast$\+\_\+\+\_\+addr)
+\item 
+void $\ast$ \mbox{\hyperlink{kheap_8cpp_af6befd054103fbf412781924afa082bc}{calloc}} (size\+\_\+t nobj, size\+\_\+t \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{kheap_8cpp_a79b225cc7b0ff19c2719aee539d3fadc}\label{kheap_8cpp_a79b225cc7b0ff19c2719aee539d3fadc}} 
+\index{kheap.cpp@{kheap.cpp}!MALLOC\_H\_WANT\_INTERNAL\_DEFINITIONS@{MALLOC\_H\_WANT\_INTERNAL\_DEFINITIONS}}
+\index{MALLOC\_H\_WANT\_INTERNAL\_DEFINITIONS@{MALLOC\_H\_WANT\_INTERNAL\_DEFINITIONS}!kheap.cpp@{kheap.cpp}}
+\doxysubsubsection{\texorpdfstring{MALLOC\_H\_WANT\_INTERNAL\_DEFINITIONS}{MALLOC\_H\_WANT\_INTERNAL\_DEFINITIONS}}
+{\footnotesize\ttfamily \#define MALLOC\+\_\+\+H\+\_\+\+WANT\+\_\+\+INTERNAL\+\_\+\+DEFINITIONS}
+
+\mbox{\Hypertarget{kheap_8cpp_a32c32d80fde66e08bb43221b6f88f537}\label{kheap_8cpp_a32c32d80fde66e08bb43221b6f88f537}} 
+\index{kheap.cpp@{kheap.cpp}!USE\_MY\_ALLOC@{USE\_MY\_ALLOC}}
+\index{USE\_MY\_ALLOC@{USE\_MY\_ALLOC}!kheap.cpp@{kheap.cpp}}
+\doxysubsubsection{\texorpdfstring{USE\_MY\_ALLOC}{USE\_MY\_ALLOC}}
+{\footnotesize\ttfamily \#define USE\+\_\+\+MY\+\_\+\+ALLOC}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{kheap_8cpp_af6befd054103fbf412781924afa082bc}\label{kheap_8cpp_af6befd054103fbf412781924afa082bc}} 
+\index{kheap.cpp@{kheap.cpp}!calloc@{calloc}}
+\index{calloc@{calloc}!kheap.cpp@{kheap.cpp}}
+\doxysubsubsection{\texorpdfstring{calloc()}{calloc()}}
+{\footnotesize\ttfamily void $\ast$ calloc (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{nobj,  }\item[{size\+\_\+t}]{size }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{kheap_8cpp_ac05083502fd3521c02cdfc72075ce53f}\label{kheap_8cpp_ac05083502fd3521c02cdfc72075ce53f}} 
+\index{kheap.cpp@{kheap.cpp}!free@{free}}
+\index{free@{free}!kheap.cpp@{kheap.cpp}}
+\doxysubsubsection{\texorpdfstring{free()}{free()}}
+{\footnotesize\ttfamily void free (\begin{DoxyParamCaption}\item[{void $\ast$}]{\+\_\+\+\_\+addr }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{kheap_8cpp_ac891ea6fb4513fed58362344067c5f5a}\label{kheap_8cpp_ac891ea6fb4513fed58362344067c5f5a}} 
+\index{kheap.cpp@{kheap.cpp}!liballoc\_alloc@{liballoc\_alloc}}
+\index{liballoc\_alloc@{liballoc\_alloc}!kheap.cpp@{kheap.cpp}}
+\doxysubsubsection{\texorpdfstring{liballoc\_alloc()}{liballoc\_alloc()}}
+{\footnotesize\ttfamily size\+\_\+t liballoc\+\_\+alloc (\begin{DoxyParamCaption}\item[{int}]{pages }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{kheap_8cpp_aee2dc12f19409f4a76b2aa36f5ab1316}\label{kheap_8cpp_aee2dc12f19409f4a76b2aa36f5ab1316}} 
+\index{kheap.cpp@{kheap.cpp}!liballoc\_free@{liballoc\_free}}
+\index{liballoc\_free@{liballoc\_free}!kheap.cpp@{kheap.cpp}}
+\doxysubsubsection{\texorpdfstring{liballoc\_free()}{liballoc\_free()}}
+{\footnotesize\ttfamily int liballoc\+\_\+free (\begin{DoxyParamCaption}\item[{void $\ast$}]{ptr,  }\item[{int}]{pages }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{kheap_8cpp_a8b5670e4594b0b6f8be78fe17f0c3b53}\label{kheap_8cpp_a8b5670e4594b0b6f8be78fe17f0c3b53}} 
+\index{kheap.cpp@{kheap.cpp}!liballoc\_lock@{liballoc\_lock}}
+\index{liballoc\_lock@{liballoc\_lock}!kheap.cpp@{kheap.cpp}}
+\doxysubsubsection{\texorpdfstring{liballoc\_lock()}{liballoc\_lock()}}
+{\footnotesize\ttfamily int liballoc\+\_\+lock (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{kheap_8cpp_aedc23f198b2882d41d0caa316453967b}\label{kheap_8cpp_aedc23f198b2882d41d0caa316453967b}} 
+\index{kheap.cpp@{kheap.cpp}!liballoc\_unlock@{liballoc\_unlock}}
+\index{liballoc\_unlock@{liballoc\_unlock}!kheap.cpp@{kheap.cpp}}
+\doxysubsubsection{\texorpdfstring{liballoc\_unlock()}{liballoc\_unlock()}}
+{\footnotesize\ttfamily int liballoc\+\_\+unlock (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{kheap_8cpp_a9c36d0fe3ec4675cbffdc9b52f5fb399}\label{kheap_8cpp_a9c36d0fe3ec4675cbffdc9b52f5fb399}} 
+\index{kheap.cpp@{kheap.cpp}!malloc@{malloc}}
+\index{malloc@{malloc}!kheap.cpp@{kheap.cpp}}
+\doxysubsubsection{\texorpdfstring{malloc()}{malloc()}}
+{\footnotesize\ttfamily void $\ast$ malloc (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{size }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{kheap_8cpp_affe9009b5f2a144a9bd5199bda74a653}\label{kheap_8cpp_affe9009b5f2a144a9bd5199bda74a653}} 
+\index{kheap.cpp@{kheap.cpp}!mmap@{mmap}}
+\index{mmap@{mmap}!kheap.cpp@{kheap.cpp}}
+\doxysubsubsection{\texorpdfstring{mmap()}{mmap()}}
+{\footnotesize\ttfamily void $\ast$ mmap (\begin{DoxyParamCaption}\item[{void $\ast$}]{addr,  }\item[{size\+\_\+t}]{length,  }\item[{int}]{prot,  }\item[{int}]{flags,  }\item[{int}]{fd,  }\item[{size\+\_\+t}]{offset }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{kheap_8cpp_a1343e4aa663c9e8bb7d1b16d367f0b08}\label{kheap_8cpp_a1343e4aa663c9e8bb7d1b16d367f0b08}} 
+\index{kheap.cpp@{kheap.cpp}!munmap@{munmap}}
+\index{munmap@{munmap}!kheap.cpp@{kheap.cpp}}
+\doxysubsubsection{\texorpdfstring{munmap()}{munmap()}}
+{\footnotesize\ttfamily int munmap (\begin{DoxyParamCaption}\item[{void $\ast$}]{addr,  }\item[{size\+\_\+t}]{length }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{kheap_8cpp_ad28fed1039f35d754710633141b4edf0}\label{kheap_8cpp_ad28fed1039f35d754710633141b4edf0}} 
+\index{kheap.cpp@{kheap.cpp}!realloc@{realloc}}
+\index{realloc@{realloc}!kheap.cpp@{kheap.cpp}}
+\doxysubsubsection{\texorpdfstring{realloc()}{realloc()}}
+{\footnotesize\ttfamily void $\ast$ realloc (\begin{DoxyParamCaption}\item[{void $\ast$}]{ptr,  }\item[{size\+\_\+t}]{size }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{kheap_8cpp_acb615d0d73858d73933776462b18c3b7}\label{kheap_8cpp_acb615d0d73858d73933776462b18c3b7}} 
+\index{kheap.cpp@{kheap.cpp}!rfree@{rfree}}
+\index{rfree@{rfree}!kheap.cpp@{kheap.cpp}}
+\doxysubsubsection{\texorpdfstring{rfree()}{rfree()}}
+{\footnotesize\ttfamily void rfree (\begin{DoxyParamCaption}\item[{void $\ast$}]{\+\_\+\+\_\+addr }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{kheap_8cpp_a62d6a388838a559f8d802ea73e1a58ef}\label{kheap_8cpp_a62d6a388838a559f8d802ea73e1a58ef}} 
+\index{kheap.cpp@{kheap.cpp}!sbrk@{sbrk}}
+\index{sbrk@{sbrk}!kheap.cpp@{kheap.cpp}}
+\doxysubsubsection{\texorpdfstring{sbrk()}{sbrk()}}
+{\footnotesize\ttfamily void $\ast$ sbrk (\begin{DoxyParamCaption}\item[{ptrdiff\+\_\+t}]{increment }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{kheap_8cpp_a6e573f1ca7aee79d798ccb24d38a7476}\label{kheap_8cpp_a6e573f1ca7aee79d798ccb24d38a7476}} 
+\index{kheap.cpp@{kheap.cpp}!sbrk\_thunk@{sbrk\_thunk}}
+\index{sbrk\_thunk@{sbrk\_thunk}!kheap.cpp@{kheap.cpp}}
+\doxysubsubsection{\texorpdfstring{sbrk\_thunk()}{sbrk\_thunk()}}
+{\footnotesize\ttfamily void $\ast$ sbrk\+\_\+thunk (\begin{DoxyParamCaption}\item[{ptrdiff\+\_\+t}]{increment }\end{DoxyParamCaption})}
+

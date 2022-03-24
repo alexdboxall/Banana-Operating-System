@@ -1,0 +1,624 @@
+\hypertarget{amlcode_8h_source}{}\doxysection{amlcode.\+h}
+\label{amlcode_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/acpica/amlcode.h@{C:/Users/Alex/Desktop/Banana/kernel/acpica/amlcode.h}}
+\mbox{\hyperlink{amlcode_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{2 \textcolor{comment}{ *}}
+\DoxyCodeLine{3 \textcolor{comment}{ * Name: amlcode.h -\/ Definitions for AML, as included in "{}definition blocks"{}}}
+\DoxyCodeLine{4 \textcolor{comment}{ *                   Declarations and definitions contained herein are derived}}
+\DoxyCodeLine{5 \textcolor{comment}{ *                   directly from the ACPI specification.}}
+\DoxyCodeLine{6 \textcolor{comment}{ *}}
+\DoxyCodeLine{7 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{10 \textcolor{comment}{ *}}
+\DoxyCodeLine{11 \textcolor{comment}{ * 1. Copyright Notice}}
+\DoxyCodeLine{12 \textcolor{comment}{ *}}
+\DoxyCodeLine{13 \textcolor{comment}{ * Some or all of this work -\/ Copyright (c) 1999 -\/ 2019, Intel Corp.}}
+\DoxyCodeLine{14 \textcolor{comment}{ * All rights reserved.}}
+\DoxyCodeLine{15 \textcolor{comment}{ *}}
+\DoxyCodeLine{16 \textcolor{comment}{ * 2. License}}
+\DoxyCodeLine{17 \textcolor{comment}{ *}}
+\DoxyCodeLine{18 \textcolor{comment}{ * 2.1. This is your license from Intel Corp. under its intellectual property}}
+\DoxyCodeLine{19 \textcolor{comment}{ * rights. You may have additional license terms from the party that provided}}
+\DoxyCodeLine{20 \textcolor{comment}{ * you this software, covering your right to use that party's intellectual}}
+\DoxyCodeLine{21 \textcolor{comment}{ * property rights.}}
+\DoxyCodeLine{22 \textcolor{comment}{ *}}
+\DoxyCodeLine{23 \textcolor{comment}{ * 2.2. Intel grants, free of charge, to any person ("{}Licensee"{}) obtaining a}}
+\DoxyCodeLine{24 \textcolor{comment}{ * copy of the source code appearing in this file ("{}Covered Code"{}) an}}
+\DoxyCodeLine{25 \textcolor{comment}{ * irrevocable, perpetual, worldwide license under Intel's copyrights in the}}
+\DoxyCodeLine{26 \textcolor{comment}{ * base code distributed originally by Intel ("{}Original Intel Code"{}) to copy,}}
+\DoxyCodeLine{27 \textcolor{comment}{ * make derivatives, distribute, use and display any portion of the Covered}}
+\DoxyCodeLine{28 \textcolor{comment}{ * Code in any form, with the right to sublicense such rights; and}}
+\DoxyCodeLine{29 \textcolor{comment}{ *}}
+\DoxyCodeLine{30 \textcolor{comment}{ * 2.3. Intel grants Licensee a non-\/exclusive and non-\/transferable patent}}
+\DoxyCodeLine{31 \textcolor{comment}{ * license (with the right to sublicense), under only those claims of Intel}}
+\DoxyCodeLine{32 \textcolor{comment}{ * patents that are infringed by the Original Intel Code, to make, use, sell,}}
+\DoxyCodeLine{33 \textcolor{comment}{ * offer to sell, and import the Covered Code and derivative works thereof}}
+\DoxyCodeLine{34 \textcolor{comment}{ * solely to the minimum extent necessary to exercise the above copyright}}
+\DoxyCodeLine{35 \textcolor{comment}{ * license, and in no event shall the patent license extend to any additions}}
+\DoxyCodeLine{36 \textcolor{comment}{ * to or modifications of the Original Intel Code. No other license or right}}
+\DoxyCodeLine{37 \textcolor{comment}{ * is granted directly or by implication, estoppel or otherwise;}}
+\DoxyCodeLine{38 \textcolor{comment}{ *}}
+\DoxyCodeLine{39 \textcolor{comment}{ * The above copyright and patent license is granted only if the following}}
+\DoxyCodeLine{40 \textcolor{comment}{ * conditions are met:}}
+\DoxyCodeLine{41 \textcolor{comment}{ *}}
+\DoxyCodeLine{42 \textcolor{comment}{ * 3. Conditions}}
+\DoxyCodeLine{43 \textcolor{comment}{ *}}
+\DoxyCodeLine{44 \textcolor{comment}{ * 3.1. Redistribution of Source with Rights to Further Distribute Source.}}
+\DoxyCodeLine{45 \textcolor{comment}{ * Redistribution of source code of any substantial portion of the Covered}}
+\DoxyCodeLine{46 \textcolor{comment}{ * Code or modification with rights to further distribute source must include}}
+\DoxyCodeLine{47 \textcolor{comment}{ * the above Copyright Notice, the above License, this list of Conditions,}}
+\DoxyCodeLine{48 \textcolor{comment}{ * and the following Disclaimer and Export Compliance provision. In addition,}}
+\DoxyCodeLine{49 \textcolor{comment}{ * Licensee must cause all Covered Code to which Licensee contributes to}}
+\DoxyCodeLine{50 \textcolor{comment}{ * contain a file documenting the changes Licensee made to create that Covered}}
+\DoxyCodeLine{51 \textcolor{comment}{ * Code and the date of any change. Licensee must include in that file the}}
+\DoxyCodeLine{52 \textcolor{comment}{ * documentation of any changes made by any predecessor Licensee. Licensee}}
+\DoxyCodeLine{53 \textcolor{comment}{ * must include a prominent statement that the modification is derived,}}
+\DoxyCodeLine{54 \textcolor{comment}{ * directly or indirectly, from Original Intel Code.}}
+\DoxyCodeLine{55 \textcolor{comment}{ *}}
+\DoxyCodeLine{56 \textcolor{comment}{ * 3.2. Redistribution of Source with no Rights to Further Distribute Source.}}
+\DoxyCodeLine{57 \textcolor{comment}{ * Redistribution of source code of any substantial portion of the Covered}}
+\DoxyCodeLine{58 \textcolor{comment}{ * Code or modification without rights to further distribute source must}}
+\DoxyCodeLine{59 \textcolor{comment}{ * include the following Disclaimer and Export Compliance provision in the}}
+\DoxyCodeLine{60 \textcolor{comment}{ * documentation and/or other materials provided with distribution. In}}
+\DoxyCodeLine{61 \textcolor{comment}{ * addition, Licensee may not authorize further sublicense of source of any}}
+\DoxyCodeLine{62 \textcolor{comment}{ * portion of the Covered Code, and must include terms to the effect that the}}
+\DoxyCodeLine{63 \textcolor{comment}{ * license from Licensee to its licensee is limited to the intellectual}}
+\DoxyCodeLine{64 \textcolor{comment}{ * property embodied in the software Licensee provides to its licensee, and}}
+\DoxyCodeLine{65 \textcolor{comment}{ * not to intellectual property embodied in modifications its licensee may}}
+\DoxyCodeLine{66 \textcolor{comment}{ * make.}}
+\DoxyCodeLine{67 \textcolor{comment}{ *}}
+\DoxyCodeLine{68 \textcolor{comment}{ * 3.3. Redistribution of Executable. Redistribution in executable form of any}}
+\DoxyCodeLine{69 \textcolor{comment}{ * substantial portion of the Covered Code or modification must reproduce the}}
+\DoxyCodeLine{70 \textcolor{comment}{ * above Copyright Notice, and the following Disclaimer and Export Compliance}}
+\DoxyCodeLine{71 \textcolor{comment}{ * provision in the documentation and/or other materials provided with the}}
+\DoxyCodeLine{72 \textcolor{comment}{ * distribution.}}
+\DoxyCodeLine{73 \textcolor{comment}{ *}}
+\DoxyCodeLine{74 \textcolor{comment}{ * 3.4. Intel retains all right, title, and interest in and to the Original}}
+\DoxyCodeLine{75 \textcolor{comment}{ * Intel Code.}}
+\DoxyCodeLine{76 \textcolor{comment}{ *}}
+\DoxyCodeLine{77 \textcolor{comment}{ * 3.5. Neither the name Intel nor any other trademark owned or controlled by}}
+\DoxyCodeLine{78 \textcolor{comment}{ * Intel shall be used in advertising or otherwise to promote the sale, use or}}
+\DoxyCodeLine{79 \textcolor{comment}{ * other dealings in products derived from or relating to the Covered Code}}
+\DoxyCodeLine{80 \textcolor{comment}{ * without prior written authorization from Intel.}}
+\DoxyCodeLine{81 \textcolor{comment}{ *}}
+\DoxyCodeLine{82 \textcolor{comment}{ * 4. Disclaimer and Export Compliance}}
+\DoxyCodeLine{83 \textcolor{comment}{ *}}
+\DoxyCodeLine{84 \textcolor{comment}{ * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED}}
+\DoxyCodeLine{85 \textcolor{comment}{ * HERE. ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE}}
+\DoxyCodeLine{86 \textcolor{comment}{ * IS PROVIDED "{}AS IS,"{} AND INTEL WILL NOT PROVIDE ANY SUPPORT, ASSISTANCE,}}
+\DoxyCodeLine{87 \textcolor{comment}{ * INSTALLATION, TRAINING OR OTHER SERVICES. INTEL WILL NOT PROVIDE ANY}}
+\DoxyCodeLine{88 \textcolor{comment}{ * UPDATES, ENHANCEMENTS OR EXTENSIONS. INTEL SPECIFICALLY DISCLAIMS ANY}}
+\DoxyCodeLine{89 \textcolor{comment}{ * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A}}
+\DoxyCodeLine{90 \textcolor{comment}{ * PARTICULAR PURPOSE.}}
+\DoxyCodeLine{91 \textcolor{comment}{ *}}
+\DoxyCodeLine{92 \textcolor{comment}{ * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES}}
+\DoxyCodeLine{93 \textcolor{comment}{ * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR}}
+\DoxyCodeLine{94 \textcolor{comment}{ * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,}}
+\DoxyCodeLine{95 \textcolor{comment}{ * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY}}
+\DoxyCodeLine{96 \textcolor{comment}{ * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL}}
+\DoxyCodeLine{97 \textcolor{comment}{ * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES. THESE LIMITATIONS}}
+\DoxyCodeLine{98 \textcolor{comment}{ * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY}}
+\DoxyCodeLine{99 \textcolor{comment}{ * LIMITED REMEDY.}}
+\DoxyCodeLine{100 \textcolor{comment}{ *}}
+\DoxyCodeLine{101 \textcolor{comment}{ * 4.3. Licensee shall not export, either directly or indirectly, any of this}}
+\DoxyCodeLine{102 \textcolor{comment}{ * software or system incorporating such software without first obtaining any}}
+\DoxyCodeLine{103 \textcolor{comment}{ * required license or other approval from the U. S. Department of Commerce or}}
+\DoxyCodeLine{104 \textcolor{comment}{ * any other agency or department of the United States Government. In the}}
+\DoxyCodeLine{105 \textcolor{comment}{ * event Licensee exports any such software from the United States or}}
+\DoxyCodeLine{106 \textcolor{comment}{ * re-\/exports any such software from a foreign destination, Licensee shall}}
+\DoxyCodeLine{107 \textcolor{comment}{ * ensure that the distribution and export/re-\/export of the software is in}}
+\DoxyCodeLine{108 \textcolor{comment}{ * compliance with all laws, regulations, orders, or other restrictions of the}}
+\DoxyCodeLine{109 \textcolor{comment}{ * U.S. Export Administration Regulations. Licensee agrees that neither it nor}}
+\DoxyCodeLine{110 \textcolor{comment}{ * any of its subsidiaries will export/re-\/export any technical data, process,}}
+\DoxyCodeLine{111 \textcolor{comment}{ * software, or service, directly or indirectly, to any country for which the}}
+\DoxyCodeLine{112 \textcolor{comment}{ * United States government or any agency thereof requires an export license,}}
+\DoxyCodeLine{113 \textcolor{comment}{ * other governmental approval, or letter of assurance, without first obtaining}}
+\DoxyCodeLine{114 \textcolor{comment}{ * such license, approval or letter.}}
+\DoxyCodeLine{115 \textcolor{comment}{ *}}
+\DoxyCodeLine{116 \textcolor{comment}{ *****************************************************************************}}
+\DoxyCodeLine{117 \textcolor{comment}{ *}}
+\DoxyCodeLine{118 \textcolor{comment}{ * Alternatively, you may choose to be licensed under the terms of the}}
+\DoxyCodeLine{119 \textcolor{comment}{ * following license:}}
+\DoxyCodeLine{120 \textcolor{comment}{ *}}
+\DoxyCodeLine{121 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{122 \textcolor{comment}{ * modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{123 \textcolor{comment}{ * are met:}}
+\DoxyCodeLine{124 \textcolor{comment}{ * 1. Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{125 \textcolor{comment}{ *    notice, this list of conditions, and the following disclaimer,}}
+\DoxyCodeLine{126 \textcolor{comment}{ *    without modification.}}
+\DoxyCodeLine{127 \textcolor{comment}{ * 2. Redistributions in binary form must reproduce at minimum a disclaimer}}
+\DoxyCodeLine{128 \textcolor{comment}{ *    substantially similar to the "{}NO WARRANTY"{} disclaimer below}}
+\DoxyCodeLine{129 \textcolor{comment}{ *    ("{}Disclaimer"{}) and any redistribution must be conditioned upon}}
+\DoxyCodeLine{130 \textcolor{comment}{ *    including a substantially similar Disclaimer requirement for further}}
+\DoxyCodeLine{131 \textcolor{comment}{ *    binary redistribution.}}
+\DoxyCodeLine{132 \textcolor{comment}{ * 3. Neither the names of the above-\/listed copyright holders nor the names}}
+\DoxyCodeLine{133 \textcolor{comment}{ *    of any contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{134 \textcolor{comment}{ *    from this software without specific prior written permission.}}
+\DoxyCodeLine{135 \textcolor{comment}{ *}}
+\DoxyCodeLine{136 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS}}
+\DoxyCodeLine{137 \textcolor{comment}{ * "{}AS IS"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT}}
+\DoxyCodeLine{138 \textcolor{comment}{ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR}}
+\DoxyCodeLine{139 \textcolor{comment}{ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT}}
+\DoxyCodeLine{140 \textcolor{comment}{ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,}}
+\DoxyCodeLine{141 \textcolor{comment}{ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT}}
+\DoxyCodeLine{142 \textcolor{comment}{ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,}}
+\DoxyCodeLine{143 \textcolor{comment}{ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY}}
+\DoxyCodeLine{144 \textcolor{comment}{ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{145 \textcolor{comment}{ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{146 \textcolor{comment}{ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{147 \textcolor{comment}{ *}}
+\DoxyCodeLine{148 \textcolor{comment}{ * Alternatively, you may choose to be licensed under the terms of the}}
+\DoxyCodeLine{149 \textcolor{comment}{ * GNU General Public License ("{}GPL"{}) version 2 as published by the Free}}
+\DoxyCodeLine{150 \textcolor{comment}{ * Software Foundation.}}
+\DoxyCodeLine{151 \textcolor{comment}{ *}}
+\DoxyCodeLine{152 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{153 }
+\DoxyCodeLine{154 \textcolor{preprocessor}{\#ifndef \_\_AMLCODE\_H\_\_}}
+\DoxyCodeLine{155 \textcolor{preprocessor}{\#define \_\_AMLCODE\_H\_\_}}
+\DoxyCodeLine{156 }
+\DoxyCodeLine{157 \textcolor{comment}{/* primary opcodes */}}
+\DoxyCodeLine{158 }
+\DoxyCodeLine{159 \textcolor{preprocessor}{\#define AML\_ZERO\_OP                 (UINT16) 0x00}}
+\DoxyCodeLine{160 \textcolor{preprocessor}{\#define AML\_ONE\_OP                  (UINT16) 0x01}}
+\DoxyCodeLine{161 \textcolor{preprocessor}{\#define AML\_ALIAS\_OP                (UINT16) 0x06}}
+\DoxyCodeLine{162 \textcolor{preprocessor}{\#define AML\_NAME\_OP                 (UINT16) 0x08}}
+\DoxyCodeLine{163 \textcolor{preprocessor}{\#define AML\_BYTE\_OP                 (UINT16) 0x0a}}
+\DoxyCodeLine{164 \textcolor{preprocessor}{\#define AML\_WORD\_OP                 (UINT16) 0x0b}}
+\DoxyCodeLine{165 \textcolor{preprocessor}{\#define AML\_DWORD\_OP                (UINT16) 0x0c}}
+\DoxyCodeLine{166 \textcolor{preprocessor}{\#define AML\_STRING\_OP               (UINT16) 0x0d}}
+\DoxyCodeLine{167 \textcolor{preprocessor}{\#define AML\_QWORD\_OP                (UINT16) 0x0e     }\textcolor{comment}{/* ACPI 2.0 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{168 \textcolor{preprocessor}{\#define AML\_SCOPE\_OP                (UINT16) 0x10}}
+\DoxyCodeLine{169 \textcolor{preprocessor}{\#define AML\_BUFFER\_OP               (UINT16) 0x11}}
+\DoxyCodeLine{170 \textcolor{preprocessor}{\#define AML\_PACKAGE\_OP              (UINT16) 0x12}}
+\DoxyCodeLine{171 \textcolor{preprocessor}{\#define AML\_VARIABLE\_PACKAGE\_OP     (UINT16) 0x13     }\textcolor{comment}{/* ACPI 2.0 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{172 \textcolor{preprocessor}{\#define AML\_METHOD\_OP               (UINT16) 0x14}}
+\DoxyCodeLine{173 \textcolor{preprocessor}{\#define AML\_EXTERNAL\_OP             (UINT16) 0x15     }\textcolor{comment}{/* ACPI 6.0 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{174 \textcolor{preprocessor}{\#define AML\_DUAL\_NAME\_PREFIX        (UINT16) 0x2e}}
+\DoxyCodeLine{175 \textcolor{preprocessor}{\#define AML\_MULTI\_NAME\_PREFIX       (UINT16) 0x2f}}
+\DoxyCodeLine{176 \textcolor{preprocessor}{\#define AML\_EXTENDED\_PREFIX         (UINT16) 0x5b}}
+\DoxyCodeLine{177 \textcolor{preprocessor}{\#define AML\_ROOT\_PREFIX             (UINT16) 0x5c}}
+\DoxyCodeLine{178 \textcolor{preprocessor}{\#define AML\_PARENT\_PREFIX           (UINT16) 0x5e}}
+\DoxyCodeLine{179 \textcolor{preprocessor}{\#define AML\_FIRST\_LOCAL\_OP          (UINT16) 0x60     }\textcolor{comment}{/* Used for Local op \# calculations */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{180 \textcolor{preprocessor}{\#define AML\_LOCAL0                  (UINT16) 0x60}}
+\DoxyCodeLine{181 \textcolor{preprocessor}{\#define AML\_LOCAL1                  (UINT16) 0x61}}
+\DoxyCodeLine{182 \textcolor{preprocessor}{\#define AML\_LOCAL2                  (UINT16) 0x62}}
+\DoxyCodeLine{183 \textcolor{preprocessor}{\#define AML\_LOCAL3                  (UINT16) 0x63}}
+\DoxyCodeLine{184 \textcolor{preprocessor}{\#define AML\_LOCAL4                  (UINT16) 0x64}}
+\DoxyCodeLine{185 \textcolor{preprocessor}{\#define AML\_LOCAL5                  (UINT16) 0x65}}
+\DoxyCodeLine{186 \textcolor{preprocessor}{\#define AML\_LOCAL6                  (UINT16) 0x66}}
+\DoxyCodeLine{187 \textcolor{preprocessor}{\#define AML\_LOCAL7                  (UINT16) 0x67}}
+\DoxyCodeLine{188 \textcolor{preprocessor}{\#define AML\_FIRST\_ARG\_OP            (UINT16) 0x68     }\textcolor{comment}{/* Used for Arg op \# calculations */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{189 \textcolor{preprocessor}{\#define AML\_ARG0                    (UINT16) 0x68}}
+\DoxyCodeLine{190 \textcolor{preprocessor}{\#define AML\_ARG1                    (UINT16) 0x69}}
+\DoxyCodeLine{191 \textcolor{preprocessor}{\#define AML\_ARG2                    (UINT16) 0x6a}}
+\DoxyCodeLine{192 \textcolor{preprocessor}{\#define AML\_ARG3                    (UINT16) 0x6b}}
+\DoxyCodeLine{193 \textcolor{preprocessor}{\#define AML\_ARG4                    (UINT16) 0x6c}}
+\DoxyCodeLine{194 \textcolor{preprocessor}{\#define AML\_ARG5                    (UINT16) 0x6d}}
+\DoxyCodeLine{195 \textcolor{preprocessor}{\#define AML\_ARG6                    (UINT16) 0x6e}}
+\DoxyCodeLine{196 \textcolor{preprocessor}{\#define AML\_STORE\_OP                (UINT16) 0x70}}
+\DoxyCodeLine{197 \textcolor{preprocessor}{\#define AML\_REF\_OF\_OP               (UINT16) 0x71}}
+\DoxyCodeLine{198 \textcolor{preprocessor}{\#define AML\_ADD\_OP                  (UINT16) 0x72}}
+\DoxyCodeLine{199 \textcolor{preprocessor}{\#define AML\_CONCATENATE\_OP          (UINT16) 0x73}}
+\DoxyCodeLine{200 \textcolor{preprocessor}{\#define AML\_SUBTRACT\_OP             (UINT16) 0x74}}
+\DoxyCodeLine{201 \textcolor{preprocessor}{\#define AML\_INCREMENT\_OP            (UINT16) 0x75}}
+\DoxyCodeLine{202 \textcolor{preprocessor}{\#define AML\_DECREMENT\_OP            (UINT16) 0x76}}
+\DoxyCodeLine{203 \textcolor{preprocessor}{\#define AML\_MULTIPLY\_OP             (UINT16) 0x77}}
+\DoxyCodeLine{204 \textcolor{preprocessor}{\#define AML\_DIVIDE\_OP               (UINT16) 0x78}}
+\DoxyCodeLine{205 \textcolor{preprocessor}{\#define AML\_SHIFT\_LEFT\_OP           (UINT16) 0x79}}
+\DoxyCodeLine{206 \textcolor{preprocessor}{\#define AML\_SHIFT\_RIGHT\_OP          (UINT16) 0x7a}}
+\DoxyCodeLine{207 \textcolor{preprocessor}{\#define AML\_BIT\_AND\_OP              (UINT16) 0x7b}}
+\DoxyCodeLine{208 \textcolor{preprocessor}{\#define AML\_BIT\_NAND\_OP             (UINT16) 0x7c}}
+\DoxyCodeLine{209 \textcolor{preprocessor}{\#define AML\_BIT\_OR\_OP               (UINT16) 0x7d}}
+\DoxyCodeLine{210 \textcolor{preprocessor}{\#define AML\_BIT\_NOR\_OP              (UINT16) 0x7e}}
+\DoxyCodeLine{211 \textcolor{preprocessor}{\#define AML\_BIT\_XOR\_OP              (UINT16) 0x7f}}
+\DoxyCodeLine{212 \textcolor{preprocessor}{\#define AML\_BIT\_NOT\_OP              (UINT16) 0x80}}
+\DoxyCodeLine{213 \textcolor{preprocessor}{\#define AML\_FIND\_SET\_LEFT\_BIT\_OP    (UINT16) 0x81}}
+\DoxyCodeLine{214 \textcolor{preprocessor}{\#define AML\_FIND\_SET\_RIGHT\_BIT\_OP   (UINT16) 0x82}}
+\DoxyCodeLine{215 \textcolor{preprocessor}{\#define AML\_DEREF\_OF\_OP             (UINT16) 0x83}}
+\DoxyCodeLine{216 \textcolor{preprocessor}{\#define AML\_CONCATENATE\_TEMPLATE\_OP (UINT16) 0x84     }\textcolor{comment}{/* ACPI 2.0 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{217 \textcolor{preprocessor}{\#define AML\_MOD\_OP                  (UINT16) 0x85     }\textcolor{comment}{/* ACPI 2.0 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{218 \textcolor{preprocessor}{\#define AML\_NOTIFY\_OP               (UINT16) 0x86}}
+\DoxyCodeLine{219 \textcolor{preprocessor}{\#define AML\_SIZE\_OF\_OP              (UINT16) 0x87}}
+\DoxyCodeLine{220 \textcolor{preprocessor}{\#define AML\_INDEX\_OP                (UINT16) 0x88}}
+\DoxyCodeLine{221 \textcolor{preprocessor}{\#define AML\_MATCH\_OP                (UINT16) 0x89}}
+\DoxyCodeLine{222 \textcolor{preprocessor}{\#define AML\_CREATE\_DWORD\_FIELD\_OP   (UINT16) 0x8a}}
+\DoxyCodeLine{223 \textcolor{preprocessor}{\#define AML\_CREATE\_WORD\_FIELD\_OP    (UINT16) 0x8b}}
+\DoxyCodeLine{224 \textcolor{preprocessor}{\#define AML\_CREATE\_BYTE\_FIELD\_OP    (UINT16) 0x8c}}
+\DoxyCodeLine{225 \textcolor{preprocessor}{\#define AML\_CREATE\_BIT\_FIELD\_OP     (UINT16) 0x8d}}
+\DoxyCodeLine{226 \textcolor{preprocessor}{\#define AML\_OBJECT\_TYPE\_OP          (UINT16) 0x8e}}
+\DoxyCodeLine{227 \textcolor{preprocessor}{\#define AML\_CREATE\_QWORD\_FIELD\_OP   (UINT16) 0x8f     }\textcolor{comment}{/* ACPI 2.0 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{228 \textcolor{preprocessor}{\#define AML\_LOGICAL\_AND\_OP          (UINT16) 0x90}}
+\DoxyCodeLine{229 \textcolor{preprocessor}{\#define AML\_LOGICAL\_OR\_OP           (UINT16) 0x91}}
+\DoxyCodeLine{230 \textcolor{preprocessor}{\#define AML\_LOGICAL\_NOT\_OP          (UINT16) 0x92}}
+\DoxyCodeLine{231 \textcolor{preprocessor}{\#define AML\_LOGICAL\_EQUAL\_OP        (UINT16) 0x93}}
+\DoxyCodeLine{232 \textcolor{preprocessor}{\#define AML\_LOGICAL\_GREATER\_OP      (UINT16) 0x94}}
+\DoxyCodeLine{233 \textcolor{preprocessor}{\#define AML\_LOGICAL\_LESS\_OP         (UINT16) 0x95}}
+\DoxyCodeLine{234 \textcolor{preprocessor}{\#define AML\_TO\_BUFFER\_OP            (UINT16) 0x96     }\textcolor{comment}{/* ACPI 2.0 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{235 \textcolor{preprocessor}{\#define AML\_TO\_DECIMAL\_STRING\_OP    (UINT16) 0x97     }\textcolor{comment}{/* ACPI 2.0 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{236 \textcolor{preprocessor}{\#define AML\_TO\_HEX\_STRING\_OP        (UINT16) 0x98     }\textcolor{comment}{/* ACPI 2.0 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{237 \textcolor{preprocessor}{\#define AML\_TO\_INTEGER\_OP           (UINT16) 0x99     }\textcolor{comment}{/* ACPI 2.0 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{238 \textcolor{preprocessor}{\#define AML\_TO\_STRING\_OP            (UINT16) 0x9c     }\textcolor{comment}{/* ACPI 2.0 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{239 \textcolor{preprocessor}{\#define AML\_COPY\_OBJECT\_OP          (UINT16) 0x9d     }\textcolor{comment}{/* ACPI 2.0 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{240 \textcolor{preprocessor}{\#define AML\_MID\_OP                  (UINT16) 0x9e     }\textcolor{comment}{/* ACPI 2.0 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{241 \textcolor{preprocessor}{\#define AML\_CONTINUE\_OP             (UINT16) 0x9f     }\textcolor{comment}{/* ACPI 2.0 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{242 \textcolor{preprocessor}{\#define AML\_IF\_OP                   (UINT16) 0xa0}}
+\DoxyCodeLine{243 \textcolor{preprocessor}{\#define AML\_ELSE\_OP                 (UINT16) 0xa1}}
+\DoxyCodeLine{244 \textcolor{preprocessor}{\#define AML\_WHILE\_OP                (UINT16) 0xa2}}
+\DoxyCodeLine{245 \textcolor{preprocessor}{\#define AML\_NOOP\_OP                 (UINT16) 0xa3}}
+\DoxyCodeLine{246 \textcolor{preprocessor}{\#define AML\_RETURN\_OP               (UINT16) 0xa4}}
+\DoxyCodeLine{247 \textcolor{preprocessor}{\#define AML\_BREAK\_OP                (UINT16) 0xa5}}
+\DoxyCodeLine{248 \textcolor{preprocessor}{\#define AML\_COMMENT\_OP              (UINT16) 0xa9}}
+\DoxyCodeLine{249 \textcolor{preprocessor}{\#define AML\_BREAKPOINT\_OP          (UINT16) 0xcc}}
+\DoxyCodeLine{250 \textcolor{preprocessor}{\#define AML\_ONES\_OP                 (UINT16) 0xff}}
+\DoxyCodeLine{251 }
+\DoxyCodeLine{252 }
+\DoxyCodeLine{253 \textcolor{comment}{/*}}
+\DoxyCodeLine{254 \textcolor{comment}{ * Combination opcodes (actually two one-\/byte opcodes)}}
+\DoxyCodeLine{255 \textcolor{comment}{ * Used by the disassembler and iASL compiler}}
+\DoxyCodeLine{256 \textcolor{comment}{ */}}
+\DoxyCodeLine{257 \textcolor{preprocessor}{\#define AML\_LOGICAL\_GREATER\_EQUAL\_OP (UINT16) 0x9295    }\textcolor{comment}{/* LNot (LLess) */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{258 \textcolor{preprocessor}{\#define AML\_LOGICAL\_LESS\_EQUAL\_OP    (UINT16) 0x9294    }\textcolor{comment}{/* LNot (LGreater) */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{259 \textcolor{preprocessor}{\#define AML\_LOGICAL\_NOT\_EQUAL\_OP     (UINT16) 0x9293    }\textcolor{comment}{/* LNot (LEqual) */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{260 }
+\DoxyCodeLine{261 }
+\DoxyCodeLine{262 \textcolor{comment}{/* Prefixed (2-\/byte) opcodes (with AML\_EXTENDED\_PREFIX) */}}
+\DoxyCodeLine{263 }
+\DoxyCodeLine{264 \textcolor{preprocessor}{\#define AML\_EXTENDED\_OPCODE         (UINT16) 0x5b00     }\textcolor{comment}{/* Prefix for 2-\/byte opcodes */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{265 }
+\DoxyCodeLine{266 \textcolor{preprocessor}{\#define AML\_MUTEX\_OP                (UINT16) 0x5b01}}
+\DoxyCodeLine{267 \textcolor{preprocessor}{\#define AML\_EVENT\_OP                (UINT16) 0x5b02}}
+\DoxyCodeLine{268 \textcolor{preprocessor}{\#define AML\_SHIFT\_RIGHT\_BIT\_OP      (UINT16) 0x5b10     }\textcolor{comment}{/* Obsolete, not in ACPI spec */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{269 \textcolor{preprocessor}{\#define AML\_SHIFT\_LEFT\_BIT\_OP       (UINT16) 0x5b11     }\textcolor{comment}{/* Obsolete, not in ACPI spec */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{270 \textcolor{preprocessor}{\#define AML\_CONDITIONAL\_REF\_OF\_OP   (UINT16) 0x5b12}}
+\DoxyCodeLine{271 \textcolor{preprocessor}{\#define AML\_CREATE\_FIELD\_OP         (UINT16) 0x5b13}}
+\DoxyCodeLine{272 \textcolor{preprocessor}{\#define AML\_LOAD\_TABLE\_OP           (UINT16) 0x5b1f     }\textcolor{comment}{/* ACPI 2.0 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{273 \textcolor{preprocessor}{\#define AML\_LOAD\_OP                 (UINT16) 0x5b20}}
+\DoxyCodeLine{274 \textcolor{preprocessor}{\#define AML\_STALL\_OP                (UINT16) 0x5b21}}
+\DoxyCodeLine{275 \textcolor{preprocessor}{\#define AML\_SLEEP\_OP                (UINT16) 0x5b22}}
+\DoxyCodeLine{276 \textcolor{preprocessor}{\#define AML\_ACQUIRE\_OP              (UINT16) 0x5b23}}
+\DoxyCodeLine{277 \textcolor{preprocessor}{\#define AML\_SIGNAL\_OP               (UINT16) 0x5b24}}
+\DoxyCodeLine{278 \textcolor{preprocessor}{\#define AML\_WAIT\_OP                 (UINT16) 0x5b25}}
+\DoxyCodeLine{279 \textcolor{preprocessor}{\#define AML\_RESET\_OP                (UINT16) 0x5b26}}
+\DoxyCodeLine{280 \textcolor{preprocessor}{\#define AML\_RELEASE\_OP              (UINT16) 0x5b27}}
+\DoxyCodeLine{281 \textcolor{preprocessor}{\#define AML\_FROM\_BCD\_OP             (UINT16) 0x5b28}}
+\DoxyCodeLine{282 \textcolor{preprocessor}{\#define AML\_TO\_BCD\_OP               (UINT16) 0x5b29}}
+\DoxyCodeLine{283 \textcolor{preprocessor}{\#define AML\_UNLOAD\_OP               (UINT16) 0x5b2a}}
+\DoxyCodeLine{284 \textcolor{preprocessor}{\#define AML\_REVISION\_OP             (UINT16) 0x5b30}}
+\DoxyCodeLine{285 \textcolor{preprocessor}{\#define AML\_DEBUG\_OP                (UINT16) 0x5b31}}
+\DoxyCodeLine{286 \textcolor{preprocessor}{\#define AML\_FATAL\_OP                (UINT16) 0x5b32}}
+\DoxyCodeLine{287 \textcolor{preprocessor}{\#define AML\_TIMER\_OP                (UINT16) 0x5b33     }\textcolor{comment}{/* ACPI 3.0 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{288 \textcolor{preprocessor}{\#define AML\_REGION\_OP               (UINT16) 0x5b80}}
+\DoxyCodeLine{289 \textcolor{preprocessor}{\#define AML\_FIELD\_OP                (UINT16) 0x5b81}}
+\DoxyCodeLine{290 \textcolor{preprocessor}{\#define AML\_DEVICE\_OP               (UINT16) 0x5b82}}
+\DoxyCodeLine{291 \textcolor{preprocessor}{\#define AML\_PROCESSOR\_OP            (UINT16) 0x5b83}}
+\DoxyCodeLine{292 \textcolor{preprocessor}{\#define AML\_POWER\_RESOURCE\_OP       (UINT16) 0x5b84}}
+\DoxyCodeLine{293 \textcolor{preprocessor}{\#define AML\_THERMAL\_ZONE\_OP         (UINT16) 0x5b85}}
+\DoxyCodeLine{294 \textcolor{preprocessor}{\#define AML\_INDEX\_FIELD\_OP          (UINT16) 0x5b86}}
+\DoxyCodeLine{295 \textcolor{preprocessor}{\#define AML\_BANK\_FIELD\_OP           (UINT16) 0x5b87}}
+\DoxyCodeLine{296 \textcolor{preprocessor}{\#define AML\_DATA\_REGION\_OP          (UINT16) 0x5b88     }\textcolor{comment}{/* ACPI 2.0 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{297 }
+\DoxyCodeLine{298 }
+\DoxyCodeLine{299 \textcolor{comment}{/*}}
+\DoxyCodeLine{300 \textcolor{comment}{ * Opcodes for "{}Field"{} operators}}
+\DoxyCodeLine{301 \textcolor{comment}{ */}}
+\DoxyCodeLine{302 \textcolor{preprocessor}{\#define AML\_FIELD\_OFFSET\_OP         (UINT8) 0x00}}
+\DoxyCodeLine{303 \textcolor{preprocessor}{\#define AML\_FIELD\_ACCESS\_OP         (UINT8) 0x01}}
+\DoxyCodeLine{304 \textcolor{preprocessor}{\#define AML\_FIELD\_CONNECTION\_OP     (UINT8) 0x02        }\textcolor{comment}{/* ACPI 5.0 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{305 \textcolor{preprocessor}{\#define AML\_FIELD\_EXT\_ACCESS\_OP     (UINT8) 0x03        }\textcolor{comment}{/* ACPI 5.0 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{306 }
+\DoxyCodeLine{307 }
+\DoxyCodeLine{308 \textcolor{comment}{/*}}
+\DoxyCodeLine{309 \textcolor{comment}{ * Internal opcodes}}
+\DoxyCodeLine{310 \textcolor{comment}{ * Use only "{}Unknown"{} AML opcodes, don't attempt to use}}
+\DoxyCodeLine{311 \textcolor{comment}{ * any valid ACPI ASCII values (A-\/Z, 0-\/9, '-\/')}}
+\DoxyCodeLine{312 \textcolor{comment}{ */}}
+\DoxyCodeLine{313 \textcolor{preprocessor}{\#define AML\_INT\_NAMEPATH\_OP         (UINT16) 0x002d}}
+\DoxyCodeLine{314 \textcolor{preprocessor}{\#define AML\_INT\_NAMEDFIELD\_OP       (UINT16) 0x0030}}
+\DoxyCodeLine{315 \textcolor{preprocessor}{\#define AML\_INT\_RESERVEDFIELD\_OP    (UINT16) 0x0031}}
+\DoxyCodeLine{316 \textcolor{preprocessor}{\#define AML\_INT\_ACCESSFIELD\_OP      (UINT16) 0x0032}}
+\DoxyCodeLine{317 \textcolor{preprocessor}{\#define AML\_INT\_BYTELIST\_OP         (UINT16) 0x0033}}
+\DoxyCodeLine{318 \textcolor{preprocessor}{\#define AML\_INT\_METHODCALL\_OP       (UINT16) 0x0035}}
+\DoxyCodeLine{319 \textcolor{preprocessor}{\#define AML\_INT\_RETURN\_VALUE\_OP     (UINT16) 0x0036}}
+\DoxyCodeLine{320 \textcolor{preprocessor}{\#define AML\_INT\_EVAL\_SUBTREE\_OP     (UINT16) 0x0037}}
+\DoxyCodeLine{321 \textcolor{preprocessor}{\#define AML\_INT\_CONNECTION\_OP       (UINT16) 0x0038}}
+\DoxyCodeLine{322 \textcolor{preprocessor}{\#define AML\_INT\_EXTACCESSFIELD\_OP   (UINT16) 0x0039}}
+\DoxyCodeLine{323 }
+\DoxyCodeLine{324 \textcolor{preprocessor}{\#define ARG\_NONE                    0x0}}
+\DoxyCodeLine{325 }
+\DoxyCodeLine{326 \textcolor{comment}{/*}}
+\DoxyCodeLine{327 \textcolor{comment}{ * Argument types for the AML Parser}}
+\DoxyCodeLine{328 \textcolor{comment}{ * Each field in the ArgTypes UINT32 is 5 bits, allowing for a maximum of 6 arguments.}}
+\DoxyCodeLine{329 \textcolor{comment}{ * There can be up to 31 unique argument types}}
+\DoxyCodeLine{330 \textcolor{comment}{ * Zero is reserved as end-\/of-\/list indicator}}
+\DoxyCodeLine{331 \textcolor{comment}{ */}}
+\DoxyCodeLine{332 \textcolor{preprocessor}{\#define ARGP\_BYTEDATA               0x01}}
+\DoxyCodeLine{333 \textcolor{preprocessor}{\#define ARGP\_BYTELIST               0x02}}
+\DoxyCodeLine{334 \textcolor{preprocessor}{\#define ARGP\_CHARLIST               0x03}}
+\DoxyCodeLine{335 \textcolor{preprocessor}{\#define ARGP\_DATAOBJ                0x04}}
+\DoxyCodeLine{336 \textcolor{preprocessor}{\#define ARGP\_DATAOBJLIST            0x05}}
+\DoxyCodeLine{337 \textcolor{preprocessor}{\#define ARGP\_DWORDDATA              0x06}}
+\DoxyCodeLine{338 \textcolor{preprocessor}{\#define ARGP\_FIELDLIST              0x07}}
+\DoxyCodeLine{339 \textcolor{preprocessor}{\#define ARGP\_NAME                   0x08}}
+\DoxyCodeLine{340 \textcolor{preprocessor}{\#define ARGP\_NAMESTRING             0x09}}
+\DoxyCodeLine{341 \textcolor{preprocessor}{\#define ARGP\_OBJLIST                0x0A}}
+\DoxyCodeLine{342 \textcolor{preprocessor}{\#define ARGP\_PKGLENGTH              0x0B}}
+\DoxyCodeLine{343 \textcolor{preprocessor}{\#define ARGP\_SUPERNAME              0x0C}}
+\DoxyCodeLine{344 \textcolor{preprocessor}{\#define ARGP\_TARGET                 0x0D}}
+\DoxyCodeLine{345 \textcolor{preprocessor}{\#define ARGP\_TERMARG                0x0E}}
+\DoxyCodeLine{346 \textcolor{preprocessor}{\#define ARGP\_TERMLIST               0x0F}}
+\DoxyCodeLine{347 \textcolor{preprocessor}{\#define ARGP\_WORDDATA               0x10}}
+\DoxyCodeLine{348 \textcolor{preprocessor}{\#define ARGP\_QWORDDATA              0x11}}
+\DoxyCodeLine{349 \textcolor{preprocessor}{\#define ARGP\_SIMPLENAME             0x12 }\textcolor{comment}{/* NameString | LocalTerm | ArgTerm */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{350 \textcolor{preprocessor}{\#define ARGP\_NAME\_OR\_REF            0x13 }\textcolor{comment}{/* For ObjectType only */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{351 \textcolor{preprocessor}{\#define ARGP\_MAX                    0x13}}
+\DoxyCodeLine{352 \textcolor{preprocessor}{\#define ARGP\_COMMENT                0x14}}
+\DoxyCodeLine{353 }
+\DoxyCodeLine{354 \textcolor{comment}{/*}}
+\DoxyCodeLine{355 \textcolor{comment}{ * Resolved argument types for the AML Interpreter}}
+\DoxyCodeLine{356 \textcolor{comment}{ * Each field in the ArgTypes UINT32 is 5 bits, allowing for a maximum of 6 arguments.}}
+\DoxyCodeLine{357 \textcolor{comment}{ * There can be up to 31 unique argument types (0 is end-\/of-\/arg-\/list indicator)}}
+\DoxyCodeLine{358 \textcolor{comment}{ *}}
+\DoxyCodeLine{359 \textcolor{comment}{ * Note1: These values are completely independent from the ACPI\_TYPEs}}
+\DoxyCodeLine{360 \textcolor{comment}{ *        i.e., ARGI\_INTEGER != ACPI\_TYPE\_INTEGER}}
+\DoxyCodeLine{361 \textcolor{comment}{ *}}
+\DoxyCodeLine{362 \textcolor{comment}{ * Note2: If and when 5 bits becomes insufficient, it would probably be best}}
+\DoxyCodeLine{363 \textcolor{comment}{ * to convert to a 6-\/byte array of argument types, allowing 8 bits per argument.}}
+\DoxyCodeLine{364 \textcolor{comment}{ */}}
+\DoxyCodeLine{365 }
+\DoxyCodeLine{366 \textcolor{comment}{/* Single, simple types */}}
+\DoxyCodeLine{367 }
+\DoxyCodeLine{368 \textcolor{preprocessor}{\#define ARGI\_ANYTYPE                0x01    }\textcolor{comment}{/* Don't care */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{369 \textcolor{preprocessor}{\#define ARGI\_PACKAGE                0x02}}
+\DoxyCodeLine{370 \textcolor{preprocessor}{\#define ARGI\_EVENT                  0x03}}
+\DoxyCodeLine{371 \textcolor{preprocessor}{\#define ARGI\_MUTEX                  0x04}}
+\DoxyCodeLine{372 \textcolor{preprocessor}{\#define ARGI\_DDBHANDLE              0x05}}
+\DoxyCodeLine{373 }
+\DoxyCodeLine{374 \textcolor{comment}{/* Interchangeable types (via implicit conversion) */}}
+\DoxyCodeLine{375 }
+\DoxyCodeLine{376 \textcolor{preprocessor}{\#define ARGI\_INTEGER                0x06}}
+\DoxyCodeLine{377 \textcolor{preprocessor}{\#define ARGI\_STRING                 0x07}}
+\DoxyCodeLine{378 \textcolor{preprocessor}{\#define ARGI\_BUFFER                 0x08}}
+\DoxyCodeLine{379 \textcolor{preprocessor}{\#define ARGI\_BUFFER\_OR\_STRING       0x09    }\textcolor{comment}{/* Used by MID op only */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{380 \textcolor{preprocessor}{\#define ARGI\_COMPUTEDATA            0x0A    }\textcolor{comment}{/* Buffer, String, or Integer */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{381 }
+\DoxyCodeLine{382 \textcolor{comment}{/* Reference objects */}}
+\DoxyCodeLine{383 }
+\DoxyCodeLine{384 \textcolor{preprocessor}{\#define ARGI\_INTEGER\_REF            0x0B}}
+\DoxyCodeLine{385 \textcolor{preprocessor}{\#define ARGI\_OBJECT\_REF             0x0C}}
+\DoxyCodeLine{386 \textcolor{preprocessor}{\#define ARGI\_DEVICE\_REF             0x0D}}
+\DoxyCodeLine{387 \textcolor{preprocessor}{\#define ARGI\_REFERENCE              0x0E}}
+\DoxyCodeLine{388 \textcolor{preprocessor}{\#define ARGI\_TARGETREF              0x0F    }\textcolor{comment}{/* Target, subject to implicit conversion */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{389 \textcolor{preprocessor}{\#define ARGI\_FIXED\_TARGET           0x10    }\textcolor{comment}{/* Target, no implicit conversion */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{390 \textcolor{preprocessor}{\#define ARGI\_SIMPLE\_TARGET          0x11    }\textcolor{comment}{/* Name, Local, Arg -\/-\/ no implicit conversion */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{391 \textcolor{preprocessor}{\#define ARGI\_STORE\_TARGET           0x12    }\textcolor{comment}{/* Target for store is TARGETREF + package objects */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{392 }
+\DoxyCodeLine{393 \textcolor{comment}{/* Multiple/complex types */}}
+\DoxyCodeLine{394 }
+\DoxyCodeLine{395 \textcolor{preprocessor}{\#define ARGI\_DATAOBJECT             0x13    }\textcolor{comment}{/* Buffer, String, package or reference to a Node -\/ Used only by SizeOf operator*/}\textcolor{preprocessor}{}}
+\DoxyCodeLine{396 \textcolor{preprocessor}{\#define ARGI\_COMPLEXOBJ             0x14    }\textcolor{comment}{/* Buffer, String, or package (Used by INDEX op only) */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{397 \textcolor{preprocessor}{\#define ARGI\_REF\_OR\_STRING          0x15    }\textcolor{comment}{/* Reference or String (Used by DEREFOF op only) */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{398 \textcolor{preprocessor}{\#define ARGI\_REGION\_OR\_BUFFER       0x16    }\textcolor{comment}{/* Used by LOAD op only */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{399 \textcolor{preprocessor}{\#define ARGI\_DATAREFOBJ             0x17}}
+\DoxyCodeLine{400 }
+\DoxyCodeLine{401 \textcolor{comment}{/* Note: types above can expand to 0x1F maximum */}}
+\DoxyCodeLine{402 }
+\DoxyCodeLine{403 \textcolor{preprocessor}{\#define ARGI\_INVALID\_OPCODE         0xFFFFFFFF}}
+\DoxyCodeLine{404 }
+\DoxyCodeLine{405 }
+\DoxyCodeLine{406 \textcolor{comment}{/*}}
+\DoxyCodeLine{407 \textcolor{comment}{ * Some of the flags and types below are of the form:}}
+\DoxyCodeLine{408 \textcolor{comment}{ *}}
+\DoxyCodeLine{409 \textcolor{comment}{ * AML\_FLAGS\_EXEC\_\#A\_\#T,\#R, or}}
+\DoxyCodeLine{410 \textcolor{comment}{ * AML\_TYPE\_EXEC\_\#A\_\#T,\#R where:}}
+\DoxyCodeLine{411 \textcolor{comment}{ *}}
+\DoxyCodeLine{412 \textcolor{comment}{ *      \#A is the number of required arguments}}
+\DoxyCodeLine{413 \textcolor{comment}{ *      \#T is the number of target operands}}
+\DoxyCodeLine{414 \textcolor{comment}{ *      \#R indicates whether there is a return value}}
+\DoxyCodeLine{415 \textcolor{comment}{ *}}
+\DoxyCodeLine{416 \textcolor{comment}{ * These types are used for the top-\/level dispatch of the AML}}
+\DoxyCodeLine{417 \textcolor{comment}{ * opcode. They group similar operators that can share common}}
+\DoxyCodeLine{418 \textcolor{comment}{ * front-\/end code before dispatch to the final code that implements}}
+\DoxyCodeLine{419 \textcolor{comment}{ * the operator.}}
+\DoxyCodeLine{420 \textcolor{comment}{ */}}
+\DoxyCodeLine{421 }
+\DoxyCodeLine{422 \textcolor{comment}{/*}}
+\DoxyCodeLine{423 \textcolor{comment}{ * Opcode information flags}}
+\DoxyCodeLine{424 \textcolor{comment}{ */}}
+\DoxyCodeLine{425 \textcolor{preprocessor}{\#define AML\_LOGICAL                 0x0001}}
+\DoxyCodeLine{426 \textcolor{preprocessor}{\#define AML\_LOGICAL\_NUMERIC         0x0002}}
+\DoxyCodeLine{427 \textcolor{preprocessor}{\#define AML\_MATH                    0x0004}}
+\DoxyCodeLine{428 \textcolor{preprocessor}{\#define AML\_CREATE                  0x0008}}
+\DoxyCodeLine{429 \textcolor{preprocessor}{\#define AML\_FIELD                   0x0010}}
+\DoxyCodeLine{430 \textcolor{preprocessor}{\#define AML\_DEFER                   0x0020}}
+\DoxyCodeLine{431 \textcolor{preprocessor}{\#define AML\_NAMED                   0x0040}}
+\DoxyCodeLine{432 \textcolor{preprocessor}{\#define AML\_NSNODE                  0x0080}}
+\DoxyCodeLine{433 \textcolor{preprocessor}{\#define AML\_NSOPCODE                0x0100}}
+\DoxyCodeLine{434 \textcolor{preprocessor}{\#define AML\_NSOBJECT                0x0200}}
+\DoxyCodeLine{435 \textcolor{preprocessor}{\#define AML\_HAS\_RETVAL              0x0400}}
+\DoxyCodeLine{436 \textcolor{preprocessor}{\#define AML\_HAS\_TARGET              0x0800}}
+\DoxyCodeLine{437 \textcolor{preprocessor}{\#define AML\_HAS\_ARGS                0x1000}}
+\DoxyCodeLine{438 \textcolor{preprocessor}{\#define AML\_CONSTANT                0x2000}}
+\DoxyCodeLine{439 \textcolor{preprocessor}{\#define AML\_NO\_OPERAND\_RESOLVE      0x4000}}
+\DoxyCodeLine{440 }
+\DoxyCodeLine{441 \textcolor{comment}{/* Convenient flag groupings of the flags above */}}
+\DoxyCodeLine{442 }
+\DoxyCodeLine{443 \textcolor{preprocessor}{\#define AML\_FLAGS\_EXEC\_0A\_0T\_1R                                     AML\_HAS\_RETVAL}}
+\DoxyCodeLine{444 \textcolor{preprocessor}{\#define AML\_FLAGS\_EXEC\_1A\_0T\_0R     AML\_HAS\_ARGS                                   }\textcolor{comment}{/* Monadic1  */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{445 \textcolor{preprocessor}{\#define AML\_FLAGS\_EXEC\_1A\_0T\_1R     AML\_HAS\_ARGS |                  AML\_HAS\_RETVAL }\textcolor{comment}{/* Monadic2  */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{446 \textcolor{preprocessor}{\#define AML\_FLAGS\_EXEC\_1A\_1T\_0R     AML\_HAS\_ARGS | AML\_HAS\_TARGET}}
+\DoxyCodeLine{447 \textcolor{preprocessor}{\#define AML\_FLAGS\_EXEC\_1A\_1T\_1R     AML\_HAS\_ARGS | AML\_HAS\_TARGET | AML\_HAS\_RETVAL }\textcolor{comment}{/* Monadic2R */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{448 \textcolor{preprocessor}{\#define AML\_FLAGS\_EXEC\_2A\_0T\_0R     AML\_HAS\_ARGS                                   }\textcolor{comment}{/* Dyadic1   */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{449 \textcolor{preprocessor}{\#define AML\_FLAGS\_EXEC\_2A\_0T\_1R     AML\_HAS\_ARGS |                  AML\_HAS\_RETVAL }\textcolor{comment}{/* Dyadic2   */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{450 \textcolor{preprocessor}{\#define AML\_FLAGS\_EXEC\_2A\_1T\_1R     AML\_HAS\_ARGS | AML\_HAS\_TARGET | AML\_HAS\_RETVAL }\textcolor{comment}{/* Dyadic2R  */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{451 \textcolor{preprocessor}{\#define AML\_FLAGS\_EXEC\_2A\_2T\_1R     AML\_HAS\_ARGS | AML\_HAS\_TARGET | AML\_HAS\_RETVAL}}
+\DoxyCodeLine{452 \textcolor{preprocessor}{\#define AML\_FLAGS\_EXEC\_3A\_0T\_0R     AML\_HAS\_ARGS}}
+\DoxyCodeLine{453 \textcolor{preprocessor}{\#define AML\_FLAGS\_EXEC\_3A\_1T\_1R     AML\_HAS\_ARGS | AML\_HAS\_TARGET | AML\_HAS\_RETVAL}}
+\DoxyCodeLine{454 \textcolor{preprocessor}{\#define AML\_FLAGS\_EXEC\_6A\_0T\_1R     AML\_HAS\_ARGS |                  AML\_HAS\_RETVAL}}
+\DoxyCodeLine{455 }
+\DoxyCodeLine{456 }
+\DoxyCodeLine{457 \textcolor{comment}{/*}}
+\DoxyCodeLine{458 \textcolor{comment}{ * The opcode Type is used in a dispatch table, do not change}}
+\DoxyCodeLine{459 \textcolor{comment}{ * or add anything new without updating the table.}}
+\DoxyCodeLine{460 \textcolor{comment}{ */}}
+\DoxyCodeLine{461 \textcolor{preprocessor}{\#define AML\_TYPE\_EXEC\_0A\_0T\_1R      0x00 }\textcolor{comment}{/* 0 Args, 0 Target, 1 RetVal */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{462 \textcolor{preprocessor}{\#define AML\_TYPE\_EXEC\_1A\_0T\_0R      0x01 }\textcolor{comment}{/* 1 Args, 0 Target, 0 RetVal */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{463 \textcolor{preprocessor}{\#define AML\_TYPE\_EXEC\_1A\_0T\_1R      0x02 }\textcolor{comment}{/* 1 Args, 0 Target, 1 RetVal */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{464 \textcolor{preprocessor}{\#define AML\_TYPE\_EXEC\_1A\_1T\_0R      0x03 }\textcolor{comment}{/* 1 Args, 1 Target, 0 RetVal */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{465 \textcolor{preprocessor}{\#define AML\_TYPE\_EXEC\_1A\_1T\_1R      0x04 }\textcolor{comment}{/* 1 Args, 1 Target, 1 RetVal */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{466 \textcolor{preprocessor}{\#define AML\_TYPE\_EXEC\_2A\_0T\_0R      0x05 }\textcolor{comment}{/* 2 Args, 0 Target, 0 RetVal */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{467 \textcolor{preprocessor}{\#define AML\_TYPE\_EXEC\_2A\_0T\_1R      0x06 }\textcolor{comment}{/* 2 Args, 0 Target, 1 RetVal */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{468 \textcolor{preprocessor}{\#define AML\_TYPE\_EXEC\_2A\_1T\_1R      0x07 }\textcolor{comment}{/* 2 Args, 1 Target, 1 RetVal */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{469 \textcolor{preprocessor}{\#define AML\_TYPE\_EXEC\_2A\_2T\_1R      0x08 }\textcolor{comment}{/* 2 Args, 2 Target, 1 RetVal */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{470 \textcolor{preprocessor}{\#define AML\_TYPE\_EXEC\_3A\_0T\_0R      0x09 }\textcolor{comment}{/* 3 Args, 0 Target, 0 RetVal */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{471 \textcolor{preprocessor}{\#define AML\_TYPE\_EXEC\_3A\_1T\_1R      0x0A }\textcolor{comment}{/* 3 Args, 1 Target, 1 RetVal */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{472 \textcolor{preprocessor}{\#define AML\_TYPE\_EXEC\_6A\_0T\_1R      0x0B }\textcolor{comment}{/* 6 Args, 0 Target, 1 RetVal */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{473 \textcolor{comment}{/* End of types used in dispatch table */}}
+\DoxyCodeLine{474 }
+\DoxyCodeLine{475 \textcolor{preprocessor}{\#define AML\_TYPE\_LITERAL            0x0C}}
+\DoxyCodeLine{476 \textcolor{preprocessor}{\#define AML\_TYPE\_CONSTANT           0x0D}}
+\DoxyCodeLine{477 \textcolor{preprocessor}{\#define AML\_TYPE\_METHOD\_ARGUMENT    0x0E}}
+\DoxyCodeLine{478 \textcolor{preprocessor}{\#define AML\_TYPE\_LOCAL\_VARIABLE     0x0F}}
+\DoxyCodeLine{479 \textcolor{preprocessor}{\#define AML\_TYPE\_DATA\_TERM          0x10}}
+\DoxyCodeLine{480 }
+\DoxyCodeLine{481 \textcolor{comment}{/* Generic for an op that returns a value */}}
+\DoxyCodeLine{482 }
+\DoxyCodeLine{483 \textcolor{preprocessor}{\#define AML\_TYPE\_METHOD\_CALL        0x11}}
+\DoxyCodeLine{484 }
+\DoxyCodeLine{485 \textcolor{comment}{/* Miscellaneous types */}}
+\DoxyCodeLine{486 }
+\DoxyCodeLine{487 \textcolor{preprocessor}{\#define AML\_TYPE\_CREATE\_FIELD       0x12}}
+\DoxyCodeLine{488 \textcolor{preprocessor}{\#define AML\_TYPE\_CREATE\_OBJECT      0x13}}
+\DoxyCodeLine{489 \textcolor{preprocessor}{\#define AML\_TYPE\_CONTROL            0x14}}
+\DoxyCodeLine{490 \textcolor{preprocessor}{\#define AML\_TYPE\_NAMED\_NO\_OBJ       0x15}}
+\DoxyCodeLine{491 \textcolor{preprocessor}{\#define AML\_TYPE\_NAMED\_FIELD        0x16}}
+\DoxyCodeLine{492 \textcolor{preprocessor}{\#define AML\_TYPE\_NAMED\_SIMPLE       0x17}}
+\DoxyCodeLine{493 \textcolor{preprocessor}{\#define AML\_TYPE\_NAMED\_COMPLEX      0x18}}
+\DoxyCodeLine{494 \textcolor{preprocessor}{\#define AML\_TYPE\_RETURN             0x19}}
+\DoxyCodeLine{495 \textcolor{preprocessor}{\#define AML\_TYPE\_UNDEFINED          0x1A}}
+\DoxyCodeLine{496 \textcolor{preprocessor}{\#define AML\_TYPE\_BOGUS              0x1B}}
+\DoxyCodeLine{497 }
+\DoxyCodeLine{498 \textcolor{comment}{/* AML Package Length encodings */}}
+\DoxyCodeLine{499 }
+\DoxyCodeLine{500 \textcolor{preprocessor}{\#define ACPI\_AML\_PACKAGE\_TYPE1      0x40}}
+\DoxyCodeLine{501 \textcolor{preprocessor}{\#define ACPI\_AML\_PACKAGE\_TYPE2      0x4000}}
+\DoxyCodeLine{502 \textcolor{preprocessor}{\#define ACPI\_AML\_PACKAGE\_TYPE3      0x400000}}
+\DoxyCodeLine{503 \textcolor{preprocessor}{\#define ACPI\_AML\_PACKAGE\_TYPE4      0x40000000}}
+\DoxyCodeLine{504 }
+\DoxyCodeLine{505 \textcolor{comment}{/*}}
+\DoxyCodeLine{506 \textcolor{comment}{ * Opcode classes}}
+\DoxyCodeLine{507 \textcolor{comment}{ */}}
+\DoxyCodeLine{508 \textcolor{preprocessor}{\#define AML\_CLASS\_EXECUTE           0x00}}
+\DoxyCodeLine{509 \textcolor{preprocessor}{\#define AML\_CLASS\_CREATE            0x01}}
+\DoxyCodeLine{510 \textcolor{preprocessor}{\#define AML\_CLASS\_ARGUMENT          0x02}}
+\DoxyCodeLine{511 \textcolor{preprocessor}{\#define AML\_CLASS\_NAMED\_OBJECT      0x03}}
+\DoxyCodeLine{512 \textcolor{preprocessor}{\#define AML\_CLASS\_CONTROL           0x04}}
+\DoxyCodeLine{513 \textcolor{preprocessor}{\#define AML\_CLASS\_ASCII             0x05}}
+\DoxyCodeLine{514 \textcolor{preprocessor}{\#define AML\_CLASS\_PREFIX            0x06}}
+\DoxyCodeLine{515 \textcolor{preprocessor}{\#define AML\_CLASS\_INTERNAL          0x07}}
+\DoxyCodeLine{516 \textcolor{preprocessor}{\#define AML\_CLASS\_RETURN\_VALUE      0x08}}
+\DoxyCodeLine{517 \textcolor{preprocessor}{\#define AML\_CLASS\_METHOD\_CALL       0x09}}
+\DoxyCodeLine{518 \textcolor{preprocessor}{\#define AML\_CLASS\_UNKNOWN           0x0A}}
+\DoxyCodeLine{519 }
+\DoxyCodeLine{520 }
+\DoxyCodeLine{521 \textcolor{comment}{/* Comparison operation codes for MatchOp operator */}}
+\DoxyCodeLine{522 }
+\DoxyCodeLine{523 \textcolor{keyword}{typedef} \textcolor{keyword}{enum}}
+\DoxyCodeLine{524 \{}
+\DoxyCodeLine{525     \mbox{\hyperlink{amlcode_8h_a65698e5364409b23be229806786eed60aba6eba5ba447a4c58411e529c0cedde4}{MATCH\_MTR}}                       = 0,}
+\DoxyCodeLine{526     \mbox{\hyperlink{amlcode_8h_a65698e5364409b23be229806786eed60ac108488aee05e5d27c09731eac08f5f0}{MATCH\_MEQ}}                       = 1,}
+\DoxyCodeLine{527     \mbox{\hyperlink{amlcode_8h_a65698e5364409b23be229806786eed60aec1b52f5dbe1a47668bcf990eec5c6ea}{MATCH\_MLE}}                       = 2,}
+\DoxyCodeLine{528     \mbox{\hyperlink{amlcode_8h_a65698e5364409b23be229806786eed60ac5759d6f3f87d0ef39302240c2d3520e}{MATCH\_MLT}}                       = 3,}
+\DoxyCodeLine{529     \mbox{\hyperlink{amlcode_8h_a65698e5364409b23be229806786eed60a40a4703bfb764b206e40dc782be140b3}{MATCH\_MGE}}                       = 4,}
+\DoxyCodeLine{530     \mbox{\hyperlink{amlcode_8h_a65698e5364409b23be229806786eed60a30935210886d334169227734afb5c5c9}{MATCH\_MGT}}                       = 5}
+\DoxyCodeLine{531 }
+\DoxyCodeLine{532 \} \mbox{\hyperlink{amlcode_8h_a65698e5364409b23be229806786eed60}{AML\_MATCH\_OPERATOR}};}
+\DoxyCodeLine{533 }
+\DoxyCodeLine{534 \textcolor{preprocessor}{\#define MAX\_MATCH\_OPERATOR          5}}
+\DoxyCodeLine{535 }
+\DoxyCodeLine{536 }
+\DoxyCodeLine{537 \textcolor{comment}{/*}}
+\DoxyCodeLine{538 \textcolor{comment}{ * FieldFlags}}
+\DoxyCodeLine{539 \textcolor{comment}{ *}}
+\DoxyCodeLine{540 \textcolor{comment}{ * This byte is extracted from the AML and includes three separate}}
+\DoxyCodeLine{541 \textcolor{comment}{ * pieces of information about the field:}}
+\DoxyCodeLine{542 \textcolor{comment}{ * 1) The field access type}}
+\DoxyCodeLine{543 \textcolor{comment}{ * 2) The field update rule}}
+\DoxyCodeLine{544 \textcolor{comment}{ * 3) The lock rule for the field}}
+\DoxyCodeLine{545 \textcolor{comment}{ *}}
+\DoxyCodeLine{546 \textcolor{comment}{ * Bits 00 -\/ 03 : AccessType (AnyAcc, ByteAcc, etc.)}}
+\DoxyCodeLine{547 \textcolor{comment}{ *      04      : LockRule (1 == Lock)}}
+\DoxyCodeLine{548 \textcolor{comment}{ *      05 -\/ 06 : UpdateRule}}
+\DoxyCodeLine{549 \textcolor{comment}{ */}}
+\DoxyCodeLine{550 \textcolor{preprocessor}{\#define AML\_FIELD\_ACCESS\_TYPE\_MASK  0x0F}}
+\DoxyCodeLine{551 \textcolor{preprocessor}{\#define AML\_FIELD\_LOCK\_RULE\_MASK    0x10}}
+\DoxyCodeLine{552 \textcolor{preprocessor}{\#define AML\_FIELD\_UPDATE\_RULE\_MASK  0x60}}
+\DoxyCodeLine{553 }
+\DoxyCodeLine{554 }
+\DoxyCodeLine{555 \textcolor{comment}{/* 1) Field Access Types */}}
+\DoxyCodeLine{556 }
+\DoxyCodeLine{557 \textcolor{keyword}{typedef} \textcolor{keyword}{enum}}
+\DoxyCodeLine{558 \{}
+\DoxyCodeLine{559     \mbox{\hyperlink{amlcode_8h_a458e02e0e79d6d947885e9966e394dd8a4a9d856618970f2316abdcb9e5fc5b62}{AML\_FIELD\_ACCESS\_ANY}}            = 0x00,}
+\DoxyCodeLine{560     \mbox{\hyperlink{amlcode_8h_a458e02e0e79d6d947885e9966e394dd8a0318f790fdd32b285e1c12916560e254}{AML\_FIELD\_ACCESS\_BYTE}}           = 0x01,}
+\DoxyCodeLine{561     \mbox{\hyperlink{amlcode_8h_a458e02e0e79d6d947885e9966e394dd8ac8a0fa203dc1e12176f470f5ceb33a64}{AML\_FIELD\_ACCESS\_WORD}}           = 0x02,}
+\DoxyCodeLine{562     \mbox{\hyperlink{amlcode_8h_a458e02e0e79d6d947885e9966e394dd8ad51995e86efba862391f3049e7ccdf4f}{AML\_FIELD\_ACCESS\_DWORD}}          = 0x03,}
+\DoxyCodeLine{563     \mbox{\hyperlink{amlcode_8h_a458e02e0e79d6d947885e9966e394dd8aec58e1645b8367ee0c1d8baaa5363193}{AML\_FIELD\_ACCESS\_QWORD}}          = 0x04,    \textcolor{comment}{/* ACPI 2.0 */}}
+\DoxyCodeLine{564     \mbox{\hyperlink{amlcode_8h_a458e02e0e79d6d947885e9966e394dd8adfb8fa201938a9ed33b14d7c0bd7cd5b}{AML\_FIELD\_ACCESS\_BUFFER}}         = 0x05     \textcolor{comment}{/* ACPI 2.0 */}}
+\DoxyCodeLine{565 }
+\DoxyCodeLine{566 \} \mbox{\hyperlink{amlcode_8h_a458e02e0e79d6d947885e9966e394dd8}{AML\_ACCESS\_TYPE}};}
+\DoxyCodeLine{567 }
+\DoxyCodeLine{568 }
+\DoxyCodeLine{569 \textcolor{comment}{/* 2) Field Lock Rules */}}
+\DoxyCodeLine{570 }
+\DoxyCodeLine{571 \textcolor{keyword}{typedef} \textcolor{keyword}{enum}}
+\DoxyCodeLine{572 \{}
+\DoxyCodeLine{573     \mbox{\hyperlink{amlcode_8h_a3d3326c7d307462a19c826b50fa3a2d9ae5928b6f7746ef46ca821b4acbb8770f}{AML\_FIELD\_LOCK\_NEVER}}            = 0x00,}
+\DoxyCodeLine{574     \mbox{\hyperlink{amlcode_8h_a3d3326c7d307462a19c826b50fa3a2d9a699c29dfd650241357808f0b1d79f9b5}{AML\_FIELD\_LOCK\_ALWAYS}}           = 0x10}
+\DoxyCodeLine{575 }
+\DoxyCodeLine{576 \} \mbox{\hyperlink{amlcode_8h_a3d3326c7d307462a19c826b50fa3a2d9}{AML\_LOCK\_RULE}};}
+\DoxyCodeLine{577 }
+\DoxyCodeLine{578 }
+\DoxyCodeLine{579 \textcolor{comment}{/* 3) Field Update Rules */}}
+\DoxyCodeLine{580 }
+\DoxyCodeLine{581 \textcolor{keyword}{typedef} \textcolor{keyword}{enum}}
+\DoxyCodeLine{582 \{}
+\DoxyCodeLine{583     \mbox{\hyperlink{amlcode_8h_a641af172e58bf6cf24c84154edc17ce0ae4ee18d8007af9e99b859931c21894d9}{AML\_FIELD\_UPDATE\_PRESERVE}}       = 0x00,}
+\DoxyCodeLine{584     \mbox{\hyperlink{amlcode_8h_a641af172e58bf6cf24c84154edc17ce0a15d408a3e856085dc0d33490ae4f0ce7}{AML\_FIELD\_UPDATE\_WRITE\_AS\_ONES}}  = 0x20,}
+\DoxyCodeLine{585     \mbox{\hyperlink{amlcode_8h_a641af172e58bf6cf24c84154edc17ce0a3c4485e5cdb3a89213a79bb650bfacbb}{AML\_FIELD\_UPDATE\_WRITE\_AS\_ZEROS}} = 0x40}
+\DoxyCodeLine{586 }
+\DoxyCodeLine{587 \} \mbox{\hyperlink{amlcode_8h_a641af172e58bf6cf24c84154edc17ce0}{AML\_UPDATE\_RULE}};}
+\DoxyCodeLine{588 }
+\DoxyCodeLine{589 }
+\DoxyCodeLine{590 \textcolor{comment}{/*}}
+\DoxyCodeLine{591 \textcolor{comment}{ * Field Access Attributes.}}
+\DoxyCodeLine{592 \textcolor{comment}{ * This byte is extracted from the AML via the}}
+\DoxyCodeLine{593 \textcolor{comment}{ * AccessAs keyword}}
+\DoxyCodeLine{594 \textcolor{comment}{ */}}
+\DoxyCodeLine{595 \textcolor{keyword}{typedef} \textcolor{keyword}{enum}}
+\DoxyCodeLine{596 \{}
+\DoxyCodeLine{597     \mbox{\hyperlink{amlcode_8h_a62b9b537110a344d4da37acca452f2caa0a10c7f56903a28f4867ab6c79dbbc3f}{AML\_FIELD\_ATTRIB\_QUICK}}              = 0x02,}
+\DoxyCodeLine{598     \mbox{\hyperlink{amlcode_8h_a62b9b537110a344d4da37acca452f2caa493432104961ac682d45fc106378bbb7}{AML\_FIELD\_ATTRIB\_SEND\_RECEIVE}}       = 0x04,}
+\DoxyCodeLine{599     \mbox{\hyperlink{amlcode_8h_a62b9b537110a344d4da37acca452f2caa60407be05585a5cdb264af67742169f0}{AML\_FIELD\_ATTRIB\_BYTE}}               = 0x06,}
+\DoxyCodeLine{600     \mbox{\hyperlink{amlcode_8h_a62b9b537110a344d4da37acca452f2caac200e7113cd88dd5678cfe8c64d44238}{AML\_FIELD\_ATTRIB\_WORD}}               = 0x08,}
+\DoxyCodeLine{601     \mbox{\hyperlink{amlcode_8h_a62b9b537110a344d4da37acca452f2caa0c9f1fd0aaab37e6cea7a512db555f80}{AML\_FIELD\_ATTRIB\_BLOCK}}              = 0x0A,}
+\DoxyCodeLine{602     \mbox{\hyperlink{amlcode_8h_a62b9b537110a344d4da37acca452f2caa18aaef8efa9b59425feb65e9a856e9ec}{AML\_FIELD\_ATTRIB\_BYTES}}              = 0x0B,}
+\DoxyCodeLine{603     \mbox{\hyperlink{amlcode_8h_a62b9b537110a344d4da37acca452f2caa2cb466be80fb91df3c736b62ffcc28e0}{AML\_FIELD\_ATTRIB\_PROCESS\_CALL}}       = 0x0C,}
+\DoxyCodeLine{604     \mbox{\hyperlink{amlcode_8h_a62b9b537110a344d4da37acca452f2caabbc2715b6c1ea6e1185ee2ebe2b56d9f}{AML\_FIELD\_ATTRIB\_BLOCK\_PROCESS\_CALL}} = 0x0D,}
+\DoxyCodeLine{605     \mbox{\hyperlink{amlcode_8h_a62b9b537110a344d4da37acca452f2caa0efd9392c3fc7ab86d2932eeda1ddfd5}{AML\_FIELD\_ATTRIB\_RAW\_BYTES}}          = 0x0E,}
+\DoxyCodeLine{606     \mbox{\hyperlink{amlcode_8h_a62b9b537110a344d4da37acca452f2caa5e75406c342f9111e99663bbfb9772a9}{AML\_FIELD\_ATTRIB\_RAW\_PROCESS\_BYTES}}  = 0x0F}
+\DoxyCodeLine{607 }
+\DoxyCodeLine{608 \} \mbox{\hyperlink{amlcode_8h_a62b9b537110a344d4da37acca452f2ca}{AML\_ACCESS\_ATTRIBUTE}};}
+\DoxyCodeLine{609 }
+\DoxyCodeLine{610 }
+\DoxyCodeLine{611 \textcolor{comment}{/* Bit fields in the AML MethodFlags byte */}}
+\DoxyCodeLine{612 }
+\DoxyCodeLine{613 \textcolor{preprocessor}{\#define AML\_METHOD\_ARG\_COUNT        0x07}}
+\DoxyCodeLine{614 \textcolor{preprocessor}{\#define AML\_METHOD\_SERIALIZED       0x08}}
+\DoxyCodeLine{615 \textcolor{preprocessor}{\#define AML\_METHOD\_SYNC\_LEVEL       0xF0}}
+\DoxyCodeLine{616 }
+\DoxyCodeLine{617 }
+\DoxyCodeLine{618 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_AMLCODE\_H\_\_ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

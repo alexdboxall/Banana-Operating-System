@@ -1,0 +1,83 @@
+\hypertarget{diskio_8h_source}{}\doxysection{diskio.\+h}
+\label{diskio_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/fs/fat/diskio.h@{C:/Users/Alex/Desktop/Banana/kernel/fs/fat/diskio.h}}
+\mbox{\hyperlink{diskio_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\//}}
+\DoxyCodeLine{2 \textcolor{comment}{/  Low level disk interface modlue include file   (C)ChaN, 2019          /}}
+\DoxyCodeLine{3 \textcolor{comment}{/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#ifndef \_DISKIO\_DEFINED}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#define \_DISKIO\_DEFINED}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#ifdef \_\_cplusplus}}
+\DoxyCodeLine{9 \textcolor{keyword}{extern} \textcolor{stringliteral}{"{}C"{}} \{}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{11 }
+\DoxyCodeLine{12 \textcolor{comment}{/* Status of Disk Functions */}}
+\DoxyCodeLine{13 \textcolor{keyword}{typedef} \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}    \mbox{\hyperlink{diskio_8h_adba6790898ce4029c20a34b898ce73c1}{DSTATUS}};}
+\DoxyCodeLine{14 }
+\DoxyCodeLine{15 \textcolor{comment}{/* Results of Disk Functions */}}
+\DoxyCodeLine{16 \textcolor{keyword}{typedef} \textcolor{keyword}{enum} \{}
+\DoxyCodeLine{17     \mbox{\hyperlink{diskio_8h_aacdfef1dad6565f65c26d12fe0ea4b2ba2ea4b6ef3fffc17dd1d38ab5c2837737}{RES\_OK}} = 0,       \textcolor{comment}{/* 0: Successful */}}
+\DoxyCodeLine{18     \mbox{\hyperlink{diskio_8h_aacdfef1dad6565f65c26d12fe0ea4b2ba78011f5557679ec178fb40bd21e89840}{RES\_ERROR}},     \textcolor{comment}{/* 1: R/W Error */}}
+\DoxyCodeLine{19     \mbox{\hyperlink{diskio_8h_aacdfef1dad6565f65c26d12fe0ea4b2ba442a6d4393dc404827067bc4e981b322}{RES\_WRPRT}},     \textcolor{comment}{/* 2: Write Protected */}}
+\DoxyCodeLine{20     \mbox{\hyperlink{diskio_8h_aacdfef1dad6565f65c26d12fe0ea4b2baad64c27c69eb1ff39ae67c5f77bb2b1d}{RES\_NOTRDY}},       \textcolor{comment}{/* 3: Not Ready */}}
+\DoxyCodeLine{21     \mbox{\hyperlink{diskio_8h_aacdfef1dad6565f65c26d12fe0ea4b2baf4dcc07fd46310b5495fa8025c89a9f3}{RES\_PARERR}}        \textcolor{comment}{/* 4: Invalid Parameter */}}
+\DoxyCodeLine{22 \} \mbox{\hyperlink{diskio_8h_aacdfef1dad6565f65c26d12fe0ea4b2b}{DRESULT}};}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25 \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{26 \textcolor{comment}{/* Prototypes for disk control functions */}}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28 }
+\DoxyCodeLine{29 \mbox{\hyperlink{diskio_8h_adba6790898ce4029c20a34b898ce73c1}{DSTATUS}} \mbox{\hyperlink{diskio_8h_a09cdaa6f36fa409bdf002727bff98eb1}{disk\_initialize}} (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}} pdrv);}
+\DoxyCodeLine{30 \mbox{\hyperlink{diskio_8h_adba6790898ce4029c20a34b898ce73c1}{DSTATUS}} \mbox{\hyperlink{diskio_8h_a8348ac5ee6d709420c02e45c111f4793}{disk\_status}} (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}} pdrv);}
+\DoxyCodeLine{31 \mbox{\hyperlink{diskio_8h_aacdfef1dad6565f65c26d12fe0ea4b2b}{DRESULT}} \mbox{\hyperlink{diskio_8h_a0711b1d03b833e9d73b3be1a6397f461}{disk\_read}} (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}} pdrv, \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}* buff, \mbox{\hyperlink{ff_8h_a1f3c30a83148a28340f009d4e583f087}{LBA\_t}} sector, \mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}} count);}
+\DoxyCodeLine{32 \mbox{\hyperlink{diskio_8h_aacdfef1dad6565f65c26d12fe0ea4b2b}{DRESULT}} \mbox{\hyperlink{diskio_8h_ac24448955ef914f54a499df1fb45689d}{disk\_write}} (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}} pdrv, \textcolor{keyword}{const} \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}* buff, \mbox{\hyperlink{ff_8h_a1f3c30a83148a28340f009d4e583f087}{LBA\_t}} sector, \mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}} count);}
+\DoxyCodeLine{33 \mbox{\hyperlink{diskio_8h_aacdfef1dad6565f65c26d12fe0ea4b2b}{DRESULT}} \mbox{\hyperlink{diskio_8h_ab00fa450a811dbdabe3c655c1a36fab4}{disk\_ioctl}} (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}} pdrv, \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}} cmd, \textcolor{keywordtype}{void}* buff);}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36 \textcolor{comment}{/* Disk Status Bits (DSTATUS) */}}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38 \textcolor{preprocessor}{\#define STA\_NOINIT      0x01    }\textcolor{comment}{/* Drive not initialized */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#define STA\_NODISK      0x02    }\textcolor{comment}{/* No medium in the drive */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{40 \textcolor{preprocessor}{\#define STA\_PROTECT     0x04    }\textcolor{comment}{/* Write protected */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43 \textcolor{comment}{/* Command code for disk\_ioctrl fucntion */}}
+\DoxyCodeLine{44 }
+\DoxyCodeLine{45 \textcolor{comment}{/* Generic command (Used by FatFs) */}}
+\DoxyCodeLine{46 \textcolor{preprocessor}{\#define CTRL\_SYNC           0   }\textcolor{comment}{/* Complete pending write process (needed at FF\_FS\_READONLY == 0) */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{47 \textcolor{preprocessor}{\#define GET\_SECTOR\_COUNT    1   }\textcolor{comment}{/* Get media size (needed at FF\_USE\_MKFS == 1) */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{48 \textcolor{preprocessor}{\#define GET\_SECTOR\_SIZE     2   }\textcolor{comment}{/* Get sector size (needed at FF\_MAX\_SS != FF\_MIN\_SS) */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{49 \textcolor{preprocessor}{\#define GET\_BLOCK\_SIZE      3   }\textcolor{comment}{/* Get erase block size (needed at FF\_USE\_MKFS == 1) */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{50 \textcolor{preprocessor}{\#define CTRL\_TRIM           4   }\textcolor{comment}{/* Inform device that the data on the block of sectors is no longer used (needed at FF\_USE\_TRIM == 1) */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52 \textcolor{comment}{/* Generic command (Not used by FatFs) */}}
+\DoxyCodeLine{53 \textcolor{preprocessor}{\#define CTRL\_POWER          5   }\textcolor{comment}{/* Get/Set power status */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{54 \textcolor{preprocessor}{\#define CTRL\_LOCK           6   }\textcolor{comment}{/* Lock/Unlock media removal */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{55 \textcolor{preprocessor}{\#define CTRL\_EJECT          7   }\textcolor{comment}{/* Eject media */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{56 \textcolor{preprocessor}{\#define CTRL\_FORMAT         8   }\textcolor{comment}{/* Create physical format on the media */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{57 }
+\DoxyCodeLine{58 \textcolor{comment}{/* MMC/SDC specific ioctl command */}}
+\DoxyCodeLine{59 \textcolor{preprocessor}{\#define MMC\_GET\_TYPE        10  }\textcolor{comment}{/* Get card type */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{60 \textcolor{preprocessor}{\#define MMC\_GET\_CSD         11  }\textcolor{comment}{/* Get CSD */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{61 \textcolor{preprocessor}{\#define MMC\_GET\_CID         12  }\textcolor{comment}{/* Get CID */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{62 \textcolor{preprocessor}{\#define MMC\_GET\_OCR         13  }\textcolor{comment}{/* Get OCR */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{63 \textcolor{preprocessor}{\#define MMC\_GET\_SDSTAT      14  }\textcolor{comment}{/* Get SD status */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{64 \textcolor{preprocessor}{\#define ISDIO\_READ          55  }\textcolor{comment}{/* Read data form SD iSDIO register */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{65 \textcolor{preprocessor}{\#define ISDIO\_WRITE         56  }\textcolor{comment}{/* Write data to SD iSDIO register */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{66 \textcolor{preprocessor}{\#define ISDIO\_MRITE         57  }\textcolor{comment}{/* Masked write data to SD iSDIO register */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{67 }
+\DoxyCodeLine{68 \textcolor{comment}{/* ATA/CF specific ioctl command */}}
+\DoxyCodeLine{69 \textcolor{preprocessor}{\#define ATA\_GET\_REV         20  }\textcolor{comment}{/* Get F/W revision */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{70 \textcolor{preprocessor}{\#define ATA\_GET\_MODEL       21  }\textcolor{comment}{/* Get model name */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{71 \textcolor{preprocessor}{\#define ATA\_GET\_SN          22  }\textcolor{comment}{/* Get serial number */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{72 }
+\DoxyCodeLine{73 \textcolor{preprocessor}{\#ifdef \_\_cplusplus}}
+\DoxyCodeLine{74 \}}
+\DoxyCodeLine{75 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{76 }
+\DoxyCodeLine{77 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

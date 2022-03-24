@@ -1,0 +1,620 @@
+\hypertarget{ide_8hpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/hw/diskctrl/ide.hpp File Reference}
+\label{ide_8hpp}\index{C:/Users/Alex/Desktop/Banana/kernel/hw/diskctrl/ide.hpp@{C:/Users/Alex/Desktop/Banana/kernel/hw/diskctrl/ide.hpp}}
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}hal/diskctrl.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/bus/pci.\+hpp\char`\"{}}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_i_d_e}{IDE}}
+\item 
+struct \mbox{\hyperlink{struct_i_d_e_1_1_i_d_e_channels}{IDE\+::\+IDEChannels}}
+\item 
+struct \mbox{\hyperlink{struct_i_d_e_1_1_i_d_e_device}{IDE\+::\+IDEDevice}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a359c566cefff5e671eb3bae72e0d0948}{ATA\+\_\+\+REG\+\_\+\+DATA}}~0x00
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_ad2f2744a08145beb17b7ed6ca0465d85}{ATA\+\_\+\+REG\+\_\+\+ERROR}}~0x01
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_aa2dc5ed9bf4786f687e4000243f6a21d}{ATA\+\_\+\+REG\+\_\+\+FEATURES}}~0x01
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_ad995693d31857a8e514b5f96c5fc4cdb}{ATA\+\_\+\+REG\+\_\+\+SECCOUNT0}}~0x02
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a9818e533e211e2ddadf650dab77f55fd}{ATA\+\_\+\+REG\+\_\+\+LBA0}}~0x03
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a4ca55ad2c56ea915f9dcde1aba57433d}{ATA\+\_\+\+REG\+\_\+\+LBA1}}~0x04
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_afaf134917cbfc81c86b4e1d67930757a}{ATA\+\_\+\+REG\+\_\+\+LBA2}}~0x05
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_af80b9f0d852148eda227b433f72ca8bb}{ATA\+\_\+\+REG\+\_\+\+HDDEVSEL}}~0x06
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a3b532ef33b38be16a240f8f2e21bc5db}{ATA\+\_\+\+REG\+\_\+\+STATUS}}~0x07
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a1a54069e05845badff84e1490ca4681e}{ATA\+\_\+\+REG\+\_\+\+COMMAND}}~0x07
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a8a9a19e403cdc08cdb52ac4a77d44b1d}{ATA\+\_\+\+REG\+\_\+\+SECCOUNT1}}~0x08
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_af95cf3177ed01e63c3e2783f71e3bfb8}{ATA\+\_\+\+REG\+\_\+\+LBA3}}~0x09
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a39c9e21fd98a8933142af12c472ffb80}{ATA\+\_\+\+REG\+\_\+\+LBA4}}~0x0A
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a24546e89863608bb2850a6ab39a24693}{ATA\+\_\+\+REG\+\_\+\+LBA5}}~0x0B
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_acd25672516342decdb4acb14b13dfa03}{ATA\+\_\+\+REG\+\_\+\+CONTROL}}~0x0C
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a051769d4520d201d24bbb06758a5c1de}{ATA\+\_\+\+REG\+\_\+\+ALTSTATUS}}~0x0C
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_adf8b096ca00ce8ce58af3dd79240b2e5}{ATA\+\_\+\+REG\+\_\+\+DEVADDRESS}}~0x0D
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_aee20dad52d6448086092f6921d5123fd}{ATA\+\_\+\+REG\+\_\+\+BUSMSTR\+\_\+\+COMMAND}}~0x0E
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_ae4b5348e12c3bd80cae20b89fdcb47b5}{ATA\+\_\+\+REG\+\_\+\+BUSMSTR\+\_\+\+STATUS}}~0x10
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_ab25b0989bb80f6cc4229f347c1b98f84}{ATA\+\_\+\+REG\+\_\+\+BUSMSTR\+\_\+\+PRDT0}}~0x12
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_af31e63f0096e96e3efe10c9d17af8dbd}{ATA\+\_\+\+REG\+\_\+\+BUSMSTR\+\_\+\+PRDT1}}~0x13
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_aa3c6e043860e809d812e455a6f8ce978}{ATA\+\_\+\+REG\+\_\+\+BUSMSTR\+\_\+\+PRDT2}}~0x14
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a258880eeb390319097f05b6b81f65662}{ATA\+\_\+\+REG\+\_\+\+BUSMSTR\+\_\+\+PRDT3}}~0x15
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_aa18f254fa4afcfdb5fcf897eeaf38564}{ATA\+\_\+\+PRIMARY}}~0x00
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_ad514d776b09e8b873aa7087ef0091fe6}{ATA\+\_\+\+SECONDARY}}~0x01
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a061cf4fd71859d6355aea5be3bae767a}{ATA\+\_\+\+READ}}~0x00
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a9a19b84aa7a02ac7e07528795816ffb2}{ATA\+\_\+\+WRITE}}~0x01
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a3046279f2a25227c121b69f4cf855bf8}{IDE\+\_\+\+ATA}}~0x00
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a6513ee2a4da2c6aaa691b9d4c639a53e}{IDE\+\_\+\+ATAPI}}~0x01
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_acb5691a26e836afc6972577bd71b0d97}{ATA\+\_\+\+MASTER}}~0x00
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_abe2ab9064f7100c5915bc694386a3e40}{ATA\+\_\+\+SLAVE}}~0x01
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a56e10a89c3c6b8c43899c260eb8ddd1c}{ATAPI\+\_\+\+CMD\+\_\+\+TEST\+\_\+\+UNIT\+\_\+\+READY}}~0x00
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a94bf36a7e0a52f4dd421eca62e80631e}{ATAPI\+\_\+\+CMD\+\_\+\+EJECT}}~0x1B
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_ae5df77204021547b69964b3cde9c910c}{ATAPI\+\_\+\+CMD\+\_\+\+REQUEST\+\_\+\+SENSE}}~0x03
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a46c7100054351e7afa8762a5dd165ff5}{ATAPI\+\_\+\+CMD\+\_\+\+READ}}~0x\+A8
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a4224d2160f2f2718d8a67a09bfb8f4a5}{ATA\+\_\+\+IDENT\+\_\+\+DEVICETYPE}}~0
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a692fbddd7825db7edba694d647a69aa7}{ATA\+\_\+\+IDENT\+\_\+\+CYLINDERS}}~2
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a1dcc2ec4b54df2f3cb011bbf6dc3795c}{ATA\+\_\+\+IDENT\+\_\+\+HEADS}}~6
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_ae9be2cb739432bf835c6e5492cf92ba7}{ATA\+\_\+\+IDENT\+\_\+\+SECTORS}}~12
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a60e929ababaf71de94d96c079f9028d0}{ATA\+\_\+\+IDENT\+\_\+\+SERIAL}}~20
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a9fd52e892928c016a4a66f59a46241e4}{ATA\+\_\+\+IDENT\+\_\+\+MODEL}}~54
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a4efaa1ae14eb268a085d1824eb2a1f08}{ATA\+\_\+\+IDENT\+\_\+\+CAPABILITIES}}~98
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a4515f6ed07cf67add34766e02bd8d133}{ATA\+\_\+\+IDENT\+\_\+\+FIELDVALID}}~106
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_ae0d046a29ce70e07d868961cf17b54c7}{ATA\+\_\+\+IDENT\+\_\+\+MAX\+\_\+\+LBA}}~120
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a8536e132f24aa36e826f753b6061e8ea}{ATA\+\_\+\+IDENT\+\_\+\+COMMANDSETS}}~164
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_aa1926c13a31f512c9ec07ed3bdba8893}{ATA\+\_\+\+IDENT\+\_\+\+MAX\+\_\+\+LBA\+\_\+\+EXT}}~200
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a91a96db8427a8caa254a218f05dcb3f4}{ATA\+\_\+\+CMD\+\_\+\+READ\+\_\+\+PIO}}~0x20
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a3165497b4d8eb30297a4d62e39846b01}{ATA\+\_\+\+CMD\+\_\+\+READ\+\_\+\+PIO\+\_\+\+EXT}}~0x24
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_aefab351e75e10b6dbfa0b7828031cda4}{ATA\+\_\+\+CMD\+\_\+\+READ\+\_\+\+DMA}}~0x\+C8
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a42247550c708b2b7852927180c7dde78}{ATA\+\_\+\+CMD\+\_\+\+READ\+\_\+\+DMA\+\_\+\+EXT}}~0x25
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a64f2c50b916f1f67018c36f75f811cc7}{ATA\+\_\+\+CMD\+\_\+\+WRITE\+\_\+\+PIO}}~0x30
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_ac8e433782c7125e6929673907eca6f17}{ATA\+\_\+\+CMD\+\_\+\+WRITE\+\_\+\+PIO\+\_\+\+EXT}}~0x34
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a41dc931ac3c2c6733a2a67d03eaf1674}{ATA\+\_\+\+CMD\+\_\+\+WRITE\+\_\+\+DMA}}~0x\+CA
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a3a75d9e39518e704f3a4b39e6a3d998c}{ATA\+\_\+\+CMD\+\_\+\+WRITE\+\_\+\+DMA\+\_\+\+EXT}}~0x35
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a23e8deb17b95336898b52cc76d5206af}{ATA\+\_\+\+CMD\+\_\+\+CACHE\+\_\+\+FLUSH}}~0x\+E7
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a3c624c2041a51a473bd6e77b7753d475}{ATA\+\_\+\+CMD\+\_\+\+CACHE\+\_\+\+FLUSH\+\_\+\+EXT}}~0x\+EA
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_afaaead63f9b69425b9f6514b03f0bbb2}{ATA\+\_\+\+CMD\+\_\+\+PACKET}}~0x\+A0
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_acba68da9027d95b9bae53901a8ea009b}{ATA\+\_\+\+CMD\+\_\+\+IDENTIFY\+\_\+\+PACKET}}~0x\+A1
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a572958103bba5d355c7fe135ae7526bd}{ATA\+\_\+\+CMD\+\_\+\+IDENTIFY}}~0x\+EC
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a97e6940186e5f1cfe5c501e56312de45}{ATA\+\_\+\+ER\+\_\+\+BBK}}~0x80
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_ab1e1938e0fc8f511102b778956aa3bd4}{ATA\+\_\+\+ER\+\_\+\+UNC}}~0x40
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_aaed40c458ad34dae2d82381e71e372ac}{ATA\+\_\+\+ER\+\_\+\+MC}}~0x20
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a6bed47f17f64ab98da1dd946ca123198}{ATA\+\_\+\+ER\+\_\+\+IDNF}}~0x10
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_af5f476aa2920211197aa8ff81f0dfdbd}{ATA\+\_\+\+ER\+\_\+\+MCR}}~0x08
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a415987608bff240636a785bb48970e94}{ATA\+\_\+\+ER\+\_\+\+ABRT}}~0x04
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_aaffca74832da09d4cf0ea68624546c91}{ATA\+\_\+\+ER\+\_\+\+TK0\+NF}}~0x02
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_ac4f0c06f285d99068cbad7b6d4641d1f}{ATA\+\_\+\+ER\+\_\+\+AMNF}}~0x01
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_aed1929007f388cab23229c908be5bbaf}{ATA\+\_\+\+SR\+\_\+\+BSY}}~0x80
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a51b4023132fbdc98d4498bd8e21d064d}{ATA\+\_\+\+SR\+\_\+\+DRDY}}~0x40
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_aca73201ed93e5c9d9d9fbf51270fde0b}{ATA\+\_\+\+SR\+\_\+\+DF}}~0x20
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a2317ad830d33431eb1222a4079d6dab2}{ATA\+\_\+\+SR\+\_\+\+DSC}}~0x10
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a27e6aaa78aaaa205a7dadf56b48d0bf6}{ATA\+\_\+\+SR\+\_\+\+DRQ}}~0x08
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a7cb0243beb875711e6b46cda0be7c53a}{ATA\+\_\+\+SR\+\_\+\+CORR}}~0x04
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_ad74934afc699945311360be6e3700ef5}{ATA\+\_\+\+SR\+\_\+\+IDX}}~0x02
+\item 
+\#define \mbox{\hyperlink{ide_8hpp_a8a2cf843df1ae63d4d16748dfe72a592}{ATA\+\_\+\+SR\+\_\+\+ERR}}~0x01
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{ide_8hpp_a23e8deb17b95336898b52cc76d5206af}\label{ide_8hpp_a23e8deb17b95336898b52cc76d5206af}} 
+\index{ide.hpp@{ide.hpp}!ATA\_CMD\_CACHE\_FLUSH@{ATA\_CMD\_CACHE\_FLUSH}}
+\index{ATA\_CMD\_CACHE\_FLUSH@{ATA\_CMD\_CACHE\_FLUSH}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_CMD\_CACHE\_FLUSH}{ATA\_CMD\_CACHE\_FLUSH}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+CMD\+\_\+\+CACHE\+\_\+\+FLUSH~0x\+E7}
+
+\mbox{\Hypertarget{ide_8hpp_a3c624c2041a51a473bd6e77b7753d475}\label{ide_8hpp_a3c624c2041a51a473bd6e77b7753d475}} 
+\index{ide.hpp@{ide.hpp}!ATA\_CMD\_CACHE\_FLUSH\_EXT@{ATA\_CMD\_CACHE\_FLUSH\_EXT}}
+\index{ATA\_CMD\_CACHE\_FLUSH\_EXT@{ATA\_CMD\_CACHE\_FLUSH\_EXT}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_CMD\_CACHE\_FLUSH\_EXT}{ATA\_CMD\_CACHE\_FLUSH\_EXT}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+CMD\+\_\+\+CACHE\+\_\+\+FLUSH\+\_\+\+EXT~0x\+EA}
+
+\mbox{\Hypertarget{ide_8hpp_a572958103bba5d355c7fe135ae7526bd}\label{ide_8hpp_a572958103bba5d355c7fe135ae7526bd}} 
+\index{ide.hpp@{ide.hpp}!ATA\_CMD\_IDENTIFY@{ATA\_CMD\_IDENTIFY}}
+\index{ATA\_CMD\_IDENTIFY@{ATA\_CMD\_IDENTIFY}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_CMD\_IDENTIFY}{ATA\_CMD\_IDENTIFY}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+CMD\+\_\+\+IDENTIFY~0x\+EC}
+
+\mbox{\Hypertarget{ide_8hpp_acba68da9027d95b9bae53901a8ea009b}\label{ide_8hpp_acba68da9027d95b9bae53901a8ea009b}} 
+\index{ide.hpp@{ide.hpp}!ATA\_CMD\_IDENTIFY\_PACKET@{ATA\_CMD\_IDENTIFY\_PACKET}}
+\index{ATA\_CMD\_IDENTIFY\_PACKET@{ATA\_CMD\_IDENTIFY\_PACKET}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_CMD\_IDENTIFY\_PACKET}{ATA\_CMD\_IDENTIFY\_PACKET}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+CMD\+\_\+\+IDENTIFY\+\_\+\+PACKET~0x\+A1}
+
+\mbox{\Hypertarget{ide_8hpp_afaaead63f9b69425b9f6514b03f0bbb2}\label{ide_8hpp_afaaead63f9b69425b9f6514b03f0bbb2}} 
+\index{ide.hpp@{ide.hpp}!ATA\_CMD\_PACKET@{ATA\_CMD\_PACKET}}
+\index{ATA\_CMD\_PACKET@{ATA\_CMD\_PACKET}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_CMD\_PACKET}{ATA\_CMD\_PACKET}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+CMD\+\_\+\+PACKET~0x\+A0}
+
+\mbox{\Hypertarget{ide_8hpp_aefab351e75e10b6dbfa0b7828031cda4}\label{ide_8hpp_aefab351e75e10b6dbfa0b7828031cda4}} 
+\index{ide.hpp@{ide.hpp}!ATA\_CMD\_READ\_DMA@{ATA\_CMD\_READ\_DMA}}
+\index{ATA\_CMD\_READ\_DMA@{ATA\_CMD\_READ\_DMA}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_CMD\_READ\_DMA}{ATA\_CMD\_READ\_DMA}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+CMD\+\_\+\+READ\+\_\+\+DMA~0x\+C8}
+
+\mbox{\Hypertarget{ide_8hpp_a42247550c708b2b7852927180c7dde78}\label{ide_8hpp_a42247550c708b2b7852927180c7dde78}} 
+\index{ide.hpp@{ide.hpp}!ATA\_CMD\_READ\_DMA\_EXT@{ATA\_CMD\_READ\_DMA\_EXT}}
+\index{ATA\_CMD\_READ\_DMA\_EXT@{ATA\_CMD\_READ\_DMA\_EXT}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_CMD\_READ\_DMA\_EXT}{ATA\_CMD\_READ\_DMA\_EXT}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+CMD\+\_\+\+READ\+\_\+\+DMA\+\_\+\+EXT~0x25}
+
+\mbox{\Hypertarget{ide_8hpp_a91a96db8427a8caa254a218f05dcb3f4}\label{ide_8hpp_a91a96db8427a8caa254a218f05dcb3f4}} 
+\index{ide.hpp@{ide.hpp}!ATA\_CMD\_READ\_PIO@{ATA\_CMD\_READ\_PIO}}
+\index{ATA\_CMD\_READ\_PIO@{ATA\_CMD\_READ\_PIO}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_CMD\_READ\_PIO}{ATA\_CMD\_READ\_PIO}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+CMD\+\_\+\+READ\+\_\+\+PIO~0x20}
+
+\mbox{\Hypertarget{ide_8hpp_a3165497b4d8eb30297a4d62e39846b01}\label{ide_8hpp_a3165497b4d8eb30297a4d62e39846b01}} 
+\index{ide.hpp@{ide.hpp}!ATA\_CMD\_READ\_PIO\_EXT@{ATA\_CMD\_READ\_PIO\_EXT}}
+\index{ATA\_CMD\_READ\_PIO\_EXT@{ATA\_CMD\_READ\_PIO\_EXT}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_CMD\_READ\_PIO\_EXT}{ATA\_CMD\_READ\_PIO\_EXT}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+CMD\+\_\+\+READ\+\_\+\+PIO\+\_\+\+EXT~0x24}
+
+\mbox{\Hypertarget{ide_8hpp_a41dc931ac3c2c6733a2a67d03eaf1674}\label{ide_8hpp_a41dc931ac3c2c6733a2a67d03eaf1674}} 
+\index{ide.hpp@{ide.hpp}!ATA\_CMD\_WRITE\_DMA@{ATA\_CMD\_WRITE\_DMA}}
+\index{ATA\_CMD\_WRITE\_DMA@{ATA\_CMD\_WRITE\_DMA}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_CMD\_WRITE\_DMA}{ATA\_CMD\_WRITE\_DMA}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+CMD\+\_\+\+WRITE\+\_\+\+DMA~0x\+CA}
+
+\mbox{\Hypertarget{ide_8hpp_a3a75d9e39518e704f3a4b39e6a3d998c}\label{ide_8hpp_a3a75d9e39518e704f3a4b39e6a3d998c}} 
+\index{ide.hpp@{ide.hpp}!ATA\_CMD\_WRITE\_DMA\_EXT@{ATA\_CMD\_WRITE\_DMA\_EXT}}
+\index{ATA\_CMD\_WRITE\_DMA\_EXT@{ATA\_CMD\_WRITE\_DMA\_EXT}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_CMD\_WRITE\_DMA\_EXT}{ATA\_CMD\_WRITE\_DMA\_EXT}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+CMD\+\_\+\+WRITE\+\_\+\+DMA\+\_\+\+EXT~0x35}
+
+\mbox{\Hypertarget{ide_8hpp_a64f2c50b916f1f67018c36f75f811cc7}\label{ide_8hpp_a64f2c50b916f1f67018c36f75f811cc7}} 
+\index{ide.hpp@{ide.hpp}!ATA\_CMD\_WRITE\_PIO@{ATA\_CMD\_WRITE\_PIO}}
+\index{ATA\_CMD\_WRITE\_PIO@{ATA\_CMD\_WRITE\_PIO}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_CMD\_WRITE\_PIO}{ATA\_CMD\_WRITE\_PIO}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+CMD\+\_\+\+WRITE\+\_\+\+PIO~0x30}
+
+\mbox{\Hypertarget{ide_8hpp_ac8e433782c7125e6929673907eca6f17}\label{ide_8hpp_ac8e433782c7125e6929673907eca6f17}} 
+\index{ide.hpp@{ide.hpp}!ATA\_CMD\_WRITE\_PIO\_EXT@{ATA\_CMD\_WRITE\_PIO\_EXT}}
+\index{ATA\_CMD\_WRITE\_PIO\_EXT@{ATA\_CMD\_WRITE\_PIO\_EXT}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_CMD\_WRITE\_PIO\_EXT}{ATA\_CMD\_WRITE\_PIO\_EXT}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+CMD\+\_\+\+WRITE\+\_\+\+PIO\+\_\+\+EXT~0x34}
+
+\mbox{\Hypertarget{ide_8hpp_a415987608bff240636a785bb48970e94}\label{ide_8hpp_a415987608bff240636a785bb48970e94}} 
+\index{ide.hpp@{ide.hpp}!ATA\_ER\_ABRT@{ATA\_ER\_ABRT}}
+\index{ATA\_ER\_ABRT@{ATA\_ER\_ABRT}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_ER\_ABRT}{ATA\_ER\_ABRT}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+ER\+\_\+\+ABRT~0x04}
+
+\mbox{\Hypertarget{ide_8hpp_ac4f0c06f285d99068cbad7b6d4641d1f}\label{ide_8hpp_ac4f0c06f285d99068cbad7b6d4641d1f}} 
+\index{ide.hpp@{ide.hpp}!ATA\_ER\_AMNF@{ATA\_ER\_AMNF}}
+\index{ATA\_ER\_AMNF@{ATA\_ER\_AMNF}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_ER\_AMNF}{ATA\_ER\_AMNF}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+ER\+\_\+\+AMNF~0x01}
+
+\mbox{\Hypertarget{ide_8hpp_a97e6940186e5f1cfe5c501e56312de45}\label{ide_8hpp_a97e6940186e5f1cfe5c501e56312de45}} 
+\index{ide.hpp@{ide.hpp}!ATA\_ER\_BBK@{ATA\_ER\_BBK}}
+\index{ATA\_ER\_BBK@{ATA\_ER\_BBK}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_ER\_BBK}{ATA\_ER\_BBK}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+ER\+\_\+\+BBK~0x80}
+
+\mbox{\Hypertarget{ide_8hpp_a6bed47f17f64ab98da1dd946ca123198}\label{ide_8hpp_a6bed47f17f64ab98da1dd946ca123198}} 
+\index{ide.hpp@{ide.hpp}!ATA\_ER\_IDNF@{ATA\_ER\_IDNF}}
+\index{ATA\_ER\_IDNF@{ATA\_ER\_IDNF}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_ER\_IDNF}{ATA\_ER\_IDNF}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+ER\+\_\+\+IDNF~0x10}
+
+\mbox{\Hypertarget{ide_8hpp_aaed40c458ad34dae2d82381e71e372ac}\label{ide_8hpp_aaed40c458ad34dae2d82381e71e372ac}} 
+\index{ide.hpp@{ide.hpp}!ATA\_ER\_MC@{ATA\_ER\_MC}}
+\index{ATA\_ER\_MC@{ATA\_ER\_MC}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_ER\_MC}{ATA\_ER\_MC}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+ER\+\_\+\+MC~0x20}
+
+\mbox{\Hypertarget{ide_8hpp_af5f476aa2920211197aa8ff81f0dfdbd}\label{ide_8hpp_af5f476aa2920211197aa8ff81f0dfdbd}} 
+\index{ide.hpp@{ide.hpp}!ATA\_ER\_MCR@{ATA\_ER\_MCR}}
+\index{ATA\_ER\_MCR@{ATA\_ER\_MCR}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_ER\_MCR}{ATA\_ER\_MCR}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+ER\+\_\+\+MCR~0x08}
+
+\mbox{\Hypertarget{ide_8hpp_aaffca74832da09d4cf0ea68624546c91}\label{ide_8hpp_aaffca74832da09d4cf0ea68624546c91}} 
+\index{ide.hpp@{ide.hpp}!ATA\_ER\_TK0NF@{ATA\_ER\_TK0NF}}
+\index{ATA\_ER\_TK0NF@{ATA\_ER\_TK0NF}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_ER\_TK0NF}{ATA\_ER\_TK0NF}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+ER\+\_\+\+TK0\+NF~0x02}
+
+\mbox{\Hypertarget{ide_8hpp_ab1e1938e0fc8f511102b778956aa3bd4}\label{ide_8hpp_ab1e1938e0fc8f511102b778956aa3bd4}} 
+\index{ide.hpp@{ide.hpp}!ATA\_ER\_UNC@{ATA\_ER\_UNC}}
+\index{ATA\_ER\_UNC@{ATA\_ER\_UNC}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_ER\_UNC}{ATA\_ER\_UNC}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+ER\+\_\+\+UNC~0x40}
+
+\mbox{\Hypertarget{ide_8hpp_a4efaa1ae14eb268a085d1824eb2a1f08}\label{ide_8hpp_a4efaa1ae14eb268a085d1824eb2a1f08}} 
+\index{ide.hpp@{ide.hpp}!ATA\_IDENT\_CAPABILITIES@{ATA\_IDENT\_CAPABILITIES}}
+\index{ATA\_IDENT\_CAPABILITIES@{ATA\_IDENT\_CAPABILITIES}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_IDENT\_CAPABILITIES}{ATA\_IDENT\_CAPABILITIES}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+IDENT\+\_\+\+CAPABILITIES~98}
+
+\mbox{\Hypertarget{ide_8hpp_a8536e132f24aa36e826f753b6061e8ea}\label{ide_8hpp_a8536e132f24aa36e826f753b6061e8ea}} 
+\index{ide.hpp@{ide.hpp}!ATA\_IDENT\_COMMANDSETS@{ATA\_IDENT\_COMMANDSETS}}
+\index{ATA\_IDENT\_COMMANDSETS@{ATA\_IDENT\_COMMANDSETS}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_IDENT\_COMMANDSETS}{ATA\_IDENT\_COMMANDSETS}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+IDENT\+\_\+\+COMMANDSETS~164}
+
+\mbox{\Hypertarget{ide_8hpp_a692fbddd7825db7edba694d647a69aa7}\label{ide_8hpp_a692fbddd7825db7edba694d647a69aa7}} 
+\index{ide.hpp@{ide.hpp}!ATA\_IDENT\_CYLINDERS@{ATA\_IDENT\_CYLINDERS}}
+\index{ATA\_IDENT\_CYLINDERS@{ATA\_IDENT\_CYLINDERS}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_IDENT\_CYLINDERS}{ATA\_IDENT\_CYLINDERS}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+IDENT\+\_\+\+CYLINDERS~2}
+
+\mbox{\Hypertarget{ide_8hpp_a4224d2160f2f2718d8a67a09bfb8f4a5}\label{ide_8hpp_a4224d2160f2f2718d8a67a09bfb8f4a5}} 
+\index{ide.hpp@{ide.hpp}!ATA\_IDENT\_DEVICETYPE@{ATA\_IDENT\_DEVICETYPE}}
+\index{ATA\_IDENT\_DEVICETYPE@{ATA\_IDENT\_DEVICETYPE}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_IDENT\_DEVICETYPE}{ATA\_IDENT\_DEVICETYPE}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+IDENT\+\_\+\+DEVICETYPE~0}
+
+\mbox{\Hypertarget{ide_8hpp_a4515f6ed07cf67add34766e02bd8d133}\label{ide_8hpp_a4515f6ed07cf67add34766e02bd8d133}} 
+\index{ide.hpp@{ide.hpp}!ATA\_IDENT\_FIELDVALID@{ATA\_IDENT\_FIELDVALID}}
+\index{ATA\_IDENT\_FIELDVALID@{ATA\_IDENT\_FIELDVALID}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_IDENT\_FIELDVALID}{ATA\_IDENT\_FIELDVALID}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+IDENT\+\_\+\+FIELDVALID~106}
+
+\mbox{\Hypertarget{ide_8hpp_a1dcc2ec4b54df2f3cb011bbf6dc3795c}\label{ide_8hpp_a1dcc2ec4b54df2f3cb011bbf6dc3795c}} 
+\index{ide.hpp@{ide.hpp}!ATA\_IDENT\_HEADS@{ATA\_IDENT\_HEADS}}
+\index{ATA\_IDENT\_HEADS@{ATA\_IDENT\_HEADS}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_IDENT\_HEADS}{ATA\_IDENT\_HEADS}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+IDENT\+\_\+\+HEADS~6}
+
+\mbox{\Hypertarget{ide_8hpp_ae0d046a29ce70e07d868961cf17b54c7}\label{ide_8hpp_ae0d046a29ce70e07d868961cf17b54c7}} 
+\index{ide.hpp@{ide.hpp}!ATA\_IDENT\_MAX\_LBA@{ATA\_IDENT\_MAX\_LBA}}
+\index{ATA\_IDENT\_MAX\_LBA@{ATA\_IDENT\_MAX\_LBA}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_IDENT\_MAX\_LBA}{ATA\_IDENT\_MAX\_LBA}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+IDENT\+\_\+\+MAX\+\_\+\+LBA~120}
+
+\mbox{\Hypertarget{ide_8hpp_aa1926c13a31f512c9ec07ed3bdba8893}\label{ide_8hpp_aa1926c13a31f512c9ec07ed3bdba8893}} 
+\index{ide.hpp@{ide.hpp}!ATA\_IDENT\_MAX\_LBA\_EXT@{ATA\_IDENT\_MAX\_LBA\_EXT}}
+\index{ATA\_IDENT\_MAX\_LBA\_EXT@{ATA\_IDENT\_MAX\_LBA\_EXT}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_IDENT\_MAX\_LBA\_EXT}{ATA\_IDENT\_MAX\_LBA\_EXT}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+IDENT\+\_\+\+MAX\+\_\+\+LBA\+\_\+\+EXT~200}
+
+\mbox{\Hypertarget{ide_8hpp_a9fd52e892928c016a4a66f59a46241e4}\label{ide_8hpp_a9fd52e892928c016a4a66f59a46241e4}} 
+\index{ide.hpp@{ide.hpp}!ATA\_IDENT\_MODEL@{ATA\_IDENT\_MODEL}}
+\index{ATA\_IDENT\_MODEL@{ATA\_IDENT\_MODEL}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_IDENT\_MODEL}{ATA\_IDENT\_MODEL}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+IDENT\+\_\+\+MODEL~54}
+
+\mbox{\Hypertarget{ide_8hpp_ae9be2cb739432bf835c6e5492cf92ba7}\label{ide_8hpp_ae9be2cb739432bf835c6e5492cf92ba7}} 
+\index{ide.hpp@{ide.hpp}!ATA\_IDENT\_SECTORS@{ATA\_IDENT\_SECTORS}}
+\index{ATA\_IDENT\_SECTORS@{ATA\_IDENT\_SECTORS}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_IDENT\_SECTORS}{ATA\_IDENT\_SECTORS}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+IDENT\+\_\+\+SECTORS~12}
+
+\mbox{\Hypertarget{ide_8hpp_a60e929ababaf71de94d96c079f9028d0}\label{ide_8hpp_a60e929ababaf71de94d96c079f9028d0}} 
+\index{ide.hpp@{ide.hpp}!ATA\_IDENT\_SERIAL@{ATA\_IDENT\_SERIAL}}
+\index{ATA\_IDENT\_SERIAL@{ATA\_IDENT\_SERIAL}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_IDENT\_SERIAL}{ATA\_IDENT\_SERIAL}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+IDENT\+\_\+\+SERIAL~20}
+
+\mbox{\Hypertarget{ide_8hpp_acb5691a26e836afc6972577bd71b0d97}\label{ide_8hpp_acb5691a26e836afc6972577bd71b0d97}} 
+\index{ide.hpp@{ide.hpp}!ATA\_MASTER@{ATA\_MASTER}}
+\index{ATA\_MASTER@{ATA\_MASTER}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_MASTER}{ATA\_MASTER}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+MASTER~0x00}
+
+\mbox{\Hypertarget{ide_8hpp_aa18f254fa4afcfdb5fcf897eeaf38564}\label{ide_8hpp_aa18f254fa4afcfdb5fcf897eeaf38564}} 
+\index{ide.hpp@{ide.hpp}!ATA\_PRIMARY@{ATA\_PRIMARY}}
+\index{ATA\_PRIMARY@{ATA\_PRIMARY}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_PRIMARY}{ATA\_PRIMARY}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+PRIMARY~0x00}
+
+\mbox{\Hypertarget{ide_8hpp_a061cf4fd71859d6355aea5be3bae767a}\label{ide_8hpp_a061cf4fd71859d6355aea5be3bae767a}} 
+\index{ide.hpp@{ide.hpp}!ATA\_READ@{ATA\_READ}}
+\index{ATA\_READ@{ATA\_READ}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_READ}{ATA\_READ}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+READ~0x00}
+
+\mbox{\Hypertarget{ide_8hpp_a051769d4520d201d24bbb06758a5c1de}\label{ide_8hpp_a051769d4520d201d24bbb06758a5c1de}} 
+\index{ide.hpp@{ide.hpp}!ATA\_REG\_ALTSTATUS@{ATA\_REG\_ALTSTATUS}}
+\index{ATA\_REG\_ALTSTATUS@{ATA\_REG\_ALTSTATUS}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_REG\_ALTSTATUS}{ATA\_REG\_ALTSTATUS}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+REG\+\_\+\+ALTSTATUS~0x0C}
+
+\mbox{\Hypertarget{ide_8hpp_aee20dad52d6448086092f6921d5123fd}\label{ide_8hpp_aee20dad52d6448086092f6921d5123fd}} 
+\index{ide.hpp@{ide.hpp}!ATA\_REG\_BUSMSTR\_COMMAND@{ATA\_REG\_BUSMSTR\_COMMAND}}
+\index{ATA\_REG\_BUSMSTR\_COMMAND@{ATA\_REG\_BUSMSTR\_COMMAND}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_REG\_BUSMSTR\_COMMAND}{ATA\_REG\_BUSMSTR\_COMMAND}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+REG\+\_\+\+BUSMSTR\+\_\+\+COMMAND~0x0E}
+
+\mbox{\Hypertarget{ide_8hpp_ab25b0989bb80f6cc4229f347c1b98f84}\label{ide_8hpp_ab25b0989bb80f6cc4229f347c1b98f84}} 
+\index{ide.hpp@{ide.hpp}!ATA\_REG\_BUSMSTR\_PRDT0@{ATA\_REG\_BUSMSTR\_PRDT0}}
+\index{ATA\_REG\_BUSMSTR\_PRDT0@{ATA\_REG\_BUSMSTR\_PRDT0}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_REG\_BUSMSTR\_PRDT0}{ATA\_REG\_BUSMSTR\_PRDT0}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+REG\+\_\+\+BUSMSTR\+\_\+\+PRDT0~0x12}
+
+\mbox{\Hypertarget{ide_8hpp_af31e63f0096e96e3efe10c9d17af8dbd}\label{ide_8hpp_af31e63f0096e96e3efe10c9d17af8dbd}} 
+\index{ide.hpp@{ide.hpp}!ATA\_REG\_BUSMSTR\_PRDT1@{ATA\_REG\_BUSMSTR\_PRDT1}}
+\index{ATA\_REG\_BUSMSTR\_PRDT1@{ATA\_REG\_BUSMSTR\_PRDT1}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_REG\_BUSMSTR\_PRDT1}{ATA\_REG\_BUSMSTR\_PRDT1}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+REG\+\_\+\+BUSMSTR\+\_\+\+PRDT1~0x13}
+
+\mbox{\Hypertarget{ide_8hpp_aa3c6e043860e809d812e455a6f8ce978}\label{ide_8hpp_aa3c6e043860e809d812e455a6f8ce978}} 
+\index{ide.hpp@{ide.hpp}!ATA\_REG\_BUSMSTR\_PRDT2@{ATA\_REG\_BUSMSTR\_PRDT2}}
+\index{ATA\_REG\_BUSMSTR\_PRDT2@{ATA\_REG\_BUSMSTR\_PRDT2}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_REG\_BUSMSTR\_PRDT2}{ATA\_REG\_BUSMSTR\_PRDT2}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+REG\+\_\+\+BUSMSTR\+\_\+\+PRDT2~0x14}
+
+\mbox{\Hypertarget{ide_8hpp_a258880eeb390319097f05b6b81f65662}\label{ide_8hpp_a258880eeb390319097f05b6b81f65662}} 
+\index{ide.hpp@{ide.hpp}!ATA\_REG\_BUSMSTR\_PRDT3@{ATA\_REG\_BUSMSTR\_PRDT3}}
+\index{ATA\_REG\_BUSMSTR\_PRDT3@{ATA\_REG\_BUSMSTR\_PRDT3}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_REG\_BUSMSTR\_PRDT3}{ATA\_REG\_BUSMSTR\_PRDT3}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+REG\+\_\+\+BUSMSTR\+\_\+\+PRDT3~0x15}
+
+\mbox{\Hypertarget{ide_8hpp_ae4b5348e12c3bd80cae20b89fdcb47b5}\label{ide_8hpp_ae4b5348e12c3bd80cae20b89fdcb47b5}} 
+\index{ide.hpp@{ide.hpp}!ATA\_REG\_BUSMSTR\_STATUS@{ATA\_REG\_BUSMSTR\_STATUS}}
+\index{ATA\_REG\_BUSMSTR\_STATUS@{ATA\_REG\_BUSMSTR\_STATUS}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_REG\_BUSMSTR\_STATUS}{ATA\_REG\_BUSMSTR\_STATUS}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+REG\+\_\+\+BUSMSTR\+\_\+\+STATUS~0x10}
+
+\mbox{\Hypertarget{ide_8hpp_a1a54069e05845badff84e1490ca4681e}\label{ide_8hpp_a1a54069e05845badff84e1490ca4681e}} 
+\index{ide.hpp@{ide.hpp}!ATA\_REG\_COMMAND@{ATA\_REG\_COMMAND}}
+\index{ATA\_REG\_COMMAND@{ATA\_REG\_COMMAND}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_REG\_COMMAND}{ATA\_REG\_COMMAND}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+REG\+\_\+\+COMMAND~0x07}
+
+\mbox{\Hypertarget{ide_8hpp_acd25672516342decdb4acb14b13dfa03}\label{ide_8hpp_acd25672516342decdb4acb14b13dfa03}} 
+\index{ide.hpp@{ide.hpp}!ATA\_REG\_CONTROL@{ATA\_REG\_CONTROL}}
+\index{ATA\_REG\_CONTROL@{ATA\_REG\_CONTROL}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_REG\_CONTROL}{ATA\_REG\_CONTROL}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+REG\+\_\+\+CONTROL~0x0C}
+
+\mbox{\Hypertarget{ide_8hpp_a359c566cefff5e671eb3bae72e0d0948}\label{ide_8hpp_a359c566cefff5e671eb3bae72e0d0948}} 
+\index{ide.hpp@{ide.hpp}!ATA\_REG\_DATA@{ATA\_REG\_DATA}}
+\index{ATA\_REG\_DATA@{ATA\_REG\_DATA}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_REG\_DATA}{ATA\_REG\_DATA}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+REG\+\_\+\+DATA~0x00}
+
+\mbox{\Hypertarget{ide_8hpp_adf8b096ca00ce8ce58af3dd79240b2e5}\label{ide_8hpp_adf8b096ca00ce8ce58af3dd79240b2e5}} 
+\index{ide.hpp@{ide.hpp}!ATA\_REG\_DEVADDRESS@{ATA\_REG\_DEVADDRESS}}
+\index{ATA\_REG\_DEVADDRESS@{ATA\_REG\_DEVADDRESS}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_REG\_DEVADDRESS}{ATA\_REG\_DEVADDRESS}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+REG\+\_\+\+DEVADDRESS~0x0D}
+
+\mbox{\Hypertarget{ide_8hpp_ad2f2744a08145beb17b7ed6ca0465d85}\label{ide_8hpp_ad2f2744a08145beb17b7ed6ca0465d85}} 
+\index{ide.hpp@{ide.hpp}!ATA\_REG\_ERROR@{ATA\_REG\_ERROR}}
+\index{ATA\_REG\_ERROR@{ATA\_REG\_ERROR}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_REG\_ERROR}{ATA\_REG\_ERROR}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+REG\+\_\+\+ERROR~0x01}
+
+\mbox{\Hypertarget{ide_8hpp_aa2dc5ed9bf4786f687e4000243f6a21d}\label{ide_8hpp_aa2dc5ed9bf4786f687e4000243f6a21d}} 
+\index{ide.hpp@{ide.hpp}!ATA\_REG\_FEATURES@{ATA\_REG\_FEATURES}}
+\index{ATA\_REG\_FEATURES@{ATA\_REG\_FEATURES}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_REG\_FEATURES}{ATA\_REG\_FEATURES}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+REG\+\_\+\+FEATURES~0x01}
+
+\mbox{\Hypertarget{ide_8hpp_af80b9f0d852148eda227b433f72ca8bb}\label{ide_8hpp_af80b9f0d852148eda227b433f72ca8bb}} 
+\index{ide.hpp@{ide.hpp}!ATA\_REG\_HDDEVSEL@{ATA\_REG\_HDDEVSEL}}
+\index{ATA\_REG\_HDDEVSEL@{ATA\_REG\_HDDEVSEL}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_REG\_HDDEVSEL}{ATA\_REG\_HDDEVSEL}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+REG\+\_\+\+HDDEVSEL~0x06}
+
+\mbox{\Hypertarget{ide_8hpp_a9818e533e211e2ddadf650dab77f55fd}\label{ide_8hpp_a9818e533e211e2ddadf650dab77f55fd}} 
+\index{ide.hpp@{ide.hpp}!ATA\_REG\_LBA0@{ATA\_REG\_LBA0}}
+\index{ATA\_REG\_LBA0@{ATA\_REG\_LBA0}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_REG\_LBA0}{ATA\_REG\_LBA0}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+REG\+\_\+\+LBA0~0x03}
+
+\mbox{\Hypertarget{ide_8hpp_a4ca55ad2c56ea915f9dcde1aba57433d}\label{ide_8hpp_a4ca55ad2c56ea915f9dcde1aba57433d}} 
+\index{ide.hpp@{ide.hpp}!ATA\_REG\_LBA1@{ATA\_REG\_LBA1}}
+\index{ATA\_REG\_LBA1@{ATA\_REG\_LBA1}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_REG\_LBA1}{ATA\_REG\_LBA1}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+REG\+\_\+\+LBA1~0x04}
+
+\mbox{\Hypertarget{ide_8hpp_afaf134917cbfc81c86b4e1d67930757a}\label{ide_8hpp_afaf134917cbfc81c86b4e1d67930757a}} 
+\index{ide.hpp@{ide.hpp}!ATA\_REG\_LBA2@{ATA\_REG\_LBA2}}
+\index{ATA\_REG\_LBA2@{ATA\_REG\_LBA2}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_REG\_LBA2}{ATA\_REG\_LBA2}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+REG\+\_\+\+LBA2~0x05}
+
+\mbox{\Hypertarget{ide_8hpp_af95cf3177ed01e63c3e2783f71e3bfb8}\label{ide_8hpp_af95cf3177ed01e63c3e2783f71e3bfb8}} 
+\index{ide.hpp@{ide.hpp}!ATA\_REG\_LBA3@{ATA\_REG\_LBA3}}
+\index{ATA\_REG\_LBA3@{ATA\_REG\_LBA3}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_REG\_LBA3}{ATA\_REG\_LBA3}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+REG\+\_\+\+LBA3~0x09}
+
+\mbox{\Hypertarget{ide_8hpp_a39c9e21fd98a8933142af12c472ffb80}\label{ide_8hpp_a39c9e21fd98a8933142af12c472ffb80}} 
+\index{ide.hpp@{ide.hpp}!ATA\_REG\_LBA4@{ATA\_REG\_LBA4}}
+\index{ATA\_REG\_LBA4@{ATA\_REG\_LBA4}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_REG\_LBA4}{ATA\_REG\_LBA4}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+REG\+\_\+\+LBA4~0x0A}
+
+\mbox{\Hypertarget{ide_8hpp_a24546e89863608bb2850a6ab39a24693}\label{ide_8hpp_a24546e89863608bb2850a6ab39a24693}} 
+\index{ide.hpp@{ide.hpp}!ATA\_REG\_LBA5@{ATA\_REG\_LBA5}}
+\index{ATA\_REG\_LBA5@{ATA\_REG\_LBA5}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_REG\_LBA5}{ATA\_REG\_LBA5}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+REG\+\_\+\+LBA5~0x0B}
+
+\mbox{\Hypertarget{ide_8hpp_ad995693d31857a8e514b5f96c5fc4cdb}\label{ide_8hpp_ad995693d31857a8e514b5f96c5fc4cdb}} 
+\index{ide.hpp@{ide.hpp}!ATA\_REG\_SECCOUNT0@{ATA\_REG\_SECCOUNT0}}
+\index{ATA\_REG\_SECCOUNT0@{ATA\_REG\_SECCOUNT0}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_REG\_SECCOUNT0}{ATA\_REG\_SECCOUNT0}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+REG\+\_\+\+SECCOUNT0~0x02}
+
+\mbox{\Hypertarget{ide_8hpp_a8a9a19e403cdc08cdb52ac4a77d44b1d}\label{ide_8hpp_a8a9a19e403cdc08cdb52ac4a77d44b1d}} 
+\index{ide.hpp@{ide.hpp}!ATA\_REG\_SECCOUNT1@{ATA\_REG\_SECCOUNT1}}
+\index{ATA\_REG\_SECCOUNT1@{ATA\_REG\_SECCOUNT1}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_REG\_SECCOUNT1}{ATA\_REG\_SECCOUNT1}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+REG\+\_\+\+SECCOUNT1~0x08}
+
+\mbox{\Hypertarget{ide_8hpp_a3b532ef33b38be16a240f8f2e21bc5db}\label{ide_8hpp_a3b532ef33b38be16a240f8f2e21bc5db}} 
+\index{ide.hpp@{ide.hpp}!ATA\_REG\_STATUS@{ATA\_REG\_STATUS}}
+\index{ATA\_REG\_STATUS@{ATA\_REG\_STATUS}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_REG\_STATUS}{ATA\_REG\_STATUS}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+REG\+\_\+\+STATUS~0x07}
+
+\mbox{\Hypertarget{ide_8hpp_ad514d776b09e8b873aa7087ef0091fe6}\label{ide_8hpp_ad514d776b09e8b873aa7087ef0091fe6}} 
+\index{ide.hpp@{ide.hpp}!ATA\_SECONDARY@{ATA\_SECONDARY}}
+\index{ATA\_SECONDARY@{ATA\_SECONDARY}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_SECONDARY}{ATA\_SECONDARY}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+SECONDARY~0x01}
+
+\mbox{\Hypertarget{ide_8hpp_abe2ab9064f7100c5915bc694386a3e40}\label{ide_8hpp_abe2ab9064f7100c5915bc694386a3e40}} 
+\index{ide.hpp@{ide.hpp}!ATA\_SLAVE@{ATA\_SLAVE}}
+\index{ATA\_SLAVE@{ATA\_SLAVE}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_SLAVE}{ATA\_SLAVE}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+SLAVE~0x01}
+
+\mbox{\Hypertarget{ide_8hpp_aed1929007f388cab23229c908be5bbaf}\label{ide_8hpp_aed1929007f388cab23229c908be5bbaf}} 
+\index{ide.hpp@{ide.hpp}!ATA\_SR\_BSY@{ATA\_SR\_BSY}}
+\index{ATA\_SR\_BSY@{ATA\_SR\_BSY}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_SR\_BSY}{ATA\_SR\_BSY}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+SR\+\_\+\+BSY~0x80}
+
+\mbox{\Hypertarget{ide_8hpp_a7cb0243beb875711e6b46cda0be7c53a}\label{ide_8hpp_a7cb0243beb875711e6b46cda0be7c53a}} 
+\index{ide.hpp@{ide.hpp}!ATA\_SR\_CORR@{ATA\_SR\_CORR}}
+\index{ATA\_SR\_CORR@{ATA\_SR\_CORR}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_SR\_CORR}{ATA\_SR\_CORR}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+SR\+\_\+\+CORR~0x04}
+
+\mbox{\Hypertarget{ide_8hpp_aca73201ed93e5c9d9d9fbf51270fde0b}\label{ide_8hpp_aca73201ed93e5c9d9d9fbf51270fde0b}} 
+\index{ide.hpp@{ide.hpp}!ATA\_SR\_DF@{ATA\_SR\_DF}}
+\index{ATA\_SR\_DF@{ATA\_SR\_DF}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_SR\_DF}{ATA\_SR\_DF}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+SR\+\_\+\+DF~0x20}
+
+\mbox{\Hypertarget{ide_8hpp_a51b4023132fbdc98d4498bd8e21d064d}\label{ide_8hpp_a51b4023132fbdc98d4498bd8e21d064d}} 
+\index{ide.hpp@{ide.hpp}!ATA\_SR\_DRDY@{ATA\_SR\_DRDY}}
+\index{ATA\_SR\_DRDY@{ATA\_SR\_DRDY}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_SR\_DRDY}{ATA\_SR\_DRDY}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+SR\+\_\+\+DRDY~0x40}
+
+\mbox{\Hypertarget{ide_8hpp_a27e6aaa78aaaa205a7dadf56b48d0bf6}\label{ide_8hpp_a27e6aaa78aaaa205a7dadf56b48d0bf6}} 
+\index{ide.hpp@{ide.hpp}!ATA\_SR\_DRQ@{ATA\_SR\_DRQ}}
+\index{ATA\_SR\_DRQ@{ATA\_SR\_DRQ}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_SR\_DRQ}{ATA\_SR\_DRQ}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+SR\+\_\+\+DRQ~0x08}
+
+\mbox{\Hypertarget{ide_8hpp_a2317ad830d33431eb1222a4079d6dab2}\label{ide_8hpp_a2317ad830d33431eb1222a4079d6dab2}} 
+\index{ide.hpp@{ide.hpp}!ATA\_SR\_DSC@{ATA\_SR\_DSC}}
+\index{ATA\_SR\_DSC@{ATA\_SR\_DSC}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_SR\_DSC}{ATA\_SR\_DSC}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+SR\+\_\+\+DSC~0x10}
+
+\mbox{\Hypertarget{ide_8hpp_a8a2cf843df1ae63d4d16748dfe72a592}\label{ide_8hpp_a8a2cf843df1ae63d4d16748dfe72a592}} 
+\index{ide.hpp@{ide.hpp}!ATA\_SR\_ERR@{ATA\_SR\_ERR}}
+\index{ATA\_SR\_ERR@{ATA\_SR\_ERR}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_SR\_ERR}{ATA\_SR\_ERR}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+SR\+\_\+\+ERR~0x01}
+
+\mbox{\Hypertarget{ide_8hpp_ad74934afc699945311360be6e3700ef5}\label{ide_8hpp_ad74934afc699945311360be6e3700ef5}} 
+\index{ide.hpp@{ide.hpp}!ATA\_SR\_IDX@{ATA\_SR\_IDX}}
+\index{ATA\_SR\_IDX@{ATA\_SR\_IDX}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_SR\_IDX}{ATA\_SR\_IDX}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+SR\+\_\+\+IDX~0x02}
+
+\mbox{\Hypertarget{ide_8hpp_a9a19b84aa7a02ac7e07528795816ffb2}\label{ide_8hpp_a9a19b84aa7a02ac7e07528795816ffb2}} 
+\index{ide.hpp@{ide.hpp}!ATA\_WRITE@{ATA\_WRITE}}
+\index{ATA\_WRITE@{ATA\_WRITE}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_WRITE}{ATA\_WRITE}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+WRITE~0x01}
+
+\mbox{\Hypertarget{ide_8hpp_a94bf36a7e0a52f4dd421eca62e80631e}\label{ide_8hpp_a94bf36a7e0a52f4dd421eca62e80631e}} 
+\index{ide.hpp@{ide.hpp}!ATAPI\_CMD\_EJECT@{ATAPI\_CMD\_EJECT}}
+\index{ATAPI\_CMD\_EJECT@{ATAPI\_CMD\_EJECT}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATAPI\_CMD\_EJECT}{ATAPI\_CMD\_EJECT}}
+{\footnotesize\ttfamily \#define ATAPI\+\_\+\+CMD\+\_\+\+EJECT~0x1B}
+
+\mbox{\Hypertarget{ide_8hpp_a46c7100054351e7afa8762a5dd165ff5}\label{ide_8hpp_a46c7100054351e7afa8762a5dd165ff5}} 
+\index{ide.hpp@{ide.hpp}!ATAPI\_CMD\_READ@{ATAPI\_CMD\_READ}}
+\index{ATAPI\_CMD\_READ@{ATAPI\_CMD\_READ}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATAPI\_CMD\_READ}{ATAPI\_CMD\_READ}}
+{\footnotesize\ttfamily \#define ATAPI\+\_\+\+CMD\+\_\+\+READ~0x\+A8}
+
+\mbox{\Hypertarget{ide_8hpp_ae5df77204021547b69964b3cde9c910c}\label{ide_8hpp_ae5df77204021547b69964b3cde9c910c}} 
+\index{ide.hpp@{ide.hpp}!ATAPI\_CMD\_REQUEST\_SENSE@{ATAPI\_CMD\_REQUEST\_SENSE}}
+\index{ATAPI\_CMD\_REQUEST\_SENSE@{ATAPI\_CMD\_REQUEST\_SENSE}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATAPI\_CMD\_REQUEST\_SENSE}{ATAPI\_CMD\_REQUEST\_SENSE}}
+{\footnotesize\ttfamily \#define ATAPI\+\_\+\+CMD\+\_\+\+REQUEST\+\_\+\+SENSE~0x03}
+
+\mbox{\Hypertarget{ide_8hpp_a56e10a89c3c6b8c43899c260eb8ddd1c}\label{ide_8hpp_a56e10a89c3c6b8c43899c260eb8ddd1c}} 
+\index{ide.hpp@{ide.hpp}!ATAPI\_CMD\_TEST\_UNIT\_READY@{ATAPI\_CMD\_TEST\_UNIT\_READY}}
+\index{ATAPI\_CMD\_TEST\_UNIT\_READY@{ATAPI\_CMD\_TEST\_UNIT\_READY}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{ATAPI\_CMD\_TEST\_UNIT\_READY}{ATAPI\_CMD\_TEST\_UNIT\_READY}}
+{\footnotesize\ttfamily \#define ATAPI\+\_\+\+CMD\+\_\+\+TEST\+\_\+\+UNIT\+\_\+\+READY~0x00}
+
+\mbox{\Hypertarget{ide_8hpp_a3046279f2a25227c121b69f4cf855bf8}\label{ide_8hpp_a3046279f2a25227c121b69f4cf855bf8}} 
+\index{ide.hpp@{ide.hpp}!IDE\_ATA@{IDE\_ATA}}
+\index{IDE\_ATA@{IDE\_ATA}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{IDE\_ATA}{IDE\_ATA}}
+{\footnotesize\ttfamily \#define IDE\+\_\+\+ATA~0x00}
+
+\mbox{\Hypertarget{ide_8hpp_a6513ee2a4da2c6aaa691b9d4c639a53e}\label{ide_8hpp_a6513ee2a4da2c6aaa691b9d4c639a53e}} 
+\index{ide.hpp@{ide.hpp}!IDE\_ATAPI@{IDE\_ATAPI}}
+\index{IDE\_ATAPI@{IDE\_ATAPI}!ide.hpp@{ide.hpp}}
+\doxysubsubsection{\texorpdfstring{IDE\_ATAPI}{IDE\_ATAPI}}
+{\footnotesize\ttfamily \#define IDE\+\_\+\+ATAPI~0x01}
+

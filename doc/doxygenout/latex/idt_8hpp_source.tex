@@ -1,0 +1,63 @@
+\hypertarget{idt_8hpp_source}{}\doxysection{idt.\+hpp}
+\label{idt_8hpp_source}\index{C:/Users/Alex/Desktop/Banana/kernel/krnl/idt.hpp@{C:/Users/Alex/Desktop/Banana/kernel/krnl/idt.hpp}}
+\mbox{\hyperlink{idt_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_IDT\_HPP\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_IDT\_HPP\_}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <stddef.h>}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{keyword}{struct }\mbox{\hyperlink{struct_i_d_t_entry}{IDTEntry}}}
+\DoxyCodeLine{8 \{}
+\DoxyCodeLine{9     \textcolor{keyword}{union}}
+\DoxyCodeLine{10     \{}
+\DoxyCodeLine{11         \textcolor{keyword}{struct}}
+\DoxyCodeLine{12         \{}
+\DoxyCodeLine{13             uint64\_t \mbox{\hyperlink{struct_i_d_t_entry_a978fb3b58fc31a087b8e8f65eef278a4}{offsetLow}} : 16;}
+\DoxyCodeLine{14             uint64\_t \mbox{\hyperlink{struct_i_d_t_entry_ae27a88c788adcee6d9ed684d4208fd4e}{selector}} : 16;}
+\DoxyCodeLine{15             uint64\_t \mbox{\hyperlink{struct_i_d_t_entry_a87674ff1fcc40795755b2b67cc663c2c}{mustBeZero}} : 8;}
+\DoxyCodeLine{16             uint64\_t \mbox{\hyperlink{struct_i_d_t_entry_a64de1e105f72df35d29dd88d980778c9}{type}} : 4;}
+\DoxyCodeLine{17             uint64\_t \mbox{\hyperlink{struct_i_d_t_entry_ad550f37c0e960ce4bb1f2611952a91ce}{storageSegment}} : 1;}
+\DoxyCodeLine{18             uint64\_t \mbox{\hyperlink{struct_i_d_t_entry_a805bc326e2c8a9822865d65957e1ac15}{priv}} : 2;}
+\DoxyCodeLine{19             uint64\_t \mbox{\hyperlink{struct_i_d_t_entry_ae7ef4341c4b343d40abb74716beb424e}{present}} : 1;}
+\DoxyCodeLine{20             uint64\_t \mbox{\hyperlink{struct_i_d_t_entry_a0aa2a2a161099dd03efe4c5bf4dd3b4f}{offsetHigh}} : 16;}
+\DoxyCodeLine{21         \};}
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23         uint64\_t \mbox{\hyperlink{struct_i_d_t_entry_a6c4d29f79c022b8c65e2774a87dbdf89}{val}};}
+\DoxyCodeLine{24     \};}
+\DoxyCodeLine{25     }
+\DoxyCodeLine{26 }
+\DoxyCodeLine{27     \mbox{\hyperlink{struct_i_d_t_entry_a513cd6aa553d2e3c9062492d3a1fc2a8}{IDTEntry}}(\textcolor{keywordtype}{bool} userspaceAllowed = \textcolor{keyword}{false});}
+\DoxyCodeLine{28     \textcolor{keywordtype}{void} \mbox{\hyperlink{struct_i_d_t_entry_a66840a75a18eff31523d3e9c695d2647}{setOffset}} (uint32\_t \mbox{\hyperlink{struct_i_d_t_entry_a6c4d29f79c022b8c65e2774a87dbdf89}{val}});}
+\DoxyCodeLine{29 \};}
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31 \textcolor{preprocessor}{\#pragma pack(push,1)}}
+\DoxyCodeLine{32 \textcolor{keyword}{struct }\mbox{\hyperlink{struct_i_d_t_descriptor}{IDTDescriptor}}}
+\DoxyCodeLine{33 \{}
+\DoxyCodeLine{34     uint16\_t \mbox{\hyperlink{struct_i_d_t_descriptor_a549bdaaee7348247358d0547f05d61d6}{size}};}
+\DoxyCodeLine{35     \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{struct_i_d_t_descriptor_ab59e7980979e006ba56a94cd8c973335}{offset}};}
+\DoxyCodeLine{36 \};}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#pragma pack(pop)}}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{39 \textcolor{keyword}{class }\mbox{\hyperlink{class_i_d_t}{IDT}}}
+\DoxyCodeLine{40 \{}
+\DoxyCodeLine{41 \textcolor{keyword}{private}:}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{44     uint64\_t \mbox{\hyperlink{class_i_d_t_a0052597e957de630f0958f988320249b}{entries}}[256];}
+\DoxyCodeLine{45 }
+\DoxyCodeLine{46 \textcolor{keyword}{public}:}
+\DoxyCodeLine{47     \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{class_i_d_t_ade8786d5766f1b2c9bdbe93d03685cb3}{getPointerToInvalidOpcodeEntryForF00F}}();}
+\DoxyCodeLine{48 }
+\DoxyCodeLine{49     \mbox{\hyperlink{class_i_d_t_a270c4ba26ebd12d61e4dfa8e38baa6ee}{IDT}}();}
+\DoxyCodeLine{50     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_i_d_t_ad155d5ea4714aa85dc1462013f51731c}{addEntry}}(\mbox{\hyperlink{struct_i_d_t_entry}{IDTEntry}} entry, \textcolor{keywordtype}{int} num);}
+\DoxyCodeLine{51     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_i_d_t_ad155d5ea4714aa85dc1462013f51731c}{addEntry}}(\textcolor{keywordtype}{int} num, \textcolor{keywordtype}{void} (*offset)(), \textcolor{keywordtype}{bool} userspace = \textcolor{keyword}{false});}
+\DoxyCodeLine{52     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_i_d_t_a39d29ce6feb3edf5ac85420b07e98bc8}{flush}}();}
+\DoxyCodeLine{53     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_i_d_t_afc1a23fa81893d141206ec82b8e52d5d}{setup}}();}
+\DoxyCodeLine{54 \};}
+\DoxyCodeLine{55 }
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

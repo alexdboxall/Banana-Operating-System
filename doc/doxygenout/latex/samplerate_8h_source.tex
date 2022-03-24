@@ -1,0 +1,189 @@
+\hypertarget{samplerate_8h_source}{}\doxysection{samplerate.\+h}
+\label{samplerate_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/hal/libresample/samplerate.h@{C:/Users/Alex/Desktop/Banana/kernel/hal/libresample/samplerate.h}}
+\mbox{\hyperlink{samplerate_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*}}
+\DoxyCodeLine{2 \textcolor{comment}{** Copyright (c) 2002-\/2016, Erik de Castro Lopo <erikd@mega-\/nerd.com>}}
+\DoxyCodeLine{3 \textcolor{comment}{** All rights reserved.}}
+\DoxyCodeLine{4 \textcolor{comment}{**}}
+\DoxyCodeLine{5 \textcolor{comment}{** This code is released under 2-\/clause BSD license. Please see the}}
+\DoxyCodeLine{6 \textcolor{comment}{** file at : https://github.com/erikd/libsamplerate/blob/master/COPYING}}
+\DoxyCodeLine{7 \textcolor{comment}{*/}}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{comment}{/*}}
+\DoxyCodeLine{10 \textcolor{comment}{** API documentation is available here:}}
+\DoxyCodeLine{11 \textcolor{comment}{**     http://www.mega-\/nerd.com/SRC/api.html}}
+\DoxyCodeLine{12 \textcolor{comment}{*/}}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#ifndef SAMPLERATE\_H}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#define SAMPLERATE\_H}}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#ifdef \_\_cplusplus}}
+\DoxyCodeLine{18 \textcolor{keyword}{extern} \textcolor{stringliteral}{"{}C"{}} \{}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#endif  }\textcolor{comment}{/* \_\_cplusplus */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22 \textcolor{comment}{/* Opaque data type SRC\_STATE. */}}
+\DoxyCodeLine{23 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }SRC\_STATE\_tag \mbox{\hyperlink{samplerate_8h_a55e76751ba612cdc845fca8d7ffcfa0b}{SRC\_STATE}} ;}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25 \textcolor{comment}{/* SRC\_DATA is used to pass data to src\_simple() and src\_process(). */}}
+\DoxyCodeLine{26 \textcolor{keyword}{typedef} \textcolor{keyword}{struct}}
+\DoxyCodeLine{27 \{   \textcolor{keyword}{const} \textcolor{keywordtype}{float} *\mbox{\hyperlink{struct_s_r_c___d_a_t_a_ae81b5876c89aab03edd8f34471fb331d}{data\_in}} ;}
+\DoxyCodeLine{28     \textcolor{keywordtype}{float}    *\mbox{\hyperlink{struct_s_r_c___d_a_t_a_a3d08a161dfb599f478efa8db7414c8a9}{data\_out}} ;}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30     \textcolor{keywordtype}{long}    \mbox{\hyperlink{struct_s_r_c___d_a_t_a_a2b6fe0af73069250592190eece97a9ac}{input\_frames}}, output\_frames ;}
+\DoxyCodeLine{31     \textcolor{keywordtype}{long}    \mbox{\hyperlink{struct_s_r_c___d_a_t_a_accc338b0c6ec1074614dc4907fcc3bb1}{input\_frames\_used}}, output\_frames\_gen ;}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33     \textcolor{keywordtype}{int}     \mbox{\hyperlink{struct_s_r_c___d_a_t_a_affc01ca4a99f3d15ab7c62da16b69eff}{end\_of\_input}} ;}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{35     \textcolor{keywordtype}{double}  \mbox{\hyperlink{struct_s_r_c___d_a_t_a_acaeb0a1991debfd736b4004f0c459530}{src\_ratio}} ;}
+\DoxyCodeLine{36 \} \mbox{\hyperlink{struct_s_r_c___d_a_t_a}{SRC\_DATA}} ;}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38 \textcolor{comment}{/*}}
+\DoxyCodeLine{39 \textcolor{comment}{** User supplied callback function type for use with src\_callback\_new()}}
+\DoxyCodeLine{40 \textcolor{comment}{** and src\_callback\_read(). First parameter is the same pointer that was}}
+\DoxyCodeLine{41 \textcolor{comment}{** passed into src\_callback\_new(). Second parameter is pointer to a}}
+\DoxyCodeLine{42 \textcolor{comment}{** pointer. The user supplied callback function must modify *data to}}
+\DoxyCodeLine{43 \textcolor{comment}{** point to the start of the user supplied float array. The user supplied}}
+\DoxyCodeLine{44 \textcolor{comment}{** function must return the number of frames that **data points to.}}
+\DoxyCodeLine{45 \textcolor{comment}{*/}}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47 \textcolor{keyword}{typedef} long (*\mbox{\hyperlink{samplerate_8h_aff8534c2cb863b5f377817bfe0aa1d28}{src\_callback\_t}}) (\textcolor{keywordtype}{void} *cb\_data, \textcolor{keywordtype}{float} **\mbox{\hyperlink{acpi_8hpp_abbaff690fbbced9e133675b72b3c46e9}{data}}) ;}
+\DoxyCodeLine{48 }
+\DoxyCodeLine{49 \textcolor{comment}{/*}}
+\DoxyCodeLine{50 \textcolor{comment}{**  Standard initialisation function : return an anonymous pointer to the}}
+\DoxyCodeLine{51 \textcolor{comment}{**  internal state of the converter. Choose a converter from the enums below.}}
+\DoxyCodeLine{52 \textcolor{comment}{**  Error returned in *error.}}
+\DoxyCodeLine{53 \textcolor{comment}{*/}}
+\DoxyCodeLine{54 }
+\DoxyCodeLine{55 \mbox{\hyperlink{samplerate_8h_a55e76751ba612cdc845fca8d7ffcfa0b}{SRC\_STATE}}* \mbox{\hyperlink{samplerate_8h_afac0a2f593488fb12dba3a8ed2b935aa}{src\_new}} (\textcolor{keywordtype}{int} converter\_type, \textcolor{keywordtype}{int} channels, \textcolor{keywordtype}{int} *error) ;}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57 \textcolor{comment}{/*}}
+\DoxyCodeLine{58 \textcolor{comment}{**  Initilisation for callback based API : return an anonymous pointer to the}}
+\DoxyCodeLine{59 \textcolor{comment}{**  internal state of the converter. Choose a converter from the enums below.}}
+\DoxyCodeLine{60 \textcolor{comment}{**  The cb\_data pointer can point to any data or be set to NULL. Whatever the}}
+\DoxyCodeLine{61 \textcolor{comment}{**  value, when processing, user supplied function "{}func"{} gets called with}}
+\DoxyCodeLine{62 \textcolor{comment}{**  cb\_data as first parameter.}}
+\DoxyCodeLine{63 \textcolor{comment}{*/}}
+\DoxyCodeLine{64 }
+\DoxyCodeLine{65 \mbox{\hyperlink{samplerate_8h_a55e76751ba612cdc845fca8d7ffcfa0b}{SRC\_STATE}}* \mbox{\hyperlink{samplerate_8h_a1d970614393ce1138f46711e2de9f029}{src\_callback\_new}} (\mbox{\hyperlink{samplerate_8h_aff8534c2cb863b5f377817bfe0aa1d28}{src\_callback\_t}} func, \textcolor{keywordtype}{int} converter\_type, \textcolor{keywordtype}{int} channels,}
+\DoxyCodeLine{66                 \textcolor{keywordtype}{int} *error, \textcolor{keywordtype}{void}* cb\_data) ;}
+\DoxyCodeLine{67 }
+\DoxyCodeLine{68 \textcolor{comment}{/*}}
+\DoxyCodeLine{69 \textcolor{comment}{**  Cleanup all internal allocations.}}
+\DoxyCodeLine{70 \textcolor{comment}{**  Always returns NULL.}}
+\DoxyCodeLine{71 \textcolor{comment}{*/}}
+\DoxyCodeLine{72 }
+\DoxyCodeLine{73 \mbox{\hyperlink{samplerate_8h_a55e76751ba612cdc845fca8d7ffcfa0b}{SRC\_STATE}}* \mbox{\hyperlink{samplerate_8h_aed6e08282b1d379033a25be2927f3eea}{src\_delete}} (\mbox{\hyperlink{samplerate_8h_a55e76751ba612cdc845fca8d7ffcfa0b}{SRC\_STATE}} *state) ;}
+\DoxyCodeLine{74 }
+\DoxyCodeLine{75 \textcolor{comment}{/*}}
+\DoxyCodeLine{76 \textcolor{comment}{**  Standard processing function.}}
+\DoxyCodeLine{77 \textcolor{comment}{**  Returns non zero on error.}}
+\DoxyCodeLine{78 \textcolor{comment}{*/}}
+\DoxyCodeLine{79 }
+\DoxyCodeLine{80 \textcolor{keywordtype}{int} \mbox{\hyperlink{samplerate_8h_ae42e5a5939b6531f351a725bbdc072dc}{src\_process}} (\mbox{\hyperlink{samplerate_8h_a55e76751ba612cdc845fca8d7ffcfa0b}{SRC\_STATE}} *state, \mbox{\hyperlink{struct_s_r_c___d_a_t_a}{SRC\_DATA}} *\mbox{\hyperlink{acpi_8hpp_abbaff690fbbced9e133675b72b3c46e9}{data}}) ;}
+\DoxyCodeLine{81 }
+\DoxyCodeLine{82 \textcolor{comment}{/*}}
+\DoxyCodeLine{83 \textcolor{comment}{**  Callback based processing function. Read up to frames worth of data from}}
+\DoxyCodeLine{84 \textcolor{comment}{**  the converter int *data and return frames read or -\/1 on error.}}
+\DoxyCodeLine{85 \textcolor{comment}{*/}}
+\DoxyCodeLine{86 \textcolor{keywordtype}{long} \mbox{\hyperlink{samplerate_8h_abfd438c758c16340668b77b3a07ef3c5}{src\_callback\_read}} (\mbox{\hyperlink{samplerate_8h_a55e76751ba612cdc845fca8d7ffcfa0b}{SRC\_STATE}} *state, \textcolor{keywordtype}{double} src\_ratio, \textcolor{keywordtype}{long} frames, \textcolor{keywordtype}{float} *\mbox{\hyperlink{acpi_8hpp_abbaff690fbbced9e133675b72b3c46e9}{data}}) ;}
+\DoxyCodeLine{87 }
+\DoxyCodeLine{88 \textcolor{comment}{/*}}
+\DoxyCodeLine{89 \textcolor{comment}{**  Simple interface for performing a single conversion from input buffer to}}
+\DoxyCodeLine{90 \textcolor{comment}{**  output buffer at a fixed conversion ratio.}}
+\DoxyCodeLine{91 \textcolor{comment}{**  Simple interface does not require initialisation as it can only operate on}}
+\DoxyCodeLine{92 \textcolor{comment}{**  a single buffer worth of audio.}}
+\DoxyCodeLine{93 \textcolor{comment}{*/}}
+\DoxyCodeLine{94 }
+\DoxyCodeLine{95 \textcolor{keywordtype}{int} \mbox{\hyperlink{samplerate_8h_a26a7e516597fb48eaee455c88bb28d83}{src\_simple}} (\mbox{\hyperlink{struct_s_r_c___d_a_t_a}{SRC\_DATA}} *\mbox{\hyperlink{acpi_8hpp_abbaff690fbbced9e133675b72b3c46e9}{data}}, \textcolor{keywordtype}{int} converter\_type, \textcolor{keywordtype}{int} channels) ;}
+\DoxyCodeLine{96 }
+\DoxyCodeLine{97 \textcolor{comment}{/*}}
+\DoxyCodeLine{98 \textcolor{comment}{** This library contains a number of different sample rate converters,}}
+\DoxyCodeLine{99 \textcolor{comment}{** numbered 0 through N.}}
+\DoxyCodeLine{100 \textcolor{comment}{**}}
+\DoxyCodeLine{101 \textcolor{comment}{** Return a string giving either a name or a more full description of each}}
+\DoxyCodeLine{102 \textcolor{comment}{** sample rate converter or NULL if no sample rate converter exists for}}
+\DoxyCodeLine{103 \textcolor{comment}{** the given value. The converters are sequentially numbered from 0 to N.}}
+\DoxyCodeLine{104 \textcolor{comment}{*/}}
+\DoxyCodeLine{105 }
+\DoxyCodeLine{106 \textcolor{keyword}{const} \textcolor{keywordtype}{char} *\mbox{\hyperlink{samplerate_8h_abaf0266a8e1d5e3e878bbb3d524314a4}{src\_get\_name}} (\textcolor{keywordtype}{int} converter\_type) ;}
+\DoxyCodeLine{107 \textcolor{keyword}{const} \textcolor{keywordtype}{char} *\mbox{\hyperlink{samplerate_8h_afae66c9565ed2c124c367a89b9599912}{src\_get\_description}} (\textcolor{keywordtype}{int} converter\_type) ;}
+\DoxyCodeLine{108 \textcolor{keyword}{const} \textcolor{keywordtype}{char} *\mbox{\hyperlink{samplerate_8h_a63172878273f92b48e59ce5aa65dcdfa}{src\_get\_version}} (\textcolor{keywordtype}{void}) ;}
+\DoxyCodeLine{109 }
+\DoxyCodeLine{110 \textcolor{comment}{/*}}
+\DoxyCodeLine{111 \textcolor{comment}{**  Set a new SRC ratio. This allows step responses}}
+\DoxyCodeLine{112 \textcolor{comment}{**  in the conversion ratio.}}
+\DoxyCodeLine{113 \textcolor{comment}{**  Returns non zero on error.}}
+\DoxyCodeLine{114 \textcolor{comment}{*/}}
+\DoxyCodeLine{115 }
+\DoxyCodeLine{116 \textcolor{keywordtype}{int} \mbox{\hyperlink{samplerate_8h_a1e39da386a2fd326d3841eb5fc5a55c9}{src\_set\_ratio}} (\mbox{\hyperlink{samplerate_8h_a55e76751ba612cdc845fca8d7ffcfa0b}{SRC\_STATE}} *state, \textcolor{keywordtype}{double} new\_ratio) ;}
+\DoxyCodeLine{117 }
+\DoxyCodeLine{118 \textcolor{comment}{/*}}
+\DoxyCodeLine{119 \textcolor{comment}{**  Get the current channel count.}}
+\DoxyCodeLine{120 \textcolor{comment}{**  Returns negative on error, positive channel count otherwise}}
+\DoxyCodeLine{121 \textcolor{comment}{*/}}
+\DoxyCodeLine{122 }
+\DoxyCodeLine{123 \textcolor{keywordtype}{int} \mbox{\hyperlink{samplerate_8h_afdeb0758fe18c016692fd903695f6c5f}{src\_get\_channels}} (\mbox{\hyperlink{samplerate_8h_a55e76751ba612cdc845fca8d7ffcfa0b}{SRC\_STATE}} *state) ;}
+\DoxyCodeLine{124 }
+\DoxyCodeLine{125 \textcolor{comment}{/*}}
+\DoxyCodeLine{126 \textcolor{comment}{**  Reset the internal SRC state.}}
+\DoxyCodeLine{127 \textcolor{comment}{**  Does not modify the quality settings.}}
+\DoxyCodeLine{128 \textcolor{comment}{**  Does not free any memory allocations.}}
+\DoxyCodeLine{129 \textcolor{comment}{**  Returns non zero on error.}}
+\DoxyCodeLine{130 \textcolor{comment}{*/}}
+\DoxyCodeLine{131 }
+\DoxyCodeLine{132 \textcolor{keywordtype}{int} \mbox{\hyperlink{samplerate_8h_a9b2bb66ef9f7d47f5efd793db37b3486}{src\_reset}} (\mbox{\hyperlink{samplerate_8h_a55e76751ba612cdc845fca8d7ffcfa0b}{SRC\_STATE}} *state) ;}
+\DoxyCodeLine{133 }
+\DoxyCodeLine{134 \textcolor{comment}{/*}}
+\DoxyCodeLine{135 \textcolor{comment}{** Return TRUE if ratio is a valid conversion ratio, FALSE}}
+\DoxyCodeLine{136 \textcolor{comment}{** otherwise.}}
+\DoxyCodeLine{137 \textcolor{comment}{*/}}
+\DoxyCodeLine{138 }
+\DoxyCodeLine{139 \textcolor{keywordtype}{int} \mbox{\hyperlink{samplerate_8h_a2eb6a76bc793873469e8b986ee8ad547}{src\_is\_valid\_ratio}} (\textcolor{keywordtype}{double} ratio) ;}
+\DoxyCodeLine{140 }
+\DoxyCodeLine{141 \textcolor{comment}{/*}}
+\DoxyCodeLine{142 \textcolor{comment}{**  Return an error number.}}
+\DoxyCodeLine{143 \textcolor{comment}{*/}}
+\DoxyCodeLine{144 }
+\DoxyCodeLine{145 \textcolor{keywordtype}{int} \mbox{\hyperlink{samplerate_8h_a19a5978aeafeefe79ac7cae9b7395ea3}{src\_error}} (\mbox{\hyperlink{samplerate_8h_a55e76751ba612cdc845fca8d7ffcfa0b}{SRC\_STATE}} *state) ;}
+\DoxyCodeLine{146 }
+\DoxyCodeLine{147 \textcolor{comment}{/*}}
+\DoxyCodeLine{148 \textcolor{comment}{**  Convert the error number into a string.}}
+\DoxyCodeLine{149 \textcolor{comment}{*/}}
+\DoxyCodeLine{150 \textcolor{keyword}{const} \textcolor{keywordtype}{char}* \mbox{\hyperlink{samplerate_8h_af4f158206a44093386035c3d3ab4f4dd}{src\_strerror}} (\textcolor{keywordtype}{int} error) ;}
+\DoxyCodeLine{151 }
+\DoxyCodeLine{152 \textcolor{comment}{/*}}
+\DoxyCodeLine{153 \textcolor{comment}{** The following enums can be used to set the interpolator type}}
+\DoxyCodeLine{154 \textcolor{comment}{** using the function src\_set\_converter().}}
+\DoxyCodeLine{155 \textcolor{comment}{*/}}
+\DoxyCodeLine{156 }
+\DoxyCodeLine{157 \textcolor{keyword}{enum}}
+\DoxyCodeLine{158 \{}
+\DoxyCodeLine{159     \mbox{\hyperlink{samplerate_8h_af9bdc3014f3d54c426b6d2df10de4960a5390586814f84b16467093ce2eb2cfd0}{SRC\_SINC\_BEST\_QUALITY}}      = 0,}
+\DoxyCodeLine{160     \mbox{\hyperlink{samplerate_8h_af9bdc3014f3d54c426b6d2df10de4960ad90511870142e65ce4aba49f3ae21878}{SRC\_SINC\_MEDIUM\_QUALITY}}      = 1,}
+\DoxyCodeLine{161     \mbox{\hyperlink{samplerate_8h_af9bdc3014f3d54c426b6d2df10de4960aa85c27f5f94b6e59e46c0a0ab76b1232}{SRC\_SINC\_FASTEST}}            = 2,}
+\DoxyCodeLine{162     \mbox{\hyperlink{samplerate_8h_af9bdc3014f3d54c426b6d2df10de4960a945bd2a06a1668bc657e5a0284dd6082}{SRC\_ZERO\_ORDER\_HOLD}}          = 3,}
+\DoxyCodeLine{163     \mbox{\hyperlink{samplerate_8h_af9bdc3014f3d54c426b6d2df10de4960a2eb7c16805bc87c82a7e94ed50a3509a}{SRC\_LINEAR}}                    = 4,}
+\DoxyCodeLine{164 \} ;}
+\DoxyCodeLine{165 }
+\DoxyCodeLine{166 \textcolor{comment}{/*}}
+\DoxyCodeLine{167 \textcolor{comment}{** Extra helper functions for converting from short to float and}}
+\DoxyCodeLine{168 \textcolor{comment}{** back again.}}
+\DoxyCodeLine{169 \textcolor{comment}{*/}}
+\DoxyCodeLine{170 }
+\DoxyCodeLine{171 \textcolor{keywordtype}{void} \mbox{\hyperlink{samplerate_8h_a86201baeaa4d55e247363186c0d342da}{src\_short\_to\_float\_array}} (\textcolor{keyword}{const} \textcolor{keywordtype}{short} *in, \textcolor{keywordtype}{float} *out, \textcolor{keywordtype}{int} len) ;}
+\DoxyCodeLine{172 \textcolor{keywordtype}{void} \mbox{\hyperlink{samplerate_8h_a72d043b7bcd28b45578f378271680e99}{src\_float\_to\_short\_array}} (\textcolor{keyword}{const} \textcolor{keywordtype}{float} *in, \textcolor{keywordtype}{short} *out, \textcolor{keywordtype}{int} len) ;}
+\DoxyCodeLine{173 }
+\DoxyCodeLine{174 \textcolor{keywordtype}{void} \mbox{\hyperlink{samplerate_8h_a2cbff40939c1e36621f7d49afe50f341}{src\_int\_to\_float\_array}} (\textcolor{keyword}{const} \textcolor{keywordtype}{int} *in, \textcolor{keywordtype}{float} *out, \textcolor{keywordtype}{int} len) ;}
+\DoxyCodeLine{175 \textcolor{keywordtype}{void} \mbox{\hyperlink{samplerate_8h_aca3e368207ed1e34d933cc1c0f52d080}{src\_float\_to\_int\_array}} (\textcolor{keyword}{const} \textcolor{keywordtype}{float} *in, \textcolor{keywordtype}{int} *out, \textcolor{keywordtype}{int} len) ;}
+\DoxyCodeLine{176 }
+\DoxyCodeLine{177 }
+\DoxyCodeLine{178 \textcolor{preprocessor}{\#ifdef \_\_cplusplus}}
+\DoxyCodeLine{179 \}       \textcolor{comment}{/* extern "{}C"{} */}}
+\DoxyCodeLine{180 \textcolor{preprocessor}{\#endif  }\textcolor{comment}{/* \_\_cplusplus */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{181 }
+\DoxyCodeLine{182 \textcolor{preprocessor}{\#endif  }\textcolor{comment}{/* SAMPLERATE\_H */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{183 }
+
+\end{DoxyCode}

@@ -1,0 +1,1560 @@
+\hypertarget{hal_8cpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/arch/i386/hal.cpp File Reference}
+\label{hal_8cpp}\index{C:/Users/Alex/Desktop/Banana/kernel/arch/i386/hal.cpp@{C:/Users/Alex/Desktop/Banana/kernel/arch/i386/hal.cpp}}
+{\ttfamily \#include $<$arch/i386/hal.\+hpp$>$}\newline
+{\ttfamily \#include $<$arch/i386/pic.\+hpp$>$}\newline
+{\ttfamily \#include $<$arch/i386/apic.\+hpp$>$}\newline
+{\ttfamily \#include $<$arch/i386/rtc.\+hpp$>$}\newline
+{\ttfamily \#include $<$arch/i386/x86.\+hpp$>$}\newline
+{\ttfamily \#include $<$hw/cpu.\+hpp$>$}\newline
+{\ttfamily \#include $<$vm86/x87em.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/common.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/fault.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/physmgr.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/panic.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/virtmgr.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/hal.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/bootflags.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/powctrl.\+hpp$>$}\newline
+{\ttfamily \#include $<$sys/syscalls.\+hpp$>$}\newline
+{\ttfamily \#include $<$thr/elf.\+hpp$>$}\newline
+{\ttfamily \#include $<$thr/prcssthr.\+hpp$>$}\newline
+{\ttfamily \#include $<$hal/intctrl.\+hpp$>$}\newline
+{\ttfamily \#include $<$hal/device.\+hpp$>$}\newline
+{\ttfamily \#include $<$hw/acpi.\+hpp$>$}\newline
+{\ttfamily \#include $<$vm86/vm8086.\+hpp$>$}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_ad52f58b4b45236d1828f665d053b8037}{PORT\+\_\+\+SYSTEM\+\_\+\+CONTROL\+\_\+A}}~0x92
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a07836e17660a220ea163b396803ee138}{PORT\+\_\+\+SYSTEM\+\_\+\+CONTROL\+\_\+B}}~0x61
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a26e74c849ad9213ffbb36033edfc1f62}{PORT\+\_\+\+CMOS\+\_\+\+BASE}}~0x70
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a341f872fcfcd49ca3e4f02caade31191}{CPUID\+\_\+\+VENDOR\+\_\+\+OLDAMD}}~\char`\"{}AMDisbetter!\char`\"{} /$\ast$ early engineering samples of AMD K5 processor $\ast$/
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_ad0ae9d4658eb6c019efbb66384005dab}{CPUID\+\_\+\+VENDOR\+\_\+\+AMD}}~\char`\"{}Authentic\+AMD\char`\"{}
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a2252d4da61bc8e76df71f8af33a547a2}{CPUID\+\_\+\+VENDOR\+\_\+\+INTEL}}~\char`\"{}Genuine\+Intel\char`\"{}
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_abd34511eabb4053d1385aa5a566fbaa7}{CPUID\+\_\+\+VENDOR\+\_\+\+VIA1}}~\char`\"{}Centaur\+Hauls\char`\"{}
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a7cb4132fcdce715e12147f039d6364b7}{CPUID\+\_\+\+VENDOR\+\_\+\+OLDTRANSMETA}}~\char`\"{}Transmeta\+CPU\char`\"{}
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a887c960f636a4dcc41ecaa6624adc59d}{CPUID\+\_\+\+VENDOR\+\_\+\+TRANSMETA}}~\char`\"{}Genuine\+TMx86\char`\"{}
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_ab044f1560728d8686fb1486afcf6b6ef}{CPUID\+\_\+\+VENDOR\+\_\+\+CYRIX}}~\char`\"{}Cyrix\+Instead\char`\"{}
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_adf1e062a787c09bebb6624567aea1fff}{CPUID\+\_\+\+VENDOR\+\_\+\+CENTAUR}}~\char`\"{}Centaur\+Hauls\char`\"{}
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a6c9020992dfe74959390a4b41f2fa71c}{CPUID\+\_\+\+VENDOR\+\_\+\+NEXGEN}}~\char`\"{}Nex\+Gen\+Driven\char`\"{}
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a6b2b599ef09ec8629f294060c5cabe44}{CPUID\+\_\+\+VENDOR\+\_\+\+UMC}}~\char`\"{}UMC UMC UMC \char`\"{}
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a4c65f683bafbe7ac750b02249275bcf3}{CPUID\+\_\+\+VENDOR\+\_\+\+SIS}}~\char`\"{}SiS SiS SiS \char`\"{}
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a71ee70ea4a4803c3eb9644bf11970575}{CPUID\+\_\+\+VENDOR\+\_\+\+NSC}}~\char`\"{}Geode by NSC\char`\"{}
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_ab27dfdb9bc3c2aa51ab380516e679d98}{CPUID\+\_\+\+VENDOR\+\_\+\+RISE}}~\char`\"{}Rise\+Rise\+Rise\char`\"{}
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a55a2a1e1e52003f706869af4e71eddc8}{CPUID\+\_\+\+VENDOR\+\_\+\+VORTEX}}~\char`\"{}Vortex86 SoC\char`\"{}
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_aa4ed3de26787dc26db35d0c85c140ac4}{CPUID\+\_\+\+VENDOR\+\_\+\+VIA2}}~\char`\"{}VIA VIA VIA \char`\"{}
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_acd5893be73c6284b07f2fca012722dad}{CPUID\+\_\+\+VENDOR\+\_\+\+VMWARE}}~\char`\"{}VMware\+VMware\char`\"{}
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_ad8bc214b540c9fd3971c6257478ac5d9}{CPUID\+\_\+\+VENDOR\+\_\+\+XENHVM}}~\char`\"{}Xen\+VMMXen\+VMM\char`\"{}
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a2ff8e439b4221408bfd1f5552a26b7a4}{CPUID\+\_\+\+VENDOR\+\_\+\+MICROSOFT\+\_\+\+HV}}~\char`\"{}Microsoft Hv\char`\"{}
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a500f49e94c2df9199c46fb326fc37eef}{CPUID\+\_\+\+VENDOR\+\_\+\+PARALLELS}}~\char`\"{} lrpepyh vr\char`\"{}
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a3e8c711b8bd16c1b14e5dd0fe64f8b0c}{ISR\+\_\+\+DIV\+\_\+\+BY\+\_\+\+ZERO}}~0x00
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a99b6847b96f744287be3205dc0f2ba31}{ISR\+\_\+\+DEBUG}}~0x01
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a5f371227cb56e6ed71a5b7ef20e61ec6}{ISR\+\_\+\+NMI}}~0x02
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a87b80e5180cd7f23eec4dee18601db93}{ISR\+\_\+\+BREAKPOINT}}~0x03
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_af747d6009740b9e81b4764ea328142ec}{ISR\+\_\+\+OVERFLOW}}~0x04
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a8e1573fde4f6cbbb9c1635150ffdd44d}{ISR\+\_\+\+BOUNDS}}~0x05
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a73c06a874e109ecb26894c049018f52c}{ISR\+\_\+\+INVALID\+\_\+\+OPCODE}}~0x06
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a85618ae809b300212904b98d9e5835f2}{ISR\+\_\+\+DEVICE\+\_\+\+NOT\+\_\+\+AVAILABLE}}~0x07
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_ab80e8028fee2d72a979eca533a20509d}{ISR\+\_\+\+DOUBLE\+\_\+\+FAULT}}~0x08
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_afb6372e28cf793c5876b0b8f219d86cf}{ISR\+\_\+\+COPROCESSOR\+\_\+\+SEGMENT\+\_\+\+OVERRUN}}~0x09
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a93012c50a1af5e5fa82da4a69cf4628f}{ISR\+\_\+\+INVALID\+\_\+\+TSS}}~0x0A
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a6968cb2479912bca62c1c76ddfc5596d}{ISR\+\_\+\+SEGMENT\+\_\+\+NOT\+\_\+\+PRESENT}}~0x0B
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_acd6b03e6ad6fa6e44ddb0b0c809b3307}{ISR\+\_\+\+STACK\+\_\+\+SEGMENT}}~0x0C
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_ad48b0a7e2bf332764353c23cccea9fcd}{ISR\+\_\+\+GENERAL\+\_\+\+PROTECTION}}~0x0D
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_af60307a74d2915b2301dbf343d6de657}{ISR\+\_\+\+PAGE\+\_\+\+FAULT}}~0x0E
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_af06e537b9475882d9f0b8890c699084e}{ISR\+\_\+\+RESERVED}}~0x0F
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a49b04a014ce805e71dbd0a8662626af9}{ISR\+\_\+\+FPU\+\_\+\+EXCEPTION}}~0x10
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a2285a47e17db06be8ffb8e10e54092ca}{ISR\+\_\+\+ALIGNMENT\+\_\+\+CHECK}}~0x11
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_aa603863b4d4acc314876651df07b1dc0}{ISR\+\_\+\+MACHINE\+\_\+\+CHECK}}~0x12
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_abeecb4d3f3867b95d07e33b483be5713}{ISR\+\_\+\+SIMD\+\_\+\+EXCEPTION}}~0x13
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a800336509a48aa5f4db56d98b3bc4fdc}{ISR\+\_\+\+VIRTULIZATION\+\_\+\+EXCEPTION}}~0x14
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_aab2a17746a1cecce3a0af53e972c4a2c}{ISR\+\_\+\+SECURITY\+\_\+\+EXCEPTION}}~0x1E
+\item 
+\#define \mbox{\hyperlink{hal_8cpp_a3dac42d568d070ca6f076841c4ef835a}{IA32\+\_\+\+APIC\+\_\+\+BASE\+\_\+\+MSR}}~0x1B
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{hal_8cpp_aa333875790e538e1ed3dfe456632635c}{CPUVendor}} \{ \newline
+\mbox{\hyperlink{hal_8cpp_aa333875790e538e1ed3dfe456632635ca88183b946cc5f0e8c96b2e66e1c74a7e}{Unknown}}
+, \mbox{\hyperlink{hal_8cpp_aa333875790e538e1ed3dfe456632635caff97a9fdede09eaf6e1c8ec9f6a61dd5}{Intel}}
+, \mbox{\hyperlink{hal_8cpp_aa333875790e538e1ed3dfe456632635ca48af4341f745163f945fa838eeabb062}{AMD}}
+, \mbox{\hyperlink{hal_8cpp_aa333875790e538e1ed3dfe456632635cab13e157831a8d064e71035e3c3dd49bf}{Cyrix}}
+, \newline
+\mbox{\hyperlink{hal_8cpp_aa333875790e538e1ed3dfe456632635ca87a3ca4be7aee885f44155b59b5b9957}{VIA}}
+, \mbox{\hyperlink{hal_8cpp_aa333875790e538e1ed3dfe456632635cafd2a83135bac54061ab3fc81771628a5}{Trans\+Meta}}
+, \mbox{\hyperlink{hal_8cpp_aa333875790e538e1ed3dfe456632635ca4613847cd6374d6bbeef9b51e0f5edaa}{Centaur}}
+, \mbox{\hyperlink{hal_8cpp_aa333875790e538e1ed3dfe456632635cab79fc5c1067ee5a0dcd021b9d8b59701}{Nexgen}}
+, \newline
+\mbox{\hyperlink{hal_8cpp_aa333875790e538e1ed3dfe456632635ca6d82720f1e5c05d0a12e1f7ef046e339}{UMC}}
+, \mbox{\hyperlink{hal_8cpp_aa333875790e538e1ed3dfe456632635ca1e7666b5a9493b46391ea4159697dff3}{SIS}}
+, \mbox{\hyperlink{hal_8cpp_aa333875790e538e1ed3dfe456632635caccfd3dea026567841314b004a03fd8e8}{NSC}}
+, \mbox{\hyperlink{hal_8cpp_aa333875790e538e1ed3dfe456632635ca64d71b4eabcd8de0a1d64bd6d5973c50}{Rise}}
+, \newline
+\mbox{\hyperlink{hal_8cpp_aa333875790e538e1ed3dfe456632635ca8e11b2f987a99ed900a44aa1aa8bd3d0}{Vortex}}
+, \mbox{\hyperlink{hal_8cpp_aa333875790e538e1ed3dfe456632635ca61251ec3a7d52d61e900f50b2271561a}{Virtual\+Machine}}
+ \}
+\item 
+enum \mbox{\hyperlink{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5}{cpuid\+\_\+requests}} \{ \newline
+\mbox{\hyperlink{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5a287b9480159ff0790f83312fc0f35361}{CPUID\+\_\+\+GETVENDORSTRING}}
+, \mbox{\hyperlink{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5ae54d5cf464a4eaab14f5639ef57a5350}{CPUID\+\_\+\+GETFEATURES}}
+, \mbox{\hyperlink{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5a1844360ad06974a69963618af9fd7721}{CPUID\+\_\+\+GETTLB}}
+, \mbox{\hyperlink{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5ad206c016f6b1bf979bab7c632a2daaa4}{CPUID\+\_\+\+GETSERIAL}}
+, \newline
+\mbox{\hyperlink{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5a97af0621f15a35fd85d95f85e069a4ee}{CPUID\+\_\+\+GETEXTENDED}} = 7
+, \mbox{\hyperlink{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5a5f8f1b6872bdc552aba413ce598afd0d}{CPUID\+\_\+\+GETHIGHEST}} = 0x80000000
+, \mbox{\hyperlink{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5ab016d439747f36e0a2bdd34f8f26ecbe}{CPUID\+\_\+\+INTELEXTENDED}} = 0x80000001
+, \mbox{\hyperlink{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5a6b1682619d4f05d42499c280f74ba7d0}{CPUID\+\_\+\+INTELFEATURES}}
+, \newline
+\mbox{\hyperlink{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5a898f490021383393edca0741e4a3b8df}{CPUID\+\_\+\+INTELBRANDSTRING}}
+, \mbox{\hyperlink{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5a8585bcaf7fb2b6c52217566488dc3739}{CPUID\+\_\+\+INTELBRANDSTRINGMORE}}
+, \mbox{\hyperlink{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5af0e6c842bda49527a246dd9c85d6da6a}{CPUID\+\_\+\+INTELBRANDSTRINGEND}}
+ \}
+\item 
+enum \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1}{CPUID\+\_\+\+Features}} \{ \newline
+\mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a9ec1c52e0b19a9532baa8ce4f80add58}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+SSE3}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 0
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1aaa62b2a02d3829ace891eac7d1d8f746}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+PCLMUL}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 1
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1aa84b899e336daf2d90cdab723a24d544}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+DTES64}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 2
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a6ffa8cdde16327f47b6a49aa5d676ee5}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+MONITOR}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 3
+, \newline
+\mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a1be0388c15db5d77facac96d2efddc4f}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+DS\+\_\+\+CPL}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 4
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a714125fa31dd21e46e385b8dc340214f}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+VMX}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 5
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1ab6deac61a50e0367b5475869e240ac06}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+SMX}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 6
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a150b3abab983011be08fc459b7b9b700}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+EST}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 7
+, \newline
+\mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1acf4aa3ed6f11fc17b684281787f60949}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+TM2}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 8
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a5957647e74d0eaea90bdb316e578e579}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+SSSE3}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 9
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1afb8bce29e8cfd07070b596f3912f608b}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+CID}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 10
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a9c1fd66e736f5d3d344e919b57483336}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+FMA}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 12
+, \newline
+\mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1ad30be7d0797e3aad723013154aa733d2}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+CX16}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 13
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a41b9888036ae940d974a544bed3f19c4}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+ETPRD}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 14
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a93ddbafd38f7a260286998ae9ddc8cad}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+PDCM}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 15
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a5f88e85a311dc7f0091a923751951f65}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+PCIDE}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 17
+, \newline
+\mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a2b75568ac85063fb0a96418fa0bfb29d}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+DCA}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 18
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a63ddf183b299d2fc7686dac65e1a555a}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+SSE4\+\_\+1}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 19
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1ac35d5255d2ef4728b73348db7087c1c7}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+SSE4\+\_\+2}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 20
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1ac1613126920afb91d3d177c21e4f3dfe}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+x2\+APIC}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 21
+, \newline
+\mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1ac67b97fbc629b276f5c13dbf88c4f709}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+MOVBE}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 22
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a71e5348902e26fc6de23f4f5bd384f74}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+POPCNT}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 23
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a8a62b9dd23a47562237c0370b8ed87a0}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+AES}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 25
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a9c28569cd999d6cc2e9e0005b4fa6c9d}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+XSAVE}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 26
+, \newline
+\mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a56478550836d5fa258b03e9fd9eb8116}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+OSXSAVE}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 27
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a749d00516968a015a4d8e15235bf07e6}{CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+AVX}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 28
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1ac07d767d714117e48c453b752f799610}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+FPU}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 0
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a5d32075fb1cfd95910c1eff1f0f3d056}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+VME}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 1
+, \newline
+\mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a69236c580bf3feddd4a57b3072a7b521}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+DE}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 2
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a59bc828bc43010ac71793759e8011335}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+PSE}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 3
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a2ae56cfb5a846822cc095b79bf74de10}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+TSC}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 4
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a6b8beb5908a936d7f00c848df0abe061}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+MSR}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 5
+, \newline
+\mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a3a97eae0ba980bb5d9d9b10138d70aca}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+PAE}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 6
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1ade0ff2978a54bc0c96dd71a7a7177d0f}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+MCE}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 7
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a431ed484886fa29e4a7d16ab99523350}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+CX8}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 8
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a7fa4170aae12fbc1642012ccba9855b0}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+APIC}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 9
+, \newline
+\mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a674ec4ce4025c0f520a30d6e461ed47d}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+SEP}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 11
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a5b30fec963effd4a0d2c8447028d0215}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+MTRR}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 12
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1afb0d4b99b2d0e98089be4ede2162eddf}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+PGE}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 13
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1ac9e7b8e9c0e19bfe48a4bcd749aaaa4e}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+MCA}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 14
+, \newline
+\mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a9c90442380d5125737f106c44afce64f}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+CMOV}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 15
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1ac0e40c6f57efc979712596770aab9f8a}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+PAT}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 16
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a9718e0367b529df69ee7c9b7fd998b83}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+PSE36}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 17
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1aac23260b012a04ea25d113844c631d44}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+PSN}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 18
+, \newline
+\mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a80d53b7ac629e80940d02e38ad48414b}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+CLF}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 19
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a43682d6fe8589b4809e2c49bb55c1558}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+DTES}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 21
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1aec94ddf1825bdde32627d9149beec9dc}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+ACPI}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 22
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1ac8185eb6b47dd2ef97a44cbb759f8e52}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+MMX}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 23
+, \newline
+\mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a577b773d21178552d9d768da936479f6}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+FXSR}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 24
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1ab362f49f025f651238f57dcf8d5d281f}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+SSE}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 25
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1ab64ff1599bf88ab91782ee4f9152f3ce}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+SSE2}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 26
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1aec6daa5351cf0b927f4fcbad3f0cfef1}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+SS}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 27
+, \newline
+\mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1ac91c9cfc9f3165b25b10030ef82c491f}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+HTT}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 28
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a5468113d56e2d06eb0e6d5c4f74af589}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+TM1}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 29
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1a12ab79d3456f748b49340fa00e60c160}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+IA64}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 30
+, \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1ae6cfc957052841ae578ddfb390f00a1a}{CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+PBE}} = 1 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 31
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{hal_8cpp_a6be3936b22dabafc9001711e7680875c}{detect\+CPUID}} ()
+\item 
+int \mbox{\hyperlink{hal_8cpp_ae0e0cd08459a5461fa179a951930cb17}{avx\+Detect}} ()
+\item 
+void \mbox{\hyperlink{hal_8cpp_a3f9f93d59efad3a5f91f3c3c1f7d3850}{avx\+Save}} (size\+\_\+t)
+\item 
+void \mbox{\hyperlink{hal_8cpp_a9943540e5bd5683e3e60c203f430f0b7}{avx\+Load}} (size\+\_\+t)
+\item 
+void \mbox{\hyperlink{hal_8cpp_a600f6bbbb61b99c5080ef4d877bb2c48}{avx\+Init}} ()
+\item 
+int \mbox{\hyperlink{hal_8cpp_aa72e4b6b00d1ced7d4fdeedbba90c0f7}{sse\+Detect}} ()
+\item 
+void \mbox{\hyperlink{hal_8cpp_af9a9138be7dc9ade2620f19aae08a421}{sse\+Save}} (size\+\_\+t)
+\item 
+void \mbox{\hyperlink{hal_8cpp_a75ae8926c589bd380bf88dad4e02c01a}{sse\+Load}} (size\+\_\+t)
+\item 
+void \mbox{\hyperlink{hal_8cpp_a956487ef6b5979412bb363ae8ea200e5}{sse\+Init}} ()
+\item 
+int \mbox{\hyperlink{hal_8cpp_a17febbbf83ca3e5286ba6c497dabd81a}{x87\+Detect}} ()
+\item 
+void \mbox{\hyperlink{hal_8cpp_a5b814f88de489b72626d4f32debfdab4}{x87\+Save}} (size\+\_\+t)
+\item 
+void \mbox{\hyperlink{hal_8cpp_a60e9366d67021c8dd51e3317cbf0af0d}{x87\+Load}} (size\+\_\+t)
+\item 
+void \mbox{\hyperlink{hal_8cpp_a8f63231fa2730091d12f0df1bfdd583b}{x87\+Init}} ()
+\item 
+uint8\+\_\+t \mbox{\hyperlink{hal_8cpp_ae43177b806620933be41fe0d0fdb00d6}{x86\+Read\+CMOS}} (uint8\+\_\+t reg)
+\item 
+void \mbox{\hyperlink{hal_8cpp_a321ae7942a091951ebe705fd15d094f5}{x86\+Write\+CMOS}} (uint8\+\_\+t reg, uint8\+\_\+t \mbox{\hyperlink{unaligned_8hpp_a66c6adb17a64370b8e95c4413da0c1b1}{val}})
+\item 
+size\+\_\+t \mbox{\hyperlink{hal_8cpp_a4de81f872291b00d6ffae9281db454d3}{is486}} ()
+\item 
+size\+\_\+t \mbox{\hyperlink{hal_8cpp_aefe06284ea836895360f2b411f002a58}{has\+Legacy\+FPU}} ()
+\item 
+void \mbox{\hyperlink{hal_8cpp_aab7e954a30ce2726f6c15a0b01da9aef}{AMD\+\_\+\+K6\+\_\+writeback}} (int family, int \mbox{\hyperlink{hal_8cpp_a6b5e17905d0e1bc12cfac364ecdcdf1c}{model}}, int stepping)
+\item 
+void \mbox{\hyperlink{hal_8cpp_a4164d77a0a0ea79cf3b022d1877140ac}{AMD\+\_\+\+K6\+\_\+write\+\_\+msr}} (uint32\+\_\+t msr, uint32\+\_\+t v1, uint32\+\_\+t v2, \mbox{\hyperlink{struct_r_e_g_s}{REGS}} $\ast$\mbox{\hyperlink{structregs}{regs}})
+\item 
+void \mbox{\hyperlink{hal_8cpp_a8e8d5a9c4f2b78e6e6574cd6c0af285a}{AMD\+\_\+\+K6\+\_\+read\+\_\+msr}} (uint32\+\_\+t msr, \mbox{\hyperlink{struct_r_e_g_s}{REGS}} $\ast$\mbox{\hyperlink{structregs}{regs}})
+\item 
+void \mbox{\hyperlink{hal_8cpp_a79ccf24abde1fad7203a4974a671a303}{cpuid}} (int code, size\+\_\+t $\ast$a, size\+\_\+t $\ast$\mbox{\hyperlink{syscalls_8cpp_a99ed6187132780a335e6db030a0115e7}{b}}, size\+\_\+t $\ast$\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}, size\+\_\+t $\ast$\mbox{\hyperlink{syscalls_8cpp_ab0ea24539a2252176fffac31d88365ba}{d}})
+\item 
+bool \mbox{\hyperlink{hal_8cpp_a48804cff9fbdd7c64b625d9505194c58}{cpuid\+Check\+EDX}} (uint32\+\_\+t check)
+\item 
+bool \mbox{\hyperlink{hal_8cpp_ac2ab69d42fe6b1551fa0ff164ec346ae}{cpuid\+Check\+ECX}} (uint32\+\_\+t check)
+\item 
+bool \mbox{\hyperlink{hal_8cpp_a3bf44b86535c896a6e8c337bcc6523e9}{cpuid\+Check\+Extended\+EBX}} (uint32\+\_\+t check)
+\item 
+bool \mbox{\hyperlink{hal_8cpp_a179eef8928321863fd2238b58a8b65fa}{cpuid\+Check\+Extended\+ECX}} (uint32\+\_\+t check)
+\item 
+void \mbox{\hyperlink{hal_8cpp_a5297851967cfb0210cd477655511c2ba}{Hal\+Detect\+Features}} ()
+\item 
+void \mbox{\hyperlink{hal_8cpp_aa852e445f4a2847cd9b8ae6510ba2944}{Hal\+Enable\+NMI}} ()
+\item 
+void \mbox{\hyperlink{hal_8cpp_ad17958411f89ef960912e262173d65f4}{Hal\+Disable\+NMI}} ()
+\item 
+bool \mbox{\hyperlink{hal_8cpp_a0bfd7f19b52e7077d5d2322b50f19308}{Hal\+Get\+NMIState}} ()
+\item 
+uint64\+\_\+t \mbox{\hyperlink{hal_8cpp_a2694ba290e4782f583c3903889713f5a}{x86rdmsr}} (uint32\+\_\+t msr\+\_\+id)
+\item 
+void \mbox{\hyperlink{hal_8cpp_a1a6b1a272348079acffcc08a86c0ecd6}{x86wrmsr}} (uint32\+\_\+t msr\+\_\+id, uint64\+\_\+t msr\+\_\+value)
+\item 
+bool \mbox{\hyperlink{hal_8cpp_af5489bfb078558d31257c02f25b2a4d7}{Hal\+Handle\+General\+Protection\+Fault}} (void $\ast$rr, void $\ast$ctxt)
+\item 
+uint8\+\_\+t $\ast$ \mbox{\hyperlink{hal_8cpp_a10bb32d66d845e1579049c6af903b108}{Hal\+Find\+RSDP}} ()
+\item 
+bool \mbox{\hyperlink{hal_8cpp_afec8a2453bf72f304b112d0ec6df8b54}{Hal\+Handle\+Page\+Fault}} (void $\ast$rr, void $\ast$ctxt)
+\item 
+bool \mbox{\hyperlink{hal_8cpp_a129f9b7da3a76dcec5052b457170f082}{Hal\+Handle\+Opcode\+Fault}} (void $\ast$rr, void $\ast$ctxt)
+\item 
+void \mbox{\hyperlink{hal_8cpp_a3c7d6ef6e6ee18ee7224a596fdefdb5d}{Hal\+Display\+Debug\+Info}} (void $\ast$rr)
+\item 
+void \mbox{\hyperlink{hal_8cpp_a27b9b5b1893e1841a353813c5fc5ba27}{Hal\+Received\+NMI}} ()
+\begin{DoxyCompactList}\small\item\em Called when the system receives an NMI. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{hal_8cpp_ab0f21b39e7c79ad09f6ad828b369ce0e}{do\+TPAUSE}} ()
+\item 
+void \mbox{\hyperlink{hal_8cpp_a5af6602c012a616f81107c0881ff053b}{Hal\+System\+Idle}} ()
+\begin{DoxyCompactList}\small\item\em Called when the system is idle (not running any tasks). It may put the system into a low-\/power mode until the next interrupt, perform background caching / cleaning work, etc. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{hal_8cpp_a62e2371d016d30773b072de6bf1eaab6}{i386\+Save\+Coprocessor}} (void $\ast$buf)
+\item 
+void \mbox{\hyperlink{hal_8cpp_a6d262b36cc5f492ac092360e49f2411d}{i386\+Load\+Coprocessor}} (void $\ast$buf)
+\item 
+void \mbox{\hyperlink{hal_8cpp_a643f056b5d5d5e4239f09a4925ddcb17}{no\+Copro}} (size\+\_\+t a)
+\item 
+void \mbox{\hyperlink{hal_8cpp_af9b17a675333a7c2100422a47f2130ff}{x87\+Emul\+Handler}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r, void $\ast$context)
+\item 
+void \mbox{\hyperlink{hal_8cpp_a253bda11278b608ccbfeb3768533a8c4}{Hal\+Initialise\+Coprocessor}} ()
+\begin{DoxyCompactList}\small\item\em Initialies the floating point coprocessor if it exists. Should only be called once, and is internal to the kernel. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{hal_8cpp_a607e59a8bc44e7107f03090df4e54417}{Hal\+Panic}} (const char $\ast$message)
+\begin{DoxyCompactList}\small\item\em Causes a stop error, for when the system detects an unrecoverable situation which requires a complete lockup of the system. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{hal_8cpp_a01c269a06e0c3184a607eb1d3c4027d3}{Hal\+Query\+Performance\+Counter}} ()
+\begin{DoxyCompactList}\small\item\em Returns the value of performance counter (e.\+g. the timestamp counter) if the system has one. If the system has one, all values are expected to be larger than the previously returned value. If the system does not have one, the function shall either return zero or provide a estimate (in which case all values should be larger than the previously returned value). \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{hal_8cpp_a235176223b3d4074dd13f2d913887b36}{Hal\+Initialise}} ()
+\begin{DoxyCompactList}\small\item\em Initialises the HAL. Should only be called once, and is internal to the kernel. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{hal_8cpp_a2cd9727e49c650a2dcfdb8d2c568fcc9}{Hal\+Make\+Beep}} (int hertz)
+\begin{DoxyCompactList}\small\item\em Causes the speaker to produce a tone at the requested frequency, until this function is called with a frequency of zero. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{hal_8cpp_aacbc8729fccfaad86c53d35b2c9510c8}{i386\+Get\+RDRAND}} ()
+\item 
+uint32\+\_\+t \mbox{\hyperlink{hal_8cpp_a9b9d096f749341acd3f791d523534d38}{Hal\+Get\+Rand}} ()
+\begin{DoxyCompactList}\small\item\em Returns a 32-\/bit random value using a hardware RNG generator if available, else it should return zero. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{hal_8cpp_a0685e42bd12c21f16797a4de3d52c7fa}{Hal\+End\+Of\+Interrupt}} (int irq\+Num)
+\begin{DoxyCompactList}\small\item\em Sends an acknowledgement message to the interrupt controller that the interrupt has been handled. Needs to be called after every interrupt. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{hal_8cpp_abf8e081cd17a410eff34db48b0ff0a3b}{Hal\+Restart}} ()
+\begin{DoxyCompactList}\small\item\em Reboots the system immediately. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{hal_8cpp_a94ac9d176213d1684a29fb55d46c973b}{Hal\+Shutdown}} ()
+\begin{DoxyCompactList}\small\item\em Performs a system shutdown immediately if supported, otherwise displays a message to the user telling them it is okay to turn off their computer. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{hal_8cpp_a934b436fe652e9a95a267469a788c2f5}{Hal\+Sleep}} ()
+\begin{DoxyCompactList}\small\item\em Puts the system to sleep immediately if supported, otherwise does nothing. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structx86_features}{x86\+Features}} \mbox{\hyperlink{hal_8cpp_ad74c3220e2f30d5bed0216f49fe8da1d}{features}}
+\item 
+bool \mbox{\hyperlink{hal_8cpp_a7eead901fb97ebee6c653afb24f40473}{opcode\+Detection\+Mode}} = false
+\item 
+\mbox{\hyperlink{hal_8cpp_aa333875790e538e1ed3dfe456632635c}{CPUVendor}} \mbox{\hyperlink{hal_8cpp_a7c6678fcc3ad5bdfdd411a6c89baaf23}{vendor}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{hal_8cpp_a927b2019e04f23683e7e9545cd09e8df}{stepping\+ID}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{hal_8cpp_ada1f9e50afe8fa8178569c0a0d1c112b}{processor\+Type}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{hal_8cpp_a6b5e17905d0e1bc12cfac364ecdcdf1c}{model}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{hal_8cpp_ad722b3a406f71ed9d6a5daf29150cc45}{family\+ID}}
+\item 
+char \mbox{\hyperlink{hal_8cpp_a61e6e4743473c79f84c7d25b2dfd8e1f}{vendor\+IDString}} \mbox{[}13\mbox{]}
+\item 
+bool \mbox{\hyperlink{hal_8cpp_a34a448919add5334c16c06259085c8e4}{ke\+NMIEnabled}} = false
+\item 
+size\+\_\+t \mbox{\hyperlink{hal_8cpp_ac6e06fbe07db4b76ddd356468f3f0e45}{Hal\+Page\+Global\+Flag}} = 0
+\item 
+size\+\_\+t \mbox{\hyperlink{hal_8cpp_af9ac0b94d0fc3199e9b8cdc5bfc8c3ee}{Hal\+Page\+Write\+Combining\+Flag}} = 0
+\item 
+int \mbox{\hyperlink{hal_8cpp_adb2401d3a54855258cf609ab8dca47d6}{last\+Code}} = -\/1
+\item 
+size\+\_\+t \mbox{\hyperlink{hal_8cpp_a6d33f5cdbd31aee50244299da1a85037}{lastA}} = 0
+\item 
+size\+\_\+t \mbox{\hyperlink{hal_8cpp_aed23e73665b19e2ffcd4dcd9c7e9dc33}{lastB}} = 0
+\item 
+size\+\_\+t \mbox{\hyperlink{hal_8cpp_ac42741d626234150d707d35e0043ed1f}{lastC}} = 0
+\item 
+size\+\_\+t \mbox{\hyperlink{hal_8cpp_a9aee1f4e712ed594ae0efd81af684cb8}{lastD}} = 0
+\item 
+char \mbox{\hyperlink{hal_8cpp_aac2b818b518f9214a7c8eaaa2f9a3ab9}{exception\+Names}} \mbox{[}$\,$\mbox{]}\mbox{[}32\mbox{]}
+\item 
+void($\ast$ \mbox{\hyperlink{hal_8cpp_a59e3e43e9540ef23d891e815572eb820}{copro\+Save\+Func}} )(size\+\_\+t)
+\item 
+void($\ast$ \mbox{\hyperlink{hal_8cpp_a3a0bd0b1c96e14a9f9078328a2ea1506}{copro\+Load\+Func}} )(size\+\_\+t)
+\item 
+\mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}} $\ast$ \mbox{\hyperlink{hal_8cpp_a6185caedc6d924ab2c6e39fc64f2711d}{fpu\+Owner}} = nullptr
+\item 
+void($\ast$ \mbox{\hyperlink{hal_8cpp_a35c2f7cfad81a5cd72b152547525efaf}{gui\+Panic\+Handler}} )(char $\ast$message)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{hal_8cpp_ad0ae9d4658eb6c019efbb66384005dab}\label{hal_8cpp_ad0ae9d4658eb6c019efbb66384005dab}} 
+\index{hal.cpp@{hal.cpp}!CPUID\_VENDOR\_AMD@{CPUID\_VENDOR\_AMD}}
+\index{CPUID\_VENDOR\_AMD@{CPUID\_VENDOR\_AMD}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{CPUID\_VENDOR\_AMD}{CPUID\_VENDOR\_AMD}}
+{\footnotesize\ttfamily \#define CPUID\+\_\+\+VENDOR\+\_\+\+AMD~\char`\"{}Authentic\+AMD\char`\"{}}
+
+\mbox{\Hypertarget{hal_8cpp_adf1e062a787c09bebb6624567aea1fff}\label{hal_8cpp_adf1e062a787c09bebb6624567aea1fff}} 
+\index{hal.cpp@{hal.cpp}!CPUID\_VENDOR\_CENTAUR@{CPUID\_VENDOR\_CENTAUR}}
+\index{CPUID\_VENDOR\_CENTAUR@{CPUID\_VENDOR\_CENTAUR}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{CPUID\_VENDOR\_CENTAUR}{CPUID\_VENDOR\_CENTAUR}}
+{\footnotesize\ttfamily \#define CPUID\+\_\+\+VENDOR\+\_\+\+CENTAUR~\char`\"{}Centaur\+Hauls\char`\"{}}
+
+\mbox{\Hypertarget{hal_8cpp_ab044f1560728d8686fb1486afcf6b6ef}\label{hal_8cpp_ab044f1560728d8686fb1486afcf6b6ef}} 
+\index{hal.cpp@{hal.cpp}!CPUID\_VENDOR\_CYRIX@{CPUID\_VENDOR\_CYRIX}}
+\index{CPUID\_VENDOR\_CYRIX@{CPUID\_VENDOR\_CYRIX}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{CPUID\_VENDOR\_CYRIX}{CPUID\_VENDOR\_CYRIX}}
+{\footnotesize\ttfamily \#define CPUID\+\_\+\+VENDOR\+\_\+\+CYRIX~\char`\"{}Cyrix\+Instead\char`\"{}}
+
+\mbox{\Hypertarget{hal_8cpp_a2252d4da61bc8e76df71f8af33a547a2}\label{hal_8cpp_a2252d4da61bc8e76df71f8af33a547a2}} 
+\index{hal.cpp@{hal.cpp}!CPUID\_VENDOR\_INTEL@{CPUID\_VENDOR\_INTEL}}
+\index{CPUID\_VENDOR\_INTEL@{CPUID\_VENDOR\_INTEL}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{CPUID\_VENDOR\_INTEL}{CPUID\_VENDOR\_INTEL}}
+{\footnotesize\ttfamily \#define CPUID\+\_\+\+VENDOR\+\_\+\+INTEL~\char`\"{}Genuine\+Intel\char`\"{}}
+
+\mbox{\Hypertarget{hal_8cpp_a2ff8e439b4221408bfd1f5552a26b7a4}\label{hal_8cpp_a2ff8e439b4221408bfd1f5552a26b7a4}} 
+\index{hal.cpp@{hal.cpp}!CPUID\_VENDOR\_MICROSOFT\_HV@{CPUID\_VENDOR\_MICROSOFT\_HV}}
+\index{CPUID\_VENDOR\_MICROSOFT\_HV@{CPUID\_VENDOR\_MICROSOFT\_HV}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{CPUID\_VENDOR\_MICROSOFT\_HV}{CPUID\_VENDOR\_MICROSOFT\_HV}}
+{\footnotesize\ttfamily \#define CPUID\+\_\+\+VENDOR\+\_\+\+MICROSOFT\+\_\+\+HV~\char`\"{}Microsoft Hv\char`\"{}}
+
+\mbox{\Hypertarget{hal_8cpp_a6c9020992dfe74959390a4b41f2fa71c}\label{hal_8cpp_a6c9020992dfe74959390a4b41f2fa71c}} 
+\index{hal.cpp@{hal.cpp}!CPUID\_VENDOR\_NEXGEN@{CPUID\_VENDOR\_NEXGEN}}
+\index{CPUID\_VENDOR\_NEXGEN@{CPUID\_VENDOR\_NEXGEN}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{CPUID\_VENDOR\_NEXGEN}{CPUID\_VENDOR\_NEXGEN}}
+{\footnotesize\ttfamily \#define CPUID\+\_\+\+VENDOR\+\_\+\+NEXGEN~\char`\"{}Nex\+Gen\+Driven\char`\"{}}
+
+\mbox{\Hypertarget{hal_8cpp_a71ee70ea4a4803c3eb9644bf11970575}\label{hal_8cpp_a71ee70ea4a4803c3eb9644bf11970575}} 
+\index{hal.cpp@{hal.cpp}!CPUID\_VENDOR\_NSC@{CPUID\_VENDOR\_NSC}}
+\index{CPUID\_VENDOR\_NSC@{CPUID\_VENDOR\_NSC}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{CPUID\_VENDOR\_NSC}{CPUID\_VENDOR\_NSC}}
+{\footnotesize\ttfamily \#define CPUID\+\_\+\+VENDOR\+\_\+\+NSC~\char`\"{}Geode by NSC\char`\"{}}
+
+\mbox{\Hypertarget{hal_8cpp_a341f872fcfcd49ca3e4f02caade31191}\label{hal_8cpp_a341f872fcfcd49ca3e4f02caade31191}} 
+\index{hal.cpp@{hal.cpp}!CPUID\_VENDOR\_OLDAMD@{CPUID\_VENDOR\_OLDAMD}}
+\index{CPUID\_VENDOR\_OLDAMD@{CPUID\_VENDOR\_OLDAMD}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{CPUID\_VENDOR\_OLDAMD}{CPUID\_VENDOR\_OLDAMD}}
+{\footnotesize\ttfamily \#define CPUID\+\_\+\+VENDOR\+\_\+\+OLDAMD~\char`\"{}AMDisbetter!\char`\"{} /$\ast$ early engineering samples of AMD K5 processor $\ast$/}
+
+\mbox{\Hypertarget{hal_8cpp_a7cb4132fcdce715e12147f039d6364b7}\label{hal_8cpp_a7cb4132fcdce715e12147f039d6364b7}} 
+\index{hal.cpp@{hal.cpp}!CPUID\_VENDOR\_OLDTRANSMETA@{CPUID\_VENDOR\_OLDTRANSMETA}}
+\index{CPUID\_VENDOR\_OLDTRANSMETA@{CPUID\_VENDOR\_OLDTRANSMETA}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{CPUID\_VENDOR\_OLDTRANSMETA}{CPUID\_VENDOR\_OLDTRANSMETA}}
+{\footnotesize\ttfamily \#define CPUID\+\_\+\+VENDOR\+\_\+\+OLDTRANSMETA~\char`\"{}Transmeta\+CPU\char`\"{}}
+
+\mbox{\Hypertarget{hal_8cpp_a500f49e94c2df9199c46fb326fc37eef}\label{hal_8cpp_a500f49e94c2df9199c46fb326fc37eef}} 
+\index{hal.cpp@{hal.cpp}!CPUID\_VENDOR\_PARALLELS@{CPUID\_VENDOR\_PARALLELS}}
+\index{CPUID\_VENDOR\_PARALLELS@{CPUID\_VENDOR\_PARALLELS}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{CPUID\_VENDOR\_PARALLELS}{CPUID\_VENDOR\_PARALLELS}}
+{\footnotesize\ttfamily \#define CPUID\+\_\+\+VENDOR\+\_\+\+PARALLELS~\char`\"{} lrpepyh vr\char`\"{}}
+
+\mbox{\Hypertarget{hal_8cpp_ab27dfdb9bc3c2aa51ab380516e679d98}\label{hal_8cpp_ab27dfdb9bc3c2aa51ab380516e679d98}} 
+\index{hal.cpp@{hal.cpp}!CPUID\_VENDOR\_RISE@{CPUID\_VENDOR\_RISE}}
+\index{CPUID\_VENDOR\_RISE@{CPUID\_VENDOR\_RISE}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{CPUID\_VENDOR\_RISE}{CPUID\_VENDOR\_RISE}}
+{\footnotesize\ttfamily \#define CPUID\+\_\+\+VENDOR\+\_\+\+RISE~\char`\"{}Rise\+Rise\+Rise\char`\"{}}
+
+\mbox{\Hypertarget{hal_8cpp_a4c65f683bafbe7ac750b02249275bcf3}\label{hal_8cpp_a4c65f683bafbe7ac750b02249275bcf3}} 
+\index{hal.cpp@{hal.cpp}!CPUID\_VENDOR\_SIS@{CPUID\_VENDOR\_SIS}}
+\index{CPUID\_VENDOR\_SIS@{CPUID\_VENDOR\_SIS}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{CPUID\_VENDOR\_SIS}{CPUID\_VENDOR\_SIS}}
+{\footnotesize\ttfamily \#define CPUID\+\_\+\+VENDOR\+\_\+\+SIS~\char`\"{}SiS SiS SiS \char`\"{}}
+
+\mbox{\Hypertarget{hal_8cpp_a887c960f636a4dcc41ecaa6624adc59d}\label{hal_8cpp_a887c960f636a4dcc41ecaa6624adc59d}} 
+\index{hal.cpp@{hal.cpp}!CPUID\_VENDOR\_TRANSMETA@{CPUID\_VENDOR\_TRANSMETA}}
+\index{CPUID\_VENDOR\_TRANSMETA@{CPUID\_VENDOR\_TRANSMETA}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{CPUID\_VENDOR\_TRANSMETA}{CPUID\_VENDOR\_TRANSMETA}}
+{\footnotesize\ttfamily \#define CPUID\+\_\+\+VENDOR\+\_\+\+TRANSMETA~\char`\"{}Genuine\+TMx86\char`\"{}}
+
+\mbox{\Hypertarget{hal_8cpp_a6b2b599ef09ec8629f294060c5cabe44}\label{hal_8cpp_a6b2b599ef09ec8629f294060c5cabe44}} 
+\index{hal.cpp@{hal.cpp}!CPUID\_VENDOR\_UMC@{CPUID\_VENDOR\_UMC}}
+\index{CPUID\_VENDOR\_UMC@{CPUID\_VENDOR\_UMC}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{CPUID\_VENDOR\_UMC}{CPUID\_VENDOR\_UMC}}
+{\footnotesize\ttfamily \#define CPUID\+\_\+\+VENDOR\+\_\+\+UMC~\char`\"{}UMC UMC UMC \char`\"{}}
+
+\mbox{\Hypertarget{hal_8cpp_abd34511eabb4053d1385aa5a566fbaa7}\label{hal_8cpp_abd34511eabb4053d1385aa5a566fbaa7}} 
+\index{hal.cpp@{hal.cpp}!CPUID\_VENDOR\_VIA1@{CPUID\_VENDOR\_VIA1}}
+\index{CPUID\_VENDOR\_VIA1@{CPUID\_VENDOR\_VIA1}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{CPUID\_VENDOR\_VIA1}{CPUID\_VENDOR\_VIA1}}
+{\footnotesize\ttfamily \#define CPUID\+\_\+\+VENDOR\+\_\+\+VIA1~\char`\"{}Centaur\+Hauls\char`\"{}}
+
+\mbox{\Hypertarget{hal_8cpp_aa4ed3de26787dc26db35d0c85c140ac4}\label{hal_8cpp_aa4ed3de26787dc26db35d0c85c140ac4}} 
+\index{hal.cpp@{hal.cpp}!CPUID\_VENDOR\_VIA2@{CPUID\_VENDOR\_VIA2}}
+\index{CPUID\_VENDOR\_VIA2@{CPUID\_VENDOR\_VIA2}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{CPUID\_VENDOR\_VIA2}{CPUID\_VENDOR\_VIA2}}
+{\footnotesize\ttfamily \#define CPUID\+\_\+\+VENDOR\+\_\+\+VIA2~\char`\"{}VIA VIA VIA \char`\"{}}
+
+\mbox{\Hypertarget{hal_8cpp_acd5893be73c6284b07f2fca012722dad}\label{hal_8cpp_acd5893be73c6284b07f2fca012722dad}} 
+\index{hal.cpp@{hal.cpp}!CPUID\_VENDOR\_VMWARE@{CPUID\_VENDOR\_VMWARE}}
+\index{CPUID\_VENDOR\_VMWARE@{CPUID\_VENDOR\_VMWARE}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{CPUID\_VENDOR\_VMWARE}{CPUID\_VENDOR\_VMWARE}}
+{\footnotesize\ttfamily \#define CPUID\+\_\+\+VENDOR\+\_\+\+VMWARE~\char`\"{}VMware\+VMware\char`\"{}}
+
+\mbox{\Hypertarget{hal_8cpp_a55a2a1e1e52003f706869af4e71eddc8}\label{hal_8cpp_a55a2a1e1e52003f706869af4e71eddc8}} 
+\index{hal.cpp@{hal.cpp}!CPUID\_VENDOR\_VORTEX@{CPUID\_VENDOR\_VORTEX}}
+\index{CPUID\_VENDOR\_VORTEX@{CPUID\_VENDOR\_VORTEX}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{CPUID\_VENDOR\_VORTEX}{CPUID\_VENDOR\_VORTEX}}
+{\footnotesize\ttfamily \#define CPUID\+\_\+\+VENDOR\+\_\+\+VORTEX~\char`\"{}Vortex86 SoC\char`\"{}}
+
+\mbox{\Hypertarget{hal_8cpp_ad8bc214b540c9fd3971c6257478ac5d9}\label{hal_8cpp_ad8bc214b540c9fd3971c6257478ac5d9}} 
+\index{hal.cpp@{hal.cpp}!CPUID\_VENDOR\_XENHVM@{CPUID\_VENDOR\_XENHVM}}
+\index{CPUID\_VENDOR\_XENHVM@{CPUID\_VENDOR\_XENHVM}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{CPUID\_VENDOR\_XENHVM}{CPUID\_VENDOR\_XENHVM}}
+{\footnotesize\ttfamily \#define CPUID\+\_\+\+VENDOR\+\_\+\+XENHVM~\char`\"{}Xen\+VMMXen\+VMM\char`\"{}}
+
+\mbox{\Hypertarget{hal_8cpp_a3dac42d568d070ca6f076841c4ef835a}\label{hal_8cpp_a3dac42d568d070ca6f076841c4ef835a}} 
+\index{hal.cpp@{hal.cpp}!IA32\_APIC\_BASE\_MSR@{IA32\_APIC\_BASE\_MSR}}
+\index{IA32\_APIC\_BASE\_MSR@{IA32\_APIC\_BASE\_MSR}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{IA32\_APIC\_BASE\_MSR}{IA32\_APIC\_BASE\_MSR}}
+{\footnotesize\ttfamily \#define IA32\+\_\+\+APIC\+\_\+\+BASE\+\_\+\+MSR~0x1B}
+
+\mbox{\Hypertarget{hal_8cpp_a2285a47e17db06be8ffb8e10e54092ca}\label{hal_8cpp_a2285a47e17db06be8ffb8e10e54092ca}} 
+\index{hal.cpp@{hal.cpp}!ISR\_ALIGNMENT\_CHECK@{ISR\_ALIGNMENT\_CHECK}}
+\index{ISR\_ALIGNMENT\_CHECK@{ISR\_ALIGNMENT\_CHECK}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{ISR\_ALIGNMENT\_CHECK}{ISR\_ALIGNMENT\_CHECK}}
+{\footnotesize\ttfamily \#define ISR\+\_\+\+ALIGNMENT\+\_\+\+CHECK~0x11}
+
+\mbox{\Hypertarget{hal_8cpp_a8e1573fde4f6cbbb9c1635150ffdd44d}\label{hal_8cpp_a8e1573fde4f6cbbb9c1635150ffdd44d}} 
+\index{hal.cpp@{hal.cpp}!ISR\_BOUNDS@{ISR\_BOUNDS}}
+\index{ISR\_BOUNDS@{ISR\_BOUNDS}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{ISR\_BOUNDS}{ISR\_BOUNDS}}
+{\footnotesize\ttfamily \#define ISR\+\_\+\+BOUNDS~0x05}
+
+\mbox{\Hypertarget{hal_8cpp_a87b80e5180cd7f23eec4dee18601db93}\label{hal_8cpp_a87b80e5180cd7f23eec4dee18601db93}} 
+\index{hal.cpp@{hal.cpp}!ISR\_BREAKPOINT@{ISR\_BREAKPOINT}}
+\index{ISR\_BREAKPOINT@{ISR\_BREAKPOINT}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{ISR\_BREAKPOINT}{ISR\_BREAKPOINT}}
+{\footnotesize\ttfamily \#define ISR\+\_\+\+BREAKPOINT~0x03}
+
+\mbox{\Hypertarget{hal_8cpp_afb6372e28cf793c5876b0b8f219d86cf}\label{hal_8cpp_afb6372e28cf793c5876b0b8f219d86cf}} 
+\index{hal.cpp@{hal.cpp}!ISR\_COPROCESSOR\_SEGMENT\_OVERRUN@{ISR\_COPROCESSOR\_SEGMENT\_OVERRUN}}
+\index{ISR\_COPROCESSOR\_SEGMENT\_OVERRUN@{ISR\_COPROCESSOR\_SEGMENT\_OVERRUN}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{ISR\_COPROCESSOR\_SEGMENT\_OVERRUN}{ISR\_COPROCESSOR\_SEGMENT\_OVERRUN}}
+{\footnotesize\ttfamily \#define ISR\+\_\+\+COPROCESSOR\+\_\+\+SEGMENT\+\_\+\+OVERRUN~0x09}
+
+\mbox{\Hypertarget{hal_8cpp_a99b6847b96f744287be3205dc0f2ba31}\label{hal_8cpp_a99b6847b96f744287be3205dc0f2ba31}} 
+\index{hal.cpp@{hal.cpp}!ISR\_DEBUG@{ISR\_DEBUG}}
+\index{ISR\_DEBUG@{ISR\_DEBUG}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{ISR\_DEBUG}{ISR\_DEBUG}}
+{\footnotesize\ttfamily \#define ISR\+\_\+\+DEBUG~0x01}
+
+\mbox{\Hypertarget{hal_8cpp_a85618ae809b300212904b98d9e5835f2}\label{hal_8cpp_a85618ae809b300212904b98d9e5835f2}} 
+\index{hal.cpp@{hal.cpp}!ISR\_DEVICE\_NOT\_AVAILABLE@{ISR\_DEVICE\_NOT\_AVAILABLE}}
+\index{ISR\_DEVICE\_NOT\_AVAILABLE@{ISR\_DEVICE\_NOT\_AVAILABLE}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{ISR\_DEVICE\_NOT\_AVAILABLE}{ISR\_DEVICE\_NOT\_AVAILABLE}}
+{\footnotesize\ttfamily \#define ISR\+\_\+\+DEVICE\+\_\+\+NOT\+\_\+\+AVAILABLE~0x07}
+
+\mbox{\Hypertarget{hal_8cpp_a3e8c711b8bd16c1b14e5dd0fe64f8b0c}\label{hal_8cpp_a3e8c711b8bd16c1b14e5dd0fe64f8b0c}} 
+\index{hal.cpp@{hal.cpp}!ISR\_DIV\_BY\_ZERO@{ISR\_DIV\_BY\_ZERO}}
+\index{ISR\_DIV\_BY\_ZERO@{ISR\_DIV\_BY\_ZERO}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{ISR\_DIV\_BY\_ZERO}{ISR\_DIV\_BY\_ZERO}}
+{\footnotesize\ttfamily \#define ISR\+\_\+\+DIV\+\_\+\+BY\+\_\+\+ZERO~0x00}
+
+\mbox{\Hypertarget{hal_8cpp_ab80e8028fee2d72a979eca533a20509d}\label{hal_8cpp_ab80e8028fee2d72a979eca533a20509d}} 
+\index{hal.cpp@{hal.cpp}!ISR\_DOUBLE\_FAULT@{ISR\_DOUBLE\_FAULT}}
+\index{ISR\_DOUBLE\_FAULT@{ISR\_DOUBLE\_FAULT}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{ISR\_DOUBLE\_FAULT}{ISR\_DOUBLE\_FAULT}}
+{\footnotesize\ttfamily \#define ISR\+\_\+\+DOUBLE\+\_\+\+FAULT~0x08}
+
+\mbox{\Hypertarget{hal_8cpp_a49b04a014ce805e71dbd0a8662626af9}\label{hal_8cpp_a49b04a014ce805e71dbd0a8662626af9}} 
+\index{hal.cpp@{hal.cpp}!ISR\_FPU\_EXCEPTION@{ISR\_FPU\_EXCEPTION}}
+\index{ISR\_FPU\_EXCEPTION@{ISR\_FPU\_EXCEPTION}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{ISR\_FPU\_EXCEPTION}{ISR\_FPU\_EXCEPTION}}
+{\footnotesize\ttfamily \#define ISR\+\_\+\+FPU\+\_\+\+EXCEPTION~0x10}
+
+\mbox{\Hypertarget{hal_8cpp_ad48b0a7e2bf332764353c23cccea9fcd}\label{hal_8cpp_ad48b0a7e2bf332764353c23cccea9fcd}} 
+\index{hal.cpp@{hal.cpp}!ISR\_GENERAL\_PROTECTION@{ISR\_GENERAL\_PROTECTION}}
+\index{ISR\_GENERAL\_PROTECTION@{ISR\_GENERAL\_PROTECTION}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{ISR\_GENERAL\_PROTECTION}{ISR\_GENERAL\_PROTECTION}}
+{\footnotesize\ttfamily \#define ISR\+\_\+\+GENERAL\+\_\+\+PROTECTION~0x0D}
+
+\mbox{\Hypertarget{hal_8cpp_a73c06a874e109ecb26894c049018f52c}\label{hal_8cpp_a73c06a874e109ecb26894c049018f52c}} 
+\index{hal.cpp@{hal.cpp}!ISR\_INVALID\_OPCODE@{ISR\_INVALID\_OPCODE}}
+\index{ISR\_INVALID\_OPCODE@{ISR\_INVALID\_OPCODE}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{ISR\_INVALID\_OPCODE}{ISR\_INVALID\_OPCODE}}
+{\footnotesize\ttfamily \#define ISR\+\_\+\+INVALID\+\_\+\+OPCODE~0x06}
+
+\mbox{\Hypertarget{hal_8cpp_a93012c50a1af5e5fa82da4a69cf4628f}\label{hal_8cpp_a93012c50a1af5e5fa82da4a69cf4628f}} 
+\index{hal.cpp@{hal.cpp}!ISR\_INVALID\_TSS@{ISR\_INVALID\_TSS}}
+\index{ISR\_INVALID\_TSS@{ISR\_INVALID\_TSS}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{ISR\_INVALID\_TSS}{ISR\_INVALID\_TSS}}
+{\footnotesize\ttfamily \#define ISR\+\_\+\+INVALID\+\_\+\+TSS~0x0A}
+
+\mbox{\Hypertarget{hal_8cpp_aa603863b4d4acc314876651df07b1dc0}\label{hal_8cpp_aa603863b4d4acc314876651df07b1dc0}} 
+\index{hal.cpp@{hal.cpp}!ISR\_MACHINE\_CHECK@{ISR\_MACHINE\_CHECK}}
+\index{ISR\_MACHINE\_CHECK@{ISR\_MACHINE\_CHECK}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{ISR\_MACHINE\_CHECK}{ISR\_MACHINE\_CHECK}}
+{\footnotesize\ttfamily \#define ISR\+\_\+\+MACHINE\+\_\+\+CHECK~0x12}
+
+\mbox{\Hypertarget{hal_8cpp_a5f371227cb56e6ed71a5b7ef20e61ec6}\label{hal_8cpp_a5f371227cb56e6ed71a5b7ef20e61ec6}} 
+\index{hal.cpp@{hal.cpp}!ISR\_NMI@{ISR\_NMI}}
+\index{ISR\_NMI@{ISR\_NMI}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{ISR\_NMI}{ISR\_NMI}}
+{\footnotesize\ttfamily \#define ISR\+\_\+\+NMI~0x02}
+
+\mbox{\Hypertarget{hal_8cpp_af747d6009740b9e81b4764ea328142ec}\label{hal_8cpp_af747d6009740b9e81b4764ea328142ec}} 
+\index{hal.cpp@{hal.cpp}!ISR\_OVERFLOW@{ISR\_OVERFLOW}}
+\index{ISR\_OVERFLOW@{ISR\_OVERFLOW}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{ISR\_OVERFLOW}{ISR\_OVERFLOW}}
+{\footnotesize\ttfamily \#define ISR\+\_\+\+OVERFLOW~0x04}
+
+\mbox{\Hypertarget{hal_8cpp_af60307a74d2915b2301dbf343d6de657}\label{hal_8cpp_af60307a74d2915b2301dbf343d6de657}} 
+\index{hal.cpp@{hal.cpp}!ISR\_PAGE\_FAULT@{ISR\_PAGE\_FAULT}}
+\index{ISR\_PAGE\_FAULT@{ISR\_PAGE\_FAULT}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{ISR\_PAGE\_FAULT}{ISR\_PAGE\_FAULT}}
+{\footnotesize\ttfamily \#define ISR\+\_\+\+PAGE\+\_\+\+FAULT~0x0E}
+
+\mbox{\Hypertarget{hal_8cpp_af06e537b9475882d9f0b8890c699084e}\label{hal_8cpp_af06e537b9475882d9f0b8890c699084e}} 
+\index{hal.cpp@{hal.cpp}!ISR\_RESERVED@{ISR\_RESERVED}}
+\index{ISR\_RESERVED@{ISR\_RESERVED}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{ISR\_RESERVED}{ISR\_RESERVED}}
+{\footnotesize\ttfamily \#define ISR\+\_\+\+RESERVED~0x0F}
+
+\mbox{\Hypertarget{hal_8cpp_aab2a17746a1cecce3a0af53e972c4a2c}\label{hal_8cpp_aab2a17746a1cecce3a0af53e972c4a2c}} 
+\index{hal.cpp@{hal.cpp}!ISR\_SECURITY\_EXCEPTION@{ISR\_SECURITY\_EXCEPTION}}
+\index{ISR\_SECURITY\_EXCEPTION@{ISR\_SECURITY\_EXCEPTION}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{ISR\_SECURITY\_EXCEPTION}{ISR\_SECURITY\_EXCEPTION}}
+{\footnotesize\ttfamily \#define ISR\+\_\+\+SECURITY\+\_\+\+EXCEPTION~0x1E}
+
+\mbox{\Hypertarget{hal_8cpp_a6968cb2479912bca62c1c76ddfc5596d}\label{hal_8cpp_a6968cb2479912bca62c1c76ddfc5596d}} 
+\index{hal.cpp@{hal.cpp}!ISR\_SEGMENT\_NOT\_PRESENT@{ISR\_SEGMENT\_NOT\_PRESENT}}
+\index{ISR\_SEGMENT\_NOT\_PRESENT@{ISR\_SEGMENT\_NOT\_PRESENT}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{ISR\_SEGMENT\_NOT\_PRESENT}{ISR\_SEGMENT\_NOT\_PRESENT}}
+{\footnotesize\ttfamily \#define ISR\+\_\+\+SEGMENT\+\_\+\+NOT\+\_\+\+PRESENT~0x0B}
+
+\mbox{\Hypertarget{hal_8cpp_abeecb4d3f3867b95d07e33b483be5713}\label{hal_8cpp_abeecb4d3f3867b95d07e33b483be5713}} 
+\index{hal.cpp@{hal.cpp}!ISR\_SIMD\_EXCEPTION@{ISR\_SIMD\_EXCEPTION}}
+\index{ISR\_SIMD\_EXCEPTION@{ISR\_SIMD\_EXCEPTION}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{ISR\_SIMD\_EXCEPTION}{ISR\_SIMD\_EXCEPTION}}
+{\footnotesize\ttfamily \#define ISR\+\_\+\+SIMD\+\_\+\+EXCEPTION~0x13}
+
+\mbox{\Hypertarget{hal_8cpp_acd6b03e6ad6fa6e44ddb0b0c809b3307}\label{hal_8cpp_acd6b03e6ad6fa6e44ddb0b0c809b3307}} 
+\index{hal.cpp@{hal.cpp}!ISR\_STACK\_SEGMENT@{ISR\_STACK\_SEGMENT}}
+\index{ISR\_STACK\_SEGMENT@{ISR\_STACK\_SEGMENT}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{ISR\_STACK\_SEGMENT}{ISR\_STACK\_SEGMENT}}
+{\footnotesize\ttfamily \#define ISR\+\_\+\+STACK\+\_\+\+SEGMENT~0x0C}
+
+\mbox{\Hypertarget{hal_8cpp_a800336509a48aa5f4db56d98b3bc4fdc}\label{hal_8cpp_a800336509a48aa5f4db56d98b3bc4fdc}} 
+\index{hal.cpp@{hal.cpp}!ISR\_VIRTULIZATION\_EXCEPTION@{ISR\_VIRTULIZATION\_EXCEPTION}}
+\index{ISR\_VIRTULIZATION\_EXCEPTION@{ISR\_VIRTULIZATION\_EXCEPTION}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{ISR\_VIRTULIZATION\_EXCEPTION}{ISR\_VIRTULIZATION\_EXCEPTION}}
+{\footnotesize\ttfamily \#define ISR\+\_\+\+VIRTULIZATION\+\_\+\+EXCEPTION~0x14}
+
+\mbox{\Hypertarget{hal_8cpp_a26e74c849ad9213ffbb36033edfc1f62}\label{hal_8cpp_a26e74c849ad9213ffbb36033edfc1f62}} 
+\index{hal.cpp@{hal.cpp}!PORT\_CMOS\_BASE@{PORT\_CMOS\_BASE}}
+\index{PORT\_CMOS\_BASE@{PORT\_CMOS\_BASE}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{PORT\_CMOS\_BASE}{PORT\_CMOS\_BASE}}
+{\footnotesize\ttfamily \#define PORT\+\_\+\+CMOS\+\_\+\+BASE~0x70}
+
+\mbox{\Hypertarget{hal_8cpp_ad52f58b4b45236d1828f665d053b8037}\label{hal_8cpp_ad52f58b4b45236d1828f665d053b8037}} 
+\index{hal.cpp@{hal.cpp}!PORT\_SYSTEM\_CONTROL\_A@{PORT\_SYSTEM\_CONTROL\_A}}
+\index{PORT\_SYSTEM\_CONTROL\_A@{PORT\_SYSTEM\_CONTROL\_A}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{PORT\_SYSTEM\_CONTROL\_A}{PORT\_SYSTEM\_CONTROL\_A}}
+{\footnotesize\ttfamily \#define PORT\+\_\+\+SYSTEM\+\_\+\+CONTROL\+\_\+A~0x92}
+
+\mbox{\Hypertarget{hal_8cpp_a07836e17660a220ea163b396803ee138}\label{hal_8cpp_a07836e17660a220ea163b396803ee138}} 
+\index{hal.cpp@{hal.cpp}!PORT\_SYSTEM\_CONTROL\_B@{PORT\_SYSTEM\_CONTROL\_B}}
+\index{PORT\_SYSTEM\_CONTROL\_B@{PORT\_SYSTEM\_CONTROL\_B}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{PORT\_SYSTEM\_CONTROL\_B}{PORT\_SYSTEM\_CONTROL\_B}}
+{\footnotesize\ttfamily \#define PORT\+\_\+\+SYSTEM\+\_\+\+CONTROL\+\_\+B~0x61}
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1}} 
+\index{hal.cpp@{hal.cpp}!CPUID\_Features@{CPUID\_Features}}
+\index{CPUID\_Features@{CPUID\_Features}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{CPUID\_Features}{CPUID\_Features}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{hal_8cpp_a5f6a946175d1948a96af4be850804af1}{CPUID\+\_\+\+Features}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_SSE3@{CPUID\_FEAT\_ECX\_SSE3}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_SSE3@{CPUID\_FEAT\_ECX\_SSE3}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a9ec1c52e0b19a9532baa8ce4f80add58}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a9ec1c52e0b19a9532baa8ce4f80add58}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+SSE3&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_PCLMUL@{CPUID\_FEAT\_ECX\_PCLMUL}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_PCLMUL@{CPUID\_FEAT\_ECX\_PCLMUL}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1aaa62b2a02d3829ace891eac7d1d8f746}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1aaa62b2a02d3829ace891eac7d1d8f746}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+PCLMUL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_DTES64@{CPUID\_FEAT\_ECX\_DTES64}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_DTES64@{CPUID\_FEAT\_ECX\_DTES64}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1aa84b899e336daf2d90cdab723a24d544}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1aa84b899e336daf2d90cdab723a24d544}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+DTES64&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_MONITOR@{CPUID\_FEAT\_ECX\_MONITOR}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_MONITOR@{CPUID\_FEAT\_ECX\_MONITOR}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a6ffa8cdde16327f47b6a49aa5d676ee5}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a6ffa8cdde16327f47b6a49aa5d676ee5}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+MONITOR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_DS\_CPL@{CPUID\_FEAT\_ECX\_DS\_CPL}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_DS\_CPL@{CPUID\_FEAT\_ECX\_DS\_CPL}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a1be0388c15db5d77facac96d2efddc4f}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a1be0388c15db5d77facac96d2efddc4f}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+DS\+\_\+\+CPL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_VMX@{CPUID\_FEAT\_ECX\_VMX}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_VMX@{CPUID\_FEAT\_ECX\_VMX}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a714125fa31dd21e46e385b8dc340214f}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a714125fa31dd21e46e385b8dc340214f}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+VMX&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_SMX@{CPUID\_FEAT\_ECX\_SMX}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_SMX@{CPUID\_FEAT\_ECX\_SMX}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1ab6deac61a50e0367b5475869e240ac06}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1ab6deac61a50e0367b5475869e240ac06}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+SMX&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_EST@{CPUID\_FEAT\_ECX\_EST}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_EST@{CPUID\_FEAT\_ECX\_EST}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a150b3abab983011be08fc459b7b9b700}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a150b3abab983011be08fc459b7b9b700}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+EST&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_TM2@{CPUID\_FEAT\_ECX\_TM2}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_TM2@{CPUID\_FEAT\_ECX\_TM2}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1acf4aa3ed6f11fc17b684281787f60949}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1acf4aa3ed6f11fc17b684281787f60949}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+TM2&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_SSSE3@{CPUID\_FEAT\_ECX\_SSSE3}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_SSSE3@{CPUID\_FEAT\_ECX\_SSSE3}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a5957647e74d0eaea90bdb316e578e579}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a5957647e74d0eaea90bdb316e578e579}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+SSSE3&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_CID@{CPUID\_FEAT\_ECX\_CID}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_CID@{CPUID\_FEAT\_ECX\_CID}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1afb8bce29e8cfd07070b596f3912f608b}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1afb8bce29e8cfd07070b596f3912f608b}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+CID&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_FMA@{CPUID\_FEAT\_ECX\_FMA}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_FMA@{CPUID\_FEAT\_ECX\_FMA}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a9c1fd66e736f5d3d344e919b57483336}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a9c1fd66e736f5d3d344e919b57483336}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+FMA&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_CX16@{CPUID\_FEAT\_ECX\_CX16}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_CX16@{CPUID\_FEAT\_ECX\_CX16}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1ad30be7d0797e3aad723013154aa733d2}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1ad30be7d0797e3aad723013154aa733d2}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+CX16&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_ETPRD@{CPUID\_FEAT\_ECX\_ETPRD}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_ETPRD@{CPUID\_FEAT\_ECX\_ETPRD}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a41b9888036ae940d974a544bed3f19c4}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a41b9888036ae940d974a544bed3f19c4}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+ETPRD&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_PDCM@{CPUID\_FEAT\_ECX\_PDCM}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_PDCM@{CPUID\_FEAT\_ECX\_PDCM}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a93ddbafd38f7a260286998ae9ddc8cad}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a93ddbafd38f7a260286998ae9ddc8cad}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+PDCM&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_PCIDE@{CPUID\_FEAT\_ECX\_PCIDE}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_PCIDE@{CPUID\_FEAT\_ECX\_PCIDE}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a5f88e85a311dc7f0091a923751951f65}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a5f88e85a311dc7f0091a923751951f65}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+PCIDE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_DCA@{CPUID\_FEAT\_ECX\_DCA}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_DCA@{CPUID\_FEAT\_ECX\_DCA}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a2b75568ac85063fb0a96418fa0bfb29d}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a2b75568ac85063fb0a96418fa0bfb29d}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+DCA&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_SSE4\_1@{CPUID\_FEAT\_ECX\_SSE4\_1}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_SSE4\_1@{CPUID\_FEAT\_ECX\_SSE4\_1}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a63ddf183b299d2fc7686dac65e1a555a}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a63ddf183b299d2fc7686dac65e1a555a}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+SSE4\+\_\+1&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_SSE4\_2@{CPUID\_FEAT\_ECX\_SSE4\_2}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_SSE4\_2@{CPUID\_FEAT\_ECX\_SSE4\_2}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1ac35d5255d2ef4728b73348db7087c1c7}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1ac35d5255d2ef4728b73348db7087c1c7}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+SSE4\+\_\+2&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_x2APIC@{CPUID\_FEAT\_ECX\_x2APIC}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_x2APIC@{CPUID\_FEAT\_ECX\_x2APIC}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1ac1613126920afb91d3d177c21e4f3dfe}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1ac1613126920afb91d3d177c21e4f3dfe}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+x2\+APIC&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_MOVBE@{CPUID\_FEAT\_ECX\_MOVBE}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_MOVBE@{CPUID\_FEAT\_ECX\_MOVBE}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1ac67b97fbc629b276f5c13dbf88c4f709}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1ac67b97fbc629b276f5c13dbf88c4f709}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+MOVBE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_POPCNT@{CPUID\_FEAT\_ECX\_POPCNT}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_POPCNT@{CPUID\_FEAT\_ECX\_POPCNT}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a71e5348902e26fc6de23f4f5bd384f74}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a71e5348902e26fc6de23f4f5bd384f74}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+POPCNT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_AES@{CPUID\_FEAT\_ECX\_AES}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_AES@{CPUID\_FEAT\_ECX\_AES}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a8a62b9dd23a47562237c0370b8ed87a0}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a8a62b9dd23a47562237c0370b8ed87a0}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+AES&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_XSAVE@{CPUID\_FEAT\_ECX\_XSAVE}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_XSAVE@{CPUID\_FEAT\_ECX\_XSAVE}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a9c28569cd999d6cc2e9e0005b4fa6c9d}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a9c28569cd999d6cc2e9e0005b4fa6c9d}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+XSAVE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_OSXSAVE@{CPUID\_FEAT\_ECX\_OSXSAVE}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_OSXSAVE@{CPUID\_FEAT\_ECX\_OSXSAVE}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a56478550836d5fa258b03e9fd9eb8116}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a56478550836d5fa258b03e9fd9eb8116}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+OSXSAVE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_ECX\_AVX@{CPUID\_FEAT\_ECX\_AVX}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_ECX\_AVX@{CPUID\_FEAT\_ECX\_AVX}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a749d00516968a015a4d8e15235bf07e6}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a749d00516968a015a4d8e15235bf07e6}} 
+CPUID\+\_\+\+FEAT\+\_\+\+ECX\+\_\+\+AVX&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_FPU@{CPUID\_FEAT\_EDX\_FPU}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_FPU@{CPUID\_FEAT\_EDX\_FPU}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1ac07d767d714117e48c453b752f799610}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1ac07d767d714117e48c453b752f799610}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+FPU&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_VME@{CPUID\_FEAT\_EDX\_VME}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_VME@{CPUID\_FEAT\_EDX\_VME}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a5d32075fb1cfd95910c1eff1f0f3d056}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a5d32075fb1cfd95910c1eff1f0f3d056}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+VME&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_DE@{CPUID\_FEAT\_EDX\_DE}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_DE@{CPUID\_FEAT\_EDX\_DE}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a69236c580bf3feddd4a57b3072a7b521}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a69236c580bf3feddd4a57b3072a7b521}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+DE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_PSE@{CPUID\_FEAT\_EDX\_PSE}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_PSE@{CPUID\_FEAT\_EDX\_PSE}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a59bc828bc43010ac71793759e8011335}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a59bc828bc43010ac71793759e8011335}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+PSE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_TSC@{CPUID\_FEAT\_EDX\_TSC}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_TSC@{CPUID\_FEAT\_EDX\_TSC}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a2ae56cfb5a846822cc095b79bf74de10}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a2ae56cfb5a846822cc095b79bf74de10}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+TSC&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_MSR@{CPUID\_FEAT\_EDX\_MSR}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_MSR@{CPUID\_FEAT\_EDX\_MSR}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a6b8beb5908a936d7f00c848df0abe061}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a6b8beb5908a936d7f00c848df0abe061}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+MSR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_PAE@{CPUID\_FEAT\_EDX\_PAE}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_PAE@{CPUID\_FEAT\_EDX\_PAE}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a3a97eae0ba980bb5d9d9b10138d70aca}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a3a97eae0ba980bb5d9d9b10138d70aca}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+PAE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_MCE@{CPUID\_FEAT\_EDX\_MCE}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_MCE@{CPUID\_FEAT\_EDX\_MCE}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1ade0ff2978a54bc0c96dd71a7a7177d0f}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1ade0ff2978a54bc0c96dd71a7a7177d0f}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+MCE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_CX8@{CPUID\_FEAT\_EDX\_CX8}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_CX8@{CPUID\_FEAT\_EDX\_CX8}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a431ed484886fa29e4a7d16ab99523350}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a431ed484886fa29e4a7d16ab99523350}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+CX8&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_APIC@{CPUID\_FEAT\_EDX\_APIC}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_APIC@{CPUID\_FEAT\_EDX\_APIC}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a7fa4170aae12fbc1642012ccba9855b0}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a7fa4170aae12fbc1642012ccba9855b0}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+APIC&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_SEP@{CPUID\_FEAT\_EDX\_SEP}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_SEP@{CPUID\_FEAT\_EDX\_SEP}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a674ec4ce4025c0f520a30d6e461ed47d}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a674ec4ce4025c0f520a30d6e461ed47d}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+SEP&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_MTRR@{CPUID\_FEAT\_EDX\_MTRR}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_MTRR@{CPUID\_FEAT\_EDX\_MTRR}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a5b30fec963effd4a0d2c8447028d0215}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a5b30fec963effd4a0d2c8447028d0215}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+MTRR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_PGE@{CPUID\_FEAT\_EDX\_PGE}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_PGE@{CPUID\_FEAT\_EDX\_PGE}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1afb0d4b99b2d0e98089be4ede2162eddf}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1afb0d4b99b2d0e98089be4ede2162eddf}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+PGE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_MCA@{CPUID\_FEAT\_EDX\_MCA}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_MCA@{CPUID\_FEAT\_EDX\_MCA}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1ac9e7b8e9c0e19bfe48a4bcd749aaaa4e}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1ac9e7b8e9c0e19bfe48a4bcd749aaaa4e}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+MCA&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_CMOV@{CPUID\_FEAT\_EDX\_CMOV}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_CMOV@{CPUID\_FEAT\_EDX\_CMOV}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a9c90442380d5125737f106c44afce64f}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a9c90442380d5125737f106c44afce64f}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+CMOV&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_PAT@{CPUID\_FEAT\_EDX\_PAT}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_PAT@{CPUID\_FEAT\_EDX\_PAT}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1ac0e40c6f57efc979712596770aab9f8a}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1ac0e40c6f57efc979712596770aab9f8a}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+PAT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_PSE36@{CPUID\_FEAT\_EDX\_PSE36}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_PSE36@{CPUID\_FEAT\_EDX\_PSE36}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a9718e0367b529df69ee7c9b7fd998b83}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a9718e0367b529df69ee7c9b7fd998b83}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+PSE36&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_PSN@{CPUID\_FEAT\_EDX\_PSN}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_PSN@{CPUID\_FEAT\_EDX\_PSN}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1aac23260b012a04ea25d113844c631d44}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1aac23260b012a04ea25d113844c631d44}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+PSN&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_CLF@{CPUID\_FEAT\_EDX\_CLF}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_CLF@{CPUID\_FEAT\_EDX\_CLF}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a80d53b7ac629e80940d02e38ad48414b}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a80d53b7ac629e80940d02e38ad48414b}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+CLF&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_DTES@{CPUID\_FEAT\_EDX\_DTES}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_DTES@{CPUID\_FEAT\_EDX\_DTES}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a43682d6fe8589b4809e2c49bb55c1558}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a43682d6fe8589b4809e2c49bb55c1558}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+DTES&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_ACPI@{CPUID\_FEAT\_EDX\_ACPI}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_ACPI@{CPUID\_FEAT\_EDX\_ACPI}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1aec94ddf1825bdde32627d9149beec9dc}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1aec94ddf1825bdde32627d9149beec9dc}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+ACPI&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_MMX@{CPUID\_FEAT\_EDX\_MMX}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_MMX@{CPUID\_FEAT\_EDX\_MMX}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1ac8185eb6b47dd2ef97a44cbb759f8e52}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1ac8185eb6b47dd2ef97a44cbb759f8e52}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+MMX&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_FXSR@{CPUID\_FEAT\_EDX\_FXSR}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_FXSR@{CPUID\_FEAT\_EDX\_FXSR}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a577b773d21178552d9d768da936479f6}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a577b773d21178552d9d768da936479f6}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+FXSR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_SSE@{CPUID\_FEAT\_EDX\_SSE}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_SSE@{CPUID\_FEAT\_EDX\_SSE}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1ab362f49f025f651238f57dcf8d5d281f}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1ab362f49f025f651238f57dcf8d5d281f}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+SSE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_SSE2@{CPUID\_FEAT\_EDX\_SSE2}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_SSE2@{CPUID\_FEAT\_EDX\_SSE2}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1ab64ff1599bf88ab91782ee4f9152f3ce}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1ab64ff1599bf88ab91782ee4f9152f3ce}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+SSE2&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_SS@{CPUID\_FEAT\_EDX\_SS}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_SS@{CPUID\_FEAT\_EDX\_SS}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1aec6daa5351cf0b927f4fcbad3f0cfef1}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1aec6daa5351cf0b927f4fcbad3f0cfef1}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+SS&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_HTT@{CPUID\_FEAT\_EDX\_HTT}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_HTT@{CPUID\_FEAT\_EDX\_HTT}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1ac91c9cfc9f3165b25b10030ef82c491f}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1ac91c9cfc9f3165b25b10030ef82c491f}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+HTT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_TM1@{CPUID\_FEAT\_EDX\_TM1}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_TM1@{CPUID\_FEAT\_EDX\_TM1}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a5468113d56e2d06eb0e6d5c4f74af589}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a5468113d56e2d06eb0e6d5c4f74af589}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+TM1&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_IA64@{CPUID\_FEAT\_EDX\_IA64}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_IA64@{CPUID\_FEAT\_EDX\_IA64}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1a12ab79d3456f748b49340fa00e60c160}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1a12ab79d3456f748b49340fa00e60c160}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+IA64&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_FEAT\_EDX\_PBE@{CPUID\_FEAT\_EDX\_PBE}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_FEAT\_EDX\_PBE@{CPUID\_FEAT\_EDX\_PBE}}}\mbox{\Hypertarget{hal_8cpp_a5f6a946175d1948a96af4be850804af1ae6cfc957052841ae578ddfb390f00a1a}\label{hal_8cpp_a5f6a946175d1948a96af4be850804af1ae6cfc957052841ae578ddfb390f00a1a}} 
+CPUID\+\_\+\+FEAT\+\_\+\+EDX\+\_\+\+PBE&\\
+\hline
+
+\end{DoxyEnumFields}
+\mbox{\Hypertarget{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5}\label{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5}} 
+\index{hal.cpp@{hal.cpp}!cpuid\_requests@{cpuid\_requests}}
+\index{cpuid\_requests@{cpuid\_requests}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{cpuid\_requests}{cpuid\_requests}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5}{cpuid\+\_\+requests}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_GETVENDORSTRING@{CPUID\_GETVENDORSTRING}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_GETVENDORSTRING@{CPUID\_GETVENDORSTRING}}}\mbox{\Hypertarget{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5a287b9480159ff0790f83312fc0f35361}\label{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5a287b9480159ff0790f83312fc0f35361}} 
+CPUID\+\_\+\+GETVENDORSTRING&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_GETFEATURES@{CPUID\_GETFEATURES}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_GETFEATURES@{CPUID\_GETFEATURES}}}\mbox{\Hypertarget{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5ae54d5cf464a4eaab14f5639ef57a5350}\label{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5ae54d5cf464a4eaab14f5639ef57a5350}} 
+CPUID\+\_\+\+GETFEATURES&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_GETTLB@{CPUID\_GETTLB}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_GETTLB@{CPUID\_GETTLB}}}\mbox{\Hypertarget{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5a1844360ad06974a69963618af9fd7721}\label{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5a1844360ad06974a69963618af9fd7721}} 
+CPUID\+\_\+\+GETTLB&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_GETSERIAL@{CPUID\_GETSERIAL}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_GETSERIAL@{CPUID\_GETSERIAL}}}\mbox{\Hypertarget{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5ad206c016f6b1bf979bab7c632a2daaa4}\label{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5ad206c016f6b1bf979bab7c632a2daaa4}} 
+CPUID\+\_\+\+GETSERIAL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_GETEXTENDED@{CPUID\_GETEXTENDED}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_GETEXTENDED@{CPUID\_GETEXTENDED}}}\mbox{\Hypertarget{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5a97af0621f15a35fd85d95f85e069a4ee}\label{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5a97af0621f15a35fd85d95f85e069a4ee}} 
+CPUID\+\_\+\+GETEXTENDED&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_GETHIGHEST@{CPUID\_GETHIGHEST}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_GETHIGHEST@{CPUID\_GETHIGHEST}}}\mbox{\Hypertarget{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5a5f8f1b6872bdc552aba413ce598afd0d}\label{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5a5f8f1b6872bdc552aba413ce598afd0d}} 
+CPUID\+\_\+\+GETHIGHEST&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_INTELEXTENDED@{CPUID\_INTELEXTENDED}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_INTELEXTENDED@{CPUID\_INTELEXTENDED}}}\mbox{\Hypertarget{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5ab016d439747f36e0a2bdd34f8f26ecbe}\label{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5ab016d439747f36e0a2bdd34f8f26ecbe}} 
+CPUID\+\_\+\+INTELEXTENDED&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_INTELFEATURES@{CPUID\_INTELFEATURES}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_INTELFEATURES@{CPUID\_INTELFEATURES}}}\mbox{\Hypertarget{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5a6b1682619d4f05d42499c280f74ba7d0}\label{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5a6b1682619d4f05d42499c280f74ba7d0}} 
+CPUID\+\_\+\+INTELFEATURES&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_INTELBRANDSTRING@{CPUID\_INTELBRANDSTRING}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_INTELBRANDSTRING@{CPUID\_INTELBRANDSTRING}}}\mbox{\Hypertarget{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5a898f490021383393edca0741e4a3b8df}\label{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5a898f490021383393edca0741e4a3b8df}} 
+CPUID\+\_\+\+INTELBRANDSTRING&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_INTELBRANDSTRINGMORE@{CPUID\_INTELBRANDSTRINGMORE}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_INTELBRANDSTRINGMORE@{CPUID\_INTELBRANDSTRINGMORE}}}\mbox{\Hypertarget{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5a8585bcaf7fb2b6c52217566488dc3739}\label{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5a8585bcaf7fb2b6c52217566488dc3739}} 
+CPUID\+\_\+\+INTELBRANDSTRINGMORE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPUID\_INTELBRANDSTRINGEND@{CPUID\_INTELBRANDSTRINGEND}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!CPUID\_INTELBRANDSTRINGEND@{CPUID\_INTELBRANDSTRINGEND}}}\mbox{\Hypertarget{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5af0e6c842bda49527a246dd9c85d6da6a}\label{hal_8cpp_ae79fa892c49bf77dd5e8fc53d18c57b5af0e6c842bda49527a246dd9c85d6da6a}} 
+CPUID\+\_\+\+INTELBRANDSTRINGEND&\\
+\hline
+
+\end{DoxyEnumFields}
+\mbox{\Hypertarget{hal_8cpp_aa333875790e538e1ed3dfe456632635c}\label{hal_8cpp_aa333875790e538e1ed3dfe456632635c}} 
+\index{hal.cpp@{hal.cpp}!CPUVendor@{CPUVendor}}
+\index{CPUVendor@{CPUVendor}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{CPUVendor}{CPUVendor}}
+{\footnotesize\ttfamily enum class \mbox{\hyperlink{hal_8cpp_aa333875790e538e1ed3dfe456632635c}{CPUVendor}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Unknown@{Unknown}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!Unknown@{Unknown}}}\mbox{\Hypertarget{hal_8cpp_aa333875790e538e1ed3dfe456632635ca88183b946cc5f0e8c96b2e66e1c74a7e}\label{hal_8cpp_aa333875790e538e1ed3dfe456632635ca88183b946cc5f0e8c96b2e66e1c74a7e}} 
+Unknown&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Intel@{Intel}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!Intel@{Intel}}}\mbox{\Hypertarget{hal_8cpp_aa333875790e538e1ed3dfe456632635caff97a9fdede09eaf6e1c8ec9f6a61dd5}\label{hal_8cpp_aa333875790e538e1ed3dfe456632635caff97a9fdede09eaf6e1c8ec9f6a61dd5}} 
+Intel&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AMD@{AMD}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!AMD@{AMD}}}\mbox{\Hypertarget{hal_8cpp_aa333875790e538e1ed3dfe456632635ca48af4341f745163f945fa838eeabb062}\label{hal_8cpp_aa333875790e538e1ed3dfe456632635ca48af4341f745163f945fa838eeabb062}} 
+AMD&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Cyrix@{Cyrix}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!Cyrix@{Cyrix}}}\mbox{\Hypertarget{hal_8cpp_aa333875790e538e1ed3dfe456632635cab13e157831a8d064e71035e3c3dd49bf}\label{hal_8cpp_aa333875790e538e1ed3dfe456632635cab13e157831a8d064e71035e3c3dd49bf}} 
+Cyrix&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{VIA@{VIA}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!VIA@{VIA}}}\mbox{\Hypertarget{hal_8cpp_aa333875790e538e1ed3dfe456632635ca87a3ca4be7aee885f44155b59b5b9957}\label{hal_8cpp_aa333875790e538e1ed3dfe456632635ca87a3ca4be7aee885f44155b59b5b9957}} 
+VIA&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{TransMeta@{TransMeta}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!TransMeta@{TransMeta}}}\mbox{\Hypertarget{hal_8cpp_aa333875790e538e1ed3dfe456632635cafd2a83135bac54061ab3fc81771628a5}\label{hal_8cpp_aa333875790e538e1ed3dfe456632635cafd2a83135bac54061ab3fc81771628a5}} 
+Trans\+Meta&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Centaur@{Centaur}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!Centaur@{Centaur}}}\mbox{\Hypertarget{hal_8cpp_aa333875790e538e1ed3dfe456632635ca4613847cd6374d6bbeef9b51e0f5edaa}\label{hal_8cpp_aa333875790e538e1ed3dfe456632635ca4613847cd6374d6bbeef9b51e0f5edaa}} 
+Centaur&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Nexgen@{Nexgen}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!Nexgen@{Nexgen}}}\mbox{\Hypertarget{hal_8cpp_aa333875790e538e1ed3dfe456632635cab79fc5c1067ee5a0dcd021b9d8b59701}\label{hal_8cpp_aa333875790e538e1ed3dfe456632635cab79fc5c1067ee5a0dcd021b9d8b59701}} 
+Nexgen&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{UMC@{UMC}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!UMC@{UMC}}}\mbox{\Hypertarget{hal_8cpp_aa333875790e538e1ed3dfe456632635ca6d82720f1e5c05d0a12e1f7ef046e339}\label{hal_8cpp_aa333875790e538e1ed3dfe456632635ca6d82720f1e5c05d0a12e1f7ef046e339}} 
+UMC&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SIS@{SIS}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!SIS@{SIS}}}\mbox{\Hypertarget{hal_8cpp_aa333875790e538e1ed3dfe456632635ca1e7666b5a9493b46391ea4159697dff3}\label{hal_8cpp_aa333875790e538e1ed3dfe456632635ca1e7666b5a9493b46391ea4159697dff3}} 
+SIS&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NSC@{NSC}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!NSC@{NSC}}}\mbox{\Hypertarget{hal_8cpp_aa333875790e538e1ed3dfe456632635caccfd3dea026567841314b004a03fd8e8}\label{hal_8cpp_aa333875790e538e1ed3dfe456632635caccfd3dea026567841314b004a03fd8e8}} 
+NSC&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Rise@{Rise}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!Rise@{Rise}}}\mbox{\Hypertarget{hal_8cpp_aa333875790e538e1ed3dfe456632635ca64d71b4eabcd8de0a1d64bd6d5973c50}\label{hal_8cpp_aa333875790e538e1ed3dfe456632635ca64d71b4eabcd8de0a1d64bd6d5973c50}} 
+Rise&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Vortex@{Vortex}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!Vortex@{Vortex}}}\mbox{\Hypertarget{hal_8cpp_aa333875790e538e1ed3dfe456632635ca8e11b2f987a99ed900a44aa1aa8bd3d0}\label{hal_8cpp_aa333875790e538e1ed3dfe456632635ca8e11b2f987a99ed900a44aa1aa8bd3d0}} 
+Vortex&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{VirtualMachine@{VirtualMachine}!hal.cpp@{hal.cpp}}\index{hal.cpp@{hal.cpp}!VirtualMachine@{VirtualMachine}}}\mbox{\Hypertarget{hal_8cpp_aa333875790e538e1ed3dfe456632635ca61251ec3a7d52d61e900f50b2271561a}\label{hal_8cpp_aa333875790e538e1ed3dfe456632635ca61251ec3a7d52d61e900f50b2271561a}} 
+Virtual\+Machine&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{hal_8cpp_a8e8d5a9c4f2b78e6e6574cd6c0af285a}\label{hal_8cpp_a8e8d5a9c4f2b78e6e6574cd6c0af285a}} 
+\index{hal.cpp@{hal.cpp}!AMD\_K6\_read\_msr@{AMD\_K6\_read\_msr}}
+\index{AMD\_K6\_read\_msr@{AMD\_K6\_read\_msr}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{AMD\_K6\_read\_msr()}{AMD\_K6\_read\_msr()}}
+{\footnotesize\ttfamily void AMD\+\_\+\+K6\+\_\+read\+\_\+msr (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{msr,  }\item[{\mbox{\hyperlink{struct_r_e_g_s}{REGS}} $\ast$}]{regs }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a4164d77a0a0ea79cf3b022d1877140ac}\label{hal_8cpp_a4164d77a0a0ea79cf3b022d1877140ac}} 
+\index{hal.cpp@{hal.cpp}!AMD\_K6\_write\_msr@{AMD\_K6\_write\_msr}}
+\index{AMD\_K6\_write\_msr@{AMD\_K6\_write\_msr}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{AMD\_K6\_write\_msr()}{AMD\_K6\_write\_msr()}}
+{\footnotesize\ttfamily void AMD\+\_\+\+K6\+\_\+write\+\_\+msr (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{msr,  }\item[{uint32\+\_\+t}]{v1,  }\item[{uint32\+\_\+t}]{v2,  }\item[{\mbox{\hyperlink{struct_r_e_g_s}{REGS}} $\ast$}]{regs }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_aab7e954a30ce2726f6c15a0b01da9aef}\label{hal_8cpp_aab7e954a30ce2726f6c15a0b01da9aef}} 
+\index{hal.cpp@{hal.cpp}!AMD\_K6\_writeback@{AMD\_K6\_writeback}}
+\index{AMD\_K6\_writeback@{AMD\_K6\_writeback}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{AMD\_K6\_writeback()}{AMD\_K6\_writeback()}}
+{\footnotesize\ttfamily void AMD\+\_\+\+K6\+\_\+writeback (\begin{DoxyParamCaption}\item[{int}]{family,  }\item[{int}]{model,  }\item[{int}]{stepping }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_ae0e0cd08459a5461fa179a951930cb17}\label{hal_8cpp_ae0e0cd08459a5461fa179a951930cb17}} 
+\index{hal.cpp@{hal.cpp}!avxDetect@{avxDetect}}
+\index{avxDetect@{avxDetect}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{avxDetect()}{avxDetect()}}
+{\footnotesize\ttfamily int avx\+Detect (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a600f6bbbb61b99c5080ef4d877bb2c48}\label{hal_8cpp_a600f6bbbb61b99c5080ef4d877bb2c48}} 
+\index{hal.cpp@{hal.cpp}!avxInit@{avxInit}}
+\index{avxInit@{avxInit}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{avxInit()}{avxInit()}}
+{\footnotesize\ttfamily void avx\+Init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a9943540e5bd5683e3e60c203f430f0b7}\label{hal_8cpp_a9943540e5bd5683e3e60c203f430f0b7}} 
+\index{hal.cpp@{hal.cpp}!avxLoad@{avxLoad}}
+\index{avxLoad@{avxLoad}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{avxLoad()}{avxLoad()}}
+{\footnotesize\ttfamily void avx\+Load (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a3f9f93d59efad3a5f91f3c3c1f7d3850}\label{hal_8cpp_a3f9f93d59efad3a5f91f3c3c1f7d3850}} 
+\index{hal.cpp@{hal.cpp}!avxSave@{avxSave}}
+\index{avxSave@{avxSave}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{avxSave()}{avxSave()}}
+{\footnotesize\ttfamily void avx\+Save (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a79ccf24abde1fad7203a4974a671a303}\label{hal_8cpp_a79ccf24abde1fad7203a4974a671a303}} 
+\index{hal.cpp@{hal.cpp}!cpuid@{cpuid}}
+\index{cpuid@{cpuid}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{cpuid()}{cpuid()}}
+{\footnotesize\ttfamily void cpuid (\begin{DoxyParamCaption}\item[{int}]{code,  }\item[{size\+\_\+t $\ast$}]{a,  }\item[{size\+\_\+t $\ast$}]{b,  }\item[{size\+\_\+t $\ast$}]{c,  }\item[{size\+\_\+t $\ast$}]{d }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_ac2ab69d42fe6b1551fa0ff164ec346ae}\label{hal_8cpp_ac2ab69d42fe6b1551fa0ff164ec346ae}} 
+\index{hal.cpp@{hal.cpp}!cpuidCheckECX@{cpuidCheckECX}}
+\index{cpuidCheckECX@{cpuidCheckECX}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{cpuidCheckECX()}{cpuidCheckECX()}}
+{\footnotesize\ttfamily bool cpuid\+Check\+ECX (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{check }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a48804cff9fbdd7c64b625d9505194c58}\label{hal_8cpp_a48804cff9fbdd7c64b625d9505194c58}} 
+\index{hal.cpp@{hal.cpp}!cpuidCheckEDX@{cpuidCheckEDX}}
+\index{cpuidCheckEDX@{cpuidCheckEDX}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{cpuidCheckEDX()}{cpuidCheckEDX()}}
+{\footnotesize\ttfamily bool cpuid\+Check\+EDX (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{check }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a3bf44b86535c896a6e8c337bcc6523e9}\label{hal_8cpp_a3bf44b86535c896a6e8c337bcc6523e9}} 
+\index{hal.cpp@{hal.cpp}!cpuidCheckExtendedEBX@{cpuidCheckExtendedEBX}}
+\index{cpuidCheckExtendedEBX@{cpuidCheckExtendedEBX}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{cpuidCheckExtendedEBX()}{cpuidCheckExtendedEBX()}}
+{\footnotesize\ttfamily bool cpuid\+Check\+Extended\+EBX (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{check }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a179eef8928321863fd2238b58a8b65fa}\label{hal_8cpp_a179eef8928321863fd2238b58a8b65fa}} 
+\index{hal.cpp@{hal.cpp}!cpuidCheckExtendedECX@{cpuidCheckExtendedECX}}
+\index{cpuidCheckExtendedECX@{cpuidCheckExtendedECX}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{cpuidCheckExtendedECX()}{cpuidCheckExtendedECX()}}
+{\footnotesize\ttfamily bool cpuid\+Check\+Extended\+ECX (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{check }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a6be3936b22dabafc9001711e7680875c}\label{hal_8cpp_a6be3936b22dabafc9001711e7680875c}} 
+\index{hal.cpp@{hal.cpp}!detectCPUID@{detectCPUID}}
+\index{detectCPUID@{detectCPUID}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{detectCPUID()}{detectCPUID()}}
+{\footnotesize\ttfamily int detect\+CPUID (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_ab0f21b39e7c79ad09f6ad828b369ce0e}\label{hal_8cpp_ab0f21b39e7c79ad09f6ad828b369ce0e}} 
+\index{hal.cpp@{hal.cpp}!doTPAUSE@{doTPAUSE}}
+\index{doTPAUSE@{doTPAUSE}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{doTPAUSE()}{doTPAUSE()}}
+{\footnotesize\ttfamily void do\+TPAUSE (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a5297851967cfb0210cd477655511c2ba}\label{hal_8cpp_a5297851967cfb0210cd477655511c2ba}} 
+\index{hal.cpp@{hal.cpp}!HalDetectFeatures@{HalDetectFeatures}}
+\index{HalDetectFeatures@{HalDetectFeatures}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{HalDetectFeatures()}{HalDetectFeatures()}}
+{\footnotesize\ttfamily void Hal\+Detect\+Features (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_ad17958411f89ef960912e262173d65f4}\label{hal_8cpp_ad17958411f89ef960912e262173d65f4}} 
+\index{hal.cpp@{hal.cpp}!HalDisableNMI@{HalDisableNMI}}
+\index{HalDisableNMI@{HalDisableNMI}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{HalDisableNMI()}{HalDisableNMI()}}
+{\footnotesize\ttfamily void Hal\+Disable\+NMI (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a3c7d6ef6e6ee18ee7224a596fdefdb5d}\label{hal_8cpp_a3c7d6ef6e6ee18ee7224a596fdefdb5d}} 
+\index{hal.cpp@{hal.cpp}!HalDisplayDebugInfo@{HalDisplayDebugInfo}}
+\index{HalDisplayDebugInfo@{HalDisplayDebugInfo}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{HalDisplayDebugInfo()}{HalDisplayDebugInfo()}}
+{\footnotesize\ttfamily void Hal\+Display\+Debug\+Info (\begin{DoxyParamCaption}\item[{void $\ast$}]{rr }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_aa852e445f4a2847cd9b8ae6510ba2944}\label{hal_8cpp_aa852e445f4a2847cd9b8ae6510ba2944}} 
+\index{hal.cpp@{hal.cpp}!HalEnableNMI@{HalEnableNMI}}
+\index{HalEnableNMI@{HalEnableNMI}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{HalEnableNMI()}{HalEnableNMI()}}
+{\footnotesize\ttfamily void Hal\+Enable\+NMI (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a0685e42bd12c21f16797a4de3d52c7fa}\label{hal_8cpp_a0685e42bd12c21f16797a4de3d52c7fa}} 
+\index{hal.cpp@{hal.cpp}!HalEndOfInterrupt@{HalEndOfInterrupt}}
+\index{HalEndOfInterrupt@{HalEndOfInterrupt}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{HalEndOfInterrupt()}{HalEndOfInterrupt()}}
+{\footnotesize\ttfamily void Hal\+End\+Of\+Interrupt (\begin{DoxyParamCaption}\item[{int}]{irq }\end{DoxyParamCaption})}
+
+
+
+Sends an acknowledgement message to the interrupt controller that the interrupt has been handled. Needs to be called after every interrupt. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em irq} & The interrupt number to acknowledge.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{hal_8cpp_a10bb32d66d845e1579049c6af903b108}\label{hal_8cpp_a10bb32d66d845e1579049c6af903b108}} 
+\index{hal.cpp@{hal.cpp}!HalFindRSDP@{HalFindRSDP}}
+\index{HalFindRSDP@{HalFindRSDP}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{HalFindRSDP()}{HalFindRSDP()}}
+{\footnotesize\ttfamily uint8\+\_\+t $\ast$ Hal\+Find\+RSDP (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a0bfd7f19b52e7077d5d2322b50f19308}\label{hal_8cpp_a0bfd7f19b52e7077d5d2322b50f19308}} 
+\index{hal.cpp@{hal.cpp}!HalGetNMIState@{HalGetNMIState}}
+\index{HalGetNMIState@{HalGetNMIState}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{HalGetNMIState()}{HalGetNMIState()}}
+{\footnotesize\ttfamily bool Hal\+Get\+NMIState (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a9b9d096f749341acd3f791d523534d38}\label{hal_8cpp_a9b9d096f749341acd3f791d523534d38}} 
+\index{hal.cpp@{hal.cpp}!HalGetRand@{HalGetRand}}
+\index{HalGetRand@{HalGetRand}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{HalGetRand()}{HalGetRand()}}
+{\footnotesize\ttfamily uint32\+\_\+t Hal\+Get\+Rand (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns a 32-\/bit random value using a hardware RNG generator if available, else it should return zero. 
+
+\begin{DoxyReturn}{Returns}
+A 32-\/bit random value, or zero if hardware RNG is not supported.
+\end{DoxyReturn}
+\mbox{\Hypertarget{hal_8cpp_af5489bfb078558d31257c02f25b2a4d7}\label{hal_8cpp_af5489bfb078558d31257c02f25b2a4d7}} 
+\index{hal.cpp@{hal.cpp}!HalHandleGeneralProtectionFault@{HalHandleGeneralProtectionFault}}
+\index{HalHandleGeneralProtectionFault@{HalHandleGeneralProtectionFault}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{HalHandleGeneralProtectionFault()}{HalHandleGeneralProtectionFault()}}
+{\footnotesize\ttfamily bool Hal\+Handle\+General\+Protection\+Fault (\begin{DoxyParamCaption}\item[{void $\ast$}]{rr,  }\item[{void $\ast$}]{ctxt }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a129f9b7da3a76dcec5052b457170f082}\label{hal_8cpp_a129f9b7da3a76dcec5052b457170f082}} 
+\index{hal.cpp@{hal.cpp}!HalHandleOpcodeFault@{HalHandleOpcodeFault}}
+\index{HalHandleOpcodeFault@{HalHandleOpcodeFault}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{HalHandleOpcodeFault()}{HalHandleOpcodeFault()}}
+{\footnotesize\ttfamily bool Hal\+Handle\+Opcode\+Fault (\begin{DoxyParamCaption}\item[{void $\ast$}]{rr,  }\item[{void $\ast$}]{ctxt }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_afec8a2453bf72f304b112d0ec6df8b54}\label{hal_8cpp_afec8a2453bf72f304b112d0ec6df8b54}} 
+\index{hal.cpp@{hal.cpp}!HalHandlePageFault@{HalHandlePageFault}}
+\index{HalHandlePageFault@{HalHandlePageFault}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{HalHandlePageFault()}{HalHandlePageFault()}}
+{\footnotesize\ttfamily bool Hal\+Handle\+Page\+Fault (\begin{DoxyParamCaption}\item[{void $\ast$}]{rr,  }\item[{void $\ast$}]{ctxt }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a235176223b3d4074dd13f2d913887b36}\label{hal_8cpp_a235176223b3d4074dd13f2d913887b36}} 
+\index{hal.cpp@{hal.cpp}!HalInitialise@{HalInitialise}}
+\index{HalInitialise@{HalInitialise}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{HalInitialise()}{HalInitialise()}}
+{\footnotesize\ttfamily void Hal\+Initialise (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Initialises the HAL. Should only be called once, and is internal to the kernel. 
+
+\mbox{\Hypertarget{hal_8cpp_a253bda11278b608ccbfeb3768533a8c4}\label{hal_8cpp_a253bda11278b608ccbfeb3768533a8c4}} 
+\index{hal.cpp@{hal.cpp}!HalInitialiseCoprocessor@{HalInitialiseCoprocessor}}
+\index{HalInitialiseCoprocessor@{HalInitialiseCoprocessor}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{HalInitialiseCoprocessor()}{HalInitialiseCoprocessor()}}
+{\footnotesize\ttfamily void Hal\+Initialise\+Coprocessor (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Initialies the floating point coprocessor if it exists. Should only be called once, and is internal to the kernel. 
+
+\mbox{\Hypertarget{hal_8cpp_a2cd9727e49c650a2dcfdb8d2c568fcc9}\label{hal_8cpp_a2cd9727e49c650a2dcfdb8d2c568fcc9}} 
+\index{hal.cpp@{hal.cpp}!HalMakeBeep@{HalMakeBeep}}
+\index{HalMakeBeep@{HalMakeBeep}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{HalMakeBeep()}{HalMakeBeep()}}
+{\footnotesize\ttfamily void Hal\+Make\+Beep (\begin{DoxyParamCaption}\item[{int}]{hertz }\end{DoxyParamCaption})}
+
+
+
+Causes the speaker to produce a tone at the requested frequency, until this function is called with a frequency of zero. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em hertz} & The frequency to produce, or zero to stop.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{hal_8cpp_a607e59a8bc44e7107f03090df4e54417}\label{hal_8cpp_a607e59a8bc44e7107f03090df4e54417}} 
+\index{hal.cpp@{hal.cpp}!HalPanic@{HalPanic}}
+\index{HalPanic@{HalPanic}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{HalPanic()}{HalPanic()}}
+{\footnotesize\ttfamily void Hal\+Panic (\begin{DoxyParamCaption}\item[{const char $\ast$}]{message }\end{DoxyParamCaption})}
+
+
+
+Causes a stop error, for when the system detects an unrecoverable situation which requires a complete lockup of the system. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em message} & The error message to display to the user.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{hal_8cpp_a01c269a06e0c3184a607eb1d3c4027d3}\label{hal_8cpp_a01c269a06e0c3184a607eb1d3c4027d3}} 
+\index{hal.cpp@{hal.cpp}!HalQueryPerformanceCounter@{HalQueryPerformanceCounter}}
+\index{HalQueryPerformanceCounter@{HalQueryPerformanceCounter}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{HalQueryPerformanceCounter()}{HalQueryPerformanceCounter()}}
+{\footnotesize\ttfamily uint64\+\_\+t Hal\+Query\+Performance\+Counter (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns the value of performance counter (e.\+g. the timestamp counter) if the system has one. If the system has one, all values are expected to be larger than the previously returned value. If the system does not have one, the function shall either return zero or provide a estimate (in which case all values should be larger than the previously returned value). 
+
+\begin{DoxyReturn}{Returns}
+The current value of the performance counter.
+\end{DoxyReturn}
+\mbox{\Hypertarget{hal_8cpp_a27b9b5b1893e1841a353813c5fc5ba27}\label{hal_8cpp_a27b9b5b1893e1841a353813c5fc5ba27}} 
+\index{hal.cpp@{hal.cpp}!HalReceivedNMI@{HalReceivedNMI}}
+\index{HalReceivedNMI@{HalReceivedNMI}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{HalReceivedNMI()}{HalReceivedNMI()}}
+{\footnotesize\ttfamily void Hal\+Received\+NMI (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Called when the system receives an NMI. 
+
+\mbox{\Hypertarget{hal_8cpp_abf8e081cd17a410eff34db48b0ff0a3b}\label{hal_8cpp_abf8e081cd17a410eff34db48b0ff0a3b}} 
+\index{hal.cpp@{hal.cpp}!HalRestart@{HalRestart}}
+\index{HalRestart@{HalRestart}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{HalRestart()}{HalRestart()}}
+{\footnotesize\ttfamily void Hal\+Restart (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Reboots the system immediately. 
+
+\mbox{\Hypertarget{hal_8cpp_a94ac9d176213d1684a29fb55d46c973b}\label{hal_8cpp_a94ac9d176213d1684a29fb55d46c973b}} 
+\index{hal.cpp@{hal.cpp}!HalShutdown@{HalShutdown}}
+\index{HalShutdown@{HalShutdown}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{HalShutdown()}{HalShutdown()}}
+{\footnotesize\ttfamily void Hal\+Shutdown (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Performs a system shutdown immediately if supported, otherwise displays a message to the user telling them it is okay to turn off their computer. 
+
+\mbox{\Hypertarget{hal_8cpp_a934b436fe652e9a95a267469a788c2f5}\label{hal_8cpp_a934b436fe652e9a95a267469a788c2f5}} 
+\index{hal.cpp@{hal.cpp}!HalSleep@{HalSleep}}
+\index{HalSleep@{HalSleep}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{HalSleep()}{HalSleep()}}
+{\footnotesize\ttfamily void Hal\+Sleep (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Puts the system to sleep immediately if supported, otherwise does nothing. 
+
+\mbox{\Hypertarget{hal_8cpp_a5af6602c012a616f81107c0881ff053b}\label{hal_8cpp_a5af6602c012a616f81107c0881ff053b}} 
+\index{hal.cpp@{hal.cpp}!HalSystemIdle@{HalSystemIdle}}
+\index{HalSystemIdle@{HalSystemIdle}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{HalSystemIdle()}{HalSystemIdle()}}
+{\footnotesize\ttfamily void Hal\+System\+Idle (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Called when the system is idle (not running any tasks). It may put the system into a low-\/power mode until the next interrupt, perform background caching / cleaning work, etc. 
+
+\mbox{\Hypertarget{hal_8cpp_aefe06284ea836895360f2b411f002a58}\label{hal_8cpp_aefe06284ea836895360f2b411f002a58}} 
+\index{hal.cpp@{hal.cpp}!hasLegacyFPU@{hasLegacyFPU}}
+\index{hasLegacyFPU@{hasLegacyFPU}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{hasLegacyFPU()}{hasLegacyFPU()}}
+{\footnotesize\ttfamily size\+\_\+t has\+Legacy\+FPU (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_aacbc8729fccfaad86c53d35b2c9510c8}\label{hal_8cpp_aacbc8729fccfaad86c53d35b2c9510c8}} 
+\index{hal.cpp@{hal.cpp}!i386GetRDRAND@{i386GetRDRAND}}
+\index{i386GetRDRAND@{i386GetRDRAND}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{i386GetRDRAND()}{i386GetRDRAND()}}
+{\footnotesize\ttfamily void i386\+Get\+RDRAND (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a6d262b36cc5f492ac092360e49f2411d}\label{hal_8cpp_a6d262b36cc5f492ac092360e49f2411d}} 
+\index{hal.cpp@{hal.cpp}!i386LoadCoprocessor@{i386LoadCoprocessor}}
+\index{i386LoadCoprocessor@{i386LoadCoprocessor}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{i386LoadCoprocessor()}{i386LoadCoprocessor()}}
+{\footnotesize\ttfamily void i386\+Load\+Coprocessor (\begin{DoxyParamCaption}\item[{void $\ast$}]{buf }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a62e2371d016d30773b072de6bf1eaab6}\label{hal_8cpp_a62e2371d016d30773b072de6bf1eaab6}} 
+\index{hal.cpp@{hal.cpp}!i386SaveCoprocessor@{i386SaveCoprocessor}}
+\index{i386SaveCoprocessor@{i386SaveCoprocessor}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{i386SaveCoprocessor()}{i386SaveCoprocessor()}}
+{\footnotesize\ttfamily void i386\+Save\+Coprocessor (\begin{DoxyParamCaption}\item[{void $\ast$}]{buf }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a4de81f872291b00d6ffae9281db454d3}\label{hal_8cpp_a4de81f872291b00d6ffae9281db454d3}} 
+\index{hal.cpp@{hal.cpp}!is486@{is486}}
+\index{is486@{is486}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{is486()}{is486()}}
+{\footnotesize\ttfamily size\+\_\+t is486 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a643f056b5d5d5e4239f09a4925ddcb17}\label{hal_8cpp_a643f056b5d5d5e4239f09a4925ddcb17}} 
+\index{hal.cpp@{hal.cpp}!noCopro@{noCopro}}
+\index{noCopro@{noCopro}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{noCopro()}{noCopro()}}
+{\footnotesize\ttfamily void no\+Copro (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{a }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_aa72e4b6b00d1ced7d4fdeedbba90c0f7}\label{hal_8cpp_aa72e4b6b00d1ced7d4fdeedbba90c0f7}} 
+\index{hal.cpp@{hal.cpp}!sseDetect@{sseDetect}}
+\index{sseDetect@{sseDetect}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{sseDetect()}{sseDetect()}}
+{\footnotesize\ttfamily int sse\+Detect (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a956487ef6b5979412bb363ae8ea200e5}\label{hal_8cpp_a956487ef6b5979412bb363ae8ea200e5}} 
+\index{hal.cpp@{hal.cpp}!sseInit@{sseInit}}
+\index{sseInit@{sseInit}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{sseInit()}{sseInit()}}
+{\footnotesize\ttfamily void sse\+Init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a75ae8926c589bd380bf88dad4e02c01a}\label{hal_8cpp_a75ae8926c589bd380bf88dad4e02c01a}} 
+\index{hal.cpp@{hal.cpp}!sseLoad@{sseLoad}}
+\index{sseLoad@{sseLoad}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{sseLoad()}{sseLoad()}}
+{\footnotesize\ttfamily void sse\+Load (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_af9a9138be7dc9ade2620f19aae08a421}\label{hal_8cpp_af9a9138be7dc9ade2620f19aae08a421}} 
+\index{hal.cpp@{hal.cpp}!sseSave@{sseSave}}
+\index{sseSave@{sseSave}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{sseSave()}{sseSave()}}
+{\footnotesize\ttfamily void sse\+Save (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a2694ba290e4782f583c3903889713f5a}\label{hal_8cpp_a2694ba290e4782f583c3903889713f5a}} 
+\index{hal.cpp@{hal.cpp}!x86rdmsr@{x86rdmsr}}
+\index{x86rdmsr@{x86rdmsr}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{x86rdmsr()}{x86rdmsr()}}
+{\footnotesize\ttfamily uint64\+\_\+t x86rdmsr (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{msr\+\_\+id }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_ae43177b806620933be41fe0d0fdb00d6}\label{hal_8cpp_ae43177b806620933be41fe0d0fdb00d6}} 
+\index{hal.cpp@{hal.cpp}!x86ReadCMOS@{x86ReadCMOS}}
+\index{x86ReadCMOS@{x86ReadCMOS}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{x86ReadCMOS()}{x86ReadCMOS()}}
+{\footnotesize\ttfamily uint8\+\_\+t x86\+Read\+CMOS (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{reg }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a321ae7942a091951ebe705fd15d094f5}\label{hal_8cpp_a321ae7942a091951ebe705fd15d094f5}} 
+\index{hal.cpp@{hal.cpp}!x86WriteCMOS@{x86WriteCMOS}}
+\index{x86WriteCMOS@{x86WriteCMOS}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{x86WriteCMOS()}{x86WriteCMOS()}}
+{\footnotesize\ttfamily void x86\+Write\+CMOS (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{reg,  }\item[{uint8\+\_\+t}]{val }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a1a6b1a272348079acffcc08a86c0ecd6}\label{hal_8cpp_a1a6b1a272348079acffcc08a86c0ecd6}} 
+\index{hal.cpp@{hal.cpp}!x86wrmsr@{x86wrmsr}}
+\index{x86wrmsr@{x86wrmsr}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{x86wrmsr()}{x86wrmsr()}}
+{\footnotesize\ttfamily void x86wrmsr (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{msr\+\_\+id,  }\item[{uint64\+\_\+t}]{msr\+\_\+value }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a17febbbf83ca3e5286ba6c497dabd81a}\label{hal_8cpp_a17febbbf83ca3e5286ba6c497dabd81a}} 
+\index{hal.cpp@{hal.cpp}!x87Detect@{x87Detect}}
+\index{x87Detect@{x87Detect}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{x87Detect()}{x87Detect()}}
+{\footnotesize\ttfamily int x87\+Detect (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_af9b17a675333a7c2100422a47f2130ff}\label{hal_8cpp_af9b17a675333a7c2100422a47f2130ff}} 
+\index{hal.cpp@{hal.cpp}!x87EmulHandler@{x87EmulHandler}}
+\index{x87EmulHandler@{x87EmulHandler}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{x87EmulHandler()}{x87EmulHandler()}}
+{\footnotesize\ttfamily void x87\+Emul\+Handler (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r,  }\item[{void $\ast$}]{context }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a8f63231fa2730091d12f0df1bfdd583b}\label{hal_8cpp_a8f63231fa2730091d12f0df1bfdd583b}} 
+\index{hal.cpp@{hal.cpp}!x87Init@{x87Init}}
+\index{x87Init@{x87Init}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{x87Init()}{x87Init()}}
+{\footnotesize\ttfamily void x87\+Init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a60e9366d67021c8dd51e3317cbf0af0d}\label{hal_8cpp_a60e9366d67021c8dd51e3317cbf0af0d}} 
+\index{hal.cpp@{hal.cpp}!x87Load@{x87Load}}
+\index{x87Load@{x87Load}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{x87Load()}{x87Load()}}
+{\footnotesize\ttfamily void x87\+Load (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a5b814f88de489b72626d4f32debfdab4}\label{hal_8cpp_a5b814f88de489b72626d4f32debfdab4}} 
+\index{hal.cpp@{hal.cpp}!x87Save@{x87Save}}
+\index{x87Save@{x87Save}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{x87Save()}{x87Save()}}
+{\footnotesize\ttfamily void x87\+Save (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{hal_8cpp_a3a0bd0b1c96e14a9f9078328a2ea1506}\label{hal_8cpp_a3a0bd0b1c96e14a9f9078328a2ea1506}} 
+\index{hal.cpp@{hal.cpp}!coproLoadFunc@{coproLoadFunc}}
+\index{coproLoadFunc@{coproLoadFunc}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{coproLoadFunc}{coproLoadFunc}}
+{\footnotesize\ttfamily void($\ast$ copro\+Load\+Func) (size\+\_\+t) (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_a59e3e43e9540ef23d891e815572eb820}\label{hal_8cpp_a59e3e43e9540ef23d891e815572eb820}} 
+\index{hal.cpp@{hal.cpp}!coproSaveFunc@{coproSaveFunc}}
+\index{coproSaveFunc@{coproSaveFunc}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{coproSaveFunc}{coproSaveFunc}}
+{\footnotesize\ttfamily void($\ast$ copro\+Save\+Func) (size\+\_\+t) (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_aac2b818b518f9214a7c8eaaa2f9a3ab9}\label{hal_8cpp_aac2b818b518f9214a7c8eaaa2f9a3ab9}} 
+\index{hal.cpp@{hal.cpp}!exceptionNames@{exceptionNames}}
+\index{exceptionNames@{exceptionNames}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{exceptionNames}{exceptionNames}}
+{\footnotesize\ttfamily char exception\+Names\mbox{[}$\,$\mbox{]}\mbox{[}32\mbox{]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}Division by zero error"{}},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}Debug"{}},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}Non-\/maskable interrupt"{}},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}Breakpoint"{}},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}Overflow"{}},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}Bound range exceeded"{}},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}Invalid opcode"{}},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}Device not available"{}},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}Dobule fault"{}},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}Coprocessor segment"{}},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}Invalid TSS"{}},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}Segment not present"{}},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}Stack segment fault"{}},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}General protection fault"{}},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}Page fault"{}},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}Reserved"{}},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}Floating point exception"{}},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}Alignment check"{}},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}Machine check"{}},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}SIMD floating-\/point exception"{}},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"{}Virtualisation exception"{}},}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{hal_8cpp_ad722b3a406f71ed9d6a5daf29150cc45}\label{hal_8cpp_ad722b3a406f71ed9d6a5daf29150cc45}} 
+\index{hal.cpp@{hal.cpp}!familyID@{familyID}}
+\index{familyID@{familyID}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{familyID}{familyID}}
+{\footnotesize\ttfamily uint8\+\_\+t family\+ID}
+
+\mbox{\Hypertarget{hal_8cpp_ad74c3220e2f30d5bed0216f49fe8da1d}\label{hal_8cpp_ad74c3220e2f30d5bed0216f49fe8da1d}} 
+\index{hal.cpp@{hal.cpp}!features@{features}}
+\index{features@{features}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{features}{features}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structx86_features}{x86\+Features}} features}
+
+\mbox{\Hypertarget{hal_8cpp_a6185caedc6d924ab2c6e39fc64f2711d}\label{hal_8cpp_a6185caedc6d924ab2c6e39fc64f2711d}} 
+\index{hal.cpp@{hal.cpp}!fpuOwner@{fpuOwner}}
+\index{fpuOwner@{fpuOwner}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{fpuOwner}{fpuOwner}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}}$\ast$ fpu\+Owner = nullptr}
+
+\mbox{\Hypertarget{hal_8cpp_a35c2f7cfad81a5cd72b152547525efaf}\label{hal_8cpp_a35c2f7cfad81a5cd72b152547525efaf}} 
+\index{hal.cpp@{hal.cpp}!guiPanicHandler@{guiPanicHandler}}
+\index{guiPanicHandler@{guiPanicHandler}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{guiPanicHandler}{guiPanicHandler}}
+{\footnotesize\ttfamily void($\ast$ gui\+Panic\+Handler) (char $\ast$message) (\begin{DoxyParamCaption}\item[{char $\ast$}]{message }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hal_8cpp_ac6e06fbe07db4b76ddd356468f3f0e45}\label{hal_8cpp_ac6e06fbe07db4b76ddd356468f3f0e45}} 
+\index{hal.cpp@{hal.cpp}!HalPageGlobalFlag@{HalPageGlobalFlag}}
+\index{HalPageGlobalFlag@{HalPageGlobalFlag}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{HalPageGlobalFlag}{HalPageGlobalFlag}}
+{\footnotesize\ttfamily size\+\_\+t Hal\+Page\+Global\+Flag = 0}
+
+\mbox{\Hypertarget{hal_8cpp_af9ac0b94d0fc3199e9b8cdc5bfc8c3ee}\label{hal_8cpp_af9ac0b94d0fc3199e9b8cdc5bfc8c3ee}} 
+\index{hal.cpp@{hal.cpp}!HalPageWriteCombiningFlag@{HalPageWriteCombiningFlag}}
+\index{HalPageWriteCombiningFlag@{HalPageWriteCombiningFlag}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{HalPageWriteCombiningFlag}{HalPageWriteCombiningFlag}}
+{\footnotesize\ttfamily size\+\_\+t Hal\+Page\+Write\+Combining\+Flag = 0}
+
+\mbox{\Hypertarget{hal_8cpp_a34a448919add5334c16c06259085c8e4}\label{hal_8cpp_a34a448919add5334c16c06259085c8e4}} 
+\index{hal.cpp@{hal.cpp}!keNMIEnabled@{keNMIEnabled}}
+\index{keNMIEnabled@{keNMIEnabled}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{keNMIEnabled}{keNMIEnabled}}
+{\footnotesize\ttfamily bool ke\+NMIEnabled = false}
+
+\mbox{\Hypertarget{hal_8cpp_a6d33f5cdbd31aee50244299da1a85037}\label{hal_8cpp_a6d33f5cdbd31aee50244299da1a85037}} 
+\index{hal.cpp@{hal.cpp}!lastA@{lastA}}
+\index{lastA@{lastA}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{lastA}{lastA}}
+{\footnotesize\ttfamily size\+\_\+t lastA = 0}
+
+\mbox{\Hypertarget{hal_8cpp_aed23e73665b19e2ffcd4dcd9c7e9dc33}\label{hal_8cpp_aed23e73665b19e2ffcd4dcd9c7e9dc33}} 
+\index{hal.cpp@{hal.cpp}!lastB@{lastB}}
+\index{lastB@{lastB}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{lastB}{lastB}}
+{\footnotesize\ttfamily size\+\_\+t lastB = 0}
+
+\mbox{\Hypertarget{hal_8cpp_ac42741d626234150d707d35e0043ed1f}\label{hal_8cpp_ac42741d626234150d707d35e0043ed1f}} 
+\index{hal.cpp@{hal.cpp}!lastC@{lastC}}
+\index{lastC@{lastC}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{lastC}{lastC}}
+{\footnotesize\ttfamily size\+\_\+t lastC = 0}
+
+\mbox{\Hypertarget{hal_8cpp_adb2401d3a54855258cf609ab8dca47d6}\label{hal_8cpp_adb2401d3a54855258cf609ab8dca47d6}} 
+\index{hal.cpp@{hal.cpp}!lastCode@{lastCode}}
+\index{lastCode@{lastCode}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{lastCode}{lastCode}}
+{\footnotesize\ttfamily int last\+Code = -\/1}
+
+\mbox{\Hypertarget{hal_8cpp_a9aee1f4e712ed594ae0efd81af684cb8}\label{hal_8cpp_a9aee1f4e712ed594ae0efd81af684cb8}} 
+\index{hal.cpp@{hal.cpp}!lastD@{lastD}}
+\index{lastD@{lastD}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{lastD}{lastD}}
+{\footnotesize\ttfamily size\+\_\+t lastD = 0}
+
+\mbox{\Hypertarget{hal_8cpp_a6b5e17905d0e1bc12cfac364ecdcdf1c}\label{hal_8cpp_a6b5e17905d0e1bc12cfac364ecdcdf1c}} 
+\index{hal.cpp@{hal.cpp}!model@{model}}
+\index{model@{model}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{model}{model}}
+{\footnotesize\ttfamily uint8\+\_\+t model}
+
+\mbox{\Hypertarget{hal_8cpp_a7eead901fb97ebee6c653afb24f40473}\label{hal_8cpp_a7eead901fb97ebee6c653afb24f40473}} 
+\index{hal.cpp@{hal.cpp}!opcodeDetectionMode@{opcodeDetectionMode}}
+\index{opcodeDetectionMode@{opcodeDetectionMode}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{opcodeDetectionMode}{opcodeDetectionMode}}
+{\footnotesize\ttfamily bool opcode\+Detection\+Mode = false}
+
+\mbox{\Hypertarget{hal_8cpp_ada1f9e50afe8fa8178569c0a0d1c112b}\label{hal_8cpp_ada1f9e50afe8fa8178569c0a0d1c112b}} 
+\index{hal.cpp@{hal.cpp}!processorType@{processorType}}
+\index{processorType@{processorType}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{processorType}{processorType}}
+{\footnotesize\ttfamily uint8\+\_\+t processor\+Type}
+
+\mbox{\Hypertarget{hal_8cpp_a927b2019e04f23683e7e9545cd09e8df}\label{hal_8cpp_a927b2019e04f23683e7e9545cd09e8df}} 
+\index{hal.cpp@{hal.cpp}!steppingID@{steppingID}}
+\index{steppingID@{steppingID}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{steppingID}{steppingID}}
+{\footnotesize\ttfamily uint8\+\_\+t stepping\+ID}
+
+\mbox{\Hypertarget{hal_8cpp_a7c6678fcc3ad5bdfdd411a6c89baaf23}\label{hal_8cpp_a7c6678fcc3ad5bdfdd411a6c89baaf23}} 
+\index{hal.cpp@{hal.cpp}!vendor@{vendor}}
+\index{vendor@{vendor}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{vendor}{vendor}}
+{\footnotesize\ttfamily \mbox{\hyperlink{hal_8cpp_aa333875790e538e1ed3dfe456632635c}{CPUVendor}} vendor}
+
+\mbox{\Hypertarget{hal_8cpp_a61e6e4743473c79f84c7d25b2dfd8e1f}\label{hal_8cpp_a61e6e4743473c79f84c7d25b2dfd8e1f}} 
+\index{hal.cpp@{hal.cpp}!vendorIDString@{vendorIDString}}
+\index{vendorIDString@{vendorIDString}!hal.cpp@{hal.cpp}}
+\doxysubsubsection{\texorpdfstring{vendorIDString}{vendorIDString}}
+{\footnotesize\ttfamily char vendor\+IDString\mbox{[}13\mbox{]}}
+

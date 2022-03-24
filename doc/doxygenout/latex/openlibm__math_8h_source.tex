@@ -1,0 +1,506 @@
+\hypertarget{openlibm__math_8h_source}{}\doxysection{openlibm\+\_\+math.\+h}
+\label{openlibm__math_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/libk/\_mathinc/openlibm\_math.h@{C:/Users/Alex/Desktop/Banana/kernel/libk/\_mathinc/openlibm\_math.h}}
+\mbox{\hyperlink{openlibm__math_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*}}
+\DoxyCodeLine{2 \textcolor{comment}{ * ====================================================}}
+\DoxyCodeLine{3 \textcolor{comment}{ * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.}}
+\DoxyCodeLine{4 \textcolor{comment}{ *}}
+\DoxyCodeLine{5 \textcolor{comment}{ * Developed at SunPro, a Sun Microsystems, Inc. business.}}
+\DoxyCodeLine{6 \textcolor{comment}{ * Permission to use, copy, modify, and distribute this}}
+\DoxyCodeLine{7 \textcolor{comment}{ * software is freely granted, provided that this notice}}
+\DoxyCodeLine{8 \textcolor{comment}{ * is preserved.}}
+\DoxyCodeLine{9 \textcolor{comment}{ * ====================================================}}
+\DoxyCodeLine{10 \textcolor{comment}{ */}}
+\DoxyCodeLine{11 }
+\DoxyCodeLine{12 \textcolor{comment}{/*}}
+\DoxyCodeLine{13 \textcolor{comment}{ * from: @(\#)fdlibm.h 5.1 93/09/24}}
+\DoxyCodeLine{14 \textcolor{comment}{ * \$FreeBSD: src/lib/msun/src/openlibm.h,v 1.82 2011/11/12 19:55:48 theraven Exp \$}}
+\DoxyCodeLine{15 \textcolor{comment}{ */}}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#ifdef OPENLIBM\_USE\_HOST\_MATH\_H}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#include <\mbox{\hyperlink{math_8h}{math.h}}>}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#else }\textcolor{comment}{/* !OPENLIBM\_USE\_HOST\_MATH\_H */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21 \textcolor{preprocessor}{\#ifndef OPENLIBM\_MATH\_H}}
+\DoxyCodeLine{22 \textcolor{preprocessor}{\#define OPENLIBM\_MATH\_H}}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24 \textcolor{preprocessor}{\#if (defined(\_WIN32) || defined (\_MSC\_VER)) \&\& !defined(\_\_WIN32\_\_)}}
+\DoxyCodeLine{25 \textcolor{preprocessor}{    \#define \_\_WIN32\_\_}}
+\DoxyCodeLine{26 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#ifndef \_\_arm\_\_}}
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#define LONG\_DOUBLE}}
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32 \textcolor{preprocessor}{\#ifndef \_\_pure2}}
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#define \_\_pure2}}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#ifdef \_WIN32}}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\# ifdef IMPORT\_EXPORTS}}
+\DoxyCodeLine{38 \textcolor{preprocessor}{\#  define OLM\_DLLEXPORT \_\_declspec(dllimport)}}
+\DoxyCodeLine{39 \textcolor{preprocessor}{\# else}}
+\DoxyCodeLine{40 \textcolor{preprocessor}{\#  define OLM\_DLLEXPORT \_\_declspec(dllexport)}}
+\DoxyCodeLine{41 \textcolor{preprocessor}{\# endif}}
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{43 \textcolor{preprocessor}{\#define OLM\_DLLEXPORT \_\_attribute\_\_ ((visibility("{}default"{}})))}
+\DoxyCodeLine{44 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{45 }
+\DoxyCodeLine{46 \textcolor{comment}{/*}}
+\DoxyCodeLine{47 \textcolor{comment}{ * ANSI/POSIX}}
+\DoxyCodeLine{48 \textcolor{comment}{ */}}
+\DoxyCodeLine{49 \textcolor{keyword}{extern} \textcolor{keyword}{const} \textcolor{keyword}{union }\mbox{\hyperlink{union____infinity__un}{\_\_infinity\_un}} \{}
+\DoxyCodeLine{50     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char}   \mbox{\hyperlink{union____infinity__un_a3b6ddefdcd04f0a03cb766c28d403ae9}{\_\_uc}}[8];}
+\DoxyCodeLine{51     \textcolor{keywordtype}{double}      \mbox{\hyperlink{union____infinity__un_a31e2b2036b940bb143d34071241f842a}{\_\_ud}};}
+\DoxyCodeLine{52 \} \mbox{\hyperlink{openlibm__math_8h_a8151add3d1de36089da4d352b6235209}{\_\_infinity}};}
+\DoxyCodeLine{53 }
+\DoxyCodeLine{54 \textcolor{keyword}{extern} \textcolor{keyword}{const} \textcolor{keyword}{union }\mbox{\hyperlink{union____nan__un}{\_\_nan\_un}} \{}
+\DoxyCodeLine{55     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char}   \mbox{\hyperlink{union____nan__un_a555082848c0e98f79a4340ef6cc8e642}{\_\_uc}}[\textcolor{keyword}{sizeof}(float)];}
+\DoxyCodeLine{56     \textcolor{keywordtype}{float}       \mbox{\hyperlink{union____nan__un_a341b60b3b11ff276435795c102578ade}{\_\_uf}};}
+\DoxyCodeLine{57 \} \mbox{\hyperlink{openlibm__math_8h_a3961591eabe322cf2f0e661514f87b32}{\_\_nan}};}
+\DoxyCodeLine{58 }
+\DoxyCodeLine{59 \textcolor{comment}{/* VBS}}
+\DoxyCodeLine{60 \textcolor{comment}{\#if \_\_GNUC\_PREREQ\_\_(3, 3) || (defined(\_\_INTEL\_COMPILER) \&\& \_\_INTEL\_COMPILER >= 800)}}
+\DoxyCodeLine{61 \textcolor{comment}{\#define \_\_MATH\_BUILTIN\_CONSTANTS}}
+\DoxyCodeLine{62 \textcolor{comment}{\#endif}}
+\DoxyCodeLine{63 \textcolor{comment}{}}
+\DoxyCodeLine{64 \textcolor{comment}{\#if \_\_GNUC\_PREREQ\_\_(3, 0) \&\& !defined(\_\_INTEL\_COMPILER)}}
+\DoxyCodeLine{65 \textcolor{comment}{\#define \_\_MATH\_BUILTIN\_RELOPS}}
+\DoxyCodeLine{66 \textcolor{comment}{\#endif}}
+\DoxyCodeLine{67 \textcolor{comment}{*/}}
+\DoxyCodeLine{68 }
+\DoxyCodeLine{69 \textcolor{comment}{//VBS begin}}
+\DoxyCodeLine{70 \textcolor{preprocessor}{\#define \_\_MATH\_BUILTIN\_CONSTANTS}}
+\DoxyCodeLine{71 \textcolor{preprocessor}{\#define \_\_MATH\_BUILTIN\_RELOPS}}
+\DoxyCodeLine{72 \textcolor{preprocessor}{\#ifndef \_\_ISO\_C\_VISIBLE}}
+\DoxyCodeLine{73 \textcolor{preprocessor}{\#define \_\_ISO\_C\_VISIBLE 1999}}
+\DoxyCodeLine{74 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{75 \textcolor{comment}{//VBS end}}
+\DoxyCodeLine{76 }
+\DoxyCodeLine{77 \textcolor{preprocessor}{\#ifdef \_\_MATH\_BUILTIN\_CONSTANTS}}
+\DoxyCodeLine{78 \textcolor{preprocessor}{\#define HUGE\_VAL    \_\_builtin\_huge\_val()}}
+\DoxyCodeLine{79 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{80 \textcolor{preprocessor}{\#define HUGE\_VAL    (\_\_infinity.\_\_ud)}}
+\DoxyCodeLine{81 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{82 }
+\DoxyCodeLine{83 \textcolor{preprocessor}{\#if \_\_ISO\_C\_VISIBLE >= 1999}}
+\DoxyCodeLine{84 \textcolor{preprocessor}{\#define FP\_ILOGB0   (-\/INT\_MAX)}}
+\DoxyCodeLine{85 \textcolor{preprocessor}{\#define FP\_ILOGBNAN INT\_MAX}}
+\DoxyCodeLine{86 }
+\DoxyCodeLine{87 \textcolor{preprocessor}{\#ifdef \_\_MATH\_BUILTIN\_CONSTANTS}}
+\DoxyCodeLine{88 \textcolor{preprocessor}{\#define HUGE\_VALF   \_\_builtin\_huge\_valf()}}
+\DoxyCodeLine{89 \textcolor{preprocessor}{\#define HUGE\_VALL   \_\_builtin\_huge\_vall()}}
+\DoxyCodeLine{90 \textcolor{preprocessor}{\#define INFINITY    \_\_builtin\_inff()}}
+\DoxyCodeLine{91 \textcolor{preprocessor}{\#define NAN     \_\_builtin\_nanf("{}"{}})}
+\DoxyCodeLine{92 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{93 \textcolor{preprocessor}{\#define HUGE\_VALF   (float)HUGE\_VAL}}
+\DoxyCodeLine{94 \textcolor{preprocessor}{\#define HUGE\_VALL   (long double)HUGE\_VAL}}
+\DoxyCodeLine{95 \textcolor{preprocessor}{\#define INFINITY    HUGE\_VALF}}
+\DoxyCodeLine{96 \textcolor{preprocessor}{\#define NAN     (\_\_nan.\_\_uf)}}
+\DoxyCodeLine{97 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_MATH\_BUILTIN\_CONSTANTS */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{98 }
+\DoxyCodeLine{99 \textcolor{preprocessor}{\#define MATH\_ERRNO  1}}
+\DoxyCodeLine{100 \textcolor{preprocessor}{\#define MATH\_ERREXCEPT  2}}
+\DoxyCodeLine{101 \textcolor{preprocessor}{\#define math\_errhandling    MATH\_ERREXCEPT}}
+\DoxyCodeLine{102 }
+\DoxyCodeLine{103 \textcolor{preprocessor}{\#define FP\_FAST\_FMAF    1}}
+\DoxyCodeLine{104 \textcolor{preprocessor}{\#ifdef \_\_ia64\_\_}}
+\DoxyCodeLine{105 \textcolor{preprocessor}{\#define FP\_FAST\_FMA 1}}
+\DoxyCodeLine{106 \textcolor{preprocessor}{\#define FP\_FAST\_FMAL    1}}
+\DoxyCodeLine{107 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{108 }
+\DoxyCodeLine{109 \textcolor{comment}{/* Symbolic constants to classify floating point numbers. */}}
+\DoxyCodeLine{110 \textcolor{preprocessor}{\#define FP\_INFINITE 0x01}}
+\DoxyCodeLine{111 \textcolor{preprocessor}{\#define FP\_NAN      0x02}}
+\DoxyCodeLine{112 \textcolor{preprocessor}{\#define FP\_NORMAL   0x04}}
+\DoxyCodeLine{113 \textcolor{preprocessor}{\#define FP\_SUBNORMAL    0x08}}
+\DoxyCodeLine{114 \textcolor{preprocessor}{\#define FP\_ZERO     0x10}}
+\DoxyCodeLine{115 \textcolor{preprocessor}{\#define fpclassify(x) \(\backslash\)}}
+\DoxyCodeLine{116 \textcolor{preprocessor}{    ((sizeof (x) == sizeof (float)) ? \_\_fpclassifyf(x) \(\backslash\)}}
+\DoxyCodeLine{117 \textcolor{preprocessor}{    : (sizeof (x) == sizeof (double)) ? \_\_fpclassifyd(x) \(\backslash\)}}
+\DoxyCodeLine{118 \textcolor{preprocessor}{    : \_\_fpclassifyl(x))}}
+\DoxyCodeLine{119 }
+\DoxyCodeLine{120 \textcolor{preprocessor}{\#define isfinite(x)                 \(\backslash\)}}
+\DoxyCodeLine{121 \textcolor{preprocessor}{    ((sizeof (x) == sizeof (float)) ? \_\_isfinitef(x)    \(\backslash\)}}
+\DoxyCodeLine{122 \textcolor{preprocessor}{    : (sizeof (x) == sizeof (double)) ? \_\_isfinite(x)   \(\backslash\)}}
+\DoxyCodeLine{123 \textcolor{preprocessor}{    : \_\_isfinitel(x))}}
+\DoxyCodeLine{124 \textcolor{preprocessor}{\#define isinf(x)                    \(\backslash\)}}
+\DoxyCodeLine{125 \textcolor{preprocessor}{    ((sizeof (x) == sizeof (float)) ? \_\_isinff(x)   \(\backslash\)}}
+\DoxyCodeLine{126 \textcolor{preprocessor}{    : (sizeof (x) == sizeof (double)) ? isinf(x)    \(\backslash\)}}
+\DoxyCodeLine{127 \textcolor{preprocessor}{    : \_\_isinfl(x))}}
+\DoxyCodeLine{128 \textcolor{preprocessor}{\#define isnan(x)                    \(\backslash\)}}
+\DoxyCodeLine{129 \textcolor{preprocessor}{    ((sizeof (x) == sizeof (float)) ? \_\_isnanf(x)   \(\backslash\)}}
+\DoxyCodeLine{130 \textcolor{preprocessor}{    : (sizeof (x) == sizeof (double)) ? isnan(x)    \(\backslash\)}}
+\DoxyCodeLine{131 \textcolor{preprocessor}{    : \_\_isnanl(x))}}
+\DoxyCodeLine{132 \textcolor{preprocessor}{\#define isnormal(x)                 \(\backslash\)}}
+\DoxyCodeLine{133 \textcolor{preprocessor}{    ((sizeof (x) == sizeof (float)) ? \_\_isnormalf(x)    \(\backslash\)}}
+\DoxyCodeLine{134 \textcolor{preprocessor}{    : (sizeof (x) == sizeof (double)) ? \_\_isnormal(x)   \(\backslash\)}}
+\DoxyCodeLine{135 \textcolor{preprocessor}{    : \_\_isnormall(x))}}
+\DoxyCodeLine{136 }
+\DoxyCodeLine{137 \textcolor{preprocessor}{\#ifdef \_\_MATH\_BUILTIN\_RELOPS}}
+\DoxyCodeLine{138 \textcolor{preprocessor}{\#define isgreater(x, y)     \_\_builtin\_isgreater((x), (y))}}
+\DoxyCodeLine{139 \textcolor{preprocessor}{\#define isgreaterequal(x, y)    \_\_builtin\_isgreaterequal((x), (y))}}
+\DoxyCodeLine{140 \textcolor{preprocessor}{\#define isless(x, y)        \_\_builtin\_isless((x), (y))}}
+\DoxyCodeLine{141 \textcolor{preprocessor}{\#define islessequal(x, y)   \_\_builtin\_islessequal((x), (y))}}
+\DoxyCodeLine{142 \textcolor{preprocessor}{\#define islessgreater(x, y) \_\_builtin\_islessgreater((x), (y))}}
+\DoxyCodeLine{143 \textcolor{preprocessor}{\#define isunordered(x, y)   \_\_builtin\_isunordered((x), (y))}}
+\DoxyCodeLine{144 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{145 \textcolor{preprocessor}{\#define isgreater(x, y)     (!isunordered((x), (y)) \&\& (x) > (y))}}
+\DoxyCodeLine{146 \textcolor{preprocessor}{\#define isgreaterequal(x, y)    (!isunordered((x), (y)) \&\& (x) >= (y))}}
+\DoxyCodeLine{147 \textcolor{preprocessor}{\#define isless(x, y)        (!isunordered((x), (y)) \&\& (x) < (y))}}
+\DoxyCodeLine{148 \textcolor{preprocessor}{\#define islessequal(x, y)   (!isunordered((x), (y)) \&\& (x) <= (y))}}
+\DoxyCodeLine{149 \textcolor{preprocessor}{\#define islessgreater(x, y) (!isunordered((x), (y)) \&\& \(\backslash\)}}
+\DoxyCodeLine{150 \textcolor{preprocessor}{                    ((x) > (y) || (y) > (x)))}}
+\DoxyCodeLine{151 \textcolor{preprocessor}{\#define isunordered(x, y)   (isnan(x) || isnan(y))}}
+\DoxyCodeLine{152 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_MATH\_BUILTIN\_RELOPS */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{153 }
+\DoxyCodeLine{154 \textcolor{preprocessor}{\#define signbit(x)                  \(\backslash\)}}
+\DoxyCodeLine{155 \textcolor{preprocessor}{    ((sizeof (x) == sizeof (float)) ? \_\_signbitf(x) \(\backslash\)}}
+\DoxyCodeLine{156 \textcolor{preprocessor}{    : (sizeof (x) == sizeof (double)) ? \_\_signbit(x)    \(\backslash\)}}
+\DoxyCodeLine{157 \textcolor{preprocessor}{    : \_\_signbitl(x))}}
+\DoxyCodeLine{158 }
+\DoxyCodeLine{159 \textcolor{comment}{//VBS}}
+\DoxyCodeLine{160 \textcolor{comment}{//typedef   \_\_double\_t  double\_t;}}
+\DoxyCodeLine{161 \textcolor{comment}{//typedef   \_\_float\_t   float\_t;}}
+\DoxyCodeLine{162 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_ISO\_C\_VISIBLE >= 1999 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{163 }
+\DoxyCodeLine{164 \textcolor{comment}{/*}}
+\DoxyCodeLine{165 \textcolor{comment}{ * XOPEN/SVID}}
+\DoxyCodeLine{166 \textcolor{comment}{ */}}
+\DoxyCodeLine{167 \textcolor{preprocessor}{\#if \_\_BSD\_VISIBLE || \_\_XSI\_VISIBLE}}
+\DoxyCodeLine{168 \textcolor{preprocessor}{\#define M\_E     2.7182818284590452354   }\textcolor{comment}{/* e */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{169 \textcolor{preprocessor}{\#define M\_LOG2E     1.4426950408889634074   }\textcolor{comment}{/* log 2e */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{170 \textcolor{preprocessor}{\#define M\_LOG10E    0.43429448190325182765  }\textcolor{comment}{/* log 10e */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{171 \textcolor{preprocessor}{\#define M\_LN2       0.69314718055994530942  }\textcolor{comment}{/* log e2 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{172 \textcolor{preprocessor}{\#define M\_LN10      2.30258509299404568402  }\textcolor{comment}{/* log e10 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{173 \textcolor{preprocessor}{\#define M\_PI        3.14159265358979323846  }\textcolor{comment}{/* pi */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{174 \textcolor{preprocessor}{\#define M\_PI\_2      1.57079632679489661923  }\textcolor{comment}{/* pi/2 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{175 \textcolor{preprocessor}{\#define M\_PI\_4      0.78539816339744830962  }\textcolor{comment}{/* pi/4 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{176 \textcolor{preprocessor}{\#define M\_1\_PI      0.31830988618379067154  }\textcolor{comment}{/* 1/pi */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{177 \textcolor{preprocessor}{\#define M\_2\_PI      0.63661977236758134308  }\textcolor{comment}{/* 2/pi */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{178 \textcolor{preprocessor}{\#define M\_2\_SQRTPI  1.12837916709551257390  }\textcolor{comment}{/* 2/sqrt(pi) */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{179 \textcolor{preprocessor}{\#define M\_SQRT2     1.41421356237309504880  }\textcolor{comment}{/* sqrt(2) */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{180 \textcolor{preprocessor}{\#define M\_SQRT1\_2   0.70710678118654752440  }\textcolor{comment}{/* 1/sqrt(2) */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{181 }
+\DoxyCodeLine{182 \textcolor{preprocessor}{\#define MAXFLOAT    ((float)3.40282346638528860e+38)}}
+\DoxyCodeLine{183 }
+\DoxyCodeLine{184 \textcolor{preprocessor}{\#ifndef OPENLIBM\_ONLY\_THREAD\_SAFE}}
+\DoxyCodeLine{185 \textcolor{keyword}{extern} \textcolor{keywordtype}{int} signgam;}
+\DoxyCodeLine{186 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{187 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_BSD\_VISIBLE || \_\_XSI\_VISIBLE */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{188 }
+\DoxyCodeLine{189 \textcolor{preprocessor}{\#if \_\_BSD\_VISIBLE}}
+\DoxyCodeLine{190 \textcolor{preprocessor}{\#if 0}}
+\DoxyCodeLine{191 \textcolor{comment}{/* Old value from 4.4BSD-\/Lite openlibm.h; this is probably better. */}}
+\DoxyCodeLine{192 \textcolor{preprocessor}{\#define HUGE        HUGE\_VAL}}
+\DoxyCodeLine{193 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{194 \textcolor{preprocessor}{\#define HUGE        MAXFLOAT}}
+\DoxyCodeLine{195 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{196 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_BSD\_VISIBLE */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{197 }
+\DoxyCodeLine{198 \textcolor{comment}{/*}}
+\DoxyCodeLine{199 \textcolor{comment}{ * Most of these functions depend on the rounding mode and have the side}}
+\DoxyCodeLine{200 \textcolor{comment}{ * effect of raising floating-\/point exceptions, so they are not declared}}
+\DoxyCodeLine{201 \textcolor{comment}{ * as \_\_pure2.  In C99, FENV\_ACCESS affects the purity of these functions.}}
+\DoxyCodeLine{202 \textcolor{comment}{ */}}
+\DoxyCodeLine{203 }
+\DoxyCodeLine{204 \textcolor{preprocessor}{\#if defined(\_\_cplusplus)}}
+\DoxyCodeLine{205 \textcolor{keyword}{extern} \textcolor{stringliteral}{"{}C"{}} \{}
+\DoxyCodeLine{206 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{207 \textcolor{comment}{/* Symbol present when OpenLibm is used. */}}
+\DoxyCodeLine{208 \textcolor{keywordtype}{int} \mbox{\hyperlink{openlibm__math_8h_aa072f137237a932c1b7f29665ea151d2}{isopenlibm}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{209 }
+\DoxyCodeLine{210 \textcolor{comment}{/*}}
+\DoxyCodeLine{211 \textcolor{comment}{ * ANSI/POSIX}}
+\DoxyCodeLine{212 \textcolor{comment}{ */}}
+\DoxyCodeLine{213 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{int}  \mbox{\hyperlink{openlibm__math_8h_a184876025679094a88ed9b66a1c22c80}{\_\_fpclassifyd}}(\textcolor{keywordtype}{double}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{214 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{int}  \mbox{\hyperlink{openlibm__math_8h_a354b93e3973c89823a1537aaff85c115}{\_\_fpclassifyf}}(\textcolor{keywordtype}{float}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{215 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{int}  \mbox{\hyperlink{openlibm__math_8h_abb1bb7e757bd9e112bf02f075fa14351}{\_\_fpclassifyl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{216 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{int}  \mbox{\hyperlink{openlibm__math_8h_a09bbfc8fa59b06b069ca90e667a0de48}{\_\_isfinitef}}(\textcolor{keywordtype}{float}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{217 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{int}  \mbox{\hyperlink{openlibm__math_8h_a22c63c8c2d1493472d4adde770540234}{\_\_isfinite}}(\textcolor{keywordtype}{double}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{218 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{int}  \mbox{\hyperlink{openlibm__math_8h_aade0ef8ddb7d332b25da5f9ae9196066}{\_\_isfinitel}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{219 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{int}  \mbox{\hyperlink{openlibm__math_8h_a6be5f57160fcd2ee63a8cd81e7d4e202}{\_\_isinff}}(\textcolor{keywordtype}{float}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{220 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{int}  \mbox{\hyperlink{openlibm__math_8h_a1dddd5eb35b72819fc33158777ccbbc3}{\_\_isinfl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{221 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{int}  \mbox{\hyperlink{openlibm__math_8h_af9aa8cc743c63b118dd103d628bed429}{\_\_isnanf}}(\textcolor{keywordtype}{float}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{222 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{int}  \mbox{\hyperlink{openlibm__math_8h_abd45e5c65ccc7606987507665b15416e}{\_\_isnanl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{223 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{int}  \mbox{\hyperlink{openlibm__math_8h_a7a7ea3bbfaf5b7d573a71c82c953001d}{\_\_isnormalf}}(\textcolor{keywordtype}{float}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{224 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{int}  \mbox{\hyperlink{openlibm__math_8h_ad033bbe216b7b9d37b4e27e7051ba847}{\_\_isnormal}}(\textcolor{keywordtype}{double}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{225 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{int}  \mbox{\hyperlink{openlibm__math_8h_a2a6ec39e0ad2423cc7fb067ab96eed5b}{\_\_isnormall}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{226 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{int}  \mbox{\hyperlink{openlibm__math_8h_a02fd32c8a8f3e654b136ee7ad825f116}{\_\_signbit}}(\textcolor{keywordtype}{double}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{227 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{int}  \mbox{\hyperlink{openlibm__math_8h_af7b95cb81fd2cc6f81e2fe049c4dd4f9}{\_\_signbitf}}(\textcolor{keywordtype}{float}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{228 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{int}  \mbox{\hyperlink{openlibm__math_8h_a585ae43b388df07d9c300225b7a9b6d0}{\_\_signbitl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{229 }
+\DoxyCodeLine{230 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a9e1d0b577262baadb49e2fe44e9191c2}{acos}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{231 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_aa3da04a718c2f535d775e2486028f930}{asin}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{232 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a39e157face3ce77d4dd2491c37f9d8e7}{atan}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{233 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_adec5384861ca764e156d4cef68305dcc}{atan2}}(\textcolor{keywordtype}{double}, \textcolor{keywordtype}{double});}
+\DoxyCodeLine{234 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_ac94b0ee77adf330d40c759b0a83af7b5}{cos}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{235 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a2108a6725d51c00a69ade3eeec372288}{sin}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{236 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a8e465625558d5d4b528edbebb5b64324}{tan}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{237 }
+\DoxyCodeLine{238 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a41a298edefca14454cd656230d248005}{cosh}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{239 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_ab65176213d886e4f3cabd6f4cb018346}{sinh}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{240 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a389406e5fbdcf7a8473739c5081d669f}{tanh}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{241 }
+\DoxyCodeLine{242 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a9fe528b6c8ac2268043b81249c1d13da}{exp}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{243 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a63a34810d56439da605ad21d15192e30}{frexp}}(\textcolor{keywordtype}{double}, \textcolor{keywordtype}{int} *);  \textcolor{comment}{/* fundamentally !\_\_pure2 */}}
+\DoxyCodeLine{244 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a7e55c069ca2e1d94df8d30821692c831}{ldexp}}(\textcolor{keywordtype}{double}, \textcolor{keywordtype}{int});}
+\DoxyCodeLine{245 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a2c8e901c3045b850f83c9d1fdca51bc8}{log}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{246 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_af1a2bd7b306e4144178ef2e02e88ff57}{log10}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{247 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_adef0b53a6530b3110f946306666c93e6}{modf}}(\textcolor{keywordtype}{double}, \textcolor{keywordtype}{double} *); \textcolor{comment}{/* fundamentally !\_\_pure2 */}}
+\DoxyCodeLine{248 }
+\DoxyCodeLine{249 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a74a79f56feeb3005ecbb9fa3c05a0866}{pow}}(\textcolor{keywordtype}{double}, \textcolor{keywordtype}{double});}
+\DoxyCodeLine{250 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a373763a4e9f03730aefd7a4fd18b6b83}{sqrt}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{251 }
+\DoxyCodeLine{252 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a49d0a4850a3e385dc0daf6132c55bb13}{ceil}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{253 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_aa5507607ca6fef3a39b2d81032e0b722}{fabs}}(\textcolor{keywordtype}{double}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{254 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a421567e2b49b8f1b7ae2ab578734f0f2}{floor}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{255 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a4f8296aa1883ff2f226dab17bee2c7bd}{fmod}}(\textcolor{keywordtype}{double}, \textcolor{keywordtype}{double});}
+\DoxyCodeLine{256 }
+\DoxyCodeLine{257 \textcolor{comment}{/*}}
+\DoxyCodeLine{258 \textcolor{comment}{ * These functions are not in C90.}}
+\DoxyCodeLine{259 \textcolor{comment}{ */}}
+\DoxyCodeLine{260 \textcolor{preprocessor}{\#if \_\_BSD\_VISIBLE || \_\_ISO\_C\_VISIBLE >= 1999 || \_\_XSI\_VISIBLE}}
+\DoxyCodeLine{261 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_af175d9400e32aab1723f82aa24e2630e}{acosh}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{262 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a606653602853ef6b3634f35935bd33c0}{asinh}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{263 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a67843186ad2d029036c9b8c6b31c03e4}{atanh}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{264 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_ae32cbee23b47945fb5107744af862d05}{cbrt}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{265 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a32fe1e6d26cb71656204f6d59b3d3a0e}{erf}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{266 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_add3803e5bf7ccd1c64760e11e25e19c5}{erfc}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{267 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a96a7f4b23429f47788eb308cb221d51a}{exp2}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{268 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a4cbf978a520a2c07d0fbac51d4717fe3}{expm1}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{269 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a883c1bd0a1fbb7da2327d99ce721b4cf}{fma}}(\textcolor{keywordtype}{double}, \textcolor{keywordtype}{double}, \textcolor{keywordtype}{double});}
+\DoxyCodeLine{270 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a99055e7cb833da596514ab613c3b548a}{hypot}}(\textcolor{keywordtype}{double}, \textcolor{keywordtype}{double});}
+\DoxyCodeLine{271 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{int}  \mbox{\hyperlink{openlibm__math_8h_a0fd5005b4c5cdd563ece73d63cd9a06d}{ilogb}}(\textcolor{keywordtype}{double}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{272 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} int  (\mbox{\hyperlink{openlibm__math_8h_a2a266c767456556e5c0da234b602b18b}{isinf}})(double) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{273 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} int  (\mbox{\hyperlink{openlibm__math_8h_a2e1baae9134e580910322362dc23290e}{isnan}})(double) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{274 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_ac7e2a904fc36ce168529deaaced30efd}{lgamma}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{275 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \mbox{\hyperlink{openlibm__math_8h_a5c194eaca06099da44e8097d9bdbf7bd}{llrint}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{276 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \mbox{\hyperlink{openlibm__math_8h_a1604cd0965ed9ea4c5db0032965f2cf7}{llround}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{277 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a61dbe0efcbb32aeae19e9bfa5c33eaf0}{log1p}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{278 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a36011135b072ea88b76ec9f2f38794f4}{log2}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{279 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a43669e8fe4d0886c28ab5a3f4b4389a5}{logb}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{280 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \mbox{\hyperlink{openlibm__math_8h_a4e67c0d6d9bf9781d677095a240909fd}{lrint}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{281 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \mbox{\hyperlink{openlibm__math_8h_ade786fad9c37aeece9a20c8dc4505761}{lround}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{282 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a27ac22a2330d08bee3afc9de872e2dfb}{nan}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{283 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a510fc0d32dc5c7f4ed4eca3142325bcb}{nextafter}}(\textcolor{keywordtype}{double}, \textcolor{keywordtype}{double});}
+\DoxyCodeLine{284 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_aebd40d9e568be2f9f2917f5e1507b903}{remainder}}(\textcolor{keywordtype}{double}, \textcolor{keywordtype}{double});}
+\DoxyCodeLine{285 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a35bb5e0af55a382ac2f4ced802cda243}{remquo}}(\textcolor{keywordtype}{double}, \textcolor{keywordtype}{double}, \textcolor{keywordtype}{int} *);}
+\DoxyCodeLine{286 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_abe583d4847f070e92e6ac4d1ed64437f}{rint}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{287 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_BSD\_VISIBLE || \_\_ISO\_C\_VISIBLE >= 1999 || \_\_XSI\_VISIBLE */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{288 }
+\DoxyCodeLine{289 \textcolor{preprocessor}{\#if \_\_BSD\_VISIBLE || \_\_XSI\_VISIBLE}}
+\DoxyCodeLine{290 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   j0(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{291 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   j1(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{292 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   jn(\textcolor{keywordtype}{int}, \textcolor{keywordtype}{double});}
+\DoxyCodeLine{293 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   y0(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{294 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   y1(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{295 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   yn(\textcolor{keywordtype}{int}, \textcolor{keywordtype}{double});}
+\DoxyCodeLine{296 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_BSD\_VISIBLE || \_\_XSI\_VISIBLE */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{297 }
+\DoxyCodeLine{298 \textcolor{preprocessor}{\#if \_\_BSD\_VISIBLE || \_\_ISO\_C\_VISIBLE >= 1999}}
+\DoxyCodeLine{299 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a2abb14919a07240044a0266b22a23fca}{copysign}}(\textcolor{keywordtype}{double}, \textcolor{keywordtype}{double}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{300 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a4a394dd5975d2bbe07cbe58435267956}{fdim}}(\textcolor{keywordtype}{double}, \textcolor{keywordtype}{double});}
+\DoxyCodeLine{301 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_ade62a3897fde3422633fbb22b61e916e}{fmax}}(\textcolor{keywordtype}{double}, \textcolor{keywordtype}{double}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{302 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a57ec2546cfe0c5dde2fdc42ac9fbd0f0}{fmin}}(\textcolor{keywordtype}{double}, \textcolor{keywordtype}{double}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{303 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_ab99422967b4c68842f7ae7161c38e96d}{nearbyint}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{304 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a1e2d597a7aed4cfb1cc9c9f5e45a4782}{round}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{305 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a6fb2f0eb77cade39f0b5afb0fe75f7bd}{scalbln}}(\textcolor{keywordtype}{double}, \textcolor{keywordtype}{long});}
+\DoxyCodeLine{306 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a1ee6705a6b4b2298d2ac349265bda5f0}{scalbn}}(\textcolor{keywordtype}{double}, \textcolor{keywordtype}{int});}
+\DoxyCodeLine{307 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a04eb4c70d4731e7c95bf6fe366d95ab8}{tgamma}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{308 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   \mbox{\hyperlink{openlibm__math_8h_a562c7f46088164162cb81e56b67ad286}{trunc}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{309 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{310 }
+\DoxyCodeLine{311 \textcolor{comment}{/*}}
+\DoxyCodeLine{312 \textcolor{comment}{ * BSD math library entry points}}
+\DoxyCodeLine{313 \textcolor{comment}{ */}}
+\DoxyCodeLine{314 \textcolor{preprocessor}{\#if \_\_BSD\_VISIBLE}}
+\DoxyCodeLine{315 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{int}  isnanf(\textcolor{keywordtype}{float}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{316 }
+\DoxyCodeLine{317 \textcolor{comment}{/*}}
+\DoxyCodeLine{318 \textcolor{comment}{ * Reentrant version of lgamma; passes signgam back by reference as the}}
+\DoxyCodeLine{319 \textcolor{comment}{ * second argument; user must allocate space for signgam.}}
+\DoxyCodeLine{320 \textcolor{comment}{ */}}
+\DoxyCodeLine{321 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}   lgamma\_r(\textcolor{keywordtype}{double}, \textcolor{keywordtype}{int} *);}
+\DoxyCodeLine{322 }
+\DoxyCodeLine{323 \textcolor{comment}{/*}}
+\DoxyCodeLine{324 \textcolor{comment}{ * Single sine/cosine function.}}
+\DoxyCodeLine{325 \textcolor{comment}{ */}}
+\DoxyCodeLine{326 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{void} sincos(\textcolor{keywordtype}{double}, \textcolor{keywordtype}{double} *, \textcolor{keywordtype}{double} *);}
+\DoxyCodeLine{327 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_BSD\_VISIBLE */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{328 }
+\DoxyCodeLine{329 \textcolor{comment}{/* float versions of ANSI/POSIX functions */}}
+\DoxyCodeLine{330 \textcolor{preprocessor}{\#if \_\_ISO\_C\_VISIBLE >= 1999}}
+\DoxyCodeLine{331 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_af2745106ba99515a89b5febd18e30a19}{acosf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{332 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a8525e83cff50b208be24706fe0b23d5a}{asinf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{333 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a681a6d7a8001e35abc2e760f5a937416}{atanf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{334 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a0853e996cc260d05e4a15c71337a015d}{atan2f}}(\textcolor{keywordtype}{float}, \textcolor{keywordtype}{float});}
+\DoxyCodeLine{335 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a462449b9d7f32f58797d6d8b64e9ec5b}{cosf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{336 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a68a870c3b2650729b8f4d9f30ad7de51}{sinf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{337 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_ada6cde2d7205b684195f7d20449d15d4}{tanf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{338 }
+\DoxyCodeLine{339 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_ad61773523ba3785a2c33849468c0f884}{coshf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{340 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_afbd1c11f719695b79ad3014607231f3d}{sinhf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{341 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_aef2ed5da6b2d3eccc23186efdd897e69}{tanhf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{342 }
+\DoxyCodeLine{343 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a8de5d8e1e4860512004ec26fc8895261}{exp2f}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{344 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a759749a576059442a43fd4efa599e954}{expf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{345 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a956270e56d24892e2aa9b77399680be0}{expm1f}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{346 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a89487eaa3a31fe5056f4ff6450017f8e}{frexpf}}(\textcolor{keywordtype}{float}, \textcolor{keywordtype}{int} *); \textcolor{comment}{/* fundamentally !\_\_pure2 */}}
+\DoxyCodeLine{347 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{int}  \mbox{\hyperlink{openlibm__math_8h_a9326dae6247281f3afc5f4149ff13c48}{ilogbf}}(\textcolor{keywordtype}{float}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{348 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_ad515b0c95bf7bf44da9bda54ced714d6}{ldexpf}}(\textcolor{keywordtype}{float}, \textcolor{keywordtype}{int});}
+\DoxyCodeLine{349 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_ac9b6b1281a50a5d57394c29df12bb2a8}{log10f}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{350 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a7d4c4698b0afcb7617a1f7078261d0d6}{log1pf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{351 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_ae66e356850fa03ebe07612215f43ebaf}{log2f}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{352 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a07a0b156f8e7a465f61262d5593bd33b}{logf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{353 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a9ce1f6adaa6cddc6ca94b34d0e18666d}{modff}}(\textcolor{keywordtype}{float}, \textcolor{keywordtype}{float} *); \textcolor{comment}{/* fundamentally !\_\_pure2 */}}
+\DoxyCodeLine{354 }
+\DoxyCodeLine{355 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_ad4020ac0230c81d33e7284d00ee466e3}{powf}}(\textcolor{keywordtype}{float}, \textcolor{keywordtype}{float});}
+\DoxyCodeLine{356 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a7c3bbd9069b26523453b22c5a3bd9406}{sqrtf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{357 }
+\DoxyCodeLine{358 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_ae4e52e50a025d5fc10f76d411b503991}{ceilf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{359 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_abb31b15714cdfa2aa97627025933e127}{fabsf}}(\textcolor{keywordtype}{float}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{360 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a4eb194abe4604b490c11627fd770d2a0}{floorf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{361 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_adfce01799590ef4479cb24046e250dcc}{fmodf}}(\textcolor{keywordtype}{float}, \textcolor{keywordtype}{float});}
+\DoxyCodeLine{362 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_ae3e692b9b9ece5fd8706f76dacb2e033}{roundf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{363 }
+\DoxyCodeLine{364 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_afce3dcbb74cc8b8c78abf98410612b71}{erff}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{365 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a717cb1f35bebf66d8020c456102642b4}{erfcf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{366 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a218095ee8ac9d794fa90b7ff900bd6db}{hypotf}}(\textcolor{keywordtype}{float}, \textcolor{keywordtype}{float});}
+\DoxyCodeLine{367 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a25fd555ad8355b58a6c48e99cbead1db}{lgammaf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{368 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a9416e2bc703c05107b06518a636c459b}{tgammaf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{369 }
+\DoxyCodeLine{370 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a326c7b5dd4b3ec9886939886abf3ed0d}{acoshf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{371 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a5d6be49e5d616cc6fdd168a9f6e15738}{asinhf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{372 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a478b314758008b51cec1e52c4eeb406f}{atanhf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{373 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a2c73468edc1bc865b684b64f2467cf95}{cbrtf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{374 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_adfe7b333e3c4de7577e8c9d756362013}{logbf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{375 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a887609d8c8ce68824984d1ce73a671d1}{copysignf}}(\textcolor{keywordtype}{float}, \textcolor{keywordtype}{float}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{376 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \mbox{\hyperlink{openlibm__math_8h_aeae6004282a7e8e7be3f955e9242783e}{llrintf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{377 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long} \mbox{\hyperlink{openlibm__math_8h_a52cae32975b5babed6881be97e31b920}{llroundf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{378 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \mbox{\hyperlink{openlibm__math_8h_a678ae03f84144cf070ddd55ead59e9b8}{lrintf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{379 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \mbox{\hyperlink{openlibm__math_8h_a8aaf340f6691f6ac3043cf1130d9a506}{lroundf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{380 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a0acdb31fce9151e50399ffc998d950b5}{nanf}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{381 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a8610599fafde36bf2949411d1d312551}{nearbyintf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{382 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_ad3c678f4ea39c88d640390bf25bee81f}{nextafterf}}(\textcolor{keywordtype}{float}, \textcolor{keywordtype}{float});}
+\DoxyCodeLine{383 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_aea285b49e87ca3f98c13d4b9720786cc}{remainderf}}(\textcolor{keywordtype}{float}, \textcolor{keywordtype}{float});}
+\DoxyCodeLine{384 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a0c7636788e22764027c9938a5070623d}{remquof}}(\textcolor{keywordtype}{float}, \textcolor{keywordtype}{float}, \textcolor{keywordtype}{int} *);}
+\DoxyCodeLine{385 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a26c6ce00444b5eb89d02924f60bdce45}{rintf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{386 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_af0f33849849611364172acc66d970d64}{scalblnf}}(\textcolor{keywordtype}{float}, \textcolor{keywordtype}{long});}
+\DoxyCodeLine{387 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_ac7bbc1b6e3318e2c23472fa184f40b83}{scalbnf}}(\textcolor{keywordtype}{float}, \textcolor{keywordtype}{int});}
+\DoxyCodeLine{388 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_adca2b4bfcaaa2d6a0bd81fe7813969b8}{truncf}}(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{389 }
+\DoxyCodeLine{390 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_ac763385241f4f847bb126bbab2203ebb}{fdimf}}(\textcolor{keywordtype}{float}, \textcolor{keywordtype}{float});}
+\DoxyCodeLine{391 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_ac9ef1a6e7d4790ce55409eb7ebd27ae2}{fmaf}}(\textcolor{keywordtype}{float}, \textcolor{keywordtype}{float}, \textcolor{keywordtype}{float});}
+\DoxyCodeLine{392 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_ad909e888113516890d2e38904e6f3d1d}{fmaxf}}(\textcolor{keywordtype}{float}, \textcolor{keywordtype}{float}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{393 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    \mbox{\hyperlink{openlibm__math_8h_a3e64db3f1d72005be4bef3d560aeb5a6}{fminf}}(\textcolor{keywordtype}{float}, \textcolor{keywordtype}{float}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{394 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{395 }
+\DoxyCodeLine{396 \textcolor{comment}{/*}}
+\DoxyCodeLine{397 \textcolor{comment}{ * float versions of BSD math library entry points}}
+\DoxyCodeLine{398 \textcolor{comment}{ */}}
+\DoxyCodeLine{399 \textcolor{preprocessor}{\#if \_\_BSD\_VISIBLE}}
+\DoxyCodeLine{400 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    dremf(\textcolor{keywordtype}{float}, \textcolor{keywordtype}{float});}
+\DoxyCodeLine{401 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    j0f(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{402 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    j1f(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{403 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    jnf(\textcolor{keywordtype}{int}, \textcolor{keywordtype}{float});}
+\DoxyCodeLine{404 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    y0f(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{405 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    y1f(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{406 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    ynf(\textcolor{keywordtype}{int}, \textcolor{keywordtype}{float});}
+\DoxyCodeLine{407 }
+\DoxyCodeLine{408 \textcolor{comment}{/*}}
+\DoxyCodeLine{409 \textcolor{comment}{ * Float versions of reentrant version of lgamma; passes signgam back by}}
+\DoxyCodeLine{410 \textcolor{comment}{ * reference as the second argument; user must allocate space for signgam.}}
+\DoxyCodeLine{411 \textcolor{comment}{ */}}
+\DoxyCodeLine{412 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}    lgammaf\_r(\textcolor{keywordtype}{float}, \textcolor{keywordtype}{int} *);}
+\DoxyCodeLine{413 }
+\DoxyCodeLine{414 \textcolor{comment}{/*}}
+\DoxyCodeLine{415 \textcolor{comment}{ * Single sine/cosine function.}}
+\DoxyCodeLine{416 \textcolor{comment}{ */}}
+\DoxyCodeLine{417 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{void} sincosf(\textcolor{keywordtype}{float}, \textcolor{keywordtype}{float} *, \textcolor{keywordtype}{float} *);}
+\DoxyCodeLine{418 \textcolor{preprocessor}{\#endif  }\textcolor{comment}{/* \_\_BSD\_VISIBLE */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{419 }
+\DoxyCodeLine{420 \textcolor{comment}{/*}}
+\DoxyCodeLine{421 \textcolor{comment}{ * long double versions of ISO/POSIX math functions}}
+\DoxyCodeLine{422 \textcolor{comment}{ */}}
+\DoxyCodeLine{423 \textcolor{preprocessor}{\#if \_\_ISO\_C\_VISIBLE >= 1999}}
+\DoxyCodeLine{424 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_aa0ff1e16fe986950b3ad83f8a2bc8ef2}{acoshl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{425 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a37944ecc001a25dc6b579393ddce67d0}{acosl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{426 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_aacbd555869c23c850a0f1bce6bd4a8fa}{asinhl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{427 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_aa6f0da9a2761051c46f123e541f71d6b}{asinl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{428 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a1435c4e073b78078166a8acad4083800}{atan2l}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{429 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a8d3cbef3bbda363ca4468132ec8fd84e}{atanhl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{430 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a6d58c90eb249cb9c8fcb314509d093dc}{atanl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{431 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_ad8aedc76ff6688a95df36566c44acab1}{cbrtl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{432 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_adf152735b565d5835565c7290cb058ca}{ceill}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{433 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a4b1214a5d1fe35f434d11a81377cc274}{copysignl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{434 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a124441716658f9f64c29308d12f01d26}{coshl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{435 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a77d93013bd51ad5299820b341a60cf97}{cosl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{436 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a67b357e575832e3d936f1e30446ddebc}{erfcl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{437 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a068f160baa7b5189bf56c82892cca2c3}{erfl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{438 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_acc11a755a7a27588837ee2a1f09d46ef}{exp2l}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{439 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_ad684d6c83dd83c94f0db3e98db4a37f2}{expl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{440 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a510ff6c82ca4152cd8c68168a4bb62e5}{expm1l}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{441 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a30b18b93b139e39669972eb3b1006082}{fabsl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{442 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_ad69746a98155f25884dac8c40a0ecf42}{fdiml}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{443 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_aee576a6e6312cf1feeac99a9f9ccea35}{floorl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{444 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a993fbd9249b09dc716af5a78834b4bff}{fmal}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{445 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a56ec925736d9986ba2e9252f85551442}{fmaxl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{446 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a09e1227c70974c0289a988833b980145}{fminl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{447 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a204f7bf7557392895f2a0dcebcb68612}{fmodl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{448 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_ad565242ee0a08737471057063c31ff32}{frexpl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double} value, \textcolor{keywordtype}{int} *); \textcolor{comment}{/* fundamentally !\_\_pure2 */}}
+\DoxyCodeLine{449 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a3babfa965d10a673f159879b76c1538d}{hypotl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{450 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{int}      \mbox{\hyperlink{openlibm__math_8h_aaaa81acaa096bd59eab168602c6b754f}{ilogbl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{451 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_ae88ce6274c9776b9a4757e3ddae5e1e6}{ldexpl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{int});}
+\DoxyCodeLine{452 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a56c590194d0495d1fe915852e24fb6f9}{lgammal}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{453 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long}    \mbox{\hyperlink{openlibm__math_8h_a8291c8c5002cd7f76bafa17374436723}{llrintl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{454 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{long}    \mbox{\hyperlink{openlibm__math_8h_adb74b8c8d8e88bdffad83e4a48041ec7}{llroundl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{455 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_af82a58cabd6b8633daa2923d917d561d}{log10l}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{456 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_acd1af6af2fbd8db66aca33942ec775ac}{log1pl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{457 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a697916d24d4524f8207d5b3f9424c0fb}{log2l}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{458 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a3a0f72794cc47caba978d6a33d946e92}{logbl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{459 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a04e4012964ded9203ef660e6e394ebc1}{logl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{460 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long}     \mbox{\hyperlink{openlibm__math_8h_aefce250e31c3949ba22e094a740117d7}{lrintl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{461 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long}     \mbox{\hyperlink{openlibm__math_8h_a96144acdb0eca9983a648a35041089cb}{lroundl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{462 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a0e31e2b6c22b1e422fe353e3aff87bf9}{modfl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} *); \textcolor{comment}{/* fundamentally !\_\_pure2 */}}
+\DoxyCodeLine{463 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_ac8254a30a5433e88779406c4f1f53667}{nanl}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *) \mbox{\hyperlink{openlibm__math_8h_a2542d742d75f94143ae25799cd33d49f}{\_\_pure2}};}
+\DoxyCodeLine{464 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a68e53e19a1c2a49394b698f252b287da}{nearbyintl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{465 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_aadc49923b07e940298c29fe312f40daf}{nextafterl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{466 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{double}       \mbox{\hyperlink{openlibm__math_8h_a6de25953287591acc593cad2e0277d63}{nexttoward}}(\textcolor{keywordtype}{double}, \textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{467 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{float}        \mbox{\hyperlink{openlibm__math_8h_a03e21c907f53b196b9b93d879169dd1d}{nexttowardf}}(\textcolor{keywordtype}{float}, \textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{468 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a28f25101ce0d26a15d932763a14a83c2}{nexttowardl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{469 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a7290921098e5af70abe77a946c805f74}{powl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{470 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a16cab042ce0b41a81e6812622125ff3c}{remainderl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{471 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a2196c68c7e8bc72ae717a838a9858157}{remquol}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{int} *);}
+\DoxyCodeLine{472 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_ab1243a7a95899a58f7e3ee8eaf02216f}{rintl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{473 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a13be616c5a771e5264569b9f72f2fa59}{roundl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{474 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_af81664974c3200105719af9db63183ba}{scalblnl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{long});}
+\DoxyCodeLine{475 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_ad3ad43c0738d67456bb57e94c5074bff}{scalbnl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{int});}
+\DoxyCodeLine{476 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_aa6e78252a6901c16c043756d296e9eef}{sinhl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{477 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a8fdd57bc8bae891ed060b62fad2ae3d1}{sinl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{478 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a7d9c6622acc870e6aac4819a38016229}{sqrtl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{479 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a6a3710eb02c544559aa67880ef1c7798}{tanhl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{480 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a559508843c9f052819cc28ef9e199166}{tanl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{481 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a81920773edcd68928862c3178131bf08}{tgammal}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{482 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  \mbox{\hyperlink{openlibm__math_8h_a4b7c9e5c29eb29ec65d000ebab7ebb59}{truncl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{483 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_ISO\_C\_VISIBLE >= 1999 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{484 }
+\DoxyCodeLine{485 \textcolor{comment}{/* Reentrant version of lgammal. */}}
+\DoxyCodeLine{486 \textcolor{preprocessor}{\#if \_\_BSD\_VISIBLE}}
+\DoxyCodeLine{487 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}  lgammal\_r(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{int} *);}
+\DoxyCodeLine{488 }
+\DoxyCodeLine{489 \textcolor{comment}{/*}}
+\DoxyCodeLine{490 \textcolor{comment}{ * Single sine/cosine function.}}
+\DoxyCodeLine{491 \textcolor{comment}{ */}}
+\DoxyCodeLine{492 \mbox{\hyperlink{openlibm__math_8h_a1f74bd5115955e86bc1032b0ba55be3e}{OLM\_DLLEXPORT}} \textcolor{keywordtype}{void} sincosl(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} *, \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} *);}
+\DoxyCodeLine{493 \textcolor{preprocessor}{\#endif  }\textcolor{comment}{/* \_\_BSD\_VISIBLE */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{494 }
+\DoxyCodeLine{495 \textcolor{preprocessor}{\#if defined(\_\_cplusplus)}}
+\DoxyCodeLine{496 \}}
+\DoxyCodeLine{497 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{498 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* !OPENLIBM\_MATH\_H */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{499 }
+\DoxyCodeLine{500 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* OPENLIBM\_USE\_HOST\_MATH\_H */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

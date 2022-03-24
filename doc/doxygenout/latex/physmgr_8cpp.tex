@@ -1,0 +1,82 @@
+\hypertarget{physmgr_8cpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/krnl/physmgr.cpp File Reference}
+\label{physmgr_8cpp}\index{C:/Users/Alex/Desktop/Banana/kernel/krnl/physmgr.cpp@{C:/Users/Alex/Desktop/Banana/kernel/krnl/physmgr.cpp}}
+{\ttfamily \#include \char`\"{}krnl/physmgr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/common.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/terminal.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hal/vcache.\+hpp\char`\"{}}\newline
+{\ttfamily \#include $<$krnl/unaligned.\+hpp$>$}\newline
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespace_phys}{Phys}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{physmgr_8cpp_a2c7dbe3a735c27c9d5fcd9a6abd7aa30}{STATE\+\_\+\+FREE}}~false
+\item 
+\#define \mbox{\hyperlink{physmgr_8cpp_a141e84835004b211b4ce48c93d2534f6}{STATE\+\_\+\+ALLOCATED}}~true
+\item 
+\#define \mbox{\hyperlink{physmgr_8cpp_a41b307ec8e085fb48835c3af657e5214}{DMA\+\_\+\+BLOCK\+\_\+\+SIZE}}~4096
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+size\+\_\+t \mbox{\hyperlink{namespace_phys_ae5ad8a3d47f4ee61bff96846d513b50a}{Phys\+::allocate\+DMA}} (size\+\_\+t \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}})
+\item 
+void \mbox{\hyperlink{namespace_phys_a90142289bf41ad6b3df4bbc1caf7151a}{Phys\+::free\+DMA}} (size\+\_\+t addr, size\+\_\+t \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}})
+\item 
+void \mbox{\hyperlink{namespace_phys_a3fb776a0badc3305ed6d41ec6d1c5ce9}{Phys\+::set\+Page\+State}} (size\+\_\+t page\+Num, bool state)
+\item 
+bool \mbox{\hyperlink{namespace_phys_ab773d69e9590cf4b99b64e9d0c8bdb20}{Phys\+::get\+Page\+State}} (size\+\_\+t page\+Num)
+\item 
+void \mbox{\hyperlink{namespace_phys_ad2672c1559bedce173cda1c4a685a2c6}{Phys\+::free\+Page}} (size\+\_\+t address)
+\item 
+size\+\_\+t \mbox{\hyperlink{namespace_phys_a19d4926eeea8b837a4a19f1a2aa5af44}{Phys\+::allocate\+Page}} ()
+\item 
+size\+\_\+t \mbox{\hyperlink{namespace_phys_a802541063c19a7ba83718aa59ead7550}{Phys\+::allocate\+Contiguous\+Pages}} (int needed)
+\item 
+void \mbox{\hyperlink{namespace_phys_a2996c3a4c7c3184946d29d9e4d8791c1}{Phys\+::allow\+Segment\+To\+Be\+Used}} (size\+\_\+t bottom, size\+\_\+t top)
+\item 
+void \mbox{\hyperlink{namespace_phys_ae222b809258ae8f9723f66c8bc9628f1}{Phys\+::physical\+Memory\+Setup}} (uint32\+\_\+t highest\+Used\+Addr)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{namespace_phys_a439d3b615fc03c695064067fe792b782}{Phys\+::dma\+Usage}} \mbox{[}(\mbox{\hyperlink{main_8hpp_af1dd3a24028a5892c403421d7e65fc23}{SIZE\+\_\+\+DMA\+\_\+\+MEMORY\+\_\+1}})/\mbox{\hyperlink{physmgr_8cpp_a41b307ec8e085fb48835c3af657e5214}{DMA\+\_\+\+BLOCK\+\_\+\+SIZE}}\mbox{]}
+\item 
+int \mbox{\hyperlink{namespace_phys_a9e9e4c0f2d5997ca0536eec5fc00b2e5}{Phys\+::usable\+Pages}} = 0
+\item 
+int \mbox{\hyperlink{namespace_phys_ac392bd0db459843e722bd36d030d7aec}{Phys\+::used\+Pages}} = 0
+\item 
+int \mbox{\hyperlink{namespace_phys_a3766e95e48f7163803d696257366befc}{Phys\+::old\+Percent}} = 0
+\item 
+uint8\+\_\+t $\ast$ \mbox{\hyperlink{namespace_phys_a2bdc1b0eb81f7726bcd4e69c76e6ee99}{Phys\+::bitmap}} = (uint8\+\_\+t$\ast$) \mbox{\hyperlink{main_8hpp_a4dfc8086e95b9f5c6fccd1e27028a498}{VIRT\+\_\+\+PHYS\+\_\+\+PAGE\+\_\+\+BITMAP}}
+\item 
+size\+\_\+t \mbox{\hyperlink{namespace_phys_acbb76d05b49d2531d4c8464fb698991f}{Phys\+::highest\+Mem}} = 0
+\item 
+size\+\_\+t \mbox{\hyperlink{namespace_phys_ac0fa35246a7906de9c34179cf8724629}{Phys\+::current\+Page\+Pointer}} = 0
+\item 
+bool \mbox{\hyperlink{namespace_phys_afe00e0237ceb56ec4c6c7eba9162b003}{Phys\+::forbid\+Evictions}} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{physmgr_8cpp_a41b307ec8e085fb48835c3af657e5214}\label{physmgr_8cpp_a41b307ec8e085fb48835c3af657e5214}} 
+\index{physmgr.cpp@{physmgr.cpp}!DMA\_BLOCK\_SIZE@{DMA\_BLOCK\_SIZE}}
+\index{DMA\_BLOCK\_SIZE@{DMA\_BLOCK\_SIZE}!physmgr.cpp@{physmgr.cpp}}
+\doxysubsubsection{\texorpdfstring{DMA\_BLOCK\_SIZE}{DMA\_BLOCK\_SIZE}}
+{\footnotesize\ttfamily \#define DMA\+\_\+\+BLOCK\+\_\+\+SIZE~4096}
+
+\mbox{\Hypertarget{physmgr_8cpp_a141e84835004b211b4ce48c93d2534f6}\label{physmgr_8cpp_a141e84835004b211b4ce48c93d2534f6}} 
+\index{physmgr.cpp@{physmgr.cpp}!STATE\_ALLOCATED@{STATE\_ALLOCATED}}
+\index{STATE\_ALLOCATED@{STATE\_ALLOCATED}!physmgr.cpp@{physmgr.cpp}}
+\doxysubsubsection{\texorpdfstring{STATE\_ALLOCATED}{STATE\_ALLOCATED}}
+{\footnotesize\ttfamily \#define STATE\+\_\+\+ALLOCATED~true}
+
+\mbox{\Hypertarget{physmgr_8cpp_a2c7dbe3a735c27c9d5fcd9a6abd7aa30}\label{physmgr_8cpp_a2c7dbe3a735c27c9d5fcd9a6abd7aa30}} 
+\index{physmgr.cpp@{physmgr.cpp}!STATE\_FREE@{STATE\_FREE}}
+\index{STATE\_FREE@{STATE\_FREE}!physmgr.cpp@{physmgr.cpp}}
+\doxysubsubsection{\texorpdfstring{STATE\_FREE}{STATE\_FREE}}
+{\footnotesize\ttfamily \#define STATE\+\_\+\+FREE~false}
+

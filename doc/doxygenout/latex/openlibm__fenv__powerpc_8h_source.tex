@@ -1,0 +1,285 @@
+\hypertarget{openlibm__fenv__powerpc_8h_source}{}\doxysection{openlibm\+\_\+fenv\+\_\+powerpc.\+h}
+\label{openlibm__fenv__powerpc_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/libk/\_mathinc/openlibm\_fenv\_powerpc.h@{C:/Users/Alex/Desktop/Banana/kernel/libk/\_mathinc/openlibm\_fenv\_powerpc.h}}
+\mbox{\hyperlink{openlibm__fenv__powerpc_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*-\/}}
+\DoxyCodeLine{2 \textcolor{comment}{ * Copyright (c) 2004-\/2005 David Schultz <das@FreeBSD.ORG>}}
+\DoxyCodeLine{3 \textcolor{comment}{ * All rights reserved.}}
+\DoxyCodeLine{4 \textcolor{comment}{ *}}
+\DoxyCodeLine{5 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{6 \textcolor{comment}{ * modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{7 \textcolor{comment}{ * are met:}}
+\DoxyCodeLine{8 \textcolor{comment}{ * 1. Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{9 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{10 \textcolor{comment}{ * 2. Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{11 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer in the}}
+\DoxyCodeLine{12 \textcolor{comment}{ *    documentation and/or other materials provided with the distribution.}}
+\DoxyCodeLine{13 \textcolor{comment}{ *}}
+\DoxyCodeLine{14 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND}}
+\DoxyCodeLine{15 \textcolor{comment}{ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE}}
+\DoxyCodeLine{16 \textcolor{comment}{ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE}}
+\DoxyCodeLine{17 \textcolor{comment}{ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE}}
+\DoxyCodeLine{18 \textcolor{comment}{ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL}}
+\DoxyCodeLine{19 \textcolor{comment}{ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS}}
+\DoxyCodeLine{20 \textcolor{comment}{ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)}}
+\DoxyCodeLine{21 \textcolor{comment}{ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT}}
+\DoxyCodeLine{22 \textcolor{comment}{ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY}}
+\DoxyCodeLine{23 \textcolor{comment}{ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF}}
+\DoxyCodeLine{24 \textcolor{comment}{ * SUCH DAMAGE.}}
+\DoxyCodeLine{25 \textcolor{comment}{ *}}
+\DoxyCodeLine{26 \textcolor{comment}{ * \$FreeBSD\$}}
+\DoxyCodeLine{27 \textcolor{comment}{ */}}
+\DoxyCodeLine{28 }
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#ifndef \_FENV\_H\_}}
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#define \_FENV\_H\_}}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32 \textcolor{preprocessor}{\#include <sys/types.h>}}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#ifndef \_\_fenv\_static}}
+\DoxyCodeLine{35 \textcolor{preprocessor}{\#define \_\_fenv\_static   static}}
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38 \textcolor{keyword}{typedef} \_\_uint32\_t  \mbox{\hyperlink{openlibm__fenv__powerpc_8h_ab27f3e3e245748107c32fe36496af467}{fenv\_t}};}
+\DoxyCodeLine{39 \textcolor{keyword}{typedef} \_\_uint32\_t  \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a924409780c852969c346a80f98f909b6}{fexcept\_t}};}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41 \textcolor{comment}{/* Exception flags */}}
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#define FE\_INEXACT  0x02000000}}
+\DoxyCodeLine{43 \textcolor{preprocessor}{\#define FE\_DIVBYZERO    0x04000000}}
+\DoxyCodeLine{44 \textcolor{preprocessor}{\#define FE\_UNDERFLOW    0x08000000}}
+\DoxyCodeLine{45 \textcolor{preprocessor}{\#define FE\_OVERFLOW 0x10000000}}
+\DoxyCodeLine{46 \textcolor{preprocessor}{\#define FE\_INVALID  0x20000000  }\textcolor{comment}{/* all types of invalid FP ops */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{48 \textcolor{comment}{/*}}
+\DoxyCodeLine{49 \textcolor{comment}{ * The PowerPC architecture has extra invalid flags that indicate the}}
+\DoxyCodeLine{50 \textcolor{comment}{ * specific type of invalid operation occurred.  These flags may be}}
+\DoxyCodeLine{51 \textcolor{comment}{ * tested, set, and cleared-\/-\/-\/but not masked-\/-\/-\/separately.  All of}}
+\DoxyCodeLine{52 \textcolor{comment}{ * these bits are cleared when FE\_INVALID is cleared, but only}}
+\DoxyCodeLine{53 \textcolor{comment}{ * FE\_VXSOFT is set when FE\_INVALID is explicitly set in software.}}
+\DoxyCodeLine{54 \textcolor{comment}{ */}}
+\DoxyCodeLine{55 \textcolor{preprocessor}{\#define FE\_VXCVI    0x00000100  }\textcolor{comment}{/* invalid integer convert */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{56 \textcolor{preprocessor}{\#define FE\_VXSQRT   0x00000200  }\textcolor{comment}{/* square root of a negative */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{57 \textcolor{preprocessor}{\#define FE\_VXSOFT   0x00000400  }\textcolor{comment}{/* software-\/requested exception */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{58 \textcolor{preprocessor}{\#define FE\_VXVC     0x00080000  }\textcolor{comment}{/* ordered comparison involving NaN */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{59 \textcolor{preprocessor}{\#define FE\_VXIMZ    0x00100000  }\textcolor{comment}{/* inf * 0 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{60 \textcolor{preprocessor}{\#define FE\_VXZDZ    0x00200000  }\textcolor{comment}{/* 0 / 0 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{61 \textcolor{preprocessor}{\#define FE\_VXIDI    0x00400000  }\textcolor{comment}{/* inf / inf */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{62 \textcolor{preprocessor}{\#define FE\_VXISI    0x00800000  }\textcolor{comment}{/* inf -\/ inf */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{63 \textcolor{preprocessor}{\#define FE\_VXSNAN   0x01000000  }\textcolor{comment}{/* operation on a signalling NaN */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{64 \textcolor{preprocessor}{\#define FE\_ALL\_INVALID  (FE\_VXCVI | FE\_VXSQRT | FE\_VXSOFT | FE\_VXVC | \(\backslash\)}}
+\DoxyCodeLine{65 \textcolor{preprocessor}{             FE\_VXIMZ | FE\_VXZDZ | FE\_VXIDI | FE\_VXISI | \(\backslash\)}}
+\DoxyCodeLine{66 \textcolor{preprocessor}{             FE\_VXSNAN | FE\_INVALID)}}
+\DoxyCodeLine{67 \textcolor{preprocessor}{\#define FE\_ALL\_EXCEPT   (FE\_DIVBYZERO | FE\_INEXACT | \(\backslash\)}}
+\DoxyCodeLine{68 \textcolor{preprocessor}{             FE\_ALL\_INVALID | FE\_OVERFLOW | FE\_UNDERFLOW)}}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{70 \textcolor{comment}{/* Rounding modes */}}
+\DoxyCodeLine{71 \textcolor{preprocessor}{\#define FE\_TONEAREST    0x0000}}
+\DoxyCodeLine{72 \textcolor{preprocessor}{\#define FE\_TOWARDZERO   0x0001}}
+\DoxyCodeLine{73 \textcolor{preprocessor}{\#define FE\_UPWARD   0x0002}}
+\DoxyCodeLine{74 \textcolor{preprocessor}{\#define FE\_DOWNWARD 0x0003}}
+\DoxyCodeLine{75 \textcolor{preprocessor}{\#define \_ROUND\_MASK (FE\_TONEAREST | FE\_DOWNWARD | \(\backslash\)}}
+\DoxyCodeLine{76 \textcolor{preprocessor}{             FE\_UPWARD | FE\_TOWARDZERO)}}
+\DoxyCodeLine{77 }
+\DoxyCodeLine{78 \mbox{\hyperlink{cdefs-compat_8h_a568e6bde99652b7fd271ad206cfe38f5}{\_\_BEGIN\_DECLS}}}
+\DoxyCodeLine{79 }
+\DoxyCodeLine{80 \textcolor{comment}{/* Default floating-\/point environment */}}
+\DoxyCodeLine{81 \textcolor{keyword}{extern} \textcolor{keyword}{const} \mbox{\hyperlink{structfenv__t}{fenv\_t}}   \mbox{\hyperlink{openlibm__fenv__powerpc_8h_aaf5b925e20d433d1de3810f92994e01c}{\_\_fe\_dfl\_env}};}
+\DoxyCodeLine{82 \textcolor{preprocessor}{\#define FE\_DFL\_ENV  (\&\_\_fe\_dfl\_env)}}
+\DoxyCodeLine{83 }
+\DoxyCodeLine{84 \textcolor{comment}{/* We need to be able to map status flag positions to mask flag positions */}}
+\DoxyCodeLine{85 \textcolor{preprocessor}{\#define \_FPUSW\_SHIFT    22}}
+\DoxyCodeLine{86 \textcolor{preprocessor}{\#define \_ENABLE\_MASK    ((FE\_DIVBYZERO | FE\_INEXACT | FE\_INVALID | \(\backslash\)}}
+\DoxyCodeLine{87 \textcolor{preprocessor}{             FE\_OVERFLOW | FE\_UNDERFLOW) >> \_FPUSW\_SHIFT)}}
+\DoxyCodeLine{88 }
+\DoxyCodeLine{89 \textcolor{preprocessor}{\#ifndef \_SOFT\_FLOAT}}
+\DoxyCodeLine{90 \textcolor{preprocessor}{\#define \_\_mffs(\_\_env)   \_\_asm \_\_volatile("{}mffs \%0"{}} : "{}=f"{} (*(\_\_env)))}
+\DoxyCodeLine{91 \textcolor{preprocessor}{\#define \_\_mtfsf(\_\_env)  \_\_asm \_\_volatile("{}mtfsf 255,\%0"{}} : : "{}f"{} (\_\_env))}
+\DoxyCodeLine{92 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{93 \textcolor{preprocessor}{\#define \_\_mffs(\_\_env)}}
+\DoxyCodeLine{94 \textcolor{preprocessor}{\#define \_\_mtfsf(\_\_env)}}
+\DoxyCodeLine{95 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{96 }
+\DoxyCodeLine{97 \textcolor{keyword}{union }\mbox{\hyperlink{union____fpscr}{\_\_fpscr}} \{}
+\DoxyCodeLine{98     \textcolor{keywordtype}{double} \mbox{\hyperlink{union____fpscr_aebfc4f1d9d00b0790cff31a016108371}{\_\_d}};}
+\DoxyCodeLine{99     \textcolor{keyword}{struct }\{}
+\DoxyCodeLine{100 \textcolor{preprocessor}{\#if \_\_BYTE\_ORDER\_\_ == \_\_ORDER\_LITTLE\_ENDIAN\_\_}}
+\DoxyCodeLine{101         \mbox{\hyperlink{structfenv__t}{fenv\_t}} \mbox{\hyperlink{union____fpscr_ae29961da31952c66d43060c5371800b5}{\_\_reg}};}
+\DoxyCodeLine{102         \_\_uint32\_t \mbox{\hyperlink{union____fpscr_a5e03f1c042d8489ee8ffe3eb13b80cd3}{\_\_junk}};}
+\DoxyCodeLine{103 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{104         \_\_uint32\_t \mbox{\hyperlink{union____fpscr_a5e03f1c042d8489ee8ffe3eb13b80cd3}{\_\_junk}};}
+\DoxyCodeLine{105         \mbox{\hyperlink{structfenv__t}{fenv\_t}} \mbox{\hyperlink{union____fpscr_ae29961da31952c66d43060c5371800b5}{\_\_reg}};}
+\DoxyCodeLine{106 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{107     \} \mbox{\hyperlink{union____fpscr_acabced72b49dd35b134de34d2549f081}{\_\_bits}};}
+\DoxyCodeLine{108 \};}
+\DoxyCodeLine{109 }
+\DoxyCodeLine{110 \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a56f7e74b3772e12653b98fa2c6c5380d}{\_\_fenv\_static}} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{111 \mbox{\hyperlink{openlibm__fenv__powerpc_8h_aea4e8c7d3cc52dfc74d4dfdb1e795082}{feclearexcept}}(\textcolor{keywordtype}{int} \_\_excepts)}
+\DoxyCodeLine{112 \{}
+\DoxyCodeLine{113     \textcolor{keyword}{union }\mbox{\hyperlink{union____fpscr}{\_\_fpscr}} \_\_r;}
+\DoxyCodeLine{114 }
+\DoxyCodeLine{115     \textcolor{keywordflow}{if} (\_\_excepts \& \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a638c8489adb1fac7204b07ece42998ae}{FE\_INVALID}})}
+\DoxyCodeLine{116         \_\_excepts |= \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a3d3527e51f72bff8f66412013fd620c4}{FE\_ALL\_INVALID}};}
+\DoxyCodeLine{117     \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a027d2a5dab513ef337bd9b345fd424da}{\_\_mffs}}(\&\_\_r.\mbox{\hyperlink{union____fpscr_aebfc4f1d9d00b0790cff31a016108371}{\_\_d}});}
+\DoxyCodeLine{118     \_\_r.\mbox{\hyperlink{union____fpscr_acabced72b49dd35b134de34d2549f081}{\_\_bits}}.\mbox{\hyperlink{union____fpscr_ae29961da31952c66d43060c5371800b5}{\_\_reg}} \&= \string~\_\_excepts;}
+\DoxyCodeLine{119     \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a615b72570a67be27bb4d5a9e85f5c1f1}{\_\_mtfsf}}(\_\_r.\mbox{\hyperlink{union____fpscr_aebfc4f1d9d00b0790cff31a016108371}{\_\_d}});}
+\DoxyCodeLine{120     \textcolor{keywordflow}{return} (0);}
+\DoxyCodeLine{121 \}}
+\DoxyCodeLine{122 }
+\DoxyCodeLine{123 \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a56f7e74b3772e12653b98fa2c6c5380d}{\_\_fenv\_static}} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{124 \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a8f9f0ea0d8d4237d189a284e6b14da11}{fegetexceptflag}}(\mbox{\hyperlink{openlibm__fenv__amd64_8h_af5be3a86f74aba2a00dc666fcfb158ea}{fexcept\_t}} *\_\_flagp, \textcolor{keywordtype}{int} \_\_excepts)}
+\DoxyCodeLine{125 \{}
+\DoxyCodeLine{126     \textcolor{keyword}{union }\mbox{\hyperlink{union____fpscr}{\_\_fpscr}} \_\_r;}
+\DoxyCodeLine{127 }
+\DoxyCodeLine{128     \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a027d2a5dab513ef337bd9b345fd424da}{\_\_mffs}}(\&\_\_r.\mbox{\hyperlink{union____fpscr_aebfc4f1d9d00b0790cff31a016108371}{\_\_d}});}
+\DoxyCodeLine{129     *\_\_flagp = \_\_r.\mbox{\hyperlink{union____fpscr_acabced72b49dd35b134de34d2549f081}{\_\_bits}}.\mbox{\hyperlink{union____fpscr_ae29961da31952c66d43060c5371800b5}{\_\_reg}} \& \_\_excepts;}
+\DoxyCodeLine{130     \textcolor{keywordflow}{return} (0);}
+\DoxyCodeLine{131 \}}
+\DoxyCodeLine{132 }
+\DoxyCodeLine{133 \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a56f7e74b3772e12653b98fa2c6c5380d}{\_\_fenv\_static}} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{134 \mbox{\hyperlink{openlibm__fenv__powerpc_8h_ad6691b75f79b65fe543329fa53c707f3}{fesetexceptflag}}(\textcolor{keyword}{const} \mbox{\hyperlink{openlibm__fenv__amd64_8h_af5be3a86f74aba2a00dc666fcfb158ea}{fexcept\_t}} *\_\_flagp, \textcolor{keywordtype}{int} \_\_excepts)}
+\DoxyCodeLine{135 \{}
+\DoxyCodeLine{136     \textcolor{keyword}{union }\mbox{\hyperlink{union____fpscr}{\_\_fpscr}} \_\_r;}
+\DoxyCodeLine{137 }
+\DoxyCodeLine{138     \textcolor{keywordflow}{if} (\_\_excepts \& \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a638c8489adb1fac7204b07ece42998ae}{FE\_INVALID}})}
+\DoxyCodeLine{139         \_\_excepts |= \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a09e405b3782b934813075e48366dda9a}{FE\_ALL\_EXCEPT}};}
+\DoxyCodeLine{140     \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a027d2a5dab513ef337bd9b345fd424da}{\_\_mffs}}(\&\_\_r.\mbox{\hyperlink{union____fpscr_aebfc4f1d9d00b0790cff31a016108371}{\_\_d}});}
+\DoxyCodeLine{141     \_\_r.\mbox{\hyperlink{union____fpscr_acabced72b49dd35b134de34d2549f081}{\_\_bits}}.\mbox{\hyperlink{union____fpscr_ae29961da31952c66d43060c5371800b5}{\_\_reg}} \&= \string~\_\_excepts;}
+\DoxyCodeLine{142     \_\_r.\mbox{\hyperlink{union____fpscr_acabced72b49dd35b134de34d2549f081}{\_\_bits}}.\mbox{\hyperlink{union____fpscr_ae29961da31952c66d43060c5371800b5}{\_\_reg}} |= *\_\_flagp \& \_\_excepts;}
+\DoxyCodeLine{143     \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a615b72570a67be27bb4d5a9e85f5c1f1}{\_\_mtfsf}}(\_\_r.\mbox{\hyperlink{union____fpscr_aebfc4f1d9d00b0790cff31a016108371}{\_\_d}});}
+\DoxyCodeLine{144     \textcolor{keywordflow}{return} (0);}
+\DoxyCodeLine{145 \}}
+\DoxyCodeLine{146 }
+\DoxyCodeLine{147 \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a56f7e74b3772e12653b98fa2c6c5380d}{\_\_fenv\_static}} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{148 \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a026937b9d4367562c87a0ccb43b67a44}{feraiseexcept}}(\textcolor{keywordtype}{int} \_\_excepts)}
+\DoxyCodeLine{149 \{}
+\DoxyCodeLine{150     \textcolor{keyword}{union }\mbox{\hyperlink{union____fpscr}{\_\_fpscr}} \_\_r;}
+\DoxyCodeLine{151 }
+\DoxyCodeLine{152     \textcolor{keywordflow}{if} (\_\_excepts \& \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a638c8489adb1fac7204b07ece42998ae}{FE\_INVALID}})}
+\DoxyCodeLine{153         \_\_excepts |= \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a6d42ec18ccb1d2ee9bbd2d49f2fccfbc}{FE\_VXSOFT}};}
+\DoxyCodeLine{154     \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a027d2a5dab513ef337bd9b345fd424da}{\_\_mffs}}(\&\_\_r.\mbox{\hyperlink{union____fpscr_aebfc4f1d9d00b0790cff31a016108371}{\_\_d}});}
+\DoxyCodeLine{155     \_\_r.\mbox{\hyperlink{union____fpscr_acabced72b49dd35b134de34d2549f081}{\_\_bits}}.\mbox{\hyperlink{union____fpscr_ae29961da31952c66d43060c5371800b5}{\_\_reg}} |= \_\_excepts;}
+\DoxyCodeLine{156     \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a615b72570a67be27bb4d5a9e85f5c1f1}{\_\_mtfsf}}(\_\_r.\mbox{\hyperlink{union____fpscr_aebfc4f1d9d00b0790cff31a016108371}{\_\_d}});}
+\DoxyCodeLine{157     \textcolor{keywordflow}{return} (0);}
+\DoxyCodeLine{158 \}}
+\DoxyCodeLine{159 }
+\DoxyCodeLine{160 \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a56f7e74b3772e12653b98fa2c6c5380d}{\_\_fenv\_static}} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{161 \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a34873ef7d06f9459a9f7c64b7c966bb2}{fetestexcept}}(\textcolor{keywordtype}{int} \_\_excepts)}
+\DoxyCodeLine{162 \{}
+\DoxyCodeLine{163     \textcolor{keyword}{union }\mbox{\hyperlink{union____fpscr}{\_\_fpscr}} \_\_r;}
+\DoxyCodeLine{164 }
+\DoxyCodeLine{165     \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a027d2a5dab513ef337bd9b345fd424da}{\_\_mffs}}(\&\_\_r.\mbox{\hyperlink{union____fpscr_aebfc4f1d9d00b0790cff31a016108371}{\_\_d}});}
+\DoxyCodeLine{166     \textcolor{keywordflow}{return} (\_\_r.\mbox{\hyperlink{union____fpscr_acabced72b49dd35b134de34d2549f081}{\_\_bits}}.\mbox{\hyperlink{union____fpscr_ae29961da31952c66d43060c5371800b5}{\_\_reg}} \& \_\_excepts);}
+\DoxyCodeLine{167 \}}
+\DoxyCodeLine{168 }
+\DoxyCodeLine{169 \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a56f7e74b3772e12653b98fa2c6c5380d}{\_\_fenv\_static}} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{170 \mbox{\hyperlink{openlibm__fenv__powerpc_8h_aba60129e080204b37209f72adedecee7}{fegetround}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{171 \{}
+\DoxyCodeLine{172     \textcolor{keyword}{union }\mbox{\hyperlink{union____fpscr}{\_\_fpscr}} \_\_r;}
+\DoxyCodeLine{173 }
+\DoxyCodeLine{174     \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a027d2a5dab513ef337bd9b345fd424da}{\_\_mffs}}(\&\_\_r.\mbox{\hyperlink{union____fpscr_aebfc4f1d9d00b0790cff31a016108371}{\_\_d}});}
+\DoxyCodeLine{175     \textcolor{keywordflow}{return} (\_\_r.\mbox{\hyperlink{union____fpscr_acabced72b49dd35b134de34d2549f081}{\_\_bits}}.\mbox{\hyperlink{union____fpscr_ae29961da31952c66d43060c5371800b5}{\_\_reg}} \& \mbox{\hyperlink{openlibm__fenv__powerpc_8h_aaa2db323172710d809fe6dbbe0069195}{\_ROUND\_MASK}});}
+\DoxyCodeLine{176 \}}
+\DoxyCodeLine{177 }
+\DoxyCodeLine{178 \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a56f7e74b3772e12653b98fa2c6c5380d}{\_\_fenv\_static}} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{179 \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a09d68f60f8870d93bf471f492e6acad3}{fesetround}}(\textcolor{keywordtype}{int} \_\_round)}
+\DoxyCodeLine{180 \{}
+\DoxyCodeLine{181     \textcolor{keyword}{union }\mbox{\hyperlink{union____fpscr}{\_\_fpscr}} \_\_r;}
+\DoxyCodeLine{182 }
+\DoxyCodeLine{183     \textcolor{keywordflow}{if} (\_\_round \& \string~\mbox{\hyperlink{openlibm__fenv__powerpc_8h_aaa2db323172710d809fe6dbbe0069195}{\_ROUND\_MASK}})}
+\DoxyCodeLine{184         \textcolor{keywordflow}{return} (-\/1);}
+\DoxyCodeLine{185     \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a027d2a5dab513ef337bd9b345fd424da}{\_\_mffs}}(\&\_\_r.\mbox{\hyperlink{union____fpscr_aebfc4f1d9d00b0790cff31a016108371}{\_\_d}});}
+\DoxyCodeLine{186     \_\_r.\mbox{\hyperlink{union____fpscr_acabced72b49dd35b134de34d2549f081}{\_\_bits}}.\mbox{\hyperlink{union____fpscr_ae29961da31952c66d43060c5371800b5}{\_\_reg}} \&= \string~\_ROUND\_MASK;}
+\DoxyCodeLine{187     \_\_r.\mbox{\hyperlink{union____fpscr_acabced72b49dd35b134de34d2549f081}{\_\_bits}}.\mbox{\hyperlink{union____fpscr_ae29961da31952c66d43060c5371800b5}{\_\_reg}} |= \_\_round;}
+\DoxyCodeLine{188     \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a615b72570a67be27bb4d5a9e85f5c1f1}{\_\_mtfsf}}(\_\_r.\mbox{\hyperlink{union____fpscr_aebfc4f1d9d00b0790cff31a016108371}{\_\_d}});}
+\DoxyCodeLine{189     \textcolor{keywordflow}{return} (0);}
+\DoxyCodeLine{190 \}}
+\DoxyCodeLine{191 }
+\DoxyCodeLine{192 \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a56f7e74b3772e12653b98fa2c6c5380d}{\_\_fenv\_static}} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{193 \mbox{\hyperlink{openlibm__fenv__powerpc_8h_ad2db3a71a6aa8b2330ec2463cbd8fac2}{fegetenv}}(\mbox{\hyperlink{structfenv__t}{fenv\_t}} *\_\_envp)}
+\DoxyCodeLine{194 \{}
+\DoxyCodeLine{195     \textcolor{keyword}{union }\mbox{\hyperlink{union____fpscr}{\_\_fpscr}} \_\_r;}
+\DoxyCodeLine{196 }
+\DoxyCodeLine{197     \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a027d2a5dab513ef337bd9b345fd424da}{\_\_mffs}}(\&\_\_r.\mbox{\hyperlink{union____fpscr_aebfc4f1d9d00b0790cff31a016108371}{\_\_d}});}
+\DoxyCodeLine{198     *\_\_envp = \_\_r.\mbox{\hyperlink{union____fpscr_acabced72b49dd35b134de34d2549f081}{\_\_bits}}.\mbox{\hyperlink{union____fpscr_ae29961da31952c66d43060c5371800b5}{\_\_reg}};}
+\DoxyCodeLine{199     \textcolor{keywordflow}{return} (0);}
+\DoxyCodeLine{200 \}}
+\DoxyCodeLine{201 }
+\DoxyCodeLine{202 \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a56f7e74b3772e12653b98fa2c6c5380d}{\_\_fenv\_static}} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{203 \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a18df0a8e1a442f2bd11a0206342d9672}{feholdexcept}}(\mbox{\hyperlink{structfenv__t}{fenv\_t}} *\_\_envp)}
+\DoxyCodeLine{204 \{}
+\DoxyCodeLine{205     \textcolor{keyword}{union }\mbox{\hyperlink{union____fpscr}{\_\_fpscr}} \_\_r;}
+\DoxyCodeLine{206 }
+\DoxyCodeLine{207     \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a027d2a5dab513ef337bd9b345fd424da}{\_\_mffs}}(\&\_\_r.\mbox{\hyperlink{union____fpscr_aebfc4f1d9d00b0790cff31a016108371}{\_\_d}});}
+\DoxyCodeLine{208     *\_\_envp = \_\_r.\mbox{\hyperlink{union____fpscr_aebfc4f1d9d00b0790cff31a016108371}{\_\_d}};}
+\DoxyCodeLine{209     \_\_r.\mbox{\hyperlink{union____fpscr_acabced72b49dd35b134de34d2549f081}{\_\_bits}}.\mbox{\hyperlink{union____fpscr_ae29961da31952c66d43060c5371800b5}{\_\_reg}} \&= \string~(\mbox{\hyperlink{openlibm__fenv__powerpc_8h_a09e405b3782b934813075e48366dda9a}{FE\_ALL\_EXCEPT}} | \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a2a4611f70a567ad98073333fa188712e}{\_ENABLE\_MASK}});}
+\DoxyCodeLine{210     \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a615b72570a67be27bb4d5a9e85f5c1f1}{\_\_mtfsf}}(\_\_r.\mbox{\hyperlink{union____fpscr_aebfc4f1d9d00b0790cff31a016108371}{\_\_d}});}
+\DoxyCodeLine{211     \textcolor{keywordflow}{return} (0);}
+\DoxyCodeLine{212 \}}
+\DoxyCodeLine{213 }
+\DoxyCodeLine{214 \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a56f7e74b3772e12653b98fa2c6c5380d}{\_\_fenv\_static}} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{215 \mbox{\hyperlink{openlibm__fenv__powerpc_8h_abdaa8f700bdb653319f063979cd983d5}{fesetenv}}(\textcolor{keyword}{const} \mbox{\hyperlink{structfenv__t}{fenv\_t}} *\_\_envp)}
+\DoxyCodeLine{216 \{}
+\DoxyCodeLine{217     \textcolor{keyword}{union }\mbox{\hyperlink{union____fpscr}{\_\_fpscr}} \_\_r;}
+\DoxyCodeLine{218 }
+\DoxyCodeLine{219     \_\_r.\mbox{\hyperlink{union____fpscr_acabced72b49dd35b134de34d2549f081}{\_\_bits}}.\mbox{\hyperlink{union____fpscr_ae29961da31952c66d43060c5371800b5}{\_\_reg}} = *\_\_envp;}
+\DoxyCodeLine{220     \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a615b72570a67be27bb4d5a9e85f5c1f1}{\_\_mtfsf}}(\_\_r.\mbox{\hyperlink{union____fpscr_aebfc4f1d9d00b0790cff31a016108371}{\_\_d}});}
+\DoxyCodeLine{221     \textcolor{keywordflow}{return} (0);}
+\DoxyCodeLine{222 \}}
+\DoxyCodeLine{223 }
+\DoxyCodeLine{224 \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a56f7e74b3772e12653b98fa2c6c5380d}{\_\_fenv\_static}} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{225 \mbox{\hyperlink{openlibm__fenv__powerpc_8h_aa0b243183d29631478097e40f2f653d1}{feupdateenv}}(\textcolor{keyword}{const} \mbox{\hyperlink{structfenv__t}{fenv\_t}} *\_\_envp)}
+\DoxyCodeLine{226 \{}
+\DoxyCodeLine{227     \textcolor{keyword}{union }\mbox{\hyperlink{union____fpscr}{\_\_fpscr}} \_\_r;}
+\DoxyCodeLine{228 }
+\DoxyCodeLine{229     \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a027d2a5dab513ef337bd9b345fd424da}{\_\_mffs}}(\&\_\_r.\mbox{\hyperlink{union____fpscr_aebfc4f1d9d00b0790cff31a016108371}{\_\_d}});}
+\DoxyCodeLine{230     \_\_r.\mbox{\hyperlink{union____fpscr_acabced72b49dd35b134de34d2549f081}{\_\_bits}}.\mbox{\hyperlink{union____fpscr_ae29961da31952c66d43060c5371800b5}{\_\_reg}} \&= \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a09e405b3782b934813075e48366dda9a}{FE\_ALL\_EXCEPT}};}
+\DoxyCodeLine{231     \_\_r.\mbox{\hyperlink{union____fpscr_acabced72b49dd35b134de34d2549f081}{\_\_bits}}.\mbox{\hyperlink{union____fpscr_ae29961da31952c66d43060c5371800b5}{\_\_reg}} |= *\_\_envp;}
+\DoxyCodeLine{232     \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a615b72570a67be27bb4d5a9e85f5c1f1}{\_\_mtfsf}}(\_\_r.\mbox{\hyperlink{union____fpscr_aebfc4f1d9d00b0790cff31a016108371}{\_\_d}});}
+\DoxyCodeLine{233     \textcolor{keywordflow}{return} (0);}
+\DoxyCodeLine{234 \}}
+\DoxyCodeLine{235 }
+\DoxyCodeLine{236 \textcolor{preprocessor}{\#if \_\_BSD\_VISIBLE}}
+\DoxyCodeLine{237 }
+\DoxyCodeLine{238 \textcolor{comment}{/* We currently provide no external definitions of the functions below. */}}
+\DoxyCodeLine{239 }
+\DoxyCodeLine{240 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{241 feenableexcept(\textcolor{keywordtype}{int} \_\_mask)}
+\DoxyCodeLine{242 \{}
+\DoxyCodeLine{243     \textcolor{keyword}{union }\mbox{\hyperlink{union____fpscr}{\_\_fpscr}} \_\_r;}
+\DoxyCodeLine{244     \mbox{\hyperlink{structfenv__t}{fenv\_t}} \_\_oldmask;}
+\DoxyCodeLine{245 }
+\DoxyCodeLine{246     \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a027d2a5dab513ef337bd9b345fd424da}{\_\_mffs}}(\&\_\_r.\_\_d);}
+\DoxyCodeLine{247     \_\_oldmask = \_\_r.\_\_bits.\_\_reg;}
+\DoxyCodeLine{248     \_\_r.\_\_bits.\_\_reg |= (\_\_mask \& \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a09e405b3782b934813075e48366dda9a}{FE\_ALL\_EXCEPT}}) >> \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a394464c7bf4464ea0038cd3cc643a7fc}{\_FPUSW\_SHIFT}};}
+\DoxyCodeLine{249     \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a615b72570a67be27bb4d5a9e85f5c1f1}{\_\_mtfsf}}(\_\_r.\_\_d);}
+\DoxyCodeLine{250     \textcolor{keywordflow}{return} ((\_\_oldmask \& \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a2a4611f70a567ad98073333fa188712e}{\_ENABLE\_MASK}}) << \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a394464c7bf4464ea0038cd3cc643a7fc}{\_FPUSW\_SHIFT}});}
+\DoxyCodeLine{251 \}}
+\DoxyCodeLine{252 }
+\DoxyCodeLine{253 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{254 fedisableexcept(\textcolor{keywordtype}{int} \_\_mask)}
+\DoxyCodeLine{255 \{}
+\DoxyCodeLine{256     \textcolor{keyword}{union }\mbox{\hyperlink{union____fpscr}{\_\_fpscr}} \_\_r;}
+\DoxyCodeLine{257     \mbox{\hyperlink{structfenv__t}{fenv\_t}} \_\_oldmask;}
+\DoxyCodeLine{258 }
+\DoxyCodeLine{259     \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a027d2a5dab513ef337bd9b345fd424da}{\_\_mffs}}(\&\_\_r.\_\_d);}
+\DoxyCodeLine{260     \_\_oldmask = \_\_r.\_\_bits.\_\_reg;}
+\DoxyCodeLine{261     \_\_r.\_\_bits.\_\_reg \&= \string~((\_\_mask \& \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a09e405b3782b934813075e48366dda9a}{FE\_ALL\_EXCEPT}}) >> \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a394464c7bf4464ea0038cd3cc643a7fc}{\_FPUSW\_SHIFT}});}
+\DoxyCodeLine{262     \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a615b72570a67be27bb4d5a9e85f5c1f1}{\_\_mtfsf}}(\_\_r.\_\_d);}
+\DoxyCodeLine{263     \textcolor{keywordflow}{return} ((\_\_oldmask \& \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a2a4611f70a567ad98073333fa188712e}{\_ENABLE\_MASK}}) << \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a394464c7bf4464ea0038cd3cc643a7fc}{\_FPUSW\_SHIFT}});}
+\DoxyCodeLine{264 \}}
+\DoxyCodeLine{265 }
+\DoxyCodeLine{266 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{267 fegetexcept(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{268 \{}
+\DoxyCodeLine{269     \textcolor{keyword}{union }\mbox{\hyperlink{union____fpscr}{\_\_fpscr}} \_\_r;}
+\DoxyCodeLine{270 }
+\DoxyCodeLine{271     \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a027d2a5dab513ef337bd9b345fd424da}{\_\_mffs}}(\&\_\_r.\_\_d);}
+\DoxyCodeLine{272     \textcolor{keywordflow}{return} ((\_\_r.\_\_bits.\_\_reg \& \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a2a4611f70a567ad98073333fa188712e}{\_ENABLE\_MASK}}) << \mbox{\hyperlink{openlibm__fenv__powerpc_8h_a394464c7bf4464ea0038cd3cc643a7fc}{\_FPUSW\_SHIFT}});}
+\DoxyCodeLine{273 \}}
+\DoxyCodeLine{274 }
+\DoxyCodeLine{275 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_BSD\_VISIBLE */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{276 }
+\DoxyCodeLine{277 \mbox{\hyperlink{cdefs-compat_8h_a115472f6d0d1035f1885658ce0821537}{\_\_END\_DECLS}}}
+\DoxyCodeLine{278 }
+\DoxyCodeLine{279 \textcolor{preprocessor}{\#endif  }\textcolor{comment}{/* !\_FENV\_H\_ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

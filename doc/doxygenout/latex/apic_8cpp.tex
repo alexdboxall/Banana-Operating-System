@@ -1,0 +1,99 @@
+\hypertarget{apic_8cpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/arch/i386/apic.cpp File Reference}
+\label{apic_8cpp}\index{C:/Users/Alex/Desktop/Banana/kernel/arch/i386/apic.cpp@{C:/Users/Alex/Desktop/Banana/kernel/arch/i386/apic.cpp}}
+{\ttfamily \#include \char`\"{}krnl/common.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hal/intctrl.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/acpi.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/cpu.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/hal.\+hpp\char`\"{}}\newline
+{\ttfamily \#include $<$arch/i386/apic.\+hpp$>$}\newline
+{\ttfamily \#include $<$arch/i386/x86.\+hpp$>$}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{apic_8cpp_aa938b337a5f092dad1e28fc795aa1fdb}{IOAPICID}}~0x00
+\item 
+\#define \mbox{\hyperlink{apic_8cpp_ad5d84e1da3914f72a85e8fbc54cc2f41}{IOAPICVER}}~0x01
+\item 
+\#define \mbox{\hyperlink{apic_8cpp_af9fd1febb1ee5e79bb1534c3c71bc8ac}{IOAPICARB}}~0x02
+\item 
+\#define \mbox{\hyperlink{apic_8cpp_a47a9dbf4b0b26dbc094cdeb4e89b247c}{IOAPICREDTBL}}(\mbox{\hyperlink{string_8h_a5a8464156e218440bed8aa10828319c5}{n}})~(0x10 + 2 $\ast$ \mbox{\hyperlink{string_8h_a5a8464156e218440bed8aa10828319c5}{n}})
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{apic_8cpp_a2df7f4b964f1048d614354aa98ffdfaf}{apic\+Get\+Base}} ()
+\item 
+void \mbox{\hyperlink{apic_8cpp_ac07cf4be50cf2f9f54c813ae084713d9}{apic\+Open}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{apic_8cpp_a9f4e99a9811e917a9ba14ea0f23db9ff}{IOAPICs\+Setup\+Yet}} = false
+\item 
+\mbox{\hyperlink{class_i_o_a_p_i_c}{IOAPIC}} $\ast$ \mbox{\hyperlink{apic_8cpp_adf637e68b6e124531e7596baf2a50b99}{ioapics}} \mbox{[}8\mbox{]}
+\item 
+int \mbox{\hyperlink{apic_8cpp_a14a3d7667ec778903d7b5ff9bcd5d1ba}{no\+Of\+IOAPICs}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{apic_8cpp_af9fd1febb1ee5e79bb1534c3c71bc8ac}\label{apic_8cpp_af9fd1febb1ee5e79bb1534c3c71bc8ac}} 
+\index{apic.cpp@{apic.cpp}!IOAPICARB@{IOAPICARB}}
+\index{IOAPICARB@{IOAPICARB}!apic.cpp@{apic.cpp}}
+\doxysubsubsection{\texorpdfstring{IOAPICARB}{IOAPICARB}}
+{\footnotesize\ttfamily \#define IOAPICARB~0x02}
+
+\mbox{\Hypertarget{apic_8cpp_aa938b337a5f092dad1e28fc795aa1fdb}\label{apic_8cpp_aa938b337a5f092dad1e28fc795aa1fdb}} 
+\index{apic.cpp@{apic.cpp}!IOAPICID@{IOAPICID}}
+\index{IOAPICID@{IOAPICID}!apic.cpp@{apic.cpp}}
+\doxysubsubsection{\texorpdfstring{IOAPICID}{IOAPICID}}
+{\footnotesize\ttfamily \#define IOAPICID~0x00}
+
+\mbox{\Hypertarget{apic_8cpp_a47a9dbf4b0b26dbc094cdeb4e89b247c}\label{apic_8cpp_a47a9dbf4b0b26dbc094cdeb4e89b247c}} 
+\index{apic.cpp@{apic.cpp}!IOAPICREDTBL@{IOAPICREDTBL}}
+\index{IOAPICREDTBL@{IOAPICREDTBL}!apic.cpp@{apic.cpp}}
+\doxysubsubsection{\texorpdfstring{IOAPICREDTBL}{IOAPICREDTBL}}
+{\footnotesize\ttfamily \#define IOAPICREDTBL(\begin{DoxyParamCaption}\item[{}]{\mbox{\hyperlink{string_8h_a5a8464156e218440bed8aa10828319c5}{n}} }\end{DoxyParamCaption})~(0x10 + 2 $\ast$ \mbox{\hyperlink{string_8h_a5a8464156e218440bed8aa10828319c5}{n}})}
+
+\mbox{\Hypertarget{apic_8cpp_ad5d84e1da3914f72a85e8fbc54cc2f41}\label{apic_8cpp_ad5d84e1da3914f72a85e8fbc54cc2f41}} 
+\index{apic.cpp@{apic.cpp}!IOAPICVER@{IOAPICVER}}
+\index{IOAPICVER@{IOAPICVER}!apic.cpp@{apic.cpp}}
+\doxysubsubsection{\texorpdfstring{IOAPICVER}{IOAPICVER}}
+{\footnotesize\ttfamily \#define IOAPICVER~0x01}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{apic_8cpp_a2df7f4b964f1048d614354aa98ffdfaf}\label{apic_8cpp_a2df7f4b964f1048d614354aa98ffdfaf}} 
+\index{apic.cpp@{apic.cpp}!apicGetBase@{apicGetBase}}
+\index{apicGetBase@{apicGetBase}!apic.cpp@{apic.cpp}}
+\doxysubsubsection{\texorpdfstring{apicGetBase()}{apicGetBase()}}
+{\footnotesize\ttfamily uint32\+\_\+t apic\+Get\+Base (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{apic_8cpp_ac07cf4be50cf2f9f54c813ae084713d9}\label{apic_8cpp_ac07cf4be50cf2f9f54c813ae084713d9}} 
+\index{apic.cpp@{apic.cpp}!apicOpen@{apicOpen}}
+\index{apicOpen@{apicOpen}!apic.cpp@{apic.cpp}}
+\doxysubsubsection{\texorpdfstring{apicOpen()}{apicOpen()}}
+{\footnotesize\ttfamily void apic\+Open (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{apic_8cpp_adf637e68b6e124531e7596baf2a50b99}\label{apic_8cpp_adf637e68b6e124531e7596baf2a50b99}} 
+\index{apic.cpp@{apic.cpp}!ioapics@{ioapics}}
+\index{ioapics@{ioapics}!apic.cpp@{apic.cpp}}
+\doxysubsubsection{\texorpdfstring{ioapics}{ioapics}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_i_o_a_p_i_c}{IOAPIC}}$\ast$ ioapics\mbox{[}8\mbox{]}}
+
+\mbox{\Hypertarget{apic_8cpp_a9f4e99a9811e917a9ba14ea0f23db9ff}\label{apic_8cpp_a9f4e99a9811e917a9ba14ea0f23db9ff}} 
+\index{apic.cpp@{apic.cpp}!IOAPICsSetupYet@{IOAPICsSetupYet}}
+\index{IOAPICsSetupYet@{IOAPICsSetupYet}!apic.cpp@{apic.cpp}}
+\doxysubsubsection{\texorpdfstring{IOAPICsSetupYet}{IOAPICsSetupYet}}
+{\footnotesize\ttfamily bool IOAPICs\+Setup\+Yet = false}
+
+\mbox{\Hypertarget{apic_8cpp_a14a3d7667ec778903d7b5ff9bcd5d1ba}\label{apic_8cpp_a14a3d7667ec778903d7b5ff9bcd5d1ba}} 
+\index{apic.cpp@{apic.cpp}!noOfIOAPICs@{noOfIOAPICs}}
+\index{noOfIOAPICs@{noOfIOAPICs}!apic.cpp@{apic.cpp}}
+\doxysubsubsection{\texorpdfstring{noOfIOAPICs}{noOfIOAPICs}}
+{\footnotesize\ttfamily int no\+Of\+IOAPICs}
+

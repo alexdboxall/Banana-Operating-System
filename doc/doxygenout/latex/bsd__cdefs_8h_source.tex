@@ -1,0 +1,108 @@
+\hypertarget{bsd__cdefs_8h_source}{}\doxysection{bsd\+\_\+cdefs.\+h}
+\label{bsd__cdefs_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/libk/\_mathinc/bsd\_cdefs.h@{C:/Users/Alex/Desktop/Banana/kernel/libk/\_mathinc/bsd\_cdefs.h}}
+\mbox{\hyperlink{bsd__cdefs_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*-\/}}
+\DoxyCodeLine{2 \textcolor{comment}{ * Copyright (c) 1991, 1993}}
+\DoxyCodeLine{3 \textcolor{comment}{ *  The Regents of the University of California.  All rights reserved.}}
+\DoxyCodeLine{4 \textcolor{comment}{ *}}
+\DoxyCodeLine{5 \textcolor{comment}{ * This code is derived from software contributed to Berkeley by}}
+\DoxyCodeLine{6 \textcolor{comment}{ * Berkeley Software Design, Inc.}}
+\DoxyCodeLine{7 \textcolor{comment}{ *}}
+\DoxyCodeLine{8 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{9 \textcolor{comment}{ * modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{10 \textcolor{comment}{ * are met:}}
+\DoxyCodeLine{11 \textcolor{comment}{ * 1. Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{12 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer.}}
+\DoxyCodeLine{13 \textcolor{comment}{ * 2. Redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{14 \textcolor{comment}{ *    notice, this list of conditions and the following disclaimer in the}}
+\DoxyCodeLine{15 \textcolor{comment}{ *    documentation and/or other materials provided with the distribution.}}
+\DoxyCodeLine{16 \textcolor{comment}{ * 4. Neither the name of the University nor the names of its contributors}}
+\DoxyCodeLine{17 \textcolor{comment}{ *    may be used to endorse or promote products derived from this software}}
+\DoxyCodeLine{18 \textcolor{comment}{ *    without specific prior written permission.}}
+\DoxyCodeLine{19 \textcolor{comment}{ *}}
+\DoxyCodeLine{20 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND}}
+\DoxyCodeLine{21 \textcolor{comment}{ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE}}
+\DoxyCodeLine{22 \textcolor{comment}{ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE}}
+\DoxyCodeLine{23 \textcolor{comment}{ * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE}}
+\DoxyCodeLine{24 \textcolor{comment}{ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL}}
+\DoxyCodeLine{25 \textcolor{comment}{ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS}}
+\DoxyCodeLine{26 \textcolor{comment}{ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)}}
+\DoxyCodeLine{27 \textcolor{comment}{ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT}}
+\DoxyCodeLine{28 \textcolor{comment}{ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY}}
+\DoxyCodeLine{29 \textcolor{comment}{ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF}}
+\DoxyCodeLine{30 \textcolor{comment}{ * SUCH DAMAGE.}}
+\DoxyCodeLine{31 \textcolor{comment}{ *}}
+\DoxyCodeLine{32 \textcolor{comment}{ *  @(\#)cdefs.h 8.8 (Berkeley) 1/9/95}}
+\DoxyCodeLine{33 \textcolor{comment}{ * \$FreeBSD: src/sys/sys/cdefs.h,v 1.114 2011/02/18 21:44:53 nwhitehorn Exp \$}}
+\DoxyCodeLine{34 \textcolor{comment}{ */}}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36 \textcolor{comment}{/* Do not redefine macros if the system provides them in sys/cdefs.h.}}
+\DoxyCodeLine{37 \textcolor{comment}{ * The two macros correspond to different platforms. */}}
+\DoxyCodeLine{38 \textcolor{preprocessor}{\#ifndef \_BSD\_CDEFS\_H\_}}
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#define \_BSD\_CDEFS\_H\_}}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41 \textcolor{comment}{/*}}
+\DoxyCodeLine{42 \textcolor{comment}{ * This code has been put in place to help reduce the addition of}}
+\DoxyCodeLine{43 \textcolor{comment}{ * compiler specific defines in FreeBSD code.  It helps to aid in}}
+\DoxyCodeLine{44 \textcolor{comment}{ * having a compiler-\/agnostic source tree.}}
+\DoxyCodeLine{45 \textcolor{comment}{ */}}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47 \textcolor{preprocessor}{\#if defined(\_\_GNUC\_\_) || defined(\_\_INTEL\_COMPILER)}}
+\DoxyCodeLine{48 }
+\DoxyCodeLine{49 \textcolor{preprocessor}{\#if \_\_GNUC\_\_ >= 3 || defined(\_\_INTEL\_COMPILER)}}
+\DoxyCodeLine{50 \textcolor{preprocessor}{\#define \_\_GNUCLIKE\_ASM 3}}
+\DoxyCodeLine{51 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{52 \textcolor{preprocessor}{\#define \_\_GNUCLIKE\_ASM 2}}
+\DoxyCodeLine{53 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{54 }
+\DoxyCodeLine{55 \textcolor{preprocessor}{\#define \_\_CC\_SUPPORTS\_\_\_INLINE\_\_ 1}}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_GNUC\_\_ || \_\_INTEL\_COMPILER */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{58 }
+\DoxyCodeLine{59 \textcolor{preprocessor}{\#if defined(\_\_STDC\_\_) || defined(\_\_cplusplus)}}
+\DoxyCodeLine{60 }
+\DoxyCodeLine{61 \textcolor{preprocessor}{\#define \_\_volatile  volatile}}
+\DoxyCodeLine{62 \textcolor{preprocessor}{\#if defined(\_\_cplusplus)}}
+\DoxyCodeLine{63 \textcolor{preprocessor}{\#define \_\_inline    inline      }\textcolor{comment}{/* convert to C++ keyword */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{64 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{65 \textcolor{preprocessor}{\#if !defined(\_\_CC\_SUPPORTS\_\_\_INLINE)}}
+\DoxyCodeLine{66 \textcolor{preprocessor}{\#define \_\_inline            }\textcolor{comment}{/* delete GCC keyword */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{67 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* ! \_\_CC\_SUPPORTS\_\_\_INLINE */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{68 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* !\_\_cplusplus */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{70 \textcolor{preprocessor}{\#else   }\textcolor{comment}{/* !(\_\_STDC\_\_ || \_\_cplusplus) */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{71 }
+\DoxyCodeLine{72 \textcolor{preprocessor}{\#if !defined(\_\_CC\_SUPPORTS\_\_\_INLINE)}}
+\DoxyCodeLine{73 \textcolor{preprocessor}{\#define \_\_inline}}
+\DoxyCodeLine{74 \textcolor{preprocessor}{\#define \_\_volatile}}
+\DoxyCodeLine{75 \textcolor{preprocessor}{\#endif  }\textcolor{comment}{/* !\_\_CC\_SUPPORTS\_\_\_INLINE */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{76 \textcolor{preprocessor}{\#endif  }\textcolor{comment}{/* !(\_\_STDC\_\_ || \_\_cplusplus) */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{77 }
+\DoxyCodeLine{78 \textcolor{comment}{/*}}
+\DoxyCodeLine{79 \textcolor{comment}{ * Macro to test if we're using a specific version of gcc or later.}}
+\DoxyCodeLine{80 \textcolor{comment}{ */}}
+\DoxyCodeLine{81 \textcolor{preprocessor}{\#ifndef \_\_GNUC\_PREREQ\_\_}}
+\DoxyCodeLine{82 \textcolor{preprocessor}{\#if defined(\_\_GNUC\_\_) \&\& !defined(\_\_INTEL\_COMPILER)}}
+\DoxyCodeLine{83 \textcolor{preprocessor}{\#define \_\_GNUC\_PREREQ\_\_(ma, mi) \(\backslash\)}}
+\DoxyCodeLine{84 \textcolor{preprocessor}{    (\_\_GNUC\_\_ > (ma) || \_\_GNUC\_\_ == (ma) \&\& \_\_GNUC\_MINOR\_\_ >= (mi))}}
+\DoxyCodeLine{85 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{86 \textcolor{preprocessor}{\#define \_\_GNUC\_PREREQ\_\_(ma, mi) 0}}
+\DoxyCodeLine{87 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{88 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_GNUC\_PREREQ\_\_ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{89 }
+\DoxyCodeLine{90 \textcolor{comment}{/*}}
+\DoxyCodeLine{91 \textcolor{comment}{ * Compiler-\/dependent macro to help declare pure (no side effects) functions.}}
+\DoxyCodeLine{92 \textcolor{comment}{ * It is null except for versions of gcc that are known to support the features}}
+\DoxyCodeLine{93 \textcolor{comment}{ * properly (old versions of gcc-\/2 supported the dead and pure features}}
+\DoxyCodeLine{94 \textcolor{comment}{ * in a different (wrong) way), and for icc.  If we do not provide an implementation}}
+\DoxyCodeLine{95 \textcolor{comment}{ * for a given compiler, let the compile fail if it is told to use}}
+\DoxyCodeLine{96 \textcolor{comment}{ * a feature that we cannot live without.}}
+\DoxyCodeLine{97 \textcolor{comment}{ */}}
+\DoxyCodeLine{98 \textcolor{preprocessor}{\#if !defined(\_\_pure2) \&\& (\_\_GNUC\_PREREQ\_\_(2, 7) || defined(\_\_INTEL\_COMPILER))}}
+\DoxyCodeLine{99 \textcolor{preprocessor}{\#define \_\_pure2     \_\_attribute\_\_((\_\_const\_\_))}}
+\DoxyCodeLine{100 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{101 }
+\DoxyCodeLine{102 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* !\_BSD\_CDEFS\_H\_ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

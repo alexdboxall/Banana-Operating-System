@@ -1,0 +1,53 @@
+\hypertarget{apic_8hpp_source}{}\doxysection{apic.\+hpp}
+\label{apic_8hpp_source}\index{C:/Users/Alex/Desktop/Banana/kernel/arch/i386/apic.hpp@{C:/Users/Alex/Desktop/Banana/kernel/arch/i386/apic.hpp}}
+\mbox{\hyperlink{apic_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#ifndef \_APIC\_HPP\_}}
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#define \_APIC\_HPP\_}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{intctrl_8hpp}{hal/intctrl.hpp}}"{}}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#define IA32\_APIC\_BASE\_MSR 0x1B}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#define IA32\_APIC\_BASE\_MSR\_BSP 0x100            }\textcolor{comment}{// Processor is a BSP}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#define IA32\_APIC\_BASE\_MSR\_ENABLE 0x800}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#define APIC\_REGISTER\_LVT\_TIMER                 0x320}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#define APIC\_REGISTER\_TIMER\_INITCNT             0x380}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#define APIC\_REGISTER\_TIMER\_CURRCNT             0x390}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#define APIC\_REGISTER\_TIMER\_DIV                 0x3E0}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#define APIC\_REGISTER\_LVT\_MASKED                0x10000}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#define APIC\_REGISTER\_LVT\_TIMER\_MODE\_PERIODIC   0x20000}}
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18 \textcolor{keyword}{class }\mbox{\hyperlink{class_i_o_a_p_i_c}{IOAPIC}}: \textcolor{keyword}{public} \mbox{\hyperlink{class_device}{Device}}}
+\DoxyCodeLine{19 \{}
+\DoxyCodeLine{20 \textcolor{keyword}{private}:}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24 \textcolor{keyword}{public}:}
+\DoxyCodeLine{25     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_i_o_a_p_i_c_a2d335d912e7e72280376128f85da22aa}{number}};}
+\DoxyCodeLine{26     uint32\_t \mbox{\hyperlink{class_i_o_a_p_i_c_a157b17dad1b0a9d76465c7d12c0dbc7f}{base}};}
+\DoxyCodeLine{27     uint32\_t \mbox{\hyperlink{class_i_o_a_p_i_c_af914c722d5609096e1d422020a683fb1}{gsiBase}};}
+\DoxyCodeLine{28     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_i_o_a_p_i_c_a98f3522550ec713ff88023acbd53b8f7}{handles}};}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_i_o_a_p_i_c_aad18eb62d30c1e300c86f6b8a84d12de}{handlesGSIWithNumber}}(\textcolor{keywordtype}{unsigned} \mbox{\hyperlink{class_i_o_a_p_i_c_a2d335d912e7e72280376128f85da22aa}{number}});}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_i_o_a_p_i_c_acc614adb1df10cecf73bcbcd5896ffdb}{redirect}}(uint8\_t irq, uint64\_t apic\_id, uint8\_t vector, \textcolor{keywordtype}{bool} levelTriggered = \textcolor{keyword}{false}, \textcolor{keywordtype}{bool} activeLow = \textcolor{keyword}{false});}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34     \mbox{\hyperlink{class_i_o_a_p_i_c_a1e1e2101ff4d35bf391d7d46087c14bc}{IOAPIC}}();}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_i_o_a_p_i_c_af3ca797a9202f9c71dcc03fa7ea03a4d}{open}}(\textcolor{keywordtype}{int}, \textcolor{keywordtype}{int}, \textcolor{keywordtype}{void}*);}
+\DoxyCodeLine{37     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_i_o_a_p_i_c_a2812c9e9217e20e9fa66f35846a3e1c2}{read}}(\textcolor{keywordtype}{int});          }
+\DoxyCodeLine{38     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_i_o_a_p_i_c_af246e6410ac990b9023b6df991344ad7}{write}}(\textcolor{keywordtype}{int}, \textcolor{keywordtype}{int});}
+\DoxyCodeLine{39     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_i_o_a_p_i_c_a0f16947e039c96c1f9c0b9d5dfe36dd9}{close}}(\textcolor{keywordtype}{int}, \textcolor{keywordtype}{int}, \textcolor{keywordtype}{void}*);}
+\DoxyCodeLine{40 \};}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42 \textcolor{keyword}{extern} \mbox{\hyperlink{class_i_o_a_p_i_c}{IOAPIC}}* \mbox{\hyperlink{apic_8hpp_adf637e68b6e124531e7596baf2a50b99}{ioapics}}[8];}
+\DoxyCodeLine{43 \textcolor{keyword}{extern} \textcolor{keywordtype}{int} \mbox{\hyperlink{apic_8hpp_a14a3d7667ec778903d7b5ff9bcd5d1ba}{noOfIOAPICs}};}
+\DoxyCodeLine{44 }
+\DoxyCodeLine{45 \textcolor{keywordtype}{void} \mbox{\hyperlink{apic_8hpp_ac07cf4be50cf2f9f54c813ae084713d9}{apicOpen}}();}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

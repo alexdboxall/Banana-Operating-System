@@ -1,0 +1,363 @@
+\hypertarget{iso9660_8c}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/fs/iso9660/iso9660.c File Reference}
+\label{iso9660_8c}\index{C:/Users/Alex/Desktop/Banana/kernel/fs/iso9660/iso9660.c@{C:/Users/Alex/Desktop/Banana/kernel/fs/iso9660/iso9660.c}}
+{\ttfamily \#include $<$fs/iso9660/iso9660.\+h$>$}\newline
+{\ttfamily \#include $<$krnl/kheap.\+hpp$>$}\newline
+{\ttfamily \#include $<$libk/string.\+h$>$}\newline
+{\ttfamily \#include $<$libk/ctype.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stddef.\+h$>$}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structiso__dirent__t}{iso\+\_\+dirent\+\_\+t}}
+\item 
+struct \mbox{\hyperlink{structcache__block__t}{cache\+\_\+block\+\_\+t}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{iso9660_8c_ac9cb30e4174596f1921e30e23bbe95ce}{MAX\+\_\+\+ISO\+\_\+\+FILES}}~16
+\item 
+\#define \mbox{\hyperlink{iso9660_8c_ae1558a40dc9bf44dcee0dfd1468a6121}{MAX\+\_\+\+FN\+\_\+\+LEN}}~256
+\item 
+\#define \mbox{\hyperlink{iso9660_8c_a8744a685dd616033897ff175cf003b84}{DBG\+\_\+\+NOTICE}}~\char`\"{}\mbox{[}iso9660\mbox{]} Notice\+: \char`\"{}
+\item 
+\#define \mbox{\hyperlink{iso9660_8c_a004bc89ac4c6725bbf5f2291977392e0}{DBG\+\_\+\+ERROR}}~\char`\"{}\mbox{[}iso9660\mbox{]} Error\+: \char`\"{}
+\item 
+\#define \mbox{\hyperlink{iso9660_8c_a93f50dc61b972754c8b666ba9c272dc4}{lock}}(x)
+\item 
+\#define \mbox{\hyperlink{iso9660_8c_a56dc631d218355c200ec10d8376d72be}{unlock}}(x)
+\item 
+\#define \mbox{\hyperlink{iso9660_8c_a1c9d8db3c7b414ae6c0422321874a096}{dbglog}}(sev,  prm...)
+\item 
+\#define \mbox{\hyperlink{iso9660_8c_a02eaefa97ea5cd0451c747d4b4e836d8}{NUM\+\_\+\+CACHE\+\_\+\+BLOCKS}}~16
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef uint8\+\_\+t \mbox{\hyperlink{iso9660_8c_a92c50087ca0e64fa93fc59402c55f8ca}{u8}}
+\item 
+typedef uint16\+\_\+t \mbox{\hyperlink{iso9660_8c_ace9d960e74685e2cd84b36132dbbf8aa}{u16}}
+\item 
+typedef uint32\+\_\+t \mbox{\hyperlink{iso9660_8c_afaa62991928fb9fb18ff0db62a040aba}{u32}}
+\item 
+typedef int8\+\_\+t \mbox{\hyperlink{iso9660_8c_a9e382f207c65ca13ab4ae98363aeda80}{s8}}
+\item 
+typedef int16\+\_\+t \mbox{\hyperlink{iso9660_8c_aa980e2c02ba2305e0f489d5650655425}{s16}}
+\item 
+typedef int32\+\_\+t \mbox{\hyperlink{iso9660_8c_ae9b1af5c037e57a98884758875d3a7c4}{s32}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{iso9660_8c_a0b31cbd797340effee2dc6c0180e3239}{iso\+\_\+kprintf}} (char $\ast$str)
+\item 
+void \mbox{\hyperlink{iso9660_8c_a60ec76eb041ae1c96d5f1289952f8fb8}{iso\+\_\+kprintfd}} (int \mbox{\hyperlink{syscalls_8cpp_ab0ea24539a2252176fffac31d88365ba}{d}})
+\item 
+int \mbox{\hyperlink{iso9660_8c_a1c71fbb01e2f3a8fe5e57ef4ac83261d}{iso\+Read\+Disc\+Sector\+Helper}} (uint8\+\_\+t $\ast$buffer, uint32\+\_\+t sector, int count, char drv\+Letter)
+\item 
+int \mbox{\hyperlink{iso9660_8c_a43feb2ecf9ac4ad7af5df74196a88285}{iso\+Read\+Disc\+Sector}} (uint8\+\_\+t $\ast$buffer, uint32\+\_\+t sector, int count)
+\item 
+int \mbox{\hyperlink{iso9660_8c_ae69b30ce6aad0aa49b57e4d78ef866dc}{strnicmp}} (const char $\ast$s1, const char $\ast$s2, size\+\_\+t len)
+\item 
+int \mbox{\hyperlink{iso9660_8c_af51c0fb9c5824e21ab382a23d3f9df51}{stricmp}} (const char $\ast$a, const char $\ast$\mbox{\hyperlink{syscalls_8cpp_a99ed6187132780a335e6db030a0115e7}{b}})
+\item 
+int \mbox{\hyperlink{iso9660_8c_a2f61feb94fa4049408e00e33dc09eb60}{iso\+\_\+reset}} ()
+\item 
+int \mbox{\hyperlink{iso9660_8c_ac49ee72690ad0eb016b439529a2579d3}{init\+\_\+percd}} (char diskletter)
+\item 
+int \mbox{\hyperlink{iso9660_8c_ae35d9afd46ed96fee43031ffc67594ec}{iso\+\_\+open}} (const char $\ast$fn, int wantdir)
+\item 
+void \mbox{\hyperlink{iso9660_8c_a10b87bf8655925d8f23e83b99a6a75a6}{iso\+\_\+close}} (int fd)
+\item 
+int64\+\_\+t \mbox{\hyperlink{iso9660_8c_a2ac4990db1dadb0f59671bff222c927d}{iso\+\_\+read}} (int fd, void $\ast$buf, size\+\_\+t bytes)
+\item 
+int64\+\_\+t \mbox{\hyperlink{iso9660_8c_a689acc64525576267c0c56ac63e12391}{iso\+\_\+seek}} (int fd, int64\+\_\+t offset, int whence)
+\item 
+int64\+\_\+t \mbox{\hyperlink{iso9660_8c_a9b453e811567c25e45628788d9745a9a}{iso\+\_\+tell}} (int fd)
+\item 
+size\+\_\+t \mbox{\hyperlink{iso9660_8c_a975b5af269de18b1f2e2313003ae23f2}{iso\+\_\+total}} (int fd)
+\item 
+void \mbox{\hyperlink{iso9660_8c_a2dc668338a754b950e60821b64217876}{fn\+\_\+postprocess}} (char $\ast$fnin)
+\item 
+struct \mbox{\hyperlink{structdirent_x}{direntX}} $\ast$ \mbox{\hyperlink{iso9660_8c_a1ee052960805cef085a0b52c5f48c037}{iso\+\_\+readdir}} (int fd)
+\item 
+int \mbox{\hyperlink{iso9660_8c_ad007e8d57699fe9b1190203b4170ee55}{iso\+\_\+ioctl}} (int hnd, void $\ast$\mbox{\hyperlink{acpi_8hpp_abbaff690fbbced9e133675b72b3c46e9}{data}}, size\+\_\+t \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}})
+\item 
+int \mbox{\hyperlink{iso9660_8c_afdbdfe7c14ca416f5c71a0bd6e6fb93d}{fs\+\_\+iso9660\+\_\+init}} ()
+\item 
+int \mbox{\hyperlink{iso9660_8c_a428ea17c3e4f0239e2b8491645a3ab88}{fs\+\_\+iso9660\+\_\+shutdown}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+char \mbox{\hyperlink{iso9660_8c_a92c0f7d1541784ea88b35fd8a8b682b4}{cd\+Drive\+Letter}}
+\item 
+\mbox{\hyperlink{structcache__block__t}{cache\+\_\+block\+\_\+t}} $\ast$ \mbox{\hyperlink{iso9660_8c_aa7c97770b74afe9249cbe92ade91766c}{icache}} \mbox{[}\mbox{\hyperlink{iso9660_8c_a02eaefa97ea5cd0451c747d4b4e836d8}{NUM\+\_\+\+CACHE\+\_\+\+BLOCKS}}\mbox{]}
+\item 
+\mbox{\hyperlink{structcache__block__t}{cache\+\_\+block\+\_\+t}} $\ast$ \mbox{\hyperlink{iso9660_8c_a9d3893a8ab2cfe138619441511dabea3}{dcache}} \mbox{[}\mbox{\hyperlink{iso9660_8c_a02eaefa97ea5cd0451c747d4b4e836d8}{NUM\+\_\+\+CACHE\+\_\+\+BLOCKS}}\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{iso9660_8c_a004bc89ac4c6725bbf5f2291977392e0}\label{iso9660_8c_a004bc89ac4c6725bbf5f2291977392e0}} 
+\index{iso9660.c@{iso9660.c}!DBG\_ERROR@{DBG\_ERROR}}
+\index{DBG\_ERROR@{DBG\_ERROR}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{DBG\_ERROR}{DBG\_ERROR}}
+{\footnotesize\ttfamily \#define DBG\+\_\+\+ERROR~\char`\"{}\mbox{[}iso9660\mbox{]} Error\+: \char`\"{}}
+
+\mbox{\Hypertarget{iso9660_8c_a8744a685dd616033897ff175cf003b84}\label{iso9660_8c_a8744a685dd616033897ff175cf003b84}} 
+\index{iso9660.c@{iso9660.c}!DBG\_NOTICE@{DBG\_NOTICE}}
+\index{DBG\_NOTICE@{DBG\_NOTICE}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{DBG\_NOTICE}{DBG\_NOTICE}}
+{\footnotesize\ttfamily \#define DBG\+\_\+\+NOTICE~\char`\"{}\mbox{[}iso9660\mbox{]} Notice\+: \char`\"{}}
+
+\mbox{\Hypertarget{iso9660_8c_a1c9d8db3c7b414ae6c0422321874a096}\label{iso9660_8c_a1c9d8db3c7b414ae6c0422321874a096}} 
+\index{iso9660.c@{iso9660.c}!dbglog@{dbglog}}
+\index{dbglog@{dbglog}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{dbglog}{dbglog}}
+{\footnotesize\ttfamily \#define dbglog(\begin{DoxyParamCaption}\item[{}]{sev,  }\item[{}]{prm... }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{iso9660_8c_a93f50dc61b972754c8b666ba9c272dc4}\label{iso9660_8c_a93f50dc61b972754c8b666ba9c272dc4}} 
+\index{iso9660.c@{iso9660.c}!lock@{lock}}
+\index{lock@{lock}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{lock}{lock}}
+{\footnotesize\ttfamily \#define lock(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{iso9660_8c_ae1558a40dc9bf44dcee0dfd1468a6121}\label{iso9660_8c_ae1558a40dc9bf44dcee0dfd1468a6121}} 
+\index{iso9660.c@{iso9660.c}!MAX\_FN\_LEN@{MAX\_FN\_LEN}}
+\index{MAX\_FN\_LEN@{MAX\_FN\_LEN}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{MAX\_FN\_LEN}{MAX\_FN\_LEN}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+FN\+\_\+\+LEN~256}
+
+\mbox{\Hypertarget{iso9660_8c_ac9cb30e4174596f1921e30e23bbe95ce}\label{iso9660_8c_ac9cb30e4174596f1921e30e23bbe95ce}} 
+\index{iso9660.c@{iso9660.c}!MAX\_ISO\_FILES@{MAX\_ISO\_FILES}}
+\index{MAX\_ISO\_FILES@{MAX\_ISO\_FILES}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{MAX\_ISO\_FILES}{MAX\_ISO\_FILES}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+ISO\+\_\+\+FILES~16}
+
+\mbox{\Hypertarget{iso9660_8c_a02eaefa97ea5cd0451c747d4b4e836d8}\label{iso9660_8c_a02eaefa97ea5cd0451c747d4b4e836d8}} 
+\index{iso9660.c@{iso9660.c}!NUM\_CACHE\_BLOCKS@{NUM\_CACHE\_BLOCKS}}
+\index{NUM\_CACHE\_BLOCKS@{NUM\_CACHE\_BLOCKS}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_CACHE\_BLOCKS}{NUM\_CACHE\_BLOCKS}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+CACHE\+\_\+\+BLOCKS~16}
+
+\mbox{\Hypertarget{iso9660_8c_a56dc631d218355c200ec10d8376d72be}\label{iso9660_8c_a56dc631d218355c200ec10d8376d72be}} 
+\index{iso9660.c@{iso9660.c}!unlock@{unlock}}
+\index{unlock@{unlock}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{unlock}{unlock}}
+{\footnotesize\ttfamily \#define unlock(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{iso9660_8c_aa980e2c02ba2305e0f489d5650655425}\label{iso9660_8c_aa980e2c02ba2305e0f489d5650655425}} 
+\index{iso9660.c@{iso9660.c}!s16@{s16}}
+\index{s16@{s16}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{s16}{s16}}
+{\footnotesize\ttfamily typedef int16\+\_\+t \mbox{\hyperlink{iso9660_8c_aa980e2c02ba2305e0f489d5650655425}{s16}}}
+
+\mbox{\Hypertarget{iso9660_8c_ae9b1af5c037e57a98884758875d3a7c4}\label{iso9660_8c_ae9b1af5c037e57a98884758875d3a7c4}} 
+\index{iso9660.c@{iso9660.c}!s32@{s32}}
+\index{s32@{s32}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{s32}{s32}}
+{\footnotesize\ttfamily typedef int32\+\_\+t \mbox{\hyperlink{iso9660_8c_ae9b1af5c037e57a98884758875d3a7c4}{s32}}}
+
+\mbox{\Hypertarget{iso9660_8c_a9e382f207c65ca13ab4ae98363aeda80}\label{iso9660_8c_a9e382f207c65ca13ab4ae98363aeda80}} 
+\index{iso9660.c@{iso9660.c}!s8@{s8}}
+\index{s8@{s8}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{s8}{s8}}
+{\footnotesize\ttfamily typedef int8\+\_\+t \mbox{\hyperlink{iso9660_8c_a9e382f207c65ca13ab4ae98363aeda80}{s8}}}
+
+\mbox{\Hypertarget{iso9660_8c_ace9d960e74685e2cd84b36132dbbf8aa}\label{iso9660_8c_ace9d960e74685e2cd84b36132dbbf8aa}} 
+\index{iso9660.c@{iso9660.c}!u16@{u16}}
+\index{u16@{u16}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{u16}{u16}}
+{\footnotesize\ttfamily typedef uint16\+\_\+t \mbox{\hyperlink{iso9660_8c_ace9d960e74685e2cd84b36132dbbf8aa}{u16}}}
+
+\mbox{\Hypertarget{iso9660_8c_afaa62991928fb9fb18ff0db62a040aba}\label{iso9660_8c_afaa62991928fb9fb18ff0db62a040aba}} 
+\index{iso9660.c@{iso9660.c}!u32@{u32}}
+\index{u32@{u32}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{u32}{u32}}
+{\footnotesize\ttfamily typedef uint32\+\_\+t \mbox{\hyperlink{iso9660_8c_afaa62991928fb9fb18ff0db62a040aba}{u32}}}
+
+\mbox{\Hypertarget{iso9660_8c_a92c50087ca0e64fa93fc59402c55f8ca}\label{iso9660_8c_a92c50087ca0e64fa93fc59402c55f8ca}} 
+\index{iso9660.c@{iso9660.c}!u8@{u8}}
+\index{u8@{u8}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{u8}{u8}}
+{\footnotesize\ttfamily typedef uint8\+\_\+t \mbox{\hyperlink{iso9660_8c_a92c50087ca0e64fa93fc59402c55f8ca}{u8}}}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{iso9660_8c_a2dc668338a754b950e60821b64217876}\label{iso9660_8c_a2dc668338a754b950e60821b64217876}} 
+\index{iso9660.c@{iso9660.c}!fn\_postprocess@{fn\_postprocess}}
+\index{fn\_postprocess@{fn\_postprocess}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{fn\_postprocess()}{fn\_postprocess()}}
+{\footnotesize\ttfamily void fn\+\_\+postprocess (\begin{DoxyParamCaption}\item[{char $\ast$}]{fnin }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{iso9660_8c_afdbdfe7c14ca416f5c71a0bd6e6fb93d}\label{iso9660_8c_afdbdfe7c14ca416f5c71a0bd6e6fb93d}} 
+\index{iso9660.c@{iso9660.c}!fs\_iso9660\_init@{fs\_iso9660\_init}}
+\index{fs\_iso9660\_init@{fs\_iso9660\_init}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{fs\_iso9660\_init()}{fs\_iso9660\_init()}}
+{\footnotesize\ttfamily int fs\+\_\+iso9660\+\_\+init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{iso9660_8c_a428ea17c3e4f0239e2b8491645a3ab88}\label{iso9660_8c_a428ea17c3e4f0239e2b8491645a3ab88}} 
+\index{iso9660.c@{iso9660.c}!fs\_iso9660\_shutdown@{fs\_iso9660\_shutdown}}
+\index{fs\_iso9660\_shutdown@{fs\_iso9660\_shutdown}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{fs\_iso9660\_shutdown()}{fs\_iso9660\_shutdown()}}
+{\footnotesize\ttfamily int fs\+\_\+iso9660\+\_\+shutdown (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{iso9660_8c_ac49ee72690ad0eb016b439529a2579d3}\label{iso9660_8c_ac49ee72690ad0eb016b439529a2579d3}} 
+\index{iso9660.c@{iso9660.c}!init\_percd@{init\_percd}}
+\index{init\_percd@{init\_percd}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{init\_percd()}{init\_percd()}}
+{\footnotesize\ttfamily int init\+\_\+percd (\begin{DoxyParamCaption}\item[{char}]{diskletter }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{iso9660_8c_a10b87bf8655925d8f23e83b99a6a75a6}\label{iso9660_8c_a10b87bf8655925d8f23e83b99a6a75a6}} 
+\index{iso9660.c@{iso9660.c}!iso\_close@{iso\_close}}
+\index{iso\_close@{iso\_close}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{iso\_close()}{iso\_close()}}
+{\footnotesize\ttfamily void iso\+\_\+close (\begin{DoxyParamCaption}\item[{int}]{fd }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{iso9660_8c_ad007e8d57699fe9b1190203b4170ee55}\label{iso9660_8c_ad007e8d57699fe9b1190203b4170ee55}} 
+\index{iso9660.c@{iso9660.c}!iso\_ioctl@{iso\_ioctl}}
+\index{iso\_ioctl@{iso\_ioctl}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{iso\_ioctl()}{iso\_ioctl()}}
+{\footnotesize\ttfamily int iso\+\_\+ioctl (\begin{DoxyParamCaption}\item[{int}]{hnd,  }\item[{void $\ast$}]{data,  }\item[{size\+\_\+t}]{size }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{iso9660_8c_a0b31cbd797340effee2dc6c0180e3239}\label{iso9660_8c_a0b31cbd797340effee2dc6c0180e3239}} 
+\index{iso9660.c@{iso9660.c}!iso\_kprintf@{iso\_kprintf}}
+\index{iso\_kprintf@{iso\_kprintf}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{iso\_kprintf()}{iso\_kprintf()}}
+{\footnotesize\ttfamily void iso\+\_\+kprintf (\begin{DoxyParamCaption}\item[{char $\ast$}]{str }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{iso9660_8c_a60ec76eb041ae1c96d5f1289952f8fb8}\label{iso9660_8c_a60ec76eb041ae1c96d5f1289952f8fb8}} 
+\index{iso9660.c@{iso9660.c}!iso\_kprintfd@{iso\_kprintfd}}
+\index{iso\_kprintfd@{iso\_kprintfd}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{iso\_kprintfd()}{iso\_kprintfd()}}
+{\footnotesize\ttfamily void iso\+\_\+kprintfd (\begin{DoxyParamCaption}\item[{int}]{d }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{iso9660_8c_ae35d9afd46ed96fee43031ffc67594ec}\label{iso9660_8c_ae35d9afd46ed96fee43031ffc67594ec}} 
+\index{iso9660.c@{iso9660.c}!iso\_open@{iso\_open}}
+\index{iso\_open@{iso\_open}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{iso\_open()}{iso\_open()}}
+{\footnotesize\ttfamily int iso\+\_\+open (\begin{DoxyParamCaption}\item[{const char $\ast$}]{fn,  }\item[{int}]{wantdir }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{iso9660_8c_a2ac4990db1dadb0f59671bff222c927d}\label{iso9660_8c_a2ac4990db1dadb0f59671bff222c927d}} 
+\index{iso9660.c@{iso9660.c}!iso\_read@{iso\_read}}
+\index{iso\_read@{iso\_read}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{iso\_read()}{iso\_read()}}
+{\footnotesize\ttfamily int64\+\_\+t iso\+\_\+read (\begin{DoxyParamCaption}\item[{int}]{fd,  }\item[{void $\ast$}]{buf,  }\item[{size\+\_\+t}]{bytes }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{iso9660_8c_a1ee052960805cef085a0b52c5f48c037}\label{iso9660_8c_a1ee052960805cef085a0b52c5f48c037}} 
+\index{iso9660.c@{iso9660.c}!iso\_readdir@{iso\_readdir}}
+\index{iso\_readdir@{iso\_readdir}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{iso\_readdir()}{iso\_readdir()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structdirent_x}{direntX}} $\ast$ iso\+\_\+readdir (\begin{DoxyParamCaption}\item[{int}]{fd }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{iso9660_8c_a2f61feb94fa4049408e00e33dc09eb60}\label{iso9660_8c_a2f61feb94fa4049408e00e33dc09eb60}} 
+\index{iso9660.c@{iso9660.c}!iso\_reset@{iso\_reset}}
+\index{iso\_reset@{iso\_reset}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{iso\_reset()}{iso\_reset()}}
+{\footnotesize\ttfamily int iso\+\_\+reset (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{iso9660_8c_a689acc64525576267c0c56ac63e12391}\label{iso9660_8c_a689acc64525576267c0c56ac63e12391}} 
+\index{iso9660.c@{iso9660.c}!iso\_seek@{iso\_seek}}
+\index{iso\_seek@{iso\_seek}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{iso\_seek()}{iso\_seek()}}
+{\footnotesize\ttfamily int64\+\_\+t iso\+\_\+seek (\begin{DoxyParamCaption}\item[{int}]{fd,  }\item[{int64\+\_\+t}]{offset,  }\item[{int}]{whence }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{iso9660_8c_a9b453e811567c25e45628788d9745a9a}\label{iso9660_8c_a9b453e811567c25e45628788d9745a9a}} 
+\index{iso9660.c@{iso9660.c}!iso\_tell@{iso\_tell}}
+\index{iso\_tell@{iso\_tell}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{iso\_tell()}{iso\_tell()}}
+{\footnotesize\ttfamily int64\+\_\+t iso\+\_\+tell (\begin{DoxyParamCaption}\item[{int}]{fd }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{iso9660_8c_a975b5af269de18b1f2e2313003ae23f2}\label{iso9660_8c_a975b5af269de18b1f2e2313003ae23f2}} 
+\index{iso9660.c@{iso9660.c}!iso\_total@{iso\_total}}
+\index{iso\_total@{iso\_total}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{iso\_total()}{iso\_total()}}
+{\footnotesize\ttfamily size\+\_\+t iso\+\_\+total (\begin{DoxyParamCaption}\item[{int}]{fd }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{iso9660_8c_a43feb2ecf9ac4ad7af5df74196a88285}\label{iso9660_8c_a43feb2ecf9ac4ad7af5df74196a88285}} 
+\index{iso9660.c@{iso9660.c}!isoReadDiscSector@{isoReadDiscSector}}
+\index{isoReadDiscSector@{isoReadDiscSector}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{isoReadDiscSector()}{isoReadDiscSector()}}
+{\footnotesize\ttfamily int iso\+Read\+Disc\+Sector (\begin{DoxyParamCaption}\item[{uint8\+\_\+t $\ast$}]{buffer,  }\item[{uint32\+\_\+t}]{sector,  }\item[{int}]{count }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{iso9660_8c_a1c71fbb01e2f3a8fe5e57ef4ac83261d}\label{iso9660_8c_a1c71fbb01e2f3a8fe5e57ef4ac83261d}} 
+\index{iso9660.c@{iso9660.c}!isoReadDiscSectorHelper@{isoReadDiscSectorHelper}}
+\index{isoReadDiscSectorHelper@{isoReadDiscSectorHelper}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{isoReadDiscSectorHelper()}{isoReadDiscSectorHelper()}}
+{\footnotesize\ttfamily int iso\+Read\+Disc\+Sector\+Helper (\begin{DoxyParamCaption}\item[{uint8\+\_\+t $\ast$}]{buffer,  }\item[{uint32\+\_\+t}]{sector,  }\item[{int}]{count,  }\item[{char}]{drv\+Letter }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{iso9660_8c_af51c0fb9c5824e21ab382a23d3f9df51}\label{iso9660_8c_af51c0fb9c5824e21ab382a23d3f9df51}} 
+\index{iso9660.c@{iso9660.c}!stricmp@{stricmp}}
+\index{stricmp@{stricmp}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{stricmp()}{stricmp()}}
+{\footnotesize\ttfamily int stricmp (\begin{DoxyParamCaption}\item[{const char $\ast$}]{a,  }\item[{const char $\ast$}]{b }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{iso9660_8c_ae69b30ce6aad0aa49b57e4d78ef866dc}\label{iso9660_8c_ae69b30ce6aad0aa49b57e4d78ef866dc}} 
+\index{iso9660.c@{iso9660.c}!strnicmp@{strnicmp}}
+\index{strnicmp@{strnicmp}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{strnicmp()}{strnicmp()}}
+{\footnotesize\ttfamily int strnicmp (\begin{DoxyParamCaption}\item[{const char $\ast$}]{s1,  }\item[{const char $\ast$}]{s2,  }\item[{size\+\_\+t}]{len }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{iso9660_8c_a06e8d1af52c9cfe119d484c35212418e}\label{iso9660_8c_a06e8d1af52c9cfe119d484c35212418e}} 
+\index{iso9660.c@{iso9660.c}!broken@{broken}}
+\index{broken@{broken}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{broken}{broken}}
+{\footnotesize\ttfamily int broken}
+
+\mbox{\Hypertarget{iso9660_8c_a92c0f7d1541784ea88b35fd8a8b682b4}\label{iso9660_8c_a92c0f7d1541784ea88b35fd8a8b682b4}} 
+\index{iso9660.c@{iso9660.c}!cdDriveLetter@{cdDriveLetter}}
+\index{cdDriveLetter@{cdDriveLetter}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{cdDriveLetter}{cdDriveLetter}}
+{\footnotesize\ttfamily char cd\+Drive\+Letter}
+
+\mbox{\Hypertarget{iso9660_8c_a9d3893a8ab2cfe138619441511dabea3}\label{iso9660_8c_a9d3893a8ab2cfe138619441511dabea3}} 
+\index{iso9660.c@{iso9660.c}!dcache@{dcache}}
+\index{dcache@{dcache}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{dcache}{dcache}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structcache__block__t}{cache\+\_\+block\+\_\+t}}$\ast$ dcache\mbox{[}\mbox{\hyperlink{iso9660_8c_a02eaefa97ea5cd0451c747d4b4e836d8}{NUM\+\_\+\+CACHE\+\_\+\+BLOCKS}}\mbox{]}}
+
+\mbox{\Hypertarget{iso9660_8c_a851cf68c8f607573c1a5e987784c83f6}\label{iso9660_8c_a851cf68c8f607573c1a5e987784c83f6}} 
+\index{iso9660.c@{iso9660.c}!dir@{dir}}
+\index{dir@{dir}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{dir}{dir}}
+{\footnotesize\ttfamily int dir}
+
+\mbox{\Hypertarget{iso9660_8c_a5e6da6fcd3227bf755e2c60ddd265f7a}\label{iso9660_8c_a5e6da6fcd3227bf755e2c60ddd265f7a}} 
+\index{iso9660.c@{iso9660.c}!dirent@{dirent}}
+\index{dirent@{dirent}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{dirent}{dirent}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structdirent_x}{direntX}} dirent}
+
+\mbox{\Hypertarget{iso9660_8c_a4006a4f63affd276e1622611357cb718}\label{iso9660_8c_a4006a4f63affd276e1622611357cb718}} 
+\index{iso9660.c@{iso9660.c}!first\_extent@{first\_extent}}
+\index{first\_extent@{first\_extent}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{first\_extent}{first\_extent}}
+{\footnotesize\ttfamily \mbox{\hyperlink{iso9660_8c_afaa62991928fb9fb18ff0db62a040aba}{u32}} first\+\_\+extent}
+
+\mbox{\Hypertarget{iso9660_8c_aa7c97770b74afe9249cbe92ade91766c}\label{iso9660_8c_aa7c97770b74afe9249cbe92ade91766c}} 
+\index{iso9660.c@{iso9660.c}!icache@{icache}}
+\index{icache@{icache}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{icache}{icache}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structcache__block__t}{cache\+\_\+block\+\_\+t}}$\ast$ icache\mbox{[}\mbox{\hyperlink{iso9660_8c_a02eaefa97ea5cd0451c747d4b4e836d8}{NUM\+\_\+\+CACHE\+\_\+\+BLOCKS}}\mbox{]}}
+
+\mbox{\Hypertarget{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}\label{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}} 
+\index{iso9660.c@{iso9660.c}!ptr@{ptr}}
+\index{ptr@{ptr}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{ptr}{ptr}}
+{\footnotesize\ttfamily \mbox{\hyperlink{iso9660_8c_afaa62991928fb9fb18ff0db62a040aba}{u32}} ptr}
+
+\mbox{\Hypertarget{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}\label{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}} 
+\index{iso9660.c@{iso9660.c}!size@{size}}
+\index{size@{size}!iso9660.c@{iso9660.c}}
+\doxysubsubsection{\texorpdfstring{size}{size}}
+{\footnotesize\ttfamily \mbox{\hyperlink{iso9660_8c_afaa62991928fb9fb18ff0db62a040aba}{u32}} size}
+

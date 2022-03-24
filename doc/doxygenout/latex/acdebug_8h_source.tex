@@ -1,0 +1,622 @@
+\hypertarget{acdebug_8h_source}{}\doxysection{acdebug.\+h}
+\label{acdebug_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/acpica/acdebug.h@{C:/Users/Alex/Desktop/Banana/kernel/acpica/acdebug.h}}
+\mbox{\hyperlink{acdebug_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{2 \textcolor{comment}{ *}}
+\DoxyCodeLine{3 \textcolor{comment}{ * Name: acdebug.h -\/ ACPI/AML debugger}}
+\DoxyCodeLine{4 \textcolor{comment}{ *}}
+\DoxyCodeLine{5 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{8 \textcolor{comment}{ *}}
+\DoxyCodeLine{9 \textcolor{comment}{ * 1. Copyright Notice}}
+\DoxyCodeLine{10 \textcolor{comment}{ *}}
+\DoxyCodeLine{11 \textcolor{comment}{ * Some or all of this work -\/ Copyright (c) 1999 -\/ 2019, Intel Corp.}}
+\DoxyCodeLine{12 \textcolor{comment}{ * All rights reserved.}}
+\DoxyCodeLine{13 \textcolor{comment}{ *}}
+\DoxyCodeLine{14 \textcolor{comment}{ * 2. License}}
+\DoxyCodeLine{15 \textcolor{comment}{ *}}
+\DoxyCodeLine{16 \textcolor{comment}{ * 2.1. This is your license from Intel Corp. under its intellectual property}}
+\DoxyCodeLine{17 \textcolor{comment}{ * rights. You may have additional license terms from the party that provided}}
+\DoxyCodeLine{18 \textcolor{comment}{ * you this software, covering your right to use that party's intellectual}}
+\DoxyCodeLine{19 \textcolor{comment}{ * property rights.}}
+\DoxyCodeLine{20 \textcolor{comment}{ *}}
+\DoxyCodeLine{21 \textcolor{comment}{ * 2.2. Intel grants, free of charge, to any person ("{}Licensee"{}) obtaining a}}
+\DoxyCodeLine{22 \textcolor{comment}{ * copy of the source code appearing in this file ("{}Covered Code"{}) an}}
+\DoxyCodeLine{23 \textcolor{comment}{ * irrevocable, perpetual, worldwide license under Intel's copyrights in the}}
+\DoxyCodeLine{24 \textcolor{comment}{ * base code distributed originally by Intel ("{}Original Intel Code"{}) to copy,}}
+\DoxyCodeLine{25 \textcolor{comment}{ * make derivatives, distribute, use and display any portion of the Covered}}
+\DoxyCodeLine{26 \textcolor{comment}{ * Code in any form, with the right to sublicense such rights; and}}
+\DoxyCodeLine{27 \textcolor{comment}{ *}}
+\DoxyCodeLine{28 \textcolor{comment}{ * 2.3. Intel grants Licensee a non-\/exclusive and non-\/transferable patent}}
+\DoxyCodeLine{29 \textcolor{comment}{ * license (with the right to sublicense), under only those claims of Intel}}
+\DoxyCodeLine{30 \textcolor{comment}{ * patents that are infringed by the Original Intel Code, to make, use, sell,}}
+\DoxyCodeLine{31 \textcolor{comment}{ * offer to sell, and import the Covered Code and derivative works thereof}}
+\DoxyCodeLine{32 \textcolor{comment}{ * solely to the minimum extent necessary to exercise the above copyright}}
+\DoxyCodeLine{33 \textcolor{comment}{ * license, and in no event shall the patent license extend to any additions}}
+\DoxyCodeLine{34 \textcolor{comment}{ * to or modifications of the Original Intel Code. No other license or right}}
+\DoxyCodeLine{35 \textcolor{comment}{ * is granted directly or by implication, estoppel or otherwise;}}
+\DoxyCodeLine{36 \textcolor{comment}{ *}}
+\DoxyCodeLine{37 \textcolor{comment}{ * The above copyright and patent license is granted only if the following}}
+\DoxyCodeLine{38 \textcolor{comment}{ * conditions are met:}}
+\DoxyCodeLine{39 \textcolor{comment}{ *}}
+\DoxyCodeLine{40 \textcolor{comment}{ * 3. Conditions}}
+\DoxyCodeLine{41 \textcolor{comment}{ *}}
+\DoxyCodeLine{42 \textcolor{comment}{ * 3.1. Redistribution of Source with Rights to Further Distribute Source.}}
+\DoxyCodeLine{43 \textcolor{comment}{ * Redistribution of source code of any substantial portion of the Covered}}
+\DoxyCodeLine{44 \textcolor{comment}{ * Code or modification with rights to further distribute source must include}}
+\DoxyCodeLine{45 \textcolor{comment}{ * the above Copyright Notice, the above License, this list of Conditions,}}
+\DoxyCodeLine{46 \textcolor{comment}{ * and the following Disclaimer and Export Compliance provision. In addition,}}
+\DoxyCodeLine{47 \textcolor{comment}{ * Licensee must cause all Covered Code to which Licensee contributes to}}
+\DoxyCodeLine{48 \textcolor{comment}{ * contain a file documenting the changes Licensee made to create that Covered}}
+\DoxyCodeLine{49 \textcolor{comment}{ * Code and the date of any change. Licensee must include in that file the}}
+\DoxyCodeLine{50 \textcolor{comment}{ * documentation of any changes made by any predecessor Licensee. Licensee}}
+\DoxyCodeLine{51 \textcolor{comment}{ * must include a prominent statement that the modification is derived,}}
+\DoxyCodeLine{52 \textcolor{comment}{ * directly or indirectly, from Original Intel Code.}}
+\DoxyCodeLine{53 \textcolor{comment}{ *}}
+\DoxyCodeLine{54 \textcolor{comment}{ * 3.2. Redistribution of Source with no Rights to Further Distribute Source.}}
+\DoxyCodeLine{55 \textcolor{comment}{ * Redistribution of source code of any substantial portion of the Covered}}
+\DoxyCodeLine{56 \textcolor{comment}{ * Code or modification without rights to further distribute source must}}
+\DoxyCodeLine{57 \textcolor{comment}{ * include the following Disclaimer and Export Compliance provision in the}}
+\DoxyCodeLine{58 \textcolor{comment}{ * documentation and/or other materials provided with distribution. In}}
+\DoxyCodeLine{59 \textcolor{comment}{ * addition, Licensee may not authorize further sublicense of source of any}}
+\DoxyCodeLine{60 \textcolor{comment}{ * portion of the Covered Code, and must include terms to the effect that the}}
+\DoxyCodeLine{61 \textcolor{comment}{ * license from Licensee to its licensee is limited to the intellectual}}
+\DoxyCodeLine{62 \textcolor{comment}{ * property embodied in the software Licensee provides to its licensee, and}}
+\DoxyCodeLine{63 \textcolor{comment}{ * not to intellectual property embodied in modifications its licensee may}}
+\DoxyCodeLine{64 \textcolor{comment}{ * make.}}
+\DoxyCodeLine{65 \textcolor{comment}{ *}}
+\DoxyCodeLine{66 \textcolor{comment}{ * 3.3. Redistribution of Executable. Redistribution in executable form of any}}
+\DoxyCodeLine{67 \textcolor{comment}{ * substantial portion of the Covered Code or modification must reproduce the}}
+\DoxyCodeLine{68 \textcolor{comment}{ * above Copyright Notice, and the following Disclaimer and Export Compliance}}
+\DoxyCodeLine{69 \textcolor{comment}{ * provision in the documentation and/or other materials provided with the}}
+\DoxyCodeLine{70 \textcolor{comment}{ * distribution.}}
+\DoxyCodeLine{71 \textcolor{comment}{ *}}
+\DoxyCodeLine{72 \textcolor{comment}{ * 3.4. Intel retains all right, title, and interest in and to the Original}}
+\DoxyCodeLine{73 \textcolor{comment}{ * Intel Code.}}
+\DoxyCodeLine{74 \textcolor{comment}{ *}}
+\DoxyCodeLine{75 \textcolor{comment}{ * 3.5. Neither the name Intel nor any other trademark owned or controlled by}}
+\DoxyCodeLine{76 \textcolor{comment}{ * Intel shall be used in advertising or otherwise to promote the sale, use or}}
+\DoxyCodeLine{77 \textcolor{comment}{ * other dealings in products derived from or relating to the Covered Code}}
+\DoxyCodeLine{78 \textcolor{comment}{ * without prior written authorization from Intel.}}
+\DoxyCodeLine{79 \textcolor{comment}{ *}}
+\DoxyCodeLine{80 \textcolor{comment}{ * 4. Disclaimer and Export Compliance}}
+\DoxyCodeLine{81 \textcolor{comment}{ *}}
+\DoxyCodeLine{82 \textcolor{comment}{ * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED}}
+\DoxyCodeLine{83 \textcolor{comment}{ * HERE. ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE}}
+\DoxyCodeLine{84 \textcolor{comment}{ * IS PROVIDED "{}AS IS,"{} AND INTEL WILL NOT PROVIDE ANY SUPPORT, ASSISTANCE,}}
+\DoxyCodeLine{85 \textcolor{comment}{ * INSTALLATION, TRAINING OR OTHER SERVICES. INTEL WILL NOT PROVIDE ANY}}
+\DoxyCodeLine{86 \textcolor{comment}{ * UPDATES, ENHANCEMENTS OR EXTENSIONS. INTEL SPECIFICALLY DISCLAIMS ANY}}
+\DoxyCodeLine{87 \textcolor{comment}{ * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A}}
+\DoxyCodeLine{88 \textcolor{comment}{ * PARTICULAR PURPOSE.}}
+\DoxyCodeLine{89 \textcolor{comment}{ *}}
+\DoxyCodeLine{90 \textcolor{comment}{ * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES}}
+\DoxyCodeLine{91 \textcolor{comment}{ * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR}}
+\DoxyCodeLine{92 \textcolor{comment}{ * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,}}
+\DoxyCodeLine{93 \textcolor{comment}{ * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY}}
+\DoxyCodeLine{94 \textcolor{comment}{ * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL}}
+\DoxyCodeLine{95 \textcolor{comment}{ * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES. THESE LIMITATIONS}}
+\DoxyCodeLine{96 \textcolor{comment}{ * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY}}
+\DoxyCodeLine{97 \textcolor{comment}{ * LIMITED REMEDY.}}
+\DoxyCodeLine{98 \textcolor{comment}{ *}}
+\DoxyCodeLine{99 \textcolor{comment}{ * 4.3. Licensee shall not export, either directly or indirectly, any of this}}
+\DoxyCodeLine{100 \textcolor{comment}{ * software or system incorporating such software without first obtaining any}}
+\DoxyCodeLine{101 \textcolor{comment}{ * required license or other approval from the U. S. Department of Commerce or}}
+\DoxyCodeLine{102 \textcolor{comment}{ * any other agency or department of the United States Government. In the}}
+\DoxyCodeLine{103 \textcolor{comment}{ * event Licensee exports any such software from the United States or}}
+\DoxyCodeLine{104 \textcolor{comment}{ * re-\/exports any such software from a foreign destination, Licensee shall}}
+\DoxyCodeLine{105 \textcolor{comment}{ * ensure that the distribution and export/re-\/export of the software is in}}
+\DoxyCodeLine{106 \textcolor{comment}{ * compliance with all laws, regulations, orders, or other restrictions of the}}
+\DoxyCodeLine{107 \textcolor{comment}{ * U.S. Export Administration Regulations. Licensee agrees that neither it nor}}
+\DoxyCodeLine{108 \textcolor{comment}{ * any of its subsidiaries will export/re-\/export any technical data, process,}}
+\DoxyCodeLine{109 \textcolor{comment}{ * software, or service, directly or indirectly, to any country for which the}}
+\DoxyCodeLine{110 \textcolor{comment}{ * United States government or any agency thereof requires an export license,}}
+\DoxyCodeLine{111 \textcolor{comment}{ * other governmental approval, or letter of assurance, without first obtaining}}
+\DoxyCodeLine{112 \textcolor{comment}{ * such license, approval or letter.}}
+\DoxyCodeLine{113 \textcolor{comment}{ *}}
+\DoxyCodeLine{114 \textcolor{comment}{ *****************************************************************************}}
+\DoxyCodeLine{115 \textcolor{comment}{ *}}
+\DoxyCodeLine{116 \textcolor{comment}{ * Alternatively, you may choose to be licensed under the terms of the}}
+\DoxyCodeLine{117 \textcolor{comment}{ * following license:}}
+\DoxyCodeLine{118 \textcolor{comment}{ *}}
+\DoxyCodeLine{119 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{120 \textcolor{comment}{ * modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{121 \textcolor{comment}{ * are met:}}
+\DoxyCodeLine{122 \textcolor{comment}{ * 1. Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{123 \textcolor{comment}{ *    notice, this list of conditions, and the following disclaimer,}}
+\DoxyCodeLine{124 \textcolor{comment}{ *    without modification.}}
+\DoxyCodeLine{125 \textcolor{comment}{ * 2. Redistributions in binary form must reproduce at minimum a disclaimer}}
+\DoxyCodeLine{126 \textcolor{comment}{ *    substantially similar to the "{}NO WARRANTY"{} disclaimer below}}
+\DoxyCodeLine{127 \textcolor{comment}{ *    ("{}Disclaimer"{}) and any redistribution must be conditioned upon}}
+\DoxyCodeLine{128 \textcolor{comment}{ *    including a substantially similar Disclaimer requirement for further}}
+\DoxyCodeLine{129 \textcolor{comment}{ *    binary redistribution.}}
+\DoxyCodeLine{130 \textcolor{comment}{ * 3. Neither the names of the above-\/listed copyright holders nor the names}}
+\DoxyCodeLine{131 \textcolor{comment}{ *    of any contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{132 \textcolor{comment}{ *    from this software without specific prior written permission.}}
+\DoxyCodeLine{133 \textcolor{comment}{ *}}
+\DoxyCodeLine{134 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS}}
+\DoxyCodeLine{135 \textcolor{comment}{ * "{}AS IS"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT}}
+\DoxyCodeLine{136 \textcolor{comment}{ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR}}
+\DoxyCodeLine{137 \textcolor{comment}{ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT}}
+\DoxyCodeLine{138 \textcolor{comment}{ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,}}
+\DoxyCodeLine{139 \textcolor{comment}{ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT}}
+\DoxyCodeLine{140 \textcolor{comment}{ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,}}
+\DoxyCodeLine{141 \textcolor{comment}{ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY}}
+\DoxyCodeLine{142 \textcolor{comment}{ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{143 \textcolor{comment}{ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{144 \textcolor{comment}{ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{145 \textcolor{comment}{ *}}
+\DoxyCodeLine{146 \textcolor{comment}{ * Alternatively, you may choose to be licensed under the terms of the}}
+\DoxyCodeLine{147 \textcolor{comment}{ * GNU General Public License ("{}GPL"{}) version 2 as published by the Free}}
+\DoxyCodeLine{148 \textcolor{comment}{ * Software Foundation.}}
+\DoxyCodeLine{149 \textcolor{comment}{ *}}
+\DoxyCodeLine{150 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{151 }
+\DoxyCodeLine{152 \textcolor{preprocessor}{\#ifndef \_\_ACDEBUG\_H\_\_}}
+\DoxyCodeLine{153 \textcolor{preprocessor}{\#define \_\_ACDEBUG\_H\_\_}}
+\DoxyCodeLine{154 }
+\DoxyCodeLine{155 \textcolor{comment}{/* The debugger is used in conjunction with the disassembler most of time */}}
+\DoxyCodeLine{156 }
+\DoxyCodeLine{157 \textcolor{preprocessor}{\#ifdef ACPI\_DISASSEMBLER}}
+\DoxyCodeLine{158 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{acdisasm_8h}{acdisasm.h}}"{}}}
+\DoxyCodeLine{159 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{160 }
+\DoxyCodeLine{161 }
+\DoxyCodeLine{162 \textcolor{preprocessor}{\#define ACPI\_DEBUG\_BUFFER\_SIZE      0x4000      }\textcolor{comment}{/* 16K buffer for return objects */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{163 \textcolor{preprocessor}{\#define ACPI\_DEBUG\_LENGTH\_FORMAT    "{} (\%.4X bits, \%.3X bytes)"{}}}
+\DoxyCodeLine{164 }
+\DoxyCodeLine{165 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__db__command__info}{acpi\_db\_command\_info}}}
+\DoxyCodeLine{166 \{}
+\DoxyCodeLine{167     \textcolor{keyword}{const} \textcolor{keywordtype}{char}              *\mbox{\hyperlink{structacpi__db__command__info_a8151e3d29670fae8bda5f10e1a33450b}{Name}};          \textcolor{comment}{/* Command Name */}}
+\DoxyCodeLine{168     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__db__command__info_aaa779d625186017667b34f6f3f67a190}{MinArgs}};        \textcolor{comment}{/* Minimum arguments required */}}
+\DoxyCodeLine{169 }
+\DoxyCodeLine{170 \} \mbox{\hyperlink{acdebug_8h_ae7c4710e67cfac92a8e2d050945cdde7}{ACPI\_DB\_COMMAND\_INFO}};}
+\DoxyCodeLine{171 }
+\DoxyCodeLine{172 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__db__command__help}{acpi\_db\_command\_help}}}
+\DoxyCodeLine{173 \{}
+\DoxyCodeLine{174     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   \mbox{\hyperlink{structacpi__db__command__help_a2888504a771ab81ab245cfaa13496b54}{LineCount}};      \textcolor{comment}{/* Number of help lines */}}
+\DoxyCodeLine{175     \textcolor{keywordtype}{char}                    *\mbox{\hyperlink{structacpi__db__command__help_a1082128108d3f7d4c5d8afdf7544188a}{Invocation}};    \textcolor{comment}{/* Command Invocation */}}
+\DoxyCodeLine{176     \textcolor{keywordtype}{char}                    *\mbox{\hyperlink{structacpi__db__command__help_ad27f1f3a20fc08c5fa2932483afebae9}{Description}};   \textcolor{comment}{/* Command Description */}}
+\DoxyCodeLine{177 }
+\DoxyCodeLine{178 \} \mbox{\hyperlink{acdebug_8h_a3a72b4c16802856ca35bbb076c2822fa}{ACPI\_DB\_COMMAND\_HELP}};}
+\DoxyCodeLine{179 }
+\DoxyCodeLine{180 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__db__argument__info}{acpi\_db\_argument\_info}}}
+\DoxyCodeLine{181 \{}
+\DoxyCodeLine{182     \textcolor{keyword}{const} \textcolor{keywordtype}{char}              *\mbox{\hyperlink{structacpi__db__argument__info_aeb1f34d2e80a4d1629837e9a22d3daac}{Name}};          \textcolor{comment}{/* Argument Name */}}
+\DoxyCodeLine{183 }
+\DoxyCodeLine{184 \} \mbox{\hyperlink{acdebug_8h_a1c5a35d9e461335f3b5cf423bb3ab834}{ACPI\_DB\_ARGUMENT\_INFO}};}
+\DoxyCodeLine{185 }
+\DoxyCodeLine{186 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__db__execute__walk}{acpi\_db\_execute\_walk}}}
+\DoxyCodeLine{187 \{}
+\DoxyCodeLine{188     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__db__execute__walk_ad73e7f32d2b0a57cbdb7b01f35e95c7f}{Count}};}
+\DoxyCodeLine{189     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__db__execute__walk_a4bc685312c99d0ce00b3996e4854cdcf}{MaxCount}};}
+\DoxyCodeLine{190 }
+\DoxyCodeLine{191 \} \mbox{\hyperlink{acdebug_8h_a6fc4d2d7bc26ebb10dffe3e8dafc2a1c}{ACPI\_DB\_EXECUTE\_WALK}};}
+\DoxyCodeLine{192 }
+\DoxyCodeLine{193 }
+\DoxyCodeLine{194 \textcolor{preprocessor}{\#define PARAM\_LIST(pl)                  pl}}
+\DoxyCodeLine{195 }
+\DoxyCodeLine{196 \textcolor{preprocessor}{\#define EX\_NO\_SINGLE\_STEP               1}}
+\DoxyCodeLine{197 \textcolor{preprocessor}{\#define EX\_SINGLE\_STEP                  2}}
+\DoxyCodeLine{198 }
+\DoxyCodeLine{199 }
+\DoxyCodeLine{200 \textcolor{comment}{/*}}
+\DoxyCodeLine{201 \textcolor{comment}{ * dbxface -\/ external debugger interfaces}}
+\DoxyCodeLine{202 \textcolor{comment}{ */}}
+\DoxyCodeLine{203 \mbox{\hyperlink{acdebug_8h_a24c0f8315cff5fc0143386951f3606e4}{ACPI\_DBR\_DEPENDENT\_RETURN\_OK}} (}
+\DoxyCodeLine{204 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{205 AcpiDbSingleStep (}
+\DoxyCodeLine{206     \mbox{\hyperlink{structacpi__walk__state}{ACPI\_WALK\_STATE}}         *WalkState,}
+\DoxyCodeLine{207     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op,}
+\DoxyCodeLine{208     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  OpType))}
+\DoxyCodeLine{209 }
+\DoxyCodeLine{210 \mbox{\hyperlink{acdebug_8h_a1f5b9908c78acf05c8f90bf4faf3a064}{ACPI\_DBR\_DEPENDENT\_RETURN\_VOID}} (}
+\DoxyCodeLine{211 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{212 AcpiDbSignalBreakPoint (}
+\DoxyCodeLine{213     \mbox{\hyperlink{structacpi__walk__state}{ACPI\_WALK\_STATE}}         *WalkState))}
+\DoxyCodeLine{214 }
+\DoxyCodeLine{215 }
+\DoxyCodeLine{216 \textcolor{comment}{/*}}
+\DoxyCodeLine{217 \textcolor{comment}{ * dbcmds -\/ debug commands and output routines}}
+\DoxyCodeLine{218 \textcolor{comment}{ */}}
+\DoxyCodeLine{219 \mbox{\hyperlink{structacpi__namespace__node}{ACPI\_NAMESPACE\_NODE}} *}
+\DoxyCodeLine{220 AcpiDbConvertToNode (}
+\DoxyCodeLine{221     \textcolor{keywordtype}{char}                    *InString);}
+\DoxyCodeLine{222 }
+\DoxyCodeLine{223 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{224 \mbox{\hyperlink{acdebug_8h_abbd59a324a33bfa414047c61e708297c}{AcpiDbDisplayTableInfo}} (}
+\DoxyCodeLine{225     \textcolor{keywordtype}{char}                    *TableArg);}
+\DoxyCodeLine{226 }
+\DoxyCodeLine{227 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{228 \mbox{\hyperlink{acdebug_8h_a4fe43e472501cd40958e00a60c32d34c}{AcpiDbDisplayTemplate}} (}
+\DoxyCodeLine{229     \textcolor{keywordtype}{char}                    *BufferArg);}
+\DoxyCodeLine{230 }
+\DoxyCodeLine{231 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{232 \mbox{\hyperlink{acdebug_8h_aacd3b1a9fed9c9072c4a987d6e74b52d}{AcpiDbUnloadAcpiTable}} (}
+\DoxyCodeLine{233     \textcolor{keywordtype}{char}                    *\mbox{\hyperlink{acpixf_8h_a5e6f9eb1e980275f44f308f43bff476e}{Name}});}
+\DoxyCodeLine{234 }
+\DoxyCodeLine{235 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{236 \mbox{\hyperlink{acdebug_8h_a7b4df65ebe6435a646848bb78f79c81b}{AcpiDbSendNotify}} (}
+\DoxyCodeLine{237     \textcolor{keywordtype}{char}                    *\mbox{\hyperlink{acpixf_8h_a5e6f9eb1e980275f44f308f43bff476e}{Name}},}
+\DoxyCodeLine{238     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Value);}
+\DoxyCodeLine{239 }
+\DoxyCodeLine{240 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{241 \mbox{\hyperlink{acdebug_8h_a88fff5aed52a2d6f3f811ba189cec39f}{AcpiDbDisplayInterfaces}} (}
+\DoxyCodeLine{242     \textcolor{keywordtype}{char}                    *ActionArg,}
+\DoxyCodeLine{243     \textcolor{keywordtype}{char}                    *InterfaceNameArg);}
+\DoxyCodeLine{244 }
+\DoxyCodeLine{245 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{246 \mbox{\hyperlink{acdebug_8h_a4694a83fa3ffe0bbb4428e33162c6291}{AcpiDbSleep}} (}
+\DoxyCodeLine{247     \textcolor{keywordtype}{char}                    *ObjectArg);}
+\DoxyCodeLine{248 }
+\DoxyCodeLine{249 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{250 \mbox{\hyperlink{acdebug_8h_a051a81551bd2ff40b0e488a617252c55}{AcpiDbTrace}} (}
+\DoxyCodeLine{251     \textcolor{keywordtype}{char}                    *EnableArg,}
+\DoxyCodeLine{252     \textcolor{keywordtype}{char}                    *MethodArg,}
+\DoxyCodeLine{253     \textcolor{keywordtype}{char}                    *OnceArg);}
+\DoxyCodeLine{254 }
+\DoxyCodeLine{255 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{256 \mbox{\hyperlink{acdebug_8h_a6d782f5026a9c407690f416f03365d41}{AcpiDbDisplayLocks}} (}
+\DoxyCodeLine{257     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{258 }
+\DoxyCodeLine{259 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{260 \mbox{\hyperlink{acdebug_8h_ab5f63167799dc839021c8d804911e37d}{AcpiDbDisplayResources}} (}
+\DoxyCodeLine{261     \textcolor{keywordtype}{char}                    *ObjectArg);}
+\DoxyCodeLine{262 }
+\DoxyCodeLine{263 \mbox{\hyperlink{acdebug_8h_aaa3eefe84ced587d3ded0fe9176eb11f}{ACPI\_HW\_DEPENDENT\_RETURN\_VOID}} (}
+\DoxyCodeLine{264 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{265 AcpiDbDisplayGpes (}
+\DoxyCodeLine{266     \textcolor{keywordtype}{void}))}
+\DoxyCodeLine{267 }
+\DoxyCodeLine{268 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{269 AcpiDbDisplayHandlers (}
+\DoxyCodeLine{270     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{271 }
+\DoxyCodeLine{272 \mbox{\hyperlink{acdebug_8h_aaa3eefe84ced587d3ded0fe9176eb11f}{ACPI\_HW\_DEPENDENT\_RETURN\_VOID}} (}
+\DoxyCodeLine{273 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{274 AcpiDbGenerateGpe (}
+\DoxyCodeLine{275     \textcolor{keywordtype}{char}                    *GpeArg,}
+\DoxyCodeLine{276     \textcolor{keywordtype}{char}                    *BlockArg))}
+\DoxyCodeLine{277 }
+\DoxyCodeLine{278 \mbox{\hyperlink{acdebug_8h_aaa3eefe84ced587d3ded0fe9176eb11f}{ACPI\_HW\_DEPENDENT\_RETURN\_VOID}} (}
+\DoxyCodeLine{279 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{280 AcpiDbGenerateSci (}
+\DoxyCodeLine{281     \textcolor{keywordtype}{void}))}
+\DoxyCodeLine{282 }
+\DoxyCodeLine{283 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{284 AcpiDbExecuteTest (}
+\DoxyCodeLine{285     \textcolor{keywordtype}{char}                    *TypeArg);}
+\DoxyCodeLine{286 }
+\DoxyCodeLine{287 }
+\DoxyCodeLine{288 \textcolor{comment}{/*}}
+\DoxyCodeLine{289 \textcolor{comment}{ * dbconvert -\/ miscellaneous conversion routines}}
+\DoxyCodeLine{290 \textcolor{comment}{ */}}
+\DoxyCodeLine{291 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{292 \mbox{\hyperlink{acdebug_8h_a6a68ba457fd751ac23a701b918cc94c3}{AcpiDbHexCharToValue}} (}
+\DoxyCodeLine{293     \textcolor{keywordtype}{int}                     HexChar,}
+\DoxyCodeLine{294     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   *\mbox{\hyperlink{acevents_8h_a0550841ff134bc4e0830d6f5255324dd}{ReturnValue}});}
+\DoxyCodeLine{295 }
+\DoxyCodeLine{296 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{297 \mbox{\hyperlink{acdebug_8h_ad6c0bb3ae271e1ddaf11747423196fb8}{AcpiDbConvertToPackage}} (}
+\DoxyCodeLine{298     \textcolor{keywordtype}{char}                    *String,}
+\DoxyCodeLine{299     \mbox{\hyperlink{unionacpi__object}{ACPI\_OBJECT}}             *Object);}
+\DoxyCodeLine{300 }
+\DoxyCodeLine{301 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{302 \mbox{\hyperlink{acdebug_8h_a2b3b138bdec86dd5d602f9172af8ba18}{AcpiDbConvertToObject}} (}
+\DoxyCodeLine{303     \mbox{\hyperlink{actypes_8h_a3275c9cf8b4cad8f8e0daaaeeb690be6}{ACPI\_OBJECT\_TYPE}}        \mbox{\hyperlink{acpixf_8h_ab361d6187ad6230bccbce7d8dbe49abc}{Type}},}
+\DoxyCodeLine{304     \textcolor{keywordtype}{char}                    *String,}
+\DoxyCodeLine{305     \mbox{\hyperlink{unionacpi__object}{ACPI\_OBJECT}}             *Object);}
+\DoxyCodeLine{306 }
+\DoxyCodeLine{307 \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}} *}
+\DoxyCodeLine{308 \mbox{\hyperlink{acdebug_8h_a998cbd45791ad61b022c298aad73483b}{AcpiDbEncodePldBuffer}} (}
+\DoxyCodeLine{309     \mbox{\hyperlink{structacpi__pld__info}{ACPI\_PLD\_INFO}}           *PldInfo);}
+\DoxyCodeLine{310 }
+\DoxyCodeLine{311 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{312 \mbox{\hyperlink{acdebug_8h_a44a3e2c52bd8397a1b0823413cdc7d6b}{AcpiDbDumpPldBuffer}} (}
+\DoxyCodeLine{313     \mbox{\hyperlink{unionacpi__object}{ACPI\_OBJECT}}             *ObjDesc);}
+\DoxyCodeLine{314 }
+\DoxyCodeLine{315 }
+\DoxyCodeLine{316 \textcolor{comment}{/*}}
+\DoxyCodeLine{317 \textcolor{comment}{ * dbmethod -\/ control method commands}}
+\DoxyCodeLine{318 \textcolor{comment}{ */}}
+\DoxyCodeLine{319 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{320 \mbox{\hyperlink{acdebug_8h_ac155304488e62279571bbf9d4b97e45c}{AcpiDbSetMethodBreakpoint}} (}
+\DoxyCodeLine{321     \textcolor{keywordtype}{char}                    *Location,}
+\DoxyCodeLine{322     \mbox{\hyperlink{structacpi__walk__state}{ACPI\_WALK\_STATE}}         *WalkState,}
+\DoxyCodeLine{323     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{324 }
+\DoxyCodeLine{325 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{326 \mbox{\hyperlink{acdebug_8h_ace864f1be759679b0eeee8e2899d48a8}{AcpiDbSetMethodCallBreakpoint}} (}
+\DoxyCodeLine{327     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{328 }
+\DoxyCodeLine{329 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{330 \mbox{\hyperlink{acdebug_8h_a1b7251478221fbb5abc5614c38ba6638}{AcpiDbSetMethodData}} (}
+\DoxyCodeLine{331     \textcolor{keywordtype}{char}                    *TypeArg,}
+\DoxyCodeLine{332     \textcolor{keywordtype}{char}                    *IndexArg,}
+\DoxyCodeLine{333     \textcolor{keywordtype}{char}                    *ValueArg);}
+\DoxyCodeLine{334 }
+\DoxyCodeLine{335 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{336 \mbox{\hyperlink{acdebug_8h_a6adc744cb3b9bf16088204572ff3abfc}{AcpiDbDisassembleMethod}} (}
+\DoxyCodeLine{337     \textcolor{keywordtype}{char}                    *\mbox{\hyperlink{acpixf_8h_a5e6f9eb1e980275f44f308f43bff476e}{Name}});}
+\DoxyCodeLine{338 }
+\DoxyCodeLine{339 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{340 \mbox{\hyperlink{acdebug_8h_aadf29f659bef10df42251ce1e57143f7}{AcpiDbDisassembleAml}} (}
+\DoxyCodeLine{341     \textcolor{keywordtype}{char}                    *Statements,}
+\DoxyCodeLine{342     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{343 }
+\DoxyCodeLine{344 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{345 \mbox{\hyperlink{acdebug_8h_a560c94f1bb077f27137b95cb75c8a055}{AcpiDbEvaluatePredefinedNames}} (}
+\DoxyCodeLine{346     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{347 }
+\DoxyCodeLine{348 }
+\DoxyCodeLine{349 \textcolor{comment}{/*}}
+\DoxyCodeLine{350 \textcolor{comment}{ * dbnames -\/ namespace commands}}
+\DoxyCodeLine{351 \textcolor{comment}{ */}}
+\DoxyCodeLine{352 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{353 \mbox{\hyperlink{acdebug_8h_ad306c8cd2b91d3d63cc1d017077916fc}{AcpiDbSetScope}} (}
+\DoxyCodeLine{354     \textcolor{keywordtype}{char}                    *\mbox{\hyperlink{acpixf_8h_a5e6f9eb1e980275f44f308f43bff476e}{Name}});}
+\DoxyCodeLine{355 }
+\DoxyCodeLine{356 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{357 \mbox{\hyperlink{acdebug_8h_a176143ce2150357d5c756dfc27ffcd1d}{AcpiDbDumpNamespace}} (}
+\DoxyCodeLine{358     \textcolor{keywordtype}{char}                    *StartArg,}
+\DoxyCodeLine{359     \textcolor{keywordtype}{char}                    *DepthArg);}
+\DoxyCodeLine{360 }
+\DoxyCodeLine{361 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{362 \mbox{\hyperlink{acdebug_8h_aad7250d15099302b0d355accab544512}{AcpiDbDumpNamespacePaths}} (}
+\DoxyCodeLine{363     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{364 }
+\DoxyCodeLine{365 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{366 \mbox{\hyperlink{acdebug_8h_aec7bd8442533ca9f707248af0150c10f}{AcpiDbDumpNamespaceByOwner}} (}
+\DoxyCodeLine{367     \textcolor{keywordtype}{char}                    *OwnerArg,}
+\DoxyCodeLine{368     \textcolor{keywordtype}{char}                    *DepthArg);}
+\DoxyCodeLine{369 }
+\DoxyCodeLine{370 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{371 \mbox{\hyperlink{acdebug_8h_a8b3fc8eb18e80370e930c80df30f20e8}{AcpiDbFindNameInNamespace}} (}
+\DoxyCodeLine{372     \textcolor{keywordtype}{char}                    *NameArg);}
+\DoxyCodeLine{373 }
+\DoxyCodeLine{374 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{375 \mbox{\hyperlink{acdebug_8h_a1f32d6074f08d90829b8406eb570c81e}{AcpiDbCheckPredefinedNames}} (}
+\DoxyCodeLine{376     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{377 }
+\DoxyCodeLine{378 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{379 \mbox{\hyperlink{acdebug_8h_a43b6e3d9c9c2f54c7f0c4e49de2863f1}{AcpiDbDisplayObjects}} (}
+\DoxyCodeLine{380     \textcolor{keywordtype}{char}                    *ObjTypeArg,}
+\DoxyCodeLine{381     \textcolor{keywordtype}{char}                    *DisplayCountArg);}
+\DoxyCodeLine{382 }
+\DoxyCodeLine{383 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{384 \mbox{\hyperlink{acdebug_8h_a61705377dd9cf2c522c1f33d18ff1f1d}{AcpiDbCheckIntegrity}} (}
+\DoxyCodeLine{385     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{386 }
+\DoxyCodeLine{387 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{388 \mbox{\hyperlink{acdebug_8h_a0bb1dc392a1737543aa0c2a0c17203eb}{AcpiDbFindReferences}} (}
+\DoxyCodeLine{389     \textcolor{keywordtype}{char}                    *ObjectArg);}
+\DoxyCodeLine{390 }
+\DoxyCodeLine{391 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{392 \mbox{\hyperlink{acdebug_8h_a5b52b3e2e6bad56d55acdf2ccd5c6d95}{AcpiDbGetBusInfo}} (}
+\DoxyCodeLine{393     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{394 }
+\DoxyCodeLine{395 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{396 \mbox{\hyperlink{acdebug_8h_a2f8aa3eebdb43a424bc267931b045e5c}{AcpiDbDisplayFields}} (}
+\DoxyCodeLine{397     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  AddressSpaceId);}
+\DoxyCodeLine{398 }
+\DoxyCodeLine{399 }
+\DoxyCodeLine{400 \textcolor{comment}{/*}}
+\DoxyCodeLine{401 \textcolor{comment}{ * dbdisply -\/ debug display commands}}
+\DoxyCodeLine{402 \textcolor{comment}{ */}}
+\DoxyCodeLine{403 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{404 \mbox{\hyperlink{acdebug_8h_a009ad8750584d5597b98103180fbf98d}{AcpiDbDisplayMethodInfo}} (}
+\DoxyCodeLine{405     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{406 }
+\DoxyCodeLine{407 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{408 \mbox{\hyperlink{acdebug_8h_af5a55d726d4dd340c87736738db77e8c}{AcpiDbDecodeAndDisplayObject}} (}
+\DoxyCodeLine{409     \textcolor{keywordtype}{char}                    *Target,}
+\DoxyCodeLine{410     \textcolor{keywordtype}{char}                    *OutputType);}
+\DoxyCodeLine{411 }
+\DoxyCodeLine{412 \mbox{\hyperlink{acdebug_8h_a1f5b9908c78acf05c8f90bf4faf3a064}{ACPI\_DBR\_DEPENDENT\_RETURN\_VOID}} (}
+\DoxyCodeLine{413 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{414 AcpiDbDisplayResultObject (}
+\DoxyCodeLine{415     \mbox{\hyperlink{unionacpi__operand__object}{ACPI\_OPERAND\_OBJECT}}     *ObjDesc,}
+\DoxyCodeLine{416     \mbox{\hyperlink{structacpi__walk__state}{ACPI\_WALK\_STATE}}         *WalkState))}
+\DoxyCodeLine{417 }
+\DoxyCodeLine{418 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{419 AcpiDbDisplayAllMethods (}
+\DoxyCodeLine{420     \textcolor{keywordtype}{char}                    *DisplayCountArg);}
+\DoxyCodeLine{421 }
+\DoxyCodeLine{422 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{423 \mbox{\hyperlink{acdebug_8h_a45d230437c43fb386ca02dfcf47ce017}{AcpiDbDisplayArguments}} (}
+\DoxyCodeLine{424     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{425 }
+\DoxyCodeLine{426 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{427 \mbox{\hyperlink{acdebug_8h_a96f6add6812769fe2c5fecff6a15d3b8}{AcpiDbDisplayLocals}} (}
+\DoxyCodeLine{428     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{429 }
+\DoxyCodeLine{430 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{431 \mbox{\hyperlink{acdebug_8h_aa34f901c5d6bddc4204844b3b40267d2}{AcpiDbDisplayResults}} (}
+\DoxyCodeLine{432     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{433 }
+\DoxyCodeLine{434 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{435 \mbox{\hyperlink{acdebug_8h_a40804fd8c4997237d6cf9c97adf8b5dd}{AcpiDbDisplayCallingTree}} (}
+\DoxyCodeLine{436     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{437 }
+\DoxyCodeLine{438 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{439 \mbox{\hyperlink{acdebug_8h_a322dd1bfee49bff8a952bdc9a1cd5946}{AcpiDbDisplayObjectType}} (}
+\DoxyCodeLine{440     \textcolor{keywordtype}{char}                    *ObjectArg);}
+\DoxyCodeLine{441 }
+\DoxyCodeLine{442 \mbox{\hyperlink{acdebug_8h_a1f5b9908c78acf05c8f90bf4faf3a064}{ACPI\_DBR\_DEPENDENT\_RETURN\_VOID}} (}
+\DoxyCodeLine{443 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{444 AcpiDbDisplayArgumentObject (}
+\DoxyCodeLine{445     \mbox{\hyperlink{unionacpi__operand__object}{ACPI\_OPERAND\_OBJECT}}     *ObjDesc,}
+\DoxyCodeLine{446     \mbox{\hyperlink{structacpi__walk__state}{ACPI\_WALK\_STATE}}         *WalkState))}
+\DoxyCodeLine{447 }
+\DoxyCodeLine{448 }
+\DoxyCodeLine{449 \textcolor{comment}{/*}}
+\DoxyCodeLine{450 \textcolor{comment}{ * dbexec -\/ debugger control method execution}}
+\DoxyCodeLine{451 \textcolor{comment}{ */}}
+\DoxyCodeLine{452 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{453 AcpiDbExecute (}
+\DoxyCodeLine{454     \textcolor{keywordtype}{char}                    *\mbox{\hyperlink{acpixf_8h_a5e6f9eb1e980275f44f308f43bff476e}{Name}},}
+\DoxyCodeLine{455     \textcolor{keywordtype}{char}                    **\mbox{\hyperlink{acdebug_8h_afe6d698f39645a1c4a335230ac727fcb}{Args}},}
+\DoxyCodeLine{456     \mbox{\hyperlink{actypes_8h_a3275c9cf8b4cad8f8e0daaaeeb690be6}{ACPI\_OBJECT\_TYPE}}        *\mbox{\hyperlink{acdebug_8h_a32cc54c86f836a4612ef6f70cf5445f5}{Types}},}
+\DoxyCodeLine{457     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acdebug_8h_a4f38d8eec414bbac21fe17e446586ef4}{Flags}});}
+\DoxyCodeLine{458 }
+\DoxyCodeLine{459 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{460 \mbox{\hyperlink{acdebug_8h_a136730d147b744e4a0aeb2f8e10cc70e}{AcpiDbCreateExecutionThread}} (}
+\DoxyCodeLine{461     \textcolor{keywordtype}{char}                    *MethodNameArg,}
+\DoxyCodeLine{462     \textcolor{keywordtype}{char}                    **Arguments,}
+\DoxyCodeLine{463     \mbox{\hyperlink{actypes_8h_a3275c9cf8b4cad8f8e0daaaeeb690be6}{ACPI\_OBJECT\_TYPE}}        *\mbox{\hyperlink{acdebug_8h_a32cc54c86f836a4612ef6f70cf5445f5}{Types}});}
+\DoxyCodeLine{464 }
+\DoxyCodeLine{465 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{466 \mbox{\hyperlink{acdebug_8h_a590d128a6ac3f545feb51b4112822c59}{AcpiDbCreateExecutionThreads}} (}
+\DoxyCodeLine{467     \textcolor{keywordtype}{char}                    *NumThreadsArg,}
+\DoxyCodeLine{468     \textcolor{keywordtype}{char}                    *NumLoopsArg,}
+\DoxyCodeLine{469     \textcolor{keywordtype}{char}                    *MethodNameArg);}
+\DoxyCodeLine{470 }
+\DoxyCodeLine{471 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{472 \mbox{\hyperlink{acdebug_8h_a733dbfa910c365ab05ab77c89688a8ba}{AcpiDbDeleteObjects}} (}
+\DoxyCodeLine{473     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Count,}
+\DoxyCodeLine{474     \mbox{\hyperlink{unionacpi__object}{ACPI\_OBJECT}}             *Objects);}
+\DoxyCodeLine{475 }
+\DoxyCodeLine{476 \textcolor{preprocessor}{\#ifdef ACPI\_DBG\_TRACK\_ALLOCATIONS}}
+\DoxyCodeLine{477 \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}}
+\DoxyCodeLine{478 AcpiDbGetCacheInfo (}
+\DoxyCodeLine{479     \mbox{\hyperlink{structacpi__memory__list}{ACPI\_MEMORY\_LIST}}        *Cache);}
+\DoxyCodeLine{480 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{481 }
+\DoxyCodeLine{482 }
+\DoxyCodeLine{483 \textcolor{comment}{/*}}
+\DoxyCodeLine{484 \textcolor{comment}{ * dbfileio -\/ Debugger file I/O commands}}
+\DoxyCodeLine{485 \textcolor{comment}{ */}}
+\DoxyCodeLine{486 \mbox{\hyperlink{actypes_8h_a3275c9cf8b4cad8f8e0daaaeeb690be6}{ACPI\_OBJECT\_TYPE}}}
+\DoxyCodeLine{487 \mbox{\hyperlink{acdebug_8h_a5c07d3c8e61615c3ed06a41116a3488b}{AcpiDbMatchArgument}} (}
+\DoxyCodeLine{488     \textcolor{keywordtype}{char}                    *UserArgument,}
+\DoxyCodeLine{489     \mbox{\hyperlink{structacpi__db__argument__info}{ACPI\_DB\_ARGUMENT\_INFO}}   *Arguments);}
+\DoxyCodeLine{490 }
+\DoxyCodeLine{491 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{492 \mbox{\hyperlink{acdebug_8h_a049da3c1a1efa8f9118570d113befb8d}{AcpiDbCloseDebugFile}} (}
+\DoxyCodeLine{493     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{494 }
+\DoxyCodeLine{495 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{496 \mbox{\hyperlink{acdebug_8h_abd37bcb675788c58fd8ae631cb5c9d1c}{AcpiDbOpenDebugFile}} (}
+\DoxyCodeLine{497     \textcolor{keywordtype}{char}                    *\mbox{\hyperlink{acpixf_8h_a5e6f9eb1e980275f44f308f43bff476e}{Name}});}
+\DoxyCodeLine{498 }
+\DoxyCodeLine{499 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{500 \mbox{\hyperlink{acdebug_8h_ae349612058648b7eea427f7135112212}{AcpiDbLoadAcpiTable}} (}
+\DoxyCodeLine{501     \textcolor{keywordtype}{char}                    *Filename);}
+\DoxyCodeLine{502 }
+\DoxyCodeLine{503 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{504 \mbox{\hyperlink{acdebug_8h_aa075cf173b0e58e32921938e00e5ae2c}{AcpiDbLoadTables}} (}
+\DoxyCodeLine{505     \mbox{\hyperlink{structacpi__new__table__desc}{ACPI\_NEW\_TABLE\_DESC}}     *ListHead);}
+\DoxyCodeLine{506 }
+\DoxyCodeLine{507 }
+\DoxyCodeLine{508 \textcolor{comment}{/*}}
+\DoxyCodeLine{509 \textcolor{comment}{ * dbhistry -\/ debugger HISTORY command}}
+\DoxyCodeLine{510 \textcolor{comment}{ */}}
+\DoxyCodeLine{511 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{512 \mbox{\hyperlink{acdebug_8h_a8adc07cb3d2905d564dda4e3187e0f56}{AcpiDbAddToHistory}} (}
+\DoxyCodeLine{513     \textcolor{keywordtype}{char}                    *CommandLine);}
+\DoxyCodeLine{514 }
+\DoxyCodeLine{515 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{516 \mbox{\hyperlink{acdebug_8h_a4969297bfbe51ffa6cb8e4e79d7a9b86}{AcpiDbDisplayHistory}} (}
+\DoxyCodeLine{517     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{518 }
+\DoxyCodeLine{519 \textcolor{keywordtype}{char} *}
+\DoxyCodeLine{520 \mbox{\hyperlink{acdebug_8h_ae6bbbf62875eba44661180939384026c}{AcpiDbGetFromHistory}} (}
+\DoxyCodeLine{521     \textcolor{keywordtype}{char}                    *CommandNumArg);}
+\DoxyCodeLine{522 }
+\DoxyCodeLine{523 \textcolor{keywordtype}{char} *}
+\DoxyCodeLine{524 \mbox{\hyperlink{acdebug_8h_a3cc813fec49e88cd6b31b2813613d5e3}{AcpiDbGetHistoryByIndex}} (}
+\DoxyCodeLine{525     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  CommanddNum);}
+\DoxyCodeLine{526 }
+\DoxyCodeLine{527 }
+\DoxyCodeLine{528 \textcolor{comment}{/*}}
+\DoxyCodeLine{529 \textcolor{comment}{ * dbinput -\/ user front-\/end to the AML debugger}}
+\DoxyCodeLine{530 \textcolor{comment}{ */}}
+\DoxyCodeLine{531 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{532 \mbox{\hyperlink{acdebug_8h_a19b39998ff4a36b6dd70d22f684bee6b}{AcpiDbCommandDispatch}} (}
+\DoxyCodeLine{533     \textcolor{keywordtype}{char}                    *InputBuffer,}
+\DoxyCodeLine{534     \mbox{\hyperlink{structacpi__walk__state}{ACPI\_WALK\_STATE}}         *WalkState,}
+\DoxyCodeLine{535     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Op);}
+\DoxyCodeLine{536 }
+\DoxyCodeLine{537 \textcolor{keywordtype}{void} \mbox{\hyperlink{acenv_8h_ad4437609964dd6a9a52aca0a52573529}{ACPI\_SYSTEM\_XFACE}}}
+\DoxyCodeLine{538 \mbox{\hyperlink{acdebug_8h_a3a2400440055ea6c71f86091df931065}{AcpiDbExecuteThread}} (}
+\DoxyCodeLine{539     \textcolor{keywordtype}{void}                    *\mbox{\hyperlink{acevents_8h_a97d06ff39d7dfbebc4998842382a0d4a}{Context}});}
+\DoxyCodeLine{540 }
+\DoxyCodeLine{541 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{542 \mbox{\hyperlink{acdebug_8h_a4ee87df6b273b8d0e53cf838d0c491f9}{AcpiDbUserCommands}} (}
+\DoxyCodeLine{543     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{544 }
+\DoxyCodeLine{545 \textcolor{keywordtype}{char} *}
+\DoxyCodeLine{546 \mbox{\hyperlink{acdebug_8h_a2875bda454cda9ff1f33ea4176ed5c05}{AcpiDbGetNextToken}} (}
+\DoxyCodeLine{547     \textcolor{keywordtype}{char}                    *String,}
+\DoxyCodeLine{548     \textcolor{keywordtype}{char}                    **Next,}
+\DoxyCodeLine{549     \mbox{\hyperlink{actypes_8h_a3275c9cf8b4cad8f8e0daaaeeb690be6}{ACPI\_OBJECT\_TYPE}}        *ReturnType);}
+\DoxyCodeLine{550 }
+\DoxyCodeLine{551 }
+\DoxyCodeLine{552 \textcolor{comment}{/*}}
+\DoxyCodeLine{553 \textcolor{comment}{ * dbobject}}
+\DoxyCodeLine{554 \textcolor{comment}{ */}}
+\DoxyCodeLine{555 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{556 \mbox{\hyperlink{acdebug_8h_a831ffa9e6416555efd60740e1f1a033c}{AcpiDbDecodeInternalObject}} (}
+\DoxyCodeLine{557     \mbox{\hyperlink{unionacpi__operand__object}{ACPI\_OPERAND\_OBJECT}}     *ObjDesc);}
+\DoxyCodeLine{558 }
+\DoxyCodeLine{559 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{560 \mbox{\hyperlink{acdebug_8h_acf659e9fa2898e8621c184f4436ca65f}{AcpiDbDisplayInternalObject}} (}
+\DoxyCodeLine{561     \mbox{\hyperlink{unionacpi__operand__object}{ACPI\_OPERAND\_OBJECT}}     *ObjDesc,}
+\DoxyCodeLine{562     \mbox{\hyperlink{structacpi__walk__state}{ACPI\_WALK\_STATE}}         *WalkState);}
+\DoxyCodeLine{563 }
+\DoxyCodeLine{564 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{565 \mbox{\hyperlink{acdebug_8h_ae0fcd27ca02ba4d2e16440811fb293ed}{AcpiDbDecodeArguments}} (}
+\DoxyCodeLine{566     \mbox{\hyperlink{structacpi__walk__state}{ACPI\_WALK\_STATE}}         *WalkState);}
+\DoxyCodeLine{567 }
+\DoxyCodeLine{568 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{569 \mbox{\hyperlink{acdebug_8h_ada30e9345d0682ac6f2619b8841a597c}{AcpiDbDecodeLocals}} (}
+\DoxyCodeLine{570     \mbox{\hyperlink{structacpi__walk__state}{ACPI\_WALK\_STATE}}         *WalkState);}
+\DoxyCodeLine{571 }
+\DoxyCodeLine{572 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{573 \mbox{\hyperlink{acdebug_8h_a7e32c60271b2edd1dacda445e95b715d}{AcpiDbDumpMethodInfo}} (}
+\DoxyCodeLine{574     \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}             \mbox{\hyperlink{acpixf_8h_adba1986479531d5d136a3277bcf7278e}{Status}},}
+\DoxyCodeLine{575     \mbox{\hyperlink{structacpi__walk__state}{ACPI\_WALK\_STATE}}         *WalkState);}
+\DoxyCodeLine{576 }
+\DoxyCodeLine{577 }
+\DoxyCodeLine{578 \textcolor{comment}{/*}}
+\DoxyCodeLine{579 \textcolor{comment}{ * dbstats -\/ Generation and display of ACPI table statistics}}
+\DoxyCodeLine{580 \textcolor{comment}{ */}}
+\DoxyCodeLine{581 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{582 \mbox{\hyperlink{acdebug_8h_a57412d0504c84abf30653173a08266ed}{AcpiDbGenerateStatistics}} (}
+\DoxyCodeLine{583     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}       *Root,}
+\DoxyCodeLine{584     \mbox{\hyperlink{actypes_8h_a112e3146cb38b6ee95e64d85842e380a}{BOOLEAN}}                 IsMethod);}
+\DoxyCodeLine{585 }
+\DoxyCodeLine{586 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{587 \mbox{\hyperlink{acdebug_8h_ad550da36390676214e25a66e0e081916}{AcpiDbDisplayStatistics}} (}
+\DoxyCodeLine{588     \textcolor{keywordtype}{char}                    *TypeArg);}
+\DoxyCodeLine{589 }
+\DoxyCodeLine{590 }
+\DoxyCodeLine{591 \textcolor{comment}{/*}}
+\DoxyCodeLine{592 \textcolor{comment}{ * dbutils -\/ AML debugger utilities}}
+\DoxyCodeLine{593 \textcolor{comment}{ */}}
+\DoxyCodeLine{594 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{595 \mbox{\hyperlink{acdebug_8h_ad768300af51255b822d531f34af7954a}{AcpiDbSetOutputDestination}} (}
+\DoxyCodeLine{596     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Where);}
+\DoxyCodeLine{597 }
+\DoxyCodeLine{598 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{599 \mbox{\hyperlink{acdebug_8h_af502221f27b2dc1b08252ac0b2878d25}{AcpiDbDumpExternalObject}} (}
+\DoxyCodeLine{600     \mbox{\hyperlink{unionacpi__object}{ACPI\_OBJECT}}             *ObjDesc,}
+\DoxyCodeLine{601     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acevents_8h_a02f2e409c5113811e497621855f8db87}{Level}});}
+\DoxyCodeLine{602 }
+\DoxyCodeLine{603 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{604 \mbox{\hyperlink{acdebug_8h_a2b566ccfb293d0c0be0292102d5c1f1d}{AcpiDbPrepNamestring}} (}
+\DoxyCodeLine{605     \textcolor{keywordtype}{char}                    *\mbox{\hyperlink{acpixf_8h_a5e6f9eb1e980275f44f308f43bff476e}{Name}});}
+\DoxyCodeLine{606 }
+\DoxyCodeLine{607 \mbox{\hyperlink{structacpi__namespace__node}{ACPI\_NAMESPACE\_NODE}} *}
+\DoxyCodeLine{608 \mbox{\hyperlink{acdebug_8h_ae3e41d3f1069d3a6e7088a8161c51561}{AcpiDbLocalNsLookup}} (}
+\DoxyCodeLine{609     \textcolor{keywordtype}{char}                    *\mbox{\hyperlink{acpixf_8h_a5e6f9eb1e980275f44f308f43bff476e}{Name}});}
+\DoxyCodeLine{610 }
+\DoxyCodeLine{611 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{612 \mbox{\hyperlink{acdebug_8h_a1223deeb77eac5d856a57b17de335f73}{AcpiDbUint32ToHexString}} (}
+\DoxyCodeLine{613     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Value,}
+\DoxyCodeLine{614     \textcolor{keywordtype}{char}                    *Buffer);}
+\DoxyCodeLine{615 }
+\DoxyCodeLine{616 \textcolor{preprocessor}{\#endif  }\textcolor{comment}{/* \_\_ACDEBUG\_H\_\_ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

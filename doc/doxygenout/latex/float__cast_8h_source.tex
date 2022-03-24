@@ -1,0 +1,277 @@
+\hypertarget{float__cast_8h_source}{}\doxysection{float\+\_\+cast.\+h}
+\label{float__cast_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/hal/libresample/float\_cast.h@{C:/Users/Alex/Desktop/Banana/kernel/hal/libresample/float\_cast.h}}
+\mbox{\hyperlink{float__cast_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*}}
+\DoxyCodeLine{2 \textcolor{comment}{** Copyright (c) 2001-\/2016, Erik de Castro Lopo <erikd@mega-\/nerd.com>}}
+\DoxyCodeLine{3 \textcolor{comment}{** All rights reserved.}}
+\DoxyCodeLine{4 \textcolor{comment}{**}}
+\DoxyCodeLine{5 \textcolor{comment}{** This code is released under 2-\/clause BSD license. Please see the}}
+\DoxyCodeLine{6 \textcolor{comment}{** file at : https://github.com/erikd/libsamplerate/blob/master/COPYING}}
+\DoxyCodeLine{7 \textcolor{comment}{*/}}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{comment}{/* Version 1.5 */}}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#ifndef FLOAT\_CAST\_HEADER}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#define FLOAT\_CAST\_HEADER}}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14 \textcolor{comment}{/*============================================================================}}
+\DoxyCodeLine{15 \textcolor{comment}{**  On Intel Pentium processors (especially PIII and probably P4), converting}}
+\DoxyCodeLine{16 \textcolor{comment}{**  from float to int is very slow. To meet the C specs, the code produced by}}
+\DoxyCodeLine{17 \textcolor{comment}{**  most C compilers targeting Pentium needs to change the FPU rounding mode}}
+\DoxyCodeLine{18 \textcolor{comment}{**  before the float to int conversion is performed.}}
+\DoxyCodeLine{19 \textcolor{comment}{**}}
+\DoxyCodeLine{20 \textcolor{comment}{**  Changing the FPU rounding mode causes the FPU pipeline to be flushed. It}}
+\DoxyCodeLine{21 \textcolor{comment}{**  is this flushing of the pipeline which is so slow.}}
+\DoxyCodeLine{22 \textcolor{comment}{**}}
+\DoxyCodeLine{23 \textcolor{comment}{**  Fortunately the ISO C99 specifications define the functions lrint, lrintf,}}
+\DoxyCodeLine{24 \textcolor{comment}{**  llrint and llrintf which fix this problem as a side effect.}}
+\DoxyCodeLine{25 \textcolor{comment}{**}}
+\DoxyCodeLine{26 \textcolor{comment}{**  On Unix-\/like systems, the configure process should have detected the}}
+\DoxyCodeLine{27 \textcolor{comment}{**  presence of these functions. If they weren't found we have to replace them}}
+\DoxyCodeLine{28 \textcolor{comment}{**  here with a standard C cast.}}
+\DoxyCodeLine{29 \textcolor{comment}{*/}}
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31 \textcolor{comment}{/*}}
+\DoxyCodeLine{32 \textcolor{comment}{**  The C99 prototypes for lrint and lrintf are as follows:}}
+\DoxyCodeLine{33 \textcolor{comment}{**}}
+\DoxyCodeLine{34 \textcolor{comment}{**      long int lrintf (float x) ;}}
+\DoxyCodeLine{35 \textcolor{comment}{**      long int lrint  (double x) ;}}
+\DoxyCodeLine{36 \textcolor{comment}{*/}}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{config_8h}{config.h}}"{}}}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40 \textcolor{comment}{/*}}
+\DoxyCodeLine{41 \textcolor{comment}{**  The presence of the required functions are detected during the configure}}
+\DoxyCodeLine{42 \textcolor{comment}{**  process and the values HAVE\_LRINT and HAVE\_LRINTF are set accordingly in}}
+\DoxyCodeLine{43 \textcolor{comment}{**  the config.h file.}}
+\DoxyCodeLine{44 \textcolor{comment}{*/}}
+\DoxyCodeLine{45 }
+\DoxyCodeLine{46 \textcolor{preprocessor}{\#define     HAVE\_LRINT\_REPLACEMENT  0}}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{48 \textcolor{preprocessor}{\#if (HAVE\_LRINT \&\& HAVE\_LRINTF)}}
+\DoxyCodeLine{49 }
+\DoxyCodeLine{50     \textcolor{comment}{/*}}
+\DoxyCodeLine{51 \textcolor{comment}{    **  These defines enable functionality introduced with the 1999 ISO C}}
+\DoxyCodeLine{52 \textcolor{comment}{    **  standard. They must be defined before the inclusion of math.h to}}
+\DoxyCodeLine{53 \textcolor{comment}{    **  engage them. If optimisation is enabled, these functions will be}}
+\DoxyCodeLine{54 \textcolor{comment}{    **  inlined. With optimisation switched off, you have to link in the}}
+\DoxyCodeLine{55 \textcolor{comment}{    **  maths library using -\/lm.}}
+\DoxyCodeLine{56 \textcolor{comment}{    */}}
+\DoxyCodeLine{57 }
+\DoxyCodeLine{58 \textcolor{preprocessor}{    \#define \_ISOC9X\_SOURCE  1}}
+\DoxyCodeLine{59 \textcolor{preprocessor}{    \#define \_ISOC99\_SOURCE  1}}
+\DoxyCodeLine{60 }
+\DoxyCodeLine{61 \textcolor{preprocessor}{    \#define \_\_USE\_ISOC9X    1}}
+\DoxyCodeLine{62 \textcolor{preprocessor}{    \#define \_\_USE\_ISOC99    1}}
+\DoxyCodeLine{63 }
+\DoxyCodeLine{64 \textcolor{preprocessor}{    \#include    <\mbox{\hyperlink{math_8h}{math.h}}>}}
+\DoxyCodeLine{65 }
+\DoxyCodeLine{66 \textcolor{preprocessor}{\#elif (defined (\_\_CYGWIN\_\_))}}
+\DoxyCodeLine{67 }
+\DoxyCodeLine{68 \textcolor{preprocessor}{    \#include    <\mbox{\hyperlink{math_8h}{math.h}}>}}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{70 \textcolor{preprocessor}{    \#undef      HAVE\_LRINT\_REPLACEMENT}}
+\DoxyCodeLine{71 \textcolor{preprocessor}{    \#define     HAVE\_LRINT\_REPLACEMENT  1}}
+\DoxyCodeLine{72 }
+\DoxyCodeLine{73 \textcolor{preprocessor}{    \#undef  lrint}}
+\DoxyCodeLine{74 \textcolor{preprocessor}{    \#undef  lrintf}}
+\DoxyCodeLine{75 }
+\DoxyCodeLine{76 \textcolor{preprocessor}{    \#define lrint   double2int}}
+\DoxyCodeLine{77 \textcolor{preprocessor}{    \#define lrintf  float2int}}
+\DoxyCodeLine{78 }
+\DoxyCodeLine{79     \textcolor{comment}{/*}}
+\DoxyCodeLine{80 \textcolor{comment}{    **  The native CYGWIN lrint and lrintf functions are buggy:}}
+\DoxyCodeLine{81 \textcolor{comment}{    **      http://sourceware.org/ml/cygwin/2005-\/06/msg00153.html}}
+\DoxyCodeLine{82 \textcolor{comment}{    **      http://sourceware.org/ml/cygwin/2005-\/09/msg00047.html}}
+\DoxyCodeLine{83 \textcolor{comment}{    **  and slow.}}
+\DoxyCodeLine{84 \textcolor{comment}{    **  These functions (pulled from the Public Domain MinGW math.h header)}}
+\DoxyCodeLine{85 \textcolor{comment}{    **  replace the native versions.}}
+\DoxyCodeLine{86 \textcolor{comment}{    */}}
+\DoxyCodeLine{87 }
+\DoxyCodeLine{88     \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{long} double2int (\textcolor{keywordtype}{double} in)}
+\DoxyCodeLine{89     \{   \textcolor{keywordtype}{long} retval ;}
+\DoxyCodeLine{90 }
+\DoxyCodeLine{91         \_\_asm\_\_ \_\_volatile\_\_}
+\DoxyCodeLine{92         (   \textcolor{stringliteral}{"{}fistpl \%0"{}}}
+\DoxyCodeLine{93             : \textcolor{stringliteral}{"{}=m"{}} (retval)}
+\DoxyCodeLine{94             : \textcolor{stringliteral}{"{}t"{}} (in)}
+\DoxyCodeLine{95             : \textcolor{stringliteral}{"{}st"{}}}
+\DoxyCodeLine{96             ) ;}
+\DoxyCodeLine{97 }
+\DoxyCodeLine{98         \textcolor{keywordflow}{return} retval ;}
+\DoxyCodeLine{99     \} \textcolor{comment}{/* double2int */}}
+\DoxyCodeLine{100 }
+\DoxyCodeLine{101     \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{long} float2int (\textcolor{keywordtype}{float} in)}
+\DoxyCodeLine{102     \{   \textcolor{keywordtype}{long} retval ;}
+\DoxyCodeLine{103 }
+\DoxyCodeLine{104         \_\_asm\_\_ \_\_volatile\_\_}
+\DoxyCodeLine{105         (   \textcolor{stringliteral}{"{}fistpl \%0"{}}}
+\DoxyCodeLine{106             : \textcolor{stringliteral}{"{}=m"{}} (retval)}
+\DoxyCodeLine{107             : \textcolor{stringliteral}{"{}t"{}} (in)}
+\DoxyCodeLine{108             : \textcolor{stringliteral}{"{}st"{}}}
+\DoxyCodeLine{109             ) ;}
+\DoxyCodeLine{110 }
+\DoxyCodeLine{111         \textcolor{keywordflow}{return} retval ;}
+\DoxyCodeLine{112     \} \textcolor{comment}{/* float2int */}}
+\DoxyCodeLine{113 }
+\DoxyCodeLine{114 \textcolor{preprocessor}{\#elif (defined (WIN64) || defined(\_WIN64))}}
+\DoxyCodeLine{115 }
+\DoxyCodeLine{116     \textcolor{comment}{/*  Win64 section should be places before Win32 one, because}}
+\DoxyCodeLine{117 \textcolor{comment}{    **  most likely both WIN32 and WIN64 will be defined in 64-\/bit case.}}
+\DoxyCodeLine{118 \textcolor{comment}{    */}}
+\DoxyCodeLine{119 }
+\DoxyCodeLine{120 \textcolor{preprocessor}{    \#include    <\mbox{\hyperlink{math_8h}{math.h}}>}}
+\DoxyCodeLine{121 }
+\DoxyCodeLine{122     \textcolor{comment}{/*  Win64 doesn't seem to have these functions, nor inline assembly.}}
+\DoxyCodeLine{123 \textcolor{comment}{    **  Therefore implement inline versions of these functions here.}}
+\DoxyCodeLine{124 \textcolor{comment}{    */}}
+\DoxyCodeLine{125 \textcolor{preprocessor}{    \#include    <emmintrin.h>}}
+\DoxyCodeLine{126 \textcolor{preprocessor}{    \#include    <mmintrin.h>}}
+\DoxyCodeLine{127 }
+\DoxyCodeLine{128     \mbox{\hyperlink{bsd__cdefs_8h_a96deb7ba5a74848afb710cc4ee6d2c08}{\_\_inline}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{129     \mbox{\hyperlink{openlibm__math_8h_a4e67c0d6d9bf9781d677095a240909fd}{lrint}}(\textcolor{keywordtype}{double} flt)}
+\DoxyCodeLine{130     \{}
+\DoxyCodeLine{131         \textcolor{keywordflow}{return} \_mm\_cvtsd\_si32(\_mm\_load\_sd(\&flt));}
+\DoxyCodeLine{132     \}}
+\DoxyCodeLine{133 }
+\DoxyCodeLine{134     \mbox{\hyperlink{bsd__cdefs_8h_a96deb7ba5a74848afb710cc4ee6d2c08}{\_\_inline}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{135     \mbox{\hyperlink{openlibm__math_8h_a678ae03f84144cf070ddd55ead59e9b8}{lrintf}}(\textcolor{keywordtype}{float} flt)}
+\DoxyCodeLine{136     \{}
+\DoxyCodeLine{137         \textcolor{keywordflow}{return} \_mm\_cvtss\_si32(\_mm\_load\_ss(\&flt));}
+\DoxyCodeLine{138     \}}
+\DoxyCodeLine{139 }
+\DoxyCodeLine{140 \textcolor{preprocessor}{\#elif (defined (WIN32) || defined (\_WIN32))}}
+\DoxyCodeLine{141 }
+\DoxyCodeLine{142 \textcolor{preprocessor}{    \#undef      HAVE\_LRINT\_REPLACEMENT}}
+\DoxyCodeLine{143 \textcolor{preprocessor}{    \#define     HAVE\_LRINT\_REPLACEMENT  1}}
+\DoxyCodeLine{144 }
+\DoxyCodeLine{145 \textcolor{preprocessor}{    \#include    <\mbox{\hyperlink{math_8h}{math.h}}>}}
+\DoxyCodeLine{146 }
+\DoxyCodeLine{147     \textcolor{comment}{/*}}
+\DoxyCodeLine{148 \textcolor{comment}{    **  Win32 doesn't seem to have these functions.}}
+\DoxyCodeLine{149 \textcolor{comment}{    **  Therefore implement inline versions of these functions here.}}
+\DoxyCodeLine{150 \textcolor{comment}{    */}}
+\DoxyCodeLine{151 }
+\DoxyCodeLine{152     \mbox{\hyperlink{bsd__cdefs_8h_a96deb7ba5a74848afb710cc4ee6d2c08}{\_\_inline}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{153     \mbox{\hyperlink{openlibm__math_8h_a4e67c0d6d9bf9781d677095a240909fd}{lrint}} (\textcolor{keywordtype}{double} flt)}
+\DoxyCodeLine{154     \{   \textcolor{keywordtype}{int} intgr ;}
+\DoxyCodeLine{155 }
+\DoxyCodeLine{156         \_asm}
+\DoxyCodeLine{157         \{   fld flt}
+\DoxyCodeLine{158             fistp intgr}
+\DoxyCodeLine{159             \} ;}
+\DoxyCodeLine{160 }
+\DoxyCodeLine{161         \textcolor{keywordflow}{return} intgr ;}
+\DoxyCodeLine{162     \}}
+\DoxyCodeLine{163 }
+\DoxyCodeLine{164     \mbox{\hyperlink{bsd__cdefs_8h_a96deb7ba5a74848afb710cc4ee6d2c08}{\_\_inline}} \textcolor{keywordtype}{long} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{165     \mbox{\hyperlink{openlibm__math_8h_a678ae03f84144cf070ddd55ead59e9b8}{lrintf}} (\textcolor{keywordtype}{float} flt)}
+\DoxyCodeLine{166     \{   \textcolor{keywordtype}{int} intgr ;}
+\DoxyCodeLine{167 }
+\DoxyCodeLine{168         \_asm}
+\DoxyCodeLine{169         \{   fld flt}
+\DoxyCodeLine{170             fistp intgr}
+\DoxyCodeLine{171             \} ;}
+\DoxyCodeLine{172 }
+\DoxyCodeLine{173         \textcolor{keywordflow}{return} intgr ;}
+\DoxyCodeLine{174     \}}
+\DoxyCodeLine{175 }
+\DoxyCodeLine{176 \textcolor{preprocessor}{\#elif (defined (\_\_MWERKS\_\_) \&\& defined (macintosh))}}
+\DoxyCodeLine{177 }
+\DoxyCodeLine{178     \textcolor{comment}{/* This MacOS 9 solution was provided by Stephane Letz */}}
+\DoxyCodeLine{179 }
+\DoxyCodeLine{180 \textcolor{preprocessor}{    \#undef      HAVE\_LRINT\_REPLACEMENT}}
+\DoxyCodeLine{181 \textcolor{preprocessor}{    \#define     HAVE\_LRINT\_REPLACEMENT  1}}
+\DoxyCodeLine{182 \textcolor{preprocessor}{    \#include    <\mbox{\hyperlink{math_8h}{math.h}}>}}
+\DoxyCodeLine{183 }
+\DoxyCodeLine{184 \textcolor{preprocessor}{    \#undef  lrint}}
+\DoxyCodeLine{185 \textcolor{preprocessor}{    \#undef  lrintf}}
+\DoxyCodeLine{186 }
+\DoxyCodeLine{187 \textcolor{preprocessor}{    \#define lrint   double2int}}
+\DoxyCodeLine{188 \textcolor{preprocessor}{    \#define lrintf  float2int}}
+\DoxyCodeLine{189 }
+\DoxyCodeLine{190     \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{191     float2int (\textcolor{keyword}{register} \textcolor{keywordtype}{float} in)}
+\DoxyCodeLine{192     \{   \textcolor{keywordtype}{long} \mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}} [2] ;}
+\DoxyCodeLine{193 }
+\DoxyCodeLine{194         \textcolor{keyword}{asm}}
+\DoxyCodeLine{195         \{   fctiw   in, in}
+\DoxyCodeLine{196             stfd     in, \mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}}}
+\DoxyCodeLine{197         \}}
+\DoxyCodeLine{198         \textcolor{keywordflow}{return} \mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}} [1] ;}
+\DoxyCodeLine{199     \} \textcolor{comment}{/* float2int */}}
+\DoxyCodeLine{200 }
+\DoxyCodeLine{201     \textcolor{keyword}{inline} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{202     double2int (\textcolor{keyword}{register} \textcolor{keywordtype}{double} in)}
+\DoxyCodeLine{203     \{   \textcolor{keywordtype}{long} \mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}} [2] ;}
+\DoxyCodeLine{204 }
+\DoxyCodeLine{205         \textcolor{keyword}{asm}}
+\DoxyCodeLine{206         \{   fctiw   in, in}
+\DoxyCodeLine{207             stfd     in, \mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}}}
+\DoxyCodeLine{208         \}}
+\DoxyCodeLine{209         \textcolor{keywordflow}{return} \mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}} [1] ;}
+\DoxyCodeLine{210     \} \textcolor{comment}{/* double2int */}}
+\DoxyCodeLine{211 }
+\DoxyCodeLine{212 \textcolor{preprocessor}{\#elif (defined (\_\_MACH\_\_) \&\& defined (\_\_APPLE\_\_))}}
+\DoxyCodeLine{213 }
+\DoxyCodeLine{214     \textcolor{comment}{/* For Apple MacOSX. */}}
+\DoxyCodeLine{215 }
+\DoxyCodeLine{216 \textcolor{preprocessor}{    \#undef      HAVE\_LRINT\_REPLACEMENT}}
+\DoxyCodeLine{217 \textcolor{preprocessor}{    \#define     HAVE\_LRINT\_REPLACEMENT  1}}
+\DoxyCodeLine{218 \textcolor{preprocessor}{    \#include    <\mbox{\hyperlink{math_8h}{math.h}}>}}
+\DoxyCodeLine{219 }
+\DoxyCodeLine{220 \textcolor{preprocessor}{    \#undef lrint}}
+\DoxyCodeLine{221 \textcolor{preprocessor}{    \#undef lrintf}}
+\DoxyCodeLine{222 }
+\DoxyCodeLine{223 \textcolor{preprocessor}{    \#define lrint   double2int}}
+\DoxyCodeLine{224 \textcolor{preprocessor}{    \#define lrintf  float2int}}
+\DoxyCodeLine{225 }
+\DoxyCodeLine{226     \textcolor{keyword}{inline} \textcolor{keyword}{static} \textcolor{keywordtype}{long}}
+\DoxyCodeLine{227     float2int (\textcolor{keyword}{register} \textcolor{keywordtype}{float} in)}
+\DoxyCodeLine{228     \{   \textcolor{keywordtype}{int} \mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}} [2] ;}
+\DoxyCodeLine{229 }
+\DoxyCodeLine{230         \_\_asm\_\_ \_\_volatile\_\_}
+\DoxyCodeLine{231         (   \textcolor{stringliteral}{"{}fctiw  \%1, \%1\(\backslash\)n\(\backslash\)t"{}}}
+\DoxyCodeLine{232             \textcolor{stringliteral}{"{}stfd   \%1, \%0"{}}}
+\DoxyCodeLine{233             : \textcolor{stringliteral}{"{}=m"{}} (\mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}}) \textcolor{comment}{/* Output */}}
+\DoxyCodeLine{234             : \textcolor{stringliteral}{"{}f"{}} (in)      \textcolor{comment}{/* Input */}}
+\DoxyCodeLine{235             : \textcolor{stringliteral}{"{}memory"{}}}
+\DoxyCodeLine{236             ) ;}
+\DoxyCodeLine{237 }
+\DoxyCodeLine{238         \textcolor{keywordflow}{return} \mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}} [1] ;}
+\DoxyCodeLine{239     \} \textcolor{comment}{/* lrintf */}}
+\DoxyCodeLine{240 }
+\DoxyCodeLine{241     \textcolor{keyword}{inline} \textcolor{keyword}{static} \textcolor{keywordtype}{long}}
+\DoxyCodeLine{242     double2int (\textcolor{keyword}{register} \textcolor{keywordtype}{double} in)}
+\DoxyCodeLine{243     \{   \textcolor{keywordtype}{int} \mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}} [2] ;}
+\DoxyCodeLine{244 }
+\DoxyCodeLine{245         \_\_asm\_\_ \_\_volatile\_\_}
+\DoxyCodeLine{246         (   \textcolor{stringliteral}{"{}fctiw  \%1, \%1\(\backslash\)n\(\backslash\)t"{}}}
+\DoxyCodeLine{247             \textcolor{stringliteral}{"{}stfd   \%1, \%0"{}}}
+\DoxyCodeLine{248             : \textcolor{stringliteral}{"{}=m"{}} (\mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}}) \textcolor{comment}{/* Output */}}
+\DoxyCodeLine{249             : \textcolor{stringliteral}{"{}f"{}} (in)      \textcolor{comment}{/* Input */}}
+\DoxyCodeLine{250             : \textcolor{stringliteral}{"{}memory"{}}}
+\DoxyCodeLine{251             ) ;}
+\DoxyCodeLine{252 }
+\DoxyCodeLine{253         \textcolor{keywordflow}{return} \mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}} [1] ;}
+\DoxyCodeLine{254     \} \textcolor{comment}{/* lrint */}}
+\DoxyCodeLine{255 }
+\DoxyCodeLine{256 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{257 \textcolor{preprocessor}{    \#ifndef \_\_sgi}}
+\DoxyCodeLine{258 \textcolor{preprocessor}{    \#warning "{}Don't have the functions lrint() and lrintf()."{}}}
+\DoxyCodeLine{259 \textcolor{preprocessor}{    \#warning "{}Replacing these functions with a standard C cast."{}}}
+\DoxyCodeLine{260 \textcolor{preprocessor}{    \#endif}}
+\DoxyCodeLine{261 }
+\DoxyCodeLine{262 \textcolor{preprocessor}{    \#include    <\mbox{\hyperlink{math_8h}{math.h}}>}}
+\DoxyCodeLine{263 }
+\DoxyCodeLine{264 \textcolor{preprocessor}{    \#define lrint(dbl)      ((long) (dbl))}}
+\DoxyCodeLine{265 \textcolor{preprocessor}{    \#define lrintf(flt)     ((long) (flt))}}
+\DoxyCodeLine{266 }
+\DoxyCodeLine{267 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{268 }
+\DoxyCodeLine{269 }
+\DoxyCodeLine{270 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* FLOAT\_CAST\_HEADER */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{271 }
+
+\end{DoxyCode}

@@ -1,0 +1,441 @@
+\hypertarget{acenv_8h_source}{}\doxysection{acenv.\+h}
+\label{acenv_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/acpica/platform/acenv.h@{C:/Users/Alex/Desktop/Banana/kernel/acpica/platform/acenv.h}}
+\mbox{\hyperlink{acenv_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{2 \textcolor{comment}{ *}}
+\DoxyCodeLine{3 \textcolor{comment}{ * Name: acenv.h -\/ Host and compiler configuration}}
+\DoxyCodeLine{4 \textcolor{comment}{ *}}
+\DoxyCodeLine{5 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{8 \textcolor{comment}{ *}}
+\DoxyCodeLine{9 \textcolor{comment}{ * 1. Copyright Notice}}
+\DoxyCodeLine{10 \textcolor{comment}{ *}}
+\DoxyCodeLine{11 \textcolor{comment}{ * Some or all of this work -\/ Copyright (c) 1999 -\/ 2019, Intel Corp.}}
+\DoxyCodeLine{12 \textcolor{comment}{ * All rights reserved.}}
+\DoxyCodeLine{13 \textcolor{comment}{ *}}
+\DoxyCodeLine{14 \textcolor{comment}{ * 2. License}}
+\DoxyCodeLine{15 \textcolor{comment}{ *}}
+\DoxyCodeLine{16 \textcolor{comment}{ * 2.1. This is your license from Intel Corp. under its intellectual property}}
+\DoxyCodeLine{17 \textcolor{comment}{ * rights. You may have additional license terms from the party that provided}}
+\DoxyCodeLine{18 \textcolor{comment}{ * you this software, covering your right to use that party's intellectual}}
+\DoxyCodeLine{19 \textcolor{comment}{ * property rights.}}
+\DoxyCodeLine{20 \textcolor{comment}{ *}}
+\DoxyCodeLine{21 \textcolor{comment}{ * 2.2. Intel grants, free of charge, to any person ("{}Licensee"{}) obtaining a}}
+\DoxyCodeLine{22 \textcolor{comment}{ * copy of the source code appearing in this file ("{}Covered Code"{}) an}}
+\DoxyCodeLine{23 \textcolor{comment}{ * irrevocable, perpetual, worldwide license under Intel's copyrights in the}}
+\DoxyCodeLine{24 \textcolor{comment}{ * base code distributed originally by Intel ("{}Original Intel Code"{}) to copy,}}
+\DoxyCodeLine{25 \textcolor{comment}{ * make derivatives, distribute, use and display any portion of the Covered}}
+\DoxyCodeLine{26 \textcolor{comment}{ * Code in any form, with the right to sublicense such rights; and}}
+\DoxyCodeLine{27 \textcolor{comment}{ *}}
+\DoxyCodeLine{28 \textcolor{comment}{ * 2.3. Intel grants Licensee a non-\/exclusive and non-\/transferable patent}}
+\DoxyCodeLine{29 \textcolor{comment}{ * license (with the right to sublicense), under only those claims of Intel}}
+\DoxyCodeLine{30 \textcolor{comment}{ * patents that are infringed by the Original Intel Code, to make, use, sell,}}
+\DoxyCodeLine{31 \textcolor{comment}{ * offer to sell, and import the Covered Code and derivative works thereof}}
+\DoxyCodeLine{32 \textcolor{comment}{ * solely to the minimum extent necessary to exercise the above copyright}}
+\DoxyCodeLine{33 \textcolor{comment}{ * license, and in no event shall the patent license extend to any additions}}
+\DoxyCodeLine{34 \textcolor{comment}{ * to or modifications of the Original Intel Code. No other license or right}}
+\DoxyCodeLine{35 \textcolor{comment}{ * is granted directly or by implication, estoppel or otherwise;}}
+\DoxyCodeLine{36 \textcolor{comment}{ *}}
+\DoxyCodeLine{37 \textcolor{comment}{ * The above copyright and patent license is granted only if the following}}
+\DoxyCodeLine{38 \textcolor{comment}{ * conditions are met:}}
+\DoxyCodeLine{39 \textcolor{comment}{ *}}
+\DoxyCodeLine{40 \textcolor{comment}{ * 3. Conditions}}
+\DoxyCodeLine{41 \textcolor{comment}{ *}}
+\DoxyCodeLine{42 \textcolor{comment}{ * 3.1. Redistribution of Source with Rights to Further Distribute Source.}}
+\DoxyCodeLine{43 \textcolor{comment}{ * Redistribution of source code of any substantial portion of the Covered}}
+\DoxyCodeLine{44 \textcolor{comment}{ * Code or modification with rights to further distribute source must include}}
+\DoxyCodeLine{45 \textcolor{comment}{ * the above Copyright Notice, the above License, this list of Conditions,}}
+\DoxyCodeLine{46 \textcolor{comment}{ * and the following Disclaimer and Export Compliance provision. In addition,}}
+\DoxyCodeLine{47 \textcolor{comment}{ * Licensee must cause all Covered Code to which Licensee contributes to}}
+\DoxyCodeLine{48 \textcolor{comment}{ * contain a file documenting the changes Licensee made to create that Covered}}
+\DoxyCodeLine{49 \textcolor{comment}{ * Code and the date of any change. Licensee must include in that file the}}
+\DoxyCodeLine{50 \textcolor{comment}{ * documentation of any changes made by any predecessor Licensee. Licensee}}
+\DoxyCodeLine{51 \textcolor{comment}{ * must include a prominent statement that the modification is derived,}}
+\DoxyCodeLine{52 \textcolor{comment}{ * directly or indirectly, from Original Intel Code.}}
+\DoxyCodeLine{53 \textcolor{comment}{ *}}
+\DoxyCodeLine{54 \textcolor{comment}{ * 3.2. Redistribution of Source with no Rights to Further Distribute Source.}}
+\DoxyCodeLine{55 \textcolor{comment}{ * Redistribution of source code of any substantial portion of the Covered}}
+\DoxyCodeLine{56 \textcolor{comment}{ * Code or modification without rights to further distribute source must}}
+\DoxyCodeLine{57 \textcolor{comment}{ * include the following Disclaimer and Export Compliance provision in the}}
+\DoxyCodeLine{58 \textcolor{comment}{ * documentation and/or other materials provided with distribution. In}}
+\DoxyCodeLine{59 \textcolor{comment}{ * addition, Licensee may not authorize further sublicense of source of any}}
+\DoxyCodeLine{60 \textcolor{comment}{ * portion of the Covered Code, and must include terms to the effect that the}}
+\DoxyCodeLine{61 \textcolor{comment}{ * license from Licensee to its licensee is limited to the intellectual}}
+\DoxyCodeLine{62 \textcolor{comment}{ * property embodied in the software Licensee provides to its licensee, and}}
+\DoxyCodeLine{63 \textcolor{comment}{ * not to intellectual property embodied in modifications its licensee may}}
+\DoxyCodeLine{64 \textcolor{comment}{ * make.}}
+\DoxyCodeLine{65 \textcolor{comment}{ *}}
+\DoxyCodeLine{66 \textcolor{comment}{ * 3.3. Redistribution of Executable. Redistribution in executable form of any}}
+\DoxyCodeLine{67 \textcolor{comment}{ * substantial portion of the Covered Code or modification must reproduce the}}
+\DoxyCodeLine{68 \textcolor{comment}{ * above Copyright Notice, and the following Disclaimer and Export Compliance}}
+\DoxyCodeLine{69 \textcolor{comment}{ * provision in the documentation and/or other materials provided with the}}
+\DoxyCodeLine{70 \textcolor{comment}{ * distribution.}}
+\DoxyCodeLine{71 \textcolor{comment}{ *}}
+\DoxyCodeLine{72 \textcolor{comment}{ * 3.4. Intel retains all right, title, and interest in and to the Original}}
+\DoxyCodeLine{73 \textcolor{comment}{ * Intel Code.}}
+\DoxyCodeLine{74 \textcolor{comment}{ *}}
+\DoxyCodeLine{75 \textcolor{comment}{ * 3.5. Neither the name Intel nor any other trademark owned or controlled by}}
+\DoxyCodeLine{76 \textcolor{comment}{ * Intel shall be used in advertising or otherwise to promote the sale, use or}}
+\DoxyCodeLine{77 \textcolor{comment}{ * other dealings in products derived from or relating to the Covered Code}}
+\DoxyCodeLine{78 \textcolor{comment}{ * without prior written authorization from Intel.}}
+\DoxyCodeLine{79 \textcolor{comment}{ *}}
+\DoxyCodeLine{80 \textcolor{comment}{ * 4. Disclaimer and Export Compliance}}
+\DoxyCodeLine{81 \textcolor{comment}{ *}}
+\DoxyCodeLine{82 \textcolor{comment}{ * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED}}
+\DoxyCodeLine{83 \textcolor{comment}{ * HERE. ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE}}
+\DoxyCodeLine{84 \textcolor{comment}{ * IS PROVIDED "{}AS IS,"{} AND INTEL WILL NOT PROVIDE ANY SUPPORT, ASSISTANCE,}}
+\DoxyCodeLine{85 \textcolor{comment}{ * INSTALLATION, TRAINING OR OTHER SERVICES. INTEL WILL NOT PROVIDE ANY}}
+\DoxyCodeLine{86 \textcolor{comment}{ * UPDATES, ENHANCEMENTS OR EXTENSIONS. INTEL SPECIFICALLY DISCLAIMS ANY}}
+\DoxyCodeLine{87 \textcolor{comment}{ * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A}}
+\DoxyCodeLine{88 \textcolor{comment}{ * PARTICULAR PURPOSE.}}
+\DoxyCodeLine{89 \textcolor{comment}{ *}}
+\DoxyCodeLine{90 \textcolor{comment}{ * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES}}
+\DoxyCodeLine{91 \textcolor{comment}{ * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR}}
+\DoxyCodeLine{92 \textcolor{comment}{ * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,}}
+\DoxyCodeLine{93 \textcolor{comment}{ * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY}}
+\DoxyCodeLine{94 \textcolor{comment}{ * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL}}
+\DoxyCodeLine{95 \textcolor{comment}{ * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES. THESE LIMITATIONS}}
+\DoxyCodeLine{96 \textcolor{comment}{ * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY}}
+\DoxyCodeLine{97 \textcolor{comment}{ * LIMITED REMEDY.}}
+\DoxyCodeLine{98 \textcolor{comment}{ *}}
+\DoxyCodeLine{99 \textcolor{comment}{ * 4.3. Licensee shall not export, either directly or indirectly, any of this}}
+\DoxyCodeLine{100 \textcolor{comment}{ * software or system incorporating such software without first obtaining any}}
+\DoxyCodeLine{101 \textcolor{comment}{ * required license or other approval from the U. S. Department of Commerce or}}
+\DoxyCodeLine{102 \textcolor{comment}{ * any other agency or department of the United States Government. In the}}
+\DoxyCodeLine{103 \textcolor{comment}{ * event Licensee exports any such software from the United States or}}
+\DoxyCodeLine{104 \textcolor{comment}{ * re-\/exports any such software from a foreign destination, Licensee shall}}
+\DoxyCodeLine{105 \textcolor{comment}{ * ensure that the distribution and export/re-\/export of the software is in}}
+\DoxyCodeLine{106 \textcolor{comment}{ * compliance with all laws, regulations, orders, or other restrictions of the}}
+\DoxyCodeLine{107 \textcolor{comment}{ * U.S. Export Administration Regulations. Licensee agrees that neither it nor}}
+\DoxyCodeLine{108 \textcolor{comment}{ * any of its subsidiaries will export/re-\/export any technical data, process,}}
+\DoxyCodeLine{109 \textcolor{comment}{ * software, or service, directly or indirectly, to any country for which the}}
+\DoxyCodeLine{110 \textcolor{comment}{ * United States government or any agency thereof requires an export license,}}
+\DoxyCodeLine{111 \textcolor{comment}{ * other governmental approval, or letter of assurance, without first obtaining}}
+\DoxyCodeLine{112 \textcolor{comment}{ * such license, approval or letter.}}
+\DoxyCodeLine{113 \textcolor{comment}{ *}}
+\DoxyCodeLine{114 \textcolor{comment}{ *****************************************************************************}}
+\DoxyCodeLine{115 \textcolor{comment}{ *}}
+\DoxyCodeLine{116 \textcolor{comment}{ * Alternatively, you may choose to be licensed under the terms of the}}
+\DoxyCodeLine{117 \textcolor{comment}{ * following license:}}
+\DoxyCodeLine{118 \textcolor{comment}{ *}}
+\DoxyCodeLine{119 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{120 \textcolor{comment}{ * modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{121 \textcolor{comment}{ * are met:}}
+\DoxyCodeLine{122 \textcolor{comment}{ * 1. Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{123 \textcolor{comment}{ *    notice, this list of conditions, and the following disclaimer,}}
+\DoxyCodeLine{124 \textcolor{comment}{ *    without modification.}}
+\DoxyCodeLine{125 \textcolor{comment}{ * 2. Redistributions in binary form must reproduce at minimum a disclaimer}}
+\DoxyCodeLine{126 \textcolor{comment}{ *    substantially similar to the "{}NO WARRANTY"{} disclaimer below}}
+\DoxyCodeLine{127 \textcolor{comment}{ *    ("{}Disclaimer"{}) and any redistribution must be conditioned upon}}
+\DoxyCodeLine{128 \textcolor{comment}{ *    including a substantially similar Disclaimer requirement for further}}
+\DoxyCodeLine{129 \textcolor{comment}{ *    binary redistribution.}}
+\DoxyCodeLine{130 \textcolor{comment}{ * 3. Neither the names of the above-\/listed copyright holders nor the names}}
+\DoxyCodeLine{131 \textcolor{comment}{ *    of any contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{132 \textcolor{comment}{ *    from this software without specific prior written permission.}}
+\DoxyCodeLine{133 \textcolor{comment}{ *}}
+\DoxyCodeLine{134 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS}}
+\DoxyCodeLine{135 \textcolor{comment}{ * "{}AS IS"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT}}
+\DoxyCodeLine{136 \textcolor{comment}{ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR}}
+\DoxyCodeLine{137 \textcolor{comment}{ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT}}
+\DoxyCodeLine{138 \textcolor{comment}{ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,}}
+\DoxyCodeLine{139 \textcolor{comment}{ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT}}
+\DoxyCodeLine{140 \textcolor{comment}{ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,}}
+\DoxyCodeLine{141 \textcolor{comment}{ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY}}
+\DoxyCodeLine{142 \textcolor{comment}{ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{143 \textcolor{comment}{ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{144 \textcolor{comment}{ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{145 \textcolor{comment}{ *}}
+\DoxyCodeLine{146 \textcolor{comment}{ * Alternatively, you may choose to be licensed under the terms of the}}
+\DoxyCodeLine{147 \textcolor{comment}{ * GNU General Public License ("{}GPL"{}) version 2 as published by the Free}}
+\DoxyCodeLine{148 \textcolor{comment}{ * Software Foundation.}}
+\DoxyCodeLine{149 \textcolor{comment}{ *}}
+\DoxyCodeLine{150 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{151 }
+\DoxyCodeLine{152 \textcolor{preprocessor}{\#ifndef \_\_ACENV\_H\_\_}}
+\DoxyCodeLine{153 \textcolor{preprocessor}{\#define \_\_ACENV\_H\_\_}}
+\DoxyCodeLine{154 }
+\DoxyCodeLine{155 \textcolor{comment}{/*}}
+\DoxyCodeLine{156 \textcolor{comment}{ * Environment configuration. The purpose of this file is to interface ACPICA}}
+\DoxyCodeLine{157 \textcolor{comment}{ * to the local environment. This includes compiler-\/specific, OS-\/specific,}}
+\DoxyCodeLine{158 \textcolor{comment}{ * and machine-\/specific configuration.}}
+\DoxyCodeLine{159 \textcolor{comment}{ */}}
+\DoxyCodeLine{160 }
+\DoxyCodeLine{161 \textcolor{comment}{/* Types for ACPI\_MUTEX\_TYPE */}}
+\DoxyCodeLine{162 }
+\DoxyCodeLine{163 \textcolor{preprocessor}{\#define ACPI\_BINARY\_SEMAPHORE       0}}
+\DoxyCodeLine{164 \textcolor{preprocessor}{\#define ACPI\_OSL\_MUTEX              1}}
+\DoxyCodeLine{165 }
+\DoxyCodeLine{166 \textcolor{comment}{/* Types for DEBUGGER\_THREADING */}}
+\DoxyCodeLine{167 }
+\DoxyCodeLine{168 \textcolor{preprocessor}{\#define DEBUGGER\_SINGLE\_THREADED    0}}
+\DoxyCodeLine{169 \textcolor{preprocessor}{\#define DEBUGGER\_MULTI\_THREADED     1}}
+\DoxyCodeLine{170 }
+\DoxyCodeLine{171 }
+\DoxyCodeLine{172 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{173 \textcolor{comment}{ *}}
+\DoxyCodeLine{174 \textcolor{comment}{ * Configuration for ACPI tools and utilities}}
+\DoxyCodeLine{175 \textcolor{comment}{ *}}
+\DoxyCodeLine{176 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{177 }
+\DoxyCodeLine{178 \textcolor{comment}{/* Common application configuration. All single threaded except for AcpiExec. */}}
+\DoxyCodeLine{179 }
+\DoxyCodeLine{180 \textcolor{preprocessor}{\#if (defined ACPI\_ASL\_COMPILER) || \(\backslash\)}}
+\DoxyCodeLine{181 \textcolor{preprocessor}{    (defined ACPI\_BIN\_APP)      || \(\backslash\)}}
+\DoxyCodeLine{182 \textcolor{preprocessor}{    (defined ACPI\_DUMP\_APP)     || \(\backslash\)}}
+\DoxyCodeLine{183 \textcolor{preprocessor}{    (defined ACPI\_HELP\_APP)     || \(\backslash\)}}
+\DoxyCodeLine{184 \textcolor{preprocessor}{    (defined ACPI\_NAMES\_APP)    || \(\backslash\)}}
+\DoxyCodeLine{185 \textcolor{preprocessor}{    (defined ACPI\_SRC\_APP)      || \(\backslash\)}}
+\DoxyCodeLine{186 \textcolor{preprocessor}{    (defined ACPI\_XTRACT\_APP)   || \(\backslash\)}}
+\DoxyCodeLine{187 \textcolor{preprocessor}{    (defined ACPI\_EXAMPLE\_APP)  || \(\backslash\)}}
+\DoxyCodeLine{188 \textcolor{preprocessor}{    (defined ACPI\_EFI\_HELLO)}}
+\DoxyCodeLine{189 \textcolor{preprocessor}{\#define ACPI\_APPLICATION}}
+\DoxyCodeLine{190 \textcolor{preprocessor}{\#define ACPI\_SINGLE\_THREADED}}
+\DoxyCodeLine{191 \textcolor{preprocessor}{\#define USE\_NATIVE\_ALLOCATE\_ZEROED}}
+\DoxyCodeLine{192 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{193 }
+\DoxyCodeLine{194 \textcolor{comment}{/* iASL configuration */}}
+\DoxyCodeLine{195 }
+\DoxyCodeLine{196 \textcolor{preprocessor}{\#ifdef ACPI\_ASL\_COMPILER}}
+\DoxyCodeLine{197 \textcolor{preprocessor}{\#undef ACPI\_DEBUG\_OUTPUT}}
+\DoxyCodeLine{198 \textcolor{preprocessor}{\#define ACPI\_CONSTANT\_EVAL\_ONLY}}
+\DoxyCodeLine{199 \textcolor{preprocessor}{\#define ACPI\_LARGE\_NAMESPACE\_NODE}}
+\DoxyCodeLine{200 \textcolor{preprocessor}{\#define ACPI\_DATA\_TABLE\_DISASSEMBLY}}
+\DoxyCodeLine{201 \textcolor{preprocessor}{\#define ACPI\_32BIT\_PHYSICAL\_ADDRESS}}
+\DoxyCodeLine{202 \textcolor{preprocessor}{\#define ACPI\_DISASSEMBLER 1}}
+\DoxyCodeLine{203 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{204 }
+\DoxyCodeLine{205 \textcolor{comment}{/* AcpiExec configuration. Multithreaded with full AML debugger */}}
+\DoxyCodeLine{206 }
+\DoxyCodeLine{207 \textcolor{preprocessor}{\#ifdef ACPI\_EXEC\_APP}}
+\DoxyCodeLine{208 \textcolor{preprocessor}{\#define ACPI\_APPLICATION}}
+\DoxyCodeLine{209 \textcolor{preprocessor}{\#undef ACPI\_FULL\_DEBUG}}
+\DoxyCodeLine{210 \textcolor{preprocessor}{\#define ACPI\_MUTEX\_DEBUG}}
+\DoxyCodeLine{211 \textcolor{preprocessor}{\#define ACPI\_DBG\_TRACK\_ALLOCATIONS}}
+\DoxyCodeLine{212 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{213 }
+\DoxyCodeLine{214 \textcolor{comment}{/* AcpiHelp configuration. Error messages disabled. */}}
+\DoxyCodeLine{215 }
+\DoxyCodeLine{216 \textcolor{preprocessor}{\#ifdef ACPI\_HELP\_APP}}
+\DoxyCodeLine{217 \textcolor{preprocessor}{\#define ACPI\_NO\_ERROR\_MESSAGES}}
+\DoxyCodeLine{218 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{219 }
+\DoxyCodeLine{220 \textcolor{comment}{/* AcpiNames configuration. Debug output enabled. */}}
+\DoxyCodeLine{221 }
+\DoxyCodeLine{222 \textcolor{preprocessor}{\#ifdef ACPI\_NAMES\_APP}}
+\DoxyCodeLine{223 \textcolor{preprocessor}{\#undef ACPI\_DEBUG\_OUTPUT}}
+\DoxyCodeLine{224 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{225 }
+\DoxyCodeLine{226 \textcolor{comment}{/* AcpiExec/AcpiNames/Example configuration. Native RSDP used. */}}
+\DoxyCodeLine{227 }
+\DoxyCodeLine{228 \textcolor{preprocessor}{\#if (defined ACPI\_EXEC\_APP)     || \(\backslash\)}}
+\DoxyCodeLine{229 \textcolor{preprocessor}{    (defined ACPI\_EXAMPLE\_APP)  || \(\backslash\)}}
+\DoxyCodeLine{230 \textcolor{preprocessor}{    (defined ACPI\_NAMES\_APP)}}
+\DoxyCodeLine{231 \textcolor{preprocessor}{\#define ACPI\_USE\_NATIVE\_RSDP\_POINTER}}
+\DoxyCodeLine{232 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{233 }
+\DoxyCodeLine{234 \textcolor{comment}{/* AcpiDump configuration. Native mapping used if provided by the host */}}
+\DoxyCodeLine{235 }
+\DoxyCodeLine{236 \textcolor{preprocessor}{\#ifdef ACPI\_DUMP\_APP}}
+\DoxyCodeLine{237 \textcolor{preprocessor}{\#define ACPI\_USE\_NATIVE\_MEMORY\_MAPPING}}
+\DoxyCodeLine{238 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{239 }
+\DoxyCodeLine{240 \textcolor{comment}{/* AcpiNames/Example configuration. Hardware disabled */}}
+\DoxyCodeLine{241 }
+\DoxyCodeLine{242 \textcolor{preprocessor}{\#if (defined ACPI\_EXAMPLE\_APP)  || \(\backslash\)}}
+\DoxyCodeLine{243 \textcolor{preprocessor}{    (defined ACPI\_NAMES\_APP)}}
+\DoxyCodeLine{244 \textcolor{preprocessor}{\#define ACPI\_REDUCED\_HARDWARE 1}}
+\DoxyCodeLine{245 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{246 }
+\DoxyCodeLine{247 \textcolor{comment}{/* Linkable ACPICA library. Two versions, one with full debug. */}}
+\DoxyCodeLine{248 }
+\DoxyCodeLine{249 \textcolor{preprocessor}{\#ifdef ACPI\_LIBRARY}}
+\DoxyCodeLine{250 \textcolor{preprocessor}{\#define ACPI\_USE\_LOCAL\_CACHE}}
+\DoxyCodeLine{251 \textcolor{preprocessor}{\#define ACPI\_DEBUGGER 1}}
+\DoxyCodeLine{252 \textcolor{preprocessor}{\#define ACPI\_DISASSEMBLER 1}}
+\DoxyCodeLine{253 }
+\DoxyCodeLine{254 \textcolor{preprocessor}{\#ifdef \_DEBUG}}
+\DoxyCodeLine{255 \textcolor{preprocessor}{\#undef ACPI\_DEBUG\_OUTPUT}}
+\DoxyCodeLine{256 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{257 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{258 }
+\DoxyCodeLine{259 \textcolor{comment}{/* Common for all ACPICA applications */}}
+\DoxyCodeLine{260 }
+\DoxyCodeLine{261 \textcolor{preprocessor}{\#ifdef ACPI\_APPLICATION}}
+\DoxyCodeLine{262 \textcolor{preprocessor}{\#define ACPI\_USE\_LOCAL\_CACHE}}
+\DoxyCodeLine{263 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{264 }
+\DoxyCodeLine{265 \textcolor{comment}{/* Common debug/disassembler support */}}
+\DoxyCodeLine{266 }
+\DoxyCodeLine{267 \textcolor{preprocessor}{\#ifdef ACPI\_FULL\_DEBUG}}
+\DoxyCodeLine{268 \textcolor{preprocessor}{\#define ACPI\_DEBUG\_OUTPUT}}
+\DoxyCodeLine{269 \textcolor{preprocessor}{\#define ACPI\_DEBUGGER 1}}
+\DoxyCodeLine{270 \textcolor{preprocessor}{\#define ACPI\_DISASSEMBLER 1}}
+\DoxyCodeLine{271 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{272 }
+\DoxyCodeLine{273 \textcolor{preprocessor}{\#undef ACPI\_DEBUGGER}}
+\DoxyCodeLine{274 }
+\DoxyCodeLine{275 \textcolor{comment}{/*}}
+\DoxyCodeLine{276 \textcolor{comment}{ * acpisrc CR\(\backslash\)LF support}}
+\DoxyCodeLine{277 \textcolor{comment}{ * Unix file line endings do not include the carriage return.}}
+\DoxyCodeLine{278 \textcolor{comment}{ * If the acpisrc utility is being built using a microsoft compiler, it means}}
+\DoxyCodeLine{279 \textcolor{comment}{ * that it will be running on a windows machine which means that the output is}}
+\DoxyCodeLine{280 \textcolor{comment}{ * expected to have CR/LF newlines. If the acpisrc utility is built with}}
+\DoxyCodeLine{281 \textcolor{comment}{ * anything else, it will likely run on a system with LF newlines. This flag}}
+\DoxyCodeLine{282 \textcolor{comment}{ * tells the acpisrc utility that newlines will be in the LF format.}}
+\DoxyCodeLine{283 \textcolor{comment}{ */}}
+\DoxyCodeLine{284 \textcolor{preprocessor}{\#if defined(ACPI\_SRC\_APP) \&\& !defined(\_MSC\_VER)}}
+\DoxyCodeLine{285 \textcolor{preprocessor}{\#define ACPI\_SRC\_OS\_LF\_ONLY 1}}
+\DoxyCodeLine{286 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{287 \textcolor{preprocessor}{\#define ACPI\_SRC\_OS\_LF\_ONLY 0}}
+\DoxyCodeLine{288 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{289 }
+\DoxyCodeLine{292 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{293 \textcolor{comment}{ *}}
+\DoxyCodeLine{294 \textcolor{comment}{ * Host configuration files. The compiler configuration files are included}}
+\DoxyCodeLine{295 \textcolor{comment}{ * first.}}
+\DoxyCodeLine{296 \textcolor{comment}{ *}}
+\DoxyCodeLine{297 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{298 }
+\DoxyCodeLine{299 \textcolor{preprocessor}{\#if defined(\_\_GNUC\_\_) \&\& !defined(\_\_INTEL\_COMPILER)}}
+\DoxyCodeLine{300 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{acgcc_8h}{acgcc.h}}"{}}}
+\DoxyCodeLine{301 }
+\DoxyCodeLine{302 \textcolor{preprocessor}{\#elif defined(\_MSC\_VER)}}
+\DoxyCodeLine{303 \textcolor{preprocessor}{\#include "{}acmsvc.h"{}}}
+\DoxyCodeLine{304 }
+\DoxyCodeLine{305 \textcolor{preprocessor}{\#elif defined(\_\_INTEL\_COMPILER)}}
+\DoxyCodeLine{306 \textcolor{preprocessor}{\#include "{}acintel.h"{}}}
+\DoxyCodeLine{307 }
+\DoxyCodeLine{308 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{309 }
+\DoxyCodeLine{310 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{acbanana_8h}{acbanana.h}}"{}}}
+\DoxyCodeLine{311 }
+\DoxyCodeLine{312 }
+\DoxyCodeLine{316 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{317 \textcolor{comment}{ *}}
+\DoxyCodeLine{318 \textcolor{comment}{ * Setup defaults for the required symbols that were not defined in one of}}
+\DoxyCodeLine{319 \textcolor{comment}{ * the host/compiler files above.}}
+\DoxyCodeLine{320 \textcolor{comment}{ *}}
+\DoxyCodeLine{321 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{322 }
+\DoxyCodeLine{323 \textcolor{comment}{/* 64-\/bit data types */}}
+\DoxyCodeLine{324 }
+\DoxyCodeLine{325 \textcolor{preprocessor}{\#ifndef COMPILER\_DEPENDENT\_INT64}}
+\DoxyCodeLine{326 \textcolor{preprocessor}{\#define COMPILER\_DEPENDENT\_INT64   long long}}
+\DoxyCodeLine{327 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{328 }
+\DoxyCodeLine{329 \textcolor{preprocessor}{\#ifndef COMPILER\_DEPENDENT\_UINT64}}
+\DoxyCodeLine{330 \textcolor{preprocessor}{\#define COMPILER\_DEPENDENT\_UINT64  unsigned long long}}
+\DoxyCodeLine{331 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{332 }
+\DoxyCodeLine{333 \textcolor{comment}{/* Type of mutex supported by host. Default is binary semaphores. */}}
+\DoxyCodeLine{334 }
+\DoxyCodeLine{335 \textcolor{preprocessor}{\#ifndef ACPI\_MUTEX\_TYPE}}
+\DoxyCodeLine{336 \textcolor{preprocessor}{\#define ACPI\_MUTEX\_TYPE             ACPI\_BINARY\_SEMAPHORE}}
+\DoxyCodeLine{337 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{338 }
+\DoxyCodeLine{339 \textcolor{comment}{/* Global Lock acquire/release */}}
+\DoxyCodeLine{340 }
+\DoxyCodeLine{341 \textcolor{preprocessor}{\#ifndef ACPI\_ACQUIRE\_GLOBAL\_LOCK}}
+\DoxyCodeLine{342 \textcolor{preprocessor}{\#define ACPI\_ACQUIRE\_GLOBAL\_LOCK(GLptr, Acquired) Acquired = 1}}
+\DoxyCodeLine{343 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{344 }
+\DoxyCodeLine{345 \textcolor{preprocessor}{\#ifndef ACPI\_RELEASE\_GLOBAL\_LOCK}}
+\DoxyCodeLine{346 \textcolor{preprocessor}{\#define ACPI\_RELEASE\_GLOBAL\_LOCK(GLptr, Pending) Pending = 0}}
+\DoxyCodeLine{347 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{348 }
+\DoxyCodeLine{349 \textcolor{comment}{/* Flush CPU cache -\/ used when going to sleep. Wbinvd or similar. */}}
+\DoxyCodeLine{350 }
+\DoxyCodeLine{351 \textcolor{preprocessor}{\#ifndef ACPI\_FLUSH\_CPU\_CACHE}}
+\DoxyCodeLine{352 \textcolor{preprocessor}{\#define ACPI\_FLUSH\_CPU\_CACHE()}}
+\DoxyCodeLine{353 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{354 }
+\DoxyCodeLine{355 \textcolor{comment}{/* "{}inline"{} keywords -\/ configurable since inline is not standardized */}}
+\DoxyCodeLine{356 }
+\DoxyCodeLine{357 \textcolor{preprocessor}{\#ifndef ACPI\_INLINE}}
+\DoxyCodeLine{358 \textcolor{preprocessor}{\#define ACPI\_INLINE}}
+\DoxyCodeLine{359 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{360 }
+\DoxyCodeLine{361 \textcolor{comment}{/* Use ordered initialization if compiler doesn't support designated. */}}
+\DoxyCodeLine{362 \textcolor{preprocessor}{\#ifndef ACPI\_STRUCT\_INIT}}
+\DoxyCodeLine{363 \textcolor{preprocessor}{\#define ACPI\_STRUCT\_INIT(field, value)  value}}
+\DoxyCodeLine{364 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{365 }
+\DoxyCodeLine{366 \textcolor{comment}{/*}}
+\DoxyCodeLine{367 \textcolor{comment}{ * Configurable calling conventions:}}
+\DoxyCodeLine{368 \textcolor{comment}{ *}}
+\DoxyCodeLine{369 \textcolor{comment}{ * ACPI\_SYSTEM\_XFACE        -\/ Interfaces to host OS (handlers, threads)}}
+\DoxyCodeLine{370 \textcolor{comment}{ * ACPI\_EXTERNAL\_XFACE      -\/ External ACPI interfaces}}
+\DoxyCodeLine{371 \textcolor{comment}{ * ACPI\_INTERNAL\_XFACE      -\/ Internal ACPI interfaces}}
+\DoxyCodeLine{372 \textcolor{comment}{ * ACPI\_INTERNAL\_VAR\_XFACE  -\/ Internal variable-\/parameter list interfaces}}
+\DoxyCodeLine{373 \textcolor{comment}{ */}}
+\DoxyCodeLine{374 \textcolor{preprocessor}{\#ifndef ACPI\_SYSTEM\_XFACE}}
+\DoxyCodeLine{375 \textcolor{preprocessor}{\#define ACPI\_SYSTEM\_XFACE}}
+\DoxyCodeLine{376 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{377 }
+\DoxyCodeLine{378 \textcolor{preprocessor}{\#ifndef ACPI\_EXTERNAL\_XFACE}}
+\DoxyCodeLine{379 \textcolor{preprocessor}{\#define ACPI\_EXTERNAL\_XFACE}}
+\DoxyCodeLine{380 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{381 }
+\DoxyCodeLine{382 \textcolor{preprocessor}{\#ifndef ACPI\_INTERNAL\_XFACE}}
+\DoxyCodeLine{383 \textcolor{preprocessor}{\#define ACPI\_INTERNAL\_XFACE}}
+\DoxyCodeLine{384 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{385 }
+\DoxyCodeLine{386 \textcolor{preprocessor}{\#ifndef ACPI\_INTERNAL\_VAR\_XFACE}}
+\DoxyCodeLine{387 \textcolor{preprocessor}{\#define ACPI\_INTERNAL\_VAR\_XFACE}}
+\DoxyCodeLine{388 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{389 }
+\DoxyCodeLine{390 }
+\DoxyCodeLine{391 \textcolor{comment}{/*}}
+\DoxyCodeLine{392 \textcolor{comment}{ * Debugger threading model}}
+\DoxyCodeLine{393 \textcolor{comment}{ * Use single threaded if the entire subsystem is contained in an application}}
+\DoxyCodeLine{394 \textcolor{comment}{ * Use multiple threaded when the subsystem is running in the kernel.}}
+\DoxyCodeLine{395 \textcolor{comment}{ *}}
+\DoxyCodeLine{396 \textcolor{comment}{ * By default the model is single threaded if ACPI\_APPLICATION is set,}}
+\DoxyCodeLine{397 \textcolor{comment}{ * multi-\/threaded if ACPI\_APPLICATION is not set.}}
+\DoxyCodeLine{398 \textcolor{comment}{ */}}
+\DoxyCodeLine{399 \textcolor{preprocessor}{\#ifndef DEBUGGER\_THREADING}}
+\DoxyCodeLine{400 \textcolor{preprocessor}{\#if !defined (ACPI\_APPLICATION) || defined (ACPI\_EXEC\_APP)}}
+\DoxyCodeLine{401 \textcolor{preprocessor}{\#define DEBUGGER\_THREADING          DEBUGGER\_MULTI\_THREADED}}
+\DoxyCodeLine{402 }
+\DoxyCodeLine{403 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{404 \textcolor{preprocessor}{\#define DEBUGGER\_THREADING          DEBUGGER\_SINGLE\_THREADED}}
+\DoxyCodeLine{405 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{406 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* !DEBUGGER\_THREADING */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{407 }
+\DoxyCodeLine{408 }
+\DoxyCodeLine{409 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{410 \textcolor{comment}{ *}}
+\DoxyCodeLine{411 \textcolor{comment}{ * C library configuration}}
+\DoxyCodeLine{412 \textcolor{comment}{ *}}
+\DoxyCodeLine{413 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{414 }
+\DoxyCodeLine{415 \textcolor{comment}{/*}}
+\DoxyCodeLine{416 \textcolor{comment}{ * ACPI\_USE\_SYSTEM\_CLIBRARY -\/ Define this if linking to an actual C library.}}
+\DoxyCodeLine{417 \textcolor{comment}{ *      Otherwise, local versions of string/memory functions will be used.}}
+\DoxyCodeLine{418 \textcolor{comment}{ * ACPI\_USE\_STANDARD\_HEADERS -\/ Define this if linking to a C library and}}
+\DoxyCodeLine{419 \textcolor{comment}{ *      the standard header files may be used. Defining this implies that}}
+\DoxyCodeLine{420 \textcolor{comment}{ *      ACPI\_USE\_SYSTEM\_CLIBRARY has been defined.}}
+\DoxyCodeLine{421 \textcolor{comment}{ *}}
+\DoxyCodeLine{422 \textcolor{comment}{ * The ACPICA subsystem only uses low level C library functions that do not}}
+\DoxyCodeLine{423 \textcolor{comment}{ * call operating system services and may therefore be inlined in the code.}}
+\DoxyCodeLine{424 \textcolor{comment}{ *}}
+\DoxyCodeLine{425 \textcolor{comment}{ * It may be necessary to tailor these include files to the target}}
+\DoxyCodeLine{426 \textcolor{comment}{ * generation environment.}}
+\DoxyCodeLine{427 \textcolor{comment}{ */}}
+\DoxyCodeLine{428 }
+\DoxyCodeLine{429 \textcolor{comment}{/* Use the standard C library headers. We want to keep these to a minimum. */}}
+\DoxyCodeLine{430 }
+\DoxyCodeLine{431 }
+\DoxyCodeLine{432 \textcolor{preprocessor}{\#define ACPI\_FILE              void *}}
+\DoxyCodeLine{433 \textcolor{preprocessor}{\#define ACPI\_FILE\_OUT          NULL}}
+\DoxyCodeLine{434 \textcolor{preprocessor}{\#define ACPI\_FILE\_ERR          NULL}}
+\DoxyCodeLine{435 }
+\DoxyCodeLine{436 \textcolor{preprocessor}{\#ifndef ACPI\_INIT\_FUNCTION}}
+\DoxyCodeLine{437 \textcolor{preprocessor}{\#define ACPI\_INIT\_FUNCTION}}
+\DoxyCodeLine{438 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{439 }
+\DoxyCodeLine{440 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_ACENV\_H\_\_ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

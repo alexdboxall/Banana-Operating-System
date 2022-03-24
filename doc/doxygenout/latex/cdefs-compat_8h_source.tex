@@ -1,0 +1,88 @@
+\hypertarget{cdefs-compat_8h_source}{}\doxysection{cdefs-\/compat.h}
+\label{cdefs-compat_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/libk/\_mathinc/cdefs-\/compat.h@{C:/Users/Alex/Desktop/Banana/kernel/libk/\_mathinc/cdefs-\/compat.h}}
+\mbox{\hyperlink{cdefs-compat_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_CDEFS\_COMPAT\_H\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_CDEFS\_COMPAT\_H\_}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#if !defined(\_\_BEGIN\_DECLS)}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#if defined(\_\_cplusplus)}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#define \_\_BEGIN\_DECLS   extern "{}C"{}} \{}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#define \_\_END\_DECLS \}}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#define \_\_BEGIN\_DECLS}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#define \_\_END\_DECLS}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* !defined(\_\_BEGIN\_DECLS) */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#ifdef \_\_GNUC\_\_}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#ifndef \_\_strong\_reference}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#ifdef \_\_APPLE\_\_}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#define \_\_strong\_reference(sym,aliassym) \_\_weak\_reference(sym,aliassym)}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#define \_\_strong\_reference(sym,aliassym)    \(\backslash\)}}
+\DoxyCodeLine{20 \textcolor{preprocessor}{    OLM\_DLLEXPORT extern \_\_typeof (sym) aliassym \_\_attribute\_\_ ((\_\_alias\_\_ (\#sym)));}}
+\DoxyCodeLine{21 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_APPLE\_\_ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{22 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_strong\_reference */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24 \textcolor{preprocessor}{\#ifndef \_\_weak\_reference}}
+\DoxyCodeLine{25 \textcolor{preprocessor}{\#ifdef \_\_ELF\_\_}}
+\DoxyCodeLine{26 \textcolor{preprocessor}{\#ifdef \_\_STDC\_\_}}
+\DoxyCodeLine{27 \textcolor{preprocessor}{\#define \_\_weak\_reference(sym,alias) \(\backslash\)}}
+\DoxyCodeLine{28 \textcolor{preprocessor}{    \_\_asm\_\_("{}.weak "{}} \#alias);   \(\backslash\)}
+\DoxyCodeLine{29     \_\_asm\_\_("{}.equ "{}  \#alias "{}, "{} \#sym)}
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#ifndef \_\_warn\_references}}
+\DoxyCodeLine{31 \textcolor{preprocessor}{\#define \_\_warn\_references(sym,msg)  \(\backslash\)}}
+\DoxyCodeLine{32 \textcolor{preprocessor}{    \_\_asm\_\_("{}.section .gnu.warning."{}} \#sym); \(\backslash\)}
+\DoxyCodeLine{33     \_\_asm\_\_("{}.asciz \(\backslash\)"{}"{} msg "{}\(\backslash\)"{}"{});  \(\backslash\)}
+\DoxyCodeLine{34     \_\_asm\_\_("{}.previous"{})}
+\DoxyCodeLine{35 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_warn\_references */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#define \_\_weak\_reference(sym,alias) \(\backslash\)}}
+\DoxyCodeLine{38 \textcolor{preprocessor}{    \_\_asm\_\_("{}.weak alias"{}});     \(\backslash\)}
+\DoxyCodeLine{39     \_\_asm\_\_("{}.equ alias, sym"{})}
+\DoxyCodeLine{40 \textcolor{preprocessor}{\#ifndef \_\_warn\_references}}
+\DoxyCodeLine{41 \textcolor{preprocessor}{\#define \_\_warn\_references(sym,msg)  \(\backslash\)}}
+\DoxyCodeLine{42 \textcolor{preprocessor}{    \_\_asm\_\_("{}.section .gnu.warning.sym"{}}); \(\backslash\)}
+\DoxyCodeLine{43     \_\_asm\_\_("{}.asciz \(\backslash\)"{}msg\(\backslash\)"{}"{});  \(\backslash\)}
+\DoxyCodeLine{44     \_\_asm\_\_("{}.previous"{})}
+\DoxyCodeLine{45 \textcolor{preprocessor}{\#endif  }\textcolor{comment}{/* \_\_warn\_references */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{46 \textcolor{preprocessor}{\#endif  }\textcolor{comment}{/* \_\_STDC\_\_ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{47 \textcolor{preprocessor}{\#elif defined(\_\_clang\_\_) }\textcolor{comment}{/* CLANG */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{48 \textcolor{preprocessor}{\#ifdef \_\_STDC\_\_}}
+\DoxyCodeLine{49 \textcolor{preprocessor}{\#define \_\_weak\_reference(sym,alias)     \(\backslash\)}}
+\DoxyCodeLine{50 \textcolor{preprocessor}{    \_\_asm\_\_("{}.weak\_reference "{}} \#alias); \(\backslash\)}
+\DoxyCodeLine{51     \_\_asm\_\_("{}.set "{} \#alias "{}, "{} \#sym)}
+\DoxyCodeLine{52 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{53 \textcolor{preprocessor}{\#define \_\_weak\_reference(sym,alias)     \(\backslash\)}}
+\DoxyCodeLine{54 \textcolor{preprocessor}{    \_\_asm\_\_("{}.weak\_reference alias"{}});\(\backslash\)}
+\DoxyCodeLine{55     \_\_asm\_\_("{}.set alias, sym"{})}
+\DoxyCodeLine{56 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{57 \textcolor{preprocessor}{\#else   }\textcolor{comment}{/* !\_\_ELF\_\_ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{58 \textcolor{preprocessor}{\#ifdef \_\_STDC\_\_}}
+\DoxyCodeLine{59 \textcolor{preprocessor}{\#define \_\_weak\_reference(sym,alias) \(\backslash\)}}
+\DoxyCodeLine{60 \textcolor{preprocessor}{    \_\_asm\_\_("{}.stabs \(\backslash\)"{}\_"{}} \#alias "{}\(\backslash\)"{},11,0,0,0"{}); \(\backslash\)}
+\DoxyCodeLine{61     \_\_asm\_\_("{}.stabs \(\backslash\)"{}\_"{} \#sym "{}\(\backslash\)"{},1,0,0,0"{})}
+\DoxyCodeLine{62 \textcolor{preprocessor}{\#ifndef \_\_warn\_references}}
+\DoxyCodeLine{63 \textcolor{preprocessor}{\#define \_\_warn\_references(sym,msg)  \(\backslash\)}}
+\DoxyCodeLine{64 \textcolor{preprocessor}{    \_\_asm\_\_("{}.stabs \(\backslash\)"{}"{}} msg "{}\(\backslash\)"{},30,0,0,0"{});     \(\backslash\)}
+\DoxyCodeLine{65     \_\_asm\_\_("{}.stabs \(\backslash\)"{}\_"{} \#sym "{}\(\backslash\)"{},1,0,0,0"{})}
+\DoxyCodeLine{66 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_warn\_references */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{67 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{68 \textcolor{preprocessor}{\#define \_\_weak\_reference(sym,alias) \(\backslash\)}}
+\DoxyCodeLine{69 \textcolor{preprocessor}{    \_\_asm\_\_("{}.stabs \(\backslash\)"{}\_/**/alias\(\backslash\)"{},11,0,0,0"{}});  \(\backslash\)}
+\DoxyCodeLine{70     \_\_asm\_\_("{}.stabs \(\backslash\)"{}\_/**/sym\(\backslash\)"{},1,0,0,0"{})}
+\DoxyCodeLine{71 \textcolor{preprocessor}{\#ifndef \_\_warn\_references}}
+\DoxyCodeLine{72 \textcolor{preprocessor}{\#define \_\_warn\_references(sym,msg)  \(\backslash\)}}
+\DoxyCodeLine{73 \textcolor{preprocessor}{    \_\_asm\_\_("{}.stabs msg,30,0,0,0"{}});         \(\backslash\)}
+\DoxyCodeLine{74     \_\_asm\_\_("{}.stabs \(\backslash\)"{}\_/**/sym\(\backslash\)"{},1,0,0,0"{})}
+\DoxyCodeLine{75 \textcolor{preprocessor}{\#endif  }\textcolor{comment}{/* \_\_warn\_references */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{76 \textcolor{preprocessor}{\#endif  }\textcolor{comment}{/* \_\_STDC\_\_ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{77 \textcolor{preprocessor}{\#endif  }\textcolor{comment}{/* \_\_ELF\_\_ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{78 \textcolor{preprocessor}{\#endif  }\textcolor{comment}{/* \_\_weak\_reference */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{79 \textcolor{preprocessor}{\#endif  }\textcolor{comment}{/* \_\_GNUC\_\_ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{80 }
+\DoxyCodeLine{81 }
+\DoxyCodeLine{82 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_CDEFS\_COMPAT\_H\_ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

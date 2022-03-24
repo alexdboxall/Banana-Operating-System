@@ -1,0 +1,42 @@
+\hypertarget{getvgaptr_8cpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/sys/getvgaptr.cpp File Reference}
+\label{getvgaptr_8cpp}\index{C:/Users/Alex/Desktop/Banana/kernel/sys/getvgaptr.cpp@{C:/Users/Alex/Desktop/Banana/kernel/sys/getvgaptr.cpp}}
+{\ttfamily \#include \char`\"{}thr/prcssthr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}sys/syscalls.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hal/intctrl.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}fs/vfs.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/cpu.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hal/timer.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hal/device.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hal/vcache.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/virtmgr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/physmgr.\+hpp\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+uint64\+\_\+t \mbox{\hyperlink{getvgaptr_8cpp_add2a10c6050718e604690b8e987beb4e}{Sys\+Get\+VGAPtr}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Returns a task\textquotesingle{}s terminal data for use by CONHOST.\+EXE. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{getvgaptr_8cpp_add2a10c6050718e604690b8e987beb4e}\label{getvgaptr_8cpp_add2a10c6050718e604690b8e987beb4e}} 
+\index{getvgaptr.cpp@{getvgaptr.cpp}!SysGetVGAPtr@{SysGetVGAPtr}}
+\index{SysGetVGAPtr@{SysGetVGAPtr}!getvgaptr.cpp@{getvgaptr.cpp}}
+\doxysubsubsection{\texorpdfstring{SysGetVGAPtr()}{SysGetVGAPtr()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Get\+VGAPtr (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Returns a task\textquotesingle{}s terminal data for use by CONHOST.\+EXE. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ebx} & Pointer to store 4096 bytes of data, 4000 of characters, then width (4 bytes), height (4 bytes) and GUI state (0 = terminal, 1 = GUI) (4 bytes). After that is the terminal\textquotesingle{}s name.\\
+\hline
+{\em ecx} & The PID of the task.\\
+\hline
+{\em edx} & If this is set to a non-\/zero value, the terminal will become the active terminal.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if good, 1 if bad.
+\end{DoxyReturn}

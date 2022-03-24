@@ -1,0 +1,121 @@
+\hypertarget{sata_8cpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/hw/diskphys/sata.cpp File Reference}
+\label{sata_8cpp}\index{C:/Users/Alex/Desktop/Banana/kernel/hw/diskphys/sata.cpp@{C:/Users/Alex/Desktop/Banana/kernel/hw/diskphys/sata.cpp}}
+{\ttfamily \#include \char`\"{}hw/diskphys/sata.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/diskphys/ata.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/diskctrl/ide.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/diskctrl/satabus.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/hal.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/acpi.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/physmgr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/virtmgr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/common.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}thr/prcssthr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hal/vcache.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hal/logidisk.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/cpu.\+hpp\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{sata_8cpp_a32b0d71691c7e21ded44e462fe3de8db}{ATA\+\_\+\+DEV\+\_\+\+BUSY}}~0x80
+\item 
+\#define \mbox{\hyperlink{sata_8cpp_af12bdbc024458d3a760650e93bc32cb3}{ATA\+\_\+\+DEV\+\_\+\+DRQ}}~0x08
+\item 
+\#define \mbox{\hyperlink{sata_8cpp_a469ab8af9bf8f1f89a5c8f79b2305e34}{HBA\+\_\+\+Px\+CMD\+\_\+\+ST}}~0x0001
+\item 
+\#define \mbox{\hyperlink{sata_8cpp_a27978dd2aac599cbd0330c923652c6e4}{HBA\+\_\+\+Px\+CMD\+\_\+\+FRE}}~0x0010
+\item 
+\#define \mbox{\hyperlink{sata_8cpp_a93f2b1904299d4d1920e65039ff7ce5c}{HBA\+\_\+\+Px\+CMD\+\_\+\+FR}}~0x4000
+\item 
+\#define \mbox{\hyperlink{sata_8cpp_ad2550f8f63fa32140f93da1b95354cf6}{HBA\+\_\+\+Px\+CMD\+\_\+\+CR}}~0x8000
+\item 
+\#define \mbox{\hyperlink{sata_8cpp_a11add414188662b170c68ead95a786d8}{HBA\+\_\+\+Px\+IS\+\_\+\+TFES}}~(1 $<$$<$ 30)
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{sata_8cpp_a0d226f6357648d4208ab902e2f23b267}{combine\+Char\+And\+Colour}} (char \mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}, uint8\+\_\+t \mbox{\hyperlink{syscalls_8cpp_ab0ea24539a2252176fffac31d88365ba}{d}})
+\item 
+uint8\+\_\+t \mbox{\hyperlink{sata_8cpp_a878a1bb7ade834f730fdc37aaee0aff5}{combine\+Colours}} (uint8\+\_\+t a, uint8\+\_\+t \mbox{\hyperlink{syscalls_8cpp_a99ed6187132780a335e6db030a0115e7}{b}})
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{sata_8cpp_a9e0c1101b4e09b097f4540f6493369fa}{ata\+Sectors\+Read}}
+\item 
+int \mbox{\hyperlink{sata_8cpp_a2e7d9fc8508a1d46109414d4fb410acd}{ata\+Sectors\+Written}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{sata_8cpp_a32b0d71691c7e21ded44e462fe3de8db}\label{sata_8cpp_a32b0d71691c7e21ded44e462fe3de8db}} 
+\index{sata.cpp@{sata.cpp}!ATA\_DEV\_BUSY@{ATA\_DEV\_BUSY}}
+\index{ATA\_DEV\_BUSY@{ATA\_DEV\_BUSY}!sata.cpp@{sata.cpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_DEV\_BUSY}{ATA\_DEV\_BUSY}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+DEV\+\_\+\+BUSY~0x80}
+
+\mbox{\Hypertarget{sata_8cpp_af12bdbc024458d3a760650e93bc32cb3}\label{sata_8cpp_af12bdbc024458d3a760650e93bc32cb3}} 
+\index{sata.cpp@{sata.cpp}!ATA\_DEV\_DRQ@{ATA\_DEV\_DRQ}}
+\index{ATA\_DEV\_DRQ@{ATA\_DEV\_DRQ}!sata.cpp@{sata.cpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_DEV\_DRQ}{ATA\_DEV\_DRQ}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+DEV\+\_\+\+DRQ~0x08}
+
+\mbox{\Hypertarget{sata_8cpp_ad2550f8f63fa32140f93da1b95354cf6}\label{sata_8cpp_ad2550f8f63fa32140f93da1b95354cf6}} 
+\index{sata.cpp@{sata.cpp}!HBA\_PxCMD\_CR@{HBA\_PxCMD\_CR}}
+\index{HBA\_PxCMD\_CR@{HBA\_PxCMD\_CR}!sata.cpp@{sata.cpp}}
+\doxysubsubsection{\texorpdfstring{HBA\_PxCMD\_CR}{HBA\_PxCMD\_CR}}
+{\footnotesize\ttfamily \#define HBA\+\_\+\+Px\+CMD\+\_\+\+CR~0x8000}
+
+\mbox{\Hypertarget{sata_8cpp_a93f2b1904299d4d1920e65039ff7ce5c}\label{sata_8cpp_a93f2b1904299d4d1920e65039ff7ce5c}} 
+\index{sata.cpp@{sata.cpp}!HBA\_PxCMD\_FR@{HBA\_PxCMD\_FR}}
+\index{HBA\_PxCMD\_FR@{HBA\_PxCMD\_FR}!sata.cpp@{sata.cpp}}
+\doxysubsubsection{\texorpdfstring{HBA\_PxCMD\_FR}{HBA\_PxCMD\_FR}}
+{\footnotesize\ttfamily \#define HBA\+\_\+\+Px\+CMD\+\_\+\+FR~0x4000}
+
+\mbox{\Hypertarget{sata_8cpp_a27978dd2aac599cbd0330c923652c6e4}\label{sata_8cpp_a27978dd2aac599cbd0330c923652c6e4}} 
+\index{sata.cpp@{sata.cpp}!HBA\_PxCMD\_FRE@{HBA\_PxCMD\_FRE}}
+\index{HBA\_PxCMD\_FRE@{HBA\_PxCMD\_FRE}!sata.cpp@{sata.cpp}}
+\doxysubsubsection{\texorpdfstring{HBA\_PxCMD\_FRE}{HBA\_PxCMD\_FRE}}
+{\footnotesize\ttfamily \#define HBA\+\_\+\+Px\+CMD\+\_\+\+FRE~0x0010}
+
+\mbox{\Hypertarget{sata_8cpp_a469ab8af9bf8f1f89a5c8f79b2305e34}\label{sata_8cpp_a469ab8af9bf8f1f89a5c8f79b2305e34}} 
+\index{sata.cpp@{sata.cpp}!HBA\_PxCMD\_ST@{HBA\_PxCMD\_ST}}
+\index{HBA\_PxCMD\_ST@{HBA\_PxCMD\_ST}!sata.cpp@{sata.cpp}}
+\doxysubsubsection{\texorpdfstring{HBA\_PxCMD\_ST}{HBA\_PxCMD\_ST}}
+{\footnotesize\ttfamily \#define HBA\+\_\+\+Px\+CMD\+\_\+\+ST~0x0001}
+
+\mbox{\Hypertarget{sata_8cpp_a11add414188662b170c68ead95a786d8}\label{sata_8cpp_a11add414188662b170c68ead95a786d8}} 
+\index{sata.cpp@{sata.cpp}!HBA\_PxIS\_TFES@{HBA\_PxIS\_TFES}}
+\index{HBA\_PxIS\_TFES@{HBA\_PxIS\_TFES}!sata.cpp@{sata.cpp}}
+\doxysubsubsection{\texorpdfstring{HBA\_PxIS\_TFES}{HBA\_PxIS\_TFES}}
+{\footnotesize\ttfamily \#define HBA\+\_\+\+Px\+IS\+\_\+\+TFES~(1 $<$$<$ 30)}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{sata_8cpp_a0d226f6357648d4208ab902e2f23b267}\label{sata_8cpp_a0d226f6357648d4208ab902e2f23b267}} 
+\index{sata.cpp@{sata.cpp}!combineCharAndColour@{combineCharAndColour}}
+\index{combineCharAndColour@{combineCharAndColour}!sata.cpp@{sata.cpp}}
+\doxysubsubsection{\texorpdfstring{combineCharAndColour()}{combineCharAndColour()}}
+{\footnotesize\ttfamily uint16\+\_\+t combine\+Char\+And\+Colour (\begin{DoxyParamCaption}\item[{char}]{c,  }\item[{uint8\+\_\+t}]{d }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{sata_8cpp_a878a1bb7ade834f730fdc37aaee0aff5}\label{sata_8cpp_a878a1bb7ade834f730fdc37aaee0aff5}} 
+\index{sata.cpp@{sata.cpp}!combineColours@{combineColours}}
+\index{combineColours@{combineColours}!sata.cpp@{sata.cpp}}
+\doxysubsubsection{\texorpdfstring{combineColours()}{combineColours()}}
+{\footnotesize\ttfamily uint8\+\_\+t combine\+Colours (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{a,  }\item[{uint8\+\_\+t}]{b }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{sata_8cpp_a9e0c1101b4e09b097f4540f6493369fa}\label{sata_8cpp_a9e0c1101b4e09b097f4540f6493369fa}} 
+\index{sata.cpp@{sata.cpp}!ataSectorsRead@{ataSectorsRead}}
+\index{ataSectorsRead@{ataSectorsRead}!sata.cpp@{sata.cpp}}
+\doxysubsubsection{\texorpdfstring{ataSectorsRead}{ataSectorsRead}}
+{\footnotesize\ttfamily int ata\+Sectors\+Read\hspace{0.3cm}{\ttfamily [extern]}}
+
+\mbox{\Hypertarget{sata_8cpp_a2e7d9fc8508a1d46109414d4fb410acd}\label{sata_8cpp_a2e7d9fc8508a1d46109414d4fb410acd}} 
+\index{sata.cpp@{sata.cpp}!ataSectorsWritten@{ataSectorsWritten}}
+\index{ataSectorsWritten@{ataSectorsWritten}!sata.cpp@{sata.cpp}}
+\doxysubsubsection{\texorpdfstring{ataSectorsWritten}{ataSectorsWritten}}
+{\footnotesize\ttfamily int ata\+Sectors\+Written\hspace{0.3cm}{\ttfamily [extern]}}
+

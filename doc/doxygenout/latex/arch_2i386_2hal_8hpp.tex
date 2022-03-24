@@ -1,0 +1,714 @@
+\hypertarget{arch_2i386_2hal_8hpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/arch/i386/hal.hpp File Reference}
+\label{arch_2i386_2hal_8hpp}\index{C:/Users/Alex/Desktop/Banana/kernel/arch/i386/hal.hpp@{C:/Users/Alex/Desktop/Banana/kernel/arch/i386/hal.hpp}}
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stddef.\+h$>$}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}}~inline \mbox{\hyperlink{struct____attribute____}{\+\_\+\+\_\+attribute\+\_\+\+\_\+}}((always\+\_\+inline))
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{arch_2i386_2hal_8hpp_a235176223b3d4074dd13f2d913887b36}{Hal\+Initialise}} ()
+\begin{DoxyCompactList}\small\item\em Initialises the HAL. Should only be called once, and is internal to the kernel. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{arch_2i386_2hal_8hpp_a253bda11278b608ccbfeb3768533a8c4}{Hal\+Initialise\+Coprocessor}} ()
+\begin{DoxyCompactList}\small\item\em Initialies the floating point coprocessor if it exists. Should only be called once, and is internal to the kernel. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{arch_2i386_2hal_8hpp_a27b9b5b1893e1841a353813c5fc5ba27}{Hal\+Received\+NMI}} ()
+\begin{DoxyCompactList}\small\item\em Called when the system receives an NMI. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{arch_2i386_2hal_8hpp_aa852e445f4a2847cd9b8ae6510ba2944}{Hal\+Enable\+NMI}} ()
+\item 
+void \mbox{\hyperlink{arch_2i386_2hal_8hpp_ad17958411f89ef960912e262173d65f4}{Hal\+Disable\+NMI}} ()
+\item 
+bool \mbox{\hyperlink{arch_2i386_2hal_8hpp_a0bfd7f19b52e7077d5d2322b50f19308}{Hal\+Get\+NMIState}} ()
+\item 
+void \mbox{\hyperlink{arch_2i386_2hal_8hpp_a5297851967cfb0210cd477655511c2ba}{Hal\+Detect\+Features}} ()
+\item 
+uint8\+\_\+t $\ast$ \mbox{\hyperlink{arch_2i386_2hal_8hpp_a10bb32d66d845e1579049c6af903b108}{Hal\+Find\+RSDP}} ()
+\item 
+bool \mbox{\hyperlink{arch_2i386_2hal_8hpp_a9994ad18eda5bebaaf48ea148d403954}{Hal\+Handle\+Opcode\+Fault}} (void $\ast$\mbox{\hyperlink{structregs}{regs}}, void $\ast$ctxt)
+\item 
+bool \mbox{\hyperlink{arch_2i386_2hal_8hpp_aa7ff5fb1c06fa629b568830642b4a8b8}{Hal\+Handle\+General\+Protection\+Fault}} (void $\ast$\mbox{\hyperlink{structregs}{regs}}, void $\ast$ctxt)
+\item 
+bool \mbox{\hyperlink{arch_2i386_2hal_8hpp_a6431553a3aeadc3d400b3a65c9a527e2}{Hal\+Handle\+Page\+Fault}} (void $\ast$\mbox{\hyperlink{structregs}{regs}}, void $\ast$ctxt)
+\item 
+void \mbox{\hyperlink{arch_2i386_2hal_8hpp_a3574816ef34bfae4f44054e2a213944f}{Hal\+Display\+Debug\+Info}} (void $\ast$r)
+\item 
+void \mbox{\hyperlink{arch_2i386_2hal_8hpp_ae2fa0a2740cc349af4b5237ce35b9d30}{Hal\+Install\+ISRHandler}} (int num, void($\ast$handler)(\mbox{\hyperlink{structregs}{regs}} $\ast$, void $\ast$), void $\ast$context=0)
+\item 
+int \mbox{\hyperlink{arch_2i386_2hal_8hpp_a2ba7c9ecc494b767c2b6d7ddce4e105f}{Hal\+Install\+IRQHandler}} (int num, void($\ast$handler)(\mbox{\hyperlink{structregs}{regs}} $\ast$, void $\ast$), bool legacy, void $\ast$context=0)
+\item 
+void \mbox{\hyperlink{arch_2i386_2hal_8hpp_a82f53f5cde26cafed4f28d9a5092bf5b}{Hal\+Uninstall\+ISRHandler}} (int num, void($\ast$handler)(\mbox{\hyperlink{structregs}{regs}} $\ast$, void $\ast$))
+\item 
+void \mbox{\hyperlink{arch_2i386_2hal_8hpp_aca4fc813d005a82ce88606eba15359d5}{Hal\+Uninstall\+IRQHandler}} (int num, void($\ast$handler)(\mbox{\hyperlink{structregs}{regs}} $\ast$, void $\ast$), bool legacy)
+\item 
+void \mbox{\hyperlink{arch_2i386_2hal_8hpp_a607e59a8bc44e7107f03090df4e54417}{Hal\+Panic}} (const char $\ast$message)
+\begin{DoxyCompactList}\small\item\em Causes a stop error, for when the system detects an unrecoverable situation which requires a complete lockup of the system. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{arch_2i386_2hal_8hpp_a01c269a06e0c3184a607eb1d3c4027d3}{Hal\+Query\+Performance\+Counter}} ()
+\begin{DoxyCompactList}\small\item\em Returns the value of performance counter (e.\+g. the timestamp counter) if the system has one. If the system has one, all values are expected to be larger than the previously returned value. If the system does not have one, the function shall either return zero or provide a estimate (in which case all values should be larger than the previously returned value). \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{arch_2i386_2hal_8hpp_a2cd9727e49c650a2dcfdb8d2c568fcc9}{Hal\+Make\+Beep}} (int hertz)
+\begin{DoxyCompactList}\small\item\em Causes the speaker to produce a tone at the requested frequency, until this function is called with a frequency of zero. \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{arch_2i386_2hal_8hpp_a9b9d096f749341acd3f791d523534d38}{Hal\+Get\+Rand}} ()
+\begin{DoxyCompactList}\small\item\em Returns a 32-\/bit random value using a hardware RNG generator if available, else it should return zero. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{arch_2i386_2hal_8hpp_aec1000c4c60daab6343cb17865cc1789}{Hal\+End\+Of\+Interrupt}} (int irq)
+\begin{DoxyCompactList}\small\item\em Sends an acknowledgement message to the interrupt controller that the interrupt has been handled. Needs to be called after every interrupt. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{arch_2i386_2hal_8hpp_abf8e081cd17a410eff34db48b0ff0a3b}{Hal\+Restart}} ()
+\begin{DoxyCompactList}\small\item\em Reboots the system immediately. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{arch_2i386_2hal_8hpp_a94ac9d176213d1684a29fb55d46c973b}{Hal\+Shutdown}} ()
+\begin{DoxyCompactList}\small\item\em Performs a system shutdown immediately if supported, otherwise displays a message to the user telling them it is okay to turn off their computer. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{arch_2i386_2hal_8hpp_a934b436fe652e9a95a267469a788c2f5}{Hal\+Sleep}} ()
+\begin{DoxyCompactList}\small\item\em Puts the system to sleep immediately if supported, otherwise does nothing. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{arch_2i386_2hal_8hpp_a4a9e36d88dfd40b6f03fcc7d306247b0}{Hal\+Console\+Scroll}} (int fg, int bg)
+\begin{DoxyCompactList}\small\item\em Scrolls the console by one row, discarding the topmost row\textquotesingle{}s contents. The bottommost row is set to the colours specified as blank characters. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{arch_2i386_2hal_8hpp_a1473cdd4b469dc211b72a19d3be0a2d1}{Hal\+Console\+Write\+Character}} (char \mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}, int fg, int bg, int x, int y)
+\begin{DoxyCompactList}\small\item\em Writes a charcater to the console. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{arch_2i386_2hal_8hpp_a549348050e58d19e2f1029f0aa1a3c8a}{Hal\+Console\+Cursor\+Update}} (int x, int y)
+\begin{DoxyCompactList}\small\item\em Sets the position of the cursor on the console. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{arch_2i386_2hal_8hpp_a5af6602c012a616f81107c0881ff053b}{Hal\+System\+Idle}} ()
+\begin{DoxyCompactList}\small\item\em Called when the system is idle (not running any tasks). It may put the system into a low-\/power mode until the next interrupt, perform background caching / cleaning work, etc. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void $\ast$ \mbox{\hyperlink{arch_2i386_2hal_8hpp_a31dadfc5f1349db64282a134bbcae4d8}{Hal\+Allocate\+Coprocessor\+State}} ()
+\begin{DoxyCompactList}\small\item\em Allocates a buffer which stores the coprocessor state. This buffer is passed into Hal\+Save\+Coprocessor and Hal\+Load\+Coprocessor. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void \mbox{\hyperlink{arch_2i386_2hal_8hpp_aed6b40ea72eed373c24c044db463bb89}{Hal\+Save\+Coprocessor}} (void $\ast$buffer)
+\begin{DoxyCompactList}\small\item\em Saves the coprocessor state to a buffer previously allocated with Hal\+Allocate\+Coprocessor\+State. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void \mbox{\hyperlink{arch_2i386_2hal_8hpp_afd196d9a5d06b8a681310b1fa7e564f8}{Hal\+Flush\+TLB}} ()
+\item 
+\mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void \mbox{\hyperlink{arch_2i386_2hal_8hpp_a82338327a18dc0ba26e6bb18d70bb602}{Hal\+Load\+Coprocessor}} (void $\ast$buffer)
+\begin{DoxyCompactList}\small\item\em Restores the coprocessor state from a buffer previously allocated with Hal\+Allocate\+Coprocessor\+State. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void \mbox{\hyperlink{arch_2i386_2hal_8hpp_a6c97699b802fe6d9efeee960c2df5fda}{Hal\+Enable\+Interrupts}} ()
+\begin{DoxyCompactList}\small\item\em Enables hardware interrupts. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void \mbox{\hyperlink{arch_2i386_2hal_8hpp_a70608b0d4abf79a61c42810a6f44529b}{Hal\+Disable\+Interrupts}} ()
+\begin{DoxyCompactList}\small\item\em Disables hardware interrupts. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void \mbox{\hyperlink{arch_2i386_2hal_8hpp_ad1f92fd989a6966da6809b54c3dd7abd}{Hal\+Stall\+Processor}} ()
+\begin{DoxyCompactList}\small\item\em Waits until the next interrupt. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} uint8\+\_\+t \mbox{\hyperlink{arch_2i386_2hal_8hpp_a2974066bdf70f19db5c59ec18a2cc859}{inb}} (uint16\+\_\+t port)
+\begin{DoxyCompactList}\small\item\em Reads from an 8 bit I/O port. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} uint16\+\_\+t \mbox{\hyperlink{arch_2i386_2hal_8hpp_abc8113b75198b2d15f0bde7fc366a838}{inw}} (uint16\+\_\+t port)
+\begin{DoxyCompactList}\small\item\em Reads from a 16 bit I/O port. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} uint32\+\_\+t \mbox{\hyperlink{arch_2i386_2hal_8hpp_a5f890745a0c8e5e8a3f8982c57d0fbde}{inl}} (uint16\+\_\+t port)
+\begin{DoxyCompactList}\small\item\em Reads from a 32 bit I/O port. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void \mbox{\hyperlink{arch_2i386_2hal_8hpp_a5aeb32acb6fa67460fa4983198384103}{insb}} (uint16\+\_\+t port, void $\ast$addr, size\+\_\+t cnt)
+\begin{DoxyCompactList}\small\item\em Reads from an 8 bit I/O port multiple times, storing the data in a buffer. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void \mbox{\hyperlink{arch_2i386_2hal_8hpp_a9ec3a728ccef965e90c4517710d3ecd5}{insw}} (uint16\+\_\+t port, void $\ast$addr, size\+\_\+t cnt)
+\begin{DoxyCompactList}\small\item\em Reads from a 16 bit I/O port multiple times, storing the data in a buffer. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void \mbox{\hyperlink{arch_2i386_2hal_8hpp_a378c26d2e476b7b59baec6462d99fd6b}{insl}} (uint16\+\_\+t port, void $\ast$addr, size\+\_\+t cnt)
+\begin{DoxyCompactList}\small\item\em Reads from a 32 bit I/O port multiple times, storing the data in a buffer. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void \mbox{\hyperlink{arch_2i386_2hal_8hpp_a6d9469fb913973c17739f9b6f6387068}{outb}} (uint16\+\_\+t port, uint8\+\_\+t \mbox{\hyperlink{unaligned_8hpp_a66c6adb17a64370b8e95c4413da0c1b1}{val}})
+\begin{DoxyCompactList}\small\item\em Writes data to an 8 bit I/O port. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void \mbox{\hyperlink{arch_2i386_2hal_8hpp_ab6306c0e1a1b34c70533c7148644c6f1}{outw}} (uint16\+\_\+t port, uint16\+\_\+t \mbox{\hyperlink{unaligned_8hpp_a66c6adb17a64370b8e95c4413da0c1b1}{val}})
+\begin{DoxyCompactList}\small\item\em Writes data to a 16 bit I/O port. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void \mbox{\hyperlink{arch_2i386_2hal_8hpp_a5d717b17d65d01b081bf262de0c92676}{outl}} (uint16\+\_\+t port, uint32\+\_\+t \mbox{\hyperlink{unaligned_8hpp_a66c6adb17a64370b8e95c4413da0c1b1}{val}})
+\begin{DoxyCompactList}\small\item\em Writes data to a 32 bit I/O port. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void \mbox{\hyperlink{arch_2i386_2hal_8hpp_af23f5e14d5fa0f37c9026152193abc5c}{outsb}} (uint16\+\_\+t port, const void $\ast$addr, size\+\_\+t cnt)
+\begin{DoxyCompactList}\small\item\em Writes from an 8 bit I/O port multiple times, using data from a buffer. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void \mbox{\hyperlink{arch_2i386_2hal_8hpp_a31ae65194e1a2f88fc8e94754e477ad0}{outsw}} (uint16\+\_\+t port, const void $\ast$addr, size\+\_\+t cnt)
+\begin{DoxyCompactList}\small\item\em Writes from a 16 bit I/O port multiple times, using data from a buffer. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void \mbox{\hyperlink{arch_2i386_2hal_8hpp_ac3f63b48627e2e98a2eb9906b237e803}{outsl}} (uint16\+\_\+t port, const void $\ast$addr, size\+\_\+t cnt)
+\begin{DoxyCompactList}\small\item\em Writes from a 32 bit I/O port multiple times, using data from a buffer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+size\+\_\+t \mbox{\hyperlink{arch_2i386_2hal_8hpp_ac6e06fbe07db4b76ddd356468f3f0e45}{Hal\+Page\+Global\+Flag}}
+\item 
+size\+\_\+t \mbox{\hyperlink{arch_2i386_2hal_8hpp_af9ac0b94d0fc3199e9b8cdc5bfc8c3ee}{Hal\+Page\+Write\+Combining\+Flag}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}\label{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}} 
+\index{hal.hpp@{hal.hpp}!INLINEX@{INLINEX}}
+\index{INLINEX@{INLINEX}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{INLINEX}{INLINEX}}
+{\footnotesize\ttfamily \#define INLINEX~inline \mbox{\hyperlink{struct____attribute____}{\+\_\+\+\_\+attribute\+\_\+\+\_\+}}((always\+\_\+inline))}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a31dadfc5f1349db64282a134bbcae4d8}\label{arch_2i386_2hal_8hpp_a31dadfc5f1349db64282a134bbcae4d8}} 
+\index{hal.hpp@{hal.hpp}!HalAllocateCoprocessorState@{HalAllocateCoprocessorState}}
+\index{HalAllocateCoprocessorState@{HalAllocateCoprocessorState}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalAllocateCoprocessorState()}{HalAllocateCoprocessorState()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void $\ast$ Hal\+Allocate\+Coprocessor\+State (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Allocates a buffer which stores the coprocessor state. This buffer is passed into Hal\+Save\+Coprocessor and Hal\+Load\+Coprocessor. 
+
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a549348050e58d19e2f1029f0aa1a3c8a}\label{arch_2i386_2hal_8hpp_a549348050e58d19e2f1029f0aa1a3c8a}} 
+\index{hal.hpp@{hal.hpp}!HalConsoleCursorUpdate@{HalConsoleCursorUpdate}}
+\index{HalConsoleCursorUpdate@{HalConsoleCursorUpdate}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalConsoleCursorUpdate()}{HalConsoleCursorUpdate()}}
+{\footnotesize\ttfamily void Hal\+Console\+Cursor\+Update (\begin{DoxyParamCaption}\item[{int}]{x,  }\item[{int}]{y }\end{DoxyParamCaption})}
+
+
+
+Sets the position of the cursor on the console. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & The X position (from 0-\/79).\\
+\hline
+{\em y} & The Y position (from 0-\/24).\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a4a9e36d88dfd40b6f03fcc7d306247b0}\label{arch_2i386_2hal_8hpp_a4a9e36d88dfd40b6f03fcc7d306247b0}} 
+\index{hal.hpp@{hal.hpp}!HalConsoleScroll@{HalConsoleScroll}}
+\index{HalConsoleScroll@{HalConsoleScroll}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalConsoleScroll()}{HalConsoleScroll()}}
+{\footnotesize\ttfamily void Hal\+Console\+Scroll (\begin{DoxyParamCaption}\item[{int}]{fg,  }\item[{int}]{bg }\end{DoxyParamCaption})}
+
+
+
+Scrolls the console by one row, discarding the topmost row\textquotesingle{}s contents. The bottommost row is set to the colours specified as blank characters. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fg} & The foreground colour for the bottommost row (from 0-\/15, CGA palette).\\
+\hline
+{\em bg} & The background colour for the bottommost row (from 0-\/15, CGA palette).\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a1473cdd4b469dc211b72a19d3be0a2d1}\label{arch_2i386_2hal_8hpp_a1473cdd4b469dc211b72a19d3be0a2d1}} 
+\index{hal.hpp@{hal.hpp}!HalConsoleWriteCharacter@{HalConsoleWriteCharacter}}
+\index{HalConsoleWriteCharacter@{HalConsoleWriteCharacter}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalConsoleWriteCharacter()}{HalConsoleWriteCharacter()}}
+{\footnotesize\ttfamily void Hal\+Console\+Write\+Character (\begin{DoxyParamCaption}\item[{char}]{c,  }\item[{int}]{fg,  }\item[{int}]{bg,  }\item[{int}]{x,  }\item[{int}]{y }\end{DoxyParamCaption})}
+
+
+
+Writes a charcater to the console. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em c} & The character.\\
+\hline
+{\em fg} & The foreground colour (from 0-\/15, CGA palette).\\
+\hline
+{\em bg} & The backgronud colour (from 0-\/15, CGA palette).\\
+\hline
+{\em x} & The X position to write the character (from 0-\/79).\\
+\hline
+{\em y} & The Y position to write the character (from 0-\/24).\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a5297851967cfb0210cd477655511c2ba}\label{arch_2i386_2hal_8hpp_a5297851967cfb0210cd477655511c2ba}} 
+\index{hal.hpp@{hal.hpp}!HalDetectFeatures@{HalDetectFeatures}}
+\index{HalDetectFeatures@{HalDetectFeatures}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalDetectFeatures()}{HalDetectFeatures()}}
+{\footnotesize\ttfamily void Hal\+Detect\+Features (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a70608b0d4abf79a61c42810a6f44529b}\label{arch_2i386_2hal_8hpp_a70608b0d4abf79a61c42810a6f44529b}} 
+\index{hal.hpp@{hal.hpp}!HalDisableInterrupts@{HalDisableInterrupts}}
+\index{HalDisableInterrupts@{HalDisableInterrupts}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalDisableInterrupts()}{HalDisableInterrupts()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void Hal\+Disable\+Interrupts (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Disables hardware interrupts. 
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_ad17958411f89ef960912e262173d65f4}\label{arch_2i386_2hal_8hpp_ad17958411f89ef960912e262173d65f4}} 
+\index{hal.hpp@{hal.hpp}!HalDisableNMI@{HalDisableNMI}}
+\index{HalDisableNMI@{HalDisableNMI}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalDisableNMI()}{HalDisableNMI()}}
+{\footnotesize\ttfamily void Hal\+Disable\+NMI (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a3574816ef34bfae4f44054e2a213944f}\label{arch_2i386_2hal_8hpp_a3574816ef34bfae4f44054e2a213944f}} 
+\index{hal.hpp@{hal.hpp}!HalDisplayDebugInfo@{HalDisplayDebugInfo}}
+\index{HalDisplayDebugInfo@{HalDisplayDebugInfo}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalDisplayDebugInfo()}{HalDisplayDebugInfo()}}
+{\footnotesize\ttfamily void Hal\+Display\+Debug\+Info (\begin{DoxyParamCaption}\item[{void $\ast$}]{r }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a6c97699b802fe6d9efeee960c2df5fda}\label{arch_2i386_2hal_8hpp_a6c97699b802fe6d9efeee960c2df5fda}} 
+\index{hal.hpp@{hal.hpp}!HalEnableInterrupts@{HalEnableInterrupts}}
+\index{HalEnableInterrupts@{HalEnableInterrupts}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalEnableInterrupts()}{HalEnableInterrupts()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void Hal\+Enable\+Interrupts (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Enables hardware interrupts. 
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_aa852e445f4a2847cd9b8ae6510ba2944}\label{arch_2i386_2hal_8hpp_aa852e445f4a2847cd9b8ae6510ba2944}} 
+\index{hal.hpp@{hal.hpp}!HalEnableNMI@{HalEnableNMI}}
+\index{HalEnableNMI@{HalEnableNMI}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalEnableNMI()}{HalEnableNMI()}}
+{\footnotesize\ttfamily void Hal\+Enable\+NMI (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_aec1000c4c60daab6343cb17865cc1789}\label{arch_2i386_2hal_8hpp_aec1000c4c60daab6343cb17865cc1789}} 
+\index{hal.hpp@{hal.hpp}!HalEndOfInterrupt@{HalEndOfInterrupt}}
+\index{HalEndOfInterrupt@{HalEndOfInterrupt}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalEndOfInterrupt()}{HalEndOfInterrupt()}}
+{\footnotesize\ttfamily void Hal\+End\+Of\+Interrupt (\begin{DoxyParamCaption}\item[{int}]{irq }\end{DoxyParamCaption})}
+
+
+
+Sends an acknowledgement message to the interrupt controller that the interrupt has been handled. Needs to be called after every interrupt. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em irq} & The interrupt number to acknowledge.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a10bb32d66d845e1579049c6af903b108}\label{arch_2i386_2hal_8hpp_a10bb32d66d845e1579049c6af903b108}} 
+\index{hal.hpp@{hal.hpp}!HalFindRSDP@{HalFindRSDP}}
+\index{HalFindRSDP@{HalFindRSDP}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalFindRSDP()}{HalFindRSDP()}}
+{\footnotesize\ttfamily uint8\+\_\+t $\ast$ Hal\+Find\+RSDP (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_afd196d9a5d06b8a681310b1fa7e564f8}\label{arch_2i386_2hal_8hpp_afd196d9a5d06b8a681310b1fa7e564f8}} 
+\index{hal.hpp@{hal.hpp}!HalFlushTLB@{HalFlushTLB}}
+\index{HalFlushTLB@{HalFlushTLB}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalFlushTLB()}{HalFlushTLB()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void Hal\+Flush\+TLB (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a0bfd7f19b52e7077d5d2322b50f19308}\label{arch_2i386_2hal_8hpp_a0bfd7f19b52e7077d5d2322b50f19308}} 
+\index{hal.hpp@{hal.hpp}!HalGetNMIState@{HalGetNMIState}}
+\index{HalGetNMIState@{HalGetNMIState}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalGetNMIState()}{HalGetNMIState()}}
+{\footnotesize\ttfamily bool Hal\+Get\+NMIState (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a9b9d096f749341acd3f791d523534d38}\label{arch_2i386_2hal_8hpp_a9b9d096f749341acd3f791d523534d38}} 
+\index{hal.hpp@{hal.hpp}!HalGetRand@{HalGetRand}}
+\index{HalGetRand@{HalGetRand}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalGetRand()}{HalGetRand()}}
+{\footnotesize\ttfamily uint32\+\_\+t Hal\+Get\+Rand (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns a 32-\/bit random value using a hardware RNG generator if available, else it should return zero. 
+
+\begin{DoxyReturn}{Returns}
+A 32-\/bit random value, or zero if hardware RNG is not supported.
+\end{DoxyReturn}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_aa7ff5fb1c06fa629b568830642b4a8b8}\label{arch_2i386_2hal_8hpp_aa7ff5fb1c06fa629b568830642b4a8b8}} 
+\index{hal.hpp@{hal.hpp}!HalHandleGeneralProtectionFault@{HalHandleGeneralProtectionFault}}
+\index{HalHandleGeneralProtectionFault@{HalHandleGeneralProtectionFault}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalHandleGeneralProtectionFault()}{HalHandleGeneralProtectionFault()}}
+{\footnotesize\ttfamily bool Hal\+Handle\+General\+Protection\+Fault (\begin{DoxyParamCaption}\item[{void $\ast$}]{regs,  }\item[{void $\ast$}]{ctxt }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a9994ad18eda5bebaaf48ea148d403954}\label{arch_2i386_2hal_8hpp_a9994ad18eda5bebaaf48ea148d403954}} 
+\index{hal.hpp@{hal.hpp}!HalHandleOpcodeFault@{HalHandleOpcodeFault}}
+\index{HalHandleOpcodeFault@{HalHandleOpcodeFault}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalHandleOpcodeFault()}{HalHandleOpcodeFault()}}
+{\footnotesize\ttfamily bool Hal\+Handle\+Opcode\+Fault (\begin{DoxyParamCaption}\item[{void $\ast$}]{regs,  }\item[{void $\ast$}]{ctxt }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a6431553a3aeadc3d400b3a65c9a527e2}\label{arch_2i386_2hal_8hpp_a6431553a3aeadc3d400b3a65c9a527e2}} 
+\index{hal.hpp@{hal.hpp}!HalHandlePageFault@{HalHandlePageFault}}
+\index{HalHandlePageFault@{HalHandlePageFault}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalHandlePageFault()}{HalHandlePageFault()}}
+{\footnotesize\ttfamily bool Hal\+Handle\+Page\+Fault (\begin{DoxyParamCaption}\item[{void $\ast$}]{regs,  }\item[{void $\ast$}]{ctxt }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a235176223b3d4074dd13f2d913887b36}\label{arch_2i386_2hal_8hpp_a235176223b3d4074dd13f2d913887b36}} 
+\index{hal.hpp@{hal.hpp}!HalInitialise@{HalInitialise}}
+\index{HalInitialise@{HalInitialise}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalInitialise()}{HalInitialise()}}
+{\footnotesize\ttfamily void Hal\+Initialise (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Initialises the HAL. Should only be called once, and is internal to the kernel. 
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a253bda11278b608ccbfeb3768533a8c4}\label{arch_2i386_2hal_8hpp_a253bda11278b608ccbfeb3768533a8c4}} 
+\index{hal.hpp@{hal.hpp}!HalInitialiseCoprocessor@{HalInitialiseCoprocessor}}
+\index{HalInitialiseCoprocessor@{HalInitialiseCoprocessor}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalInitialiseCoprocessor()}{HalInitialiseCoprocessor()}}
+{\footnotesize\ttfamily void Hal\+Initialise\+Coprocessor (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Initialies the floating point coprocessor if it exists. Should only be called once, and is internal to the kernel. 
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a2ba7c9ecc494b767c2b6d7ddce4e105f}\label{arch_2i386_2hal_8hpp_a2ba7c9ecc494b767c2b6d7ddce4e105f}} 
+\index{hal.hpp@{hal.hpp}!HalInstallIRQHandler@{HalInstallIRQHandler}}
+\index{HalInstallIRQHandler@{HalInstallIRQHandler}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalInstallIRQHandler()}{HalInstallIRQHandler()}}
+{\footnotesize\ttfamily int Hal\+Install\+IRQHandler (\begin{DoxyParamCaption}\item[{int}]{num,  }\item[{void($\ast$)(\mbox{\hyperlink{structregs}{regs}} $\ast$, void $\ast$)}]{handler,  }\item[{bool}]{legacy,  }\item[{void $\ast$}]{context = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_ae2fa0a2740cc349af4b5237ce35b9d30}\label{arch_2i386_2hal_8hpp_ae2fa0a2740cc349af4b5237ce35b9d30}} 
+\index{hal.hpp@{hal.hpp}!HalInstallISRHandler@{HalInstallISRHandler}}
+\index{HalInstallISRHandler@{HalInstallISRHandler}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalInstallISRHandler()}{HalInstallISRHandler()}}
+{\footnotesize\ttfamily void Hal\+Install\+ISRHandler (\begin{DoxyParamCaption}\item[{int}]{num,  }\item[{void($\ast$)(\mbox{\hyperlink{structregs}{regs}} $\ast$, void $\ast$)}]{handler,  }\item[{void $\ast$}]{context = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a82338327a18dc0ba26e6bb18d70bb602}\label{arch_2i386_2hal_8hpp_a82338327a18dc0ba26e6bb18d70bb602}} 
+\index{hal.hpp@{hal.hpp}!HalLoadCoprocessor@{HalLoadCoprocessor}}
+\index{HalLoadCoprocessor@{HalLoadCoprocessor}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalLoadCoprocessor()}{HalLoadCoprocessor()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void Hal\+Load\+Coprocessor (\begin{DoxyParamCaption}\item[{void $\ast$}]{buffer }\end{DoxyParamCaption})}
+
+
+
+Restores the coprocessor state from a buffer previously allocated with Hal\+Allocate\+Coprocessor\+State. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em buffer} & The buffer to load the data from.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a2cd9727e49c650a2dcfdb8d2c568fcc9}\label{arch_2i386_2hal_8hpp_a2cd9727e49c650a2dcfdb8d2c568fcc9}} 
+\index{hal.hpp@{hal.hpp}!HalMakeBeep@{HalMakeBeep}}
+\index{HalMakeBeep@{HalMakeBeep}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalMakeBeep()}{HalMakeBeep()}}
+{\footnotesize\ttfamily void Hal\+Make\+Beep (\begin{DoxyParamCaption}\item[{int}]{hertz }\end{DoxyParamCaption})}
+
+
+
+Causes the speaker to produce a tone at the requested frequency, until this function is called with a frequency of zero. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em hertz} & The frequency to produce, or zero to stop.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a607e59a8bc44e7107f03090df4e54417}\label{arch_2i386_2hal_8hpp_a607e59a8bc44e7107f03090df4e54417}} 
+\index{hal.hpp@{hal.hpp}!HalPanic@{HalPanic}}
+\index{HalPanic@{HalPanic}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalPanic()}{HalPanic()}}
+{\footnotesize\ttfamily void Hal\+Panic (\begin{DoxyParamCaption}\item[{const char $\ast$}]{message }\end{DoxyParamCaption})}
+
+
+
+Causes a stop error, for when the system detects an unrecoverable situation which requires a complete lockup of the system. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em message} & The error message to display to the user.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a01c269a06e0c3184a607eb1d3c4027d3}\label{arch_2i386_2hal_8hpp_a01c269a06e0c3184a607eb1d3c4027d3}} 
+\index{hal.hpp@{hal.hpp}!HalQueryPerformanceCounter@{HalQueryPerformanceCounter}}
+\index{HalQueryPerformanceCounter@{HalQueryPerformanceCounter}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalQueryPerformanceCounter()}{HalQueryPerformanceCounter()}}
+{\footnotesize\ttfamily uint64\+\_\+t Hal\+Query\+Performance\+Counter (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns the value of performance counter (e.\+g. the timestamp counter) if the system has one. If the system has one, all values are expected to be larger than the previously returned value. If the system does not have one, the function shall either return zero or provide a estimate (in which case all values should be larger than the previously returned value). 
+
+\begin{DoxyReturn}{Returns}
+The current value of the performance counter.
+\end{DoxyReturn}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a27b9b5b1893e1841a353813c5fc5ba27}\label{arch_2i386_2hal_8hpp_a27b9b5b1893e1841a353813c5fc5ba27}} 
+\index{hal.hpp@{hal.hpp}!HalReceivedNMI@{HalReceivedNMI}}
+\index{HalReceivedNMI@{HalReceivedNMI}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalReceivedNMI()}{HalReceivedNMI()}}
+{\footnotesize\ttfamily void Hal\+Received\+NMI (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Called when the system receives an NMI. 
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_abf8e081cd17a410eff34db48b0ff0a3b}\label{arch_2i386_2hal_8hpp_abf8e081cd17a410eff34db48b0ff0a3b}} 
+\index{hal.hpp@{hal.hpp}!HalRestart@{HalRestart}}
+\index{HalRestart@{HalRestart}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalRestart()}{HalRestart()}}
+{\footnotesize\ttfamily void Hal\+Restart (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Reboots the system immediately. 
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_aed6b40ea72eed373c24c044db463bb89}\label{arch_2i386_2hal_8hpp_aed6b40ea72eed373c24c044db463bb89}} 
+\index{hal.hpp@{hal.hpp}!HalSaveCoprocessor@{HalSaveCoprocessor}}
+\index{HalSaveCoprocessor@{HalSaveCoprocessor}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalSaveCoprocessor()}{HalSaveCoprocessor()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void Hal\+Save\+Coprocessor (\begin{DoxyParamCaption}\item[{void $\ast$}]{buffer }\end{DoxyParamCaption})}
+
+
+
+Saves the coprocessor state to a buffer previously allocated with Hal\+Allocate\+Coprocessor\+State. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em buffer} & The buffer to save the data to.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a94ac9d176213d1684a29fb55d46c973b}\label{arch_2i386_2hal_8hpp_a94ac9d176213d1684a29fb55d46c973b}} 
+\index{hal.hpp@{hal.hpp}!HalShutdown@{HalShutdown}}
+\index{HalShutdown@{HalShutdown}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalShutdown()}{HalShutdown()}}
+{\footnotesize\ttfamily void Hal\+Shutdown (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Performs a system shutdown immediately if supported, otherwise displays a message to the user telling them it is okay to turn off their computer. 
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a934b436fe652e9a95a267469a788c2f5}\label{arch_2i386_2hal_8hpp_a934b436fe652e9a95a267469a788c2f5}} 
+\index{hal.hpp@{hal.hpp}!HalSleep@{HalSleep}}
+\index{HalSleep@{HalSleep}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalSleep()}{HalSleep()}}
+{\footnotesize\ttfamily void Hal\+Sleep (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Puts the system to sleep immediately if supported, otherwise does nothing. 
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_ad1f92fd989a6966da6809b54c3dd7abd}\label{arch_2i386_2hal_8hpp_ad1f92fd989a6966da6809b54c3dd7abd}} 
+\index{hal.hpp@{hal.hpp}!HalStallProcessor@{HalStallProcessor}}
+\index{HalStallProcessor@{HalStallProcessor}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalStallProcessor()}{HalStallProcessor()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void Hal\+Stall\+Processor (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Waits until the next interrupt. 
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a5af6602c012a616f81107c0881ff053b}\label{arch_2i386_2hal_8hpp_a5af6602c012a616f81107c0881ff053b}} 
+\index{hal.hpp@{hal.hpp}!HalSystemIdle@{HalSystemIdle}}
+\index{HalSystemIdle@{HalSystemIdle}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalSystemIdle()}{HalSystemIdle()}}
+{\footnotesize\ttfamily void Hal\+System\+Idle (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Called when the system is idle (not running any tasks). It may put the system into a low-\/power mode until the next interrupt, perform background caching / cleaning work, etc. 
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_aca4fc813d005a82ce88606eba15359d5}\label{arch_2i386_2hal_8hpp_aca4fc813d005a82ce88606eba15359d5}} 
+\index{hal.hpp@{hal.hpp}!HalUninstallIRQHandler@{HalUninstallIRQHandler}}
+\index{HalUninstallIRQHandler@{HalUninstallIRQHandler}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalUninstallIRQHandler()}{HalUninstallIRQHandler()}}
+{\footnotesize\ttfamily void Hal\+Uninstall\+IRQHandler (\begin{DoxyParamCaption}\item[{int}]{num,  }\item[{void($\ast$)(\mbox{\hyperlink{structregs}{regs}} $\ast$, void $\ast$)}]{handler,  }\item[{bool}]{legacy }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a82f53f5cde26cafed4f28d9a5092bf5b}\label{arch_2i386_2hal_8hpp_a82f53f5cde26cafed4f28d9a5092bf5b}} 
+\index{hal.hpp@{hal.hpp}!HalUninstallISRHandler@{HalUninstallISRHandler}}
+\index{HalUninstallISRHandler@{HalUninstallISRHandler}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalUninstallISRHandler()}{HalUninstallISRHandler()}}
+{\footnotesize\ttfamily void Hal\+Uninstall\+ISRHandler (\begin{DoxyParamCaption}\item[{int}]{num,  }\item[{void($\ast$)(\mbox{\hyperlink{structregs}{regs}} $\ast$, void $\ast$)}]{handler }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a2974066bdf70f19db5c59ec18a2cc859}\label{arch_2i386_2hal_8hpp_a2974066bdf70f19db5c59ec18a2cc859}} 
+\index{hal.hpp@{hal.hpp}!inb@{inb}}
+\index{inb@{inb}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{inb()}{inb()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} uint8\+\_\+t inb (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{port }\end{DoxyParamCaption})}
+
+
+
+Reads from an 8 bit I/O port. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em port} & The port number.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The data received.
+\end{DoxyReturn}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a5f890745a0c8e5e8a3f8982c57d0fbde}\label{arch_2i386_2hal_8hpp_a5f890745a0c8e5e8a3f8982c57d0fbde}} 
+\index{hal.hpp@{hal.hpp}!inl@{inl}}
+\index{inl@{inl}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{inl()}{inl()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} uint32\+\_\+t inl (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{port }\end{DoxyParamCaption})}
+
+
+
+Reads from a 32 bit I/O port. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em port} & The port number.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The data received.
+\end{DoxyReturn}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a5aeb32acb6fa67460fa4983198384103}\label{arch_2i386_2hal_8hpp_a5aeb32acb6fa67460fa4983198384103}} 
+\index{hal.hpp@{hal.hpp}!insb@{insb}}
+\index{insb@{insb}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{insb()}{insb()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void insb (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{port,  }\item[{void $\ast$}]{addr,  }\item[{size\+\_\+t}]{cnt }\end{DoxyParamCaption})}
+
+
+
+Reads from an 8 bit I/O port multiple times, storing the data in a buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em port} & The port number.\\
+\hline
+{\em addr} & The buffer address.\\
+\hline
+{\em cnt} & The number of 8 bit values to read from the port.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a378c26d2e476b7b59baec6462d99fd6b}\label{arch_2i386_2hal_8hpp_a378c26d2e476b7b59baec6462d99fd6b}} 
+\index{hal.hpp@{hal.hpp}!insl@{insl}}
+\index{insl@{insl}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{insl()}{insl()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void insl (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{port,  }\item[{void $\ast$}]{addr,  }\item[{size\+\_\+t}]{cnt }\end{DoxyParamCaption})}
+
+
+
+Reads from a 32 bit I/O port multiple times, storing the data in a buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em port} & The port number.\\
+\hline
+{\em addr} & The buffer address.\\
+\hline
+{\em cnt} & The number of 32 bit values to read from the port.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a9ec3a728ccef965e90c4517710d3ecd5}\label{arch_2i386_2hal_8hpp_a9ec3a728ccef965e90c4517710d3ecd5}} 
+\index{hal.hpp@{hal.hpp}!insw@{insw}}
+\index{insw@{insw}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{insw()}{insw()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void insw (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{port,  }\item[{void $\ast$}]{addr,  }\item[{size\+\_\+t}]{cnt }\end{DoxyParamCaption})}
+
+
+
+Reads from a 16 bit I/O port multiple times, storing the data in a buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em port} & The port number.\\
+\hline
+{\em addr} & The buffer address.\\
+\hline
+{\em cnt} & The number of 16 bit values to read from the port.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_abc8113b75198b2d15f0bde7fc366a838}\label{arch_2i386_2hal_8hpp_abc8113b75198b2d15f0bde7fc366a838}} 
+\index{hal.hpp@{hal.hpp}!inw@{inw}}
+\index{inw@{inw}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{inw()}{inw()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} uint16\+\_\+t inw (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{port }\end{DoxyParamCaption})}
+
+
+
+Reads from a 16 bit I/O port. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em port} & The port number.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The data received.
+\end{DoxyReturn}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a6d9469fb913973c17739f9b6f6387068}\label{arch_2i386_2hal_8hpp_a6d9469fb913973c17739f9b6f6387068}} 
+\index{hal.hpp@{hal.hpp}!outb@{outb}}
+\index{outb@{outb}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{outb()}{outb()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void outb (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{port,  }\item[{uint8\+\_\+t}]{val }\end{DoxyParamCaption})}
+
+
+
+Writes data to an 8 bit I/O port. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em port} & The port number.\\
+\hline
+{\em val} & The value to write.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a5d717b17d65d01b081bf262de0c92676}\label{arch_2i386_2hal_8hpp_a5d717b17d65d01b081bf262de0c92676}} 
+\index{hal.hpp@{hal.hpp}!outl@{outl}}
+\index{outl@{outl}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{outl()}{outl()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void outl (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{port,  }\item[{uint32\+\_\+t}]{val }\end{DoxyParamCaption})}
+
+
+
+Writes data to a 32 bit I/O port. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em port} & The port number.\\
+\hline
+{\em val} & The value to write.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_af23f5e14d5fa0f37c9026152193abc5c}\label{arch_2i386_2hal_8hpp_af23f5e14d5fa0f37c9026152193abc5c}} 
+\index{hal.hpp@{hal.hpp}!outsb@{outsb}}
+\index{outsb@{outsb}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{outsb()}{outsb()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void outsb (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{port,  }\item[{const void $\ast$}]{addr,  }\item[{size\+\_\+t}]{cnt }\end{DoxyParamCaption})}
+
+
+
+Writes from an 8 bit I/O port multiple times, using data from a buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em port} & The port number.\\
+\hline
+{\em addr} & The buffer address.\\
+\hline
+{\em cnt} & The number of 8 bit values to write to the port.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_ac3f63b48627e2e98a2eb9906b237e803}\label{arch_2i386_2hal_8hpp_ac3f63b48627e2e98a2eb9906b237e803}} 
+\index{hal.hpp@{hal.hpp}!outsl@{outsl}}
+\index{outsl@{outsl}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{outsl()}{outsl()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void outsl (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{port,  }\item[{const void $\ast$}]{addr,  }\item[{size\+\_\+t}]{cnt }\end{DoxyParamCaption})}
+
+
+
+Writes from a 32 bit I/O port multiple times, using data from a buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em port} & The port number.\\
+\hline
+{\em addr} & The buffer address.\\
+\hline
+{\em cnt} & The number of 32 bit values to write to the port.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_a31ae65194e1a2f88fc8e94754e477ad0}\label{arch_2i386_2hal_8hpp_a31ae65194e1a2f88fc8e94754e477ad0}} 
+\index{hal.hpp@{hal.hpp}!outsw@{outsw}}
+\index{outsw@{outsw}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{outsw()}{outsw()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void outsw (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{port,  }\item[{const void $\ast$}]{addr,  }\item[{size\+\_\+t}]{cnt }\end{DoxyParamCaption})}
+
+
+
+Writes from a 16 bit I/O port multiple times, using data from a buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em port} & The port number.\\
+\hline
+{\em addr} & The buffer address.\\
+\hline
+{\em cnt} & The number of 16 bit values to write to the port.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_ab6306c0e1a1b34c70533c7148644c6f1}\label{arch_2i386_2hal_8hpp_ab6306c0e1a1b34c70533c7148644c6f1}} 
+\index{hal.hpp@{hal.hpp}!outw@{outw}}
+\index{outw@{outw}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{outw()}{outw()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{arch_2i386_2hal_8hpp_abf17a24257f57ed2c80a3d05e88ff084}{INLINEX}} void outw (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{port,  }\item[{uint16\+\_\+t}]{val }\end{DoxyParamCaption})}
+
+
+
+Writes data to a 16 bit I/O port. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em port} & The port number.\\
+\hline
+{\em val} & The value to write.\\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_ac6e06fbe07db4b76ddd356468f3f0e45}\label{arch_2i386_2hal_8hpp_ac6e06fbe07db4b76ddd356468f3f0e45}} 
+\index{hal.hpp@{hal.hpp}!HalPageGlobalFlag@{HalPageGlobalFlag}}
+\index{HalPageGlobalFlag@{HalPageGlobalFlag}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalPageGlobalFlag}{HalPageGlobalFlag}}
+{\footnotesize\ttfamily size\+\_\+t Hal\+Page\+Global\+Flag\hspace{0.3cm}{\ttfamily [extern]}}
+
+\mbox{\Hypertarget{arch_2i386_2hal_8hpp_af9ac0b94d0fc3199e9b8cdc5bfc8c3ee}\label{arch_2i386_2hal_8hpp_af9ac0b94d0fc3199e9b8cdc5bfc8c3ee}} 
+\index{hal.hpp@{hal.hpp}!HalPageWriteCombiningFlag@{HalPageWriteCombiningFlag}}
+\index{HalPageWriteCombiningFlag@{HalPageWriteCombiningFlag}!hal.hpp@{hal.hpp}}
+\doxysubsubsection{\texorpdfstring{HalPageWriteCombiningFlag}{HalPageWriteCombiningFlag}}
+{\footnotesize\ttfamily size\+\_\+t Hal\+Page\+Write\+Combining\+Flag\hspace{0.3cm}{\ttfamily [extern]}}
+

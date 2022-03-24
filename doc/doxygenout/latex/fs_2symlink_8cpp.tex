@@ -1,0 +1,228 @@
+\hypertarget{fs_2symlink_8cpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/fs/symlink.cpp File Reference}
+\label{fs_2symlink_8cpp}\index{C:/Users/Alex/Desktop/Banana/kernel/fs/symlink.cpp@{C:/Users/Alex/Desktop/Banana/kernel/fs/symlink.cpp}}
+{\ttfamily \#include \char`\"{}krnl/main.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}thr/prcssthr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}fs/vfs.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hal/logidisk.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}libk/string.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}fs/symlink.\+hpp\char`\"{}}\newline
+{\ttfamily \#include $<$krnl/random.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/atexit.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/crc32.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/cm.\+hpp$>$}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{fs_2symlink_8cpp_a7ac90b52051ff053e0f14610975054b9}{MAX\+\_\+\+WAITING\+\_\+\+ROOM\+\_\+\+LINKS}}~4
+\item 
+\#define \mbox{\hyperlink{fs_2symlink_8cpp_ae2467be61a7a8a06eed84d2acc307876}{SYMLINK\+\_\+\+TABLE\+\_\+\+BYTES}}~8192
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{fs_2symlink_8cpp_a34a24dfc2e2e3918ae76ef310b063115}{Ki\+Deinitialise\+Symlinks}} (void $\ast$context)
+\item 
+void \mbox{\hyperlink{fs_2symlink_8cpp_a529f1c9e96e3528c01b76afcdb030071}{Ke\+Register\+Symlink}} (const char $\ast$link\+Name, uint64\+\_\+t link\+ID)
+\begin{DoxyCompactList}\small\item\em Adds a symlink entry to the registrar. 
+\begin{DoxyParams}{Parameters}
+{\em link\+Name} & The symlink filepath.\\
+\hline
+{\em link\+ID} & The symlink ID.\\
+\hline
+\end{DoxyParams}
+\end{DoxyCompactList}\item 
+void \mbox{\hyperlink{fs_2symlink_8cpp_a71a17a49240a672e804099211e5b8b67}{Ke\+Initialise\+Symlinks}} ()
+\begin{DoxyCompactList}\small\item\em Registers a handler to be called on system shutdown or restart. 
+\begin{DoxyParams}{Parameters}
+{\em ebx} & The file number.\\
+\hline
+{\em ecx} & Maximum number of bytes to write.\\
+\hline
+{\em edx} & Pointer to write data to.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of bytes read, or -\/1 on failure.
+\end{DoxyReturn}
+\end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{fs_2symlink_8cpp_a31afb7af45925074bbf8792cad14db9d}{Ki\+Is\+Symlink\+Registered}} (const char $\ast$link\+Name)
+\item 
+int \mbox{\hyperlink{fs_2symlink_8cpp_a79b96efd28f1b9eab964f27ae779c2bb}{Ke\+Dereference\+Symlink}} (const char $\ast$link\+Name, char $\ast$dereferenced\+Buffer)
+\begin{DoxyCompactList}\small\item\em Checks if a filepath is a symlink and dereferences them if so. 
+\begin{DoxyParams}{Parameters}
+{\em link\+Name} & The symlink filepath.\\
+\hline
+{\em dereferenced} & A pointer to an output buffer.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns 0 on if no symlinks were dereferenced, 1 if there was a dereference, and negative on error.
+\end{DoxyReturn}
+\end{DoxyCompactList}\item 
+int \mbox{\hyperlink{fs_2symlink_8cpp_aca4c49aa5094fd36d9720f04d630b6c0}{Ke\+Create\+Symlink}} (const char $\ast$existing, const char $\ast$link\+Name)
+\begin{DoxyCompactList}\small\item\em Creates a symbolic link. WARNING\+: if relative or non-\/normalised paths are used the system may become unstable. 
+\begin{DoxyParams}{Parameters}
+{\em existing} & The absolute, normalised target filepath.\\
+\hline
+{\em link\+Name} & The absolute, normalised symlink filepath.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns 0 on success, and non-\/zero on error.
+\end{DoxyReturn}
+\end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{fs_2symlink_8cpp_a16f4ff3bcbfade641677bd4f98afa27b}{ki\+Base\+Symlink\+ID}} = 0
+\item 
+uint8\+\_\+t \mbox{\hyperlink{fs_2symlink_8cpp_a13625de009fadb9850ebbc0578e04641}{ki\+Symlink\+Hash\+Table}} \mbox{[}\mbox{\hyperlink{fs_2symlink_8cpp_ae2467be61a7a8a06eed84d2acc307876}{SYMLINK\+\_\+\+TABLE\+\_\+\+BYTES}}\mbox{]}
+\item 
+char \mbox{\hyperlink{fs_2symlink_8cpp_a55814e85ec13734d4dc81fe7bf0b1ef8}{ki\+Newly\+Created\+Symlinks}} \mbox{[}\mbox{\hyperlink{fs_2symlink_8cpp_a7ac90b52051ff053e0f14610975054b9}{MAX\+\_\+\+WAITING\+\_\+\+ROOM\+\_\+\+LINKS}}\mbox{]}\mbox{[}256\mbox{]}
+\item 
+uint64\+\_\+t \mbox{\hyperlink{fs_2symlink_8cpp_ac7534fa3b0b9c41cc8e91702c5ae0aab}{ki\+Newly\+Created\+IDs}} \mbox{[}\mbox{\hyperlink{fs_2symlink_8cpp_a7ac90b52051ff053e0f14610975054b9}{MAX\+\_\+\+WAITING\+\_\+\+ROOM\+\_\+\+LINKS}}\mbox{]}
+\item 
+int \mbox{\hyperlink{fs_2symlink_8cpp_ad8d4b1c73b8bff32055c27bedeac2bb1}{ki\+Num\+Waiting\+Room\+Symlinks}} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{fs_2symlink_8cpp_a7ac90b52051ff053e0f14610975054b9}\label{fs_2symlink_8cpp_a7ac90b52051ff053e0f14610975054b9}} 
+\index{symlink.cpp@{symlink.cpp}!MAX\_WAITING\_ROOM\_LINKS@{MAX\_WAITING\_ROOM\_LINKS}}
+\index{MAX\_WAITING\_ROOM\_LINKS@{MAX\_WAITING\_ROOM\_LINKS}!symlink.cpp@{symlink.cpp}}
+\doxysubsubsection{\texorpdfstring{MAX\_WAITING\_ROOM\_LINKS}{MAX\_WAITING\_ROOM\_LINKS}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+WAITING\+\_\+\+ROOM\+\_\+\+LINKS~4}
+
+\mbox{\Hypertarget{fs_2symlink_8cpp_ae2467be61a7a8a06eed84d2acc307876}\label{fs_2symlink_8cpp_ae2467be61a7a8a06eed84d2acc307876}} 
+\index{symlink.cpp@{symlink.cpp}!SYMLINK\_TABLE\_BYTES@{SYMLINK\_TABLE\_BYTES}}
+\index{SYMLINK\_TABLE\_BYTES@{SYMLINK\_TABLE\_BYTES}!symlink.cpp@{symlink.cpp}}
+\doxysubsubsection{\texorpdfstring{SYMLINK\_TABLE\_BYTES}{SYMLINK\_TABLE\_BYTES}}
+{\footnotesize\ttfamily \#define SYMLINK\+\_\+\+TABLE\+\_\+\+BYTES~8192}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{fs_2symlink_8cpp_aca4c49aa5094fd36d9720f04d630b6c0}\label{fs_2symlink_8cpp_aca4c49aa5094fd36d9720f04d630b6c0}} 
+\index{symlink.cpp@{symlink.cpp}!KeCreateSymlink@{KeCreateSymlink}}
+\index{KeCreateSymlink@{KeCreateSymlink}!symlink.cpp@{symlink.cpp}}
+\doxysubsubsection{\texorpdfstring{KeCreateSymlink()}{KeCreateSymlink()}}
+{\footnotesize\ttfamily int Ke\+Create\+Symlink (\begin{DoxyParamCaption}\item[{const char $\ast$}]{existing,  }\item[{const char $\ast$}]{link\+Name }\end{DoxyParamCaption})}
+
+
+
+Creates a symbolic link. WARNING\+: if relative or non-\/normalised paths are used the system may become unstable. 
+\begin{DoxyParams}{Parameters}
+{\em existing} & The absolute, normalised target filepath.\\
+\hline
+{\em link\+Name} & The absolute, normalised symlink filepath.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns 0 on success, and non-\/zero on error.
+\end{DoxyReturn}
+
+
+\mbox{\Hypertarget{fs_2symlink_8cpp_a79b96efd28f1b9eab964f27ae779c2bb}\label{fs_2symlink_8cpp_a79b96efd28f1b9eab964f27ae779c2bb}} 
+\index{symlink.cpp@{symlink.cpp}!KeDereferenceSymlink@{KeDereferenceSymlink}}
+\index{KeDereferenceSymlink@{KeDereferenceSymlink}!symlink.cpp@{symlink.cpp}}
+\doxysubsubsection{\texorpdfstring{KeDereferenceSymlink()}{KeDereferenceSymlink()}}
+{\footnotesize\ttfamily int Ke\+Dereference\+Symlink (\begin{DoxyParamCaption}\item[{const char $\ast$}]{link\+Name,  }\item[{char $\ast$}]{dereferenced\+Buffer }\end{DoxyParamCaption})}
+
+
+
+Checks if a filepath is a symlink and dereferences them if so. 
+\begin{DoxyParams}{Parameters}
+{\em link\+Name} & The symlink filepath.\\
+\hline
+{\em dereferenced} & A pointer to an output buffer.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns 0 on if no symlinks were dereferenced, 1 if there was a dereference, and negative on error.
+\end{DoxyReturn}
+
+
+\mbox{\Hypertarget{fs_2symlink_8cpp_a71a17a49240a672e804099211e5b8b67}\label{fs_2symlink_8cpp_a71a17a49240a672e804099211e5b8b67}} 
+\index{symlink.cpp@{symlink.cpp}!KeInitialiseSymlinks@{KeInitialiseSymlinks}}
+\index{KeInitialiseSymlinks@{KeInitialiseSymlinks}!symlink.cpp@{symlink.cpp}}
+\doxysubsubsection{\texorpdfstring{KeInitialiseSymlinks()}{KeInitialiseSymlinks()}}
+{\footnotesize\ttfamily void Ke\+Initialise\+Symlinks (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Registers a handler to be called on system shutdown or restart. 
+\begin{DoxyParams}{Parameters}
+{\em ebx} & The file number.\\
+\hline
+{\em ecx} & Maximum number of bytes to write.\\
+\hline
+{\em edx} & Pointer to write data to.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of bytes read, or -\/1 on failure.
+\end{DoxyReturn}
+
+
+Initialises the symlink subsystem. \mbox{\Hypertarget{fs_2symlink_8cpp_a529f1c9e96e3528c01b76afcdb030071}\label{fs_2symlink_8cpp_a529f1c9e96e3528c01b76afcdb030071}} 
+\index{symlink.cpp@{symlink.cpp}!KeRegisterSymlink@{KeRegisterSymlink}}
+\index{KeRegisterSymlink@{KeRegisterSymlink}!symlink.cpp@{symlink.cpp}}
+\doxysubsubsection{\texorpdfstring{KeRegisterSymlink()}{KeRegisterSymlink()}}
+{\footnotesize\ttfamily void Ke\+Register\+Symlink (\begin{DoxyParamCaption}\item[{const char $\ast$}]{link\+Name,  }\item[{uint64\+\_\+t}]{link\+ID }\end{DoxyParamCaption})}
+
+
+
+Adds a symlink entry to the registrar. 
+\begin{DoxyParams}{Parameters}
+{\em link\+Name} & The symlink filepath.\\
+\hline
+{\em link\+ID} & The symlink ID.\\
+\hline
+\end{DoxyParams}
+
+
+\mbox{\Hypertarget{fs_2symlink_8cpp_a34a24dfc2e2e3918ae76ef310b063115}\label{fs_2symlink_8cpp_a34a24dfc2e2e3918ae76ef310b063115}} 
+\index{symlink.cpp@{symlink.cpp}!KiDeinitialiseSymlinks@{KiDeinitialiseSymlinks}}
+\index{KiDeinitialiseSymlinks@{KiDeinitialiseSymlinks}!symlink.cpp@{symlink.cpp}}
+\doxysubsubsection{\texorpdfstring{KiDeinitialiseSymlinks()}{KiDeinitialiseSymlinks()}}
+{\footnotesize\ttfamily void Ki\+Deinitialise\+Symlinks (\begin{DoxyParamCaption}\item[{void $\ast$}]{context }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{fs_2symlink_8cpp_a31afb7af45925074bbf8792cad14db9d}\label{fs_2symlink_8cpp_a31afb7af45925074bbf8792cad14db9d}} 
+\index{symlink.cpp@{symlink.cpp}!KiIsSymlinkRegistered@{KiIsSymlinkRegistered}}
+\index{KiIsSymlinkRegistered@{KiIsSymlinkRegistered}!symlink.cpp@{symlink.cpp}}
+\doxysubsubsection{\texorpdfstring{KiIsSymlinkRegistered()}{KiIsSymlinkRegistered()}}
+{\footnotesize\ttfamily uint64\+\_\+t Ki\+Is\+Symlink\+Registered (\begin{DoxyParamCaption}\item[{const char $\ast$}]{link\+Name }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{fs_2symlink_8cpp_a16f4ff3bcbfade641677bd4f98afa27b}\label{fs_2symlink_8cpp_a16f4ff3bcbfade641677bd4f98afa27b}} 
+\index{symlink.cpp@{symlink.cpp}!kiBaseSymlinkID@{kiBaseSymlinkID}}
+\index{kiBaseSymlinkID@{kiBaseSymlinkID}!symlink.cpp@{symlink.cpp}}
+\doxysubsubsection{\texorpdfstring{kiBaseSymlinkID}{kiBaseSymlinkID}}
+{\footnotesize\ttfamily uint32\+\_\+t ki\+Base\+Symlink\+ID = 0}
+
+\mbox{\Hypertarget{fs_2symlink_8cpp_ac7534fa3b0b9c41cc8e91702c5ae0aab}\label{fs_2symlink_8cpp_ac7534fa3b0b9c41cc8e91702c5ae0aab}} 
+\index{symlink.cpp@{symlink.cpp}!kiNewlyCreatedIDs@{kiNewlyCreatedIDs}}
+\index{kiNewlyCreatedIDs@{kiNewlyCreatedIDs}!symlink.cpp@{symlink.cpp}}
+\doxysubsubsection{\texorpdfstring{kiNewlyCreatedIDs}{kiNewlyCreatedIDs}}
+{\footnotesize\ttfamily uint64\+\_\+t ki\+Newly\+Created\+IDs\mbox{[}\mbox{\hyperlink{fs_2symlink_8cpp_a7ac90b52051ff053e0f14610975054b9}{MAX\+\_\+\+WAITING\+\_\+\+ROOM\+\_\+\+LINKS}}\mbox{]}}
+
+\mbox{\Hypertarget{fs_2symlink_8cpp_a55814e85ec13734d4dc81fe7bf0b1ef8}\label{fs_2symlink_8cpp_a55814e85ec13734d4dc81fe7bf0b1ef8}} 
+\index{symlink.cpp@{symlink.cpp}!kiNewlyCreatedSymlinks@{kiNewlyCreatedSymlinks}}
+\index{kiNewlyCreatedSymlinks@{kiNewlyCreatedSymlinks}!symlink.cpp@{symlink.cpp}}
+\doxysubsubsection{\texorpdfstring{kiNewlyCreatedSymlinks}{kiNewlyCreatedSymlinks}}
+{\footnotesize\ttfamily char ki\+Newly\+Created\+Symlinks\mbox{[}\mbox{\hyperlink{fs_2symlink_8cpp_a7ac90b52051ff053e0f14610975054b9}{MAX\+\_\+\+WAITING\+\_\+\+ROOM\+\_\+\+LINKS}}\mbox{]}\mbox{[}256\mbox{]}}
+
+\mbox{\Hypertarget{fs_2symlink_8cpp_ad8d4b1c73b8bff32055c27bedeac2bb1}\label{fs_2symlink_8cpp_ad8d4b1c73b8bff32055c27bedeac2bb1}} 
+\index{symlink.cpp@{symlink.cpp}!kiNumWaitingRoomSymlinks@{kiNumWaitingRoomSymlinks}}
+\index{kiNumWaitingRoomSymlinks@{kiNumWaitingRoomSymlinks}!symlink.cpp@{symlink.cpp}}
+\doxysubsubsection{\texorpdfstring{kiNumWaitingRoomSymlinks}{kiNumWaitingRoomSymlinks}}
+{\footnotesize\ttfamily int ki\+Num\+Waiting\+Room\+Symlinks = 0}
+
+\mbox{\Hypertarget{fs_2symlink_8cpp_a13625de009fadb9850ebbc0578e04641}\label{fs_2symlink_8cpp_a13625de009fadb9850ebbc0578e04641}} 
+\index{symlink.cpp@{symlink.cpp}!kiSymlinkHashTable@{kiSymlinkHashTable}}
+\index{kiSymlinkHashTable@{kiSymlinkHashTable}!symlink.cpp@{symlink.cpp}}
+\doxysubsubsection{\texorpdfstring{kiSymlinkHashTable}{kiSymlinkHashTable}}
+{\footnotesize\ttfamily uint8\+\_\+t ki\+Symlink\+Hash\+Table\mbox{[}\mbox{\hyperlink{fs_2symlink_8cpp_ae2467be61a7a8a06eed84d2acc307876}{SYMLINK\+\_\+\+TABLE\+\_\+\+BYTES}}\mbox{]}}
+

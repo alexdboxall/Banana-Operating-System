@@ -1,0 +1,85 @@
+\hypertarget{unixfile_8hpp_source}{}\doxysection{unixfile.\+hpp}
+\label{unixfile_8hpp_source}\index{C:/Users/Alex/Desktop/Banana/kernel/krnl/unixfile.hpp@{C:/Users/Alex/Desktop/Banana/kernel/krnl/unixfile.hpp}}
+\mbox{\hyperlink{unixfile_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#ifndef \_UNIXFILE\_HPP\_}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#define \_UNIXFILE\_HPP\_}}
+\DoxyCodeLine{5 }
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include <stddef.h>}}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{keyword}{enum class} \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}}}
+\DoxyCodeLine{10 \{}
+\DoxyCodeLine{11     \mbox{\hyperlink{diskphys_8hpp_a6e02d7176c75ff911b02a8dad4ab230fa505a83f220c02df2f85c3810cd9ceb38}{Success}} = 0,}
+\DoxyCodeLine{12     \mbox{\hyperlink{diskphys_8hpp_a6e02d7176c75ff911b02a8dad4ab230fae139a585510a502bbf1841cf589f5086}{Failure}} = 1,}
+\DoxyCodeLine{13     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40cac30e98851cafc795dbe00917b7c4ccf8}{NotExist}} = 2,}
+\DoxyCodeLine{14     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40ca4f5b6e2769b831adcda40ded8391abb6}{WriteProtect}} = 3,}
+\DoxyCodeLine{15     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40ca253ca7dd096ee0956cccee4d376cab8b}{InvalidArgument}} = 4,}
+\DoxyCodeLine{16     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40ca782eaee304653cf00978d5206fd1e813}{FileNotOpen}} = 5,}
+\DoxyCodeLine{17     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40ca499c424202e02d3bc117e7ab53836f64}{FileOpen}} = 6,}
+\DoxyCodeLine{18     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40cabbc4557cf8729e1217cba7c93223eee7}{DirectoryEOF}} = 7,}
+\DoxyCodeLine{19     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40ca91e4caee9dd53c4cb98255353a691b0a}{FormatNotSupported}} = 8,}
+\DoxyCodeLine{20     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40ca93285cd82b5dfb747977b9a507ddd432}{FormatDidntStart}} = 9,}
+\DoxyCodeLine{21     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40ca9ed2d871602556951e39f3cebd08d6cb}{NotSupported}} = 10,}
+\DoxyCodeLine{22     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40ca59d1bef383acb822b4957d372ed5fa5a}{NoFilesystem}} = 11,}
+\DoxyCodeLine{23 \};}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25 \textcolor{comment}{//these need to be way up here becuase newlib decided a signed short}}
+\DoxyCodeLine{26 \textcolor{comment}{//was long enough for file descriptors...}}
+\DoxyCodeLine{27 \textcolor{preprocessor}{\#define RESERVED\_FD\_NUL     0x0FFFFF00}}
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#define RESERVED\_FD\_CON     0x0FFFFF01}}
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#define RESERVED\_FD\_PNT     0x0FFFFF02}}
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#define RESERVED\_FD\_AUX     0x0FFFFF03}}
+\DoxyCodeLine{31 \textcolor{preprocessor}{\#define RESERVED\_FD\_COM1    0x0FFFFF10}}
+\DoxyCodeLine{32 \textcolor{preprocessor}{\#define RESERVED\_FD\_COM9    0x0FFFFF18}}
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#define RESERVED\_FD\_LPT1    0x0FFFFF20}}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#define RESERVED\_FD\_LPT9    0x0FFFFF28}}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#define RESERVED\_FD\_START   RESERVED\_FD\_NUL}}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38 \textcolor{keyword}{class }\mbox{\hyperlink{class_unix_file}{UnixFile}};}
+\DoxyCodeLine{39 \mbox{\hyperlink{class_unix_file}{UnixFile}}* \mbox{\hyperlink{unixfile_8hpp_a9ef618ca2b20bea00d3842755358175e}{KeGetFileFromDescriptor}}(\textcolor{keywordtype}{int} \mbox{\hyperlink{class_unix_file_a64d92f177ae1601537de22590703d0b7}{fd}});}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41 \textcolor{keyword}{class }\mbox{\hyperlink{class_unix_file}{UnixFile}}}
+\DoxyCodeLine{42 \{}
+\DoxyCodeLine{43 \textcolor{keyword}{private}:}
+\DoxyCodeLine{44 }
+\DoxyCodeLine{45 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{46     \textcolor{keyword}{friend} \mbox{\hyperlink{class_unix_file}{UnixFile}}* \mbox{\hyperlink{class_unix_file_a9ef618ca2b20bea00d3842755358175e}{KeGetFileFromDescriptor}}(\textcolor{keywordtype}{int} \mbox{\hyperlink{class_unix_file_a64d92f177ae1601537de22590703d0b7}{fd}});}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{48     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_unix_file_a64d92f177ae1601537de22590703d0b7}{fd}};   }
+\DoxyCodeLine{49     \textcolor{keyword}{static} \textcolor{keywordtype}{int} \mbox{\hyperlink{class_unix_file_a36b33c524896c1a13a181de520085adb}{nextFd}};}
+\DoxyCodeLine{50 }
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52 \textcolor{keyword}{public}:}
+\DoxyCodeLine{53     \mbox{\hyperlink{class_unix_file}{UnixFile}}* \mbox{\hyperlink{class_unix_file_a30d2826e5f674d47562be2d1cf2615e9}{next}};}
+\DoxyCodeLine{54     \textcolor{keyword}{virtual} \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_unix_file_a1eca4910cedf24af9556a64499500f86}{isAtty}}() = 0;}
+\DoxyCodeLine{55 }
+\DoxyCodeLine{56     \mbox{\hyperlink{class_unix_file_a1f81fefa0f5f057161b273620d733f8d}{UnixFile}}(\textcolor{keywordtype}{int} \mbox{\hyperlink{class_unix_file_a64d92f177ae1601537de22590703d0b7}{fd}} = 0);}
+\DoxyCodeLine{57     \textcolor{keyword}{virtual} \mbox{\hyperlink{class_unix_file_a4d50fa11d1e9387b517fb5a94a8d85b2}{\string~UnixFile}}();}
+\DoxyCodeLine{58 }
+\DoxyCodeLine{59     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_unix_file_aed1d5fe833190f7d158945b920ded996}{getFileDescriptor}}();}
+\DoxyCodeLine{60 }
+\DoxyCodeLine{61     \textcolor{keyword}{virtual} \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_unix_file_aac028d7131ddeebc10bec7e0422d8d77}{read}}(uint64\_t bytes, \textcolor{keywordtype}{void}* where, \textcolor{keywordtype}{int}* bytesRead) = 0;}
+\DoxyCodeLine{62     \textcolor{keyword}{virtual} \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_unix_file_a31be73a49d0c0e64de2deeaf47da44c8}{write}}(uint64\_t bytes, \textcolor{keywordtype}{void}* where, \textcolor{keywordtype}{int}* bytesWritten) = 0;}
+\DoxyCodeLine{63 \};}
+\DoxyCodeLine{64 }
+\DoxyCodeLine{65 \textcolor{keyword}{class }\mbox{\hyperlink{class_reserved_filename}{ReservedFilename}}: \textcolor{keyword}{public} \mbox{\hyperlink{class_unix_file}{UnixFile}}}
+\DoxyCodeLine{66 \{}
+\DoxyCodeLine{67 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{68 }
+\DoxyCodeLine{69 \textcolor{keyword}{public}:}
+\DoxyCodeLine{70     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_reserved_filename_a4cc2cf84709ab65e3f8f3460b6b12a3d}{isAtty}}();}
+\DoxyCodeLine{71 }
+\DoxyCodeLine{72     \mbox{\hyperlink{class_reserved_filename_a5bcb6a4461d35e3fda9adaa505b32395}{ReservedFilename}}(\textcolor{keywordtype}{int} \mbox{\hyperlink{class_unix_file_a64d92f177ae1601537de22590703d0b7}{fd}});}
+\DoxyCodeLine{73     \mbox{\hyperlink{class_reserved_filename_a5b620572b8e8a4a00571478846b97740}{\string~ReservedFilename}}();}
+\DoxyCodeLine{74 }
+\DoxyCodeLine{75     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_reserved_filename_af8914be900acb0b57406d07534cf759a}{read}}(uint64\_t bytes, \textcolor{keywordtype}{void}* where, \textcolor{keywordtype}{int}* bytesRead);}
+\DoxyCodeLine{76     \mbox{\hyperlink{unixfile_8hpp_a0a785734a2e4d29ff32532d92a03b40c}{FileStatus}} \mbox{\hyperlink{class_reserved_filename_acd72ee119a11cb1141bfd6c24731c90c}{write}}(uint64\_t bytes, \textcolor{keywordtype}{void}* where, \textcolor{keywordtype}{int}* bytesWritten);}
+\DoxyCodeLine{77 \};}
+\DoxyCodeLine{78 }
+\DoxyCodeLine{79 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

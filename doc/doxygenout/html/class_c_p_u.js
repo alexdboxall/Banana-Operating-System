@@ -1,0 +1,25 @@
+var class_c_p_u =
+[
+    [ "CPU", "class_c_p_u.html#a2fdd8153d0979ccad9ed8452897267f4", null ],
+    [ "allowUsermodeDataAccess", "class_c_p_u.html#a9a84f0808c6a0c359dec9286eca243bc", null ],
+    [ "close", "class_c_p_u.html#a03e74860807b880c4e0a6c970aa6ce4b", null ],
+    [ "open", "class_c_p_u.html#a34139b5d445aacac6b693a367d442b2f", null ],
+    [ "prohibitUsermodeDataAccess", "class_c_p_u.html#a559fa688bc2a3bb17226df7950531eb0", null ],
+    [ "setupFeatures", "class_c_p_u.html#ae985385d24a0de918eb103480bb3ae60", null ],
+    [ "setupGlobalPages", "class_c_p_u.html#a7748ee8792b1a9381476db38ef031b20", null ],
+    [ "setupLargePages", "class_c_p_u.html#a8f100ba12042af86df1874661e101223", null ],
+    [ "setupMTRR", "class_c_p_u.html#a47f912c804b3a6ee83f96dedd661ae9c", null ],
+    [ "setupPAT", "class_c_p_u.html#ab175252e58ff852850de99dbd5aff4d3", null ],
+    [ "setupSMAP", "class_c_p_u.html#af11f360d3f5766b2eb00f0cab84e33fa", null ],
+    [ "setupSMEP", "class_c_p_u.html#a15fa8293a705b8187139d93cefb9dd50", null ],
+    [ "setupTSC", "class_c_p_u.html#a3eb64678fcaea1bb55c29acff3e94817", null ],
+    [ "setupUMIP", "class_c_p_u.html#a2089f6029d7ba4d517d797f54175cc77", null ],
+    [ "cpuNum", "class_c_p_u.html#acdecf78e4816c75466ca0ac72ada3cca", null ],
+    [ "cpuSpecificData", "class_c_p_u.html#af5b428ed2557631bb88186dc58cbc299", null ],
+    [ "cpuSpecificPhysAddr", "class_c_p_u.html#a369e23e11e27c3c5ab4279ad71311ce3", null ],
+    [ "doubleFaultSelector", "class_c_p_u.html#a65b37959f3b34e66e7b8911fe005f1a2", null ],
+    [ "gdt", "class_c_p_u.html#ad89ba6000f75984026a4f978eeeb208d", null ],
+    [ "idt", "class_c_p_u.html#a272e6a5a00b4882703b9d1024d070f28", null ],
+    [ "timer", "class_c_p_u.html#afff4404ea40c169965905009d55cfeab", null ],
+    [ "tss", "class_c_p_u.html#a5ebe5e2c85b540dd8cec78d80166c828", null ]
+];

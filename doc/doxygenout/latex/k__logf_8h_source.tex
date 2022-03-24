@@ -1,0 +1,45 @@
+\hypertarget{k__logf_8h_source}{}\doxysection{k\+\_\+logf.\+h}
+\label{k__logf_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/libk/\_mathinc/k\_logf.h@{C:/Users/Alex/Desktop/Banana/kernel/libk/\_mathinc/k\_logf.h}}
+\mbox{\hyperlink{k__logf_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*}}
+\DoxyCodeLine{2 \textcolor{comment}{ * ====================================================}}
+\DoxyCodeLine{3 \textcolor{comment}{ * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.}}
+\DoxyCodeLine{4 \textcolor{comment}{ *}}
+\DoxyCodeLine{5 \textcolor{comment}{ * Developed at SunPro, a Sun Microsystems, Inc. business.}}
+\DoxyCodeLine{6 \textcolor{comment}{ * Permission to use, copy, modify, and distribute this}}
+\DoxyCodeLine{7 \textcolor{comment}{ * software is freely granted, provided that this notice}}
+\DoxyCodeLine{8 \textcolor{comment}{ * is preserved.}}
+\DoxyCodeLine{9 \textcolor{comment}{ * ====================================================}}
+\DoxyCodeLine{10 \textcolor{comment}{ */}}
+\DoxyCodeLine{11 }
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{cdefs-compat_8h}{cdefs-\/compat.h}}"{}}}
+\DoxyCodeLine{13 \textcolor{comment}{//\_\_FBSDID("{}\$FreeBSD: src/lib/msun/src/k\_logf.h,v 1.3 2011/10/15 05:23:28 das Exp \$"{});}}
+\DoxyCodeLine{14 }
+\DoxyCodeLine{15 \textcolor{comment}{/*}}
+\DoxyCodeLine{16 \textcolor{comment}{ * Float version of k\_log.h.  See the latter for most comments.}}
+\DoxyCodeLine{17 \textcolor{comment}{ */}}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19 \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{float}}
+\DoxyCodeLine{20 \textcolor{comment}{/* |(log(1+s)-\/log(1-\/s))/s -\/ Lg(s)| < 2**-\/34.24 (\string~[-\/4.95e-\/11, 4.97e-\/11]). */}}
+\DoxyCodeLine{21 Lg1 =      0xaaaaaa.0p-\/24,  \textcolor{comment}{/* 0.66666662693 */}}
+\DoxyCodeLine{22 Lg2 =      0xccce13.0p-\/25,  \textcolor{comment}{/* 0.40000972152 */}}
+\DoxyCodeLine{23 Lg3 =      0x91e9ee.0p-\/25,  \textcolor{comment}{/* 0.28498786688 */}}
+\DoxyCodeLine{24 Lg4 =      0xf89e26.0p-\/26;  \textcolor{comment}{/* 0.24279078841 */}}
+\DoxyCodeLine{25 }
+\DoxyCodeLine{26 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{float}}
+\DoxyCodeLine{27 k\_log1pf(\textcolor{keywordtype}{float} f)}
+\DoxyCodeLine{28 \{}
+\DoxyCodeLine{29     \textcolor{keywordtype}{float} hfsq,s,z,R,w,t1,t2;}
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31     s = f/((float)2.0+f);}
+\DoxyCodeLine{32     z = s*s;}
+\DoxyCodeLine{33     w = z*z;}
+\DoxyCodeLine{34     t1= w*(Lg2+w*Lg4);}
+\DoxyCodeLine{35     t2= z*(Lg1+w*Lg3);}
+\DoxyCodeLine{36     R = t2+t1;}
+\DoxyCodeLine{37     hfsq=(float)0.5*f*f;}
+\DoxyCodeLine{38     \textcolor{keywordflow}{return} s*(hfsq+R);}
+\DoxyCodeLine{39 \}}
+
+\end{DoxyCode}

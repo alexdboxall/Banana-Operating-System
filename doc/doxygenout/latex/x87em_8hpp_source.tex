@@ -1,0 +1,72 @@
+\hypertarget{x87em_8hpp_source}{}\doxysection{x87em.\+hpp}
+\label{x87em_8hpp_source}\index{C:/Users/Alex/Desktop/Banana/kernel/vm86/x87em.hpp@{C:/Users/Alex/Desktop/Banana/kernel/vm86/x87em.hpp}}
+\mbox{\hyperlink{x87em_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_\_x87EMULATOR\_\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_\_x87EMULATOR\_\_}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <stdbool.h>}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{intctrl_8hpp}{hal/intctrl.hpp}}"{}}}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespace_vm}{Vm}}}
+\DoxyCodeLine{10 \{}
+\DoxyCodeLine{11     \textcolor{keyword}{typedef} uint64\_t \mbox{\hyperlink{namespace_vm_ab12684750282ef15a94d47b3caf413fc}{Float80}};}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{13     \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_vm_1_1___f_p_u_state}{\_FPUState}}}
+\DoxyCodeLine{14     \{}
+\DoxyCodeLine{15         \textcolor{keyword}{union}}
+\DoxyCodeLine{16         \{}
+\DoxyCodeLine{17             \textcolor{keyword}{struct}}
+\DoxyCodeLine{18             \{}
+\DoxyCodeLine{19                 uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_ac58d4176f57e90849587c529b618b12d}{invalidOperation}} : 1;}
+\DoxyCodeLine{20                 uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_a960a06a57226e99331c14e7913094c44}{denormalisedOperand}} : 1;}
+\DoxyCodeLine{21                 uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_a6f59bd57a62b995774d07642bc41c907}{zeroDivide}} : 1;}
+\DoxyCodeLine{22                 uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_a3e495e7b5fb3fab1fd68f91b7cdef0b2}{overflow}} : 1;}
+\DoxyCodeLine{23                 uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_a26e62dfbf9d4a560d06aba8c5a23b612}{underflow}} : 1;}
+\DoxyCodeLine{24                 uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_a00ad8c1499918428afc0f3389b3eedf2}{precision}} : 1;}
+\DoxyCodeLine{25                 uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_a1082414235e4fe833391dee8edfd8121}{stackFault}} : 1;}
+\DoxyCodeLine{26                 uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_afc1cdb9f1ae626925625933f3330109c}{errSummaryStatus}} : 1;}
+\DoxyCodeLine{27                 uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_a5956e0eae998555bce854f2cc98cb596}{c0}} : 1;}
+\DoxyCodeLine{28                 uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_a1cb07eadbcdc94668ba132f5ee3ba88c}{c1}} : 1;}
+\DoxyCodeLine{29                 uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_ad663ea98504af71c03d9a3415147467c}{c2}} : 1;}
+\DoxyCodeLine{30                 uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_a596bfc6f0bfa056d61482b36ba9f6161}{stackTop}} : 3;}
+\DoxyCodeLine{31                 uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_ab2e19589e31905cc04c5b832124d2eae}{c3}} : 1;}
+\DoxyCodeLine{32                 uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_a4eea29f16f07df42c454fbacfee43fe6}{fpuBusy}} : 1;}
+\DoxyCodeLine{33             \};}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{35             uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_a001109672a0528ada89f48d395013816}{status}};}
+\DoxyCodeLine{36         \};}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38         \textcolor{keyword}{union}}
+\DoxyCodeLine{39         \{}
+\DoxyCodeLine{40             \textcolor{keyword}{struct}}
+\DoxyCodeLine{41             \{}
+\DoxyCodeLine{42                 uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_a8c47fbc97f7af809c72bf2700342de27}{maskInvalidOperation}} : 1;}
+\DoxyCodeLine{43                 uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_ad72238ebaff64f66685541a5de3c70c0}{maskDenormalisedOperand}} : 1;}
+\DoxyCodeLine{44                 uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_abbc0e4e494d026c1aac9e13d3961e46c}{maskZeroDivide}} : 1;}
+\DoxyCodeLine{45                 uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_ac2a3197a284caac4c377582f64859d6c}{maskOverflow}} : 1;}
+\DoxyCodeLine{46                 uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_af2b27594c7fcad95bb6e685b3b17978b}{maskUnderflow}} : 1;}
+\DoxyCodeLine{47                 uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_a2d0303276a89106fa136afb268f4f67a}{maskPrecision}} : 1;}
+\DoxyCodeLine{48                 uint16\_t : 2;}
+\DoxyCodeLine{49                 uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_af0fa58119aa7ae88c99f8b29bb3e22f6}{precisionControl}} : 2;}
+\DoxyCodeLine{50                 uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_a77ad28f806a7e634e89586be6fb51ccb}{roundingControl}} : 2;}
+\DoxyCodeLine{51                 uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_a99e866648c8b53b9e67cc514910f641f}{infinityControl}} : 1;}
+\DoxyCodeLine{52                 uint16\_t : 3;}
+\DoxyCodeLine{53             \};}
+\DoxyCodeLine{54 }
+\DoxyCodeLine{55             uint16\_t \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_a2a968875c9fc6612d7fb54eacffe4767}{control}};}
+\DoxyCodeLine{56         \};}
+\DoxyCodeLine{57 }
+\DoxyCodeLine{58         \mbox{\hyperlink{namespace_vm_ab12684750282ef15a94d47b3caf413fc}{Float80}} \mbox{\hyperlink{structregs}{regs}}[8];}
+\DoxyCodeLine{59         \textcolor{keywordtype}{int} \mbox{\hyperlink{struct_vm_1_1___f_p_u_state_afd2d19b6ba9b0000c39f2e9d64744052}{valuesOnStack}} = 0;}
+\DoxyCodeLine{60 }
+\DoxyCodeLine{61     \} \mbox{\hyperlink{namespace_vm_a62188358554c176ba9b7be38a5052630}{FPUState}};}
+\DoxyCodeLine{62 }
+\DoxyCodeLine{63     \textcolor{keywordtype}{bool} \mbox{\hyperlink{namespace_vm_ada75b13c169d35b4fa5aebe14a392e01}{x87Handler}}(\mbox{\hyperlink{structregs}{regs}}* r);}
+\DoxyCodeLine{64 \}}
+\DoxyCodeLine{65 }
+\DoxyCodeLine{66 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

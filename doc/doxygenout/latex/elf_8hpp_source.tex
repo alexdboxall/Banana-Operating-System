@@ -1,0 +1,183 @@
+\hypertarget{elf_8hpp_source}{}\doxysection{elf.\+hpp}
+\label{elf_8hpp_source}\index{C:/Users/Alex/Desktop/Banana/kernel/thr/elf.hpp@{C:/Users/Alex/Desktop/Banana/kernel/thr/elf.hpp}}
+\mbox{\hyperlink{elf_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_ELF\_HPP\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_ELF\_HPP\_}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <stddef.h>}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{vfs_8hpp}{fs/vfs.hpp}}"{}}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#define ELF\_ARCH\_32 0x03}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#define ELF\_ARCH\_64 0x3E}}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#define DT\_NULL     0}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#define DT\_NEEDED   1}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#define DT\_PLTRELSZ 2}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#define DT\_PLTGOT   3}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#define DT\_HASH     4}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#define DT\_STRTAB   5}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#define DT\_SYMTAB   6}}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespace_thr}{Thr}}}
+\DoxyCodeLine{20 \{}
+\DoxyCodeLine{21     \textcolor{keyword}{enum} \mbox{\hyperlink{namespace_thr_a0bd38f3632d7bfb5805b098daf14c16d}{ELFProgramTypes}}}
+\DoxyCodeLine{22     \{}
+\DoxyCodeLine{23         \mbox{\hyperlink{namespace_thr_a0bd38f3632d7bfb5805b098daf14c16da14b085cff1b5da89b7992a1d938d980b}{PT\_NULL}} = 0,}
+\DoxyCodeLine{24         \mbox{\hyperlink{namespace_thr_a0bd38f3632d7bfb5805b098daf14c16dad3233fb7f4a2c650772c84de2f7996c6}{PT\_LOAD}} = 1,}
+\DoxyCodeLine{25         \mbox{\hyperlink{namespace_thr_a0bd38f3632d7bfb5805b098daf14c16da9e4df2f123a17009b7ce83fc3dc92e60}{PT\_DYNAMIC}} = 2,}
+\DoxyCodeLine{26         \mbox{\hyperlink{namespace_thr_a0bd38f3632d7bfb5805b098daf14c16daeacc764f41da7e86e0788322a26f8f4e}{PT\_INTERP}} = 3,}
+\DoxyCodeLine{27         \mbox{\hyperlink{namespace_thr_a0bd38f3632d7bfb5805b098daf14c16dac41425e82ac09295e242ca0a7c75a5d1}{PT\_NOTE}} = 4,}
+\DoxyCodeLine{28         \mbox{\hyperlink{namespace_thr_a0bd38f3632d7bfb5805b098daf14c16da26c8f60e2a85f2e127c88a32e9882cfb}{PT\_SHLIB}} = 5,}
+\DoxyCodeLine{29         \mbox{\hyperlink{namespace_thr_a0bd38f3632d7bfb5805b098daf14c16da8ed558ec71e9b702308ea77e87e3921e}{PT\_PHDIR}} = 6,}
+\DoxyCodeLine{30         \mbox{\hyperlink{namespace_thr_a0bd38f3632d7bfb5805b098daf14c16daee806da796ca359777592ade619ff72d}{PT\_LOOS}} = 0x60000000,}
+\DoxyCodeLine{31         \mbox{\hyperlink{namespace_thr_a0bd38f3632d7bfb5805b098daf14c16da6e4314905cc9ac1e4fa13a2491296a3d}{PT\_HIOS}} = 0x6FFFFFFF,}
+\DoxyCodeLine{32         \mbox{\hyperlink{namespace_thr_a0bd38f3632d7bfb5805b098daf14c16daf3aefde3d790050e1d1300c650d1659e}{PT\_LOPROC}} = 0x70000000,}
+\DoxyCodeLine{33         \mbox{\hyperlink{namespace_thr_a0bd38f3632d7bfb5805b098daf14c16da17bdd19fcf90ff3613392e869c5161d1}{PT\_HIPROC}} = 0x7FFFFFFF}
+\DoxyCodeLine{34     \};}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36     \textcolor{keyword}{enum} \mbox{\hyperlink{namespace_thr_ae9ac478688ceb00fa144363c5985a19b}{ELFSectionTypes}}}
+\DoxyCodeLine{37     \{}
+\DoxyCodeLine{38         \mbox{\hyperlink{namespace_thr_ae9ac478688ceb00fa144363c5985a19ba28927bf8c90d9e0a55a5223a697f1cfc}{SHT\_NULL}} = 0,           \textcolor{comment}{//null}}
+\DoxyCodeLine{39         \mbox{\hyperlink{namespace_thr_ae9ac478688ceb00fa144363c5985a19ba71015d8631935d61733b7d86aa304b9c}{SHT\_PROGBITS}} = 1,       \textcolor{comment}{//program}}
+\DoxyCodeLine{40         \mbox{\hyperlink{namespace_thr_ae9ac478688ceb00fa144363c5985a19ba3956bc985ae7dc15038d666bb73e23ac}{SHT\_SYMTAB}} = 2,           \textcolor{comment}{//symbol table}}
+\DoxyCodeLine{41         \mbox{\hyperlink{namespace_thr_ae9ac478688ceb00fa144363c5985a19ba8d7299b5cbbec5ec48249753d9e55f8c}{SHT\_STRTAB}} = 3,           \textcolor{comment}{//string table}}
+\DoxyCodeLine{42         \mbox{\hyperlink{namespace_thr_ae9ac478688ceb00fa144363c5985a19ba11c38bd3655d606322d623550e021499}{SHT\_RELA}} = 4,           \textcolor{comment}{//relocation}}
+\DoxyCodeLine{43         \mbox{\hyperlink{namespace_thr_ae9ac478688ceb00fa144363c5985a19ba4e85833fdda42456a12bec859da50f9a}{SHT\_NOBITS}} = 8,           \textcolor{comment}{//not present in file (e.g. BSS)}}
+\DoxyCodeLine{44         \mbox{\hyperlink{namespace_thr_ae9ac478688ceb00fa144363c5985a19baa403289a00d08709f3c549c7dfe6d46f}{SHT\_REL}} = 9,         \textcolor{comment}{//relocation}}
+\DoxyCodeLine{45     \};}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47     \textcolor{keyword}{enum} \mbox{\hyperlink{namespace_thr_a0ee7911eb675ab4c0972a124ec1379bd}{ELFSectionAttribs}}}
+\DoxyCodeLine{48     \{}
+\DoxyCodeLine{49         \mbox{\hyperlink{namespace_thr_a0ee7911eb675ab4c0972a124ec1379bda963814a680aa0994c30c511b796862b8}{SHF\_WRITE}} = 0x1,       \textcolor{comment}{//writable}}
+\DoxyCodeLine{50         \mbox{\hyperlink{namespace_thr_a0ee7911eb675ab4c0972a124ec1379bda6a5fecf0e204f83d4ab03411e89e250d}{SHF\_ALLOC}} = 0x2            \textcolor{comment}{//exists in memory}}
+\DoxyCodeLine{51     \};}
+\DoxyCodeLine{52 }
+\DoxyCodeLine{53     \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_thr_1_1_e_l_f_section_header32}{ELFSectionHeader32}}}
+\DoxyCodeLine{54     \{}
+\DoxyCodeLine{55         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_section_header32_aba98d16a1a45e8436f3c553f83589dad}{sh\_name}};}
+\DoxyCodeLine{56         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_section_header32_aadaafb983867aece45467500a8625003}{sh\_type}};}
+\DoxyCodeLine{57         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_section_header32_a8a4ef0c1d20c07370ac0a516ddad408f}{sh\_flags}};}
+\DoxyCodeLine{58         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_section_header32_a1f14fb5750ba260138b630350099d996}{sh\_addr}};}
+\DoxyCodeLine{59         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_section_header32_a116f1ac7bdeea9427b82d90bc81ab1e1}{sh\_offset}};}
+\DoxyCodeLine{60         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_section_header32_aaca2313466b0a76d1f2f5e86aa6a4b54}{sh\_size}};}
+\DoxyCodeLine{61         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_section_header32_a20743bcc7f34264b355d3566bba1851f}{sh\_link}};}
+\DoxyCodeLine{62         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_section_header32_a457883de9df3850a99b3daaec5f7c77e}{sh\_info}};}
+\DoxyCodeLine{63         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_section_header32_ab2c54c4b9cc425e1311751c9798d4ef0}{sh\_addalign}};}
+\DoxyCodeLine{64         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_section_header32_a61a7056199dd183b39f1a26ab142287c}{sh\_entsize}};}
+\DoxyCodeLine{65 }
+\DoxyCodeLine{66     \} \mbox{\hyperlink{namespace_thr_abebc9107e439a9c0dd5c854ed7c76675}{ELFSectionHeader32}};}
+\DoxyCodeLine{67 }
+\DoxyCodeLine{68     \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_thr_1_1_e_l_f_section_header64}{ELFSectionHeader64}}}
+\DoxyCodeLine{69     \{}
+\DoxyCodeLine{70         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_section_header64_a3bc57ae1d7253d6d1c0d2c1bbccda4a9}{sh\_name}};}
+\DoxyCodeLine{71         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_section_header64_aaa67a71b4374489808481432a61812c8}{sh\_type}};}
+\DoxyCodeLine{72         uint64\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_section_header64_aab92f71555346813409d975feb4f71b0}{sh\_flags}};}
+\DoxyCodeLine{73         uint64\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_section_header64_a1e1ca7d50cbc44f6897bef956263761a}{sh\_addr}};}
+\DoxyCodeLine{74         uint64\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_section_header64_ab61b66f920f891e824749675d503cd4d}{sh\_offset}};}
+\DoxyCodeLine{75         uint64\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_section_header64_ac3254871c0f6b38f4fd7b94d0a676d8e}{sh\_size}};}
+\DoxyCodeLine{76         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_section_header64_aadd1a98fcf5c13e88bc461e4db24ea91}{sh\_link}};}
+\DoxyCodeLine{77         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_section_header64_a501db50517e7e8a3063b108954ef6df2}{sh\_info}};}
+\DoxyCodeLine{78         uint64\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_section_header64_a1130ea4d5eb199773bc34e3e59844c61}{sh\_addalign}};}
+\DoxyCodeLine{79         uint64\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_section_header64_a8b83ea2f18097896e129baa1c0fcb937}{sh\_entsize}};}
+\DoxyCodeLine{80 }
+\DoxyCodeLine{81     \} \mbox{\hyperlink{namespace_thr_ae3efeb2c2bcfdbe313f59b6785d2211f}{ELFSectionHeader64}};}
+\DoxyCodeLine{82 }
+\DoxyCodeLine{83     \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_thr_1_1_e_l_f_program_header32}{ELFProgramHeader32}}}
+\DoxyCodeLine{84     \{}
+\DoxyCodeLine{85         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_program_header32_a1de9f88820e84d8f7e531de821f037d2}{type}};}
+\DoxyCodeLine{86         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_program_header32_a3540c3587b509799dc2bded8121651bd}{p\_offset}};}
+\DoxyCodeLine{87         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_program_header32_a184a8bb6dea02a0f2f0f1502d031fc89}{p\_vaddr}};}
+\DoxyCodeLine{88         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_program_header32_ad998d8dcefc9f9e2b21fded426cb8e1a}{reserved}};}
+\DoxyCodeLine{89         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_program_header32_a9e67278cfd8310bb753ef2886205ee20}{p\_filsz}};}
+\DoxyCodeLine{90         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_program_header32_a1136df8196c937444fa9cdd09f74bff3}{p\_memsz}};}
+\DoxyCodeLine{91         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_program_header32_aaafac2b57a21941203b8e5f39fbc2fac}{flags}};}
+\DoxyCodeLine{92         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_program_header32_a90ef2d361399febee8508d2208899624}{padding}};}
+\DoxyCodeLine{93 }
+\DoxyCodeLine{94     \} \mbox{\hyperlink{namespace_thr_ac3a40342e3a492f1cbf988a7100b07c2}{ELFProgramHeader32}};}
+\DoxyCodeLine{95 }
+\DoxyCodeLine{96     \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_thr_1_1_e_l_f_program_header64}{ELFProgramHeader64}}}
+\DoxyCodeLine{97     \{}
+\DoxyCodeLine{98         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_program_header64_a4fb713061d12b82c4ca8db9e38e18626}{type}};}
+\DoxyCodeLine{99         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_program_header64_a154e7e17a8dd1ad1eee537d1d7e9ff56}{flags}};}
+\DoxyCodeLine{100         uint64\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_program_header64_a14a70650be47bc5d8c0a6527a1d579a2}{p\_offset}};}
+\DoxyCodeLine{101         uint64\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_program_header64_a2644119cc3565ef73314dd4632f18066}{p\_vaddr}};}
+\DoxyCodeLine{102         uint64\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_program_header64_abd70afe34b51cdc8ebdaa7628b491e21}{reserved}};}
+\DoxyCodeLine{103         uint64\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_program_header64_ab4e7748146cd4e0ec9f3ea50ea8bf98f}{p\_filsz}};}
+\DoxyCodeLine{104         uint64\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_program_header64_acb695378e444fd02b87e0ab1bd52b29f}{p\_memsz}};}
+\DoxyCodeLine{105         uint64\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_program_header64_a282a9157733c2b11f6d7c821ac32ace7}{padding}};}
+\DoxyCodeLine{106         \textcolor{comment}{//uint64\_t padding2;}}
+\DoxyCodeLine{107 }
+\DoxyCodeLine{108     \} \mbox{\hyperlink{namespace_thr_a39b73c51e86f05ecfbac85e52a4b38b5}{ELFProgramHeader64}};}
+\DoxyCodeLine{109 }
+\DoxyCodeLine{110     \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_thr_1_1_e_l_f_header}{ELFHeader}}}
+\DoxyCodeLine{111     \{}
+\DoxyCodeLine{112         uint8\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_header_a2b5411d93bc67ef0f59367c869ec4611}{identify}}[16];}
+\DoxyCodeLine{113         uint16\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_header_a35de828ece7edd4c8b03b79d5b374ba9}{type}};}
+\DoxyCodeLine{114         uint16\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_header_abc2581b9751b9854844f914376d7b422}{machine}};}
+\DoxyCodeLine{115         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_header_ac5a2fd81ff5adb8e73823244bbb07764}{version}};}
+\DoxyCodeLine{116         \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{struct_thr_1_1_e_l_f_header_ac84fbd9997b63a6de9a062679a78896a}{entry}};              \textcolor{comment}{//program entry point}}
+\DoxyCodeLine{117         \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{struct_thr_1_1_e_l_f_header_a0e00c083f5ec85cdc131d71e44cba256}{phOffset}};            \textcolor{comment}{//program header offset}}
+\DoxyCodeLine{118         \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{struct_thr_1_1_e_l_f_header_a93af0adb27d172dd7d9c02abd92f431b}{shOffset}};            \textcolor{comment}{//section header offset}}
+\DoxyCodeLine{119         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_header_acd4b2530d503791c112c58118b390271}{flags}};}
+\DoxyCodeLine{120         uint16\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_header_a552591dd75f8797fc3fbfe1c4e885e24}{headerSize}};}
+\DoxyCodeLine{121         uint16\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_header_ae038d4d6da2fb12147ea49f2b3f21046}{phSize}};}
+\DoxyCodeLine{122         uint16\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_header_aed346595b50250be1bc27d810265d34e}{phNum}};}
+\DoxyCodeLine{123         uint16\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_header_a1a394fe960946d1ae325455963ec371b}{shSize}};          \textcolor{comment}{//section header size}}
+\DoxyCodeLine{124         uint16\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_header_ac427194a93a217b26059bc9297a8ee98}{shNum}};                \textcolor{comment}{//number of sections}}
+\DoxyCodeLine{125         uint16\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_header_a6c2050b11e31ba951da4afca336767bc}{strtabIndex}};}
+\DoxyCodeLine{126 }
+\DoxyCodeLine{127     \} \mbox{\hyperlink{namespace_thr_afbb50b18245dec00009d10001c69a1bb}{ELFHeader}};}
+\DoxyCodeLine{128 }
+\DoxyCodeLine{129     \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_thr_1_1_e_l_f_symbol_table32}{ELFSymbolTable32}}}
+\DoxyCodeLine{130     \{}
+\DoxyCodeLine{131         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_symbol_table32_a307cba924a6131784d6494bb1ec8eb4c}{st\_name}};}
+\DoxyCodeLine{132         \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{struct_thr_1_1_e_l_f_symbol_table32_a028bc4117c1b96b696d24a9a2cbf9f21}{st\_value}};}
+\DoxyCodeLine{133         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_symbol_table32_af9f4fcffb491eb5536ce6fa1fd42c387}{st\_size}};}
+\DoxyCodeLine{134         uint8\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_symbol_table32_a346e7bef074054411c5ce4202fe1bcbb}{st\_info}};}
+\DoxyCodeLine{135         uint8\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_symbol_table32_ad53378803a23755a64437a38142f4f4f}{st\_other}};}
+\DoxyCodeLine{136         uint16\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_symbol_table32_abfb6b0e336ea05f7d83b9b2bcd0743b8}{st\_shndx}};}
+\DoxyCodeLine{137 }
+\DoxyCodeLine{138     \} \mbox{\hyperlink{namespace_thr_a350668153e97deb298ede81f11e86acb}{ELFSymbolTable32}};}
+\DoxyCodeLine{139 }
+\DoxyCodeLine{140     \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_thr_1_1_e_l_f_dynanic_section32}{ELFDynanicSection32}}}
+\DoxyCodeLine{141     \{}
+\DoxyCodeLine{142         uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_dynanic_section32_a2b0e5530dfd31636f3875d8ae901049f}{d\_tag}};}
+\DoxyCodeLine{143         \textcolor{keyword}{union}}
+\DoxyCodeLine{144         \{}
+\DoxyCodeLine{145             uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_dynanic_section32_afae59898093fd68366ba8dec5fcb0d83}{d\_val}};}
+\DoxyCodeLine{146             uint32\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_dynanic_section32_acea301a329d20846d2785a21a4b8159c}{d\_ptr}};}
+\DoxyCodeLine{147         \} \mbox{\hyperlink{struct_thr_1_1_e_l_f_dynanic_section32_ad79e10d7786bd0635f7c445783c61ab2}{d\_un}};}
+\DoxyCodeLine{148 }
+\DoxyCodeLine{149     \} \mbox{\hyperlink{namespace_thr_aec7453a57ddc0613bce58f6697053b4b}{ELFDynanicSection32}};}
+\DoxyCodeLine{150 }
+\DoxyCodeLine{151     \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_thr_1_1_e_l_f_dynanic_section64}{ELFDynanicSection64}}}
+\DoxyCodeLine{152     \{}
+\DoxyCodeLine{153         uint64\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_dynanic_section64_a1077a196ec71f184c5d6bc4227b6bb83}{d\_tag}};}
+\DoxyCodeLine{154         \textcolor{keyword}{union}}
+\DoxyCodeLine{155         \{}
+\DoxyCodeLine{156             uint64\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_dynanic_section64_aa116958269ab700cf01d285a9c86e58c}{d\_val}};}
+\DoxyCodeLine{157             uint64\_t \mbox{\hyperlink{struct_thr_1_1_e_l_f_dynanic_section64_a1e0777a8240601f426399490bf47d756}{d\_ptr}};}
+\DoxyCodeLine{158         \} \mbox{\hyperlink{struct_thr_1_1_e_l_f_dynanic_section64_a2bdc5ffd0e029db5014d108ea59c879b}{d\_un}};}
+\DoxyCodeLine{159 }
+\DoxyCodeLine{160     \} \mbox{\hyperlink{namespace_thr_a317f4dc5c9e18eb7c29d70a36e2424d7}{ELFDynanicSection64}};}
+\DoxyCodeLine{161 }
+\DoxyCodeLine{162     \textcolor{keywordtype}{bool} \mbox{\hyperlink{namespace_thr_a0e4a3d94f704dde142104814dcc54d13}{allocateMemoryForTask}}(\mbox{\hyperlink{struct_process}{Process}}* prcss, \mbox{\hyperlink{class_file}{File}}* file, \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}}, \textcolor{keywordtype}{size\_t} virtualAddr, \textcolor{keywordtype}{size\_t} additionalNullBytes);}
+\DoxyCodeLine{163     \textcolor{keywordtype}{bool} \mbox{\hyperlink{namespace_thr_a1816f7218ab406101189929a08d17202}{loadProgramIntoMemory}}(\mbox{\hyperlink{struct_process}{Process}}* \mbox{\hyperlink{unaligned_8hpp_a3fb79589b732956ce35d008fa4c8def8}{p}}, \textcolor{keyword}{const} \textcolor{keywordtype}{char}* filename);}
+\DoxyCodeLine{164 }
+\DoxyCodeLine{165     \textcolor{keywordtype}{bool} \mbox{\hyperlink{namespace_thr_a2b9c7d85cf0d42a98767a801b316643d}{loadDriverIntoMemory}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* filename, \textcolor{keywordtype}{size\_t} address, \textcolor{keywordtype}{bool} critical = \textcolor{keyword}{true});}
+\DoxyCodeLine{166     \textcolor{keywordtype}{bool} \mbox{\hyperlink{namespace_thr_ab6debf5450c79ab6f3291502f8f4c017}{loadKernelSymbolTable}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* filename);}
+\DoxyCodeLine{167     \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{namespace_thr_ac3f9d1eabd99a7d0fe718bed1506064c}{getAddressOfKernelSymbol}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* name);}
+\DoxyCodeLine{168 }
+\DoxyCodeLine{169     \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{namespace_thr_a76cf380607aba97b5f3e357a1aebcf1e}{loadDLL}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* name, \textcolor{keywordtype}{bool} critical = \textcolor{keyword}{true});}
+\DoxyCodeLine{170     \textcolor{keywordtype}{void} \mbox{\hyperlink{namespace_thr_a1b1ecba7008f92689e49bd8ffb34d7b3}{executeDLL}}(\textcolor{keywordtype}{size\_t} startAddr, \textcolor{keywordtype}{void}* parentDevice);}
+\DoxyCodeLine{171 }
+\DoxyCodeLine{172     \textcolor{keywordtype}{char}* \mbox{\hyperlink{namespace_thr_a16bd1ce8482f0f46782a46a0d7c01fc1}{getDriverNameFromAddress}}(\textcolor{keywordtype}{size\_t} addr);}
+\DoxyCodeLine{173     \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{namespace_thr_a3d4470c6d144ff0467855d329b8c6225}{getDriverOffsetFromAddress}}(\textcolor{keywordtype}{size\_t} addr);}
+\DoxyCodeLine{174     \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{namespace_thr_a46c5b452f4adb2e3bf391ccd7995025a}{getDriverBaseFromAddress}}(\textcolor{keywordtype}{size\_t} addr);}
+\DoxyCodeLine{175 \}}
+\DoxyCodeLine{176 }
+\DoxyCodeLine{177 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

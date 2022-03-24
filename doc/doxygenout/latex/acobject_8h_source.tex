@@ -1,0 +1,711 @@
+\hypertarget{acobject_8h_source}{}\doxysection{acobject.\+h}
+\label{acobject_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/acpica/acobject.h@{C:/Users/Alex/Desktop/Banana/kernel/acpica/acobject.h}}
+\mbox{\hyperlink{acobject_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{2 \textcolor{comment}{ *}}
+\DoxyCodeLine{3 \textcolor{comment}{ * Name: acobject.h -\/ Definition of ACPI\_OPERAND\_OBJECT  (Internal object only)}}
+\DoxyCodeLine{4 \textcolor{comment}{ *}}
+\DoxyCodeLine{5 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{8 \textcolor{comment}{ *}}
+\DoxyCodeLine{9 \textcolor{comment}{ * 1. Copyright Notice}}
+\DoxyCodeLine{10 \textcolor{comment}{ *}}
+\DoxyCodeLine{11 \textcolor{comment}{ * Some or all of this work -\/ Copyright (c) 1999 -\/ 2019, Intel Corp.}}
+\DoxyCodeLine{12 \textcolor{comment}{ * All rights reserved.}}
+\DoxyCodeLine{13 \textcolor{comment}{ *}}
+\DoxyCodeLine{14 \textcolor{comment}{ * 2. License}}
+\DoxyCodeLine{15 \textcolor{comment}{ *}}
+\DoxyCodeLine{16 \textcolor{comment}{ * 2.1. This is your license from Intel Corp. under its intellectual property}}
+\DoxyCodeLine{17 \textcolor{comment}{ * rights. You may have additional license terms from the party that provided}}
+\DoxyCodeLine{18 \textcolor{comment}{ * you this software, covering your right to use that party's intellectual}}
+\DoxyCodeLine{19 \textcolor{comment}{ * property rights.}}
+\DoxyCodeLine{20 \textcolor{comment}{ *}}
+\DoxyCodeLine{21 \textcolor{comment}{ * 2.2. Intel grants, free of charge, to any person ("{}Licensee"{}) obtaining a}}
+\DoxyCodeLine{22 \textcolor{comment}{ * copy of the source code appearing in this file ("{}Covered Code"{}) an}}
+\DoxyCodeLine{23 \textcolor{comment}{ * irrevocable, perpetual, worldwide license under Intel's copyrights in the}}
+\DoxyCodeLine{24 \textcolor{comment}{ * base code distributed originally by Intel ("{}Original Intel Code"{}) to copy,}}
+\DoxyCodeLine{25 \textcolor{comment}{ * make derivatives, distribute, use and display any portion of the Covered}}
+\DoxyCodeLine{26 \textcolor{comment}{ * Code in any form, with the right to sublicense such rights; and}}
+\DoxyCodeLine{27 \textcolor{comment}{ *}}
+\DoxyCodeLine{28 \textcolor{comment}{ * 2.3. Intel grants Licensee a non-\/exclusive and non-\/transferable patent}}
+\DoxyCodeLine{29 \textcolor{comment}{ * license (with the right to sublicense), under only those claims of Intel}}
+\DoxyCodeLine{30 \textcolor{comment}{ * patents that are infringed by the Original Intel Code, to make, use, sell,}}
+\DoxyCodeLine{31 \textcolor{comment}{ * offer to sell, and import the Covered Code and derivative works thereof}}
+\DoxyCodeLine{32 \textcolor{comment}{ * solely to the minimum extent necessary to exercise the above copyright}}
+\DoxyCodeLine{33 \textcolor{comment}{ * license, and in no event shall the patent license extend to any additions}}
+\DoxyCodeLine{34 \textcolor{comment}{ * to or modifications of the Original Intel Code. No other license or right}}
+\DoxyCodeLine{35 \textcolor{comment}{ * is granted directly or by implication, estoppel or otherwise;}}
+\DoxyCodeLine{36 \textcolor{comment}{ *}}
+\DoxyCodeLine{37 \textcolor{comment}{ * The above copyright and patent license is granted only if the following}}
+\DoxyCodeLine{38 \textcolor{comment}{ * conditions are met:}}
+\DoxyCodeLine{39 \textcolor{comment}{ *}}
+\DoxyCodeLine{40 \textcolor{comment}{ * 3. Conditions}}
+\DoxyCodeLine{41 \textcolor{comment}{ *}}
+\DoxyCodeLine{42 \textcolor{comment}{ * 3.1. Redistribution of Source with Rights to Further Distribute Source.}}
+\DoxyCodeLine{43 \textcolor{comment}{ * Redistribution of source code of any substantial portion of the Covered}}
+\DoxyCodeLine{44 \textcolor{comment}{ * Code or modification with rights to further distribute source must include}}
+\DoxyCodeLine{45 \textcolor{comment}{ * the above Copyright Notice, the above License, this list of Conditions,}}
+\DoxyCodeLine{46 \textcolor{comment}{ * and the following Disclaimer and Export Compliance provision. In addition,}}
+\DoxyCodeLine{47 \textcolor{comment}{ * Licensee must cause all Covered Code to which Licensee contributes to}}
+\DoxyCodeLine{48 \textcolor{comment}{ * contain a file documenting the changes Licensee made to create that Covered}}
+\DoxyCodeLine{49 \textcolor{comment}{ * Code and the date of any change. Licensee must include in that file the}}
+\DoxyCodeLine{50 \textcolor{comment}{ * documentation of any changes made by any predecessor Licensee. Licensee}}
+\DoxyCodeLine{51 \textcolor{comment}{ * must include a prominent statement that the modification is derived,}}
+\DoxyCodeLine{52 \textcolor{comment}{ * directly or indirectly, from Original Intel Code.}}
+\DoxyCodeLine{53 \textcolor{comment}{ *}}
+\DoxyCodeLine{54 \textcolor{comment}{ * 3.2. Redistribution of Source with no Rights to Further Distribute Source.}}
+\DoxyCodeLine{55 \textcolor{comment}{ * Redistribution of source code of any substantial portion of the Covered}}
+\DoxyCodeLine{56 \textcolor{comment}{ * Code or modification without rights to further distribute source must}}
+\DoxyCodeLine{57 \textcolor{comment}{ * include the following Disclaimer and Export Compliance provision in the}}
+\DoxyCodeLine{58 \textcolor{comment}{ * documentation and/or other materials provided with distribution. In}}
+\DoxyCodeLine{59 \textcolor{comment}{ * addition, Licensee may not authorize further sublicense of source of any}}
+\DoxyCodeLine{60 \textcolor{comment}{ * portion of the Covered Code, and must include terms to the effect that the}}
+\DoxyCodeLine{61 \textcolor{comment}{ * license from Licensee to its licensee is limited to the intellectual}}
+\DoxyCodeLine{62 \textcolor{comment}{ * property embodied in the software Licensee provides to its licensee, and}}
+\DoxyCodeLine{63 \textcolor{comment}{ * not to intellectual property embodied in modifications its licensee may}}
+\DoxyCodeLine{64 \textcolor{comment}{ * make.}}
+\DoxyCodeLine{65 \textcolor{comment}{ *}}
+\DoxyCodeLine{66 \textcolor{comment}{ * 3.3. Redistribution of Executable. Redistribution in executable form of any}}
+\DoxyCodeLine{67 \textcolor{comment}{ * substantial portion of the Covered Code or modification must reproduce the}}
+\DoxyCodeLine{68 \textcolor{comment}{ * above Copyright Notice, and the following Disclaimer and Export Compliance}}
+\DoxyCodeLine{69 \textcolor{comment}{ * provision in the documentation and/or other materials provided with the}}
+\DoxyCodeLine{70 \textcolor{comment}{ * distribution.}}
+\DoxyCodeLine{71 \textcolor{comment}{ *}}
+\DoxyCodeLine{72 \textcolor{comment}{ * 3.4. Intel retains all right, title, and interest in and to the Original}}
+\DoxyCodeLine{73 \textcolor{comment}{ * Intel Code.}}
+\DoxyCodeLine{74 \textcolor{comment}{ *}}
+\DoxyCodeLine{75 \textcolor{comment}{ * 3.5. Neither the name Intel nor any other trademark owned or controlled by}}
+\DoxyCodeLine{76 \textcolor{comment}{ * Intel shall be used in advertising or otherwise to promote the sale, use or}}
+\DoxyCodeLine{77 \textcolor{comment}{ * other dealings in products derived from or relating to the Covered Code}}
+\DoxyCodeLine{78 \textcolor{comment}{ * without prior written authorization from Intel.}}
+\DoxyCodeLine{79 \textcolor{comment}{ *}}
+\DoxyCodeLine{80 \textcolor{comment}{ * 4. Disclaimer and Export Compliance}}
+\DoxyCodeLine{81 \textcolor{comment}{ *}}
+\DoxyCodeLine{82 \textcolor{comment}{ * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED}}
+\DoxyCodeLine{83 \textcolor{comment}{ * HERE. ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE}}
+\DoxyCodeLine{84 \textcolor{comment}{ * IS PROVIDED "{}AS IS,"{} AND INTEL WILL NOT PROVIDE ANY SUPPORT, ASSISTANCE,}}
+\DoxyCodeLine{85 \textcolor{comment}{ * INSTALLATION, TRAINING OR OTHER SERVICES. INTEL WILL NOT PROVIDE ANY}}
+\DoxyCodeLine{86 \textcolor{comment}{ * UPDATES, ENHANCEMENTS OR EXTENSIONS. INTEL SPECIFICALLY DISCLAIMS ANY}}
+\DoxyCodeLine{87 \textcolor{comment}{ * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A}}
+\DoxyCodeLine{88 \textcolor{comment}{ * PARTICULAR PURPOSE.}}
+\DoxyCodeLine{89 \textcolor{comment}{ *}}
+\DoxyCodeLine{90 \textcolor{comment}{ * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES}}
+\DoxyCodeLine{91 \textcolor{comment}{ * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR}}
+\DoxyCodeLine{92 \textcolor{comment}{ * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,}}
+\DoxyCodeLine{93 \textcolor{comment}{ * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY}}
+\DoxyCodeLine{94 \textcolor{comment}{ * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL}}
+\DoxyCodeLine{95 \textcolor{comment}{ * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES. THESE LIMITATIONS}}
+\DoxyCodeLine{96 \textcolor{comment}{ * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY}}
+\DoxyCodeLine{97 \textcolor{comment}{ * LIMITED REMEDY.}}
+\DoxyCodeLine{98 \textcolor{comment}{ *}}
+\DoxyCodeLine{99 \textcolor{comment}{ * 4.3. Licensee shall not export, either directly or indirectly, any of this}}
+\DoxyCodeLine{100 \textcolor{comment}{ * software or system incorporating such software without first obtaining any}}
+\DoxyCodeLine{101 \textcolor{comment}{ * required license or other approval from the U. S. Department of Commerce or}}
+\DoxyCodeLine{102 \textcolor{comment}{ * any other agency or department of the United States Government. In the}}
+\DoxyCodeLine{103 \textcolor{comment}{ * event Licensee exports any such software from the United States or}}
+\DoxyCodeLine{104 \textcolor{comment}{ * re-\/exports any such software from a foreign destination, Licensee shall}}
+\DoxyCodeLine{105 \textcolor{comment}{ * ensure that the distribution and export/re-\/export of the software is in}}
+\DoxyCodeLine{106 \textcolor{comment}{ * compliance with all laws, regulations, orders, or other restrictions of the}}
+\DoxyCodeLine{107 \textcolor{comment}{ * U.S. Export Administration Regulations. Licensee agrees that neither it nor}}
+\DoxyCodeLine{108 \textcolor{comment}{ * any of its subsidiaries will export/re-\/export any technical data, process,}}
+\DoxyCodeLine{109 \textcolor{comment}{ * software, or service, directly or indirectly, to any country for which the}}
+\DoxyCodeLine{110 \textcolor{comment}{ * United States government or any agency thereof requires an export license,}}
+\DoxyCodeLine{111 \textcolor{comment}{ * other governmental approval, or letter of assurance, without first obtaining}}
+\DoxyCodeLine{112 \textcolor{comment}{ * such license, approval or letter.}}
+\DoxyCodeLine{113 \textcolor{comment}{ *}}
+\DoxyCodeLine{114 \textcolor{comment}{ *****************************************************************************}}
+\DoxyCodeLine{115 \textcolor{comment}{ *}}
+\DoxyCodeLine{116 \textcolor{comment}{ * Alternatively, you may choose to be licensed under the terms of the}}
+\DoxyCodeLine{117 \textcolor{comment}{ * following license:}}
+\DoxyCodeLine{118 \textcolor{comment}{ *}}
+\DoxyCodeLine{119 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{120 \textcolor{comment}{ * modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{121 \textcolor{comment}{ * are met:}}
+\DoxyCodeLine{122 \textcolor{comment}{ * 1. Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{123 \textcolor{comment}{ *    notice, this list of conditions, and the following disclaimer,}}
+\DoxyCodeLine{124 \textcolor{comment}{ *    without modification.}}
+\DoxyCodeLine{125 \textcolor{comment}{ * 2. Redistributions in binary form must reproduce at minimum a disclaimer}}
+\DoxyCodeLine{126 \textcolor{comment}{ *    substantially similar to the "{}NO WARRANTY"{} disclaimer below}}
+\DoxyCodeLine{127 \textcolor{comment}{ *    ("{}Disclaimer"{}) and any redistribution must be conditioned upon}}
+\DoxyCodeLine{128 \textcolor{comment}{ *    including a substantially similar Disclaimer requirement for further}}
+\DoxyCodeLine{129 \textcolor{comment}{ *    binary redistribution.}}
+\DoxyCodeLine{130 \textcolor{comment}{ * 3. Neither the names of the above-\/listed copyright holders nor the names}}
+\DoxyCodeLine{131 \textcolor{comment}{ *    of any contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{132 \textcolor{comment}{ *    from this software without specific prior written permission.}}
+\DoxyCodeLine{133 \textcolor{comment}{ *}}
+\DoxyCodeLine{134 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS}}
+\DoxyCodeLine{135 \textcolor{comment}{ * "{}AS IS"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT}}
+\DoxyCodeLine{136 \textcolor{comment}{ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR}}
+\DoxyCodeLine{137 \textcolor{comment}{ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT}}
+\DoxyCodeLine{138 \textcolor{comment}{ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,}}
+\DoxyCodeLine{139 \textcolor{comment}{ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT}}
+\DoxyCodeLine{140 \textcolor{comment}{ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,}}
+\DoxyCodeLine{141 \textcolor{comment}{ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY}}
+\DoxyCodeLine{142 \textcolor{comment}{ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{143 \textcolor{comment}{ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{144 \textcolor{comment}{ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{145 \textcolor{comment}{ *}}
+\DoxyCodeLine{146 \textcolor{comment}{ * Alternatively, you may choose to be licensed under the terms of the}}
+\DoxyCodeLine{147 \textcolor{comment}{ * GNU General Public License ("{}GPL"{}) version 2 as published by the Free}}
+\DoxyCodeLine{148 \textcolor{comment}{ * Software Foundation.}}
+\DoxyCodeLine{149 \textcolor{comment}{ *}}
+\DoxyCodeLine{150 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{151 }
+\DoxyCodeLine{152 \textcolor{preprocessor}{\#ifndef \_ACOBJECT\_H}}
+\DoxyCodeLine{153 \textcolor{preprocessor}{\#define \_ACOBJECT\_H}}
+\DoxyCodeLine{154 }
+\DoxyCodeLine{155 \textcolor{comment}{/* acpisrc:StructDefs -\/-\/ for acpisrc conversion */}}
+\DoxyCodeLine{156 }
+\DoxyCodeLine{157 }
+\DoxyCodeLine{158 \textcolor{comment}{/*}}
+\DoxyCodeLine{159 \textcolor{comment}{ * The ACPI\_OPERAND\_OBJECT is used to pass AML operands from the dispatcher}}
+\DoxyCodeLine{160 \textcolor{comment}{ * to the interpreter, and to keep track of the various handlers such as}}
+\DoxyCodeLine{161 \textcolor{comment}{ * address space handlers and notify handlers. The object is a constant}}
+\DoxyCodeLine{162 \textcolor{comment}{ * size in order to allow it to be cached and reused.}}
+\DoxyCodeLine{163 \textcolor{comment}{ *}}
+\DoxyCodeLine{164 \textcolor{comment}{ * Note: The object is optimized to be aligned and will not work if it is}}
+\DoxyCodeLine{165 \textcolor{comment}{ * byte-\/packed.}}
+\DoxyCodeLine{166 \textcolor{comment}{ */}}
+\DoxyCodeLine{167 \textcolor{preprocessor}{\#if ACPI\_MACHINE\_WIDTH == 64}}
+\DoxyCodeLine{168 \textcolor{preprocessor}{\#pragma pack(8)}}
+\DoxyCodeLine{169 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{170 \textcolor{preprocessor}{\#pragma pack(4)}}
+\DoxyCodeLine{171 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{172 }
+\DoxyCodeLine{173 \textcolor{comment}{/*******************************************************************************}}
+\DoxyCodeLine{174 \textcolor{comment}{ *}}
+\DoxyCodeLine{175 \textcolor{comment}{ * Common Descriptors}}
+\DoxyCodeLine{176 \textcolor{comment}{ *}}
+\DoxyCodeLine{177 \textcolor{comment}{ ******************************************************************************/}}
+\DoxyCodeLine{178 }
+\DoxyCodeLine{179 \textcolor{comment}{/*}}
+\DoxyCodeLine{180 \textcolor{comment}{ * Common area for all objects.}}
+\DoxyCodeLine{181 \textcolor{comment}{ *}}
+\DoxyCodeLine{182 \textcolor{comment}{ * DescriptorType is used to differentiate between internal descriptors, and}}
+\DoxyCodeLine{183 \textcolor{comment}{ * must be in the same place across all descriptors}}
+\DoxyCodeLine{184 \textcolor{comment}{ *}}
+\DoxyCodeLine{185 \textcolor{comment}{ * Note: The DescriptorType and Type fields must appear in the identical}}
+\DoxyCodeLine{186 \textcolor{comment}{ * position in both the ACPI\_NAMESPACE\_NODE and ACPI\_OPERAND\_OBJECT}}
+\DoxyCodeLine{187 \textcolor{comment}{ * structures.}}
+\DoxyCodeLine{188 \textcolor{comment}{ */}}
+\DoxyCodeLine{189 \textcolor{preprocessor}{\#define ACPI\_OBJECT\_COMMON\_HEADER \(\backslash\)}}
+\DoxyCodeLine{190 \textcolor{preprocessor}{    union acpi\_operand\_object       *NextObject;        }\textcolor{comment}{/* Objects linked to parent NS node */}\textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{191 \textcolor{preprocessor}{    UINT8                           DescriptorType;     }\textcolor{comment}{/* To differentiate various internal objs */}\textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{192 \textcolor{preprocessor}{    UINT8                           Type;               }\textcolor{comment}{/* ACPI\_OBJECT\_TYPE */}\textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{193 \textcolor{preprocessor}{    UINT16                          ReferenceCount;     }\textcolor{comment}{/* For object deletion management */}\textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{194 \textcolor{preprocessor}{    UINT8                           Flags;}}
+\DoxyCodeLine{195     \textcolor{comment}{/*}}
+\DoxyCodeLine{196 \textcolor{comment}{     * Note: There are 3 bytes available here before the}}
+\DoxyCodeLine{197 \textcolor{comment}{     * next natural alignment boundary (for both 32/64 cases)}}
+\DoxyCodeLine{198 \textcolor{comment}{     */}}
+\DoxyCodeLine{199 }
+\DoxyCodeLine{200 \textcolor{comment}{/* Values for Flag byte above */}}
+\DoxyCodeLine{201 }
+\DoxyCodeLine{202 \textcolor{preprocessor}{\#define AOPOBJ\_AML\_CONSTANT         0x01    }\textcolor{comment}{/* Integer is an AML constant */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{203 \textcolor{preprocessor}{\#define AOPOBJ\_STATIC\_POINTER       0x02    }\textcolor{comment}{/* Data is part of an ACPI table, don't delete */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{204 \textcolor{preprocessor}{\#define AOPOBJ\_DATA\_VALID           0x04    }\textcolor{comment}{/* Object is initialized and data is valid */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{205 \textcolor{preprocessor}{\#define AOPOBJ\_OBJECT\_INITIALIZED   0x08    }\textcolor{comment}{/* Region is initialized */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{206 \textcolor{preprocessor}{\#define AOPOBJ\_REG\_CONNECTED        0x10    }\textcolor{comment}{/* \_REG was run */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{207 \textcolor{preprocessor}{\#define AOPOBJ\_SETUP\_COMPLETE       0x20    }\textcolor{comment}{/* Region setup is complete */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{208 \textcolor{preprocessor}{\#define AOPOBJ\_INVALID              0x40    }\textcolor{comment}{/* Host OS won't allow a Region address */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{209 }
+\DoxyCodeLine{210 }
+\DoxyCodeLine{211 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{212 \textcolor{comment}{ *}}
+\DoxyCodeLine{213 \textcolor{comment}{ * Basic data types}}
+\DoxyCodeLine{214 \textcolor{comment}{ *}}
+\DoxyCodeLine{215 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{216 }
+\DoxyCodeLine{217 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__common}{acpi\_object\_common}}}
+\DoxyCodeLine{218 \{}
+\DoxyCodeLine{219     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{220 }
+\DoxyCodeLine{221 \} \mbox{\hyperlink{acobject_8h_ad878a1b5342e927c2e4d309ab9f5d1fb}{ACPI\_OBJECT\_COMMON}};}
+\DoxyCodeLine{222 }
+\DoxyCodeLine{223 }
+\DoxyCodeLine{224 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__integer}{acpi\_object\_integer}}}
+\DoxyCodeLine{225 \{}
+\DoxyCodeLine{226     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{227     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                           \mbox{\hyperlink{structacpi__object__integer_a34163189c986c28f60e54753933407f5}{Fill}}[3];            \textcolor{comment}{/* Prevent warning on some compilers */}}
+\DoxyCodeLine{228     \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}                          \mbox{\hyperlink{structacpi__object__integer_a7e633f0d0b58779103bae32998a5d04d}{Value}};}
+\DoxyCodeLine{229 }
+\DoxyCodeLine{230 \} \mbox{\hyperlink{acobject_8h_a211ad68789f08c7ea3f972f8e0801f81}{ACPI\_OBJECT\_INTEGER}};}
+\DoxyCodeLine{231 }
+\DoxyCodeLine{232 }
+\DoxyCodeLine{233 \textcolor{comment}{/*}}
+\DoxyCodeLine{234 \textcolor{comment}{ * Note: The String and Buffer object must be identical through the}}
+\DoxyCodeLine{235 \textcolor{comment}{ * pointer and length elements. There is code that depends on this.}}
+\DoxyCodeLine{236 \textcolor{comment}{ *}}
+\DoxyCodeLine{237 \textcolor{comment}{ * Fields common to both Strings and Buffers}}
+\DoxyCodeLine{238 \textcolor{comment}{ */}}
+\DoxyCodeLine{239 \textcolor{preprocessor}{\#define ACPI\_COMMON\_BUFFER\_INFO(\_Type) \(\backslash\)}}
+\DoxyCodeLine{240 \textcolor{preprocessor}{    \_Type                           *Pointer; \(\backslash\)}}
+\DoxyCodeLine{241 \textcolor{preprocessor}{    UINT32                          Length;}}
+\DoxyCodeLine{242 }
+\DoxyCodeLine{243 }
+\DoxyCodeLine{244 \textcolor{comment}{/* Null terminated, ASCII characters only */}}
+\DoxyCodeLine{245 }
+\DoxyCodeLine{246 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__string}{acpi\_object\_string}}}
+\DoxyCodeLine{247 \{}
+\DoxyCodeLine{248     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{249     \mbox{\hyperlink{acobject_8h_ac784336a4f8a12d6c6422890416410dc}{ACPI\_COMMON\_BUFFER\_INFO}}         (\textcolor{keywordtype}{char})              \textcolor{comment}{/* String in AML stream or allocated string */}}
+\DoxyCodeLine{250 }
+\DoxyCodeLine{251 \} \mbox{\hyperlink{acobject_8h_a0546eee28e8b5b7096915113e2780ff6}{ACPI\_OBJECT\_STRING}};}
+\DoxyCodeLine{252 }
+\DoxyCodeLine{253 }
+\DoxyCodeLine{254 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__buffer}{acpi\_object\_buffer}}}
+\DoxyCodeLine{255 \{}
+\DoxyCodeLine{256     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{257     \mbox{\hyperlink{structacpi__object__buffer_aafa93feeed07c9cde2bd8a9d16c6733e}{ACPI\_COMMON\_BUFFER\_INFO}}         (\mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}})             \textcolor{comment}{/* Buffer in AML stream or allocated buffer */}}
+\DoxyCodeLine{258     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                          AmlLength;}
+\DoxyCodeLine{259     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                           *\mbox{\hyperlink{structacpi__object__buffer_ac2b42d2a414098e432cffb45525bf5c6}{AmlStart}};}
+\DoxyCodeLine{260     \mbox{\hyperlink{structacpi__namespace__node}{ACPI\_NAMESPACE\_NODE}}             *\mbox{\hyperlink{structacpi__object__buffer_aeef75e1074d1103f85aa897b08e50476}{Node}};              \textcolor{comment}{/* Link back to parent node */}}
+\DoxyCodeLine{261 }
+\DoxyCodeLine{262 \} \mbox{\hyperlink{acobject_8h_ab6f63c398a7d308a51a6323796f76a9a}{ACPI\_OBJECT\_BUFFER}};}
+\DoxyCodeLine{263 }
+\DoxyCodeLine{264 }
+\DoxyCodeLine{265 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__package}{acpi\_object\_package}}}
+\DoxyCodeLine{266 \{}
+\DoxyCodeLine{267     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{268     \mbox{\hyperlink{structacpi__namespace__node}{ACPI\_NAMESPACE\_NODE}}             *\mbox{\hyperlink{structacpi__object__package_a2137899276ad54857d42db4363de7b35}{Node}};              \textcolor{comment}{/* Link back to parent node */}}
+\DoxyCodeLine{269     \textcolor{keyword}{union }\mbox{\hyperlink{unionacpi__operand__object}{acpi\_operand\_object}}       **\mbox{\hyperlink{structacpi__object__package_ad712ac027151181e91202610bd0807f2}{Elements}};         \textcolor{comment}{/* Array of pointers to AcpiObjects */}}
+\DoxyCodeLine{270     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                           *\mbox{\hyperlink{structacpi__object__package_a1c5fa88421e0b1384977e0c0e412ca18}{AmlStart}};}
+\DoxyCodeLine{271     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                          \mbox{\hyperlink{structacpi__object__package_a62e2c367cfd94c022fdee8cd9292fce6}{AmlLength}};}
+\DoxyCodeLine{272     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                          \mbox{\hyperlink{structacpi__object__package_aa0d7611d40887bdeaa4cfd3424c0f43a}{Count}};              \textcolor{comment}{/* \# of elements in package */}}
+\DoxyCodeLine{273 }
+\DoxyCodeLine{274 \} \mbox{\hyperlink{acobject_8h_a999cde061c43f12dc65bbef898cf70af}{ACPI\_OBJECT\_PACKAGE}};}
+\DoxyCodeLine{275 }
+\DoxyCodeLine{276 }
+\DoxyCodeLine{277 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{278 \textcolor{comment}{ *}}
+\DoxyCodeLine{279 \textcolor{comment}{ * Complex data types}}
+\DoxyCodeLine{280 \textcolor{comment}{ *}}
+\DoxyCodeLine{281 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{282 }
+\DoxyCodeLine{283 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__event}{acpi\_object\_event}}}
+\DoxyCodeLine{284 \{}
+\DoxyCodeLine{285     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{286     \mbox{\hyperlink{actypes_8h_a432412f7016d0ac0f98977fd97dd6d83}{ACPI\_SEMAPHORE}}                  \mbox{\hyperlink{structacpi__object__event_a6224136e1c335c48927033c39251f672}{OsSemaphore}};        \textcolor{comment}{/* Actual OS synchronization object */}}
+\DoxyCodeLine{287 }
+\DoxyCodeLine{288 \} \mbox{\hyperlink{acobject_8h_a58b4848a548081d5829dfe00ff640a69}{ACPI\_OBJECT\_EVENT}};}
+\DoxyCodeLine{289 }
+\DoxyCodeLine{290 }
+\DoxyCodeLine{291 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__mutex}{acpi\_object\_mutex}}}
+\DoxyCodeLine{292 \{}
+\DoxyCodeLine{293     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{294     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                           \mbox{\hyperlink{structacpi__object__mutex_a0cd21eb9ea702047b836c5b902d2183a}{SyncLevel}};          \textcolor{comment}{/* 0-\/15, specified in Mutex() call */}}
+\DoxyCodeLine{295     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                          \mbox{\hyperlink{structacpi__object__mutex_a85fbf2d529d7dfd6c93943e4138c4771}{AcquisitionDepth}};   \textcolor{comment}{/* Allow multiple Acquires, same thread */}}
+\DoxyCodeLine{296     \mbox{\hyperlink{actypes_8h_a3705e4a711b8b995c1ef165a9b4d37d8}{ACPI\_MUTEX}}                      \mbox{\hyperlink{structacpi__object__mutex_ac73fdd42e371484651259b23f8424381}{OsMutex}};            \textcolor{comment}{/* Actual OS synchronization object */}}
+\DoxyCodeLine{297     \mbox{\hyperlink{actypes_8h_abd8bd0f06d2601b39f4cee54615d37d5}{ACPI\_THREAD\_ID}}                  \mbox{\hyperlink{structacpi__object__mutex_a86d4579090f612f32727c7eaa4aec582}{ThreadId}};           \textcolor{comment}{/* Current owner of the mutex */}}
+\DoxyCodeLine{298     \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__thread__state}{acpi\_thread\_state}}        *\mbox{\hyperlink{structacpi__object__mutex_a3e42e3d3eae23300f42ec63434c9d813}{OwnerThread}};       \textcolor{comment}{/* Current owner of the mutex */}}
+\DoxyCodeLine{299     \textcolor{keyword}{union }\mbox{\hyperlink{unionacpi__operand__object}{acpi\_operand\_object}}       *\mbox{\hyperlink{structacpi__object__mutex_a47ed8cd1d9a8ac657e82ea447066987c}{Prev}};              \textcolor{comment}{/* Link for list of acquired mutexes */}}
+\DoxyCodeLine{300     \textcolor{keyword}{union }\mbox{\hyperlink{unionacpi__operand__object}{acpi\_operand\_object}}       *\mbox{\hyperlink{structacpi__object__mutex_a00927ab53df053418e58d18dcf7c1579}{Next}};              \textcolor{comment}{/* Link for list of acquired mutexes */}}
+\DoxyCodeLine{301     \mbox{\hyperlink{structacpi__namespace__node}{ACPI\_NAMESPACE\_NODE}}             *\mbox{\hyperlink{structacpi__object__mutex_a9b6c69b591d9d9e2c1b00e5ab067ef70}{Node}};              \textcolor{comment}{/* Containing namespace node */}}
+\DoxyCodeLine{302     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                           \mbox{\hyperlink{structacpi__object__mutex_ac88fee4f3bdcb72c3e01280580c9db99}{OriginalSyncLevel}};  \textcolor{comment}{/* Owner's original sync level (0-\/15) */}}
+\DoxyCodeLine{303 }
+\DoxyCodeLine{304 \} \mbox{\hyperlink{acobject_8h_a496fd71ab1f0fdca8727e0645837c153}{ACPI\_OBJECT\_MUTEX}};}
+\DoxyCodeLine{305 }
+\DoxyCodeLine{306 }
+\DoxyCodeLine{307 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__region}{acpi\_object\_region}}}
+\DoxyCodeLine{308 \{}
+\DoxyCodeLine{309     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{310     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                           \mbox{\hyperlink{structacpi__object__region_a6a83ecded0272904ff2433aee63a83d3}{SpaceId}};}
+\DoxyCodeLine{311     \mbox{\hyperlink{structacpi__namespace__node}{ACPI\_NAMESPACE\_NODE}}             *\mbox{\hyperlink{structacpi__object__region_a1008105716fe531fa53e0481f92ad34a}{Node}};              \textcolor{comment}{/* Containing namespace node */}}
+\DoxyCodeLine{312     \textcolor{keyword}{union }\mbox{\hyperlink{unionacpi__operand__object}{acpi\_operand\_object}}       *\mbox{\hyperlink{structacpi__object__region_a989c759360c849aab4bfd29c88c11da8}{Handler}};           \textcolor{comment}{/* Handler for region access */}}
+\DoxyCodeLine{313     \textcolor{keyword}{union }\mbox{\hyperlink{unionacpi__operand__object}{acpi\_operand\_object}}       *\mbox{\hyperlink{structacpi__object__region_abef7b66e6296419d89396d319658f6ed}{Next}};}
+\DoxyCodeLine{314     \mbox{\hyperlink{actypes_8h_a32224933d3fb684d3fe3edae33a92758}{ACPI\_PHYSICAL\_ADDRESS}}           \mbox{\hyperlink{structacpi__object__region_a7c86ffb4b5843aa03a85436792db4144}{Address}};}
+\DoxyCodeLine{315     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                          \mbox{\hyperlink{structacpi__object__region_a8937d7903133bde80c9c6d23e9b1b3c2}{Length}};}
+\DoxyCodeLine{316 }
+\DoxyCodeLine{317 \} \mbox{\hyperlink{acobject_8h_a4dcfa957b89875aa7568271f2c1e7548}{ACPI\_OBJECT\_REGION}};}
+\DoxyCodeLine{318 }
+\DoxyCodeLine{319 }
+\DoxyCodeLine{320 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__method}{acpi\_object\_method}}}
+\DoxyCodeLine{321 \{}
+\DoxyCodeLine{322     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{323     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                           \mbox{\hyperlink{structacpi__object__method_aa330a314ea3961e4fdcbd94b40a4b135}{InfoFlags}};}
+\DoxyCodeLine{324     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                           \mbox{\hyperlink{structacpi__object__method_a02593046885d6371e6043ff9fd05cd3b}{ParamCount}};}
+\DoxyCodeLine{325     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                           \mbox{\hyperlink{structacpi__object__method_a54b504c204c2a5de00b5239f58a930d8}{SyncLevel}};}
+\DoxyCodeLine{326     \textcolor{keyword}{union }\mbox{\hyperlink{unionacpi__operand__object}{acpi\_operand\_object}}       *\mbox{\hyperlink{structacpi__object__method_ae61d49e545446c2e85fd5ae7353fede4}{Mutex}};}
+\DoxyCodeLine{327     \textcolor{keyword}{union }\mbox{\hyperlink{unionacpi__operand__object}{acpi\_operand\_object}}       *\mbox{\hyperlink{structacpi__object__method_afb99dea9a5eeb350a03ee5e829facb63}{Node}};}
+\DoxyCodeLine{328     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                           *\mbox{\hyperlink{structacpi__object__method_a6a975b190b18ff73cd90f5cedfbc2502}{AmlStart}};}
+\DoxyCodeLine{329     \textcolor{keyword}{union}}
+\DoxyCodeLine{330     \{}
+\DoxyCodeLine{331         \mbox{\hyperlink{aclocal_8h_a9d5ef072a0ffd97a108b45e097d99865}{ACPI\_INTERNAL\_METHOD}}            \mbox{\hyperlink{structacpi__object__method_aa7fbcfd4d25299d261e3cd1aa6b2805d}{Implementation}};}
+\DoxyCodeLine{332         \textcolor{keyword}{union }\mbox{\hyperlink{unionacpi__operand__object}{acpi\_operand\_object}}       *\mbox{\hyperlink{structacpi__object__method_a2073973da84a475fb37f18302170c50f}{Handler}};}
+\DoxyCodeLine{333     \} \mbox{\hyperlink{structacpi__object__method_a52bedc4bda129b1d22234f87817e7eec}{Dispatch}};}
+\DoxyCodeLine{334 }
+\DoxyCodeLine{335     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                          \mbox{\hyperlink{structacpi__object__method_aed53a6b3e1bce2f64c448df1e2514c1e}{AmlLength}};}
+\DoxyCodeLine{336     \mbox{\hyperlink{actypes_8h_ad92f0865ab9ce9800c267468b6a5a064}{ACPI\_OWNER\_ID}}                   \mbox{\hyperlink{structacpi__object__method_a262b9f3aeb910afea4210ea710c6989e}{OwnerId}};}
+\DoxyCodeLine{337     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                           \mbox{\hyperlink{structacpi__object__method_ae8bd3e107fc452a44109fadaae0ac55b}{ThreadCount}};}
+\DoxyCodeLine{338 }
+\DoxyCodeLine{339 \} \mbox{\hyperlink{acobject_8h_abfbf73fa30639a9bcefd1248b3b50a67}{ACPI\_OBJECT\_METHOD}};}
+\DoxyCodeLine{340 }
+\DoxyCodeLine{341 \textcolor{comment}{/* Flags for InfoFlags field above */}}
+\DoxyCodeLine{342 }
+\DoxyCodeLine{343 \textcolor{preprocessor}{\#define ACPI\_METHOD\_MODULE\_LEVEL        0x01    }\textcolor{comment}{/* Method is actually module-\/level code */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{344 \textcolor{preprocessor}{\#define ACPI\_METHOD\_INTERNAL\_ONLY       0x02    }\textcolor{comment}{/* Method is implemented internally (\_OSI) */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{345 \textcolor{preprocessor}{\#define ACPI\_METHOD\_SERIALIZED          0x04    }\textcolor{comment}{/* Method is serialized */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{346 \textcolor{preprocessor}{\#define ACPI\_METHOD\_SERIALIZED\_PENDING  0x08    }\textcolor{comment}{/* Method is to be marked serialized */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{347 \textcolor{preprocessor}{\#define ACPI\_METHOD\_IGNORE\_SYNC\_LEVEL   0x10    }\textcolor{comment}{/* Method was auto-\/serialized at table load time */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{348 \textcolor{preprocessor}{\#define ACPI\_METHOD\_MODIFIED\_NAMESPACE  0x20    }\textcolor{comment}{/* Method modified the namespace */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{349 }
+\DoxyCodeLine{350 }
+\DoxyCodeLine{351 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{352 \textcolor{comment}{ *}}
+\DoxyCodeLine{353 \textcolor{comment}{ * Objects that can be notified. All share a common NotifyInfo area.}}
+\DoxyCodeLine{354 \textcolor{comment}{ *}}
+\DoxyCodeLine{355 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{356 }
+\DoxyCodeLine{357 \textcolor{comment}{/*}}
+\DoxyCodeLine{358 \textcolor{comment}{ * Common fields for objects that support ASL notifications}}
+\DoxyCodeLine{359 \textcolor{comment}{ */}}
+\DoxyCodeLine{360 \textcolor{preprocessor}{\#define ACPI\_COMMON\_NOTIFY\_INFO \(\backslash\)}}
+\DoxyCodeLine{361 \textcolor{preprocessor}{    union acpi\_operand\_object       *NotifyList[2];     }\textcolor{comment}{/* Handlers for system/device notifies */}\textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{362 \textcolor{preprocessor}{    union acpi\_operand\_object       *Handler;           }\textcolor{comment}{/* Handler for Address space */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{363 }
+\DoxyCodeLine{364 \textcolor{comment}{/* COMMON NOTIFY for POWER, PROCESSOR, DEVICE, and THERMAL */}}
+\DoxyCodeLine{365 }
+\DoxyCodeLine{366 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__notify__common}{acpi\_object\_notify\_common}}}
+\DoxyCodeLine{367 \{}
+\DoxyCodeLine{368     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{369     \mbox{\hyperlink{acobject_8h_ab341081d75dd3fd6d870585cc1b09eee}{ACPI\_COMMON\_NOTIFY\_INFO}}}
+\DoxyCodeLine{370 }
+\DoxyCodeLine{371 \} \mbox{\hyperlink{acobject_8h_a5b0f4a3e3d73520245ac4c203ecaf223}{ACPI\_OBJECT\_NOTIFY\_COMMON}};}
+\DoxyCodeLine{372 }
+\DoxyCodeLine{373 }
+\DoxyCodeLine{374 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__device}{acpi\_object\_device}}}
+\DoxyCodeLine{375 \{}
+\DoxyCodeLine{376     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{377     \mbox{\hyperlink{acobject_8h_ab341081d75dd3fd6d870585cc1b09eee}{ACPI\_COMMON\_NOTIFY\_INFO}}}
+\DoxyCodeLine{378     \mbox{\hyperlink{structacpi__gpe__block__info}{ACPI\_GPE\_BLOCK\_INFO}}             *\mbox{\hyperlink{structacpi__object__device_a0f041d3d95149451405b6ceee080a61a}{GpeBlock}};}
+\DoxyCodeLine{379 }
+\DoxyCodeLine{380 \} \mbox{\hyperlink{acobject_8h_a9d303aebdaf0888d88ea6a3d01d633cb}{ACPI\_OBJECT\_DEVICE}};}
+\DoxyCodeLine{381 }
+\DoxyCodeLine{382 }
+\DoxyCodeLine{383 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__power__resource}{acpi\_object\_power\_resource}}}
+\DoxyCodeLine{384 \{}
+\DoxyCodeLine{385     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{386     \mbox{\hyperlink{acobject_8h_ab341081d75dd3fd6d870585cc1b09eee}{ACPI\_COMMON\_NOTIFY\_INFO}}}
+\DoxyCodeLine{387     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                          \mbox{\hyperlink{structacpi__object__power__resource_afb350dc26a0749dca9d729475061e841}{SystemLevel}};}
+\DoxyCodeLine{388     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                          \mbox{\hyperlink{structacpi__object__power__resource_a07ffa374248062fae166d788871a2408}{ResourceOrder}};}
+\DoxyCodeLine{389 }
+\DoxyCodeLine{390 \} \mbox{\hyperlink{acobject_8h_a6f2d8bad572f8f7f4117aa30bf9a0137}{ACPI\_OBJECT\_POWER\_RESOURCE}};}
+\DoxyCodeLine{391 }
+\DoxyCodeLine{392 }
+\DoxyCodeLine{393 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__processor}{acpi\_object\_processor}}}
+\DoxyCodeLine{394 \{}
+\DoxyCodeLine{395     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{396 }
+\DoxyCodeLine{397     \textcolor{comment}{/* The next two fields take advantage of the 3-\/byte space before NOTIFY\_INFO */}}
+\DoxyCodeLine{398 }
+\DoxyCodeLine{399     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                           \mbox{\hyperlink{structacpi__object__processor_afe1298e7fcae5892945f387c9b31932e}{ProcId}};}
+\DoxyCodeLine{400     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                           \mbox{\hyperlink{structacpi__object__processor_a4ffcdc7ac7638fdb289bf587bd2cb4ce}{Length}};}
+\DoxyCodeLine{401     \mbox{\hyperlink{acobject_8h_ab341081d75dd3fd6d870585cc1b09eee}{ACPI\_COMMON\_NOTIFY\_INFO}}}
+\DoxyCodeLine{402     \mbox{\hyperlink{actypes_8h_a14f5a1e5b1d4431f3d379391cdc9ab55}{ACPI\_IO\_ADDRESS}}                 \mbox{\hyperlink{structacpi__object__processor_a148452ed8a659629b38ad61cb767d37f}{Address}};}
+\DoxyCodeLine{403 }
+\DoxyCodeLine{404 \} \mbox{\hyperlink{acobject_8h_a7b73f2358d30880422006f6d4bf26501}{ACPI\_OBJECT\_PROCESSOR}};}
+\DoxyCodeLine{405 }
+\DoxyCodeLine{406 }
+\DoxyCodeLine{407 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__thermal__zone}{acpi\_object\_thermal\_zone}}}
+\DoxyCodeLine{408 \{}
+\DoxyCodeLine{409     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{410     \mbox{\hyperlink{acobject_8h_ab341081d75dd3fd6d870585cc1b09eee}{ACPI\_COMMON\_NOTIFY\_INFO}}}
+\DoxyCodeLine{411 }
+\DoxyCodeLine{412 \} \mbox{\hyperlink{acobject_8h_ac6423f2a275d7a71ec487a13f8ed38f3}{ACPI\_OBJECT\_THERMAL\_ZONE}};}
+\DoxyCodeLine{413 }
+\DoxyCodeLine{414 }
+\DoxyCodeLine{415 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{416 \textcolor{comment}{ *}}
+\DoxyCodeLine{417 \textcolor{comment}{ * Fields. All share a common header/info field.}}
+\DoxyCodeLine{418 \textcolor{comment}{ *}}
+\DoxyCodeLine{419 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{420 }
+\DoxyCodeLine{421 \textcolor{comment}{/*}}
+\DoxyCodeLine{422 \textcolor{comment}{ * Common bitfield for the field objects}}
+\DoxyCodeLine{423 \textcolor{comment}{ * "{}Field Datum"{}  -\/-\/ a datum from the actual field object}}
+\DoxyCodeLine{424 \textcolor{comment}{ * "{}Buffer Datum"{} -\/-\/ a datum from a user buffer, read from or to be written to the field}}
+\DoxyCodeLine{425 \textcolor{comment}{ */}}
+\DoxyCodeLine{426 \textcolor{preprocessor}{\#define ACPI\_COMMON\_FIELD\_INFO \(\backslash\)}}
+\DoxyCodeLine{427 \textcolor{preprocessor}{    UINT8                           FieldFlags;         }\textcolor{comment}{/* Access, update, and lock bits */}\textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{428 \textcolor{preprocessor}{    UINT8                           Attribute;          }\textcolor{comment}{/* From AccessAs keyword */}\textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{429 \textcolor{preprocessor}{    UINT8                           AccessByteWidth;    }\textcolor{comment}{/* Read/Write size in bytes */}\textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{430 \textcolor{preprocessor}{    ACPI\_NAMESPACE\_NODE             *Node;              }\textcolor{comment}{/* Link back to parent node */}\textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{431 \textcolor{preprocessor}{    UINT32                          BitLength;          }\textcolor{comment}{/* Length of field in bits */}\textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{432 \textcolor{preprocessor}{    UINT32                          BaseByteOffset;     }\textcolor{comment}{/* Byte offset within containing object */}\textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{433 \textcolor{preprocessor}{    UINT32                          Value;              }\textcolor{comment}{/* Value to store into the Bank or Index register */}\textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{434 \textcolor{preprocessor}{    UINT8                           StartFieldBitOffset;}\textcolor{comment}{/* Bit offset within first field datum (0-\/63) */}\textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{435 \textcolor{preprocessor}{    UINT8                           AccessLength;       }\textcolor{comment}{/* For serial regions/fields */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{436 }
+\DoxyCodeLine{437 \textcolor{comment}{/* COMMON FIELD (for BUFFER, REGION, BANK, and INDEX fields) */}}
+\DoxyCodeLine{438 }
+\DoxyCodeLine{439 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__field__common}{acpi\_object\_field\_common}}}
+\DoxyCodeLine{440 \{}
+\DoxyCodeLine{441     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{442     \mbox{\hyperlink{acobject_8h_aac11952acab2594d63777bd2133c820e}{ACPI\_COMMON\_FIELD\_INFO}}}
+\DoxyCodeLine{443     \textcolor{keyword}{union }\mbox{\hyperlink{unionacpi__operand__object}{acpi\_operand\_object}}       *\mbox{\hyperlink{structacpi__object__field__common_a9cc8fa1af9ad91c1c7c6f394e9f886a1}{RegionObj}};         \textcolor{comment}{/* Parent Operation Region object (REGION/BANK fields only) */}}
+\DoxyCodeLine{444 }
+\DoxyCodeLine{445 \} \mbox{\hyperlink{acobject_8h_aa0e8d844bfe61836dd24678e2218a411}{ACPI\_OBJECT\_FIELD\_COMMON}};}
+\DoxyCodeLine{446 }
+\DoxyCodeLine{447 }
+\DoxyCodeLine{448 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__region__field}{acpi\_object\_region\_field}}}
+\DoxyCodeLine{449 \{}
+\DoxyCodeLine{450     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{451     \mbox{\hyperlink{acobject_8h_aac11952acab2594d63777bd2133c820e}{ACPI\_COMMON\_FIELD\_INFO}}}
+\DoxyCodeLine{452     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                          \mbox{\hyperlink{structacpi__object__region__field_a36460231758e3c93bde97d8f16379cec}{ResourceLength}};}
+\DoxyCodeLine{453     \textcolor{keyword}{union }\mbox{\hyperlink{unionacpi__operand__object}{acpi\_operand\_object}}       *\mbox{\hyperlink{structacpi__object__region__field_a83f5c690fdd8d4609678afefdb1c0cc8}{RegionObj}};         \textcolor{comment}{/* Containing OpRegion object */}}
+\DoxyCodeLine{454     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                           *\mbox{\hyperlink{structacpi__object__region__field_a909ac1802f5395a1dfbe25c80ea2852a}{ResourceBuffer}};    \textcolor{comment}{/* ResourceTemplate for serial regions/fields */}}
+\DoxyCodeLine{455     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                          \mbox{\hyperlink{structacpi__object__region__field_a606ed6a9cefdce4d52c2130888439a93}{PinNumberIndex}};     \textcolor{comment}{/* Index relative to previous Connection/Template */}}
+\DoxyCodeLine{456     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                           *\mbox{\hyperlink{structacpi__object__region__field_a44be1f1121aeacff6a1e0a856d8a1186}{InternalPccBuffer}}; \textcolor{comment}{/* Internal buffer for fields associated with PCC */}}
+\DoxyCodeLine{457 }
+\DoxyCodeLine{458 \} \mbox{\hyperlink{acobject_8h_a2e68175a3fe50022c81c877b94c02465}{ACPI\_OBJECT\_REGION\_FIELD}};}
+\DoxyCodeLine{459 }
+\DoxyCodeLine{460 }
+\DoxyCodeLine{461 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__bank__field}{acpi\_object\_bank\_field}}}
+\DoxyCodeLine{462 \{}
+\DoxyCodeLine{463     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{464     \mbox{\hyperlink{acobject_8h_aac11952acab2594d63777bd2133c820e}{ACPI\_COMMON\_FIELD\_INFO}}}
+\DoxyCodeLine{465     \textcolor{keyword}{union }\mbox{\hyperlink{unionacpi__operand__object}{acpi\_operand\_object}}       *\mbox{\hyperlink{structacpi__object__bank__field_a46dab661eec4014335b9349cb0ef6a96}{RegionObj}};         \textcolor{comment}{/* Containing OpRegion object */}}
+\DoxyCodeLine{466     \textcolor{keyword}{union }\mbox{\hyperlink{unionacpi__operand__object}{acpi\_operand\_object}}       *\mbox{\hyperlink{structacpi__object__bank__field_a73ed4dfbc43c06d12943e619cb7628fa}{BankObj}};           \textcolor{comment}{/* BankSelect Register object */}}
+\DoxyCodeLine{467 }
+\DoxyCodeLine{468 \} \mbox{\hyperlink{acobject_8h_a96f586ea8224cb11ed51f5b7fdd667f0}{ACPI\_OBJECT\_BANK\_FIELD}};}
+\DoxyCodeLine{469 }
+\DoxyCodeLine{470 }
+\DoxyCodeLine{471 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__index__field}{acpi\_object\_index\_field}}}
+\DoxyCodeLine{472 \{}
+\DoxyCodeLine{473     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{474     \mbox{\hyperlink{acobject_8h_aac11952acab2594d63777bd2133c820e}{ACPI\_COMMON\_FIELD\_INFO}}}
+\DoxyCodeLine{475 }
+\DoxyCodeLine{476     \textcolor{comment}{/*}}
+\DoxyCodeLine{477 \textcolor{comment}{     * No "{}RegionObj"{} pointer needed since the Index and Data registers}}
+\DoxyCodeLine{478 \textcolor{comment}{     * are each field definitions unto themselves.}}
+\DoxyCodeLine{479 \textcolor{comment}{     */}}
+\DoxyCodeLine{480     \textcolor{keyword}{union }\mbox{\hyperlink{unionacpi__operand__object}{acpi\_operand\_object}}       *\mbox{\hyperlink{structacpi__object__index__field_a98104f43353228c85d619aa1c8f11d52}{IndexObj}};          \textcolor{comment}{/* Index register */}}
+\DoxyCodeLine{481     \textcolor{keyword}{union }\mbox{\hyperlink{unionacpi__operand__object}{acpi\_operand\_object}}       *\mbox{\hyperlink{structacpi__object__index__field_afb105298151a1e6e6a0b92623e25e638}{DataObj}};           \textcolor{comment}{/* Data register */}}
+\DoxyCodeLine{482 }
+\DoxyCodeLine{483 \} \mbox{\hyperlink{acobject_8h_a25c0ae7ed8be86792a8f362351cb1e74}{ACPI\_OBJECT\_INDEX\_FIELD}};}
+\DoxyCodeLine{484 }
+\DoxyCodeLine{485 }
+\DoxyCodeLine{486 \textcolor{comment}{/* The BufferField is different in that it is part of a Buffer, not an OpRegion */}}
+\DoxyCodeLine{487 }
+\DoxyCodeLine{488 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__buffer__field}{acpi\_object\_buffer\_field}}}
+\DoxyCodeLine{489 \{}
+\DoxyCodeLine{490     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{491     \mbox{\hyperlink{acobject_8h_aac11952acab2594d63777bd2133c820e}{ACPI\_COMMON\_FIELD\_INFO}}}
+\DoxyCodeLine{492     \mbox{\hyperlink{actypes_8h_a112e3146cb38b6ee95e64d85842e380a}{BOOLEAN}}                         \mbox{\hyperlink{structacpi__object__buffer__field_a74db2e56353d4f2ce25cdd849f4bca64}{IsCreateField}};      \textcolor{comment}{/* Special case for objects created by CreateField() */}}
+\DoxyCodeLine{493     \textcolor{keyword}{union }\mbox{\hyperlink{unionacpi__operand__object}{acpi\_operand\_object}}       *\mbox{\hyperlink{structacpi__object__buffer__field_a44b0c5cd2663e957168dc482d871b983}{BufferObj}};         \textcolor{comment}{/* Containing Buffer object */}}
+\DoxyCodeLine{494 }
+\DoxyCodeLine{495 \} \mbox{\hyperlink{acobject_8h_a95ee2f39aa862458e8d6aadd71214381}{ACPI\_OBJECT\_BUFFER\_FIELD}};}
+\DoxyCodeLine{496 }
+\DoxyCodeLine{497 }
+\DoxyCodeLine{498 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{499 \textcolor{comment}{ *}}
+\DoxyCodeLine{500 \textcolor{comment}{ * Objects for handlers}}
+\DoxyCodeLine{501 \textcolor{comment}{ *}}
+\DoxyCodeLine{502 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{503 }
+\DoxyCodeLine{504 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__notify__handler}{acpi\_object\_notify\_handler}}}
+\DoxyCodeLine{505 \{}
+\DoxyCodeLine{506     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{507     \mbox{\hyperlink{structacpi__namespace__node}{ACPI\_NAMESPACE\_NODE}}             *\mbox{\hyperlink{structacpi__object__notify__handler_a1d2f307c192846d770a039b9f8f83c99}{Node}};              \textcolor{comment}{/* Parent device */}}
+\DoxyCodeLine{508     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                          \mbox{\hyperlink{structacpi__object__notify__handler_a46ac734875243e776c8865f5484ec264}{HandlerType}};        \textcolor{comment}{/* Type: Device/System/Both */}}
+\DoxyCodeLine{509     \mbox{\hyperlink{actypes_8h_aa3c11190dce0844cefd6c033e37522d8}{ACPI\_NOTIFY\_HANDLER}}             \mbox{\hyperlink{structacpi__object__notify__handler_a9a95b65e950428ef7fb00a7e37f8a8f2}{Handler}};            \textcolor{comment}{/* Handler address */}}
+\DoxyCodeLine{510     \textcolor{keywordtype}{void}                            *\mbox{\hyperlink{structacpi__object__notify__handler_a43674d1e40374262e75ad7b1b1a63953}{Context}};}
+\DoxyCodeLine{511     \textcolor{keyword}{union }\mbox{\hyperlink{unionacpi__operand__object}{acpi\_operand\_object}}       *\mbox{\hyperlink{structacpi__object__notify__handler_ab0bff97964baaf740eae97e8e750bfa3}{Next}}[2];           \textcolor{comment}{/* Device and System handler lists */}}
+\DoxyCodeLine{512 }
+\DoxyCodeLine{513 \} \mbox{\hyperlink{acobject_8h_acd645256be6a88f88720d53bb30c2720}{ACPI\_OBJECT\_NOTIFY\_HANDLER}};}
+\DoxyCodeLine{514 }
+\DoxyCodeLine{515 }
+\DoxyCodeLine{516 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__addr__handler}{acpi\_object\_addr\_handler}}}
+\DoxyCodeLine{517 \{}
+\DoxyCodeLine{518     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{519     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                           \mbox{\hyperlink{structacpi__object__addr__handler_a3205224af2a0f9c7403ddc5489d8b0eb}{SpaceId}};}
+\DoxyCodeLine{520     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                           \mbox{\hyperlink{structacpi__object__addr__handler_aad8ceb44777a55d7b78435690f88d9bc}{HandlerFlags}};}
+\DoxyCodeLine{521     \mbox{\hyperlink{actypes_8h_a81b2fa90cdbbf4da3d65603cb5279ccc}{ACPI\_ADR\_SPACE\_HANDLER}}          \mbox{\hyperlink{structacpi__object__addr__handler_a6f3ae9a8115d7ffc2bd9dff7551bf780}{Handler}};}
+\DoxyCodeLine{522     \mbox{\hyperlink{structacpi__namespace__node}{ACPI\_NAMESPACE\_NODE}}             *\mbox{\hyperlink{structacpi__object__addr__handler_a337767a20b2327e119352dce89fbd87f}{Node}};              \textcolor{comment}{/* Parent device */}}
+\DoxyCodeLine{523     \textcolor{keywordtype}{void}                            *\mbox{\hyperlink{structacpi__object__addr__handler_a05b40e412d7bd6bfbe913adbc1c12eab}{Context}};}
+\DoxyCodeLine{524     \mbox{\hyperlink{actypes_8h_a660302ea98e306aef3e1a8601d8f6181}{ACPI\_ADR\_SPACE\_SETUP}}            \mbox{\hyperlink{structacpi__object__addr__handler_ac4db7c84d9cd3561707fed2b1f97f935}{Setup}};}
+\DoxyCodeLine{525     \textcolor{keyword}{union }\mbox{\hyperlink{unionacpi__operand__object}{acpi\_operand\_object}}       *\mbox{\hyperlink{structacpi__object__addr__handler_a074ec5653fc8a47e86d833bcfdfb1c8e}{RegionList}};        \textcolor{comment}{/* Regions using this handler */}}
+\DoxyCodeLine{526     \textcolor{keyword}{union }\mbox{\hyperlink{unionacpi__operand__object}{acpi\_operand\_object}}       *\mbox{\hyperlink{structacpi__object__addr__handler_aeeb3eb0628a1fbb73ac73defcbaef142}{Next}};}
+\DoxyCodeLine{527 }
+\DoxyCodeLine{528 \} \mbox{\hyperlink{acobject_8h_a37532e92572fe99ef3f9dc81f3ee4ade}{ACPI\_OBJECT\_ADDR\_HANDLER}};}
+\DoxyCodeLine{529 }
+\DoxyCodeLine{530 \textcolor{comment}{/* Flags for address handler (HandlerFlags) */}}
+\DoxyCodeLine{531 }
+\DoxyCodeLine{532 \textcolor{preprocessor}{\#define ACPI\_ADDR\_HANDLER\_DEFAULT\_INSTALLED  0x01}}
+\DoxyCodeLine{533 }
+\DoxyCodeLine{534 }
+\DoxyCodeLine{535 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{536 \textcolor{comment}{ *}}
+\DoxyCodeLine{537 \textcolor{comment}{ * Special internal objects}}
+\DoxyCodeLine{538 \textcolor{comment}{ *}}
+\DoxyCodeLine{539 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{540 }
+\DoxyCodeLine{541 \textcolor{comment}{/*}}
+\DoxyCodeLine{542 \textcolor{comment}{ * The Reference object is used for these opcodes:}}
+\DoxyCodeLine{543 \textcolor{comment}{ * Arg[0-\/6], Local[0-\/7], IndexOp, NameOp, RefOfOp, LoadOp, LoadTableOp, DebugOp}}
+\DoxyCodeLine{544 \textcolor{comment}{ * The Reference.Class differentiates these types.}}
+\DoxyCodeLine{545 \textcolor{comment}{ */}}
+\DoxyCodeLine{546 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__reference}{acpi\_object\_reference}}}
+\DoxyCodeLine{547 \{}
+\DoxyCodeLine{548     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{549     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                           \mbox{\hyperlink{structacpi__object__reference_ac859b796cec90f4d25ffb4ef80bc2326}{Class}};              \textcolor{comment}{/* Reference Class */}}
+\DoxyCodeLine{550     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                           \mbox{\hyperlink{structacpi__object__reference_a59ef6568ddbce5cbe8565cfd94b2fc65}{TargetType}};         \textcolor{comment}{/* Used for Index Op */}}
+\DoxyCodeLine{551     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                           \mbox{\hyperlink{structacpi__object__reference_a09910a19f1fdf4b22c9034636885af94}{Resolved}};           \textcolor{comment}{/* Reference has been resolved to a value */}}
+\DoxyCodeLine{552     \textcolor{keywordtype}{void}                            *\mbox{\hyperlink{structacpi__object__reference_a6eea65c7f8fe6e5ba5b22853e030cfe8}{Object}};            \textcolor{comment}{/* NameOp=>HANDLE to obj, IndexOp=>ACPI\_OPERAND\_OBJECT */}}
+\DoxyCodeLine{553     \mbox{\hyperlink{structacpi__namespace__node}{ACPI\_NAMESPACE\_NODE}}             *\mbox{\hyperlink{structacpi__object__reference_a3ab49eec0d069650719dff3561bfac3a}{Node}};              \textcolor{comment}{/* RefOf or Namepath */}}
+\DoxyCodeLine{554     \textcolor{keyword}{union }\mbox{\hyperlink{unionacpi__operand__object}{acpi\_operand\_object}}       **\mbox{\hyperlink{structacpi__object__reference_a02a01f130345842c4fcd284b4bc97a11}{Where}};            \textcolor{comment}{/* Target of Index */}}
+\DoxyCodeLine{555     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                           *\mbox{\hyperlink{structacpi__object__reference_a8e728aeafd0151cb4d4b189047fbaae8}{IndexPointer}};      \textcolor{comment}{/* Used for Buffers and Strings */}}
+\DoxyCodeLine{556     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                           *\mbox{\hyperlink{structacpi__object__reference_ad2452113233c6d648561a165123f99f3}{Aml}};               \textcolor{comment}{/* Used for deferred resolution of the ref */}}
+\DoxyCodeLine{557     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                          \mbox{\hyperlink{structacpi__object__reference_a56ee29a909db2a5f85c61b1a7d87ece4}{Value}};              \textcolor{comment}{/* Used for Local/Arg/Index/DdbHandle */}}
+\DoxyCodeLine{558 }
+\DoxyCodeLine{559 \} \mbox{\hyperlink{acobject_8h_a41d7b6dc8c27dd73561ecbdffd93c5a7}{ACPI\_OBJECT\_REFERENCE}};}
+\DoxyCodeLine{560 }
+\DoxyCodeLine{561 \textcolor{comment}{/* Values for Reference.Class above */}}
+\DoxyCodeLine{562 }
+\DoxyCodeLine{563 \textcolor{keyword}{typedef} \textcolor{keyword}{enum}}
+\DoxyCodeLine{564 \{}
+\DoxyCodeLine{565     \mbox{\hyperlink{acobject_8h_a8b1c0090a253e38f0e77b9558a00f744aab7cfe090eec01662df0d4db52df219c}{ACPI\_REFCLASS\_LOCAL}}             = 0,        \textcolor{comment}{/* Method local */}}
+\DoxyCodeLine{566     \mbox{\hyperlink{acobject_8h_a8b1c0090a253e38f0e77b9558a00f744a74a3f33f53ebce78477f4fec410fa01a}{ACPI\_REFCLASS\_ARG}}               = 1,        \textcolor{comment}{/* Method argument */}}
+\DoxyCodeLine{567     \mbox{\hyperlink{acobject_8h_a8b1c0090a253e38f0e77b9558a00f744ab861b060ad025db99922d0bfc6bcb697}{ACPI\_REFCLASS\_REFOF}}             = 2,        \textcolor{comment}{/* Result of RefOf() TBD: Split to Ref/Node and Ref/OperandObj? */}}
+\DoxyCodeLine{568     \mbox{\hyperlink{acobject_8h_a8b1c0090a253e38f0e77b9558a00f744a8136c2e8bd11bdee99334ee4dee2a3d9}{ACPI\_REFCLASS\_INDEX}}             = 3,        \textcolor{comment}{/* Result of Index() */}}
+\DoxyCodeLine{569     \mbox{\hyperlink{acobject_8h_a8b1c0090a253e38f0e77b9558a00f744a0cc2abd7fd4b7a73c965bd48e6840ff7}{ACPI\_REFCLASS\_TABLE}}             = 4,        \textcolor{comment}{/* DdbHandle -\/ Load(), LoadTable() */}}
+\DoxyCodeLine{570     \mbox{\hyperlink{acobject_8h_a8b1c0090a253e38f0e77b9558a00f744a5315891c866dd855afae3028899e0c8c}{ACPI\_REFCLASS\_NAME}}              = 5,        \textcolor{comment}{/* Reference to a named object */}}
+\DoxyCodeLine{571     \mbox{\hyperlink{acobject_8h_a8b1c0090a253e38f0e77b9558a00f744adbd7440ae0fd0807f444ae8d3c2e58d3}{ACPI\_REFCLASS\_DEBUG}}             = 6,        \textcolor{comment}{/* Debug object */}}
+\DoxyCodeLine{572 }
+\DoxyCodeLine{573     \mbox{\hyperlink{acobject_8h_a8b1c0090a253e38f0e77b9558a00f744a50ea6124f8488ef5ac15e25143a99357}{ACPI\_REFCLASS\_MAX}}               = 6}
+\DoxyCodeLine{574 }
+\DoxyCodeLine{575 \} \mbox{\hyperlink{acobject_8h_a8b1c0090a253e38f0e77b9558a00f744}{ACPI\_REFERENCE\_CLASSES}};}
+\DoxyCodeLine{576 }
+\DoxyCodeLine{577 \textcolor{comment}{/*}}
+\DoxyCodeLine{578 \textcolor{comment}{ * Extra object is used as additional storage for types that}}
+\DoxyCodeLine{579 \textcolor{comment}{ * have AML code in their declarations (TermArgs) that must be}}
+\DoxyCodeLine{580 \textcolor{comment}{ * evaluated at run time.}}
+\DoxyCodeLine{581 \textcolor{comment}{ *}}
+\DoxyCodeLine{582 \textcolor{comment}{ * Currently: Region and FieldUnit types}}
+\DoxyCodeLine{583 \textcolor{comment}{ */}}
+\DoxyCodeLine{584 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__extra}{acpi\_object\_extra}}}
+\DoxyCodeLine{585 \{}
+\DoxyCodeLine{586     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{587     \mbox{\hyperlink{structacpi__namespace__node}{ACPI\_NAMESPACE\_NODE}}             *\mbox{\hyperlink{structacpi__object__extra_a8b0d04ad8445b4c8b926dc08d9d1fbb6}{Method\_REG}};        \textcolor{comment}{/* \_REG method for this region (if any) */}}
+\DoxyCodeLine{588     \mbox{\hyperlink{structacpi__namespace__node}{ACPI\_NAMESPACE\_NODE}}             *\mbox{\hyperlink{structacpi__object__extra_aa5e8e700c601bc65dd4431bd57fe14fa}{ScopeNode}};}
+\DoxyCodeLine{589     \textcolor{keywordtype}{void}                            *\mbox{\hyperlink{structacpi__object__extra_afd6aeec87bdf8abfb87d028b05e7e37e}{RegionContext}};     \textcolor{comment}{/* Region-\/specific data */}}
+\DoxyCodeLine{590     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                           *\mbox{\hyperlink{structacpi__object__extra_aad769c64ca822fa14302b561d0c9cf5e}{AmlStart}};}
+\DoxyCodeLine{591     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                          \mbox{\hyperlink{structacpi__object__extra_a943f7f1dc4ac551be11cae3121c5c91d}{AmlLength}};}
+\DoxyCodeLine{592 }
+\DoxyCodeLine{593 \} \mbox{\hyperlink{acobject_8h_a479ed11c3f12b79a0324e27db4e45c4d}{ACPI\_OBJECT\_EXTRA}};}
+\DoxyCodeLine{594 }
+\DoxyCodeLine{595 }
+\DoxyCodeLine{596 \textcolor{comment}{/* Additional data that can be attached to namespace nodes */}}
+\DoxyCodeLine{597 }
+\DoxyCodeLine{598 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__data}{acpi\_object\_data}}}
+\DoxyCodeLine{599 \{}
+\DoxyCodeLine{600     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{601     \mbox{\hyperlink{actypes_8h_a033d8aab2c275833b0e0dd46075596d2}{ACPI\_OBJECT\_HANDLER}}             \mbox{\hyperlink{structacpi__object__data_a51cd3a6312d3a7d4a83041ede437fc1b}{Handler}};}
+\DoxyCodeLine{602     \textcolor{keywordtype}{void}                            *\mbox{\hyperlink{structacpi__object__data_a6734f595a7b43de9eed61478e26e601f}{Pointer}};}
+\DoxyCodeLine{603 }
+\DoxyCodeLine{604 \} \mbox{\hyperlink{acobject_8h_a6e4e6a4b9875dda60e36a60e44b396b8}{ACPI\_OBJECT\_DATA}};}
+\DoxyCodeLine{605 }
+\DoxyCodeLine{606 }
+\DoxyCodeLine{607 \textcolor{comment}{/* Structure used when objects are cached for reuse */}}
+\DoxyCodeLine{608 }
+\DoxyCodeLine{609 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__object__cache__list}{acpi\_object\_cache\_list}}}
+\DoxyCodeLine{610 \{}
+\DoxyCodeLine{611     \mbox{\hyperlink{acobject_8h_adf905af605c47bb553af1a9faa5c6a39}{ACPI\_OBJECT\_COMMON\_HEADER}}}
+\DoxyCodeLine{612     \textcolor{keyword}{union }\mbox{\hyperlink{unionacpi__operand__object}{acpi\_operand\_object}}       *\mbox{\hyperlink{structacpi__object__cache__list_a5465b884ce557131255d909695bda0f1}{Next}};              \textcolor{comment}{/* Link for object cache and internal lists*/}}
+\DoxyCodeLine{613 }
+\DoxyCodeLine{614 \} \mbox{\hyperlink{acobject_8h_a1b059e32bd72ddcbdd16794d40b0599e}{ACPI\_OBJECT\_CACHE\_LIST}};}
+\DoxyCodeLine{615 }
+\DoxyCodeLine{616 }
+\DoxyCodeLine{617 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{618 \textcolor{comment}{ *}}
+\DoxyCodeLine{619 \textcolor{comment}{ * ACPI\_OPERAND\_OBJECT Descriptor -\/ a giant union of all of the above}}
+\DoxyCodeLine{620 \textcolor{comment}{ *}}
+\DoxyCodeLine{621 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{622 }
+\DoxyCodeLine{623 \textcolor{keyword}{typedef} \textcolor{keyword}{union }\mbox{\hyperlink{unionacpi__operand__object}{acpi\_operand\_object}}}
+\DoxyCodeLine{624 \{}
+\DoxyCodeLine{625     \mbox{\hyperlink{structacpi__object__common}{ACPI\_OBJECT\_COMMON}}                  \mbox{\hyperlink{unionacpi__operand__object_abc919e5178090194537be7101885138c}{Common}};}
+\DoxyCodeLine{626     \mbox{\hyperlink{structacpi__object__integer}{ACPI\_OBJECT\_INTEGER}}                 \mbox{\hyperlink{unionacpi__operand__object_a9e0aaa8f652a54f0b58498074e225334}{Integer}};}
+\DoxyCodeLine{627     \mbox{\hyperlink{structacpi__object__string}{ACPI\_OBJECT\_STRING}}                  \mbox{\hyperlink{unionacpi__operand__object_aed3d976138150d526d8f489c09d2008f}{String}};}
+\DoxyCodeLine{628     \mbox{\hyperlink{structacpi__object__buffer}{ACPI\_OBJECT\_BUFFER}}                  \mbox{\hyperlink{unionacpi__operand__object_af7ca32cf4956c998ca4b7886074d2876}{Buffer}};}
+\DoxyCodeLine{629     \mbox{\hyperlink{structacpi__object__package}{ACPI\_OBJECT\_PACKAGE}}                 \mbox{\hyperlink{unionacpi__operand__object_adddb46c90a97f867aeef7de9579d5534}{Package}};}
+\DoxyCodeLine{630     \mbox{\hyperlink{structacpi__object__event}{ACPI\_OBJECT\_EVENT}}                   \mbox{\hyperlink{unionacpi__operand__object_a1271eb0c130d875d8012379d3ec55cbc}{Event}};}
+\DoxyCodeLine{631     \mbox{\hyperlink{structacpi__object__method}{ACPI\_OBJECT\_METHOD}}                  \mbox{\hyperlink{unionacpi__operand__object_a29c877142a2814afdc5ea1a8007f2d61}{Method}};}
+\DoxyCodeLine{632     \mbox{\hyperlink{structacpi__object__mutex}{ACPI\_OBJECT\_MUTEX}}                   \mbox{\hyperlink{unionacpi__operand__object_a624f08c18fdfe1f9565bc17e2779ddac}{Mutex}};}
+\DoxyCodeLine{633     \mbox{\hyperlink{structacpi__object__region}{ACPI\_OBJECT\_REGION}}                  \mbox{\hyperlink{unionacpi__operand__object_a4bcf2972fab471e6b0f722459d04607a}{Region}};}
+\DoxyCodeLine{634     \mbox{\hyperlink{structacpi__object__notify__common}{ACPI\_OBJECT\_NOTIFY\_COMMON}}           \mbox{\hyperlink{unionacpi__operand__object_a3ddff529c12f720eb75c7c66770be163}{CommonNotify}};}
+\DoxyCodeLine{635     \mbox{\hyperlink{structacpi__object__device}{ACPI\_OBJECT\_DEVICE}}                  \mbox{\hyperlink{unionacpi__operand__object_a57085ff79df24a3dae1511cc88484871}{Device}};}
+\DoxyCodeLine{636     \mbox{\hyperlink{structacpi__object__power__resource}{ACPI\_OBJECT\_POWER\_RESOURCE}}          \mbox{\hyperlink{unionacpi__operand__object_a5092e1f3b426b8ea699ce9cda091ebc7}{PowerResource}};}
+\DoxyCodeLine{637     \mbox{\hyperlink{structacpi__object__processor}{ACPI\_OBJECT\_PROCESSOR}}               \mbox{\hyperlink{unionacpi__operand__object_a02ce5d4ffdf4753a565d59436f0b64eb}{Processor}};}
+\DoxyCodeLine{638     \mbox{\hyperlink{structacpi__object__thermal__zone}{ACPI\_OBJECT\_THERMAL\_ZONE}}            \mbox{\hyperlink{unionacpi__operand__object_a066a8c535a21e14a33b04c8ea4324790}{ThermalZone}};}
+\DoxyCodeLine{639     \mbox{\hyperlink{structacpi__object__field__common}{ACPI\_OBJECT\_FIELD\_COMMON}}            \mbox{\hyperlink{unionacpi__operand__object_af4a9797825b8a0d9d5b11d4999f1e25b}{CommonField}};}
+\DoxyCodeLine{640     \mbox{\hyperlink{structacpi__object__region__field}{ACPI\_OBJECT\_REGION\_FIELD}}            \mbox{\hyperlink{unionacpi__operand__object_a0667c45fe92affd5723b01742c4c923d}{Field}};}
+\DoxyCodeLine{641     \mbox{\hyperlink{structacpi__object__buffer__field}{ACPI\_OBJECT\_BUFFER\_FIELD}}            \mbox{\hyperlink{unionacpi__operand__object_a45862710e9b3627002fd9973a500f300}{BufferField}};}
+\DoxyCodeLine{642     \mbox{\hyperlink{structacpi__object__bank__field}{ACPI\_OBJECT\_BANK\_FIELD}}              \mbox{\hyperlink{unionacpi__operand__object_a2188673bf8dc961d3c792104ee32a57b}{BankField}};}
+\DoxyCodeLine{643     \mbox{\hyperlink{structacpi__object__index__field}{ACPI\_OBJECT\_INDEX\_FIELD}}             \mbox{\hyperlink{unionacpi__operand__object_abb4b2eeae74e10a398d10331d596d874}{IndexField}};}
+\DoxyCodeLine{644     \mbox{\hyperlink{structacpi__object__notify__handler}{ACPI\_OBJECT\_NOTIFY\_HANDLER}}          \mbox{\hyperlink{unionacpi__operand__object_a01bac76ca56f066cfd398be1fd29d05e}{Notify}};}
+\DoxyCodeLine{645     \mbox{\hyperlink{structacpi__object__addr__handler}{ACPI\_OBJECT\_ADDR\_HANDLER}}            \mbox{\hyperlink{unionacpi__operand__object_a301d0ba76739185fe63afb216809ef18}{AddressSpace}};}
+\DoxyCodeLine{646     \mbox{\hyperlink{structacpi__object__reference}{ACPI\_OBJECT\_REFERENCE}}               \mbox{\hyperlink{unionacpi__operand__object_aaa3c2ca4ce9f18919c2cc758f97079e2}{Reference}};}
+\DoxyCodeLine{647     \mbox{\hyperlink{structacpi__object__extra}{ACPI\_OBJECT\_EXTRA}}                   \mbox{\hyperlink{unionacpi__operand__object_a726a2c2d8ee254c642d2accac6538e9c}{Extra}};}
+\DoxyCodeLine{648     \mbox{\hyperlink{structacpi__object__data}{ACPI\_OBJECT\_DATA}}                    \mbox{\hyperlink{unionacpi__operand__object_ad405ef582cf151711354a3ab2bf3ad27}{Data}};}
+\DoxyCodeLine{649     \mbox{\hyperlink{structacpi__object__cache__list}{ACPI\_OBJECT\_CACHE\_LIST}}              \mbox{\hyperlink{unionacpi__operand__object_a7e635ee5c7d0c347458f46b141c8e3ca}{Cache}};}
+\DoxyCodeLine{650 }
+\DoxyCodeLine{651     \textcolor{comment}{/*}}
+\DoxyCodeLine{652 \textcolor{comment}{     * Add namespace node to union in order to simplify code that accepts both}}
+\DoxyCodeLine{653 \textcolor{comment}{     * ACPI\_OPERAND\_OBJECTs and ACPI\_NAMESPACE\_NODEs. The structures share}}
+\DoxyCodeLine{654 \textcolor{comment}{     * a common DescriptorType field in order to differentiate them.}}
+\DoxyCodeLine{655 \textcolor{comment}{     */}}
+\DoxyCodeLine{656     \mbox{\hyperlink{structacpi__namespace__node}{ACPI\_NAMESPACE\_NODE}}                 \mbox{\hyperlink{unionacpi__operand__object_a7386cc26bcab3590dbbc5876cf51b270}{Node}};}
+\DoxyCodeLine{657 }
+\DoxyCodeLine{658 \} \mbox{\hyperlink{acobject_8h_a3387073486aa6518246edd60079f888b}{ACPI\_OPERAND\_OBJECT}};}
+\DoxyCodeLine{659 }
+\DoxyCodeLine{660 }
+\DoxyCodeLine{661 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{662 \textcolor{comment}{ *}}
+\DoxyCodeLine{663 \textcolor{comment}{ * ACPI\_DESCRIPTOR -\/ objects that share a common descriptor identifier}}
+\DoxyCodeLine{664 \textcolor{comment}{ *}}
+\DoxyCodeLine{665 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{666 }
+\DoxyCodeLine{667 \textcolor{comment}{/* Object descriptor types */}}
+\DoxyCodeLine{668 }
+\DoxyCodeLine{669 \textcolor{preprocessor}{\#define ACPI\_DESC\_TYPE\_CACHED           0x01        }\textcolor{comment}{/* Used only when object is cached */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{670 \textcolor{preprocessor}{\#define ACPI\_DESC\_TYPE\_STATE            0x02}}
+\DoxyCodeLine{671 \textcolor{preprocessor}{\#define ACPI\_DESC\_TYPE\_STATE\_UPDATE     0x03}}
+\DoxyCodeLine{672 \textcolor{preprocessor}{\#define ACPI\_DESC\_TYPE\_STATE\_PACKAGE    0x04}}
+\DoxyCodeLine{673 \textcolor{preprocessor}{\#define ACPI\_DESC\_TYPE\_STATE\_CONTROL    0x05}}
+\DoxyCodeLine{674 \textcolor{preprocessor}{\#define ACPI\_DESC\_TYPE\_STATE\_RPSCOPE    0x06}}
+\DoxyCodeLine{675 \textcolor{preprocessor}{\#define ACPI\_DESC\_TYPE\_STATE\_PSCOPE     0x07}}
+\DoxyCodeLine{676 \textcolor{preprocessor}{\#define ACPI\_DESC\_TYPE\_STATE\_WSCOPE     0x08}}
+\DoxyCodeLine{677 \textcolor{preprocessor}{\#define ACPI\_DESC\_TYPE\_STATE\_RESULT     0x09}}
+\DoxyCodeLine{678 \textcolor{preprocessor}{\#define ACPI\_DESC\_TYPE\_STATE\_NOTIFY     0x0A}}
+\DoxyCodeLine{679 \textcolor{preprocessor}{\#define ACPI\_DESC\_TYPE\_STATE\_THREAD     0x0B}}
+\DoxyCodeLine{680 \textcolor{preprocessor}{\#define ACPI\_DESC\_TYPE\_WALK             0x0C}}
+\DoxyCodeLine{681 \textcolor{preprocessor}{\#define ACPI\_DESC\_TYPE\_PARSER           0x0D}}
+\DoxyCodeLine{682 \textcolor{preprocessor}{\#define ACPI\_DESC\_TYPE\_OPERAND          0x0E}}
+\DoxyCodeLine{683 \textcolor{preprocessor}{\#define ACPI\_DESC\_TYPE\_NAMED            0x0F}}
+\DoxyCodeLine{684 \textcolor{preprocessor}{\#define ACPI\_DESC\_TYPE\_MAX              0x0F}}
+\DoxyCodeLine{685 }
+\DoxyCodeLine{686 }
+\DoxyCodeLine{687 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__common__descriptor}{acpi\_common\_descriptor}}}
+\DoxyCodeLine{688 \{}
+\DoxyCodeLine{689     \textcolor{keywordtype}{void}                            *\mbox{\hyperlink{structacpi__common__descriptor_a02ca2215909e9b5a8d30344521c4e8fc}{CommonPointer}};}
+\DoxyCodeLine{690     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                           \mbox{\hyperlink{structacpi__common__descriptor_a74f1ea034fbb1221897c9d977901a4c1}{DescriptorType}}; \textcolor{comment}{/* To differentiate various internal objs */}}
+\DoxyCodeLine{691 }
+\DoxyCodeLine{692 \} \mbox{\hyperlink{acobject_8h_aade6ee7330ff0a2ffa3b696252d68583}{ACPI\_COMMON\_DESCRIPTOR}};}
+\DoxyCodeLine{693 }
+\DoxyCodeLine{694 \textcolor{keyword}{typedef} \textcolor{keyword}{union }\mbox{\hyperlink{unionacpi__descriptor}{acpi\_descriptor}}}
+\DoxyCodeLine{695 \{}
+\DoxyCodeLine{696     \mbox{\hyperlink{structacpi__common__descriptor}{ACPI\_COMMON\_DESCRIPTOR}}          \mbox{\hyperlink{unionacpi__descriptor_a95c3c945745cd221eac2072375e6b990}{Common}};}
+\DoxyCodeLine{697     \mbox{\hyperlink{unionacpi__operand__object}{ACPI\_OPERAND\_OBJECT}}             \mbox{\hyperlink{unionacpi__descriptor_ab8a6ab04612a327cbdd2aefc7a5b2c38}{Object}};}
+\DoxyCodeLine{698     \mbox{\hyperlink{structacpi__namespace__node}{ACPI\_NAMESPACE\_NODE}}             \mbox{\hyperlink{unionacpi__descriptor_a0bc47a0e343f530ce8bedb338fb3427f}{Node}};}
+\DoxyCodeLine{699     \mbox{\hyperlink{unionacpi__parse__object}{ACPI\_PARSE\_OBJECT}}               \mbox{\hyperlink{unionacpi__descriptor_affe86533e00fc1e0471e031fa7fdf97b}{Op}};}
+\DoxyCodeLine{700 }
+\DoxyCodeLine{701 \} \mbox{\hyperlink{acobject_8h_a8d9c728279799b31f8dc6ebf4225f8dd}{ACPI\_DESCRIPTOR}};}
+\DoxyCodeLine{702 }
+\DoxyCodeLine{703 \textcolor{preprocessor}{\#pragma pack()}}
+\DoxyCodeLine{704 }
+\DoxyCodeLine{705 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_ACOBJECT\_H */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

@@ -1,0 +1,2020 @@
+\hypertarget{ff_8c}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/fs/fat/ff.c File Reference}
+\label{ff_8c}\index{C:/Users/Alex/Desktop/Banana/kernel/fs/fat/ff.c@{C:/Users/Alex/Desktop/Banana/kernel/fs/fat/ff.c}}
+{\ttfamily \#include \char`\"{}ff.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}diskio.\+h\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{ff_8c_a556a1452c85d74c908fe071754ce4a71}{MAX\+\_\+\+DIR}}~0x200000  /$\ast$ Max \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} of \mbox{\hyperlink{class_f_a_t}{FAT}} directory $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_aeac7903cb4fde8e45722fca3244257e7}{MAX\+\_\+\+DIR\+\_\+\+EX}}~0x10000000  /$\ast$ Max \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} of ex\+FAT directory $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a03962fce05a65b3e0ff6855d5436869f}{MAX\+\_\+\+FAT12}}~0x\+FF5   /$\ast$ Max FAT12 clusters (differs from specs, but right for real DOS/Windows behavior) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a259e5a1973d5209304482a5bcd89372f}{MAX\+\_\+\+FAT16}}~0x\+FFF5   /$\ast$ Max FAT16 clusters (differs from specs, but right for real DOS/Windows behavior) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a40e7471b7ae3620a0419aa4d8d6dc684}{MAX\+\_\+\+FAT32}}~0x0\+FFFFFF5  /$\ast$ Max FAT32 clusters (not specified, practical limit) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ad7bea1c4a86cb654807e6da0370cb694}{MAX\+\_\+\+EXFAT}}~0x7\+FFFFFFD  /$\ast$ Max ex\+FAT clusters (differs from specs, implementation limit) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a89b2514198590e139dd064c5d534f302}{Is\+Upper}}(\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}})~((\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}) $>$= \textquotesingle{}A\textquotesingle{} \&\& (\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}) $<$= \textquotesingle{}Z\textquotesingle{})
+\item 
+\#define \mbox{\hyperlink{ff_8c_a4a9d454724926bd51a3aed589a97f08b}{Is\+Lower}}(\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}})~((\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}) $>$= \textquotesingle{}a\textquotesingle{} \&\& (\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}) $<$= \textquotesingle{}z\textquotesingle{})
+\item 
+\#define \mbox{\hyperlink{ff_8c_a65dee564f69f2ec27f25b67a348018b9}{Is\+Digit}}(\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}})~((\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}) $>$= \textquotesingle{}0\textquotesingle{} \&\& (\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}) $<$= \textquotesingle{}9\textquotesingle{})
+\item 
+\#define \mbox{\hyperlink{ff_8c_a1678f40df73ed6cd30ed3e837b3558e7}{Is\+Surrogate}}(\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}})~((\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}) $>$= 0x\+D800 \&\& (\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}) $<$= 0x\+DFFF)
+\item 
+\#define \mbox{\hyperlink{ff_8c_ad148073d4a74bdff0f86f2b18284b569}{Is\+SurrogateH}}(\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}})~((\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}) $>$= 0x\+D800 \&\& (\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}) $<$= 0x\+DBFF)
+\item 
+\#define \mbox{\hyperlink{ff_8c_a7a67adc6a71fa08dbbe481ad756849c4}{Is\+SurrogateL}}(\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}})~((\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}) $>$= 0x\+DC00 \&\& (\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}) $<$= 0x\+DFFF)
+\item 
+\#define \mbox{\hyperlink{ff_8c_ad4d0d6afc5e28678b87a1b75b6645f7d}{FA\+\_\+\+SEEKEND}}~0x20 /$\ast$ \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca80b5ad0400d2828aa8dc6538981689dc}{Seek}} to end of the file on file open $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a9ae82de1b6841df9041411357f8d3eb5}{FA\+\_\+\+MODIFIED}}~0x40 /$\ast$ \mbox{\hyperlink{class_file}{File}} has been modified $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_affd69e5e6d205e09e1070b2f3c039072}{FA\+\_\+\+DIRTY}}~0x80 /$\ast$ \mbox{\hyperlink{struct_f_i_l_ac2aa36f0fa61cd82f905173d51f719b0}{FIL.\+buf}}\mbox{[}$\,$\mbox{]} needs to be written-\/back $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a5cfae62dabae0a54809e43b36685ce7c}{AM\+\_\+\+VOL}}~0x08 /$\ast$ Volume label $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a91161ef62e0e85ba3c2876d3d339473d}{AM\+\_\+\+LFN}}~0x0F /$\ast$ LFN entry $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_aefa78fd6b130faaca4e115602869b57c}{AM\+\_\+\+MASK}}~0x3F /$\ast$ Mask of defined bits $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ad2306816015e67e72cfd0a20a880b227}{NSFLAG}}~11  /$\ast$ Index of the name status byte $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ac92c92c3a3d6b9235ac98feeb00e565a}{NS\+\_\+\+LOSS}}~0x01 /$\ast$ Out of 8.\+3 format $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ae957b8d4065ea0b3eed822aec5368d29}{NS\+\_\+\+LFN}}~0x02 /$\ast$ Force to create LFN entry $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a5a0742bfc1d94f0c3baa5ede485048c4}{NS\+\_\+\+LAST}}~0x04 /$\ast$ Last segment $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a4a0e89b504dece19e2e4b02c83782ca2}{NS\+\_\+\+BODY}}~0x08 /$\ast$ Lower case flag (body) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a3b7fad0942e816fdb84d869c1f7a613e}{NS\+\_\+\+EXT}}~0x10 /$\ast$ Lower case flag (ext) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a2db528782a021797b34bdc6e9e9de1c3}{NS\+\_\+\+DOT}}~0x20 /$\ast$ Dot entry $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a4355b699eba89ff8a3615ef62128caff}{NS\+\_\+\+NOLFN}}~0x40 /$\ast$ Do not find LFN $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a03a711029b966a7fad4f01e546b5e034}{NS\+\_\+\+NONAME}}~0x80 /$\ast$ Not followed $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ab9becfd202f51394d189dffe291a5959}{ET\+\_\+\+BITMAP}}~0x81 /$\ast$ Allocation bitmap $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a25a8a4c5eb49dc0d306d0fa6011cd9af}{ET\+\_\+\+UPCASE}}~0x82 /$\ast$ Up-\/case table $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a9c991beac4793083d6bd370735bcb9c6}{ET\+\_\+\+VLABEL}}~0x83 /$\ast$ Volume label $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a4b213905cd7d1c590f56a8244abc3479}{ET\+\_\+\+FILEDIR}}~0x85 /$\ast$ \mbox{\hyperlink{class_file}{File}} and directory $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a1166d46cb68eb191dd4991829aab3cf9}{ET\+\_\+\+STREAM}}~0x\+C0 /$\ast$ Stream extension $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a7e5707cf4bb01cc3b0c7e438cd4c601c}{ET\+\_\+\+FILENAME}}~0x\+C1 /$\ast$ \mbox{\hyperlink{acpixf_8h_a5e6f9eb1e980275f44f308f43bff476e}{Name}} extension $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a664130f8583af5ccc48d5c79952cea8a}{BS\+\_\+\+Jmp\+Boot}}~0  /$\ast$ x86 jump instruction (3-\/byte) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a02a76ada191ec2dc5f8af60ff3576da7}{BS\+\_\+\+OEMName}}~3  /$\ast$ OEM name (8-\/byte) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a8551844b4eb4e15aecd8cc9aa3585fa2}{BPB\+\_\+\+Byts\+Per\+Sec}}~11  /$\ast$ Sector \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} \mbox{[}byte\mbox{]} (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_aab78e41c617a14b9540c0563d6b957fa}{BPB\+\_\+\+Sec\+Per\+Clus}}~13  /$\ast$ Cluster \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} \mbox{[}sector\mbox{]} (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ab3ec444c8457c9bc98aa07e846f5c1b7}{BPB\+\_\+\+Rsvd\+Sec\+Cnt}}~14  /$\ast$ \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaff9abf2b1a689f70a77a18da50c01d9f}{Size}} of \mbox{\hyperlink{acpi_8hpp_a72aca6ea6d8153b28ea8f139b932ec3e}{reserved}} area \mbox{[}sector\mbox{]} (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_af44a1e8c89ec5502595f23496d24cbf1}{BPB\+\_\+\+Num\+FATs}}~16  /$\ast$ Number of FATs (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_aaa667f14c87c45dc128f2ab208e92f98}{BPB\+\_\+\+Root\+Ent\+Cnt}}~17  /$\ast$ \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaff9abf2b1a689f70a77a18da50c01d9f}{Size}} of root directory area for \mbox{\hyperlink{class_f_a_t}{FAT}} \mbox{[}entry\mbox{]} (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a4eb540eecde0f2df26fa8c7969341d68}{BPB\+\_\+\+Tot\+Sec16}}~19  /$\ast$ Volume \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} (16-\/bit) \mbox{[}sector\mbox{]} (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a414e054c4b5ea3414ebefa3539e7e554}{BPB\+\_\+\+Media}}~21  /$\ast$ Media descriptor byte (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a60a2f6efeb6a4c7cb2da1e5def6ca43b}{BPB\+\_\+\+FATSz16}}~22  /$\ast$ \mbox{\hyperlink{class_f_a_t}{FAT}} \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} (16-\/bit) \mbox{[}sector\mbox{]} (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ac71bb771432ea532bc47713a028ebd76}{BPB\+\_\+\+Sec\+Per\+Trk}}~24  /$\ast$ Number of sectors per track for int13h \mbox{[}sector\mbox{]} (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a9c03603c3be34d4c5cc1b481b0bc6774}{BPB\+\_\+\+Num\+Heads}}~26  /$\ast$ Number of heads for int13h (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a449d4ed5c4c8105daf29aad9488277f7}{BPB\+\_\+\+Hidd\+Sec}}~28  /$\ast$ Volume offset from top of the drive (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a7723a9f0da553e8879d60909d85ccb7b}{BPB\+\_\+\+Tot\+Sec32}}~32  /$\ast$ Volume \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} (32-\/bit) \mbox{[}sector\mbox{]} (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a0c51f7393341b839dfb241c2951f3ef4}{BS\+\_\+\+Drv\+Num}}~36  /$\ast$ Physical drive number for int13h (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a97d9de2942e551e182747f3ed01ab5b4}{BS\+\_\+\+NTres}}~37  /$\ast$ Windows\+NT error flag (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a85a92e790602efef4da3a2f141611ce8}{BS\+\_\+\+Boot\+Sig}}~38  /$\ast$ Extended boot signature (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a383a71bda500a0fb5a37f4edd785acbf}{BS\+\_\+\+Vol\+ID}}~39  /$\ast$ Volume serial number (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a28498ba4b07ff90aaa9628e81fb89d32}{BS\+\_\+\+Vol\+Lab}}~43  /$\ast$ Volume label string (8-\/byte) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a2264848692d36c1b2499c9b6a10acf75}{BS\+\_\+\+Fil\+Sys\+Type}}~54  /$\ast$ \mbox{\hyperlink{class_filesystem}{Filesystem}} type string (8-\/byte) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a42b6c0366bbc0ad92da5b4997c052b9a}{BS\+\_\+\+Boot\+Code}}~62  /$\ast$ Boot code (448-\/byte) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a74b810b3f3583c1eb54bd4305c0f261a}{BS\+\_\+55\+AA}}~510  /$\ast$ \mbox{\hyperlink{acpi_8hpp_a5ec67df9ee3474ea9b15652a47362df0}{Signature}} word (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a6e6340030dc29e7da2e9f92e472a763d}{BPB\+\_\+\+FATSz32}}~36  /$\ast$ FAT32\+: \mbox{\hyperlink{class_f_a_t}{FAT}} \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} \mbox{[}sector\mbox{]} (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a25b233cdbcc8c78db0a791be2623d988}{BPB\+\_\+\+Ext\+Flags32}}~40  /$\ast$ FAT32\+: Extended \mbox{\hyperlink{acpi_8hpp_a773b39d480759f67926cb18ae2219281}{flags}} (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_aed6c1d79c193debd85f7dc9afd05eb22}{BPB\+\_\+\+FSVer32}}~42  /$\ast$ FAT32\+: \mbox{\hyperlink{class_filesystem}{Filesystem}} version (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a4c99b85429f73c8f6a0ac2bc7a1d81ea}{BPB\+\_\+\+Root\+Clus32}}~44  /$\ast$ FAT32\+: Root directory cluster (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a86b761a0ed35d7f6e9774be44482ee5b}{BPB\+\_\+\+FSInfo32}}~48  /$\ast$ FAT32\+: Offset of FSINFO sector (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a6fceac966c2f2b277e8f472c5a7de0c7}{BPB\+\_\+\+Bk\+Boot\+Sec32}}~50  /$\ast$ FAT32\+: Offset of backup boot sector (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_aa670c7b495f5b347c442df67b188c58f}{BS\+\_\+\+Drv\+Num32}}~64  /$\ast$ FAT32\+: Physical drive number for int13h (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a0970c574d425c190a0d6fc6d40bcd9df}{BS\+\_\+\+NTres32}}~65  /$\ast$ FAT32\+: Error flag (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a59c4b2f802ab4bc9319e5bd840e615b8}{BS\+\_\+\+Boot\+Sig32}}~66  /$\ast$ FAT32\+: Extended boot signature (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_abaa3aafdcf5e83f8cb7e2bb373b13525}{BS\+\_\+\+Vol\+ID32}}~67  /$\ast$ FAT32\+: Volume serial number (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a8241a49bce313184a58617ba1ad9e84c}{BS\+\_\+\+Vol\+Lab32}}~71  /$\ast$ FAT32\+: Volume label string (8-\/byte) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a8d8786452966cd0ce579f2575a54a348}{BS\+\_\+\+Fil\+Sys\+Type32}}~82  /$\ast$ FAT32\+: \mbox{\hyperlink{class_filesystem}{Filesystem}} type string (8-\/byte) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a6df4d5ea8d94280f9dc935cd6995761d}{BS\+\_\+\+Boot\+Code32}}~90  /$\ast$ FAT32\+: Boot code (420-\/byte) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a8b262d23932b103fc341cf6b631539bd}{BPB\+\_\+\+Zeroed\+Ex}}~11  /$\ast$ ex\+FAT\+: MBZ field (53-\/byte) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ab09fe2e1cd6205eb848e5fd00374efd4}{BPB\+\_\+\+Vol\+Ofs\+Ex}}~64  /$\ast$ ex\+FAT\+: Volume offset from top of the drive \mbox{[}sector\mbox{]} (QWORD) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ac0c21531f17f5690b31622fcf98d3581}{BPB\+\_\+\+Tot\+Sec\+Ex}}~72  /$\ast$ ex\+FAT\+: Volume \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} \mbox{[}sector\mbox{]} (QWORD) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a12af2061024593ffc7a92daf1c2d3470}{BPB\+\_\+\+Fat\+Ofs\+Ex}}~80  /$\ast$ ex\+FAT\+: \mbox{\hyperlink{class_f_a_t}{FAT}} offset from top of the volume \mbox{[}sector\mbox{]} (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a54579961bdbed995bcb7e077fedff1f4}{BPB\+\_\+\+Fat\+Sz\+Ex}}~84  /$\ast$ ex\+FAT\+: \mbox{\hyperlink{class_f_a_t}{FAT}} \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} \mbox{[}sector\mbox{]} (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ad3ab64cc288e66c0643af23094aa9645}{BPB\+\_\+\+Data\+Ofs\+Ex}}~88  /$\ast$ ex\+FAT\+: Data offset from top of the volume \mbox{[}sector\mbox{]} (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a5bb065cee85104cbb58390ea9dfa01d8}{BPB\+\_\+\+Num\+Clus\+Ex}}~92  /$\ast$ ex\+FAT\+: Number of clusters (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a8447a1c7d19cab308ab198e1de2e086f}{BPB\+\_\+\+Root\+Clus\+Ex}}~96  /$\ast$ ex\+FAT\+: Root directory start cluster (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a465d34bfcd2bf930e04ae1b379047199}{BPB\+\_\+\+Vol\+IDEx}}~100  /$\ast$ ex\+FAT\+: Volume serial number (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a86f95a0a4b798a61967e086540e6ebd9}{BPB\+\_\+\+FSVer\+Ex}}~104  /$\ast$ ex\+FAT\+: \mbox{\hyperlink{class_filesystem}{Filesystem}} version (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_af7b37995f89d832a47898aa787ecfbc8}{BPB\+\_\+\+Vol\+Flag\+Ex}}~106  /$\ast$ ex\+FAT\+: Volume \mbox{\hyperlink{acpi_8hpp_a773b39d480759f67926cb18ae2219281}{flags}} (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a3d35e000a1033bb913d3fbc3aa5c68af}{BPB\+\_\+\+Byts\+Per\+Sec\+Ex}}~108  /$\ast$ ex\+FAT\+: Log2 of sector \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} in unit of byte (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a64dfd457aa404e53c16d58a3d249adfe}{BPB\+\_\+\+Sec\+Per\+Clus\+Ex}}~109  /$\ast$ ex\+FAT\+: Log2 of cluster \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} in unit of sector (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a20cab50b62fe9cb5a99ce28cb54da60e}{BPB\+\_\+\+Num\+FATs\+Ex}}~110  /$\ast$ ex\+FAT\+: Number of FATs (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ac926d7c74f368a033dc8240167df9bc0}{BPB\+\_\+\+Drv\+Num\+Ex}}~111  /$\ast$ ex\+FAT\+: Physical drive number for int13h (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a935b5f7cb38489adf96f42775583025b}{BPB\+\_\+\+Perc\+In\+Use\+Ex}}~112  /$\ast$ ex\+FAT\+: Percent in use (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a1f1f5c2e566e3d7d226e4b2a7b70ee2d}{BPB\+\_\+\+Rsvd\+Ex}}~113  /$\ast$ ex\+FAT\+: Reserved (7-\/byte) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_adea4123eb450eb09933fac339b08eeee}{BS\+\_\+\+Boot\+Code\+Ex}}~120  /$\ast$ ex\+FAT\+: Boot code (390-\/byte) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_afa89348e9fc2de82ae9e12c661366b0e}{DIR\+\_\+\+Name}}~0  /$\ast$ Short file name (11-\/byte) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ad3233e40118ed66095f3c9545b788f8a}{DIR\+\_\+\+Attr}}~11  /$\ast$ Attribute (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a87ee1f701c2ab941862e3ce00c1c1e9d}{DIR\+\_\+\+NTres}}~12  /$\ast$ Lower case flag (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_af8ddb351ddcaaac5d52923ad442fd8cb}{DIR\+\_\+\+Crt\+Time10}}~13  /$\ast$ Created time sub-\/second (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a47fb1881ea71d860db9b8280564cb4d5}{DIR\+\_\+\+Crt\+Time}}~14  /$\ast$ Created time (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_afa0625d73f4683df24345f51e7a43da3}{DIR\+\_\+\+Lst\+Acc\+Date}}~18  /$\ast$ Last accessed date (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a0bc29c3f09e1e9c40c414f7d50d7905c}{DIR\+\_\+\+Fst\+Clus\+HI}}~20  /$\ast$ Higher 16-\/bit of \mbox{\hyperlink{malloc_8c_afcdd80de1d2482a30e49ef0389f36c63}{first}} cluster (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_aa136ac8eaf0b3febba999e37b7d01803}{DIR\+\_\+\+Mod\+Time}}~22  /$\ast$ Modified time (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_aebe0e913bff75a89d38dbcb04baf5dff}{DIR\+\_\+\+Fst\+Clus\+LO}}~26  /$\ast$ Lower 16-\/bit of \mbox{\hyperlink{malloc_8c_afcdd80de1d2482a30e49ef0389f36c63}{first}} cluster (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_abfbfa613864a02a65f0bf70ead6672c7}{DIR\+\_\+\+File\+Size}}~28  /$\ast$ \mbox{\hyperlink{class_file}{File}} \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a6c97d545619e6586b02b5d4f39f7be25}{LDIR\+\_\+\+Ord}}~0  /$\ast$ LFN\+: LFN order and LLE flag (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a28dcd75633b49e40b42a31f0cf5f5929}{LDIR\+\_\+\+Attr}}~11  /$\ast$ LFN\+: LFN attribute (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_acb98a052a9be81564b56854df35480a0}{LDIR\+\_\+\+Type}}~12  /$\ast$ LFN\+: Entry type (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ade1d529763d2d097a6d1410956c8a84f}{LDIR\+\_\+\+Chksum}}~13  /$\ast$ LFN\+: \mbox{\hyperlink{acpi_8hpp_ad98d5051c2e94669e746dd13771daac8}{Checksum}} of the SFN (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ad73024151eff6baea94e680f7928969d}{LDIR\+\_\+\+Fst\+Clus\+LO}}~26  /$\ast$ LFN\+: MBZ field (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a55c8dde2fcff23002e196ae2c3eeaa08}{XDIR\+\_\+\+Type}}~0  /$\ast$ ex\+FAT\+: \mbox{\hyperlink{acpixf_8h_ab361d6187ad6230bccbce7d8dbe49abc}{Type}} of ex\+FAT directory entry (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_aac6d45371e0269e7b10c5a08f2f4b422}{XDIR\+\_\+\+Num\+Label}}~1  /$\ast$ ex\+FAT\+: Number of volume label characters (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ac154e61682dfed7bb071b0926db1efac}{XDIR\+\_\+\+Label}}~2  /$\ast$ ex\+FAT\+: Volume label (11-\/\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a966901795f1a82003139433a0ba318dd}{XDIR\+\_\+\+Case\+Sum}}~4  /$\ast$ ex\+FAT\+: Sum of case conversion table (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a37e729265403caf1ae349714e069a3e6}{XDIR\+\_\+\+Num\+Sec}}~1  /$\ast$ ex\+FAT\+: Number of secondary entries (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a784a27bba3d35dddeb57d7fa99670b2a}{XDIR\+\_\+\+Set\+Sum}}~2  /$\ast$ ex\+FAT\+: Sum of the set of directory entries (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_aafe8687fb9356906c13ccd9fe88eb3de}{XDIR\+\_\+\+Attr}}~4  /$\ast$ ex\+FAT\+: \mbox{\hyperlink{class_file}{File}} attribute (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a74046208323ac5e8b5214b05e1a43b87}{XDIR\+\_\+\+Crt\+Time}}~8  /$\ast$ ex\+FAT\+: Created time (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_aecb0af980a40b38b30dd0a736c8d6406}{XDIR\+\_\+\+Mod\+Time}}~12  /$\ast$ ex\+FAT\+: Modified time (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_af0a826e3f3902172e3ebd5a3132a0153}{XDIR\+\_\+\+Acc\+Time}}~16  /$\ast$ ex\+FAT\+: Last accessed time (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a15318ffa52c4e35fdce00a64ab3ccbf9}{XDIR\+\_\+\+Crt\+Time10}}~20  /$\ast$ ex\+FAT\+: Created time subsecond (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a0f63c605687d0ed66c633ba6a10c01e5}{XDIR\+\_\+\+Mod\+Time10}}~21  /$\ast$ ex\+FAT\+: Modified time subsecond (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a2358527d5a3665a4ffb363e014ee421b}{XDIR\+\_\+\+Crt\+TZ}}~22  /$\ast$ ex\+FAT\+: Created timezone (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_abe933d1753a1f0c30a94131e02f23ab5}{XDIR\+\_\+\+Mod\+TZ}}~23  /$\ast$ ex\+FAT\+: Modified timezone (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ab12e9f890b539722562824d569969959}{XDIR\+\_\+\+Acc\+TZ}}~24  /$\ast$ ex\+FAT\+: Last accessed timezone (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ac3fd42ab7ee833b0e3683b1843d310d6}{XDIR\+\_\+\+Gen\+Flags}}~33  /$\ast$ ex\+FAT\+: General secondary \mbox{\hyperlink{acpi_8hpp_a773b39d480759f67926cb18ae2219281}{flags}} (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a382f456b33f0c719163bcf521aa7ecea}{XDIR\+\_\+\+Num\+Name}}~35  /$\ast$ ex\+FAT\+: Number of file name characters (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a7c0a94f8a7efc7a710d6eb897059462d}{XDIR\+\_\+\+Name\+Hash}}~36  /$\ast$ ex\+FAT\+: Hash of file name (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a543e2a11cefac978a0108a7973416d56}{XDIR\+\_\+\+Valid\+File\+Size}}~40  /$\ast$ ex\+FAT\+: Valid file \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} (QWORD) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ae08bbe65fd20259cb98c85ce08aa53cb}{XDIR\+\_\+\+Fst\+Clus}}~52  /$\ast$ ex\+FAT\+: First cluster of the file \mbox{\hyperlink{acpi_8hpp_abbaff690fbbced9e133675b72b3c46e9}{data}} (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a899bf596ce53d81a373229662249f524}{XDIR\+\_\+\+File\+Size}}~56  /$\ast$ ex\+FAT\+: \mbox{\hyperlink{class_file}{File}}/\mbox{\hyperlink{class_directory}{Directory}} \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} (QWORD) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a90943705ce4b32e47562c9f56860c7af}{SZDIRE}}~32  /$\ast$ \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaff9abf2b1a689f70a77a18da50c01d9f}{Size}} of a directory entry $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a0f2455f7318e6d56318c62f5e4048e1e}{DDEM}}~0x\+E5 /$\ast$ Deleted directory entry mark set to \mbox{\hyperlink{ff_8c_afa89348e9fc2de82ae9e12c661366b0e}{DIR\+\_\+\+Name}}\mbox{[}0\mbox{]} $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a24b6bc427cbd37fbe76e087f7f188abb}{RDDEM}}~0x05 /$\ast$ Replacement of the character collides with \mbox{\hyperlink{ff_8c_a0f2455f7318e6d56318c62f5e4048e1e}{DDEM}} $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a31ec96cd263bb14418cb8b7b2b54b3ca}{LLEF}}~0x40 /$\ast$ Last long entry flag in \mbox{\hyperlink{ff_8c_a6c97d545619e6586b02b5d4f39f7be25}{LDIR\+\_\+\+Ord}} $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a318e58c1966aba52b90ab98dcb649883}{FSI\+\_\+\+Lead\+Sig}}~0  /$\ast$ FAT32 FSI\+: Leading signature (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a3bac0e6ff5907873030db1d0a7c4ebef}{FSI\+\_\+\+Struc\+Sig}}~484  /$\ast$ FAT32 FSI\+: Structure signature (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ab711e50459aba01b11c6b46a7cc1410b}{FSI\+\_\+\+Free\+\_\+\+Count}}~488  /$\ast$ FAT32 FSI\+: Number of \mbox{\hyperlink{kheap_8hpp_af07d89f5ceaea0c7c8252cc41fd75f37}{free}} clusters (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a320700cedf300c9b418edf56e5e6b086}{FSI\+\_\+\+Nxt\+\_\+\+Free}}~492  /$\ast$ FAT32 FSI\+: Last allocated cluster (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ac3f187bf0ba891551f594af6b61f3188}{MBR\+\_\+\+Table}}~446  /$\ast$ MBR\+: Offset of partition table in the MBR $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_af133060c47366e7e557d4085d931183f}{SZ\+\_\+\+PTE}}~16  /$\ast$ MBR\+: \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaff9abf2b1a689f70a77a18da50c01d9f}{Size}} of a partition table entry $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a74c1bb03f929236b18eb9c4a3df26a8c}{PTE\+\_\+\+Boot}}~0  /$\ast$ MBR PTE\+: Boot indicator $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a72ec8d9f48ea97de79e5878dfa593ca3}{PTE\+\_\+\+St\+Head}}~1  /$\ast$ MBR PTE\+: Start head $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a3fd894243a30fe6253a78fb9221eb5f4}{PTE\+\_\+\+St\+Sec}}~2  /$\ast$ MBR PTE\+: Start sector $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a973d54c6ad9ae5c0b40e1832db4976f9}{PTE\+\_\+\+St\+Cyl}}~3  /$\ast$ MBR PTE\+: Start cylinder $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a71a2bd9498580394a97fe0b5246635d6}{PTE\+\_\+\+System}}~4  /$\ast$ MBR PTE\+: System ID $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a151137a5b01c29730bbf4ee63c773d12}{PTE\+\_\+\+Ed\+Head}}~5  /$\ast$ MBR PTE\+: End head $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_aa3b0eae83b150116114dfa582a297ee9}{PTE\+\_\+\+Ed\+Sec}}~6  /$\ast$ MBR PTE\+: End sector $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a0f96bb9d52c3a5bbd489b59772463cab}{PTE\+\_\+\+Ed\+Cyl}}~7  /$\ast$ MBR PTE\+: End cylinder $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ae33f69bfe238a35fb3fd1949c4e087da}{PTE\+\_\+\+St\+Lba}}~8  /$\ast$ MBR PTE\+: Start in LBA $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a195f11dd0185a4edbe7064ebe40092bc}{PTE\+\_\+\+Siz\+Lba}}~12  /$\ast$ MBR PTE\+: \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaff9abf2b1a689f70a77a18da50c01d9f}{Size}} in LBA $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_afff5a1b885cf62ef3382022e6f2bf5c2}{GPTH\+\_\+\+Sign}}~0  /$\ast$ GPT\+: Header signature (8-\/byte) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a2da96e2de03ca769426591b23fecdde9}{GPTH\+\_\+\+Rev}}~8  /$\ast$ GPT\+: \mbox{\hyperlink{acpi_8hpp_a55eb3228cf0540a1e7ee4fa81453e29c}{Revision}} (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a58237ab846855bf2b4a0ab750493e8a3}{GPTH\+\_\+\+Size}}~12  /$\ast$ GPT\+: Header \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ac1a4c52079edc7bf25dddc7bf02e1882}{GPTH\+\_\+\+Bcc}}~16  /$\ast$ GPT\+: Header BCC (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a985c526784a91120bec12f33f3169408}{GPTH\+\_\+\+Cur\+Lba}}~24  /$\ast$ GPT\+: Main header LBA (QWORD) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ad65d7cc56b164352a9f487a69e3a1281}{GPTH\+\_\+\+Bak\+Lba}}~32  /$\ast$ GPT\+: Backup header LBA (QWORD) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a14df7c4b0d469d423e2c1b5f4f0ea02d}{GPTH\+\_\+\+Fst\+Lba}}~40  /$\ast$ GPT\+: First LBA for partitions (QWORD) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_adaa930215faa1e6f51430b080130f9e5}{GPTH\+\_\+\+Lst\+Lba}}~48  /$\ast$ GPT\+: Last LBA for partitions (QWORD) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a32df4a198d3dc8acebd987be74c304ee}{GPTH\+\_\+\+Dsk\+Guid}}~56  /$\ast$ GPT\+: Disk GUID (16-\/byte) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_acf59802a11562c5dc1f0d99ae5a89946}{GPTH\+\_\+\+Pt\+Ofs}}~72  /$\ast$ GPT\+: Partation table LBA (QWORD) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a950d43a4211a4bdcc19888bfc8fde5f9}{GPTH\+\_\+\+Pt\+Num}}~80  /$\ast$ GPT\+: Number of table entries (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a16b1364aca6d6fc7991516ee883606ff}{GPTH\+\_\+\+Pte\+Size}}~84  /$\ast$ GPT\+: \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaff9abf2b1a689f70a77a18da50c01d9f}{Size}} of table entry (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a94ea6178d6f9e74b6b8eb4bb68eb4470}{GPTH\+\_\+\+Pt\+Bcc}}~88  /$\ast$ GPT\+: Partation table BCC (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_aaaa69650a3bce4a6f68f88e2e3a07f43}{SZ\+\_\+\+GPTE}}~128  /$\ast$ GPT\+: \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaff9abf2b1a689f70a77a18da50c01d9f}{Size}} of partition table entry $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a8e8517c1287b2d9c93d164bccc0133db}{GPTE\+\_\+\+Pt\+Guid}}~0  /$\ast$ GPT PTE\+: Partition type GUID (16-\/byte) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a0b89556f11a98b5c3d893d92d7d32334}{GPTE\+\_\+\+Up\+Guid}}~16  /$\ast$ GPT PTE\+: Partition unique GUID (16-\/byte) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a25029670f9bc74da6eae5001fe4acdb4}{GPTE\+\_\+\+Fst\+Lba}}~32  /$\ast$ GPT PTE\+: First LBA (QWORD) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a4f37e50e5eabcfb8353749dc8b8be4b4}{GPTE\+\_\+\+Lst\+Lba}}~40  /$\ast$ GPT PTE\+: Last LBA inclusive (QWORD) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ab27c352b8f3ec3f23ad2715630d8ebcd}{GPTE\+\_\+\+Flags}}~48  /$\ast$ GPT PTE\+: \mbox{\hyperlink{acdebug_8h_a4f38d8eec414bbac21fe17e446586ef4}{Flags}} (QWORD) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a327bcf9a8000b94be389d8e22f1e3c5e}{GPTE\+\_\+\+Name}}~56  /$\ast$ GPT PTE\+: \mbox{\hyperlink{acpixf_8h_a5e6f9eb1e980275f44f308f43bff476e}{Name}} $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a41e4c46636679236568cf50b5535847f}{ABORT}}(fs,  \mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}})~\{ fp-\/$>$err = (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}})(\mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}}); \mbox{\hyperlink{ff_8c_a7e653d8ca0ae09faa49cd5b7335fea84}{LEAVE\+\_\+\+FF}}(fs, \mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}}); \}
+\item 
+\#define \mbox{\hyperlink{ff_8c_a7e653d8ca0ae09faa49cd5b7335fea84}{LEAVE\+\_\+\+FF}}(fs,  \mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}})~return \mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}}
+\item 
+\#define \mbox{\hyperlink{ff_8c_a6577ed2f95527745bf4d27c53488b9a7}{LD2\+PD}}(vol)~(\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}})(vol) /$\ast$ Each logical drive is associated with the same physical drive number $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_aadc4a9aefaf2588bdd7565549f5d91e7}{LD2\+PT}}(vol)~0   /$\ast$ Find \mbox{\hyperlink{malloc_8c_afcdd80de1d2482a30e49ef0389f36c63}{first}} valid partition or in SFD $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a42b5140fc5e09a53c8f4cba66dc0e6c1}{SS}}(fs)~((\mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}})\mbox{\hyperlink{ffconf_8h_a104c36ee46f9d6e76dadf37f3d9696cc}{FF\+\_\+\+MAX\+\_\+\+SS}}) /$\ast$ Fixed sector \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a72589f5bbb514c0b222ab8b292764418}{GET\+\_\+\+FATTIME}}()~((\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}})(\mbox{\hyperlink{ffconf_8h_aa23a9857382e458421fb87ef11ff9c63}{FF\+\_\+\+NORTC\+\_\+\+YEAR}} -\/ 1980) $<$$<$ 25 $\vert$ (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}})\mbox{\hyperlink{ffconf_8h_acc2167f3af4dd4f6ec84a57a82f923dd}{FF\+\_\+\+NORTC\+\_\+\+MON}} $<$$<$ 21 $\vert$ (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}})\mbox{\hyperlink{ffconf_8h_a1726418a7d765c3ae4da9c43d2349151}{FF\+\_\+\+NORTC\+\_\+\+MDAY}} $<$$<$ 16)
+\item 
+\#define \mbox{\hyperlink{ff_8c_a2079f038e00e8b606f9393c90d504741}{TBL\+\_\+\+CT437}}
+\item 
+\#define \mbox{\hyperlink{ff_8c_a3e366ee91d633beb55efd063e6b418f5}{TBL\+\_\+\+CT720}}
+\item 
+\#define \mbox{\hyperlink{ff_8c_a3a91f6a3f799a268afbe851044c0b383}{TBL\+\_\+\+CT737}}
+\item 
+\#define \mbox{\hyperlink{ff_8c_a12704299ef30f60f1185542bfa97ca91}{TBL\+\_\+\+CT771}}
+\item 
+\#define \mbox{\hyperlink{ff_8c_a7cc0395eded166e3d8348ab67ec139c4}{TBL\+\_\+\+CT775}}
+\item 
+\#define \mbox{\hyperlink{ff_8c_abb70cf43279200ee2b62d3fd27e6afb8}{TBL\+\_\+\+CT850}}
+\item 
+\#define \mbox{\hyperlink{ff_8c_adc1a9e1b27f3771422ac64db338dd8d2}{TBL\+\_\+\+CT852}}
+\item 
+\#define \mbox{\hyperlink{ff_8c_a17a8a35ea37f5599dbb79713985a343f}{TBL\+\_\+\+CT855}}
+\item 
+\#define \mbox{\hyperlink{ff_8c_ac6b3e7939a5a3d45ac6f1d7d15f24822}{TBL\+\_\+\+CT857}}
+\item 
+\#define \mbox{\hyperlink{ff_8c_aea035c03068190b9bf80e824b2cfda93}{TBL\+\_\+\+CT860}}
+\item 
+\#define \mbox{\hyperlink{ff_8c_afdbdf45ddc573889990eb30bf70a59b6}{TBL\+\_\+\+CT861}}
+\item 
+\#define \mbox{\hyperlink{ff_8c_a7e2ecbf1aa017e0fbcc0233469ad1c86}{TBL\+\_\+\+CT862}}
+\item 
+\#define \mbox{\hyperlink{ff_8c_ae7986d8f1be641fa513a553ca6ca9d83}{TBL\+\_\+\+CT863}}
+\item 
+\#define \mbox{\hyperlink{ff_8c_a5b7151d4a75d72a82f254ab56adceac5}{TBL\+\_\+\+CT864}}
+\item 
+\#define \mbox{\hyperlink{ff_8c_a90580e1098c6ec520b05ae406bbfe7cf}{TBL\+\_\+\+CT865}}
+\item 
+\#define \mbox{\hyperlink{ff_8c_a613653d9cce7972729bf5f1a39c7db3c}{TBL\+\_\+\+CT866}}
+\item 
+\#define \mbox{\hyperlink{ff_8c_aa0c4b6d1b444aa99c051639e397ce2b9}{TBL\+\_\+\+CT869}}
+\item 
+\#define \mbox{\hyperlink{ff_8c_aaf2f449c3ebf5ca12827b9eeb5134290}{TBL\+\_\+\+DC932}}~\{0x81, 0x9F, 0x\+E0, 0x\+FC, 0x40, 0x7E, 0x80, 0x\+FC, 0x00, 0x00\}
+\item 
+\#define \mbox{\hyperlink{ff_8c_a1e9d0d464e35a432767eaf26e3d0d0f6}{TBL\+\_\+\+DC936}}~\{0x81, 0x\+FE, 0x00, 0x00, 0x40, 0x7E, 0x80, 0x\+FE, 0x00, 0x00\}
+\item 
+\#define \mbox{\hyperlink{ff_8c_ac48368e0a312bdeaabb949f132758ed0}{TBL\+\_\+\+DC949}}~\{0x81, 0x\+FE, 0x00, 0x00, 0x41, 0x5A, 0x61, 0x7A, 0x81, 0x\+FE\}
+\item 
+\#define \mbox{\hyperlink{ff_8c_aebba82563d7b04297527becfbae117df}{TBL\+\_\+\+DC950}}~\{0x81, 0x\+FE, 0x00, 0x00, 0x40, 0x7E, 0x\+A1, 0x\+FE, 0x00, 0x00\}
+\item 
+\#define \mbox{\hyperlink{ff_8c_afd69eeee2e2b9f8359018dfe8d163fd4}{MERGE\+\_\+2\+STR}}(a,  \mbox{\hyperlink{syscalls_8cpp_a99ed6187132780a335e6db030a0115e7}{b}})~a \#\# \mbox{\hyperlink{syscalls_8cpp_a99ed6187132780a335e6db030a0115e7}{b}}
+\item 
+\#define \mbox{\hyperlink{ff_8c_ac4c5cba43a7d51edd75c267e6046756f}{MKCVTBL}}(hd,  cp)~\mbox{\hyperlink{ff_8c_afd69eeee2e2b9f8359018dfe8d163fd4}{MERGE\+\_\+2\+STR}}(hd, cp)
+\item 
+\#define \mbox{\hyperlink{ff_8c_a01c7bbfbe635cd0d0ab3e59a3f44dc64}{MAXDIRB}}(nc)~((nc + 44U) / 15 $\ast$ \mbox{\hyperlink{ff_8c_a90943705ce4b32e47562c9f56860c7af}{SZDIRE}}) /$\ast$ ex\+FAT\+: \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaff9abf2b1a689f70a77a18da50c01d9f}{Size}} of directory entry block scratchpad buffer needed for the name length $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_ad9aa172b1cf1d54aca234228a7ae8503}{DEF\+\_\+\+NAMBUF}}~\mbox{\hyperlink{ff_8h_a0bb095da65fbe52192dd9e3e643c7568}{WCHAR}} $\ast$lfn; /$\ast$ Pointer to LFN working buffer $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a9880dce2d33fe7708f982b5f80a31142}{INIT\+\_\+\+NAMBUF}}(fs)~\{ lfn = \mbox{\hyperlink{ffsystem_8c_ae63913186246b80cfce42dbab9e8bcab}{ff\+\_\+memalloc}}((\mbox{\hyperlink{ffconf_8h_adf88cd7c56034e4b94a6f2b3b83f95bf}{FF\+\_\+\+MAX\+\_\+\+LFN}}+1)$\ast$2); \mbox{\hyperlink{usban_8cpp_a10a99e960749b873ebf2a747d34b5e24}{if}} (!lfn) \mbox{\hyperlink{ff_8c_a7e653d8ca0ae09faa49cd5b7335fea84}{LEAVE\+\_\+\+FF}}(fs, \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44caf56a76a86602cbdeb2c4f3d00cfad21c}{FR\+\_\+\+NOT\+\_\+\+ENOUGH\+\_\+\+CORE}}); (fs)-\/$>$lfnbuf = lfn; \}
+\item 
+\#define \mbox{\hyperlink{ff_8c_aa2d2dda6ad1a1ec4a09e5cb30ae40e2a}{FREE\+\_\+\+NAMBUF}}()~\mbox{\hyperlink{ffsystem_8c_ab85fd090c8b8b17846ccc1e8cda16a9b}{ff\+\_\+memfree}}(lfn)
+\item 
+\#define \mbox{\hyperlink{ff_8c_aeeb83ea2531f2af57f2d9fa191ef4531}{LEAVE\+\_\+\+MKFS}}(\mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}})~\{ \mbox{\hyperlink{usban_8cpp_a10a99e960749b873ebf2a747d34b5e24}{if}} (!work) \mbox{\hyperlink{ffsystem_8c_ab85fd090c8b8b17846ccc1e8cda16a9b}{ff\+\_\+memfree}}(buf); return \mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}}; \}
+\item 
+\#define \mbox{\hyperlink{ff_8c_aaa791eb9a3f067c6a24c70626bddcc66}{MAX\+\_\+\+MALLOC}}~0x8000 /$\ast$ Must be $>$=\mbox{\hyperlink{ffconf_8h_a104c36ee46f9d6e76dadf37f3d9696cc}{FF\+\_\+\+MAX\+\_\+\+SS}} $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a0532865fc94e93704941f95e9425ccb9}{CODEPAGE}}~\mbox{\hyperlink{ffconf_8h_a56bf522419025961acdfaf6388f40402}{FF\+\_\+\+CODE\+\_\+\+PAGE}}
+\item 
+\#define \mbox{\hyperlink{ff_8c_a7dc00ac3fd99f0a14d6b7f3fc76b8778}{DIR\+\_\+\+READ\+\_\+\+FILE}}(dp)~dir\+\_\+read(dp, 0)
+\item 
+\#define \mbox{\hyperlink{ff_8c_afd5d25039aad72791c8fd0e911ba7e97}{DIR\+\_\+\+READ\+\_\+\+LABEL}}(dp)~dir\+\_\+read(dp, 1)
+\item 
+\#define \mbox{\hyperlink{ff_8c_aa7655ed8fbdcfec3965be1d6f412d0f6}{N\+\_\+\+SEC\+\_\+\+TRACK}}~63   /$\ast$ Sectors per track for determination of drive CHS $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a7f901110fcf3b8bc941e6086cc7ba860}{GPT\+\_\+\+ALIGN}}~0x100000 /$\ast$ Alignment of partitions in GPT \mbox{[}byte\mbox{]} ($>$=128KB) $\ast$/
+\item 
+\#define \mbox{\hyperlink{ff_8c_a5ba0a17d3228d2ccda3859b6ed0c4fb8}{GPT\+\_\+\+ITEMS}}~128   /$\ast$ Number of GPT table \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} ($>$=128, sector aligned) $\ast$/
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8c_a16a934c2bbfa2160295810adc49d5509}{f\+\_\+mount}} (\mbox{\hyperlink{struct_f_a_t_f_s}{FATFS}} $\ast$fs, const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$path, \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}} opt)
+\item 
+\mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8c_aefdef7126128d99d0b3bd82c28e54d80}{f\+\_\+open}} (\mbox{\hyperlink{struct_f_i_l}{FIL}} $\ast$fp, const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$path, \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}} mode)
+\item 
+\mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8c_ac4c3dcb6869ca252888eebabe39727b3}{f\+\_\+read}} (\mbox{\hyperlink{struct_f_i_l}{FIL}} $\ast$fp, void $\ast$buff, \mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}} btr, \mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}} $\ast$br)
+\item 
+\mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8c_ae6a4dfae8a9e308bdb2283a37ef680f2}{f\+\_\+write}} (\mbox{\hyperlink{struct_f_i_l}{FIL}} $\ast$fp, const void $\ast$buff, \mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}} btw, \mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}} $\ast$bw)
+\item 
+\mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8c_ad69c7246b122ba56a134939ee0eaf847}{f\+\_\+sync}} (\mbox{\hyperlink{struct_f_i_l}{FIL}} $\ast$fp)
+\item 
+\mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8c_a53882db20ef4323dcfd1874d7733ffc3}{f\+\_\+close}} (\mbox{\hyperlink{struct_f_i_l}{FIL}} $\ast$fp)
+\item 
+\mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8c_a7c4bcf81d9122f0b5376852ec6a8c3eb}{f\+\_\+lseek}} (\mbox{\hyperlink{struct_f_i_l}{FIL}} $\ast$fp, \mbox{\hyperlink{ff_8h_a3fc0992ad7436250b6b1a0592214b7f2}{FSIZE\+\_\+t}} ofs)
+\item 
+\mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8c_ab63b213c75f7335fbb63a1f3f70e5fc7}{f\+\_\+opendir}} (\mbox{\hyperlink{struct_d_i_r}{DIR}} $\ast$dp, const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$path)
+\item 
+\mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8c_ab5f7376b6f3e3bcc7f5ff5497c8b7364}{f\+\_\+closedir}} (\mbox{\hyperlink{struct_d_i_r}{DIR}} $\ast$dp)
+\item 
+\mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8c_ab39e82a110695de45f416f3149358012}{f\+\_\+readdir}} (\mbox{\hyperlink{struct_d_i_r}{DIR}} $\ast$dp, \mbox{\hyperlink{struct_f_i_l_i_n_f_o}{FILINFO}} $\ast$fno)
+\item 
+\mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8c_abe1f60daab5c7d11170c334fb832c798}{f\+\_\+stat}} (const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$path, \mbox{\hyperlink{struct_f_i_l_i_n_f_o}{FILINFO}} $\ast$fno)
+\item 
+\mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8c_a0ff39f75a87cbda9cd6ea65d83f16cec}{f\+\_\+getfree}} (const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$path, \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}} $\ast$nclst, \mbox{\hyperlink{struct_f_a_t_f_s}{FATFS}} $\ast$$\ast$fatfs)
+\item 
+\mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8c_a691a27b40c348f7c84b42e911636f38a}{f\+\_\+truncate}} (\mbox{\hyperlink{struct_f_i_l}{FIL}} $\ast$fp)
+\item 
+\mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8c_a2858167fcd0bced48e9be434b3895efe}{f\+\_\+unlink}} (const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$path)
+\item 
+\mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8c_a4b4d38db58e89c526cfcf53200d719d0}{f\+\_\+mkdir}} (const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$path)
+\item 
+\mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8c_aa775b9b024acfeb3a66523cab497d142}{f\+\_\+rename}} (const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$path\+\_\+old, const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$path\+\_\+new)
+\item 
+\mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8c_a9ee7e560eec8d82755c636ae41e702cd}{f\+\_\+chmod}} (const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$path, \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}} attr, \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}} mask)
+\item 
+\mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8c_aafaa718d1a487e12a8f0087173dba0b9}{f\+\_\+utime}} (const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$path, const \mbox{\hyperlink{struct_f_i_l_i_n_f_o}{FILINFO}} $\ast$fno)
+\item 
+\mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8c_ac4ff40a674bcbfe40d81b1e8e54befc6}{f\+\_\+getlabel}} (const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$path, \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$label, \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}} $\ast$vsn)
+\item 
+\mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8c_aa82bca64e28bc0d656a7999dd0eadec7}{f\+\_\+setlabel}} (const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$label)
+\item 
+\mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8c_a35ff90f5219df5cdb6c8f408b1b9e1a3}{f\+\_\+expand}} (\mbox{\hyperlink{struct_f_i_l}{FIL}} $\ast$fp, \mbox{\hyperlink{ff_8h_a3fc0992ad7436250b6b1a0592214b7f2}{FSIZE\+\_\+t}} fsz, \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}} opt)
+\item 
+\mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8c_a983f0614033bd7cf587eb56d3054a91c}{f\+\_\+mkfs}} (const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$path, const \mbox{\hyperlink{struct_m_k_f_s___p_a_r_m}{MKFS\+\_\+\+PARM}} $\ast$opt, void $\ast$work, \mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}} len)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{ff_8c_a41e4c46636679236568cf50b5535847f}\label{ff_8c_a41e4c46636679236568cf50b5535847f}} 
+\index{ff.c@{ff.c}!ABORT@{ABORT}}
+\index{ABORT@{ABORT}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{ABORT}{ABORT}}
+{\footnotesize\ttfamily \#define ABORT(\begin{DoxyParamCaption}\item[{}]{fs,  }\item[{}]{\mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}} }\end{DoxyParamCaption})~\{ fp-\/$>$err = (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}})(\mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}}); \mbox{\hyperlink{ff_8c_a7e653d8ca0ae09faa49cd5b7335fea84}{LEAVE\+\_\+\+FF}}(fs, \mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}}); \}}
+
+\mbox{\Hypertarget{ff_8c_a91161ef62e0e85ba3c2876d3d339473d}\label{ff_8c_a91161ef62e0e85ba3c2876d3d339473d}} 
+\index{ff.c@{ff.c}!AM\_LFN@{AM\_LFN}}
+\index{AM\_LFN@{AM\_LFN}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{AM\_LFN}{AM\_LFN}}
+{\footnotesize\ttfamily \#define AM\+\_\+\+LFN~0x0F /$\ast$ LFN entry $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_aefa78fd6b130faaca4e115602869b57c}\label{ff_8c_aefa78fd6b130faaca4e115602869b57c}} 
+\index{ff.c@{ff.c}!AM\_MASK@{AM\_MASK}}
+\index{AM\_MASK@{AM\_MASK}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{AM\_MASK}{AM\_MASK}}
+{\footnotesize\ttfamily \#define AM\+\_\+\+MASK~0x3F /$\ast$ Mask of defined bits $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a5cfae62dabae0a54809e43b36685ce7c}\label{ff_8c_a5cfae62dabae0a54809e43b36685ce7c}} 
+\index{ff.c@{ff.c}!AM\_VOL@{AM\_VOL}}
+\index{AM\_VOL@{AM\_VOL}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{AM\_VOL}{AM\_VOL}}
+{\footnotesize\ttfamily \#define AM\+\_\+\+VOL~0x08 /$\ast$ Volume label $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a6fceac966c2f2b277e8f472c5a7de0c7}\label{ff_8c_a6fceac966c2f2b277e8f472c5a7de0c7}} 
+\index{ff.c@{ff.c}!BPB\_BkBootSec32@{BPB\_BkBootSec32}}
+\index{BPB\_BkBootSec32@{BPB\_BkBootSec32}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_BkBootSec32}{BPB\_BkBootSec32}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Bk\+Boot\+Sec32~50  /$\ast$ FAT32\+: Offset of backup boot sector (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a8551844b4eb4e15aecd8cc9aa3585fa2}\label{ff_8c_a8551844b4eb4e15aecd8cc9aa3585fa2}} 
+\index{ff.c@{ff.c}!BPB\_BytsPerSec@{BPB\_BytsPerSec}}
+\index{BPB\_BytsPerSec@{BPB\_BytsPerSec}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_BytsPerSec}{BPB\_BytsPerSec}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Byts\+Per\+Sec~11  /$\ast$ Sector \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} \mbox{[}byte\mbox{]} (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a3d35e000a1033bb913d3fbc3aa5c68af}\label{ff_8c_a3d35e000a1033bb913d3fbc3aa5c68af}} 
+\index{ff.c@{ff.c}!BPB\_BytsPerSecEx@{BPB\_BytsPerSecEx}}
+\index{BPB\_BytsPerSecEx@{BPB\_BytsPerSecEx}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_BytsPerSecEx}{BPB\_BytsPerSecEx}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Byts\+Per\+Sec\+Ex~108  /$\ast$ ex\+FAT\+: Log2 of sector \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} in unit of byte (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_ad3ab64cc288e66c0643af23094aa9645}\label{ff_8c_ad3ab64cc288e66c0643af23094aa9645}} 
+\index{ff.c@{ff.c}!BPB\_DataOfsEx@{BPB\_DataOfsEx}}
+\index{BPB\_DataOfsEx@{BPB\_DataOfsEx}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_DataOfsEx}{BPB\_DataOfsEx}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Data\+Ofs\+Ex~88  /$\ast$ ex\+FAT\+: Data offset from top of the volume \mbox{[}sector\mbox{]} (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_ac926d7c74f368a033dc8240167df9bc0}\label{ff_8c_ac926d7c74f368a033dc8240167df9bc0}} 
+\index{ff.c@{ff.c}!BPB\_DrvNumEx@{BPB\_DrvNumEx}}
+\index{BPB\_DrvNumEx@{BPB\_DrvNumEx}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_DrvNumEx}{BPB\_DrvNumEx}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Drv\+Num\+Ex~111  /$\ast$ ex\+FAT\+: Physical drive number for int13h (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a25b233cdbcc8c78db0a791be2623d988}\label{ff_8c_a25b233cdbcc8c78db0a791be2623d988}} 
+\index{ff.c@{ff.c}!BPB\_ExtFlags32@{BPB\_ExtFlags32}}
+\index{BPB\_ExtFlags32@{BPB\_ExtFlags32}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_ExtFlags32}{BPB\_ExtFlags32}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Ext\+Flags32~40  /$\ast$ FAT32\+: Extended \mbox{\hyperlink{acpi_8hpp_a773b39d480759f67926cb18ae2219281}{flags}} (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a12af2061024593ffc7a92daf1c2d3470}\label{ff_8c_a12af2061024593ffc7a92daf1c2d3470}} 
+\index{ff.c@{ff.c}!BPB\_FatOfsEx@{BPB\_FatOfsEx}}
+\index{BPB\_FatOfsEx@{BPB\_FatOfsEx}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_FatOfsEx}{BPB\_FatOfsEx}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Fat\+Ofs\+Ex~80  /$\ast$ ex\+FAT\+: \mbox{\hyperlink{class_f_a_t}{FAT}} offset from top of the volume \mbox{[}sector\mbox{]} (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a60a2f6efeb6a4c7cb2da1e5def6ca43b}\label{ff_8c_a60a2f6efeb6a4c7cb2da1e5def6ca43b}} 
+\index{ff.c@{ff.c}!BPB\_FATSz16@{BPB\_FATSz16}}
+\index{BPB\_FATSz16@{BPB\_FATSz16}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_FATSz16}{BPB\_FATSz16}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+FATSz16~22  /$\ast$ \mbox{\hyperlink{class_f_a_t}{FAT}} \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} (16-\/bit) \mbox{[}sector\mbox{]} (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a6e6340030dc29e7da2e9f92e472a763d}\label{ff_8c_a6e6340030dc29e7da2e9f92e472a763d}} 
+\index{ff.c@{ff.c}!BPB\_FATSz32@{BPB\_FATSz32}}
+\index{BPB\_FATSz32@{BPB\_FATSz32}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_FATSz32}{BPB\_FATSz32}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+FATSz32~36  /$\ast$ FAT32\+: \mbox{\hyperlink{class_f_a_t}{FAT}} \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} \mbox{[}sector\mbox{]} (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a54579961bdbed995bcb7e077fedff1f4}\label{ff_8c_a54579961bdbed995bcb7e077fedff1f4}} 
+\index{ff.c@{ff.c}!BPB\_FatSzEx@{BPB\_FatSzEx}}
+\index{BPB\_FatSzEx@{BPB\_FatSzEx}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_FatSzEx}{BPB\_FatSzEx}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Fat\+Sz\+Ex~84  /$\ast$ ex\+FAT\+: \mbox{\hyperlink{class_f_a_t}{FAT}} \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} \mbox{[}sector\mbox{]} (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a86b761a0ed35d7f6e9774be44482ee5b}\label{ff_8c_a86b761a0ed35d7f6e9774be44482ee5b}} 
+\index{ff.c@{ff.c}!BPB\_FSInfo32@{BPB\_FSInfo32}}
+\index{BPB\_FSInfo32@{BPB\_FSInfo32}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_FSInfo32}{BPB\_FSInfo32}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+FSInfo32~48  /$\ast$ FAT32\+: Offset of FSINFO sector (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_aed6c1d79c193debd85f7dc9afd05eb22}\label{ff_8c_aed6c1d79c193debd85f7dc9afd05eb22}} 
+\index{ff.c@{ff.c}!BPB\_FSVer32@{BPB\_FSVer32}}
+\index{BPB\_FSVer32@{BPB\_FSVer32}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_FSVer32}{BPB\_FSVer32}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+FSVer32~42  /$\ast$ FAT32\+: \mbox{\hyperlink{class_filesystem}{Filesystem}} version (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a86f95a0a4b798a61967e086540e6ebd9}\label{ff_8c_a86f95a0a4b798a61967e086540e6ebd9}} 
+\index{ff.c@{ff.c}!BPB\_FSVerEx@{BPB\_FSVerEx}}
+\index{BPB\_FSVerEx@{BPB\_FSVerEx}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_FSVerEx}{BPB\_FSVerEx}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+FSVer\+Ex~104  /$\ast$ ex\+FAT\+: \mbox{\hyperlink{class_filesystem}{Filesystem}} version (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a449d4ed5c4c8105daf29aad9488277f7}\label{ff_8c_a449d4ed5c4c8105daf29aad9488277f7}} 
+\index{ff.c@{ff.c}!BPB\_HiddSec@{BPB\_HiddSec}}
+\index{BPB\_HiddSec@{BPB\_HiddSec}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_HiddSec}{BPB\_HiddSec}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Hidd\+Sec~28  /$\ast$ Volume offset from top of the drive (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a414e054c4b5ea3414ebefa3539e7e554}\label{ff_8c_a414e054c4b5ea3414ebefa3539e7e554}} 
+\index{ff.c@{ff.c}!BPB\_Media@{BPB\_Media}}
+\index{BPB\_Media@{BPB\_Media}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_Media}{BPB\_Media}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Media~21  /$\ast$ Media descriptor byte (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a5bb065cee85104cbb58390ea9dfa01d8}\label{ff_8c_a5bb065cee85104cbb58390ea9dfa01d8}} 
+\index{ff.c@{ff.c}!BPB\_NumClusEx@{BPB\_NumClusEx}}
+\index{BPB\_NumClusEx@{BPB\_NumClusEx}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_NumClusEx}{BPB\_NumClusEx}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Num\+Clus\+Ex~92  /$\ast$ ex\+FAT\+: Number of clusters (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_af44a1e8c89ec5502595f23496d24cbf1}\label{ff_8c_af44a1e8c89ec5502595f23496d24cbf1}} 
+\index{ff.c@{ff.c}!BPB\_NumFATs@{BPB\_NumFATs}}
+\index{BPB\_NumFATs@{BPB\_NumFATs}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_NumFATs}{BPB\_NumFATs}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Num\+FATs~16  /$\ast$ Number of FATs (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a20cab50b62fe9cb5a99ce28cb54da60e}\label{ff_8c_a20cab50b62fe9cb5a99ce28cb54da60e}} 
+\index{ff.c@{ff.c}!BPB\_NumFATsEx@{BPB\_NumFATsEx}}
+\index{BPB\_NumFATsEx@{BPB\_NumFATsEx}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_NumFATsEx}{BPB\_NumFATsEx}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Num\+FATs\+Ex~110  /$\ast$ ex\+FAT\+: Number of FATs (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a9c03603c3be34d4c5cc1b481b0bc6774}\label{ff_8c_a9c03603c3be34d4c5cc1b481b0bc6774}} 
+\index{ff.c@{ff.c}!BPB\_NumHeads@{BPB\_NumHeads}}
+\index{BPB\_NumHeads@{BPB\_NumHeads}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_NumHeads}{BPB\_NumHeads}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Num\+Heads~26  /$\ast$ Number of heads for int13h (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a935b5f7cb38489adf96f42775583025b}\label{ff_8c_a935b5f7cb38489adf96f42775583025b}} 
+\index{ff.c@{ff.c}!BPB\_PercInUseEx@{BPB\_PercInUseEx}}
+\index{BPB\_PercInUseEx@{BPB\_PercInUseEx}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_PercInUseEx}{BPB\_PercInUseEx}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Perc\+In\+Use\+Ex~112  /$\ast$ ex\+FAT\+: Percent in use (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a4c99b85429f73c8f6a0ac2bc7a1d81ea}\label{ff_8c_a4c99b85429f73c8f6a0ac2bc7a1d81ea}} 
+\index{ff.c@{ff.c}!BPB\_RootClus32@{BPB\_RootClus32}}
+\index{BPB\_RootClus32@{BPB\_RootClus32}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_RootClus32}{BPB\_RootClus32}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Root\+Clus32~44  /$\ast$ FAT32\+: Root directory cluster (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a8447a1c7d19cab308ab198e1de2e086f}\label{ff_8c_a8447a1c7d19cab308ab198e1de2e086f}} 
+\index{ff.c@{ff.c}!BPB\_RootClusEx@{BPB\_RootClusEx}}
+\index{BPB\_RootClusEx@{BPB\_RootClusEx}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_RootClusEx}{BPB\_RootClusEx}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Root\+Clus\+Ex~96  /$\ast$ ex\+FAT\+: Root directory start cluster (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_aaa667f14c87c45dc128f2ab208e92f98}\label{ff_8c_aaa667f14c87c45dc128f2ab208e92f98}} 
+\index{ff.c@{ff.c}!BPB\_RootEntCnt@{BPB\_RootEntCnt}}
+\index{BPB\_RootEntCnt@{BPB\_RootEntCnt}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_RootEntCnt}{BPB\_RootEntCnt}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Root\+Ent\+Cnt~17  /$\ast$ \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaff9abf2b1a689f70a77a18da50c01d9f}{Size}} of root directory area for \mbox{\hyperlink{class_f_a_t}{FAT}} \mbox{[}entry\mbox{]} (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a1f1f5c2e566e3d7d226e4b2a7b70ee2d}\label{ff_8c_a1f1f5c2e566e3d7d226e4b2a7b70ee2d}} 
+\index{ff.c@{ff.c}!BPB\_RsvdEx@{BPB\_RsvdEx}}
+\index{BPB\_RsvdEx@{BPB\_RsvdEx}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_RsvdEx}{BPB\_RsvdEx}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Rsvd\+Ex~113  /$\ast$ ex\+FAT\+: Reserved (7-\/byte) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_ab3ec444c8457c9bc98aa07e846f5c1b7}\label{ff_8c_ab3ec444c8457c9bc98aa07e846f5c1b7}} 
+\index{ff.c@{ff.c}!BPB\_RsvdSecCnt@{BPB\_RsvdSecCnt}}
+\index{BPB\_RsvdSecCnt@{BPB\_RsvdSecCnt}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_RsvdSecCnt}{BPB\_RsvdSecCnt}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Rsvd\+Sec\+Cnt~14  /$\ast$ \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaff9abf2b1a689f70a77a18da50c01d9f}{Size}} of \mbox{\hyperlink{acpi_8hpp_a72aca6ea6d8153b28ea8f139b932ec3e}{reserved}} area \mbox{[}sector\mbox{]} (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_aab78e41c617a14b9540c0563d6b957fa}\label{ff_8c_aab78e41c617a14b9540c0563d6b957fa}} 
+\index{ff.c@{ff.c}!BPB\_SecPerClus@{BPB\_SecPerClus}}
+\index{BPB\_SecPerClus@{BPB\_SecPerClus}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_SecPerClus}{BPB\_SecPerClus}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Sec\+Per\+Clus~13  /$\ast$ Cluster \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} \mbox{[}sector\mbox{]} (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a64dfd457aa404e53c16d58a3d249adfe}\label{ff_8c_a64dfd457aa404e53c16d58a3d249adfe}} 
+\index{ff.c@{ff.c}!BPB\_SecPerClusEx@{BPB\_SecPerClusEx}}
+\index{BPB\_SecPerClusEx@{BPB\_SecPerClusEx}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_SecPerClusEx}{BPB\_SecPerClusEx}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Sec\+Per\+Clus\+Ex~109  /$\ast$ ex\+FAT\+: Log2 of cluster \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} in unit of sector (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_ac71bb771432ea532bc47713a028ebd76}\label{ff_8c_ac71bb771432ea532bc47713a028ebd76}} 
+\index{ff.c@{ff.c}!BPB\_SecPerTrk@{BPB\_SecPerTrk}}
+\index{BPB\_SecPerTrk@{BPB\_SecPerTrk}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_SecPerTrk}{BPB\_SecPerTrk}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Sec\+Per\+Trk~24  /$\ast$ Number of sectors per track for int13h \mbox{[}sector\mbox{]} (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a4eb540eecde0f2df26fa8c7969341d68}\label{ff_8c_a4eb540eecde0f2df26fa8c7969341d68}} 
+\index{ff.c@{ff.c}!BPB\_TotSec16@{BPB\_TotSec16}}
+\index{BPB\_TotSec16@{BPB\_TotSec16}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_TotSec16}{BPB\_TotSec16}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Tot\+Sec16~19  /$\ast$ Volume \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} (16-\/bit) \mbox{[}sector\mbox{]} (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a7723a9f0da553e8879d60909d85ccb7b}\label{ff_8c_a7723a9f0da553e8879d60909d85ccb7b}} 
+\index{ff.c@{ff.c}!BPB\_TotSec32@{BPB\_TotSec32}}
+\index{BPB\_TotSec32@{BPB\_TotSec32}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_TotSec32}{BPB\_TotSec32}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Tot\+Sec32~32  /$\ast$ Volume \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} (32-\/bit) \mbox{[}sector\mbox{]} (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_ac0c21531f17f5690b31622fcf98d3581}\label{ff_8c_ac0c21531f17f5690b31622fcf98d3581}} 
+\index{ff.c@{ff.c}!BPB\_TotSecEx@{BPB\_TotSecEx}}
+\index{BPB\_TotSecEx@{BPB\_TotSecEx}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_TotSecEx}{BPB\_TotSecEx}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Tot\+Sec\+Ex~72  /$\ast$ ex\+FAT\+: Volume \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} \mbox{[}sector\mbox{]} (QWORD) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_af7b37995f89d832a47898aa787ecfbc8}\label{ff_8c_af7b37995f89d832a47898aa787ecfbc8}} 
+\index{ff.c@{ff.c}!BPB\_VolFlagEx@{BPB\_VolFlagEx}}
+\index{BPB\_VolFlagEx@{BPB\_VolFlagEx}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_VolFlagEx}{BPB\_VolFlagEx}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Vol\+Flag\+Ex~106  /$\ast$ ex\+FAT\+: Volume \mbox{\hyperlink{acpi_8hpp_a773b39d480759f67926cb18ae2219281}{flags}} (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a465d34bfcd2bf930e04ae1b379047199}\label{ff_8c_a465d34bfcd2bf930e04ae1b379047199}} 
+\index{ff.c@{ff.c}!BPB\_VolIDEx@{BPB\_VolIDEx}}
+\index{BPB\_VolIDEx@{BPB\_VolIDEx}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_VolIDEx}{BPB\_VolIDEx}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Vol\+IDEx~100  /$\ast$ ex\+FAT\+: Volume serial number (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_ab09fe2e1cd6205eb848e5fd00374efd4}\label{ff_8c_ab09fe2e1cd6205eb848e5fd00374efd4}} 
+\index{ff.c@{ff.c}!BPB\_VolOfsEx@{BPB\_VolOfsEx}}
+\index{BPB\_VolOfsEx@{BPB\_VolOfsEx}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_VolOfsEx}{BPB\_VolOfsEx}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Vol\+Ofs\+Ex~64  /$\ast$ ex\+FAT\+: Volume offset from top of the drive \mbox{[}sector\mbox{]} (QWORD) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a8b262d23932b103fc341cf6b631539bd}\label{ff_8c_a8b262d23932b103fc341cf6b631539bd}} 
+\index{ff.c@{ff.c}!BPB\_ZeroedEx@{BPB\_ZeroedEx}}
+\index{BPB\_ZeroedEx@{BPB\_ZeroedEx}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BPB\_ZeroedEx}{BPB\_ZeroedEx}}
+{\footnotesize\ttfamily \#define BPB\+\_\+\+Zeroed\+Ex~11  /$\ast$ ex\+FAT\+: MBZ field (53-\/byte) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a74b810b3f3583c1eb54bd4305c0f261a}\label{ff_8c_a74b810b3f3583c1eb54bd4305c0f261a}} 
+\index{ff.c@{ff.c}!BS\_55AA@{BS\_55AA}}
+\index{BS\_55AA@{BS\_55AA}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BS\_55AA}{BS\_55AA}}
+{\footnotesize\ttfamily \#define BS\+\_\+55\+AA~510  /$\ast$ \mbox{\hyperlink{acpi_8hpp_a5ec67df9ee3474ea9b15652a47362df0}{Signature}} word (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a42b6c0366bbc0ad92da5b4997c052b9a}\label{ff_8c_a42b6c0366bbc0ad92da5b4997c052b9a}} 
+\index{ff.c@{ff.c}!BS\_BootCode@{BS\_BootCode}}
+\index{BS\_BootCode@{BS\_BootCode}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BS\_BootCode}{BS\_BootCode}}
+{\footnotesize\ttfamily \#define BS\+\_\+\+Boot\+Code~62  /$\ast$ Boot code (448-\/byte) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a6df4d5ea8d94280f9dc935cd6995761d}\label{ff_8c_a6df4d5ea8d94280f9dc935cd6995761d}} 
+\index{ff.c@{ff.c}!BS\_BootCode32@{BS\_BootCode32}}
+\index{BS\_BootCode32@{BS\_BootCode32}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BS\_BootCode32}{BS\_BootCode32}}
+{\footnotesize\ttfamily \#define BS\+\_\+\+Boot\+Code32~90  /$\ast$ FAT32\+: Boot code (420-\/byte) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_adea4123eb450eb09933fac339b08eeee}\label{ff_8c_adea4123eb450eb09933fac339b08eeee}} 
+\index{ff.c@{ff.c}!BS\_BootCodeEx@{BS\_BootCodeEx}}
+\index{BS\_BootCodeEx@{BS\_BootCodeEx}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BS\_BootCodeEx}{BS\_BootCodeEx}}
+{\footnotesize\ttfamily \#define BS\+\_\+\+Boot\+Code\+Ex~120  /$\ast$ ex\+FAT\+: Boot code (390-\/byte) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a85a92e790602efef4da3a2f141611ce8}\label{ff_8c_a85a92e790602efef4da3a2f141611ce8}} 
+\index{ff.c@{ff.c}!BS\_BootSig@{BS\_BootSig}}
+\index{BS\_BootSig@{BS\_BootSig}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BS\_BootSig}{BS\_BootSig}}
+{\footnotesize\ttfamily \#define BS\+\_\+\+Boot\+Sig~38  /$\ast$ Extended boot signature (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a59c4b2f802ab4bc9319e5bd840e615b8}\label{ff_8c_a59c4b2f802ab4bc9319e5bd840e615b8}} 
+\index{ff.c@{ff.c}!BS\_BootSig32@{BS\_BootSig32}}
+\index{BS\_BootSig32@{BS\_BootSig32}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BS\_BootSig32}{BS\_BootSig32}}
+{\footnotesize\ttfamily \#define BS\+\_\+\+Boot\+Sig32~66  /$\ast$ FAT32\+: Extended boot signature (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a0c51f7393341b839dfb241c2951f3ef4}\label{ff_8c_a0c51f7393341b839dfb241c2951f3ef4}} 
+\index{ff.c@{ff.c}!BS\_DrvNum@{BS\_DrvNum}}
+\index{BS\_DrvNum@{BS\_DrvNum}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BS\_DrvNum}{BS\_DrvNum}}
+{\footnotesize\ttfamily \#define BS\+\_\+\+Drv\+Num~36  /$\ast$ Physical drive number for int13h (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_aa670c7b495f5b347c442df67b188c58f}\label{ff_8c_aa670c7b495f5b347c442df67b188c58f}} 
+\index{ff.c@{ff.c}!BS\_DrvNum32@{BS\_DrvNum32}}
+\index{BS\_DrvNum32@{BS\_DrvNum32}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BS\_DrvNum32}{BS\_DrvNum32}}
+{\footnotesize\ttfamily \#define BS\+\_\+\+Drv\+Num32~64  /$\ast$ FAT32\+: Physical drive number for int13h (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a2264848692d36c1b2499c9b6a10acf75}\label{ff_8c_a2264848692d36c1b2499c9b6a10acf75}} 
+\index{ff.c@{ff.c}!BS\_FilSysType@{BS\_FilSysType}}
+\index{BS\_FilSysType@{BS\_FilSysType}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BS\_FilSysType}{BS\_FilSysType}}
+{\footnotesize\ttfamily \#define BS\+\_\+\+Fil\+Sys\+Type~54  /$\ast$ \mbox{\hyperlink{class_filesystem}{Filesystem}} type string (8-\/byte) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a8d8786452966cd0ce579f2575a54a348}\label{ff_8c_a8d8786452966cd0ce579f2575a54a348}} 
+\index{ff.c@{ff.c}!BS\_FilSysType32@{BS\_FilSysType32}}
+\index{BS\_FilSysType32@{BS\_FilSysType32}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BS\_FilSysType32}{BS\_FilSysType32}}
+{\footnotesize\ttfamily \#define BS\+\_\+\+Fil\+Sys\+Type32~82  /$\ast$ FAT32\+: \mbox{\hyperlink{class_filesystem}{Filesystem}} type string (8-\/byte) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a664130f8583af5ccc48d5c79952cea8a}\label{ff_8c_a664130f8583af5ccc48d5c79952cea8a}} 
+\index{ff.c@{ff.c}!BS\_JmpBoot@{BS\_JmpBoot}}
+\index{BS\_JmpBoot@{BS\_JmpBoot}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BS\_JmpBoot}{BS\_JmpBoot}}
+{\footnotesize\ttfamily \#define BS\+\_\+\+Jmp\+Boot~0  /$\ast$ x86 jump instruction (3-\/byte) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a97d9de2942e551e182747f3ed01ab5b4}\label{ff_8c_a97d9de2942e551e182747f3ed01ab5b4}} 
+\index{ff.c@{ff.c}!BS\_NTres@{BS\_NTres}}
+\index{BS\_NTres@{BS\_NTres}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BS\_NTres}{BS\_NTres}}
+{\footnotesize\ttfamily \#define BS\+\_\+\+NTres~37  /$\ast$ Windows\+NT error flag (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a0970c574d425c190a0d6fc6d40bcd9df}\label{ff_8c_a0970c574d425c190a0d6fc6d40bcd9df}} 
+\index{ff.c@{ff.c}!BS\_NTres32@{BS\_NTres32}}
+\index{BS\_NTres32@{BS\_NTres32}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BS\_NTres32}{BS\_NTres32}}
+{\footnotesize\ttfamily \#define BS\+\_\+\+NTres32~65  /$\ast$ FAT32\+: Error flag (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a02a76ada191ec2dc5f8af60ff3576da7}\label{ff_8c_a02a76ada191ec2dc5f8af60ff3576da7}} 
+\index{ff.c@{ff.c}!BS\_OEMName@{BS\_OEMName}}
+\index{BS\_OEMName@{BS\_OEMName}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BS\_OEMName}{BS\_OEMName}}
+{\footnotesize\ttfamily \#define BS\+\_\+\+OEMName~3  /$\ast$ OEM name (8-\/byte) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a383a71bda500a0fb5a37f4edd785acbf}\label{ff_8c_a383a71bda500a0fb5a37f4edd785acbf}} 
+\index{ff.c@{ff.c}!BS\_VolID@{BS\_VolID}}
+\index{BS\_VolID@{BS\_VolID}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BS\_VolID}{BS\_VolID}}
+{\footnotesize\ttfamily \#define BS\+\_\+\+Vol\+ID~39  /$\ast$ Volume serial number (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_abaa3aafdcf5e83f8cb7e2bb373b13525}\label{ff_8c_abaa3aafdcf5e83f8cb7e2bb373b13525}} 
+\index{ff.c@{ff.c}!BS\_VolID32@{BS\_VolID32}}
+\index{BS\_VolID32@{BS\_VolID32}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BS\_VolID32}{BS\_VolID32}}
+{\footnotesize\ttfamily \#define BS\+\_\+\+Vol\+ID32~67  /$\ast$ FAT32\+: Volume serial number (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a28498ba4b07ff90aaa9628e81fb89d32}\label{ff_8c_a28498ba4b07ff90aaa9628e81fb89d32}} 
+\index{ff.c@{ff.c}!BS\_VolLab@{BS\_VolLab}}
+\index{BS\_VolLab@{BS\_VolLab}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BS\_VolLab}{BS\_VolLab}}
+{\footnotesize\ttfamily \#define BS\+\_\+\+Vol\+Lab~43  /$\ast$ Volume label string (8-\/byte) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a8241a49bce313184a58617ba1ad9e84c}\label{ff_8c_a8241a49bce313184a58617ba1ad9e84c}} 
+\index{ff.c@{ff.c}!BS\_VolLab32@{BS\_VolLab32}}
+\index{BS\_VolLab32@{BS\_VolLab32}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{BS\_VolLab32}{BS\_VolLab32}}
+{\footnotesize\ttfamily \#define BS\+\_\+\+Vol\+Lab32~71  /$\ast$ FAT32\+: Volume label string (8-\/byte) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a0532865fc94e93704941f95e9425ccb9}\label{ff_8c_a0532865fc94e93704941f95e9425ccb9}} 
+\index{ff.c@{ff.c}!CODEPAGE@{CODEPAGE}}
+\index{CODEPAGE@{CODEPAGE}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{CODEPAGE}{CODEPAGE}}
+{\footnotesize\ttfamily \#define CODEPAGE~\mbox{\hyperlink{ffconf_8h_a56bf522419025961acdfaf6388f40402}{FF\+\_\+\+CODE\+\_\+\+PAGE}}}
+
+\mbox{\Hypertarget{ff_8c_a0f2455f7318e6d56318c62f5e4048e1e}\label{ff_8c_a0f2455f7318e6d56318c62f5e4048e1e}} 
+\index{ff.c@{ff.c}!DDEM@{DDEM}}
+\index{DDEM@{DDEM}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{DDEM}{DDEM}}
+{\footnotesize\ttfamily \#define DDEM~0x\+E5 /$\ast$ Deleted directory entry mark set to \mbox{\hyperlink{ff_8c_afa89348e9fc2de82ae9e12c661366b0e}{DIR\+\_\+\+Name}}\mbox{[}0\mbox{]} $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_ad9aa172b1cf1d54aca234228a7ae8503}\label{ff_8c_ad9aa172b1cf1d54aca234228a7ae8503}} 
+\index{ff.c@{ff.c}!DEF\_NAMBUF@{DEF\_NAMBUF}}
+\index{DEF\_NAMBUF@{DEF\_NAMBUF}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{DEF\_NAMBUF}{DEF\_NAMBUF}}
+{\footnotesize\ttfamily \#define DEF\+\_\+\+NAMBUF~\mbox{\hyperlink{ff_8h_a0bb095da65fbe52192dd9e3e643c7568}{WCHAR}} $\ast$lfn; /$\ast$ Pointer to LFN working buffer $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_ad3233e40118ed66095f3c9545b788f8a}\label{ff_8c_ad3233e40118ed66095f3c9545b788f8a}} 
+\index{ff.c@{ff.c}!DIR\_Attr@{DIR\_Attr}}
+\index{DIR\_Attr@{DIR\_Attr}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{DIR\_Attr}{DIR\_Attr}}
+{\footnotesize\ttfamily \#define DIR\+\_\+\+Attr~11  /$\ast$ Attribute (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a47fb1881ea71d860db9b8280564cb4d5}\label{ff_8c_a47fb1881ea71d860db9b8280564cb4d5}} 
+\index{ff.c@{ff.c}!DIR\_CrtTime@{DIR\_CrtTime}}
+\index{DIR\_CrtTime@{DIR\_CrtTime}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{DIR\_CrtTime}{DIR\_CrtTime}}
+{\footnotesize\ttfamily \#define DIR\+\_\+\+Crt\+Time~14  /$\ast$ Created time (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_af8ddb351ddcaaac5d52923ad442fd8cb}\label{ff_8c_af8ddb351ddcaaac5d52923ad442fd8cb}} 
+\index{ff.c@{ff.c}!DIR\_CrtTime10@{DIR\_CrtTime10}}
+\index{DIR\_CrtTime10@{DIR\_CrtTime10}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{DIR\_CrtTime10}{DIR\_CrtTime10}}
+{\footnotesize\ttfamily \#define DIR\+\_\+\+Crt\+Time10~13  /$\ast$ Created time sub-\/second (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_abfbfa613864a02a65f0bf70ead6672c7}\label{ff_8c_abfbfa613864a02a65f0bf70ead6672c7}} 
+\index{ff.c@{ff.c}!DIR\_FileSize@{DIR\_FileSize}}
+\index{DIR\_FileSize@{DIR\_FileSize}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{DIR\_FileSize}{DIR\_FileSize}}
+{\footnotesize\ttfamily \#define DIR\+\_\+\+File\+Size~28  /$\ast$ \mbox{\hyperlink{class_file}{File}} \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a0bc29c3f09e1e9c40c414f7d50d7905c}\label{ff_8c_a0bc29c3f09e1e9c40c414f7d50d7905c}} 
+\index{ff.c@{ff.c}!DIR\_FstClusHI@{DIR\_FstClusHI}}
+\index{DIR\_FstClusHI@{DIR\_FstClusHI}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{DIR\_FstClusHI}{DIR\_FstClusHI}}
+{\footnotesize\ttfamily \#define DIR\+\_\+\+Fst\+Clus\+HI~20  /$\ast$ Higher 16-\/bit of \mbox{\hyperlink{malloc_8c_afcdd80de1d2482a30e49ef0389f36c63}{first}} cluster (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_aebe0e913bff75a89d38dbcb04baf5dff}\label{ff_8c_aebe0e913bff75a89d38dbcb04baf5dff}} 
+\index{ff.c@{ff.c}!DIR\_FstClusLO@{DIR\_FstClusLO}}
+\index{DIR\_FstClusLO@{DIR\_FstClusLO}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{DIR\_FstClusLO}{DIR\_FstClusLO}}
+{\footnotesize\ttfamily \#define DIR\+\_\+\+Fst\+Clus\+LO~26  /$\ast$ Lower 16-\/bit of \mbox{\hyperlink{malloc_8c_afcdd80de1d2482a30e49ef0389f36c63}{first}} cluster (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_afa0625d73f4683df24345f51e7a43da3}\label{ff_8c_afa0625d73f4683df24345f51e7a43da3}} 
+\index{ff.c@{ff.c}!DIR\_LstAccDate@{DIR\_LstAccDate}}
+\index{DIR\_LstAccDate@{DIR\_LstAccDate}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{DIR\_LstAccDate}{DIR\_LstAccDate}}
+{\footnotesize\ttfamily \#define DIR\+\_\+\+Lst\+Acc\+Date~18  /$\ast$ Last accessed date (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_aa136ac8eaf0b3febba999e37b7d01803}\label{ff_8c_aa136ac8eaf0b3febba999e37b7d01803}} 
+\index{ff.c@{ff.c}!DIR\_ModTime@{DIR\_ModTime}}
+\index{DIR\_ModTime@{DIR\_ModTime}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{DIR\_ModTime}{DIR\_ModTime}}
+{\footnotesize\ttfamily \#define DIR\+\_\+\+Mod\+Time~22  /$\ast$ Modified time (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_afa89348e9fc2de82ae9e12c661366b0e}\label{ff_8c_afa89348e9fc2de82ae9e12c661366b0e}} 
+\index{ff.c@{ff.c}!DIR\_Name@{DIR\_Name}}
+\index{DIR\_Name@{DIR\_Name}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{DIR\_Name}{DIR\_Name}}
+{\footnotesize\ttfamily \#define DIR\+\_\+\+Name~0  /$\ast$ Short file name (11-\/byte) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a87ee1f701c2ab941862e3ce00c1c1e9d}\label{ff_8c_a87ee1f701c2ab941862e3ce00c1c1e9d}} 
+\index{ff.c@{ff.c}!DIR\_NTres@{DIR\_NTres}}
+\index{DIR\_NTres@{DIR\_NTres}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{DIR\_NTres}{DIR\_NTres}}
+{\footnotesize\ttfamily \#define DIR\+\_\+\+NTres~12  /$\ast$ Lower case flag (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a7dc00ac3fd99f0a14d6b7f3fc76b8778}\label{ff_8c_a7dc00ac3fd99f0a14d6b7f3fc76b8778}} 
+\index{ff.c@{ff.c}!DIR\_READ\_FILE@{DIR\_READ\_FILE}}
+\index{DIR\_READ\_FILE@{DIR\_READ\_FILE}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{DIR\_READ\_FILE}{DIR\_READ\_FILE}}
+{\footnotesize\ttfamily \#define DIR\+\_\+\+READ\+\_\+\+FILE(\begin{DoxyParamCaption}\item[{}]{dp }\end{DoxyParamCaption})~dir\+\_\+read(dp, 0)}
+
+\mbox{\Hypertarget{ff_8c_afd5d25039aad72791c8fd0e911ba7e97}\label{ff_8c_afd5d25039aad72791c8fd0e911ba7e97}} 
+\index{ff.c@{ff.c}!DIR\_READ\_LABEL@{DIR\_READ\_LABEL}}
+\index{DIR\_READ\_LABEL@{DIR\_READ\_LABEL}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{DIR\_READ\_LABEL}{DIR\_READ\_LABEL}}
+{\footnotesize\ttfamily \#define DIR\+\_\+\+READ\+\_\+\+LABEL(\begin{DoxyParamCaption}\item[{}]{dp }\end{DoxyParamCaption})~dir\+\_\+read(dp, 1)}
+
+\mbox{\Hypertarget{ff_8c_ab9becfd202f51394d189dffe291a5959}\label{ff_8c_ab9becfd202f51394d189dffe291a5959}} 
+\index{ff.c@{ff.c}!ET\_BITMAP@{ET\_BITMAP}}
+\index{ET\_BITMAP@{ET\_BITMAP}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{ET\_BITMAP}{ET\_BITMAP}}
+{\footnotesize\ttfamily \#define ET\+\_\+\+BITMAP~0x81 /$\ast$ Allocation bitmap $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a4b213905cd7d1c590f56a8244abc3479}\label{ff_8c_a4b213905cd7d1c590f56a8244abc3479}} 
+\index{ff.c@{ff.c}!ET\_FILEDIR@{ET\_FILEDIR}}
+\index{ET\_FILEDIR@{ET\_FILEDIR}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{ET\_FILEDIR}{ET\_FILEDIR}}
+{\footnotesize\ttfamily \#define ET\+\_\+\+FILEDIR~0x85 /$\ast$ \mbox{\hyperlink{class_file}{File}} and directory $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a7e5707cf4bb01cc3b0c7e438cd4c601c}\label{ff_8c_a7e5707cf4bb01cc3b0c7e438cd4c601c}} 
+\index{ff.c@{ff.c}!ET\_FILENAME@{ET\_FILENAME}}
+\index{ET\_FILENAME@{ET\_FILENAME}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{ET\_FILENAME}{ET\_FILENAME}}
+{\footnotesize\ttfamily \#define ET\+\_\+\+FILENAME~0x\+C1 /$\ast$ \mbox{\hyperlink{acpixf_8h_a5e6f9eb1e980275f44f308f43bff476e}{Name}} extension $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a1166d46cb68eb191dd4991829aab3cf9}\label{ff_8c_a1166d46cb68eb191dd4991829aab3cf9}} 
+\index{ff.c@{ff.c}!ET\_STREAM@{ET\_STREAM}}
+\index{ET\_STREAM@{ET\_STREAM}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{ET\_STREAM}{ET\_STREAM}}
+{\footnotesize\ttfamily \#define ET\+\_\+\+STREAM~0x\+C0 /$\ast$ Stream extension $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a25a8a4c5eb49dc0d306d0fa6011cd9af}\label{ff_8c_a25a8a4c5eb49dc0d306d0fa6011cd9af}} 
+\index{ff.c@{ff.c}!ET\_UPCASE@{ET\_UPCASE}}
+\index{ET\_UPCASE@{ET\_UPCASE}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{ET\_UPCASE}{ET\_UPCASE}}
+{\footnotesize\ttfamily \#define ET\+\_\+\+UPCASE~0x82 /$\ast$ Up-\/case table $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a9c991beac4793083d6bd370735bcb9c6}\label{ff_8c_a9c991beac4793083d6bd370735bcb9c6}} 
+\index{ff.c@{ff.c}!ET\_VLABEL@{ET\_VLABEL}}
+\index{ET\_VLABEL@{ET\_VLABEL}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{ET\_VLABEL}{ET\_VLABEL}}
+{\footnotesize\ttfamily \#define ET\+\_\+\+VLABEL~0x83 /$\ast$ Volume label $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_affd69e5e6d205e09e1070b2f3c039072}\label{ff_8c_affd69e5e6d205e09e1070b2f3c039072}} 
+\index{ff.c@{ff.c}!FA\_DIRTY@{FA\_DIRTY}}
+\index{FA\_DIRTY@{FA\_DIRTY}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{FA\_DIRTY}{FA\_DIRTY}}
+{\footnotesize\ttfamily \#define FA\+\_\+\+DIRTY~0x80 /$\ast$ \mbox{\hyperlink{struct_f_i_l_ac2aa36f0fa61cd82f905173d51f719b0}{FIL.\+buf}}\mbox{[}$\,$\mbox{]} needs to be written-\/back $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a9ae82de1b6841df9041411357f8d3eb5}\label{ff_8c_a9ae82de1b6841df9041411357f8d3eb5}} 
+\index{ff.c@{ff.c}!FA\_MODIFIED@{FA\_MODIFIED}}
+\index{FA\_MODIFIED@{FA\_MODIFIED}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{FA\_MODIFIED}{FA\_MODIFIED}}
+{\footnotesize\ttfamily \#define FA\+\_\+\+MODIFIED~0x40 /$\ast$ \mbox{\hyperlink{class_file}{File}} has been modified $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_ad4d0d6afc5e28678b87a1b75b6645f7d}\label{ff_8c_ad4d0d6afc5e28678b87a1b75b6645f7d}} 
+\index{ff.c@{ff.c}!FA\_SEEKEND@{FA\_SEEKEND}}
+\index{FA\_SEEKEND@{FA\_SEEKEND}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{FA\_SEEKEND}{FA\_SEEKEND}}
+{\footnotesize\ttfamily \#define FA\+\_\+\+SEEKEND~0x20 /$\ast$ \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca80b5ad0400d2828aa8dc6538981689dc}{Seek}} to end of the file on file open $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_aa2d2dda6ad1a1ec4a09e5cb30ae40e2a}\label{ff_8c_aa2d2dda6ad1a1ec4a09e5cb30ae40e2a}} 
+\index{ff.c@{ff.c}!FREE\_NAMBUF@{FREE\_NAMBUF}}
+\index{FREE\_NAMBUF@{FREE\_NAMBUF}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{FREE\_NAMBUF}{FREE\_NAMBUF}}
+{\footnotesize\ttfamily \#define FREE\+\_\+\+NAMBUF(\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})~\mbox{\hyperlink{ffsystem_8c_ab85fd090c8b8b17846ccc1e8cda16a9b}{ff\+\_\+memfree}}(lfn)}
+
+\mbox{\Hypertarget{ff_8c_ab711e50459aba01b11c6b46a7cc1410b}\label{ff_8c_ab711e50459aba01b11c6b46a7cc1410b}} 
+\index{ff.c@{ff.c}!FSI\_Free\_Count@{FSI\_Free\_Count}}
+\index{FSI\_Free\_Count@{FSI\_Free\_Count}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{FSI\_Free\_Count}{FSI\_Free\_Count}}
+{\footnotesize\ttfamily \#define FSI\+\_\+\+Free\+\_\+\+Count~488  /$\ast$ FAT32 FSI\+: Number of \mbox{\hyperlink{kheap_8hpp_af07d89f5ceaea0c7c8252cc41fd75f37}{free}} clusters (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a318e58c1966aba52b90ab98dcb649883}\label{ff_8c_a318e58c1966aba52b90ab98dcb649883}} 
+\index{ff.c@{ff.c}!FSI\_LeadSig@{FSI\_LeadSig}}
+\index{FSI\_LeadSig@{FSI\_LeadSig}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{FSI\_LeadSig}{FSI\_LeadSig}}
+{\footnotesize\ttfamily \#define FSI\+\_\+\+Lead\+Sig~0  /$\ast$ FAT32 FSI\+: Leading signature (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a320700cedf300c9b418edf56e5e6b086}\label{ff_8c_a320700cedf300c9b418edf56e5e6b086}} 
+\index{ff.c@{ff.c}!FSI\_Nxt\_Free@{FSI\_Nxt\_Free}}
+\index{FSI\_Nxt\_Free@{FSI\_Nxt\_Free}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{FSI\_Nxt\_Free}{FSI\_Nxt\_Free}}
+{\footnotesize\ttfamily \#define FSI\+\_\+\+Nxt\+\_\+\+Free~492  /$\ast$ FAT32 FSI\+: Last allocated cluster (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a3bac0e6ff5907873030db1d0a7c4ebef}\label{ff_8c_a3bac0e6ff5907873030db1d0a7c4ebef}} 
+\index{ff.c@{ff.c}!FSI\_StrucSig@{FSI\_StrucSig}}
+\index{FSI\_StrucSig@{FSI\_StrucSig}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{FSI\_StrucSig}{FSI\_StrucSig}}
+{\footnotesize\ttfamily \#define FSI\+\_\+\+Struc\+Sig~484  /$\ast$ FAT32 FSI\+: Structure signature (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a72589f5bbb514c0b222ab8b292764418}\label{ff_8c_a72589f5bbb514c0b222ab8b292764418}} 
+\index{ff.c@{ff.c}!GET\_FATTIME@{GET\_FATTIME}}
+\index{GET\_FATTIME@{GET\_FATTIME}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{GET\_FATTIME}{GET\_FATTIME}}
+{\footnotesize\ttfamily \#define GET\+\_\+\+FATTIME(\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})~((\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}})(\mbox{\hyperlink{ffconf_8h_aa23a9857382e458421fb87ef11ff9c63}{FF\+\_\+\+NORTC\+\_\+\+YEAR}} -\/ 1980) $<$$<$ 25 $\vert$ (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}})\mbox{\hyperlink{ffconf_8h_acc2167f3af4dd4f6ec84a57a82f923dd}{FF\+\_\+\+NORTC\+\_\+\+MON}} $<$$<$ 21 $\vert$ (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}})\mbox{\hyperlink{ffconf_8h_a1726418a7d765c3ae4da9c43d2349151}{FF\+\_\+\+NORTC\+\_\+\+MDAY}} $<$$<$ 16)}
+
+\mbox{\Hypertarget{ff_8c_a7f901110fcf3b8bc941e6086cc7ba860}\label{ff_8c_a7f901110fcf3b8bc941e6086cc7ba860}} 
+\index{ff.c@{ff.c}!GPT\_ALIGN@{GPT\_ALIGN}}
+\index{GPT\_ALIGN@{GPT\_ALIGN}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{GPT\_ALIGN}{GPT\_ALIGN}}
+{\footnotesize\ttfamily \#define GPT\+\_\+\+ALIGN~0x100000 /$\ast$ Alignment of partitions in GPT \mbox{[}byte\mbox{]} ($>$=128KB) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a5ba0a17d3228d2ccda3859b6ed0c4fb8}\label{ff_8c_a5ba0a17d3228d2ccda3859b6ed0c4fb8}} 
+\index{ff.c@{ff.c}!GPT\_ITEMS@{GPT\_ITEMS}}
+\index{GPT\_ITEMS@{GPT\_ITEMS}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{GPT\_ITEMS}{GPT\_ITEMS}}
+{\footnotesize\ttfamily \#define GPT\+\_\+\+ITEMS~128   /$\ast$ Number of GPT table \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} ($>$=128, sector aligned) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_ab27c352b8f3ec3f23ad2715630d8ebcd}\label{ff_8c_ab27c352b8f3ec3f23ad2715630d8ebcd}} 
+\index{ff.c@{ff.c}!GPTE\_Flags@{GPTE\_Flags}}
+\index{GPTE\_Flags@{GPTE\_Flags}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{GPTE\_Flags}{GPTE\_Flags}}
+{\footnotesize\ttfamily \#define GPTE\+\_\+\+Flags~48  /$\ast$ GPT PTE\+: \mbox{\hyperlink{acdebug_8h_a4f38d8eec414bbac21fe17e446586ef4}{Flags}} (QWORD) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a25029670f9bc74da6eae5001fe4acdb4}\label{ff_8c_a25029670f9bc74da6eae5001fe4acdb4}} 
+\index{ff.c@{ff.c}!GPTE\_FstLba@{GPTE\_FstLba}}
+\index{GPTE\_FstLba@{GPTE\_FstLba}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{GPTE\_FstLba}{GPTE\_FstLba}}
+{\footnotesize\ttfamily \#define GPTE\+\_\+\+Fst\+Lba~32  /$\ast$ GPT PTE\+: First LBA (QWORD) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a4f37e50e5eabcfb8353749dc8b8be4b4}\label{ff_8c_a4f37e50e5eabcfb8353749dc8b8be4b4}} 
+\index{ff.c@{ff.c}!GPTE\_LstLba@{GPTE\_LstLba}}
+\index{GPTE\_LstLba@{GPTE\_LstLba}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{GPTE\_LstLba}{GPTE\_LstLba}}
+{\footnotesize\ttfamily \#define GPTE\+\_\+\+Lst\+Lba~40  /$\ast$ GPT PTE\+: Last LBA inclusive (QWORD) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a327bcf9a8000b94be389d8e22f1e3c5e}\label{ff_8c_a327bcf9a8000b94be389d8e22f1e3c5e}} 
+\index{ff.c@{ff.c}!GPTE\_Name@{GPTE\_Name}}
+\index{GPTE\_Name@{GPTE\_Name}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{GPTE\_Name}{GPTE\_Name}}
+{\footnotesize\ttfamily \#define GPTE\+\_\+\+Name~56  /$\ast$ GPT PTE\+: \mbox{\hyperlink{acpixf_8h_a5e6f9eb1e980275f44f308f43bff476e}{Name}} $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a8e8517c1287b2d9c93d164bccc0133db}\label{ff_8c_a8e8517c1287b2d9c93d164bccc0133db}} 
+\index{ff.c@{ff.c}!GPTE\_PtGuid@{GPTE\_PtGuid}}
+\index{GPTE\_PtGuid@{GPTE\_PtGuid}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{GPTE\_PtGuid}{GPTE\_PtGuid}}
+{\footnotesize\ttfamily \#define GPTE\+\_\+\+Pt\+Guid~0  /$\ast$ GPT PTE\+: Partition type GUID (16-\/byte) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a0b89556f11a98b5c3d893d92d7d32334}\label{ff_8c_a0b89556f11a98b5c3d893d92d7d32334}} 
+\index{ff.c@{ff.c}!GPTE\_UpGuid@{GPTE\_UpGuid}}
+\index{GPTE\_UpGuid@{GPTE\_UpGuid}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{GPTE\_UpGuid}{GPTE\_UpGuid}}
+{\footnotesize\ttfamily \#define GPTE\+\_\+\+Up\+Guid~16  /$\ast$ GPT PTE\+: Partition unique GUID (16-\/byte) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_ad65d7cc56b164352a9f487a69e3a1281}\label{ff_8c_ad65d7cc56b164352a9f487a69e3a1281}} 
+\index{ff.c@{ff.c}!GPTH\_BakLba@{GPTH\_BakLba}}
+\index{GPTH\_BakLba@{GPTH\_BakLba}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{GPTH\_BakLba}{GPTH\_BakLba}}
+{\footnotesize\ttfamily \#define GPTH\+\_\+\+Bak\+Lba~32  /$\ast$ GPT\+: Backup header LBA (QWORD) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_ac1a4c52079edc7bf25dddc7bf02e1882}\label{ff_8c_ac1a4c52079edc7bf25dddc7bf02e1882}} 
+\index{ff.c@{ff.c}!GPTH\_Bcc@{GPTH\_Bcc}}
+\index{GPTH\_Bcc@{GPTH\_Bcc}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{GPTH\_Bcc}{GPTH\_Bcc}}
+{\footnotesize\ttfamily \#define GPTH\+\_\+\+Bcc~16  /$\ast$ GPT\+: Header BCC (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a985c526784a91120bec12f33f3169408}\label{ff_8c_a985c526784a91120bec12f33f3169408}} 
+\index{ff.c@{ff.c}!GPTH\_CurLba@{GPTH\_CurLba}}
+\index{GPTH\_CurLba@{GPTH\_CurLba}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{GPTH\_CurLba}{GPTH\_CurLba}}
+{\footnotesize\ttfamily \#define GPTH\+\_\+\+Cur\+Lba~24  /$\ast$ GPT\+: Main header LBA (QWORD) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a32df4a198d3dc8acebd987be74c304ee}\label{ff_8c_a32df4a198d3dc8acebd987be74c304ee}} 
+\index{ff.c@{ff.c}!GPTH\_DskGuid@{GPTH\_DskGuid}}
+\index{GPTH\_DskGuid@{GPTH\_DskGuid}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{GPTH\_DskGuid}{GPTH\_DskGuid}}
+{\footnotesize\ttfamily \#define GPTH\+\_\+\+Dsk\+Guid~56  /$\ast$ GPT\+: Disk GUID (16-\/byte) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a14df7c4b0d469d423e2c1b5f4f0ea02d}\label{ff_8c_a14df7c4b0d469d423e2c1b5f4f0ea02d}} 
+\index{ff.c@{ff.c}!GPTH\_FstLba@{GPTH\_FstLba}}
+\index{GPTH\_FstLba@{GPTH\_FstLba}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{GPTH\_FstLba}{GPTH\_FstLba}}
+{\footnotesize\ttfamily \#define GPTH\+\_\+\+Fst\+Lba~40  /$\ast$ GPT\+: First LBA for partitions (QWORD) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_adaa930215faa1e6f51430b080130f9e5}\label{ff_8c_adaa930215faa1e6f51430b080130f9e5}} 
+\index{ff.c@{ff.c}!GPTH\_LstLba@{GPTH\_LstLba}}
+\index{GPTH\_LstLba@{GPTH\_LstLba}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{GPTH\_LstLba}{GPTH\_LstLba}}
+{\footnotesize\ttfamily \#define GPTH\+\_\+\+Lst\+Lba~48  /$\ast$ GPT\+: Last LBA for partitions (QWORD) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a94ea6178d6f9e74b6b8eb4bb68eb4470}\label{ff_8c_a94ea6178d6f9e74b6b8eb4bb68eb4470}} 
+\index{ff.c@{ff.c}!GPTH\_PtBcc@{GPTH\_PtBcc}}
+\index{GPTH\_PtBcc@{GPTH\_PtBcc}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{GPTH\_PtBcc}{GPTH\_PtBcc}}
+{\footnotesize\ttfamily \#define GPTH\+\_\+\+Pt\+Bcc~88  /$\ast$ GPT\+: Partation table BCC (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a16b1364aca6d6fc7991516ee883606ff}\label{ff_8c_a16b1364aca6d6fc7991516ee883606ff}} 
+\index{ff.c@{ff.c}!GPTH\_PteSize@{GPTH\_PteSize}}
+\index{GPTH\_PteSize@{GPTH\_PteSize}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{GPTH\_PteSize}{GPTH\_PteSize}}
+{\footnotesize\ttfamily \#define GPTH\+\_\+\+Pte\+Size~84  /$\ast$ GPT\+: \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaff9abf2b1a689f70a77a18da50c01d9f}{Size}} of table entry (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a950d43a4211a4bdcc19888bfc8fde5f9}\label{ff_8c_a950d43a4211a4bdcc19888bfc8fde5f9}} 
+\index{ff.c@{ff.c}!GPTH\_PtNum@{GPTH\_PtNum}}
+\index{GPTH\_PtNum@{GPTH\_PtNum}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{GPTH\_PtNum}{GPTH\_PtNum}}
+{\footnotesize\ttfamily \#define GPTH\+\_\+\+Pt\+Num~80  /$\ast$ GPT\+: Number of table entries (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_acf59802a11562c5dc1f0d99ae5a89946}\label{ff_8c_acf59802a11562c5dc1f0d99ae5a89946}} 
+\index{ff.c@{ff.c}!GPTH\_PtOfs@{GPTH\_PtOfs}}
+\index{GPTH\_PtOfs@{GPTH\_PtOfs}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{GPTH\_PtOfs}{GPTH\_PtOfs}}
+{\footnotesize\ttfamily \#define GPTH\+\_\+\+Pt\+Ofs~72  /$\ast$ GPT\+: Partation table LBA (QWORD) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a2da96e2de03ca769426591b23fecdde9}\label{ff_8c_a2da96e2de03ca769426591b23fecdde9}} 
+\index{ff.c@{ff.c}!GPTH\_Rev@{GPTH\_Rev}}
+\index{GPTH\_Rev@{GPTH\_Rev}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{GPTH\_Rev}{GPTH\_Rev}}
+{\footnotesize\ttfamily \#define GPTH\+\_\+\+Rev~8  /$\ast$ GPT\+: \mbox{\hyperlink{acpi_8hpp_a55eb3228cf0540a1e7ee4fa81453e29c}{Revision}} (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_afff5a1b885cf62ef3382022e6f2bf5c2}\label{ff_8c_afff5a1b885cf62ef3382022e6f2bf5c2}} 
+\index{ff.c@{ff.c}!GPTH\_Sign@{GPTH\_Sign}}
+\index{GPTH\_Sign@{GPTH\_Sign}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{GPTH\_Sign}{GPTH\_Sign}}
+{\footnotesize\ttfamily \#define GPTH\+\_\+\+Sign~0  /$\ast$ GPT\+: Header signature (8-\/byte) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a58237ab846855bf2b4a0ab750493e8a3}\label{ff_8c_a58237ab846855bf2b4a0ab750493e8a3}} 
+\index{ff.c@{ff.c}!GPTH\_Size@{GPTH\_Size}}
+\index{GPTH\_Size@{GPTH\_Size}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{GPTH\_Size}{GPTH\_Size}}
+{\footnotesize\ttfamily \#define GPTH\+\_\+\+Size~12  /$\ast$ GPT\+: Header \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a9880dce2d33fe7708f982b5f80a31142}\label{ff_8c_a9880dce2d33fe7708f982b5f80a31142}} 
+\index{ff.c@{ff.c}!INIT\_NAMBUF@{INIT\_NAMBUF}}
+\index{INIT\_NAMBUF@{INIT\_NAMBUF}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{INIT\_NAMBUF}{INIT\_NAMBUF}}
+{\footnotesize\ttfamily \#define INIT\+\_\+\+NAMBUF(\begin{DoxyParamCaption}\item[{}]{fs }\end{DoxyParamCaption})~\{ lfn = \mbox{\hyperlink{ffsystem_8c_ae63913186246b80cfce42dbab9e8bcab}{ff\+\_\+memalloc}}((\mbox{\hyperlink{ffconf_8h_adf88cd7c56034e4b94a6f2b3b83f95bf}{FF\+\_\+\+MAX\+\_\+\+LFN}}+1)$\ast$2); \mbox{\hyperlink{usban_8cpp_a10a99e960749b873ebf2a747d34b5e24}{if}} (!lfn) \mbox{\hyperlink{ff_8c_a7e653d8ca0ae09faa49cd5b7335fea84}{LEAVE\+\_\+\+FF}}(fs, \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44caf56a76a86602cbdeb2c4f3d00cfad21c}{FR\+\_\+\+NOT\+\_\+\+ENOUGH\+\_\+\+CORE}}); (fs)-\/$>$lfnbuf = lfn; \}}
+
+\mbox{\Hypertarget{ff_8c_a65dee564f69f2ec27f25b67a348018b9}\label{ff_8c_a65dee564f69f2ec27f25b67a348018b9}} 
+\index{ff.c@{ff.c}!IsDigit@{IsDigit}}
+\index{IsDigit@{IsDigit}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{IsDigit}{IsDigit}}
+{\footnotesize\ttfamily \#define Is\+Digit(\begin{DoxyParamCaption}\item[{}]{\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}} }\end{DoxyParamCaption})~((\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}) $>$= \textquotesingle{}0\textquotesingle{} \&\& (\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}) $<$= \textquotesingle{}9\textquotesingle{})}
+
+\mbox{\Hypertarget{ff_8c_a4a9d454724926bd51a3aed589a97f08b}\label{ff_8c_a4a9d454724926bd51a3aed589a97f08b}} 
+\index{ff.c@{ff.c}!IsLower@{IsLower}}
+\index{IsLower@{IsLower}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{IsLower}{IsLower}}
+{\footnotesize\ttfamily \#define Is\+Lower(\begin{DoxyParamCaption}\item[{}]{\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}} }\end{DoxyParamCaption})~((\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}) $>$= \textquotesingle{}a\textquotesingle{} \&\& (\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}) $<$= \textquotesingle{}z\textquotesingle{})}
+
+\mbox{\Hypertarget{ff_8c_a1678f40df73ed6cd30ed3e837b3558e7}\label{ff_8c_a1678f40df73ed6cd30ed3e837b3558e7}} 
+\index{ff.c@{ff.c}!IsSurrogate@{IsSurrogate}}
+\index{IsSurrogate@{IsSurrogate}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{IsSurrogate}{IsSurrogate}}
+{\footnotesize\ttfamily \#define Is\+Surrogate(\begin{DoxyParamCaption}\item[{}]{\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}} }\end{DoxyParamCaption})~((\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}) $>$= 0x\+D800 \&\& (\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}) $<$= 0x\+DFFF)}
+
+\mbox{\Hypertarget{ff_8c_ad148073d4a74bdff0f86f2b18284b569}\label{ff_8c_ad148073d4a74bdff0f86f2b18284b569}} 
+\index{ff.c@{ff.c}!IsSurrogateH@{IsSurrogateH}}
+\index{IsSurrogateH@{IsSurrogateH}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{IsSurrogateH}{IsSurrogateH}}
+{\footnotesize\ttfamily \#define Is\+SurrogateH(\begin{DoxyParamCaption}\item[{}]{\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}} }\end{DoxyParamCaption})~((\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}) $>$= 0x\+D800 \&\& (\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}) $<$= 0x\+DBFF)}
+
+\mbox{\Hypertarget{ff_8c_a7a67adc6a71fa08dbbe481ad756849c4}\label{ff_8c_a7a67adc6a71fa08dbbe481ad756849c4}} 
+\index{ff.c@{ff.c}!IsSurrogateL@{IsSurrogateL}}
+\index{IsSurrogateL@{IsSurrogateL}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{IsSurrogateL}{IsSurrogateL}}
+{\footnotesize\ttfamily \#define Is\+SurrogateL(\begin{DoxyParamCaption}\item[{}]{\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}} }\end{DoxyParamCaption})~((\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}) $>$= 0x\+DC00 \&\& (\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}) $<$= 0x\+DFFF)}
+
+\mbox{\Hypertarget{ff_8c_a89b2514198590e139dd064c5d534f302}\label{ff_8c_a89b2514198590e139dd064c5d534f302}} 
+\index{ff.c@{ff.c}!IsUpper@{IsUpper}}
+\index{IsUpper@{IsUpper}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{IsUpper}{IsUpper}}
+{\footnotesize\ttfamily \#define Is\+Upper(\begin{DoxyParamCaption}\item[{}]{\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}} }\end{DoxyParamCaption})~((\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}) $>$= \textquotesingle{}A\textquotesingle{} \&\& (\mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}) $<$= \textquotesingle{}Z\textquotesingle{})}
+
+\mbox{\Hypertarget{ff_8c_a6577ed2f95527745bf4d27c53488b9a7}\label{ff_8c_a6577ed2f95527745bf4d27c53488b9a7}} 
+\index{ff.c@{ff.c}!LD2PD@{LD2PD}}
+\index{LD2PD@{LD2PD}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{LD2PD}{LD2PD}}
+{\footnotesize\ttfamily \#define LD2\+PD(\begin{DoxyParamCaption}\item[{}]{vol }\end{DoxyParamCaption})~(\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}})(vol) /$\ast$ Each logical drive is associated with the same physical drive number $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_aadc4a9aefaf2588bdd7565549f5d91e7}\label{ff_8c_aadc4a9aefaf2588bdd7565549f5d91e7}} 
+\index{ff.c@{ff.c}!LD2PT@{LD2PT}}
+\index{LD2PT@{LD2PT}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{LD2PT}{LD2PT}}
+{\footnotesize\ttfamily \#define LD2\+PT(\begin{DoxyParamCaption}\item[{}]{vol }\end{DoxyParamCaption})~0   /$\ast$ Find \mbox{\hyperlink{malloc_8c_afcdd80de1d2482a30e49ef0389f36c63}{first}} valid partition or in SFD $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a28dcd75633b49e40b42a31f0cf5f5929}\label{ff_8c_a28dcd75633b49e40b42a31f0cf5f5929}} 
+\index{ff.c@{ff.c}!LDIR\_Attr@{LDIR\_Attr}}
+\index{LDIR\_Attr@{LDIR\_Attr}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{LDIR\_Attr}{LDIR\_Attr}}
+{\footnotesize\ttfamily \#define LDIR\+\_\+\+Attr~11  /$\ast$ LFN\+: LFN attribute (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_ade1d529763d2d097a6d1410956c8a84f}\label{ff_8c_ade1d529763d2d097a6d1410956c8a84f}} 
+\index{ff.c@{ff.c}!LDIR\_Chksum@{LDIR\_Chksum}}
+\index{LDIR\_Chksum@{LDIR\_Chksum}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{LDIR\_Chksum}{LDIR\_Chksum}}
+{\footnotesize\ttfamily \#define LDIR\+\_\+\+Chksum~13  /$\ast$ LFN\+: \mbox{\hyperlink{acpi_8hpp_ad98d5051c2e94669e746dd13771daac8}{Checksum}} of the SFN (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_ad73024151eff6baea94e680f7928969d}\label{ff_8c_ad73024151eff6baea94e680f7928969d}} 
+\index{ff.c@{ff.c}!LDIR\_FstClusLO@{LDIR\_FstClusLO}}
+\index{LDIR\_FstClusLO@{LDIR\_FstClusLO}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{LDIR\_FstClusLO}{LDIR\_FstClusLO}}
+{\footnotesize\ttfamily \#define LDIR\+\_\+\+Fst\+Clus\+LO~26  /$\ast$ LFN\+: MBZ field (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a6c97d545619e6586b02b5d4f39f7be25}\label{ff_8c_a6c97d545619e6586b02b5d4f39f7be25}} 
+\index{ff.c@{ff.c}!LDIR\_Ord@{LDIR\_Ord}}
+\index{LDIR\_Ord@{LDIR\_Ord}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{LDIR\_Ord}{LDIR\_Ord}}
+{\footnotesize\ttfamily \#define LDIR\+\_\+\+Ord~0  /$\ast$ LFN\+: LFN order and LLE flag (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_acb98a052a9be81564b56854df35480a0}\label{ff_8c_acb98a052a9be81564b56854df35480a0}} 
+\index{ff.c@{ff.c}!LDIR\_Type@{LDIR\_Type}}
+\index{LDIR\_Type@{LDIR\_Type}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{LDIR\_Type}{LDIR\_Type}}
+{\footnotesize\ttfamily \#define LDIR\+\_\+\+Type~12  /$\ast$ LFN\+: Entry type (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a7e653d8ca0ae09faa49cd5b7335fea84}\label{ff_8c_a7e653d8ca0ae09faa49cd5b7335fea84}} 
+\index{ff.c@{ff.c}!LEAVE\_FF@{LEAVE\_FF}}
+\index{LEAVE\_FF@{LEAVE\_FF}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{LEAVE\_FF}{LEAVE\_FF}}
+{\footnotesize\ttfamily \#define LEAVE\+\_\+\+FF(\begin{DoxyParamCaption}\item[{}]{fs,  }\item[{}]{\mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}} }\end{DoxyParamCaption})~return \mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}}}
+
+\mbox{\Hypertarget{ff_8c_aeeb83ea2531f2af57f2d9fa191ef4531}\label{ff_8c_aeeb83ea2531f2af57f2d9fa191ef4531}} 
+\index{ff.c@{ff.c}!LEAVE\_MKFS@{LEAVE\_MKFS}}
+\index{LEAVE\_MKFS@{LEAVE\_MKFS}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{LEAVE\_MKFS}{LEAVE\_MKFS}}
+{\footnotesize\ttfamily \#define LEAVE\+\_\+\+MKFS(\begin{DoxyParamCaption}\item[{}]{\mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}} }\end{DoxyParamCaption})~\{ \mbox{\hyperlink{usban_8cpp_a10a99e960749b873ebf2a747d34b5e24}{if}} (!work) \mbox{\hyperlink{ffsystem_8c_ab85fd090c8b8b17846ccc1e8cda16a9b}{ff\+\_\+memfree}}(buf); return \mbox{\hyperlink{syscalls_8cpp_a9aa9ad2ab5827d8d84d2c793455c18ae}{res}}; \}}
+
+\mbox{\Hypertarget{ff_8c_a31ec96cd263bb14418cb8b7b2b54b3ca}\label{ff_8c_a31ec96cd263bb14418cb8b7b2b54b3ca}} 
+\index{ff.c@{ff.c}!LLEF@{LLEF}}
+\index{LLEF@{LLEF}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{LLEF}{LLEF}}
+{\footnotesize\ttfamily \#define LLEF~0x40 /$\ast$ Last long entry flag in \mbox{\hyperlink{ff_8c_a6c97d545619e6586b02b5d4f39f7be25}{LDIR\+\_\+\+Ord}} $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a556a1452c85d74c908fe071754ce4a71}\label{ff_8c_a556a1452c85d74c908fe071754ce4a71}} 
+\index{ff.c@{ff.c}!MAX\_DIR@{MAX\_DIR}}
+\index{MAX\_DIR@{MAX\_DIR}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{MAX\_DIR}{MAX\_DIR}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+DIR~0x200000  /$\ast$ Max \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} of \mbox{\hyperlink{class_f_a_t}{FAT}} directory $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_aeac7903cb4fde8e45722fca3244257e7}\label{ff_8c_aeac7903cb4fde8e45722fca3244257e7}} 
+\index{ff.c@{ff.c}!MAX\_DIR\_EX@{MAX\_DIR\_EX}}
+\index{MAX\_DIR\_EX@{MAX\_DIR\_EX}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{MAX\_DIR\_EX}{MAX\_DIR\_EX}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+DIR\+\_\+\+EX~0x10000000  /$\ast$ Max \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} of ex\+FAT directory $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_ad7bea1c4a86cb654807e6da0370cb694}\label{ff_8c_ad7bea1c4a86cb654807e6da0370cb694}} 
+\index{ff.c@{ff.c}!MAX\_EXFAT@{MAX\_EXFAT}}
+\index{MAX\_EXFAT@{MAX\_EXFAT}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{MAX\_EXFAT}{MAX\_EXFAT}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+EXFAT~0x7\+FFFFFFD  /$\ast$ Max ex\+FAT clusters (differs from specs, implementation limit) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a03962fce05a65b3e0ff6855d5436869f}\label{ff_8c_a03962fce05a65b3e0ff6855d5436869f}} 
+\index{ff.c@{ff.c}!MAX\_FAT12@{MAX\_FAT12}}
+\index{MAX\_FAT12@{MAX\_FAT12}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{MAX\_FAT12}{MAX\_FAT12}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+FAT12~0x\+FF5   /$\ast$ Max FAT12 clusters (differs from specs, but right for real DOS/Windows behavior) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a259e5a1973d5209304482a5bcd89372f}\label{ff_8c_a259e5a1973d5209304482a5bcd89372f}} 
+\index{ff.c@{ff.c}!MAX\_FAT16@{MAX\_FAT16}}
+\index{MAX\_FAT16@{MAX\_FAT16}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{MAX\_FAT16}{MAX\_FAT16}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+FAT16~0x\+FFF5   /$\ast$ Max FAT16 clusters (differs from specs, but right for real DOS/Windows behavior) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a40e7471b7ae3620a0419aa4d8d6dc684}\label{ff_8c_a40e7471b7ae3620a0419aa4d8d6dc684}} 
+\index{ff.c@{ff.c}!MAX\_FAT32@{MAX\_FAT32}}
+\index{MAX\_FAT32@{MAX\_FAT32}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{MAX\_FAT32}{MAX\_FAT32}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+FAT32~0x0\+FFFFFF5  /$\ast$ Max FAT32 clusters (not specified, practical limit) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_aaa791eb9a3f067c6a24c70626bddcc66}\label{ff_8c_aaa791eb9a3f067c6a24c70626bddcc66}} 
+\index{ff.c@{ff.c}!MAX\_MALLOC@{MAX\_MALLOC}}
+\index{MAX\_MALLOC@{MAX\_MALLOC}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{MAX\_MALLOC}{MAX\_MALLOC}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+MALLOC~0x8000 /$\ast$ Must be $>$=\mbox{\hyperlink{ffconf_8h_a104c36ee46f9d6e76dadf37f3d9696cc}{FF\+\_\+\+MAX\+\_\+\+SS}} $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a01c7bbfbe635cd0d0ab3e59a3f44dc64}\label{ff_8c_a01c7bbfbe635cd0d0ab3e59a3f44dc64}} 
+\index{ff.c@{ff.c}!MAXDIRB@{MAXDIRB}}
+\index{MAXDIRB@{MAXDIRB}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{MAXDIRB}{MAXDIRB}}
+{\footnotesize\ttfamily \#define MAXDIRB(\begin{DoxyParamCaption}\item[{}]{nc }\end{DoxyParamCaption})~((nc + 44U) / 15 $\ast$ \mbox{\hyperlink{ff_8c_a90943705ce4b32e47562c9f56860c7af}{SZDIRE}}) /$\ast$ ex\+FAT\+: \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaff9abf2b1a689f70a77a18da50c01d9f}{Size}} of directory entry block scratchpad buffer needed for the name length $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_ac3f187bf0ba891551f594af6b61f3188}\label{ff_8c_ac3f187bf0ba891551f594af6b61f3188}} 
+\index{ff.c@{ff.c}!MBR\_Table@{MBR\_Table}}
+\index{MBR\_Table@{MBR\_Table}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{MBR\_Table}{MBR\_Table}}
+{\footnotesize\ttfamily \#define MBR\+\_\+\+Table~446  /$\ast$ MBR\+: Offset of partition table in the MBR $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_afd69eeee2e2b9f8359018dfe8d163fd4}\label{ff_8c_afd69eeee2e2b9f8359018dfe8d163fd4}} 
+\index{ff.c@{ff.c}!MERGE\_2STR@{MERGE\_2STR}}
+\index{MERGE\_2STR@{MERGE\_2STR}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{MERGE\_2STR}{MERGE\_2STR}}
+{\footnotesize\ttfamily \#define MERGE\+\_\+2\+STR(\begin{DoxyParamCaption}\item[{}]{a,  }\item[{}]{\mbox{\hyperlink{syscalls_8cpp_a99ed6187132780a335e6db030a0115e7}{b}} }\end{DoxyParamCaption})~a \#\# \mbox{\hyperlink{syscalls_8cpp_a99ed6187132780a335e6db030a0115e7}{b}}}
+
+\mbox{\Hypertarget{ff_8c_ac4c5cba43a7d51edd75c267e6046756f}\label{ff_8c_ac4c5cba43a7d51edd75c267e6046756f}} 
+\index{ff.c@{ff.c}!MKCVTBL@{MKCVTBL}}
+\index{MKCVTBL@{MKCVTBL}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{MKCVTBL}{MKCVTBL}}
+{\footnotesize\ttfamily \#define MKCVTBL(\begin{DoxyParamCaption}\item[{}]{hd,  }\item[{}]{cp }\end{DoxyParamCaption})~\mbox{\hyperlink{ff_8c_afd69eeee2e2b9f8359018dfe8d163fd4}{MERGE\+\_\+2\+STR}}(hd, cp)}
+
+\mbox{\Hypertarget{ff_8c_aa7655ed8fbdcfec3965be1d6f412d0f6}\label{ff_8c_aa7655ed8fbdcfec3965be1d6f412d0f6}} 
+\index{ff.c@{ff.c}!N\_SEC\_TRACK@{N\_SEC\_TRACK}}
+\index{N\_SEC\_TRACK@{N\_SEC\_TRACK}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{N\_SEC\_TRACK}{N\_SEC\_TRACK}}
+{\footnotesize\ttfamily \#define N\+\_\+\+SEC\+\_\+\+TRACK~63   /$\ast$ Sectors per track for determination of drive CHS $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a4a0e89b504dece19e2e4b02c83782ca2}\label{ff_8c_a4a0e89b504dece19e2e4b02c83782ca2}} 
+\index{ff.c@{ff.c}!NS\_BODY@{NS\_BODY}}
+\index{NS\_BODY@{NS\_BODY}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{NS\_BODY}{NS\_BODY}}
+{\footnotesize\ttfamily \#define NS\+\_\+\+BODY~0x08 /$\ast$ Lower case flag (body) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a2db528782a021797b34bdc6e9e9de1c3}\label{ff_8c_a2db528782a021797b34bdc6e9e9de1c3}} 
+\index{ff.c@{ff.c}!NS\_DOT@{NS\_DOT}}
+\index{NS\_DOT@{NS\_DOT}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{NS\_DOT}{NS\_DOT}}
+{\footnotesize\ttfamily \#define NS\+\_\+\+DOT~0x20 /$\ast$ Dot entry $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a3b7fad0942e816fdb84d869c1f7a613e}\label{ff_8c_a3b7fad0942e816fdb84d869c1f7a613e}} 
+\index{ff.c@{ff.c}!NS\_EXT@{NS\_EXT}}
+\index{NS\_EXT@{NS\_EXT}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{NS\_EXT}{NS\_EXT}}
+{\footnotesize\ttfamily \#define NS\+\_\+\+EXT~0x10 /$\ast$ Lower case flag (ext) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a5a0742bfc1d94f0c3baa5ede485048c4}\label{ff_8c_a5a0742bfc1d94f0c3baa5ede485048c4}} 
+\index{ff.c@{ff.c}!NS\_LAST@{NS\_LAST}}
+\index{NS\_LAST@{NS\_LAST}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{NS\_LAST}{NS\_LAST}}
+{\footnotesize\ttfamily \#define NS\+\_\+\+LAST~0x04 /$\ast$ Last segment $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_ae957b8d4065ea0b3eed822aec5368d29}\label{ff_8c_ae957b8d4065ea0b3eed822aec5368d29}} 
+\index{ff.c@{ff.c}!NS\_LFN@{NS\_LFN}}
+\index{NS\_LFN@{NS\_LFN}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{NS\_LFN}{NS\_LFN}}
+{\footnotesize\ttfamily \#define NS\+\_\+\+LFN~0x02 /$\ast$ Force to create LFN entry $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_ac92c92c3a3d6b9235ac98feeb00e565a}\label{ff_8c_ac92c92c3a3d6b9235ac98feeb00e565a}} 
+\index{ff.c@{ff.c}!NS\_LOSS@{NS\_LOSS}}
+\index{NS\_LOSS@{NS\_LOSS}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{NS\_LOSS}{NS\_LOSS}}
+{\footnotesize\ttfamily \#define NS\+\_\+\+LOSS~0x01 /$\ast$ Out of 8.\+3 format $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a4355b699eba89ff8a3615ef62128caff}\label{ff_8c_a4355b699eba89ff8a3615ef62128caff}} 
+\index{ff.c@{ff.c}!NS\_NOLFN@{NS\_NOLFN}}
+\index{NS\_NOLFN@{NS\_NOLFN}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{NS\_NOLFN}{NS\_NOLFN}}
+{\footnotesize\ttfamily \#define NS\+\_\+\+NOLFN~0x40 /$\ast$ Do not find LFN $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a03a711029b966a7fad4f01e546b5e034}\label{ff_8c_a03a711029b966a7fad4f01e546b5e034}} 
+\index{ff.c@{ff.c}!NS\_NONAME@{NS\_NONAME}}
+\index{NS\_NONAME@{NS\_NONAME}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{NS\_NONAME}{NS\_NONAME}}
+{\footnotesize\ttfamily \#define NS\+\_\+\+NONAME~0x80 /$\ast$ Not followed $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_ad2306816015e67e72cfd0a20a880b227}\label{ff_8c_ad2306816015e67e72cfd0a20a880b227}} 
+\index{ff.c@{ff.c}!NSFLAG@{NSFLAG}}
+\index{NSFLAG@{NSFLAG}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{NSFLAG}{NSFLAG}}
+{\footnotesize\ttfamily \#define NSFLAG~11  /$\ast$ Index of the name status byte $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a74c1bb03f929236b18eb9c4a3df26a8c}\label{ff_8c_a74c1bb03f929236b18eb9c4a3df26a8c}} 
+\index{ff.c@{ff.c}!PTE\_Boot@{PTE\_Boot}}
+\index{PTE\_Boot@{PTE\_Boot}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{PTE\_Boot}{PTE\_Boot}}
+{\footnotesize\ttfamily \#define PTE\+\_\+\+Boot~0  /$\ast$ MBR PTE\+: Boot indicator $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a0f96bb9d52c3a5bbd489b59772463cab}\label{ff_8c_a0f96bb9d52c3a5bbd489b59772463cab}} 
+\index{ff.c@{ff.c}!PTE\_EdCyl@{PTE\_EdCyl}}
+\index{PTE\_EdCyl@{PTE\_EdCyl}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{PTE\_EdCyl}{PTE\_EdCyl}}
+{\footnotesize\ttfamily \#define PTE\+\_\+\+Ed\+Cyl~7  /$\ast$ MBR PTE\+: End cylinder $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a151137a5b01c29730bbf4ee63c773d12}\label{ff_8c_a151137a5b01c29730bbf4ee63c773d12}} 
+\index{ff.c@{ff.c}!PTE\_EdHead@{PTE\_EdHead}}
+\index{PTE\_EdHead@{PTE\_EdHead}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{PTE\_EdHead}{PTE\_EdHead}}
+{\footnotesize\ttfamily \#define PTE\+\_\+\+Ed\+Head~5  /$\ast$ MBR PTE\+: End head $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_aa3b0eae83b150116114dfa582a297ee9}\label{ff_8c_aa3b0eae83b150116114dfa582a297ee9}} 
+\index{ff.c@{ff.c}!PTE\_EdSec@{PTE\_EdSec}}
+\index{PTE\_EdSec@{PTE\_EdSec}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{PTE\_EdSec}{PTE\_EdSec}}
+{\footnotesize\ttfamily \#define PTE\+\_\+\+Ed\+Sec~6  /$\ast$ MBR PTE\+: End sector $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a195f11dd0185a4edbe7064ebe40092bc}\label{ff_8c_a195f11dd0185a4edbe7064ebe40092bc}} 
+\index{ff.c@{ff.c}!PTE\_SizLba@{PTE\_SizLba}}
+\index{PTE\_SizLba@{PTE\_SizLba}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{PTE\_SizLba}{PTE\_SizLba}}
+{\footnotesize\ttfamily \#define PTE\+\_\+\+Siz\+Lba~12  /$\ast$ MBR PTE\+: \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaff9abf2b1a689f70a77a18da50c01d9f}{Size}} in LBA $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a973d54c6ad9ae5c0b40e1832db4976f9}\label{ff_8c_a973d54c6ad9ae5c0b40e1832db4976f9}} 
+\index{ff.c@{ff.c}!PTE\_StCyl@{PTE\_StCyl}}
+\index{PTE\_StCyl@{PTE\_StCyl}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{PTE\_StCyl}{PTE\_StCyl}}
+{\footnotesize\ttfamily \#define PTE\+\_\+\+St\+Cyl~3  /$\ast$ MBR PTE\+: Start cylinder $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a72ec8d9f48ea97de79e5878dfa593ca3}\label{ff_8c_a72ec8d9f48ea97de79e5878dfa593ca3}} 
+\index{ff.c@{ff.c}!PTE\_StHead@{PTE\_StHead}}
+\index{PTE\_StHead@{PTE\_StHead}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{PTE\_StHead}{PTE\_StHead}}
+{\footnotesize\ttfamily \#define PTE\+\_\+\+St\+Head~1  /$\ast$ MBR PTE\+: Start head $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_ae33f69bfe238a35fb3fd1949c4e087da}\label{ff_8c_ae33f69bfe238a35fb3fd1949c4e087da}} 
+\index{ff.c@{ff.c}!PTE\_StLba@{PTE\_StLba}}
+\index{PTE\_StLba@{PTE\_StLba}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{PTE\_StLba}{PTE\_StLba}}
+{\footnotesize\ttfamily \#define PTE\+\_\+\+St\+Lba~8  /$\ast$ MBR PTE\+: Start in LBA $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a3fd894243a30fe6253a78fb9221eb5f4}\label{ff_8c_a3fd894243a30fe6253a78fb9221eb5f4}} 
+\index{ff.c@{ff.c}!PTE\_StSec@{PTE\_StSec}}
+\index{PTE\_StSec@{PTE\_StSec}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{PTE\_StSec}{PTE\_StSec}}
+{\footnotesize\ttfamily \#define PTE\+\_\+\+St\+Sec~2  /$\ast$ MBR PTE\+: Start sector $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a71a2bd9498580394a97fe0b5246635d6}\label{ff_8c_a71a2bd9498580394a97fe0b5246635d6}} 
+\index{ff.c@{ff.c}!PTE\_System@{PTE\_System}}
+\index{PTE\_System@{PTE\_System}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{PTE\_System}{PTE\_System}}
+{\footnotesize\ttfamily \#define PTE\+\_\+\+System~4  /$\ast$ MBR PTE\+: System ID $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a24b6bc427cbd37fbe76e087f7f188abb}\label{ff_8c_a24b6bc427cbd37fbe76e087f7f188abb}} 
+\index{ff.c@{ff.c}!RDDEM@{RDDEM}}
+\index{RDDEM@{RDDEM}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{RDDEM}{RDDEM}}
+{\footnotesize\ttfamily \#define RDDEM~0x05 /$\ast$ Replacement of the character collides with \mbox{\hyperlink{ff_8c_a0f2455f7318e6d56318c62f5e4048e1e}{DDEM}} $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a42b5140fc5e09a53c8f4cba66dc0e6c1}\label{ff_8c_a42b5140fc5e09a53c8f4cba66dc0e6c1}} 
+\index{ff.c@{ff.c}!SS@{SS}}
+\index{SS@{SS}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{SS}{SS}}
+{\footnotesize\ttfamily \#define SS(\begin{DoxyParamCaption}\item[{}]{fs }\end{DoxyParamCaption})~((\mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}})\mbox{\hyperlink{ffconf_8h_a104c36ee46f9d6e76dadf37f3d9696cc}{FF\+\_\+\+MAX\+\_\+\+SS}}) /$\ast$ Fixed sector \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_aaaa69650a3bce4a6f68f88e2e3a07f43}\label{ff_8c_aaaa69650a3bce4a6f68f88e2e3a07f43}} 
+\index{ff.c@{ff.c}!SZ\_GPTE@{SZ\_GPTE}}
+\index{SZ\_GPTE@{SZ\_GPTE}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{SZ\_GPTE}{SZ\_GPTE}}
+{\footnotesize\ttfamily \#define SZ\+\_\+\+GPTE~128  /$\ast$ GPT\+: \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaff9abf2b1a689f70a77a18da50c01d9f}{Size}} of partition table entry $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_af133060c47366e7e557d4085d931183f}\label{ff_8c_af133060c47366e7e557d4085d931183f}} 
+\index{ff.c@{ff.c}!SZ\_PTE@{SZ\_PTE}}
+\index{SZ\_PTE@{SZ\_PTE}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{SZ\_PTE}{SZ\_PTE}}
+{\footnotesize\ttfamily \#define SZ\+\_\+\+PTE~16  /$\ast$ MBR\+: \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaff9abf2b1a689f70a77a18da50c01d9f}{Size}} of a partition table entry $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a90943705ce4b32e47562c9f56860c7af}\label{ff_8c_a90943705ce4b32e47562c9f56860c7af}} 
+\index{ff.c@{ff.c}!SZDIRE@{SZDIRE}}
+\index{SZDIRE@{SZDIRE}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{SZDIRE}{SZDIRE}}
+{\footnotesize\ttfamily \#define SZDIRE~32  /$\ast$ \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaff9abf2b1a689f70a77a18da50c01d9f}{Size}} of a directory entry $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a2079f038e00e8b606f9393c90d504741}\label{ff_8c_a2079f038e00e8b606f9393c90d504741}} 
+\index{ff.c@{ff.c}!TBL\_CT437@{TBL\_CT437}}
+\index{TBL\_CT437@{TBL\_CT437}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{TBL\_CT437}{TBL\_CT437}}
+{\footnotesize\ttfamily \#define TBL\+\_\+\+CT437}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{                    \{0x80,0x9A,0x45,0x41,0x8E,0x41,0x8F,0x80,0x45,0x45,0x45,0x49,0x49,0x49,0x8E,0x8F, \(\backslash\)}
+\DoxyCodeLine{                    0x90,0x92,0x92,0x4F,0x99,0x4F,0x55,0x55,0x59,0x99,0x9A,0x9B,0x9C,0x9D,0x9E,0x9F, \(\backslash\)}
+\DoxyCodeLine{                    0x41,0x49,0x4F,0x55,0xA5,0xA5,0xA6,0xA7,0xA8,0xA9,0xAA,0xAB,0xAC,0xAD,0xAE,0xAF, \(\backslash\)}
+\DoxyCodeLine{                    0xB0,0xB1,0xB2,0xB3,0xB4,0xB5,0xB6,0xB7,0xB8,0xB9,0xBA,0xBB,0xBC,0xBD,0xBE,0xBF, \(\backslash\)}
+\DoxyCodeLine{                    0xC0,0xC1,0xC2,0xC3,0xC4,0xC5,0xC6,0xC7,0xC8,0xC9,0xCA,0xCB,0xCC,0xCD,0xCE,0xCF, \(\backslash\)}
+\DoxyCodeLine{                    0xD0,0xD1,0xD2,0xD3,0xD4,0xD5,0xD6,0xD7,0xD8,0xD9,0xDA,0xDB,0xDC,0xDD,0xDE,0xDF, \(\backslash\)}
+\DoxyCodeLine{                    0xE0,0xE1,0xE2,0xE3,0xE4,0xE5,0xE6,0xE7,0xE8,0xE9,0xEA,0xEB,0xEC,0xED,0xEE,0xEF, \(\backslash\)}
+\DoxyCodeLine{                    0xF0,0xF1,0xF2,0xF3,0xF4,0xF5,0xF6,0xF7,0xF8,0xF9,0xFA,0xFB,0xFC,0xFD,0xFE,0xFF\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{ff_8c_a3e366ee91d633beb55efd063e6b418f5}\label{ff_8c_a3e366ee91d633beb55efd063e6b418f5}} 
+\index{ff.c@{ff.c}!TBL\_CT720@{TBL\_CT720}}
+\index{TBL\_CT720@{TBL\_CT720}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{TBL\_CT720}{TBL\_CT720}}
+{\footnotesize\ttfamily \#define TBL\+\_\+\+CT720}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{                    \{0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8A,0x8B,0x8C,0x8D,0x8E,0x8F, \(\backslash\)}
+\DoxyCodeLine{                    0x90,0x91,0x92,0x93,0x94,0x95,0x96,0x97,0x98,0x99,0x9A,0x9B,0x9C,0x9D,0x9E,0x9F, \(\backslash\)}
+\DoxyCodeLine{                    0xA0,0xA1,0xA2,0xA3,0xA4,0xA5,0xA6,0xA7,0xA8,0xA9,0xAA,0xAB,0xAC,0xAD,0xAE,0xAF, \(\backslash\)}
+\DoxyCodeLine{                    0xB0,0xB1,0xB2,0xB3,0xB4,0xB5,0xB6,0xB7,0xB8,0xB9,0xBA,0xBB,0xBC,0xBD,0xBE,0xBF, \(\backslash\)}
+\DoxyCodeLine{                    0xC0,0xC1,0xC2,0xC3,0xC4,0xC5,0xC6,0xC7,0xC8,0xC9,0xCA,0xCB,0xCC,0xCD,0xCE,0xCF, \(\backslash\)}
+\DoxyCodeLine{                    0xD0,0xD1,0xD2,0xD3,0xD4,0xD5,0xD6,0xD7,0xD8,0xD9,0xDA,0xDB,0xDC,0xDD,0xDE,0xDF, \(\backslash\)}
+\DoxyCodeLine{                    0xE0,0xE1,0xE2,0xE3,0xE4,0xE5,0xE6,0xE7,0xE8,0xE9,0xEA,0xEB,0xEC,0xED,0xEE,0xEF, \(\backslash\)}
+\DoxyCodeLine{                    0xF0,0xF1,0xF2,0xF3,0xF4,0xF5,0xF6,0xF7,0xF8,0xF9,0xFA,0xFB,0xFC,0xFD,0xFE,0xFF\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{ff_8c_a3a91f6a3f799a268afbe851044c0b383}\label{ff_8c_a3a91f6a3f799a268afbe851044c0b383}} 
+\index{ff.c@{ff.c}!TBL\_CT737@{TBL\_CT737}}
+\index{TBL\_CT737@{TBL\_CT737}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{TBL\_CT737}{TBL\_CT737}}
+{\footnotesize\ttfamily \#define TBL\+\_\+\+CT737}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{                    \{0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8A,0x8B,0x8C,0x8D,0x8E,0x8F, \(\backslash\)}
+\DoxyCodeLine{                    0x90,0x92,0x92,0x93,0x94,0x95,0x96,0x97,0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87, \(\backslash\)}
+\DoxyCodeLine{                    0x88,0x89,0x8A,0x8B,0x8C,0x8D,0x8E,0x8F,0x90,0x91,0xAA,0x92,0x93,0x94,0x95,0x96, \(\backslash\)}
+\DoxyCodeLine{                    0xB0,0xB1,0xB2,0xB3,0xB4,0xB5,0xB6,0xB7,0xB8,0xB9,0xBA,0xBB,0xBC,0xBD,0xBE,0xBF, \(\backslash\)}
+\DoxyCodeLine{                    0xC0,0xC1,0xC2,0xC3,0xC4,0xC5,0xC6,0xC7,0xC8,0xC9,0xCA,0xCB,0xCC,0xCD,0xCE,0xCF, \(\backslash\)}
+\DoxyCodeLine{                    0xD0,0xD1,0xD2,0xD3,0xD4,0xD5,0xD6,0xD7,0xD8,0xD9,0xDA,0xDB,0xDC,0xDD,0xDE,0xDF, \(\backslash\)}
+\DoxyCodeLine{                    0x97,0xEA,0xEB,0xEC,0xE4,0xED,0xEE,0xEF,0xF5,0xF0,0xEA,0xEB,0xEC,0xED,0xEE,0xEF, \(\backslash\)}
+\DoxyCodeLine{                    0xF0,0xF1,0xF2,0xF3,0xF4,0xF5,0xF6,0xF7,0xF8,0xF9,0xFA,0xFB,0xFC,0xFD,0xFE,0xFF\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{ff_8c_a12704299ef30f60f1185542bfa97ca91}\label{ff_8c_a12704299ef30f60f1185542bfa97ca91}} 
+\index{ff.c@{ff.c}!TBL\_CT771@{TBL\_CT771}}
+\index{TBL\_CT771@{TBL\_CT771}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{TBL\_CT771}{TBL\_CT771}}
+{\footnotesize\ttfamily \#define TBL\+\_\+\+CT771}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{                    \{0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8A,0x8B,0x8C,0x8D,0x8E,0x8F, \(\backslash\)}
+\DoxyCodeLine{                    0x90,0x91,0x92,0x93,0x94,0x95,0x96,0x97,0x98,0x99,0x9A,0x9B,0x9C,0x9D,0x9E,0x9F, \(\backslash\)}
+\DoxyCodeLine{                    0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8A,0x8B,0x8C,0x8D,0x8E,0x8F, \(\backslash\)}
+\DoxyCodeLine{                    0xB0,0xB1,0xB2,0xB3,0xB4,0xB5,0xB6,0xB7,0xB8,0xB9,0xBA,0xBB,0xBC,0xBD,0xBE,0xBF, \(\backslash\)}
+\DoxyCodeLine{                    0xC0,0xC1,0xC2,0xC3,0xC4,0xC5,0xC6,0xC7,0xC8,0xC9,0xCA,0xCB,0xCC,0xCD,0xCE,0xCF, \(\backslash\)}
+\DoxyCodeLine{                    0xD0,0xD1,0xD2,0xD3,0xD4,0xD5,0xD6,0xD7,0xD8,0xD9,0xDA,0xDB,0xDC,0xDC,0xDE,0xDE, \(\backslash\)}
+\DoxyCodeLine{                    0x90,0x91,0x92,0x93,0x94,0x95,0x96,0x97,0x98,0x99,0x9A,0x9B,0x9C,0x9D,0x9E,0x9F, \(\backslash\)}
+\DoxyCodeLine{                    0xF0,0xF0,0xF2,0xF2,0xF4,0xF4,0xF6,0xF6,0xF8,0xF8,0xFA,0xFA,0xFC,0xFC,0xFE,0xFF\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{ff_8c_a7cc0395eded166e3d8348ab67ec139c4}\label{ff_8c_a7cc0395eded166e3d8348ab67ec139c4}} 
+\index{ff.c@{ff.c}!TBL\_CT775@{TBL\_CT775}}
+\index{TBL\_CT775@{TBL\_CT775}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{TBL\_CT775}{TBL\_CT775}}
+{\footnotesize\ttfamily \#define TBL\+\_\+\+CT775}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{                    \{0x80,0x9A,0x91,0xA0,0x8E,0x95,0x8F,0x80,0xAD,0xED,0x8A,0x8A,0xA1,0x8D,0x8E,0x8F, \(\backslash\)}
+\DoxyCodeLine{                    0x90,0x92,0x92,0xE2,0x99,0x95,0x96,0x97,0x97,0x99,0x9A,0x9D,0x9C,0x9D,0x9E,0x9F, \(\backslash\)}
+\DoxyCodeLine{                    0xA0,0xA1,0xE0,0xA3,0xA3,0xA5,0xA6,0xA7,0xA8,0xA9,0xAA,0xAB,0xAC,0xAD,0xAE,0xAF, \(\backslash\)}
+\DoxyCodeLine{                    0xB0,0xB1,0xB2,0xB3,0xB4,0xB5,0xB6,0xB7,0xB8,0xB9,0xBA,0xBB,0xBC,0xBD,0xBE,0xBF, \(\backslash\)}
+\DoxyCodeLine{                    0xC0,0xC1,0xC2,0xC3,0xC4,0xC5,0xC6,0xC7,0xC8,0xC9,0xCA,0xCB,0xCC,0xCD,0xCE,0xCF, \(\backslash\)}
+\DoxyCodeLine{                    0xB5,0xB6,0xB7,0xB8,0xBD,0xBE,0xC6,0xC7,0xA5,0xD9,0xDA,0xDB,0xDC,0xDD,0xDE,0xDF, \(\backslash\)}
+\DoxyCodeLine{                    0xE0,0xE1,0xE2,0xE3,0xE5,0xE5,0xE6,0xE3,0xE8,0xE8,0xEA,0xEA,0xEE,0xED,0xEE,0xEF, \(\backslash\)}
+\DoxyCodeLine{                    0xF0,0xF1,0xF2,0xF3,0xF4,0xF5,0xF6,0xF7,0xF8,0xF9,0xFA,0xFB,0xFC,0xFD,0xFE,0xFF\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{ff_8c_abb70cf43279200ee2b62d3fd27e6afb8}\label{ff_8c_abb70cf43279200ee2b62d3fd27e6afb8}} 
+\index{ff.c@{ff.c}!TBL\_CT850@{TBL\_CT850}}
+\index{TBL\_CT850@{TBL\_CT850}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{TBL\_CT850}{TBL\_CT850}}
+{\footnotesize\ttfamily \#define TBL\+\_\+\+CT850}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{                    \{0x43,0x55,0x45,0x41,0x41,0x41,0x41,0x43,0x45,0x45,0x45,0x49,0x49,0x49,0x41,0x41, \(\backslash\)}
+\DoxyCodeLine{                    0x45,0x92,0x92,0x4F,0x4F,0x4F,0x55,0x55,0x59,0x4F,0x55,0x4F,0x9C,0x4F,0x9E,0x9F, \(\backslash\)}
+\DoxyCodeLine{                    0x41,0x49,0x4F,0x55,0xA5,0xA5,0xA6,0xA7,0xA8,0xA9,0xAA,0xAB,0xAC,0xAD,0xAE,0xAF, \(\backslash\)}
+\DoxyCodeLine{                    0xB0,0xB1,0xB2,0xB3,0xB4,0x41,0x41,0x41,0xB8,0xB9,0xBA,0xBB,0xBC,0xBD,0xBE,0xBF, \(\backslash\)}
+\DoxyCodeLine{                    0xC0,0xC1,0xC2,0xC3,0xC4,0xC5,0x41,0x41,0xC8,0xC9,0xCA,0xCB,0xCC,0xCD,0xCE,0xCF, \(\backslash\)}
+\DoxyCodeLine{                    0xD1,0xD1,0x45,0x45,0x45,0x49,0x49,0x49,0x49,0xD9,0xDA,0xDB,0xDC,0xDD,0x49,0xDF, \(\backslash\)}
+\DoxyCodeLine{                    0x4F,0xE1,0x4F,0x4F,0x4F,0x4F,0xE6,0xE8,0xE8,0x55,0x55,0x55,0x59,0x59,0xEE,0xEF, \(\backslash\)}
+\DoxyCodeLine{                    0xF0,0xF1,0xF2,0xF3,0xF4,0xF5,0xF6,0xF7,0xF8,0xF9,0xFA,0xFB,0xFC,0xFD,0xFE,0xFF\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{ff_8c_adc1a9e1b27f3771422ac64db338dd8d2}\label{ff_8c_adc1a9e1b27f3771422ac64db338dd8d2}} 
+\index{ff.c@{ff.c}!TBL\_CT852@{TBL\_CT852}}
+\index{TBL\_CT852@{TBL\_CT852}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{TBL\_CT852}{TBL\_CT852}}
+{\footnotesize\ttfamily \#define TBL\+\_\+\+CT852}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{                    \{0x80,0x9A,0x90,0xB6,0x8E,0xDE,0x8F,0x80,0x9D,0xD3,0x8A,0x8A,0xD7,0x8D,0x8E,0x8F, \(\backslash\)}
+\DoxyCodeLine{                    0x90,0x91,0x91,0xE2,0x99,0x95,0x95,0x97,0x97,0x99,0x9A,0x9B,0x9B,0x9D,0x9E,0xAC, \(\backslash\)}
+\DoxyCodeLine{                    0xB5,0xD6,0xE0,0xE9,0xA4,0xA4,0xA6,0xA6,0xA8,0xA8,0xAA,0x8D,0xAC,0xB8,0xAE,0xAF, \(\backslash\)}
+\DoxyCodeLine{                    0xB0,0xB1,0xB2,0xB3,0xB4,0xB5,0xB6,0xB7,0xB8,0xB9,0xBA,0xBB,0xBC,0xBD,0xBD,0xBF, \(\backslash\)}
+\DoxyCodeLine{                    0xC0,0xC1,0xC2,0xC3,0xC4,0xC5,0xC6,0xC6,0xC8,0xC9,0xCA,0xCB,0xCC,0xCD,0xCE,0xCF, \(\backslash\)}
+\DoxyCodeLine{                    0xD1,0xD1,0xD2,0xD3,0xD2,0xD5,0xD6,0xD7,0xB7,0xD9,0xDA,0xDB,0xDC,0xDD,0xDE,0xDF, \(\backslash\)}
+\DoxyCodeLine{                    0xE0,0xE1,0xE2,0xE3,0xE3,0xD5,0xE6,0xE6,0xE8,0xE9,0xE8,0xEB,0xED,0xED,0xDD,0xEF, \(\backslash\)}
+\DoxyCodeLine{                    0xF0,0xF1,0xF2,0xF3,0xF4,0xF5,0xF6,0xF7,0xF8,0xF9,0xFA,0xEB,0xFC,0xFC,0xFE,0xFF\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{ff_8c_a17a8a35ea37f5599dbb79713985a343f}\label{ff_8c_a17a8a35ea37f5599dbb79713985a343f}} 
+\index{ff.c@{ff.c}!TBL\_CT855@{TBL\_CT855}}
+\index{TBL\_CT855@{TBL\_CT855}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{TBL\_CT855}{TBL\_CT855}}
+{\footnotesize\ttfamily \#define TBL\+\_\+\+CT855}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{                    \{0x81,0x81,0x83,0x83,0x85,0x85,0x87,0x87,0x89,0x89,0x8B,0x8B,0x8D,0x8D,0x8F,0x8F, \(\backslash\)}
+\DoxyCodeLine{                    0x91,0x91,0x93,0x93,0x95,0x95,0x97,0x97,0x99,0x99,0x9B,0x9B,0x9D,0x9D,0x9F,0x9F, \(\backslash\)}
+\DoxyCodeLine{                    0xA1,0xA1,0xA3,0xA3,0xA5,0xA5,0xA7,0xA7,0xA9,0xA9,0xAB,0xAB,0xAD,0xAD,0xAE,0xAF, \(\backslash\)}
+\DoxyCodeLine{                    0xB0,0xB1,0xB2,0xB3,0xB4,0xB6,0xB6,0xB8,0xB8,0xB9,0xBA,0xBB,0xBC,0xBE,0xBE,0xBF, \(\backslash\)}
+\DoxyCodeLine{                    0xC0,0xC1,0xC2,0xC3,0xC4,0xC5,0xC7,0xC7,0xC8,0xC9,0xCA,0xCB,0xCC,0xCD,0xCE,0xCF, \(\backslash\)}
+\DoxyCodeLine{                    0xD1,0xD1,0xD3,0xD3,0xD5,0xD5,0xD7,0xD7,0xDD,0xD9,0xDA,0xDB,0xDC,0xDD,0xE0,0xDF, \(\backslash\)}
+\DoxyCodeLine{                    0xE0,0xE2,0xE2,0xE4,0xE4,0xE6,0xE6,0xE8,0xE8,0xEA,0xEA,0xEC,0xEC,0xEE,0xEE,0xEF, \(\backslash\)}
+\DoxyCodeLine{                    0xF0,0xF2,0xF2,0xF4,0xF4,0xF6,0xF6,0xF8,0xF8,0xFA,0xFA,0xFC,0xFC,0xFD,0xFE,0xFF\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{ff_8c_ac6b3e7939a5a3d45ac6f1d7d15f24822}\label{ff_8c_ac6b3e7939a5a3d45ac6f1d7d15f24822}} 
+\index{ff.c@{ff.c}!TBL\_CT857@{TBL\_CT857}}
+\index{TBL\_CT857@{TBL\_CT857}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{TBL\_CT857}{TBL\_CT857}}
+{\footnotesize\ttfamily \#define TBL\+\_\+\+CT857}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{                    \{0x80,0x9A,0x90,0xB6,0x8E,0xB7,0x8F,0x80,0xD2,0xD3,0xD4,0xD8,0xD7,0x49,0x8E,0x8F, \(\backslash\)}
+\DoxyCodeLine{                    0x90,0x92,0x92,0xE2,0x99,0xE3,0xEA,0xEB,0x98,0x99,0x9A,0x9D,0x9C,0x9D,0x9E,0x9E, \(\backslash\)}
+\DoxyCodeLine{                    0xB5,0xD6,0xE0,0xE9,0xA5,0xA5,0xA6,0xA6,0xA8,0xA9,0xAA,0xAB,0xAC,0xAD,0xAE,0xAF, \(\backslash\)}
+\DoxyCodeLine{                    0xB0,0xB1,0xB2,0xB3,0xB4,0xB5,0xB6,0xB7,0xB8,0xB9,0xBA,0xBB,0xBC,0xBD,0xBE,0xBF, \(\backslash\)}
+\DoxyCodeLine{                    0xC0,0xC1,0xC2,0xC3,0xC4,0xC5,0xC7,0xC7,0xC8,0xC9,0xCA,0xCB,0xCC,0xCD,0xCE,0xCF, \(\backslash\)}
+\DoxyCodeLine{                    0xD0,0xD1,0xD2,0xD3,0xD4,0x49,0xD6,0xD7,0xD8,0xD9,0xDA,0xDB,0xDC,0xDD,0xDE,0xDF, \(\backslash\)}
+\DoxyCodeLine{                    0xE0,0xE1,0xE2,0xE3,0xE5,0xE5,0xE6,0xE7,0xE8,0xE9,0xEA,0xEB,0xDE,0xED,0xEE,0xEF, \(\backslash\)}
+\DoxyCodeLine{                    0xF0,0xF1,0xF2,0xF3,0xF4,0xF5,0xF6,0xF7,0xF8,0xF9,0xFA,0xFB,0xFC,0xFD,0xFE,0xFF\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{ff_8c_aea035c03068190b9bf80e824b2cfda93}\label{ff_8c_aea035c03068190b9bf80e824b2cfda93}} 
+\index{ff.c@{ff.c}!TBL\_CT860@{TBL\_CT860}}
+\index{TBL\_CT860@{TBL\_CT860}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{TBL\_CT860}{TBL\_CT860}}
+{\footnotesize\ttfamily \#define TBL\+\_\+\+CT860}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{                    \{0x80,0x9A,0x90,0x8F,0x8E,0x91,0x86,0x80,0x89,0x89,0x92,0x8B,0x8C,0x98,0x8E,0x8F, \(\backslash\)}
+\DoxyCodeLine{                    0x90,0x91,0x92,0x8C,0x99,0xA9,0x96,0x9D,0x98,0x99,0x9A,0x9B,0x9C,0x9D,0x9E,0x9F, \(\backslash\)}
+\DoxyCodeLine{                    0x86,0x8B,0x9F,0x96,0xA5,0xA5,0xA6,0xA7,0xA8,0xA9,0xAA,0xAB,0xAC,0xAD,0xAE,0xAF, \(\backslash\)}
+\DoxyCodeLine{                    0xB0,0xB1,0xB2,0xB3,0xB4,0xB5,0xB6,0xB7,0xB8,0xB9,0xBA,0xBB,0xBC,0xBD,0xBE,0xBF, \(\backslash\)}
+\DoxyCodeLine{                    0xC0,0xC1,0xC2,0xC3,0xC4,0xC5,0xC6,0xC7,0xC8,0xC9,0xCA,0xCB,0xCC,0xCD,0xCE,0xCF, \(\backslash\)}
+\DoxyCodeLine{                    0xD0,0xD1,0xD2,0xD3,0xD4,0xD5,0xD6,0xD7,0xD8,0xD9,0xDA,0xDB,0xDC,0xDD,0xDE,0xDF, \(\backslash\)}
+\DoxyCodeLine{                    0xE0,0xE1,0xE2,0xE3,0xE4,0xE5,0xE6,0xE7,0xE8,0xE9,0xEA,0xEB,0xEC,0xED,0xEE,0xEF, \(\backslash\)}
+\DoxyCodeLine{                    0xF0,0xF1,0xF2,0xF3,0xF4,0xF5,0xF6,0xF7,0xF8,0xF9,0xFA,0xFB,0xFC,0xFD,0xFE,0xFF\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{ff_8c_afdbdf45ddc573889990eb30bf70a59b6}\label{ff_8c_afdbdf45ddc573889990eb30bf70a59b6}} 
+\index{ff.c@{ff.c}!TBL\_CT861@{TBL\_CT861}}
+\index{TBL\_CT861@{TBL\_CT861}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{TBL\_CT861}{TBL\_CT861}}
+{\footnotesize\ttfamily \#define TBL\+\_\+\+CT861}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{                    \{0x80,0x9A,0x90,0x41,0x8E,0x41,0x8F,0x80,0x45,0x45,0x45,0x8B,0x8B,0x8D,0x8E,0x8F, \(\backslash\)}
+\DoxyCodeLine{                    0x90,0x92,0x92,0x4F,0x99,0x8D,0x55,0x97,0x97,0x99,0x9A,0x9D,0x9C,0x9D,0x9E,0x9F, \(\backslash\)}
+\DoxyCodeLine{                    0xA4,0xA5,0xA6,0xA7,0xA4,0xA5,0xA6,0xA7,0xA8,0xA9,0xAA,0xAB,0xAC,0xAD,0xAE,0xAF, \(\backslash\)}
+\DoxyCodeLine{                    0xB0,0xB1,0xB2,0xB3,0xB4,0xB5,0xB6,0xB7,0xB8,0xB9,0xBA,0xBB,0xBC,0xBD,0xBE,0xBF, \(\backslash\)}
+\DoxyCodeLine{                    0xC0,0xC1,0xC2,0xC3,0xC4,0xC5,0xC6,0xC7,0xC8,0xC9,0xCA,0xCB,0xCC,0xCD,0xCE,0xCF, \(\backslash\)}
+\DoxyCodeLine{                    0xD0,0xD1,0xD2,0xD3,0xD4,0xD5,0xD6,0xD7,0xD8,0xD9,0xDA,0xDB,0xDC,0xDD,0xDE,0xDF, \(\backslash\)}
+\DoxyCodeLine{                    0xE0,0xE1,0xE2,0xE3,0xE4,0xE5,0xE6,0xE7,0xE8,0xE9,0xEA,0xEB,0xEC,0xED,0xEE,0xEF, \(\backslash\)}
+\DoxyCodeLine{                    0xF0,0xF1,0xF2,0xF3,0xF4,0xF5,0xF6,0xF7,0xF8,0xF9,0xFA,0xFB,0xFC,0xFD,0xFE,0xFF\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{ff_8c_a7e2ecbf1aa017e0fbcc0233469ad1c86}\label{ff_8c_a7e2ecbf1aa017e0fbcc0233469ad1c86}} 
+\index{ff.c@{ff.c}!TBL\_CT862@{TBL\_CT862}}
+\index{TBL\_CT862@{TBL\_CT862}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{TBL\_CT862}{TBL\_CT862}}
+{\footnotesize\ttfamily \#define TBL\+\_\+\+CT862}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{                    \{0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8A,0x8B,0x8C,0x8D,0x8E,0x8F, \(\backslash\)}
+\DoxyCodeLine{                    0x90,0x91,0x92,0x93,0x94,0x95,0x96,0x97,0x98,0x99,0x9A,0x9B,0x9C,0x9D,0x9E,0x9F, \(\backslash\)}
+\DoxyCodeLine{                    0x41,0x49,0x4F,0x55,0xA5,0xA5,0xA6,0xA7,0xA8,0xA9,0xAA,0xAB,0xAC,0xAD,0xAE,0xAF, \(\backslash\)}
+\DoxyCodeLine{                    0xB0,0xB1,0xB2,0xB3,0xB4,0xB5,0xB6,0xB7,0xB8,0xB9,0xBA,0xBB,0xBC,0xBD,0xBE,0xBF, \(\backslash\)}
+\DoxyCodeLine{                    0xC0,0xC1,0xC2,0xC3,0xC4,0xC5,0xC6,0xC7,0xC8,0xC9,0xCA,0xCB,0xCC,0xCD,0xCE,0xCF, \(\backslash\)}
+\DoxyCodeLine{                    0xD0,0xD1,0xD2,0xD3,0xD4,0xD5,0xD6,0xD7,0xD8,0xD9,0xDA,0xDB,0xDC,0xDD,0xDE,0xDF, \(\backslash\)}
+\DoxyCodeLine{                    0xE0,0xE1,0xE2,0xE3,0xE4,0xE5,0xE6,0xE7,0xE8,0xE9,0xEA,0xEB,0xEC,0xED,0xEE,0xEF, \(\backslash\)}
+\DoxyCodeLine{                    0xF0,0xF1,0xF2,0xF3,0xF4,0xF5,0xF6,0xF7,0xF8,0xF9,0xFA,0xFB,0xFC,0xFD,0xFE,0xFF\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{ff_8c_ae7986d8f1be641fa513a553ca6ca9d83}\label{ff_8c_ae7986d8f1be641fa513a553ca6ca9d83}} 
+\index{ff.c@{ff.c}!TBL\_CT863@{TBL\_CT863}}
+\index{TBL\_CT863@{TBL\_CT863}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{TBL\_CT863}{TBL\_CT863}}
+{\footnotesize\ttfamily \#define TBL\+\_\+\+CT863}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{                    \{0x43,0x55,0x45,0x41,0x41,0x41,0x86,0x43,0x45,0x45,0x45,0x49,0x49,0x8D,0x41,0x8F, \(\backslash\)}
+\DoxyCodeLine{                    0x45,0x45,0x45,0x4F,0x45,0x49,0x55,0x55,0x98,0x4F,0x55,0x9B,0x9C,0x55,0x55,0x9F, \(\backslash\)}
+\DoxyCodeLine{                    0xA0,0xA1,0x4F,0x55,0xA4,0xA5,0xA6,0xA7,0x49,0xA9,0xAA,0xAB,0xAC,0xAD,0xAE,0xAF, \(\backslash\)}
+\DoxyCodeLine{                    0xB0,0xB1,0xB2,0xB3,0xB4,0xB5,0xB6,0xB7,0xB8,0xB9,0xBA,0xBB,0xBC,0xBD,0xBE,0xBF, \(\backslash\)}
+\DoxyCodeLine{                    0xC0,0xC1,0xC2,0xC3,0xC4,0xC5,0xC6,0xC7,0xC8,0xC9,0xCA,0xCB,0xCC,0xCD,0xCE,0xCF, \(\backslash\)}
+\DoxyCodeLine{                    0xD0,0xD1,0xD2,0xD3,0xD4,0xD5,0xD6,0xD7,0xD8,0xD9,0xDA,0xDB,0xDC,0xDD,0xDE,0xDF, \(\backslash\)}
+\DoxyCodeLine{                    0xE0,0xE1,0xE2,0xE3,0xE4,0xE5,0xE6,0xE7,0xE8,0xE9,0xEA,0xEB,0xEC,0xED,0xEE,0xEF, \(\backslash\)}
+\DoxyCodeLine{                    0xF0,0xF1,0xF2,0xF3,0xF4,0xF5,0xF6,0xF7,0xF8,0xF9,0xFA,0xFB,0xFC,0xFD,0xFE,0xFF\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{ff_8c_a5b7151d4a75d72a82f254ab56adceac5}\label{ff_8c_a5b7151d4a75d72a82f254ab56adceac5}} 
+\index{ff.c@{ff.c}!TBL\_CT864@{TBL\_CT864}}
+\index{TBL\_CT864@{TBL\_CT864}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{TBL\_CT864}{TBL\_CT864}}
+{\footnotesize\ttfamily \#define TBL\+\_\+\+CT864}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{                    \{0x80,0x9A,0x45,0x41,0x8E,0x41,0x8F,0x80,0x45,0x45,0x45,0x49,0x49,0x49,0x8E,0x8F, \(\backslash\)}
+\DoxyCodeLine{                    0x90,0x92,0x92,0x4F,0x99,0x4F,0x55,0x55,0x59,0x99,0x9A,0x9B,0x9C,0x9D,0x9E,0x9F, \(\backslash\)}
+\DoxyCodeLine{                    0x41,0x49,0x4F,0x55,0xA5,0xA5,0xA6,0xA7,0xA8,0xA9,0xAA,0xAB,0xAC,0xAD,0xAE,0xAF, \(\backslash\)}
+\DoxyCodeLine{                    0xB0,0xB1,0xB2,0xB3,0xB4,0xB5,0xB6,0xB7,0xB8,0xB9,0xBA,0xBB,0xBC,0xBD,0xBE,0xBF, \(\backslash\)}
+\DoxyCodeLine{                    0xC0,0xC1,0xC2,0xC3,0xC4,0xC5,0xC6,0xC7,0xC8,0xC9,0xCA,0xCB,0xCC,0xCD,0xCE,0xCF, \(\backslash\)}
+\DoxyCodeLine{                    0xD0,0xD1,0xD2,0xD3,0xD4,0xD5,0xD6,0xD7,0xD8,0xD9,0xDA,0xDB,0xDC,0xDD,0xDE,0xDF, \(\backslash\)}
+\DoxyCodeLine{                    0xE0,0xE1,0xE2,0xE3,0xE4,0xE5,0xE6,0xE7,0xE8,0xE9,0xEA,0xEB,0xEC,0xED,0xEE,0xEF, \(\backslash\)}
+\DoxyCodeLine{                    0xF0,0xF1,0xF2,0xF3,0xF4,0xF5,0xF6,0xF7,0xF8,0xF9,0xFA,0xFB,0xFC,0xFD,0xFE,0xFF\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{ff_8c_a90580e1098c6ec520b05ae406bbfe7cf}\label{ff_8c_a90580e1098c6ec520b05ae406bbfe7cf}} 
+\index{ff.c@{ff.c}!TBL\_CT865@{TBL\_CT865}}
+\index{TBL\_CT865@{TBL\_CT865}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{TBL\_CT865}{TBL\_CT865}}
+{\footnotesize\ttfamily \#define TBL\+\_\+\+CT865}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{                    \{0x80,0x9A,0x90,0x41,0x8E,0x41,0x8F,0x80,0x45,0x45,0x45,0x49,0x49,0x49,0x8E,0x8F, \(\backslash\)}
+\DoxyCodeLine{                    0x90,0x92,0x92,0x4F,0x99,0x4F,0x55,0x55,0x59,0x99,0x9A,0x9B,0x9C,0x9D,0x9E,0x9F, \(\backslash\)}
+\DoxyCodeLine{                    0x41,0x49,0x4F,0x55,0xA5,0xA5,0xA6,0xA7,0xA8,0xA9,0xAA,0xAB,0xAC,0xAD,0xAE,0xAF, \(\backslash\)}
+\DoxyCodeLine{                    0xB0,0xB1,0xB2,0xB3,0xB4,0xB5,0xB6,0xB7,0xB8,0xB9,0xBA,0xBB,0xBC,0xBD,0xBE,0xBF, \(\backslash\)}
+\DoxyCodeLine{                    0xC0,0xC1,0xC2,0xC3,0xC4,0xC5,0xC6,0xC7,0xC8,0xC9,0xCA,0xCB,0xCC,0xCD,0xCE,0xCF, \(\backslash\)}
+\DoxyCodeLine{                    0xD0,0xD1,0xD2,0xD3,0xD4,0xD5,0xD6,0xD7,0xD8,0xD9,0xDA,0xDB,0xDC,0xDD,0xDE,0xDF, \(\backslash\)}
+\DoxyCodeLine{                    0xE0,0xE1,0xE2,0xE3,0xE4,0xE5,0xE6,0xE7,0xE8,0xE9,0xEA,0xEB,0xEC,0xED,0xEE,0xEF, \(\backslash\)}
+\DoxyCodeLine{                    0xF0,0xF1,0xF2,0xF3,0xF4,0xF5,0xF6,0xF7,0xF8,0xF9,0xFA,0xFB,0xFC,0xFD,0xFE,0xFF\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{ff_8c_a613653d9cce7972729bf5f1a39c7db3c}\label{ff_8c_a613653d9cce7972729bf5f1a39c7db3c}} 
+\index{ff.c@{ff.c}!TBL\_CT866@{TBL\_CT866}}
+\index{TBL\_CT866@{TBL\_CT866}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{TBL\_CT866}{TBL\_CT866}}
+{\footnotesize\ttfamily \#define TBL\+\_\+\+CT866}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{                    \{0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8A,0x8B,0x8C,0x8D,0x8E,0x8F, \(\backslash\)}
+\DoxyCodeLine{                    0x90,0x91,0x92,0x93,0x94,0x95,0x96,0x97,0x98,0x99,0x9A,0x9B,0x9C,0x9D,0x9E,0x9F, \(\backslash\)}
+\DoxyCodeLine{                    0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8A,0x8B,0x8C,0x8D,0x8E,0x8F, \(\backslash\)}
+\DoxyCodeLine{                    0xB0,0xB1,0xB2,0xB3,0xB4,0xB5,0xB6,0xB7,0xB8,0xB9,0xBA,0xBB,0xBC,0xBD,0xBE,0xBF, \(\backslash\)}
+\DoxyCodeLine{                    0xC0,0xC1,0xC2,0xC3,0xC4,0xC5,0xC6,0xC7,0xC8,0xC9,0xCA,0xCB,0xCC,0xCD,0xCE,0xCF, \(\backslash\)}
+\DoxyCodeLine{                    0xD0,0xD1,0xD2,0xD3,0xD4,0xD5,0xD6,0xD7,0xD8,0xD9,0xDA,0xDB,0xDC,0xDD,0xDE,0xDF, \(\backslash\)}
+\DoxyCodeLine{                    0x90,0x91,0x92,0x93,0x94,0x95,0x96,0x97,0x98,0x99,0x9A,0x9B,0x9C,0x9D,0x9E,0x9F, \(\backslash\)}
+\DoxyCodeLine{                    0xF0,0xF0,0xF2,0xF2,0xF4,0xF4,0xF6,0xF6,0xF8,0xF9,0xFA,0xFB,0xFC,0xFD,0xFE,0xFF\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{ff_8c_aa0c4b6d1b444aa99c051639e397ce2b9}\label{ff_8c_aa0c4b6d1b444aa99c051639e397ce2b9}} 
+\index{ff.c@{ff.c}!TBL\_CT869@{TBL\_CT869}}
+\index{TBL\_CT869@{TBL\_CT869}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{TBL\_CT869}{TBL\_CT869}}
+{\footnotesize\ttfamily \#define TBL\+\_\+\+CT869}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{                    \{0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8A,0x8B,0x8C,0x8D,0x8E,0x8F, \(\backslash\)}
+\DoxyCodeLine{                    0x90,0x91,0x92,0x93,0x94,0x95,0x96,0x97,0x98,0x99,0x9A,0x86,0x9C,0x8D,0x8F,0x90, \(\backslash\)}
+\DoxyCodeLine{                    0x91,0x90,0x92,0x95,0xA4,0xA5,0xA6,0xA7,0xA8,0xA9,0xAA,0xAB,0xAC,0xAD,0xAE,0xAF, \(\backslash\)}
+\DoxyCodeLine{                    0xB0,0xB1,0xB2,0xB3,0xB4,0xB5,0xB6,0xB7,0xB8,0xB9,0xBA,0xBB,0xBC,0xBD,0xBE,0xBF, \(\backslash\)}
+\DoxyCodeLine{                    0xC0,0xC1,0xC2,0xC3,0xC4,0xC5,0xC6,0xC7,0xC8,0xC9,0xCA,0xCB,0xCC,0xCD,0xCE,0xCF, \(\backslash\)}
+\DoxyCodeLine{                    0xD0,0xD1,0xD2,0xD3,0xD4,0xD5,0xA4,0xA5,0xA6,0xD9,0xDA,0xDB,0xDC,0xA7,0xA8,0xDF, \(\backslash\)}
+\DoxyCodeLine{                    0xA9,0xAA,0xAC,0xAD,0xB5,0xB6,0xB7,0xB8,0xBD,0xBE,0xC6,0xC7,0xCF,0xCF,0xD0,0xEF, \(\backslash\)}
+\DoxyCodeLine{                    0xF0,0xF1,0xD1,0xD2,0xD3,0xF5,0xD4,0xF7,0xF8,0xF9,0xD5,0x96,0x95,0x98,0xFE,0xFF\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{ff_8c_aaf2f449c3ebf5ca12827b9eeb5134290}\label{ff_8c_aaf2f449c3ebf5ca12827b9eeb5134290}} 
+\index{ff.c@{ff.c}!TBL\_DC932@{TBL\_DC932}}
+\index{TBL\_DC932@{TBL\_DC932}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{TBL\_DC932}{TBL\_DC932}}
+{\footnotesize\ttfamily \#define TBL\+\_\+\+DC932~\{0x81, 0x9F, 0x\+E0, 0x\+FC, 0x40, 0x7E, 0x80, 0x\+FC, 0x00, 0x00\}}
+
+\mbox{\Hypertarget{ff_8c_a1e9d0d464e35a432767eaf26e3d0d0f6}\label{ff_8c_a1e9d0d464e35a432767eaf26e3d0d0f6}} 
+\index{ff.c@{ff.c}!TBL\_DC936@{TBL\_DC936}}
+\index{TBL\_DC936@{TBL\_DC936}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{TBL\_DC936}{TBL\_DC936}}
+{\footnotesize\ttfamily \#define TBL\+\_\+\+DC936~\{0x81, 0x\+FE, 0x00, 0x00, 0x40, 0x7E, 0x80, 0x\+FE, 0x00, 0x00\}}
+
+\mbox{\Hypertarget{ff_8c_ac48368e0a312bdeaabb949f132758ed0}\label{ff_8c_ac48368e0a312bdeaabb949f132758ed0}} 
+\index{ff.c@{ff.c}!TBL\_DC949@{TBL\_DC949}}
+\index{TBL\_DC949@{TBL\_DC949}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{TBL\_DC949}{TBL\_DC949}}
+{\footnotesize\ttfamily \#define TBL\+\_\+\+DC949~\{0x81, 0x\+FE, 0x00, 0x00, 0x41, 0x5A, 0x61, 0x7A, 0x81, 0x\+FE\}}
+
+\mbox{\Hypertarget{ff_8c_aebba82563d7b04297527becfbae117df}\label{ff_8c_aebba82563d7b04297527becfbae117df}} 
+\index{ff.c@{ff.c}!TBL\_DC950@{TBL\_DC950}}
+\index{TBL\_DC950@{TBL\_DC950}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{TBL\_DC950}{TBL\_DC950}}
+{\footnotesize\ttfamily \#define TBL\+\_\+\+DC950~\{0x81, 0x\+FE, 0x00, 0x00, 0x40, 0x7E, 0x\+A1, 0x\+FE, 0x00, 0x00\}}
+
+\mbox{\Hypertarget{ff_8c_af0a826e3f3902172e3ebd5a3132a0153}\label{ff_8c_af0a826e3f3902172e3ebd5a3132a0153}} 
+\index{ff.c@{ff.c}!XDIR\_AccTime@{XDIR\_AccTime}}
+\index{XDIR\_AccTime@{XDIR\_AccTime}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{XDIR\_AccTime}{XDIR\_AccTime}}
+{\footnotesize\ttfamily \#define XDIR\+\_\+\+Acc\+Time~16  /$\ast$ ex\+FAT\+: Last accessed time (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_ab12e9f890b539722562824d569969959}\label{ff_8c_ab12e9f890b539722562824d569969959}} 
+\index{ff.c@{ff.c}!XDIR\_AccTZ@{XDIR\_AccTZ}}
+\index{XDIR\_AccTZ@{XDIR\_AccTZ}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{XDIR\_AccTZ}{XDIR\_AccTZ}}
+{\footnotesize\ttfamily \#define XDIR\+\_\+\+Acc\+TZ~24  /$\ast$ ex\+FAT\+: Last accessed timezone (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_aafe8687fb9356906c13ccd9fe88eb3de}\label{ff_8c_aafe8687fb9356906c13ccd9fe88eb3de}} 
+\index{ff.c@{ff.c}!XDIR\_Attr@{XDIR\_Attr}}
+\index{XDIR\_Attr@{XDIR\_Attr}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{XDIR\_Attr}{XDIR\_Attr}}
+{\footnotesize\ttfamily \#define XDIR\+\_\+\+Attr~4  /$\ast$ ex\+FAT\+: \mbox{\hyperlink{class_file}{File}} attribute (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a966901795f1a82003139433a0ba318dd}\label{ff_8c_a966901795f1a82003139433a0ba318dd}} 
+\index{ff.c@{ff.c}!XDIR\_CaseSum@{XDIR\_CaseSum}}
+\index{XDIR\_CaseSum@{XDIR\_CaseSum}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{XDIR\_CaseSum}{XDIR\_CaseSum}}
+{\footnotesize\ttfamily \#define XDIR\+\_\+\+Case\+Sum~4  /$\ast$ ex\+FAT\+: Sum of case conversion table (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a74046208323ac5e8b5214b05e1a43b87}\label{ff_8c_a74046208323ac5e8b5214b05e1a43b87}} 
+\index{ff.c@{ff.c}!XDIR\_CrtTime@{XDIR\_CrtTime}}
+\index{XDIR\_CrtTime@{XDIR\_CrtTime}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{XDIR\_CrtTime}{XDIR\_CrtTime}}
+{\footnotesize\ttfamily \#define XDIR\+\_\+\+Crt\+Time~8  /$\ast$ ex\+FAT\+: Created time (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a15318ffa52c4e35fdce00a64ab3ccbf9}\label{ff_8c_a15318ffa52c4e35fdce00a64ab3ccbf9}} 
+\index{ff.c@{ff.c}!XDIR\_CrtTime10@{XDIR\_CrtTime10}}
+\index{XDIR\_CrtTime10@{XDIR\_CrtTime10}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{XDIR\_CrtTime10}{XDIR\_CrtTime10}}
+{\footnotesize\ttfamily \#define XDIR\+\_\+\+Crt\+Time10~20  /$\ast$ ex\+FAT\+: Created time subsecond (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a2358527d5a3665a4ffb363e014ee421b}\label{ff_8c_a2358527d5a3665a4ffb363e014ee421b}} 
+\index{ff.c@{ff.c}!XDIR\_CrtTZ@{XDIR\_CrtTZ}}
+\index{XDIR\_CrtTZ@{XDIR\_CrtTZ}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{XDIR\_CrtTZ}{XDIR\_CrtTZ}}
+{\footnotesize\ttfamily \#define XDIR\+\_\+\+Crt\+TZ~22  /$\ast$ ex\+FAT\+: Created timezone (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a899bf596ce53d81a373229662249f524}\label{ff_8c_a899bf596ce53d81a373229662249f524}} 
+\index{ff.c@{ff.c}!XDIR\_FileSize@{XDIR\_FileSize}}
+\index{XDIR\_FileSize@{XDIR\_FileSize}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{XDIR\_FileSize}{XDIR\_FileSize}}
+{\footnotesize\ttfamily \#define XDIR\+\_\+\+File\+Size~56  /$\ast$ ex\+FAT\+: \mbox{\hyperlink{class_file}{File}}/\mbox{\hyperlink{class_directory}{Directory}} \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} (QWORD) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_ae08bbe65fd20259cb98c85ce08aa53cb}\label{ff_8c_ae08bbe65fd20259cb98c85ce08aa53cb}} 
+\index{ff.c@{ff.c}!XDIR\_FstClus@{XDIR\_FstClus}}
+\index{XDIR\_FstClus@{XDIR\_FstClus}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{XDIR\_FstClus}{XDIR\_FstClus}}
+{\footnotesize\ttfamily \#define XDIR\+\_\+\+Fst\+Clus~52  /$\ast$ ex\+FAT\+: First cluster of the file \mbox{\hyperlink{acpi_8hpp_abbaff690fbbced9e133675b72b3c46e9}{data}} (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_ac3fd42ab7ee833b0e3683b1843d310d6}\label{ff_8c_ac3fd42ab7ee833b0e3683b1843d310d6}} 
+\index{ff.c@{ff.c}!XDIR\_GenFlags@{XDIR\_GenFlags}}
+\index{XDIR\_GenFlags@{XDIR\_GenFlags}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{XDIR\_GenFlags}{XDIR\_GenFlags}}
+{\footnotesize\ttfamily \#define XDIR\+\_\+\+Gen\+Flags~33  /$\ast$ ex\+FAT\+: General secondary \mbox{\hyperlink{acpi_8hpp_a773b39d480759f67926cb18ae2219281}{flags}} (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_ac154e61682dfed7bb071b0926db1efac}\label{ff_8c_ac154e61682dfed7bb071b0926db1efac}} 
+\index{ff.c@{ff.c}!XDIR\_Label@{XDIR\_Label}}
+\index{XDIR\_Label@{XDIR\_Label}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{XDIR\_Label}{XDIR\_Label}}
+{\footnotesize\ttfamily \#define XDIR\+\_\+\+Label~2  /$\ast$ ex\+FAT\+: Volume label (11-\/\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_aecb0af980a40b38b30dd0a736c8d6406}\label{ff_8c_aecb0af980a40b38b30dd0a736c8d6406}} 
+\index{ff.c@{ff.c}!XDIR\_ModTime@{XDIR\_ModTime}}
+\index{XDIR\_ModTime@{XDIR\_ModTime}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{XDIR\_ModTime}{XDIR\_ModTime}}
+{\footnotesize\ttfamily \#define XDIR\+\_\+\+Mod\+Time~12  /$\ast$ ex\+FAT\+: Modified time (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a0f63c605687d0ed66c633ba6a10c01e5}\label{ff_8c_a0f63c605687d0ed66c633ba6a10c01e5}} 
+\index{ff.c@{ff.c}!XDIR\_ModTime10@{XDIR\_ModTime10}}
+\index{XDIR\_ModTime10@{XDIR\_ModTime10}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{XDIR\_ModTime10}{XDIR\_ModTime10}}
+{\footnotesize\ttfamily \#define XDIR\+\_\+\+Mod\+Time10~21  /$\ast$ ex\+FAT\+: Modified time subsecond (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_abe933d1753a1f0c30a94131e02f23ab5}\label{ff_8c_abe933d1753a1f0c30a94131e02f23ab5}} 
+\index{ff.c@{ff.c}!XDIR\_ModTZ@{XDIR\_ModTZ}}
+\index{XDIR\_ModTZ@{XDIR\_ModTZ}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{XDIR\_ModTZ}{XDIR\_ModTZ}}
+{\footnotesize\ttfamily \#define XDIR\+\_\+\+Mod\+TZ~23  /$\ast$ ex\+FAT\+: Modified timezone (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a7c0a94f8a7efc7a710d6eb897059462d}\label{ff_8c_a7c0a94f8a7efc7a710d6eb897059462d}} 
+\index{ff.c@{ff.c}!XDIR\_NameHash@{XDIR\_NameHash}}
+\index{XDIR\_NameHash@{XDIR\_NameHash}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{XDIR\_NameHash}{XDIR\_NameHash}}
+{\footnotesize\ttfamily \#define XDIR\+\_\+\+Name\+Hash~36  /$\ast$ ex\+FAT\+: Hash of file name (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_aac6d45371e0269e7b10c5a08f2f4b422}\label{ff_8c_aac6d45371e0269e7b10c5a08f2f4b422}} 
+\index{ff.c@{ff.c}!XDIR\_NumLabel@{XDIR\_NumLabel}}
+\index{XDIR\_NumLabel@{XDIR\_NumLabel}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{XDIR\_NumLabel}{XDIR\_NumLabel}}
+{\footnotesize\ttfamily \#define XDIR\+\_\+\+Num\+Label~1  /$\ast$ ex\+FAT\+: Number of volume label characters (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a382f456b33f0c719163bcf521aa7ecea}\label{ff_8c_a382f456b33f0c719163bcf521aa7ecea}} 
+\index{ff.c@{ff.c}!XDIR\_NumName@{XDIR\_NumName}}
+\index{XDIR\_NumName@{XDIR\_NumName}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{XDIR\_NumName}{XDIR\_NumName}}
+{\footnotesize\ttfamily \#define XDIR\+\_\+\+Num\+Name~35  /$\ast$ ex\+FAT\+: Number of file name characters (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a37e729265403caf1ae349714e069a3e6}\label{ff_8c_a37e729265403caf1ae349714e069a3e6}} 
+\index{ff.c@{ff.c}!XDIR\_NumSec@{XDIR\_NumSec}}
+\index{XDIR\_NumSec@{XDIR\_NumSec}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{XDIR\_NumSec}{XDIR\_NumSec}}
+{\footnotesize\ttfamily \#define XDIR\+\_\+\+Num\+Sec~1  /$\ast$ ex\+FAT\+: Number of secondary entries (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a784a27bba3d35dddeb57d7fa99670b2a}\label{ff_8c_a784a27bba3d35dddeb57d7fa99670b2a}} 
+\index{ff.c@{ff.c}!XDIR\_SetSum@{XDIR\_SetSum}}
+\index{XDIR\_SetSum@{XDIR\_SetSum}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{XDIR\_SetSum}{XDIR\_SetSum}}
+{\footnotesize\ttfamily \#define XDIR\+\_\+\+Set\+Sum~2  /$\ast$ ex\+FAT\+: Sum of the set of directory entries (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a55c8dde2fcff23002e196ae2c3eeaa08}\label{ff_8c_a55c8dde2fcff23002e196ae2c3eeaa08}} 
+\index{ff.c@{ff.c}!XDIR\_Type@{XDIR\_Type}}
+\index{XDIR\_Type@{XDIR\_Type}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{XDIR\_Type}{XDIR\_Type}}
+{\footnotesize\ttfamily \#define XDIR\+\_\+\+Type~0  /$\ast$ ex\+FAT\+: \mbox{\hyperlink{acpixf_8h_ab361d6187ad6230bccbce7d8dbe49abc}{Type}} of ex\+FAT directory entry (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}) $\ast$/}
+
+\mbox{\Hypertarget{ff_8c_a543e2a11cefac978a0108a7973416d56}\label{ff_8c_a543e2a11cefac978a0108a7973416d56}} 
+\index{ff.c@{ff.c}!XDIR\_ValidFileSize@{XDIR\_ValidFileSize}}
+\index{XDIR\_ValidFileSize@{XDIR\_ValidFileSize}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{XDIR\_ValidFileSize}{XDIR\_ValidFileSize}}
+{\footnotesize\ttfamily \#define XDIR\+\_\+\+Valid\+File\+Size~40  /$\ast$ ex\+FAT\+: Valid file \mbox{\hyperlink{iso9660_8c_acfd6273064c5acdcfc39a23a69dd4343}{size}} (QWORD) $\ast$/}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{ff_8c_a9ee7e560eec8d82755c636ae41e702cd}\label{ff_8c_a9ee7e560eec8d82755c636ae41e702cd}} 
+\index{ff.c@{ff.c}!f\_chmod@{f\_chmod}}
+\index{f\_chmod@{f\_chmod}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{f\_chmod()}{f\_chmod()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} f\+\_\+chmod (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$}]{path,  }\item[{\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}}]{attr,  }\item[{\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}}]{mask }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ff_8c_a53882db20ef4323dcfd1874d7733ffc3}\label{ff_8c_a53882db20ef4323dcfd1874d7733ffc3}} 
+\index{ff.c@{ff.c}!f\_close@{f\_close}}
+\index{f\_close@{f\_close}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{f\_close()}{f\_close()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} f\+\_\+close (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_f_i_l}{FIL}} $\ast$}]{fp }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ff_8c_ab5f7376b6f3e3bcc7f5ff5497c8b7364}\label{ff_8c_ab5f7376b6f3e3bcc7f5ff5497c8b7364}} 
+\index{ff.c@{ff.c}!f\_closedir@{f\_closedir}}
+\index{f\_closedir@{f\_closedir}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{f\_closedir()}{f\_closedir()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} f\+\_\+closedir (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_d_i_r}{DIR}} $\ast$}]{dp }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ff_8c_a35ff90f5219df5cdb6c8f408b1b9e1a3}\label{ff_8c_a35ff90f5219df5cdb6c8f408b1b9e1a3}} 
+\index{ff.c@{ff.c}!f\_expand@{f\_expand}}
+\index{f\_expand@{f\_expand}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{f\_expand()}{f\_expand()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} f\+\_\+expand (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_f_i_l}{FIL}} $\ast$}]{fp,  }\item[{\mbox{\hyperlink{ff_8h_a3fc0992ad7436250b6b1a0592214b7f2}{FSIZE\+\_\+t}}}]{fsz,  }\item[{\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}}]{opt }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ff_8c_a0ff39f75a87cbda9cd6ea65d83f16cec}\label{ff_8c_a0ff39f75a87cbda9cd6ea65d83f16cec}} 
+\index{ff.c@{ff.c}!f\_getfree@{f\_getfree}}
+\index{f\_getfree@{f\_getfree}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{f\_getfree()}{f\_getfree()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} f\+\_\+getfree (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$}]{path,  }\item[{\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}} $\ast$}]{nclst,  }\item[{\mbox{\hyperlink{struct_f_a_t_f_s}{FATFS}} $\ast$$\ast$}]{fatfs }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ff_8c_ac4ff40a674bcbfe40d81b1e8e54befc6}\label{ff_8c_ac4ff40a674bcbfe40d81b1e8e54befc6}} 
+\index{ff.c@{ff.c}!f\_getlabel@{f\_getlabel}}
+\index{f\_getlabel@{f\_getlabel}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{f\_getlabel()}{f\_getlabel()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} f\+\_\+getlabel (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$}]{path,  }\item[{\mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$}]{label,  }\item[{\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}} $\ast$}]{vsn }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ff_8c_a7c4bcf81d9122f0b5376852ec6a8c3eb}\label{ff_8c_a7c4bcf81d9122f0b5376852ec6a8c3eb}} 
+\index{ff.c@{ff.c}!f\_lseek@{f\_lseek}}
+\index{f\_lseek@{f\_lseek}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{f\_lseek()}{f\_lseek()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} f\+\_\+lseek (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_f_i_l}{FIL}} $\ast$}]{fp,  }\item[{\mbox{\hyperlink{ff_8h_a3fc0992ad7436250b6b1a0592214b7f2}{FSIZE\+\_\+t}}}]{ofs }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ff_8c_a4b4d38db58e89c526cfcf53200d719d0}\label{ff_8c_a4b4d38db58e89c526cfcf53200d719d0}} 
+\index{ff.c@{ff.c}!f\_mkdir@{f\_mkdir}}
+\index{f\_mkdir@{f\_mkdir}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{f\_mkdir()}{f\_mkdir()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} f\+\_\+mkdir (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$}]{path }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ff_8c_a983f0614033bd7cf587eb56d3054a91c}\label{ff_8c_a983f0614033bd7cf587eb56d3054a91c}} 
+\index{ff.c@{ff.c}!f\_mkfs@{f\_mkfs}}
+\index{f\_mkfs@{f\_mkfs}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{f\_mkfs()}{f\_mkfs()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} f\+\_\+mkfs (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$}]{path,  }\item[{const \mbox{\hyperlink{struct_m_k_f_s___p_a_r_m}{MKFS\+\_\+\+PARM}} $\ast$}]{opt,  }\item[{void $\ast$}]{work,  }\item[{\mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}}}]{len }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ff_8c_a16a934c2bbfa2160295810adc49d5509}\label{ff_8c_a16a934c2bbfa2160295810adc49d5509}} 
+\index{ff.c@{ff.c}!f\_mount@{f\_mount}}
+\index{f\_mount@{f\_mount}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{f\_mount()}{f\_mount()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} f\+\_\+mount (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_f_a_t_f_s}{FATFS}} $\ast$}]{fs,  }\item[{const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$}]{path,  }\item[{\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}}]{opt }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ff_8c_aefdef7126128d99d0b3bd82c28e54d80}\label{ff_8c_aefdef7126128d99d0b3bd82c28e54d80}} 
+\index{ff.c@{ff.c}!f\_open@{f\_open}}
+\index{f\_open@{f\_open}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{f\_open()}{f\_open()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} f\+\_\+open (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_f_i_l}{FIL}} $\ast$}]{fp,  }\item[{const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$}]{path,  }\item[{\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}}]{mode }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ff_8c_ab63b213c75f7335fbb63a1f3f70e5fc7}\label{ff_8c_ab63b213c75f7335fbb63a1f3f70e5fc7}} 
+\index{ff.c@{ff.c}!f\_opendir@{f\_opendir}}
+\index{f\_opendir@{f\_opendir}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{f\_opendir()}{f\_opendir()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} f\+\_\+opendir (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_d_i_r}{DIR}} $\ast$}]{dp,  }\item[{const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$}]{path }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ff_8c_ac4c3dcb6869ca252888eebabe39727b3}\label{ff_8c_ac4c3dcb6869ca252888eebabe39727b3}} 
+\index{ff.c@{ff.c}!f\_read@{f\_read}}
+\index{f\_read@{f\_read}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{f\_read()}{f\_read()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} f\+\_\+read (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_f_i_l}{FIL}} $\ast$}]{fp,  }\item[{void $\ast$}]{buff,  }\item[{\mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}}}]{btr,  }\item[{\mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}} $\ast$}]{br }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ff_8c_ab39e82a110695de45f416f3149358012}\label{ff_8c_ab39e82a110695de45f416f3149358012}} 
+\index{ff.c@{ff.c}!f\_readdir@{f\_readdir}}
+\index{f\_readdir@{f\_readdir}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{f\_readdir()}{f\_readdir()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} f\+\_\+readdir (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_d_i_r}{DIR}} $\ast$}]{dp,  }\item[{\mbox{\hyperlink{struct_f_i_l_i_n_f_o}{FILINFO}} $\ast$}]{fno }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ff_8c_aa775b9b024acfeb3a66523cab497d142}\label{ff_8c_aa775b9b024acfeb3a66523cab497d142}} 
+\index{ff.c@{ff.c}!f\_rename@{f\_rename}}
+\index{f\_rename@{f\_rename}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{f\_rename()}{f\_rename()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} f\+\_\+rename (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$}]{path\+\_\+old,  }\item[{const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$}]{path\+\_\+new }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ff_8c_aa82bca64e28bc0d656a7999dd0eadec7}\label{ff_8c_aa82bca64e28bc0d656a7999dd0eadec7}} 
+\index{ff.c@{ff.c}!f\_setlabel@{f\_setlabel}}
+\index{f\_setlabel@{f\_setlabel}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{f\_setlabel()}{f\_setlabel()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} f\+\_\+setlabel (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$}]{label }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ff_8c_abe1f60daab5c7d11170c334fb832c798}\label{ff_8c_abe1f60daab5c7d11170c334fb832c798}} 
+\index{ff.c@{ff.c}!f\_stat@{f\_stat}}
+\index{f\_stat@{f\_stat}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{f\_stat()}{f\_stat()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} f\+\_\+stat (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$}]{path,  }\item[{\mbox{\hyperlink{struct_f_i_l_i_n_f_o}{FILINFO}} $\ast$}]{fno }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ff_8c_ad69c7246b122ba56a134939ee0eaf847}\label{ff_8c_ad69c7246b122ba56a134939ee0eaf847}} 
+\index{ff.c@{ff.c}!f\_sync@{f\_sync}}
+\index{f\_sync@{f\_sync}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{f\_sync()}{f\_sync()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} f\+\_\+sync (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_f_i_l}{FIL}} $\ast$}]{fp }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ff_8c_a691a27b40c348f7c84b42e911636f38a}\label{ff_8c_a691a27b40c348f7c84b42e911636f38a}} 
+\index{ff.c@{ff.c}!f\_truncate@{f\_truncate}}
+\index{f\_truncate@{f\_truncate}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{f\_truncate()}{f\_truncate()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} f\+\_\+truncate (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_f_i_l}{FIL}} $\ast$}]{fp }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ff_8c_a2858167fcd0bced48e9be434b3895efe}\label{ff_8c_a2858167fcd0bced48e9be434b3895efe}} 
+\index{ff.c@{ff.c}!f\_unlink@{f\_unlink}}
+\index{f\_unlink@{f\_unlink}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{f\_unlink()}{f\_unlink()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} f\+\_\+unlink (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$}]{path }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ff_8c_aafaa718d1a487e12a8f0087173dba0b9}\label{ff_8c_aafaa718d1a487e12a8f0087173dba0b9}} 
+\index{ff.c@{ff.c}!f\_utime@{f\_utime}}
+\index{f\_utime@{f\_utime}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{f\_utime()}{f\_utime()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} f\+\_\+utime (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} $\ast$}]{path,  }\item[{const \mbox{\hyperlink{struct_f_i_l_i_n_f_o}{FILINFO}} $\ast$}]{fno }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ff_8c_ae6a4dfae8a9e308bdb2283a37ef680f2}\label{ff_8c_ae6a4dfae8a9e308bdb2283a37ef680f2}} 
+\index{ff.c@{ff.c}!f\_write@{f\_write}}
+\index{f\_write@{f\_write}!ff.c@{ff.c}}
+\doxysubsubsection{\texorpdfstring{f\_write()}{f\_write()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} f\+\_\+write (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_f_i_l}{FIL}} $\ast$}]{fp,  }\item[{const void $\ast$}]{buff,  }\item[{\mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}}}]{btw,  }\item[{\mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}} $\ast$}]{bw }\end{DoxyParamCaption})}
+

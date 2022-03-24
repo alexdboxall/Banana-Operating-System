@@ -1,0 +1,63 @@
+\hypertarget{clock_8hpp_source}{}\doxysection{clock.\+hpp}
+\label{clock_8hpp_source}\index{C:/Users/Alex/Desktop/Banana/kernel/hal/clock.hpp@{C:/Users/Alex/Desktop/Banana/kernel/hal/clock.hpp}}
+\mbox{\hyperlink{clock_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_CLOCK\_HPP\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_CLOCK\_HPP\_}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <stddef.h>}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{device_8hpp}{hal/device.hpp}}"{}}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{vfs_8hpp}{fs/vfs.hpp}}"{}}         \textcolor{comment}{// time\_t}}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{keyword}{struct }\mbox{\hyperlink{structdatetime__t}{datetime\_t}}}
+\DoxyCodeLine{10 \{}
+\DoxyCodeLine{11     uint8\_t \mbox{\hyperlink{structdatetime__t_afabded25c81cb29402963646e458e652}{day}};     \textcolor{comment}{//1-\/31}}
+\DoxyCodeLine{12     uint8\_t \mbox{\hyperlink{structdatetime__t_a69a3491a78234c70fcd6dbdf7cd4c8c4}{month}};     \textcolor{comment}{//0-\/11}}
+\DoxyCodeLine{13     uint16\_t \mbox{\hyperlink{structdatetime__t_ad8118505f760f56db69081b45943b9d4}{year}};      \textcolor{comment}{//years since 1970}}
+\DoxyCodeLine{14     uint8\_t \mbox{\hyperlink{structdatetime__t_a2f40a1600a005b946eda5582f3368f08}{hour}};       \textcolor{comment}{//0-\/23}}
+\DoxyCodeLine{15     uint8\_t \mbox{\hyperlink{structdatetime__t_a2f66889685c065cc329bcd90f067d53e}{minute}};       \textcolor{comment}{//0-\/59}}
+\DoxyCodeLine{16     uint8\_t \mbox{\hyperlink{structdatetime__t_a11d19b04bb5d36df03b097fbade51775}{second}};       \textcolor{comment}{//0-\/59}}
+\DoxyCodeLine{17 \};}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19 \mbox{\hyperlink{vfs_8hpp_a02ad034d26db2c14b7e295b0c50fc11d}{time\_t}} \mbox{\hyperlink{clock_8hpp_ab6341e545ddb6b43a00250ec3f2eec06}{KeDatetimeToSeconds}}(\mbox{\hyperlink{structdatetime__t}{datetime\_t}} dt);}
+\DoxyCodeLine{20 \mbox{\hyperlink{structdatetime__t}{datetime\_t}} \mbox{\hyperlink{clock_8hpp_aa3658d5516b09f492b5f861756b6ebc0}{KeSecondsToDatetime}}(\mbox{\hyperlink{vfs_8hpp_a02ad034d26db2c14b7e295b0c50fc11d}{time\_t}} tim);}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22 \textcolor{keyword}{extern} \textcolor{keywordtype}{int} \mbox{\hyperlink{clock_8hpp_a728cc442d1f423699a50cb3c1e534e28}{keTimezoneHourOffset}};}
+\DoxyCodeLine{23 \textcolor{keyword}{extern} \textcolor{keywordtype}{bool} \mbox{\hyperlink{clock_8hpp_a51e0de773077d71e688e9034bc35a5b1}{keTimezoneHalfHourOffset}};}
+\DoxyCodeLine{24 \textcolor{keyword}{extern} \textcolor{keywordtype}{bool} \mbox{\hyperlink{clock_8hpp_a2a4f80bc438e05e12e89b9da57a62a1d}{keDstOn}};}
+\DoxyCodeLine{25 }
+\DoxyCodeLine{26 \textcolor{keywordtype}{void} \mbox{\hyperlink{clock_8hpp_a5889b426694e6af4913289f51bf8e4d6}{KeLoadTimezone}}();}
+\DoxyCodeLine{27 \textcolor{keywordtype}{void} \mbox{\hyperlink{clock_8hpp_acbbbc19be42d71d6f3d2d9e1d8281df1}{KeSetTimezone}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* tzstring);}
+\DoxyCodeLine{28 \textcolor{keywordtype}{bool} \mbox{\hyperlink{clock_8hpp_acbbbc19be42d71d6f3d2d9e1d8281df1}{KeSetTimezone}}(\textcolor{keywordtype}{int} \textcolor{keywordtype}{id});}
+\DoxyCodeLine{29 \textcolor{keywordtype}{void} \mbox{\hyperlink{clock_8hpp_ab3734c29e2c4520ac5e002cf05c41c85}{KeUpdateTimezone}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* tzstring);}
+\DoxyCodeLine{30 \textcolor{keyword}{const} \textcolor{keywordtype}{char}* \mbox{\hyperlink{clock_8hpp_a352c63f6471fef56a75df162f5f36495}{KeGetTimezoneStringFromID}}(\textcolor{keywordtype}{int} \textcolor{keywordtype}{id});}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32 \textcolor{keywordtype}{void} \mbox{\hyperlink{clock_8hpp_a160cbb958d8a3d7891ff9ee6131e8157}{KeLoadClockSettings}}();}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34 \textcolor{keyword}{class }\mbox{\hyperlink{class_clock}{Clock}}: \textcolor{keyword}{public} \mbox{\hyperlink{class_device}{Device}}}
+\DoxyCodeLine{35 \{}
+\DoxyCodeLine{36 \textcolor{keyword}{private}:}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40 \textcolor{keyword}{public}:}
+\DoxyCodeLine{41     \textcolor{keyword}{virtual} \mbox{\hyperlink{vfs_8hpp_a02ad034d26db2c14b7e295b0c50fc11d}{time\_t}} \mbox{\hyperlink{class_clock_ac84f52b5349e75d4f33b5b46060de836}{timeInSecondsUTC}}() = 0;}
+\DoxyCodeLine{42     \textcolor{keyword}{virtual} \mbox{\hyperlink{structdatetime__t}{datetime\_t}} \mbox{\hyperlink{class_clock_ae966605303d52231aa04a796e893b2a4}{timeInDatetimeUTC}}() = 0;}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44     \textcolor{keyword}{virtual} \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_clock_a92d2ea0fea95f555e38ab549180fc245}{setTimeInSecondsUTC}}(\mbox{\hyperlink{vfs_8hpp_a02ad034d26db2c14b7e295b0c50fc11d}{time\_t}} t) = 0;}
+\DoxyCodeLine{45     \textcolor{keyword}{virtual} \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_clock_ad89a24717b04b049434cb394b9410e16}{setTimeInDatetimeUTC}}(\mbox{\hyperlink{structdatetime__t}{datetime\_t}} \mbox{\hyperlink{syscalls_8cpp_ab0ea24539a2252176fffac31d88365ba}{d}}) = 0;}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47     \mbox{\hyperlink{vfs_8hpp_a02ad034d26db2c14b7e295b0c50fc11d}{time\_t}} \mbox{\hyperlink{class_clock_a27a6977bbc89ece2b97c44186f2a6aa6}{timeInSecondsLocal}}();}
+\DoxyCodeLine{48     \mbox{\hyperlink{structdatetime__t}{datetime\_t}} \mbox{\hyperlink{class_clock_aece629608e9bd5ce50a720a351fc97c7}{timeInDatetimeLocal}}();}
+\DoxyCodeLine{49 }
+\DoxyCodeLine{50     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_clock_a69d6b7cc5ff867bc89388c8c735416d8}{setTimeInSecondsLocal}}(\mbox{\hyperlink{vfs_8hpp_a02ad034d26db2c14b7e295b0c50fc11d}{time\_t}} t);}
+\DoxyCodeLine{51     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_clock_a02428df050692be5de9b7e0a18a766e2}{setTimeInDatetimeLocal}}(\mbox{\hyperlink{structdatetime__t}{datetime\_t}} \mbox{\hyperlink{syscalls_8cpp_ab0ea24539a2252176fffac31d88365ba}{d}});}
+\DoxyCodeLine{52 }
+\DoxyCodeLine{53     \mbox{\hyperlink{class_clock_a2fe59fac6e1eb6aabe25c63b3c5a896d}{Clock}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* name);}
+\DoxyCodeLine{54     \textcolor{keyword}{virtual} \mbox{\hyperlink{class_clock_afc976ce68fa85e15cc06f9ed47bddb7c}{\string~Clock}}();}
+\DoxyCodeLine{55 \};}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

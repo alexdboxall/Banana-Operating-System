@@ -1,0 +1,431 @@
+\hypertarget{ff_8h_source}{}\doxysection{ff.\+h}
+\label{ff_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/fs/fat/ff.h@{C:/Users/Alex/Desktop/Banana/kernel/fs/fat/ff.h}}
+\mbox{\hyperlink{ff_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\//}}
+\DoxyCodeLine{2 \textcolor{comment}{/  FatFs -\/ Generic FAT Filesystem module  R0.14                               /}}
+\DoxyCodeLine{3 \textcolor{comment}{/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\//}}
+\DoxyCodeLine{4 \textcolor{comment}{/}}
+\DoxyCodeLine{5 \textcolor{comment}{/ Copyright (C) 2019, ChaN, all right reserved.}}
+\DoxyCodeLine{6 \textcolor{comment}{/}}
+\DoxyCodeLine{7 \textcolor{comment}{/ FatFs module is an open source software. Redistribution and use of FatFs in}}
+\DoxyCodeLine{8 \textcolor{comment}{/ source and binary forms, with or without modification, are permitted provided}}
+\DoxyCodeLine{9 \textcolor{comment}{/ that the following condition is met:}}
+\DoxyCodeLine{10 \textcolor{comment}{}}
+\DoxyCodeLine{11 \textcolor{comment}{/ 1. Redistributions of source code must retain the above copyright notice,}}
+\DoxyCodeLine{12 \textcolor{comment}{/    this condition and the following disclaimer.}}
+\DoxyCodeLine{13 \textcolor{comment}{/}}
+\DoxyCodeLine{14 \textcolor{comment}{/ This software is provided by the copyright holder and contributors "{}AS IS"{}}}
+\DoxyCodeLine{15 \textcolor{comment}{/ and any warranties related to this software are DISCLAIMED.}}
+\DoxyCodeLine{16 \textcolor{comment}{/ The copyright owner or contributors be NOT LIABLE for any damages caused}}
+\DoxyCodeLine{17 \textcolor{comment}{/ by use of this software.}}
+\DoxyCodeLine{18 \textcolor{comment}{/}}
+\DoxyCodeLine{19 \textcolor{comment}{/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22 \textcolor{preprocessor}{\#ifndef FF\_DEFINED}}
+\DoxyCodeLine{23 \textcolor{preprocessor}{\#define FF\_DEFINED  86606   }\textcolor{comment}{/* Revision ID */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25 \textcolor{preprocessor}{\#ifdef \_\_cplusplus}}
+\DoxyCodeLine{26 \textcolor{keyword}{extern} \textcolor{stringliteral}{"{}C"{}} \{}
+\DoxyCodeLine{27 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{28 }
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{ffconf_8h}{ffconf.h}}"{}}     \textcolor{comment}{/* FatFs configuration options */}}
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31 \textcolor{preprocessor}{\#if FF\_DEFINED != FFCONF\_DEF}}
+\DoxyCodeLine{32 \textcolor{preprocessor}{\#error Wrong configuration file (ffconf.h).}}
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{35 \textcolor{comment}{/* Integer types used for FatFs API */}}
+\DoxyCodeLine{36 }
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#if defined(\_WIN32) }\textcolor{comment}{/* Main development platform */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{38 \textcolor{preprocessor}{\#define FF\_INTDEF 2}}
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#include <windows.h>}}
+\DoxyCodeLine{40 \textcolor{keyword}{typedef} \textcolor{keywordtype}{unsigned} \_\_int64 QWORD;}
+\DoxyCodeLine{41 \textcolor{preprocessor}{\#elif (defined(\_\_STDC\_VERSION\_\_) \&\& \_\_STDC\_VERSION\_\_ >= 199901L) || defined(\_\_cplusplus)    }\textcolor{comment}{/* C99 or later */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#define FF\_INTDEF 2}}
+\DoxyCodeLine{43 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{44 \textcolor{keyword}{typedef} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}    \mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}};   \textcolor{comment}{/* int must be 16-\/bit or 32-\/bit */}}
+\DoxyCodeLine{45 \textcolor{keyword}{typedef} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char}   \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}};   \textcolor{comment}{/* char must be 8-\/bit */}}
+\DoxyCodeLine{46 \textcolor{keyword}{typedef} uint16\_t        \mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}};   \textcolor{comment}{/* 16-\/bit unsigned integer */}}
+\DoxyCodeLine{47 \textcolor{keyword}{typedef} uint32\_t        \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}; \textcolor{comment}{/* 32-\/bit unsigned integer */}}
+\DoxyCodeLine{48 \textcolor{keyword}{typedef} uint64\_t        QWORD;  \textcolor{comment}{/* 64-\/bit unsigned integer */}}
+\DoxyCodeLine{49 \textcolor{keyword}{typedef} \mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}            \mbox{\hyperlink{ff_8h_a0bb095da65fbe52192dd9e3e643c7568}{WCHAR}}; \textcolor{comment}{/* UTF-\/16 character type */}}
+\DoxyCodeLine{50 \textcolor{preprocessor}{\#else   }\textcolor{comment}{/* Earlier than C99 */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{51 \textcolor{preprocessor}{\#define FF\_INTDEF 1}}
+\DoxyCodeLine{52 \textcolor{keyword}{typedef} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}    \mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}};   \textcolor{comment}{/* int must be 16-\/bit or 32-\/bit */}}
+\DoxyCodeLine{53 \textcolor{keyword}{typedef} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char}   \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}};   \textcolor{comment}{/* char must be 8-\/bit */}}
+\DoxyCodeLine{54 \textcolor{keyword}{typedef} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{short}  \mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}};   \textcolor{comment}{/* 16-\/bit unsigned integer */}}
+\DoxyCodeLine{55 \textcolor{keyword}{typedef} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long}   \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}; \textcolor{comment}{/* 32-\/bit unsigned integer */}}
+\DoxyCodeLine{56 \textcolor{keyword}{typedef} \mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}            \mbox{\hyperlink{ff_8h_a0bb095da65fbe52192dd9e3e643c7568}{WCHAR}}; \textcolor{comment}{/* UTF-\/16 character type */}}
+\DoxyCodeLine{57 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{58 }
+\DoxyCodeLine{59 }
+\DoxyCodeLine{60 \textcolor{comment}{/* Definitions of volume management */}}
+\DoxyCodeLine{61 }
+\DoxyCodeLine{62 \textcolor{preprocessor}{\#if FF\_MULTI\_PARTITION      }\textcolor{comment}{/* Multiple partition configuration */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{63 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\{}
+\DoxyCodeLine{64     \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}} pd;    \textcolor{comment}{/* Physical drive number */}}
+\DoxyCodeLine{65     \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}} pt;    \textcolor{comment}{/* Partition: 0:Auto detect, 1-\/4:Forced partition) */}}
+\DoxyCodeLine{66 \} PARTITION;}
+\DoxyCodeLine{67 \textcolor{keyword}{extern} PARTITION VolToPart[];   \textcolor{comment}{/* Volume -\/ Partition mapping table */}}
+\DoxyCodeLine{68 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{70 \textcolor{preprocessor}{\#if FF\_STR\_VOLUME\_ID}}
+\DoxyCodeLine{71 \textcolor{preprocessor}{\#ifndef FF\_VOLUME\_STRS}}
+\DoxyCodeLine{72 \textcolor{keyword}{extern} \textcolor{keyword}{const} \textcolor{keywordtype}{char}* VolumeStr[\mbox{\hyperlink{ffconf_8h_a2343dca8b59f249f6a88574fda8ac31c}{FF\_VOLUMES}}]; \textcolor{comment}{/* User defied volume ID */}}
+\DoxyCodeLine{73 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{74 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{75 }
+\DoxyCodeLine{76 }
+\DoxyCodeLine{77 }
+\DoxyCodeLine{78 \textcolor{comment}{/* Type of path name strings on FatFs API */}}
+\DoxyCodeLine{79 }
+\DoxyCodeLine{80 \textcolor{preprocessor}{\#ifndef \_INC\_TCHAR}}
+\DoxyCodeLine{81 \textcolor{preprocessor}{\#define \_INC\_TCHAR}}
+\DoxyCodeLine{82 }
+\DoxyCodeLine{83 \textcolor{preprocessor}{\#if FF\_USE\_LFN \&\& FF\_LFN\_UNICODE == 1   }\textcolor{comment}{/* Unicode in UTF-\/16 encoding */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{84 \textcolor{keyword}{typedef} \mbox{\hyperlink{ff_8h_a0bb095da65fbe52192dd9e3e643c7568}{WCHAR}} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}};}
+\DoxyCodeLine{85 \textcolor{preprocessor}{\#define \_T(x) L \#\# x}}
+\DoxyCodeLine{86 \textcolor{preprocessor}{\#define \_TEXT(x) L \#\# x}}
+\DoxyCodeLine{87 \textcolor{preprocessor}{\#elif FF\_USE\_LFN \&\& FF\_LFN\_UNICODE == 2 }\textcolor{comment}{/* Unicode in UTF-\/8 encoding */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{88 \textcolor{keyword}{typedef} \textcolor{keywordtype}{char} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}};}
+\DoxyCodeLine{89 \textcolor{preprocessor}{\#define \_T(x) u8 \#\# x}}
+\DoxyCodeLine{90 \textcolor{preprocessor}{\#define \_TEXT(x) u8 \#\# x}}
+\DoxyCodeLine{91 \textcolor{preprocessor}{\#elif FF\_USE\_LFN \&\& FF\_LFN\_UNICODE == 3 }\textcolor{comment}{/* Unicode in UTF-\/32 encoding */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{92 \textcolor{keyword}{typedef} \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}};}
+\DoxyCodeLine{93 \textcolor{preprocessor}{\#define \_T(x) U \#\# x}}
+\DoxyCodeLine{94 \textcolor{preprocessor}{\#define \_TEXT(x) U \#\# x}}
+\DoxyCodeLine{95 \textcolor{preprocessor}{\#elif FF\_USE\_LFN \&\& (FF\_LFN\_UNICODE < 0 || FF\_LFN\_UNICODE > 3)}}
+\DoxyCodeLine{96 \textcolor{preprocessor}{\#error Wrong FF\_LFN\_UNICODE setting}}
+\DoxyCodeLine{97 \textcolor{preprocessor}{\#else                                   }\textcolor{comment}{/* ANSI/OEM code in SBCS/DBCS */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{98 \textcolor{keyword}{typedef} \textcolor{keywordtype}{char} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}};}
+\DoxyCodeLine{99 \textcolor{preprocessor}{\#define \_T(x) x}}
+\DoxyCodeLine{100 \textcolor{preprocessor}{\#define \_TEXT(x) x}}
+\DoxyCodeLine{101 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{102 }
+\DoxyCodeLine{103 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{104 }
+\DoxyCodeLine{105 }
+\DoxyCodeLine{106 }
+\DoxyCodeLine{107 \textcolor{comment}{/* Type of file size and LBA variables */}}
+\DoxyCodeLine{108 }
+\DoxyCodeLine{109 \textcolor{preprocessor}{\#if FF\_FS\_EXFAT}}
+\DoxyCodeLine{110 \textcolor{preprocessor}{\#if FF\_INTDEF != 2}}
+\DoxyCodeLine{111 \textcolor{preprocessor}{\#error exFAT feature wants C99 or later}}
+\DoxyCodeLine{112 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{113 \textcolor{keyword}{typedef} QWORD \mbox{\hyperlink{ff_8h_a3fc0992ad7436250b6b1a0592214b7f2}{FSIZE\_t}};}
+\DoxyCodeLine{114 \textcolor{preprocessor}{\#if FF\_LBA64}}
+\DoxyCodeLine{115 \textcolor{keyword}{typedef} QWORD \mbox{\hyperlink{ff_8h_a1f3c30a83148a28340f009d4e583f087}{LBA\_t}};}
+\DoxyCodeLine{116 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{117 \textcolor{keyword}{typedef} \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}} \mbox{\hyperlink{ff_8h_a1f3c30a83148a28340f009d4e583f087}{LBA\_t}};}
+\DoxyCodeLine{118 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{119 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{120 \textcolor{preprocessor}{\#if FF\_LBA64}}
+\DoxyCodeLine{121 \textcolor{preprocessor}{\#error exFAT needs to be enabled when enable 64-\/bit LBA}}
+\DoxyCodeLine{122 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{123 \textcolor{keyword}{typedef} \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}} \mbox{\hyperlink{ff_8h_a3fc0992ad7436250b6b1a0592214b7f2}{FSIZE\_t}};}
+\DoxyCodeLine{124 \textcolor{keyword}{typedef} \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}} \mbox{\hyperlink{ff_8h_a1f3c30a83148a28340f009d4e583f087}{LBA\_t}};}
+\DoxyCodeLine{125 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{126 }
+\DoxyCodeLine{127 }
+\DoxyCodeLine{128 }
+\DoxyCodeLine{129 \textcolor{comment}{/* Filesystem object structure (FATFS) */}}
+\DoxyCodeLine{130 }
+\DoxyCodeLine{131 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\{}
+\DoxyCodeLine{132     \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}    \mbox{\hyperlink{struct_f_a_t_f_s_add27d97babe807b573eac98a71dc4ae5}{fs\_type}};     \textcolor{comment}{/* Filesystem type (0:not mounted) */}}
+\DoxyCodeLine{133     \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}    \mbox{\hyperlink{struct_f_a_t_f_s_acae426c920cd7f59e5883f948e1b3184}{pdrv}};           \textcolor{comment}{/* Associated physical drive */}}
+\DoxyCodeLine{134     \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}    \mbox{\hyperlink{struct_f_a_t_f_s_a56716c7e7ac10cf46e73ffb2a2e9b545}{n\_fats}};           \textcolor{comment}{/* Number of FATs (1 or 2) */}}
+\DoxyCodeLine{135     \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}    \mbox{\hyperlink{struct_f_a_t_f_s_a647e43c9ccae94b7274793d1909897de}{wflag}};         \textcolor{comment}{/* win[] flag (b0:dirty) */}}
+\DoxyCodeLine{136     \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}    \mbox{\hyperlink{struct_f_a_t_f_s_a84e9cdc5a6a8e33ea7ec192058abf161}{fsi\_flag}};       \textcolor{comment}{/* FSINFO flags (b7:disabled, b0:dirty) */}}
+\DoxyCodeLine{137     \mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}    \mbox{\hyperlink{struct_f_a_t_f_s_a417095d7c20d56d417dc0998e0dd5a5c}{id}};               \textcolor{comment}{/* Volume mount ID */}}
+\DoxyCodeLine{138     \mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}    \mbox{\hyperlink{struct_f_a_t_f_s_a189a00aa038044ffad0fc7f7dcf2aae1}{n\_rootdir}};     \textcolor{comment}{/* Number of root directory entries (FAT12/16) */}}
+\DoxyCodeLine{139     \mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}    \mbox{\hyperlink{struct_f_a_t_f_s_ad7fa7a509f8d097a9ab182d6c47be568}{csize}};         \textcolor{comment}{/* Cluster size [sectors] */}}
+\DoxyCodeLine{140 \textcolor{preprocessor}{\#if FF\_MAX\_SS != FF\_MIN\_SS}}
+\DoxyCodeLine{141     \mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}    ssize;          \textcolor{comment}{/* Sector size (512, 1024, 2048 or 4096) */}}
+\DoxyCodeLine{142 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{143 \textcolor{preprocessor}{\#if FF\_USE\_LFN}}
+\DoxyCodeLine{144     \mbox{\hyperlink{ff_8h_a0bb095da65fbe52192dd9e3e643c7568}{WCHAR}}* \mbox{\hyperlink{struct_f_a_t_f_s_ad1999aa771ae428c3abe14dbe585e981}{lfnbuf}};           \textcolor{comment}{/* LFN working buffer */}}
+\DoxyCodeLine{145 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{146 \textcolor{preprocessor}{\#if FF\_FS\_EXFAT}}
+\DoxyCodeLine{147     \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}*   dirbuf;         \textcolor{comment}{/* Directory entry block scratchpad buffer for exFAT */}}
+\DoxyCodeLine{148 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{149 \textcolor{preprocessor}{\#if FF\_FS\_REENTRANT}}
+\DoxyCodeLine{150     \mbox{\hyperlink{ffconf_8h_a6c13f8a2584a7f5c6c8768d83c62a935}{FF\_SYNC\_t}}  sobj;       \textcolor{comment}{/* Identifier of sync object */}}
+\DoxyCodeLine{151 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{152 \textcolor{preprocessor}{\#if !FF\_FS\_READONLY}}
+\DoxyCodeLine{153     \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}  \mbox{\hyperlink{struct_f_a_t_f_s_ac26e848817569fedc15a9a4e49ddedd1}{last\_clst}};     \textcolor{comment}{/* Last allocated cluster */}}
+\DoxyCodeLine{154     \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}  \mbox{\hyperlink{struct_f_a_t_f_s_ac834248773bf338df807f0d7e6b6a579}{free\_clst}};     \textcolor{comment}{/* Number of free clusters */}}
+\DoxyCodeLine{155 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{156 \textcolor{preprocessor}{\#if FF\_FS\_RPATH}}
+\DoxyCodeLine{157     \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}  cdir;           \textcolor{comment}{/* Current directory start cluster (0:root) */}}
+\DoxyCodeLine{158 \textcolor{preprocessor}{\#if FF\_FS\_EXFAT}}
+\DoxyCodeLine{159     \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}  cdc\_scl;        \textcolor{comment}{/* Containing directory start cluster (invalid when cdir is 0) */}}
+\DoxyCodeLine{160     \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}  cdc\_size;       \textcolor{comment}{/* b31-\/b8:Size of containing directory, b7-\/b0: Chain status */}}
+\DoxyCodeLine{161     \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}  cdc\_ofs;        \textcolor{comment}{/* Offset in the containing directory (invalid when cdir is 0) */}}
+\DoxyCodeLine{162 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{163 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{164     \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}  \mbox{\hyperlink{struct_f_a_t_f_s_a8da50eeba6469bc20d60ca0cf9a1307c}{n\_fatent}};       \textcolor{comment}{/* Number of FAT entries (number of clusters + 2) */}}
+\DoxyCodeLine{165     \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}  \mbox{\hyperlink{struct_f_a_t_f_s_a53e9560659f14e66f306c2c444198bf3}{fsize}};         \textcolor{comment}{/* Size of an FAT [sectors] */}}
+\DoxyCodeLine{166     \mbox{\hyperlink{ff_8h_a1f3c30a83148a28340f009d4e583f087}{LBA\_t}}  \mbox{\hyperlink{struct_f_a_t_f_s_a89358c0e7b2293254c9481dcd2984d30}{volbase}};     \textcolor{comment}{/* Volume base sector */}}
+\DoxyCodeLine{167     \mbox{\hyperlink{ff_8h_a1f3c30a83148a28340f009d4e583f087}{LBA\_t}}  \mbox{\hyperlink{struct_f_a_t_f_s_a78b1024e7d7d086d132a58ee943b31df}{fatbase}};     \textcolor{comment}{/* FAT base sector */}}
+\DoxyCodeLine{168     \mbox{\hyperlink{ff_8h_a1f3c30a83148a28340f009d4e583f087}{LBA\_t}}  \mbox{\hyperlink{struct_f_a_t_f_s_afc8c3d5d8408b70379f23382c6e28168}{dirbase}};     \textcolor{comment}{/* Root directory base sector/cluster */}}
+\DoxyCodeLine{169     \mbox{\hyperlink{ff_8h_a1f3c30a83148a28340f009d4e583f087}{LBA\_t}}  \mbox{\hyperlink{struct_f_a_t_f_s_a4ce7c10569f45fae1c709c9ee41f69cb}{database}};       \textcolor{comment}{/* Data base sector */}}
+\DoxyCodeLine{170 \textcolor{preprocessor}{\#if FF\_FS\_EXFAT}}
+\DoxyCodeLine{171     \mbox{\hyperlink{ff_8h_a1f3c30a83148a28340f009d4e583f087}{LBA\_t}}  bitbase;        \textcolor{comment}{/* Allocation bitmap base sector */}}
+\DoxyCodeLine{172 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{173     \mbox{\hyperlink{ff_8h_a1f3c30a83148a28340f009d4e583f087}{LBA\_t}}  \mbox{\hyperlink{struct_f_a_t_f_s_aaf7eccaccdc9c4243230672d6b2f6566}{winsect}};     \textcolor{comment}{/* Current sector appearing in the win[] */}}
+\DoxyCodeLine{174     \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}    win[\mbox{\hyperlink{ffconf_8h_a104c36ee46f9d6e76dadf37f3d9696cc}{FF\_MAX\_SS}}];    \textcolor{comment}{/* Disk access window for Directory, FAT (and file data at tiny cfg) */}}
+\DoxyCodeLine{175 \} \mbox{\hyperlink{struct_f_a_t_f_s}{FATFS}};}
+\DoxyCodeLine{176 }
+\DoxyCodeLine{177 }
+\DoxyCodeLine{178 }
+\DoxyCodeLine{179 \textcolor{comment}{/* Object ID and allocation information (FFOBJID) */}}
+\DoxyCodeLine{180 }
+\DoxyCodeLine{181 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\{}
+\DoxyCodeLine{182     \mbox{\hyperlink{struct_f_a_t_f_s}{FATFS}}* \mbox{\hyperlink{struct_f_f_o_b_j_i_d_a867089659a2374d44ab917c60037fe5c}{fs}};               \textcolor{comment}{/* Pointer to the hosting volume of this object */}}
+\DoxyCodeLine{183     \mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}    \mbox{\hyperlink{struct_f_f_o_b_j_i_d_afc765e01ff97bfd9645c42b0ba30397f}{id}};               \textcolor{comment}{/* Hosting volume mount ID */}}
+\DoxyCodeLine{184     \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}    \mbox{\hyperlink{struct_f_f_o_b_j_i_d_ae9b1e6f98dbad367cc00f92b87f8d279}{attr}};           \textcolor{comment}{/* Object attribute */}}
+\DoxyCodeLine{185     \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}    \mbox{\hyperlink{struct_f_f_o_b_j_i_d_aa7bfa8dd8958d11df042a67e1da25f63}{stat}};           \textcolor{comment}{/* Object chain status (b1-\/0: =0:not contiguous, =2:contiguous, =3:fragmented in this session, b2:sub-\/directory stretched) */}}
+\DoxyCodeLine{186     \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}  \mbox{\hyperlink{struct_f_f_o_b_j_i_d_ad990393e2ddf16f73671ded4b751becb}{sclust}};           \textcolor{comment}{/* Object data start cluster (0:no cluster or root directory) */}}
+\DoxyCodeLine{187     \mbox{\hyperlink{ff_8h_a3fc0992ad7436250b6b1a0592214b7f2}{FSIZE\_t}}  \mbox{\hyperlink{struct_f_f_o_b_j_i_d_a83c51ba99687054f0cc653b45f195268}{objsize}};     \textcolor{comment}{/* Object size (valid when sclust != 0) */}}
+\DoxyCodeLine{188 \textcolor{preprocessor}{\#if FF\_FS\_EXFAT}}
+\DoxyCodeLine{189     \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}  n\_cont;         \textcolor{comment}{/* Size of first fragment -\/ 1 (valid when stat == 3) */}}
+\DoxyCodeLine{190     \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}  n\_frag;         \textcolor{comment}{/* Size of last fragment needs to be written to FAT (valid when not zero) */}}
+\DoxyCodeLine{191     \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}  c\_scl;          \textcolor{comment}{/* Containing directory start cluster (valid when sclust != 0) */}}
+\DoxyCodeLine{192     \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}  c\_size;         \textcolor{comment}{/* b31-\/b8:Size of containing directory, b7-\/b0: Chain status (valid when c\_scl != 0) */}}
+\DoxyCodeLine{193     \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}  c\_ofs;          \textcolor{comment}{/* Offset in the containing directory (valid when file object and sclust != 0) */}}
+\DoxyCodeLine{194 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{195 \textcolor{preprocessor}{\#if FF\_FS\_LOCK}}
+\DoxyCodeLine{196     \mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}}    lockid;         \textcolor{comment}{/* File lock ID origin from 1 (index of file semaphore table Files[]) */}}
+\DoxyCodeLine{197 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{198 \} \mbox{\hyperlink{struct_f_f_o_b_j_i_d}{FFOBJID}};}
+\DoxyCodeLine{199 }
+\DoxyCodeLine{200 }
+\DoxyCodeLine{201 }
+\DoxyCodeLine{202 \textcolor{comment}{/* File object structure (FIL) */}}
+\DoxyCodeLine{203 }
+\DoxyCodeLine{204 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\{}
+\DoxyCodeLine{205     \mbox{\hyperlink{struct_f_f_o_b_j_i_d}{FFOBJID}}  \mbox{\hyperlink{struct_f_i_l_ad95b6e85106673b0d7a1855da4d264f4}{obj}};         \textcolor{comment}{/* Object identifier (must be the 1st member to detect invalid object pointer) */}}
+\DoxyCodeLine{206     \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}    \mbox{\hyperlink{struct_f_i_l_ac409508881f5a16f2998ae675072b376}{flag}};           \textcolor{comment}{/* File status flags */}}
+\DoxyCodeLine{207     \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}    \mbox{\hyperlink{struct_f_i_l_aea440945db26de9c4a88065c0c887fda}{err}};         \textcolor{comment}{/* Abort flag (error code) */}}
+\DoxyCodeLine{208     \mbox{\hyperlink{ff_8h_a3fc0992ad7436250b6b1a0592214b7f2}{FSIZE\_t}}  \mbox{\hyperlink{struct_f_i_l_a088b03ab2e02f82e10e17bdd938190a6}{fptr}};           \textcolor{comment}{/* File read/write pointer (Zeroed on file open) */}}
+\DoxyCodeLine{209     \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}  \mbox{\hyperlink{struct_f_i_l_aa41312aba551b9a6d1c9d3c8c7d2734b}{clust}};         \textcolor{comment}{/* Current cluster of fpter (invalid when fptr is 0) */}}
+\DoxyCodeLine{210     \mbox{\hyperlink{ff_8h_a1f3c30a83148a28340f009d4e583f087}{LBA\_t}}  \mbox{\hyperlink{struct_f_i_l_aa3f9f9ed9341b765862d073a95c86001}{sect}};           \textcolor{comment}{/* Sector number appearing in buf[] (0:invalid) */}}
+\DoxyCodeLine{211 \textcolor{preprocessor}{\#if !FF\_FS\_READONLY}}
+\DoxyCodeLine{212     \mbox{\hyperlink{ff_8h_a1f3c30a83148a28340f009d4e583f087}{LBA\_t}}  \mbox{\hyperlink{struct_f_i_l_a19e61b116df8e6f2138243998e43f131}{dir\_sect}};       \textcolor{comment}{/* Sector number containing the directory entry (not used at exFAT) */}}
+\DoxyCodeLine{213     \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}*   \mbox{\hyperlink{struct_f_i_l_a5af9e9fb312b629220eaf684dd28c4a9}{dir\_ptr}};     \textcolor{comment}{/* Pointer to the directory entry in the win[] (not used at exFAT) */}}
+\DoxyCodeLine{214 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{215 \textcolor{preprocessor}{\#if FF\_USE\_FASTSEEK}}
+\DoxyCodeLine{216     \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}* cltbl;          \textcolor{comment}{/* Pointer to the cluster link map table (nulled on open, set by application) */}}
+\DoxyCodeLine{217 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{218 \textcolor{preprocessor}{\#if !FF\_FS\_TINY}}
+\DoxyCodeLine{219     \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}    buf[\mbox{\hyperlink{ffconf_8h_a104c36ee46f9d6e76dadf37f3d9696cc}{FF\_MAX\_SS}}];    \textcolor{comment}{/* File private data read/write window */}}
+\DoxyCodeLine{220 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{221 \} \mbox{\hyperlink{struct_f_i_l}{FIL}};}
+\DoxyCodeLine{222 }
+\DoxyCodeLine{223 }
+\DoxyCodeLine{224 }
+\DoxyCodeLine{225 \textcolor{comment}{/* Directory object structure (DIR) */}}
+\DoxyCodeLine{226 }
+\DoxyCodeLine{227 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\{}
+\DoxyCodeLine{228     \mbox{\hyperlink{struct_f_f_o_b_j_i_d}{FFOBJID}}  \mbox{\hyperlink{struct_d_i_r_a8fa2dfd8198410ea92a98281d982cf44}{obj}};         \textcolor{comment}{/* Object identifier */}}
+\DoxyCodeLine{229     \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}  \mbox{\hyperlink{struct_d_i_r_a0330e9554e1f38795debe4495156873e}{dptr}};           \textcolor{comment}{/* Current read/write offset */}}
+\DoxyCodeLine{230     \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}  \mbox{\hyperlink{struct_d_i_r_acfbb8ba2d6e73b6f999ceffd1857c190}{clust}};         \textcolor{comment}{/* Current cluster */}}
+\DoxyCodeLine{231     \mbox{\hyperlink{ff_8h_a1f3c30a83148a28340f009d4e583f087}{LBA\_t}}  \mbox{\hyperlink{struct_d_i_r_ae76119034beae8f34eb1536d0ef83a40}{sect}};           \textcolor{comment}{/* Current sector (0:Read operation has terminated) */}}
+\DoxyCodeLine{232     \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}*   \mbox{\hyperlink{struct_d_i_r_a6c2a8c0cf2d55ae99775e93a16593449}{dir}};         \textcolor{comment}{/* Pointer to the directory item in the win[] */}}
+\DoxyCodeLine{233     \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}    fn[12];         \textcolor{comment}{/* SFN (in/out) \{body[8],ext[3],status[1]\} */}}
+\DoxyCodeLine{234 \textcolor{preprocessor}{\#if FF\_USE\_LFN}}
+\DoxyCodeLine{235     \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}  \mbox{\hyperlink{struct_d_i_r_afdb5d6302a88eaf5d43da0352ca2cc91}{blk\_ofs}};     \textcolor{comment}{/* Offset of current entry block being processed (0xFFFFFFFF:Invalid) */}}
+\DoxyCodeLine{236 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{237 \textcolor{preprocessor}{\#if FF\_USE\_FIND}}
+\DoxyCodeLine{238     \textcolor{keyword}{const} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* pat;      \textcolor{comment}{/* Pointer to the name matching pattern */}}
+\DoxyCodeLine{239 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{240 \} \mbox{\hyperlink{struct_d_i_r}{DIR}};}
+\DoxyCodeLine{241 }
+\DoxyCodeLine{242 }
+\DoxyCodeLine{243 }
+\DoxyCodeLine{244 \textcolor{comment}{/* File information structure (FILINFO) */}}
+\DoxyCodeLine{245 }
+\DoxyCodeLine{246 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\{}
+\DoxyCodeLine{247     \mbox{\hyperlink{ff_8h_a3fc0992ad7436250b6b1a0592214b7f2}{FSIZE\_t}}  \mbox{\hyperlink{struct_f_i_l_i_n_f_o_a9e5b78ed7190f73de3ebcbdfbd6d1844}{fsize}};         \textcolor{comment}{/* File size */}}
+\DoxyCodeLine{248     \mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}    \mbox{\hyperlink{struct_f_i_l_i_n_f_o_a7c01c48a15b1b49da459924437b0bd52}{fdate}};         \textcolor{comment}{/* Modified date */}}
+\DoxyCodeLine{249     \mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}}    \mbox{\hyperlink{struct_f_i_l_i_n_f_o_ae0f751b79621bf7b29669f177bbe6b9a}{ftime}};         \textcolor{comment}{/* Modified time */}}
+\DoxyCodeLine{250     \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}    \mbox{\hyperlink{struct_f_i_l_i_n_f_o_a838d542585831b085537b363f18205c0}{fattrib}};     \textcolor{comment}{/* File attribute */}}
+\DoxyCodeLine{251 \textcolor{preprocessor}{\#if FF\_USE\_LFN}}
+\DoxyCodeLine{252     \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}  altname[\mbox{\hyperlink{ffconf_8h_ac19c6abcf1fc6e2bbf204003462cfedb}{FF\_SFN\_BUF}} + 1];\textcolor{comment}{/* Altenative file name */}}
+\DoxyCodeLine{253     \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}  fname[\mbox{\hyperlink{ffconf_8h_a7d29ac29d2d2db71cc7d045ea38fa927}{FF\_LFN\_BUF}} + 1];    \textcolor{comment}{/* Primary file name */}}
+\DoxyCodeLine{254 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{255     \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}  fname[12 + 1];  \textcolor{comment}{/* File name */}}
+\DoxyCodeLine{256 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{257 \} \mbox{\hyperlink{struct_f_i_l_i_n_f_o}{FILINFO}};}
+\DoxyCodeLine{258 }
+\DoxyCodeLine{259 }
+\DoxyCodeLine{260 }
+\DoxyCodeLine{261 \textcolor{comment}{/* Format parameter structure (MKFS\_PARM) */}}
+\DoxyCodeLine{262 }
+\DoxyCodeLine{263 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\{}
+\DoxyCodeLine{264     \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}} \mbox{\hyperlink{struct_m_k_f_s___p_a_r_m_a54cb609ecff9f1586f3628b00aeb8f23}{fmt}};            \textcolor{comment}{/* Format option (FM\_FAT, FM\_FAT32, FM\_EXFAT and FM\_SFD) */}}
+\DoxyCodeLine{265     \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}} \mbox{\hyperlink{struct_m_k_f_s___p_a_r_m_a0ff8e4728bddfe0636c50367af399e25}{n\_fat}};            \textcolor{comment}{/* Number of FATs */}}
+\DoxyCodeLine{266     \mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}} \mbox{\hyperlink{struct_m_k_f_s___p_a_r_m_af244e017c4cb2c821e5e819fff7db710}{align}};            \textcolor{comment}{/* Data area alignment (sector) */}}
+\DoxyCodeLine{267     \mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}} \mbox{\hyperlink{struct_m_k_f_s___p_a_r_m_a2b8a26b614381e0c2e0ff26f138feea6}{n\_root}};      \textcolor{comment}{/* Number of root directory entries */}}
+\DoxyCodeLine{268     \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}} \mbox{\hyperlink{struct_m_k_f_s___p_a_r_m_adb29b0af8e486fc53d8b629c3e49d567}{au\_size}};      \textcolor{comment}{/* Cluster size (byte) */}}
+\DoxyCodeLine{269 \} \mbox{\hyperlink{struct_m_k_f_s___p_a_r_m}{MKFS\_PARM}};}
+\DoxyCodeLine{270 }
+\DoxyCodeLine{271 }
+\DoxyCodeLine{272 }
+\DoxyCodeLine{273 \textcolor{comment}{/* File function return code (FRESULT) */}}
+\DoxyCodeLine{274 }
+\DoxyCodeLine{275 \textcolor{keyword}{typedef} \textcolor{keyword}{enum} \{}
+\DoxyCodeLine{276     \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44ca62fce5cd9df008f8fc85f99706bda5f1}{FR\_OK}} = 0,             \textcolor{comment}{/* (0) Succeeded */}}
+\DoxyCodeLine{277     \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44ca97dee4a6b485dc8f91f37486092dfe34}{FR\_DISK\_ERR}},         \textcolor{comment}{/* (1) A hard error occurred in the low level disk I/O layer */}}
+\DoxyCodeLine{278     \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44cab6c9903af6e9bffbb7a288705f4a6a76}{FR\_INT\_ERR}},               \textcolor{comment}{/* (2) Assertion failed */}}
+\DoxyCodeLine{279     \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44cac9894bed3e8632ede8d2712235fa8e45}{FR\_NOT\_READY}},           \textcolor{comment}{/* (3) The physical drive cannot work */}}
+\DoxyCodeLine{280     \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44ca97da8f98fc2e66d8fa7847f9ebb19b8c}{FR\_NO\_FILE}},               \textcolor{comment}{/* (4) Could not find the file */}}
+\DoxyCodeLine{281     \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44cae4529c8cc8b59783d6efc9ba4f574532}{FR\_NO\_PATH}},               \textcolor{comment}{/* (5) Could not find the path */}}
+\DoxyCodeLine{282     \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44ca83e45a4b579558c57192c0a391b9bb45}{FR\_INVALID\_NAME}},     \textcolor{comment}{/* (6) The path name format is invalid */}}
+\DoxyCodeLine{283     \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44ca897e9f2dd7629a80f48af242d8bc1a3d}{FR\_DENIED}},             \textcolor{comment}{/* (7) Access denied due to prohibited access or directory full */}}
+\DoxyCodeLine{284     \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44ca0d8f024d256df76e84782b95018a2450}{FR\_EXIST}},               \textcolor{comment}{/* (8) Access denied due to prohibited access */}}
+\DoxyCodeLine{285     \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44ca3dec4eba481cdf5e99d7cd6009e6dcf8}{FR\_INVALID\_OBJECT}},     \textcolor{comment}{/* (9) The file/directory object is invalid */}}
+\DoxyCodeLine{286     \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44cac3afbb423b1d4497229416812aff383b}{FR\_WRITE\_PROTECTED}},       \textcolor{comment}{/* (10) The physical drive is write protected */}}
+\DoxyCodeLine{287     \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44ca487844af77de15f6932a3b41ef3a2d65}{FR\_INVALID\_DRIVE}},       \textcolor{comment}{/* (11) The logical drive number is invalid */}}
+\DoxyCodeLine{288     \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44cafc56605c68aaffab4a428339a8bd600d}{FR\_NOT\_ENABLED}},           \textcolor{comment}{/* (12) The volume has no work area */}}
+\DoxyCodeLine{289     \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44ca086154b5fee763f28c49fd0e2c1cb463}{FR\_NO\_FILESYSTEM}},       \textcolor{comment}{/* (13) There is no valid FAT volume */}}
+\DoxyCodeLine{290     \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44ca4b02760f758f5b1a89f445244fe9fbca}{FR\_MKFS\_ABORTED}},     \textcolor{comment}{/* (14) The f\_mkfs() aborted due to any problem */}}
+\DoxyCodeLine{291     \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44ca3f8ca7e51af8b129d14328de7243c5d4}{FR\_TIMEOUT}},               \textcolor{comment}{/* (15) Could not get a grant to access the volume within defined period */}}
+\DoxyCodeLine{292     \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44ca7db5afaaa2af591bd4a208b2967075d7}{FR\_LOCKED}},             \textcolor{comment}{/* (16) The operation is rejected according to the file sharing policy */}}
+\DoxyCodeLine{293     \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44caf56a76a86602cbdeb2c4f3d00cfad21c}{FR\_NOT\_ENOUGH\_CORE}},       \textcolor{comment}{/* (17) LFN working buffer could not be allocated */}}
+\DoxyCodeLine{294     \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44ca50dd3c3c274ccebb2cfbddde9d065bb9}{FR\_TOO\_MANY\_OPEN\_FILES}},   \textcolor{comment}{/* (18) Number of open files > FF\_FS\_LOCK */}}
+\DoxyCodeLine{295     \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44ca3b89faeceab64db277d0fcdeaaa315d6}{FR\_INVALID\_PARAMETER}}    \textcolor{comment}{/* (19) Given parameter is invalid */}}
+\DoxyCodeLine{296 \} \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}};}
+\DoxyCodeLine{297 }
+\DoxyCodeLine{298 }
+\DoxyCodeLine{299 }
+\DoxyCodeLine{300 \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{301 \textcolor{comment}{/* FatFs module application interface                           */}}
+\DoxyCodeLine{302 }
+\DoxyCodeLine{303 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_aefdef7126128d99d0b3bd82c28e54d80}{f\_open}} (\mbox{\hyperlink{struct_f_i_l}{FIL}}* fp, \textcolor{keyword}{const} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* path, \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}} mode);                \textcolor{comment}{/* Open or create a file */}}
+\DoxyCodeLine{304 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_a53882db20ef4323dcfd1874d7733ffc3}{f\_close}} (\mbox{\hyperlink{struct_f_i_l}{FIL}}* fp);                                         \textcolor{comment}{/* Close an open file object */}}
+\DoxyCodeLine{305 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_ac4c3dcb6869ca252888eebabe39727b3}{f\_read}} (\mbox{\hyperlink{struct_f_i_l}{FIL}}* fp, \textcolor{keywordtype}{void}* buff, \mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}} btr, \mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}}* br);           \textcolor{comment}{/* Read data from the file */}}
+\DoxyCodeLine{306 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_ae6a4dfae8a9e308bdb2283a37ef680f2}{f\_write}} (\mbox{\hyperlink{struct_f_i_l}{FIL}}* fp, \textcolor{keyword}{const} \textcolor{keywordtype}{void}* buff, \mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}} btw, \mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}}* bw);   \textcolor{comment}{/* Write data to the file */}}
+\DoxyCodeLine{307 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_a7c4bcf81d9122f0b5376852ec6a8c3eb}{f\_lseek}} (\mbox{\hyperlink{struct_f_i_l}{FIL}}* fp, \mbox{\hyperlink{ff_8h_a3fc0992ad7436250b6b1a0592214b7f2}{FSIZE\_t}} ofs);                             \textcolor{comment}{/* Move file pointer of the file object */}}
+\DoxyCodeLine{308 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_a691a27b40c348f7c84b42e911636f38a}{f\_truncate}} (\mbox{\hyperlink{struct_f_i_l}{FIL}}* fp);                                       \textcolor{comment}{/* Truncate the file */}}
+\DoxyCodeLine{309 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_ad69c7246b122ba56a134939ee0eaf847}{f\_sync}} (\mbox{\hyperlink{struct_f_i_l}{FIL}}* fp);                                           \textcolor{comment}{/* Flush cached data of the writing file */}}
+\DoxyCodeLine{310 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_ab63b213c75f7335fbb63a1f3f70e5fc7}{f\_opendir}} (\mbox{\hyperlink{struct_d_i_r}{DIR}}* dp, \textcolor{keyword}{const} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* path);                     \textcolor{comment}{/* Open a directory */}}
+\DoxyCodeLine{311 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_ab5f7376b6f3e3bcc7f5ff5497c8b7364}{f\_closedir}} (\mbox{\hyperlink{struct_d_i_r}{DIR}}* dp);                                       \textcolor{comment}{/* Close an open directory */}}
+\DoxyCodeLine{312 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_ab39e82a110695de45f416f3149358012}{f\_readdir}} (\mbox{\hyperlink{struct_d_i_r}{DIR}}* dp, \mbox{\hyperlink{struct_f_i_l_i_n_f_o}{FILINFO}}* fno);                            \textcolor{comment}{/* Read a directory item */}}
+\DoxyCodeLine{313 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_a6db7bc3d037b51a9f205eacda6177a5f}{f\_findfirst}} (\mbox{\hyperlink{struct_d_i_r}{DIR}}* dp, \mbox{\hyperlink{struct_f_i_l_i_n_f_o}{FILINFO}}* fno, \textcolor{keyword}{const} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* path, \textcolor{keyword}{const} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* pattern); \textcolor{comment}{/* Find first file */}}
+\DoxyCodeLine{314 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_a013999e446481a607316b916441f8673}{f\_findnext}} (\mbox{\hyperlink{struct_d_i_r}{DIR}}* dp, \mbox{\hyperlink{struct_f_i_l_i_n_f_o}{FILINFO}}* fno);                          \textcolor{comment}{/* Find next file */}}
+\DoxyCodeLine{315 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_a4b4d38db58e89c526cfcf53200d719d0}{f\_mkdir}} (\textcolor{keyword}{const} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* path);                             \textcolor{comment}{/* Create a sub directory */}}
+\DoxyCodeLine{316 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_a2858167fcd0bced48e9be434b3895efe}{f\_unlink}} (\textcolor{keyword}{const} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* path);                               \textcolor{comment}{/* Delete an existing file or directory */}}
+\DoxyCodeLine{317 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_aa775b9b024acfeb3a66523cab497d142}{f\_rename}} (\textcolor{keyword}{const} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* path\_old, \textcolor{keyword}{const} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* path\_new);   \textcolor{comment}{/* Rename/Move a file or directory */}}
+\DoxyCodeLine{318 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_abe1f60daab5c7d11170c334fb832c798}{f\_stat}} (\textcolor{keyword}{const} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* path, \mbox{\hyperlink{struct_f_i_l_i_n_f_o}{FILINFO}}* fno);                  \textcolor{comment}{/* Get file status */}}
+\DoxyCodeLine{319 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_a9ee7e560eec8d82755c636ae41e702cd}{f\_chmod}} (\textcolor{keyword}{const} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* path, \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}} attr, \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}} mask);           \textcolor{comment}{/* Change attribute of a file/dir */}}
+\DoxyCodeLine{320 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_aafaa718d1a487e12a8f0087173dba0b9}{f\_utime}} (\textcolor{keyword}{const} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* path, \textcolor{keyword}{const} \mbox{\hyperlink{struct_f_i_l_i_n_f_o}{FILINFO}}* fno);          \textcolor{comment}{/* Change timestamp of a file/dir */}}
+\DoxyCodeLine{321 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_a53c7e9a7fb3c279254cd2d0445667e2f}{f\_chdir}} (\textcolor{keyword}{const} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* path);                             \textcolor{comment}{/* Change current directory */}}
+\DoxyCodeLine{322 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_a13e5933f851b436890361189f64261cd}{f\_chdrive}} (\textcolor{keyword}{const} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* path);                             \textcolor{comment}{/* Change current drive */}}
+\DoxyCodeLine{323 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_acb865a03dbac0031ac5cb8a031f7b71c}{f\_getcwd}} (\mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* buff, \mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}} len);                           \textcolor{comment}{/* Get current directory */}}
+\DoxyCodeLine{324 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_a0ff39f75a87cbda9cd6ea65d83f16cec}{f\_getfree}} (\textcolor{keyword}{const} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* path, \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}* nclst, \mbox{\hyperlink{struct_f_a_t_f_s}{FATFS}}** fatfs);  \textcolor{comment}{/* Get number of free clusters on the drive */}}
+\DoxyCodeLine{325 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_ac4ff40a674bcbfe40d81b1e8e54befc6}{f\_getlabel}} (\textcolor{keyword}{const} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* path, \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* label, \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}}* vsn);   \textcolor{comment}{/* Get volume label */}}
+\DoxyCodeLine{326 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_aa82bca64e28bc0d656a7999dd0eadec7}{f\_setlabel}} (\textcolor{keyword}{const} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* label);                          \textcolor{comment}{/* Set volume label */}}
+\DoxyCodeLine{327 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_a6c0c4cd695704aa6d952c90be81d9849}{f\_forward}} (\mbox{\hyperlink{struct_f_i_l}{FIL}}* fp, \mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}}(*func)(\textcolor{keyword}{const} \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}*,\mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}}), \mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}} btf, \mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}}* bf);  \textcolor{comment}{/* Forward data to the stream */}}
+\DoxyCodeLine{328 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_a35ff90f5219df5cdb6c8f408b1b9e1a3}{f\_expand}} (\mbox{\hyperlink{struct_f_i_l}{FIL}}* fp, \mbox{\hyperlink{ff_8h_a3fc0992ad7436250b6b1a0592214b7f2}{FSIZE\_t}} fsz, \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}} opt);                 \textcolor{comment}{/* Allocate a contiguous block to the file */}}
+\DoxyCodeLine{329 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_a16a934c2bbfa2160295810adc49d5509}{f\_mount}} (\mbox{\hyperlink{struct_f_a_t_f_s}{FATFS}}* fs, \textcolor{keyword}{const} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* path, \mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}} opt);           \textcolor{comment}{/* Mount/Unmount a logical drive */}}
+\DoxyCodeLine{330 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_a983f0614033bd7cf587eb56d3054a91c}{f\_mkfs}} (\textcolor{keyword}{const} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* path, \textcolor{keyword}{const} \mbox{\hyperlink{struct_m_k_f_s___p_a_r_m}{MKFS\_PARM}}* opt, \textcolor{keywordtype}{void}* work, \mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}} len);  \textcolor{comment}{/* Create a FAT volume */}}
+\DoxyCodeLine{331 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_a70461190a46edc96bb7baef1ab4dbd4d}{f\_fdisk}} (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}} pdrv, \textcolor{keyword}{const} \mbox{\hyperlink{ff_8h_a1f3c30a83148a28340f009d4e583f087}{LBA\_t}} ptbl[], \textcolor{keywordtype}{void}* work);     \textcolor{comment}{/* Divide a physical drive into some partitions */}}
+\DoxyCodeLine{332 \mbox{\hyperlink{ff_8h_a49d0171ecbd362cda5680a0d360db44c}{FRESULT}} \mbox{\hyperlink{ff_8h_a529e8f17cae495f6536ff405622c996c}{f\_setcp}} (\mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}} cp);                                            \textcolor{comment}{/* Set current code page */}}
+\DoxyCodeLine{333 \textcolor{keywordtype}{int} \mbox{\hyperlink{ff_8h_ad1d73b8d01c2ef89eddf920b7fcc6beb}{f\_putc}} (\mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}} \mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}, \mbox{\hyperlink{struct_f_i_l}{FIL}}* fp);                                       \textcolor{comment}{/* Put a character to the file */}}
+\DoxyCodeLine{334 \textcolor{keywordtype}{int} \mbox{\hyperlink{ff_8h_a699fc03ffa785ceab8812a7f204421f3}{f\_puts}} (\textcolor{keyword}{const} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* str, \mbox{\hyperlink{struct_f_i_l}{FIL}}* cp);                               \textcolor{comment}{/* Put a string to the file */}}
+\DoxyCodeLine{335 \textcolor{keywordtype}{int} \mbox{\hyperlink{ff_8h_a4ce26253177c167df849e76f69b5c66c}{f\_printf}} (\mbox{\hyperlink{struct_f_i_l}{FIL}}* fp, \textcolor{keyword}{const} \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* str, ...);                      \textcolor{comment}{/* Put a formatted string to the file */}}
+\DoxyCodeLine{336 \mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* \mbox{\hyperlink{ff_8h_a4a47f14a554ff3a49fc122fe3e190f2f}{f\_gets}} (\mbox{\hyperlink{ff_8h_a03bdb8ce5895c7e261aadc2529637546}{TCHAR}}* buff, \textcolor{keywordtype}{int} len, \mbox{\hyperlink{struct_f_i_l}{FIL}}* fp);                       \textcolor{comment}{/* Get a string from the file */}}
+\DoxyCodeLine{337 }
+\DoxyCodeLine{338 \textcolor{preprocessor}{\#define f\_eof(fp) ((int)((fp)-\/>fptr == (fp)-\/>obj.objsize))}}
+\DoxyCodeLine{339 \textcolor{preprocessor}{\#define f\_error(fp) ((fp)-\/>err)}}
+\DoxyCodeLine{340 \textcolor{preprocessor}{\#define f\_tell(fp) ((fp)-\/>fptr)}}
+\DoxyCodeLine{341 \textcolor{preprocessor}{\#define f\_size(fp) ((fp)-\/>obj.objsize)}}
+\DoxyCodeLine{342 \textcolor{preprocessor}{\#define f\_rewind(fp) f\_lseek((fp), 0)}}
+\DoxyCodeLine{343 \textcolor{preprocessor}{\#define f\_rewinddir(dp) f\_readdir((dp), 0)}}
+\DoxyCodeLine{344 \textcolor{preprocessor}{\#define f\_rmdir(path) f\_unlink(path)}}
+\DoxyCodeLine{345 \textcolor{preprocessor}{\#define f\_unmount(path) f\_mount(0, path, 0)}}
+\DoxyCodeLine{346 }
+\DoxyCodeLine{347 \textcolor{preprocessor}{\#ifndef EOF}}
+\DoxyCodeLine{348 \textcolor{preprocessor}{\#define EOF (-\/1)}}
+\DoxyCodeLine{349 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{350 }
+\DoxyCodeLine{351 }
+\DoxyCodeLine{352 }
+\DoxyCodeLine{353 }
+\DoxyCodeLine{354 \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{355 \textcolor{comment}{/* Additional user defined functions                            */}}
+\DoxyCodeLine{356 }
+\DoxyCodeLine{357 \textcolor{comment}{/* RTC function */}}
+\DoxyCodeLine{358 \textcolor{preprocessor}{\#if !FF\_FS\_READONLY \&\& !FF\_FS\_NORTC}}
+\DoxyCodeLine{359 \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}} get\_fattime (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{360 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{361 }
+\DoxyCodeLine{362 \textcolor{comment}{/* LFN support functions */}}
+\DoxyCodeLine{363 \textcolor{preprocessor}{\#if FF\_USE\_LFN >= 1                     }\textcolor{comment}{/* Code conversion (defined in unicode.c) */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{364 \mbox{\hyperlink{ff_8h_a0bb095da65fbe52192dd9e3e643c7568}{WCHAR}} \mbox{\hyperlink{ff_8h_a52f09f31c84747cc135c90282509961a}{ff\_oem2uni}} (\mbox{\hyperlink{ff_8h_a0bb095da65fbe52192dd9e3e643c7568}{WCHAR}} oem, \mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}} cp);  \textcolor{comment}{/* OEM code to Unicode conversion */}}
+\DoxyCodeLine{365 \mbox{\hyperlink{ff_8h_a0bb095da65fbe52192dd9e3e643c7568}{WCHAR}} \mbox{\hyperlink{ff_8h_a72914966e82f8df3504a3659834f2abe}{ff\_uni2oem}} (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}} uni, \mbox{\hyperlink{ff_8h_a197942eefa7db30960ae396d68339b97}{WORD}} cp);  \textcolor{comment}{/* Unicode to OEM code conversion */}}
+\DoxyCodeLine{366 \mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}} \mbox{\hyperlink{ff_8h_acb0bf9acde41b603662ab45811cbc806}{ff\_wtoupper}} (\mbox{\hyperlink{ff_8h_ad342ac907eb044443153a22f964bf0af}{DWORD}} uni);         \textcolor{comment}{/* Unicode upper-\/case conversion */}}
+\DoxyCodeLine{367 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{368 \textcolor{preprocessor}{\#if FF\_USE\_LFN == 3                     }\textcolor{comment}{/* Dynamic memory allocation */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{369 \textcolor{keywordtype}{void}* \mbox{\hyperlink{ff_8h_ae63913186246b80cfce42dbab9e8bcab}{ff\_memalloc}} (\mbox{\hyperlink{ff_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}} msize);          \textcolor{comment}{/* Allocate memory block */}}
+\DoxyCodeLine{370 \textcolor{keywordtype}{void} \mbox{\hyperlink{ff_8h_ab85fd090c8b8b17846ccc1e8cda16a9b}{ff\_memfree}} (\textcolor{keywordtype}{void}* mblock);           \textcolor{comment}{/* Free memory block */}}
+\DoxyCodeLine{371 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{372 }
+\DoxyCodeLine{373 \textcolor{comment}{/* Sync functions */}}
+\DoxyCodeLine{374 \textcolor{preprocessor}{\#if FF\_FS\_REENTRANT}}
+\DoxyCodeLine{375 \textcolor{keywordtype}{int} ff\_cre\_syncobj (\mbox{\hyperlink{ff_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}} vol, \mbox{\hyperlink{ffconf_8h_a6c13f8a2584a7f5c6c8768d83c62a935}{FF\_SYNC\_t}}* sobj);    \textcolor{comment}{/* Create a sync object */}}
+\DoxyCodeLine{376 \textcolor{keywordtype}{int} ff\_req\_grant (\mbox{\hyperlink{ffconf_8h_a6c13f8a2584a7f5c6c8768d83c62a935}{FF\_SYNC\_t}} sobj);     \textcolor{comment}{/* Lock sync object */}}
+\DoxyCodeLine{377 \textcolor{keywordtype}{void} ff\_rel\_grant (\mbox{\hyperlink{ffconf_8h_a6c13f8a2584a7f5c6c8768d83c62a935}{FF\_SYNC\_t}} sobj);        \textcolor{comment}{/* Unlock sync object */}}
+\DoxyCodeLine{378 \textcolor{keywordtype}{int} ff\_del\_syncobj (\mbox{\hyperlink{ffconf_8h_a6c13f8a2584a7f5c6c8768d83c62a935}{FF\_SYNC\_t}} sobj);   \textcolor{comment}{/* Delete a sync object */}}
+\DoxyCodeLine{379 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{380 }
+\DoxyCodeLine{381 }
+\DoxyCodeLine{382 }
+\DoxyCodeLine{383 }
+\DoxyCodeLine{384 \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{385 \textcolor{comment}{/* Flags and offset address                                     */}}
+\DoxyCodeLine{386 }
+\DoxyCodeLine{387 }
+\DoxyCodeLine{388 \textcolor{comment}{/* File access mode and open method flags (3rd argument of f\_open) */}}
+\DoxyCodeLine{389 \textcolor{preprocessor}{\#define FA\_READ             0x01}}
+\DoxyCodeLine{390 \textcolor{preprocessor}{\#define FA\_WRITE            0x02}}
+\DoxyCodeLine{391 \textcolor{preprocessor}{\#define FA\_OPEN\_EXISTING    0x00}}
+\DoxyCodeLine{392 \textcolor{preprocessor}{\#define FA\_CREATE\_NEW       0x04}}
+\DoxyCodeLine{393 \textcolor{preprocessor}{\#define FA\_CREATE\_ALWAYS    0x08}}
+\DoxyCodeLine{394 \textcolor{preprocessor}{\#define FA\_OPEN\_ALWAYS      0x10}}
+\DoxyCodeLine{395 \textcolor{preprocessor}{\#define FA\_OPEN\_APPEND      0x30}}
+\DoxyCodeLine{396 }
+\DoxyCodeLine{397 \textcolor{comment}{/* Fast seek controls (2nd argument of f\_lseek) */}}
+\DoxyCodeLine{398 \textcolor{preprocessor}{\#define CREATE\_LINKMAP  ((FSIZE\_t)0 -\/ 1)}}
+\DoxyCodeLine{399 }
+\DoxyCodeLine{400 \textcolor{comment}{/* Format options (2nd argument of f\_mkfs) */}}
+\DoxyCodeLine{401 \textcolor{preprocessor}{\#define FM\_FAT      0x01}}
+\DoxyCodeLine{402 \textcolor{preprocessor}{\#define FM\_FAT32    0x02}}
+\DoxyCodeLine{403 \textcolor{preprocessor}{\#define FM\_EXFAT    0x04}}
+\DoxyCodeLine{404 \textcolor{preprocessor}{\#define FM\_ANY      0x07}}
+\DoxyCodeLine{405 \textcolor{preprocessor}{\#define FM\_SFD      0x08}}
+\DoxyCodeLine{406 }
+\DoxyCodeLine{407 \textcolor{comment}{/* Filesystem type (FATFS.fs\_type) */}}
+\DoxyCodeLine{408 \textcolor{preprocessor}{\#define FS\_FAT12    1}}
+\DoxyCodeLine{409 \textcolor{preprocessor}{\#define FS\_FAT16    2}}
+\DoxyCodeLine{410 \textcolor{preprocessor}{\#define FS\_FAT32    3}}
+\DoxyCodeLine{411 \textcolor{preprocessor}{\#define FS\_EXFAT    4}}
+\DoxyCodeLine{412 }
+\DoxyCodeLine{413 \textcolor{comment}{/* File attribute bits for directory entry (FILINFO.fattrib) */}}
+\DoxyCodeLine{414 \textcolor{preprocessor}{\#define AM\_RDO  0x01    }\textcolor{comment}{/* Read only */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{415 \textcolor{preprocessor}{\#define AM\_HID  0x02    }\textcolor{comment}{/* Hidden */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{416 \textcolor{preprocessor}{\#define AM\_SYS  0x04    }\textcolor{comment}{/* System */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{417 \textcolor{preprocessor}{\#define AM\_DIR  0x10    }\textcolor{comment}{/* Directory */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{418 \textcolor{preprocessor}{\#define AM\_ARC  0x20    }\textcolor{comment}{/* Archive */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{419 }
+\DoxyCodeLine{420 }
+\DoxyCodeLine{421 \textcolor{preprocessor}{\#ifdef \_\_cplusplus}}
+\DoxyCodeLine{422 \}}
+\DoxyCodeLine{423 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{424 }
+\DoxyCodeLine{425 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* FF\_DEFINED */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

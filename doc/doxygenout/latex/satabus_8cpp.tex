@@ -1,0 +1,146 @@
+\hypertarget{satabus_8cpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/hw/diskctrl/satabus.cpp File Reference}
+\label{satabus_8cpp}\index{C:/Users/Alex/Desktop/Banana/kernel/hw/diskctrl/satabus.cpp@{C:/Users/Alex/Desktop/Banana/kernel/hw/diskctrl/satabus.cpp}}
+{\ttfamily \#include \char`\"{}krnl/common.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/physmgr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/virtmgr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}thr/prcssthr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/diskctrl/satabus.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/hal.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/acpi.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/diskphys/sata.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/diskphys/satapi.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hal/device.\+hpp\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{satabus_8cpp_ab97be318da4cd3f956b53f3d3c162d22}{SATA\+\_\+\+SIG\+\_\+\+ATA}}~0x00000101
+\item 
+\#define \mbox{\hyperlink{satabus_8cpp_aa52680525d3698b9c2206cedbf2b3c82}{SATA\+\_\+\+SIG\+\_\+\+ATAPI}}~0x\+EB140101
+\item 
+\#define \mbox{\hyperlink{satabus_8cpp_a74a4ae0fdaf517fb886dfe8fc53218db}{SATA\+\_\+\+SIG\+\_\+\+SEMB}}~0x\+C33\+C0101
+\item 
+\#define \mbox{\hyperlink{satabus_8cpp_a5824e44ad5e394c0026dad1f997d26d3}{SATA\+\_\+\+SIG\+\_\+\+PM}}~0x96690101
+\item 
+\#define \mbox{\hyperlink{satabus_8cpp_a70cb9cf6f5592304658efff34c009d0f}{AHCI\+\_\+\+DEV\+\_\+\+NULL}}~0
+\item 
+\#define \mbox{\hyperlink{satabus_8cpp_a528bf8cf48a25cbb5faf1b47aa41469c}{AHCI\+\_\+\+DEV\+\_\+\+SATA}}~1
+\item 
+\#define \mbox{\hyperlink{satabus_8cpp_a252890fb3343fb24494794f3f2c33a92}{AHCI\+\_\+\+DEV\+\_\+\+SEMB}}~2
+\item 
+\#define \mbox{\hyperlink{satabus_8cpp_a388f0e67c6bf032307b8e8192bf07c47}{AHCI\+\_\+\+DEV\+\_\+\+PM}}~3
+\item 
+\#define \mbox{\hyperlink{satabus_8cpp_af14cd62b8394e7284ed7880e9a6cd379}{AHCI\+\_\+\+DEV\+\_\+\+SATAPI}}~4
+\item 
+\#define \mbox{\hyperlink{satabus_8cpp_a7799cbde4e99b339a61cb79ba018ed78}{HBA\+\_\+\+PORT\+\_\+\+IPM\+\_\+\+ACTIVE}}~1
+\item 
+\#define \mbox{\hyperlink{satabus_8cpp_ad35e9d10e89ce48bf4f0e94929664102}{HBA\+\_\+\+PORT\+\_\+\+DET\+\_\+\+PRESENT}}~3
+\item 
+\#define \mbox{\hyperlink{satabus_8cpp_a469ab8af9bf8f1f89a5c8f79b2305e34}{HBA\+\_\+\+Px\+CMD\+\_\+\+ST}}~0x0001
+\item 
+\#define \mbox{\hyperlink{satabus_8cpp_a8c9e7501928cd8945cf681e7700e5704}{HBA\+\_\+\+Px\+CMD\+\_\+\+SUD}}~0x0002
+\item 
+\#define \mbox{\hyperlink{satabus_8cpp_a27978dd2aac599cbd0330c923652c6e4}{HBA\+\_\+\+Px\+CMD\+\_\+\+FRE}}~0x0010
+\item 
+\#define \mbox{\hyperlink{satabus_8cpp_a93f2b1904299d4d1920e65039ff7ce5c}{HBA\+\_\+\+Px\+CMD\+\_\+\+FR}}~0x4000
+\item 
+\#define \mbox{\hyperlink{satabus_8cpp_ad2550f8f63fa32140f93da1b95354cf6}{HBA\+\_\+\+Px\+CMD\+\_\+\+CR}}~0x8000
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{satabus_8cpp_a70cb9cf6f5592304658efff34c009d0f}\label{satabus_8cpp_a70cb9cf6f5592304658efff34c009d0f}} 
+\index{satabus.cpp@{satabus.cpp}!AHCI\_DEV\_NULL@{AHCI\_DEV\_NULL}}
+\index{AHCI\_DEV\_NULL@{AHCI\_DEV\_NULL}!satabus.cpp@{satabus.cpp}}
+\doxysubsubsection{\texorpdfstring{AHCI\_DEV\_NULL}{AHCI\_DEV\_NULL}}
+{\footnotesize\ttfamily \#define AHCI\+\_\+\+DEV\+\_\+\+NULL~0}
+
+\mbox{\Hypertarget{satabus_8cpp_a388f0e67c6bf032307b8e8192bf07c47}\label{satabus_8cpp_a388f0e67c6bf032307b8e8192bf07c47}} 
+\index{satabus.cpp@{satabus.cpp}!AHCI\_DEV\_PM@{AHCI\_DEV\_PM}}
+\index{AHCI\_DEV\_PM@{AHCI\_DEV\_PM}!satabus.cpp@{satabus.cpp}}
+\doxysubsubsection{\texorpdfstring{AHCI\_DEV\_PM}{AHCI\_DEV\_PM}}
+{\footnotesize\ttfamily \#define AHCI\+\_\+\+DEV\+\_\+\+PM~3}
+
+\mbox{\Hypertarget{satabus_8cpp_a528bf8cf48a25cbb5faf1b47aa41469c}\label{satabus_8cpp_a528bf8cf48a25cbb5faf1b47aa41469c}} 
+\index{satabus.cpp@{satabus.cpp}!AHCI\_DEV\_SATA@{AHCI\_DEV\_SATA}}
+\index{AHCI\_DEV\_SATA@{AHCI\_DEV\_SATA}!satabus.cpp@{satabus.cpp}}
+\doxysubsubsection{\texorpdfstring{AHCI\_DEV\_SATA}{AHCI\_DEV\_SATA}}
+{\footnotesize\ttfamily \#define AHCI\+\_\+\+DEV\+\_\+\+SATA~1}
+
+\mbox{\Hypertarget{satabus_8cpp_af14cd62b8394e7284ed7880e9a6cd379}\label{satabus_8cpp_af14cd62b8394e7284ed7880e9a6cd379}} 
+\index{satabus.cpp@{satabus.cpp}!AHCI\_DEV\_SATAPI@{AHCI\_DEV\_SATAPI}}
+\index{AHCI\_DEV\_SATAPI@{AHCI\_DEV\_SATAPI}!satabus.cpp@{satabus.cpp}}
+\doxysubsubsection{\texorpdfstring{AHCI\_DEV\_SATAPI}{AHCI\_DEV\_SATAPI}}
+{\footnotesize\ttfamily \#define AHCI\+\_\+\+DEV\+\_\+\+SATAPI~4}
+
+\mbox{\Hypertarget{satabus_8cpp_a252890fb3343fb24494794f3f2c33a92}\label{satabus_8cpp_a252890fb3343fb24494794f3f2c33a92}} 
+\index{satabus.cpp@{satabus.cpp}!AHCI\_DEV\_SEMB@{AHCI\_DEV\_SEMB}}
+\index{AHCI\_DEV\_SEMB@{AHCI\_DEV\_SEMB}!satabus.cpp@{satabus.cpp}}
+\doxysubsubsection{\texorpdfstring{AHCI\_DEV\_SEMB}{AHCI\_DEV\_SEMB}}
+{\footnotesize\ttfamily \#define AHCI\+\_\+\+DEV\+\_\+\+SEMB~2}
+
+\mbox{\Hypertarget{satabus_8cpp_ad35e9d10e89ce48bf4f0e94929664102}\label{satabus_8cpp_ad35e9d10e89ce48bf4f0e94929664102}} 
+\index{satabus.cpp@{satabus.cpp}!HBA\_PORT\_DET\_PRESENT@{HBA\_PORT\_DET\_PRESENT}}
+\index{HBA\_PORT\_DET\_PRESENT@{HBA\_PORT\_DET\_PRESENT}!satabus.cpp@{satabus.cpp}}
+\doxysubsubsection{\texorpdfstring{HBA\_PORT\_DET\_PRESENT}{HBA\_PORT\_DET\_PRESENT}}
+{\footnotesize\ttfamily \#define HBA\+\_\+\+PORT\+\_\+\+DET\+\_\+\+PRESENT~3}
+
+\mbox{\Hypertarget{satabus_8cpp_a7799cbde4e99b339a61cb79ba018ed78}\label{satabus_8cpp_a7799cbde4e99b339a61cb79ba018ed78}} 
+\index{satabus.cpp@{satabus.cpp}!HBA\_PORT\_IPM\_ACTIVE@{HBA\_PORT\_IPM\_ACTIVE}}
+\index{HBA\_PORT\_IPM\_ACTIVE@{HBA\_PORT\_IPM\_ACTIVE}!satabus.cpp@{satabus.cpp}}
+\doxysubsubsection{\texorpdfstring{HBA\_PORT\_IPM\_ACTIVE}{HBA\_PORT\_IPM\_ACTIVE}}
+{\footnotesize\ttfamily \#define HBA\+\_\+\+PORT\+\_\+\+IPM\+\_\+\+ACTIVE~1}
+
+\mbox{\Hypertarget{satabus_8cpp_ad2550f8f63fa32140f93da1b95354cf6}\label{satabus_8cpp_ad2550f8f63fa32140f93da1b95354cf6}} 
+\index{satabus.cpp@{satabus.cpp}!HBA\_PxCMD\_CR@{HBA\_PxCMD\_CR}}
+\index{HBA\_PxCMD\_CR@{HBA\_PxCMD\_CR}!satabus.cpp@{satabus.cpp}}
+\doxysubsubsection{\texorpdfstring{HBA\_PxCMD\_CR}{HBA\_PxCMD\_CR}}
+{\footnotesize\ttfamily \#define HBA\+\_\+\+Px\+CMD\+\_\+\+CR~0x8000}
+
+\mbox{\Hypertarget{satabus_8cpp_a93f2b1904299d4d1920e65039ff7ce5c}\label{satabus_8cpp_a93f2b1904299d4d1920e65039ff7ce5c}} 
+\index{satabus.cpp@{satabus.cpp}!HBA\_PxCMD\_FR@{HBA\_PxCMD\_FR}}
+\index{HBA\_PxCMD\_FR@{HBA\_PxCMD\_FR}!satabus.cpp@{satabus.cpp}}
+\doxysubsubsection{\texorpdfstring{HBA\_PxCMD\_FR}{HBA\_PxCMD\_FR}}
+{\footnotesize\ttfamily \#define HBA\+\_\+\+Px\+CMD\+\_\+\+FR~0x4000}
+
+\mbox{\Hypertarget{satabus_8cpp_a27978dd2aac599cbd0330c923652c6e4}\label{satabus_8cpp_a27978dd2aac599cbd0330c923652c6e4}} 
+\index{satabus.cpp@{satabus.cpp}!HBA\_PxCMD\_FRE@{HBA\_PxCMD\_FRE}}
+\index{HBA\_PxCMD\_FRE@{HBA\_PxCMD\_FRE}!satabus.cpp@{satabus.cpp}}
+\doxysubsubsection{\texorpdfstring{HBA\_PxCMD\_FRE}{HBA\_PxCMD\_FRE}}
+{\footnotesize\ttfamily \#define HBA\+\_\+\+Px\+CMD\+\_\+\+FRE~0x0010}
+
+\mbox{\Hypertarget{satabus_8cpp_a469ab8af9bf8f1f89a5c8f79b2305e34}\label{satabus_8cpp_a469ab8af9bf8f1f89a5c8f79b2305e34}} 
+\index{satabus.cpp@{satabus.cpp}!HBA\_PxCMD\_ST@{HBA\_PxCMD\_ST}}
+\index{HBA\_PxCMD\_ST@{HBA\_PxCMD\_ST}!satabus.cpp@{satabus.cpp}}
+\doxysubsubsection{\texorpdfstring{HBA\_PxCMD\_ST}{HBA\_PxCMD\_ST}}
+{\footnotesize\ttfamily \#define HBA\+\_\+\+Px\+CMD\+\_\+\+ST~0x0001}
+
+\mbox{\Hypertarget{satabus_8cpp_a8c9e7501928cd8945cf681e7700e5704}\label{satabus_8cpp_a8c9e7501928cd8945cf681e7700e5704}} 
+\index{satabus.cpp@{satabus.cpp}!HBA\_PxCMD\_SUD@{HBA\_PxCMD\_SUD}}
+\index{HBA\_PxCMD\_SUD@{HBA\_PxCMD\_SUD}!satabus.cpp@{satabus.cpp}}
+\doxysubsubsection{\texorpdfstring{HBA\_PxCMD\_SUD}{HBA\_PxCMD\_SUD}}
+{\footnotesize\ttfamily \#define HBA\+\_\+\+Px\+CMD\+\_\+\+SUD~0x0002}
+
+\mbox{\Hypertarget{satabus_8cpp_ab97be318da4cd3f956b53f3d3c162d22}\label{satabus_8cpp_ab97be318da4cd3f956b53f3d3c162d22}} 
+\index{satabus.cpp@{satabus.cpp}!SATA\_SIG\_ATA@{SATA\_SIG\_ATA}}
+\index{SATA\_SIG\_ATA@{SATA\_SIG\_ATA}!satabus.cpp@{satabus.cpp}}
+\doxysubsubsection{\texorpdfstring{SATA\_SIG\_ATA}{SATA\_SIG\_ATA}}
+{\footnotesize\ttfamily \#define SATA\+\_\+\+SIG\+\_\+\+ATA~0x00000101}
+
+\mbox{\Hypertarget{satabus_8cpp_aa52680525d3698b9c2206cedbf2b3c82}\label{satabus_8cpp_aa52680525d3698b9c2206cedbf2b3c82}} 
+\index{satabus.cpp@{satabus.cpp}!SATA\_SIG\_ATAPI@{SATA\_SIG\_ATAPI}}
+\index{SATA\_SIG\_ATAPI@{SATA\_SIG\_ATAPI}!satabus.cpp@{satabus.cpp}}
+\doxysubsubsection{\texorpdfstring{SATA\_SIG\_ATAPI}{SATA\_SIG\_ATAPI}}
+{\footnotesize\ttfamily \#define SATA\+\_\+\+SIG\+\_\+\+ATAPI~0x\+EB140101}
+
+\mbox{\Hypertarget{satabus_8cpp_a5824e44ad5e394c0026dad1f997d26d3}\label{satabus_8cpp_a5824e44ad5e394c0026dad1f997d26d3}} 
+\index{satabus.cpp@{satabus.cpp}!SATA\_SIG\_PM@{SATA\_SIG\_PM}}
+\index{SATA\_SIG\_PM@{SATA\_SIG\_PM}!satabus.cpp@{satabus.cpp}}
+\doxysubsubsection{\texorpdfstring{SATA\_SIG\_PM}{SATA\_SIG\_PM}}
+{\footnotesize\ttfamily \#define SATA\+\_\+\+SIG\+\_\+\+PM~0x96690101}
+
+\mbox{\Hypertarget{satabus_8cpp_a74a4ae0fdaf517fb886dfe8fc53218db}\label{satabus_8cpp_a74a4ae0fdaf517fb886dfe8fc53218db}} 
+\index{satabus.cpp@{satabus.cpp}!SATA\_SIG\_SEMB@{SATA\_SIG\_SEMB}}
+\index{SATA\_SIG\_SEMB@{SATA\_SIG\_SEMB}!satabus.cpp@{satabus.cpp}}
+\doxysubsubsection{\texorpdfstring{SATA\_SIG\_SEMB}{SATA\_SIG\_SEMB}}
+{\footnotesize\ttfamily \#define SATA\+\_\+\+SIG\+\_\+\+SEMB~0x\+C33\+C0101}
+

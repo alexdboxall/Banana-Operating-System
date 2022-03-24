@@ -1,0 +1,303 @@
+\hypertarget{prcssthr_8hpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/thr/prcssthr.hpp File Reference}
+\label{prcssthr_8hpp}\index{C:/Users/Alex/Desktop/Banana/kernel/thr/prcssthr.hpp@{C:/Users/Alex/Desktop/Banana/kernel/thr/prcssthr.hpp}}
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stddef.\+h$>$}\newline
+{\ttfamily \#include $<$krnl/linkedlist.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/cpplist.\+hpp$>$}\newline
+{\ttfamily \#include \char`\"{}krnl/main.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/pipe.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/virtmgr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/env.\+hpp\char`\"{}}\newline
+{\ttfamily \#include $<$krnl/signal.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/semaphore.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/mutex.\+hpp$>$}\newline
+{\ttfamily \#include $<$krnl/hal.\+hpp$>$}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}}
+\item 
+struct \mbox{\hyperlink{struct_process}{Process}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{prcssthr_8hpp_a47627f67f9a56dce977a374159c9a63e}{current\+Task\+TCB}}~($\ast$((\mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}}$\ast$$\ast$) 0x\+C2002000))
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146a}{Task\+State}} \+: size\+\_\+t \{ \newline
+\mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aa506db5c85cf0fd10f93e5478013650b6}{Ready\+To\+Run}} = 0
+, \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aa5bda814c4aedb126839228f1a3d92f09}{Running}} = 1
+, \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aae99180abf47a8b3a856e0bcb2656990a}{Paused}} = 2
+, \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aabddd4f44136f466c065a2c7a4c53e75b}{Sleeping}} = 3
+, \newline
+\mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aafba9c4daa2dd29d1077d32d965320ac1}{Terminated}} = 4
+, \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aa64b6186e43b830ebad8009c1b5fac3fa}{Waiting\+For\+Lock}} = 5
+, \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aa9697716ec1d19a97cd1d36c408e103af}{Waiting\+For\+Keyboard}} = 6
+, \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aac1a874669fa5e0a579807b4e93a161e1}{Wait\+PID}} = 7
+, \newline
+\mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aaebe8e2a1d19294b7a1f263ab10cfa63e}{Paused\+For\+Signal}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{prcssthr_8hpp_ab9cd94c3c421fdf6db1acfc88725a139}{user\+Mode\+Entry\+Point}} (void $\ast$ignored)
+\item 
+size\+\_\+t \mbox{\hyperlink{prcssthr_8hpp_a175068b9a22718149a42a5b1e92b5ae7}{task\+Startup\+Function}} ()
+\item 
+void \mbox{\hyperlink{prcssthr_8hpp_abeb546360097f990000a417e765e19fc}{task\+Returned}} ()
+\item 
+void \mbox{\hyperlink{prcssthr_8hpp_a37b35e38927395fbbdd56b230b0d1f10}{Ke\+Disable\+Preemption}} ()
+\item 
+void \mbox{\hyperlink{prcssthr_8hpp_a04db5fa598ffff8247a58896630500f0}{Ke\+Restore\+Preemption}} ()
+\item 
+void \mbox{\hyperlink{prcssthr_8hpp_a0b207772ad06bb6fea072fbc5d1cd536}{switch\+To\+Thread}} (\mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}} $\ast$next\+Thread\+To\+Run)
+\item 
+void \mbox{\hyperlink{prcssthr_8hpp_af27290ca9db0306b5e78382e25f1810b}{setup\+Multitasking}} (void($\ast$where)())
+\item 
+void \mbox{\hyperlink{prcssthr_8hpp_a7d06701ac073c331c83519e3909b7fce}{schedule}} ()
+\item 
+void \mbox{\hyperlink{prcssthr_8hpp_af8fb1c1d7f605794cc36c0247a3e5da4}{block\+Task}} (enum \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146a}{Task\+State}} reason)
+\item 
+void \mbox{\hyperlink{prcssthr_8hpp_a9624816104533944388bb3ed9e882f5b}{block\+Task\+With\+Scheduler\+Lock\+Already\+Held}} (enum \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146a}{Task\+State}} reason)
+\item 
+void \mbox{\hyperlink{prcssthr_8hpp_a167b5d78dff13a05a3e86fc808d55006}{unblock\+Task}} (\mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}} $\ast$task)
+\item 
+void \mbox{\hyperlink{prcssthr_8hpp_a1a9b00640198135cb10b164753f48945}{sleep}} (uint64\+\_\+t seconds)
+\item 
+void \mbox{\hyperlink{prcssthr_8hpp_ae371f0d56cb674505ec0fc265a1fddc9}{milli\+Tenth\+Sleep}} (uint64\+\_\+t mtenth)
+\item 
+void \mbox{\hyperlink{prcssthr_8hpp_a6f40acf966bedafff130d714624e28a4}{cleaner\+Task\+Function}} (void $\ast$context)
+\item 
+int \mbox{\hyperlink{prcssthr_8hpp_a313106e627f546db544d0bc6b3880f7b}{wait\+Task}} (int pid, int $\ast$wstatus, int options)
+\item 
+void \mbox{\hyperlink{prcssthr_8hpp_a297eee9b85feaa965cd2d51884eac2b4}{Ke\+Terminate\+Current\+Thread}} (int return\+Code=0)
+\item 
+\mbox{\hyperlink{struct_process}{Process}} $\ast$ \mbox{\hyperlink{prcssthr_8hpp_a1fd5c5e2c9ae0fa5f79521c2f22fab76}{Ke\+Process\+From\+PID}} (int pid)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{prcssthr_8hpp_a1a5cba0a3973366468a97c8c1287e4c2}{irq\+Disable\+Counter}}
+\item 
+int \mbox{\hyperlink{prcssthr_8hpp_ad30ff4b0042251417a011a9b04032b70}{postpone\+Task\+Switches\+Counter}}
+\item 
+int \mbox{\hyperlink{prcssthr_8hpp_a2f5e57527fe35c435507948bbf78a1aa}{task\+Switches\+Postponed\+Flag}}
+\item 
+\mbox{\hyperlink{struct_process}{Process}} $\ast$ \mbox{\hyperlink{prcssthr_8hpp_af519b7792515d6313de94093d644ee43}{kernel\+Process}}
+\item 
+\mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}} $\ast$ \mbox{\hyperlink{prcssthr_8hpp_ab2c1684634155e534bbd515972ca6c43}{cleaner\+Thread}}
+\item 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{string_8h_ae808eb4555d62ce4d882d1e293728d01}{volatile}} \mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}} $>$ \mbox{\hyperlink{prcssthr_8hpp_a10014531226330497516750f7c86306e}{sleeping\+Task\+List}}
+\item 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{string_8h_ae808eb4555d62ce4d882d1e293728d01}{volatile}} \mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}} $>$ \mbox{\hyperlink{prcssthr_8hpp_a36012ed054984b258aeebf8ef7a3412f}{task\+List}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{prcssthr_8hpp_a47627f67f9a56dce977a374159c9a63e}\label{prcssthr_8hpp_a47627f67f9a56dce977a374159c9a63e}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!currentTaskTCB@{currentTaskTCB}}
+\index{currentTaskTCB@{currentTaskTCB}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{currentTaskTCB}{currentTaskTCB}}
+{\footnotesize\ttfamily \#define current\+Task\+TCB~($\ast$((\mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}}$\ast$$\ast$) 0x\+C2002000))}
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146a}\label{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146a}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!TaskState@{TaskState}}
+\index{TaskState@{TaskState}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{TaskState}{TaskState}}
+{\footnotesize\ttfamily enum class \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146a}{Task\+State}} \+: size\+\_\+t\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ReadyToRun@{ReadyToRun}!prcssthr.hpp@{prcssthr.hpp}}\index{prcssthr.hpp@{prcssthr.hpp}!ReadyToRun@{ReadyToRun}}}\mbox{\Hypertarget{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aa506db5c85cf0fd10f93e5478013650b6}\label{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aa506db5c85cf0fd10f93e5478013650b6}} 
+Ready\+To\+Run&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Running@{Running}!prcssthr.hpp@{prcssthr.hpp}}\index{prcssthr.hpp@{prcssthr.hpp}!Running@{Running}}}\mbox{\Hypertarget{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aa5bda814c4aedb126839228f1a3d92f09}\label{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aa5bda814c4aedb126839228f1a3d92f09}} 
+Running&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Paused@{Paused}!prcssthr.hpp@{prcssthr.hpp}}\index{prcssthr.hpp@{prcssthr.hpp}!Paused@{Paused}}}\mbox{\Hypertarget{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aae99180abf47a8b3a856e0bcb2656990a}\label{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aae99180abf47a8b3a856e0bcb2656990a}} 
+Paused&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Sleeping@{Sleeping}!prcssthr.hpp@{prcssthr.hpp}}\index{prcssthr.hpp@{prcssthr.hpp}!Sleeping@{Sleeping}}}\mbox{\Hypertarget{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aabddd4f44136f466c065a2c7a4c53e75b}\label{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aabddd4f44136f466c065a2c7a4c53e75b}} 
+Sleeping&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Terminated@{Terminated}!prcssthr.hpp@{prcssthr.hpp}}\index{prcssthr.hpp@{prcssthr.hpp}!Terminated@{Terminated}}}\mbox{\Hypertarget{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aafba9c4daa2dd29d1077d32d965320ac1}\label{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aafba9c4daa2dd29d1077d32d965320ac1}} 
+Terminated&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WaitingForLock@{WaitingForLock}!prcssthr.hpp@{prcssthr.hpp}}\index{prcssthr.hpp@{prcssthr.hpp}!WaitingForLock@{WaitingForLock}}}\mbox{\Hypertarget{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aa64b6186e43b830ebad8009c1b5fac3fa}\label{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aa64b6186e43b830ebad8009c1b5fac3fa}} 
+Waiting\+For\+Lock&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WaitingForKeyboard@{WaitingForKeyboard}!prcssthr.hpp@{prcssthr.hpp}}\index{prcssthr.hpp@{prcssthr.hpp}!WaitingForKeyboard@{WaitingForKeyboard}}}\mbox{\Hypertarget{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aa9697716ec1d19a97cd1d36c408e103af}\label{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aa9697716ec1d19a97cd1d36c408e103af}} 
+Waiting\+For\+Keyboard&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WaitPID@{WaitPID}!prcssthr.hpp@{prcssthr.hpp}}\index{prcssthr.hpp@{prcssthr.hpp}!WaitPID@{WaitPID}}}\mbox{\Hypertarget{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aac1a874669fa5e0a579807b4e93a161e1}\label{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aac1a874669fa5e0a579807b4e93a161e1}} 
+Wait\+PID&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PausedForSignal@{PausedForSignal}!prcssthr.hpp@{prcssthr.hpp}}\index{prcssthr.hpp@{prcssthr.hpp}!PausedForSignal@{PausedForSignal}}}\mbox{\Hypertarget{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aaebe8e2a1d19294b7a1f263ab10cfa63e}\label{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aaebe8e2a1d19294b7a1f263ab10cfa63e}} 
+Paused\+For\+Signal&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{prcssthr_8hpp_af8fb1c1d7f605794cc36c0247a3e5da4}\label{prcssthr_8hpp_af8fb1c1d7f605794cc36c0247a3e5da4}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!blockTask@{blockTask}}
+\index{blockTask@{blockTask}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{blockTask()}{blockTask()}}
+{\footnotesize\ttfamily void block\+Task (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146a}{Task\+State}}}]{reason }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8hpp_a9624816104533944388bb3ed9e882f5b}\label{prcssthr_8hpp_a9624816104533944388bb3ed9e882f5b}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!blockTaskWithSchedulerLockAlreadyHeld@{blockTaskWithSchedulerLockAlreadyHeld}}
+\index{blockTaskWithSchedulerLockAlreadyHeld@{blockTaskWithSchedulerLockAlreadyHeld}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{blockTaskWithSchedulerLockAlreadyHeld()}{blockTaskWithSchedulerLockAlreadyHeld()}}
+{\footnotesize\ttfamily void block\+Task\+With\+Scheduler\+Lock\+Already\+Held (\begin{DoxyParamCaption}\item[{enum \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146a}{Task\+State}}}]{reason }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8hpp_a6f40acf966bedafff130d714624e28a4}\label{prcssthr_8hpp_a6f40acf966bedafff130d714624e28a4}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!cleanerTaskFunction@{cleanerTaskFunction}}
+\index{cleanerTaskFunction@{cleanerTaskFunction}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{cleanerTaskFunction()}{cleanerTaskFunction()}}
+{\footnotesize\ttfamily void cleaner\+Task\+Function (\begin{DoxyParamCaption}\item[{void $\ast$}]{context }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8hpp_a37b35e38927395fbbdd56b230b0d1f10}\label{prcssthr_8hpp_a37b35e38927395fbbdd56b230b0d1f10}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!KeDisablePreemption@{KeDisablePreemption}}
+\index{KeDisablePreemption@{KeDisablePreemption}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{KeDisablePreemption()}{KeDisablePreemption()}}
+{\footnotesize\ttfamily void Ke\+Disable\+Preemption (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8hpp_a1fd5c5e2c9ae0fa5f79521c2f22fab76}\label{prcssthr_8hpp_a1fd5c5e2c9ae0fa5f79521c2f22fab76}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!KeProcessFromPID@{KeProcessFromPID}}
+\index{KeProcessFromPID@{KeProcessFromPID}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{KeProcessFromPID()}{KeProcessFromPID()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_process}{Process}} $\ast$ Ke\+Process\+From\+PID (\begin{DoxyParamCaption}\item[{int}]{pid }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8hpp_a04db5fa598ffff8247a58896630500f0}\label{prcssthr_8hpp_a04db5fa598ffff8247a58896630500f0}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!KeRestorePreemption@{KeRestorePreemption}}
+\index{KeRestorePreemption@{KeRestorePreemption}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{KeRestorePreemption()}{KeRestorePreemption()}}
+{\footnotesize\ttfamily void Ke\+Restore\+Preemption (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8hpp_a297eee9b85feaa965cd2d51884eac2b4}\label{prcssthr_8hpp_a297eee9b85feaa965cd2d51884eac2b4}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!KeTerminateCurrentThread@{KeTerminateCurrentThread}}
+\index{KeTerminateCurrentThread@{KeTerminateCurrentThread}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{KeTerminateCurrentThread()}{KeTerminateCurrentThread()}}
+{\footnotesize\ttfamily void Ke\+Terminate\+Current\+Thread (\begin{DoxyParamCaption}\item[{int}]{return\+Code = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8hpp_ae371f0d56cb674505ec0fc265a1fddc9}\label{prcssthr_8hpp_ae371f0d56cb674505ec0fc265a1fddc9}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!milliTenthSleep@{milliTenthSleep}}
+\index{milliTenthSleep@{milliTenthSleep}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{milliTenthSleep()}{milliTenthSleep()}}
+{\footnotesize\ttfamily void milli\+Tenth\+Sleep (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{mtenth }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8hpp_a7d06701ac073c331c83519e3909b7fce}\label{prcssthr_8hpp_a7d06701ac073c331c83519e3909b7fce}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!schedule@{schedule}}
+\index{schedule@{schedule}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{schedule()}{schedule()}}
+{\footnotesize\ttfamily void schedule (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8hpp_af27290ca9db0306b5e78382e25f1810b}\label{prcssthr_8hpp_af27290ca9db0306b5e78382e25f1810b}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!setupMultitasking@{setupMultitasking}}
+\index{setupMultitasking@{setupMultitasking}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{setupMultitasking()}{setupMultitasking()}}
+{\footnotesize\ttfamily void setup\+Multitasking (\begin{DoxyParamCaption}\item[{void($\ast$)()}]{where }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8hpp_a1a9b00640198135cb10b164753f48945}\label{prcssthr_8hpp_a1a9b00640198135cb10b164753f48945}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!sleep@{sleep}}
+\index{sleep@{sleep}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{sleep()}{sleep()}}
+{\footnotesize\ttfamily void sleep (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{seconds }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8hpp_a0b207772ad06bb6fea072fbc5d1cd536}\label{prcssthr_8hpp_a0b207772ad06bb6fea072fbc5d1cd536}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!switchToThread@{switchToThread}}
+\index{switchToThread@{switchToThread}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{switchToThread()}{switchToThread()}}
+{\footnotesize\ttfamily void switch\+To\+Thread (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}} $\ast$}]{next\+Thread\+To\+Run }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8hpp_abeb546360097f990000a417e765e19fc}\label{prcssthr_8hpp_abeb546360097f990000a417e765e19fc}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!taskReturned@{taskReturned}}
+\index{taskReturned@{taskReturned}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{taskReturned()}{taskReturned()}}
+{\footnotesize\ttfamily void task\+Returned (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8hpp_a175068b9a22718149a42a5b1e92b5ae7}\label{prcssthr_8hpp_a175068b9a22718149a42a5b1e92b5ae7}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!taskStartupFunction@{taskStartupFunction}}
+\index{taskStartupFunction@{taskStartupFunction}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{taskStartupFunction()}{taskStartupFunction()}}
+{\footnotesize\ttfamily size\+\_\+t task\+Startup\+Function (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8hpp_a167b5d78dff13a05a3e86fc808d55006}\label{prcssthr_8hpp_a167b5d78dff13a05a3e86fc808d55006}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!unblockTask@{unblockTask}}
+\index{unblockTask@{unblockTask}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{unblockTask()}{unblockTask()}}
+{\footnotesize\ttfamily void unblock\+Task (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}} $\ast$}]{task }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8hpp_ab9cd94c3c421fdf6db1acfc88725a139}\label{prcssthr_8hpp_ab9cd94c3c421fdf6db1acfc88725a139}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!userModeEntryPoint@{userModeEntryPoint}}
+\index{userModeEntryPoint@{userModeEntryPoint}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{userModeEntryPoint()}{userModeEntryPoint()}}
+{\footnotesize\ttfamily void user\+Mode\+Entry\+Point (\begin{DoxyParamCaption}\item[{void $\ast$}]{ignored }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{prcssthr_8hpp_a313106e627f546db544d0bc6b3880f7b}\label{prcssthr_8hpp_a313106e627f546db544d0bc6b3880f7b}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!waitTask@{waitTask}}
+\index{waitTask@{waitTask}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{waitTask()}{waitTask()}}
+{\footnotesize\ttfamily int wait\+Task (\begin{DoxyParamCaption}\item[{int}]{pid,  }\item[{int $\ast$}]{wstatus,  }\item[{int}]{options }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{prcssthr_8hpp_ab2c1684634155e534bbd515972ca6c43}\label{prcssthr_8hpp_ab2c1684634155e534bbd515972ca6c43}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!cleanerThread@{cleanerThread}}
+\index{cleanerThread@{cleanerThread}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{cleanerThread}{cleanerThread}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}}$\ast$ cleaner\+Thread\hspace{0.3cm}{\ttfamily [extern]}}
+
+\mbox{\Hypertarget{prcssthr_8hpp_a1a5cba0a3973366468a97c8c1287e4c2}\label{prcssthr_8hpp_a1a5cba0a3973366468a97c8c1287e4c2}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!irqDisableCounter@{irqDisableCounter}}
+\index{irqDisableCounter@{irqDisableCounter}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{irqDisableCounter}{irqDisableCounter}}
+{\footnotesize\ttfamily int irq\+Disable\+Counter\hspace{0.3cm}{\ttfamily [extern]}}
+
+\mbox{\Hypertarget{prcssthr_8hpp_af519b7792515d6313de94093d644ee43}\label{prcssthr_8hpp_af519b7792515d6313de94093d644ee43}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!kernelProcess@{kernelProcess}}
+\index{kernelProcess@{kernelProcess}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{kernelProcess}{kernelProcess}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_process}{Process}}$\ast$ kernel\+Process\hspace{0.3cm}{\ttfamily [extern]}}
+
+\mbox{\Hypertarget{prcssthr_8hpp_ad30ff4b0042251417a011a9b04032b70}\label{prcssthr_8hpp_ad30ff4b0042251417a011a9b04032b70}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!postponeTaskSwitchesCounter@{postponeTaskSwitchesCounter}}
+\index{postponeTaskSwitchesCounter@{postponeTaskSwitchesCounter}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{postponeTaskSwitchesCounter}{postponeTaskSwitchesCounter}}
+{\footnotesize\ttfamily int postpone\+Task\+Switches\+Counter\hspace{0.3cm}{\ttfamily [extern]}}
+
+\mbox{\Hypertarget{prcssthr_8hpp_a10014531226330497516750f7c86306e}\label{prcssthr_8hpp_a10014531226330497516750f7c86306e}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!sleepingTaskList@{sleepingTaskList}}
+\index{sleepingTaskList@{sleepingTaskList}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{sleepingTaskList}{sleepingTaskList}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$\mbox{\hyperlink{string_8h_ae808eb4555d62ce4d882d1e293728d01}{volatile}} \mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}}$>$ sleeping\+Task\+List\hspace{0.3cm}{\ttfamily [extern]}}
+
+\mbox{\Hypertarget{prcssthr_8hpp_a36012ed054984b258aeebf8ef7a3412f}\label{prcssthr_8hpp_a36012ed054984b258aeebf8ef7a3412f}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!taskList@{taskList}}
+\index{taskList@{taskList}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{taskList}{taskList}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$\mbox{\hyperlink{string_8h_ae808eb4555d62ce4d882d1e293728d01}{volatile}} \mbox{\hyperlink{struct_thread_control_block}{Thread\+Control\+Block}}$>$ task\+List\hspace{0.3cm}{\ttfamily [extern]}}
+
+\mbox{\Hypertarget{prcssthr_8hpp_a2f5e57527fe35c435507948bbf78a1aa}\label{prcssthr_8hpp_a2f5e57527fe35c435507948bbf78a1aa}} 
+\index{prcssthr.hpp@{prcssthr.hpp}!taskSwitchesPostponedFlag@{taskSwitchesPostponedFlag}}
+\index{taskSwitchesPostponedFlag@{taskSwitchesPostponedFlag}!prcssthr.hpp@{prcssthr.hpp}}
+\doxysubsubsection{\texorpdfstring{taskSwitchesPostponedFlag}{taskSwitchesPostponedFlag}}
+{\footnotesize\ttfamily int task\+Switches\+Postponed\+Flag\hspace{0.3cm}{\ttfamily [extern]}}
+

@@ -1,0 +1,376 @@
+\hypertarget{math__private_8h_source}{}\doxysection{math\+\_\+private.\+h}
+\label{math__private_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/libk/\_mathinc/math\_private.h@{C:/Users/Alex/Desktop/Banana/kernel/libk/\_mathinc/math\_private.h}}
+\mbox{\hyperlink{math__private_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*}}
+\DoxyCodeLine{2 \textcolor{comment}{ * ====================================================}}
+\DoxyCodeLine{3 \textcolor{comment}{ * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.}}
+\DoxyCodeLine{4 \textcolor{comment}{ *}}
+\DoxyCodeLine{5 \textcolor{comment}{ * Developed at SunPro, a Sun Microsystems, Inc. business.}}
+\DoxyCodeLine{6 \textcolor{comment}{ * Permission to use, copy, modify, and distribute this}}
+\DoxyCodeLine{7 \textcolor{comment}{ * software is freely granted, provided that this notice}}
+\DoxyCodeLine{8 \textcolor{comment}{ * is preserved.}}
+\DoxyCodeLine{9 \textcolor{comment}{ * ====================================================}}
+\DoxyCodeLine{10 \textcolor{comment}{ */}}
+\DoxyCodeLine{11 }
+\DoxyCodeLine{12 \textcolor{comment}{/*}}
+\DoxyCodeLine{13 \textcolor{comment}{ * from: @(\#)fdlibm.h 5.1 93/09/24}}
+\DoxyCodeLine{14 \textcolor{comment}{ * \$FreeBSD: src/lib/msun/src/math\_private.h,v 1.34 2011/10/21 06:27:56 das Exp \$}}
+\DoxyCodeLine{15 \textcolor{comment}{ */}}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#ifndef \_MATH\_PRIVATE\_H\_}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#define \_MATH\_PRIVATE\_H\_}}
+\DoxyCodeLine{19 }
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#include <\mbox{\hyperlink{openlibm__complex_8h}{openlibm\_complex.h}}>}}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{cdefs-compat_8h}{cdefs-\/compat.h}}"{}}}
+\DoxyCodeLine{23 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{types-compat_8h}{types-\/compat.h}}"{}}}
+\DoxyCodeLine{24 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{fpmath_8h}{fpmath.h}}"{}}}
+\DoxyCodeLine{25 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{26 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{math__private__openbsd_8h}{math\_private\_openbsd.h}}"{}}}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28 \textcolor{comment}{/*}}
+\DoxyCodeLine{29 \textcolor{comment}{ * The original fdlibm code used statements like:}}
+\DoxyCodeLine{30 \textcolor{comment}{ *  n0 = ((*(int*)\&one)>>29)\string^1;     * index of high word *}}
+\DoxyCodeLine{31 \textcolor{comment}{ *  ix0 = *(n0+(int*)\&x);           * high word of x *}}
+\DoxyCodeLine{32 \textcolor{comment}{ *  ix1 = *((1-\/n0)+(int*)\&x);       * low word of x *}}
+\DoxyCodeLine{33 \textcolor{comment}{ * to dig two 32 bit words out of the 64 bit IEEE floating point}}
+\DoxyCodeLine{34 \textcolor{comment}{ * value.  That is non-\/ANSI, and, moreover, the gcc instruction}}
+\DoxyCodeLine{35 \textcolor{comment}{ * scheduler gets it wrong.  We instead use the following macros.}}
+\DoxyCodeLine{36 \textcolor{comment}{ * Unlike the original code, we determine the endianness at compile}}
+\DoxyCodeLine{37 \textcolor{comment}{ * time, not at run time; I don't see much benefit to selecting}}
+\DoxyCodeLine{38 \textcolor{comment}{ * endianness at run time.}}
+\DoxyCodeLine{39 \textcolor{comment}{ */}}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41 \textcolor{comment}{/*}}
+\DoxyCodeLine{42 \textcolor{comment}{ * A union which permits us to convert between a double and two 32 bit}}
+\DoxyCodeLine{43 \textcolor{comment}{ * ints.}}
+\DoxyCodeLine{44 \textcolor{comment}{ */}}
+\DoxyCodeLine{45 }
+\DoxyCodeLine{46 \textcolor{preprocessor}{\#if \_\_FLOAT\_WORD\_ORDER\_\_ == \_\_ORDER\_BIG\_ENDIAN\_\_}}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{48 \textcolor{keyword}{typedef} \textcolor{keyword}{union}}
+\DoxyCodeLine{49 \{}
+\DoxyCodeLine{50   \textcolor{keywordtype}{double} \mbox{\hyperlink{unionieee__double__shape__type_a2d9c4cab9e3fa74e4be6d72f798a145b}{value}};}
+\DoxyCodeLine{51   \textcolor{keyword}{struct}}
+\DoxyCodeLine{52   \{}
+\DoxyCodeLine{53     \mbox{\hyperlink{types-compat_8h_a0d5a2542b430beb8568bacccd2c657ae}{u\_int32\_t}} \mbox{\hyperlink{unionieee__double__shape__type_afe514ffb5b28ed6540614a0871f5e1ca}{msw}};}
+\DoxyCodeLine{54     \mbox{\hyperlink{types-compat_8h_a0d5a2542b430beb8568bacccd2c657ae}{u\_int32\_t}} \mbox{\hyperlink{unionieee__double__shape__type_ab5835ce78ec638c77c127d86b5f719d5}{lsw}};}
+\DoxyCodeLine{55   \} parts;}
+\DoxyCodeLine{56   \textcolor{keyword}{struct}}
+\DoxyCodeLine{57   \{}
+\DoxyCodeLine{58     \mbox{\hyperlink{types-compat_8h_afecfb8149081bd9b746bf968fe118a1d}{u\_int64\_t}} \mbox{\hyperlink{unionieee__double__shape__type_a145f0b9f924d9bc2d05a6aea024c0db8}{w}};}
+\DoxyCodeLine{59   \} xparts;}
+\DoxyCodeLine{60 \} \mbox{\hyperlink{unionieee__double__shape__type}{ieee\_double\_shape\_type}};}
+\DoxyCodeLine{61 }
+\DoxyCodeLine{62 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{63 }
+\DoxyCodeLine{64 \textcolor{preprocessor}{\#if \_\_FLOAT\_WORD\_ORDER\_\_ == \_\_ORDER\_LITTLE\_ENDIAN\_\_}}
+\DoxyCodeLine{65 }
+\DoxyCodeLine{66 \textcolor{keyword}{typedef} \textcolor{keyword}{union}}
+\DoxyCodeLine{67 \{}
+\DoxyCodeLine{68   \textcolor{keywordtype}{double} value;}
+\DoxyCodeLine{69   \textcolor{keyword}{struct}}
+\DoxyCodeLine{70   \{}
+\DoxyCodeLine{71     \mbox{\hyperlink{types-compat_8h_a0d5a2542b430beb8568bacccd2c657ae}{u\_int32\_t}} lsw;}
+\DoxyCodeLine{72     \mbox{\hyperlink{types-compat_8h_a0d5a2542b430beb8568bacccd2c657ae}{u\_int32\_t}} msw;}
+\DoxyCodeLine{73   \} parts;}
+\DoxyCodeLine{74   \textcolor{keyword}{struct}}
+\DoxyCodeLine{75   \{}
+\DoxyCodeLine{76     \mbox{\hyperlink{types-compat_8h_afecfb8149081bd9b746bf968fe118a1d}{u\_int64\_t}} w;}
+\DoxyCodeLine{77   \} xparts;}
+\DoxyCodeLine{78 \} \mbox{\hyperlink{unionieee__double__shape__type}{ieee\_double\_shape\_type}};}
+\DoxyCodeLine{79 }
+\DoxyCodeLine{80 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{81 }
+\DoxyCodeLine{82 \textcolor{comment}{/* Get two 32 bit ints from a double.  */}}
+\DoxyCodeLine{83 }
+\DoxyCodeLine{84 \textcolor{preprocessor}{\#define EXTRACT\_WORDS(ix0,ix1,d)                \(\backslash\)}}
+\DoxyCodeLine{85 \textcolor{preprocessor}{do \{                                \(\backslash\)}}
+\DoxyCodeLine{86 \textcolor{preprocessor}{  ieee\_double\_shape\_type ew\_u;                  \(\backslash\)}}
+\DoxyCodeLine{87 \textcolor{preprocessor}{  ew\_u.value = (d);                     \(\backslash\)}}
+\DoxyCodeLine{88 \textcolor{preprocessor}{  (ix0) = ew\_u.parts.msw;                   \(\backslash\)}}
+\DoxyCodeLine{89 \textcolor{preprocessor}{  (ix1) = ew\_u.parts.lsw;                   \(\backslash\)}}
+\DoxyCodeLine{90 \textcolor{preprocessor}{\} while (0)}}
+\DoxyCodeLine{91 }
+\DoxyCodeLine{92 \textcolor{comment}{/* Get a 64-\/bit int from a double. */}}
+\DoxyCodeLine{93 \textcolor{preprocessor}{\#define EXTRACT\_WORD64(ix,d)                    \(\backslash\)}}
+\DoxyCodeLine{94 \textcolor{preprocessor}{do \{                                \(\backslash\)}}
+\DoxyCodeLine{95 \textcolor{preprocessor}{  ieee\_double\_shape\_type ew\_u;                  \(\backslash\)}}
+\DoxyCodeLine{96 \textcolor{preprocessor}{  ew\_u.value = (d);                     \(\backslash\)}}
+\DoxyCodeLine{97 \textcolor{preprocessor}{  (ix) = ew\_u.xparts.w;                     \(\backslash\)}}
+\DoxyCodeLine{98 \textcolor{preprocessor}{\} while (0)}}
+\DoxyCodeLine{99 }
+\DoxyCodeLine{100 \textcolor{comment}{/* Get the more significant 32 bit int from a double.  */}}
+\DoxyCodeLine{101 }
+\DoxyCodeLine{102 \textcolor{preprocessor}{\#define GET\_HIGH\_WORD(i,d)                  \(\backslash\)}}
+\DoxyCodeLine{103 \textcolor{preprocessor}{do \{                                \(\backslash\)}}
+\DoxyCodeLine{104 \textcolor{preprocessor}{  ieee\_double\_shape\_type gh\_u;                  \(\backslash\)}}
+\DoxyCodeLine{105 \textcolor{preprocessor}{  gh\_u.value = (d);                     \(\backslash\)}}
+\DoxyCodeLine{106 \textcolor{preprocessor}{  (i) = gh\_u.parts.msw;                     \(\backslash\)}}
+\DoxyCodeLine{107 \textcolor{preprocessor}{\} while (0)}}
+\DoxyCodeLine{108 }
+\DoxyCodeLine{109 \textcolor{comment}{/* Get the less significant 32 bit int from a double.  */}}
+\DoxyCodeLine{110 }
+\DoxyCodeLine{111 \textcolor{preprocessor}{\#define GET\_LOW\_WORD(i,d)                   \(\backslash\)}}
+\DoxyCodeLine{112 \textcolor{preprocessor}{do \{                                \(\backslash\)}}
+\DoxyCodeLine{113 \textcolor{preprocessor}{  ieee\_double\_shape\_type gl\_u;                  \(\backslash\)}}
+\DoxyCodeLine{114 \textcolor{preprocessor}{  gl\_u.value = (d);                     \(\backslash\)}}
+\DoxyCodeLine{115 \textcolor{preprocessor}{  (i) = gl\_u.parts.lsw;                     \(\backslash\)}}
+\DoxyCodeLine{116 \textcolor{preprocessor}{\} while (0)}}
+\DoxyCodeLine{117 }
+\DoxyCodeLine{118 \textcolor{comment}{/* Set a double from two 32 bit ints.  */}}
+\DoxyCodeLine{119 }
+\DoxyCodeLine{120 \textcolor{preprocessor}{\#define INSERT\_WORDS(d,ix0,ix1)                 \(\backslash\)}}
+\DoxyCodeLine{121 \textcolor{preprocessor}{do \{                                \(\backslash\)}}
+\DoxyCodeLine{122 \textcolor{preprocessor}{  ieee\_double\_shape\_type iw\_u;                  \(\backslash\)}}
+\DoxyCodeLine{123 \textcolor{preprocessor}{  iw\_u.parts.msw = (ix0);                   \(\backslash\)}}
+\DoxyCodeLine{124 \textcolor{preprocessor}{  iw\_u.parts.lsw = (ix1);                   \(\backslash\)}}
+\DoxyCodeLine{125 \textcolor{preprocessor}{  (d) = iw\_u.value;                     \(\backslash\)}}
+\DoxyCodeLine{126 \textcolor{preprocessor}{\} while (0)}}
+\DoxyCodeLine{127 }
+\DoxyCodeLine{128 \textcolor{comment}{/* Set a double from a 64-\/bit int. */}}
+\DoxyCodeLine{129 \textcolor{preprocessor}{\#define INSERT\_WORD64(d,ix)                 \(\backslash\)}}
+\DoxyCodeLine{130 \textcolor{preprocessor}{do \{                                \(\backslash\)}}
+\DoxyCodeLine{131 \textcolor{preprocessor}{  ieee\_double\_shape\_type iw\_u;                  \(\backslash\)}}
+\DoxyCodeLine{132 \textcolor{preprocessor}{  iw\_u.xparts.w = (ix);                     \(\backslash\)}}
+\DoxyCodeLine{133 \textcolor{preprocessor}{  (d) = iw\_u.value;                     \(\backslash\)}}
+\DoxyCodeLine{134 \textcolor{preprocessor}{\} while (0)}}
+\DoxyCodeLine{135 }
+\DoxyCodeLine{136 \textcolor{comment}{/* Set the more significant 32 bits of a double from an int.  */}}
+\DoxyCodeLine{137 }
+\DoxyCodeLine{138 \textcolor{preprocessor}{\#define SET\_HIGH\_WORD(d,v)                  \(\backslash\)}}
+\DoxyCodeLine{139 \textcolor{preprocessor}{do \{                                \(\backslash\)}}
+\DoxyCodeLine{140 \textcolor{preprocessor}{  ieee\_double\_shape\_type sh\_u;                  \(\backslash\)}}
+\DoxyCodeLine{141 \textcolor{preprocessor}{  sh\_u.value = (d);                     \(\backslash\)}}
+\DoxyCodeLine{142 \textcolor{preprocessor}{  sh\_u.parts.msw = (v);                     \(\backslash\)}}
+\DoxyCodeLine{143 \textcolor{preprocessor}{  (d) = sh\_u.value;                     \(\backslash\)}}
+\DoxyCodeLine{144 \textcolor{preprocessor}{\} while (0)}}
+\DoxyCodeLine{145 }
+\DoxyCodeLine{146 \textcolor{comment}{/* Set the less significant 32 bits of a double from an int.  */}}
+\DoxyCodeLine{147 }
+\DoxyCodeLine{148 \textcolor{preprocessor}{\#define SET\_LOW\_WORD(d,v)                   \(\backslash\)}}
+\DoxyCodeLine{149 \textcolor{preprocessor}{do \{                                \(\backslash\)}}
+\DoxyCodeLine{150 \textcolor{preprocessor}{  ieee\_double\_shape\_type sl\_u;                  \(\backslash\)}}
+\DoxyCodeLine{151 \textcolor{preprocessor}{  sl\_u.value = (d);                     \(\backslash\)}}
+\DoxyCodeLine{152 \textcolor{preprocessor}{  sl\_u.parts.lsw = (v);                     \(\backslash\)}}
+\DoxyCodeLine{153 \textcolor{preprocessor}{  (d) = sl\_u.value;                     \(\backslash\)}}
+\DoxyCodeLine{154 \textcolor{preprocessor}{\} while (0)}}
+\DoxyCodeLine{155 }
+\DoxyCodeLine{156 \textcolor{comment}{/*}}
+\DoxyCodeLine{157 \textcolor{comment}{ * A union which permits us to convert between a float and a 32 bit}}
+\DoxyCodeLine{158 \textcolor{comment}{ * int.}}
+\DoxyCodeLine{159 \textcolor{comment}{ */}}
+\DoxyCodeLine{160 }
+\DoxyCodeLine{161 \textcolor{keyword}{typedef} \textcolor{keyword}{union}}
+\DoxyCodeLine{162 \{}
+\DoxyCodeLine{163   \textcolor{keywordtype}{float} \mbox{\hyperlink{unionieee__float__shape__type_aa0c47451f1b974421cbb9e2833ddb68e}{value}};}
+\DoxyCodeLine{164   \textcolor{comment}{/* FIXME: Assumes 32 bit int.  */}}
+\DoxyCodeLine{165   \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{unionieee__float__shape__type_a49230c21acd672d044f38b1abcbd6071}{word}};}
+\DoxyCodeLine{166 \} \mbox{\hyperlink{unionieee__float__shape__type}{ieee\_float\_shape\_type}};}
+\DoxyCodeLine{167 }
+\DoxyCodeLine{168 \textcolor{comment}{/* Get a 32 bit int from a float.  */}}
+\DoxyCodeLine{169 }
+\DoxyCodeLine{170 \textcolor{preprocessor}{\#define GET\_FLOAT\_WORD(i,d)                 \(\backslash\)}}
+\DoxyCodeLine{171 \textcolor{preprocessor}{do \{                                \(\backslash\)}}
+\DoxyCodeLine{172 \textcolor{preprocessor}{  ieee\_float\_shape\_type gf\_u;                   \(\backslash\)}}
+\DoxyCodeLine{173 \textcolor{preprocessor}{  gf\_u.value = (d);                     \(\backslash\)}}
+\DoxyCodeLine{174 \textcolor{preprocessor}{  (i) = gf\_u.word;                      \(\backslash\)}}
+\DoxyCodeLine{175 \textcolor{preprocessor}{\} while (0)}}
+\DoxyCodeLine{176 }
+\DoxyCodeLine{177 \textcolor{comment}{/* Set a float from a 32 bit int.  */}}
+\DoxyCodeLine{178 }
+\DoxyCodeLine{179 \textcolor{preprocessor}{\#define SET\_FLOAT\_WORD(d,i)                 \(\backslash\)}}
+\DoxyCodeLine{180 \textcolor{preprocessor}{do \{                                \(\backslash\)}}
+\DoxyCodeLine{181 \textcolor{preprocessor}{  ieee\_float\_shape\_type sf\_u;                   \(\backslash\)}}
+\DoxyCodeLine{182 \textcolor{preprocessor}{  sf\_u.word = (i);                      \(\backslash\)}}
+\DoxyCodeLine{183 \textcolor{preprocessor}{  (d) = sf\_u.value;                     \(\backslash\)}}
+\DoxyCodeLine{184 \textcolor{preprocessor}{\} while (0)}}
+\DoxyCodeLine{185 }
+\DoxyCodeLine{186 \textcolor{comment}{/* Get expsign as a 16 bit int from a long double.  */}}
+\DoxyCodeLine{187 }
+\DoxyCodeLine{188 \textcolor{preprocessor}{\#define GET\_LDBL\_EXPSIGN(i,d)                   \(\backslash\)}}
+\DoxyCodeLine{189 \textcolor{preprocessor}{do \{                                \(\backslash\)}}
+\DoxyCodeLine{190 \textcolor{preprocessor}{  union IEEEl2bits ge\_u;                    \(\backslash\)}}
+\DoxyCodeLine{191 \textcolor{preprocessor}{  ge\_u.e = (d);                         \(\backslash\)}}
+\DoxyCodeLine{192 \textcolor{preprocessor}{  (i) = ge\_u.xbits.expsign;                 \(\backslash\)}}
+\DoxyCodeLine{193 \textcolor{preprocessor}{\} while (0)}}
+\DoxyCodeLine{194 }
+\DoxyCodeLine{195 \textcolor{comment}{/* Set expsign of a long double from a 16 bit int.  */}}
+\DoxyCodeLine{196 }
+\DoxyCodeLine{197 \textcolor{preprocessor}{\#define SET\_LDBL\_EXPSIGN(d,v)                   \(\backslash\)}}
+\DoxyCodeLine{198 \textcolor{preprocessor}{do \{                                \(\backslash\)}}
+\DoxyCodeLine{199 \textcolor{preprocessor}{  union IEEEl2bits se\_u;                    \(\backslash\)}}
+\DoxyCodeLine{200 \textcolor{preprocessor}{  se\_u.e = (d);                         \(\backslash\)}}
+\DoxyCodeLine{201 \textcolor{preprocessor}{  se\_u.xbits.expsign = (v);                 \(\backslash\)}}
+\DoxyCodeLine{202 \textcolor{preprocessor}{  (d) = se\_u.e;                         \(\backslash\)}}
+\DoxyCodeLine{203 \textcolor{preprocessor}{\} while (0)}}
+\DoxyCodeLine{204 }
+\DoxyCodeLine{205 }
+\DoxyCodeLine{206 \textcolor{comment}{//VBS}}
+\DoxyCodeLine{207 \textcolor{preprocessor}{\#define STRICT\_ASSIGN(type, lval, rval) ((lval) = (rval))}}
+\DoxyCodeLine{208 }
+\DoxyCodeLine{209 \textcolor{comment}{/* VBS}}
+\DoxyCodeLine{210 \textcolor{comment}{\#ifdef FLT\_EVAL\_METHOD}}
+\DoxyCodeLine{211 \textcolor{comment}{// Attempt to get strict C99 semantics for assignment with non-\/C99 compilers.}}
+\DoxyCodeLine{212 \textcolor{comment}{\#if FLT\_EVAL\_METHOD == 0 || \_\_GNUC\_\_ == 0}}
+\DoxyCodeLine{213 \textcolor{comment}{\#define STRICT\_ASSIGN(type, lval, rval) ((lval) = (rval))}}
+\DoxyCodeLine{214 \textcolor{comment}{\#else}}
+\DoxyCodeLine{215 \textcolor{comment}{\#define STRICT\_ASSIGN(type, lval, rval) do \{    \(\backslash\)}}
+\DoxyCodeLine{216 \textcolor{comment}{    volatile type \_\_lval;           \(\backslash\)}}
+\DoxyCodeLine{217 \textcolor{comment}{                        \(\backslash\)}}
+\DoxyCodeLine{218 \textcolor{comment}{    if (sizeof(type) >= sizeof(double)) \(\backslash\)}}
+\DoxyCodeLine{219 \textcolor{comment}{        (lval) = (rval);        \(\backslash\)}}
+\DoxyCodeLine{220 \textcolor{comment}{    else \{                  \(\backslash\)}}
+\DoxyCodeLine{221 \textcolor{comment}{        \_\_lval = (rval);        \(\backslash\)}}
+\DoxyCodeLine{222 \textcolor{comment}{        (lval) = \_\_lval;        \(\backslash\)}}
+\DoxyCodeLine{223 \textcolor{comment}{    \}                   \(\backslash\)}}
+\DoxyCodeLine{224 \textcolor{comment}{\} while (0)}}
+\DoxyCodeLine{225 \textcolor{comment}{\#endif}}
+\DoxyCodeLine{226 \textcolor{comment}{\#endif}}
+\DoxyCodeLine{227 \textcolor{comment}{*/}}
+\DoxyCodeLine{228 }
+\DoxyCodeLine{229 \textcolor{comment}{/*}}
+\DoxyCodeLine{230 \textcolor{comment}{ * Common routine to process the arguments to nan(), nanf(), and nanl().}}
+\DoxyCodeLine{231 \textcolor{comment}{ */}}
+\DoxyCodeLine{232 \textcolor{keywordtype}{void} \mbox{\hyperlink{math__private_8h_a3de1f808a1d1eb189d3c953e5784f749}{\_\_scan\_nan}}(\mbox{\hyperlink{types-compat_8h_a0d5a2542b430beb8568bacccd2c657ae}{u\_int32\_t}} *\_\_words, \textcolor{keywordtype}{int} \_\_num\_words, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *\_\_s);}
+\DoxyCodeLine{233 }
+\DoxyCodeLine{234 \textcolor{preprocessor}{\#ifdef \_\_GNUCLIKE\_ASM}}
+\DoxyCodeLine{235 }
+\DoxyCodeLine{236 \textcolor{comment}{/* Asm versions of some functions. */}}
+\DoxyCodeLine{237 }
+\DoxyCodeLine{238 \textcolor{preprocessor}{\#ifdef \_\_amd64\_\_}}
+\DoxyCodeLine{239 \textcolor{keyword}{static} \mbox{\hyperlink{bsd__cdefs_8h_a96deb7ba5a74848afb710cc4ee6d2c08}{\_\_inline}} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{240 irint(\textcolor{keywordtype}{double} x)}
+\DoxyCodeLine{241 \{}
+\DoxyCodeLine{242     \textcolor{keywordtype}{int} \mbox{\hyperlink{string_8h_a5a8464156e218440bed8aa10828319c5}{n}};}
+\DoxyCodeLine{243 }
+\DoxyCodeLine{244     \_\_asm\_\_(\textcolor{stringliteral}{"{}cvtsd2si \%1,\%0"{}} : \textcolor{stringliteral}{"{}=r"{}} (\mbox{\hyperlink{string_8h_a5a8464156e218440bed8aa10828319c5}{n}}) : \textcolor{stringliteral}{"{}x"{}} (x));}
+\DoxyCodeLine{245     \textcolor{keywordflow}{return} (\mbox{\hyperlink{string_8h_a5a8464156e218440bed8aa10828319c5}{n}});}
+\DoxyCodeLine{246 \}}
+\DoxyCodeLine{247 \textcolor{preprocessor}{\#define HAVE\_EFFICIENT\_IRINT}}
+\DoxyCodeLine{248 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{249 }
+\DoxyCodeLine{250 \textcolor{preprocessor}{\#ifdef \_\_i386\_\_}}
+\DoxyCodeLine{251 \textcolor{keyword}{static} \mbox{\hyperlink{bsd__cdefs_8h_a96deb7ba5a74848afb710cc4ee6d2c08}{\_\_inline}} \textcolor{keywordtype}{int}}
+\DoxyCodeLine{252 irint(\textcolor{keywordtype}{double} x)}
+\DoxyCodeLine{253 \{}
+\DoxyCodeLine{254     \textcolor{keywordtype}{int} \mbox{\hyperlink{string_8h_a5a8464156e218440bed8aa10828319c5}{n}};}
+\DoxyCodeLine{255 }
+\DoxyCodeLine{256     \_\_asm\_\_(\textcolor{stringliteral}{"{}fistl \%0"{}} : \textcolor{stringliteral}{"{}=m"{}} (\mbox{\hyperlink{string_8h_a5a8464156e218440bed8aa10828319c5}{n}}) : \textcolor{stringliteral}{"{}t"{}} (x));}
+\DoxyCodeLine{257     \textcolor{keywordflow}{return} (\mbox{\hyperlink{string_8h_a5a8464156e218440bed8aa10828319c5}{n}});}
+\DoxyCodeLine{258 \}}
+\DoxyCodeLine{259 \textcolor{preprocessor}{\#define HAVE\_EFFICIENT\_IRINT}}
+\DoxyCodeLine{260 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{261 }
+\DoxyCodeLine{262 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_GNUCLIKE\_ASM */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{263 }
+\DoxyCodeLine{264 \textcolor{comment}{/*}}
+\DoxyCodeLine{265 \textcolor{comment}{ * ieee style elementary functions}}
+\DoxyCodeLine{266 \textcolor{comment}{ *}}
+\DoxyCodeLine{267 \textcolor{comment}{ * We rename functions here to improve other sources' diffability}}
+\DoxyCodeLine{268 \textcolor{comment}{ * against fdlibm.}}
+\DoxyCodeLine{269 \textcolor{comment}{ */}}
+\DoxyCodeLine{270 \textcolor{preprocessor}{\#define \_\_ieee754\_sqrt  sqrt}}
+\DoxyCodeLine{271 \textcolor{preprocessor}{\#define \_\_ieee754\_acos  acos}}
+\DoxyCodeLine{272 \textcolor{preprocessor}{\#define \_\_ieee754\_acosh acosh}}
+\DoxyCodeLine{273 \textcolor{preprocessor}{\#define \_\_ieee754\_log   log}}
+\DoxyCodeLine{274 \textcolor{preprocessor}{\#define \_\_ieee754\_log2  log2}}
+\DoxyCodeLine{275 \textcolor{preprocessor}{\#define \_\_ieee754\_atanh atanh}}
+\DoxyCodeLine{276 \textcolor{preprocessor}{\#define \_\_ieee754\_asin  asin}}
+\DoxyCodeLine{277 \textcolor{preprocessor}{\#define \_\_ieee754\_atan2 atan2}}
+\DoxyCodeLine{278 \textcolor{preprocessor}{\#define \_\_ieee754\_exp   exp}}
+\DoxyCodeLine{279 \textcolor{preprocessor}{\#define \_\_ieee754\_cosh  cosh}}
+\DoxyCodeLine{280 \textcolor{preprocessor}{\#define \_\_ieee754\_fmod  fmod}}
+\DoxyCodeLine{281 \textcolor{preprocessor}{\#define \_\_ieee754\_pow   pow}}
+\DoxyCodeLine{282 \textcolor{preprocessor}{\#define \_\_ieee754\_lgamma lgamma}}
+\DoxyCodeLine{283 \textcolor{preprocessor}{\#define \_\_ieee754\_lgamma\_r lgamma\_r}}
+\DoxyCodeLine{284 \textcolor{preprocessor}{\#define \_\_ieee754\_log10 log10}}
+\DoxyCodeLine{285 \textcolor{preprocessor}{\#define \_\_ieee754\_sinh  sinh}}
+\DoxyCodeLine{286 \textcolor{preprocessor}{\#define \_\_ieee754\_hypot hypot}}
+\DoxyCodeLine{287 \textcolor{preprocessor}{\#define \_\_ieee754\_j0    j0}}
+\DoxyCodeLine{288 \textcolor{preprocessor}{\#define \_\_ieee754\_j1    j1}}
+\DoxyCodeLine{289 \textcolor{preprocessor}{\#define \_\_ieee754\_y0    y0}}
+\DoxyCodeLine{290 \textcolor{preprocessor}{\#define \_\_ieee754\_y1    y1}}
+\DoxyCodeLine{291 \textcolor{preprocessor}{\#define \_\_ieee754\_jn    jn}}
+\DoxyCodeLine{292 \textcolor{preprocessor}{\#define \_\_ieee754\_yn    yn}}
+\DoxyCodeLine{293 \textcolor{preprocessor}{\#define \_\_ieee754\_remainder remainder}}
+\DoxyCodeLine{294 \textcolor{preprocessor}{\#define \_\_ieee754\_sqrtf sqrtf}}
+\DoxyCodeLine{295 \textcolor{preprocessor}{\#define \_\_ieee754\_acosf acosf}}
+\DoxyCodeLine{296 \textcolor{preprocessor}{\#define \_\_ieee754\_acoshf acoshf}}
+\DoxyCodeLine{297 \textcolor{preprocessor}{\#define \_\_ieee754\_logf  logf}}
+\DoxyCodeLine{298 \textcolor{preprocessor}{\#define \_\_ieee754\_atanhf atanhf}}
+\DoxyCodeLine{299 \textcolor{preprocessor}{\#define \_\_ieee754\_asinf asinf}}
+\DoxyCodeLine{300 \textcolor{preprocessor}{\#define \_\_ieee754\_atan2f atan2f}}
+\DoxyCodeLine{301 \textcolor{preprocessor}{\#define \_\_ieee754\_expf  expf}}
+\DoxyCodeLine{302 \textcolor{preprocessor}{\#define \_\_ieee754\_coshf coshf}}
+\DoxyCodeLine{303 \textcolor{preprocessor}{\#define \_\_ieee754\_fmodf fmodf}}
+\DoxyCodeLine{304 \textcolor{preprocessor}{\#define \_\_ieee754\_powf  powf}}
+\DoxyCodeLine{305 \textcolor{preprocessor}{\#define \_\_ieee754\_lgammaf lgammaf}}
+\DoxyCodeLine{306 \textcolor{preprocessor}{\#define \_\_ieee754\_lgammaf\_r lgammaf\_r}}
+\DoxyCodeLine{307 \textcolor{preprocessor}{\#define \_\_ieee754\_log10f log10f}}
+\DoxyCodeLine{308 \textcolor{preprocessor}{\#define \_\_ieee754\_log2f log2f}}
+\DoxyCodeLine{309 \textcolor{preprocessor}{\#define \_\_ieee754\_sinhf sinhf}}
+\DoxyCodeLine{310 \textcolor{preprocessor}{\#define \_\_ieee754\_hypotf hypotf}}
+\DoxyCodeLine{311 \textcolor{preprocessor}{\#define \_\_ieee754\_j0f   j0f}}
+\DoxyCodeLine{312 \textcolor{preprocessor}{\#define \_\_ieee754\_j1f   j1f}}
+\DoxyCodeLine{313 \textcolor{preprocessor}{\#define \_\_ieee754\_y0f   y0f}}
+\DoxyCodeLine{314 \textcolor{preprocessor}{\#define \_\_ieee754\_y1f   y1f}}
+\DoxyCodeLine{315 \textcolor{preprocessor}{\#define \_\_ieee754\_jnf   jnf}}
+\DoxyCodeLine{316 \textcolor{preprocessor}{\#define \_\_ieee754\_ynf   ynf}}
+\DoxyCodeLine{317 \textcolor{preprocessor}{\#define \_\_ieee754\_remainderf remainderf}}
+\DoxyCodeLine{318 }
+\DoxyCodeLine{319 \textcolor{comment}{/* fdlibm kernel function */}}
+\DoxyCodeLine{320 \textcolor{keywordtype}{int} \mbox{\hyperlink{math__private_8h_a7bead77c5663d74ce72e514a086a42ca}{\_\_kernel\_rem\_pio2}}(\textcolor{keywordtype}{double}*,\textcolor{keywordtype}{double}*,\textcolor{keywordtype}{int},\textcolor{keywordtype}{int},\textcolor{keywordtype}{int});}
+\DoxyCodeLine{321 }
+\DoxyCodeLine{322 \textcolor{comment}{/* double precision kernel functions */}}
+\DoxyCodeLine{323 \textcolor{preprocessor}{\#ifdef INLINE\_REM\_PIO2}}
+\DoxyCodeLine{324 \mbox{\hyperlink{bsd__cdefs_8h_a96deb7ba5a74848afb710cc4ee6d2c08}{\_\_inline}}}
+\DoxyCodeLine{325 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{326 \textcolor{keywordtype}{int} \mbox{\hyperlink{math__private_8h_af9e98d748cc5d1ea7f4ccbec7f3bbda9}{\_\_ieee754\_rem\_pio2}}(\textcolor{keywordtype}{double},\textcolor{keywordtype}{double}*);}
+\DoxyCodeLine{327 \textcolor{keywordtype}{double}  \mbox{\hyperlink{math__private_8h_a2862f32a37478e0f6d281644f8be6dd3}{\_\_kernel\_sin}}(\textcolor{keywordtype}{double},\textcolor{keywordtype}{double},\textcolor{keywordtype}{int});}
+\DoxyCodeLine{328 \textcolor{keywordtype}{double}  \mbox{\hyperlink{math__private_8h_a478133ce91bab3fb037b9aed3dc4723d}{\_\_kernel\_cos}}(\textcolor{keywordtype}{double},\textcolor{keywordtype}{double});}
+\DoxyCodeLine{329 \textcolor{keywordtype}{double}  \mbox{\hyperlink{math__private_8h_a861bb874f193ccef8307d2294150af99}{\_\_kernel\_tan}}(\textcolor{keywordtype}{double},\textcolor{keywordtype}{double},\textcolor{keywordtype}{int});}
+\DoxyCodeLine{330 \textcolor{keywordtype}{double}  \mbox{\hyperlink{math__private_8h_a446852b43c9b85955133616d996de0e6}{\_\_ldexp\_exp}}(\textcolor{keywordtype}{double},\textcolor{keywordtype}{int});}
+\DoxyCodeLine{331 \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{math__private_8h_a8a7adbddd81552f40d2638bd3f3c9472}{\_\_ldexp\_cexp}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}},\textcolor{keywordtype}{int});}
+\DoxyCodeLine{332 }
+\DoxyCodeLine{333 \textcolor{comment}{/* float precision kernel functions */}}
+\DoxyCodeLine{334 \textcolor{preprocessor}{\#ifdef INLINE\_REM\_PIO2F}}
+\DoxyCodeLine{335 \mbox{\hyperlink{bsd__cdefs_8h_a96deb7ba5a74848afb710cc4ee6d2c08}{\_\_inline}}}
+\DoxyCodeLine{336 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{337 \textcolor{keywordtype}{int} \mbox{\hyperlink{math__private_8h_a36af0dbcc39947a31aa1adc242fb5aec}{\_\_ieee754\_rem\_pio2f}}(\textcolor{keywordtype}{float},\textcolor{keywordtype}{double}*);}
+\DoxyCodeLine{338 \textcolor{preprocessor}{\#ifdef INLINE\_KERNEL\_SINDF}}
+\DoxyCodeLine{339 \mbox{\hyperlink{bsd__cdefs_8h_a96deb7ba5a74848afb710cc4ee6d2c08}{\_\_inline}}}
+\DoxyCodeLine{340 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{341 \textcolor{keywordtype}{float}   \mbox{\hyperlink{math__private_8h_aaad009d5e895bd922e70e8c5f0f6eb39}{\_\_kernel\_sindf}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{342 \textcolor{preprocessor}{\#ifdef INLINE\_KERNEL\_COSDF}}
+\DoxyCodeLine{343 \mbox{\hyperlink{bsd__cdefs_8h_a96deb7ba5a74848afb710cc4ee6d2c08}{\_\_inline}}}
+\DoxyCodeLine{344 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{345 \textcolor{keywordtype}{float}   \mbox{\hyperlink{math__private_8h_adea87f0e3eaafd33d6ee123e270e5473}{\_\_kernel\_cosdf}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{346 \textcolor{preprocessor}{\#ifdef INLINE\_KERNEL\_TANDF}}
+\DoxyCodeLine{347 \mbox{\hyperlink{bsd__cdefs_8h_a96deb7ba5a74848afb710cc4ee6d2c08}{\_\_inline}}}
+\DoxyCodeLine{348 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{349 \textcolor{keywordtype}{float}   \mbox{\hyperlink{math__private_8h_a976b534d2d6c41f3a707d28344e22730}{\_\_kernel\_tandf}}(\textcolor{keywordtype}{double},\textcolor{keywordtype}{int});}
+\DoxyCodeLine{350 \textcolor{keywordtype}{float}   \mbox{\hyperlink{math__private_8h_a313106aa550a14fa7a947dcf45c9e705}{\_\_ldexp\_expf}}(\textcolor{keywordtype}{float},\textcolor{keywordtype}{int});}
+\DoxyCodeLine{351 \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{math__private_8h_af3c2483480892792afa18f1c0b901c4c}{\_\_ldexp\_cexpf}}(\textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}},\textcolor{keywordtype}{int});}
+\DoxyCodeLine{352 }
+\DoxyCodeLine{353 \textcolor{comment}{/* long double precision kernel functions */}}
+\DoxyCodeLine{354 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{math__private_8h_a0b7f78f5a5c2acd33c49862de62cf792}{\_\_kernel\_sinl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{int});}
+\DoxyCodeLine{355 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{math__private_8h_a666a94bdb5450e2e4fe3ec762e63a722}{\_\_kernel\_cosl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{long} \textcolor{keywordtype}{double});}
+\DoxyCodeLine{356 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{math__private_8h_a032321e61d5c09a8f44dfbf4cad64d4d}{\_\_kernel\_tanl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{long} \textcolor{keywordtype}{double}, \textcolor{keywordtype}{int});}
+\DoxyCodeLine{357 }
+\DoxyCodeLine{358 \textcolor{preprocessor}{\#undef OLM\_DLLEXPORT}}
+\DoxyCodeLine{359 \textcolor{preprocessor}{\#ifdef \_WIN32}}
+\DoxyCodeLine{360 \textcolor{preprocessor}{\# ifdef IMPORT\_EXPORTS}}
+\DoxyCodeLine{361 \textcolor{preprocessor}{\#  define OLM\_DLLEXPORT \_\_declspec(dllimport)}}
+\DoxyCodeLine{362 \textcolor{preprocessor}{\# else}}
+\DoxyCodeLine{363 \textcolor{preprocessor}{\#  define OLM\_DLLEXPORT \_\_declspec(dllexport)}}
+\DoxyCodeLine{364 \textcolor{preprocessor}{\# endif}}
+\DoxyCodeLine{365 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{366 \textcolor{preprocessor}{\#define OLM\_DLLEXPORT \_\_attribute\_\_ ((visibility("{}default"{}})))}
+\DoxyCodeLine{367 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{368 }
+\DoxyCodeLine{369 }
+\DoxyCodeLine{370 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* !\_MATH\_PRIVATE\_H\_ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

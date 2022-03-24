@@ -1,0 +1,120 @@
+\hypertarget{linkedlist_8hpp_source}{}\doxysection{linkedlist.\+hpp}
+\label{linkedlist_8hpp_source}\index{C:/Users/Alex/Desktop/Banana/kernel/krnl/linkedlist.hpp@{C:/Users/Alex/Desktop/Banana/kernel/krnl/linkedlist.hpp}}
+\mbox{\hyperlink{linkedlist_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_\_LINKED\_LIST\_HPP\_\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_\_LINKED\_LIST\_HPP\_\_}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{kconsole_8hpp}{dbg/kconsole.hpp}}"{}}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{8 \textcolor{keyword}{class }\mbox{\hyperlink{class_linked_list}{LinkedList}}}
+\DoxyCodeLine{9 \{}
+\DoxyCodeLine{10 \textcolor{keyword}{private}:}
+\DoxyCodeLine{11 }
+\DoxyCodeLine{12 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{13     T* \mbox{\hyperlink{class_linked_list_a09879cdb0240c0b4877b476cc99a80ea}{first}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{14     T* \mbox{\hyperlink{class_linked_list_a2d42c28d582207313fd6b9b8ab0de825}{last}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{15     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_linked_list_ad56e0ecc3fc4e7311ce38948dcac6155}{debugLength}} = 0;}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \textcolor{keyword}{public}:}
+\DoxyCodeLine{18     \mbox{\hyperlink{class_linked_list_a3c20fcfec867e867f541061a09fc640c}{LinkedList}}()}
+\DoxyCodeLine{19     \{}
+\DoxyCodeLine{20         \mbox{\hyperlink{class_linked_list_a09879cdb0240c0b4877b476cc99a80ea}{first}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{21         \mbox{\hyperlink{class_linked_list_a2d42c28d582207313fd6b9b8ab0de825}{last}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{22         \mbox{\hyperlink{class_linked_list_ad56e0ecc3fc4e7311ce38948dcac6155}{debugLength}} = 0;}
+\DoxyCodeLine{23         }
+\DoxyCodeLine{24         \textcolor{comment}{//kprintf("{}L.L. CONSTRUCTOR CALLED\(\backslash\)n"{});}}
+\DoxyCodeLine{25     \}}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{27     \mbox{\hyperlink{class_linked_list_a7c37609df3b83bc4eb0281b852f93fd7}{\string~LinkedList}}()}
+\DoxyCodeLine{28     \{}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30     \}}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32     T* \mbox{\hyperlink{class_linked_list_aba85f54788412223cd72d8573895be14}{getNext}}(T* start)}
+\DoxyCodeLine{33     \{}
+\DoxyCodeLine{34         \textcolor{keywordflow}{return} start-\/>next;}
+\DoxyCodeLine{35     \}}
+\DoxyCodeLine{36 }
+\DoxyCodeLine{37     \textcolor{comment}{/*}}
+\DoxyCodeLine{38 \textcolor{comment}{    NOTICE: VERY BAD STUFF HAPPENS IF YOU TRY TO ADD AN ITEM WHICH IS ALREADY IN THE LIST, AS THE -\/>next POINTER WILL BE THE SAME!!!!}}
+\DoxyCodeLine{39 \textcolor{comment}{    */}}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_linked_list_a1f5706f12848e87aa2813e3c8a6ddff4}{addElement}}(T* element)}
+\DoxyCodeLine{42     \{}
+\DoxyCodeLine{43         \textcolor{keywordflow}{if} (element == \textcolor{keyword}{nullptr}) \{}
+\DoxyCodeLine{44             \mbox{\hyperlink{usban_8cpp_a016bbbf6b427c99161c38a8c2a4a5d73}{KePanic}}(\textcolor{stringliteral}{"{}Null element added to linked list"{}});}
+\DoxyCodeLine{45         \}}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47         \textcolor{keywordflow}{if} (\mbox{\hyperlink{class_linked_list_a09879cdb0240c0b4877b476cc99a80ea}{first}} \&\& \mbox{\hyperlink{class_linked_list_a2d42c28d582207313fd6b9b8ab0de825}{last}}) \{}
+\DoxyCodeLine{48             \mbox{\hyperlink{class_linked_list_a2d42c28d582207313fd6b9b8ab0de825}{last}}-\/>next = element;}
+\DoxyCodeLine{49             \mbox{\hyperlink{class_linked_list_a2d42c28d582207313fd6b9b8ab0de825}{last}} = element;}
+\DoxyCodeLine{50             \mbox{\hyperlink{class_linked_list_a2d42c28d582207313fd6b9b8ab0de825}{last}}-\/>next = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52         \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (\mbox{\hyperlink{class_linked_list_a09879cdb0240c0b4877b476cc99a80ea}{first}} == \textcolor{keyword}{nullptr} \&\& \mbox{\hyperlink{class_linked_list_a2d42c28d582207313fd6b9b8ab0de825}{last}} == \textcolor{keyword}{nullptr}) \{}
+\DoxyCodeLine{53             \mbox{\hyperlink{class_linked_list_a09879cdb0240c0b4877b476cc99a80ea}{first}} = element;}
+\DoxyCodeLine{54             \mbox{\hyperlink{class_linked_list_a2d42c28d582207313fd6b9b8ab0de825}{last}} = element;}
+\DoxyCodeLine{55             \mbox{\hyperlink{class_linked_list_a2d42c28d582207313fd6b9b8ab0de825}{last}}-\/>next = \textcolor{keyword}{nullptr};       \textcolor{comment}{//it took me until the 5th of September 2020 to add this line!}}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57             \textcolor{keywordflow}{if} (\mbox{\hyperlink{class_linked_list_ad56e0ecc3fc4e7311ce38948dcac6155}{debugLength}} != 0) \{}
+\DoxyCodeLine{58                 \mbox{\hyperlink{usban_8cpp_a016bbbf6b427c99161c38a8c2a4a5d73}{KePanic}}(\textcolor{stringliteral}{"{}Whoa... 3"{}});}
+\DoxyCodeLine{59             \}}
+\DoxyCodeLine{60 }
+\DoxyCodeLine{61         \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{62             \mbox{\hyperlink{usban_8cpp_a016bbbf6b427c99161c38a8c2a4a5d73}{KePanic}}(\textcolor{stringliteral}{"{}addElement"{}});}
+\DoxyCodeLine{63         \}}
+\DoxyCodeLine{64 }
+\DoxyCodeLine{65         ++\mbox{\hyperlink{class_linked_list_ad56e0ecc3fc4e7311ce38948dcac6155}{debugLength}};}
+\DoxyCodeLine{66     \}}
+\DoxyCodeLine{67 }
+\DoxyCodeLine{68     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_linked_list_a76217192e645bda6cf1ff08c297c9e2f}{removeFirst}}()}
+\DoxyCodeLine{69     \{}
+\DoxyCodeLine{70         \textcolor{keywordflow}{if} (\mbox{\hyperlink{class_linked_list_a09879cdb0240c0b4877b476cc99a80ea}{first}} == \textcolor{keyword}{nullptr}) \{}
+\DoxyCodeLine{71             \mbox{\hyperlink{usban_8cpp_a016bbbf6b427c99161c38a8c2a4a5d73}{KePanic}}(\textcolor{stringliteral}{"{}ERROR: removing from empty list...\(\backslash\)n"{}});}
+\DoxyCodeLine{72             \textcolor{keywordflow}{return};}
+\DoxyCodeLine{73         \}}
+\DoxyCodeLine{74         \textcolor{keywordflow}{if} (\mbox{\hyperlink{class_linked_list_a2d42c28d582207313fd6b9b8ab0de825}{last}}-\/>next != \textcolor{keyword}{nullptr}) \{}
+\DoxyCodeLine{75             \mbox{\hyperlink{usban_8cpp_a016bbbf6b427c99161c38a8c2a4a5d73}{KePanic}}(\textcolor{stringliteral}{"{}Whoa..."{}});}
+\DoxyCodeLine{76         \}}
+\DoxyCodeLine{77 }
+\DoxyCodeLine{78         \textcolor{keywordflow}{if} (\mbox{\hyperlink{class_linked_list_a09879cdb0240c0b4877b476cc99a80ea}{first}}-\/>next == \textcolor{keyword}{nullptr}) \{}
+\DoxyCodeLine{79             \mbox{\hyperlink{class_linked_list_a09879cdb0240c0b4877b476cc99a80ea}{first}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{80             \mbox{\hyperlink{class_linked_list_a2d42c28d582207313fd6b9b8ab0de825}{last}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{81             \textcolor{keywordflow}{if} (\mbox{\hyperlink{class_linked_list_ad56e0ecc3fc4e7311ce38948dcac6155}{debugLength}} != 1) \{}
+\DoxyCodeLine{82                 \mbox{\hyperlink{usban_8cpp_a016bbbf6b427c99161c38a8c2a4a5d73}{KePanic}}(\textcolor{stringliteral}{"{}first-\/>next == nullptr, but length = 1"{}});}
+\DoxyCodeLine{83             \}}
+\DoxyCodeLine{84 }
+\DoxyCodeLine{85         \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{86             \mbox{\hyperlink{class_linked_list_a09879cdb0240c0b4877b476cc99a80ea}{first}} = \mbox{\hyperlink{class_linked_list_a09879cdb0240c0b4877b476cc99a80ea}{first}}-\/>next;}
+\DoxyCodeLine{87         \}}
+\DoxyCodeLine{88 }
+\DoxyCodeLine{89         -\/-\/\mbox{\hyperlink{class_linked_list_ad56e0ecc3fc4e7311ce38948dcac6155}{debugLength}};}
+\DoxyCodeLine{90     \}}
+\DoxyCodeLine{91 }
+\DoxyCodeLine{92     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_linked_list_a7ecbb28e82117a680839ed0dc28ebdce}{isEmpty}}()}
+\DoxyCodeLine{93     \{}
+\DoxyCodeLine{94         \textcolor{keywordflow}{return} \mbox{\hyperlink{class_linked_list_a09879cdb0240c0b4877b476cc99a80ea}{first}} == \textcolor{keyword}{nullptr} \&\& \mbox{\hyperlink{class_linked_list_a2d42c28d582207313fd6b9b8ab0de825}{last}} == \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{95     \}}
+\DoxyCodeLine{96 }
+\DoxyCodeLine{97     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_linked_list_ac650bde26cf5b3c074e2d59f97e0ff3b}{getLength}}()}
+\DoxyCodeLine{98     \{}
+\DoxyCodeLine{99         \textcolor{keywordflow}{return} \mbox{\hyperlink{class_linked_list_ad56e0ecc3fc4e7311ce38948dcac6155}{debugLength}};}
+\DoxyCodeLine{100     \}}
+\DoxyCodeLine{101 }
+\DoxyCodeLine{102     T* \mbox{\hyperlink{class_linked_list_af893a6d75ec1b5b714bca94c01f28118}{getLastElement}}()}
+\DoxyCodeLine{103     \{}
+\DoxyCodeLine{104         \textcolor{keywordflow}{return} \mbox{\hyperlink{class_linked_list_a2d42c28d582207313fd6b9b8ab0de825}{last}};}
+\DoxyCodeLine{105     \}}
+\DoxyCodeLine{106 }
+\DoxyCodeLine{107     T* \mbox{\hyperlink{class_linked_list_ac1e1cc813e910294e6786f2ca3d2623c}{getFirstElement}}()}
+\DoxyCodeLine{108     \{}
+\DoxyCodeLine{109         \textcolor{keywordflow}{return} \mbox{\hyperlink{class_linked_list_a09879cdb0240c0b4877b476cc99a80ea}{first}};}
+\DoxyCodeLine{110     \}}
+\DoxyCodeLine{111 \};}
+\DoxyCodeLine{112 }
+\DoxyCodeLine{113 }
+\DoxyCodeLine{114 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,172 @@
+\hypertarget{ide_8hpp_source}{}\doxysection{ide.\+hpp}
+\label{ide_8hpp_source}\index{C:/Users/Alex/Desktop/Banana/kernel/hw/diskctrl/ide.hpp@{C:/Users/Alex/Desktop/Banana/kernel/hw/diskctrl/ide.hpp}}
+\mbox{\hyperlink{ide_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#ifndef \_IDE\_HPP\_}}
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#define \_IDE\_HPP\_}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#ifndef JUMPER32}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{diskctrl_8hpp}{hal/diskctrl.hpp}}"{}}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{pci_8hpp}{hw/bus/pci.hpp}}"{}}}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#define ATA\_REG\_DATA       0x00}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#define ATA\_REG\_ERROR      0x01}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#define ATA\_REG\_FEATURES   0x01}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#define ATA\_REG\_SECCOUNT0  0x02}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#define ATA\_REG\_LBA0       0x03}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#define ATA\_REG\_LBA1       0x04}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#define ATA\_REG\_LBA2       0x05}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#define ATA\_REG\_HDDEVSEL   0x06}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#define ATA\_REG\_STATUS     0x07}}
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#define ATA\_REG\_COMMAND    0x07}}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22 \textcolor{preprocessor}{\#define ATA\_REG\_SECCOUNT1  0x08}}
+\DoxyCodeLine{23 \textcolor{preprocessor}{\#define ATA\_REG\_LBA3       0x09}}
+\DoxyCodeLine{24 \textcolor{preprocessor}{\#define ATA\_REG\_LBA4       0x0A}}
+\DoxyCodeLine{25 \textcolor{preprocessor}{\#define ATA\_REG\_LBA5       0x0B}}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{27 \textcolor{preprocessor}{\#define ATA\_REG\_CONTROL    0x0C}}
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#define ATA\_REG\_ALTSTATUS  0x0C}}
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#define ATA\_REG\_DEVADDRESS 0x0D}}
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31 \textcolor{preprocessor}{\#define ATA\_REG\_BUSMSTR\_COMMAND     0x0E}}
+\DoxyCodeLine{32 \textcolor{preprocessor}{\#define ATA\_REG\_BUSMSTR\_STATUS      0x10}}
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#define ATA\_REG\_BUSMSTR\_PRDT0       0x12}}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#define ATA\_REG\_BUSMSTR\_PRDT1       0x13}}
+\DoxyCodeLine{35 \textcolor{preprocessor}{\#define ATA\_REG\_BUSMSTR\_PRDT2       0x14}}
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#define ATA\_REG\_BUSMSTR\_PRDT3       0x15}}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38 \textcolor{preprocessor}{\#define ATA\_PRIMARY        0x00}}
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#define ATA\_SECONDARY      0x01}}
+\DoxyCodeLine{40 \textcolor{preprocessor}{\#define ATA\_READ           0x00}}
+\DoxyCodeLine{41 \textcolor{preprocessor}{\#define ATA\_WRITE          0x01}}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43 \textcolor{preprocessor}{\#define IDE\_ATA            0x00}}
+\DoxyCodeLine{44 \textcolor{preprocessor}{\#define IDE\_ATAPI          0x01}}
+\DoxyCodeLine{45 }
+\DoxyCodeLine{46 \textcolor{preprocessor}{\#define ATA\_MASTER         0x00}}
+\DoxyCodeLine{47 \textcolor{preprocessor}{\#define ATA\_SLAVE          0x01}}
+\DoxyCodeLine{48 }
+\DoxyCodeLine{49 \textcolor{preprocessor}{\#define ATAPI\_CMD\_TEST\_UNIT\_READY   0x00}}
+\DoxyCodeLine{50 \textcolor{preprocessor}{\#define ATAPI\_CMD\_EJECT             0x1B}}
+\DoxyCodeLine{51 \textcolor{preprocessor}{\#define ATAPI\_CMD\_REQUEST\_SENSE     0x03}}
+\DoxyCodeLine{52 \textcolor{preprocessor}{\#define ATAPI\_CMD\_READ              0xA8}}
+\DoxyCodeLine{53 }
+\DoxyCodeLine{54 \textcolor{preprocessor}{\#define ATA\_IDENT\_DEVICETYPE   0}}
+\DoxyCodeLine{55 \textcolor{preprocessor}{\#define ATA\_IDENT\_CYLINDERS    2}}
+\DoxyCodeLine{56 \textcolor{preprocessor}{\#define ATA\_IDENT\_HEADS        6}}
+\DoxyCodeLine{57 \textcolor{preprocessor}{\#define ATA\_IDENT\_SECTORS      12}}
+\DoxyCodeLine{58 \textcolor{preprocessor}{\#define ATA\_IDENT\_SERIAL       20}}
+\DoxyCodeLine{59 \textcolor{preprocessor}{\#define ATA\_IDENT\_MODEL        54}}
+\DoxyCodeLine{60 \textcolor{preprocessor}{\#define ATA\_IDENT\_CAPABILITIES 98}}
+\DoxyCodeLine{61 \textcolor{preprocessor}{\#define ATA\_IDENT\_FIELDVALID   106}}
+\DoxyCodeLine{62 \textcolor{preprocessor}{\#define ATA\_IDENT\_MAX\_LBA      120}}
+\DoxyCodeLine{63 \textcolor{preprocessor}{\#define ATA\_IDENT\_COMMANDSETS  164}}
+\DoxyCodeLine{64 \textcolor{preprocessor}{\#define ATA\_IDENT\_MAX\_LBA\_EXT  200}}
+\DoxyCodeLine{65 }
+\DoxyCodeLine{66 \textcolor{preprocessor}{\#define ATA\_CMD\_READ\_PIO          0x20}}
+\DoxyCodeLine{67 \textcolor{preprocessor}{\#define ATA\_CMD\_READ\_PIO\_EXT      0x24}}
+\DoxyCodeLine{68 \textcolor{preprocessor}{\#define ATA\_CMD\_READ\_DMA          0xC8}}
+\DoxyCodeLine{69 \textcolor{preprocessor}{\#define ATA\_CMD\_READ\_DMA\_EXT      0x25}}
+\DoxyCodeLine{70 \textcolor{preprocessor}{\#define ATA\_CMD\_WRITE\_PIO         0x30}}
+\DoxyCodeLine{71 \textcolor{preprocessor}{\#define ATA\_CMD\_WRITE\_PIO\_EXT     0x34}}
+\DoxyCodeLine{72 \textcolor{preprocessor}{\#define ATA\_CMD\_WRITE\_DMA         0xCA}}
+\DoxyCodeLine{73 \textcolor{preprocessor}{\#define ATA\_CMD\_WRITE\_DMA\_EXT     0x35}}
+\DoxyCodeLine{74 \textcolor{preprocessor}{\#define ATA\_CMD\_CACHE\_FLUSH       0xE7}}
+\DoxyCodeLine{75 \textcolor{preprocessor}{\#define ATA\_CMD\_CACHE\_FLUSH\_EXT   0xEA}}
+\DoxyCodeLine{76 \textcolor{preprocessor}{\#define ATA\_CMD\_PACKET            0xA0}}
+\DoxyCodeLine{77 \textcolor{preprocessor}{\#define ATA\_CMD\_IDENTIFY\_PACKET   0xA1}}
+\DoxyCodeLine{78 \textcolor{preprocessor}{\#define ATA\_CMD\_IDENTIFY          0xEC}}
+\DoxyCodeLine{79 }
+\DoxyCodeLine{80 \textcolor{preprocessor}{\#define ATA\_ER\_BBK      0x80    }\textcolor{comment}{// Bad sector}}
+\DoxyCodeLine{81 \textcolor{preprocessor}{\#define ATA\_ER\_UNC      0x40    }\textcolor{comment}{// Uncorrectable data}}
+\DoxyCodeLine{82 \textcolor{preprocessor}{\#define ATA\_ER\_MC       0x20    }\textcolor{comment}{// No media}}
+\DoxyCodeLine{83 \textcolor{preprocessor}{\#define ATA\_ER\_IDNF     0x10    }\textcolor{comment}{// ID mark not found}}
+\DoxyCodeLine{84 \textcolor{preprocessor}{\#define ATA\_ER\_MCR      0x08    }\textcolor{comment}{// No media}}
+\DoxyCodeLine{85 \textcolor{preprocessor}{\#define ATA\_ER\_ABRT     0x04    }\textcolor{comment}{// Command aborted}}
+\DoxyCodeLine{86 \textcolor{preprocessor}{\#define ATA\_ER\_TK0NF    0x02    }\textcolor{comment}{// Track 0 not found}}
+\DoxyCodeLine{87 \textcolor{preprocessor}{\#define ATA\_ER\_AMNF     0x01    }\textcolor{comment}{// No address mark}}
+\DoxyCodeLine{88 }
+\DoxyCodeLine{89 \textcolor{preprocessor}{\#define ATA\_SR\_BSY      0x80    }\textcolor{comment}{// Busy}}
+\DoxyCodeLine{90 \textcolor{preprocessor}{\#define ATA\_SR\_DRDY     0x40    }\textcolor{comment}{// Drive ready}}
+\DoxyCodeLine{91 \textcolor{preprocessor}{\#define ATA\_SR\_DF       0x20    }\textcolor{comment}{// Drive write fault}}
+\DoxyCodeLine{92 \textcolor{preprocessor}{\#define ATA\_SR\_DSC      0x10    }\textcolor{comment}{// Drive seek complete}}
+\DoxyCodeLine{93 \textcolor{preprocessor}{\#define ATA\_SR\_DRQ      0x08    }\textcolor{comment}{// Data request ready}}
+\DoxyCodeLine{94 \textcolor{preprocessor}{\#define ATA\_SR\_CORR     0x04    }\textcolor{comment}{// Corrected data}}
+\DoxyCodeLine{95 \textcolor{preprocessor}{\#define ATA\_SR\_IDX      0x02    }\textcolor{comment}{// Inlex}}
+\DoxyCodeLine{96 \textcolor{preprocessor}{\#define ATA\_SR\_ERR      0x01    }\textcolor{comment}{// Error}}
+\DoxyCodeLine{97 }
+\DoxyCodeLine{98 }
+\DoxyCodeLine{99 \textcolor{keyword}{class }\mbox{\hyperlink{class_i_d_e}{IDE}}: \textcolor{keyword}{public} \mbox{\hyperlink{class_hard_disk_controller}{HardDiskController}}}
+\DoxyCodeLine{100 \{}
+\DoxyCodeLine{101 \textcolor{keyword}{private}:}
+\DoxyCodeLine{102 }
+\DoxyCodeLine{103 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{104     \textcolor{keyword}{friend} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_i_d_e_a3c3911d5c24358345f82a590bf4f2626}{ideChannel0IRQHandler}}(\mbox{\hyperlink{structregs}{regs}}* r, \textcolor{keywordtype}{void}* context);}
+\DoxyCodeLine{105     \textcolor{keyword}{friend} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_i_d_e_a5e527b2a449be9e57f60189ab9b9ad2a}{ideChannel1IRQHandler}}(\mbox{\hyperlink{structregs}{regs}}* r, \textcolor{keywordtype}{void}* context);}
+\DoxyCodeLine{106 }
+\DoxyCodeLine{107     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_i_d_e_a84cc9a99697dece5b90dc5c8f86ae871}{detectDone}} = \textcolor{keyword}{false};}
+\DoxyCodeLine{108 }
+\DoxyCodeLine{109     \textcolor{keyword}{struct }\mbox{\hyperlink{struct_i_d_e_1_1_i_d_e_channels}{IDEChannels}}}
+\DoxyCodeLine{110     \{}
+\DoxyCodeLine{111         uint16\_t \mbox{\hyperlink{struct_i_d_e_1_1_i_d_e_channels_a3f1dd5575549dc4fc0b4a0b46556b046}{base}};}
+\DoxyCodeLine{112         uint16\_t \mbox{\hyperlink{struct_i_d_e_1_1_i_d_e_channels_ae40127ce6e26b8924a9bf20a569f98cf}{ctrl}};}
+\DoxyCodeLine{113         uint16\_t \mbox{\hyperlink{struct_i_d_e_1_1_i_d_e_channels_aaac2d5c8bdde3e44610704c8386954f1}{busMastering}};}
+\DoxyCodeLine{114         uint8\_t \mbox{\hyperlink{struct_i_d_e_1_1_i_d_e_channels_a436e9aa13baadd1d7247f53ddb50b8c7}{nIEN}};}
+\DoxyCodeLine{115 }
+\DoxyCodeLine{116     \} \mbox{\hyperlink{class_i_d_e_a7ffb71a740e391da8d6ca3a69a40647b}{channels}}[2];}
+\DoxyCodeLine{117 }
+\DoxyCodeLine{118 \textcolor{keyword}{public}:}
+\DoxyCodeLine{119     \textcolor{keyword}{struct }\mbox{\hyperlink{struct_i_d_e_1_1_i_d_e_device}{IDEDevice}}}
+\DoxyCodeLine{120     \{}
+\DoxyCodeLine{121         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char}  \mbox{\hyperlink{struct_i_d_e_1_1_i_d_e_device_a5b1359ab21847e716faa92e705df1325}{reserved}};    \textcolor{comment}{// 0 (Empty) or 1 (This Drive really exists).}}
+\DoxyCodeLine{122         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char}  \mbox{\hyperlink{struct_i_d_e_1_1_i_d_e_device_a302c0d1bd6d4aa685df744b1f82dd2b8}{channel}};     \textcolor{comment}{// 0 (Primary Channel) or 1 (Secondary Channel).}}
+\DoxyCodeLine{123         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char}  \mbox{\hyperlink{struct_i_d_e_1_1_i_d_e_device_ae87a760245e63641aea6b27bdb16664d}{drive}};       \textcolor{comment}{// 0 (Master Drive) or 1 (Slave Drive).}}
+\DoxyCodeLine{124         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{short} \mbox{\hyperlink{struct_i_d_e_1_1_i_d_e_device_a2bb7c2b1e204d1714e563188746e77e4}{type}};        \textcolor{comment}{// 0: ATA, 1:ATAPI.}}
+\DoxyCodeLine{125         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{short} \mbox{\hyperlink{struct_i_d_e_1_1_i_d_e_device_a88a257ee979b562ff371bbab4ca56d11}{signature}};   \textcolor{comment}{// Drive Signature}}
+\DoxyCodeLine{126         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{short} \mbox{\hyperlink{struct_i_d_e_1_1_i_d_e_device_a4a44df26024216ee05b1bc2ec5635137}{capabilities}};\textcolor{comment}{// Features.}}
+\DoxyCodeLine{127         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}   \mbox{\hyperlink{struct_i_d_e_1_1_i_d_e_device_a62611d483a86087bec21a4538a3ecf42}{commandSets}}; \textcolor{comment}{// Command Sets Supported.}}
+\DoxyCodeLine{128         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int}   \mbox{\hyperlink{struct_i_d_e_1_1_i_d_e_device_ab392e3413fdb5aad70fae290c6d5a351}{size}};        \textcolor{comment}{// Size in Sectors.}}
+\DoxyCodeLine{129         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char}  \mbox{\hyperlink{struct_i_d_e_1_1_i_d_e_device_a86f6d286dbc37da9cbd51595441f2eaf}{model}}[41];   \textcolor{comment}{// Model in string.}}
+\DoxyCodeLine{130 }
+\DoxyCodeLine{131         \textcolor{keywordtype}{bool} \mbox{\hyperlink{struct_i_d_e_1_1_i_d_e_device_a8d66e7ff5504928ddc27355f71727eb8}{hasLBA}};}
+\DoxyCodeLine{132         \textcolor{keywordtype}{bool} \mbox{\hyperlink{struct_i_d_e_1_1_i_d_e_device_ac2cce129005f7cde873d36ed67e738f5}{hasLBA48}};}
+\DoxyCodeLine{133         \textcolor{keywordtype}{bool} \mbox{\hyperlink{struct_i_d_e_1_1_i_d_e_device_a4d9072d4cdb5be39d360881aec841f9c}{hasDMA}};}
+\DoxyCodeLine{134 }
+\DoxyCodeLine{135     \} \mbox{\hyperlink{class_i_d_e_ae016a535c32406d3c7567a7cc94a85f5}{devices}}[4];}
+\DoxyCodeLine{136 }
+\DoxyCodeLine{137     \textcolor{keyword}{volatile} \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_i_d_e_a784e7d3ceb015b54d6c5185e2fa3e7d9}{irqInvoked}}[2];}
+\DoxyCodeLine{138     }
+\DoxyCodeLine{139     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_i_d_e_a264376f1e67d2b75101955a677cf799c}{legacyIRQs}};}
+\DoxyCodeLine{140 }
+\DoxyCodeLine{141     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_i_d_e_aa27578ea8456118b6cb09bcbd4038d2c}{enableIRQs}}(uint8\_t channel, \textcolor{keywordtype}{bool} on);}
+\DoxyCodeLine{142 }
+\DoxyCodeLine{143     \mbox{\hyperlink{class_i_d_e_a7f50dedd46414c75c4a580d0b1e2fd99}{IDE}}();}
+\DoxyCodeLine{144 }
+\DoxyCodeLine{145     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_i_d_e_a5105aab02e3b4cd1dbd12eb17cd49bee}{selectDrive}}(uint8\_t channel, uint8\_t drive);}
+\DoxyCodeLine{146 }
+\DoxyCodeLine{147     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_i_d_e_a48144ef5d37424fdc49cefa788aaad92}{prepareInterrupt}}(uint8\_t channel);}
+\DoxyCodeLine{148     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_i_d_e_a30a565320cd8641b2658f6da60e17457}{waitInterrupt}}(uint8\_t channel);}
+\DoxyCodeLine{149 }
+\DoxyCodeLine{150     uint16\_t \mbox{\hyperlink{class_i_d_e_a3cea9cd491a69f8481925ff1a05207e8}{getBase}}(uint8\_t channel);}
+\DoxyCodeLine{151 }
+\DoxyCodeLine{152     uint8\_t \mbox{\hyperlink{class_i_d_e_a62fe0e51234b204c64eb6c160f426eb1}{read}}(uint8\_t channel, uint8\_t reg);}
+\DoxyCodeLine{153     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_i_d_e_aa6e0bafc86778ba4ae24453b0dba7669}{write}}(uint8\_t channel, uint8\_t reg, uint8\_t \mbox{\hyperlink{acpi_8hpp_abbaff690fbbced9e133675b72b3c46e9}{data}});}
+\DoxyCodeLine{154     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_i_d_e_abc1206ec43d86da70f38fdb74506bf0d}{readBuffer}}(uint8\_t channel, uint8\_t reg, uint32\_t buffer, uint32\_t quads);}
+\DoxyCodeLine{155     uint8\_t \mbox{\hyperlink{class_i_d_e_a47c3be634196ce67b5b140cdf0d9f548}{polling}}(uint8\_t channel, uint32\_t advanced\_check);}
+\DoxyCodeLine{156     uint8\_t \mbox{\hyperlink{class_i_d_e_a47c2bbe6b4b8fe41a07c6990698c83ba}{printError}}(uint8\_t channel, uint8\_t drive, uint8\_t err);}
+\DoxyCodeLine{157 }
+\DoxyCodeLine{158     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_i_d_e_aebae9d0ee81361567e3661a3ee4bd606}{open}}(\textcolor{keywordtype}{int}, \textcolor{keywordtype}{int}, \textcolor{keywordtype}{void}*);}
+\DoxyCodeLine{159     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_i_d_e_a15a30770efe68e3e4fba11ac10e07448}{close}}(\textcolor{keywordtype}{int}, \textcolor{keywordtype}{int}, \textcolor{keywordtype}{void}*);}
+\DoxyCodeLine{160 }
+\DoxyCodeLine{161     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_i_d_e_aa71bbab36c0d479d0ff4f43f44a40525}{detect}}();}
+\DoxyCodeLine{162 \};}
+\DoxyCodeLine{163 }
+\DoxyCodeLine{164 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{165 }
+\DoxyCodeLine{166 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

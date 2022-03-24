@@ -1,0 +1,185 @@
+\hypertarget{openlibm__complex_8h_source}{}\doxysection{openlibm\+\_\+complex.\+h}
+\label{openlibm__complex_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/libk/\_mathinc/openlibm\_complex.h@{C:/Users/Alex/Desktop/Banana/kernel/libk/\_mathinc/openlibm\_complex.h}}
+\mbox{\hyperlink{openlibm__complex_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*  \$OpenBSD: complex.h,v 1.5 2014/03/16 18:38:30 guenther Exp \$    */}}
+\DoxyCodeLine{2 \textcolor{comment}{/*}}
+\DoxyCodeLine{3 \textcolor{comment}{ * Copyright (c) 2008 Martynas Venckus <martynas@openbsd.org>}}
+\DoxyCodeLine{4 \textcolor{comment}{ *}}
+\DoxyCodeLine{5 \textcolor{comment}{ * Permission to use, copy, modify, and distribute this software for any}}
+\DoxyCodeLine{6 \textcolor{comment}{ * purpose with or without fee is hereby granted, provided that the above}}
+\DoxyCodeLine{7 \textcolor{comment}{ * copyright notice and this permission notice appear in all copies.}}
+\DoxyCodeLine{8 \textcolor{comment}{ *}}
+\DoxyCodeLine{9 \textcolor{comment}{ * THE SOFTWARE IS PROVIDED "{}AS IS"{} AND THE AUTHOR DISCLAIMS ALL WARRANTIES}}
+\DoxyCodeLine{10 \textcolor{comment}{ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF}}
+\DoxyCodeLine{11 \textcolor{comment}{ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR}}
+\DoxyCodeLine{12 \textcolor{comment}{ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES}}
+\DoxyCodeLine{13 \textcolor{comment}{ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN}}
+\DoxyCodeLine{14 \textcolor{comment}{ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF}}
+\DoxyCodeLine{15 \textcolor{comment}{ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.}}
+\DoxyCodeLine{16 \textcolor{comment}{ */}}
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#ifdef OPENLIBM\_USE\_HOST\_COMPLEX\_H}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#include <\mbox{\hyperlink{complex_8h}{complex.h}}>}}
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#else }\textcolor{comment}{/* !OPENLIBM\_USE\_HOST\_COMPLEX\_H */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22 \textcolor{preprocessor}{\#ifndef OPENLIBM\_COMPLEX\_H}}
+\DoxyCodeLine{23 \textcolor{preprocessor}{\#define OPENLIBM\_COMPLEX\_H}}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25 \textcolor{preprocessor}{\#define complex \_Complex}}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{27 \textcolor{preprocessor}{\#define \_Complex\_I 1.0fi}}
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#define I \_Complex\_I}}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30 \textcolor{comment}{/*}}
+\DoxyCodeLine{31 \textcolor{comment}{ * Macros that can be used to construct complex values.}}
+\DoxyCodeLine{32 \textcolor{comment}{ *}}
+\DoxyCodeLine{33 \textcolor{comment}{ * The C99 standard intends x+I*y to be used for this, but x+I*y is}}
+\DoxyCodeLine{34 \textcolor{comment}{ * currently unusable in general since gcc introduces many overflow,}}
+\DoxyCodeLine{35 \textcolor{comment}{ * underflow, sign and efficiency bugs by rewriting I*y as}}
+\DoxyCodeLine{36 \textcolor{comment}{ * (0.0+I)*(y+0.0*I) and laboriously computing the full complex product.}}
+\DoxyCodeLine{37 \textcolor{comment}{ * In particular, I*Inf is corrupted to NaN+I*Inf, and I*-\/0 is corrupted}}
+\DoxyCodeLine{38 \textcolor{comment}{ * to -\/0.0+I*0.0.}}
+\DoxyCodeLine{39 \textcolor{comment}{ *}}
+\DoxyCodeLine{40 \textcolor{comment}{ * In C11, a CMPLX(x,y) macro was added to circumvent this limitation,}}
+\DoxyCodeLine{41 \textcolor{comment}{ * and gcc 4.7 added a \_\_builtin\_complex feature to simplify implementation}}
+\DoxyCodeLine{42 \textcolor{comment}{ * of CMPLX in libc, so we can take advantage of these features if they}}
+\DoxyCodeLine{43 \textcolor{comment}{ * are available. Clang simply allows complex values to be constructed}}
+\DoxyCodeLine{44 \textcolor{comment}{ * using a compound literal.}}
+\DoxyCodeLine{45 \textcolor{comment}{ *}}
+\DoxyCodeLine{46 \textcolor{comment}{ * If \_\_builtin\_complex is not available, resort to using inline}}
+\DoxyCodeLine{47 \textcolor{comment}{ * functions instead. These can unfortunately not be used to construct}}
+\DoxyCodeLine{48 \textcolor{comment}{ * compile-\/time constants.}}
+\DoxyCodeLine{49 \textcolor{comment}{ *}}
+\DoxyCodeLine{50 \textcolor{comment}{ * C99 specifies that complex numbers have the same representation as}}
+\DoxyCodeLine{51 \textcolor{comment}{ * an array of two elements, where the first element is the real part}}
+\DoxyCodeLine{52 \textcolor{comment}{ * and the second element is the imaginary part.}}
+\DoxyCodeLine{53 \textcolor{comment}{ */}}
+\DoxyCodeLine{54 }
+\DoxyCodeLine{55 \textcolor{preprocessor}{\#ifdef \_\_clang\_\_}}
+\DoxyCodeLine{56 \textcolor{preprocessor}{\#  define CMPLXF(x, y) ((float complex)\{x, y\})}}
+\DoxyCodeLine{57 \textcolor{preprocessor}{\#  define CMPLX(x, y) ((double complex)\{x, y\})}}
+\DoxyCodeLine{58 \textcolor{preprocessor}{\#  define CMPLXL(x, y) ((long double complex)\{x, y\})}}
+\DoxyCodeLine{59 \textcolor{preprocessor}{\#elif (\_\_GNUC\_\_ > 4 || (\_\_GNUC\_\_ == 4 \&\& \_\_GNUC\_MINOR\_\_ >= 7)) \&\& !defined(\_\_INTEL\_COMPILER)}}
+\DoxyCodeLine{60 \textcolor{preprocessor}{\#  define CMPLXF(x,y) \_\_builtin\_complex ((float) (x), (float) (y))}}
+\DoxyCodeLine{61 \textcolor{preprocessor}{\#  define CMPLX(x,y) \_\_builtin\_complex ((double) (x), (double) (y))}}
+\DoxyCodeLine{62 \textcolor{preprocessor}{\#  define CMPLXL(x,y) \_\_builtin\_complex ((long double) (x), (long double) (y))}}
+\DoxyCodeLine{63 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{64 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}}}
+\DoxyCodeLine{65 CMPLXF(\textcolor{keywordtype}{float} x, \textcolor{keywordtype}{float} y)}
+\DoxyCodeLine{66 \{}
+\DoxyCodeLine{67     \textcolor{keyword}{union }\{}
+\DoxyCodeLine{68         \textcolor{keywordtype}{float} a[2];}
+\DoxyCodeLine{69         \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} f;}
+\DoxyCodeLine{70     \} z = \{\{ x, y \}\};}
+\DoxyCodeLine{71 }
+\DoxyCodeLine{72     \textcolor{keywordflow}{return} (z.f);}
+\DoxyCodeLine{73 \}}
+\DoxyCodeLine{74 }
+\DoxyCodeLine{75 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}}}
+\DoxyCodeLine{76 CMPLX(\textcolor{keywordtype}{double} x, \textcolor{keywordtype}{double} y)}
+\DoxyCodeLine{77 \{}
+\DoxyCodeLine{78     \textcolor{keyword}{union }\{}
+\DoxyCodeLine{79         \textcolor{keywordtype}{double} a[2];}
+\DoxyCodeLine{80         \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} f;}
+\DoxyCodeLine{81     \} z = \{\{ x, y \}\};}
+\DoxyCodeLine{82 }
+\DoxyCodeLine{83     \textcolor{keywordflow}{return} (z.f);}
+\DoxyCodeLine{84 \}}
+\DoxyCodeLine{85 }
+\DoxyCodeLine{86 \textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}}}
+\DoxyCodeLine{87 CMPLXL(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double} x, \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} y)}
+\DoxyCodeLine{88 \{}
+\DoxyCodeLine{89     \textcolor{keyword}{union }\{}
+\DoxyCodeLine{90         \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} a[2];}
+\DoxyCodeLine{91         \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} f;}
+\DoxyCodeLine{92     \} z = \{\{ x, y \}\};}
+\DoxyCodeLine{93 }
+\DoxyCodeLine{94     \textcolor{keywordflow}{return} (z.f);}
+\DoxyCodeLine{95 \}}
+\DoxyCodeLine{96 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{97 }
+\DoxyCodeLine{98 \textcolor{comment}{/*}}
+\DoxyCodeLine{99 \textcolor{comment}{ * Double versions of C99 functions}}
+\DoxyCodeLine{100 \textcolor{comment}{ */}}
+\DoxyCodeLine{101 \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_ad49395dd9883248f4f91f61cf7b0d81a}{cacos}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{102 \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_ae7aaa88669b91b35d4f4b9bf95a0827b}{casin}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{103 \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a3e268d9f8879fe2d39e1ecdae40b7907}{catan}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{104 \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a07267c3bac1212f9abd056698d2093aa}{ccos}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{105 \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_ad0577cb98f5402541d7a18eba5299efd}{csin}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{106 \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a6e2c572d9ea82264021afba30ce719f1}{ctan}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{107 \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a1ee3bb8a80d96ed99a6cd3758d15c8cc}{cacosh}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{108 \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a8023caf8956ae941524e088c25a6d800}{casinh}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{109 \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a326f9c19bd9cb136afb280d02a8511ee}{catanh}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{110 \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_ab7076ff9f7fdb180ea160e663e8a38c7}{ccosh}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{111 \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a84fdf02177a15b0bc6d25ce97d479ec0}{csinh}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{112 \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a8af708b78f4ab42959eaf7aa94f2aa28}{ctanh}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{113 \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a7ca72c8437d02ceb59e49d0143c14e9a}{cexp}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{114 \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_ac8a5c51667e88fab12d41a945c8f042c}{clog}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{115 \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a934a3dcce914a41dfc4a989b2617d001}{cabs}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{116 \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a8b919b61b0fbbdf4f6b21b6edaed260d}{cpow}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}}, \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{117 \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a01c5895737d0f8030de09f61e3b10e81}{csqrt}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{118 \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_ae1237aea80fa5803100b0b75b5e114c2}{carg}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{119 \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a58ff384fdba74fe1c6b60ac86753bbfd}{cimag}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{120 \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_ad6b2ff60af1501558fc0326b36491035}{conj}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{121 \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a7e223a91da255fa19a111730d96e2787}{cproj}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{122 \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_aa353dc50ef26fcdec2640636269bca6a}{creal}}(\textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{123 }
+\DoxyCodeLine{124 \textcolor{comment}{/*}}
+\DoxyCodeLine{125 \textcolor{comment}{ * Float versions of C99 functions}}
+\DoxyCodeLine{126 \textcolor{comment}{ */}}
+\DoxyCodeLine{127 \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_ad7c8f4abd07bc82d16e6344bf646959e}{cacosf}}(\textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{128 \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a44a7a81682c3c05650b2e5785f777be0}{casinf}}(\textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{129 \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a92517f37857338cee945a26f459e7250}{catanf}}(\textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{130 \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a1acd68eebf0768adfc2897225e61a180}{ccosf}}(\textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{131 \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_afa0eba24a141b9a6ae630cc6ff5142be}{csinf}}(\textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{132 \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_abbb13e31eb49138f72d2338e4d40a42b}{ctanf}}(\textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{133 \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a28523cbaf07d6aca56232228db15a4e5}{cacoshf}}(\textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{134 \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a749180a005b208f39a90d8a24de25541}{casinhf}}(\textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{135 \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a1878a1ce292a8e89a71878150a9b3255}{catanhf}}(\textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{136 \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a68b30836f2bc851adbb64edefc656336}{ccoshf}}(\textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{137 \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_aeecf68c305f12daf9c93f0e3f1d91393}{csinhf}}(\textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{138 \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_ab7209962bd39cb9789c576b2dffbda51}{ctanhf}}(\textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{139 \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_ae156267f9def81480fa47b37acf67d8a}{cexpf}}(\textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{140 \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_ad0b428d29328b613bd0df8a677b1f30f}{clogf}}(\textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{141 \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a04fffcb2a20402179488fb47afa317da}{cabsf}}(\textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{142 \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a7be16be6f6b34c1d6d005a192d46e0ae}{cpowf}}(\textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}}, \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{143 \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a66994fe3ae3423143b4e9adfaaf8689b}{csqrtf}}(\textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{144 \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a362256e0549507efdea72f3640ad9f7d}{cargf}}(\textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{145 \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a14e149e6f7feb4062a7797172bfbe1c0}{cimagf}}(\textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{146 \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a1811814d62aea1ae6f14087f47d9c0a0}{conjf}}(\textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{147 \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_ad3d216b3eed6752745ab706db2b6ad1f}{cprojf}}(\textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{148 \textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a8739c27238889fb3149760b0c1dd3076}{crealf}}(\textcolor{keywordtype}{float} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{149 }
+\DoxyCodeLine{150 \textcolor{comment}{/*}}
+\DoxyCodeLine{151 \textcolor{comment}{ * Long double versions of C99 functions}}
+\DoxyCodeLine{152 \textcolor{comment}{ */}}
+\DoxyCodeLine{153 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a2c992ae0d07831faf17e0bd671cb6dd5}{cacosl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{154 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_ad950e58848b99ab72aba4849aac61a03}{casinl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{155 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_aec064dce28cc3de8dff14caf5fa0f7cc}{catanl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{156 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a11cc88e17a99a8fb8d89c2072a5789ec}{ccosl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{157 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_aa2b9819fc39f9b1c1a7058c97edbe10c}{csinl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{158 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a9e6d0b6bee3ba8ee44fd1dfaab7b776a}{ctanl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{159 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_aeea3863c284bc7c07b6a78ef12081ca4}{cacoshl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{160 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_ad2032aada201f72484ef39ad95c90ccf}{casinhl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{161 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_addded3f63ccbbd0020cf2212997ed528}{catanhl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{162 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a3137232dd3a871772e4526a8590a2f00}{ccoshl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{163 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a1006866659c37ebe0b539357f2b9f9b1}{csinhl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{164 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a2d4c51f865beaa058a57859abe9adeab}{ctanhl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{165 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a25298597e03ac1667c80eb27a22a3a64}{cexpl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{166 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_aef3e1248676794be9a203b16cf924e09}{clogl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{167 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a9e31a1e524333b2dbf515fa30f02fb7f}{cabsl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{168 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a4028ccb00dc600166b1114f734facc90}{cpowl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}},}
+\DoxyCodeLine{169     \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{170 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_add26667b3d8a31389c958b0a04f13469}{csqrtl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{171 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a25c6c3244145362ef60a2f03ae8ff844}{cargl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{172 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_af1beee91140d0412471426604c8870fd}{cimagl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{173 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a968891b7a0320ef6e646d9f45214a9c8}{conjl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{174 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}} \mbox{\hyperlink{openlibm__complex_8h_a9aac7f7f167c9abe8267db89a67887b1}{cprojl}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{175 \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_adb09064852b6946cbe92d889d0c1f238}{creall}}(\textcolor{keywordtype}{long} \textcolor{keywordtype}{double} \mbox{\hyperlink{openlibm__complex_8h_a0fa4878c968311979d497ccc322e0b9b}{complex}});}
+\DoxyCodeLine{176 }
+\DoxyCodeLine{177 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* !OPENLIBM\_COMPLEX\_H */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{178 }
+\DoxyCodeLine{179 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* OPENLIBM\_USE\_HOST\_COMPLEX\_H */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

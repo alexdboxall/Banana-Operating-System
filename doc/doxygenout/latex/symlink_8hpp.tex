@@ -1,0 +1,163 @@
+\hypertarget{symlink_8hpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/fs/symlink.hpp File Reference}
+\label{symlink_8hpp}\index{C:/Users/Alex/Desktop/Banana/kernel/fs/symlink.hpp@{C:/Users/Alex/Desktop/Banana/kernel/fs/symlink.hpp}}
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{symlink_8hpp_a71a17a49240a672e804099211e5b8b67}{Ke\+Initialise\+Symlinks}} ()
+\begin{DoxyCompactList}\small\item\em Registers a handler to be called on system shutdown or restart. 
+\begin{DoxyParams}{Parameters}
+{\em ebx} & The file number.\\
+\hline
+{\em ecx} & Maximum number of bytes to write.\\
+\hline
+{\em edx} & Pointer to write data to.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of bytes read, or -\/1 on failure.
+\end{DoxyReturn}
+\end{DoxyCompactList}\item 
+void \mbox{\hyperlink{symlink_8hpp_a529f1c9e96e3528c01b76afcdb030071}{Ke\+Register\+Symlink}} (const char $\ast$link\+Name, uint64\+\_\+t link\+ID)
+\begin{DoxyCompactList}\small\item\em Adds a symlink entry to the registrar. 
+\begin{DoxyParams}{Parameters}
+{\em link\+Name} & The symlink filepath.\\
+\hline
+{\em link\+ID} & The symlink ID.\\
+\hline
+\end{DoxyParams}
+\end{DoxyCompactList}\item 
+int \mbox{\hyperlink{symlink_8hpp_af00e8403c6f7464e1e6ca65ccc9843ec}{Ke\+Dereference\+Symlink}} (const char $\ast$link\+Name, char $\ast$dereferenced)
+\begin{DoxyCompactList}\small\item\em Checks if a filepath is a symlink and dereferences them if so. 
+\begin{DoxyParams}{Parameters}
+{\em link\+Name} & The symlink filepath.\\
+\hline
+{\em dereferenced} & A pointer to an output buffer.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns 0 on if no symlinks were dereferenced, 1 if there was a dereference, and negative on error.
+\end{DoxyReturn}
+\end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{symlink_8hpp_a84bd033f625a264306aa72d7b6c6e779}{Ke\+Verify\+Symlink}} (const char $\ast$link\+Name)
+\begin{DoxyCompactList}\small\item\em Checks if a filepath is a symlink. 
+\begin{DoxyParams}{Parameters}
+{\em link\+Name} & The symlink filepath.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns true if it is a symlink.
+\end{DoxyReturn}
+\end{DoxyCompactList}\item 
+int \mbox{\hyperlink{symlink_8hpp_aca4c49aa5094fd36d9720f04d630b6c0}{Ke\+Create\+Symlink}} (const char $\ast$existing, const char $\ast$link\+Name)
+\begin{DoxyCompactList}\small\item\em Creates a symbolic link. WARNING\+: if relative or non-\/normalised paths are used the system may become unstable. 
+\begin{DoxyParams}{Parameters}
+{\em existing} & The absolute, normalised target filepath.\\
+\hline
+{\em link\+Name} & The absolute, normalised symlink filepath.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns 0 on success, and non-\/zero on error.
+\end{DoxyReturn}
+\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{symlink_8hpp_aca4c49aa5094fd36d9720f04d630b6c0}\label{symlink_8hpp_aca4c49aa5094fd36d9720f04d630b6c0}} 
+\index{symlink.hpp@{symlink.hpp}!KeCreateSymlink@{KeCreateSymlink}}
+\index{KeCreateSymlink@{KeCreateSymlink}!symlink.hpp@{symlink.hpp}}
+\doxysubsubsection{\texorpdfstring{KeCreateSymlink()}{KeCreateSymlink()}}
+{\footnotesize\ttfamily int Ke\+Create\+Symlink (\begin{DoxyParamCaption}\item[{const char $\ast$}]{existing,  }\item[{const char $\ast$}]{link\+Name }\end{DoxyParamCaption})}
+
+
+
+Creates a symbolic link. WARNING\+: if relative or non-\/normalised paths are used the system may become unstable. 
+\begin{DoxyParams}{Parameters}
+{\em existing} & The absolute, normalised target filepath.\\
+\hline
+{\em link\+Name} & The absolute, normalised symlink filepath.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns 0 on success, and non-\/zero on error.
+\end{DoxyReturn}
+
+
+\mbox{\Hypertarget{symlink_8hpp_af00e8403c6f7464e1e6ca65ccc9843ec}\label{symlink_8hpp_af00e8403c6f7464e1e6ca65ccc9843ec}} 
+\index{symlink.hpp@{symlink.hpp}!KeDereferenceSymlink@{KeDereferenceSymlink}}
+\index{KeDereferenceSymlink@{KeDereferenceSymlink}!symlink.hpp@{symlink.hpp}}
+\doxysubsubsection{\texorpdfstring{KeDereferenceSymlink()}{KeDereferenceSymlink()}}
+{\footnotesize\ttfamily int Ke\+Dereference\+Symlink (\begin{DoxyParamCaption}\item[{const char $\ast$}]{link\+Name,  }\item[{char $\ast$}]{dereferenced }\end{DoxyParamCaption})}
+
+
+
+Checks if a filepath is a symlink and dereferences them if so. 
+\begin{DoxyParams}{Parameters}
+{\em link\+Name} & The symlink filepath.\\
+\hline
+{\em dereferenced} & A pointer to an output buffer.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns 0 on if no symlinks were dereferenced, 1 if there was a dereference, and negative on error.
+\end{DoxyReturn}
+
+
+\mbox{\Hypertarget{symlink_8hpp_a71a17a49240a672e804099211e5b8b67}\label{symlink_8hpp_a71a17a49240a672e804099211e5b8b67}} 
+\index{symlink.hpp@{symlink.hpp}!KeInitialiseSymlinks@{KeInitialiseSymlinks}}
+\index{KeInitialiseSymlinks@{KeInitialiseSymlinks}!symlink.hpp@{symlink.hpp}}
+\doxysubsubsection{\texorpdfstring{KeInitialiseSymlinks()}{KeInitialiseSymlinks()}}
+{\footnotesize\ttfamily void Ke\+Initialise\+Symlinks (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Registers a handler to be called on system shutdown or restart. 
+\begin{DoxyParams}{Parameters}
+{\em ebx} & The file number.\\
+\hline
+{\em ecx} & Maximum number of bytes to write.\\
+\hline
+{\em edx} & Pointer to write data to.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of bytes read, or -\/1 on failure.
+\end{DoxyReturn}
+
+
+Initialises the symlink subsystem. \mbox{\Hypertarget{symlink_8hpp_a529f1c9e96e3528c01b76afcdb030071}\label{symlink_8hpp_a529f1c9e96e3528c01b76afcdb030071}} 
+\index{symlink.hpp@{symlink.hpp}!KeRegisterSymlink@{KeRegisterSymlink}}
+\index{KeRegisterSymlink@{KeRegisterSymlink}!symlink.hpp@{symlink.hpp}}
+\doxysubsubsection{\texorpdfstring{KeRegisterSymlink()}{KeRegisterSymlink()}}
+{\footnotesize\ttfamily void Ke\+Register\+Symlink (\begin{DoxyParamCaption}\item[{const char $\ast$}]{link\+Name,  }\item[{uint64\+\_\+t}]{link\+ID }\end{DoxyParamCaption})}
+
+
+
+Adds a symlink entry to the registrar. 
+\begin{DoxyParams}{Parameters}
+{\em link\+Name} & The symlink filepath.\\
+\hline
+{\em link\+ID} & The symlink ID.\\
+\hline
+\end{DoxyParams}
+
+
+\mbox{\Hypertarget{symlink_8hpp_a84bd033f625a264306aa72d7b6c6e779}\label{symlink_8hpp_a84bd033f625a264306aa72d7b6c6e779}} 
+\index{symlink.hpp@{symlink.hpp}!KeVerifySymlink@{KeVerifySymlink}}
+\index{KeVerifySymlink@{KeVerifySymlink}!symlink.hpp@{symlink.hpp}}
+\doxysubsubsection{\texorpdfstring{KeVerifySymlink()}{KeVerifySymlink()}}
+{\footnotesize\ttfamily bool Ke\+Verify\+Symlink (\begin{DoxyParamCaption}\item[{const char $\ast$}]{link\+Name }\end{DoxyParamCaption})}
+
+
+
+Checks if a filepath is a symlink. 
+\begin{DoxyParams}{Parameters}
+{\em link\+Name} & The symlink filepath.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns true if it is a symlink.
+\end{DoxyReturn}
+
+

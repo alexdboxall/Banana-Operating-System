@@ -1,0 +1,341 @@
+\hypertarget{achware_8h_source}{}\doxysection{achware.\+h}
+\label{achware_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/acpica/achware.h@{C:/Users/Alex/Desktop/Banana/kernel/acpica/achware.h}}
+\mbox{\hyperlink{achware_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{2 \textcolor{comment}{ *}}
+\DoxyCodeLine{3 \textcolor{comment}{ * Name: achware.h -\/-\/ hardware specific interfaces}}
+\DoxyCodeLine{4 \textcolor{comment}{ *}}
+\DoxyCodeLine{5 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{8 \textcolor{comment}{ *}}
+\DoxyCodeLine{9 \textcolor{comment}{ * 1. Copyright Notice}}
+\DoxyCodeLine{10 \textcolor{comment}{ *}}
+\DoxyCodeLine{11 \textcolor{comment}{ * Some or all of this work -\/ Copyright (c) 1999 -\/ 2019, Intel Corp.}}
+\DoxyCodeLine{12 \textcolor{comment}{ * All rights reserved.}}
+\DoxyCodeLine{13 \textcolor{comment}{ *}}
+\DoxyCodeLine{14 \textcolor{comment}{ * 2. License}}
+\DoxyCodeLine{15 \textcolor{comment}{ *}}
+\DoxyCodeLine{16 \textcolor{comment}{ * 2.1. This is your license from Intel Corp. under its intellectual property}}
+\DoxyCodeLine{17 \textcolor{comment}{ * rights. You may have additional license terms from the party that provided}}
+\DoxyCodeLine{18 \textcolor{comment}{ * you this software, covering your right to use that party's intellectual}}
+\DoxyCodeLine{19 \textcolor{comment}{ * property rights.}}
+\DoxyCodeLine{20 \textcolor{comment}{ *}}
+\DoxyCodeLine{21 \textcolor{comment}{ * 2.2. Intel grants, free of charge, to any person ("{}Licensee"{}) obtaining a}}
+\DoxyCodeLine{22 \textcolor{comment}{ * copy of the source code appearing in this file ("{}Covered Code"{}) an}}
+\DoxyCodeLine{23 \textcolor{comment}{ * irrevocable, perpetual, worldwide license under Intel's copyrights in the}}
+\DoxyCodeLine{24 \textcolor{comment}{ * base code distributed originally by Intel ("{}Original Intel Code"{}) to copy,}}
+\DoxyCodeLine{25 \textcolor{comment}{ * make derivatives, distribute, use and display any portion of the Covered}}
+\DoxyCodeLine{26 \textcolor{comment}{ * Code in any form, with the right to sublicense such rights; and}}
+\DoxyCodeLine{27 \textcolor{comment}{ *}}
+\DoxyCodeLine{28 \textcolor{comment}{ * 2.3. Intel grants Licensee a non-\/exclusive and non-\/transferable patent}}
+\DoxyCodeLine{29 \textcolor{comment}{ * license (with the right to sublicense), under only those claims of Intel}}
+\DoxyCodeLine{30 \textcolor{comment}{ * patents that are infringed by the Original Intel Code, to make, use, sell,}}
+\DoxyCodeLine{31 \textcolor{comment}{ * offer to sell, and import the Covered Code and derivative works thereof}}
+\DoxyCodeLine{32 \textcolor{comment}{ * solely to the minimum extent necessary to exercise the above copyright}}
+\DoxyCodeLine{33 \textcolor{comment}{ * license, and in no event shall the patent license extend to any additions}}
+\DoxyCodeLine{34 \textcolor{comment}{ * to or modifications of the Original Intel Code. No other license or right}}
+\DoxyCodeLine{35 \textcolor{comment}{ * is granted directly or by implication, estoppel or otherwise;}}
+\DoxyCodeLine{36 \textcolor{comment}{ *}}
+\DoxyCodeLine{37 \textcolor{comment}{ * The above copyright and patent license is granted only if the following}}
+\DoxyCodeLine{38 \textcolor{comment}{ * conditions are met:}}
+\DoxyCodeLine{39 \textcolor{comment}{ *}}
+\DoxyCodeLine{40 \textcolor{comment}{ * 3. Conditions}}
+\DoxyCodeLine{41 \textcolor{comment}{ *}}
+\DoxyCodeLine{42 \textcolor{comment}{ * 3.1. Redistribution of Source with Rights to Further Distribute Source.}}
+\DoxyCodeLine{43 \textcolor{comment}{ * Redistribution of source code of any substantial portion of the Covered}}
+\DoxyCodeLine{44 \textcolor{comment}{ * Code or modification with rights to further distribute source must include}}
+\DoxyCodeLine{45 \textcolor{comment}{ * the above Copyright Notice, the above License, this list of Conditions,}}
+\DoxyCodeLine{46 \textcolor{comment}{ * and the following Disclaimer and Export Compliance provision. In addition,}}
+\DoxyCodeLine{47 \textcolor{comment}{ * Licensee must cause all Covered Code to which Licensee contributes to}}
+\DoxyCodeLine{48 \textcolor{comment}{ * contain a file documenting the changes Licensee made to create that Covered}}
+\DoxyCodeLine{49 \textcolor{comment}{ * Code and the date of any change. Licensee must include in that file the}}
+\DoxyCodeLine{50 \textcolor{comment}{ * documentation of any changes made by any predecessor Licensee. Licensee}}
+\DoxyCodeLine{51 \textcolor{comment}{ * must include a prominent statement that the modification is derived,}}
+\DoxyCodeLine{52 \textcolor{comment}{ * directly or indirectly, from Original Intel Code.}}
+\DoxyCodeLine{53 \textcolor{comment}{ *}}
+\DoxyCodeLine{54 \textcolor{comment}{ * 3.2. Redistribution of Source with no Rights to Further Distribute Source.}}
+\DoxyCodeLine{55 \textcolor{comment}{ * Redistribution of source code of any substantial portion of the Covered}}
+\DoxyCodeLine{56 \textcolor{comment}{ * Code or modification without rights to further distribute source must}}
+\DoxyCodeLine{57 \textcolor{comment}{ * include the following Disclaimer and Export Compliance provision in the}}
+\DoxyCodeLine{58 \textcolor{comment}{ * documentation and/or other materials provided with distribution. In}}
+\DoxyCodeLine{59 \textcolor{comment}{ * addition, Licensee may not authorize further sublicense of source of any}}
+\DoxyCodeLine{60 \textcolor{comment}{ * portion of the Covered Code, and must include terms to the effect that the}}
+\DoxyCodeLine{61 \textcolor{comment}{ * license from Licensee to its licensee is limited to the intellectual}}
+\DoxyCodeLine{62 \textcolor{comment}{ * property embodied in the software Licensee provides to its licensee, and}}
+\DoxyCodeLine{63 \textcolor{comment}{ * not to intellectual property embodied in modifications its licensee may}}
+\DoxyCodeLine{64 \textcolor{comment}{ * make.}}
+\DoxyCodeLine{65 \textcolor{comment}{ *}}
+\DoxyCodeLine{66 \textcolor{comment}{ * 3.3. Redistribution of Executable. Redistribution in executable form of any}}
+\DoxyCodeLine{67 \textcolor{comment}{ * substantial portion of the Covered Code or modification must reproduce the}}
+\DoxyCodeLine{68 \textcolor{comment}{ * above Copyright Notice, and the following Disclaimer and Export Compliance}}
+\DoxyCodeLine{69 \textcolor{comment}{ * provision in the documentation and/or other materials provided with the}}
+\DoxyCodeLine{70 \textcolor{comment}{ * distribution.}}
+\DoxyCodeLine{71 \textcolor{comment}{ *}}
+\DoxyCodeLine{72 \textcolor{comment}{ * 3.4. Intel retains all right, title, and interest in and to the Original}}
+\DoxyCodeLine{73 \textcolor{comment}{ * Intel Code.}}
+\DoxyCodeLine{74 \textcolor{comment}{ *}}
+\DoxyCodeLine{75 \textcolor{comment}{ * 3.5. Neither the name Intel nor any other trademark owned or controlled by}}
+\DoxyCodeLine{76 \textcolor{comment}{ * Intel shall be used in advertising or otherwise to promote the sale, use or}}
+\DoxyCodeLine{77 \textcolor{comment}{ * other dealings in products derived from or relating to the Covered Code}}
+\DoxyCodeLine{78 \textcolor{comment}{ * without prior written authorization from Intel.}}
+\DoxyCodeLine{79 \textcolor{comment}{ *}}
+\DoxyCodeLine{80 \textcolor{comment}{ * 4. Disclaimer and Export Compliance}}
+\DoxyCodeLine{81 \textcolor{comment}{ *}}
+\DoxyCodeLine{82 \textcolor{comment}{ * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED}}
+\DoxyCodeLine{83 \textcolor{comment}{ * HERE. ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE}}
+\DoxyCodeLine{84 \textcolor{comment}{ * IS PROVIDED "{}AS IS,"{} AND INTEL WILL NOT PROVIDE ANY SUPPORT, ASSISTANCE,}}
+\DoxyCodeLine{85 \textcolor{comment}{ * INSTALLATION, TRAINING OR OTHER SERVICES. INTEL WILL NOT PROVIDE ANY}}
+\DoxyCodeLine{86 \textcolor{comment}{ * UPDATES, ENHANCEMENTS OR EXTENSIONS. INTEL SPECIFICALLY DISCLAIMS ANY}}
+\DoxyCodeLine{87 \textcolor{comment}{ * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A}}
+\DoxyCodeLine{88 \textcolor{comment}{ * PARTICULAR PURPOSE.}}
+\DoxyCodeLine{89 \textcolor{comment}{ *}}
+\DoxyCodeLine{90 \textcolor{comment}{ * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES}}
+\DoxyCodeLine{91 \textcolor{comment}{ * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR}}
+\DoxyCodeLine{92 \textcolor{comment}{ * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,}}
+\DoxyCodeLine{93 \textcolor{comment}{ * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY}}
+\DoxyCodeLine{94 \textcolor{comment}{ * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL}}
+\DoxyCodeLine{95 \textcolor{comment}{ * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES. THESE LIMITATIONS}}
+\DoxyCodeLine{96 \textcolor{comment}{ * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY}}
+\DoxyCodeLine{97 \textcolor{comment}{ * LIMITED REMEDY.}}
+\DoxyCodeLine{98 \textcolor{comment}{ *}}
+\DoxyCodeLine{99 \textcolor{comment}{ * 4.3. Licensee shall not export, either directly or indirectly, any of this}}
+\DoxyCodeLine{100 \textcolor{comment}{ * software or system incorporating such software without first obtaining any}}
+\DoxyCodeLine{101 \textcolor{comment}{ * required license or other approval from the U. S. Department of Commerce or}}
+\DoxyCodeLine{102 \textcolor{comment}{ * any other agency or department of the United States Government. In the}}
+\DoxyCodeLine{103 \textcolor{comment}{ * event Licensee exports any such software from the United States or}}
+\DoxyCodeLine{104 \textcolor{comment}{ * re-\/exports any such software from a foreign destination, Licensee shall}}
+\DoxyCodeLine{105 \textcolor{comment}{ * ensure that the distribution and export/re-\/export of the software is in}}
+\DoxyCodeLine{106 \textcolor{comment}{ * compliance with all laws, regulations, orders, or other restrictions of the}}
+\DoxyCodeLine{107 \textcolor{comment}{ * U.S. Export Administration Regulations. Licensee agrees that neither it nor}}
+\DoxyCodeLine{108 \textcolor{comment}{ * any of its subsidiaries will export/re-\/export any technical data, process,}}
+\DoxyCodeLine{109 \textcolor{comment}{ * software, or service, directly or indirectly, to any country for which the}}
+\DoxyCodeLine{110 \textcolor{comment}{ * United States government or any agency thereof requires an export license,}}
+\DoxyCodeLine{111 \textcolor{comment}{ * other governmental approval, or letter of assurance, without first obtaining}}
+\DoxyCodeLine{112 \textcolor{comment}{ * such license, approval or letter.}}
+\DoxyCodeLine{113 \textcolor{comment}{ *}}
+\DoxyCodeLine{114 \textcolor{comment}{ *****************************************************************************}}
+\DoxyCodeLine{115 \textcolor{comment}{ *}}
+\DoxyCodeLine{116 \textcolor{comment}{ * Alternatively, you may choose to be licensed under the terms of the}}
+\DoxyCodeLine{117 \textcolor{comment}{ * following license:}}
+\DoxyCodeLine{118 \textcolor{comment}{ *}}
+\DoxyCodeLine{119 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{120 \textcolor{comment}{ * modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{121 \textcolor{comment}{ * are met:}}
+\DoxyCodeLine{122 \textcolor{comment}{ * 1. Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{123 \textcolor{comment}{ *    notice, this list of conditions, and the following disclaimer,}}
+\DoxyCodeLine{124 \textcolor{comment}{ *    without modification.}}
+\DoxyCodeLine{125 \textcolor{comment}{ * 2. Redistributions in binary form must reproduce at minimum a disclaimer}}
+\DoxyCodeLine{126 \textcolor{comment}{ *    substantially similar to the "{}NO WARRANTY"{} disclaimer below}}
+\DoxyCodeLine{127 \textcolor{comment}{ *    ("{}Disclaimer"{}) and any redistribution must be conditioned upon}}
+\DoxyCodeLine{128 \textcolor{comment}{ *    including a substantially similar Disclaimer requirement for further}}
+\DoxyCodeLine{129 \textcolor{comment}{ *    binary redistribution.}}
+\DoxyCodeLine{130 \textcolor{comment}{ * 3. Neither the names of the above-\/listed copyright holders nor the names}}
+\DoxyCodeLine{131 \textcolor{comment}{ *    of any contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{132 \textcolor{comment}{ *    from this software without specific prior written permission.}}
+\DoxyCodeLine{133 \textcolor{comment}{ *}}
+\DoxyCodeLine{134 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS}}
+\DoxyCodeLine{135 \textcolor{comment}{ * "{}AS IS"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT}}
+\DoxyCodeLine{136 \textcolor{comment}{ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR}}
+\DoxyCodeLine{137 \textcolor{comment}{ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT}}
+\DoxyCodeLine{138 \textcolor{comment}{ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,}}
+\DoxyCodeLine{139 \textcolor{comment}{ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT}}
+\DoxyCodeLine{140 \textcolor{comment}{ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,}}
+\DoxyCodeLine{141 \textcolor{comment}{ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY}}
+\DoxyCodeLine{142 \textcolor{comment}{ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{143 \textcolor{comment}{ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{144 \textcolor{comment}{ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{145 \textcolor{comment}{ *}}
+\DoxyCodeLine{146 \textcolor{comment}{ * Alternatively, you may choose to be licensed under the terms of the}}
+\DoxyCodeLine{147 \textcolor{comment}{ * GNU General Public License ("{}GPL"{}) version 2 as published by the Free}}
+\DoxyCodeLine{148 \textcolor{comment}{ * Software Foundation.}}
+\DoxyCodeLine{149 \textcolor{comment}{ *}}
+\DoxyCodeLine{150 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{151 }
+\DoxyCodeLine{152 \textcolor{preprocessor}{\#ifndef \_\_ACHWARE\_H\_\_}}
+\DoxyCodeLine{153 \textcolor{preprocessor}{\#define \_\_ACHWARE\_H\_\_}}
+\DoxyCodeLine{154 }
+\DoxyCodeLine{155 }
+\DoxyCodeLine{156 \textcolor{comment}{/* Values for the \_SST predefined method */}}
+\DoxyCodeLine{157 }
+\DoxyCodeLine{158 \textcolor{preprocessor}{\#define ACPI\_SST\_INDICATOR\_OFF  0}}
+\DoxyCodeLine{159 \textcolor{preprocessor}{\#define ACPI\_SST\_WORKING        1}}
+\DoxyCodeLine{160 \textcolor{preprocessor}{\#define ACPI\_SST\_WAKING         2}}
+\DoxyCodeLine{161 \textcolor{preprocessor}{\#define ACPI\_SST\_SLEEPING       3}}
+\DoxyCodeLine{162 \textcolor{preprocessor}{\#define ACPI\_SST\_SLEEP\_CONTEXT  4}}
+\DoxyCodeLine{163 }
+\DoxyCodeLine{164 }
+\DoxyCodeLine{165 \textcolor{comment}{/*}}
+\DoxyCodeLine{166 \textcolor{comment}{ * hwacpi -\/ high level functions}}
+\DoxyCodeLine{167 \textcolor{comment}{ */}}
+\DoxyCodeLine{168 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{169 \mbox{\hyperlink{achware_8h_a34dc0c0a906defa3a8e28d6959af4671}{AcpiHwSetMode}} (}
+\DoxyCodeLine{170     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Mode);}
+\DoxyCodeLine{171 }
+\DoxyCodeLine{172 \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}}
+\DoxyCodeLine{173 \mbox{\hyperlink{achware_8h_a487dd1d8543cce5b9a08ae4d31e72939}{AcpiHwGetMode}} (}
+\DoxyCodeLine{174     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{175 }
+\DoxyCodeLine{176 }
+\DoxyCodeLine{177 \textcolor{comment}{/*}}
+\DoxyCodeLine{178 \textcolor{comment}{ * hwregs -\/ ACPI Register I/O}}
+\DoxyCodeLine{179 \textcolor{comment}{ */}}
+\DoxyCodeLine{180 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{181 \mbox{\hyperlink{achware_8h_a196789617ed934c4a8ccc5bfa9722cd8}{AcpiHwValidateRegister}} (}
+\DoxyCodeLine{182     \mbox{\hyperlink{structacpi__generic__address}{ACPI\_GENERIC\_ADDRESS}}    *Reg,}
+\DoxyCodeLine{183     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   MaxBitWidth,}
+\DoxyCodeLine{184     \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}                  *\mbox{\hyperlink{acpixf_8h_a5c9068e87bdb7dd28aaf9b2565a0cc3c}{Address}});}
+\DoxyCodeLine{185 }
+\DoxyCodeLine{186 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{187 \mbox{\hyperlink{achware_8h_a87ef5991e1a4207c103064a7c489a911}{AcpiHwRead}} (}
+\DoxyCodeLine{188     \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}                  *Value,}
+\DoxyCodeLine{189     \mbox{\hyperlink{structacpi__generic__address}{ACPI\_GENERIC\_ADDRESS}}    *Reg);}
+\DoxyCodeLine{190 }
+\DoxyCodeLine{191 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{192 \mbox{\hyperlink{achware_8h_a2d89755b6c07e5822de638f167823921}{AcpiHwWrite}} (}
+\DoxyCodeLine{193     \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}                  Value,}
+\DoxyCodeLine{194     \mbox{\hyperlink{structacpi__generic__address}{ACPI\_GENERIC\_ADDRESS}}    *Reg);}
+\DoxyCodeLine{195 }
+\DoxyCodeLine{196 \mbox{\hyperlink{structacpi__bit__register__info}{ACPI\_BIT\_REGISTER\_INFO}} *}
+\DoxyCodeLine{197 \mbox{\hyperlink{achware_8h_af042ef907952036879584ac9d8f4dc11}{AcpiHwGetBitRegisterInfo}} (}
+\DoxyCodeLine{198     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  RegisterId);}
+\DoxyCodeLine{199 }
+\DoxyCodeLine{200 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{201 \mbox{\hyperlink{achware_8h_a095780ae9b5dc29a8c9ca9aee867393f}{AcpiHwWritePm1Control}} (}
+\DoxyCodeLine{202     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Pm1aControl,}
+\DoxyCodeLine{203     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Pm1bControl);}
+\DoxyCodeLine{204 }
+\DoxyCodeLine{205 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{206 \mbox{\hyperlink{achware_8h_aa8212851579b4a69c7b4709b7b92c6bb}{AcpiHwRegisterRead}} (}
+\DoxyCodeLine{207     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  RegisterId,}
+\DoxyCodeLine{208     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  *\mbox{\hyperlink{acevents_8h_a0550841ff134bc4e0830d6f5255324dd}{ReturnValue}});}
+\DoxyCodeLine{209 }
+\DoxyCodeLine{210 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{211 \mbox{\hyperlink{achware_8h_aed2316acfd04e3b889a268ce1a3be3eb}{AcpiHwRegisterWrite}} (}
+\DoxyCodeLine{212     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  RegisterId,}
+\DoxyCodeLine{213     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Value);}
+\DoxyCodeLine{214 }
+\DoxyCodeLine{215 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{216 \mbox{\hyperlink{achware_8h_a396f22d708e29a6b296d4684c4157517}{AcpiHwClearAcpiStatus}} (}
+\DoxyCodeLine{217     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{218 }
+\DoxyCodeLine{219 }
+\DoxyCodeLine{220 \textcolor{comment}{/*}}
+\DoxyCodeLine{221 \textcolor{comment}{ * hwsleep -\/ sleep/wake support (Legacy sleep registers)}}
+\DoxyCodeLine{222 \textcolor{comment}{ */}}
+\DoxyCodeLine{223 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{224 \mbox{\hyperlink{achware_8h_a08bf683e4635f6dca4fbdd6a24f61d57}{AcpiHwLegacySleep}} (}
+\DoxyCodeLine{225     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   SleepState);}
+\DoxyCodeLine{226 }
+\DoxyCodeLine{227 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{228 \mbox{\hyperlink{achware_8h_af62e01b05ab2f54be568739d22fff62b}{AcpiHwLegacyWakePrep}} (}
+\DoxyCodeLine{229     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   SleepState);}
+\DoxyCodeLine{230 }
+\DoxyCodeLine{231 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{232 \mbox{\hyperlink{achware_8h_ac7a7a0377af84d5b5fbf242d4635a25d}{AcpiHwLegacyWake}} (}
+\DoxyCodeLine{233     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   SleepState);}
+\DoxyCodeLine{234 }
+\DoxyCodeLine{235 }
+\DoxyCodeLine{236 \textcolor{comment}{/*}}
+\DoxyCodeLine{237 \textcolor{comment}{ * hwesleep -\/ sleep/wake support (Extended FADT-\/V5 sleep registers)}}
+\DoxyCodeLine{238 \textcolor{comment}{ */}}
+\DoxyCodeLine{239 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{240 \mbox{\hyperlink{achware_8h_a1550de7579b3903e7f9fb91e949f9db8}{AcpiHwExecuteSleepMethod}} (}
+\DoxyCodeLine{241     \textcolor{keywordtype}{char}                    *MethodName,}
+\DoxyCodeLine{242     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  IntegerArgument);}
+\DoxyCodeLine{243 }
+\DoxyCodeLine{244 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{245 \mbox{\hyperlink{achware_8h_a8791d659ba00b8599fde4794cb8dc8bf}{AcpiHwExtendedSleep}} (}
+\DoxyCodeLine{246     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   SleepState);}
+\DoxyCodeLine{247 }
+\DoxyCodeLine{248 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{249 \mbox{\hyperlink{achware_8h_a1bb918475abb06c1f47913fefd483aec}{AcpiHwExtendedWakePrep}} (}
+\DoxyCodeLine{250     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   SleepState);}
+\DoxyCodeLine{251 }
+\DoxyCodeLine{252 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{253 \mbox{\hyperlink{achware_8h_ae12c1ccf06fb7a409861a7edb8aef7ce}{AcpiHwExtendedWake}} (}
+\DoxyCodeLine{254     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   SleepState);}
+\DoxyCodeLine{255 }
+\DoxyCodeLine{256 }
+\DoxyCodeLine{257 \textcolor{comment}{/*}}
+\DoxyCodeLine{258 \textcolor{comment}{ * hwvalid -\/ Port I/O with validation}}
+\DoxyCodeLine{259 \textcolor{comment}{ */}}
+\DoxyCodeLine{260 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{261 \mbox{\hyperlink{achware_8h_adf7988fcab38736c4a9081da3ec089df}{AcpiHwReadPort}} (}
+\DoxyCodeLine{262     \mbox{\hyperlink{actypes_8h_a14f5a1e5b1d4431f3d379391cdc9ab55}{ACPI\_IO\_ADDRESS}}         \mbox{\hyperlink{acpixf_8h_a5c9068e87bdb7dd28aaf9b2565a0cc3c}{Address}},}
+\DoxyCodeLine{263     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  *Value,}
+\DoxyCodeLine{264     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Width);}
+\DoxyCodeLine{265 }
+\DoxyCodeLine{266 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{267 \mbox{\hyperlink{achware_8h_a80c11a16d90573982198c81dfa1e18e3}{AcpiHwWritePort}} (}
+\DoxyCodeLine{268     \mbox{\hyperlink{actypes_8h_a14f5a1e5b1d4431f3d379391cdc9ab55}{ACPI\_IO\_ADDRESS}}         \mbox{\hyperlink{acpixf_8h_a5c9068e87bdb7dd28aaf9b2565a0cc3c}{Address}},}
+\DoxyCodeLine{269     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Value,}
+\DoxyCodeLine{270     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Width);}
+\DoxyCodeLine{271 }
+\DoxyCodeLine{272 }
+\DoxyCodeLine{273 \textcolor{comment}{/*}}
+\DoxyCodeLine{274 \textcolor{comment}{ * hwgpe -\/ GPE support}}
+\DoxyCodeLine{275 \textcolor{comment}{ */}}
+\DoxyCodeLine{276 \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}}
+\DoxyCodeLine{277 \mbox{\hyperlink{achware_8h_a1802ad2bdc24b4c99f32df79e19244f0}{AcpiHwGetGpeRegisterBit}} (}
+\DoxyCodeLine{278     \mbox{\hyperlink{structacpi__gpe__event__info}{ACPI\_GPE\_EVENT\_INFO}}     *\mbox{\hyperlink{acevents_8h_a813dee5d772f06121b8db172a8aa6db5}{GpeEventInfo}});}
+\DoxyCodeLine{279 }
+\DoxyCodeLine{280 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{281 \mbox{\hyperlink{achware_8h_a59b3aae6f09a793858776bd160970bd1}{AcpiHwLowSetGpe}} (}
+\DoxyCodeLine{282     \mbox{\hyperlink{structacpi__gpe__event__info}{ACPI\_GPE\_EVENT\_INFO}}     *\mbox{\hyperlink{acevents_8h_a813dee5d772f06121b8db172a8aa6db5}{GpeEventInfo}},}
+\DoxyCodeLine{283     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Action);}
+\DoxyCodeLine{284 }
+\DoxyCodeLine{285 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{286 \mbox{\hyperlink{achware_8h_a030a12a1966988686eb49cafb58d8b34}{AcpiHwDisableGpeBlock}} (}
+\DoxyCodeLine{287     \mbox{\hyperlink{structacpi__gpe__xrupt__info}{ACPI\_GPE\_XRUPT\_INFO}}     *GpeXruptInfo,}
+\DoxyCodeLine{288     \mbox{\hyperlink{structacpi__gpe__block__info}{ACPI\_GPE\_BLOCK\_INFO}}     *GpeBlock,}
+\DoxyCodeLine{289     \textcolor{keywordtype}{void}                    *\mbox{\hyperlink{acevents_8h_a97d06ff39d7dfbebc4998842382a0d4a}{Context}});}
+\DoxyCodeLine{290 }
+\DoxyCodeLine{291 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{292 \mbox{\hyperlink{achware_8h_a1e58d950ef8ade4b732d91ed1fd9a4e6}{AcpiHwClearGpe}} (}
+\DoxyCodeLine{293     \mbox{\hyperlink{structacpi__gpe__event__info}{ACPI\_GPE\_EVENT\_INFO}}     *\mbox{\hyperlink{acevents_8h_a813dee5d772f06121b8db172a8aa6db5}{GpeEventInfo}});}
+\DoxyCodeLine{294 }
+\DoxyCodeLine{295 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{296 \mbox{\hyperlink{achware_8h_ad82055b2167ad26304535e8b4836836f}{AcpiHwClearGpeBlock}} (}
+\DoxyCodeLine{297     \mbox{\hyperlink{structacpi__gpe__xrupt__info}{ACPI\_GPE\_XRUPT\_INFO}}     *GpeXruptInfo,}
+\DoxyCodeLine{298     \mbox{\hyperlink{structacpi__gpe__block__info}{ACPI\_GPE\_BLOCK\_INFO}}     *GpeBlock,}
+\DoxyCodeLine{299     \textcolor{keywordtype}{void}                    *\mbox{\hyperlink{acevents_8h_a97d06ff39d7dfbebc4998842382a0d4a}{Context}});}
+\DoxyCodeLine{300 }
+\DoxyCodeLine{301 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{302 \mbox{\hyperlink{achware_8h_affec99a371a1f30f8b4d730843b4d1ec}{AcpiHwGetGpeStatus}} (}
+\DoxyCodeLine{303     \mbox{\hyperlink{structacpi__gpe__event__info}{ACPI\_GPE\_EVENT\_INFO}}     *\mbox{\hyperlink{acevents_8h_a813dee5d772f06121b8db172a8aa6db5}{GpeEventInfo}},}
+\DoxyCodeLine{304     \mbox{\hyperlink{actypes_8h_aa171fa5b4b3eb21c7f11ab4fb692d857}{ACPI\_EVENT\_STATUS}}       *EventStatus);}
+\DoxyCodeLine{305 }
+\DoxyCodeLine{306 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{307 \mbox{\hyperlink{achware_8h_a6a53892547a84f2ec591f734e34f8456}{AcpiHwDisableAllGpes}} (}
+\DoxyCodeLine{308     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{309 }
+\DoxyCodeLine{310 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{311 \mbox{\hyperlink{achware_8h_ae770d0d8ae7a2af4d2450e1bef4c09aa}{AcpiHwEnableAllRuntimeGpes}} (}
+\DoxyCodeLine{312     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{313 }
+\DoxyCodeLine{314 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{315 \mbox{\hyperlink{achware_8h_a416a7cacbd151825fd768d9ca080083a}{AcpiHwEnableAllWakeupGpes}} (}
+\DoxyCodeLine{316     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{317 }
+\DoxyCodeLine{318 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{319 \mbox{\hyperlink{achware_8h_ab991ded0a8267a3067564f06dc817294}{AcpiHwEnableRuntimeGpeBlock}} (}
+\DoxyCodeLine{320     \mbox{\hyperlink{structacpi__gpe__xrupt__info}{ACPI\_GPE\_XRUPT\_INFO}}     *GpeXruptInfo,}
+\DoxyCodeLine{321     \mbox{\hyperlink{structacpi__gpe__block__info}{ACPI\_GPE\_BLOCK\_INFO}}     *GpeBlock,}
+\DoxyCodeLine{322     \textcolor{keywordtype}{void}                    *\mbox{\hyperlink{acevents_8h_a97d06ff39d7dfbebc4998842382a0d4a}{Context}});}
+\DoxyCodeLine{323 }
+\DoxyCodeLine{324 }
+\DoxyCodeLine{325 \textcolor{comment}{/*}}
+\DoxyCodeLine{326 \textcolor{comment}{ * hwpci -\/ PCI configuration support}}
+\DoxyCodeLine{327 \textcolor{comment}{ */}}
+\DoxyCodeLine{328 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{329 \mbox{\hyperlink{achware_8h_a4376cb8a007a49b0d184629869b687bc}{AcpiHwDerivePciId}} (}
+\DoxyCodeLine{330     \mbox{\hyperlink{structacpi__pci__id}{ACPI\_PCI\_ID}}             *PciId,}
+\DoxyCodeLine{331     \mbox{\hyperlink{actypes_8h_ab4373cbcb448c2617629232a16e8de72}{ACPI\_HANDLE}}             RootPciDevice,}
+\DoxyCodeLine{332     \mbox{\hyperlink{actypes_8h_ab4373cbcb448c2617629232a16e8de72}{ACPI\_HANDLE}}             PciRegion);}
+\DoxyCodeLine{333 }
+\DoxyCodeLine{334 }
+\DoxyCodeLine{335 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_ACHWARE\_H\_\_ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

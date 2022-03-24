@@ -1,0 +1,209 @@
+\hypertarget{powctrl_8hpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/krnl/powctrl.hpp File Reference}
+\label{powctrl_8hpp}\index{C:/Users/Alex/Desktop/Banana/kernel/krnl/powctrl.hpp@{C:/Users/Alex/Desktop/Banana/kernel/krnl/powctrl.hpp}}
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stddef.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}hal/device.\+hpp\char`\"{}}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_power_settings}{Power\+Settings}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{powctrl_8hpp_aa98f1f0a843cedcd5553e251cccdd077}{Power\+Button\+Option}} \+: int \{ \mbox{\hyperlink{powctrl_8hpp_aa98f1f0a843cedcd5553e251cccdd077af80a4ad87fee7c9fdc19b7769495fdb5}{Nothing}}
+, \mbox{\hyperlink{powctrl_8hpp_aa98f1f0a843cedcd5553e251cccdd077a243924bfd56a682be235638b53961e09}{Sleep}}
+, \mbox{\hyperlink{powctrl_8hpp_aa98f1f0a843cedcd5553e251cccdd077a1a4ebb180ba59b067782515ffee6e975}{Shutdown}}
+, \mbox{\hyperlink{powctrl_8hpp_aa98f1f0a843cedcd5553e251cccdd077a3341d5262f7fe5e0e6f1bd817ac6267f}{Display\+Off}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{powctrl_8hpp_ab0a42f30a8303385c64382be01b4adf3}{Ke\+Change\+Power\+Settings}} (\mbox{\hyperlink{struct_power_settings}{Power\+Settings}} settings)
+\item 
+void \mbox{\hyperlink{powctrl_8hpp_acd285c452f7461f460a8ad9f7ddcbc43}{Ke\+Setup\+Power\+Manager}} ()
+\item 
+void \mbox{\hyperlink{powctrl_8hpp_a2048f97964c4cdb03ca758222becd196}{Ke\+User\+IOReceived}} ()
+\item 
+void \mbox{\hyperlink{powctrl_8hpp_a0799be81ffcdd0a1d83c302e7a028b9e}{Ke\+Handle\+Power\+Button}} ()
+\item 
+void \mbox{\hyperlink{powctrl_8hpp_a1e44b8c4c431247fab4bf9d482917a77}{Ke\+Handle\+Sleep\+Button}} ()
+\item 
+void \mbox{\hyperlink{powctrl_8hpp_afefbf876568c8f0fe48513cffe1b0def}{Ke\+Register\+Shutdown\+Handler}} (void($\ast$shutdown\+Func)())
+\begin{DoxyCompactList}\small\item\em The function passed to this function will be called to when we need to turn off the computer. The function passed should immediately turn the computer off, and not do anything else. If the computer does not support shutdown, the function passed may simply do nothing. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{powctrl_8hpp_aeec771d70fbf6f62f66bd2f1ec84f907}{Ke\+Register\+Restart\+Handler}} (void($\ast$restart\+Func)())
+\begin{DoxyCompactList}\small\item\em The function passed to this function will be called to when we need to restart the computer. The function passed should immediately restart the computer, and not do anything else. This function must succeed in restarting the computer, otherwise it should panic. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{powctrl_8hpp_a1ac180a7ad79d728c12672781be919be}{Ke\+Register\+Sleep\+Handler}} (void($\ast$sleep\+Func)())
+\begin{DoxyCompactList}\small\item\em The function passed to this function will be called to when we need to put the computer to sleep. The function passed should immediately put the computer to sleep. It should also completely get the computer out of sleep before it returns. If the computer does not support sleep, the function passed may simply do nothing. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{powctrl_8hpp_a2c0a9fbde42f3f0755c6b5404beccabf}{Ke\+Shutdown}} ()
+\begin{DoxyCompactList}\small\item\em Performs system deinitialisation, and then turns the computer off. This function will never return, even if the computer does not support being turned off. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{powctrl_8hpp_a66174a5e98b553d261290a02af68d2b1}{Ke\+Sleep}} ()
+\begin{DoxyCompactList}\small\item\em Puts the computer into sleep mode if it is supported. The function will return after the computer has been woken up. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{powctrl_8hpp_a44b04f22ae55900fc510696a7af7a632}{Ke\+Restart}} ()
+\begin{DoxyCompactList}\small\item\em Performs systems deinitialisation, and then reboots the computer. This function will never return. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{powctrl_8hpp_a0de31e611c5185ea36677ab3854cb70b}{seconds\+Since\+Last\+User\+IO}}
+\item 
+\mbox{\hyperlink{struct_power_settings}{Power\+Settings}} \mbox{\hyperlink{powctrl_8hpp_ac10806f3916ceb27b88fbe57fddb03ae}{current\+Power\+Settings}}
+\item 
+bool \mbox{\hyperlink{powctrl_8hpp_ad294ce41be7c11b77088cfe94450f82b}{pow\+Ctrl\+On\+Battery}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{powctrl_8hpp_aa98f1f0a843cedcd5553e251cccdd077}\label{powctrl_8hpp_aa98f1f0a843cedcd5553e251cccdd077}} 
+\index{powctrl.hpp@{powctrl.hpp}!PowerButtonOption@{PowerButtonOption}}
+\index{PowerButtonOption@{PowerButtonOption}!powctrl.hpp@{powctrl.hpp}}
+\doxysubsubsection{\texorpdfstring{PowerButtonOption}{PowerButtonOption}}
+{\footnotesize\ttfamily enum class \mbox{\hyperlink{powctrl_8hpp_aa98f1f0a843cedcd5553e251cccdd077}{Power\+Button\+Option}} \+: int\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Nothing@{Nothing}!powctrl.hpp@{powctrl.hpp}}\index{powctrl.hpp@{powctrl.hpp}!Nothing@{Nothing}}}\mbox{\Hypertarget{powctrl_8hpp_aa98f1f0a843cedcd5553e251cccdd077af80a4ad87fee7c9fdc19b7769495fdb5}\label{powctrl_8hpp_aa98f1f0a843cedcd5553e251cccdd077af80a4ad87fee7c9fdc19b7769495fdb5}} 
+Nothing&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Sleep@{Sleep}!powctrl.hpp@{powctrl.hpp}}\index{powctrl.hpp@{powctrl.hpp}!Sleep@{Sleep}}}\mbox{\Hypertarget{powctrl_8hpp_aa98f1f0a843cedcd5553e251cccdd077a243924bfd56a682be235638b53961e09}\label{powctrl_8hpp_aa98f1f0a843cedcd5553e251cccdd077a243924bfd56a682be235638b53961e09}} 
+Sleep&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Shutdown@{Shutdown}!powctrl.hpp@{powctrl.hpp}}\index{powctrl.hpp@{powctrl.hpp}!Shutdown@{Shutdown}}}\mbox{\Hypertarget{powctrl_8hpp_aa98f1f0a843cedcd5553e251cccdd077a1a4ebb180ba59b067782515ffee6e975}\label{powctrl_8hpp_aa98f1f0a843cedcd5553e251cccdd077a1a4ebb180ba59b067782515ffee6e975}} 
+Shutdown&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{DisplayOff@{DisplayOff}!powctrl.hpp@{powctrl.hpp}}\index{powctrl.hpp@{powctrl.hpp}!DisplayOff@{DisplayOff}}}\mbox{\Hypertarget{powctrl_8hpp_aa98f1f0a843cedcd5553e251cccdd077a3341d5262f7fe5e0e6f1bd817ac6267f}\label{powctrl_8hpp_aa98f1f0a843cedcd5553e251cccdd077a3341d5262f7fe5e0e6f1bd817ac6267f}} 
+Display\+Off&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{powctrl_8hpp_ab0a42f30a8303385c64382be01b4adf3}\label{powctrl_8hpp_ab0a42f30a8303385c64382be01b4adf3}} 
+\index{powctrl.hpp@{powctrl.hpp}!KeChangePowerSettings@{KeChangePowerSettings}}
+\index{KeChangePowerSettings@{KeChangePowerSettings}!powctrl.hpp@{powctrl.hpp}}
+\doxysubsubsection{\texorpdfstring{KeChangePowerSettings()}{KeChangePowerSettings()}}
+{\footnotesize\ttfamily void Ke\+Change\+Power\+Settings (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_power_settings}{Power\+Settings}}}]{settings }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{powctrl_8hpp_a0799be81ffcdd0a1d83c302e7a028b9e}\label{powctrl_8hpp_a0799be81ffcdd0a1d83c302e7a028b9e}} 
+\index{powctrl.hpp@{powctrl.hpp}!KeHandlePowerButton@{KeHandlePowerButton}}
+\index{KeHandlePowerButton@{KeHandlePowerButton}!powctrl.hpp@{powctrl.hpp}}
+\doxysubsubsection{\texorpdfstring{KeHandlePowerButton()}{KeHandlePowerButton()}}
+{\footnotesize\ttfamily void Ke\+Handle\+Power\+Button (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{powctrl_8hpp_a1e44b8c4c431247fab4bf9d482917a77}\label{powctrl_8hpp_a1e44b8c4c431247fab4bf9d482917a77}} 
+\index{powctrl.hpp@{powctrl.hpp}!KeHandleSleepButton@{KeHandleSleepButton}}
+\index{KeHandleSleepButton@{KeHandleSleepButton}!powctrl.hpp@{powctrl.hpp}}
+\doxysubsubsection{\texorpdfstring{KeHandleSleepButton()}{KeHandleSleepButton()}}
+{\footnotesize\ttfamily void Ke\+Handle\+Sleep\+Button (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{powctrl_8hpp_aeec771d70fbf6f62f66bd2f1ec84f907}\label{powctrl_8hpp_aeec771d70fbf6f62f66bd2f1ec84f907}} 
+\index{powctrl.hpp@{powctrl.hpp}!KeRegisterRestartHandler@{KeRegisterRestartHandler}}
+\index{KeRegisterRestartHandler@{KeRegisterRestartHandler}!powctrl.hpp@{powctrl.hpp}}
+\doxysubsubsection{\texorpdfstring{KeRegisterRestartHandler()}{KeRegisterRestartHandler()}}
+{\footnotesize\ttfamily void Ke\+Register\+Restart\+Handler (\begin{DoxyParamCaption}\item[{void($\ast$)()}]{restart\+Func }\end{DoxyParamCaption})}
+
+
+
+The function passed to this function will be called to when we need to restart the computer. The function passed should immediately restart the computer, and not do anything else. This function must succeed in restarting the computer, otherwise it should panic. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em restart\+Func} & A function which can restart the computer.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{powctrl_8hpp_afefbf876568c8f0fe48513cffe1b0def}\label{powctrl_8hpp_afefbf876568c8f0fe48513cffe1b0def}} 
+\index{powctrl.hpp@{powctrl.hpp}!KeRegisterShutdownHandler@{KeRegisterShutdownHandler}}
+\index{KeRegisterShutdownHandler@{KeRegisterShutdownHandler}!powctrl.hpp@{powctrl.hpp}}
+\doxysubsubsection{\texorpdfstring{KeRegisterShutdownHandler()}{KeRegisterShutdownHandler()}}
+{\footnotesize\ttfamily void Ke\+Register\+Shutdown\+Handler (\begin{DoxyParamCaption}\item[{void($\ast$)()}]{shutdown\+Func }\end{DoxyParamCaption})}
+
+
+
+The function passed to this function will be called to when we need to turn off the computer. The function passed should immediately turn the computer off, and not do anything else. If the computer does not support shutdown, the function passed may simply do nothing. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em shutdown\+Func} & A function which can turn off the computer.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{powctrl_8hpp_a1ac180a7ad79d728c12672781be919be}\label{powctrl_8hpp_a1ac180a7ad79d728c12672781be919be}} 
+\index{powctrl.hpp@{powctrl.hpp}!KeRegisterSleepHandler@{KeRegisterSleepHandler}}
+\index{KeRegisterSleepHandler@{KeRegisterSleepHandler}!powctrl.hpp@{powctrl.hpp}}
+\doxysubsubsection{\texorpdfstring{KeRegisterSleepHandler()}{KeRegisterSleepHandler()}}
+{\footnotesize\ttfamily void Ke\+Register\+Sleep\+Handler (\begin{DoxyParamCaption}\item[{void($\ast$)()}]{sleep\+Func }\end{DoxyParamCaption})}
+
+
+
+The function passed to this function will be called to when we need to put the computer to sleep. The function passed should immediately put the computer to sleep. It should also completely get the computer out of sleep before it returns. If the computer does not support sleep, the function passed may simply do nothing. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em restart\+Func} & A function which can restart the computer.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{powctrl_8hpp_a44b04f22ae55900fc510696a7af7a632}\label{powctrl_8hpp_a44b04f22ae55900fc510696a7af7a632}} 
+\index{powctrl.hpp@{powctrl.hpp}!KeRestart@{KeRestart}}
+\index{KeRestart@{KeRestart}!powctrl.hpp@{powctrl.hpp}}
+\doxysubsubsection{\texorpdfstring{KeRestart()}{KeRestart()}}
+{\footnotesize\ttfamily void Ke\+Restart (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Performs systems deinitialisation, and then reboots the computer. This function will never return. 
+
+\mbox{\Hypertarget{powctrl_8hpp_acd285c452f7461f460a8ad9f7ddcbc43}\label{powctrl_8hpp_acd285c452f7461f460a8ad9f7ddcbc43}} 
+\index{powctrl.hpp@{powctrl.hpp}!KeSetupPowerManager@{KeSetupPowerManager}}
+\index{KeSetupPowerManager@{KeSetupPowerManager}!powctrl.hpp@{powctrl.hpp}}
+\doxysubsubsection{\texorpdfstring{KeSetupPowerManager()}{KeSetupPowerManager()}}
+{\footnotesize\ttfamily void Ke\+Setup\+Power\+Manager (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{powctrl_8hpp_a2c0a9fbde42f3f0755c6b5404beccabf}\label{powctrl_8hpp_a2c0a9fbde42f3f0755c6b5404beccabf}} 
+\index{powctrl.hpp@{powctrl.hpp}!KeShutdown@{KeShutdown}}
+\index{KeShutdown@{KeShutdown}!powctrl.hpp@{powctrl.hpp}}
+\doxysubsubsection{\texorpdfstring{KeShutdown()}{KeShutdown()}}
+{\footnotesize\ttfamily void Ke\+Shutdown (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Performs system deinitialisation, and then turns the computer off. This function will never return, even if the computer does not support being turned off. 
+
+\mbox{\Hypertarget{powctrl_8hpp_a66174a5e98b553d261290a02af68d2b1}\label{powctrl_8hpp_a66174a5e98b553d261290a02af68d2b1}} 
+\index{powctrl.hpp@{powctrl.hpp}!KeSleep@{KeSleep}}
+\index{KeSleep@{KeSleep}!powctrl.hpp@{powctrl.hpp}}
+\doxysubsubsection{\texorpdfstring{KeSleep()}{KeSleep()}}
+{\footnotesize\ttfamily void Ke\+Sleep (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Puts the computer into sleep mode if it is supported. The function will return after the computer has been woken up. 
+
+\mbox{\Hypertarget{powctrl_8hpp_a2048f97964c4cdb03ca758222becd196}\label{powctrl_8hpp_a2048f97964c4cdb03ca758222becd196}} 
+\index{powctrl.hpp@{powctrl.hpp}!KeUserIOReceived@{KeUserIOReceived}}
+\index{KeUserIOReceived@{KeUserIOReceived}!powctrl.hpp@{powctrl.hpp}}
+\doxysubsubsection{\texorpdfstring{KeUserIOReceived()}{KeUserIOReceived()}}
+{\footnotesize\ttfamily void Ke\+User\+IOReceived (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{powctrl_8hpp_ac10806f3916ceb27b88fbe57fddb03ae}\label{powctrl_8hpp_ac10806f3916ceb27b88fbe57fddb03ae}} 
+\index{powctrl.hpp@{powctrl.hpp}!currentPowerSettings@{currentPowerSettings}}
+\index{currentPowerSettings@{currentPowerSettings}!powctrl.hpp@{powctrl.hpp}}
+\doxysubsubsection{\texorpdfstring{currentPowerSettings}{currentPowerSettings}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_power_settings}{Power\+Settings}} current\+Power\+Settings\hspace{0.3cm}{\ttfamily [extern]}}
+
+\mbox{\Hypertarget{powctrl_8hpp_ad294ce41be7c11b77088cfe94450f82b}\label{powctrl_8hpp_ad294ce41be7c11b77088cfe94450f82b}} 
+\index{powctrl.hpp@{powctrl.hpp}!powCtrlOnBattery@{powCtrlOnBattery}}
+\index{powCtrlOnBattery@{powCtrlOnBattery}!powctrl.hpp@{powctrl.hpp}}
+\doxysubsubsection{\texorpdfstring{powCtrlOnBattery}{powCtrlOnBattery}}
+{\footnotesize\ttfamily bool pow\+Ctrl\+On\+Battery\hspace{0.3cm}{\ttfamily [extern]}}
+
+\mbox{\Hypertarget{powctrl_8hpp_a0de31e611c5185ea36677ab3854cb70b}\label{powctrl_8hpp_a0de31e611c5185ea36677ab3854cb70b}} 
+\index{powctrl.hpp@{powctrl.hpp}!secondsSinceLastUserIO@{secondsSinceLastUserIO}}
+\index{secondsSinceLastUserIO@{secondsSinceLastUserIO}!powctrl.hpp@{powctrl.hpp}}
+\doxysubsubsection{\texorpdfstring{secondsSinceLastUserIO}{secondsSinceLastUserIO}}
+{\footnotesize\ttfamily int seconds\+Since\+Last\+User\+IO\hspace{0.3cm}{\ttfamily [extern]}}
+

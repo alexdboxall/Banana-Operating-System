@@ -1,0 +1,189 @@
+\hypertarget{vfs_8hpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/fs/vfs.hpp File Reference}
+\label{vfs_8hpp}\index{C:/Users/Alex/Desktop/Banana/kernel/fs/vfs.hpp@{C:/Users/Alex/Desktop/Banana/kernel/fs/vfs.hpp}}
+{\ttfamily \#include $<$stddef.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}krnl/main.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}thr/prcssthr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/unixfile.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hal/logidisk.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../libraries/newlib-\/3.\+3.\+0/newlib/libc/sys/banana/sys/dirent.\+h\char`\"{}}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_filesystem}{Filesystem}}
+\item 
+class \mbox{\hyperlink{class_file}{File}}
+\item 
+class \mbox{\hyperlink{class_directory}{Directory}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespace_fs}{Fs}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{vfs_8hpp_ab822b3786e8e8e906e5b95739a35ba31}{FILE\+\_\+\+OPEN\+\_\+\+READ}}~\mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a7a1a5f3e79fdc91edf2f5ead9d66abb4}{File\+Open\+Mode\+::\+Read}}
+\item 
+\#define \mbox{\hyperlink{vfs_8hpp_a99e37edec628047c52b2e827ce5ac247}{FILE\+\_\+\+OPEN\+\_\+\+WRITE\+\_\+\+EXISTING}}~\mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a1129c0e4d43f2d121652a7302712cff6}{File\+Open\+Mode\+::\+Write}}
+\item 
+\#define \mbox{\hyperlink{vfs_8hpp_a96eb5a629f7556174171f3e344078a20}{FILE\+\_\+\+OPEN\+\_\+\+WRITE\+\_\+\+NORMAL}}~((\mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64}{File\+Open\+Mode}}) (((int) \mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a1129c0e4d43f2d121652a7302712cff6}{File\+Open\+Mode\+::\+Write}}) $\vert$ ((int) \mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a5007129116ac317941eafb99b92b62d7}{File\+Open\+Mode\+::\+Create\+Always}})))
+\item 
+\#define \mbox{\hyperlink{vfs_8hpp_abf90fca722b5e3ce1f5fbc4d61fb3d23}{FILE\+\_\+\+OPEN\+\_\+\+APPEND}}~((\mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64}{File\+Open\+Mode}}) (((int) \mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a1129c0e4d43f2d121652a7302712cff6}{File\+Open\+Mode\+::\+Write}}) $\vert$ ((int) \mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a3ac4692f3935a49a0b243eecf529faa9}{File\+Open\+Mode\+::\+Append}})))
+\item 
+\#define \mbox{\hyperlink{vfs_8hpp_a9f56d71319fa6a862bbbc613596f9c7f}{\+\_\+\+\_\+\+KERNEL\+\_\+\+DIRENT\+\_\+\+INCLUDE}}
+\item 
+\#define \mbox{\hyperlink{vfs_8hpp_a88bd6b29c62a6e7fcc02d8400a3cc48e}{\+\_\+\+TIME\+\_\+\+T\+\_\+\+DECLARED}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef uint64\+\_\+t \mbox{\hyperlink{vfs_8hpp_a02ad034d26db2c14b7e295b0c50fc11d}{time\+\_\+t}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64}{File\+Open\+Mode}} \{ \newline
+\mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a7a1a5f3e79fdc91edf2f5ead9d66abb4}{Read}} = 1
+, \mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a1129c0e4d43f2d121652a7302712cff6}{Write}} = 2
+, \mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a3ac4692f3935a49a0b243eecf529faa9}{Append}} = 4
+, \mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a16aad4508a33afcd497d9cb37480722f}{Create\+New}} = 8
+, \newline
+\mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a5007129116ac317941eafb99b92b62d7}{Create\+Always}} = 16
+ \}
+\item 
+enum class \mbox{\hyperlink{vfs_8hpp_a41784127deb5b1139a8aeb933b9b6ede}{FATAttribute}} \{ \mbox{\hyperlink{vfs_8hpp_a41784127deb5b1139a8aeb933b9b6edea131fb182a881796e7606ed6da27f1197}{Read\+Only}} = 1
+, \mbox{\hyperlink{vfs_8hpp_a41784127deb5b1139a8aeb933b9b6edeae727b00944f81e1d0a95c12886ac4641}{Archive}} = 2
+, \mbox{\hyperlink{vfs_8hpp_a41784127deb5b1139a8aeb933b9b6edeaa45da96d0bf6575970f2d27af22be28a}{System}} = 4
+, \mbox{\hyperlink{vfs_8hpp_a41784127deb5b1139a8aeb933b9b6edea7acdf85c69cc3c5305456a293524386e}{Hidden}} = 8
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{namespace_fs_aca5d49753ce8e9650ae290713e1d0dd5}{Fs\+::getcwd}} (\mbox{\hyperlink{struct_process}{Process}} $\ast$process, char $\ast$buffer, int bytes)
+\item 
+int \mbox{\hyperlink{namespace_fs_ac00dde3a82bf4d0e3f35a43862403a99}{Fs\+::setcwd}} (\mbox{\hyperlink{struct_process}{Process}} $\ast$process, char $\ast$buffer)
+\item 
+void \mbox{\hyperlink{namespace_fs_a423b59bad53fa15e902c2d371e88dad6}{Fs\+::standardise\+Files}} (char $\ast$out\+Buffer, const char $\ast$filename, const char $\ast$cwd, bool follow\+Symlinks)
+\item 
+void \mbox{\hyperlink{namespace_fs_af5c3fa95602360ba42d72bf288194c21}{Fs\+::init\+VFS}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_filesystem}{Filesystem}} $\ast$ \mbox{\hyperlink{vfs_8hpp_a655b8583ec32c28a37e5281b15fad669}{installed\+Filesystems}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{vfs_8hpp_a9f56d71319fa6a862bbbc613596f9c7f}\label{vfs_8hpp_a9f56d71319fa6a862bbbc613596f9c7f}} 
+\index{vfs.hpp@{vfs.hpp}!\_\_KERNEL\_DIRENT\_INCLUDE@{\_\_KERNEL\_DIRENT\_INCLUDE}}
+\index{\_\_KERNEL\_DIRENT\_INCLUDE@{\_\_KERNEL\_DIRENT\_INCLUDE}!vfs.hpp@{vfs.hpp}}
+\doxysubsubsection{\texorpdfstring{\_\_KERNEL\_DIRENT\_INCLUDE}{\_\_KERNEL\_DIRENT\_INCLUDE}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+KERNEL\+\_\+\+DIRENT\+\_\+\+INCLUDE}
+
+\mbox{\Hypertarget{vfs_8hpp_a88bd6b29c62a6e7fcc02d8400a3cc48e}\label{vfs_8hpp_a88bd6b29c62a6e7fcc02d8400a3cc48e}} 
+\index{vfs.hpp@{vfs.hpp}!\_TIME\_T\_DECLARED@{\_TIME\_T\_DECLARED}}
+\index{\_TIME\_T\_DECLARED@{\_TIME\_T\_DECLARED}!vfs.hpp@{vfs.hpp}}
+\doxysubsubsection{\texorpdfstring{\_TIME\_T\_DECLARED}{\_TIME\_T\_DECLARED}}
+{\footnotesize\ttfamily \#define \+\_\+\+TIME\+\_\+\+T\+\_\+\+DECLARED}
+
+\mbox{\Hypertarget{vfs_8hpp_abf90fca722b5e3ce1f5fbc4d61fb3d23}\label{vfs_8hpp_abf90fca722b5e3ce1f5fbc4d61fb3d23}} 
+\index{vfs.hpp@{vfs.hpp}!FILE\_OPEN\_APPEND@{FILE\_OPEN\_APPEND}}
+\index{FILE\_OPEN\_APPEND@{FILE\_OPEN\_APPEND}!vfs.hpp@{vfs.hpp}}
+\doxysubsubsection{\texorpdfstring{FILE\_OPEN\_APPEND}{FILE\_OPEN\_APPEND}}
+{\footnotesize\ttfamily \#define FILE\+\_\+\+OPEN\+\_\+\+APPEND~((\mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64}{File\+Open\+Mode}}) (((int) \mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a1129c0e4d43f2d121652a7302712cff6}{File\+Open\+Mode\+::\+Write}}) $\vert$ ((int) \mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a3ac4692f3935a49a0b243eecf529faa9}{File\+Open\+Mode\+::\+Append}})))}
+
+\mbox{\Hypertarget{vfs_8hpp_ab822b3786e8e8e906e5b95739a35ba31}\label{vfs_8hpp_ab822b3786e8e8e906e5b95739a35ba31}} 
+\index{vfs.hpp@{vfs.hpp}!FILE\_OPEN\_READ@{FILE\_OPEN\_READ}}
+\index{FILE\_OPEN\_READ@{FILE\_OPEN\_READ}!vfs.hpp@{vfs.hpp}}
+\doxysubsubsection{\texorpdfstring{FILE\_OPEN\_READ}{FILE\_OPEN\_READ}}
+{\footnotesize\ttfamily \#define FILE\+\_\+\+OPEN\+\_\+\+READ~\mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a7a1a5f3e79fdc91edf2f5ead9d66abb4}{File\+Open\+Mode\+::\+Read}}}
+
+\mbox{\Hypertarget{vfs_8hpp_a99e37edec628047c52b2e827ce5ac247}\label{vfs_8hpp_a99e37edec628047c52b2e827ce5ac247}} 
+\index{vfs.hpp@{vfs.hpp}!FILE\_OPEN\_WRITE\_EXISTING@{FILE\_OPEN\_WRITE\_EXISTING}}
+\index{FILE\_OPEN\_WRITE\_EXISTING@{FILE\_OPEN\_WRITE\_EXISTING}!vfs.hpp@{vfs.hpp}}
+\doxysubsubsection{\texorpdfstring{FILE\_OPEN\_WRITE\_EXISTING}{FILE\_OPEN\_WRITE\_EXISTING}}
+{\footnotesize\ttfamily \#define FILE\+\_\+\+OPEN\+\_\+\+WRITE\+\_\+\+EXISTING~\mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a1129c0e4d43f2d121652a7302712cff6}{File\+Open\+Mode\+::\+Write}}}
+
+\mbox{\Hypertarget{vfs_8hpp_a96eb5a629f7556174171f3e344078a20}\label{vfs_8hpp_a96eb5a629f7556174171f3e344078a20}} 
+\index{vfs.hpp@{vfs.hpp}!FILE\_OPEN\_WRITE\_NORMAL@{FILE\_OPEN\_WRITE\_NORMAL}}
+\index{FILE\_OPEN\_WRITE\_NORMAL@{FILE\_OPEN\_WRITE\_NORMAL}!vfs.hpp@{vfs.hpp}}
+\doxysubsubsection{\texorpdfstring{FILE\_OPEN\_WRITE\_NORMAL}{FILE\_OPEN\_WRITE\_NORMAL}}
+{\footnotesize\ttfamily \#define FILE\+\_\+\+OPEN\+\_\+\+WRITE\+\_\+\+NORMAL~((\mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64}{File\+Open\+Mode}}) (((int) \mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a1129c0e4d43f2d121652a7302712cff6}{File\+Open\+Mode\+::\+Write}}) $\vert$ ((int) \mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a5007129116ac317941eafb99b92b62d7}{File\+Open\+Mode\+::\+Create\+Always}})))}
+
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{vfs_8hpp_a02ad034d26db2c14b7e295b0c50fc11d}\label{vfs_8hpp_a02ad034d26db2c14b7e295b0c50fc11d}} 
+\index{vfs.hpp@{vfs.hpp}!time\_t@{time\_t}}
+\index{time\_t@{time\_t}!vfs.hpp@{vfs.hpp}}
+\doxysubsubsection{\texorpdfstring{time\_t}{time\_t}}
+{\footnotesize\ttfamily typedef uint64\+\_\+t \mbox{\hyperlink{vfs_8hpp_a02ad034d26db2c14b7e295b0c50fc11d}{time\+\_\+t}}}
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{vfs_8hpp_a41784127deb5b1139a8aeb933b9b6ede}\label{vfs_8hpp_a41784127deb5b1139a8aeb933b9b6ede}} 
+\index{vfs.hpp@{vfs.hpp}!FATAttribute@{FATAttribute}}
+\index{FATAttribute@{FATAttribute}!vfs.hpp@{vfs.hpp}}
+\doxysubsubsection{\texorpdfstring{FATAttribute}{FATAttribute}}
+{\footnotesize\ttfamily enum class \mbox{\hyperlink{vfs_8hpp_a41784127deb5b1139a8aeb933b9b6ede}{FATAttribute}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ReadOnly@{ReadOnly}!vfs.hpp@{vfs.hpp}}\index{vfs.hpp@{vfs.hpp}!ReadOnly@{ReadOnly}}}\mbox{\Hypertarget{vfs_8hpp_a41784127deb5b1139a8aeb933b9b6edea131fb182a881796e7606ed6da27f1197}\label{vfs_8hpp_a41784127deb5b1139a8aeb933b9b6edea131fb182a881796e7606ed6da27f1197}} 
+Read\+Only&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Archive@{Archive}!vfs.hpp@{vfs.hpp}}\index{vfs.hpp@{vfs.hpp}!Archive@{Archive}}}\mbox{\Hypertarget{vfs_8hpp_a41784127deb5b1139a8aeb933b9b6edeae727b00944f81e1d0a95c12886ac4641}\label{vfs_8hpp_a41784127deb5b1139a8aeb933b9b6edeae727b00944f81e1d0a95c12886ac4641}} 
+Archive&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{System@{System}!vfs.hpp@{vfs.hpp}}\index{vfs.hpp@{vfs.hpp}!System@{System}}}\mbox{\Hypertarget{vfs_8hpp_a41784127deb5b1139a8aeb933b9b6edeaa45da96d0bf6575970f2d27af22be28a}\label{vfs_8hpp_a41784127deb5b1139a8aeb933b9b6edeaa45da96d0bf6575970f2d27af22be28a}} 
+System&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Hidden@{Hidden}!vfs.hpp@{vfs.hpp}}\index{vfs.hpp@{vfs.hpp}!Hidden@{Hidden}}}\mbox{\Hypertarget{vfs_8hpp_a41784127deb5b1139a8aeb933b9b6edea7acdf85c69cc3c5305456a293524386e}\label{vfs_8hpp_a41784127deb5b1139a8aeb933b9b6edea7acdf85c69cc3c5305456a293524386e}} 
+Hidden&\\
+\hline
+
+\end{DoxyEnumFields}
+\mbox{\Hypertarget{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64}\label{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64}} 
+\index{vfs.hpp@{vfs.hpp}!FileOpenMode@{FileOpenMode}}
+\index{FileOpenMode@{FileOpenMode}!vfs.hpp@{vfs.hpp}}
+\doxysubsubsection{\texorpdfstring{FileOpenMode}{FileOpenMode}}
+{\footnotesize\ttfamily enum class \mbox{\hyperlink{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64}{File\+Open\+Mode}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Read@{Read}!vfs.hpp@{vfs.hpp}}\index{vfs.hpp@{vfs.hpp}!Read@{Read}}}\mbox{\Hypertarget{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a7a1a5f3e79fdc91edf2f5ead9d66abb4}\label{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a7a1a5f3e79fdc91edf2f5ead9d66abb4}} 
+Read&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Write@{Write}!vfs.hpp@{vfs.hpp}}\index{vfs.hpp@{vfs.hpp}!Write@{Write}}}\mbox{\Hypertarget{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a1129c0e4d43f2d121652a7302712cff6}\label{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a1129c0e4d43f2d121652a7302712cff6}} 
+Write&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Append@{Append}!vfs.hpp@{vfs.hpp}}\index{vfs.hpp@{vfs.hpp}!Append@{Append}}}\mbox{\Hypertarget{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a3ac4692f3935a49a0b243eecf529faa9}\label{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a3ac4692f3935a49a0b243eecf529faa9}} 
+Append&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CreateNew@{CreateNew}!vfs.hpp@{vfs.hpp}}\index{vfs.hpp@{vfs.hpp}!CreateNew@{CreateNew}}}\mbox{\Hypertarget{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a16aad4508a33afcd497d9cb37480722f}\label{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a16aad4508a33afcd497d9cb37480722f}} 
+Create\+New&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CreateAlways@{CreateAlways}!vfs.hpp@{vfs.hpp}}\index{vfs.hpp@{vfs.hpp}!CreateAlways@{CreateAlways}}}\mbox{\Hypertarget{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a5007129116ac317941eafb99b92b62d7}\label{vfs_8hpp_a7c1960f51161059a852f79a6a8ecbe64a5007129116ac317941eafb99b92b62d7}} 
+Create\+Always&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{vfs_8hpp_a655b8583ec32c28a37e5281b15fad669}\label{vfs_8hpp_a655b8583ec32c28a37e5281b15fad669}} 
+\index{vfs.hpp@{vfs.hpp}!installedFilesystems@{installedFilesystems}}
+\index{installedFilesystems@{installedFilesystems}!vfs.hpp@{vfs.hpp}}
+\doxysubsubsection{\texorpdfstring{installedFilesystems}{installedFilesystems}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_filesystem}{Filesystem}}$\ast$ installed\+Filesystems\hspace{0.3cm}{\ttfamily [extern]}}
+

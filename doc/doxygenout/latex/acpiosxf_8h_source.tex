@@ -1,0 +1,711 @@
+\hypertarget{acpiosxf_8h_source}{}\doxysection{acpiosxf.\+h}
+\label{acpiosxf_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/acpica/acpiosxf.h@{C:/Users/Alex/Desktop/Banana/kernel/acpica/acpiosxf.h}}
+\mbox{\hyperlink{acpiosxf_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{2 \textcolor{comment}{ *}}
+\DoxyCodeLine{3 \textcolor{comment}{ * Name: acpiosxf.h -\/ All interfaces to the OS Services Layer (OSL). These}}
+\DoxyCodeLine{4 \textcolor{comment}{ *                    interfaces must be implemented by OSL to interface the}}
+\DoxyCodeLine{5 \textcolor{comment}{ *                    ACPI components to the host operating system.}}
+\DoxyCodeLine{6 \textcolor{comment}{ *}}
+\DoxyCodeLine{7 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{10 \textcolor{comment}{ *}}
+\DoxyCodeLine{11 \textcolor{comment}{ * 1. Copyright Notice}}
+\DoxyCodeLine{12 \textcolor{comment}{ *}}
+\DoxyCodeLine{13 \textcolor{comment}{ * Some or all of this work -\/ Copyright (c) 1999 -\/ 2019, Intel Corp.}}
+\DoxyCodeLine{14 \textcolor{comment}{ * All rights reserved.}}
+\DoxyCodeLine{15 \textcolor{comment}{ *}}
+\DoxyCodeLine{16 \textcolor{comment}{ * 2. License}}
+\DoxyCodeLine{17 \textcolor{comment}{ *}}
+\DoxyCodeLine{18 \textcolor{comment}{ * 2.1. This is your license from Intel Corp. under its intellectual property}}
+\DoxyCodeLine{19 \textcolor{comment}{ * rights. You may have additional license terms from the party that provided}}
+\DoxyCodeLine{20 \textcolor{comment}{ * you this software, covering your right to use that party's intellectual}}
+\DoxyCodeLine{21 \textcolor{comment}{ * property rights.}}
+\DoxyCodeLine{22 \textcolor{comment}{ *}}
+\DoxyCodeLine{23 \textcolor{comment}{ * 2.2. Intel grants, free of charge, to any person ("{}Licensee"{}) obtaining a}}
+\DoxyCodeLine{24 \textcolor{comment}{ * copy of the source code appearing in this file ("{}Covered Code"{}) an}}
+\DoxyCodeLine{25 \textcolor{comment}{ * irrevocable, perpetual, worldwide license under Intel's copyrights in the}}
+\DoxyCodeLine{26 \textcolor{comment}{ * base code distributed originally by Intel ("{}Original Intel Code"{}) to copy,}}
+\DoxyCodeLine{27 \textcolor{comment}{ * make derivatives, distribute, use and display any portion of the Covered}}
+\DoxyCodeLine{28 \textcolor{comment}{ * Code in any form, with the right to sublicense such rights; and}}
+\DoxyCodeLine{29 \textcolor{comment}{ *}}
+\DoxyCodeLine{30 \textcolor{comment}{ * 2.3. Intel grants Licensee a non-\/exclusive and non-\/transferable patent}}
+\DoxyCodeLine{31 \textcolor{comment}{ * license (with the right to sublicense), under only those claims of Intel}}
+\DoxyCodeLine{32 \textcolor{comment}{ * patents that are infringed by the Original Intel Code, to make, use, sell,}}
+\DoxyCodeLine{33 \textcolor{comment}{ * offer to sell, and import the Covered Code and derivative works thereof}}
+\DoxyCodeLine{34 \textcolor{comment}{ * solely to the minimum extent necessary to exercise the above copyright}}
+\DoxyCodeLine{35 \textcolor{comment}{ * license, and in no event shall the patent license extend to any additions}}
+\DoxyCodeLine{36 \textcolor{comment}{ * to or modifications of the Original Intel Code. No other license or right}}
+\DoxyCodeLine{37 \textcolor{comment}{ * is granted directly or by implication, estoppel or otherwise;}}
+\DoxyCodeLine{38 \textcolor{comment}{ *}}
+\DoxyCodeLine{39 \textcolor{comment}{ * The above copyright and patent license is granted only if the following}}
+\DoxyCodeLine{40 \textcolor{comment}{ * conditions are met:}}
+\DoxyCodeLine{41 \textcolor{comment}{ *}}
+\DoxyCodeLine{42 \textcolor{comment}{ * 3. Conditions}}
+\DoxyCodeLine{43 \textcolor{comment}{ *}}
+\DoxyCodeLine{44 \textcolor{comment}{ * 3.1. Redistribution of Source with Rights to Further Distribute Source.}}
+\DoxyCodeLine{45 \textcolor{comment}{ * Redistribution of source code of any substantial portion of the Covered}}
+\DoxyCodeLine{46 \textcolor{comment}{ * Code or modification with rights to further distribute source must include}}
+\DoxyCodeLine{47 \textcolor{comment}{ * the above Copyright Notice, the above License, this list of Conditions,}}
+\DoxyCodeLine{48 \textcolor{comment}{ * and the following Disclaimer and Export Compliance provision. In addition,}}
+\DoxyCodeLine{49 \textcolor{comment}{ * Licensee must cause all Covered Code to which Licensee contributes to}}
+\DoxyCodeLine{50 \textcolor{comment}{ * contain a file documenting the changes Licensee made to create that Covered}}
+\DoxyCodeLine{51 \textcolor{comment}{ * Code and the date of any change. Licensee must include in that file the}}
+\DoxyCodeLine{52 \textcolor{comment}{ * documentation of any changes made by any predecessor Licensee. Licensee}}
+\DoxyCodeLine{53 \textcolor{comment}{ * must include a prominent statement that the modification is derived,}}
+\DoxyCodeLine{54 \textcolor{comment}{ * directly or indirectly, from Original Intel Code.}}
+\DoxyCodeLine{55 \textcolor{comment}{ *}}
+\DoxyCodeLine{56 \textcolor{comment}{ * 3.2. Redistribution of Source with no Rights to Further Distribute Source.}}
+\DoxyCodeLine{57 \textcolor{comment}{ * Redistribution of source code of any substantial portion of the Covered}}
+\DoxyCodeLine{58 \textcolor{comment}{ * Code or modification without rights to further distribute source must}}
+\DoxyCodeLine{59 \textcolor{comment}{ * include the following Disclaimer and Export Compliance provision in the}}
+\DoxyCodeLine{60 \textcolor{comment}{ * documentation and/or other materials provided with distribution. In}}
+\DoxyCodeLine{61 \textcolor{comment}{ * addition, Licensee may not authorize further sublicense of source of any}}
+\DoxyCodeLine{62 \textcolor{comment}{ * portion of the Covered Code, and must include terms to the effect that the}}
+\DoxyCodeLine{63 \textcolor{comment}{ * license from Licensee to its licensee is limited to the intellectual}}
+\DoxyCodeLine{64 \textcolor{comment}{ * property embodied in the software Licensee provides to its licensee, and}}
+\DoxyCodeLine{65 \textcolor{comment}{ * not to intellectual property embodied in modifications its licensee may}}
+\DoxyCodeLine{66 \textcolor{comment}{ * make.}}
+\DoxyCodeLine{67 \textcolor{comment}{ *}}
+\DoxyCodeLine{68 \textcolor{comment}{ * 3.3. Redistribution of Executable. Redistribution in executable form of any}}
+\DoxyCodeLine{69 \textcolor{comment}{ * substantial portion of the Covered Code or modification must reproduce the}}
+\DoxyCodeLine{70 \textcolor{comment}{ * above Copyright Notice, and the following Disclaimer and Export Compliance}}
+\DoxyCodeLine{71 \textcolor{comment}{ * provision in the documentation and/or other materials provided with the}}
+\DoxyCodeLine{72 \textcolor{comment}{ * distribution.}}
+\DoxyCodeLine{73 \textcolor{comment}{ *}}
+\DoxyCodeLine{74 \textcolor{comment}{ * 3.4. Intel retains all right, title, and interest in and to the Original}}
+\DoxyCodeLine{75 \textcolor{comment}{ * Intel Code.}}
+\DoxyCodeLine{76 \textcolor{comment}{ *}}
+\DoxyCodeLine{77 \textcolor{comment}{ * 3.5. Neither the name Intel nor any other trademark owned or controlled by}}
+\DoxyCodeLine{78 \textcolor{comment}{ * Intel shall be used in advertising or otherwise to promote the sale, use or}}
+\DoxyCodeLine{79 \textcolor{comment}{ * other dealings in products derived from or relating to the Covered Code}}
+\DoxyCodeLine{80 \textcolor{comment}{ * without prior written authorization from Intel.}}
+\DoxyCodeLine{81 \textcolor{comment}{ *}}
+\DoxyCodeLine{82 \textcolor{comment}{ * 4. Disclaimer and Export Compliance}}
+\DoxyCodeLine{83 \textcolor{comment}{ *}}
+\DoxyCodeLine{84 \textcolor{comment}{ * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED}}
+\DoxyCodeLine{85 \textcolor{comment}{ * HERE. ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE}}
+\DoxyCodeLine{86 \textcolor{comment}{ * IS PROVIDED "{}AS IS,"{} AND INTEL WILL NOT PROVIDE ANY SUPPORT, ASSISTANCE,}}
+\DoxyCodeLine{87 \textcolor{comment}{ * INSTALLATION, TRAINING OR OTHER SERVICES. INTEL WILL NOT PROVIDE ANY}}
+\DoxyCodeLine{88 \textcolor{comment}{ * UPDATES, ENHANCEMENTS OR EXTENSIONS. INTEL SPECIFICALLY DISCLAIMS ANY}}
+\DoxyCodeLine{89 \textcolor{comment}{ * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A}}
+\DoxyCodeLine{90 \textcolor{comment}{ * PARTICULAR PURPOSE.}}
+\DoxyCodeLine{91 \textcolor{comment}{ *}}
+\DoxyCodeLine{92 \textcolor{comment}{ * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES}}
+\DoxyCodeLine{93 \textcolor{comment}{ * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR}}
+\DoxyCodeLine{94 \textcolor{comment}{ * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,}}
+\DoxyCodeLine{95 \textcolor{comment}{ * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY}}
+\DoxyCodeLine{96 \textcolor{comment}{ * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL}}
+\DoxyCodeLine{97 \textcolor{comment}{ * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES. THESE LIMITATIONS}}
+\DoxyCodeLine{98 \textcolor{comment}{ * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY}}
+\DoxyCodeLine{99 \textcolor{comment}{ * LIMITED REMEDY.}}
+\DoxyCodeLine{100 \textcolor{comment}{ *}}
+\DoxyCodeLine{101 \textcolor{comment}{ * 4.3. Licensee shall not export, either directly or indirectly, any of this}}
+\DoxyCodeLine{102 \textcolor{comment}{ * software or system incorporating such software without first obtaining any}}
+\DoxyCodeLine{103 \textcolor{comment}{ * required license or other approval from the U. S. Department of Commerce or}}
+\DoxyCodeLine{104 \textcolor{comment}{ * any other agency or department of the United States Government. In the}}
+\DoxyCodeLine{105 \textcolor{comment}{ * event Licensee exports any such software from the United States or}}
+\DoxyCodeLine{106 \textcolor{comment}{ * re-\/exports any such software from a foreign destination, Licensee shall}}
+\DoxyCodeLine{107 \textcolor{comment}{ * ensure that the distribution and export/re-\/export of the software is in}}
+\DoxyCodeLine{108 \textcolor{comment}{ * compliance with all laws, regulations, orders, or other restrictions of the}}
+\DoxyCodeLine{109 \textcolor{comment}{ * U.S. Export Administration Regulations. Licensee agrees that neither it nor}}
+\DoxyCodeLine{110 \textcolor{comment}{ * any of its subsidiaries will export/re-\/export any technical data, process,}}
+\DoxyCodeLine{111 \textcolor{comment}{ * software, or service, directly or indirectly, to any country for which the}}
+\DoxyCodeLine{112 \textcolor{comment}{ * United States government or any agency thereof requires an export license,}}
+\DoxyCodeLine{113 \textcolor{comment}{ * other governmental approval, or letter of assurance, without first obtaining}}
+\DoxyCodeLine{114 \textcolor{comment}{ * such license, approval or letter.}}
+\DoxyCodeLine{115 \textcolor{comment}{ *}}
+\DoxyCodeLine{116 \textcolor{comment}{ *****************************************************************************}}
+\DoxyCodeLine{117 \textcolor{comment}{ *}}
+\DoxyCodeLine{118 \textcolor{comment}{ * Alternatively, you may choose to be licensed under the terms of the}}
+\DoxyCodeLine{119 \textcolor{comment}{ * following license:}}
+\DoxyCodeLine{120 \textcolor{comment}{ *}}
+\DoxyCodeLine{121 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{122 \textcolor{comment}{ * modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{123 \textcolor{comment}{ * are met:}}
+\DoxyCodeLine{124 \textcolor{comment}{ * 1. Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{125 \textcolor{comment}{ *    notice, this list of conditions, and the following disclaimer,}}
+\DoxyCodeLine{126 \textcolor{comment}{ *    without modification.}}
+\DoxyCodeLine{127 \textcolor{comment}{ * 2. Redistributions in binary form must reproduce at minimum a disclaimer}}
+\DoxyCodeLine{128 \textcolor{comment}{ *    substantially similar to the "{}NO WARRANTY"{} disclaimer below}}
+\DoxyCodeLine{129 \textcolor{comment}{ *    ("{}Disclaimer"{}) and any redistribution must be conditioned upon}}
+\DoxyCodeLine{130 \textcolor{comment}{ *    including a substantially similar Disclaimer requirement for further}}
+\DoxyCodeLine{131 \textcolor{comment}{ *    binary redistribution.}}
+\DoxyCodeLine{132 \textcolor{comment}{ * 3. Neither the names of the above-\/listed copyright holders nor the names}}
+\DoxyCodeLine{133 \textcolor{comment}{ *    of any contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{134 \textcolor{comment}{ *    from this software without specific prior written permission.}}
+\DoxyCodeLine{135 \textcolor{comment}{ *}}
+\DoxyCodeLine{136 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS}}
+\DoxyCodeLine{137 \textcolor{comment}{ * "{}AS IS"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT}}
+\DoxyCodeLine{138 \textcolor{comment}{ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR}}
+\DoxyCodeLine{139 \textcolor{comment}{ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT}}
+\DoxyCodeLine{140 \textcolor{comment}{ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,}}
+\DoxyCodeLine{141 \textcolor{comment}{ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT}}
+\DoxyCodeLine{142 \textcolor{comment}{ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,}}
+\DoxyCodeLine{143 \textcolor{comment}{ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY}}
+\DoxyCodeLine{144 \textcolor{comment}{ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{145 \textcolor{comment}{ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{146 \textcolor{comment}{ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{147 \textcolor{comment}{ *}}
+\DoxyCodeLine{148 \textcolor{comment}{ * Alternatively, you may choose to be licensed under the terms of the}}
+\DoxyCodeLine{149 \textcolor{comment}{ * GNU General Public License ("{}GPL"{}) version 2 as published by the Free}}
+\DoxyCodeLine{150 \textcolor{comment}{ * Software Foundation.}}
+\DoxyCodeLine{151 \textcolor{comment}{ *}}
+\DoxyCodeLine{152 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{153 }
+\DoxyCodeLine{154 \textcolor{preprocessor}{\#ifndef \_\_ACPIOSXF\_H\_\_}}
+\DoxyCodeLine{155 \textcolor{preprocessor}{\#define \_\_ACPIOSXF\_H\_\_}}
+\DoxyCodeLine{156 }
+\DoxyCodeLine{157 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{acenv_8h}{platform/acenv.h}}"{}}}
+\DoxyCodeLine{158 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{actypes_8h}{actypes.h}}"{}}}
+\DoxyCodeLine{159 }
+\DoxyCodeLine{160 }
+\DoxyCodeLine{161 \textcolor{comment}{/* Types for AcpiOsExecute */}}
+\DoxyCodeLine{162 }
+\DoxyCodeLine{163 \textcolor{keyword}{typedef} \textcolor{keyword}{enum}}
+\DoxyCodeLine{164 \{}
+\DoxyCodeLine{165     \mbox{\hyperlink{acpiosxf_8h_aafd612ee401ad4d2eff4b296ef4a99a6a525b24cca74ccade21245735b63d9022}{OSL\_GLOBAL\_LOCK\_HANDLER}},}
+\DoxyCodeLine{166     \mbox{\hyperlink{acpiosxf_8h_aafd612ee401ad4d2eff4b296ef4a99a6a02b8baf119a11db1eb8c6bdc561e947b}{OSL\_NOTIFY\_HANDLER}},}
+\DoxyCodeLine{167     \mbox{\hyperlink{acpiosxf_8h_aafd612ee401ad4d2eff4b296ef4a99a6a60ea0e9423db9894d1b26f2d087fe049}{OSL\_GPE\_HANDLER}},}
+\DoxyCodeLine{168     \mbox{\hyperlink{acpiosxf_8h_aafd612ee401ad4d2eff4b296ef4a99a6ad09bac013c1b71d3a0d8572c7c08267f}{OSL\_DEBUGGER\_MAIN\_THREAD}},}
+\DoxyCodeLine{169     \mbox{\hyperlink{acpiosxf_8h_aafd612ee401ad4d2eff4b296ef4a99a6a0a506851a0337190f868b6a9e1f27810}{OSL\_DEBUGGER\_EXEC\_THREAD}},}
+\DoxyCodeLine{170     \mbox{\hyperlink{acpiosxf_8h_aafd612ee401ad4d2eff4b296ef4a99a6aadf0277678b3d0158421284cb13d5543}{OSL\_EC\_POLL\_HANDLER}},}
+\DoxyCodeLine{171     \mbox{\hyperlink{acpiosxf_8h_aafd612ee401ad4d2eff4b296ef4a99a6a577b93ba6e91fd5d5e3af71970ab05e3}{OSL\_EC\_BURST\_HANDLER}}}
+\DoxyCodeLine{172 }
+\DoxyCodeLine{173 \} \mbox{\hyperlink{acpiosxf_8h_aafd612ee401ad4d2eff4b296ef4a99a6}{ACPI\_EXECUTE\_TYPE}};}
+\DoxyCodeLine{174 }
+\DoxyCodeLine{175 \textcolor{preprocessor}{\#define ACPI\_NO\_UNIT\_LIMIT          ((UINT32) -\/1)}}
+\DoxyCodeLine{176 \textcolor{preprocessor}{\#define ACPI\_MUTEX\_SEM              1}}
+\DoxyCodeLine{177 }
+\DoxyCodeLine{178 }
+\DoxyCodeLine{179 \textcolor{comment}{/* Functions for AcpiOsSignal */}}
+\DoxyCodeLine{180 }
+\DoxyCodeLine{181 \textcolor{preprocessor}{\#define ACPI\_SIGNAL\_FATAL           0}}
+\DoxyCodeLine{182 \textcolor{preprocessor}{\#define ACPI\_SIGNAL\_BREAKPOINT      1}}
+\DoxyCodeLine{183 }
+\DoxyCodeLine{184 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structacpi__signal__fatal__info}{acpi\_signal\_fatal\_info}}}
+\DoxyCodeLine{185 \{}
+\DoxyCodeLine{186     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__signal__fatal__info_a60c3b0d8c4cef27ad1900f2447adca5d}{Type}};}
+\DoxyCodeLine{187     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__signal__fatal__info_a09d8f4772967935798f464050834e74c}{Code}};}
+\DoxyCodeLine{188     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{structacpi__signal__fatal__info_a7a0ef44b30ea12fee33450a0c80e8070}{Argument}};}
+\DoxyCodeLine{189 }
+\DoxyCodeLine{190 \} \mbox{\hyperlink{acpiosxf_8h_a1add905847b003a7eb2ff407b6e01757}{ACPI\_SIGNAL\_FATAL\_INFO}};}
+\DoxyCodeLine{191 }
+\DoxyCodeLine{192 }
+\DoxyCodeLine{193 \textcolor{comment}{/*}}
+\DoxyCodeLine{194 \textcolor{comment}{ * OSL Initialization and shutdown primitives}}
+\DoxyCodeLine{195 \textcolor{comment}{ */}}
+\DoxyCodeLine{196 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsInitialize}}
+\DoxyCodeLine{197 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{198 \mbox{\hyperlink{acpiosxf_8h_a01f7e1c7599d4bf8c7f6da760ba4a77a}{AcpiOsInitialize}} (}
+\DoxyCodeLine{199     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{200 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{201 }
+\DoxyCodeLine{202 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsTerminate}}
+\DoxyCodeLine{203 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{204 \mbox{\hyperlink{acpiosxf_8h_a7e9216238baf2092085bbcf417944515}{AcpiOsTerminate}} (}
+\DoxyCodeLine{205     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{206 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{207 }
+\DoxyCodeLine{208 }
+\DoxyCodeLine{209 \textcolor{comment}{/*}}
+\DoxyCodeLine{210 \textcolor{comment}{ * ACPI Table interfaces}}
+\DoxyCodeLine{211 \textcolor{comment}{ */}}
+\DoxyCodeLine{212 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsGetRootPointer}}
+\DoxyCodeLine{213 \mbox{\hyperlink{actypes_8h_a32224933d3fb684d3fe3edae33a92758}{ACPI\_PHYSICAL\_ADDRESS}}}
+\DoxyCodeLine{214 \mbox{\hyperlink{acpiosxf_8h_aafcbce2184145165c29529a56713cc6a}{AcpiOsGetRootPointer}} (}
+\DoxyCodeLine{215     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{216 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{217 }
+\DoxyCodeLine{218 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsPredefinedOverride}}
+\DoxyCodeLine{219 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{220 \mbox{\hyperlink{acpiosxf_8h_a197948f99b51b4b1a8443fa066ce8562}{AcpiOsPredefinedOverride}} (}
+\DoxyCodeLine{221     \textcolor{keyword}{const} \mbox{\hyperlink{structacpi__predefined__names}{ACPI\_PREDEFINED\_NAMES}} *InitVal,}
+\DoxyCodeLine{222     \mbox{\hyperlink{actypes_8h_a54fb599e7decfa7821a25eb9719bf448}{ACPI\_STRING}}                 *NewVal);}
+\DoxyCodeLine{223 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{224 }
+\DoxyCodeLine{225 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsTableOverride}}
+\DoxyCodeLine{226 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{227 \mbox{\hyperlink{acpiosxf_8h_a1db1ca6153f6250711004776939921da}{AcpiOsTableOverride}} (}
+\DoxyCodeLine{228     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *ExistingTable,}
+\DoxyCodeLine{229     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       **NewTable);}
+\DoxyCodeLine{230 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{231 }
+\DoxyCodeLine{232 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsPhysicalTableOverride}}
+\DoxyCodeLine{233 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{234 \mbox{\hyperlink{acpiosxf_8h_a97a8a7e7c4309f73954f7daf5ce93d70}{AcpiOsPhysicalTableOverride}} (}
+\DoxyCodeLine{235     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       *ExistingTable,}
+\DoxyCodeLine{236     \mbox{\hyperlink{actypes_8h_a32224933d3fb684d3fe3edae33a92758}{ACPI\_PHYSICAL\_ADDRESS}}   *NewAddress,}
+\DoxyCodeLine{237     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  *NewTableLength);}
+\DoxyCodeLine{238 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{239 }
+\DoxyCodeLine{240 }
+\DoxyCodeLine{241 \textcolor{comment}{/*}}
+\DoxyCodeLine{242 \textcolor{comment}{ * Spinlock primitives}}
+\DoxyCodeLine{243 \textcolor{comment}{ */}}
+\DoxyCodeLine{244 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsCreateLock}}
+\DoxyCodeLine{245 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{246 \mbox{\hyperlink{acpiosxf_8h_a0fc3d972318f90c4dd8415ab43d6f879}{AcpiOsCreateLock}} (}
+\DoxyCodeLine{247     \mbox{\hyperlink{actypes_8h_aa444f28724a989f4d8304d85fc784e13}{ACPI\_SPINLOCK}}           *OutHandle);}
+\DoxyCodeLine{248 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{249 }
+\DoxyCodeLine{250 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsDeleteLock}}
+\DoxyCodeLine{251 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{252 \mbox{\hyperlink{acpiosxf_8h_afd8872b87a50823335896624bdf130c4}{AcpiOsDeleteLock}} (}
+\DoxyCodeLine{253     \mbox{\hyperlink{actypes_8h_aa444f28724a989f4d8304d85fc784e13}{ACPI\_SPINLOCK}}           Handle);}
+\DoxyCodeLine{254 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{255 }
+\DoxyCodeLine{256 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsAcquireLock}}
+\DoxyCodeLine{257 \mbox{\hyperlink{actypes_8h_a54499436339ba1d430c3adf4929c55e6}{ACPI\_CPU\_FLAGS}}}
+\DoxyCodeLine{258 \mbox{\hyperlink{acpiosxf_8h_ab4c7b42dd241ada889702c29e178371f}{AcpiOsAcquireLock}} (}
+\DoxyCodeLine{259     \mbox{\hyperlink{actypes_8h_aa444f28724a989f4d8304d85fc784e13}{ACPI\_SPINLOCK}}           Handle);}
+\DoxyCodeLine{260 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{261 }
+\DoxyCodeLine{262 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsReleaseLock}}
+\DoxyCodeLine{263 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{264 \mbox{\hyperlink{acpiosxf_8h_ab433d14090054e76cee7984e4eedcc16}{AcpiOsReleaseLock}} (}
+\DoxyCodeLine{265     \mbox{\hyperlink{actypes_8h_aa444f28724a989f4d8304d85fc784e13}{ACPI\_SPINLOCK}}           Handle,}
+\DoxyCodeLine{266     \mbox{\hyperlink{actypes_8h_a54499436339ba1d430c3adf4929c55e6}{ACPI\_CPU\_FLAGS}}          \mbox{\hyperlink{acdebug_8h_a4f38d8eec414bbac21fe17e446586ef4}{Flags}});}
+\DoxyCodeLine{267 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{268 }
+\DoxyCodeLine{269 }
+\DoxyCodeLine{270 \textcolor{comment}{/*}}
+\DoxyCodeLine{271 \textcolor{comment}{ * Semaphore primitives}}
+\DoxyCodeLine{272 \textcolor{comment}{ */}}
+\DoxyCodeLine{273 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsCreateSemaphore}}
+\DoxyCodeLine{274 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{275 \mbox{\hyperlink{acpiosxf_8h_a28f2b4fa0a29418b228fa8ce027fd211}{AcpiOsCreateSemaphore}} (}
+\DoxyCodeLine{276     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  MaxUnits,}
+\DoxyCodeLine{277     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  InitialUnits,}
+\DoxyCodeLine{278     \mbox{\hyperlink{actypes_8h_a432412f7016d0ac0f98977fd97dd6d83}{ACPI\_SEMAPHORE}}          *OutHandle);}
+\DoxyCodeLine{279 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{280 }
+\DoxyCodeLine{281 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsDeleteSemaphore}}
+\DoxyCodeLine{282 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{283 \mbox{\hyperlink{acpiosxf_8h_aaf3d02c5093171001946df452d623926}{AcpiOsDeleteSemaphore}} (}
+\DoxyCodeLine{284     \mbox{\hyperlink{actypes_8h_a432412f7016d0ac0f98977fd97dd6d83}{ACPI\_SEMAPHORE}}          Handle);}
+\DoxyCodeLine{285 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{286 }
+\DoxyCodeLine{287 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsWaitSemaphore}}
+\DoxyCodeLine{288 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{289 \mbox{\hyperlink{acpiosxf_8h_a3dea8a749bcc4d44d61601bfe4752a14}{AcpiOsWaitSemaphore}} (}
+\DoxyCodeLine{290     \mbox{\hyperlink{actypes_8h_a432412f7016d0ac0f98977fd97dd6d83}{ACPI\_SEMAPHORE}}          Handle,}
+\DoxyCodeLine{291     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Units,}
+\DoxyCodeLine{292     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  Timeout);}
+\DoxyCodeLine{293 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{294 }
+\DoxyCodeLine{295 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsSignalSemaphore}}
+\DoxyCodeLine{296 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{297 \mbox{\hyperlink{acpiosxf_8h_a1101e10fd82150fa0a11d987f6bff815}{AcpiOsSignalSemaphore}} (}
+\DoxyCodeLine{298     \mbox{\hyperlink{actypes_8h_a432412f7016d0ac0f98977fd97dd6d83}{ACPI\_SEMAPHORE}}          Handle,}
+\DoxyCodeLine{299     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Units);}
+\DoxyCodeLine{300 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{301 }
+\DoxyCodeLine{302 }
+\DoxyCodeLine{303 \textcolor{comment}{/*}}
+\DoxyCodeLine{304 \textcolor{comment}{ * Mutex primitives. May be configured to use semaphores instead via}}
+\DoxyCodeLine{305 \textcolor{comment}{ * ACPI\_MUTEX\_TYPE (see platform/acenv.h)}}
+\DoxyCodeLine{306 \textcolor{comment}{ */}}
+\DoxyCodeLine{307 \textcolor{preprocessor}{\#if (ACPI\_MUTEX\_TYPE != ACPI\_BINARY\_SEMAPHORE)}}
+\DoxyCodeLine{308 }
+\DoxyCodeLine{309 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsCreateMutex}}
+\DoxyCodeLine{310 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{311 \mbox{\hyperlink{actypes_8h_ac2aec03e0d794434db751087315cd287}{AcpiOsCreateMutex}} (}
+\DoxyCodeLine{312     \mbox{\hyperlink{actypes_8h_a3705e4a711b8b995c1ef165a9b4d37d8}{ACPI\_MUTEX}}              *OutHandle);}
+\DoxyCodeLine{313 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{314 }
+\DoxyCodeLine{315 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsDeleteMutex}}
+\DoxyCodeLine{316 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{317 \mbox{\hyperlink{actypes_8h_a361b6c019bf484e67b3cbfb223ef3622}{AcpiOsDeleteMutex}} (}
+\DoxyCodeLine{318     \mbox{\hyperlink{actypes_8h_a3705e4a711b8b995c1ef165a9b4d37d8}{ACPI\_MUTEX}}              Handle);}
+\DoxyCodeLine{319 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{320 }
+\DoxyCodeLine{321 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsAcquireMutex}}
+\DoxyCodeLine{322 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{323 \mbox{\hyperlink{actypes_8h_a4e9daf0c77ca60f4b1987f4fa97892c6}{AcpiOsAcquireMutex}} (}
+\DoxyCodeLine{324     \mbox{\hyperlink{actypes_8h_a3705e4a711b8b995c1ef165a9b4d37d8}{ACPI\_MUTEX}}              Handle,}
+\DoxyCodeLine{325     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  Timeout);}
+\DoxyCodeLine{326 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{327 }
+\DoxyCodeLine{328 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsReleaseMutex}}
+\DoxyCodeLine{329 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{330 \mbox{\hyperlink{actypes_8h_a7e34e0c50e80741f84d187e4fe10ab19}{AcpiOsReleaseMutex}} (}
+\DoxyCodeLine{331     \mbox{\hyperlink{actypes_8h_a3705e4a711b8b995c1ef165a9b4d37d8}{ACPI\_MUTEX}}              Handle);}
+\DoxyCodeLine{332 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{333 }
+\DoxyCodeLine{334 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{335 }
+\DoxyCodeLine{336 }
+\DoxyCodeLine{337 \textcolor{comment}{/*}}
+\DoxyCodeLine{338 \textcolor{comment}{ * Memory allocation and mapping}}
+\DoxyCodeLine{339 \textcolor{comment}{ */}}
+\DoxyCodeLine{340 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsAllocate}}
+\DoxyCodeLine{341 \textcolor{keywordtype}{void} *}
+\DoxyCodeLine{342 \mbox{\hyperlink{acpiosxf_8h_a612eac366def58161df3ed84674f4543}{AcpiOsAllocate}} (}
+\DoxyCodeLine{343     \mbox{\hyperlink{actypes_8h_a40026b17c073b463afc92d329c2649bc}{ACPI\_SIZE}}               \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaff9abf2b1a689f70a77a18da50c01d9f}{Size}});}
+\DoxyCodeLine{344 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{345 }
+\DoxyCodeLine{346 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsAllocateZeroed}}
+\DoxyCodeLine{347 \textcolor{keywordtype}{void} *}
+\DoxyCodeLine{348 \mbox{\hyperlink{acpiosxf_8h_a68480b9017affe7cf6d58567cd342294}{AcpiOsAllocateZeroed}} (}
+\DoxyCodeLine{349     \mbox{\hyperlink{actypes_8h_a40026b17c073b463afc92d329c2649bc}{ACPI\_SIZE}}               \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaff9abf2b1a689f70a77a18da50c01d9f}{Size}});}
+\DoxyCodeLine{350 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{351 }
+\DoxyCodeLine{352 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsFree}}
+\DoxyCodeLine{353 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{354 \mbox{\hyperlink{acpiosxf_8h_aa3baac772ec8f5df4a49d97e39bfb307}{AcpiOsFree}} (}
+\DoxyCodeLine{355     \textcolor{keywordtype}{void} *                  Memory);}
+\DoxyCodeLine{356 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{357 }
+\DoxyCodeLine{358 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsMapMemory}}
+\DoxyCodeLine{359 \textcolor{keywordtype}{void} *}
+\DoxyCodeLine{360 \mbox{\hyperlink{acpiosxf_8h_aaad94823feeb59439ce76bef2c9f0570}{AcpiOsMapMemory}} (}
+\DoxyCodeLine{361     \mbox{\hyperlink{actypes_8h_a32224933d3fb684d3fe3edae33a92758}{ACPI\_PHYSICAL\_ADDRESS}}   Where,}
+\DoxyCodeLine{362     \mbox{\hyperlink{actypes_8h_a40026b17c073b463afc92d329c2649bc}{ACPI\_SIZE}}               \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}});}
+\DoxyCodeLine{363 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{364 }
+\DoxyCodeLine{365 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsUnmapMemory}}
+\DoxyCodeLine{366 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{367 \mbox{\hyperlink{acpiosxf_8h_ac311ac97cb1dbf409feec249058d0537}{AcpiOsUnmapMemory}} (}
+\DoxyCodeLine{368     \textcolor{keywordtype}{void}                    *LogicalAddress,}
+\DoxyCodeLine{369     \mbox{\hyperlink{actypes_8h_a40026b17c073b463afc92d329c2649bc}{ACPI\_SIZE}}               \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaff9abf2b1a689f70a77a18da50c01d9f}{Size}});}
+\DoxyCodeLine{370 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{371 }
+\DoxyCodeLine{372 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsGetPhysicalAddress}}
+\DoxyCodeLine{373 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{374 \mbox{\hyperlink{acpiosxf_8h_a080300a9ff3367aa26f300c72d7084a3}{AcpiOsGetPhysicalAddress}} (}
+\DoxyCodeLine{375     \textcolor{keywordtype}{void}                    *LogicalAddress,}
+\DoxyCodeLine{376     \mbox{\hyperlink{actypes_8h_a32224933d3fb684d3fe3edae33a92758}{ACPI\_PHYSICAL\_ADDRESS}}   *PhysicalAddress);}
+\DoxyCodeLine{377 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{378 }
+\DoxyCodeLine{379 }
+\DoxyCodeLine{380 \textcolor{comment}{/*}}
+\DoxyCodeLine{381 \textcolor{comment}{ * Memory/Object Cache}}
+\DoxyCodeLine{382 \textcolor{comment}{ */}}
+\DoxyCodeLine{383 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsCreateCache}}
+\DoxyCodeLine{384 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{385 \mbox{\hyperlink{acpiosxf_8h_a6863f68645761f326e0e2ebab67bb2ef}{AcpiOsCreateCache}} (}
+\DoxyCodeLine{386     \textcolor{keywordtype}{char}                    *CacheName,}
+\DoxyCodeLine{387     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  ObjectSize,}
+\DoxyCodeLine{388     \mbox{\hyperlink{actypes_8h_a09f1a1fb2293e33483cc8d44aefb1eb1}{UINT16}}                  \mbox{\hyperlink{acpixf_8h_a32d6817ae6d1469659d8af4d76a33126}{MaxDepth}},}
+\DoxyCodeLine{389     \mbox{\hyperlink{actypes_8h_a06645a3ba16becb6c1250ae3a7297058}{ACPI\_CACHE\_T}}            **ReturnCache);}
+\DoxyCodeLine{390 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{391 }
+\DoxyCodeLine{392 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsDeleteCache}}
+\DoxyCodeLine{393 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{394 \mbox{\hyperlink{acpiosxf_8h_a2580cc351818e69a393dffb7eb22d32a}{AcpiOsDeleteCache}} (}
+\DoxyCodeLine{395     \mbox{\hyperlink{actypes_8h_a06645a3ba16becb6c1250ae3a7297058}{ACPI\_CACHE\_T}}            *Cache);}
+\DoxyCodeLine{396 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{397 }
+\DoxyCodeLine{398 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsPurgeCache}}
+\DoxyCodeLine{399 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{400 \mbox{\hyperlink{acpiosxf_8h_af597e57307ff5bf341f0a2cb10fe1a54}{AcpiOsPurgeCache}} (}
+\DoxyCodeLine{401     \mbox{\hyperlink{actypes_8h_a06645a3ba16becb6c1250ae3a7297058}{ACPI\_CACHE\_T}}            *Cache);}
+\DoxyCodeLine{402 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{403 }
+\DoxyCodeLine{404 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsAcquireObject}}
+\DoxyCodeLine{405 \textcolor{keywordtype}{void} *}
+\DoxyCodeLine{406 \mbox{\hyperlink{acpiosxf_8h_add01709115415cc729876f38643fc00b}{AcpiOsAcquireObject}} (}
+\DoxyCodeLine{407     \mbox{\hyperlink{actypes_8h_a06645a3ba16becb6c1250ae3a7297058}{ACPI\_CACHE\_T}}            *Cache);}
+\DoxyCodeLine{408 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{409 }
+\DoxyCodeLine{410 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsReleaseObject}}
+\DoxyCodeLine{411 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{412 \mbox{\hyperlink{acpiosxf_8h_a194106ebbaa12443e59d042b26a7af3b}{AcpiOsReleaseObject}} (}
+\DoxyCodeLine{413     \mbox{\hyperlink{actypes_8h_a06645a3ba16becb6c1250ae3a7297058}{ACPI\_CACHE\_T}}            *Cache,}
+\DoxyCodeLine{414     \textcolor{keywordtype}{void}                    *Object);}
+\DoxyCodeLine{415 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{416 }
+\DoxyCodeLine{417 }
+\DoxyCodeLine{418 \textcolor{comment}{/*}}
+\DoxyCodeLine{419 \textcolor{comment}{ * Interrupt handlers}}
+\DoxyCodeLine{420 \textcolor{comment}{ */}}
+\DoxyCodeLine{421 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsInstallInterruptHandler}}
+\DoxyCodeLine{422 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{423 \mbox{\hyperlink{acpiosxf_8h_af7b189aa2cd3dde8ecc271384b0aa18e}{AcpiOsInstallInterruptHandler}} (}
+\DoxyCodeLine{424     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  InterruptNumber,}
+\DoxyCodeLine{425     \mbox{\hyperlink{actypes_8h_a43dcd6f422484e2131dff494bf64d198}{ACPI\_OSD\_HANDLER}}        ServiceRoutine,}
+\DoxyCodeLine{426     \textcolor{keywordtype}{void}                    *\mbox{\hyperlink{acevents_8h_a97d06ff39d7dfbebc4998842382a0d4a}{Context}});}
+\DoxyCodeLine{427 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{428 }
+\DoxyCodeLine{429 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsRemoveInterruptHandler}}
+\DoxyCodeLine{430 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{431 \mbox{\hyperlink{acpiosxf_8h_a6e5841233fe094d92eb9d2ec72222ee3}{AcpiOsRemoveInterruptHandler}} (}
+\DoxyCodeLine{432     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  InterruptNumber,}
+\DoxyCodeLine{433     \mbox{\hyperlink{actypes_8h_a43dcd6f422484e2131dff494bf64d198}{ACPI\_OSD\_HANDLER}}        ServiceRoutine);}
+\DoxyCodeLine{434 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{435 }
+\DoxyCodeLine{436 }
+\DoxyCodeLine{437 \textcolor{comment}{/*}}
+\DoxyCodeLine{438 \textcolor{comment}{ * Threads and Scheduling}}
+\DoxyCodeLine{439 \textcolor{comment}{ */}}
+\DoxyCodeLine{440 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsGetThreadId}}
+\DoxyCodeLine{441 \mbox{\hyperlink{actypes_8h_abd8bd0f06d2601b39f4cee54615d37d5}{ACPI\_THREAD\_ID}}}
+\DoxyCodeLine{442 \mbox{\hyperlink{acpiosxf_8h_a28e861af8754c932d6b10def7d9c95d3}{AcpiOsGetThreadId}} (}
+\DoxyCodeLine{443     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{444 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{445 }
+\DoxyCodeLine{446 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsExecute}}
+\DoxyCodeLine{447 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{448 \mbox{\hyperlink{acpiosxf_8h_aec8eed6c25c50029d4f24176fc4a0351}{AcpiOsExecute}} (}
+\DoxyCodeLine{449     \mbox{\hyperlink{acpiosxf_8h_aafd612ee401ad4d2eff4b296ef4a99a6}{ACPI\_EXECUTE\_TYPE}}       \mbox{\hyperlink{acpixf_8h_ab361d6187ad6230bccbce7d8dbe49abc}{Type}},}
+\DoxyCodeLine{450     \mbox{\hyperlink{actypes_8h_a4b0828a74c3f15ce8187c11039d12a16}{ACPI\_OSD\_EXEC\_CALLBACK}}  Function,}
+\DoxyCodeLine{451     \textcolor{keywordtype}{void}                    *\mbox{\hyperlink{acevents_8h_a97d06ff39d7dfbebc4998842382a0d4a}{Context}});}
+\DoxyCodeLine{452 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{453 }
+\DoxyCodeLine{454 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsWaitEventsComplete}}
+\DoxyCodeLine{455 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{456 \mbox{\hyperlink{acpiosxf_8h_aff3d5ece3aad4b338db36a746948bd08}{AcpiOsWaitEventsComplete}} (}
+\DoxyCodeLine{457     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{458 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{459 }
+\DoxyCodeLine{460 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsSleep}}
+\DoxyCodeLine{461 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{462 \mbox{\hyperlink{acpiosxf_8h_acbf9778b8770610960883f61b28b3039}{AcpiOsSleep}} (}
+\DoxyCodeLine{463     \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}                  Milliseconds);}
+\DoxyCodeLine{464 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{465 }
+\DoxyCodeLine{466 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsStall}}
+\DoxyCodeLine{467 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{468 \mbox{\hyperlink{acpiosxf_8h_a6ec2e6082bc9425d0ae5a09fc9ed2085}{AcpiOsStall}} (}
+\DoxyCodeLine{469     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Microseconds);}
+\DoxyCodeLine{470 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{471 }
+\DoxyCodeLine{472 }
+\DoxyCodeLine{473 \textcolor{comment}{/*}}
+\DoxyCodeLine{474 \textcolor{comment}{ * Platform and hardware-\/independent I/O interfaces}}
+\DoxyCodeLine{475 \textcolor{comment}{ */}}
+\DoxyCodeLine{476 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsReadPort}}
+\DoxyCodeLine{477 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{478 \mbox{\hyperlink{acpiosxf_8h_a64dc0148971f8117dad3692bbc8e05c9}{AcpiOsReadPort}} (}
+\DoxyCodeLine{479     \mbox{\hyperlink{actypes_8h_a14f5a1e5b1d4431f3d379391cdc9ab55}{ACPI\_IO\_ADDRESS}}         \mbox{\hyperlink{acpixf_8h_a5c9068e87bdb7dd28aaf9b2565a0cc3c}{Address}},}
+\DoxyCodeLine{480     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  *Value,}
+\DoxyCodeLine{481     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Width);}
+\DoxyCodeLine{482 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{483 }
+\DoxyCodeLine{484 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsWritePort}}
+\DoxyCodeLine{485 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{486 \mbox{\hyperlink{acpiosxf_8h_a670d056982184c18fe4e21b5ec59e199}{AcpiOsWritePort}} (}
+\DoxyCodeLine{487     \mbox{\hyperlink{actypes_8h_a14f5a1e5b1d4431f3d379391cdc9ab55}{ACPI\_IO\_ADDRESS}}         \mbox{\hyperlink{acpixf_8h_a5c9068e87bdb7dd28aaf9b2565a0cc3c}{Address}},}
+\DoxyCodeLine{488     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Value,}
+\DoxyCodeLine{489     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Width);}
+\DoxyCodeLine{490 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{491 }
+\DoxyCodeLine{492 }
+\DoxyCodeLine{493 \textcolor{comment}{/*}}
+\DoxyCodeLine{494 \textcolor{comment}{ * Platform and hardware-\/independent physical memory interfaces}}
+\DoxyCodeLine{495 \textcolor{comment}{ */}}
+\DoxyCodeLine{496 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsReadMemory}}
+\DoxyCodeLine{497 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{498 \mbox{\hyperlink{acpiosxf_8h_a43bb4cd865cfbe503bad2ee28854e215}{AcpiOsReadMemory}} (}
+\DoxyCodeLine{499     \mbox{\hyperlink{actypes_8h_a32224933d3fb684d3fe3edae33a92758}{ACPI\_PHYSICAL\_ADDRESS}}   \mbox{\hyperlink{acpixf_8h_a5c9068e87bdb7dd28aaf9b2565a0cc3c}{Address}},}
+\DoxyCodeLine{500     \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}                  *Value,}
+\DoxyCodeLine{501     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Width);}
+\DoxyCodeLine{502 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{503 }
+\DoxyCodeLine{504 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsWriteMemory}}
+\DoxyCodeLine{505 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{506 \mbox{\hyperlink{acpiosxf_8h_aabe95b60e5b2215f8e6c68865f2c3c2f}{AcpiOsWriteMemory}} (}
+\DoxyCodeLine{507     \mbox{\hyperlink{actypes_8h_a32224933d3fb684d3fe3edae33a92758}{ACPI\_PHYSICAL\_ADDRESS}}   \mbox{\hyperlink{acpixf_8h_a5c9068e87bdb7dd28aaf9b2565a0cc3c}{Address}},}
+\DoxyCodeLine{508     \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}                  Value,}
+\DoxyCodeLine{509     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Width);}
+\DoxyCodeLine{510 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{511 }
+\DoxyCodeLine{512 }
+\DoxyCodeLine{513 \textcolor{comment}{/*}}
+\DoxyCodeLine{514 \textcolor{comment}{ * Platform and hardware-\/independent PCI configuration space access}}
+\DoxyCodeLine{515 \textcolor{comment}{ * Note: Can't use "{}Register"{} as a parameter, changed to "{}Reg"{} -\/-\/}}
+\DoxyCodeLine{516 \textcolor{comment}{ * certain compilers complain.}}
+\DoxyCodeLine{517 \textcolor{comment}{ */}}
+\DoxyCodeLine{518 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsReadPciConfiguration}}
+\DoxyCodeLine{519 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{520 \mbox{\hyperlink{acpiosxf_8h_a489626c74ae691276d6f7feec243d377}{AcpiOsReadPciConfiguration}} (}
+\DoxyCodeLine{521     \mbox{\hyperlink{structacpi__pci__id}{ACPI\_PCI\_ID}}             *PciId,}
+\DoxyCodeLine{522     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Reg,}
+\DoxyCodeLine{523     \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}                  *Value,}
+\DoxyCodeLine{524     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Width);}
+\DoxyCodeLine{525 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{526 }
+\DoxyCodeLine{527 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsWritePciConfiguration}}
+\DoxyCodeLine{528 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{529 \mbox{\hyperlink{acpiosxf_8h_a40565213dbde564afaea8819637cc276}{AcpiOsWritePciConfiguration}} (}
+\DoxyCodeLine{530     \mbox{\hyperlink{structacpi__pci__id}{ACPI\_PCI\_ID}}             *PciId,}
+\DoxyCodeLine{531     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Reg,}
+\DoxyCodeLine{532     \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}                  Value,}
+\DoxyCodeLine{533     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Width);}
+\DoxyCodeLine{534 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{535 }
+\DoxyCodeLine{536 }
+\DoxyCodeLine{537 \textcolor{comment}{/*}}
+\DoxyCodeLine{538 \textcolor{comment}{ * Miscellaneous}}
+\DoxyCodeLine{539 \textcolor{comment}{ */}}
+\DoxyCodeLine{540 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsReadable}}
+\DoxyCodeLine{541 \mbox{\hyperlink{actypes_8h_a112e3146cb38b6ee95e64d85842e380a}{BOOLEAN}}}
+\DoxyCodeLine{542 \mbox{\hyperlink{acpiosxf_8h_af10b2b8833b16f7a38bfa163b1ea2e8e}{AcpiOsReadable}} (}
+\DoxyCodeLine{543     \textcolor{keywordtype}{void}                    *Pointer,}
+\DoxyCodeLine{544     \mbox{\hyperlink{actypes_8h_a40026b17c073b463afc92d329c2649bc}{ACPI\_SIZE}}               \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}});}
+\DoxyCodeLine{545 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{546 }
+\DoxyCodeLine{547 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsWritable}}
+\DoxyCodeLine{548 \mbox{\hyperlink{actypes_8h_a112e3146cb38b6ee95e64d85842e380a}{BOOLEAN}}}
+\DoxyCodeLine{549 \mbox{\hyperlink{acpiosxf_8h_afb1984598a8b6762d852e6a261bcd8b5}{AcpiOsWritable}} (}
+\DoxyCodeLine{550     \textcolor{keywordtype}{void}                    *Pointer,}
+\DoxyCodeLine{551     \mbox{\hyperlink{actypes_8h_a40026b17c073b463afc92d329c2649bc}{ACPI\_SIZE}}               \mbox{\hyperlink{acpixf_8h_af8d8a0e464944d6e219e87ef2f33d2e0}{Length}});}
+\DoxyCodeLine{552 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{553 }
+\DoxyCodeLine{554 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsGetTimer}}
+\DoxyCodeLine{555 \mbox{\hyperlink{actypes_8h_a57be03562867144161c1bfee95ca8f7c}{UINT64}}}
+\DoxyCodeLine{556 \mbox{\hyperlink{acpiosxf_8h_a70ccedc5c9a9d6ebc8c4b2064aa90c1c}{AcpiOsGetTimer}} (}
+\DoxyCodeLine{557     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{558 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{559 }
+\DoxyCodeLine{560 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsSignal}}
+\DoxyCodeLine{561 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{562 \mbox{\hyperlink{acpiosxf_8h_a2855f2085fbc8c51ca999eb105b4ba09}{AcpiOsSignal}} (}
+\DoxyCodeLine{563     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Function,}
+\DoxyCodeLine{564     \textcolor{keywordtype}{void}                    *Info);}
+\DoxyCodeLine{565 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{566 }
+\DoxyCodeLine{567 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsEnterSleep}}
+\DoxyCodeLine{568 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{569 \mbox{\hyperlink{acpiosxf_8h_a6b06b54a2da5b5ab89e541b80d5fe969}{AcpiOsEnterSleep}} (}
+\DoxyCodeLine{570     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   SleepState,}
+\DoxyCodeLine{571     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  RegaValue,}
+\DoxyCodeLine{572     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  RegbValue);}
+\DoxyCodeLine{573 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{574 }
+\DoxyCodeLine{575 }
+\DoxyCodeLine{576 \textcolor{comment}{/*}}
+\DoxyCodeLine{577 \textcolor{comment}{ * Debug print routines}}
+\DoxyCodeLine{578 \textcolor{comment}{ */}}
+\DoxyCodeLine{579 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsPrintf}}
+\DoxyCodeLine{580 \mbox{\hyperlink{actypes_8h_a6d9826a7186269cad8a4fd398278384f}{ACPI\_PRINTF\_LIKE}} (1)}
+\DoxyCodeLine{581 void \mbox{\hyperlink{acenv_8h_aea2ba47c28861b5f8ca45a2054fb047f}{ACPI\_INTERNAL\_VAR\_XFACE}}}
+\DoxyCodeLine{582 \mbox{\hyperlink{acpiosxf_8h_aff5b4b7021f79c45fa2e7c751e95aed6}{AcpiOsPrintf}} (}
+\DoxyCodeLine{583     const \textcolor{keywordtype}{char}              *\mbox{\hyperlink{acpixf_8h_a5dfb0ad42f49d15d61a81350d068ecb7}{Format}},}
+\DoxyCodeLine{584     ...);}
+\DoxyCodeLine{585 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{586 }
+\DoxyCodeLine{587 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsVprintf}}
+\DoxyCodeLine{588 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{589 \mbox{\hyperlink{acpiosxf_8h_a8059c5cfc81389e4281056dfa8edb477}{AcpiOsVprintf}} (}
+\DoxyCodeLine{590     \textcolor{keyword}{const} \textcolor{keywordtype}{char}              *\mbox{\hyperlink{acpixf_8h_a5dfb0ad42f49d15d61a81350d068ecb7}{Format}},}
+\DoxyCodeLine{591     va\_list                 \mbox{\hyperlink{acdebug_8h_afe6d698f39645a1c4a335230ac727fcb}{Args}});}
+\DoxyCodeLine{592 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{593 }
+\DoxyCodeLine{594 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsRedirectOutput}}
+\DoxyCodeLine{595 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{596 \mbox{\hyperlink{acpiosxf_8h_a0262091457b827c87f7ea95f8ca55042}{AcpiOsRedirectOutput}} (}
+\DoxyCodeLine{597     \textcolor{keywordtype}{void}                    *Destination);}
+\DoxyCodeLine{598 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{599 }
+\DoxyCodeLine{600 }
+\DoxyCodeLine{601 \textcolor{comment}{/*}}
+\DoxyCodeLine{602 \textcolor{comment}{ * Debug IO}}
+\DoxyCodeLine{603 \textcolor{comment}{ */}}
+\DoxyCodeLine{604 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsGetLine}}
+\DoxyCodeLine{605 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{606 \mbox{\hyperlink{acpiosxf_8h_ad066dd2da3e2a8d7397cfbad9dd668a6}{AcpiOsGetLine}} (}
+\DoxyCodeLine{607     \textcolor{keywordtype}{char}                    *Buffer,}
+\DoxyCodeLine{608     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  BufferLength,}
+\DoxyCodeLine{609     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  *BytesRead);}
+\DoxyCodeLine{610 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{611 }
+\DoxyCodeLine{612 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsInitializeDebugger}}
+\DoxyCodeLine{613 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{614 \mbox{\hyperlink{acpiosxf_8h_a0e1e607d0ea21a1c649d488ca047ecc8}{AcpiOsInitializeDebugger}} (}
+\DoxyCodeLine{615     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{616 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{617 }
+\DoxyCodeLine{618 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsTerminateDebugger}}
+\DoxyCodeLine{619 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{620 \mbox{\hyperlink{acpiosxf_8h_a5c84af0933ef62c4d3cc133da792660d}{AcpiOsTerminateDebugger}} (}
+\DoxyCodeLine{621     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{622 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{623 }
+\DoxyCodeLine{624 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsWaitCommandReady}}
+\DoxyCodeLine{625 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{626 \mbox{\hyperlink{acpiosxf_8h_a41a4d3601fbaad127e3b7204a99675ee}{AcpiOsWaitCommandReady}} (}
+\DoxyCodeLine{627     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{628 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{629 }
+\DoxyCodeLine{630 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsNotifyCommandComplete}}
+\DoxyCodeLine{631 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{632 \mbox{\hyperlink{acpiosxf_8h_ab2689c8c5803717c454c69807db1da12}{AcpiOsNotifyCommandComplete}} (}
+\DoxyCodeLine{633     \textcolor{keywordtype}{void});}
+\DoxyCodeLine{634 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{635 }
+\DoxyCodeLine{636 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsTracePoint}}
+\DoxyCodeLine{637 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{638 \mbox{\hyperlink{acpiosxf_8h_ac57c7fd5f91f23b66fabd233a017a1ac}{AcpiOsTracePoint}} (}
+\DoxyCodeLine{639     \mbox{\hyperlink{actypes_8h_ac34a37aab8d089350b2894e618073911}{ACPI\_TRACE\_EVENT\_TYPE}}   \mbox{\hyperlink{acpixf_8h_ab361d6187ad6230bccbce7d8dbe49abc}{Type}},}
+\DoxyCodeLine{640     \mbox{\hyperlink{actypes_8h_a112e3146cb38b6ee95e64d85842e380a}{BOOLEAN}}                 \mbox{\hyperlink{acpixf_8h_a0f95196c0b1b9dd29011567a9cca28d3}{Begin}},}
+\DoxyCodeLine{641     \mbox{\hyperlink{actypes_8h_ab27e9918b538ce9d8ca692479b375b6a}{UINT8}}                   *\mbox{\hyperlink{acpixf_8h_ae7370a32edceaa074906ef8dd60da59a}{Aml}},}
+\DoxyCodeLine{642     \textcolor{keywordtype}{char}                    *\mbox{\hyperlink{acpixf_8h_a24fb06ab935e3ba7260e1941f8c036e9}{Pathname}});}
+\DoxyCodeLine{643 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{644 }
+\DoxyCodeLine{645 }
+\DoxyCodeLine{646 \textcolor{comment}{/*}}
+\DoxyCodeLine{647 \textcolor{comment}{ * Obtain ACPI table(s)}}
+\DoxyCodeLine{648 \textcolor{comment}{ */}}
+\DoxyCodeLine{649 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsGetTableByName}}
+\DoxyCodeLine{650 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{651 \mbox{\hyperlink{acpiosxf_8h_a4abcef6f3fb2e385880da90b2554f808}{AcpiOsGetTableByName}} (}
+\DoxyCodeLine{652     \textcolor{keywordtype}{char}                    *\mbox{\hyperlink{acpi_8hpp_a5ec67df9ee3474ea9b15652a47362df0}{Signature}},}
+\DoxyCodeLine{653     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  \mbox{\hyperlink{acpixf_8h_a96bf62378c64b72630546c0589f32742}{Instance}},}
+\DoxyCodeLine{654     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       **Table,}
+\DoxyCodeLine{655     \mbox{\hyperlink{actypes_8h_a32224933d3fb684d3fe3edae33a92758}{ACPI\_PHYSICAL\_ADDRESS}}   *\mbox{\hyperlink{acpixf_8h_a5c9068e87bdb7dd28aaf9b2565a0cc3c}{Address}});}
+\DoxyCodeLine{656 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{657 }
+\DoxyCodeLine{658 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsGetTableByIndex}}
+\DoxyCodeLine{659 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{660 \mbox{\hyperlink{acpiosxf_8h_ab0e63608f03530d2cd8ffeb27bb9bfb1}{AcpiOsGetTableByIndex}} (}
+\DoxyCodeLine{661     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  Index,}
+\DoxyCodeLine{662     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       **Table,}
+\DoxyCodeLine{663     \mbox{\hyperlink{actypes_8h_ae1e6edbbc26d6fbc71a90190d0266018}{UINT32}}                  *\mbox{\hyperlink{acpixf_8h_a96bf62378c64b72630546c0589f32742}{Instance}},}
+\DoxyCodeLine{664     \mbox{\hyperlink{actypes_8h_a32224933d3fb684d3fe3edae33a92758}{ACPI\_PHYSICAL\_ADDRESS}}   *\mbox{\hyperlink{acpixf_8h_a5c9068e87bdb7dd28aaf9b2565a0cc3c}{Address}});}
+\DoxyCodeLine{665 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{666 }
+\DoxyCodeLine{667 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsGetTableByAddress}}
+\DoxyCodeLine{668 \mbox{\hyperlink{actypes_8h_a6918452192704c4c57542ccb1d2d4d7d}{ACPI\_STATUS}}}
+\DoxyCodeLine{669 \mbox{\hyperlink{acpiosxf_8h_a4958b281f5f154b0102d1f80fbb07edf}{AcpiOsGetTableByAddress}} (}
+\DoxyCodeLine{670     \mbox{\hyperlink{actypes_8h_a32224933d3fb684d3fe3edae33a92758}{ACPI\_PHYSICAL\_ADDRESS}}   \mbox{\hyperlink{acpixf_8h_a5c9068e87bdb7dd28aaf9b2565a0cc3c}{Address}},}
+\DoxyCodeLine{671     \mbox{\hyperlink{structacpi__table__header}{ACPI\_TABLE\_HEADER}}       **Table);}
+\DoxyCodeLine{672 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{673 }
+\DoxyCodeLine{674 }
+\DoxyCodeLine{675 \textcolor{comment}{/*}}
+\DoxyCodeLine{676 \textcolor{comment}{ * Directory manipulation}}
+\DoxyCodeLine{677 \textcolor{comment}{ */}}
+\DoxyCodeLine{678 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsOpenDirectory}}
+\DoxyCodeLine{679 \textcolor{keywordtype}{void} *}
+\DoxyCodeLine{680 \mbox{\hyperlink{acpiosxf_8h_a0c7bb6ddd128bf154b81ee19385a39fe}{AcpiOsOpenDirectory}} (}
+\DoxyCodeLine{681     \textcolor{keywordtype}{char}                    *\mbox{\hyperlink{acpixf_8h_a24fb06ab935e3ba7260e1941f8c036e9}{Pathname}},}
+\DoxyCodeLine{682     \textcolor{keywordtype}{char}                    *WildcardSpec,}
+\DoxyCodeLine{683     \textcolor{keywordtype}{char}                    RequestedFileType);}
+\DoxyCodeLine{684 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{685 }
+\DoxyCodeLine{686 \textcolor{comment}{/* RequesteFileType values */}}
+\DoxyCodeLine{687 }
+\DoxyCodeLine{688 \textcolor{preprocessor}{\#define REQUEST\_FILE\_ONLY                   0}}
+\DoxyCodeLine{689 \textcolor{preprocessor}{\#define REQUEST\_DIR\_ONLY                    1}}
+\DoxyCodeLine{690 }
+\DoxyCodeLine{691 }
+\DoxyCodeLine{692 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsGetNextFilename}}
+\DoxyCodeLine{693 \textcolor{keywordtype}{char} *}
+\DoxyCodeLine{694 \mbox{\hyperlink{acpiosxf_8h_a57074a1d1cd6978c24d1731780783791}{AcpiOsGetNextFilename}} (}
+\DoxyCodeLine{695     \textcolor{keywordtype}{void}                    *DirHandle);}
+\DoxyCodeLine{696 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{697 }
+\DoxyCodeLine{698 \textcolor{preprocessor}{\#ifndef ACPI\_USE\_ALTERNATE\_PROTOTYPE\_AcpiOsCloseDirectory}}
+\DoxyCodeLine{699 \textcolor{keywordtype}{void}}
+\DoxyCodeLine{700 \mbox{\hyperlink{acpiosxf_8h_ad66dcc13fe2bce64f7f8ea351e5cc9ed}{AcpiOsCloseDirectory}} (}
+\DoxyCodeLine{701     \textcolor{keywordtype}{void}                    *DirHandle);}
+\DoxyCodeLine{702 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{703 }
+\DoxyCodeLine{704 }
+\DoxyCodeLine{705 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_ACPIOSXF\_H\_\_ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

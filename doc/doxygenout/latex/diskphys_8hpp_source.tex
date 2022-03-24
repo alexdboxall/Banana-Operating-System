@@ -1,0 +1,57 @@
+\hypertarget{diskphys_8hpp_source}{}\doxysection{diskphys.\+hpp}
+\label{diskphys_8hpp_source}\index{C:/Users/Alex/Desktop/Banana/kernel/hal/diskphys.hpp@{C:/Users/Alex/Desktop/Banana/kernel/hal/diskphys.hpp}}
+\mbox{\hyperlink{diskphys_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_PHYSDISK\_HPP\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_PHYSDISK\_HPP\_}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <stddef.h>}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{device_8hpp}{hal/device.hpp}}"{}}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{vfs_8hpp}{fs/vfs.hpp}}"{}}}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{keyword}{enum class} \mbox{\hyperlink{diskphys_8hpp_a6e02d7176c75ff911b02a8dad4ab230f}{DiskError}} : \textcolor{keywordtype}{int}}
+\DoxyCodeLine{10 \{}
+\DoxyCodeLine{11     \mbox{\hyperlink{diskphys_8hpp_a6e02d7176c75ff911b02a8dad4ab230fa505a83f220c02df2f85c3810cd9ceb38}{Success}},}
+\DoxyCodeLine{12     \mbox{\hyperlink{diskphys_8hpp_a6e02d7176c75ff911b02a8dad4ab230fae139a585510a502bbf1841cf589f5086}{Failure}},}
+\DoxyCodeLine{13     \mbox{\hyperlink{diskphys_8hpp_a6e02d7176c75ff911b02a8dad4ab230fadd353567e8118a2b8df4e822e59084ab}{NotReady}},}
+\DoxyCodeLine{14     \mbox{\hyperlink{diskphys_8hpp_a6e02d7176c75ff911b02a8dad4ab230fa11908ef5a5ede122a83464e43a6ffaba}{WriteProtected}},}
+\DoxyCodeLine{15     \mbox{\hyperlink{diskphys_8hpp_a6e02d7176c75ff911b02a8dad4ab230fada2b1b46ff01d4c5b299a250ec862e4d}{BadSectorCount}},}
+\DoxyCodeLine{16     \mbox{\hyperlink{diskphys_8hpp_a6e02d7176c75ff911b02a8dad4ab230fab556ed3aa798aebb2b81aeb9768e1382}{BadLBA}},}
+\DoxyCodeLine{17     \mbox{\hyperlink{diskphys_8hpp_a6e02d7176c75ff911b02a8dad4ab230fa7c4d9d78f9aa65cd1295bf3ce0d92e94}{BadBuffer}},}
+\DoxyCodeLine{18     \mbox{\hyperlink{diskphys_8hpp_a6e02d7176c75ff911b02a8dad4ab230fa5715a975cc1ea604dbcc706287334d80}{ParitionBoundError}},}
+\DoxyCodeLine{19 \};}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21 \textcolor{keyword}{class }\mbox{\hyperlink{class_v_cache}{VCache}};}
+\DoxyCodeLine{22 \textcolor{keyword}{class }\mbox{\hyperlink{class_logical_disk}{LogicalDisk}};}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24 \textcolor{keyword}{class }\mbox{\hyperlink{class_physical_disk}{PhysicalDisk}} : \textcolor{keyword}{public} \mbox{\hyperlink{class_device}{Device}}}
+\DoxyCodeLine{25 \{}
+\DoxyCodeLine{26 \textcolor{keyword}{private}:}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{29     \textcolor{keyword}{friend} \textcolor{keyword}{class }\mbox{\hyperlink{class_v_cache}{VCache}};}
+\DoxyCodeLine{30     \textcolor{keyword}{friend} \textcolor{keyword}{class }\mbox{\hyperlink{class_logical_disk}{LogicalDisk}};}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32 \textcolor{keyword}{public}:     }
+\DoxyCodeLine{33     \mbox{\hyperlink{class_v_cache}{VCache}}* \mbox{\hyperlink{class_physical_disk_a1d57eca61533a47275be38fe712f52e3}{cache}};}
+\DoxyCodeLine{34     }
+\DoxyCodeLine{35     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_physical_disk_ab1f4a964f11805ede2474b09a2d07dc1}{sectorSize}};}
+\DoxyCodeLine{36     uint64\_t \mbox{\hyperlink{class_physical_disk_a69acf27b10123b018ca9dc5ec994727f}{sizeInKBs}};}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_physical_disk_a563283baaa025aaef6b078f9b329d6cf}{removable}} = \textcolor{keyword}{false};}
+\DoxyCodeLine{39     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_physical_disk_aa6898358524493f714d52148860db8be}{floppy}} = \textcolor{keyword}{false};}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} \mbox{\hyperlink{class_physical_disk_ab3344fc7df8d4d75ec84cd8119184a78}{eject}}();}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43     \mbox{\hyperlink{class_physical_disk_ab27c108f8484ae92b2bfd03143d22b46}{PhysicalDisk}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* name, \textcolor{keywordtype}{int} \mbox{\hyperlink{class_physical_disk_ab1f4a964f11805ede2474b09a2d07dc1}{sectorSize}});}
+\DoxyCodeLine{44     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_physical_disk_a7a626b7495e98f0cae1ffdcb8c9aa51c}{startCache}}();}
+\DoxyCodeLine{45     \textcolor{keyword}{virtual} \mbox{\hyperlink{class_physical_disk_a715972146c72b4d0c1cd506748ea8d90}{\string~PhysicalDisk}}();}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} \mbox{\hyperlink{class_physical_disk_ad13b6f1358b6f462d6430bc537136c44}{read}}(uint64\_t lba, \textcolor{keywordtype}{int} count, \textcolor{keywordtype}{void}* \mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}}) = 0;            \textcolor{comment}{//Perform a read command}}
+\DoxyCodeLine{48     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} \mbox{\hyperlink{class_physical_disk_a32c1046c29a6a760bf767e6ed1975f21}{write}}(uint64\_t lba, \textcolor{keywordtype}{int} count, \textcolor{keywordtype}{void}* \mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}}) = 0;          \textcolor{comment}{//Perform a write command}}
+\DoxyCodeLine{49 \};}
+\DoxyCodeLine{50 }
+\DoxyCodeLine{51 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

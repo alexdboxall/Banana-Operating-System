@@ -1,0 +1,191 @@
+\hypertarget{acpi_8cpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/hw/acpi.cpp File Reference}
+\label{acpi_8cpp}\index{C:/Users/Alex/Desktop/Banana/kernel/hw/acpi.cpp@{C:/Users/Alex/Desktop/Banana/kernel/hw/acpi.cpp}}
+{\ttfamily \#include \char`\"{}krnl/common.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/virtmgr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}thr/elf.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/physmgr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/acpi.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/cpu.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/hal.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/bus/pci.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/diskctrl/ide.\+hpp\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{acpi_8cpp_adbbc595f2733fd3f566f337065d825ad}{load\+ACPITables}} (uint8\+\_\+t $\ast$\mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}})
+\item 
+uint8\+\_\+t $\ast$ \mbox{\hyperlink{acpi_8cpp_a33e7f88b0695795260c94495b618ee8d}{find\+RSDT}} (uint8\+\_\+t $\ast$\mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}})
+\item 
+uint8\+\_\+t $\ast$ \mbox{\hyperlink{acpi_8cpp_ac551fdce7bc5fd1a8c590f6c9835ee43}{find\+Data\+Table}} (uint8\+\_\+t $\ast$\mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}}, char name\mbox{[}$\,$\mbox{]})
+\item 
+void \mbox{\hyperlink{acpi_8cpp_af0bc5fb0946b5bc20057b9294d0a33e8}{scan\+MADT}} ()
+\item 
+size\+\_\+t \mbox{\hyperlink{acpi_8cpp_a67f9c69001b4c4794a8c5ec335bb1eb5}{manual\+PCIProbe}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{acpi_8cpp_aa7104f508d9339a92ea7ea86a89f8830}{processor\+ID}} \mbox{[}\mbox{\hyperlink{acpi_8hpp_abd94508d39c2494283657625ee2d183d}{MAX\+\_\+\+IOAPICS}}\mbox{]}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{acpi_8cpp_a7e16266f56a649ef67150f9949841865}{matching\+APICID}} \mbox{[}\mbox{\hyperlink{acpi_8hpp_abd94508d39c2494283657625ee2d183d}{MAX\+\_\+\+IOAPICS}}\mbox{]}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{acpi_8cpp_ab34d0179549d60c6723689c2f2b9b98d}{processor\+Discovery\+Number}} = 0
+\item 
+uint32\+\_\+t \mbox{\hyperlink{acpi_8cpp_abdfa43266b9e3a05abfec08a7db4d943}{ioapic\+GSIBase}} \mbox{[}\mbox{\hyperlink{acpi_8hpp_abd94508d39c2494283657625ee2d183d}{MAX\+\_\+\+IOAPICS}}\mbox{]}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{acpi_8cpp_aff868fd628a5f031bb172a3fdf53b316}{ioapic\+Addresses}} \mbox{[}\mbox{\hyperlink{acpi_8hpp_abd94508d39c2494283657625ee2d183d}{MAX\+\_\+\+IOAPICS}}\mbox{]}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{acpi_8cpp_ad9d9481420e883cccb998b31c142361e}{ioapic\+Found\+In\+MADT}} \mbox{[}\mbox{\hyperlink{acpi_8hpp_abd94508d39c2494283657625ee2d183d}{MAX\+\_\+\+IOAPICS}}\mbox{]}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{acpi_8cpp_a9155366d12e2d9b821156ee82dab676f}{ioapic\+Discovery\+Number}} = 0
+\item 
+uint8\+\_\+t \mbox{\hyperlink{acpi_8cpp_a24f8e784ae91229f296f16677afa19f0}{legacy\+IRQRemaps}} \mbox{[}16\mbox{]} = \{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 \}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{acpi_8cpp_addd735dcb9a226d9b78a2bca7757e838}{legacy\+IRQFlags}} \mbox{[}16\mbox{]} = \{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 \}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{acpi_8cpp_a28c535b15f96dc78a2ba6acfc14aaeae}{apic\+NMIInfo}} \mbox{[}\mbox{\hyperlink{acpi_8hpp_abd94508d39c2494283657625ee2d183d}{MAX\+\_\+\+IOAPICS}}\mbox{]}
+\item 
+int \mbox{\hyperlink{acpi_8cpp_ada939d7a4d7dc9a91731115b0f3d24ca}{next\+APICNMI}}
+\item 
+uint8\+\_\+t $\ast$ \mbox{\hyperlink{acpi_8cpp_a173e78b362485b0a8505d31c340d5739}{RSDPpointer}}
+\item 
+uint8\+\_\+t $\ast$ \mbox{\hyperlink{acpi_8cpp_abff4a9b90b97e3cfb5a7caff90cf182b}{RSDTpointer}}
+\item 
+bool \mbox{\hyperlink{acpi_8cpp_a28e1c9270df58dbfb2cd5299c5a88d33}{using\+XSDT}}
+\item 
+\mbox{\hyperlink{struct_a_c_p_i_table}{ACPITable}} \mbox{\hyperlink{acpi_8cpp_ac495849a80bdf7a77b784fc6f9a30ebd}{acpi\+Tables}} \mbox{[}64\mbox{]}
+\item 
+int \mbox{\hyperlink{acpi_8cpp_aa3abfac82c9e080b69e601a34a3c082a}{next\+ACPITable}} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{acpi_8cpp_ac551fdce7bc5fd1a8c590f6c9835ee43}\label{acpi_8cpp_ac551fdce7bc5fd1a8c590f6c9835ee43}} 
+\index{acpi.cpp@{acpi.cpp}!findDataTable@{findDataTable}}
+\index{findDataTable@{findDataTable}!acpi.cpp@{acpi.cpp}}
+\doxysubsubsection{\texorpdfstring{findDataTable()}{findDataTable()}}
+{\footnotesize\ttfamily uint8\+\_\+t $\ast$ find\+Data\+Table (\begin{DoxyParamCaption}\item[{uint8\+\_\+t $\ast$}]{ptr,  }\item[{char}]{name\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{acpi_8cpp_a33e7f88b0695795260c94495b618ee8d}\label{acpi_8cpp_a33e7f88b0695795260c94495b618ee8d}} 
+\index{acpi.cpp@{acpi.cpp}!findRSDT@{findRSDT}}
+\index{findRSDT@{findRSDT}!acpi.cpp@{acpi.cpp}}
+\doxysubsubsection{\texorpdfstring{findRSDT()}{findRSDT()}}
+{\footnotesize\ttfamily uint8\+\_\+t $\ast$ find\+RSDT (\begin{DoxyParamCaption}\item[{uint8\+\_\+t $\ast$}]{ptr }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{acpi_8cpp_adbbc595f2733fd3f566f337065d825ad}\label{acpi_8cpp_adbbc595f2733fd3f566f337065d825ad}} 
+\index{acpi.cpp@{acpi.cpp}!loadACPITables@{loadACPITables}}
+\index{loadACPITables@{loadACPITables}!acpi.cpp@{acpi.cpp}}
+\doxysubsubsection{\texorpdfstring{loadACPITables()}{loadACPITables()}}
+{\footnotesize\ttfamily void load\+ACPITables (\begin{DoxyParamCaption}\item[{uint8\+\_\+t $\ast$}]{ptr }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{acpi_8cpp_a67f9c69001b4c4794a8c5ec335bb1eb5}\label{acpi_8cpp_a67f9c69001b4c4794a8c5ec335bb1eb5}} 
+\index{acpi.cpp@{acpi.cpp}!manualPCIProbe@{manualPCIProbe}}
+\index{manualPCIProbe@{manualPCIProbe}!acpi.cpp@{acpi.cpp}}
+\doxysubsubsection{\texorpdfstring{manualPCIProbe()}{manualPCIProbe()}}
+{\footnotesize\ttfamily size\+\_\+t manual\+PCIProbe (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{acpi_8cpp_af0bc5fb0946b5bc20057b9294d0a33e8}\label{acpi_8cpp_af0bc5fb0946b5bc20057b9294d0a33e8}} 
+\index{acpi.cpp@{acpi.cpp}!scanMADT@{scanMADT}}
+\index{scanMADT@{scanMADT}!acpi.cpp@{acpi.cpp}}
+\doxysubsubsection{\texorpdfstring{scanMADT()}{scanMADT()}}
+{\footnotesize\ttfamily void scan\+MADT (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{acpi_8cpp_ac495849a80bdf7a77b784fc6f9a30ebd}\label{acpi_8cpp_ac495849a80bdf7a77b784fc6f9a30ebd}} 
+\index{acpi.cpp@{acpi.cpp}!acpiTables@{acpiTables}}
+\index{acpiTables@{acpiTables}!acpi.cpp@{acpi.cpp}}
+\doxysubsubsection{\texorpdfstring{acpiTables}{acpiTables}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_a_c_p_i_table}{ACPITable}} acpi\+Tables\mbox{[}64\mbox{]}}
+
+\mbox{\Hypertarget{acpi_8cpp_a28c535b15f96dc78a2ba6acfc14aaeae}\label{acpi_8cpp_a28c535b15f96dc78a2ba6acfc14aaeae}} 
+\index{acpi.cpp@{acpi.cpp}!apicNMIInfo@{apicNMIInfo}}
+\index{apicNMIInfo@{apicNMIInfo}!acpi.cpp@{acpi.cpp}}
+\doxysubsubsection{\texorpdfstring{apicNMIInfo}{apicNMIInfo}}
+{\footnotesize\ttfamily uint32\+\_\+t apic\+NMIInfo\mbox{[}\mbox{\hyperlink{acpi_8hpp_abd94508d39c2494283657625ee2d183d}{MAX\+\_\+\+IOAPICS}}\mbox{]}}
+
+\mbox{\Hypertarget{acpi_8cpp_aff868fd628a5f031bb172a3fdf53b316}\label{acpi_8cpp_aff868fd628a5f031bb172a3fdf53b316}} 
+\index{acpi.cpp@{acpi.cpp}!ioapicAddresses@{ioapicAddresses}}
+\index{ioapicAddresses@{ioapicAddresses}!acpi.cpp@{acpi.cpp}}
+\doxysubsubsection{\texorpdfstring{ioapicAddresses}{ioapicAddresses}}
+{\footnotesize\ttfamily uint32\+\_\+t ioapic\+Addresses\mbox{[}\mbox{\hyperlink{acpi_8hpp_abd94508d39c2494283657625ee2d183d}{MAX\+\_\+\+IOAPICS}}\mbox{]}}
+
+\mbox{\Hypertarget{acpi_8cpp_a9155366d12e2d9b821156ee82dab676f}\label{acpi_8cpp_a9155366d12e2d9b821156ee82dab676f}} 
+\index{acpi.cpp@{acpi.cpp}!ioapicDiscoveryNumber@{ioapicDiscoveryNumber}}
+\index{ioapicDiscoveryNumber@{ioapicDiscoveryNumber}!acpi.cpp@{acpi.cpp}}
+\doxysubsubsection{\texorpdfstring{ioapicDiscoveryNumber}{ioapicDiscoveryNumber}}
+{\footnotesize\ttfamily uint8\+\_\+t ioapic\+Discovery\+Number = 0}
+
+\mbox{\Hypertarget{acpi_8cpp_ad9d9481420e883cccb998b31c142361e}\label{acpi_8cpp_ad9d9481420e883cccb998b31c142361e}} 
+\index{acpi.cpp@{acpi.cpp}!ioapicFoundInMADT@{ioapicFoundInMADT}}
+\index{ioapicFoundInMADT@{ioapicFoundInMADT}!acpi.cpp@{acpi.cpp}}
+\doxysubsubsection{\texorpdfstring{ioapicFoundInMADT}{ioapicFoundInMADT}}
+{\footnotesize\ttfamily uint8\+\_\+t ioapic\+Found\+In\+MADT\mbox{[}\mbox{\hyperlink{acpi_8hpp_abd94508d39c2494283657625ee2d183d}{MAX\+\_\+\+IOAPICS}}\mbox{]}}
+
+\mbox{\Hypertarget{acpi_8cpp_abdfa43266b9e3a05abfec08a7db4d943}\label{acpi_8cpp_abdfa43266b9e3a05abfec08a7db4d943}} 
+\index{acpi.cpp@{acpi.cpp}!ioapicGSIBase@{ioapicGSIBase}}
+\index{ioapicGSIBase@{ioapicGSIBase}!acpi.cpp@{acpi.cpp}}
+\doxysubsubsection{\texorpdfstring{ioapicGSIBase}{ioapicGSIBase}}
+{\footnotesize\ttfamily uint32\+\_\+t ioapic\+GSIBase\mbox{[}\mbox{\hyperlink{acpi_8hpp_abd94508d39c2494283657625ee2d183d}{MAX\+\_\+\+IOAPICS}}\mbox{]}}
+
+\mbox{\Hypertarget{acpi_8cpp_addd735dcb9a226d9b78a2bca7757e838}\label{acpi_8cpp_addd735dcb9a226d9b78a2bca7757e838}} 
+\index{acpi.cpp@{acpi.cpp}!legacyIRQFlags@{legacyIRQFlags}}
+\index{legacyIRQFlags@{legacyIRQFlags}!acpi.cpp@{acpi.cpp}}
+\doxysubsubsection{\texorpdfstring{legacyIRQFlags}{legacyIRQFlags}}
+{\footnotesize\ttfamily uint16\+\_\+t legacy\+IRQFlags\mbox{[}16\mbox{]} = \{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 \}}
+
+\mbox{\Hypertarget{acpi_8cpp_a24f8e784ae91229f296f16677afa19f0}\label{acpi_8cpp_a24f8e784ae91229f296f16677afa19f0}} 
+\index{acpi.cpp@{acpi.cpp}!legacyIRQRemaps@{legacyIRQRemaps}}
+\index{legacyIRQRemaps@{legacyIRQRemaps}!acpi.cpp@{acpi.cpp}}
+\doxysubsubsection{\texorpdfstring{legacyIRQRemaps}{legacyIRQRemaps}}
+{\footnotesize\ttfamily uint8\+\_\+t legacy\+IRQRemaps\mbox{[}16\mbox{]} = \{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 \}}
+
+\mbox{\Hypertarget{acpi_8cpp_a7e16266f56a649ef67150f9949841865}\label{acpi_8cpp_a7e16266f56a649ef67150f9949841865}} 
+\index{acpi.cpp@{acpi.cpp}!matchingAPICID@{matchingAPICID}}
+\index{matchingAPICID@{matchingAPICID}!acpi.cpp@{acpi.cpp}}
+\doxysubsubsection{\texorpdfstring{matchingAPICID}{matchingAPICID}}
+{\footnotesize\ttfamily uint8\+\_\+t matching\+APICID\mbox{[}\mbox{\hyperlink{acpi_8hpp_abd94508d39c2494283657625ee2d183d}{MAX\+\_\+\+IOAPICS}}\mbox{]}}
+
+\mbox{\Hypertarget{acpi_8cpp_aa3abfac82c9e080b69e601a34a3c082a}\label{acpi_8cpp_aa3abfac82c9e080b69e601a34a3c082a}} 
+\index{acpi.cpp@{acpi.cpp}!nextACPITable@{nextACPITable}}
+\index{nextACPITable@{nextACPITable}!acpi.cpp@{acpi.cpp}}
+\doxysubsubsection{\texorpdfstring{nextACPITable}{nextACPITable}}
+{\footnotesize\ttfamily int next\+ACPITable = 0}
+
+\mbox{\Hypertarget{acpi_8cpp_ada939d7a4d7dc9a91731115b0f3d24ca}\label{acpi_8cpp_ada939d7a4d7dc9a91731115b0f3d24ca}} 
+\index{acpi.cpp@{acpi.cpp}!nextAPICNMI@{nextAPICNMI}}
+\index{nextAPICNMI@{nextAPICNMI}!acpi.cpp@{acpi.cpp}}
+\doxysubsubsection{\texorpdfstring{nextAPICNMI}{nextAPICNMI}}
+{\footnotesize\ttfamily int next\+APICNMI}
+
+\mbox{\Hypertarget{acpi_8cpp_ab34d0179549d60c6723689c2f2b9b98d}\label{acpi_8cpp_ab34d0179549d60c6723689c2f2b9b98d}} 
+\index{acpi.cpp@{acpi.cpp}!processorDiscoveryNumber@{processorDiscoveryNumber}}
+\index{processorDiscoveryNumber@{processorDiscoveryNumber}!acpi.cpp@{acpi.cpp}}
+\doxysubsubsection{\texorpdfstring{processorDiscoveryNumber}{processorDiscoveryNumber}}
+{\footnotesize\ttfamily uint8\+\_\+t processor\+Discovery\+Number = 0}
+
+\mbox{\Hypertarget{acpi_8cpp_aa7104f508d9339a92ea7ea86a89f8830}\label{acpi_8cpp_aa7104f508d9339a92ea7ea86a89f8830}} 
+\index{acpi.cpp@{acpi.cpp}!processorID@{processorID}}
+\index{processorID@{processorID}!acpi.cpp@{acpi.cpp}}
+\doxysubsubsection{\texorpdfstring{processorID}{processorID}}
+{\footnotesize\ttfamily uint8\+\_\+t processor\+ID\mbox{[}\mbox{\hyperlink{acpi_8hpp_abd94508d39c2494283657625ee2d183d}{MAX\+\_\+\+IOAPICS}}\mbox{]}}
+
+\mbox{\Hypertarget{acpi_8cpp_a173e78b362485b0a8505d31c340d5739}\label{acpi_8cpp_a173e78b362485b0a8505d31c340d5739}} 
+\index{acpi.cpp@{acpi.cpp}!RSDPpointer@{RSDPpointer}}
+\index{RSDPpointer@{RSDPpointer}!acpi.cpp@{acpi.cpp}}
+\doxysubsubsection{\texorpdfstring{RSDPpointer}{RSDPpointer}}
+{\footnotesize\ttfamily uint8\+\_\+t$\ast$ RSDPpointer}
+
+\mbox{\Hypertarget{acpi_8cpp_abff4a9b90b97e3cfb5a7caff90cf182b}\label{acpi_8cpp_abff4a9b90b97e3cfb5a7caff90cf182b}} 
+\index{acpi.cpp@{acpi.cpp}!RSDTpointer@{RSDTpointer}}
+\index{RSDTpointer@{RSDTpointer}!acpi.cpp@{acpi.cpp}}
+\doxysubsubsection{\texorpdfstring{RSDTpointer}{RSDTpointer}}
+{\footnotesize\ttfamily uint8\+\_\+t$\ast$ RSDTpointer}
+
+\mbox{\Hypertarget{acpi_8cpp_a28e1c9270df58dbfb2cd5299c5a88d33}\label{acpi_8cpp_a28e1c9270df58dbfb2cd5299c5a88d33}} 
+\index{acpi.cpp@{acpi.cpp}!usingXSDT@{usingXSDT}}
+\index{usingXSDT@{usingXSDT}!acpi.cpp@{acpi.cpp}}
+\doxysubsubsection{\texorpdfstring{usingXSDT}{usingXSDT}}
+{\footnotesize\ttfamily bool using\+XSDT}
+

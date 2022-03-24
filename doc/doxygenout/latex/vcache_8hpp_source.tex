@@ -1,0 +1,58 @@
+\hypertarget{vcache_8hpp_source}{}\doxysection{vcache.\+hpp}
+\label{vcache_8hpp_source}\index{C:/Users/Alex/Desktop/Banana/kernel/hal/vcache.hpp@{C:/Users/Alex/Desktop/Banana/kernel/hal/vcache.hpp}}
+\mbox{\hyperlink{vcache_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_VCACHE\_HPP\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_VCACHE\_HPP\_}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <stddef.h>}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{device_8hpp}{hal/device.hpp}}"{}}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{prcssthr_8hpp}{thr/prcssthr.hpp}}"{}}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <\mbox{\hyperlink{linkedlist_8hpp}{krnl/linkedlist.hpp}}>}}
+\DoxyCodeLine{9 }
+\DoxyCodeLine{10 \textcolor{keyword}{class }\mbox{\hyperlink{class_physical_disk}{PhysicalDisk}};}
+\DoxyCodeLine{11 }
+\DoxyCodeLine{12 \textcolor{keyword}{class }\mbox{\hyperlink{class_v_cache}{VCache}}}
+\DoxyCodeLine{13 \{}
+\DoxyCodeLine{14 \textcolor{keyword}{private}:}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{16 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{17     \textcolor{keyword}{friend} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_v_cache_a35a4ee445534e96a39c67160a05d1ef3}{vcacheDispatcher}}(\textcolor{keywordtype}{void}* context);}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19     \mbox{\hyperlink{class_mutex}{Mutex}}* \mbox{\hyperlink{class_v_cache_a6deee1a297e42e57672ac04e136aa93f}{mutex}};}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21     \mbox{\hyperlink{class_physical_disk}{PhysicalDisk}}* \mbox{\hyperlink{class_v_cache_a4c329f36540d59c552104ed44a7491ae}{disk}};}
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_v_cache_a83374895cab3b4c32d1b1868f9cf9f98}{diskSectorSize}} = 512;}
+\DoxyCodeLine{24     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_v_cache_a5fc305aecbb6efe248c36da46205c3fd}{blockSizeInSectors}} = 4;}
+\DoxyCodeLine{25 }
+\DoxyCodeLine{26     uint64\_t \mbox{\hyperlink{class_v_cache_a448e609816f2d9d6f01da12820a57820}{diskSizeKBs}} = 64;}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28     uint64\_t \mbox{\hyperlink{class_v_cache_a54035127c04ec475ab399b91e3799ed1}{writeCacheLBA}} = 0;}
+\DoxyCodeLine{29     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_v_cache_af25fd838fa7044c85da74c1929cdefdc}{writeCacheSectors}} = 0;}
+\DoxyCodeLine{30     uint8\_t* \mbox{\hyperlink{class_v_cache_a859a309af7c0457e10d279797ed75dbd}{writeCacheBuffer}};}
+\DoxyCodeLine{31     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_v_cache_a67d0cd2ce81ba9f2900f731114dc003b}{writeCacheValid}} = \textcolor{keyword}{false};}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33     uint64\_t \mbox{\hyperlink{class_v_cache_a675e3c6217c76b6fbd7b6dcdca8da4bb}{readCacheLBA}} = 0;}
+\DoxyCodeLine{34     uint8\_t* \mbox{\hyperlink{class_v_cache_a5eb81046850cbf2c8382ed0dad7bd8cd}{readCacheBuffer}};}
+\DoxyCodeLine{35     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_v_cache_ad1731f80b29429627a7094c162fb19c2}{readCacheValid}} = \textcolor{keyword}{false};}
+\DoxyCodeLine{36 }
+\DoxyCodeLine{37     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_v_cache_a9ae282fd94d572e404164c0310efa15f}{hitBlockEnd}} = \textcolor{keyword}{false};}
+\DoxyCodeLine{38     \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_v_cache_a8ae7a2637c0d7a8f2f86c98970cba453}{increaseNextTime}} = \textcolor{keyword}{false};}
+\DoxyCodeLine{39     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_v_cache_a088bc01837c0862166d12d69b8ebb8f6}{READ\_BUFFER\_BLOCK\_SIZE}} = 4;}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41 \textcolor{keyword}{public}: }
+\DoxyCodeLine{42     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_v_cache_aef210ae2b0ac3fb5d79251fd0b30e2a8}{writeWriteBuffer}}();        \textcolor{comment}{//what a stupid name}}
+\DoxyCodeLine{43     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_v_cache_a02cf7a9f17e310adbe4b22ee74b3bf95}{invalidateReadBuffer}}();}
+\DoxyCodeLine{44 }
+\DoxyCodeLine{45     \mbox{\hyperlink{class_v_cache_a254a3f246af43997a8e7f9133cbabdb1}{VCache}}(\mbox{\hyperlink{class_physical_disk}{PhysicalDisk}}* \mbox{\hyperlink{class_v_cache_a4c329f36540d59c552104ed44a7491ae}{disk}});}
+\DoxyCodeLine{46     \textcolor{keyword}{virtual} \mbox{\hyperlink{class_v_cache_a399cacd6e7a662631829f0e5c81531cf}{\string~VCache}}();}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{48     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_v_cache_a6a3ccf77b4bc9f4322524ac55536d11a}{read}}(uint64\_t lba, \textcolor{keywordtype}{int} count, \textcolor{keywordtype}{void}* \mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}});}
+\DoxyCodeLine{49     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_v_cache_ac3f6bc5937d2f48783a1b7a79f34a24c}{write}}(uint64\_t lba, \textcolor{keywordtype}{int} count, \textcolor{keywordtype}{void}* \mbox{\hyperlink{iso9660_8c_a8ee410c4ef57eac74b9f77e60ddb26d2}{ptr}});}
+\DoxyCodeLine{50 \};}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

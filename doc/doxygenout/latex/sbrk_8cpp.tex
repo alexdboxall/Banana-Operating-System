@@ -1,0 +1,32 @@
+\hypertarget{sbrk_8cpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/sys/sbrk.cpp File Reference}
+\label{sbrk_8cpp}\index{C:/Users/Alex/Desktop/Banana/kernel/sys/sbrk.cpp@{C:/Users/Alex/Desktop/Banana/kernel/sys/sbrk.cpp}}
+{\ttfamily \#include \char`\"{}thr/prcssthr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}sys/syscalls.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/virtmgr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hal/intctrl.\+hpp\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+uint64\+\_\+t \mbox{\hyperlink{sbrk_8cpp_ad6c3796e42cf959540f86046e631255c}{Sys\+Sbrk}} (\mbox{\hyperlink{structregs}{regs}} $\ast$r)
+\begin{DoxyCompactList}\small\item\em Changes and/or returns the location of the process\textquotesingle{} system break by a certain number of bytes, allocating new memory if needed. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{sbrk_8cpp_ad6c3796e42cf959540f86046e631255c}\label{sbrk_8cpp_ad6c3796e42cf959540f86046e631255c}} 
+\index{sbrk.cpp@{sbrk.cpp}!SysSbrk@{SysSbrk}}
+\index{SysSbrk@{SysSbrk}!sbrk.cpp@{sbrk.cpp}}
+\doxysubsubsection{\texorpdfstring{SysSbrk()}{SysSbrk()}}
+{\footnotesize\ttfamily uint64\+\_\+t Sys\+Sbrk (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structregs}{regs}} $\ast$}]{r }\end{DoxyParamCaption})}
+
+
+
+Changes and/or returns the location of the process\textquotesingle{} system break by a certain number of bytes, allocating new memory if needed. 
+
+$<$remark$>$ This system call does not check that there is enough physical memory or virtual memory in the kernel to successfully make this call, so requesting an excessive amount of memory will cause a kernel panic. $<$/remark$>$ 
+\begin{DoxyParams}{Parameters}
+{\em ebx} & If zero, non changes are made, and the location of the system break is returned. If greater than zero, the system break increases by at least this many bytes if possible (the actual amount may be more). If less than zero, the system break may shrink by up to this many bytes. The call will fail if this value is greater than 64MiB.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+On success, the updated system break value is returned. On error, it returns -\/1.
+\end{DoxyReturn}

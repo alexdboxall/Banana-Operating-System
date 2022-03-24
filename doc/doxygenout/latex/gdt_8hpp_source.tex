@@ -1,0 +1,87 @@
+\hypertarget{gdt_8hpp_source}{}\doxysection{gdt.\+hpp}
+\label{gdt_8hpp_source}\index{C:/Users/Alex/Desktop/Banana/kernel/krnl/gdt.hpp@{C:/Users/Alex/Desktop/Banana/kernel/krnl/gdt.hpp}}
+\mbox{\hyperlink{gdt_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_GDT\_HPP\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_GDT\_HPP\_}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <stddef.h>}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{keyword}{struct }\mbox{\hyperlink{struct_g_d_t_entry}{GDTEntry}}}
+\DoxyCodeLine{8 \{}
+\DoxyCodeLine{9     \textcolor{keyword}{union}}
+\DoxyCodeLine{10     \{}
+\DoxyCodeLine{11         \textcolor{keyword}{struct}}
+\DoxyCodeLine{12         \{}
+\DoxyCodeLine{13             uint64\_t \mbox{\hyperlink{struct_g_d_t_entry_a5ff8af75600e9b79ffb16074dd824d4d}{limitLow}} : 16;}
+\DoxyCodeLine{14             uint64\_t \mbox{\hyperlink{struct_g_d_t_entry_a82627cb29e2ccb5f987d32c2e395187c}{baseLow}} : 24;}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{16             uint64\_t \mbox{\hyperlink{struct_g_d_t_entry_a2a563dbc45eb9cfb061e78951cb9f905}{accessed}} : 1;}
+\DoxyCodeLine{17             uint64\_t \mbox{\hyperlink{struct_g_d_t_entry_a9d8c7338b3a8b2a5fbe2f12bcca0f1f1}{readWrite}} : 1;}
+\DoxyCodeLine{18             uint64\_t \mbox{\hyperlink{struct_g_d_t_entry_ad66b6a99e8616c8785fcd08fd02703eb}{directionAndConforming}} : 1;}
+\DoxyCodeLine{19             uint64\_t \mbox{\hyperlink{struct_g_d_t_entry_a7161622f9e9517409cbd43ba2b835e33}{executable}} : 1;}
+\DoxyCodeLine{20             uint64\_t \mbox{\hyperlink{struct_g_d_t_entry_a20477eeb6e07de07c7d09019c132b4ac}{type}} : 1;}
+\DoxyCodeLine{21             uint64\_t \mbox{\hyperlink{struct_g_d_t_entry_af3b5c37fa76d19eea3cf120f1c0bc397}{priv}} : 2;}
+\DoxyCodeLine{22             uint64\_t \mbox{\hyperlink{struct_g_d_t_entry_a504121c455e063b658bcae5f35afa372}{present}} : 1;}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24             uint64\_t \mbox{\hyperlink{struct_g_d_t_entry_a39fbcc1e10ed8375453dae23353fd517}{limitHigh}} : 4;}
+\DoxyCodeLine{25             uint64\_t : 1;}
+\DoxyCodeLine{26             uint64\_t \mbox{\hyperlink{struct_g_d_t_entry_ac93e28de769d9e3725c123fc0f9b2851}{bit64}}: 1;}
+\DoxyCodeLine{27             uint64\_t \mbox{\hyperlink{struct_g_d_t_entry_a42b46259bf3c83b215c1bfb3a6fbe078}{size}} : 1;}
+\DoxyCodeLine{28             uint64\_t \mbox{\hyperlink{struct_g_d_t_entry_a8449c0e3a8df11bfdf8d65c16f3fd5c6}{gran}} : 1;}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30             uint64\_t \mbox{\hyperlink{struct_g_d_t_entry_add5372f03a15aa009475266cdcc6f618}{baseHigh}} : 8;}
+\DoxyCodeLine{31         \};}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33         \textcolor{keyword}{struct}}
+\DoxyCodeLine{34         \{}
+\DoxyCodeLine{35             uint64\_t  : 16;}
+\DoxyCodeLine{36             uint64\_t  : 24;}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38             uint64\_t \mbox{\hyperlink{struct_g_d_t_entry_a85c83dc670d731d6d4a1bc21d852a68f}{access}} : 8;}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40             uint64\_t  : 4;}
+\DoxyCodeLine{41             uint64\_t \mbox{\hyperlink{struct_g_d_t_entry_a6852dbb876eb2add42619aa5ed0777b1}{flags}}: 4;}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43             uint64\_t  : 8;}
+\DoxyCodeLine{44         \};}
+\DoxyCodeLine{45 }
+\DoxyCodeLine{46         uint64\_t \mbox{\hyperlink{struct_g_d_t_entry_aab15ea3e49c31b6d4b473ab51adb175e}{val}};}
+\DoxyCodeLine{47     \};}
+\DoxyCodeLine{48     }
+\DoxyCodeLine{49 }
+\DoxyCodeLine{50     \textcolor{keywordtype}{void} \mbox{\hyperlink{struct_g_d_t_entry_a4d62d75d0048d61758495c7bdf978fab}{setBase}} (uint32\_t \mbox{\hyperlink{struct_g_d_t_entry_aab15ea3e49c31b6d4b473ab51adb175e}{val}});}
+\DoxyCodeLine{51     \textcolor{keywordtype}{void} \mbox{\hyperlink{struct_g_d_t_entry_a7413f20a04eb1295ef6a5a1e680b1149}{setLimit}} (uint32\_t \mbox{\hyperlink{struct_g_d_t_entry_aab15ea3e49c31b6d4b473ab51adb175e}{val}});}
+\DoxyCodeLine{52 \};}
+\DoxyCodeLine{53 }
+\DoxyCodeLine{54 \textcolor{preprocessor}{\#pragma pack(push,1)}}
+\DoxyCodeLine{55 \textcolor{keyword}{struct }\mbox{\hyperlink{struct_g_d_t_descriptor}{GDTDescriptor}}}
+\DoxyCodeLine{56 \{}
+\DoxyCodeLine{57     uint16\_t \mbox{\hyperlink{struct_g_d_t_descriptor_ab96c7c1c446eaae673c139a8db713452}{size}};}
+\DoxyCodeLine{58     \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{struct_g_d_t_descriptor_ac5e2612d0fec713f565c256e40ac09b7}{offset}};}
+\DoxyCodeLine{59 }
+\DoxyCodeLine{60 \};}
+\DoxyCodeLine{61 }
+\DoxyCodeLine{62 \textcolor{preprocessor}{\#pragma pack(pop)}}
+\DoxyCodeLine{63 }
+\DoxyCodeLine{64 \textcolor{keyword}{class }\mbox{\hyperlink{class_g_d_t}{GDT}}}
+\DoxyCodeLine{65 \{}
+\DoxyCodeLine{66 \textcolor{keyword}{private}:}
+\DoxyCodeLine{67 }
+\DoxyCodeLine{68 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{69     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_g_d_t_a04d5b5329d94fbcc14b6e2748f1b6669}{entryCount}} = 0;}
+\DoxyCodeLine{70     uint64\_t \mbox{\hyperlink{class_g_d_t_a3c28908ed0ff41ae211ee9e95a31e53b}{entries}}[256];}
+\DoxyCodeLine{71 }
+\DoxyCodeLine{72 \textcolor{keyword}{public}:}
+\DoxyCodeLine{73     \mbox{\hyperlink{class_g_d_t_ad3f8eddd19186bd375c59cc89774755a}{GDT}}();}
+\DoxyCodeLine{74     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_g_d_t_a7d21002b123aa9ddbab0dae97e2cbca0}{addEntry}}(\mbox{\hyperlink{struct_g_d_t_entry}{GDTEntry}} entry);}
+\DoxyCodeLine{75     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_g_d_t_a34cad4420250132b1f9d8ae1d3b266f5}{getNumberOfEntries}}();}
+\DoxyCodeLine{76     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_g_d_t_ac6f61d9be58eaa869542d3b6bdc0c4ee}{flush}}();}
+\DoxyCodeLine{77     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_g_d_t_a9ea0ae1c90c0ccad61ca73b27ce27dba}{setup}}();}
+\DoxyCodeLine{78 \};}
+\DoxyCodeLine{79 }
+\DoxyCodeLine{80 }
+\DoxyCodeLine{81 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,134 @@
+\hypertarget{syscalls_8hpp_source}{}\doxysection{syscalls.\+hpp}
+\label{syscalls_8hpp_source}\index{C:/Users/Alex/Desktop/Banana/kernel/sys/syscalls.hpp@{C:/Users/Alex/Desktop/Banana/kernel/sys/syscalls.hpp}}
+\mbox{\hyperlink{syscalls_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef \_SYSCALLS\_HPP\_}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define \_SYSCALLS\_HPP\_}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <stddef.h>}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#ifdef \_\_cplusplus}}
+\DoxyCodeLine{8 \textcolor{keyword}{struct }\mbox{\hyperlink{structregs}{regs}};}
+\DoxyCodeLine{9 uint64\_t \mbox{\hyperlink{syscalls_8cpp_aacd51727902e0436a03d66f3b5138478}{KeSystemCall}}(\mbox{\hyperlink{structregs}{regs}}* r, \textcolor{keywordtype}{void}* context);}
+\DoxyCodeLine{10 uint64\_t KeSystemCallFromUsermode(\textcolor{keywordtype}{size\_t} a, \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{syscalls_8cpp_a99ed6187132780a335e6db030a0115e7}{b}}, \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{syscalls_8cpp_adb8bd215d686c4fe63581fddee1627c2}{c}}, \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{syscalls_8cpp_ab0ea24539a2252176fffac31d88365ba}{d}});}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#define WSBE\_FORCE\_INIT\_EBX     0xA5347896}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#define WSBE\_FORCE\_INIT\_ECX     0x4F777FF7}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#define WSBE\_FORCE\_INIT\_EDX     0x11235555}}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#define \_APPSETTINGS\_VALIDATION\_V1          'N'}}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#define \_APPSETTINGS\_MODE\_UNKNOWN           0}}
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#define \_APPSETTINGS\_MODE\_SET\_NAME          1}}
+\DoxyCodeLine{21 \textcolor{preprocessor}{\#define \_APPSETTINGS\_MODE\_SET\_DESCRIPTION   2}}
+\DoxyCodeLine{22 \textcolor{preprocessor}{\#define \_APPSETTINGS\_MODE\_SET\_KEYWORDS      3}}
+\DoxyCodeLine{23 \textcolor{preprocessor}{\#define \_APPSETTINGS\_MODE\_SET\_AUTHOR        4}}
+\DoxyCodeLine{24 \textcolor{preprocessor}{\#define \_APPSETTINGS\_MODE\_SET\_COPYRIGHT     5}}
+\DoxyCodeLine{25 \textcolor{preprocessor}{\#define \_APPSETTINGS\_MODE\_SET\_VERSION       6}}
+\DoxyCodeLine{26 \textcolor{preprocessor}{\#define \_APPSETTINGS\_MODE\_SET\_FLAGS         7}}
+\DoxyCodeLine{27 \textcolor{preprocessor}{\#define \_APPSETTINGS\_MODE\_SET\_TITLECOLOUR   8}}
+\DoxyCodeLine{28 }
+\DoxyCodeLine{29 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_app_settings__t}{AppSettings\_t}}}
+\DoxyCodeLine{30 \{}
+\DoxyCodeLine{31     \textcolor{keyword}{union}}
+\DoxyCodeLine{32     \{}
+\DoxyCodeLine{33         \textcolor{keywordtype}{char} \textcolor{keywordtype}{string}[256];}
+\DoxyCodeLine{34         \textcolor{keywordtype}{char} \mbox{\hyperlink{struct_app_settings__t_a381fd99f5a775e9f49d5ecbf746098ea}{keywords}}[16][16];}
+\DoxyCodeLine{35     \};}
+\DoxyCodeLine{36 }
+\DoxyCodeLine{37     uint32\_t \mbox{\hyperlink{struct_app_settings__t_a31404017f85a2e1e0b8e8eb3b668ae13}{mode}}               : 5;}
+\DoxyCodeLine{38     uint32\_t \mbox{\hyperlink{struct_app_settings__t_a80b5bc47901068c9a7448b088d61043f}{valid}}             : 8;}
+\DoxyCodeLine{39     uint32\_t \mbox{\hyperlink{struct_app_settings__t_a2e60d6b0da00db1ef2d12fa7e1a07cd7}{noConsole}}         : 1;}
+\DoxyCodeLine{40     uint32\_t \mbox{\hyperlink{struct_app_settings__t_a2cf1dfce74a22e00f3f7046d5a60f48b}{unbufferedKeyboard}} : 1;}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42     uint32\_t \mbox{\hyperlink{struct_app_settings__t_a8b95a9d46b187855d1a79d69125c1727}{intData}};}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44 \} \mbox{\hyperlink{syscalls_8hpp_a86e213931e5e3fa1a6a4acb4858b5232}{AppSettings\_t}};}
+\DoxyCodeLine{45 }
+\DoxyCodeLine{46 \textcolor{keyword}{enum}}
+\DoxyCodeLine{47 \textcolor{preprocessor}{\#ifdef \_\_cplusplus}}
+\DoxyCodeLine{48 \textcolor{keyword}{class}}
+\DoxyCodeLine{49 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{50 \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272bec}{SystemCallNumber}}}
+\DoxyCodeLine{51 \{}
+\DoxyCodeLine{52     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becac93f999c37f2e21f6704627c53b77f81}{Yield}},}
+\DoxyCodeLine{53     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaed2fed565c58a841153245e9d3b94c3b}{Exit}},}
+\DoxyCodeLine{54     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becab00ea354f642767f6bb44ddf6fdf58dc}{Sbrk}},}
+\DoxyCodeLine{55     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaa56670174817e3fed92bfd8182d7c0d1}{Write}},}
+\DoxyCodeLine{56     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca809abe96853e69894bbf8e5730b31348}{Read}},}
+\DoxyCodeLine{57     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becadd0563c60538360bb6cf3df3d39e7ab4}{GetPID}},}
+\DoxyCodeLine{58     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becab8866b9292a23b58e73775886d6ca06a}{GetCwd}},}
+\DoxyCodeLine{59     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becacb0215f5b05f219bffc1a5dcb80dba6e}{SetCwd}},}
+\DoxyCodeLine{60     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becac8e6944e998ac466c3cc4a648dde8291}{Open}},}
+\DoxyCodeLine{61     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becab0d2fc8a61cc30fce240ad6df88447d4}{Close}},}
+\DoxyCodeLine{62     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca63b245c2befbf508eeca490be94a9917}{OpenDir}},}
+\DoxyCodeLine{63     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca6305b99b3e467e480dfe2f81f5b381f3}{ReadDir}},}
+\DoxyCodeLine{64     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca034f98e5e9ab868728e79bc53ae9e74a}{SeekDir}},}
+\DoxyCodeLine{65     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca682a3252b595b54732b9eaf80dd22e34}{TellDir}},}
+\DoxyCodeLine{66     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca6a3e32ad3aa343181b4cf69303440784}{MakeDir}},}
+\DoxyCodeLine{67     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaaa2ebcc0b54302edaa02307928e21552}{CloseDir}},}
+\DoxyCodeLine{68     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca80b5ad0400d2828aa8dc6538981689dc}{Seek}},}
+\DoxyCodeLine{69     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca0719bc5063aaf21d82cbffb603a2a96b}{Tell}},}
+\DoxyCodeLine{70     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaff9abf2b1a689f70a77a18da50c01d9f}{Size}},}
+\DoxyCodeLine{71     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca2e6c0938406548712044f94366ff1a3f}{Verify}},}
+\DoxyCodeLine{72     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca9779a7e9f14b8a5b1d7640a1ff0dab26}{Wait}},}
+\DoxyCodeLine{73     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca5b1fa978a6d28f025a6396525388a7cc}{Fork}},}
+\DoxyCodeLine{74     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becad3da71f72c5ba18440668f84813cf457}{Execve}},}
+\DoxyCodeLine{75     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaf78db63e7e1d2ba224a1f25176c4d3cc}{Rmdir}},}
+\DoxyCodeLine{76     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becac4942b8ba26dbc2c28ffee18ae884b5d}{Unlink}},}
+\DoxyCodeLine{77     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca38ed6a71cf39a0bdd9c12d9a6fd256a5}{GetArgc}},}
+\DoxyCodeLine{78     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca7170beaffff7c4f0c242918af519b6a9}{GetArgv}},}
+\DoxyCodeLine{79     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca199af0b82f0269eeb391d2069242e363}{Realpath}},}
+\DoxyCodeLine{80     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca19b27b06d55089aa4c0efdcd93a6f1bb}{TTYName}},}
+\DoxyCodeLine{81     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becab574dcda06d8850f52316793ff6ca2da}{IsATTY}},}
+\DoxyCodeLine{82     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca69d010423955f1ca2db47fea1dca7360}{USleep}},}
+\DoxyCodeLine{83     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca241dd267f17703d45b57b87b9868b9ab}{SizeFromFilename}},}
+\DoxyCodeLine{84     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaaa91a7c5a479ef5add68c761703fbaee}{Spawn}},}
+\DoxyCodeLine{85     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca7e1078a4544d6e21a3b68f4df35b64c1}{GetEnv}},}
+\DoxyCodeLine{86     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca4f8185b631d03b6b6f0d9b0a8fa355b5}{AppSettings}},}
+\DoxyCodeLine{87     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becae549718cf4009e0cf9fd5bb6aaebefc6}{FormatDisk}},}
+\DoxyCodeLine{88     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca770fe6a6ca4618fe27178ef7e3259289}{SetDiskVolumeLabel}},}
+\DoxyCodeLine{89     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca5c6ba2056a03db4d085ed81649cc43dc}{GetDiskVolumeLabel}},}
+\DoxyCodeLine{90     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becade8c7d28dab6c5f7216adbfdb6247a36}{SetFATAttrib}},}
+\DoxyCodeLine{91     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca440c3fc3a1eed76b614792dd83c2b77c}{Panic}},}
+\DoxyCodeLine{92     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca82084136e62c38642986b05419b4e734}{Shutdown}},}
+\DoxyCodeLine{93     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becac9c835a25aa0abd8b88303c9e0d687d9}{Pipe}},}
+\DoxyCodeLine{94     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca5a214ab4cb10364586355879468b578b}{GetUnixTime}},}
+\DoxyCodeLine{95     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca633d75ba4fe75b96c861d0c6a55b3603}{LoadDLL}},}
+\DoxyCodeLine{96     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca6dc57a9b0c84fe305dee09e494bae63b}{SetTime}},}
+\DoxyCodeLine{97     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca62f52b716d10462107be45f1a7b02797}{Timezone}},}
+\DoxyCodeLine{98     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca16a6ed79d06b5f6f2a9a875b333f0bcc}{Eject}},}
+\DoxyCodeLine{99     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca2481f76db7b7e506e8c7832e2550f0f3}{WSBE}},}
+\DoxyCodeLine{100     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becae925f2cac9e47249067c3fe45317d276}{GetRAMData}},}
+\DoxyCodeLine{101     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becae96150fbc1744bc8e3112a810ea679f7}{GetVGAPtr}},}
+\DoxyCodeLine{102     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca6d60b68c85625a9cead70861d76d0fe5}{RegisterSignal}},}
+\DoxyCodeLine{103     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca7a1ba5d346df88f7031c7a74f384de57}{Kill}},}
+\DoxyCodeLine{104     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becae969d52eb579f20268a16ee1830c73c4}{RegistryGetTypeFromPath}},}
+\DoxyCodeLine{105     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca8e9dd4374b8aa8b5055ea9f32c4f782b}{RegistryReadExtent}},}
+\DoxyCodeLine{106     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becaf97538bc65c7190ece7af736f0a2c047}{RegistryPathToExtentLookup}},}
+\DoxyCodeLine{107     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca7058acf9d83ed2b54120c8e158261aeb}{RegistryEnterDirectory}},}
+\DoxyCodeLine{108     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca1dd6455a8460bd91d63c5f400afbcc46}{RegistryGetNext}},}
+\DoxyCodeLine{109     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becadf1d452c00f655d94e0c0cd538382285}{RegistryGetNameAndTypeFromExtent}},}
+\DoxyCodeLine{110     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca02f502ca6187b08028d93ad62955afe1}{RegistryOpen}},}
+\DoxyCodeLine{111     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca5b1e2d03cbd92a5dbc11209686622b4b}{RegistryClose}},}
+\DoxyCodeLine{112     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca4877d9d67c11656d88fc82cfeb94a4f3}{Truncate}},}
+\DoxyCodeLine{113     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca45bf1a0ed63506db8be09f54752d0f9f}{SizeFromFilenameNoSymlink}},}
+\DoxyCodeLine{114     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca738a6fa904adb0e7a7b5fb0b15ab5f6e}{Symlink}},}
+\DoxyCodeLine{115     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca328d714d02341f62c522d75e4a704896}{RegistryEasyReadString}},}
+\DoxyCodeLine{116     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca00172fb01d9ef722ef7cf797c416946b}{RegistryEasyReadInteger}},}
+\DoxyCodeLine{117     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca353d8aa6a3f5239e51c8479ed1d99b35}{Alarm}},}
+\DoxyCodeLine{118     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becadaba8aa0fcd8a87c25fec7d916c789e7}{Pause}},}
+\DoxyCodeLine{119     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becae547532a450d5e9063acdd9c7d401a4b}{PthreadCreate}},}
+\DoxyCodeLine{120     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca4b6d134e0e65e80855247121d7a58a14}{PthreadJoin}},}
+\DoxyCodeLine{121     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca1ff255b1797a0a45207127ca97b4836b}{PthreadExit}},}
+\DoxyCodeLine{122     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272becac69dc73953fd7a3ba63b8b543e38dcf9}{PthreadGetTID}},}
+\DoxyCodeLine{123     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca251838fd4cbf00bbf77e53a04716fcbd}{InternalPthreadGetContext}},}
+\DoxyCodeLine{124     \mbox{\hyperlink{syscalls_8hpp_ac96a99215bdd50c738ec33ae10272beca72d4b8294837fa5ca30d57a2ec1c8bd4}{InternalPthreadGetStartLocation}},}
+\DoxyCodeLine{125 \};}
+\DoxyCodeLine{126 }
+\DoxyCodeLine{127 }
+\DoxyCodeLine{128 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

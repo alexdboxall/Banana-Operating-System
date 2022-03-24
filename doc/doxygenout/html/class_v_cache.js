@@ -1,0 +1,25 @@
+var class_v_cache =
+[
+    [ "VCache", "class_v_cache.html#a254a3f246af43997a8e7f9133cbabdb1", null ],
+    [ "~VCache", "class_v_cache.html#a399cacd6e7a662631829f0e5c81531cf", null ],
+    [ "invalidateReadBuffer", "class_v_cache.html#a02cf7a9f17e310adbe4b22ee74b3bf95", null ],
+    [ "read", "class_v_cache.html#a6a3ccf77b4bc9f4322524ac55536d11a", null ],
+    [ "write", "class_v_cache.html#ac3f6bc5937d2f48783a1b7a79f34a24c", null ],
+    [ "writeWriteBuffer", "class_v_cache.html#aef210ae2b0ac3fb5d79251fd0b30e2a8", null ],
+    [ "vcacheDispatcher", "class_v_cache.html#a35a4ee445534e96a39c67160a05d1ef3", null ],
+    [ "blockSizeInSectors", "class_v_cache.html#a5fc305aecbb6efe248c36da46205c3fd", null ],
+    [ "disk", "class_v_cache.html#a4c329f36540d59c552104ed44a7491ae", null ],
+    [ "diskSectorSize", "class_v_cache.html#a83374895cab3b4c32d1b1868f9cf9f98", null ],
+    [ "diskSizeKBs", "class_v_cache.html#a448e609816f2d9d6f01da12820a57820", null ],
+    [ "hitBlockEnd", "class_v_cache.html#a9ae282fd94d572e404164c0310efa15f", null ],
+    [ "increaseNextTime", "class_v_cache.html#a8ae7a2637c0d7a8f2f86c98970cba453", null ],
+    [ "mutex", "class_v_cache.html#a6deee1a297e42e57672ac04e136aa93f", null ],
+    [ "READ_BUFFER_BLOCK_SIZE", "class_v_cache.html#a088bc01837c0862166d12d69b8ebb8f6", null ],
+    [ "readCacheBuffer", "class_v_cache.html#a5eb81046850cbf2c8382ed0dad7bd8cd", null ],
+    [ "readCacheLBA", "class_v_cache.html#a675e3c6217c76b6fbd7b6dcdca8da4bb", null ],
+    [ "readCacheValid", "class_v_cache.html#ad1731f80b29429627a7094c162fb19c2", null ],
+    [ "writeCacheBuffer", "class_v_cache.html#a859a309af7c0457e10d279797ed75dbd", null ],
+    [ "writeCacheLBA", "class_v_cache.html#a54035127c04ec475ab399b91e3799ed1", null ],
+    [ "writeCacheSectors", "class_v_cache.html#af25fd838fa7044c85da74c1929cdefdc", null ],
+    [ "writeCacheValid", "class_v_cache.html#a67d0cd2ce81ba9f2900f731114dc003b", null ]
+];

@@ -1,0 +1,620 @@
+\hypertarget{acoutput_8h_source}{}\doxysection{acoutput.\+h}
+\label{acoutput_8h_source}\index{C:/Users/Alex/Desktop/Banana/kernel/acpica/acoutput.h@{C:/Users/Alex/Desktop/Banana/kernel/acpica/acoutput.h}}
+\mbox{\hyperlink{acoutput_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{2 \textcolor{comment}{ *}}
+\DoxyCodeLine{3 \textcolor{comment}{ * Name: acoutput.h -\/-\/ debug output}}
+\DoxyCodeLine{4 \textcolor{comment}{ *}}
+\DoxyCodeLine{5 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{8 \textcolor{comment}{ *}}
+\DoxyCodeLine{9 \textcolor{comment}{ * 1. Copyright Notice}}
+\DoxyCodeLine{10 \textcolor{comment}{ *}}
+\DoxyCodeLine{11 \textcolor{comment}{ * Some or all of this work -\/ Copyright (c) 1999 -\/ 2019, Intel Corp.}}
+\DoxyCodeLine{12 \textcolor{comment}{ * All rights reserved.}}
+\DoxyCodeLine{13 \textcolor{comment}{ *}}
+\DoxyCodeLine{14 \textcolor{comment}{ * 2. License}}
+\DoxyCodeLine{15 \textcolor{comment}{ *}}
+\DoxyCodeLine{16 \textcolor{comment}{ * 2.1. This is your license from Intel Corp. under its intellectual property}}
+\DoxyCodeLine{17 \textcolor{comment}{ * rights. You may have additional license terms from the party that provided}}
+\DoxyCodeLine{18 \textcolor{comment}{ * you this software, covering your right to use that party's intellectual}}
+\DoxyCodeLine{19 \textcolor{comment}{ * property rights.}}
+\DoxyCodeLine{20 \textcolor{comment}{ *}}
+\DoxyCodeLine{21 \textcolor{comment}{ * 2.2. Intel grants, free of charge, to any person ("{}Licensee"{}) obtaining a}}
+\DoxyCodeLine{22 \textcolor{comment}{ * copy of the source code appearing in this file ("{}Covered Code"{}) an}}
+\DoxyCodeLine{23 \textcolor{comment}{ * irrevocable, perpetual, worldwide license under Intel's copyrights in the}}
+\DoxyCodeLine{24 \textcolor{comment}{ * base code distributed originally by Intel ("{}Original Intel Code"{}) to copy,}}
+\DoxyCodeLine{25 \textcolor{comment}{ * make derivatives, distribute, use and display any portion of the Covered}}
+\DoxyCodeLine{26 \textcolor{comment}{ * Code in any form, with the right to sublicense such rights; and}}
+\DoxyCodeLine{27 \textcolor{comment}{ *}}
+\DoxyCodeLine{28 \textcolor{comment}{ * 2.3. Intel grants Licensee a non-\/exclusive and non-\/transferable patent}}
+\DoxyCodeLine{29 \textcolor{comment}{ * license (with the right to sublicense), under only those claims of Intel}}
+\DoxyCodeLine{30 \textcolor{comment}{ * patents that are infringed by the Original Intel Code, to make, use, sell,}}
+\DoxyCodeLine{31 \textcolor{comment}{ * offer to sell, and import the Covered Code and derivative works thereof}}
+\DoxyCodeLine{32 \textcolor{comment}{ * solely to the minimum extent necessary to exercise the above copyright}}
+\DoxyCodeLine{33 \textcolor{comment}{ * license, and in no event shall the patent license extend to any additions}}
+\DoxyCodeLine{34 \textcolor{comment}{ * to or modifications of the Original Intel Code. No other license or right}}
+\DoxyCodeLine{35 \textcolor{comment}{ * is granted directly or by implication, estoppel or otherwise;}}
+\DoxyCodeLine{36 \textcolor{comment}{ *}}
+\DoxyCodeLine{37 \textcolor{comment}{ * The above copyright and patent license is granted only if the following}}
+\DoxyCodeLine{38 \textcolor{comment}{ * conditions are met:}}
+\DoxyCodeLine{39 \textcolor{comment}{ *}}
+\DoxyCodeLine{40 \textcolor{comment}{ * 3. Conditions}}
+\DoxyCodeLine{41 \textcolor{comment}{ *}}
+\DoxyCodeLine{42 \textcolor{comment}{ * 3.1. Redistribution of Source with Rights to Further Distribute Source.}}
+\DoxyCodeLine{43 \textcolor{comment}{ * Redistribution of source code of any substantial portion of the Covered}}
+\DoxyCodeLine{44 \textcolor{comment}{ * Code or modification with rights to further distribute source must include}}
+\DoxyCodeLine{45 \textcolor{comment}{ * the above Copyright Notice, the above License, this list of Conditions,}}
+\DoxyCodeLine{46 \textcolor{comment}{ * and the following Disclaimer and Export Compliance provision. In addition,}}
+\DoxyCodeLine{47 \textcolor{comment}{ * Licensee must cause all Covered Code to which Licensee contributes to}}
+\DoxyCodeLine{48 \textcolor{comment}{ * contain a file documenting the changes Licensee made to create that Covered}}
+\DoxyCodeLine{49 \textcolor{comment}{ * Code and the date of any change. Licensee must include in that file the}}
+\DoxyCodeLine{50 \textcolor{comment}{ * documentation of any changes made by any predecessor Licensee. Licensee}}
+\DoxyCodeLine{51 \textcolor{comment}{ * must include a prominent statement that the modification is derived,}}
+\DoxyCodeLine{52 \textcolor{comment}{ * directly or indirectly, from Original Intel Code.}}
+\DoxyCodeLine{53 \textcolor{comment}{ *}}
+\DoxyCodeLine{54 \textcolor{comment}{ * 3.2. Redistribution of Source with no Rights to Further Distribute Source.}}
+\DoxyCodeLine{55 \textcolor{comment}{ * Redistribution of source code of any substantial portion of the Covered}}
+\DoxyCodeLine{56 \textcolor{comment}{ * Code or modification without rights to further distribute source must}}
+\DoxyCodeLine{57 \textcolor{comment}{ * include the following Disclaimer and Export Compliance provision in the}}
+\DoxyCodeLine{58 \textcolor{comment}{ * documentation and/or other materials provided with distribution. In}}
+\DoxyCodeLine{59 \textcolor{comment}{ * addition, Licensee may not authorize further sublicense of source of any}}
+\DoxyCodeLine{60 \textcolor{comment}{ * portion of the Covered Code, and must include terms to the effect that the}}
+\DoxyCodeLine{61 \textcolor{comment}{ * license from Licensee to its licensee is limited to the intellectual}}
+\DoxyCodeLine{62 \textcolor{comment}{ * property embodied in the software Licensee provides to its licensee, and}}
+\DoxyCodeLine{63 \textcolor{comment}{ * not to intellectual property embodied in modifications its licensee may}}
+\DoxyCodeLine{64 \textcolor{comment}{ * make.}}
+\DoxyCodeLine{65 \textcolor{comment}{ *}}
+\DoxyCodeLine{66 \textcolor{comment}{ * 3.3. Redistribution of Executable. Redistribution in executable form of any}}
+\DoxyCodeLine{67 \textcolor{comment}{ * substantial portion of the Covered Code or modification must reproduce the}}
+\DoxyCodeLine{68 \textcolor{comment}{ * above Copyright Notice, and the following Disclaimer and Export Compliance}}
+\DoxyCodeLine{69 \textcolor{comment}{ * provision in the documentation and/or other materials provided with the}}
+\DoxyCodeLine{70 \textcolor{comment}{ * distribution.}}
+\DoxyCodeLine{71 \textcolor{comment}{ *}}
+\DoxyCodeLine{72 \textcolor{comment}{ * 3.4. Intel retains all right, title, and interest in and to the Original}}
+\DoxyCodeLine{73 \textcolor{comment}{ * Intel Code.}}
+\DoxyCodeLine{74 \textcolor{comment}{ *}}
+\DoxyCodeLine{75 \textcolor{comment}{ * 3.5. Neither the name Intel nor any other trademark owned or controlled by}}
+\DoxyCodeLine{76 \textcolor{comment}{ * Intel shall be used in advertising or otherwise to promote the sale, use or}}
+\DoxyCodeLine{77 \textcolor{comment}{ * other dealings in products derived from or relating to the Covered Code}}
+\DoxyCodeLine{78 \textcolor{comment}{ * without prior written authorization from Intel.}}
+\DoxyCodeLine{79 \textcolor{comment}{ *}}
+\DoxyCodeLine{80 \textcolor{comment}{ * 4. Disclaimer and Export Compliance}}
+\DoxyCodeLine{81 \textcolor{comment}{ *}}
+\DoxyCodeLine{82 \textcolor{comment}{ * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED}}
+\DoxyCodeLine{83 \textcolor{comment}{ * HERE. ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE}}
+\DoxyCodeLine{84 \textcolor{comment}{ * IS PROVIDED "{}AS IS,"{} AND INTEL WILL NOT PROVIDE ANY SUPPORT, ASSISTANCE,}}
+\DoxyCodeLine{85 \textcolor{comment}{ * INSTALLATION, TRAINING OR OTHER SERVICES. INTEL WILL NOT PROVIDE ANY}}
+\DoxyCodeLine{86 \textcolor{comment}{ * UPDATES, ENHANCEMENTS OR EXTENSIONS. INTEL SPECIFICALLY DISCLAIMS ANY}}
+\DoxyCodeLine{87 \textcolor{comment}{ * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A}}
+\DoxyCodeLine{88 \textcolor{comment}{ * PARTICULAR PURPOSE.}}
+\DoxyCodeLine{89 \textcolor{comment}{ *}}
+\DoxyCodeLine{90 \textcolor{comment}{ * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES}}
+\DoxyCodeLine{91 \textcolor{comment}{ * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR}}
+\DoxyCodeLine{92 \textcolor{comment}{ * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,}}
+\DoxyCodeLine{93 \textcolor{comment}{ * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY}}
+\DoxyCodeLine{94 \textcolor{comment}{ * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL}}
+\DoxyCodeLine{95 \textcolor{comment}{ * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES. THESE LIMITATIONS}}
+\DoxyCodeLine{96 \textcolor{comment}{ * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY}}
+\DoxyCodeLine{97 \textcolor{comment}{ * LIMITED REMEDY.}}
+\DoxyCodeLine{98 \textcolor{comment}{ *}}
+\DoxyCodeLine{99 \textcolor{comment}{ * 4.3. Licensee shall not export, either directly or indirectly, any of this}}
+\DoxyCodeLine{100 \textcolor{comment}{ * software or system incorporating such software without first obtaining any}}
+\DoxyCodeLine{101 \textcolor{comment}{ * required license or other approval from the U. S. Department of Commerce or}}
+\DoxyCodeLine{102 \textcolor{comment}{ * any other agency or department of the United States Government. In the}}
+\DoxyCodeLine{103 \textcolor{comment}{ * event Licensee exports any such software from the United States or}}
+\DoxyCodeLine{104 \textcolor{comment}{ * re-\/exports any such software from a foreign destination, Licensee shall}}
+\DoxyCodeLine{105 \textcolor{comment}{ * ensure that the distribution and export/re-\/export of the software is in}}
+\DoxyCodeLine{106 \textcolor{comment}{ * compliance with all laws, regulations, orders, or other restrictions of the}}
+\DoxyCodeLine{107 \textcolor{comment}{ * U.S. Export Administration Regulations. Licensee agrees that neither it nor}}
+\DoxyCodeLine{108 \textcolor{comment}{ * any of its subsidiaries will export/re-\/export any technical data, process,}}
+\DoxyCodeLine{109 \textcolor{comment}{ * software, or service, directly or indirectly, to any country for which the}}
+\DoxyCodeLine{110 \textcolor{comment}{ * United States government or any agency thereof requires an export license,}}
+\DoxyCodeLine{111 \textcolor{comment}{ * other governmental approval, or letter of assurance, without first obtaining}}
+\DoxyCodeLine{112 \textcolor{comment}{ * such license, approval or letter.}}
+\DoxyCodeLine{113 \textcolor{comment}{ *}}
+\DoxyCodeLine{114 \textcolor{comment}{ *****************************************************************************}}
+\DoxyCodeLine{115 \textcolor{comment}{ *}}
+\DoxyCodeLine{116 \textcolor{comment}{ * Alternatively, you may choose to be licensed under the terms of the}}
+\DoxyCodeLine{117 \textcolor{comment}{ * following license:}}
+\DoxyCodeLine{118 \textcolor{comment}{ *}}
+\DoxyCodeLine{119 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{120 \textcolor{comment}{ * modification, are permitted provided that the following conditions}}
+\DoxyCodeLine{121 \textcolor{comment}{ * are met:}}
+\DoxyCodeLine{122 \textcolor{comment}{ * 1. Redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{123 \textcolor{comment}{ *    notice, this list of conditions, and the following disclaimer,}}
+\DoxyCodeLine{124 \textcolor{comment}{ *    without modification.}}
+\DoxyCodeLine{125 \textcolor{comment}{ * 2. Redistributions in binary form must reproduce at minimum a disclaimer}}
+\DoxyCodeLine{126 \textcolor{comment}{ *    substantially similar to the "{}NO WARRANTY"{} disclaimer below}}
+\DoxyCodeLine{127 \textcolor{comment}{ *    ("{}Disclaimer"{}) and any redistribution must be conditioned upon}}
+\DoxyCodeLine{128 \textcolor{comment}{ *    including a substantially similar Disclaimer requirement for further}}
+\DoxyCodeLine{129 \textcolor{comment}{ *    binary redistribution.}}
+\DoxyCodeLine{130 \textcolor{comment}{ * 3. Neither the names of the above-\/listed copyright holders nor the names}}
+\DoxyCodeLine{131 \textcolor{comment}{ *    of any contributors may be used to endorse or promote products derived}}
+\DoxyCodeLine{132 \textcolor{comment}{ *    from this software without specific prior written permission.}}
+\DoxyCodeLine{133 \textcolor{comment}{ *}}
+\DoxyCodeLine{134 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS}}
+\DoxyCodeLine{135 \textcolor{comment}{ * "{}AS IS"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT}}
+\DoxyCodeLine{136 \textcolor{comment}{ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR}}
+\DoxyCodeLine{137 \textcolor{comment}{ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT}}
+\DoxyCodeLine{138 \textcolor{comment}{ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,}}
+\DoxyCodeLine{139 \textcolor{comment}{ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT}}
+\DoxyCodeLine{140 \textcolor{comment}{ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,}}
+\DoxyCodeLine{141 \textcolor{comment}{ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY}}
+\DoxyCodeLine{142 \textcolor{comment}{ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{143 \textcolor{comment}{ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{144 \textcolor{comment}{ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{145 \textcolor{comment}{ *}}
+\DoxyCodeLine{146 \textcolor{comment}{ * Alternatively, you may choose to be licensed under the terms of the}}
+\DoxyCodeLine{147 \textcolor{comment}{ * GNU General Public License ("{}GPL"{}) version 2 as published by the Free}}
+\DoxyCodeLine{148 \textcolor{comment}{ * Software Foundation.}}
+\DoxyCodeLine{149 \textcolor{comment}{ *}}
+\DoxyCodeLine{150 \textcolor{comment}{ *****************************************************************************/}}
+\DoxyCodeLine{151 }
+\DoxyCodeLine{152 \textcolor{preprocessor}{\#ifndef \_\_ACOUTPUT\_H\_\_}}
+\DoxyCodeLine{153 \textcolor{preprocessor}{\#define \_\_ACOUTPUT\_H\_\_}}
+\DoxyCodeLine{154 }
+\DoxyCodeLine{155 \textcolor{comment}{/*}}
+\DoxyCodeLine{156 \textcolor{comment}{ * Debug levels and component IDs. These are used to control the}}
+\DoxyCodeLine{157 \textcolor{comment}{ * granularity of the output of the ACPI\_DEBUG\_PRINT macro -\/-\/ on a}}
+\DoxyCodeLine{158 \textcolor{comment}{ * per-\/component basis and a per-\/exception-\/type basis.}}
+\DoxyCodeLine{159 \textcolor{comment}{ */}}
+\DoxyCodeLine{160 }
+\DoxyCodeLine{161 \textcolor{comment}{/* Component IDs are used in the global "{}DebugLayer"{} */}}
+\DoxyCodeLine{162 }
+\DoxyCodeLine{163 \textcolor{preprocessor}{\#define ACPI\_UTILITIES              0x00000001}}
+\DoxyCodeLine{164 \textcolor{preprocessor}{\#define ACPI\_HARDWARE               0x00000002}}
+\DoxyCodeLine{165 \textcolor{preprocessor}{\#define ACPI\_EVENTS                 0x00000004}}
+\DoxyCodeLine{166 \textcolor{preprocessor}{\#define ACPI\_TABLES                 0x00000008}}
+\DoxyCodeLine{167 \textcolor{preprocessor}{\#define ACPI\_NAMESPACE              0x00000010}}
+\DoxyCodeLine{168 \textcolor{preprocessor}{\#define ACPI\_PARSER                 0x00000020}}
+\DoxyCodeLine{169 \textcolor{preprocessor}{\#define ACPI\_DISPATCHER             0x00000040}}
+\DoxyCodeLine{170 \textcolor{preprocessor}{\#define ACPI\_EXECUTER               0x00000080}}
+\DoxyCodeLine{171 \textcolor{preprocessor}{\#define ACPI\_RESOURCES              0x00000100}}
+\DoxyCodeLine{172 \textcolor{preprocessor}{\#define ACPI\_CA\_DEBUGGER            0x00000200}}
+\DoxyCodeLine{173 \textcolor{preprocessor}{\#define ACPI\_OS\_SERVICES            0x00000400}}
+\DoxyCodeLine{174 \textcolor{preprocessor}{\#define ACPI\_CA\_DISASSEMBLER        0x00000800}}
+\DoxyCodeLine{175 }
+\DoxyCodeLine{176 \textcolor{comment}{/* Component IDs for ACPI tools and utilities */}}
+\DoxyCodeLine{177 }
+\DoxyCodeLine{178 \textcolor{preprocessor}{\#define ACPI\_COMPILER               0x00001000}}
+\DoxyCodeLine{179 \textcolor{preprocessor}{\#define ACPI\_TOOLS                  0x00002000}}
+\DoxyCodeLine{180 \textcolor{preprocessor}{\#define ACPI\_EXAMPLE                0x00004000}}
+\DoxyCodeLine{181 \textcolor{preprocessor}{\#define ACPI\_DRIVER                 0x00008000}}
+\DoxyCodeLine{182 \textcolor{preprocessor}{\#define DT\_COMPILER                 0x00010000}}
+\DoxyCodeLine{183 \textcolor{preprocessor}{\#define ASL\_PREPROCESSOR            0x00020000}}
+\DoxyCodeLine{184 }
+\DoxyCodeLine{185 \textcolor{preprocessor}{\#define ACPI\_ALL\_COMPONENTS         0x0001FFFF}}
+\DoxyCodeLine{186 \textcolor{preprocessor}{\#define ACPI\_COMPONENT\_DEFAULT      (ACPI\_ALL\_COMPONENTS)}}
+\DoxyCodeLine{187 }
+\DoxyCodeLine{188 \textcolor{comment}{/* Component IDs reserved for ACPI drivers */}}
+\DoxyCodeLine{189 }
+\DoxyCodeLine{190 \textcolor{preprocessor}{\#define ACPI\_ALL\_DRIVERS            0xFFFF0000}}
+\DoxyCodeLine{191 }
+\DoxyCodeLine{192 }
+\DoxyCodeLine{193 \textcolor{comment}{/*}}
+\DoxyCodeLine{194 \textcolor{comment}{ * Raw debug output levels, do not use these in the ACPI\_DEBUG\_PRINT macros}}
+\DoxyCodeLine{195 \textcolor{comment}{ */}}
+\DoxyCodeLine{196 \textcolor{preprocessor}{\#define ACPI\_LV\_INIT                0x00000001}}
+\DoxyCodeLine{197 \textcolor{preprocessor}{\#define ACPI\_LV\_DEBUG\_OBJECT        0x00000002}}
+\DoxyCodeLine{198 \textcolor{preprocessor}{\#define ACPI\_LV\_INFO                0x00000004}}
+\DoxyCodeLine{199 \textcolor{preprocessor}{\#define ACPI\_LV\_REPAIR              0x00000008}}
+\DoxyCodeLine{200 \textcolor{preprocessor}{\#define ACPI\_LV\_TRACE\_POINT         0x00000010}}
+\DoxyCodeLine{201 \textcolor{preprocessor}{\#define ACPI\_LV\_ALL\_EXCEPTIONS      0x0000001F}}
+\DoxyCodeLine{202 }
+\DoxyCodeLine{203 \textcolor{comment}{/* Trace verbosity level 1 [Standard Trace Level] */}}
+\DoxyCodeLine{204 }
+\DoxyCodeLine{205 \textcolor{preprocessor}{\#define ACPI\_LV\_INIT\_NAMES          0x00000020}}
+\DoxyCodeLine{206 \textcolor{preprocessor}{\#define ACPI\_LV\_PARSE               0x00000040}}
+\DoxyCodeLine{207 \textcolor{preprocessor}{\#define ACPI\_LV\_LOAD                0x00000080}}
+\DoxyCodeLine{208 \textcolor{preprocessor}{\#define ACPI\_LV\_DISPATCH            0x00000100}}
+\DoxyCodeLine{209 \textcolor{preprocessor}{\#define ACPI\_LV\_EXEC                0x00000200}}
+\DoxyCodeLine{210 \textcolor{preprocessor}{\#define ACPI\_LV\_NAMES               0x00000400}}
+\DoxyCodeLine{211 \textcolor{preprocessor}{\#define ACPI\_LV\_OPREGION            0x00000800}}
+\DoxyCodeLine{212 \textcolor{preprocessor}{\#define ACPI\_LV\_BFIELD              0x00001000}}
+\DoxyCodeLine{213 \textcolor{preprocessor}{\#define ACPI\_LV\_TABLES              0x00002000}}
+\DoxyCodeLine{214 \textcolor{preprocessor}{\#define ACPI\_LV\_VALUES              0x00004000}}
+\DoxyCodeLine{215 \textcolor{preprocessor}{\#define ACPI\_LV\_OBJECTS             0x00008000}}
+\DoxyCodeLine{216 \textcolor{preprocessor}{\#define ACPI\_LV\_RESOURCES           0x00010000}}
+\DoxyCodeLine{217 \textcolor{preprocessor}{\#define ACPI\_LV\_USER\_REQUESTS       0x00020000}}
+\DoxyCodeLine{218 \textcolor{preprocessor}{\#define ACPI\_LV\_PACKAGE             0x00040000}}
+\DoxyCodeLine{219 \textcolor{preprocessor}{\#define ACPI\_LV\_EVALUATION          0x00080000}}
+\DoxyCodeLine{220 \textcolor{preprocessor}{\#define ACPI\_LV\_VERBOSITY1          0x000FFF40 | ACPI\_LV\_ALL\_EXCEPTIONS}}
+\DoxyCodeLine{221 }
+\DoxyCodeLine{222 \textcolor{comment}{/* Trace verbosity level 2 [Function tracing and memory allocation] */}}
+\DoxyCodeLine{223 }
+\DoxyCodeLine{224 \textcolor{preprocessor}{\#define ACPI\_LV\_ALLOCATIONS         0x00100000}}
+\DoxyCodeLine{225 \textcolor{preprocessor}{\#define ACPI\_LV\_FUNCTIONS           0x00200000}}
+\DoxyCodeLine{226 \textcolor{preprocessor}{\#define ACPI\_LV\_OPTIMIZATIONS       0x00400000}}
+\DoxyCodeLine{227 \textcolor{preprocessor}{\#define ACPI\_LV\_PARSE\_TREES         0x00800000}}
+\DoxyCodeLine{228 \textcolor{preprocessor}{\#define ACPI\_LV\_VERBOSITY2          0x00F00000 | ACPI\_LV\_VERBOSITY1}}
+\DoxyCodeLine{229 \textcolor{preprocessor}{\#define ACPI\_LV\_ALL                 ACPI\_LV\_VERBOSITY2}}
+\DoxyCodeLine{230 }
+\DoxyCodeLine{231 \textcolor{comment}{/* Trace verbosity level 3 [Threading, I/O, and Interrupts] */}}
+\DoxyCodeLine{232 }
+\DoxyCodeLine{233 \textcolor{preprocessor}{\#define ACPI\_LV\_MUTEX               0x01000000}}
+\DoxyCodeLine{234 \textcolor{preprocessor}{\#define ACPI\_LV\_THREADS             0x02000000}}
+\DoxyCodeLine{235 \textcolor{preprocessor}{\#define ACPI\_LV\_IO                  0x04000000}}
+\DoxyCodeLine{236 \textcolor{preprocessor}{\#define ACPI\_LV\_INTERRUPTS          0x08000000}}
+\DoxyCodeLine{237 \textcolor{preprocessor}{\#define ACPI\_LV\_VERBOSITY3          0x0F000000 | ACPI\_LV\_VERBOSITY2}}
+\DoxyCodeLine{238 }
+\DoxyCodeLine{239 \textcolor{comment}{/* Exceptionally verbose output -\/-\/ also used in the global "{}DebugLevel"{}  */}}
+\DoxyCodeLine{240 }
+\DoxyCodeLine{241 \textcolor{preprocessor}{\#define ACPI\_LV\_AML\_DISASSEMBLE     0x10000000}}
+\DoxyCodeLine{242 \textcolor{preprocessor}{\#define ACPI\_LV\_VERBOSE\_INFO        0x20000000}}
+\DoxyCodeLine{243 \textcolor{preprocessor}{\#define ACPI\_LV\_FULL\_TABLES         0x40000000}}
+\DoxyCodeLine{244 \textcolor{preprocessor}{\#define ACPI\_LV\_EVENTS              0x80000000}}
+\DoxyCodeLine{245 \textcolor{preprocessor}{\#define ACPI\_LV\_VERBOSE             0xF0000000}}
+\DoxyCodeLine{246 }
+\DoxyCodeLine{247 }
+\DoxyCodeLine{248 \textcolor{comment}{/*}}
+\DoxyCodeLine{249 \textcolor{comment}{ * Debug level macros that are used in the DEBUG\_PRINT macros}}
+\DoxyCodeLine{250 \textcolor{comment}{ */}}
+\DoxyCodeLine{251 \textcolor{preprocessor}{\#define ACPI\_DEBUG\_LEVEL(dl)        (UINT32) dl,ACPI\_DEBUG\_PARAMETERS}}
+\DoxyCodeLine{252 }
+\DoxyCodeLine{253 \textcolor{comment}{/*}}
+\DoxyCodeLine{254 \textcolor{comment}{ * Exception level -\/-\/ used in the global "{}DebugLevel"{}}}
+\DoxyCodeLine{255 \textcolor{comment}{ *}}
+\DoxyCodeLine{256 \textcolor{comment}{ * Note: For errors, use the ACPI\_ERROR or ACPI\_EXCEPTION interfaces.}}
+\DoxyCodeLine{257 \textcolor{comment}{ * For warnings, use ACPI\_WARNING.}}
+\DoxyCodeLine{258 \textcolor{comment}{ */}}
+\DoxyCodeLine{259 \textcolor{preprocessor}{\#define ACPI\_DB\_INIT                ACPI\_DEBUG\_LEVEL (ACPI\_LV\_INIT)}}
+\DoxyCodeLine{260 \textcolor{preprocessor}{\#define ACPI\_DB\_DEBUG\_OBJECT        ACPI\_DEBUG\_LEVEL (ACPI\_LV\_DEBUG\_OBJECT)}}
+\DoxyCodeLine{261 \textcolor{preprocessor}{\#define ACPI\_DB\_INFO                ACPI\_DEBUG\_LEVEL (ACPI\_LV\_INFO)}}
+\DoxyCodeLine{262 \textcolor{preprocessor}{\#define ACPI\_DB\_REPAIR              ACPI\_DEBUG\_LEVEL (ACPI\_LV\_REPAIR)}}
+\DoxyCodeLine{263 \textcolor{preprocessor}{\#define ACPI\_DB\_TRACE\_POINT         ACPI\_DEBUG\_LEVEL (ACPI\_LV\_TRACE\_POINT)}}
+\DoxyCodeLine{264 \textcolor{preprocessor}{\#define ACPI\_DB\_ALL\_EXCEPTIONS      ACPI\_DEBUG\_LEVEL (ACPI\_LV\_ALL\_EXCEPTIONS)}}
+\DoxyCodeLine{265 }
+\DoxyCodeLine{266 \textcolor{comment}{/* Trace level -\/-\/ also used in the global "{}DebugLevel"{} */}}
+\DoxyCodeLine{267 }
+\DoxyCodeLine{268 \textcolor{preprocessor}{\#define ACPI\_DB\_INIT\_NAMES          ACPI\_DEBUG\_LEVEL (ACPI\_LV\_INIT\_NAMES)}}
+\DoxyCodeLine{269 \textcolor{preprocessor}{\#define ACPI\_DB\_THREADS             ACPI\_DEBUG\_LEVEL (ACPI\_LV\_THREADS)}}
+\DoxyCodeLine{270 \textcolor{preprocessor}{\#define ACPI\_DB\_PARSE               ACPI\_DEBUG\_LEVEL (ACPI\_LV\_PARSE)}}
+\DoxyCodeLine{271 \textcolor{preprocessor}{\#define ACPI\_DB\_DISPATCH            ACPI\_DEBUG\_LEVEL (ACPI\_LV\_DISPATCH)}}
+\DoxyCodeLine{272 \textcolor{preprocessor}{\#define ACPI\_DB\_LOAD                ACPI\_DEBUG\_LEVEL (ACPI\_LV\_LOAD)}}
+\DoxyCodeLine{273 \textcolor{preprocessor}{\#define ACPI\_DB\_EXEC                ACPI\_DEBUG\_LEVEL (ACPI\_LV\_EXEC)}}
+\DoxyCodeLine{274 \textcolor{preprocessor}{\#define ACPI\_DB\_NAMES               ACPI\_DEBUG\_LEVEL (ACPI\_LV\_NAMES)}}
+\DoxyCodeLine{275 \textcolor{preprocessor}{\#define ACPI\_DB\_OPREGION            ACPI\_DEBUG\_LEVEL (ACPI\_LV\_OPREGION)}}
+\DoxyCodeLine{276 \textcolor{preprocessor}{\#define ACPI\_DB\_BFIELD              ACPI\_DEBUG\_LEVEL (ACPI\_LV\_BFIELD)}}
+\DoxyCodeLine{277 \textcolor{preprocessor}{\#define ACPI\_DB\_TABLES              ACPI\_DEBUG\_LEVEL (ACPI\_LV\_TABLES)}}
+\DoxyCodeLine{278 \textcolor{preprocessor}{\#define ACPI\_DB\_FUNCTIONS           ACPI\_DEBUG\_LEVEL (ACPI\_LV\_FUNCTIONS)}}
+\DoxyCodeLine{279 \textcolor{preprocessor}{\#define ACPI\_DB\_OPTIMIZATIONS       ACPI\_DEBUG\_LEVEL (ACPI\_LV\_OPTIMIZATIONS)}}
+\DoxyCodeLine{280 \textcolor{preprocessor}{\#define ACPI\_DB\_PARSE\_TREES         ACPI\_DEBUG\_LEVEL (ACPI\_LV\_PARSE\_TREES)}}
+\DoxyCodeLine{281 \textcolor{preprocessor}{\#define ACPI\_DB\_VALUES              ACPI\_DEBUG\_LEVEL (ACPI\_LV\_VALUES)}}
+\DoxyCodeLine{282 \textcolor{preprocessor}{\#define ACPI\_DB\_OBJECTS             ACPI\_DEBUG\_LEVEL (ACPI\_LV\_OBJECTS)}}
+\DoxyCodeLine{283 \textcolor{preprocessor}{\#define ACPI\_DB\_ALLOCATIONS         ACPI\_DEBUG\_LEVEL (ACPI\_LV\_ALLOCATIONS)}}
+\DoxyCodeLine{284 \textcolor{preprocessor}{\#define ACPI\_DB\_RESOURCES           ACPI\_DEBUG\_LEVEL (ACPI\_LV\_RESOURCES)}}
+\DoxyCodeLine{285 \textcolor{preprocessor}{\#define ACPI\_DB\_IO                  ACPI\_DEBUG\_LEVEL (ACPI\_LV\_IO)}}
+\DoxyCodeLine{286 \textcolor{preprocessor}{\#define ACPI\_DB\_INTERRUPTS          ACPI\_DEBUG\_LEVEL (ACPI\_LV\_INTERRUPTS)}}
+\DoxyCodeLine{287 \textcolor{preprocessor}{\#define ACPI\_DB\_USER\_REQUESTS       ACPI\_DEBUG\_LEVEL (ACPI\_LV\_USER\_REQUESTS)}}
+\DoxyCodeLine{288 \textcolor{preprocessor}{\#define ACPI\_DB\_PACKAGE             ACPI\_DEBUG\_LEVEL (ACPI\_LV\_PACKAGE)}}
+\DoxyCodeLine{289 \textcolor{preprocessor}{\#define ACPI\_DB\_EVALUATION          ACPI\_DEBUG\_LEVEL (ACPI\_LV\_EVALUATION)}}
+\DoxyCodeLine{290 \textcolor{preprocessor}{\#define ACPI\_DB\_MUTEX               ACPI\_DEBUG\_LEVEL (ACPI\_LV\_MUTEX)}}
+\DoxyCodeLine{291 \textcolor{preprocessor}{\#define ACPI\_DB\_EVENTS              ACPI\_DEBUG\_LEVEL (ACPI\_LV\_EVENTS)}}
+\DoxyCodeLine{292 }
+\DoxyCodeLine{293 \textcolor{preprocessor}{\#define ACPI\_DB\_ALL                 ACPI\_DEBUG\_LEVEL (ACPI\_LV\_ALL)}}
+\DoxyCodeLine{294 }
+\DoxyCodeLine{295 \textcolor{comment}{/* Defaults for DebugLevel, debug and normal */}}
+\DoxyCodeLine{296 }
+\DoxyCodeLine{297 \textcolor{preprocessor}{\#define ACPI\_DEBUG\_DEFAULT          (ACPI\_LV\_INIT | ACPI\_LV\_DEBUG\_OBJECT | ACPI\_LV\_EVALUATION | ACPI\_LV\_REPAIR)}}
+\DoxyCodeLine{298 \textcolor{preprocessor}{\#define ACPI\_NORMAL\_DEFAULT         (ACPI\_LV\_INIT | ACPI\_LV\_DEBUG\_OBJECT | ACPI\_LV\_REPAIR)}}
+\DoxyCodeLine{299 \textcolor{preprocessor}{\#define ACPI\_DEBUG\_ALL              (ACPI\_LV\_AML\_DISASSEMBLE | ACPI\_LV\_ALL\_EXCEPTIONS | ACPI\_LV\_ALL)}}
+\DoxyCodeLine{300 }
+\DoxyCodeLine{301 }
+\DoxyCodeLine{302 \textcolor{comment}{/*}}
+\DoxyCodeLine{303 \textcolor{comment}{ * Global trace flags}}
+\DoxyCodeLine{304 \textcolor{comment}{ */}}
+\DoxyCodeLine{305 \textcolor{preprocessor}{\#define ACPI\_TRACE\_ENABLED          ((UINT32) 4)}}
+\DoxyCodeLine{306 \textcolor{preprocessor}{\#define ACPI\_TRACE\_ONESHOT          ((UINT32) 2)}}
+\DoxyCodeLine{307 \textcolor{preprocessor}{\#define ACPI\_TRACE\_OPCODE           ((UINT32) 1)}}
+\DoxyCodeLine{308 }
+\DoxyCodeLine{309 \textcolor{comment}{/* Defaults for trace debugging level/layer */}}
+\DoxyCodeLine{310 }
+\DoxyCodeLine{311 \textcolor{preprocessor}{\#define ACPI\_TRACE\_LEVEL\_ALL        ACPI\_LV\_ALL}}
+\DoxyCodeLine{312 \textcolor{preprocessor}{\#define ACPI\_TRACE\_LAYER\_ALL        0x000001FF}}
+\DoxyCodeLine{313 \textcolor{preprocessor}{\#define ACPI\_TRACE\_LEVEL\_DEFAULT    ACPI\_LV\_TRACE\_POINT}}
+\DoxyCodeLine{314 \textcolor{preprocessor}{\#define ACPI\_TRACE\_LAYER\_DEFAULT    ACPI\_EXECUTER}}
+\DoxyCodeLine{315 }
+\DoxyCodeLine{316 }
+\DoxyCodeLine{317 \textcolor{preprocessor}{\#if defined (ACPI\_DEBUG\_OUTPUT) || !defined (ACPI\_NO\_ERROR\_MESSAGES)}}
+\DoxyCodeLine{318 \textcolor{comment}{/*}}
+\DoxyCodeLine{319 \textcolor{comment}{ * The module name is used primarily for error and debug messages.}}
+\DoxyCodeLine{320 \textcolor{comment}{ * The \_\_FILE\_\_ macro is not very useful for this, because it}}
+\DoxyCodeLine{321 \textcolor{comment}{ * usually includes the entire pathname to the module making the}}
+\DoxyCodeLine{322 \textcolor{comment}{ * debug output difficult to read.}}
+\DoxyCodeLine{323 \textcolor{comment}{ */}}
+\DoxyCodeLine{324 \textcolor{preprocessor}{\#define ACPI\_MODULE\_NAME(Name)          static const char ACPI\_UNUSED\_VAR \_AcpiModuleName[] = Name;}}
+\DoxyCodeLine{325 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{326 \textcolor{comment}{/*}}
+\DoxyCodeLine{327 \textcolor{comment}{ * For the no-\/debug and no-\/error-\/msg cases, we must at least define}}
+\DoxyCodeLine{328 \textcolor{comment}{ * a null module name.}}
+\DoxyCodeLine{329 \textcolor{comment}{ */}}
+\DoxyCodeLine{330 \textcolor{preprocessor}{\#define ACPI\_MODULE\_NAME(Name)}}
+\DoxyCodeLine{331 \textcolor{preprocessor}{\#define \_AcpiModuleName "{}"{}}}
+\DoxyCodeLine{332 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{333 }
+\DoxyCodeLine{334 \textcolor{comment}{/*}}
+\DoxyCodeLine{335 \textcolor{comment}{ * Ascii error messages can be configured out}}
+\DoxyCodeLine{336 \textcolor{comment}{ */}}
+\DoxyCodeLine{337 \textcolor{preprocessor}{\#ifndef ACPI\_NO\_ERROR\_MESSAGES}}
+\DoxyCodeLine{338 \textcolor{preprocessor}{\#define AE\_INFO                         \_AcpiModuleName, \_\_LINE\_\_}}
+\DoxyCodeLine{339 }
+\DoxyCodeLine{340 \textcolor{comment}{/*}}
+\DoxyCodeLine{341 \textcolor{comment}{ * Error reporting. Callers module and line number are inserted by AE\_INFO,}}
+\DoxyCodeLine{342 \textcolor{comment}{ * the plist contains a set of parens to allow variable-\/length lists.}}
+\DoxyCodeLine{343 \textcolor{comment}{ * These macros are used for both the debug and non-\/debug versions of the code.}}
+\DoxyCodeLine{344 \textcolor{comment}{ */}}
+\DoxyCodeLine{345 \textcolor{preprocessor}{\#define ACPI\_INFO(plist)                AcpiInfo plist}}
+\DoxyCodeLine{346 \textcolor{preprocessor}{\#define ACPI\_WARNING(plist)             AcpiWarning plist}}
+\DoxyCodeLine{347 \textcolor{preprocessor}{\#define ACPI\_EXCEPTION(plist)           AcpiException plist}}
+\DoxyCodeLine{348 \textcolor{preprocessor}{\#define ACPI\_ERROR(plist)               AcpiError plist}}
+\DoxyCodeLine{349 \textcolor{preprocessor}{\#define ACPI\_BIOS\_WARNING(plist)        AcpiBiosWarning plist}}
+\DoxyCodeLine{350 \textcolor{preprocessor}{\#define ACPI\_BIOS\_EXCEPTION(plist)      AcpiBiosException plist}}
+\DoxyCodeLine{351 \textcolor{preprocessor}{\#define ACPI\_BIOS\_ERROR(plist)          AcpiBiosError plist}}
+\DoxyCodeLine{352 \textcolor{preprocessor}{\#define ACPI\_DEBUG\_OBJECT(obj,l,i)      AcpiExDoDebugObject(obj,l,i)}}
+\DoxyCodeLine{353 }
+\DoxyCodeLine{354 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{355 }
+\DoxyCodeLine{356 \textcolor{comment}{/* No error messages */}}
+\DoxyCodeLine{357 }
+\DoxyCodeLine{358 \textcolor{preprocessor}{\#define ACPI\_INFO(plist)}}
+\DoxyCodeLine{359 \textcolor{preprocessor}{\#define ACPI\_WARNING(plist)}}
+\DoxyCodeLine{360 \textcolor{preprocessor}{\#define ACPI\_EXCEPTION(plist)}}
+\DoxyCodeLine{361 \textcolor{preprocessor}{\#define ACPI\_ERROR(plist)}}
+\DoxyCodeLine{362 \textcolor{preprocessor}{\#define ACPI\_BIOS\_WARNING(plist)}}
+\DoxyCodeLine{363 \textcolor{preprocessor}{\#define ACPI\_BIOS\_EXCEPTION(plist)}}
+\DoxyCodeLine{364 \textcolor{preprocessor}{\#define ACPI\_BIOS\_ERROR(plist)}}
+\DoxyCodeLine{365 \textcolor{preprocessor}{\#define ACPI\_DEBUG\_OBJECT(obj,l,i)}}
+\DoxyCodeLine{366 }
+\DoxyCodeLine{367 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* ACPI\_NO\_ERROR\_MESSAGES */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{368 }
+\DoxyCodeLine{369 }
+\DoxyCodeLine{370 \textcolor{comment}{/*}}
+\DoxyCodeLine{371 \textcolor{comment}{ * Debug macros that are conditionally compiled}}
+\DoxyCodeLine{372 \textcolor{comment}{ */}}
+\DoxyCodeLine{373 \textcolor{preprocessor}{\#ifdef ACPI\_DEBUG\_OUTPUT}}
+\DoxyCodeLine{374 }
+\DoxyCodeLine{375 \textcolor{comment}{/*}}
+\DoxyCodeLine{376 \textcolor{comment}{ * If ACPI\_GET\_FUNCTION\_NAME was not defined in the compiler-\/dependent header,}}
+\DoxyCodeLine{377 \textcolor{comment}{ * define it now. This is the case where there the compiler does not support}}
+\DoxyCodeLine{378 \textcolor{comment}{ * a \_\_FUNCTION\_\_ macro or equivalent.}}
+\DoxyCodeLine{379 \textcolor{comment}{ */}}
+\DoxyCodeLine{380 \textcolor{preprocessor}{\#ifndef ACPI\_GET\_FUNCTION\_NAME}}
+\DoxyCodeLine{381 \textcolor{preprocessor}{\#define ACPI\_GET\_FUNCTION\_NAME          \_AcpiFunctionName}}
+\DoxyCodeLine{382 }
+\DoxyCodeLine{383 \textcolor{comment}{/*}}
+\DoxyCodeLine{384 \textcolor{comment}{ * The Name parameter should be the procedure name as a non-\/quoted string.}}
+\DoxyCodeLine{385 \textcolor{comment}{ * The function name is also used by the function exit macros below.}}
+\DoxyCodeLine{386 \textcolor{comment}{ * Note: (const char) is used to be compatible with the debug interfaces}}
+\DoxyCodeLine{387 \textcolor{comment}{ * and macros such as \_\_FUNCTION\_\_.}}
+\DoxyCodeLine{388 \textcolor{comment}{ */}}
+\DoxyCodeLine{389 \textcolor{preprocessor}{\#define ACPI\_FUNCTION\_NAME(Name)        static const char \_AcpiFunctionName[] = \#Name;}}
+\DoxyCodeLine{390 }
+\DoxyCodeLine{391 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{392 \textcolor{comment}{/* Compiler supports \_\_FUNCTION\_\_ (or equivalent) -\/-\/ Ignore this macro */}}
+\DoxyCodeLine{393 }
+\DoxyCodeLine{394 \textcolor{preprocessor}{\#define ACPI\_FUNCTION\_NAME(Name)}}
+\DoxyCodeLine{395 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* ACPI\_GET\_FUNCTION\_NAME */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{396 }
+\DoxyCodeLine{397 \textcolor{comment}{/*}}
+\DoxyCodeLine{398 \textcolor{comment}{ * Common parameters used for debug output functions:}}
+\DoxyCodeLine{399 \textcolor{comment}{ * line number, function name, module(file) name, component ID}}
+\DoxyCodeLine{400 \textcolor{comment}{ */}}
+\DoxyCodeLine{401 \textcolor{preprocessor}{\#define ACPI\_DEBUG\_PARAMETERS \(\backslash\)}}
+\DoxyCodeLine{402 \textcolor{preprocessor}{    \_\_LINE\_\_, ACPI\_GET\_FUNCTION\_NAME, \_AcpiModuleName, \_COMPONENT}}
+\DoxyCodeLine{403 }
+\DoxyCodeLine{404 \textcolor{comment}{/* Check if debug output is currently dynamically enabled */}}
+\DoxyCodeLine{405 }
+\DoxyCodeLine{406 \textcolor{preprocessor}{\#define ACPI\_IS\_DEBUG\_ENABLED(Level, Component) \(\backslash\)}}
+\DoxyCodeLine{407 \textcolor{preprocessor}{    ((Level \& AcpiDbgLevel) \&\& (Component \& AcpiDbgLayer))}}
+\DoxyCodeLine{408 }
+\DoxyCodeLine{409 \textcolor{comment}{/*}}
+\DoxyCodeLine{410 \textcolor{comment}{ * Master debug print macros}}
+\DoxyCodeLine{411 \textcolor{comment}{ * Print message if and only if:}}
+\DoxyCodeLine{412 \textcolor{comment}{ *    1) Debug print for the current component is enabled}}
+\DoxyCodeLine{413 \textcolor{comment}{ *    2) Debug error level or trace level for the print statement is enabled}}
+\DoxyCodeLine{414 \textcolor{comment}{ *}}
+\DoxyCodeLine{415 \textcolor{comment}{ * November 2012: Moved the runtime check for whether to actually emit the}}
+\DoxyCodeLine{416 \textcolor{comment}{ * debug message outside of the print function itself. This improves overall}}
+\DoxyCodeLine{417 \textcolor{comment}{ * performance at a relatively small code cost. Implementation involves the}}
+\DoxyCodeLine{418 \textcolor{comment}{ * use of variadic macros supported by C99.}}
+\DoxyCodeLine{419 \textcolor{comment}{ *}}
+\DoxyCodeLine{420 \textcolor{comment}{ * Note: the ACPI\_DO\_WHILE0 macro is used to prevent some compilers from}}
+\DoxyCodeLine{421 \textcolor{comment}{ * complaining about these constructs. On other compilers the do...while}}
+\DoxyCodeLine{422 \textcolor{comment}{ * adds some extra code, so this feature is optional.}}
+\DoxyCodeLine{423 \textcolor{comment}{ */}}
+\DoxyCodeLine{424 \textcolor{preprocessor}{\#ifdef ACPI\_USE\_DO\_WHILE\_0}}
+\DoxyCodeLine{425 \textcolor{preprocessor}{\#define ACPI\_DO\_WHILE0(a)               do a while(0)}}
+\DoxyCodeLine{426 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{427 \textcolor{preprocessor}{\#define ACPI\_DO\_WHILE0(a)               a}}
+\DoxyCodeLine{428 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{429 }
+\DoxyCodeLine{430 \textcolor{comment}{/* DEBUG\_PRINT functions */}}
+\DoxyCodeLine{431 }
+\DoxyCodeLine{432 \textcolor{preprocessor}{\#ifndef COMPILER\_VA\_MACRO}}
+\DoxyCodeLine{433 }
+\DoxyCodeLine{434 \textcolor{preprocessor}{\#define ACPI\_DEBUG\_PRINT(plist)         AcpiDebugPrint plist}}
+\DoxyCodeLine{435 \textcolor{preprocessor}{\#define ACPI\_DEBUG\_PRINT\_RAW(plist)     AcpiDebugPrintRaw plist}}
+\DoxyCodeLine{436 }
+\DoxyCodeLine{437 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{438 }
+\DoxyCodeLine{439 \textcolor{comment}{/* Helper macros for DEBUG\_PRINT */}}
+\DoxyCodeLine{440 }
+\DoxyCodeLine{441 \textcolor{preprocessor}{\#define ACPI\_DO\_DEBUG\_PRINT(Function, Level, Line, Filename, Modulename, Component, ...) \(\backslash\)}}
+\DoxyCodeLine{442 \textcolor{preprocessor}{    ACPI\_DO\_WHILE0 (\{ \(\backslash\)}}
+\DoxyCodeLine{443 \textcolor{preprocessor}{        if (ACPI\_IS\_DEBUG\_ENABLED (Level, Component)) \(\backslash\)}}
+\DoxyCodeLine{444 \textcolor{preprocessor}{        \{ \(\backslash\)}}
+\DoxyCodeLine{445 \textcolor{preprocessor}{            Function (Level, Line, Filename, Modulename, Component, \_\_VA\_ARGS\_\_); \(\backslash\)}}
+\DoxyCodeLine{446 \textcolor{preprocessor}{        \} \(\backslash\)}}
+\DoxyCodeLine{447 \textcolor{preprocessor}{    \})}}
+\DoxyCodeLine{448 }
+\DoxyCodeLine{449 \textcolor{preprocessor}{\#define ACPI\_ACTUAL\_DEBUG(Level, Line, Filename, Modulename, Component, ...) \(\backslash\)}}
+\DoxyCodeLine{450 \textcolor{preprocessor}{    ACPI\_DO\_DEBUG\_PRINT (AcpiDebugPrint, Level, Line, \(\backslash\)}}
+\DoxyCodeLine{451 \textcolor{preprocessor}{        Filename, Modulename, Component, \_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{452 }
+\DoxyCodeLine{453 \textcolor{preprocessor}{\#define ACPI\_ACTUAL\_DEBUG\_RAW(Level, Line, Filename, Modulename, Component, ...) \(\backslash\)}}
+\DoxyCodeLine{454 \textcolor{preprocessor}{    ACPI\_DO\_DEBUG\_PRINT (AcpiDebugPrintRaw, Level, Line, \(\backslash\)}}
+\DoxyCodeLine{455 \textcolor{preprocessor}{        Filename, Modulename, Component, \_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{456 }
+\DoxyCodeLine{457 \textcolor{preprocessor}{\#define ACPI\_DEBUG\_PRINT(plist)         ACPI\_ACTUAL\_DEBUG plist}}
+\DoxyCodeLine{458 \textcolor{preprocessor}{\#define ACPI\_DEBUG\_PRINT\_RAW(plist)     ACPI\_ACTUAL\_DEBUG\_RAW plist}}
+\DoxyCodeLine{459 }
+\DoxyCodeLine{460 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{461 }
+\DoxyCodeLine{462 }
+\DoxyCodeLine{463 \textcolor{comment}{/*}}
+\DoxyCodeLine{464 \textcolor{comment}{ * Function entry tracing}}
+\DoxyCodeLine{465 \textcolor{comment}{ *}}
+\DoxyCodeLine{466 \textcolor{comment}{ * The name of the function is emitted as a local variable that is}}
+\DoxyCodeLine{467 \textcolor{comment}{ * intended to be used by both the entry trace and the exit trace.}}
+\DoxyCodeLine{468 \textcolor{comment}{ */}}
+\DoxyCodeLine{469 }
+\DoxyCodeLine{470 \textcolor{comment}{/* Helper macro */}}
+\DoxyCodeLine{471 }
+\DoxyCodeLine{472 \textcolor{preprocessor}{\#define ACPI\_TRACE\_ENTRY(Name, Function, Type, Param) \(\backslash\)}}
+\DoxyCodeLine{473 \textcolor{preprocessor}{    ACPI\_FUNCTION\_NAME (Name) \(\backslash\)}}
+\DoxyCodeLine{474 \textcolor{preprocessor}{    Function (ACPI\_DEBUG\_PARAMETERS, (Type) (Param))}}
+\DoxyCodeLine{475 }
+\DoxyCodeLine{476 \textcolor{comment}{/* The actual entry trace macros */}}
+\DoxyCodeLine{477 }
+\DoxyCodeLine{478 \textcolor{preprocessor}{\#define ACPI\_FUNCTION\_TRACE(Name) \(\backslash\)}}
+\DoxyCodeLine{479 \textcolor{preprocessor}{    ACPI\_FUNCTION\_NAME(Name) \(\backslash\)}}
+\DoxyCodeLine{480 \textcolor{preprocessor}{    AcpiUtTrace (ACPI\_DEBUG\_PARAMETERS)}}
+\DoxyCodeLine{481 }
+\DoxyCodeLine{482 \textcolor{preprocessor}{\#define ACPI\_FUNCTION\_TRACE\_PTR(Name, Pointer) \(\backslash\)}}
+\DoxyCodeLine{483 \textcolor{preprocessor}{    ACPI\_TRACE\_ENTRY (Name, AcpiUtTracePtr, void *, Pointer)}}
+\DoxyCodeLine{484 }
+\DoxyCodeLine{485 \textcolor{preprocessor}{\#define ACPI\_FUNCTION\_TRACE\_U32(Name, Value) \(\backslash\)}}
+\DoxyCodeLine{486 \textcolor{preprocessor}{    ACPI\_TRACE\_ENTRY (Name, AcpiUtTraceU32, UINT32, Value)}}
+\DoxyCodeLine{487 }
+\DoxyCodeLine{488 \textcolor{preprocessor}{\#define ACPI\_FUNCTION\_TRACE\_STR(Name, String) \(\backslash\)}}
+\DoxyCodeLine{489 \textcolor{preprocessor}{    ACPI\_TRACE\_ENTRY (Name, AcpiUtTraceStr, const char *, String)}}
+\DoxyCodeLine{490 }
+\DoxyCodeLine{491 \textcolor{preprocessor}{\#define ACPI\_FUNCTION\_ENTRY() \(\backslash\)}}
+\DoxyCodeLine{492 \textcolor{preprocessor}{    AcpiUtTrackStackPtr()}}
+\DoxyCodeLine{493 }
+\DoxyCodeLine{494 }
+\DoxyCodeLine{495 \textcolor{comment}{/*}}
+\DoxyCodeLine{496 \textcolor{comment}{ * Function exit tracing}}
+\DoxyCodeLine{497 \textcolor{comment}{ *}}
+\DoxyCodeLine{498 \textcolor{comment}{ * These macros include a return statement. This is usually considered}}
+\DoxyCodeLine{499 \textcolor{comment}{ * bad form, but having a separate exit macro before the actual return}}
+\DoxyCodeLine{500 \textcolor{comment}{ * is very ugly and difficult to maintain.}}
+\DoxyCodeLine{501 \textcolor{comment}{ *}}
+\DoxyCodeLine{502 \textcolor{comment}{ * One of the FUNCTION\_TRACE macros above must be used in conjunction}}
+\DoxyCodeLine{503 \textcolor{comment}{ * with these macros so that "{}\_AcpiFunctionName"{} is defined.}}
+\DoxyCodeLine{504 \textcolor{comment}{ *}}
+\DoxyCodeLine{505 \textcolor{comment}{ * There are two versions of most of the return macros. The default version is}}
+\DoxyCodeLine{506 \textcolor{comment}{ * safer, since it avoids side-\/effects by guaranteeing that the argument will}}
+\DoxyCodeLine{507 \textcolor{comment}{ * not be evaluated twice.}}
+\DoxyCodeLine{508 \textcolor{comment}{ *}}
+\DoxyCodeLine{509 \textcolor{comment}{ * A less-\/safe version of the macros is provided for optional use if the}}
+\DoxyCodeLine{510 \textcolor{comment}{ * compiler uses excessive CPU stack (for example, this may happen in the}}
+\DoxyCodeLine{511 \textcolor{comment}{ * debug case if code optimzation is disabled.)}}
+\DoxyCodeLine{512 \textcolor{comment}{ */}}
+\DoxyCodeLine{513 }
+\DoxyCodeLine{514 \textcolor{comment}{/* Exit trace helper macro */}}
+\DoxyCodeLine{515 }
+\DoxyCodeLine{516 \textcolor{preprocessor}{\#ifndef ACPI\_SIMPLE\_RETURN\_MACROS}}
+\DoxyCodeLine{517 }
+\DoxyCodeLine{518 \textcolor{preprocessor}{\#define ACPI\_TRACE\_EXIT(Function, Type, Param) \(\backslash\)}}
+\DoxyCodeLine{519 \textcolor{preprocessor}{    ACPI\_DO\_WHILE0 (\{ \(\backslash\)}}
+\DoxyCodeLine{520 \textcolor{preprocessor}{        register Type \_Param = (Type) (Param); \(\backslash\)}}
+\DoxyCodeLine{521 \textcolor{preprocessor}{        Function (ACPI\_DEBUG\_PARAMETERS, \_Param); \(\backslash\)}}
+\DoxyCodeLine{522 \textcolor{preprocessor}{        return (\_Param); \(\backslash\)}}
+\DoxyCodeLine{523 \textcolor{preprocessor}{    \})}}
+\DoxyCodeLine{524 }
+\DoxyCodeLine{525 \textcolor{preprocessor}{\#else }\textcolor{comment}{/* Use original less-\/safe macros */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{526 }
+\DoxyCodeLine{527 \textcolor{preprocessor}{\#define ACPI\_TRACE\_EXIT(Function, Type, Param) \(\backslash\)}}
+\DoxyCodeLine{528 \textcolor{preprocessor}{    ACPI\_DO\_WHILE0 (\{ \(\backslash\)}}
+\DoxyCodeLine{529 \textcolor{preprocessor}{        Function (ACPI\_DEBUG\_PARAMETERS, (Type) (Param)); \(\backslash\)}}
+\DoxyCodeLine{530 \textcolor{preprocessor}{        return (Param); \(\backslash\)}}
+\DoxyCodeLine{531 \textcolor{preprocessor}{    \})}}
+\DoxyCodeLine{532 }
+\DoxyCodeLine{533 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* ACPI\_SIMPLE\_RETURN\_MACROS */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{534 }
+\DoxyCodeLine{535 \textcolor{comment}{/* The actual exit macros */}}
+\DoxyCodeLine{536 }
+\DoxyCodeLine{537 \textcolor{preprocessor}{\#define return\_VOID \(\backslash\)}}
+\DoxyCodeLine{538 \textcolor{preprocessor}{    ACPI\_DO\_WHILE0 (\{ \(\backslash\)}}
+\DoxyCodeLine{539 \textcolor{preprocessor}{        AcpiUtExit (ACPI\_DEBUG\_PARAMETERS); \(\backslash\)}}
+\DoxyCodeLine{540 \textcolor{preprocessor}{        return; \(\backslash\)}}
+\DoxyCodeLine{541 \textcolor{preprocessor}{    \})}}
+\DoxyCodeLine{542 }
+\DoxyCodeLine{543 \textcolor{preprocessor}{\#define return\_ACPI\_STATUS(Status) \(\backslash\)}}
+\DoxyCodeLine{544 \textcolor{preprocessor}{    ACPI\_TRACE\_EXIT (AcpiUtStatusExit, ACPI\_STATUS, Status)}}
+\DoxyCodeLine{545 }
+\DoxyCodeLine{546 \textcolor{preprocessor}{\#define return\_PTR(Pointer) \(\backslash\)}}
+\DoxyCodeLine{547 \textcolor{preprocessor}{    ACPI\_TRACE\_EXIT (AcpiUtPtrExit, void *, Pointer)}}
+\DoxyCodeLine{548 }
+\DoxyCodeLine{549 \textcolor{preprocessor}{\#define return\_STR(String) \(\backslash\)}}
+\DoxyCodeLine{550 \textcolor{preprocessor}{    ACPI\_TRACE\_EXIT (AcpiUtStrExit, const char *, String)}}
+\DoxyCodeLine{551 }
+\DoxyCodeLine{552 \textcolor{preprocessor}{\#define return\_VALUE(Value) \(\backslash\)}}
+\DoxyCodeLine{553 \textcolor{preprocessor}{    ACPI\_TRACE\_EXIT (AcpiUtValueExit, UINT64, Value)}}
+\DoxyCodeLine{554 }
+\DoxyCodeLine{555 \textcolor{preprocessor}{\#define return\_UINT32(Value) \(\backslash\)}}
+\DoxyCodeLine{556 \textcolor{preprocessor}{    ACPI\_TRACE\_EXIT (AcpiUtValueExit, UINT32, Value)}}
+\DoxyCodeLine{557 }
+\DoxyCodeLine{558 \textcolor{preprocessor}{\#define return\_UINT8(Value) \(\backslash\)}}
+\DoxyCodeLine{559 \textcolor{preprocessor}{    ACPI\_TRACE\_EXIT (AcpiUtValueExit, UINT8, Value)}}
+\DoxyCodeLine{560 }
+\DoxyCodeLine{561 \textcolor{comment}{/* Conditional execution */}}
+\DoxyCodeLine{562 }
+\DoxyCodeLine{563 \textcolor{preprocessor}{\#define ACPI\_DEBUG\_EXEC(a)              a}}
+\DoxyCodeLine{564 \textcolor{preprocessor}{\#define ACPI\_DEBUG\_ONLY\_MEMBERS(a)      a;}}
+\DoxyCodeLine{565 \textcolor{preprocessor}{\#define \_VERBOSE\_STRUCTURES}}
+\DoxyCodeLine{566 }
+\DoxyCodeLine{567 }
+\DoxyCodeLine{568 \textcolor{comment}{/* Various object display routines for debug */}}
+\DoxyCodeLine{569 }
+\DoxyCodeLine{570 \textcolor{preprocessor}{\#define ACPI\_DUMP\_STACK\_ENTRY(a)        AcpiExDumpOperand((a), 0)}}
+\DoxyCodeLine{571 \textcolor{preprocessor}{\#define ACPI\_DUMP\_OPERANDS(a, b ,c)     AcpiExDumpOperands(a, b, c)}}
+\DoxyCodeLine{572 \textcolor{preprocessor}{\#define ACPI\_DUMP\_ENTRY(a, b)           AcpiNsDumpEntry (a, b)}}
+\DoxyCodeLine{573 \textcolor{preprocessor}{\#define ACPI\_DUMP\_PATHNAME(a, b, c, d)  AcpiNsDumpPathname(a, b, c, d)}}
+\DoxyCodeLine{574 \textcolor{preprocessor}{\#define ACPI\_DUMP\_BUFFER(a, b)          AcpiUtDebugDumpBuffer((UINT8 *) a, b, DB\_BYTE\_DISPLAY, \_COMPONENT)}}
+\DoxyCodeLine{575 }
+\DoxyCodeLine{576 \textcolor{preprocessor}{\#define ACPI\_TRACE\_POINT(a, b, c, d)    AcpiTracePoint (a, b, c, d)}}
+\DoxyCodeLine{577 }
+\DoxyCodeLine{578 \textcolor{preprocessor}{\#else }\textcolor{comment}{/* ACPI\_DEBUG\_OUTPUT */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{579 \textcolor{comment}{/*}}
+\DoxyCodeLine{580 \textcolor{comment}{ * This is the non-\/debug case -\/-\/ make everything go away,}}
+\DoxyCodeLine{581 \textcolor{comment}{ * leaving no executable debug code!}}
+\DoxyCodeLine{582 \textcolor{comment}{ */}}
+\DoxyCodeLine{583 \textcolor{preprocessor}{\#define ACPI\_DEBUG\_PRINT(pl)}}
+\DoxyCodeLine{584 \textcolor{preprocessor}{\#define ACPI\_DEBUG\_PRINT\_RAW(pl)}}
+\DoxyCodeLine{585 \textcolor{preprocessor}{\#define ACPI\_DEBUG\_EXEC(a)}}
+\DoxyCodeLine{586 \textcolor{preprocessor}{\#define ACPI\_DEBUG\_ONLY\_MEMBERS(a)}}
+\DoxyCodeLine{587 \textcolor{preprocessor}{\#define ACPI\_FUNCTION\_NAME(a)}}
+\DoxyCodeLine{588 \textcolor{preprocessor}{\#define ACPI\_FUNCTION\_TRACE(a)}}
+\DoxyCodeLine{589 \textcolor{preprocessor}{\#define ACPI\_FUNCTION\_TRACE\_PTR(a, b)}}
+\DoxyCodeLine{590 \textcolor{preprocessor}{\#define ACPI\_FUNCTION\_TRACE\_U32(a, b)}}
+\DoxyCodeLine{591 \textcolor{preprocessor}{\#define ACPI\_FUNCTION\_TRACE\_STR(a, b)}}
+\DoxyCodeLine{592 \textcolor{preprocessor}{\#define ACPI\_FUNCTION\_ENTRY()}}
+\DoxyCodeLine{593 \textcolor{preprocessor}{\#define ACPI\_DUMP\_STACK\_ENTRY(a)}}
+\DoxyCodeLine{594 \textcolor{preprocessor}{\#define ACPI\_DUMP\_OPERANDS(a, b, c)}}
+\DoxyCodeLine{595 \textcolor{preprocessor}{\#define ACPI\_DUMP\_ENTRY(a, b)}}
+\DoxyCodeLine{596 \textcolor{preprocessor}{\#define ACPI\_DUMP\_PATHNAME(a, b, c, d)}}
+\DoxyCodeLine{597 \textcolor{preprocessor}{\#define ACPI\_DUMP\_BUFFER(a, b)}}
+\DoxyCodeLine{598 \textcolor{preprocessor}{\#define ACPI\_IS\_DEBUG\_ENABLED(Level, Component) 0}}
+\DoxyCodeLine{599 \textcolor{preprocessor}{\#define ACPI\_TRACE\_POINT(a, b, c, d)}}
+\DoxyCodeLine{600 }
+\DoxyCodeLine{601 \textcolor{comment}{/* Return macros must have a return statement at the minimum */}}
+\DoxyCodeLine{602 }
+\DoxyCodeLine{603 \textcolor{preprocessor}{\#define return\_VOID                     return}}
+\DoxyCodeLine{604 \textcolor{preprocessor}{\#define return\_ACPI\_STATUS(s)           return(s)}}
+\DoxyCodeLine{605 \textcolor{preprocessor}{\#define return\_PTR(s)                   return(s)}}
+\DoxyCodeLine{606 \textcolor{preprocessor}{\#define return\_STR(s)                   return(s)}}
+\DoxyCodeLine{607 \textcolor{preprocessor}{\#define return\_VALUE(s)                 return(s)}}
+\DoxyCodeLine{608 \textcolor{preprocessor}{\#define return\_UINT8(s)                 return(s)}}
+\DoxyCodeLine{609 \textcolor{preprocessor}{\#define return\_UINT32(s)                return(s)}}
+\DoxyCodeLine{610 }
+\DoxyCodeLine{611 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* ACPI\_DEBUG\_OUTPUT */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{612 }
+\DoxyCodeLine{613 }
+\DoxyCodeLine{614 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* \_\_ACOUTPUT\_H\_\_ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

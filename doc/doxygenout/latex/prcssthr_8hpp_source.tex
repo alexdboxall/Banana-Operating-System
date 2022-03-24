@@ -1,0 +1,229 @@
+\hypertarget{prcssthr_8hpp_source}{}\doxysection{prcssthr.\+hpp}
+\label{prcssthr_8hpp_source}\index{C:/Users/Alex/Desktop/Banana/kernel/thr/prcssthr.hpp@{C:/Users/Alex/Desktop/Banana/kernel/thr/prcssthr.hpp}}
+\mbox{\hyperlink{prcssthr_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#ifndef \_PRCSSTHR\_HPP\_}}
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#define \_PRCSSTHR\_HPP\_}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include <stddef.h>}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include <\mbox{\hyperlink{linkedlist_8hpp}{krnl/linkedlist.hpp}}>}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <\mbox{\hyperlink{cpplist_8hpp}{krnl/cpplist.hpp}}>}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{main_8hpp}{krnl/main.hpp}}"{}}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{pipe_8hpp}{krnl/pipe.hpp}}"{}}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{virtmgr_8hpp}{krnl/virtmgr.hpp}}"{}}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{env_8hpp}{krnl/env.hpp}}"{}}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include <\mbox{\hyperlink{signal_8hpp}{krnl/signal.hpp}}>}}
+\DoxyCodeLine{14 }
+\DoxyCodeLine{15 \textcolor{keyword}{struct }\mbox{\hyperlink{struct_process}{Process}};}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \textcolor{keyword}{enum class} \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146a}{TaskState}}: \textcolor{keywordtype}{size\_t}}
+\DoxyCodeLine{18 \{}
+\DoxyCodeLine{19     \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aa506db5c85cf0fd10f93e5478013650b6}{ReadyToRun}} = 0,}
+\DoxyCodeLine{20     \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aa5bda814c4aedb126839228f1a3d92f09}{Running}} = 1,}
+\DoxyCodeLine{21     \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aae99180abf47a8b3a856e0bcb2656990a}{Paused}} = 2,}
+\DoxyCodeLine{22     \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aabddd4f44136f466c065a2c7a4c53e75b}{Sleeping}} = 3,}
+\DoxyCodeLine{23     \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aafba9c4daa2dd29d1077d32d965320ac1}{Terminated}} = 4,}
+\DoxyCodeLine{24     \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aa64b6186e43b830ebad8009c1b5fac3fa}{WaitingForLock}} = 5,}
+\DoxyCodeLine{25     \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aa9697716ec1d19a97cd1d36c408e103af}{WaitingForKeyboard}} = 6,}
+\DoxyCodeLine{26     \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aac1a874669fa5e0a579807b4e93a161e1}{WaitPID}} = 7,}
+\DoxyCodeLine{27     \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146aaebe8e2a1d19294b7a1f263ab10cfa63e}{PausedForSignal}},}
+\DoxyCodeLine{28 \};}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#pragma pack(push,1)}}
+\DoxyCodeLine{31 \textcolor{keyword}{struct }\mbox{\hyperlink{struct_thread_control_block}{ThreadControlBlock}}}
+\DoxyCodeLine{32 \{}
+\DoxyCodeLine{33     \textcolor{keyword}{volatile} \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{struct_thread_control_block_ade26f9db835a32fd4d52fa5a7bc48535}{cr3}};                 \textcolor{comment}{//MUST BE AT OFFSET 0x0         INTO THE STRUCT}}
+\DoxyCodeLine{34     \textcolor{keyword}{volatile} \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{struct_thread_control_block_ad1552c268c47b8c2a711ff9125e9bb73}{esp}};                 \textcolor{comment}{//MUST BE AT OFFSET 0x4/0x8     INTO THE STRUCT}}
+\DoxyCodeLine{35     \textcolor{keyword}{volatile} \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{struct_thread_control_block_a80040c987146aef3bd8d0ee63c8d3b03}{signalStateHandler}};       \textcolor{comment}{//MUST BE AT OFFSET 0x8/0x10    INTO THE STRUCT     (USELESS)}}
+\DoxyCodeLine{36     \textcolor{keyword}{volatile} \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{struct_thread_control_block_a3be8bd688df9e1f73f25a357697c8d15}{firstTimeEIP}};           \textcolor{comment}{//MUST BE AT OFFSET 0xC/0x18    INTO THE STRUCT}}
+\DoxyCodeLine{37     \textcolor{keyword}{volatile} uint64\_t \mbox{\hyperlink{struct_thread_control_block_a45c468828504f89048a9c20ee3e83705}{timeKeeping}};           \textcolor{comment}{//MUST BE AT OFFSET 0x10/0x20   INTO THE STRUCT}}
+\DoxyCodeLine{38     \textcolor{keyword}{volatile} \textcolor{keyword}{enum} \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146a}{TaskState}} \mbox{\hyperlink{struct_thread_control_block_ae671b2f37b1a322f7492623c8cd3ccf8}{state}};            \textcolor{comment}{//MUST BE AT OFFSET 0x18/0x28   INTO THE STRUCT}}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40     \textcolor{keyword}{volatile} \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{struct_thread_control_block_a5e56665343687450172e98d2c9b25552}{magicForkyParentSavePoint}};         \textcolor{comment}{//MUST BE AT OFFSET 0x1C/0x30   INTO THE STRUCT}}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42     \textcolor{keyword}{volatile} \mbox{\hyperlink{struct_thread_control_block}{ThreadControlBlock}}* \textcolor{keyword}{volatile} \mbox{\hyperlink{struct_thread_control_block_a7b3501f6bdbe2ce1efb310a42b2911d3}{next}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{43     \textcolor{keyword}{volatile} \mbox{\hyperlink{struct_thread_control_block}{ThreadControlBlock}}* \textcolor{keyword}{volatile} \mbox{\hyperlink{struct_thread_control_block_a5560a2f64c64517a03fca1bb34cfb557}{prev}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{44     \textcolor{keyword}{volatile} \mbox{\hyperlink{struct_thread_control_block}{ThreadControlBlock}}* \textcolor{keyword}{volatile} \mbox{\hyperlink{struct_thread_control_block_a65dbfd7ee6cac84b392c2078a9ddd3fa}{nextForNonSchedulingThings}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{45 }
+\DoxyCodeLine{46     \textcolor{keyword}{volatile} uint64\_t \mbox{\hyperlink{struct_thread_control_block_a459564e88273092f42c1b2cdf26082ef}{sleepExpiry}};}
+\DoxyCodeLine{47     \textcolor{keywordtype}{int} \mbox{\hyperlink{struct_thread_control_block_a5f9061047597f7e55d03471009614831}{forkret}};}
+\DoxyCodeLine{48 }
+\DoxyCodeLine{49     \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{struct_thread_control_block_a22fd993505b07b16fd43375d433daad5}{timeSliceRemaining}};}
+\DoxyCodeLine{50 }
+\DoxyCodeLine{51     \textcolor{keywordtype}{int} \mbox{\hyperlink{struct_thread_control_block_a3d026f5831f8698606e9c8c8b884b89d}{rtid}};       \textcolor{comment}{//relative thread ID to the process (e.g. thread 0, thread 1, etc.)}}
+\DoxyCodeLine{52     \mbox{\hyperlink{struct_process}{Process}}* \mbox{\hyperlink{struct_thread_control_block_aaeb1e0fd24e02bf13eedcb643c4be4ad}{processRelatedTo}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{53 }
+\DoxyCodeLine{54     uint8\_t \mbox{\hyperlink{struct_thread_control_block_a6dd35366a81321929f765cec856fc579}{priority}};}
+\DoxyCodeLine{55 }
+\DoxyCodeLine{56     \textcolor{keywordtype}{void}* \mbox{\hyperlink{struct_thread_control_block_a5b88f7fb0b11804a3272932d9f106490}{startContext}};}
+\DoxyCodeLine{57 }
+\DoxyCodeLine{58     \textcolor{keywordtype}{int} \mbox{\hyperlink{struct_thread_control_block_a6741c73558ef7a577ddcc5ac1f3b1ca2}{waitingPID}};                       \textcolor{comment}{//as specified here: http://man7.org/linux/man-\/pages/man2/waitid.2.html}}
+\DoxyCodeLine{59     \textcolor{keywordtype}{int}* \mbox{\hyperlink{struct_thread_control_block_a0958c2ec70ef412ca5a98097ef0fb39a}{wstatus}};                        \textcolor{comment}{//same link, we're not using it at the moment}}
+\DoxyCodeLine{60     \textcolor{keywordtype}{int} \mbox{\hyperlink{struct_thread_control_block_a0b2fc192c8d1af42670eb07a245fe64a}{waitingThreadReturnCode}};}
+\DoxyCodeLine{61 }
+\DoxyCodeLine{62     \textcolor{keywordtype}{int} \mbox{\hyperlink{struct_thread_control_block_a99357364d2b9e3e6ed7056ce82e8ba8e}{returnCodeForUseOnTerminationList}};}
+\DoxyCodeLine{63 }
+\DoxyCodeLine{64     \textcolor{keyword}{union}}
+\DoxyCodeLine{65     \{}
+\DoxyCodeLine{66         \textcolor{keyword}{struct}}
+\DoxyCodeLine{67         \{}
+\DoxyCodeLine{68             uint16\_t \mbox{\hyperlink{struct_thread_control_block_a4ac84d759e6e7f55b9ec9b9ea7eff63d}{vm86IP}};}
+\DoxyCodeLine{69             uint16\_t \mbox{\hyperlink{struct_thread_control_block_af7bf7b45fdbd6c8eadeeeeafde784dfe}{vm86CS}};}
+\DoxyCodeLine{70             uint16\_t \mbox{\hyperlink{struct_thread_control_block_ad672d7085fc933438d817ef7e1a81dd2}{vm86SP}};}
+\DoxyCodeLine{71             uint16\_t \mbox{\hyperlink{struct_thread_control_block_ad3acddeca4d1150e2be704e95b82d236}{vm86SS}};}
+\DoxyCodeLine{72         \};}
+\DoxyCodeLine{73 }
+\DoxyCodeLine{74         \textcolor{keywordtype}{void}* \mbox{\hyperlink{struct_thread_control_block_a00d6927fea79e2b87771070e57ecf736}{fpuState}} = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{75     \};}
+\DoxyCodeLine{76     }
+\DoxyCodeLine{77     \textcolor{keywordtype}{bool} \mbox{\hyperlink{struct_thread_control_block_a96ac5c6b32dde49e94e1707c537af54b}{vm86VIE}} = \textcolor{keyword}{false};}
+\DoxyCodeLine{78     \textcolor{keywordtype}{bool} \mbox{\hyperlink{struct_thread_control_block_a2c8258ee73e71f6638de230b441ba3fc}{vm86Task}} = \textcolor{keyword}{false};}
+\DoxyCodeLine{79 }
+\DoxyCodeLine{80     uint64\_t \mbox{\hyperlink{struct_thread_control_block_a8611536a78d9f06f906cc6419ea5dcd0}{alarm}} : 63;}
+\DoxyCodeLine{81     uint64\_t \mbox{\hyperlink{struct_thread_control_block_ac3a7a1783565f0796c9888c202bfb1dd}{guiTask}} : 1;}
+\DoxyCodeLine{82     \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{struct_thread_control_block_a0d55b0e7b4158dc6443aaff0539a911b}{pthreadStartLocation}};}
+\DoxyCodeLine{83     \textcolor{keywordtype}{void}* \mbox{\hyperlink{struct_thread_control_block_a766672bc8cac0bfd0e2410d76775241c}{pthreadContext}};}
+\DoxyCodeLine{84 \};}
+\DoxyCodeLine{85 }
+\DoxyCodeLine{86 \textcolor{keyword}{struct }\mbox{\hyperlink{struct_process}{Process}}}
+\DoxyCodeLine{87 \{}
+\DoxyCodeLine{88     \textcolor{keywordtype}{int} \mbox{\hyperlink{struct_process_a595b4f93d83869f5cc3681cfeebc5609}{pid}};}
+\DoxyCodeLine{89 }
+\DoxyCodeLine{90     \textcolor{keywordtype}{size\_t}* \mbox{\hyperlink{struct_process_a941edb06ca7aa4e2ac8550b6caf1e3ec}{pointersToDelete}};}
+\DoxyCodeLine{91     \textcolor{keywordtype}{int} \mbox{\hyperlink{struct_process_a34a5257f099c9a4bf066b2e7f8ad941e}{nextDeletablePointer}};}
+\DoxyCodeLine{92 }
+\DoxyCodeLine{93     \textcolor{keywordtype}{char} \mbox{\hyperlink{struct_process_aff764866680a0ae411add0afea8af3ab}{taskname}}[256];}
+\DoxyCodeLine{94     \textcolor{keywordtype}{char} \mbox{\hyperlink{struct_process_a97d01d6f48ad397fc44db84250fcfec9}{cwd}}[256];}
+\DoxyCodeLine{95 }
+\DoxyCodeLine{96     \mbox{\hyperlink{struct_thread_control_block}{ThreadControlBlock}} \mbox{\hyperlink{struct_process_a81349af3902f2fa2c845aedf73808427}{threads}}[8];}
+\DoxyCodeLine{97     uint16\_t \mbox{\hyperlink{struct_process_aacfc46945783bb90ce85c8ea96482d2b}{threadUsage}};            \textcolor{comment}{//one bit per thread}}
+\DoxyCodeLine{98 }
+\DoxyCodeLine{99     \mbox{\hyperlink{class_vga_text}{VgaText}}* \mbox{\hyperlink{struct_process_aee13d8ecd96969594e8b642c2efd3d94}{terminal}};}
+\DoxyCodeLine{100 }
+\DoxyCodeLine{101     \mbox{\hyperlink{struct_process}{Process}}* \mbox{\hyperlink{struct_process_adcdfdd16c388ce086d429557337b560d}{parent}};}
+\DoxyCodeLine{102 }
+\DoxyCodeLine{103     \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{struct_process_ad65efb478be4aa1868477b85ecc52a50}{usermodeEntryPoint}};}
+\DoxyCodeLine{104 }
+\DoxyCodeLine{105     \mbox{\hyperlink{class_v_a_s}{VAS}}* \mbox{\hyperlink{struct_process_af4b8d958a3bb28ff8cec077ced861b52}{vas}};}
+\DoxyCodeLine{106 }
+\DoxyCodeLine{107     \textcolor{keywordtype}{int} \mbox{\hyperlink{struct_process_aaa092fc728cb2bac76af4fd8e343c46c}{argc}};}
+\DoxyCodeLine{108     \textcolor{keywordtype}{char}* \mbox{\hyperlink{struct_process_ad0443e3dfc398ff2d21db865c5cabc89}{argv}}[128];}
+\DoxyCodeLine{109 }
+\DoxyCodeLine{110     \mbox{\hyperlink{class_env_var_container}{EnvVarContainer}}* \mbox{\hyperlink{struct_process_aef394e9d185b1f88ec4ac80a9fd22917}{env}};}
+\DoxyCodeLine{111 }
+\DoxyCodeLine{112     \textcolor{keywordtype}{bool} \mbox{\hyperlink{struct_process_a8d8a58ab39414a0ee7e268ce6b04d542}{failedToLoadProgram}} = \textcolor{keyword}{false};}
+\DoxyCodeLine{113 }
+\DoxyCodeLine{114     \textcolor{keywordtype}{void} \mbox{\hyperlink{struct_process_aad29f15b5ec45955faf8629e6b0fe80c}{addArgs}}(\textcolor{keywordtype}{char}** \_argv);}
+\DoxyCodeLine{115     \mbox{\hyperlink{struct_process_ac837be5846b3ba51e704497e46325d75}{Process}}(\textcolor{keywordtype}{bool} kernel, \textcolor{keyword}{const} \textcolor{keywordtype}{char}* name, \mbox{\hyperlink{struct_process}{Process}}* \mbox{\hyperlink{struct_process_adcdfdd16c388ce086d429557337b560d}{parent}} = \textcolor{keyword}{nullptr}, \textcolor{keywordtype}{char}** \mbox{\hyperlink{struct_process_ad0443e3dfc398ff2d21db865c5cabc89}{argv}} = \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{116     \mbox{\hyperlink{struct_process_ac837be5846b3ba51e704497e46325d75}{Process}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* filepath, \mbox{\hyperlink{struct_process}{Process}}* \mbox{\hyperlink{struct_process_adcdfdd16c388ce086d429557337b560d}{parent}} = \textcolor{keyword}{nullptr}, \textcolor{keywordtype}{char}** \mbox{\hyperlink{struct_process_ad0443e3dfc398ff2d21db865c5cabc89}{argv}} = \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{117 }
+\DoxyCodeLine{118     \mbox{\hyperlink{struct_thread_control_block}{ThreadControlBlock}}* \mbox{\hyperlink{struct_process_af9c954d4cab25dcf102ba87948e98d78}{createThread}}(\textcolor{keywordtype}{void} (*where)(\textcolor{keywordtype}{void}*), \textcolor{keywordtype}{void}* context = \textcolor{keyword}{nullptr}, \textcolor{keywordtype}{int} pri = 128);}
+\DoxyCodeLine{119     \mbox{\hyperlink{struct_thread_control_block}{ThreadControlBlock}}* \mbox{\hyperlink{struct_process_a45eb83fc16f21bd67da79824db5e3df0}{createUserThread}}();}
+\DoxyCodeLine{120 }
+\DoxyCodeLine{121     \textcolor{keywordtype}{bool} \mbox{\hyperlink{struct_process_aca4c1751a647947d3185dafedb156f91}{gotCtrlC}} = \textcolor{keyword}{false};}
+\DoxyCodeLine{122 }
+\DoxyCodeLine{123     \mbox{\hyperlink{struct_sig_handler_block}{SigHandlerBlock}}* \mbox{\hyperlink{struct_process_a19c943c825c08c3b1678bd84cca1d906}{signals}};}
+\DoxyCodeLine{124 \};}
+\DoxyCodeLine{125 }
+\DoxyCodeLine{126 \textcolor{keywordtype}{void} \mbox{\hyperlink{prcssthr_8hpp_ab9cd94c3c421fdf6db1acfc88725a139}{userModeEntryPoint}}(\textcolor{keywordtype}{void}* ignored);}
+\DoxyCodeLine{127 }
+\DoxyCodeLine{128 \textcolor{preprocessor}{\#pragma pack(pop)}}
+\DoxyCodeLine{129 }
+\DoxyCodeLine{130 \textcolor{preprocessor}{\#include <\mbox{\hyperlink{semaphore_8hpp}{krnl/semaphore.hpp}}>}}
+\DoxyCodeLine{131 \textcolor{preprocessor}{\#include <\mbox{\hyperlink{mutex_8hpp}{krnl/mutex.hpp}}>}}
+\DoxyCodeLine{132 }
+\DoxyCodeLine{133 \textcolor{comment}{//JUST FOR NOW  -\/ NEEDS TO BE UPDATED IN hardware.asm IF THIS IS CHANGED}}
+\DoxyCodeLine{134 \textcolor{preprocessor}{\#define currentTaskTCB (*((ThreadControlBlock**) 0xC2002000))       }}
+\DoxyCodeLine{135 }
+\DoxyCodeLine{136 \textcolor{keyword}{extern} \textcolor{stringliteral}{"{}C"{}} \textcolor{keywordtype}{size\_t} \mbox{\hyperlink{prcssthr_8hpp_a175068b9a22718149a42a5b1e92b5ae7}{taskStartupFunction}}();}
+\DoxyCodeLine{137 \textcolor{keyword}{extern} \textcolor{stringliteral}{"{}C"{}} \textcolor{keywordtype}{void} \mbox{\hyperlink{prcssthr_8hpp_abeb546360097f990000a417e765e19fc}{taskReturned}}();}
+\DoxyCodeLine{138 }
+\DoxyCodeLine{139 \textcolor{keywordtype}{void} \mbox{\hyperlink{prcssthr_8hpp_a37b35e38927395fbbdd56b230b0d1f10}{KeDisablePreemption}}();}
+\DoxyCodeLine{140 \textcolor{keywordtype}{void} \mbox{\hyperlink{prcssthr_8hpp_a04db5fa598ffff8247a58896630500f0}{KeRestorePreemption}}();}
+\DoxyCodeLine{141 }
+\DoxyCodeLine{142 \textcolor{keywordtype}{void} \mbox{\hyperlink{prcssthr_8hpp_a0b207772ad06bb6fea072fbc5d1cd536}{switchToThread}}(\mbox{\hyperlink{struct_thread_control_block}{ThreadControlBlock}}* nextThreadToRun);}
+\DoxyCodeLine{143 \textcolor{keywordtype}{void} \mbox{\hyperlink{prcssthr_8hpp_af27290ca9db0306b5e78382e25f1810b}{setupMultitasking}}(\textcolor{keywordtype}{void} (*where)());}
+\DoxyCodeLine{144 \textcolor{keywordtype}{void} \mbox{\hyperlink{prcssthr_8hpp_a7d06701ac073c331c83519e3909b7fce}{schedule}}();}
+\DoxyCodeLine{145 \textcolor{keywordtype}{void} \mbox{\hyperlink{prcssthr_8hpp_af8fb1c1d7f605794cc36c0247a3e5da4}{blockTask}}(\textcolor{keyword}{enum} \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146a}{TaskState}} reason);}
+\DoxyCodeLine{146 \textcolor{keywordtype}{void} \mbox{\hyperlink{prcssthr_8hpp_a9624816104533944388bb3ed9e882f5b}{blockTaskWithSchedulerLockAlreadyHeld}}(\textcolor{keyword}{enum} \mbox{\hyperlink{prcssthr_8hpp_ac07ba17c40f6db054cc70ceef114146a}{TaskState}} reason);}
+\DoxyCodeLine{147 \textcolor{keywordtype}{void} \mbox{\hyperlink{prcssthr_8hpp_a167b5d78dff13a05a3e86fc808d55006}{unblockTask}}(\mbox{\hyperlink{struct_thread_control_block}{ThreadControlBlock}}* task);}
+\DoxyCodeLine{148 \textcolor{keywordtype}{void} \mbox{\hyperlink{prcssthr_8hpp_a1a9b00640198135cb10b164753f48945}{sleep}}(uint64\_t seconds);}
+\DoxyCodeLine{149 \textcolor{keywordtype}{void} \mbox{\hyperlink{prcssthr_8hpp_ae371f0d56cb674505ec0fc265a1fddc9}{milliTenthSleep}}(uint64\_t mtenth);}
+\DoxyCodeLine{150 \textcolor{keywordtype}{void} \mbox{\hyperlink{prcssthr_8hpp_a6f40acf966bedafff130d714624e28a4}{cleanerTaskFunction}}(\textcolor{keywordtype}{void}* context);}
+\DoxyCodeLine{151 \textcolor{keywordtype}{int} \mbox{\hyperlink{prcssthr_8hpp_a313106e627f546db544d0bc6b3880f7b}{waitTask}}(\textcolor{keywordtype}{int} pid, \textcolor{keywordtype}{int}* wstatus, \textcolor{keywordtype}{int} options);}
+\DoxyCodeLine{152 }
+\DoxyCodeLine{153 \textcolor{keyword}{extern} \textcolor{keywordtype}{int} \mbox{\hyperlink{prcssthr_8hpp_a1a5cba0a3973366468a97c8c1287e4c2}{irqDisableCounter}};}
+\DoxyCodeLine{154 \textcolor{keyword}{extern} \textcolor{keywordtype}{int} \mbox{\hyperlink{prcssthr_8hpp_ad30ff4b0042251417a011a9b04032b70}{postponeTaskSwitchesCounter}};}
+\DoxyCodeLine{155 \textcolor{keyword}{extern} \textcolor{keywordtype}{int} \mbox{\hyperlink{prcssthr_8hpp_a2f5e57527fe35c435507948bbf78a1aa}{taskSwitchesPostponedFlag}};}
+\DoxyCodeLine{156 }
+\DoxyCodeLine{157 \textcolor{preprocessor}{\#include <\mbox{\hyperlink{krnl_2hal_8hpp}{krnl/hal.hpp}}>}}
+\DoxyCodeLine{158 }
+\DoxyCodeLine{159 \textcolor{keyword}{static} \textcolor{keyword}{inline} \mbox{\hyperlink{struct____attribute____}{\_\_attribute\_\_}}((always\_inline)) \textcolor{keywordtype}{void} disableIRQs(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{160 \{}
+\DoxyCodeLine{161     \mbox{\hyperlink{arch_2i386_2hal_8hpp_a70608b0d4abf79a61c42810a6f44529b}{HalDisableInterrupts}}();}
+\DoxyCodeLine{162     \mbox{\hyperlink{prcssthr_8hpp_a1a5cba0a3973366468a97c8c1287e4c2}{irqDisableCounter}}++;}
+\DoxyCodeLine{163 \}}
+\DoxyCodeLine{164 }
+\DoxyCodeLine{165 \textcolor{keyword}{static} \textcolor{keyword}{inline} \mbox{\hyperlink{struct____attribute____}{\_\_attribute\_\_}}((always\_inline)) \textcolor{keywordtype}{int} getIRQNestingLevel(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{166 \{}
+\DoxyCodeLine{167     \textcolor{keywordflow}{return} \mbox{\hyperlink{prcssthr_8hpp_a1a5cba0a3973366468a97c8c1287e4c2}{irqDisableCounter}};}
+\DoxyCodeLine{168 \}}
+\DoxyCodeLine{169 }
+\DoxyCodeLine{170 \textcolor{keyword}{static} \textcolor{keyword}{inline} \mbox{\hyperlink{struct____attribute____}{\_\_attribute\_\_}}((always\_inline)) \textcolor{keywordtype}{void} enableIRQs(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{171 \{}
+\DoxyCodeLine{172     \_\_sync\_add\_and\_fetch(\&\mbox{\hyperlink{prcssthr_8hpp_a1a5cba0a3973366468a97c8c1287e4c2}{irqDisableCounter}}, -\/1);}
+\DoxyCodeLine{173     \textcolor{keywordflow}{if} (\mbox{\hyperlink{prcssthr_8hpp_a1a5cba0a3973366468a97c8c1287e4c2}{irqDisableCounter}} == 0) \{}
+\DoxyCodeLine{174         \mbox{\hyperlink{arch_2i386_2hal_8hpp_a6c97699b802fe6d9efeee960c2df5fda}{HalEnableInterrupts}}();}
+\DoxyCodeLine{175     \}}
+\DoxyCodeLine{176 \}}
+\DoxyCodeLine{177 }
+\DoxyCodeLine{178 \textcolor{keyword}{static} \textcolor{keyword}{inline} \mbox{\hyperlink{struct____attribute____}{\_\_attribute\_\_}}((always\_inline)) \textcolor{keywordtype}{void} lockScheduler(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{179 \{}
+\DoxyCodeLine{180 \textcolor{preprocessor}{\#ifndef SMP}}
+\DoxyCodeLine{181     disableIRQs();}
+\DoxyCodeLine{182 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{183 \}}
+\DoxyCodeLine{184 }
+\DoxyCodeLine{185 \textcolor{keyword}{static} \textcolor{keyword}{inline} \mbox{\hyperlink{struct____attribute____}{\_\_attribute\_\_}}((always\_inline)) \textcolor{keywordtype}{void} unlockScheduler(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{186 \{}
+\DoxyCodeLine{187 \textcolor{preprocessor}{\#ifndef SMP}}
+\DoxyCodeLine{188     enableIRQs();}
+\DoxyCodeLine{189 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{190 \}}
+\DoxyCodeLine{191 }
+\DoxyCodeLine{192 \textcolor{keyword}{static} \textcolor{keyword}{inline} \mbox{\hyperlink{struct____attribute____}{\_\_attribute\_\_}}((always\_inline)) \textcolor{keywordtype}{void} lockStuff(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{193 \{}
+\DoxyCodeLine{194 \textcolor{preprocessor}{\#ifndef SMP}}
+\DoxyCodeLine{195     disableIRQs();}
+\DoxyCodeLine{196     \mbox{\hyperlink{prcssthr_8hpp_ad30ff4b0042251417a011a9b04032b70}{postponeTaskSwitchesCounter}}++;}
+\DoxyCodeLine{197 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{198 \}}
+\DoxyCodeLine{199 }
+\DoxyCodeLine{200 \textcolor{keyword}{static} \textcolor{keyword}{inline} \mbox{\hyperlink{struct____attribute____}{\_\_attribute\_\_}}((always\_inline)) \textcolor{keywordtype}{void} unlockStuff(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{201 \{}
+\DoxyCodeLine{202 \textcolor{preprocessor}{\#ifndef SMP}}
+\DoxyCodeLine{203     \mbox{\hyperlink{prcssthr_8hpp_ad30ff4b0042251417a011a9b04032b70}{postponeTaskSwitchesCounter}}-\/-\/;}
+\DoxyCodeLine{204     \textcolor{keywordflow}{if} (\mbox{\hyperlink{prcssthr_8hpp_ad30ff4b0042251417a011a9b04032b70}{postponeTaskSwitchesCounter}} == 0) \{}
+\DoxyCodeLine{205         \textcolor{keywordflow}{if} (\mbox{\hyperlink{prcssthr_8hpp_a2f5e57527fe35c435507948bbf78a1aa}{taskSwitchesPostponedFlag}} != 0) \{}
+\DoxyCodeLine{206             \mbox{\hyperlink{prcssthr_8hpp_a2f5e57527fe35c435507948bbf78a1aa}{taskSwitchesPostponedFlag}} = 0;}
+\DoxyCodeLine{207             \mbox{\hyperlink{prcssthr_8hpp_a7d06701ac073c331c83519e3909b7fce}{schedule}}();}
+\DoxyCodeLine{208         \}}
+\DoxyCodeLine{209     \}}
+\DoxyCodeLine{210 }
+\DoxyCodeLine{211     enableIRQs();}
+\DoxyCodeLine{212 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{213 \}}
+\DoxyCodeLine{214 }
+\DoxyCodeLine{215 \textcolor{keyword}{extern} \mbox{\hyperlink{struct_process}{Process}}* \mbox{\hyperlink{prcssthr_8hpp_af519b7792515d6313de94093d644ee43}{kernelProcess}};}
+\DoxyCodeLine{216 \textcolor{keyword}{extern} \mbox{\hyperlink{struct_thread_control_block}{ThreadControlBlock}}* \mbox{\hyperlink{prcssthr_8hpp_ab2c1684634155e534bbd515972ca6c43}{cleanerThread}};}
+\DoxyCodeLine{217 \textcolor{keyword}{extern} \mbox{\hyperlink{class_linked_list}{LinkedList<volatile ThreadControlBlock>}} \mbox{\hyperlink{prcssthr_8hpp_a10014531226330497516750f7c86306e}{sleepingTaskList}};}
+\DoxyCodeLine{218 \textcolor{keyword}{extern} \mbox{\hyperlink{class_linked_list}{LinkedList<volatile ThreadControlBlock>}} \mbox{\hyperlink{prcssthr_8hpp_a36012ed054984b258aeebf8ef7a3412f}{taskList}};}
+\DoxyCodeLine{219 }
+\DoxyCodeLine{220 \textcolor{keywordtype}{void} \mbox{\hyperlink{prcssthr_8hpp_a297eee9b85feaa965cd2d51884eac2b4}{KeTerminateCurrentThread}}(\textcolor{keywordtype}{int} returnCode = 0);}
+\DoxyCodeLine{221 \mbox{\hyperlink{struct_process}{Process}}* \mbox{\hyperlink{prcssthr_8hpp_a1fd5c5e2c9ae0fa5f79521c2f22fab76}{KeProcessFromPID}}(\textcolor{keywordtype}{int} pid);}
+\DoxyCodeLine{222 }
+\DoxyCodeLine{223 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,237 @@
+\hypertarget{device_8hpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/hal/device.hpp File Reference}
+\label{device_8hpp}\index{C:/Users/Alex/Desktop/Banana/kernel/hal/device.hpp@{C:/Users/Alex/Desktop/Banana/kernel/hal/device.hpp}}
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$krnl/linkedlist.\+hpp$>$}\newline
+{\ttfamily \#include \char`\"{}acpica/acpi.\+h\char`\"{}}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_port_range}{Port\+Range}}
+\item 
+struct \mbox{\hyperlink{struct_memory_range}{Memory\+Range}}
+\item 
+struct \mbox{\hyperlink{struct_device_node}{Device\+Node}}
+\item 
+struct \mbox{\hyperlink{struct_p_c_i_device_info}{PCIDevice\+Info}}
+\item 
+class \mbox{\hyperlink{class_device}{Device}}
+\item 
+class \mbox{\hyperlink{class_driverless_device}{Driverless\+Device}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{struct_p_c_i_device_info}{PCIDevice\+Info}} \mbox{\hyperlink{device_8hpp_a2faf9e37bc9112dc3b217f1c56aa15cd}{PCIDevice\+Info}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{device_8hpp_a147d130be5b6b2720d9e08cca8f2b524}{Power\+Saving\+Level}} \{ \mbox{\hyperlink{device_8hpp_a147d130be5b6b2720d9e08cca8f2b524a4d3d769b812b6faa6b76e1a8abaece2d}{Active}}
+, \mbox{\hyperlink{device_8hpp_a147d130be5b6b2720d9e08cca8f2b524a2dbec34a65724db94f81e8533ee18192}{Standby}}
+, \mbox{\hyperlink{device_8hpp_a147d130be5b6b2720d9e08cca8f2b524a243924bfd56a682be235638b53961e09}{Sleep}}
+ \}
+\item 
+enum class \mbox{\hyperlink{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1}{Detection\+Type}} \{ \newline
+\mbox{\hyperlink{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1ae1ba155a9f2e8c3be94020eef32a0301}{Manual}}
+, \mbox{\hyperlink{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1affceb42d71b819d2006589b24d2876c9}{ISAProbe}}
+, \mbox{\hyperlink{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1ac89b74e7544d782dd33c25fdaae40b8f}{PCI}}
+, \mbox{\hyperlink{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1a970d747229841c61b3c063fb45baa9e7}{ACPI}}
+, \newline
+\mbox{\hyperlink{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1a7aca5ec618f7317328dcd7014cf9bdcf}{USB}}
+ \}
+\item 
+enum class \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9}{Device\+Type}} \{ \newline
+\mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a6e4b38bfd57741ac1597c440a1c98074}{Bus}}
+, \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a98a892aea3359481ae30e7b66c44d7a8}{Clock}}
+, \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a39b526c8cf7e4a713923a51b942986a9}{Physical\+Disk}}
+, \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a5411c671227255d6fb0362f8c8c7b273}{Logical\+Disk}}
+, \newline
+\mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a47328bd93d9fd77d0bc48059d47bde09}{Hard\+Disk\+Controller}}
+, \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a1162b85b7b993e2edf7da29dd8abf7e2}{Joystick}}
+, \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a6ce4d85a628a88bbdb3ac24a8e5a9c2e}{Keyboard}}
+, \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a37fe93164a9c7b7622bab12c349b98c8}{Printer}}
+, \newline
+\mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a60aaf44d4b562252c04db7f98497e9aa}{Port}}
+, \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9ab22f0418e8ac915eb66f829d262d14a2}{Audio}}
+, \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a2fc3359e12b2a9104121dcf04246f6a0}{Screen}}
+, \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9af2a47c6809d88e175dade0ef7b16aa13}{Mouse}}
+, \newline
+\mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9ac912c68146b55c36bff65edbac3cf26d}{Buzzer}}
+, \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a220071ab44b426f80ef21f1c552c363c}{NIC}}
+, \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a5ba3bb3a7a3c65b436e21454580970fd}{Intctrl}}
+, \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9aefb4777327e6f704fb1519c1882f93ec}{Timer}}
+, \newline
+\mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a11e4d339cb835db9884cd4a4e0c3dbb7}{FPU}}
+, \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a2b55387dd066c5bac646ac61543d152d}{CPU}}
+, \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a0044b1a89dc28e9fbcf89c1080879716}{System\+Device}}
+, \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a28f16b372700b1c4652a06d34b14177f}{Driverless}}
+, \newline
+\mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9a88183b946cc5f0e8c96b2e66e1c74a7e}{Unknown}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_device}{Device}} $>$ \mbox{\hyperlink{device_8hpp_aa4d9203d50069f57f78a128d06b8ec25}{get\+Devices\+Of\+Type}} (\mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9}{Device\+Type}} dev\+Type)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{device_8hpp_a2faf9e37bc9112dc3b217f1c56aa15cd}\label{device_8hpp_a2faf9e37bc9112dc3b217f1c56aa15cd}} 
+\index{device.hpp@{device.hpp}!PCIDeviceInfo@{PCIDeviceInfo}}
+\index{PCIDeviceInfo@{PCIDeviceInfo}!device.hpp@{device.hpp}}
+\doxysubsubsection{\texorpdfstring{PCIDeviceInfo}{PCIDeviceInfo}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct_p_c_i_device_info}{PCIDevice\+Info}} \mbox{\hyperlink{struct_p_c_i_device_info}{PCIDevice\+Info}}}
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1}\label{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1}} 
+\index{device.hpp@{device.hpp}!DetectionType@{DetectionType}}
+\index{DetectionType@{DetectionType}!device.hpp@{device.hpp}}
+\doxysubsubsection{\texorpdfstring{DetectionType}{DetectionType}}
+{\footnotesize\ttfamily enum class \mbox{\hyperlink{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1}{Detection\+Type}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Manual@{Manual}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!Manual@{Manual}}}\mbox{\Hypertarget{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1ae1ba155a9f2e8c3be94020eef32a0301}\label{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1ae1ba155a9f2e8c3be94020eef32a0301}} 
+Manual&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ISAProbe@{ISAProbe}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!ISAProbe@{ISAProbe}}}\mbox{\Hypertarget{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1affceb42d71b819d2006589b24d2876c9}\label{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1affceb42d71b819d2006589b24d2876c9}} 
+ISAProbe&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PCI@{PCI}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!PCI@{PCI}}}\mbox{\Hypertarget{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1ac89b74e7544d782dd33c25fdaae40b8f}\label{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1ac89b74e7544d782dd33c25fdaae40b8f}} 
+PCI&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ACPI@{ACPI}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!ACPI@{ACPI}}}\mbox{\Hypertarget{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1a970d747229841c61b3c063fb45baa9e7}\label{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1a970d747229841c61b3c063fb45baa9e7}} 
+ACPI&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{USB@{USB}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!USB@{USB}}}\mbox{\Hypertarget{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1a7aca5ec618f7317328dcd7014cf9bdcf}\label{device_8hpp_acb92174c00bcd444ff8ff85b0f8a1ba1a7aca5ec618f7317328dcd7014cf9bdcf}} 
+USB&\\
+\hline
+
+\end{DoxyEnumFields}
+\mbox{\Hypertarget{device_8hpp_ad258d4c51629346fceac4679b3209ad9}\label{device_8hpp_ad258d4c51629346fceac4679b3209ad9}} 
+\index{device.hpp@{device.hpp}!DeviceType@{DeviceType}}
+\index{DeviceType@{DeviceType}!device.hpp@{device.hpp}}
+\doxysubsubsection{\texorpdfstring{DeviceType}{DeviceType}}
+{\footnotesize\ttfamily enum class \mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9}{Device\+Type}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Bus@{Bus}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!Bus@{Bus}}}\mbox{\Hypertarget{device_8hpp_ad258d4c51629346fceac4679b3209ad9a6e4b38bfd57741ac1597c440a1c98074}\label{device_8hpp_ad258d4c51629346fceac4679b3209ad9a6e4b38bfd57741ac1597c440a1c98074}} 
+Bus&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Clock@{Clock}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!Clock@{Clock}}}\mbox{\Hypertarget{device_8hpp_ad258d4c51629346fceac4679b3209ad9a98a892aea3359481ae30e7b66c44d7a8}\label{device_8hpp_ad258d4c51629346fceac4679b3209ad9a98a892aea3359481ae30e7b66c44d7a8}} 
+Clock&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PhysicalDisk@{PhysicalDisk}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!PhysicalDisk@{PhysicalDisk}}}\mbox{\Hypertarget{device_8hpp_ad258d4c51629346fceac4679b3209ad9a39b526c8cf7e4a713923a51b942986a9}\label{device_8hpp_ad258d4c51629346fceac4679b3209ad9a39b526c8cf7e4a713923a51b942986a9}} 
+Physical\+Disk&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{LogicalDisk@{LogicalDisk}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!LogicalDisk@{LogicalDisk}}}\mbox{\Hypertarget{device_8hpp_ad258d4c51629346fceac4679b3209ad9a5411c671227255d6fb0362f8c8c7b273}\label{device_8hpp_ad258d4c51629346fceac4679b3209ad9a5411c671227255d6fb0362f8c8c7b273}} 
+Logical\+Disk&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{HardDiskController@{HardDiskController}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!HardDiskController@{HardDiskController}}}\mbox{\Hypertarget{device_8hpp_ad258d4c51629346fceac4679b3209ad9a47328bd93d9fd77d0bc48059d47bde09}\label{device_8hpp_ad258d4c51629346fceac4679b3209ad9a47328bd93d9fd77d0bc48059d47bde09}} 
+Hard\+Disk\+Controller&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Joystick@{Joystick}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!Joystick@{Joystick}}}\mbox{\Hypertarget{device_8hpp_ad258d4c51629346fceac4679b3209ad9a1162b85b7b993e2edf7da29dd8abf7e2}\label{device_8hpp_ad258d4c51629346fceac4679b3209ad9a1162b85b7b993e2edf7da29dd8abf7e2}} 
+Joystick&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Keyboard@{Keyboard}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!Keyboard@{Keyboard}}}\mbox{\Hypertarget{device_8hpp_ad258d4c51629346fceac4679b3209ad9a6ce4d85a628a88bbdb3ac24a8e5a9c2e}\label{device_8hpp_ad258d4c51629346fceac4679b3209ad9a6ce4d85a628a88bbdb3ac24a8e5a9c2e}} 
+Keyboard&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Printer@{Printer}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!Printer@{Printer}}}\mbox{\Hypertarget{device_8hpp_ad258d4c51629346fceac4679b3209ad9a37fe93164a9c7b7622bab12c349b98c8}\label{device_8hpp_ad258d4c51629346fceac4679b3209ad9a37fe93164a9c7b7622bab12c349b98c8}} 
+Printer&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Port@{Port}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!Port@{Port}}}\mbox{\Hypertarget{device_8hpp_ad258d4c51629346fceac4679b3209ad9a60aaf44d4b562252c04db7f98497e9aa}\label{device_8hpp_ad258d4c51629346fceac4679b3209ad9a60aaf44d4b562252c04db7f98497e9aa}} 
+Port&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Audio@{Audio}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!Audio@{Audio}}}\mbox{\Hypertarget{device_8hpp_ad258d4c51629346fceac4679b3209ad9ab22f0418e8ac915eb66f829d262d14a2}\label{device_8hpp_ad258d4c51629346fceac4679b3209ad9ab22f0418e8ac915eb66f829d262d14a2}} 
+Audio&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Screen@{Screen}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!Screen@{Screen}}}\mbox{\Hypertarget{device_8hpp_ad258d4c51629346fceac4679b3209ad9a2fc3359e12b2a9104121dcf04246f6a0}\label{device_8hpp_ad258d4c51629346fceac4679b3209ad9a2fc3359e12b2a9104121dcf04246f6a0}} 
+Screen&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Mouse@{Mouse}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!Mouse@{Mouse}}}\mbox{\Hypertarget{device_8hpp_ad258d4c51629346fceac4679b3209ad9af2a47c6809d88e175dade0ef7b16aa13}\label{device_8hpp_ad258d4c51629346fceac4679b3209ad9af2a47c6809d88e175dade0ef7b16aa13}} 
+Mouse&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Buzzer@{Buzzer}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!Buzzer@{Buzzer}}}\mbox{\Hypertarget{device_8hpp_ad258d4c51629346fceac4679b3209ad9ac912c68146b55c36bff65edbac3cf26d}\label{device_8hpp_ad258d4c51629346fceac4679b3209ad9ac912c68146b55c36bff65edbac3cf26d}} 
+Buzzer&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NIC@{NIC}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!NIC@{NIC}}}\mbox{\Hypertarget{device_8hpp_ad258d4c51629346fceac4679b3209ad9a220071ab44b426f80ef21f1c552c363c}\label{device_8hpp_ad258d4c51629346fceac4679b3209ad9a220071ab44b426f80ef21f1c552c363c}} 
+NIC&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Intctrl@{Intctrl}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!Intctrl@{Intctrl}}}\mbox{\Hypertarget{device_8hpp_ad258d4c51629346fceac4679b3209ad9a5ba3bb3a7a3c65b436e21454580970fd}\label{device_8hpp_ad258d4c51629346fceac4679b3209ad9a5ba3bb3a7a3c65b436e21454580970fd}} 
+Intctrl&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Timer@{Timer}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!Timer@{Timer}}}\mbox{\Hypertarget{device_8hpp_ad258d4c51629346fceac4679b3209ad9aefb4777327e6f704fb1519c1882f93ec}\label{device_8hpp_ad258d4c51629346fceac4679b3209ad9aefb4777327e6f704fb1519c1882f93ec}} 
+Timer&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FPU@{FPU}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!FPU@{FPU}}}\mbox{\Hypertarget{device_8hpp_ad258d4c51629346fceac4679b3209ad9a11e4d339cb835db9884cd4a4e0c3dbb7}\label{device_8hpp_ad258d4c51629346fceac4679b3209ad9a11e4d339cb835db9884cd4a4e0c3dbb7}} 
+FPU&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CPU@{CPU}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!CPU@{CPU}}}\mbox{\Hypertarget{device_8hpp_ad258d4c51629346fceac4679b3209ad9a2b55387dd066c5bac646ac61543d152d}\label{device_8hpp_ad258d4c51629346fceac4679b3209ad9a2b55387dd066c5bac646ac61543d152d}} 
+CPU&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SystemDevice@{SystemDevice}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!SystemDevice@{SystemDevice}}}\mbox{\Hypertarget{device_8hpp_ad258d4c51629346fceac4679b3209ad9a0044b1a89dc28e9fbcf89c1080879716}\label{device_8hpp_ad258d4c51629346fceac4679b3209ad9a0044b1a89dc28e9fbcf89c1080879716}} 
+System\+Device&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Driverless@{Driverless}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!Driverless@{Driverless}}}\mbox{\Hypertarget{device_8hpp_ad258d4c51629346fceac4679b3209ad9a28f16b372700b1c4652a06d34b14177f}\label{device_8hpp_ad258d4c51629346fceac4679b3209ad9a28f16b372700b1c4652a06d34b14177f}} 
+Driverless&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Unknown@{Unknown}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!Unknown@{Unknown}}}\mbox{\Hypertarget{device_8hpp_ad258d4c51629346fceac4679b3209ad9a88183b946cc5f0e8c96b2e66e1c74a7e}\label{device_8hpp_ad258d4c51629346fceac4679b3209ad9a88183b946cc5f0e8c96b2e66e1c74a7e}} 
+Unknown&\\
+\hline
+
+\end{DoxyEnumFields}
+\mbox{\Hypertarget{device_8hpp_a147d130be5b6b2720d9e08cca8f2b524}\label{device_8hpp_a147d130be5b6b2720d9e08cca8f2b524}} 
+\index{device.hpp@{device.hpp}!PowerSavingLevel@{PowerSavingLevel}}
+\index{PowerSavingLevel@{PowerSavingLevel}!device.hpp@{device.hpp}}
+\doxysubsubsection{\texorpdfstring{PowerSavingLevel}{PowerSavingLevel}}
+{\footnotesize\ttfamily enum class \mbox{\hyperlink{device_8hpp_a147d130be5b6b2720d9e08cca8f2b524}{Power\+Saving\+Level}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Active@{Active}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!Active@{Active}}}\mbox{\Hypertarget{device_8hpp_a147d130be5b6b2720d9e08cca8f2b524a4d3d769b812b6faa6b76e1a8abaece2d}\label{device_8hpp_a147d130be5b6b2720d9e08cca8f2b524a4d3d769b812b6faa6b76e1a8abaece2d}} 
+Active&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Standby@{Standby}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!Standby@{Standby}}}\mbox{\Hypertarget{device_8hpp_a147d130be5b6b2720d9e08cca8f2b524a2dbec34a65724db94f81e8533ee18192}\label{device_8hpp_a147d130be5b6b2720d9e08cca8f2b524a2dbec34a65724db94f81e8533ee18192}} 
+Standby&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Sleep@{Sleep}!device.hpp@{device.hpp}}\index{device.hpp@{device.hpp}!Sleep@{Sleep}}}\mbox{\Hypertarget{device_8hpp_a147d130be5b6b2720d9e08cca8f2b524a243924bfd56a682be235638b53961e09}\label{device_8hpp_a147d130be5b6b2720d9e08cca8f2b524a243924bfd56a682be235638b53961e09}} 
+Sleep&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{device_8hpp_aa4d9203d50069f57f78a128d06b8ec25}\label{device_8hpp_aa4d9203d50069f57f78a128d06b8ec25}} 
+\index{device.hpp@{device.hpp}!getDevicesOfType@{getDevicesOfType}}
+\index{getDevicesOfType@{getDevicesOfType}!device.hpp@{device.hpp}}
+\doxysubsubsection{\texorpdfstring{getDevicesOfType()}{getDevicesOfType()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_device}{Device}} $>$ get\+Devices\+Of\+Type (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{device_8hpp_ad258d4c51629346fceac4679b3209ad9}{Device\+Type}}}]{dev\+Type }\end{DoxyParamCaption})}
+

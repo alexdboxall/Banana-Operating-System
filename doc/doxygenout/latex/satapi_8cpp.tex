@@ -1,0 +1,77 @@
+\hypertarget{satapi_8cpp}{}\doxysection{C\+:/\+Users/\+Alex/\+Desktop/\+Banana/kernel/hw/diskphys/satapi.cpp File Reference}
+\label{satapi_8cpp}\index{C:/Users/Alex/Desktop/Banana/kernel/hw/diskphys/satapi.cpp@{C:/Users/Alex/Desktop/Banana/kernel/hw/diskphys/satapi.cpp}}
+{\ttfamily \#include \char`\"{}hw/diskphys/satapi.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/diskphys/ata.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/diskctrl/ide.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/diskctrl/satabus.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/hal.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/acpi.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/physmgr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/virtmgr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}krnl/common.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}thr/prcssthr.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hal/vcache.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hal/logidisk.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hw/cpu.\+hpp\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{satapi_8cpp_a32b0d71691c7e21ded44e462fe3de8db}{ATA\+\_\+\+DEV\+\_\+\+BUSY}}~0x80
+\item 
+\#define \mbox{\hyperlink{satapi_8cpp_af12bdbc024458d3a760650e93bc32cb3}{ATA\+\_\+\+DEV\+\_\+\+DRQ}}~0x08
+\item 
+\#define \mbox{\hyperlink{satapi_8cpp_a469ab8af9bf8f1f89a5c8f79b2305e34}{HBA\+\_\+\+Px\+CMD\+\_\+\+ST}}~0x0001
+\item 
+\#define \mbox{\hyperlink{satapi_8cpp_a27978dd2aac599cbd0330c923652c6e4}{HBA\+\_\+\+Px\+CMD\+\_\+\+FRE}}~0x0010
+\item 
+\#define \mbox{\hyperlink{satapi_8cpp_a93f2b1904299d4d1920e65039ff7ce5c}{HBA\+\_\+\+Px\+CMD\+\_\+\+FR}}~0x4000
+\item 
+\#define \mbox{\hyperlink{satapi_8cpp_ad2550f8f63fa32140f93da1b95354cf6}{HBA\+\_\+\+Px\+CMD\+\_\+\+CR}}~0x8000
+\item 
+\#define \mbox{\hyperlink{satapi_8cpp_a11add414188662b170c68ead95a786d8}{HBA\+\_\+\+Px\+IS\+\_\+\+TFES}}~(1 $<$$<$ 30)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{satapi_8cpp_a32b0d71691c7e21ded44e462fe3de8db}\label{satapi_8cpp_a32b0d71691c7e21ded44e462fe3de8db}} 
+\index{satapi.cpp@{satapi.cpp}!ATA\_DEV\_BUSY@{ATA\_DEV\_BUSY}}
+\index{ATA\_DEV\_BUSY@{ATA\_DEV\_BUSY}!satapi.cpp@{satapi.cpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_DEV\_BUSY}{ATA\_DEV\_BUSY}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+DEV\+\_\+\+BUSY~0x80}
+
+\mbox{\Hypertarget{satapi_8cpp_af12bdbc024458d3a760650e93bc32cb3}\label{satapi_8cpp_af12bdbc024458d3a760650e93bc32cb3}} 
+\index{satapi.cpp@{satapi.cpp}!ATA\_DEV\_DRQ@{ATA\_DEV\_DRQ}}
+\index{ATA\_DEV\_DRQ@{ATA\_DEV\_DRQ}!satapi.cpp@{satapi.cpp}}
+\doxysubsubsection{\texorpdfstring{ATA\_DEV\_DRQ}{ATA\_DEV\_DRQ}}
+{\footnotesize\ttfamily \#define ATA\+\_\+\+DEV\+\_\+\+DRQ~0x08}
+
+\mbox{\Hypertarget{satapi_8cpp_ad2550f8f63fa32140f93da1b95354cf6}\label{satapi_8cpp_ad2550f8f63fa32140f93da1b95354cf6}} 
+\index{satapi.cpp@{satapi.cpp}!HBA\_PxCMD\_CR@{HBA\_PxCMD\_CR}}
+\index{HBA\_PxCMD\_CR@{HBA\_PxCMD\_CR}!satapi.cpp@{satapi.cpp}}
+\doxysubsubsection{\texorpdfstring{HBA\_PxCMD\_CR}{HBA\_PxCMD\_CR}}
+{\footnotesize\ttfamily \#define HBA\+\_\+\+Px\+CMD\+\_\+\+CR~0x8000}
+
+\mbox{\Hypertarget{satapi_8cpp_a93f2b1904299d4d1920e65039ff7ce5c}\label{satapi_8cpp_a93f2b1904299d4d1920e65039ff7ce5c}} 
+\index{satapi.cpp@{satapi.cpp}!HBA\_PxCMD\_FR@{HBA\_PxCMD\_FR}}
+\index{HBA\_PxCMD\_FR@{HBA\_PxCMD\_FR}!satapi.cpp@{satapi.cpp}}
+\doxysubsubsection{\texorpdfstring{HBA\_PxCMD\_FR}{HBA\_PxCMD\_FR}}
+{\footnotesize\ttfamily \#define HBA\+\_\+\+Px\+CMD\+\_\+\+FR~0x4000}
+
+\mbox{\Hypertarget{satapi_8cpp_a27978dd2aac599cbd0330c923652c6e4}\label{satapi_8cpp_a27978dd2aac599cbd0330c923652c6e4}} 
+\index{satapi.cpp@{satapi.cpp}!HBA\_PxCMD\_FRE@{HBA\_PxCMD\_FRE}}
+\index{HBA\_PxCMD\_FRE@{HBA\_PxCMD\_FRE}!satapi.cpp@{satapi.cpp}}
+\doxysubsubsection{\texorpdfstring{HBA\_PxCMD\_FRE}{HBA\_PxCMD\_FRE}}
+{\footnotesize\ttfamily \#define HBA\+\_\+\+Px\+CMD\+\_\+\+FRE~0x0010}
+
+\mbox{\Hypertarget{satapi_8cpp_a469ab8af9bf8f1f89a5c8f79b2305e34}\label{satapi_8cpp_a469ab8af9bf8f1f89a5c8f79b2305e34}} 
+\index{satapi.cpp@{satapi.cpp}!HBA\_PxCMD\_ST@{HBA\_PxCMD\_ST}}
+\index{HBA\_PxCMD\_ST@{HBA\_PxCMD\_ST}!satapi.cpp@{satapi.cpp}}
+\doxysubsubsection{\texorpdfstring{HBA\_PxCMD\_ST}{HBA\_PxCMD\_ST}}
+{\footnotesize\ttfamily \#define HBA\+\_\+\+Px\+CMD\+\_\+\+ST~0x0001}
+
+\mbox{\Hypertarget{satapi_8cpp_a11add414188662b170c68ead95a786d8}\label{satapi_8cpp_a11add414188662b170c68ead95a786d8}} 
+\index{satapi.cpp@{satapi.cpp}!HBA\_PxIS\_TFES@{HBA\_PxIS\_TFES}}
+\index{HBA\_PxIS\_TFES@{HBA\_PxIS\_TFES}!satapi.cpp@{satapi.cpp}}
+\doxysubsubsection{\texorpdfstring{HBA\_PxIS\_TFES}{HBA\_PxIS\_TFES}}
+{\footnotesize\ttfamily \#define HBA\+\_\+\+Px\+IS\+\_\+\+TFES~(1 $<$$<$ 30)}
+
