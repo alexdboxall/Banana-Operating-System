@@ -6,9 +6,9 @@ var unionieee__quad__shape__type =
     [ "msw", "unionieee__quad__shape__type.html#a4f84b61b8b89573b2daa120846667d64", null ],
     [ "mswhi", "unionieee__quad__shape__type.html#aef27d540ba022d61ffbc3289a52b9f3f", null ],
     [ "mswlo", "unionieee__quad__shape__type.html#a51ff69cf51a306513671ebb751c60216", null ],
-    [ "parts32", "unionieee__quad__shape__type.html#aa3684ba14512a923cc745f598ee76cb5", null ],
-    [ "parts32", "unionieee__quad__shape__type.html#ad814d7f884d22bb76f07bcf386d6addd", null ],
-    [ "parts64", "unionieee__quad__shape__type.html#a2a5abecd9190afb4c46f2b326d02bbbd", null ],
-    [ "parts64", "unionieee__quad__shape__type.html#a2802ca6ad15cca47d2d75c3907c4b2ac", null ],
+    [ "parts32", "unionieee__quad__shape__type.html#aff22bdf812201eea291889d33d19cd3e", null ],
+    [ "parts32", "unionieee__quad__shape__type.html#a89a391d353b11e039bf22840ad530e5a", null ],
+    [ "parts64", "unionieee__quad__shape__type.html#a195eb3403a2121660b26e1f8de063162", null ],
+    [ "parts64", "unionieee__quad__shape__type.html#a745733bb0c7988417d893f386a096982", null ],
     [ "value", "unionieee__quad__shape__type.html#a20a55003a8eef13b6dcfdfbbe106ce4d", null ]
 ];

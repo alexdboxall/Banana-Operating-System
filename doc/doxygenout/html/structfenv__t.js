@@ -9,5 +9,5 @@ var structfenv__t =
     [ "__status", "structfenv__t.html#afdf7dbeb8f679ed7a6cc03a493b14af3", null ],
     [ "__status", "structfenv__t.html#a89de6733977104135f4cd8ab44c74c80", null ],
     [ "__tag", "structfenv__t.html#a81987425bec2c01d67422f8490ac6aec", null ],
-    [ "__x87", "structfenv__t.html#a91f40dbb2b207476b9697f78b53604ed", null ]
+    [ "__x87", "structfenv__t.html#a2ba6508f33108f5cf4d11788cba5675c", null ]
 ];

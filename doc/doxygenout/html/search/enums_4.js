@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['detectiontype_0',['DetectionType',['../device_8hpp.html#acb92174c00bcd444ff8ff85b0f8a1ba1',1,'device.hpp']]],
-  ['devicetype_1',['DeviceType',['../device_8hpp.html#ad258d4c51629346fceac4679b3209ad9',1,'device.hpp']]],
-  ['diskerror_2',['DiskError',['../diskphys_8hpp.html#a6e02d7176c75ff911b02a8dad4ab230f',1,'diskphys.hpp']]],
-  ['dresult_3',['DRESULT',['../diskio_8h.html#aacdfef1dad6565f65c26d12fe0ea4b2b',1,'diskio.h']]]
+  ['elfprogramtypes_0',['ELFProgramTypes',['../namespace_thr.html#a0bd38f3632d7bfb5805b098daf14c16d',1,'Thr']]],
+  ['elfsectionattribs_1',['ELFSectionAttribs',['../namespace_thr.html#a0ee7911eb675ab4c0972a124ec1379bd',1,'Thr']]],
+  ['elfsectiontypes_2',['ELFSectionTypes',['../namespace_thr.html#ae9ac478688ceb00fa144363c5985a19b',1,'Thr']]]
 ];

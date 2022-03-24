@@ -21,6 +21,5 @@ var searchData=
   ['tbl_5fdc936_18',['TBL_DC936',['../ff_8c.html#a1e9d0d464e35a432767eaf26e3d0d0f6',1,'ff.c']]],
   ['tbl_5fdc949_19',['TBL_DC949',['../ff_8c.html#ac48368e0a312bdeaabb949f132758ed0',1,'ff.c']]],
   ['tbl_5fdc950_20',['TBL_DC950',['../ff_8c.html#aebba82563d7b04297527becfbae117df',1,'ff.c']]],
-  ['trim_5ffastbins_21',['TRIM_FASTBINS',['../malloc_8c.html#acbf5e9b58b55393bbc41fb206b2c0cb7',1,'malloc.c']]],
-  ['true_22',['TRUE',['../actypes_8h.html#aa8cecfc5c5c054d2875c03e77b7be15d',1,'actypes.h']]]
+  ['trim_5ffastbins_21',['TRIM_FASTBINS',['../malloc_8c.html#acbf5e9b58b55393bbc41fb206b2c0cb7',1,'malloc.c']]]
 ];

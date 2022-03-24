@@ -1,6 +1,5 @@
 var dir_dc43877d82dd332f9fb2071fcca799d6 =
 [
-    [ "acpica", "dir_9c8f4db828191002bb532da0fef67fbf.html", "dir_9c8f4db828191002bb532da0fef67fbf" ],
     [ "arch", "dir_4a04b9aac4eefdd334a78e565f4616f2.html", "dir_4a04b9aac4eefdd334a78e565f4616f2" ],
     [ "boot", "dir_ecf7259329ba7794ad7c9558e45771a7.html", "dir_ecf7259329ba7794ad7c9558e45771a7" ],
     [ "dbg", "dir_810c58e1936ff3879722abe074a465f1.html", "dir_810c58e1936ff3879722abe074a465f1" ],
