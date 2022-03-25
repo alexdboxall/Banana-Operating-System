@@ -12,10 +12,28 @@
 #pragma GCC optimize ("-fno-align-functions")
 #include "krnl/terminal.hpp"
 
-bool KeIsKernelInPanic = false;
+bool keKernelPanicHappening = false;
 
+/// <summary>
+/// Returns whether or not KePanic has been called. Only in akward circumstances can this be called,
+/// as the caller must be able to run even after KePanic has started executing (ie. either an interrupt handler,
+/// the GUI panic hook, or something in HalPanic).
+/// </summary>
+/// <returns>Returns true if a call to KePanic has started (ie. it will return true in the GUI panic hook), and false if it hasn't.</returns>
+bool KeIsKernelInPanic()
+{
+	return keKernelPanicHappening;
+}
+
+/// <summary>
+/// To be called when the kernel reaches an unrecoverable error state. This will immediately 
+/// hang the system with a fullscreen error message without calling any cleanup.
+/// 
+/// This function does not return.
+/// </summary>
+/// <param name="message"></param>
 void KePanic(const char* message)
 {
-	KeIsKernelInPanic = true;
+	keKernelPanicHappening = true;
 	HalPanic(message);
 }

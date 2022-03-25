@@ -9,6 +9,9 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
+/// <summary>
+/// Loads the boot splash screen and displays it.
+/// </summary>
 void KeDisplaySplashScreen()
 {
 	for (int i = 0; "Starting Banana..."[i]; ++i) {
@@ -16,29 +19,18 @@ void KeDisplaySplashScreen()
 	}
 }
 
-
+/// <summary>
+/// Sets the message on the bottom of the boot splash screen.
+/// </summary>
+/// <param name="msg"></param>
 void KeSetBootMessage(const char* msg)
 {
-	uint16_t vgatext[79];
-	memset((void*) vgatext, 0, sizeof(vgatext));
-	int xstart = (80 - strlen(msg)) / 2;
-	for (int i = 0; msg[i]; ++i) {
-		vgatext[xstart + i] = ((uint16_t) msg[i]) | 0x0700;
+	for (int i = 0; i < 80; ++i) {
+		HalConsoleWriteCharacter(' ', 0, 0, i, 20);
 	}
 
-	uint16_t* b = (uint16_t*) 0xC20B8000;
-	memcpy(b + 80 * 20, vgatext, sizeof(vgatext));
-	kprintf("\n--> msg: %s\n", msg);
-	
-	return;
-
-	while (true) {
-		uint8_t a = inb(0x60);
-		if (a == 0x1C || a == 0x5A) {
-			while (true) {
-				a = inb(0x60);
-				if (a != 0x1C && a != 0x5A) return;
-			}
-		}
+	int startingXPosition = (80 - strlen(msg)) / 2;
+	for (int i = 0; msg[i]; ++i) {
+		HalConsoleWriteCharacter(msg[i], 0x7, 0x0, startingXPosition + i, 20);
 	}
 }

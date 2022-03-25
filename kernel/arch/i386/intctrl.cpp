@@ -1,14 +1,15 @@
-#include "krnl/common.hpp"
-#include "krnl/panic.hpp"
-#include "sys/syscalls.hpp"
-#include "thr/prcssthr.hpp"
-#include "thr/elf.hpp"
-#include "hal/intctrl.hpp"
-#include "hal/device.hpp"
-#include "hw/acpi.hpp"
-#include "krnl/hal.hpp"
-#include "hw/cpu.hpp"
-#include "vm86/vm8086.hpp"
+#include <krnl/common.hpp>
+#include <krnl/panic.hpp>
+#include <krnl/fault.hpp>
+#include <krnl/hal.hpp>
+#include <sys/syscalls.hpp>
+#include <thr/prcssthr.hpp>
+#include <thr/elf.hpp>
+#include <hal/intctrl.hpp>
+#include <hal/device.hpp>
+#include <hw/acpi.hpp>
+#include <hw/cpu.hpp>
+#include <vm86/vm8086.hpp>
 #include <arch/i386/x86.hpp>
 #include <arch/i386/apic.hpp>
 
@@ -19,7 +20,8 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-#include <krnl/fault.hpp>
+void (*keInterruptHandlers[256][4])(regs* r, void* context);
+void* keInterruptContexts[256][4];
 
 int convertLegacyIRQNumber(int num)
 {
@@ -32,6 +34,54 @@ int convertLegacyIRQNumber(int num)
 	}
 
 	return num;
+}
+
+void KeSetupInterrupts()
+{
+	//set all handlers to null so they don't get called
+	for (int i = 0; i < 256; ++i) {
+		for (int j = 0; j < 4; ++j) {
+			keInterruptHandlers[i][j] = nullptr;
+			keInterruptContexts[i][j] = nullptr;		//not needed, but just to keep a consistant startup state
+		}
+	}
+}
+
+extern "C" uint64_t int_handler(struct regs* r)
+{
+	while (KeIsKernelInPanic()) {
+		HalDisableInterrupts();
+		HalStallProcessor();
+	}
+
+	int num = r->int_no;
+
+	//send EOI command for IRQs
+	//this is done now because the handler could cause a task switch, which
+	//would mean the EOI never gets called, and so the system basically locks up
+	if (num >= 32 && num < 32 + 24) {
+		HalEndOfInterrupt(num - 32);
+	}
+
+	auto handleList = keInterruptHandlers[num];
+	auto contextList = keInterruptContexts[num];
+
+	//call handler if it exists
+	for (int i = 0; i < 4; ++i) {
+		if (handleList[i]) {
+			if (r->int_no == 96) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-function-type"
+				uint64_t retV = reinterpret_cast<uint64_t(*)(regs*, void*)>(handleList[i])(r, contextList[i]);
+#pragma GCC diagnostic pop
+				return retV;
+			} else {
+				handleList[i](r, contextList[i]);
+			}
+		}
+	}
+
+	return 0;
 }
 
 void HalInstallISRHandler(int num, void (*handler)(regs*, void*), void* context)

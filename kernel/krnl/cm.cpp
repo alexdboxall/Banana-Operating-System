@@ -1,10 +1,11 @@
 #include <krnl/cm.hpp>
-
-#include "krnl/common.hpp"
-#include "krnl/physmgr.hpp"
-#include "hal/vcache.hpp"
-#include "hal/bus.hpp"
-#include "hal/diskphys.hpp"
+#include <krnl/common.hpp>
+#include <krnl/physmgr.hpp>
+#include <hal/vcache.hpp>
+#include <hal/bus.hpp>
+#include <hal/diskphys.hpp>
+#include <libk/string.h>
+#include <libk/ctype.h>
 
 #pragma GCC optimize ("Os")
 #pragma GCC optimize ("-fno-strict-aliasing")
@@ -16,11 +17,14 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic warning "-Wcast-align"
 
-extern "C" {
-    #include <libk/string.h>
-    #include <libk/ctype.h>
-}
 
+/// <summary>
+/// Opens a registry file and loads the registry hive into memory. The file is left open so other 
+/// Cm functions may act upon the registry file it must be closed by CmClose otherwise the registry
+/// state will be inconsistent. 
+/// </summary>
+/// <param name="filename">The filepath to the registry file.</param>
+/// <returns>A pointer to a registry hive object with the data read into it.</returns>
 Reghive* CmOpen(const char* filename)
 {
     int br;
@@ -42,7 +46,7 @@ Reghive* CmOpen(const char* filename)
     free(data);
 
     if (!reg->f) {
-        KePanic("BAD REGISTRY (A)");
+        KePanic("REGISTRY FILE COULD NOT BE OPENED");
     }
 
     reg->f->seek(0);
@@ -50,7 +54,7 @@ Reghive* CmOpen(const char* filename)
     reg->f->seek(0);
 
     if (memcmp(reg->header.sig, "REGISTRY", 8)) {
-        KePanic("BAD REGISTRY (B)");
+        KePanic("REGISTRY SIGNATURE INVALID");
     }
 
     reg->valid = true;
@@ -58,6 +62,11 @@ Reghive* CmOpen(const char* filename)
     return reg;
 }
 
+
+/// <summary>
+/// Closes the backend registry file, and closes the registry hive in memory.
+/// </summary>
+/// <param name="reg"></param>
 void CmClose(Reghive* reg)
 {
     if (!reg->valid) {
@@ -67,6 +76,18 @@ void CmClose(Reghive* reg)
     reg->f->close();
 }
 
+
+/// <summary>
+/// Inserts an extent of a given type in the register under a given parent, with the given data. It also
+/// flushes the newly updated registry data to the disk. This is a low level function, designed to be used
+/// by the other registry functions. Other higher level functions hould be used to, for example, 
+/// create strings, integers and directories.
+/// </summary>
+/// <param name="reg">The registry hive to add the extent into.</param>
+/// <param name="parent">The parent extent to which the new extent should be added to. A value of zero indicates no parent, and therefore this extent must be referenced in some other use case specific form.</param>
+/// <param name="type">The type of extent to add.</param>
+/// <param name="data">A pointer to the data to copy into the extent (a copy is created).</param>
+/// <returns></returns>
 int CmCreateExtent(Reghive* reg, int parent, int type, uint8_t* data)
 {
     int child = CmFindUnusedExtent(reg);
@@ -99,6 +120,15 @@ int CmCreateExtent(Reghive* reg, int parent, int type, uint8_t* data)
     return child;
 }
 
+
+/// <summary>
+/// Adds a new blank string key in the registry with a given name, under a given parent extent. This 
+/// will flush the registry to the file.
+/// </summary>
+/// <param name="reg">The registry hive to add the string key to.</param>
+/// <param name="parent">The parent extent to add the string to.</param>
+/// <param name="name">The name of the key. This must be a valid registry key name.</param>
+/// <returns></returns>
 int CmCreateString(Reghive* reg, int parent, const char* name)
 {
     Extent ext;
@@ -112,13 +142,30 @@ int CmCreateString(Reghive* reg, int parent, const char* name)
     return CmCreateExtent(reg, parent, 0, (uint8_t*) &ext);
 }
 
-void CmFreeExtent(Reghive* reg, int num)
+
+/// <summary>
+/// Marks an extent as unused. After this call the old data cannot be recovered, and this extent can be reused.
+/// This is a low-level internal function that should only be called by other registry functions here. This will
+/// flush the registry data to the file.
+/// </summary>
+/// <param name="reg">The registry hive where the extent is.</param>
+/// <param name="extent">The extent to mark as unused.</param>
+void CmFreeExtent(Reghive* reg, int extent)
 {
     uint8_t data[EXTENT_LENGTH];
     memset(data, 0, EXTENT_LENGTH);
-    CmWriteExtent(reg, num, data);
+    CmWriteExtent(reg, extent, data);
 }
 
+
+/// <summary>
+/// Returns the string data stored by a given string type extent. The output buffer must be at least 277 bytes long
+/// even if the string data is shorter than this. If the string is 277 bytes long, a null character will not be placed
+/// after it, and therefore care must be taken to avoid buffer overruns.
+/// </summary>
+/// <param name="reg">The registry hive where the extent is.</param>
+/// <param name="extnum">The extent of the string object.</param>
+/// <param name="out">The data stored the the given string type event will be copied here. This buffer must be at least 277 bytes long, even if the string is shorter.</param>
 void CmGetString(Reghive* reg, int extnum, char* out)
 {
     Extent ext;
@@ -141,6 +188,15 @@ void CmGetString(Reghive* reg, int extnum, char* out)
     }
 }
 
+
+/// <summary>
+/// Sets the string data for a string type extent. The data can be up to 277 bytes long, and all 277
+/// bytes from the data buffer will be copied, regardless of the length of the string.
+/// This will flush the new registry data to the file.
+/// </summary>
+/// <param name="reg">The registry hive where the extent is.</param>
+/// <param name="extnum">The extent of the string object.</param>
+/// <param name="data">The data to be copied to the string object in the registry.</param>
 void CmSetString(Reghive* reg, int extnum, const char* data)
 {
     int CmComponents = (int) (strlen(data) + 38) / 39;
@@ -190,6 +246,14 @@ void CmSetString(Reghive* reg, int extnum, const char* data)
     CmWriteExtent(reg, extnum, (uint8_t*) &ext);
 }
 
+
+/// <summary>
+/// Returns the extent number of the first sub-extent of a given directory.
+/// This effectively 'enters the directory' by giving us the first child entry of a directory.
+/// </summary>
+/// <param name="reg">The registry hive where the directory is.</param>
+/// <param name="num">The extent number of the directory to enter into.</param>
+/// <returns>The extent number of the first sub-extent, or -1 if a non-directory extent is passed in.</returns>
 int CmEnterDirectory(Reghive* reg, int num)
 {
     Extent ext;
@@ -200,7 +264,18 @@ int CmEnterDirectory(Reghive* reg, int num)
     return -1;
 }
 
-int CmFindInDirectory(Reghive* reg, int direntry, const char* name)
+
+/// <summary>
+/// Given an extent number (i.e. the first sub-extent in a directory from CmEnterDirectory), iterate
+/// through the entries within this chain, searching for one with a key name given.
+/// 
+/// It is likely a bug if a directory extent (instead of the child extent) is passed in as the extent number.
+/// </summary>
+/// <param name="reg">The registry hive where the search is to be done.</param>
+/// <param name="extent">The starting point to search from.</param>
+/// <param name="name">The name of the key to search for. It must be a valid key name.</param>
+/// <returns>Returns -1 if a key with that name is not found, or the extent number if it is found.</returns>
+int CmFindInDirectory(Reghive* reg, int extent, const char* name)
 {
     Extent ext;
 
@@ -208,7 +283,7 @@ int CmFindInDirectory(Reghive* reg, int direntry, const char* name)
     memset(wantName, 0xFF, 18);
     CmConvertToInternalFilename(name, wantName);
 
-    int num = direntry;
+    int num = extent;
     while (true) {
         if (!num) {
             return -1;
@@ -224,6 +299,17 @@ int CmFindInDirectory(Reghive* reg, int direntry, const char* name)
     }
 }
 
+
+/// <summary>
+/// Adds a new integer key into the registry, with a given value, parent, name and type.
+/// This will flush the registry to the file.
+/// </summary>
+/// <param name="reg">The registry hive to add the integer to.</param>
+/// <param name="parent">The parent extent where the integer should be added to.</param>
+/// <param name="name">They key name of the integer. This must be a valid registry key.</param>
+/// <param name="value">The value to set the integer to.</param>
+/// <param name="type">The type (width) of the integer. Do not set this to anything which isn't an integer type.</param>
+/// <returns></returns>
 int CmCreateInteger(Reghive* reg, int parent, const char* name, uint64_t value, int type)
 {
     Extent ext;
@@ -236,6 +322,14 @@ int CmCreateInteger(Reghive* reg, int parent, const char* name, uint64_t value, 
     return CmCreateExtent(reg, parent, 0, (uint8_t*) &ext);
 }
 
+
+/// <summary>
+/// Given an extent, returns the next extent in the same directory. If the extent passed in
+/// is the last extent in the directory, zero will be returned.
+/// </summary>
+/// <param name="reg">The registry hive the extent is in.</param>
+/// <param name="extnum">The current extent number.</param>
+/// <returns>The next extent number. Returns zero if there is no next extent.</returns>
 int CmGetNext(Reghive* reg, int extnum)
 {
     Extent ext;
@@ -243,6 +337,15 @@ int CmGetNext(Reghive* reg, int extnum)
     return ext.next;
 }
 
+
+/// <summary>
+/// Creates a new directory in the registry. This will flush the registry
+/// to the file.
+/// </summary>
+/// <param name="reg">The registry hive to add the dircetory to.</param>
+/// <param name="parent">The parent extent of the new directory.</param>
+/// <param name="name">The key name to give to the directory. This name must be a valid key name.</param>
+/// <returns>The extent number of the first sub-entry in the directory (the dummy object). This is *not* the extent number of the directory itself.</returns>
 int CmCreateDirectory(Reghive* reg, int parent, const char* name)
 {
     Extent ext;
@@ -271,6 +374,13 @@ int CmCreateDirectory(Reghive* reg, int parent, const char* name)
     return ext.d.start;
 }
 
+
+/// <summary>
+/// Reads an extent from the registry file.
+/// </summary>
+/// <param name="reg">The registry hive to read from.</param>
+/// <param name="extnum">The extent to read.</param>
+/// <param name="data">The buffer to copy the data to. This must be long enough to store EXTENT_LENGTH bytes.</param>
 void CmReadExtent(Reghive* reg, int extnum, uint8_t* data)
 {
     if (!reg->valid) {
@@ -280,49 +390,31 @@ void CmReadExtent(Reghive* reg, int extnum, uint8_t* data)
     int br;
     reg->f->seek(extnum * EXTENT_LENGTH);
     reg->f->read(EXTENT_LENGTH, data, &br);
-
-    /*if (extnum) {
-        uint32_t* d = (uint32_t*) data;
-
-        for (int i = 0; i < 1; ++i) {
-            uint64_t val = (uint64_t) *d;
-
-            if (val) {
-                val = val * 387420489ULL % 4000000000ULL;
-                val -= extnum * (19 + i);
-            }
-
-            *d++ = (uint32_t) val;
-        }
-    }*/
 }
 
+
+/// <summary>
+/// Writes an extent to the registry file.
+/// </summary>
+/// <param name="reg">The registry hive to write to.</param>
+/// <param name="extnum">The extent to write.</param>
+/// <param name="data">The buffer to write the data from. EXTENT_LENGTH bytes will be copied from the buffer to the disk.</param>
 void CmWriteExtent(Reghive* reg, int extnum, uint8_t* data)
 {
     if (!reg->valid) {
         return;
     }
 
-    /*if (extnum) {
-        uint32_t* d = (uint32_t*) data;
-
-        for (int i = 0; i < 1; ++i) {
-            uint64_t val = (uint64_t) *d;
-
-            if (val) {
-                val += extnum * (19 + i);
-                val = val * 3513180409ULL % 4000000000ULL;
-            }
-
-            *d++ = (uint32_t) val;
-        }
-    }*/
-
     int br;
     reg->f->seek(extnum * EXTENT_LENGTH);
     reg->f->write(EXTENT_LENGTH, data, &br);
 }
 
+
+/// <summary>
+/// Flushes the registry hive back to the disk. Should be called whenever the header is updated.
+/// </summary>
+/// <param name="reg">The registry hive whose header needs flushing.</param>
 void CmUpdateHeader(Reghive* reg)
 {
     if (!reg->valid) {
@@ -332,6 +424,13 @@ void CmUpdateHeader(Reghive* reg)
     CmWriteExtent(reg, 0, (uint8_t*) &reg->header);
 }
 
+
+/// <summary>
+/// Increase the number of extents a registry hive can store. 
+/// </summary>
+/// <param name="reg">The registry hive to add extents to.</param>
+/// <param name="extents">The number of extents to add to the directory.</param>
+/// <returns>Returns the old number of extents in the registry, or -1 if the registry is invalid.</returns>
 int CmExpand(Reghive* reg, int extents)
 {
     if (!reg->valid) {
@@ -347,13 +446,20 @@ int CmExpand(Reghive* reg, int extents)
         reg->f->write(EXTENT_LENGTH, data, &br);
     }
 
-    int retv = reg->header.numExtents;
+    int oldNumExtents = reg->header.numExtents;
     reg->header.numExtents += extents;
 
     CmUpdateHeader(reg);
-    return retv;
+    return oldNumExtents;
 }
 
+
+/// <summary>
+/// Searches the registry for an unused extent, expanding the registry hive if needed. Therefore, it will
+/// always find an unused extent.
+/// </summary>
+/// <param name="reg">The registry hive.</param>
+/// <returns>The extent number of an unused extent. If the registry is invalid, -1 will be returned.</returns>
 int CmFindUnusedExtent(Reghive* reg)
 {
     if (!reg->valid) {
@@ -378,6 +484,12 @@ int CmFindUnusedExtent(Reghive* reg)
     return CmExpand(reg, 64);
 }
 
+
+/// <summary>
+/// Valid components of a registry key name. Each of these digraphs and characters take up one
+/// character in the internal representation of the name. Any characters not in this table cannot
+/// be encoded into a key name. Digraphs not in this table will be stored as two characters.
+/// </summary>
 char CmComponents[64][4] = {
     "TH", "HE", "IN", "ER", "AN", "RE", "ND", "AT", "ON", "NT", "HA", "ES",
     "ST", "EN", "ED", "TO", "IT", "OU", "EA", "HI", "IS", "OR", "TI", "AS",
@@ -386,22 +498,42 @@ char CmComponents[64][4] = {
     "0", "1", "2", "3", "4", "5", "V", "W", "X", "Y", "Z", 0,
 };
 
-int CmGetMatch(char* digraph, char* mono, bool tryDigraph, bool* matchedDigraph)
+
+/// <summary>
+/// Checks whether two given strings are in the table of valid digraphs/characters for use in key names.
+/// The first string will only be checked if it is asked for, and the second string will only be checked
+/// if the first string was not valid, or wasn't checked.
+/// </summary>
+/// <param name="first">The first string to check, only checked if tryFirst is true.</param>
+/// <param name="second">The second string to check, only check if tryFirst is false, or the first string was not in the table.</param>
+/// <param name="tryFirst">Whether or not to check the first string.</param>
+/// <param name="matchedFirst">Whether or not the match was from the first string (true) or the second string (false) will be stored here.</param>
+/// <returns>The index in CmComponents where the matching string was found.</returns>
+int CmGetMatch(char* first, char* second, bool tryFirst, bool* matchedFirst)
 {
-    if (tryDigraph) {
-        *matchedDigraph = true;
+    if (tryFirst) {
+        *matchedFirst = true;
         for (int i = 0; i < 63; ++i) {
-            if (!strcmp(digraph, CmComponents[i])) return i;
+            if (!strcmp(first, CmComponents[i])) return i;
         }
     }
-    *matchedDigraph = false;
+    *matchedFirst = false;
     for (int i = 0; i < 63; ++i) {
-        if (!strcmp(mono, CmComponents[i])) return i;
+        if (!strcmp(second, CmComponents[i])) return i;
     }
 
     return -1;
 }
 
+
+/// <summary>
+/// Shifts a value of an arbitrary bit length onto a 32 bit shift register, as long as it will fit.
+/// </summary>
+/// <param name="reg">A pointer to the 32 bit shift register. The value stored here will be updated after calling this function.</param>
+/// <param name="count">A pointer containing the number of bits currently on the shift register. The value stored here will be updated after calling this function.</param>
+/// <param name="val">The value to be shifted on.</param>
+/// <param name="bits">The number of bits used to represent 'val'.</param>
+/// <returns>Returns true if val can fit onto the shift register, or false otherwise. If false is returned, 'reg' and 'count' will be unchanged.</returns>
 bool CmAddShift(uint32_t* reg, int* count, uint8_t val, int bits)
 {
     if (*count + bits < 32) {

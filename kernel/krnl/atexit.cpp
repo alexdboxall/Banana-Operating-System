@@ -55,11 +55,8 @@ void KeExecuteAtexit()
 {
 	for (int i = 0; i < kiNextAtexitHandler; ++i) {
 		if (kiAtexitHandlers[i]) {
-			kprintf("Calling atexit handler %d (0x%X)\n", i, kiAtexitHandlers[i]);
 			kiAtexitHandlers[i](kiAtexitContexts[i]);
-			kprintf("Done");
-			KiAtexitHandlers[i] = nullptr;
-			kprintf(".\n");
+			kiAtexitHandlers[i] = nullptr;
 		}
 	}
 }
