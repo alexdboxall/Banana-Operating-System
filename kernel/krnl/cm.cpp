@@ -546,6 +546,16 @@ bool CmAddShift(uint32_t* reg, int* count, uint8_t val, int bits)
     }
 }
 
+
+/// <summary>
+/// Reads a value of an arbitrary bit length off a shift register, and then shift that register by that number of bits.
+/// The shift register is 32 bits long.
+/// </summary>
+/// <param name="reg">A pointer to the 32 bit shift register. The value stored here will be updated after calling this function.</param>
+/// <param name="count">A pointer containing the number of bits currently on the shift register. The value stored here will be updated after calling this function.</param>
+/// <param name="bits">The number of bits in the value to return, and hence how many bits to shift off.</param>
+/// <param name="success">If there is enough bits in the shift register, true will be written in the location pointed to. Otherwise, false will be written here.</param>
+/// <returns>Returns zero if success contains false, or the value if success contains true.</returns>
 uint8_t CmGetShift(uint32_t* reg, int* count, int bits, bool* success)
 {
     if (*count >= bits) {
@@ -561,6 +571,13 @@ uint8_t CmGetShift(uint32_t* reg, int* count, int bits, bool* success)
     }
 }
 
+
+/// <summary>
+/// Reads the integer value from an integer registry key.
+/// </summary>
+/// <param name="reg">The registry hive where the integer is.</param>
+/// <param name="extnum">The extent number of the integer key.</param>
+/// <param name="i">After this function is called, the integer value will be placed into the location pointed to.</param>
 void CmGetInteger(Reghive* reg, int extnum, uint64_t* i)
 {
     Extent ext;
@@ -568,6 +585,12 @@ void CmGetInteger(Reghive* reg, int extnum, uint64_t* i)
     *i = ext.i.data;
 }
 
+/// <summary>
+/// Sets the integer value of an integer registry key.
+/// </summary>
+/// <param name="reg">The registry hive where the integer is.</param>
+/// <param name="extnum">The extent number of the integer key.</param>
+/// <param name="i">The integer value to set the key's value to.</param>
 void CmSetInteger(Reghive* reg, int extnum, uint64_t i)
 {
     Extent ext;
@@ -576,6 +599,16 @@ void CmSetInteger(Reghive* reg, int extnum, uint64_t i)
     CmWriteExtent(reg, extnum, (uint8_t*) &ext);
 }
 
+
+/// <summary>
+/// For a given extent, returns the key name, and the type of key. The key name is decoded
+/// into its human-readable form.
+/// </summary>
+/// <param name="reg">The register where the extent is in.</param>
+/// <param name="extnum">The extent number to get information about.</param>
+/// <param name="name">The name of the key, stored in human readable form. This buffer needs to have
+/// enough room to store 49 characters./param>
+/// <returns>Returns the type of the extent.</returns>
 int CmGetNameAndTypeFromExtent(Reghive* reg, int extnum, char* name)
 {
     Extent ext;
@@ -584,6 +617,14 @@ int CmGetNameAndTypeFromExtent(Reghive* reg, int extnum, char* name)
     return ext.type;
 }
 
+
+/// <summary>
+/// Converts an internal key filename into a human-readable format.
+/// </summary>
+/// <param name="in">The internal key filename.</param>
+/// <param name="out">The human-readable key filename will be copied to this buffer. The buffer
+/// should be able to store at least 49 characters, regardless of the length of the internal string.</param>
+/// <returns>Always returns STATUS_SUCCESS</returns>
 int CmConvertFromInternalFilename(const uint8_t* in, char* out)
 {
     uint8_t decoded[24];
@@ -615,12 +656,22 @@ int CmConvertFromInternalFilename(const uint8_t* in, char* out)
     return STATUS_SUCCESS;
 }
 
-int CmConvertToInternalFilename(const char* __path, uint8_t* out)
+
+/// <summary>
+/// Converts a human-readable key name into the internal key name format.
+/// </summary>
+/// <param name="name">The human-readable key name. This must not be a full path, but just a key name.</param>
+/// <param name="out">The internal key name will be stored in this buffer. It should be at least 24 bytes long,
+/// regardless of the length of the human-readable name.</param>
+/// <returns>Returns STATUS_SUCCESS when it could be successfully converted. If the resulting internal key name
+/// is too long to be stored in the registry, STATUS_LONG_NAME will be returned. If there is a character in the
+/// human-readable key name which is not allowed in an internal key, STATUS_NOT_ENCODABLE will be returend.</returns>
+int CmConvertToInternalFilename(const char* name, uint8_t* out)
 {
     char path[48];
     memset(path, 0, 48);
-    for (int i = 0; i < strlen(__path); ++i) {
-        path[i] = toupper(__path[i]);
+    for (int i = 0; i < strlen(name); ++i) {
+        path[i] = toupper(name[i]);
     }
 
     uint8_t parts[24];
@@ -689,6 +740,13 @@ int CmConvertToInternalFilename(const char* __path, uint8_t* out)
     return STATUS_SUCCESS;
 }
 
+
+/// <summary>
+/// Implementation of strtok. See the C standard for details.
+/// </summary>
+/// <param name="str">See C standard for details.</param>
+/// <param name="delim">See C standard for details.</param>
+/// <returns></returns>
 char* zStrtok(char* str, const char* delim)
 {
     static char* static_str = 0;      /* var to store last address */
@@ -744,6 +802,13 @@ char* zStrtok(char* str, const char* delim)
     return str;
 }
 
+
+/// <summary>
+/// Follows a filepath and gets its the extent number of the object pointed to by that path.
+/// </summary>
+/// <param name="reg">The registry hive where the path is to be followed.</param>
+/// <param name="__name">The filepath (it may contain forward slashes) to be followed.</param>
+/// <returns>The extent number of the extent at that path, or -1 if the path does not exist, and 1 if you asked for the root folder.</returns>
 int CmFindObjectFromPath(Reghive* reg, const char* __name)
 {
     char name[256];
@@ -766,34 +831,6 @@ int CmFindObjectFromPath(Reghive* reg, const char* __name)
     }
 
     return loc;
-}
-
-void CmDisplayTree(Reghive* reg, int a, int n)
-{
-    while (a > 0) {
-        char nm[50];
-        memset(nm, 0, 50);
-        int type = CmGetNameAndTypeFromExtent(reg, a, nm);
-
-        for (int i = 0; i < n; ++i) kprintf(" ");
-        kprintf("%d = /%s\n", a, nm);
-
-        if (type == EXTENT_DIRECTORY) {
-            CmDisplayTree(reg, CmEnterDirectory(reg, a), n + 4);
-        }
-        a = CmGetNext(reg, a);
-    }
-}
-
-char* CmSplitFinalSlashInPlace(char* str)
-{
-    for (int i = strlen(str) - 1; i; --i) {
-        if (str[i] == '/') {
-            str[i] = 0;
-            return str + i + 1;
-        }
-    }
-    return NULL;
 }
 
 #pragma GCC diagnostic pop
