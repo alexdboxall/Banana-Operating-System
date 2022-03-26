@@ -385,10 +385,6 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 		bool release = !(buttons & 1) && (previousButtons & 1);
 
 		for (int y = 1; y < movingWin->height - 1; ++y) {
-			if (!(y & 7)) {
-				//rangeRefresh(oldY - moveBaseY + y, oldY - moveBaseY + y + 1, oldX - moveBaseX + 1, oldX - moveBaseX + movingWin->width);
-			}
-
 			for (int x = 1; x < movingWin->width - 1; ++x) {
 				if (!((x + y) & 63) && !(y & 7)) {
 					if (oldX - moveBaseX + x >= 0 && oldX - moveBaseX + x < ctxt->width) rangeRefresh(oldY - moveBaseY + y, oldY - moveBaseY + y + 1, oldX - moveBaseX + x, oldX - moveBaseX + x + 1);
@@ -413,11 +409,19 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 					ox2 = ctxt->width - ox1;
 					if (ox2 < 0) ox2 = 0;
 				}
-				rangeRefresh(oldY - moveBaseY, oldY - moveBaseY + 1, ox1, ox1 + ox2);
-				rangeRefresh(oldY - moveBaseY + movingWin->height - 1, oldY - moveBaseY + movingWin->height, ox1, ox1 + ox2);
+				rangeRefresh(oldY - moveBaseY, oldY - moveBaseY + 2, ox1, ox1 + ox2);
+				rangeRefresh(oldY - moveBaseY + movingWin->height - 2, oldY - moveBaseY + movingWin->height, ox1, ox1 + ox2);
 
-				if (mouseY - moveBaseY < ctxt->height) ctxt->screen->putrect(x1, mouseY - moveBaseY, x2, 1, 0);
-				if (mouseY - moveBaseY + movingWin->height - 1 < ctxt->height) ctxt->screen->putrect(x1, mouseY - moveBaseY + movingWin->height - 1, x2, 1, 0);
+				if (mouseY - moveBaseY < ctxt->height) {
+					ctxt->screen->putrect(x1, mouseY - moveBaseY, x2, 1, 0);
+					ctxt->screen->putrect(x1, mouseY - moveBaseY + 1, x2, 1, 0xFFFFFF);
+				}
+				if (mouseY - moveBaseY + movingWin->height - 1 < ctxt->height) {
+					ctxt->screen->putrect(x1, mouseY - moveBaseY + movingWin->height - 1, x2, 1, 0);
+				}
+				if (mouseY - moveBaseY + movingWin->height - 2 < ctxt->height) {
+					ctxt->screen->putrect(x1, mouseY - moveBaseY + movingWin->height - 2, x2, 1, 0xFFFFFF);
+				}
 			}
 		}
 
@@ -467,10 +471,18 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 				rangeRefresh(movingWin->ypos + oldH, movingWin->ypos + 1 + oldH, 0, movingWin->xpos + oldW);
 				if (movingWin->ypos + newH < ctxt->height) ctxt->screen->putrect(0, movingWin->ypos + newH, newW + movingWin->xpos, 1, 0);
 			} else {
-				rangeRefresh(movingWin->ypos, movingWin->ypos + 1, movingWin->xpos, movingWin->xpos + oldW);
-				if (movingWin->ypos < ctxt->height) ctxt->screen->putrect(movingWin->xpos, movingWin->ypos, newW, 1, 0);
-				rangeRefresh(movingWin->ypos + oldH, movingWin->ypos + 1 + oldH, movingWin->xpos, movingWin->xpos + oldW);
-				if (movingWin->ypos + newH < ctxt->height) ctxt->screen->putrect(movingWin->xpos, movingWin->ypos + newH, newW, 1, 0);
+				rangeRefresh(movingWin->ypos, movingWin->ypos + 2, movingWin->xpos, movingWin->xpos + oldW);
+
+				if (movingWin->ypos < ctxt->height) {
+					ctxt->screen->putrect(movingWin->xpos, movingWin->ypos, newW, 1, 0);
+					ctxt->screen->putrect(movingWin->xpos, movingWin->ypos + 1, newW, 1, 0xFFFFFF);
+				}
+
+				rangeRefresh(movingWin->ypos + oldH - 1, movingWin->ypos + 1 + oldH, movingWin->xpos, movingWin->xpos + oldW);
+				if (movingWin->ypos + newH < ctxt->height) {
+					ctxt->screen->putrect(movingWin->xpos, movingWin->ypos + newH, newW, 1, 0);
+					ctxt->screen->putrect(movingWin->xpos, movingWin->ypos + newH - 1, newW, 1, 0xFFFFFF);
+				}
 			}
 		}
 

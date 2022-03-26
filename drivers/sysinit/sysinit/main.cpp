@@ -1687,7 +1687,7 @@ char passwhash[80];*/
 
         if (firstTimeEnteringTimezone) {
             firstTimeEnteringTimezone = false;
-            tzsel = 59;
+            tzsel = 57;
             scroll = 48;
         }
 
@@ -2011,7 +2011,7 @@ void begin(void* a)
     }
     delete f;
 
-    KeIsPreemptionOn = true;
+    keIsPreemptionOn = true;
 
     if (firstTime) {
 

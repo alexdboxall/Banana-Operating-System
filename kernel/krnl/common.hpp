@@ -12,12 +12,10 @@
 #include <krnl/kheap.hpp>
 #include <krnl/terminal.hpp>
 #include <krnl/computer.hpp>
-#include <dbg/kconsole.hpp>
-
-extern "C" {
-#include "libk/string.h"
-}
-
 #include <krnl/bootmsg.hpp>
+
+#include <dbg/kconsole.hpp>
+#include <libk/string.h>
+
 
 #endif

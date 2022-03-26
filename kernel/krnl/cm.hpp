@@ -28,44 +28,47 @@
 
 #define EXTENT_STRING           0xC1
 
-
+/// <summary>
+/// An registry hive object obtained by opening a registry file.
+/// Should be created with CmOpen, and closed with CmClose
+/// </summary>
 typedef struct Reghive_Tag {
-    File* f;
-    bool valid;
+    File* f;                    // the registry file. this remains open until CmClose is called
+    bool valid;                 // whether or not this objects is valid
     
-    struct Header {
-        char sig[8];
-        uint32_t numExtents;
-        uint8_t reserved[31];
-    } header;
+    struct Header {             // the header of the file
+        char sig[8];            // signature, must be "REGISTRY"
+        uint32_t numExtents;    // the total number of extents in the hive currently
+        uint8_t reserved[31];   // unused
+    } header;                   
         
 } Reghive;
 
 typedef struct Extent_Tag {
-    uint32_t type : 8;
-    uint32_t next : 24;
+    uint32_t type : 8;          // the type of extent
+    uint32_t next : 24;         // a reference to the next extent in this folder
         
     union {
         struct {
             uint8_t data[39];
-        } x;
+        } x;                    // string data
         
         struct {
             uint8_t name[18];
             uint8_t extents[21];
-        } s;
+        } s;                    // string header
     
         struct {
             uint8_t name[18];
             uint64_t data;
             
-        } i;
+        } i;                    // integers
         
         struct {
             uint8_t name[18];
-            uint32_t start : 24;
+            uint32_t start : 24;    // the extent of the first sub-extent in the directory
             uint32_t : 8;
-        } d;
+        } d;                    // directory
     };
     
 } Extent;
@@ -92,8 +95,6 @@ int CmGetNameAndTypeFromExtent(Reghive* reg, int extnum, char* name);
 int CmConvertFromInternalFilename(const uint8_t* in, char* out);
 void CmGetInteger(Reghive* reg, int extnum, uint64_t* i);
 void CmSetInteger(Reghive* reg, int extnum, uint64_t i);
-char* CmSplitFinalSlashInPlace(char* str);
 int CmCreateDirectory(Reghive* reg, int parent, const char* name);
-void CmDisplayTree(Reghive* reg, int a, int n);
 
 #pragma pack(pop)

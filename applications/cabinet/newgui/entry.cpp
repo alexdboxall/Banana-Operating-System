@@ -17,12 +17,12 @@ void drawIcon(int pos, struct dirent* entry)
     int windowWidth = rootWindow->getWidth();
     int windowHeight = rootWindow->getHeight();
 
-    int iconsWide = windowWidth / gridSizeW;
+    int iconsWide = (windowWidth - 35) / gridSizeW;
 
     int gridX = pos % iconsWide;
     int gridY = pos / iconsWide;
 
-    int pixelX = gridX * gridSizeW + 30;
+    int pixelX = gridX * gridSizeW + 20;
     int pixelY = gridY * gridSizeH + 50;
 
     char displayName[300];
@@ -92,7 +92,7 @@ void changeDirectory(char* dir)
 extern "C" int main(int argc, char** argv) {
     createSystemBrushes();
 
-    rootWindow = new NTopLevel("Cabinet", 600, 400, WIN_FLAGS_DEFAULT_0 | WIN_FLAGS_0_HIDDEN | WIN_FLAGS_0_PRETTY);
+    rootWindow = new NTopLevel("Cabinet", 600, 400, WIN_FLAGS_DEFAULT_0 | WIN_FLAGS_0_HIDDEN | WIN_FLAGS_0_HIDE_ON_INVALIDATE | WIN_FLAGS_0_PRETTY);
     rootWindow->paintHandlerHook = handlePaint;
     rootWindow->initialise();
 
