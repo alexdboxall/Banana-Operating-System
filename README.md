@@ -2,6 +2,8 @@
 Banana is a 32-bit graphical hobby operating system (OS) written for x86 and x86-64 comptuers, written in C and C++, which can be ran on real hardware. The kernel is pre-emptive and supports loading ELF drivers and modules from the disk.
 It comes with an installer which can be run from floppies or a CD-ROM.
 
+It comes with a number of built in applications, such as minesweeper, a photo viewer and solitaire.
+
 Released under the Creative Commons Attribution-NonCommercial 4.0 International license.
 See LICENSE and COPYRIGHT for the license and copyright notices. No warranties.
 
