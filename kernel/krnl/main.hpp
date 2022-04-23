@@ -76,8 +76,6 @@ constexpr size_t VIRT_RECURSIVE_SPOT_2			= 0x2C00000 + VIRT_KERNEL_BASE;
 
 constexpr size_t VIRT_DMA_MEMORY_1				= VIRT_LOW_MEGS + PHYS_DMA_MEMORY_1;
 constexpr size_t SIZE_DMA_MEMORY_1				= 0x10000;
-constexpr size_t VIRT_DMA_MEMORY_2				= VIRT_LOW_MEGS + PHYS_DMA_MEMORY_2;
-constexpr size_t SIZE_DMA_MEMORY_2				= 0x20000;
 
 constexpr size_t VIRT_KRNL_PAGE_DIRECTORY		= VIRT_LOW_MEGS + PHYS_KRNL_PAGE_DIRECTORY;
 

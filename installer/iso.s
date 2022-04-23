@@ -356,7 +356,6 @@ ResetScreen:
 
 
 notFake:
-
 	mov [blkcnt - D_OFFSET], word 1			;read one sector from the CDROM
 	mov [db_add - D_OFFSET], word 0x7000			;stick it at 0x8000:0
 	mov [db_seg - D_OFFSET], word 0
@@ -381,6 +380,7 @@ notFake:
 
 	;mov eax, 0x1A
 
+	mov eax, 0x803A
 	inc eax			;do not overwrite the already loaded in sectors
 	mov [d_lba  - D_OFFSET], dword eax 		;the HDD image is stored at sector 60 on the CDROM
 
@@ -388,7 +388,7 @@ notFake:
 	mov ah, 0x42		; AL is unused
 	mov al, 0
 	mov dl, [driveNumber - D_OFFSET]		; drive number 0 (OR the drive # with 0x80)
-	;int 0x13
+	int 0x13
 	jc short $
 
 	mov [db_add - D_OFFSET], word 0x8400			;stick it at 0x8000:0
@@ -1055,7 +1055,6 @@ OFFSET_A dd 0
 OFFSET_B dd 0
 
 Stage5:
-	
 	cmp [OFFSET_A], dword 0
 	je .p1
 	jmp .p2
@@ -1065,9 +1064,6 @@ Stage5:
 	mov cx , 12				;must include null terminator
 	mov [cdReturnSpot], byte 0
 	call readFromCD
-	mov ebx, 0xDDDDEEEE
-	jmp $
-
 	jmp Stage55
 
 .p2:
@@ -1166,9 +1162,6 @@ Stage55:
 
 	push word 0x0
 	push word 0xC000	;0xC000
-
-	mov eax, 0xABCDDCBA
-	jmp $
 
 	retf
 

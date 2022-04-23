@@ -336,9 +336,13 @@ void redrawIcon(int id)
 
 	uint32_t textBg = (redAvg << 16) | (grnAvg << 8) | bluAvg;
 	uint32_t textFg = (redAvg + grnAvg + bluAvg < 128 * 3) ? 0xFFFFFF : 0x000000;
+	uint32_t textFg2 = (redAvg + grnAvg + bluAvg < 128 * 3) ? 0x000000 : 0xFFFFFF;
 
-	Context_fill_rect(desktopContext, files[id].textX - 1, files[id].textY - 1, files[id].boundW + 2, files[id].boundH + 2, selected ? 0x000080 : textBg);
-	Context_draw_text(desktopContext, drawname, files[id].textX, files[id].textY, selected ? 0xFFFFFF : textFg);
+	//Context_fill_rect(desktopContext, files[id].textX - 1, files[id].textY - 1, files[id].boundW + 2, files[id].boundH + 2, selected ? 0x000080 : textBg);
+	//Context_draw_text(desktopContext, drawname, files[id].textX, files[id].textY, selected ? 0xFFFFFF : textFg);
+
+	Context_draw_text(desktopContext, drawname, files[id].textX + 1, files[id].textY + 1, textFg2);
+	Context_draw_text(desktopContext, drawname, files[id].textX, files[id].textY, textFg);
 
 	NLoadedBitmap* ico = files[id].bmp;
 	int baseX = files[id].iconX;

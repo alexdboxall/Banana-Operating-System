@@ -1,4 +1,4 @@
-D:
+C:
 
 cd C:/Users/alex/Desktop/Banana/kernel
 nasm -O0 -f bin boot/FIRMWARE.ASM -o FIRMWARE.LIB -w+orphan-labels -i boot/ || pause

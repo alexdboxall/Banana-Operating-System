@@ -24,10 +24,9 @@ protected:
 	int getHeight();
 
 public:
-	NImageViewer(int x, int y, NTopLevel* context, NLoadedBitmap* bmp);
-	NImageViewer(int x, int y, NRegion* context, NLoadedBitmap* bmp);
-
-	NImageViewer(int x, int y, Context* context, NLoadedBitmap* bmp);
+	NImageViewer(int x, int y, NTopLevel* context, NLoadedBitmap* bmp, int width, int height);
+	NImageViewer(int x, int y, NRegion* context, NLoadedBitmap* bmp, int width, int height);
+	NImageViewer(int x, int y, Context* context, NLoadedBitmap* bmp, int width, int height);
 	~NImageViewer();
 };
 

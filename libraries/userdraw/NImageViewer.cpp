@@ -30,18 +30,18 @@ int NImageViewer::getHeight()
     return bmp->height;
 }
 
-NImageViewer::NImageViewer(int x, int y, NTopLevel* context, NLoadedBitmap* bmp) : NImageViewer(x, y, context->getContext(), bmp)
+NImageViewer::NImageViewer(int x, int y, NTopLevel* context, NLoadedBitmap* bmp, int width, int height) : NImageViewer(x, y, context->getContext(), bmp, width, height)
 {
 
 }
 
-NImageViewer::NImageViewer(int x, int y, NRegion* context, NLoadedBitmap* bmp) : NImageViewer(x, y, context->getContext(), bmp)
+NImageViewer::NImageViewer(int x, int y, NRegion* context, NLoadedBitmap* bmp, int width, int height) : NImageViewer(x, y, context->getContext(), bmp, width, height)
 {
 
 }
 
-NImageViewer::NImageViewer(int x, int y, Context* context, NLoadedBitmap* _bmp) :
-	NRegion(x, y, getWidth(), getHeight(), context)
+NImageViewer::NImageViewer(int x, int y, Context* context, NLoadedBitmap* _bmp, int width, int height) :
+	NRegion(x, y, width, height, context)
 {
     bmp = _bmp;
 	paintHandler = standardImageViewerHandler;

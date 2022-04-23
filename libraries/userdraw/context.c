@@ -597,21 +597,36 @@ void Context_draw_bitmap(Context* context, uint32_t* data, int x, int y, int w, 
     }
 }
 
+int getWidthOfDefaultCharacter(char c)
+{
+    switch (c) {
+    case ' ': return 6;
+    case '!': return 7;
+    case '.': return 4;
+    case ',': return 6;
+    case '\'': return 6;
+    case '`': return 7;
+    case ':': return 7;
+    case 'l': return 4;
+    case 'i': return 4;
+    case '|': return 7;
+    case 'x': return 7;
+    case 'r': return 7;
+    case 'a': return 7;
+    case 'y': return 7;
+    case 'o': return 7;
+    case 'e': return 7;
+    default:
+        return 8;
+    }
+}
+
 //Draw a line of text with the specified font color at the specified coordinates
 void Context_draw_text(Context* context, char* string, int x, int y, uint32_t color) {
 
     for (int i = 0; string[i]; ++i) {
         Context_draw_char(context, string[i], x - (string[i] == '.' || string[i] == 'i' || string[i] == 'l'), y, color);
-        if (string[i] == ' ')      x += 6;
-        else if (string[i] == '!') x += 7;
-        else if (string[i] == '.') x += 4;
-        else if (string[i] == ',') x += 6;
-        else if (string[i] == '\'') x += 6;
-        else if (string[i] == '`') x += 7;
-        else if (string[i] == 'l') x += 7;
-        else if (string[i] == 'i') x += 7;
-        else if (string[i] == '|') x += 7;
-        else x += 8;
+        x += getWidthOfDefaultCharacter(string[i]);
     }
 }
 
@@ -620,16 +635,7 @@ void Context_bound_text(Context* context, char* string, int* xx, int* y)
 {
     int x = 0;
     for (int i = 0; string[i]; ++i) {
-        if (string[i] == ' ')      x += 6;
-        else if (string[i] == '!') x += 7;
-        else if (string[i] == '.') x += 4;
-        else if (string[i] == ',') x += 6;
-        else if (string[i] == '\'') x += 6;
-        else if (string[i] == '`') x += 7;
-        else if (string[i] == 'l') x += 7;
-        else if (string[i] == 'i') x += 7;
-        else if (string[i] == '|') x += 7;
-        else x += 8;
+        x += getWidthOfDefaultCharacter(string[i]);
     }
 
     *xx = x;

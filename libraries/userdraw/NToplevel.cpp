@@ -132,7 +132,7 @@ NTopLevel::NTopLevel(const char* nam, int width, int height, int flags)
     w = width;
     h = height;
 
-    name = (char*) malloc(strlen(nam + 1));
+    name = (char*) malloc(strlen(nam) + 1);
     strcpy(name, nam);
 
     nxw = NxCreateWindow(w, h, name, flags);

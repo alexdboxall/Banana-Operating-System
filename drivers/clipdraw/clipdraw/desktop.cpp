@@ -540,7 +540,8 @@ void NIDesktop::handleMouse(int xdelta, int ydelta, int buttons, int z)
 
 			lastClick = milliTenthsSinceBoot;
 
-		} else if (!movingWin) {
+		} 
+		if (!movingWin && !(previousButtons & 1)) {
 			if (mouseY - clickon->ypos > clickon->height - 15 && !clickon->fullscreen && !(clickon->flags[0] & WIN_FLAGS_0_NO_RESIZE)) {
 				movingWin = clickon;
 				movingType = MOVE_TYPE_RESIZE_B;

@@ -13,13 +13,25 @@
 
 #define STATE_FREE false
 #define STATE_ALLOCATED true
+#define DMA_BLOCK_SIZE 4096
+
+/*
+PUBLIC:
+void			PmInitialise();
+PhysicalAddr	PmAllocatePage();
+PhysicalAddr	PmAllocateContiguousPages(int count);
+PhysicalAddr	PmAllocatePagesForDMA(int count);
+size_t			PmGetTotalUsedBytes();
+size_t			PmGetTotalFreeBytes();
+void			PmFreePage(PhysicalAddr addr);
+
+PRIVATE:
+PhysicalAddr	PmAllocateContiguousPagesWithConstraints(PhysicalAddr minAddr, PhysicalAddr maxAddr, int num, bool mayCross64KBoundary);
+*/
 
 namespace Phys
 {
-	//SHOULD BE A MULTIPLE OF 4096
-#define DMA_BLOCK_SIZE 4096
-
-	uint8_t dmaUsage[(SIZE_DMA_MEMORY_1/* + SIZE_DMA_MEMORY_2*/) / DMA_BLOCK_SIZE];
+	uint8_t dmaUsage[SIZE_DMA_MEMORY_1 / DMA_BLOCK_SIZE];
 
 	size_t allocateDMA(size_t size)
 	{
@@ -58,14 +70,13 @@ namespace Phys
 					if (startSeg < SIZE_DMA_MEMORY_1 / 65536) {
 						return VIRT_DMA_MEMORY_1 + start * DMA_BLOCK_SIZE;
 					} else {
-						KePanic("UH OH! NO MORE DMA RAM! physmgr.cpp!");
-						//return VIRT_DMA_MEMORY_2 + (start - SIZE_DMA_MEMORY_1 / DMA_BLOCK_SIZE) * DMA_BLOCK_SIZE;
+						KePanic("DMA RAM EXHAUSTED");
 					}
 				}
 			}
 		}
 
-		KePanic("UH OH! NO MORE DMA RAM! physmgr.cpp!");
+		KePanic("DMA RAM EXHAUSTED");
 
 		return 0;
 	}
@@ -75,23 +86,12 @@ namespace Phys
 		int blocks = (size + DMA_BLOCK_SIZE - 1) / DMA_BLOCK_SIZE;
 		usedPages -= (size + 4095) / 4096;
 
-		/*if (addr >= VIRT_DMA_MEMORY_2) {
-			addr -= VIRT_DMA_MEMORY_2;
-			addr /= DMA_BLOCK_SIZE;
-			addr += SIZE_DMA_MEMORY_1 / DMA_BLOCK_SIZE;
+		addr -= VIRT_DMA_MEMORY_1;
+		addr /= DMA_BLOCK_SIZE;
 
-		} else {*/
-			addr -= VIRT_DMA_MEMORY_1;
-			addr /= DMA_BLOCK_SIZE;
-
-		/*}*/
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Warray-bounds"
 		for (int i = 0; i < blocks; ++i) {
 			dmaUsage[addr + i] = 0;
 		}
-#pragma GCC diagnostic pop
 	}
 
 	int usablePages = 0;
@@ -155,18 +155,6 @@ namespace Phys
 				currentPagePointer = 0;
 			}
 			if (currentPagePointer == first) {
-				static bool fiftyFifty = false;
-				fiftyFifty ^= true;
-
-				if (fiftyFifty) {
-					/*size_t dma = allocateDMA(4096);
-					if (dma) {
-						kprintf("allocated DMA memory instead.\n");
-						kprintf("allocated page %d / %d. 0x%X\n", usedPages, usablePages, dma);
-						return dma;
-					}*/
-				}
-
 				size_t evict = currentTaskTCB->processRelatedTo->vas->scanForEviction();
 				if (evict) {
 					++usedPages;
@@ -267,7 +255,6 @@ namespace Phys
 				//stop the search if we're accessing memory above 4GB (in 32 bit mode)
 				//(I'm not sure the memory bitmap handles any more than 4GB, I'll have to check,
 				// otherwise we'll get Win9x style errors with 'too much RAM'
-
 				break;
 			}
 
@@ -315,16 +302,14 @@ namespace Phys
 		}
 		usablePages += 32;
 
-		if (1) {
-			for (int i = 0x140000 / 0x1000; i < 0x1C0000 / 0x1000 && usablePages < 1024; ++i) {
-				setPageState(i, STATE_FREE);
-				usablePages++;
-			}
+		for (int i = 0x140000 / 0x1000; i < 0x1C0000 / 0x1000 && usablePages < 1024; ++i) {
+			setPageState(i, STATE_FREE);
+			usablePages++;
+		}
 
-			for (int i = 0x1D0000 / 0x1000; i < 0x1E0000 / 0x1000 && usablePages < 2048; ++i) {
-				setPageState(i, STATE_FREE);
-				usablePages++;
-			}
+		for (int i = 0x1D0000 / 0x1000; i < 0x1E0000 / 0x1000 && usablePages < 2048; ++i) {
+			setPageState(i, STATE_FREE);
+			usablePages++;
 		}
 	}
 }
