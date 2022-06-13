@@ -61,6 +61,7 @@ void playThread(void* __);
 void start(Device* _dvl)
 {
 	KeSetBootMessage("Starting AC97 driver...");
+	return;
 
 	Device* driverless = _dvl;
 	Device* parent = driverless->getParent();
@@ -121,7 +122,8 @@ void playThread(void* __)
 		port->buffer8(buf, bytesRead);
 	}
 
-	terminateTask(0);
+	KePanic("TODO: terminateTask");
+	//terminateTask(0);
 }
 
 AC97::AC97(): SoundCard("Intel AC'97 Audio Device")

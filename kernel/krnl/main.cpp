@@ -69,7 +69,7 @@ void KeFirstTask()
 
 	// Hand over control to the login task
 	KeSetBootMessage("Getting ready...");
-	Thr::executeDLL(Thr::loadDLL("C:/Banana/System/system.dll"), computer);
+	KeLoadAndExecuteDriver("C:/Banana/System/system.dll", computer);
 
 	// This thread now does not do anything actively
 	while (1) {

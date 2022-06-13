@@ -60,6 +60,7 @@ int16_t buf2[4096];
 void sb16Demo(void* __)
 {
 	unlockScheduler();
+	while (1);
 
 	SoundCard* card = (SoundCard*) __;
 
@@ -104,7 +105,8 @@ void sb16Demo(void* __)
 		}
 	}
 
-	terminateTask(0);
+	KePanic("sb16 TERMINATE TASK");
+	//terminateTask(0);
 }
 
 char badVer[] = "BAD Soundblaster version, got 0x%X\n";

@@ -31,6 +31,7 @@ void begin(void* s)
 {
 	kprintf("begin ACPICA. s = 0x%X\n", s);
 	kprintf("a.\n");
+	kprintf("begin = 0x%X\n", begin);
 	kprintf("start = 0x%X\n", start);
 	kprintf("acpiGlobalEventHandler = 0x%X\n", acpiGlobalEventHandler);
 
@@ -372,6 +373,7 @@ void acpicaSleep()
 
 void acpicaShutdown()
 {
+	kprintf("acpicaShutdown\n");
 	ACPI_STATUS a = AcpiEnterSleepStatePrep(5);
 	if (a != AE_OK) {
 		return;
@@ -387,8 +389,6 @@ void acpicaRestart()
 
 void start(void* xxa)
 {
-	kprintf(nullptr);
-
 	ACPI* ths = (ACPI*) xxa;
 
 	kprintf("ACPICA init.\n");

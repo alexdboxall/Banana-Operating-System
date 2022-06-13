@@ -65,21 +65,6 @@ namespace Thr
 
 	} ELFSectionHeader32;
 
-	typedef struct ELFSectionHeader64
-	{
-		uint32_t sh_name;
-		uint32_t sh_type;
-		uint64_t sh_flags;
-		uint64_t sh_addr;
-		uint64_t sh_offset;
-		uint64_t sh_size;
-		uint32_t sh_link;
-		uint32_t sh_info;
-		uint64_t sh_addalign;
-		uint64_t sh_entsize;
-
-	} ELFSectionHeader64;
-
 	typedef struct ELFProgramHeader32
 	{
 		uint32_t type;
@@ -92,20 +77,6 @@ namespace Thr
 		uint32_t padding;
 
 	} ELFProgramHeader32;
-
-	typedef struct ELFProgramHeader64
-	{
-		uint32_t type;
-		uint32_t flags;
-		uint64_t p_offset;
-		uint64_t p_vaddr;
-		uint64_t reserved;
-		uint64_t p_filsz;
-		uint64_t p_memsz;
-		uint64_t padding;
-		//uint64_t padding2;
-
-	} ELFProgramHeader64;
 
 	typedef struct ELFHeader
 	{
@@ -162,16 +133,13 @@ namespace Thr
 	bool allocateMemoryForTask(Process* prcss, File* file, size_t size, size_t virtualAddr, size_t additionalNullBytes);
 	bool loadProgramIntoMemory(Process* p, const char* filename);
 
-	bool loadDriverIntoMemory(const char* filename, size_t address, bool critical = true);
 	bool loadKernelSymbolTable(const char* filename);
 	size_t getAddressOfKernelSymbol(const char* name);
-
-	size_t loadDLL(const char* name, bool critical = true);
-	void executeDLL(size_t startAddr, void* parentDevice);
-
-	char* getDriverNameFromAddress(size_t addr);
-	size_t getDriverOffsetFromAddress(size_t addr);
-	size_t getDriverBaseFromAddress(size_t addr);
 }
+
+size_t KeLoadELF(uint8_t* data, bool relocate, size_t relocationPoint);
+size_t KeLoadDriver(const char* filepath);
+void KeExecuteDriver(size_t startAddr, void* parentDevice);
+bool KeLoadAndExecuteDriver(const char* filepath, void* parentDevice, bool critical = false);
 
 #endif

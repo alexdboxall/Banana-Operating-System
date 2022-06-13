@@ -107,6 +107,10 @@ namespace Phys
 
 		bitmap[byteNum] &= ~(1 << bitNum);
 		bitmap[byteNum] |= (((int) state) << bitNum);
+
+		if (state == STATE_FREE) {
+			//kprintf("allowing you to use page %d\n", pageNum);
+		}
 	}
 
 	bool getPageState(size_t pageNum)
@@ -151,6 +155,9 @@ namespace Phys
 			}
 
 			++currentPagePointer;
+			if (currentPagePointer < 0 || currentPagePointer > 1024 * 1024) {
+				KePanic("SHIT");
+			}
 			if (currentPagePointer == 1024 * 1024) {
 				currentPagePointer = 0;
 			}
@@ -230,6 +237,9 @@ namespace Phys
 		highestUsedAddr = ((uint32_t) (highestUsedAddr / 4096)) * 4096 + 4096;
 		kprintf("highestUsedAddr = 0x%X\n", highestUsedAddr);
 
+		if (SIZE_PHYS_PAGE_BITMAP * 8 != 1024 * 1024) {
+			KePanic("ASSERT FAILED physicalMemorySetup");
+		}
 		for (int i = 0; i < SIZE_PHYS_PAGE_BITMAP * 8; ++i) {
 			setPageState(i, STATE_ALLOCATED);
 		}
@@ -291,7 +301,11 @@ namespace Phys
 			ramTable += 3;	//24 bytes / uint64_t = 3
 		}
 
-		//holes in the memory map
+		/*
+		// these all live below 'highestUsedAddr' so they were ignored in the above loop
+		//
+		// TODO: check that these locations really do exist
+		//
 		setPageState(6, STATE_FREE);
 		setPageState(7, STATE_FREE);
 		usablePages += 2;
@@ -310,6 +324,6 @@ namespace Phys
 		for (int i = 0x1D0000 / 0x1000; i < 0x1E0000 / 0x1000 && usablePages < 2048; ++i) {
 			setPageState(i, STATE_FREE);
 			usablePages++;
-		}
+		}*/
 	}
 }

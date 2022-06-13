@@ -293,20 +293,27 @@ syscall_common_stub:
     call int_handler
     add esp, 4
 
-	pop gs
-    pop fs
-    pop es
-    pop ds
-
     call KiCheckSignalZ
     test eax, eax
 	jne doSignals
+
+    ; moved here to work around Virtual x86 bug updating caches on 'call' instructions
+    pop gs
+    pop fs
+    pop es
+    pop ds
 
     popa
     add esp, 8     ; Cleans up the pushed error code and pushed ISR number
     iret
 
 doSignals:
+    ; moved here to work around Virtual x86 bug updating caches on 'call' instructions
+    pop gs
+    pop fs
+    pop es
+    pop ds
+
     mov [currentTaskTCB + 0x8], eax
 
     popa

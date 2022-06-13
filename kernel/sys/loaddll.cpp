@@ -20,7 +20,7 @@
 /// Loading dynamic link libraries or drivers which have already been loaded could cause system instability.
 /// </remark>
 /// <param name="ebx">The filename to load.</param>
-/// <returns>Returns zero on success, or non-zero on failure.</returns>
+/// <returns>Returns zero on success, or non-zero on failure. Note that failure may also be indicated by a system crash.</returns>
 /// 
 uint64_t SysLoadDLL(regs* r)
 {
@@ -46,15 +46,12 @@ uint64_t SysLoadDLL(regs* r)
 
 	//try loading the DLL as a non-critical driver
 	//stange notation here because we are calling the 'other' loadDLL()
-	size_t addr = Thr::loadDLL((char*) r->ebx, false);
+	bool success = KeLoadAndExecuteDriver((char*) r->ebx, computer, false);
 
 	//check for failure
-	if (!addr) {
+	if (success) {
+		return 0;
+	} else {
 		return 4;
 	}
-
-	//execute the DLL
-	Thr::executeDLL(addr, computer);
-
-	return 0;
 }

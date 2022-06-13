@@ -596,7 +596,11 @@ void x86wrmsr(uint32_t msr_id, uint64_t msr_value)
 
 bool HalHandleGeneralProtectionFault(void* rr, void* ctxt)
 {
-	return Vm::faultHandler((regs*) rr);
+	if (currentTaskTCB->vm86Task) {
+		return Vm::faultHandler((regs*) rr);
+	}
+
+	return false;
 }
 
 uint8_t* HalFindRSDP()

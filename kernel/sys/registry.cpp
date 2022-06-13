@@ -18,6 +18,7 @@ extern "C" {
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
+
 /// <summary>
 /// Gets the registry type from a path.
 /// </summary>

@@ -86,6 +86,7 @@ void Video::drawCursor(int mouse_x, int mouse_y, uint32_t* data, int invertMouse
 }
 
 //seriously, override this. This is slower than slow.
+//the clip renderer wants it to be good
 void Video::putrect(int x, int y, int w, int h, uint32_t colour)
 {
 	int maxX = x + w;
@@ -100,10 +101,7 @@ void Video::putrect(int x, int y, int w, int h, uint32_t colour)
 	}
 }
 
-//THIS IS PROBABLY THE MOST CRUCIAL FUNCTION TO GET RIGHT WHEN YOU ARE WRITING A VIDEO DRIVER
 //all images pass through this!
-//SO PLEASE OVERRIDE IT!!!
-//any video driver writer that doesn't implement this should not be writing drivers
 void Video::bitblit(int sx, int sy, int x, int y, int w, int h, int pitch, uint32_t* data)
 {
 	for (int yyy = 0; yyy < h; ++yyy) {
@@ -134,14 +132,9 @@ void Video::blit(uint32_t* buffer, int x, int y, int _width, int _height)
 	}
 }
 
-//this will be even SLOWER! 
 void Video::clearScreen(uint32_t colour)
 {
-	for (int y = 0; y < height; ++y) {
-		for (int x = 0; x < width; ++x) {
-			putpixel(x, y, colour);
-		}
-	}
+	putrect(0, 0, this->width, this->height, colour);
 }
 
 typedef struct
@@ -266,6 +259,7 @@ uint32_t* Video::tgaParse(uint8_t* ptr, int size, int* widthOut, int* heightOut)
 
 void Video::putTGA(int baseX, int baseY, uint8_t* tgaData, int tgaLen)
 {
+
 	int tgaWidth;
 	int tgaHeight;
 	uint32_t* parsed = tgaParse(tgaData, tgaLen, &tgaWidth, &tgaHeight);

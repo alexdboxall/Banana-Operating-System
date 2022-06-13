@@ -426,20 +426,20 @@ int ACPI::open(int mode, int, void*)
 			if (filename) {
 				File* f = new File(filename, kernelProcess);
 				if (f->exists()) {
-					Thr::executeDLL(Thr::loadDLL(filename), dev);
+					KeLoadAndExecuteDriver(filename, dev, false);
 				}
 				delete f;
 			}
 		}
 	}
 
-	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/legacy.sys"), computer);
+	KeLoadAndExecuteDriver("C:/Banana/Drivers/legacy.sys", computer);
 
 	if (RSDTpointer && RSDPpointer) {
 		KeSetBootMessage("Loading the ACPICA driver...");
 		File* f = new File("C:/Banana/Drivers/acpica.sys", kernelProcess);
 		if (f && f->exists()) {
-			Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/acpica.sys"), this);
+			KeLoadAndExecuteDriver("C:/Banana/Drivers/acpica.sys", this);
 		}
 		if (f) {
 			delete f;

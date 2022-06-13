@@ -648,6 +648,7 @@ bool VAS::tryLoadBackOffDisk(size_t faultAddr)
 		*entry |= phys;
 
 		for (int i = 0; i < Virt::swapfileSectorsPerPage; ++i) {
+			kprintf("RELOADING TO HERE: 0x%X\n", ((uint8_t*) faultAddr) + 512 * i);
 			disks[Virt::swapfileDrive - 'A']->read(Virt::swapIDToSector(id) + i, 1, ((uint8_t*) faultAddr) + 512 * i);
 		}
 
@@ -710,7 +711,7 @@ size_t VAS::scanForEviction()
 
 		//now we have an actual page directory, check the pages within
 		size_t* oldEntry = getPageTableEntry(evictionScanner);
-		if ((*oldEntry >> 12) && (*oldEntry & PAGE_SWAPPABLE)/* && (*oldEntry & PAGE_ALLOCATED)*/) {
+		if ((*oldEntry >> 12) && (*oldEntry & PAGE_SWAPPABLE) && (*oldEntry & PAGE_ALLOCATED)) {
 			if (*oldEntry & PAGE_PRESENT) {
 				if (*oldEntry & PAGE_ACCESSED) {
 					*oldEntry &= ~PAGE_ACCESSED;

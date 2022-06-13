@@ -1908,8 +1908,50 @@ retryProductKey:
                 term->setCursor(36, 15); term->puts("Press any key to continue and then");
                 term->setCursor(36, 16); term->puts("enter the product key correctly.");
 
+                /*KeBeep(440, 800, true);
+                milliTenthSleep(2000);
+                KeBeep(330, 800, true);
+                milliTenthSleep(2000);
+                KeBeep(311 / 2, 2000, true);*/
+
+                // G        1
+                // E        1 (but with a Eb in the middle of it) (so like 0.4, 0.2, 0.4)
+                // F        1
+                // E        1
+                //          1
+                // G#       1
+                // A        0.5
+                // low A    4
+
+                KeBeep(392, 600, true);
+                KeBeep(330, 320, true);
+                KeBeep(311, 80, true);
+                KeBeep(330, 320, true);
+                KeBeep(349, 800, true);
+                KeBeep(330, 800, true);
+                milliTenthSleep(8000);
+                KeBeep(415, 600, true);
+                KeBeep(440, 700, true);
+                milliTenthSleep(1000);
+                KeBeep(55, 1200, true);
+
+                /*
+                KeBeep(311, 670, true);
+                milliTenthSleep(1000);
+                KeBeep(262, 670, true);
+                milliTenthSleep(1000);
+                KeBeep(370, 970, true);
+                for (int i = 0; i < 12; ++i) {
+                    KeBeep(370, 76, true);
+                    KeBeep(352, 76, true);
+                }
+                KeBeep(370, 1000, true);
+                milliTenthSleep(1000);
+                KeBeep(370 / 8, 400, true);
+                */
+
                 installKey = 0;
-                milliTenthSleep(4500);
+                milliTenthSleep(500);
                 installKey = 0;
                 
                 while (installKey == 0);

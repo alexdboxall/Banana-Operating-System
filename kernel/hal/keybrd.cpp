@@ -49,13 +49,14 @@ void sendKeyToTerminal(uint8_t code)
 #include "hal/video.hpp"
 #include "thr/prcssthr.hpp"
 #include "thr/elf.hpp"
+#include "thr/elf2.hpp"
 
 void startGUI(void* a)
 {
 	unlockScheduler();
 
-	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/vga.sys"), computer);
-	Thr::executeDLL(Thr::loadDLL("C:/Banana/System/clipdraw.dll"), computer);
+	KeLoadAndExecuteDriver("C:/Banana/Drivers/vga.sys", computer);
+	KeLoadAndExecuteDriver("C:/Banana/System/clipdraw.dll", computer);
 	
 	while (1);
 	KePanic("startGUI returns");
@@ -65,9 +66,9 @@ void startGUIVESA(void* a)
 {
 	unlockScheduler();
 
-	Thr::executeDLL(Thr::loadDLL("C:/Banana/Drivers/vesa.sys"), computer);
-	Thr::executeDLL(Thr::loadDLL("C:/Banana/System/clipdraw.dll"), computer);
-
+	KeLoadAndExecuteDriver("C:/Banana/Drivers/vesa.sys", computer);
+	KeLoadAndExecuteDriver("C:/Banana/System/clipdraw.dll", computer);
+	
 	while (1);
 	KePanic("startGUIVESA returns");
 }

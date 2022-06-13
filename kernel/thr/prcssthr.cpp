@@ -114,6 +114,8 @@ ThreadControlBlock* Process::createThread(void (*where)(void*), void* context, i
 	threads[threadNo].alarm = 0;
 	threads[threadNo].signalStateHandler = (size_t) malloc(256);
 
+	kprintf("NEW THREAD B: 0x%X\n", &threads[threadNo]);
+
 	taskList.addElement(&threads[threadNo]);
 
 	return &threads[threadNo];
@@ -155,7 +157,7 @@ void setupMultitasking(void (*where)())
 	p->threads[0].firstTimeEIP = (size_t) where;
 	p->threads[0].timeKeeping = 0;
 	p->threads[0].processRelatedTo = p;
-	p->threads[0].timeSliceRemaining = 50000000;
+	p->threads[0].timeSliceRemaining = 0;
 	p->threads[0].signalStateHandler = (size_t) malloc(256);
 	p->threads[0].alarm = 0;
 	p->threads[0].guiTask = false;

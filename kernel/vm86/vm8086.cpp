@@ -6,7 +6,7 @@
 #include "hw/cpu.hpp"
 #include <krnl/unaligned.hpp>
 
-#pragma GCC optimize ("O2")
+#pragma GCC optimize ("O0")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
 #pragma GCC optimize ("-fno-align-jumps")
@@ -257,7 +257,7 @@ namespace Vm
 
 	void doISR(regs* r, int irqN, uint8_t* ip, uint16_t ss, uint16_t sp)
 	{
-		uint16_t* ivt = (uint16_t*) (size_t) 0;
+		uint16_t* ivt = (uint16_t*) (size_t) 0;			//whoa!
 		sp -= 6;
 		uint16_t* stack = (uint16_t*) (size_t) realToLinear(ss, sp);
 		r->useresp = (r->useresp - 6) & 0xFFFF;
@@ -281,36 +281,54 @@ namespace Vm
 
 	uint8_t readByteFromReal(uint16_t seg, uint16_t off)
 	{
+		if (seg * 16 + off >= 0x100000) {
+			KePanic("TODO: VM8086 WRAP AROUND / A20");
+		}
 		uint8_t* ptr = (uint8_t*) (size_t) ((uint32_t) seg * 16 + (uint32_t) off);
 		return *ptr;
 	}
 
 	uint16_t readWordFromReal(uint16_t seg, uint16_t off)
 	{
+		if (seg * 16 + off >= 0x100000) {
+			KePanic("TODO: VM8086 WRAP AROUND / A20");
+		}
 		uint16_t* ptr = (uint16_t*) (size_t) ((uint32_t) seg * 16 + (uint32_t) off);
 		return *ptr;
 	}
 
 	uint32_t readDwordFromReal(uint16_t seg, uint16_t off)
 	{
+		if (seg * 16 + off >= 0x100000) {
+			KePanic("TODO: VM8086 WRAP AROUND / A20");
+		}
 		uint32_t* ptr = (uint32_t*) (size_t) ((uint32_t) seg * 16 + (uint32_t) off);
 		return *ptr;
 	}
 
 	void writeByteFromReal(uint16_t seg, uint16_t off, uint8_t byte)
 	{
+		if (seg * 16 + off >= 0x100000) {
+			KePanic("TODO: VM8086 WRAP AROUND / A20");
+		}
 		uint8_t* ptr = (uint8_t*) (size_t) ((uint32_t) seg * 16 + (uint32_t) off);
 		*ptr = byte;
 	}
 
 	void writeWordFromReal(uint16_t seg, uint16_t off, uint16_t byte)
 	{
+		if (seg * 16 + off >= 0x100000) {
+			KePanic("TODO: VM8086 WRAP AROUND / A20");
+		}
 		uint16_t* ptr = (uint16_t*) (size_t) ((uint32_t) seg * 16 + (uint32_t) off);
 		*ptr = byte;
 	}
 
 	void writeDwordFromReal(uint16_t seg, uint16_t off, uint32_t byte)
 	{
+		if (seg * 16 + off >= 0x100000) {
+			KePanic("TODO: VM8086 WRAP AROUND / A20");
+		}
 		uint32_t* ptr = (uint32_t*) (size_t) ((uint32_t) seg * 16 + (uint32_t) off);
 		*ptr = byte;
 	}
@@ -336,7 +354,8 @@ namespace Vm
 			}
 		}*/
 		
-		//kprintf("<%X, %X %X%X%X> ", r->cs * 16 + r->eip, ip, ip[0], ip[1], ip[2]);
+
+		kprintf("<%X (%X, %X), %X %X%X%X> \n\r\n", r->cs * 16 + r->eip, r->cs, r->eip, ip, ip[0], ip[1], ip[2]);
 
 		bool operand32 = false;
 		bool address32 = false;

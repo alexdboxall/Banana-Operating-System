@@ -50,6 +50,7 @@ public:
 	int open(int, int, void*);
 	int close(int, int, void*);
 
+	void putrect(int x, int y, int w, int h, uint32_t colour);
 	void putpixel15(int x, int y, uint32_t colour);
 	void putpixel16(int x, int y, uint32_t colour);
 	void putpixel24(int x, int y, uint32_t colour);

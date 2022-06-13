@@ -98,11 +98,17 @@ void timerHandler(uint32_t milliTenths)
 	//do preemption
 	if (currentTaskTCB->timeSliceRemaining != 0 && keIsPreemptionOn) {
 		if (currentTaskTCB->timeSliceRemaining > 1000) {
-			kprintf("         *** FIXING BAD TIMESLICE LENGTH *** %d\n", currentTaskTCB->timeSliceRemaining);
-			currentTaskTCB->timeSliceRemaining = 1000;
+			if (!currentTaskTCB->vm86Task) {
+				kprintf("         *** FIXING BAD TIMESLICE LENGTH *** %d\n", currentTaskTCB->timeSliceRemaining);
+			}
+			currentTaskTCB->timeSliceRemaining = 1;
 		}
 		bool doPreempt = currentTaskTCB->timeSliceRemaining <= milliTenths;
-		currentTaskTCB->timeSliceRemaining -= milliTenths;
+		if (currentTaskTCB->timeSliceRemaining < milliTenths) {
+			currentTaskTCB->timeSliceRemaining = 0;
+		} else {
+			currentTaskTCB->timeSliceRemaining -= milliTenths;
+		}
 		if (doPreempt) {
 			schedule();
 		}

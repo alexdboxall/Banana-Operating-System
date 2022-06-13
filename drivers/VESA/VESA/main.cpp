@@ -374,6 +374,7 @@ uint32_t VESA::readPixelApprox(int x, int y)
 	} else {
 		KePanic("WRONG BPP (VESA)");
 	}
+	return 0;
 }
 
 inline __attribute__((always_inline)) uint32_t colTo15(uint32_t col)
@@ -416,12 +417,43 @@ void VESA::putpixel16(int x, int y, uint32_t colour)
 
 void VESA::putpixel24(int x, int y, uint32_t colour)
 {
-
+	KePanic("VESA::putpixel24");
 }
 
 void VESA::putpixel32(int x, int y, uint32_t colour)
 {
 	((uint32_t*) vram)[y * pitch + x] = colour;
+}
+
+inline __attribute__((always_inline)) void memset32(void* data, uint32_t value, int count)
+{
+	__asm__ volatile (
+		"rep stosl"
+		:"=D"(data), "=c"(count)
+		: "0"(data), "a"(value), "1"(count)
+		: "memory"
+		);
+}
+
+void VESA::putrect(int x, int y, int w, int h, uint32_t colour)
+{
+	if (ppxptr == &VESA::putpixel32) {
+		int maxX = x + w;
+		int maxY = y + h;
+
+		int ox = x;
+
+		int base = y * pitch;
+
+		uint32_t* vram32 = ((uint32_t*) vram);
+		for (; y < maxY; ++y) {
+			memset32(vram32 + base + x, colour, (maxX - ox));
+			base += pitch;
+		}
+
+	} else {
+		KePanic("VESA::putrect needs 8/16 bit impl.");
+	}
 }
 
 void VESA::putpixel(int x, int y, uint32_t colour)

@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include <udraw/banana.hpp>
 extern "C" {
     #include <unistd.h>
@@ -88,6 +89,20 @@ void changeDirectory(char* dir)
     updateTitlebar();
 }
 
+extern "C" uint64_t SystemCall(size_t, size_t, size_t, size_t);
+
+void handleMouseDown(int mouseX, int mouseY)
+{
+    static uint64_t previousMouseMicrosecond = 0;
+
+    uint64_t mouseClickMicrosecond = SystemCall((size_t) SystemCallNumber::GetUnixTime, 2, 0, 0);
+
+    if (mouseClickMicrosecond - previousMouseMicrosecond < 500000) {
+        changeDirectory("C:/Banana/");
+    }
+
+    previousMouseMicrosecond = mouseClickMicrosecond;
+}
 
 extern "C" int main(int argc, char** argv) {
     createSystemBrushes();
@@ -105,10 +120,16 @@ extern "C" int main(int argc, char** argv) {
         changeDirectory("C:/");
     }
 
+    uint64_t previousMouseDown = 0;
+
     while (1) {        
         NiEvent evnt = rootWindow->process();
 
         switch (evnt.type) {
+        case EVENT_TYPE_MOUSE_DOWN:
+            handleMouseDown(evnt.mouseX, evnt.mouseY);    
+            break;
+
         case EVENT_TYPE_RESIZED:
         case EVENT_TYPE_RESIZE_DOWN:
             rootWindow->defaultEventHandler(evnt);

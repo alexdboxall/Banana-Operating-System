@@ -315,20 +315,22 @@ void disclaimer2(Window* w)
 {
 	windowWriteCol(w, 0, 0, "DANGER!", TCRed);
 	windowWrite(w, 0, 2, "This is software is to be used at the user's own risk.");
-	windowWrite(w, 0, 4, "These risks include, but are not limited to, ");
-	windowWrite(w, 0, 5, "the following:");
-	windowWriteCol(w, 0, 7, "   - Irreversible damage to the computer's hardware", TCBlue);
-	windowWriteCol(w, 0, 8, "   - Irreversible loss of user data", TCBlue);
-	windowWriteCol(w, 0, 9, "   - Fire risks", TCBlue);
-	windowWriteCol(w, 0, 10, "   - Monitor failures, which could lead to fire,", TCBlue);
-	windowWriteCol(w, 0, 11, "     explosions, electrocution, or radiation.", TCBlue);
-	windowWrite(w, 0, 13, "The user must accept the risks to install and/or");
+	windowWrite(w, 0, 4, "Installing Banana will likely cause irreversible data");
+	windowWrite(w, 0, 5, "loss, even on other partitions. Expect that all data");
+	windowWrite(w, 0, 6, "(including files, programs and other operating");
+	windowWrite(w, 0, 7, "systens) on the computer be irreversibly erased.");
+
+	windowWrite(w, 0, 9, "Although they have never happened, it is possible that");
+	windowWrite(w, 0, 10, "the following could occur:");
+	windowWriteCol(w, 0, 11, "   - Irreversible damage to the computer's hardware;", TCBlue);
+	windowWriteCol(w, 0, 12, "     including monitor failures and fire risks", TCBlue);
+	windowWrite(w, 0, 14, "The user must accept the risks to install and/or");
 
 	if (disclaimPart2) {
-		windowWrite(w, 0, 14, "use this software. To accept the risks and install");
-		windowWrite(w, 0, 15, "this software, press ENTER. Otherwise, press ESC.");
+		windowWrite(w, 0, 15, "use this software. To accept the risks and install");
+		windowWrite(w, 0, 16, "this software, press ENTER. Otherwise, press ESC.");
 	} else {
-		windowWrite(w, 0, 14, "use this software.");
+		windowWrite(w, 0, 15, "use this software.");
 	}
 }
 
