@@ -8,13 +8,14 @@
 #include "krnl/physmgr.hpp"
 #include "thr/prcssthr.hpp"
 #include "sys/syscalls.hpp"
+#include "hal/timer.hpp"
 #include "hal/intctrl.hpp"
 #include "hw/acpi.hpp"
 #include "fs/vfs.hpp"
 #include "krnl/kheap.hpp"
 #include <hal/video.hpp>
 
-#pragma GCC optimize ("O0")
+#pragma GCC optimize ("Os")
 
 extern NButton* desktopWindow;
 
@@ -38,17 +39,72 @@ uint8_t ___mouse_data[CURSOR_DATA_SIZE * MAX_CURSOR_TYPES] = {
 	0x40, 0x02, 0x00, 0x00, 0x40, 0x02, 0x00, 0x00, 0x80, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
 // both should be identical save for relX/Y
 Region tightMouseRegionOld;
 Region tightMouseRegionNew;
 
+int cursorOffset = MOUSE_OFFSET_NORMAL;
+
+void loadCursorFile(const char* name)
+{
+	File* f = new File(name, kernelProcess);
+	FileStatus status = f->open(FileOpenMode::Read);
+	if (status != FileStatus::Success) {
+		kprintf("CURSOR LOAD: BAD 1\n");
+		return;
+	}
+
+	uint64_t size;
+	bool dir;
+	f->stat(&size, &dir);
+	int read;
+	uint8_t* curdata = (uint8_t*) malloc(size);
+	f->read(size, curdata, &read);
+	if (read != (int) size) {
+		kprintf("CURSOR LOAD: BAD 2\n");
+		return;
+	}
+
+	int numCursors = size / 260;
+	for (int i = 0; i < numCursors; ++i) {
+		int offset;
+		if (!memcmp(curdata + i * 4, "NRML", 4)) {
+			offset = MOUSE_OFFSET_NORMAL;
+		} else if (!memcmp((char*) curdata + i * 4, "WAIT", 4)) {
+			offset = MOUSE_OFFSET_WAIT;
+		} else if (!memcmp((char*) curdata + i * 4, "TLDR", 4)) {
+			offset = MOUSE_OFFSET_TLDR;
+		} else if (!memcmp((char*) curdata + i * 4, "TEXT", 4)) {
+			offset = MOUSE_OFFSET_TEXT;
+		} else if (!memcmp((char*) curdata + i * 4, "VERT", 4)) {
+			offset = MOUSE_OFFSET_VERT;
+		} else if (!memcmp((char*) curdata + i * 4, "HORZ", 4)) {
+			offset = MOUSE_OFFSET_HORZ;
+		} else if (!memcmp((char*) curdata + i * 4, "HAND", 4)) {
+			offset = MOUSE_OFFSET_HAND;
+		} else {
+			kprintf("CURSOR LOAD: BAD 3\n");
+			break;
+		}
+
+		memcpy(___mouse_data + offset, curdata + numCursors * 4 + i * CURSOR_DATA_SIZE, CURSOR_DATA_SIZE);
+	}
+
+	free(curdata);
+}
+
 void mouseInit(Screen scr)
 {
-	tightMouseRegionOld = createTightCursorRegion(0, 0, (uint32_t*) (___mouse_data + MOUSE_OFFSET_NORMAL));
-	tightMouseRegionNew = createTightCursorRegion(0, 0, (uint32_t*) (___mouse_data + MOUSE_OFFSET_NORMAL));
+	loadCursorFile("C:/Banana/Cursors/STANDARD.CUR");
+
+	cursorOffset = MOUSE_OFFSET_NORMAL;
+
+	tightMouseRegionOld = createTightCursorRegion(0, 0, (uint32_t*) (___mouse_data + cursorOffset));
+	tightMouseRegionNew = createTightCursorRegion(0, 0, (uint32_t*) (___mouse_data + cursorOffset));
+
 }
 
 void hideCursor(Screen scr, int oldX, int oldY, int newX, int newY)
@@ -66,46 +122,44 @@ void hideCursor(Screen scr, int oldX, int oldY, int newX, int newY)
 
 void showCursor(Screen scr)
 {
-	videoDrawCursor(scr, mouseX, mouseY, (uint32_t*) (___mouse_data + MOUSE_OFFSET_NORMAL));
+	videoDrawCursor(scr, mouseX, mouseY, (uint32_t*) (___mouse_data + cursorOffset));
+}
 
-	/*int usableKilobytes = Phys::usablePages * 4;
-	int usedKilobytes = Phys::usedPages * 4;
-	
-	extern void drawVGAChar(int x, int y, int c, int fg, int bg);
+void changeCursor(Screen scr, int newOffset) {
+	cursorOffset = newOffset;
 
-	drawVGAChar(0, 0, '0' + (usedKilobytes / 100000) % 10, 0xFFFFFF, 0x000000);
-	drawVGAChar(1, 0, '0' + (usedKilobytes / 10000) % 10, 0xFFFFFF, 0x000000);
-	drawVGAChar(2, 0, '0' + (usedKilobytes / 1000) % 10, 0xFFFFFF, 0x000000);
-	drawVGAChar(3, 0, '0' + (usedKilobytes / 100) % 10, 0xFFFFFF, 0x000000);
-	drawVGAChar(4, 0, '0' + (usedKilobytes / 10) % 10, 0xFFFFFF, 0x000000);
-	drawVGAChar(5, 0, '0' + (usedKilobytes / 1) % 10, 0xFFFFFF, 0x000000);
-	
-	drawVGAChar(6, 0, '/', 0xFFFFFF, 0x000000);
+	tightMouseRegionOld.relX = mouseX;
+	tightMouseRegionOld.relY = mouseY;
 
-	drawVGAChar(7, 0, '0' + (usableKilobytes / 100000) % 10, 0xFFFFFF, 0x000000);
-	drawVGAChar(8, 0, '0' + (usableKilobytes / 10000) % 10, 0xFFFFFF, 0x000000);
-	drawVGAChar(9, 0, '0' + (usableKilobytes / 1000) % 10, 0xFFFFFF, 0x000000);
-	drawVGAChar(10, 0, '0' + (usableKilobytes / 100) % 10, 0xFFFFFF, 0x000000);
-	drawVGAChar(11, 0, '0' + (usableKilobytes / 10) % 10, 0xFFFFFF, 0x000000);
-	drawVGAChar(12, 0, '0' + (usableKilobytes / 1) % 10, 0xFFFFFF, 0x000000);
-	
-	drawVGAChar(13, 0, ' ', 0xFFFFFF, 0x000000);
-	drawVGAChar(14, 0, 'K', 0xFFFFFF, 0x000000);
-	drawVGAChar(15, 0, 'B', 0xFFFFFF, 0x000000);*/
+	free(tightMouseRegionNew.data);
+	tightMouseRegionNew = createTightCursorRegion(mouseX, mouseY, (uint32_t*) (___mouse_data + cursorOffset));
+
+	Region clearRgn = getRegionDifference(tightMouseRegionOld, tightMouseRegionNew);
+	desktopWindow->repaintCursorRegion(scr, clearRgn);
+
+	free(tightMouseRegionOld.data);
+	tightMouseRegionOld = createTightCursorRegion(mouseX, mouseY, (uint32_t*) (___mouse_data + cursorOffset));
 }
 
 #define DRAG_MODE_NONE		0
 #define DRAG_MODE_MOVE		1
 #define DRAG_RESIZE_BR		2
+#define DRAG_RESIZE_BOTTOM	3
+#define DRAG_RESIZE_RIGHT	4
 
 NFrame* draggingWindow;
 bool startedDragging = false;
 int dragMode;
 
+#define DOUBLE_CLICK_MILLISECONDS	300
+
 #define EDGE_DRAG_REGION_SIZE	12
+#define CORNER_DRAG_REGION_SIZE	20
 
 bool handleMouse(Screen scr, int xDelta, int yDelta, int zDeltaHz, int zDeltaVt, int buttons)
 {
+	static uint64_t previousClickTime;
+
 	bool needsRepaint = false;
 
 	int oldMouseX = mouseX;
@@ -125,7 +179,44 @@ bool handleMouse(Screen scr, int xDelta, int yDelta, int zDeltaHz, int zDeltaVt,
 
 	NFrame* pxOwner = desktopWindow->getPixelOwner(scr, mouseX, mouseY, true);
 
+	bool doubleClick = false;
+	if ((buttons & MOUSE_BUTTON_LEFT) && !(oldButtons & MOUSE_BUTTON_LEFT)) {
+		uint64_t clickDifference = milliTenthsSinceBoot - previousClickTime;
+		doubleClick = (clickDifference < DOUBLE_CLICK_MILLISECONDS * 10);
+		previousClickTime = milliTenthsSinceBoot;
+	}
+
+	if ((buttons & MOUSE_BUTTON_LEFT) && !(oldButtons & MOUSE_BUTTON_LEFT)) {
+		extern void drawVGAChar(int x, int y, int c, int fg, int bg);
+
+		int usableKilobytes = Phys::usablePages * 4;
+		int usedKilobytes = Phys::usedPages * 4;
+
+		drawVGAChar(0, 0, '0' + (usedKilobytes / 100000) % 10, 0xFFFFFF, 0x000000);
+		drawVGAChar(1, 0, '0' + (usedKilobytes / 10000) % 10, 0xFFFFFF, 0x000000);
+		drawVGAChar(2, 0, '0' + (usedKilobytes / 1000) % 10, 0xFFFFFF, 0x000000);
+		drawVGAChar(3, 0, '0' + (usedKilobytes / 100) % 10, 0xFFFFFF, 0x000000);
+		drawVGAChar(4, 0, '0' + (usedKilobytes / 10) % 10, 0xFFFFFF, 0x000000);
+		drawVGAChar(5, 0, '0' + (usedKilobytes / 1) % 10, 0xFFFFFF, 0x000000);
+
+		drawVGAChar(6, 0, '/', 0xFFFFFF, 0x000000);
+
+		drawVGAChar(7, 0, '0' + (usableKilobytes / 100000) % 10, 0xFFFFFF, 0x000000);
+		drawVGAChar(8, 0, '0' + (usableKilobytes / 10000) % 10, 0xFFFFFF, 0x000000);
+		drawVGAChar(9, 0, '0' + (usableKilobytes / 1000) % 10, 0xFFFFFF, 0x000000);
+		drawVGAChar(10, 0, '0' + (usableKilobytes / 100) % 10, 0xFFFFFF, 0x000000);
+		drawVGAChar(11, 0, '0' + (usableKilobytes / 10) % 10, 0xFFFFFF, 0x000000);
+		drawVGAChar(12, 0, '0' + (usableKilobytes / 1) % 10, 0xFFFFFF, 0x000000);
+
+		drawVGAChar(13, 0, ' ', 0xFFFFFF, 0x000000);
+		drawVGAChar(14, 0, 'K', 0xFFFFFF, 0x000000);
+		drawVGAChar(15, 0, 'B', 0xFFFFFF, 0x000000);
+	}
+
 	if (!(buttons & MOUSE_BUTTON_LEFT) && (oldButtons & MOUSE_BUTTON_LEFT)) {
+		if (draggingWindow) {
+			changeCursor(scr, MOUSE_OFFSET_NORMAL);
+		}
 		if (draggingWindow && startedDragging) {
 			draggingWindow->endDragState();
 			needsRepaint = true;
@@ -144,14 +235,34 @@ bool handleMouse(Screen scr, int xDelta, int yDelta, int zDeltaHz, int zDeltaVt,
 			int yOffset = mouseY - pxOwner->getAbsY();
 
 			if (yOffset >= 0 && yOffset < pxOwner->getTitlebarHeight()) {
-				draggingWindow = pxOwner;
-				startedDragging = false;
-				dragMode = DRAG_MODE_MOVE;
 
-			} else if (yOffset >= pxOwner->getHeight() - EDGE_DRAG_REGION_SIZE && xOffset >= pxOwner->getWidth() - EDGE_DRAG_REGION_SIZE) {
+				if (doubleClick) {
+					pxOwner->toggleFullscreen(scr);
+
+				} else if (!pxOwner->isFullscreen()) {
+					draggingWindow = pxOwner;
+					startedDragging = false;
+					dragMode = DRAG_MODE_MOVE;
+				}
+				
+
+			} else if (yOffset >= pxOwner->getHeight() - CORNER_DRAG_REGION_SIZE && xOffset >= pxOwner->getWidth() - CORNER_DRAG_REGION_SIZE) {
 				draggingWindow = pxOwner;
 				startedDragging = false;
 				dragMode = DRAG_RESIZE_BR;
+				changeCursor(scr, MOUSE_OFFSET_TLDR);
+
+			} else if (yOffset >= pxOwner->getHeight() - EDGE_DRAG_REGION_SIZE) {
+				draggingWindow = pxOwner;
+				startedDragging = false;
+				dragMode = DRAG_RESIZE_BOTTOM;
+				changeCursor(scr, MOUSE_OFFSET_VERT);
+
+			} else if (xOffset >= pxOwner->getWidth() - EDGE_DRAG_REGION_SIZE) {
+				draggingWindow = pxOwner;
+				startedDragging = false;
+				dragMode = DRAG_RESIZE_RIGHT;
+				changeCursor(scr, MOUSE_OFFSET_HORZ);
 
 			} else {
 				draggingWindow = nullptr;
@@ -181,12 +292,24 @@ bool handleMouse(Screen scr, int xDelta, int yDelta, int zDeltaHz, int zDeltaVt,
 
 		} else if (dragMode == DRAG_RESIZE_BR) {
 			draggingWindow->setSize(mouseX - oldX, mouseY - oldY);
+
+		} else if (dragMode == DRAG_RESIZE_BOTTOM) {
+			draggingWindow->setSize(oldW, mouseY - oldY);
+
+		} else if (dragMode == DRAG_RESIZE_RIGHT) {
+			draggingWindow->setSize(mouseX - oldX, oldH);
 		}
 
 		needsRepaint = true;
 	}
 
 	showCursor(scr);
+
+	if (needsRepaint) {
+		tightMouseRegionNew.relX = mouseX;
+		tightMouseRegionNew.relY = mouseY;
+		desktopWindow->repaint(scr, tightMouseRegionNew);
+	}
 
 	return needsRepaint;
 }

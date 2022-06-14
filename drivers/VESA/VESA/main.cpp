@@ -437,7 +437,7 @@ inline __attribute__((always_inline)) void memset32(void* data, uint32_t value, 
 
 void VESA::putrect(int x, int y, int w, int h, uint32_t colour)
 {
-	if (ppxptr == &VESA::putpixel32) {
+	if (bpp == 32) {
 		int maxX = x + w;
 		int maxY = y + h;
 

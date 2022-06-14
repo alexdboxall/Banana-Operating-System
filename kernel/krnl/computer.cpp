@@ -36,6 +36,10 @@ Computer::Computer() : Device("Computer")
 	parent = nullptr;
 }
 
+extern "C" {
+#include <libk/math.h>
+}
+
 int Computer::open(int a, int b, void* vas)
 {
 	if (computer != this) {

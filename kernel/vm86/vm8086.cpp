@@ -97,18 +97,6 @@ namespace Vm
 		kernelProcess->vas->mapRange(0x0, 0x0, 256 + 16, PAGE_PRESENT | PAGE_USER | PAGE_WRITABLE);
 	}
 
-	void resetConventionalMemory8086()
-	{
-		return;
-
-		File* f = new File("C:/Banana/conventional.ram", kernelProcess);
-		f->open(FILE_OPEN_READ);
-		int br;
-		f->read(0x100000 + 65536, (void*) 0, &br);
-		f->close();
-		delete f;
-	}
-
 	uint32_t finish8086()
 	{
 		while (1) {
@@ -141,17 +129,8 @@ namespace Vm
 	bool start8086FromBuffer(uint8_t* buffer, int siz, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss)
 	{
 		if (!started8086Yet) {
-			File* f = new File("C:/Banana/conventional.ram", kernelProcess);
-			f->open(FILE_OPEN_WRITE_NORMAL);
-			int br;
-			f->write(0x100000 + 65536, (void*) 0, &br);
-			f->close();
-			delete f;
-
 			started8086Yet = true;
 		}
-
-		resetConventionalMemory8086();
 
 		while (1) {
 			lockScheduler();
@@ -185,19 +164,9 @@ namespace Vm
 	bool start8086(const char* filename, uint16_t ip, uint16_t cs, uint16_t sp, uint16_t ss)
 	{
 		if (!started8086Yet) {
-			File* f = new File("C:/Banana/conventional.ram", kernelProcess);
-			f->open(FILE_OPEN_WRITE_NORMAL);
-			int br;
-			uint8_t zero = 0;
-			f->write(0x100000 + 65536, (void*) 0, &br);
-			f->close();
-			delete f;
-
 			started8086Yet = true;
 		}
 		
-		resetConventionalMemory8086();
-
 		kprintf("started vm8086 with filename: %s\n", filename);
 		while (1) {
 			lockScheduler();
@@ -353,9 +322,8 @@ namespace Vm
 				}
 			}
 		}*/
-		
 
-		kprintf("<%X (%X, %X), %X %X%X%X> \n\r\n", r->cs * 16 + r->eip, r->cs, r->eip, ip, ip[0], ip[1], ip[2]);
+		//kprintf("<%X (%X, %X), %X %X%X%X> \n\r\n", r->cs * 16 + r->eip, r->cs, r->eip, ip, ip[0], ip[1], ip[2]);
 
 		bool operand32 = false;
 		bool address32 = false;

@@ -655,11 +655,14 @@ void createUser(const char* name)
     copytree("C:/Banana/Registry/DefaultUser", path);
 }
 
+#define BACKGROUND_COLOUR VgaColour::LightGrey
+#define SHADOW_COLOUR     VgaColour::DarkGrey
+
 VgaText* term;
 bool showSidebar = true;
 void drawBootScreen()
 {
-    term->setDefaultBgColour(safemode ? VgaColour::Black : VgaColour::Cyan);
+    term->setDefaultBgColour(safemode ? VgaColour::Black : BACKGROUND_COLOUR);
     term->setDefaultFgColour(VgaColour::Black);
     term->clearScreen();
     term->setTitle("");
@@ -706,12 +709,12 @@ void drawBasicWindowX(int wx, int wy, int ww, int wh, const char* wtitle, bool g
 
     term->setCursor(wx + 1, wy + wh);
     for (int x = 0; x < ww; ++x) {
-        term->putchar(' ', safemode ? VgaColour::Black : VgaColour::Teal, safemode ? VgaColour::Black : VgaColour::Teal);
+        term->putchar(' ', safemode ? VgaColour::Black : SHADOW_COLOUR, safemode ? VgaColour::Black : SHADOW_COLOUR);
     }
 
     for (int x = wy; x < wy + wh; ++x) {
         term->setCursor(ww + wx, 1 + x);
-        term->putchar(' ', safemode ? VgaColour::Black : VgaColour::Teal, safemode ? VgaColour::Black : VgaColour::Teal);
+        term->putchar(' ', safemode ? VgaColour::Black : SHADOW_COLOUR, safemode ? VgaColour::Black : SHADOW_COLOUR);
 
         if (x != wy + wh - 1) {
             term->setCursor(wx, 1 + x);
@@ -1573,7 +1576,7 @@ char passwhash[80];*/
         term->setCursor(24, 6); term->puts("and then press ENTER.");
         term->setCursor(26, 9); term->puts("DD/MM/YYYY HH:MM:SS", VgaColour::LightGrey, VgaColour::White);
 
-        term->setCursor(17, 24); term->puts("ESC: Go back a screen", safemode ? VgaColour::White : VgaColour::Teal, safemode ? VgaColour::Black : VgaColour::Cyan);
+        term->setCursor(17, 24); term->puts("ESC: Go back a screen", safemode ? VgaColour::White : SHADOW_COLOUR, safemode ? VgaColour::Black : BACKGROUND_COLOUR);
         while (1) {
             term->setCursor(26, 8); term->puts(dateTime);
             term->setCursor(26 + timePtr, 8);
@@ -1694,7 +1697,7 @@ char passwhash[80];*/
         drawBootScreen();
         drawBasicWindow(18, 1, 60, 20, "Date and Time");
         term->setCursor(20, 4); term->puts("Please select your timezone and then press ENTER.");
-        term->setCursor(17, 24); term->puts("ESC: Go back a screen", safemode ? VgaColour::White : VgaColour::Teal, safemode ? VgaColour::Black : VgaColour::Cyan);
+        term->setCursor(17, 24); term->puts("ESC: Go back a screen", safemode ? VgaColour::White : SHADOW_COLOUR, safemode ? VgaColour::Black : BACKGROUND_COLOUR);
 
         numEntries = loadTimezoneStrings();
         barHeight = 15 * 14 / numEntries;
@@ -1763,7 +1766,7 @@ char passwhash[80];*/
         drawBasicWindow(20, 3, 55, 16, "User Interface");
         term->setCursor(22, 6); term->puts("Please select the user interface you want Banana");
         term->setCursor(22, 7); term->puts("to boot into by default when you start the computer.");
-        term->setCursor(17, 24); term->puts("ESC: Go back a screen", safemode ? VgaColour::White : VgaColour::Teal, safemode ? VgaColour::Black : VgaColour::Cyan);
+        term->setCursor(17, 24); term->puts("ESC: Go back a screen", safemode ? VgaColour::White : SHADOW_COLOUR, safemode ? VgaColour::Black : BACKGROUND_COLOUR);
 
         numEntries = 3;
 
@@ -1833,7 +1836,7 @@ retryProductKey:
 
     drawBootScreen();
     drawBasicWindow(22, 2, 50, 14, "Product Key");
-    term->setCursor(17, 24); term->puts("ESC: Go back a screen", safemode ? VgaColour::White : VgaColour::Teal, safemode ? VgaColour::Black : VgaColour::Cyan);
+    term->setCursor(17, 24); term->puts("ESC: Go back a screen", safemode ? VgaColour::White : SHADOW_COLOUR, safemode ? VgaColour::Black : BACKGROUND_COLOUR);
 
  
     term->setCursor(24, 5); term->puts("Please enter your product key below,");

@@ -50,6 +50,7 @@ Region createBorderRegion(int x, int y, int w, int h, int r);
 Region createPolygonRegion(int* x, int* y, int num);
 Region createEllipseRegion(int x, int y, int w, int h);
 Region createTightCursorRegion(int x, int y, uint32_t* cursor);
+Region createTightFontRegion(int x, int y, uint8_t* font, int fontWidth, int fontHeight);
 
 Region performRegionOperation(Region a, Region b, RegionOperation operation);
 Region getRegionUnion(Region a, Region b);

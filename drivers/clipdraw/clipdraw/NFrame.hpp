@@ -16,6 +16,7 @@ extern "C" {
 }
 
 #include "Region.hpp"
+#include "Font.hpp"
 #include "Mouse.hpp"
 #include "Main.hpp"
 #include "Video.hpp"
@@ -43,6 +44,11 @@ protected:
 	bool hidden = false;
 	bool dragState = false;
 	int flags = NFRAME_DEFAULT_FLAGS;
+	bool fullscreen = false;
+	int restoreX = 10;
+	int restoreY = 10;
+	int restoreW = 100;
+	int restoreH = 75;
 
 	struct Graphics
 	{
@@ -91,11 +97,26 @@ protected:
 		markRegionAsDirty(rgn2);
 	}
 
-	void raiseChild(NFrame* child)
+	bool raiseChild(NFrame* child)
 	{
+		if (!children.head_ || !children.head_->data) return false;
+
+		if (children.head_->data == child) {
+			// already on top
+			return false;
+		}
+
 		children.deleteNodesByValue(child);
 		addChild(child);
-		invalidate();
+
+		return true;
+	}
+
+	// called after we are resized, useful to override for chopping off the corners of the
+	// region to create, e.g. shadows
+	virtual void postResizeCleanup()
+	{
+		tryInvalidate();
 	}
 
 	virtual void paintHandler(Graphics g) = 0;
@@ -305,7 +326,7 @@ public:
 	{
 		//assert(!dragState);
 		hide();
-		dragFrameRgn = createAntRegion(rgn.relX, rgn.relY, rgn.width, rgn.height, 3);
+		dragFrameRgn = createAntRegion(rgn.relX, rgn.relY, rgn.width, rgn.height, 2);
 		dragState = true;
 	}
 
@@ -325,25 +346,26 @@ public:
 
 		if (dragState) {
 			oldRgn = dragFrameRgn;
-			dragFrameRgn = createAntRegion(rgn.relX, rgn.relY, rgn.width, rgn.height, 3);
+			dragFrameRgn = createAntRegion(rgn.relX, rgn.relY, rgn.width, rgn.height, 2);
 			free(oldRgn.data);
 		}
 	}
-
-	void setSize(int w, int h)
+	
+	bool setSize(int w, int h)
 	{
+		if (w < 1) w = 1;
+		if (h < 1) h = 1;
+		if (hasTitleBar()) {
+			if (w < 75) w = 75;
+			if (h < 40) h = 40;
+		}
+
 		if (w != rgn.width || h != rgn.height) {
 			tryInvalidate();
-			if (w < 1) w = 1;
-			if (h < 1) h = 1;
-			if (hasTitleBar()) {
-				if (w < 50) w = 50;
-				if (h < 25) h = 25;
-			}
 			rgn.width = w;
 			rgn.height = h;
 			regenerateRegion();
-			tryInvalidate();
+			postResizeCleanup(); 
 		}
 	}
 
@@ -443,8 +465,8 @@ public:
 	void raise()
 	{
 		if (parent) {
-			parent->raiseChild(this);
-			invalidate();
+			bool gotARaise = parent->raiseChild(this);
+			if (gotARaise) invalidate();
 		}
 	}
 
@@ -453,9 +475,11 @@ public:
 		free(repaintAux(scr, mouseRgn, false).data);
 	}
 
-	void repaint(Screen scr)
+	void repaint(Screen scr, Region mouseRgn)
 	{
-		free(repaintAux(scr, getDirtyRegion()).data);
+		Region drawRgn = getRegionDifference(getDirtyRegion(), mouseRgn);
+		free(repaintAux(scr, drawRgn).data);
+		free(drawRgn.data);
 	}
 
 	void paintSolid(Graphics g, uint32_t col)
@@ -471,7 +495,37 @@ public:
 	void paintRectangle(Graphics g, int x, int y, int w, int h, uint32_t col)
 	{
 		paintClippedCommon(createRectangleRegion(x + getAbsX(), y + getAbsY(), w, h), g, col);
-		
+	}
+
+	bool isFullscreen()
+	{
+		return fullscreen;
+	}
+
+	void toggleFullscreen(Screen scr)
+	{
+		if (fullscreen) {
+			fullscreen = false;
+
+			// TODO: get rid of the in-between invalidation
+
+			setSize(restoreW, restoreH);
+			setPosition(restoreX, restoreY);
+
+		} else {
+			fullscreen = true;
+			
+			restoreX = rgn.relX;
+			restoreY = rgn.relY;
+			restoreW = rgn.width;
+			restoreH = rgn.height;
+
+			hidden = true;
+			setPosition(0, 0);
+			hidden = false;
+			setSize(scr->getWidth(), scr->getHeight());
+		}
+
 	}
 
 	void paintText(Graphics g, int x, int y, const char* text, uint32_t col)
@@ -490,7 +544,7 @@ public:
 				continue;
 			}
 
-			uint32_t wh = drawCharacter(g.scr, g.clipRegion, x, y, col, text[i]);
+			uint32_t wh = drawFontCharacter(g.scr, g.clipRegion, SYSTEM_FONT_HANDLE, text[i], x, y, col);		//drawCharacter(g.scr, g.clipRegion, x, y, col, text[i]);
 			x += (wh & 0xFFFF);
 			int h = wh >> 16;
 			if (h > highest) {
@@ -510,7 +564,7 @@ public:
 class NWindow : public NFrame
 {
 public:
-	int SHADOW_SIZE = 5;
+	int SHADOW_SIZE = 3;
 	char* title;
 
 	NWindow(int x, int y, int w, int h, const char* title_ = "Untitled Window", int flags_ = NFRAME_DEFAULT_FLAGS) : NFrame(createRectangleRegion(x, y, w, h))
@@ -525,9 +579,19 @@ public:
 		title = (char*) malloc(strlen(title_) + 1);
 		strcpy(title, title_);
 
-		if (!(flags & NFRAME_FLAG_DISABLE_SHADOW)) {
-			SHADOW_SIZE = 5;
-			
+		clipCornersIfNeededToMakeShadows();
+	}
+
+	~NWindow()
+	{
+		free(title);
+	}
+
+	void clipCornersIfNeededToMakeShadows()
+	{
+		if (!(flags & NFRAME_FLAG_DISABLE_SHADOW) && !fullscreen) {
+			SHADOW_SIZE = 3;
+
 			Region cornerClipA = createRectangleRegion(rgn.relX + rgn.width - SHADOW_SIZE, rgn.relY, SHADOW_SIZE, SHADOW_SIZE);
 			Region cornerClipB = createRectangleRegion(rgn.relX, rgn.relY + rgn.height - SHADOW_SIZE, SHADOW_SIZE, SHADOW_SIZE);
 
@@ -543,13 +607,14 @@ public:
 
 
 		} else {
-			SHADOW_SIZE = 5;
+			SHADOW_SIZE = 0;
 		}
 	}
 
-	~NWindow()
+	virtual void postResizeCleanup() override
 	{
-		free(title);
+		clipCornersIfNeededToMakeShadows();
+		tryInvalidate();
 	}
 
 	void setTitle(const char* title_)

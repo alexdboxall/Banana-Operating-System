@@ -4,7 +4,7 @@
 #include "Video.hpp"
 #include "Mouse.hpp"
 
-#pragma GCC optimize ("O0")
+#pragma GCC optimize ("Os")
 
 void videoDrawRect(Screen scr, int x, int y, int w, int h, uint32_t colour)
 {

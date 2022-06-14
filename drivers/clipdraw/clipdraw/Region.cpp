@@ -13,17 +13,13 @@
 #include "krnl/kheap.hpp"
 #include <hal/video.hpp>
 extern "C" {
-#include "libk/string.h"
+#include <libk/string.h>
+#include <libk/math.h>
 }
 
-#pragma GCC optimize ("O0")
+#pragma GCC optimize ("Os")
 
 extern "C" void* __not_memcpy(void* destination, const void* source, size_t n);
-
-double sqrt(double s)
-{
-	return s / 3;
-}
 
 #define _min_(a, b) ((a < b ? a : b))
 #define _max_(a, b) ((a > b ? a : b))
@@ -38,6 +34,42 @@ void writeUnaligned32(uint8_t* ptr, uint32_t data)
 	*((uint32_t*) ptr) = data;
 }
 
+Region createTightFontRegion(int x, int y, uint8_t* font, int fontWidth, int fontHeight)
+{
+	Region rgn(x, y, fontWidth, fontHeight);
+	rgn.dataSize = 4 * (fontHeight * 17 + 1);
+	rgn.data = (uint32_t*) malloc(rgn.dataSize);
+
+	uint32_t* data32 = (uint32_t*) rgn.data;
+
+	for (int y = 0; y < fontHeight; y++) {
+		int invs[16];
+		int invCount = 0;
+
+		bool in = false;
+
+		for (int x = 0; x < fontWidth; x++) {
+			bool newIn = font[y * fontWidth + x];
+			if (in != newIn) {
+				invs[invCount++] = x;
+				in = newIn;
+			}
+		}
+		if (in) {
+			invs[invCount++] = fontWidth;
+		}
+
+		*data32++ = invCount | (1 << 16);
+		for (int i = 0; i < invCount; ++i) {
+			*data32++ = invs[i];
+		}
+	}
+
+	*data32++ = 0xFFFFFFFF;
+	rgn.dataSize = ((size_t) data32) - ((size_t) rgn.data);
+	return rgn;
+}
+
 Region createTightCursorRegion(int x, int y, uint32_t* data)
 {
 	Region rgn(x, y, MOUSE_WIDTH, MOUSE_HEIGHT);
@@ -46,7 +78,7 @@ Region createTightCursorRegion(int x, int y, uint32_t* data)
 
 	uint32_t* data32 = (uint32_t*) rgn.data;
 
-	for (int y = 0; y < 32; y++) {
+	for (int y = 0; y < MOUSE_HEIGHT; y++) {
 		uint32_t wte = *(((uint32_t*) data) + y + 0);
 		uint32_t blk = *(((uint32_t*) data) + y + 32);
 
@@ -55,7 +87,7 @@ Region createTightCursorRegion(int x, int y, uint32_t* data)
 
 		bool in = false;
 
-		for (int x = 0; x < 32; x++) {
+		for (int x = 0; x < MOUSE_WIDTH; x++) {
 			bool newIn = (blk & 1) || (wte & 1);
 			if (in != newIn) {
 				invs[invCount++] = x;
@@ -65,16 +97,13 @@ Region createTightCursorRegion(int x, int y, uint32_t* data)
 			wte >>= 1;
 		}
 		if (in) {
-			invs[invCount++] = 32;
+			invs[invCount++] = MOUSE_WIDTH;
 		}
 
 		*data32++ = invCount | (1 << 16);
 		for (int i = 0; i < invCount; ++i) {
 			*data32++ = invs[i];
 		}
-
-		blk >>= 1;
-		wte >>= 1;
 	}
 
 	*data32++ = 0xFFFFFFFF;
@@ -205,7 +234,6 @@ Region createBorderRegion(int x, int y, int w, int h, int r)
 
 	rgn.dataSize = 4 * 12;
 	rgn.data = (uint32_t*) malloc(rgn.dataSize);
-	//assert(rgn.data != nullptr);
 
 	uint32_t* data32 = rgn.data;
 	*data32++ = 2 | (r << 16);
@@ -254,14 +282,6 @@ Region performRegionOperation(Region a, Region b, RegionOperation op)
 	int w = _max_(a.relX + a.width, b.relX + b.width) - x;
 	int h = _max_(a.relY + a.height, b.relY + b.height) - y;
 
-	////assert(x >= 0);
-	////assert(y >= 0);
-	//assert(w >= 0);
-	//assert(h > 0);
-	
-	//assert(a.height > 0);
-	//assert(b.height > 0);
-
 	int ayOffset = a.relY < b.relY ? 0 : a.relY - b.relY;
 	int byOffset = b.relY < a.relY ? 0 : b.relY - a.relY;
 
@@ -272,12 +292,10 @@ Region performRegionOperation(Region a, Region b, RegionOperation op)
 	rgn.dataSize = (a.dataSize + b.dataSize) * 4;			// we will resize DOWN later, but we never resize up
 	rgn.data = (uint32_t*) calloc(rgn.dataSize, 1);
 
-	//assert(rgn.data != nullptr);
-
 	int bytesUsed = 0;
 
 	uint32_t* ptr[2] = { a.data, b.data };
-	uint32_t* maxPtr[2] = { a.data + a.dataSize, b.data + b.dataSize };			// only used for //assertions
+	uint32_t* maxPtr[2] = { a.data + a.dataSize, b.data + b.dataSize };			// only used for assertions
 
 	const int MAX_INV_POINTS = 512;
 
@@ -304,9 +322,7 @@ Region performRegionOperation(Region a, Region b, RegionOperation op)
 			if (!inBounds[r]) {
 				inversionLifetime[r] = 0;
 			}
-			if (inBounds[r] && inversionLifetime[r] == 0) {
-				//assert(ptr[r] < maxPtr[r]);
-				
+			if (inBounds[r] && inversionLifetime[r] == 0) {				
 				uint32_t data = *(ptr[r]);
 				if (data == 0xFFFFFFFF) {
 					inBounds[r] = false;
@@ -317,11 +333,8 @@ Region performRegionOperation(Region a, Region b, RegionOperation op)
 				ptr[r]++;
 				
 				for (int j = 0; j < numInversionPoints[r]; ++j) {
-					//assert(j < MAX_INV_POINTS);
 					inversionPoints[r][j] = *(ptr[r]);
-					//assert(ptr[r] < maxPtr[r]);
 					ptr[r]++;
-					//assert(ptr[r] <= maxPtr[r]);
 				}
 			}
 		}
@@ -337,9 +350,6 @@ Region performRegionOperation(Region a, Region b, RegionOperation op)
 		bool sameAsLastTime = true;
 
 		while ((inversionLifetime[0] && aCurr < numInversionPoints[0]) || (inversionLifetime[1] && bCurr < numInversionPoints[1])) {
-			//assert(aCurr < MAX_INV_POINTS);
-			//assert(bCurr < MAX_INV_POINTS);
-			
 			int aInv = aCurr < numInversionPoints[0] && inversionLifetime[0] ? inversionPoints[0][aCurr] + axOffset : -1;
 			int bInv = bCurr < numInversionPoints[1] && inversionLifetime[1] ? inversionPoints[1][bCurr] + bxOffset : -1;
 
@@ -376,23 +386,20 @@ Region performRegionOperation(Region a, Region b, RegionOperation op)
 
 			if (newCIn != cIn) {
 				cIn = newCIn;
-				//assert(numOutputInversionPoints < MAX_INV_POINTS);
 				if (lastTimeInversionPoints[numOutputInversionPoints] != location) {
 					sameAsLastTime = false;
 				}
 				outputInversionPoints[numOutputInversionPoints++] = location;
-				//assert(numOutputInversionPoints < MAX_INV_POINTS);
 			}
 		}
 
 		if (sameAsLastTime && numOutputInversionPoints == lastTimeNumOutputInversionPoints) {
-			inARow++;
+			inARow++;																																																																																																																							
 		} else {
 			if (inARow != 0) {
 				bytesUsed = compressScanlineAndAddToRegion(&rgn, bytesUsed, lastTimeInversionPoints, lastTimeNumOutputInversionPoints, inARow);
 			}
 			lastTimeNumOutputInversionPoints = numOutputInversionPoints;
-			//assert(lastTimeNumOutputInversionPoints < MAX_INV_POINTS);
 			memcpy(lastTimeInversionPoints, outputInversionPoints, lastTimeNumOutputInversionPoints * 4);
 			inARow = 1;
 		}
@@ -402,18 +409,13 @@ Region performRegionOperation(Region a, Region b, RegionOperation op)
 	}
 
 	if (inARow != 0) {
-		//assert(lastTimeNumOutputInversionPoints < MAX_INV_POINTS);
 		bytesUsed = compressScanlineAndAddToRegion(&rgn, bytesUsed, lastTimeInversionPoints, lastTimeNumOutputInversionPoints, inARow);
 	}
 
 	rgn.dataSize = bytesUsed;
 	rgn.data[rgn.dataSize / 4] = 0xFFFFFFFF;
 	rgn.dataSize += 4;
-	uint32_t* res = (uint32_t*) realloc(rgn.data, rgn.dataSize);
-	if (res == nullptr) {
-		KePanic("abort");
-	}
-	rgn.data = res;
+	rgn.data = (uint32_t*) realloc(rgn.data, rgn.dataSize);
 
 	return rgn;
 }

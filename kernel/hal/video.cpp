@@ -65,8 +65,10 @@ void Video::drawCursor(int mouse_x, int mouse_y, uint32_t* data, int invertMouse
 
 		uint32_t wte = *(((uint32_t*) data) + y + 0);
 		uint32_t blk = *(((uint32_t*) data) + y + 32);
+		if (!wte && !blk) continue;
 
 		for (int x = 0; x < 32; x++) {
+			if (!wte && !blk) break;
 
 			//Make sure we don't draw off the right side of the screen
 			if (x + mouse_x >= getWidth()) {

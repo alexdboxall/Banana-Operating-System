@@ -1,6 +1,9 @@
 
 #include "Primatives.hpp"
+#include "WSBEFont.hpp"
 #include "Font.hpp"
+
+#pragma GCC optimize ("Os")
 
 uint32_t drawCharacter(Screen scr, Region rgn, int inX, int inY, uint32_t colour, char c)
 {
@@ -57,6 +60,24 @@ uint32_t drawCharacter(Screen scr, Region rgn, int inX, int inY, uint32_t colour
 	}
 
 	return characterWidth | (characterHeight << 16);
+}
+
+uint32_t drawFontCharacter(Screen scr, Region clipRgn, int fontHandle, int chr, int x, int y, uint32_t colour)
+{
+	bool needsFree;
+	int realW, realH;
+	Region fontRgn = getFontRegion(fontHandle, chr, &needsFree, &realW, &realH);
+	fontRgn.relX = x;
+	fontRgn.relY = y;
+	Region rgn = getRegionIntersection(clipRgn, fontRgn);
+	fillRegion(scr, rgn, colour);
+
+	if (needsFree) {
+		free(fontRgn.data);
+	}
+	free(rgn.data);
+
+	return realW | (realH << 16);
 }
 
 void fillRegion(Screen scr, Region rgn, uint32_t colour)

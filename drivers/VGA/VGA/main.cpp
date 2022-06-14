@@ -874,3 +874,59 @@ void VGAVideo::putpixel(int x, int y, uint32_t colour)
 		px >>= 1;
 	}
 }
+
+void VGAVideo::drawCursor(int mouse_x, int mouse_y, uint32_t* data, int invertMouse)
+{
+	uint32_t colWhite = invertMouse ? 0x0 : 0xF;
+	uint32_t colBlack = invertMouse ? 0xF : 0x0;
+
+	for (int bank = 0; bank < 4; ++bank) {
+		FAST_PLANE_SWITCH(bank);
+
+		for (int y = 0; y < 32; y++) {
+			//Make sure we don't draw off the bottom of the screen
+			if (y + mouse_y >= getHeight()) {
+				break;
+			}
+
+			uint32_t wte = *(((uint32_t*) data) + y + 0);
+			uint32_t blk = *(((uint32_t*) data) + y + 32);
+			if (!wte && !blk) continue;
+
+			for (int x = 0; x < 32; x++) {
+				if (!wte && !blk) break;
+
+				//Make sure we don't draw off the right side of the screen
+				if (x + mouse_x >= getWidth()) {
+					break;
+				}
+
+				bool drawPixel = true;
+				uint32_t px;
+
+				if (blk & 1) {
+					px = colBlack;
+				} else if (wte & 1) {
+					px = colWhite;
+				} else {
+					drawPixel = false;
+				}
+
+				if (drawPixel) {
+					uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + vramBase);
+					int bit = 7 - ((x + mouse_x) & 7);
+					int addr = ((y + mouse_y) * width + x + mouse_x) >> 3;
+					int w = ~(1 << bit);
+
+					vram[addr] = (vram[addr] & w) | ((px & 1) << bit);
+				}
+
+				blk >>= 1;
+				wte >>= 1;
+			}
+		}
+
+		colWhite >>= 1;
+		colBlack >>= 1;
+	}
+}
