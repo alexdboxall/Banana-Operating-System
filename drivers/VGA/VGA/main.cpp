@@ -62,11 +62,6 @@ VGAVideo::VGAVideo(): Video("VGA Display")
 	
 }
 
-uint32_t VGAVideo::readPixelApprox(int x, int y)
-{
-	return 0x808080;
-}
-
 int VGAVideo::close(int a, int b, void* c)
 {
 	return 0;
@@ -853,6 +848,44 @@ void VGAVideo::putrect(int __x, int __y, int maxx, int maxy, uint32_t colour)
 			}
 		}
 	}
+}
+
+
+
+uint32_t VGAVideo::readPixelApprox(int x, int y)
+{
+	uint32_t col4To16[16] = {
+		0x000000,
+		0x000080,
+		0x008000,
+		0x008080,
+		0x800000,
+		0x800080,
+		0x808000,
+		0xC8C8C8,
+		0x808080,
+		0x0000FF,
+		0x00FF00,
+		0x00FFFF,
+		0xFF0000,
+		0xFF00FF,
+		0xFFFF00,
+		0xFFFFFF
+	};
+
+	uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + vramBase);
+	int bit = 7 - (x & 7);
+	int addr = (y * width + x) >> 3;
+
+	int w = ~(1 << bit);
+	int out = 0;
+	for (int i = 0; i < (mono ? 1 : 4); ++i) {
+		FAST_PLANE_SWITCH(i);
+		out <<= 1;
+		out |= (vram[addr] & w);
+	}
+
+	return col4To16[out];
 }
 
 void VGAVideo::putpixel(int x, int y, uint32_t colour)
