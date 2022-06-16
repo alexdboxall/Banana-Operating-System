@@ -299,19 +299,28 @@ void loadLegacyFonts()
 	}
 }
 
-Region getLegacyFontRegion(int fontID, int c, int* realW, int* realH)
+Region getLegacyFontRegion(Font* font, int c, int* realW, int* realH)
 {
-	uint8_t decompressed[CELLH * 8];
+	bool italic = (font->flags & FONT_FLAG_ITALIC);
+	bool bold = (font->flags & FONT_FLAG_BOLD);
+
+	// TODO: underline and strikethrough
+
+	uint8_t decompressed[CELLH * 16];
+	memset(decompressed, 0, CELLH * 16);
+	
 	for (int y = 0; y < CELLH; ++y) {
-		uint8_t line = Fonts[fontID][(int) c][y];
+		int italicIncr = italic ? (CELLH - y) / 4 : 0;
+		uint8_t line = Fonts[font->legacyFontID][(int) c][y];
 		for (int x = 0; x < 8; ++x) {
-			decompressed[y * 8 + x] = (line & 1) ? 1 : 0;
+			if (line & 1) decompressed[y * 16 + x + italicIncr] = 1;
+			if (bold && (line & 1)) decompressed[y * 16 + x + italicIncr + 1] = 1;
 			line >>= 1;
 		}
 	}
 
-	*realW = FontWidths[fontID][(int) c];
+	*realW = FontWidths[font->legacyFontID][(int) c] + (bold ? 1 : 0);
 	*realH = CELLH;
 
-	return createTightFontRegion(0, 0, decompressed, 8, CELLH);
+	return createTightFontRegion(0, 0, decompressed, 16, CELLH);
 }

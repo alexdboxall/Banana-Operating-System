@@ -365,8 +365,11 @@ public:
 			rgn.width = w;
 			rgn.height = h;
 			regenerateRegion();
-			postResizeCleanup(); 
+			postResizeCleanup();
+			return true;
 		}
+
+		return false;
 	}
 
 	void setWidth(int w)
@@ -472,7 +475,7 @@ public:
 
 	void repaintCursorRegion(Screen scr, Region mouseRgn)
 	{
-		free(repaintAux(scr, mouseRgn, false).data);
+		//free(repaintAux(scr, mouseRgn, false).data);
 	}
 
 	void repaint(Screen scr, Region mouseRgn)
@@ -507,8 +510,6 @@ public:
 		if (fullscreen) {
 			fullscreen = false;
 
-			// TODO: get rid of the in-between invalidation
-
 			setSize(restoreW, restoreH);
 			setPosition(restoreX, restoreY);
 
@@ -528,8 +529,11 @@ public:
 
 	}
 
-	void paintText(Graphics g, int x, int y, const char* text, uint32_t col)
+	void paintText(Graphics g, int x, int y, const char* text, uint32_t col, int fontHandle = -1)
 	{
+		if (fontHandle == -1) {
+			fontHandle = getFontHandle(FontStyle{ "*SYSTEM", 12 });
+		}
 		x += getAbsX();
 		y += getAbsY();
 
@@ -544,7 +548,7 @@ public:
 				continue;
 			}
 
-			uint32_t wh = drawFontCharacter(g.scr, g.clipRegion, SYSTEM_FONT_HANDLE, text[i], x, y, col);		//drawCharacter(g.scr, g.clipRegion, x, y, col, text[i]);
+			uint32_t wh = drawFontCharacter(g.scr, g.clipRegion, fontHandle, text[i], x, y, col);
 			x += (wh & 0xFFFF);
 			int h = wh >> 16;
 			if (h > highest) {
@@ -674,25 +678,65 @@ public:
 };
 
 
-class NButton : public NFrame
+class NDesktopWindow : public NFrame
 {
 public:
 	int col;
-	int col2;
+	NDesktopWindow() : NFrame(0, 0, 1, 1)
+	{
+
+	}
+
+	NDesktopWindow(int x, int y, int w, int h, int c = 0x008080) : NFrame(x, y, w, h)
+	{
+		col = c;
+	}
+
+	void paintHandler(Graphics g)
+	{
+		paintRectangle(g, 0, 0, rgn.width, rgn.height, col);
+
+	}
+};
+
+class NButton : public NFrame
+{
+public:
 
 	NButton() : NFrame(0, 0, 1, 1)
 	{
 
 	}
 
-	NButton(int x, int y, int w, int h, int c = 0xFF0000, int c2 = -1) : NFrame(x, y, w, h)
+	NButton(int x, int y, int w, int h) : NFrame(x, y, w, h)
 	{
-		col = c;
-		col2 = c2 == -1 ? c : c2;
+		
 	}
 
 	void paintHandler(Graphics g)
 	{
-		paintRectangle(g, 0, 0, rgn.width, rgn.height, col);
+		paintRectangle(g, 0, 0, rgn.width, rgn.height, 0xC0C0C0);
+
+		/*paintText(g, 0, 0, "The quick brown fox jumps over a lazy dog.", 0x000000, getFontHandle(FontStyle("Serif", 12)));
+		paintText(g, 0, 25, "The quick brown fox jumps over a lazy dog.", 0x000000, getFontHandle(FontStyle("Serif", 12, FONT_FLAG_BOLD)));
+		paintText(g, 0, 50, "The quick brown fox jumps over a lazy dog.", 0x000000, getFontHandle(FontStyle("Serif", 12, FONT_FLAG_ITALIC)));
+		paintText(g, 0, 75, "The quick brown fox jumps over a lazy dog.", 0x000000, getFontHandle(FontStyle("Serif", 12, FONT_FLAG_BOLD | FONT_FLAG_ITALIC)));
+
+		paintText(g, 0, 100, "The quick brown fox jumps over a lazy dog.", 0x000000, getFontHandle(FontStyle("Serif", 16)));
+		paintText(g, 0, 130, "The quick brown fox jumps over a lazy dog.", 0x000000, getFontHandle(FontStyle("Serif", 24)));
+		paintText(g, 0, 170, "The quick brown fox jumps over a lazy dog.", 0x000000, getFontHandle(FontStyle("Serif", 24, FONT_FLAG_ITALIC)));
+		paintText(g, 0, 210, "The quick brown fox jumps over a lazy dog.", 0x000000, getFontHandle(FontStyle("Serif", 36)));
+		paintText(g, 0, 270, "The quick brown fox jumps over a lazy dog.", 0x000000, getFontHandle(FontStyle("Serif", 48)));
+		paintText(g, 0, 320, "The quick brown fox jumps over a lazy dog.", 0x000000, getFontHandle(FontStyle("Serif", 72)));
+		paintText(g, 0, 400, "The quick brown fox jumps over a lazy dog.", 0x000000, getFontHandle(FontStyle("Serif", 144)));*/
+
+
+		paintText(g, 0, 0, "The quick brown fox jumps over a lazy dog.", 0x000000, getFontHandle(FontStyle("Serif", 12)));
+		paintText(g, 0, 25, "1>C:/Users/Alex/Desktop/Banana/kernel/libk/string.h(36,8): warning GAE4BF799: declaration of 'char* strchr(char*, int)' conflicts with built-in declaration 'char* strchr(const char*, int)' [-Wbuiltin-declaration-mismatch]", 0x000000, getFontHandle(FontStyle("Serif", 12)));
+		paintText(g, 0, 50, "NButton(int x, int y, int w, int h) : NFrame(x, y, w, h)", 0x000000, getFontHandle(FontStyle("Serif", 12)));
+		paintText(g, 0, 75, "paintRectangle(g, 0, 0, rgn.width, rgn.height, col);", 0x000000, getFontHandle(FontStyle("Serif", 12)));
+
+		paintText(g, 0, 100, "The quick brown fox jumps over a lazy dog.", 0x000000, getFontHandle(FontStyle("Serif", 16)));
+		paintText(g, 0, 130, "The quick brown fox jumps over a lazy dog.", 0x000000, getFontHandle(FontStyle("Serif", 24)));
 	}
 };

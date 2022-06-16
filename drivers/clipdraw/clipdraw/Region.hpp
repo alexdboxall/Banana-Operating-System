@@ -11,7 +11,6 @@ struct Region
 	int relX;
 	int relY;
 	bool dotted;
-
 	Region()
 	{
 		width = -111111111;

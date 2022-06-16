@@ -1,0 +1,407 @@
+Key takeaways:
+	- a lot of idle time, unless on battery power could make better use of it
+	  (e.g. caching stuff, cleaning up things)
+
+  	- blocking for the keyboard (or a more general case, blocking until a byte
+	  gets set to a certain value) will time
+
+	- console scrolling is slow, but that's to be expected
+
+	- signal handling could be made faster (KeCheckSignal, KiCheckSignalZ)
+
+	- KeGetFileFromDescriptor could be made faster
+
+	- strcmp, memset faster if possible
+
+	- semaphores and locks get used a lot by ACPICA
+
+	- VGAVideo::putrect if possible, but already pretty optimised
+
+	- does page locking actually work? hopefully it does
+
+
+Sorting 383 items...
+   290802  HalSystemIdle()
+    55189  SATA::access(unsigned long long, int, void*, bool)
+    18384  timerHandler(unsigned int)
+    11628  AcpiDsBeginMethodExecution
+     1259  readKeyboard(VgaText*, char*, unsigned long)
+      855  idleCommon()
+      437  HalConsoleScroll(int, int)
+      425  AcpiDsExecEndOp
+      272  int_common_stub
+      260  KeCheckSignal(SigHandlerBlock*, int*)
+      258  Vm::start8086(char const*, unsigned short, unsigned short, unsigned short, unsigned short)
+      213  AcpiDsStoreObjectToLocal
+      190  LinkedList
+      186  KeGetFileFromDescriptor(int)
+      165  KiCheckSignalZ
+      151  Semaphore::acquire(int)
+      143  asmReleaseLock
+      141  Semaphore::release()
+      128  AcpiDsInitObjectFromOp
+      109  VCache::read(unsigned long long, int, void*)
+       90  strcmp
+       82  Thr::getAddressOfKernelSymbol(char const*)
+       61  Dbg::logc(char)
+       47  int_handler
+       38  idleFunction(void*)
+       34  VCache::write(unsigned long long, int, void*)
+       32  VGAVideo::putrect(int, int, int, int, unsigned int)
+       29  memset
+       29  AcpiUtUpdateObjectReference
+       24  VgaText::updateCursor()
+       24  AcpiOsSignalSemaphore
+       23  VAS::unlockPages(unsigned long, int)
+       23  AcpiUtAcquireMutex
+       20  move_window
+       18  dlmalloc
+       17  VgaText::putchar(char, VgaColour, VgaColour)
+       17  Dbg::kprintf(char const*, ...)
+       17  AcpiUtReleaseMutex
+       17  pitHandler(regs*, void*)
+       15  AcpiOsAcquireObject
+       14  AcpiUtCreateUpdateStateAndPush
+       13  AcpiOsReleaseObject
+       13  VGAVideo::open(int, int, void*)
+       12  AcpiOsWaitSemaphore
+       12  Semaphore::acquire()
+       12  AcpiPsGetOpcodeInfo
+       11  get_fat.isra.2
+       11  AcpiNsSearchOneScope
+       10  Fs::standardiseFiles(char*, char const*, char const*, bool)
+       10  VAS::canLockPages(unsigned long, int)
+       10  f_read
+       10  AcpiPsCreateOp
+       10  AcpiNsBuildNormalizedPath
+       10  AcpiUtMatchPredefinedMethod
+        9  AcpiUtCreateGenericState
+        9  AcpiOsGetThreadId
+        9  AcpiUtPushGenericState
+        9  VESA::putrect(int, int, int, int, unsigned int)
+        8  ff_wtoupper
+        8  AcpiOsAcquireLock
+        8  AcpiNsLookup
+        7  create_name
+        7  put_fat
+        7  create_chain
+        7  KeRestorePreemption()
+        7  AcpiPsPushScope
+        7  AcpiPsParseLoop
+        7  AcpiPsGetArguments
+        7  asmAcquireLock
+        7  AcpiPsAllocOp
+        7  AcpiDsCreateOperand
+        7  AcpiOsReadPciConfiguration
+        6  AcpiDsMethodDataInit
+        6  AcpiNsGetAttachedObject
+        6  AcpiUtUpdateRefCount
+        6  VgaText::scrollScreen()
+        6  performRegionOperation(Region, Region, RegionOperation)
+        5  KeSetBootMessage(char const*)
+        5  Virt::allocateKernelVirtualPages(int)
+        5  File::read(unsigned long long, void*, int*)
+        5  mount_volume
+        5  LogicalDisk::read(unsigned long long, int, void*)
+        5  KeSystemCall(regs*, void*)
+        5  AcpiNsSearchAndEnter
+        5  AcpiPsAppendArg
+        5  AcpiPsGetNextArg
+        5  acpiWalkDescendingCallback(void*, unsigned int, void*, void**)
+        5  KeCalculateCRC32(unsigned char*, int)
+        5  AcpiDsInitAmlWalk
+        4  KePerformRelocation(unsigned char*, unsigned long, Elf32_Shdr*, Elf32_Rel*)
+        4  cmp_lfn
+        4  VAS::canLockPage(unsigned long)
+        4  ld_dword
+        4  f_write
+        4  VAS::mapPage(unsigned long, unsigned long, int)
+        4  AcpiUtValidNameChar
+        4  AcpiTbParseRootTable
+        4  AcpiExSystemIoSpaceHandler
+        4  AcpiExStore
+        4  AcpiDsResultStackPop
+        4  AcpiPsGetAmlOpcode
+        4  asmAcquireLock.retry
+        4  AcpiUtDeleteGenericState
+        4  free
+        4  AcpiUtCreateInternalObjectDbg
+        4  dir_find
+        4  AcpiExResolveToValue
+        4  AcpiPsDeleteParseTree
+        3  HalEnableNMI()
+        3  sbrk
+        3  IDE::detect()
+        3  KeLoadDriver(char const*)
+        3  sendKeyToTerminal(unsigned char)
+        3  fatWrapperReadDisk
+        3  chk_chr
+        3  clst2sect
+        3  SATA::read(unsigned long long, int, void*)
+        3  follow_path
+        3  FAT::read(void*, unsigned long, void*, int*)
+        3  Process::Process(bool, char const*, Process*, char**)
+        3  AcpiFindRootPointer
+        3  AcpiOsMapMemory
+        3  AcpiPsExecuteTable
+        3  AcpiPsGetParentScope
+        3  AcpiGetObjectInfo
+        3  AcpiExStopTraceOpcode
+        3  AcpiPsPeekOpcode
+        3  AcpiExResolveOperands
+        3  AcpiUtPopGenericState
+        3  AcpiPsCompleteOp
+        3  AcpiNsWalkNamespace
+        3  AcpiDsIsResultUsed
+        3  AcpiDsResultStackPush
+        3  AcpiNsInternalizeName
+        3  VgaText::clearScreen()
+        3  malloc_consolidate
+        3  AcpiExOpcode_2A_1T_1R
+        3  Thr::allocateMemoryForTask(Process*, File*, unsigned long, unsigned long, unsigned long)
+        3  Directory::Directory(char const*, Process*)
+        2  PCI::foundDevice(PCIDeviceInfo)
+        2  SATA::write(unsigned long long, int, void*)
+        2  KeLoadELF(unsigned char*, bool, unsigned long)
+        2  VgaText::puts(char const*, VgaColour, VgaColour)
+        2  RTC::setTimeInDatetimeUTC(datetime_t)
+        2  FAT::open(char const*, void**, FileOpenMode)
+        2  VAS::unlockPage(unsigned long)
+        2  SysOpen(regs*)
+        2  KiIsSymlinkRegistered(char const*)
+        2  KeDisablePreemption()
+        2  VAS::getPageTableEntry(unsigned long)
+        2  CmCreateExtent(Reghive_Tag*, int, int, unsigned char*)
+        2  RTC::RTC()
+        2  SATA::open(int, int, void*)
+        2  LogicalDisk::assignDriveLetter()
+        2  FAT::tryMount(LogicalDisk*, int)
+        2  FAT::stat(char const*, unsigned long long*, bool*)
+        2  PCI::pciDetailsToFilepath(PCIDeviceInfo, char*)
+        2  KeLoadELFProgramHeaders(unsigned char*, bool, unsigned long)
+        2  AcpiTbConvertFadt
+        2  AcpiTbPutTable
+        2  AcpiDsLoad2EndOp
+        2  AcpiDsCreateOperands
+        2  AcpiDsEvalDataObjectOperands
+        2  AcpiPsGetNextPackageEnd
+        2  AcpiPsBuildNamedOp
+        2  AcpiPsGetNextNamepath
+        2  AcpiPsParseAml
+        2  AcpiExNameSegment
+        2  AcpiExDoLogicalOp
+        2  AcpiUtDeleteInternalObj
+        2  AcpiPsCompleteThisOp
+        2  AcpiUtCreateUpdateState
+        2  AcpiExOpcode_2A_0T_1R
+        2  AcpiExReadDataFromField
+        2  AcpiDsCreateBufferField
+        2  AcpiNsGetNormalizedPathname
+        2  AcpiUtCreateThreadState
+        2  AcpiUtRepairName
+        2  AcpiDsCreateWalkState
+        2  AcpiExStartTraceOpcode
+        2  AcpiNsMatchComplexRepair
+        2  CmOpen(char const*)
+        2  remove_chain
+        2  get_ldnumber
+        2  FAT::fixFilepath(char*)
+        2  sYSMALLOc
+        2  HalInstallIRQHandler(int, void (*)(regs*, void*), bool, void*)
+        2  PCI::getDeviceData(unsigned char, unsigned char, unsigned char)
+        2  createPartitionsForDisk(PhysicalDisk*)
+        2  f_lseek
+        2  ISA::detect()
+        2  dir_sdi
+        2  start(void*)
+        2  AcpiNsFindIniMethods
+        2  AcpiUtCopyIpackageToIpackage
+        2  AcpiUtRemoveReference
+        2  AcpiOsFree
+        2  AcpiUtInitializeBuffer
+        2  acpiDynamicIrqCallback(acpi_resource*, void*)
+        2  AcpiPsPopScope
+        2  AcpiNsInstallNode
+        2  KeInitialiseSymlinks()
+        2  AcpiNsEvaluate
+        2  AcpiUtIsPciRootBridge
+        2  AcpiExResolveObjectToValue
+        2  AcpiRsGetListLength
+        2  AcpiUtValidObjectType
+        2  malloc
+        2  VAS::lockPage(unsigned long)
+        1  ReservedFilename::ReservedFilename(int)
+        1  VgaText::writeCharacter(char, VgaColour, VgaColour, int, int)
+        1  SATABus::probePort(SATABus::tagHBA_MEM volatile*)
+        1  Thr::loadKernelSymbolTable(char const*)
+        1  KeExecuteDriver(unsigned long, void*)
+        1  Device::addChild(Device*)
+        1  KeRegisterAtexit(void (*)(void*), void*)
+        1  KeLoadAndExecuteDriver(char const*, void*, bool)
+        1  __udivdi3
+        1  sync_window
+        1  f_opendir
+        1  VAS::allocatePages(int, int)
+        1  Fs::setcwd(Process*, char*)
+        1  mem_cmp
+        1  dir_clear
+        1  st_dword
+        1  fatWrapperWriteDisk
+        1  sync_fs
+        1  VCache::writeWriteBuffer()
+        1  mem_set
+        1  File::stat(unsigned long long*, bool*)
+        1  SysReadDir(regs*)
+        1  f_open
+        1  CmConvertToInternalFilename(char const*, unsigned char*)
+        1  disk_read
+        1  memcmp
+        1  RTC::completeRTCRefresh()
+        1  KeRestart()
+        1  Device::closeAll()
+        1  PCI::PCI()
+        1  IDE::open(int, int, void*)
+        1  IOAPIC::handlesGSIWithNumber(unsigned int)
+        1  File::~File()
+        1  sbrk_thunk
+        1  Keyboard::Keyboard(char const*)
+        1  Phys::allocatePage()
+        1  mem_cpy
+        1  AcpiUtMutexInitialize
+        1  AcpiNsRootInitialize
+        1  AcpiNsGetInternalNameLength
+        1  AcpiTbNotifyTable
+        1  AcpiEvInstallSpaceHandler
+        1  AcpiEvInstallRegionHandlers
+        1  AcpiNsLoadTable
+        1  AcpiPsCreateScopeOp
+        1  AcpiPsGetNextNamestring
+        1  AcpiDsExecBeginOp
+        1  AcpiPsGetNextSimpleArg
+        1  AcpiExTruncateFor32bitTable
+        1  AcpiExCreateMutex
+        1  AcpiNsOpensScope
+        1  AcpiNsInitOneObject
+        1  AcpiReadBitRegister
+        1  AcpiOsReadPort
+        1  AcpiExSetupRegion
+        1  AcpiDsResultPush
+        1  AcpiNsInitializeDevices
+        1  AcpiNsCheckAcpiCompliance
+        1  AcpiExIntegerToString
+        1  AcpiUtCopyIelementToIelement
+        1  AcpiPsGetArg
+        1  memcpy
+        1  AcpiDsObjStackPop
+        1  AcpiExOpcode_1A_1T_1R
+        1  AcpiExStoreObjectToIndex
+        1  AcpiNsGetBitmappedType
+        1  AcpiUtWalkAmlResources
+        1  AcpiDsScopeStackPush
+        1  AcpiExFieldDatumIo
+        1  AcpiDsInitBufferField
+        1  AcpiExInterpreterTraceEnabled
+        1  AcpiEvSystemMemoryRegionSetup
+        1  __not_memcpy
+        1  AcpiRsStreamOptionLength
+        1  dir_next
+        1  KePerformRelocations(unsigned char*, unsigned long)
+        1  CmAddShift(unsigned int*, int*, unsigned char, int)
+        1  CmGetInteger(Reghive_Tag*, int, unsigned long long*)
+        1  setActiveTerminal(VgaText*)
+        1  KePowerThread(void*)
+        1  Thr::loadProgramIntoMemory(Process*, char const*)
+        1  string_ends_with(char const*, char const*)
+        1  SysSpawn(regs*)
+        1  VGAVideo::setPlane(int)
+        1  LinkedList2
+        1  NFrame::invalidate()
+        1  NFrame::repaint(Video*, Region)
+        1  Process::createThread(void (*)(void*), void*, int)
+        1  tchar2uni
+        1  AcpiInfo
+        1  AcpiTbAcquireTempTable
+        1  AcpiInstallAddressSpaceHandler
+        1  AcpiEvInitializeRegion
+        1  AcpiHwRead
+        1  AcpiEvInstallGpeBlock
+        1  AcpiNsInitOneDevice
+        1  AcpiExWriteDataToField
+        1  AcpiExStopTraceMethod
+        1  AcpiDsBuildInternalPackageObj
+        1  AcpiDsMethodDataSetValue
+        1  AcpiDsExecEndControlOp
+        1  AcpiDsEvalBufferFieldOperands
+        1  AcpiPsExecuteMethod
+        1  AcpiDsLoad2BeginOp
+        1  AcpiPsHasCompletedScope
+        1  AcpiNsGetType
+        1  VAS::VAS(bool)
+        1  PCI::pciReadWord(unsigned char, unsigned char, unsigned char, unsigned char)
+        1  IOAPIC::redirect(unsigned char, unsigned long long, unsigned char, bool, bool)
+        1  SATABus::portRebase(SATABus::tagHBA_PORT volatile*, int)
+        1  ACPI::open(int, int, void*)
+        1  AcpiTbInstallStandardTable
+        1  AcpiTbParseFadt
+        1  AcpiTbCheckDuplication
+        1  AcpiDsCreateNode
+        1  AcpiNsCreateNode
+        1  AcpiNsExecuteTable
+        1  AcpiDsExecuteArguments
+        1  AcpiEvInstallSciHandler
+        1  AcpiNsDeleteChildren
+        1  AcpiNsCheckReturnValue
+        1  AcpiDsMethodDataDeleteValue
+        1  AcpiPsFreeOp
+        1  AcpiDsBuildInternalObject
+        1  AcpiDsResultPop
+        1  AcpiUtDeleteObjectDesc
+        1  AcpiDsDeleteResultIfNotUsed
+        1  AcpiPsNextParseState
+        1  AcpiDsTerminateControlMethod
+        1  AcpiExResolveNodeToValue
+        1  CmFindObjectFromPath(Reghive_Tag*, char const*)
+        1  SysGetEnv(regs*)
+        1  SysIsATTY(regs*)
+        1  milliTenthSleepUntil(unsigned long long)
+        1  ssfn_render
+        1  _ssfn__parse_uncompressed_block
+        1  VGAVideo::bitblit(int, int, int, int, int, int, int, unsigned int*)
+        1  PS2Mouse::open(int, int, void*)
+        1  File::close()
+        1  AcpiOsCreateSemaphore
+        1  AcpiOsUnmapMemory
+        1  AcpiTbCompareTables
+        1  AcpiNsValidateHandle
+        1  AcpiUtAllocateOwnerId
+        1  AcpiExCreateMethod
+        1  AcpiEnableSubsystem
+        1  AcpiExWriteWithUpdateRule
+        1  AcpiUtHexToAsciiChar
+        1  AcpiRsGetPciRoutingTableLength
+        1  AcpiEvIsPciRootBridge
+        1  AcpiDsMethodDataGetNode
+        1  AcpiRsGetMethodData
+        1  AcpiUtExecute_UID
+        1  AcpiNsBuildInternalName
+        1  AcpiEvAcquireGlobalLock
+        1  AcpiRsGetAddressCommon
+        1  AcpiGetCurrentResources
+        1  AcpiOsAllocate
+        1  AcpiRsConvertAmlToResource
+        1  AcpiPsGetOpcodeSize
+        1  EnvVarContainer::loadFrom(char const*, char const*)
+        1  dir_read
+        1  ld_word
+        1  strcpy
+        1  strlen
+        1  UnixFile::~UnixFile()
+        1  SysWrite(regs*)
+        1  Directory::open()
+        1  SysSizeFromFilename(regs*)
+        1  SysSize(regs*)
+        1  disk_status
+        1  VAS::lockPages(unsigned long, int)
+        1  SysShutdown(regs*)
+        1  acpicaShutdown()
+

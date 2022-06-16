@@ -1025,7 +1025,7 @@ int CPU::open(int num, int b, void* vas_)
 	KeSetBootMessage("Starting the HAL...");
 	HalInitialise();
 
-	timer = setupTimer(KeGetBootConfigurationFlag(BootConfigurationFlag::OptimiseForOldComputers) ? 30 : 100);
+	timer = setupTimer(KeGetBootConfigurationFlag(BootConfigurationFlag::OptimiseForOldComputers) ? 30 : 200);
 
 	if (KeGetBootConfigurationFlag(BootConfigurationFlag::EnableCPUFeatures)) {
 		setupFeatures();

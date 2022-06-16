@@ -23,7 +23,7 @@ rm goodiso_s.o
 rm goodiso.drv
 
 cd Root
-C:\Users\Alex\Downloads\cdrtools-1.11a01-win32-bin\mkisofs.exe -boot-load-size 31 -T -boot-load-seg 0x7C0 -nobak -o ../BANANA.ISO -V "BANANA OS 1.0" -no-emul-boot -iso-level 1 -b SETUP.EXE .
+C:\Users\Alex\Downloads\cdrtools-1.11a01-win32-bin\mkisofs.exe -boot-load-size 4 -T -boot-load-seg 0x7C0 -nobak -o ../BANANA.ISO -V "BANANA" -no-emul-boot -iso-level 1 -b SETUP.EXE .
 
 rem For the strangest of reasons, the above command WILL GENERATE AN IMAGE WHICH IS ~10KB
 rem if the stack dump didn't exist before the script ran, and ~65KB (correct size) if 

@@ -1,6 +1,7 @@
 
 #include "Font.hpp"
 #include "LegacyFonts.hpp"
+#include "SSFNFonts.hpp"
 
 #include <krnl/panic.hpp>
 
@@ -12,7 +13,7 @@ LinkedList2<Font*>* fontTable;
 
 int SYSTEM_FONT_HANDLE = 0;
 
-int lookupInFontTable(char* name, int size)
+int lookupInFontTableByNameOnly(const char* name, int exclude)
 {
 	int handle = 0;
 	auto iterator = fontTable->head_;
@@ -21,7 +22,7 @@ int lookupInFontTable(char* name, int size)
 		iterator = iterator->next;
 
 		if (child) {
-			if (child->size == size && !strcmp(child->name, name)) {
+			if (!strcmp(child->name, name) && handle != exclude) {
 				return handle;
 			}
 		} else {
@@ -34,21 +35,44 @@ int lookupInFontTable(char* name, int size)
 	return -1;
 }
 
-int getFontHandle(char* name, int size)
+int lookupInFontTable(FontStyle style)
+{
+	int handle = 0;
+	auto iterator = fontTable->head_;
+	while (iterator) {
+		auto const& child = iterator->data;
+		iterator = iterator->next;
+
+		if (child) {
+			if (child->size == style.size && !strcmp(child->name, style.name) && child->flags == style.flags) {
+				return handle;
+			}
+		} else {
+			break;
+		}
+
+		++handle;
+	}
+
+	return -1;
+}
+
+int getFontHandle(FontStyle style)
 {
 	if (fontTable == nullptr) {
 		fontTable = new LinkedList2<Font*>;
 	}
 
-	int handle = lookupInFontTable(name, size);
+	int handle = lookupInFontTable(style);
 	if (handle != -1) {
 		return handle;
 	}
 
 	Font* newFont = new Font();
-	strcpy(newFont->name, name);
-	newFont->size = size;
-	newFont->legacy = name[0] = '*';
+	strcpy(newFont->name, style.name);
+	newFont->size = style.size;
+	newFont->flags = style.flags;
+	newFont->legacy = style.name[0] == '*';
 	newFont->legacyFontID = 0;
 
 	for (int i = 0; i < 128; ++i) {
@@ -57,6 +81,10 @@ int getFontHandle(char* name, int size)
 
 	handle = fontTable->length();
 	fontTable->appendNode(newFont);
+
+	if (!newFont->legacyFontID) {
+		loadSSFNFont(newFont, handle);
+	}
 
 	return handle;
 }
@@ -94,9 +122,9 @@ Region getFontRegion(int handle, int c, bool* needsToBeFreed, int* realW, int* r
 	Region rgn;
 	
 	if (font->legacy) {
-		rgn = getLegacyFontRegion(font->legacyFontID, c, realW, realH);
+		rgn = getLegacyFontRegion(font, c, realW, realH);
 	} else {
-		KePanic("NON-LEGACY FONTS NOT IMPLEMENTED YET");
+		rgn = getSSFNFontRegion(font, c, realW, realH);
 	}
 
 	if (c < 128) {
@@ -113,4 +141,9 @@ Region getFontRegion(int handle, int c, bool* needsToBeFreed, int* realW, int* r
 void initFonts()
 {
 	loadLegacyFonts();
+}
+
+int loadFont(FontStyle style)
+{
+	return getFontHandle(style);
 }

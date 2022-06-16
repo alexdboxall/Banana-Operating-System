@@ -2,7 +2,8 @@
 org 0
 bits 16
 
-jmp sector23Start
+JMP 0x7C0:main
+
 ;times 0xb800 - 3 db '&'
 
 
@@ -137,7 +138,6 @@ MBR_OFFSET equ (0x1A + 59)
 
 ;SECTOR 23
 sector23Start:
-jmp main
 
 ;Prints a string				- DS=>SI points to a string
 puts:

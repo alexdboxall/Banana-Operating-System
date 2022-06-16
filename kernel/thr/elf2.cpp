@@ -44,6 +44,7 @@ size_t KeLoadDriver(const char* filepath)
 	}
 
 	size_t addr = (size_t) Virt::getAKernelVAS()->allocatePages((siz + 4095) / 4096, PAGE_PRESENT | PAGE_SUPERVISOR | PAGE_WRITABLE);
+	kprintf("@<<: %s %X\n", filepath, addr);
 
 	status = f->open(FileOpenMode::Read);
 	if (status != FileStatus::Success) {

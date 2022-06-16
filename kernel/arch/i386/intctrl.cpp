@@ -54,6 +54,8 @@ extern "C" uint64_t int_handler(struct regs* r)
 		HalStallProcessor();
 	}
 
+	//kprintf("@:> %X\n", r->eip);
+
 	int num = r->int_no;
 
 	//send EOI command for IRQs

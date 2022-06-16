@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include "Region.hpp"
+#include "Font.hpp"
 
 struct FONTDATA1
 {
@@ -19,4 +20,4 @@ struct FONTDATA2
 extern struct FONTDATA2 FONT;
 
 void loadLegacyFonts();
-Region getLegacyFontRegion(int fontID, int c, int* realW, int* realH);
+Region getLegacyFontRegion(Font* font, int c, int* realW, int* realH);

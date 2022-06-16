@@ -655,8 +655,8 @@ void createUser(const char* name)
     copytree("C:/Banana/Registry/DefaultUser", path);
 }
 
-#define BACKGROUND_COLOUR VgaColour::LightGrey
-#define SHADOW_COLOUR     VgaColour::DarkGrey
+#define BACKGROUND_COLOUR VgaColour::Cyan
+#define SHADOW_COLOUR     VgaColour::Teal
 
 VgaText* term;
 bool showSidebar = true;

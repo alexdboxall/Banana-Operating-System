@@ -38,7 +38,7 @@ extern "C" {
 
 #pragma GCC optimize ("O0")
 
-NButton* desktopWindow;
+NDesktopWindow* desktopWindow;
 
 extern void (*guiMouseHandler) (int xdelta, int ydelta, int buttons, int z);
 extern void (*guiPanicHandler)(char* message);
@@ -105,12 +105,15 @@ void NiMain(void* s)
 	// the original stack won't be paged in (the interrupt stack will be in)
 
 	initFonts();
-	SYSTEM_FONT_HANDLE = getFontHandle("*SYSTEM", 12);
+	SYSTEM_FONT_HANDLE = getFontHandle(FontStyle{ "*SYSTEM", 12 });
+	kprintf("System font handle = %d\n", SYSTEM_FONT_HANDLE);
 
 	NWindow* win = new NWindow(80, 50, 350, 350);
 	NWindow* awin = new NWindow(180, 88, 450, 450);
+	NButton* textDemo = new NButton(15, 40, 1600, 600);
+	awin->addChild(textDemo);
 
-	desktopWindow = new NButton(0, 0, screen->getWidth(), screen->getHeight(), 0x008080, 0x008080);
+	desktopWindow = new NDesktopWindow(0, 0, screen->getWidth(), screen->getHeight(), 0x008080);
 	desktopWindow->addChild(win);
 	desktopWindow->addChild(awin);
 
