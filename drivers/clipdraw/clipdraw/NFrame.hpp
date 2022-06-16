@@ -480,9 +480,11 @@ public:
 
 	void repaint(Screen scr, Region mouseRgn)
 	{
-		Region drawRgn = getRegionDifference(getDirtyRegion(), mouseRgn);
-		free(repaintAux(scr, drawRgn).data);
-		free(drawRgn.data);
+		free(repaintAux(scr, getDirtyRegion()).data);
+
+		//Region drawRgn = getRegionDifference(getDirtyRegion(), mouseRgn);
+		//free(repaintAux(scr, drawRgn).data);
+		//free(drawRgn.data);
 	}
 
 	void paintSolid(Graphics g, uint32_t col)

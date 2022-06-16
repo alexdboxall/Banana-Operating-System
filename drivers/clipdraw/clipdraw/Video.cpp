@@ -46,6 +46,27 @@ void videoDrawRectDotted(Screen scr, int x, int y, int w, int h, uint32_t colour
 	}
 }
 
+uint32_t cursorBuffer[32 * 32];
+
+uint32_t* videoSaveAreaUnderCursor(Screen scr, int xx, int yy)
+{
+	for (int y = 0; y < 32; y++) {
+		if (y + yy >= scr->getHeight()) {
+			break;
+		}
+
+		for (int x = 0; x < 32; x++) {
+			if (x + xx >= scr->getWidth()) {
+				break;
+			}
+
+			cursorBuffer[y * 32 + x] = scr->readPixelApprox(xx + x, yy + y);
+		}
+	}
+
+	return cursorBuffer;
+}
+
 void videoPutpixel(Screen scr, int x, int y, uint32_t colour)
 {
 	scr->putpixel(x, y, colour);

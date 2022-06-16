@@ -104,8 +104,9 @@ void mouseInit(Screen scr)
 
 	tightMouseRegionOld = createTightCursorRegion(0, 0, (uint32_t*) (___mouse_data + cursorOffset));
 	tightMouseRegionNew = createTightCursorRegion(0, 0, (uint32_t*) (___mouse_data + cursorOffset));
-
 }
+
+uint32_t pixelsUnderCursor[32 * 32];
 
 void hideCursor(Screen scr, int oldX, int oldY, int newX, int newY)
 {
@@ -115,7 +116,9 @@ void hideCursor(Screen scr, int oldX, int oldY, int newX, int newY)
 	tightMouseRegionNew.relY = newY;
 
 	Region clearRgn = getRegionDifference(tightMouseRegionOld, tightMouseRegionNew);
-	desktopWindow->repaintCursorRegion(scr, clearRgn);
+	fillRegion(scr, clearRgn, 0x008080);
+	//shitBlit(scr, clearRgn, oldX, oldY, pixelsUnderCursor, 32, 32);
+	//desktopWindow->repaintCursorRegion(scr, clearRgn);
 
 	free(clearRgn.data);
 }
@@ -126,6 +129,8 @@ void showCursor(Screen scr)
 }
 
 void changeCursor(Screen scr, int newOffset) {
+	return;
+
 	cursorOffset = newOffset;
 
 	tightMouseRegionOld.relX = mouseX;
@@ -303,13 +308,16 @@ bool handleMouse(Screen scr, int xDelta, int yDelta, int zDeltaHz, int zDeltaVt,
 		needsRepaint = true;
 	}
 
-	showCursor(scr);
-
 	if (needsRepaint) {
 		tightMouseRegionNew.relX = mouseX;
 		tightMouseRegionNew.relY = mouseY;
 		desktopWindow->repaint(scr, tightMouseRegionNew);
 	}
+
+	uint32_t* underCursor = videoSaveAreaUnderCursor(scr, mouseX, mouseY);
+	memcpy(pixelsUnderCursor, underCursor, 32 * 32 * 4);
+
+	showCursor(scr);
 
 	return needsRepaint;
 }

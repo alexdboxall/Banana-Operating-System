@@ -82,6 +82,70 @@ uint32_t drawFontCharacter(Screen scr, Region clipRgn, int fontHandle, int chr, 
 	return realW | (realH << 16);
 }
 
+void blitRegion(Screen scr, Region rgn, int inX, int inY, uint32_t* blitData, int blitWidth, int blitHeight)
+{
+	int scanline = 0;
+	int i = 0;
+	while (scanline < rgn.height && scanline < inY + blitHeight) {
+		uint32_t dword = rgn.data[i++];
+		int numInversions = dword & 0xFFFF;
+		int times = dword >> 16;
+
+		uint32_t* data = (uint32_t*) (rgn.data + i);
+
+		i += numInversions;
+
+		bool in = false;
+		int x = 0;
+
+		if (times + scanline >= inY) {
+			while (x < rgn.width) {
+				if (*data == x) {
+					++data;
+					in ^= true;
+					--numInversions;
+				}
+
+				int modX = x - inX;
+				if (in && modX >= 0 && modX < blitWidth) {
+					for (int n = 0; n < times; ++n) {
+						int row = scanline + n - inY;
+						if (row >= 0 && row < blitHeight) {
+							videoPutpixel(scr, rgn.relX + x, rgn.relY + scanline + n, 0xFF0000);		// blitData[row * blitWidth + modX]
+						}
+					}
+				}
+
+				if (numInversions && *data < (unsigned) inX) {
+					x = *data;
+				} else {
+					x++;
+				}
+
+				if (x > inX + blitWidth) {
+					break;
+				}
+			}
+		}
+
+		scanline += times;
+	}
+}
+
+void shitBlit(Screen scr, Region rgn, int inX, int inY, uint32_t* blitData, int blitWidth, int blitHeight)
+{
+	for (int y = 0; y < blitHeight; ++y) {
+		for (int x = 0; x < blitWidth; ++x) {
+			Region r = createRectangleRegion(inX + x, inY + y, 1, 1);
+			Region r2 = getRegionIntersection(r, rgn);
+
+			fillRegion(scr, r2, 0x008080);		// blitData[y * blitWidth + x]);
+			free(r.data);
+			free(r2.data);
+		}
+	}
+}
+
 void fillRegion(Screen scr, Region rgn, uint32_t colour)
 {
 	int scanline = 0;
