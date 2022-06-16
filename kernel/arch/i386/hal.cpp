@@ -524,6 +524,11 @@ bool HalGetNMIState()
 	return keNMIEnabled;
 }
 
+bool HalIsAPICEnabled()
+{
+	return features.hasAPIC;
+}
+
 #define ISR_DIV_BY_ZERO 0x00
 #define ISR_DEBUG 0x01
 #define ISR_NMI 0x02

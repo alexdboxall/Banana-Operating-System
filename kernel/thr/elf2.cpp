@@ -221,7 +221,6 @@ bool KePerformRelocation(uint8_t* data, size_t relocationPoint, Elf32_Shdr* sect
 	size_t addrK = (size_t) relocationPoint - entryPoint + relocationTable->r_offset;
 	size_t* ref = (size_t*) addrK;
 
-
 	int symbolValue = 0;
 	if (ELF32_R_SYM(relocationTable->r_info) != SHN_UNDEF) {
 		bool error = false;

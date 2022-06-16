@@ -24,27 +24,19 @@ extern "C" {
 	#include "libk/string.h"
 }
 
-void start(void* s);
+void DrvMain(void* s);
 void acpiGlobalEventHandler(uint32_t type, ACPI_HANDLE device, uint32_t number, void* context);
 
 void begin(void* s)
 {
-	kprintf("begin ACPICA. s = 0x%X\n", s);
-	kprintf("a.\n");
-	kprintf("begin = 0x%X\n", begin);
-	kprintf("start = 0x%X\n", start);
-	kprintf("acpiGlobalEventHandler = 0x%X\n", acpiGlobalEventHandler);
-
-	start(s);
+	kprintf("begin ACPICA");
+	DrvMain(s);
 }
-
 
 void acpiGlobalEventHandler(uint32_t type, ACPI_HANDLE device, uint32_t number, void* context)
 {
 	if (type == ACPI_EVENT_TYPE_FIXED && number == ACPI_EVENT_POWER_BUTTON) {
 		KeHandlePowerButton();
-		//computer->close(0, 0, nullptr);
-		//handleShutdownButton();
 	}
 	if (type == ACPI_EVENT_TYPE_FIXED && number == ACPI_EVENT_SLEEP_BUTTON) {
 		KeHandleSleepButton();
@@ -387,7 +379,7 @@ void acpicaRestart()
 	AcpiReset();
 }
 
-void start(void* xxa)
+void DrvMain(void* xxa)
 {
 	ACPI* ths = (ACPI*) xxa;
 
@@ -429,8 +421,7 @@ void start(void* xxa)
 	if (ACPI_FAILURE(a)) KePanic("FAILURE AcpiInitializeObjects");
 
 	ACPI_STATUS status;
-	kprintf("TODO: DEBUG: @@@ ACPICA ASSUMING NO APIC\n");
-	if (0) {//computer->features.hasAPIC) {
+	if (HalIsAPICEnabled()) {
 		ACPI_OBJECT_LIST params;
 		ACPI_OBJECT arg;
 
@@ -438,7 +429,7 @@ void start(void* xxa)
 		params.Pointer = &arg;
 
 		arg.Type = ACPI_TYPE_INTEGER;
-		arg.Integer.Value = 0;// computer->features.hasAPIC;
+		arg.Integer.Value = HalIsAPICEnabled();
 		kprintf("value = %d\n", arg.Integer.Value);
 
 		status = AcpiEvaluateObject(NULL, (ACPI_STRING) "\\_PIC", &params, NULL);

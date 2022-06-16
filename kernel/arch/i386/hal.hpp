@@ -119,6 +119,12 @@ void HalConsoleCursorUpdate(int x, int y);
 void HalSystemIdle();
 
 /// <summary>
+/// Returns whether or not an APIC exists and is being used by the systems. On systems where this is not 
+/// relevant, it should return false.
+/// </summary>
+bool HalIsAPICEnabled();
+
+/// <summary>
 /// Allocates a buffer which stores the coprocessor state. This buffer is passed into HalSaveCoprocessor and HalLoadCoprocessor.
 /// </summary>
 /// <returns></returns>

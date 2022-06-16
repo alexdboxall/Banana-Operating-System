@@ -475,7 +475,7 @@ public:
 
 	void repaintCursorRegion(Screen scr, Region mouseRgn)
 	{
-		//free(repaintAux(scr, mouseRgn, false).data);
+		free(repaintAux(scr, mouseRgn, false).data);
 	}
 
 	void repaint(Screen scr, Region mouseRgn)
