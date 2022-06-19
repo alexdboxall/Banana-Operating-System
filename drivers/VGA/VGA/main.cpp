@@ -882,7 +882,7 @@ uint32_t VGAVideo::readPixelApprox(int x, int y)
 	for (int i = 0; i < (mono ? 1 : 4); ++i) {
 		FAST_PLANE_SWITCH(i);
 		out <<= 1;
-		out |= (vram[addr] & w);
+		out |= (vram[addr] & w) ? 1 : 0;
 	}
 
 	return col4To16[out];

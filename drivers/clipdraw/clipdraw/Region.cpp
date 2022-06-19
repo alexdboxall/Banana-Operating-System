@@ -468,7 +468,11 @@ bool isPointInRegion(Region rgn, int wantX, int wantY)
 			if (in) {
 
 				if (scanline + rgn.relY <= wantY && wantY < scanline + rgn.relY + times) {
-					if (rgn.relX + x <= wantX && wantX < rgn.relX + x + (*data) - x) {
+					int v = (numInversions ? (*data) - x : 1);
+					if (x + v > rgn.width) {
+						v = rgn.width - x;
+					}
+					if (rgn.relX + x <= wantX && wantX < rgn.relX + x + v) {
 						return true;
 					}
 				}

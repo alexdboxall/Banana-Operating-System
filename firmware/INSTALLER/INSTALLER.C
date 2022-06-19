@@ -337,7 +337,7 @@ void disclaimer2(Window* w)
 void lackMath(Window* w)
 {
 	windowWrite(w, 0, 0, "Your computer does not have a math");
-	windowWrite(w, 0, 1, "processor.");
+	windowWrite(w, 0, 1, "co-processor.");
 
 	windowWrite(w, 0, 3, "Some functionality may not work correctly");
 	windowWrite(w, 0, 4, "until it is installed. Some programs may");
@@ -364,7 +364,7 @@ void lackRAMSoft(Window* w)
 {
 	windowWrite(w, 0, 0, "Your computer may not enough RAM");
 	windowWrite(w, 0, 1, "run Banana.");
-	windowWrite(w, 0, 3, "It is recommended to have at least 8 MB");
+	windowWrite(w, 0, 3, "It is recommended to have at least 16 MB");
 	windowWrite(w, 0, 4, "of RAM to use Banana.");
 
 	windowWrite(w, 0, 11, "To cancel the installation, press ESC");
@@ -1466,15 +1466,15 @@ void realInstallRedrawFloppyWait(Window* w)
 
 void realInstallRedraw1(Window* w)
 {
-	//windowWrite(w, 0, 0, "Please wait while Setup formats the");
-	//windowWrite(w, 0, 1, "partition.");
-	//windowWrite(w, 0, 3, "Do not eject the installation disc or");
-	//windowWrite(w, 0, 4, "turn off the power.");
+	windowWrite(w, 0, 0, "Please wait while Setup formats the");
+	windowWrite(w, 0, 1, "partition.");
+	windowWrite(w, 0, 3, "Do not eject the installation disc or");
+	windowWrite(w, 0, 4, "turn off the power.");
 
-	windowWrite(w, 0, 0, "Please wait while Setup deletes Windows");
-	windowWrite(w, 0, 1, "and all of your files.");
-	windowWrite(w, 0, 3, "If this doesn't sound good, yank out the");
-	windowWrite(w, 0, 4, "power cable ASAP!");
+	//windowWrite(w, 0, 0, "Please wait while Setup deletes Windows");
+	//windowWrite(w, 0, 1, "and all of your files.");
+	//windowWrite(w, 0, 3, "If this doesn't sound good, yank out the");
+	//windowWrite(w, 0, 4, "power cable ASAP!");
 
 	if (percent < 100) {
 		if (percent / 10) writeCharacter(25, 13, percent / 10 + '0', TCBlack, TCWhite);
@@ -2044,7 +2044,7 @@ void main()
 	windowWrite(windows[0], 24, 8, "Done");
 	millisleep(250);
 
-	if (totalRAM < 4) {
+	if (totalRAM < 8) {
 		w.repaint = lackRAM;
 		drawScreen();
 		while (1) {
@@ -2054,7 +2054,7 @@ void main()
 			} else if (debug) break;
 		}
 	}
-	if (totalRAM < 8) {
+	if (totalRAM < 16) {
 		w.repaint = lackRAMSoft;
 		drawScreen();
 		continueOrExit();

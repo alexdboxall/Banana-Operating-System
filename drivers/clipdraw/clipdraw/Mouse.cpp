@@ -129,8 +129,6 @@ void showCursor(Screen scr)
 }
 
 void changeCursor(Screen scr, int newOffset) {
-	return;
-
 	cursorOffset = newOffset;
 
 	tightMouseRegionOld.relX = mouseX;
@@ -140,7 +138,8 @@ void changeCursor(Screen scr, int newOffset) {
 	tightMouseRegionNew = createTightCursorRegion(mouseX, mouseY, (uint32_t*) (___mouse_data + cursorOffset));
 
 	Region clearRgn = getRegionDifference(tightMouseRegionOld, tightMouseRegionNew);
-	desktopWindow->repaintCursorRegion(scr, clearRgn);
+	fillRegion(scr, clearRgn, 0x008080);		// TODO: blit
+	//desktopWindow->repaintCursorRegion(scr, clearRgn);
 
 	free(tightMouseRegionOld.data);
 	tightMouseRegionOld = createTightCursorRegion(mouseX, mouseY, (uint32_t*) (___mouse_data + cursorOffset));
@@ -155,6 +154,9 @@ void changeCursor(Screen scr, int newOffset) {
 NFrame* draggingWindow;
 bool startedDragging = false;
 int dragMode;
+
+
+bool showWindowContentsWhileDragging = false;
 
 #define DOUBLE_CLICK_MILLISECONDS	300
 
@@ -182,7 +184,8 @@ bool handleMouse(Screen scr, int xDelta, int yDelta, int zDeltaHz, int zDeltaVt,
 
 	hideCursor(scr, oldMouseX, oldMouseY, mouseX, mouseY);
 
-	NFrame* pxOwner = desktopWindow->getPixelOwner(scr, mouseX, mouseY, true);
+	NFrame* pxOwner = desktopWindow->getPixelOwner(scr, mouseX, mouseY, true, desktopWindow->_getRegion());
+	kprintf("pixel owner = 0x%X, %dx%d %dx%d\n", pxOwner, pxOwner->getAbsX(), pxOwner->getAbsY(), pxOwner->getWidth(), pxOwner->getHeight());
 
 	bool doubleClick = false;
 	if ((buttons & MOUSE_BUTTON_LEFT) && !(oldButtons & MOUSE_BUTTON_LEFT)) {
@@ -223,7 +226,7 @@ bool handleMouse(Screen scr, int xDelta, int yDelta, int zDeltaHz, int zDeltaVt,
 			changeCursor(scr, MOUSE_OFFSET_NORMAL);
 		}
 		if (draggingWindow && startedDragging) {
-			draggingWindow->endDragState();
+			if (!showWindowContentsWhileDragging) draggingWindow->endDragState();
 			needsRepaint = true;
 		}
 
@@ -289,7 +292,7 @@ bool handleMouse(Screen scr, int xDelta, int yDelta, int zDeltaHz, int zDeltaVt,
 
 		if (!startedDragging) {
 			startedDragging = true;
-			draggingWindow->startDragState();
+			if (!showWindowContentsWhileDragging) draggingWindow->startDragState();
 		}
 
 		if (dragMode == DRAG_MODE_MOVE) {

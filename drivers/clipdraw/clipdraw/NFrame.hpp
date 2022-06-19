@@ -22,14 +22,7 @@ extern "C" {
 #include "Video.hpp"
 #include "Primatives.hpp"
 
-#define NFRAME_DEFAULT_FLAGS					(0)
-#define NFRAME_DEFAULT_NON_DECORATED_FLAGS		(NFRAME_FLAG_DISABLE_TITLE_BAR | NFRAME_FLAG_DISABLE_SHADOW)
-
-#define NFRAME_FLAG_DISABLE_TITLE_BAR			1
-#define NFRAME_FLAG_HIDE_CLOSE_BUTTON			2
-#define NFRAME_FLAG_DISABLE_SHADOW				4
-#define NFRAME_FLAG_DISABLE_DEFAULT_PAINTER		8
-#define NFRAME_FLAG_DISABLE_CLOSE_BUTTON		16
+#include "NFrameFlags.hpp"
 
 #pragma GCC optimize ("O0")
 
@@ -122,13 +115,18 @@ protected:
 	virtual void paintHandler(Graphics g) = 0;
 
 public:
-	NFrame* getPixelOwner(Screen scr, int x, int y, bool collapseIntoToplevel)
+	NFrame* getPixelOwner(Screen scr, int x, int y, bool collapseIntoToplevel, Region parentBound)
 	{
 		Region drawRgn = getDrawRegion();
 		drawRgn.relX = getAbsX();
 		drawRgn.relY = getAbsY();
 
-		if (isPointInRegion(drawRgn, x, y)) {
+		//Region clippedPart = getRegionIntersection(drawRgn, parentBound);
+		//free(drawRgn.data);
+
+		//if (isPointInRegion(clippedPart, x, y)) {
+		if (isPointInRegion(drawRgn, x, y)) {//
+			//free(clippedPart.data);
 			free(drawRgn.data);
 			return this;
 		}
@@ -144,13 +142,25 @@ public:
 				continue;
 			}
 
-			NFrame* childResult = child->getPixelOwner(scr, x, y, collapseIntoToplevel);
+			NFrame* childResult = child->getPixelOwner(scr, x, y, collapseIntoToplevel, parentBound /*clippedPart*/);
 			if (childResult != nullptr) {
+				//free(clippedPart.data);
 				return (collapseIntoToplevel && parent != nullptr) ? this : childResult;
 			}
 		}
 
+		//free(clippedPart.data);
 		return nullptr;
+	}
+
+	virtual Region getChildAllowableRegion()
+	{
+		Region rgn2(getAbsX(), getAbsY(), rgn.width, rgn.height);
+		rgn2.dotted = rgn.dotted;
+		rgn2.dataSize = rgn.dataSize;
+		rgn2.data = (uint32_t*) malloc(rgn2.dataSize);
+		memcpy(rgn2.data, rgn.data, rgn2.dataSize);
+		return rgn2;
 	}
 
 	Region repaintAux(Screen scr, Region parentBound, bool clearDirtyRgn = true)
@@ -165,11 +175,10 @@ public:
 
 		paintHandler(Graphics(scr, drawRgnClipped));
 
-		Region rgn2 = rgn;
-		rgn2.relX = getAbsX();
-		rgn2.relY = getAbsY();
+		Region rgn2 = getChildAllowableRegion();
 
 		Region childClip = getRegionIntersection(parentBound, rgn2);
+		free(rgn2.data);
 
 		NFrame* dragChild = nullptr;
 
@@ -302,8 +311,16 @@ public:
 			childDrawRegion.relX += rgn.relX;
 			childDrawRegion.relY += rgn.relY;
 
-			Region recombined = getRegionUnion(combinedChildRegions, childDrawRegion);
+			Region allowableChildRgn = getChildAllowableRegion();
+			Region fixedChild = getRegionIntersection(allowableChildRgn, childDrawRegion);
+
+			Region recombined = getRegionUnion(combinedChildRegions, fixedChild);
+
 			free(combinedChildRegions.data);
+
+			free(allowableChildRgn.data);
+			free(fixedChild.data);
+
 			combinedChildRegions = recombined;
 		}
 
@@ -365,7 +382,7 @@ public:
 			rgn.width = w;
 			rgn.height = h;
 			regenerateRegion();
-			postResizeCleanup();
+			postResizeCleanup();		// TODO: if dragging, don't need to reclip corners until you release
 			return true;
 		}
 
@@ -593,9 +610,25 @@ public:
 		free(title);
 	}
 
+	virtual Region getChildAllowableRegion() override
+	{
+		if (allowShadows()) {
+			Region childRgn = createRectangleRegion(getAbsX() + 1, getAbsY() + 1 + getTitlebarHeight(), rgn.width - SHADOW_SIZE - 2, rgn.height - SHADOW_SIZE - 2 - getTitlebarHeight());
+			return childRgn;
+
+		} else {
+			return NFrame::getChildAllowableRegion();
+		}
+	}
+
+	bool allowShadows()
+	{
+		return !(flags & NFRAME_FLAG_DISABLE_SHADOW) && !fullscreen;
+	}
+
 	void clipCornersIfNeededToMakeShadows()
 	{
-		if (!(flags & NFRAME_FLAG_DISABLE_SHADOW) && !fullscreen) {
+		if (allowShadows()) {
 			SHADOW_SIZE = 3;
 
 			Region cornerClipA = createRectangleRegion(rgn.relX + rgn.width - SHADOW_SIZE, rgn.relY, SHADOW_SIZE, SHADOW_SIZE);

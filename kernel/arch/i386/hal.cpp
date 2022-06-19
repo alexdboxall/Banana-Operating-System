@@ -813,6 +813,7 @@ void HalInitialiseCoprocessor()
 	}*/
 
 	if (features.hasSSE) {
+		kprintf("using SSE\n");
 		coproSaveFunc = sseSave;
 		coproLoadFunc = sseLoad;
 		sseInit();
@@ -820,6 +821,7 @@ void HalInitialiseCoprocessor()
 	}
 
 	if (features.hasx87) {
+		kprintf("using x87\n");
 		coproSaveFunc = x87Save;
 		coproLoadFunc = x87Load;
 		x87Init();

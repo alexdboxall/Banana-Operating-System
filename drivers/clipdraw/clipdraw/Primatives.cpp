@@ -172,12 +172,11 @@ void fillRegion(Screen scr, Region rgn, uint32_t colour)
 			}
 
 			if (in) {
-				if (rgn.dotted) {
-					videoDrawRectDotted(scr, rgn.relX + x, rgn.relY + scanline, (*data) - x, times, colour);
-
-				} else {
+				//if (rgn.dotted) {
+				//	videoDrawRectDotted(scr, rgn.relX + x, rgn.relY + scanline, (*data) - x, times, colour);
+				//} else {
 					videoDrawRect(scr, rgn.relX + x, rgn.relY + scanline, (*data) - x, times, colour);
-				}
+				//}
 			}
 
 			if (numInversions) {
