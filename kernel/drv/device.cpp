@@ -1,7 +1,10 @@
 
 #include <drv/device.hpp>
 #include <drv/driver.hpp>
+#include <drv/root.hpp>
 #include <krnl/panic.hpp>
+#include <dbg/kconsole.hpp>
+#include <drv/root.hpp>
 
 extern "C" {
 #include <libk/string.h>
@@ -13,6 +16,42 @@ extern "C" {
 #pragma GCC optimize ("-fno-align-jumps")
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
+
+
+RootHardware* keDeviceTreeRoot;
+
+void KeSetupDeviceTree()
+{
+	keDeviceTreeRoot = new RootHardware();
+}
+
+void KePrintDeviceTree()
+{
+	kprintf("\n\n----------------------------------------\n\nDEVICE TREE:\n\n");
+	keDeviceTreeRoot->printRecursively(0);
+	kprintf("\n\n----------------------------------------\n\n");
+}
+
+void Hardware::printRecursively(int level)
+{
+	for (int i = 0; i < level; ++i) {
+		kprintf("    ");
+	}
+
+	char types[][12] = {
+		"<UNKNOWN> ",
+		"<BUS>     ",
+		"<KEYBOARD>",
+		"<MOUSE>   ",
+		"<ROOT>    "
+	};
+
+	kprintf("%s %s\n", types[(int) getType()], getHumanReadableName());
+
+	for (auto const& child : children) {
+		child->printRecursively(level + 1);
+	}
+}
 
 void Hardware::registerMemoryRange(size_t start, size_t length)
 {
@@ -78,9 +117,14 @@ void Hardware::deregisterIRQ(int irq)
 	}
 }
 
-void Hardware::setHumanReadableName(const char* _name)
+const char* Hardware::getHumanReadableName()
 {
-	strcpy(name, _name);
+	auto driver = _getDriver();
+	if (driver) {
+		return driver->getHumanReadableName();
+	} else {
+		return "Unknown Device";
+	}
 }
 
 void Hardware::addChild(Hardware* child)
@@ -95,17 +139,7 @@ void Hardware::removeChild(Hardware* child)
 
 Hardware::Hardware()
 {
-	
-}
-
-Hardware::Hardware(BuiltinDriver driver)
-{
-
-}
-
-Hardware::Hardware(const char* driverPath)
-{
-
+	irqUsageBitflags = 0;
 }
 
 void Hardware::detectRecursively()
@@ -144,4 +178,22 @@ void Hardware::setPowerStateRecursively(DevicePowerState state)
 	if (driver) {
 		driver->setPowerState(state);
 	}
+}
+
+void Hardware::getHardwareOfTypeAux(HardwareType type, std::vector<Hardware*>& vec)
+{
+	if (type == getType()) {
+		vec.push_back(this);
+	}
+
+	for (const auto& child : children) {
+		child->getHardwareOfTypeAux(type, vec);
+	}
+}
+
+std::vector<Hardware*> KeGetHardwareOfType(HardwareType type)
+{
+	auto vec = std::vector<Hardware*>();
+	keDeviceTreeRoot->getHardwareOfTypeAux(type, vec);
+	return vec;
 }

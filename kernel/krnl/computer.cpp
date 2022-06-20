@@ -17,6 +17,8 @@
 #include <thr/prcssthr.hpp>
 #include <sys/syscalls.hpp>
 
+#include <drv/device.hpp>
+
 #pragma GCC optimize ("O2")
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
@@ -50,6 +52,9 @@ int Computer::open(int a, int b, void* vas)
 	cpu[0]->open(0, 0, vas);		//FIRST ARG IS CPU NUMBER
 
 	KeSetBootMessage("Creating device tree...");
+	KeSetupDeviceTree();
+	KePrintDeviceTree();
+
 	root = new ACPI();
 	addChild(root);
 	addChild(cpu[0]);

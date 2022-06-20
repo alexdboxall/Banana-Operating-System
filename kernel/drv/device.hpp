@@ -5,6 +5,10 @@
 
 #include <cpp/vector.hpp>
 
+extern "C" {
+#include <acpica/acpi.h>
+}
+
 #define HARDWARE_MAX_IRQ_REGISTRATIONS 4
 #define CREATE_HARDWARE_SUBCLASS(name) class## ##name##Hardware : public Hardware { protected:##name##Driver* driver;virtual Driver* _getDriver() override{return (Driver*) driver;}HardwareType getType(){return HardwareType::##name##;}};
 
@@ -15,8 +19,29 @@ enum class DeviceRootConnectionType
 	Manual,
 	ISA,
 	PCI,
-	ACPI
+	ACPI,
+	None,
 };
+
+typedef struct DevicePCIConnectionInfo
+{
+	uint8_t classCode;
+	uint8_t subClass;
+	uint16_t vendorID;
+
+	uint8_t bus;
+	uint8_t slot;
+	uint8_t function;
+	uint8_t progIF;
+
+	uint32_t bar[6];
+
+	uint8_t interrrupt;
+	uint8_t intPIN;
+
+	uint16_t deviceID;
+
+} DevicePCIConnectionInfo;
 
 enum class DevicePowerState
 {
@@ -27,24 +52,14 @@ enum class DevicePowerState
 	WakeFromHibernate,
 };
 
+// please keep in this order, a lookup table requires it
 enum class HardwareType
 {
 	Unknown,
 	Bus,
 	Keyboard,
 	Mouse,
-};
-
-enum class BuiltinDriver
-{
-	PCI,
-	ATA,
-	ATAPI,
-	IDE,
-	SATA,
-	SATAPI,
-	ACPI,
-	ISA,
+	Root,
 };
 
 struct DeviceMemoryRange
@@ -68,6 +83,12 @@ private:
 	// only used to allow the '...Recursively' functions work
 	virtual Driver* _getDriver() = 0;
 
+	void printRecursively(int level);
+	void getHardwareOfTypeAux(HardwareType type, std::vector<Hardware*>& vec);
+
+	friend std::vector<Hardware*> KeGetHardwareOfType(HardwareType type);
+	friend void KePrintDeviceTree();
+
 protected:
 	std::vector<Hardware*> children;
 	std::vector<DeviceMemoryRange> memoryRanges;
@@ -75,8 +96,31 @@ protected:
 
 	int irqs[HARDWARE_MAX_IRQ_REGISTRATIONS];
 	uint8_t irqUsageBitflags;
-	char name[128];
 
+public:
+	union
+	{
+		struct
+		{
+			DevicePCIConnectionInfo info;
+		} pci;
+
+		struct
+		{
+			ACPI_HANDLE handle;
+			char namespaceName[30];
+			char pnpID[14];
+		} acpi;
+
+		struct
+		{
+			uint16_t probeBase[8];
+
+		} isaprobe;
+	}; 
+
+	DeviceRootConnectionType connectionType;
+	
 	void registerIRQ(int irq);
 	void deregisterIRQ(int irq);
 	void registerMemoryRange(size_t start, size_t length);
@@ -85,7 +129,7 @@ protected:
 	void addChild(Hardware* child);
 	void removeChild(Hardware* child);
 
-	void setHumanReadableName(const char* name);
+	virtual const char* getHumanReadableName();
 
 	void detectRecursively();
 	void deinitialiseRecursively();
@@ -93,10 +137,12 @@ protected:
 
 	virtual HardwareType getType() = 0;
 
-public:
 	virtual ~Hardware();
-
 	Hardware();
-	Hardware(BuiltinDriver driver);
-	Hardware(const char* driverPath);
 };
+
+class RootHardware;
+extern RootHardware* keDeviceTreeRoot;
+std::vector<Hardware*> KeGetHardwareOfType(HardwareType type);
+void KeSetupDeviceTree();
+void KePrintDeviceTree();

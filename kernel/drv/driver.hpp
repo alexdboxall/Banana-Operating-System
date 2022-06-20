@@ -5,13 +5,15 @@
 
 class Driver
 {
-private:
-
-protected:
-
 public:
-	Driver();
+	Hardware* hw;
 
+	Driver()
+	{
+
+	}
+
+	virtual const char* getHumanReadableName() = 0;
 	virtual void initialise() = 0;
 	virtual void detect() = 0;
 	virtual void deinitialise() = 0;

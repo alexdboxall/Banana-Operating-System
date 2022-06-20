@@ -29,4 +29,14 @@ protected:
 	{
 		return HardwareType::Keyboard;
 	}
+
+	KeyboardHardware() : Hardware()
+	{
+		driver = nullptr;
+	}
+
+	KeyboardHardware(KeyboardDriver* _driver) : Hardware()
+	{
+		driver = _driver;
+	}
 };
