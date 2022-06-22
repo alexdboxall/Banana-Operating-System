@@ -3,10 +3,16 @@
 #include <drv/root.hpp>
 #include <drv/bus.hpp>
 #include <drv/driver/isa.hpp>
+#include <drv/driver/isapnp.hpp>
 #include <drv/driver/pci.hpp>
 #include <drv/driver/acpi.hpp>
 
 bool RootDriver::hasACPI()
+{
+	return true;
+}
+
+bool RootDriver::hasISAPnP()
 {
 	return true;
 }
@@ -18,9 +24,6 @@ bool RootDriver::hasPCI()
 
 void RootDriver::initialise()
 {
-	auto isa = new BusHardware(reinterpret_cast<BusDriver*>(new ISADriver()));
-	hw->addChild(isa);
-
 	if (hasACPI()) {
 		auto acpi = new BusHardware(reinterpret_cast<BusDriver*>(new ACPIDriver()));
 		hw->addChild(acpi);
@@ -30,6 +33,24 @@ void RootDriver::initialise()
 		auto pci = new BusHardware(reinterpret_cast<BusDriver*>(new PCIDriver()));
 		hw->addChild(pci);
 	}
+
+	if (hasISAPnP()) {
+		auto isapnp = new BusHardware(reinterpret_cast<BusDriver*>(new ISAPnPDriver()));
+		hw->addChild(isapnp);
+	}
+
+	
+	/*auto diskDrives = KeGetHardwareOfType(HardwareType::PhysicalDisk);
+	if (diskDrives.size() == 0) {
+		KePanic("TODO: ADD HARDCODED PORT ATA DRIVE");
+	}
+	*/
+}
+
+void RootDriver::detectLegacyISA()
+{
+	auto isa = new BusHardware(reinterpret_cast<BusDriver*>(new ISADriver()));
+	hw->addChild(isa);
 }
 
 void RootDriver::detect()

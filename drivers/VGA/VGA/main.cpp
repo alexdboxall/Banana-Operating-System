@@ -850,11 +850,7 @@ void VGAVideo::putrect(int __x, int __y, int maxx, int maxy, uint32_t colour)
 	}
 }
 
-
-
-uint32_t VGAVideo::readPixelApprox(int x, int y)
-{
-	uint32_t col4To16[16] = {
+uint32_t col4To16[16] = {
 		0x000000,
 		0x000080,
 		0x008000,
@@ -871,21 +867,58 @@ uint32_t VGAVideo::readPixelApprox(int x, int y)
 		0xFF00FF,
 		0xFFFF00,
 		0xFFFFFF
-	};
+};
 
+uint32_t VGAVideo::readPixelApprox(int x, int y)
+{
 	uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + vramBase);
 	int bit = 7 - (x & 7);
 	int addr = (y * width + x) >> 3;
 
-	int w = ~(1 << bit);
+	int w = 1 << bit;
 	int out = 0;
 	for (int i = 0; i < (mono ? 1 : 4); ++i) {
-		FAST_PLANE_SWITCH(i);
+		FAST_PLANE_SWITCH(3 - i);
 		out <<= 1;
 		out |= (vram[addr] & w) ? 1 : 0;
 	}
 
 	return col4To16[out];
+}
+
+uint32_t* VGAVideo::savePixelsInSquare(int xx, int yy)
+{
+	memset(cursorBuffer, 0, 32 * 32 * 4);
+
+	uint8_t* vram = (uint8_t*) (VIRT_LOW_MEGS + vramBase);
+
+	for (int i = 0; i < 4; ++i) {
+		FAST_PLANE_SWITCH(3 - i);
+		
+		for (int y = 0; y < 32; y++) {
+			if (y + yy >= getHeight()) {
+				break;
+			}
+
+			for (int x = 0; x < 32; x++) {
+				if (x + xx >= getWidth()) {
+					break;
+				}
+
+				int bit = 7 - ((x + xx) & 7);
+				int addr = ((y + yy) * width + (x + xx)) >> 3;
+				int w = 1 << bit;
+				cursorBuffer[y * 32 + x] <<= 1;
+				cursorBuffer[y * 32 + x] |= (vram[addr] & w) ? 1 : 0;
+
+				if (i == 3) {
+					cursorBuffer[y * 32 + x] = col4To16[cursorBuffer[y * 32 + x]];
+				}
+			}
+		}
+	}
+
+	return cursorBuffer;
 }
 
 void VGAVideo::putpixel(int x, int y, uint32_t colour)

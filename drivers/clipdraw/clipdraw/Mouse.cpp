@@ -96,17 +96,23 @@ void loadCursorFile(const char* name)
 	free(curdata);
 }
 
+uint32_t pixelsUnderCursor[32 * 32];
+
 void mouseInit(Screen scr)
 {
+	mouseX = 50;
+	mouseY = 50;
+
 	loadCursorFile("C:/Banana/Cursors/STANDARD.CUR");
 
 	cursorOffset = MOUSE_OFFSET_NORMAL;
 
 	tightMouseRegionOld = createTightCursorRegion(0, 0, (uint32_t*) (___mouse_data + cursorOffset));
 	tightMouseRegionNew = createTightCursorRegion(0, 0, (uint32_t*) (___mouse_data + cursorOffset));
-}
 
-uint32_t pixelsUnderCursor[32 * 32];
+	uint32_t* underCursor = videoSaveAreaUnderCursor(scr, mouseX, mouseY);
+	memcpy(pixelsUnderCursor, underCursor, 32 * 32 * 4);
+}
 
 void hideCursor(Screen scr, int oldX, int oldY, int newX, int newY)
 {
@@ -115,12 +121,7 @@ void hideCursor(Screen scr, int oldX, int oldY, int newX, int newY)
 	tightMouseRegionNew.relX = newX;
 	tightMouseRegionNew.relY = newY;
 
-	Region clearRgn = getRegionDifference(tightMouseRegionOld, tightMouseRegionNew);
-	fillRegion(scr, clearRgn, 0x008080);
-	//shitBlit(scr, clearRgn, oldX, oldY, pixelsUnderCursor, 32, 32);
-	//desktopWindow->repaintCursorRegion(scr, clearRgn);
-
-	free(clearRgn.data);
+	shitBlit(scr, tightMouseRegionOld, oldX, oldY, pixelsUnderCursor, 32, 32);
 }
 
 void showCursor(Screen scr)
@@ -137,9 +138,7 @@ void changeCursor(Screen scr, int newOffset) {
 	free(tightMouseRegionNew.data);
 	tightMouseRegionNew = createTightCursorRegion(mouseX, mouseY, (uint32_t*) (___mouse_data + cursorOffset));
 
-	Region clearRgn = getRegionDifference(tightMouseRegionOld, tightMouseRegionNew);
-	fillRegion(scr, clearRgn, 0x008080);		// TODO: blit
-	//desktopWindow->repaintCursorRegion(scr, clearRgn);
+	hideCursor(scr, mouseX, mouseY, mouseX, mouseY);
 
 	free(tightMouseRegionOld.data);
 	tightMouseRegionOld = createTightCursorRegion(mouseX, mouseY, (uint32_t*) (___mouse_data + cursorOffset));
@@ -154,7 +153,6 @@ void changeCursor(Screen scr, int newOffset) {
 NFrame* draggingWindow;
 bool startedDragging = false;
 int dragMode;
-
 
 bool showWindowContentsWhileDragging = false;
 
@@ -182,10 +180,7 @@ bool handleMouse(Screen scr, int xDelta, int yDelta, int zDeltaHz, int zDeltaVt,
 	if (mouseX >= scr->getWidth()) mouseX = scr->getWidth() - 1;
 	if (mouseY >= scr->getHeight()) mouseY = scr->getHeight() - 1;
 
-	hideCursor(scr, oldMouseX, oldMouseY, mouseX, mouseY);
-
 	NFrame* pxOwner = desktopWindow->getPixelOwner(scr, mouseX, mouseY, true, desktopWindow->_getRegion());
-	kprintf("pixel owner = 0x%X, %dx%d %dx%d\n", pxOwner, pxOwner->getAbsX(), pxOwner->getAbsY(), pxOwner->getWidth(), pxOwner->getHeight());
 
 	bool doubleClick = false;
 	if ((buttons & MOUSE_BUTTON_LEFT) && !(oldButtons & MOUSE_BUTTON_LEFT)) {
@@ -311,10 +306,25 @@ bool handleMouse(Screen scr, int xDelta, int yDelta, int zDeltaHz, int zDeltaVt,
 		needsRepaint = true;
 	}
 
+	bool mouseOverlapsDirtyRegion = false;
+
 	if (needsRepaint) {
+		auto dirtyRgn = desktopWindow->getDirtyRegion();	// don't free this!
+		
+		// TODO: do this properly
+		mouseOverlapsDirtyRegion = isPointInRegion(dirtyRgn, mouseX, mouseY) || isPointInRegion(dirtyRgn, mouseX + 10, mouseY + 15);
+
+		if (mouseOverlapsDirtyRegion) {
+			hideCursor(scr, oldMouseX, oldMouseY, mouseX, mouseY);
+		}
+
 		tightMouseRegionNew.relX = mouseX;
 		tightMouseRegionNew.relY = mouseY;
 		desktopWindow->repaint(scr, tightMouseRegionNew);
+	}
+
+	if (!mouseOverlapsDirtyRegion) {
+		hideCursor(scr, oldMouseX, oldMouseY, mouseX, mouseY);
 	}
 
 	uint32_t* underCursor = videoSaveAreaUnderCursor(scr, mouseX, mouseY);

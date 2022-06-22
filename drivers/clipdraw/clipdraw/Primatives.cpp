@@ -134,14 +134,17 @@ void blitRegion(Screen scr, Region rgn, int inX, int inY, uint32_t* blitData, in
 
 void shitBlit(Screen scr, Region rgn, int inX, int inY, uint32_t* blitData, int blitWidth, int blitHeight)
 {
-	for (int y = 0; y < blitHeight; ++y) {
-		for (int x = 0; x < blitWidth; ++x) {
-			Region r = createRectangleRegion(inX + x, inY + y, 1, 1);
-			Region r2 = getRegionIntersection(r, rgn);
+	for (int y = rgn.relY; y < rgn.relY + rgn.height; ++y) {
+		for (int x = rgn.relX; x < rgn.relX + rgn.width; ++x) {
 
-			fillRegion(scr, r2, 0x008080);		// blitData[y * blitWidth + x]);
-			free(r.data);
-			free(r2.data);
+			int offsX = x - inX;
+			int offsY = y - inY;
+
+			if (offsX >= 0 && offsY >= 0 && offsX < 32 && offsY < 32) {
+				if (isPointInRegion(rgn, x, y)) {
+					videoPutpixel(scr, x, y, blitData[offsY * 32 + offsX]);
+				}
+			}
 		}
 	}
 }

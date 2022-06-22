@@ -16,8 +16,8 @@ class Driver;
 
 enum class DeviceRootConnectionType
 {
-	Manual,
-	ISA,
+	ISAManual,
+	ISAPnP,
 	PCI,
 	ACPI,
 	None,
@@ -60,6 +60,8 @@ enum class HardwareType
 	Keyboard,
 	Mouse,
 	Root,
+	PhysicalDisk,
+	SerialPort,
 };
 
 struct DeviceMemoryRange
@@ -90,7 +92,6 @@ private:
 	friend void KePrintDeviceTree();
 
 protected:
-	std::vector<Hardware*> children;
 	std::vector<DeviceMemoryRange> memoryRanges;
 	std::vector<DevicePortRange> portRanges;
 
@@ -116,11 +117,21 @@ public:
 		{
 			uint16_t probeBase[8];
 
-		} isaprobe;
+		} isamanual;
+
+		struct
+		{
+			uint8_t csn;
+			uint32_t vendorID;
+			uint32_t serialNumber;
+
+		} isapnp;
 	}; 
 
 	DeviceRootConnectionType connectionType;
 	
+	std::vector<Hardware*> children;
+
 	void registerIRQ(int irq);
 	void deregisterIRQ(int irq);
 	void registerMemoryRange(size_t start, size_t length);
@@ -142,7 +153,14 @@ public:
 };
 
 class RootHardware;
-extern RootHardware* keDeviceTreeRoot;
+class BusHardware;
+
 std::vector<Hardware*> KeGetHardwareOfType(HardwareType type);
 void KeSetupDeviceTree();
 void KePrintDeviceTree();
+RootHardware* KeGetRootDevice();
+BusHardware* KeGetPCIDevice();
+BusHardware* KeGetACPIDevice();
+BusHardware* KeGetISAPnPDevice();
+BusHardware* KeGetISADevice();
+bool KeIsPortInUse(uint16_t port, int length);

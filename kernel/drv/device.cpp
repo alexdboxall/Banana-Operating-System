@@ -6,6 +6,11 @@
 #include <dbg/kconsole.hpp>
 #include <drv/root.hpp>
 
+#include <drv/driver/acpi.hpp>
+#include <drv/driver/pci.hpp>
+#include <drv/driver/isa.hpp>
+#include <drv/driver/isapnp.hpp>
+
 extern "C" {
 #include <libk/string.h>
 }
@@ -23,6 +28,52 @@ RootHardware* keDeviceTreeRoot;
 void KeSetupDeviceTree()
 {
 	keDeviceTreeRoot = new RootHardware();
+	keDeviceTreeRoot->detectRecursively();				// load disk drivers
+	// TODO: load filesystem
+	keDeviceTreeRoot->detectRecursively();				// load USB, PCI devices, ACPI devices, legacy PnP etc.
+	keDeviceTreeRoot->driver->detectLegacyISA();		// PS/2 keyboard, serial ports, etc.
+}
+
+bool KeIsPortInUse(uint16_t port, int length)
+{
+	kprintf("TODO: KeIsPortInUse NOT IMPLEMENTED\n");
+	return false;
+}
+
+RootHardware* KeGetRootDevice()
+{
+	return keDeviceTreeRoot;
+}
+
+BusHardware* KeGetChildOfRootWithName(const char* str)
+{
+	for (const auto& child : KeGetRootDevice()->children) {
+		if (!strcmp(child->getHumanReadableName(), str)) {
+			return reinterpret_cast<BusHardware*>(child);
+		}
+	}
+
+	return nullptr;
+}
+
+BusHardware* KeGetPCIDevice()
+{
+	return KeGetChildOfRootWithName(PCI_DRIVER_NAME);
+}
+
+BusHardware* KeGetACPIDevice()
+{
+	return KeGetChildOfRootWithName(ACPI_DRIVER_NAME);
+}
+
+BusHardware* KeGetISAPnPDevice()
+{
+	return KeGetChildOfRootWithName(ISA_PNP_DRIVER_NAME);
+}
+
+BusHardware* KeGetISADevice()
+{
+	return KeGetChildOfRootWithName(ISA_DRIVER_NAME);
 }
 
 void KePrintDeviceTree()
@@ -43,7 +94,9 @@ void Hardware::printRecursively(int level)
 		"<BUS>     ",
 		"<KEYBOARD>",
 		"<MOUSE>   ",
-		"<ROOT>    "
+		"<ROOT>    ",
+		"<DISK>    ",
+		"<SERIAL>  "
 	};
 
 	kprintf("%s %s\n", types[(int) getType()], getHumanReadableName());
@@ -144,6 +197,8 @@ Hardware::Hardware()
 
 void Hardware::detectRecursively()
 {
+	kprintf("detecting recursively...\n");
+
 	// we must detect updates to what we have before we can update what they have
 	auto driver = _getDriver();
 	if (driver) {

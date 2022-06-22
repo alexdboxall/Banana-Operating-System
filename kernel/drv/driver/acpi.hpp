@@ -4,7 +4,9 @@
 #include <drv/driver.hpp>
 #include <drv/bus.hpp>
 
-class ACPIDriver : public Driver
+#define ACPI_DRIVER_NAME "ACPI"
+
+class ACPIDriver : public BusDriver
 {
 private:
 

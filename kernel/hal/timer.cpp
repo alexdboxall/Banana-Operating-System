@@ -68,7 +68,6 @@ void timerHandler(uint32_t milliTenths)
 	milliTenthsSinceBoot += milliTenths;
 
 	if (!keIsSchedulingOn) {
-		kprintf("NO TIMER SCHEDULING!\n");
 		return;
 	}
 

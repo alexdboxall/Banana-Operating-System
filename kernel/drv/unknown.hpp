@@ -2,8 +2,11 @@
 
 #include <drv/device.hpp>
 #include <drv/driver.hpp>
-
 #include <drv/driver/pci.hpp>
+
+extern "C" {
+#include <libk/string.h>
+}
 
 class UnknownHardware : public Hardware
 {
@@ -32,16 +35,27 @@ public:
 	UnknownHardware(DevicePCIConnectionInfo info) : Hardware()
 	{
 		connectionType = DeviceRootConnectionType::PCI;
-		pci = info;
+		pci.info = info;
 
 		strcpy(pciDeviceName, "Unknown ");
 		strcat(pciDeviceName, PCIDriver::lookupDeviceName(pci.info));
+	}
+
+	void setISAPnPDetection(uint8_t csn, uint64_t value)
+	{
+		connectionType = DeviceRootConnectionType::ISAPnP;
+		isapnp.csn = csn;
+		isapnp.vendorID = (value & 0xFFFFFFFF);
+		isapnp.serialNumber = value >> 32;
 	}
 
 	virtual const char* getHumanReadableName() override
 	{
 		if (connectionType == DeviceRootConnectionType::PCI) {
 			return pciDeviceName;
+
+		} else if (connectionType == DeviceRootConnectionType::ISAPnP) {
+			return "Legacy ISA Plug and Play Device";
 
 		} else {
 			return Hardware::getHumanReadableName();

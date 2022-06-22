@@ -24,5 +24,5 @@ void ISADriver::setPowerState(DevicePowerState state)
 
 const char* ISADriver::getHumanReadableName()
 {
-	return "ISA";
+	return ISA_DRIVER_NAME;
 }

@@ -13,6 +13,7 @@ protected:
 	int width;
 	int height;
 	bool mono;
+	uint32_t cursorBuffer[32 * 32];
 
 public:
 	Video(const char* name);
@@ -28,6 +29,7 @@ public:
 	virtual void putrect(int x, int y, int w, int h, uint32_t colour);
 	virtual void putTGA(int x, int y, uint8_t* tgaData, int tgaLen);
 	virtual void drawCursor(int x, int y, uint32_t* data, int invertMouse);
+	virtual uint32_t* savePixelsInSquare(int x, int y);
 
 	virtual uint32_t readPixelApprox(int x, int y);
 	virtual void bitblit(int sx, int sy, int x, int y, int w, int h, int pitch, uint32_t* data);

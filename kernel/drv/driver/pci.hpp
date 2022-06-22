@@ -4,7 +4,9 @@
 #include <drv/driver.hpp>
 #include <drv/bus.hpp>
 
-class PCIDriver : public Driver
+#define PCI_DRIVER_NAME "PCI Bus"
+
+class PCIDriver : public BusDriver
 {
 private:
 

@@ -5,10 +5,12 @@
 #include <krnl/hal.hpp>
 #include <krnl/computer.hpp>
 #include <hw/acpi.hpp>			// computer->root->nextPCIIRQAssignment
+#include <dbg/kconsole.hpp>
 
 void PCIDriver::initialise()
 {
 	hw->registerPortRange(0xCF8, 8, 4);
+
 	enumerateDevices();
 	detect();
 }
@@ -31,7 +33,9 @@ void PCIDriver::enumerateDevices()
 	
 void PCIDriver::detect()
 {
-
+	for (const auto& child : hw->children) {
+		
+	}
 }
 
 void PCIDriver::deinitialise()
@@ -46,7 +50,7 @@ void PCIDriver::setPowerState(DevicePowerState state)
 
 const char* PCIDriver::getHumanReadableName()
 {
-	return "PCI Bus";
+	return PCI_DRIVER_NAME;
 }
 
 uint8_t PCIDriver::readBAR8(uint32_t addr, int offset)
@@ -223,6 +227,11 @@ void PCIDriver::registerDevice(uint8_t bus, uint8_t slot, uint8_t function)
 		return;
 	}
 
+	uint16_t vendorID = getVendorID(bus, slot, function);
+	if (vendorID == 0xFFFF) {
+		return;
+	}
+
 	uint16_t classCode = getClassCode(bus, slot, function);
 	uint8_t intno = getInterruptNumber(bus, slot, function);
 
@@ -252,7 +261,7 @@ void PCIDriver::registerDevice(uint8_t bus, uint8_t slot, uint8_t function)
 	info.subClass = (classCode & 0xFF);
 	info.deviceID = readWord(info.bus, info.slot, info.function, 2);
 	info.progIF = getProgIF(bus, slot, function);
-	info.vendorID = getVendorID(bus, slot, function);
+	info.vendorID = vendorID;
 	info.interrrupt = intno;
 
 	UnknownHardware* deviceChild = new UnknownHardware(info);
@@ -260,7 +269,181 @@ void PCIDriver::registerDevice(uint8_t bus, uint8_t slot, uint8_t function)
 }
 
 
-const char* PCI::lookupDeviceName(DevicePCIConnectionInfo info)
+const char* PCIDriver::lookupDeviceName(DevicePCIConnectionInfo info)
 {
-	return "PCI Device";
+	switch (info.classCode) {
+	case 0x0:
+	{
+		switch (info.subClass) {
+		case 0x1: return "PCI VGA-Compatible Video Device";
+		default: return "PCI Video Device";
+		}
+	}
+	case 0x1:
+	{
+		switch (info.subClass) {
+		case 0x0:
+		case 0x7: 
+			return "PCI SCSI Controller";
+		case 0x1: return "PCI IDE Controller";
+		case 0x2: return "PCI Floppy Disk Controller";
+		case 0x3: return "PCI IPI Bus Controller";
+		case 0x4: return "PCI RAID Controller";
+		case 0x5: return "PCI ATA Controller";
+		case 0x6: return "PCI SATA Controller";
+		case 0x8: return "PCI Non-Volatile Memory Controller";
+		default: return "PCI Mass Storage Device";
+		}
+	}
+	case 0x2:
+	{
+		switch (info.subClass) {
+		case 0x0: return "PCI Ethernet Controller";
+		default: return "PCI Network Controller";
+		}
+	}
+	case 0x3:
+	{
+		switch (info.subClass) {
+		case 0x0: return "PCI VGA-Compatible Video Controller";
+		case 0x1: return "PCI XGA Controller";
+		case 0x2: return "PCI 3D Controller";
+		default: return "PCI Display Controller";
+		}
+	}
+	case 0x4:
+	{
+		switch (info.subClass) {
+		case 0x0: return "PCI Video Controller";
+		case 0x1: return "PCI Audio Controller";
+		case 0x2: return "PCI Telephony Device";
+		case 0x3: return "PCI Audio Device";
+		default: return "PCI Multimedia Controller";
+		}
+	}
+	case 0x5:
+	{
+		switch (info.subClass) {
+		case 0x0: return "PCI RAM Controller";
+		case 0x1: return "PCI Flash Memory Controller";
+		default: return "PCI Memory Controller";
+		}
+	}
+	case 0x6:
+	{
+		switch (info.subClass) {
+		case 0x0: return "PCI Host Bridge";
+		case 0x1: return "PCI ISA Bridge";
+		case 0x2: return "PCI EISA Bridge";
+		case 0x3: return "PCI MCA Bridge";
+		case 0x4:
+		case 0x9:
+			return "PCI-to-PCI Bridge";
+		case 0x5: return "PCMCIA Bridge";
+		case 0x6: return "NuBus Bridge";
+		case 0x7: return "CardBus Bridge";
+		case 0x8: return "RACEway Bridge";
+		case 0xA: return "InfiniBand-to-PCI Host Bridge";
+		default: return "Other PCI Bridge";
+		}
+	}
+	case 0x7:
+	{
+		switch (info.subClass) {
+		case 0x0: return "PCI Serial Controller";
+		case 0x1: return "PCI Parallel Controller";
+		case 0x2: return "PCI Multiport Serial Controller";
+		case 0x3: return "PCI Modem";
+		case 0x4: return "PCI IEEE 488 Controller";
+		case 0x5: return "PCI Smart Card Controller";
+		default: return "PCI Communication Controller";
+		}
+	}
+	case 0x8:
+	{
+		switch (info.subClass) {
+		case 0x0: return "PCI Programmable Interrupt Controller";
+		case 0x1: return "PCI DMA Controller";
+		case 0x2: return "PCI Timer";
+		case 0x3: return "PCI Real Time Clock Controller";
+		case 0x4: return "PCI Hot-Plug Controller";
+		case 0x5: return "PCI SD Host Controller";
+		case 0x6: return "PCI IOMMU";
+		default: return "PCI System Peripheral";
+		}
+	}
+	case 0x9:
+	{
+		switch (info.subClass) {
+		case 0x0: return "PCI Keyboard Controller";
+		case 0x1: return "PCI Digitizer Pen";
+		case 0x2: return "PCI Mouse Controller";
+		case 0x3: return "PCI Scanners Controller";
+		case 0x4: return "PCI Gameports Controller";
+		default: return "PCI Input Device Controller";
+		}
+	}
+	case 0xA:
+		return "PCI Docking Station";
+	case 0xB:
+	{
+		switch (info.subClass) {
+		case 0x0: return "i386 Processor";
+		case 0x1: return "i486 Processor";
+		case 0x2: return "Pentium Processor";
+		case 0x3: return "Pentium Pro Processor";
+		case 0x10: return "Alpha Processor";
+		case 0x20: return "PowerPC Processor";
+		case 0x30: return "MIPS Processor";
+		case 0x40: return "Co-Processor";
+		default: return "Other Processor";
+		}
+	}
+	case 0xC:
+	{
+		switch (info.subClass) {
+		case 0x0: return "PCI FireWire Controller";
+		case 0x1: return "PCI ACCESS Bus Controller";
+		case 0x2: return "PCI SSA";
+		case 0x3: return "PCI USB Controller";
+		case 0x4: return "PCI Fibre Controller";
+		case 0x5: return "PCI SMBus Controller";
+		case 0x6: return "PCI InfiniBand Controller";
+		case 0x7: return "PCI IPMI Interface";
+		case 0x8: return "PCI SERCOS Interface";
+		case 0x9: return "PCI CANbus Interface";
+		default: return "PCI Serial Bus Controller";
+		}
+	}
+	case 0xD:
+	{
+		switch (info.subClass) {
+		case 0x0: return "PCI iRDA Compatible Controller";
+		case 0x1: return "PCI IR Controller";
+		case 0x10: return "PCI RF Controller";
+		case 0x11: return "PCI Bluetooth Controller";
+		case 0x12: return "PCI Broadband Controller";
+		case 0x20: return "PCI Ethernet 802.1a Controller";
+		case 0x21: return "PCI Ethernet 802.2a Controller";
+		default: return "PCI Wireless Controller";
+		}
+	}
+	case 0xE:
+		return "PCI Intelligent Controller";
+	case 0xF:
+		return "PCI Satellite Communication Controller";
+	case 0x10:
+		return "PCI Encryption Controller";
+	case 0x11:
+		return "PCI Signal Processing Controller";
+	case 0x12:
+		return "PCI Processing Accelerator";
+	case 0x13:
+		return "PCI Non-Essential Instrumentation";
+	case 0x40:
+		return "Co-Processor";
+	default:
+		kprintf("Unknown PCI device: %d, %d, %d\n", info.classCode, info.subClass, info.progIF);
+		return "PCI Device";
+	}
 }

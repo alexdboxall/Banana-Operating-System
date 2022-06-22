@@ -4,6 +4,8 @@
 #include <drv/driver.hpp>
 #include <drv/bus.hpp>
 
+#define ISA_DRIVER_NAME "ISA Bus"
+
 class ISADriver : public Driver
 {
 private:

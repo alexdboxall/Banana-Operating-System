@@ -24,7 +24,8 @@ public:
 
 	int open(int, int, void*);
 	int close(int, int, void*);
-
+	
+	virtual uint32_t* savePixelsInSquare(int xx, int yy);
 	virtual void drawCursor(int mouse_x, int mouse_y, uint32_t* data, int invertMouse);
 	virtual void blit(uint32_t* buffer, int x, int y, int _width, int _height);
 	virtual uint32_t readPixelApprox(int x, int y) override;

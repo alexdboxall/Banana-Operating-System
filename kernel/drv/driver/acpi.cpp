@@ -24,5 +24,5 @@ void ACPIDriver::setPowerState(DevicePowerState state)
 
 const char* ACPIDriver::getHumanReadableName()
 {
-	return "ACPI";
+	return ACPI_DRIVER_NAME;
 }

@@ -52,6 +52,25 @@ uint32_t Video::readPixelApprox(int x, int y)
 	return 0;
 }
 
+uint32_t* Video::savePixelsInSquare(int xx, int yy)
+{
+	for (int y = 0; y < 32; y++) {
+		if (y + yy >= getHeight()) {
+			break;
+		}
+
+		for (int x = 0; x < 32; x++) {
+			if (x + xx >= getWidth()) {
+				break;
+			}
+
+			cursorBuffer[y * 32 + x] = readPixelApprox(xx + x, yy + y);
+		}
+	}
+
+	return cursorBuffer;
+}
+
 void Video::drawCursor(int mouse_x, int mouse_y, uint32_t* data, int invertMouse)
 {
 	//No more hacky mouse, instead we're going to rather inefficiently 

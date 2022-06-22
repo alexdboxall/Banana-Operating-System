@@ -49,9 +49,6 @@ void NiMain(void* s)
 
 	screen->clearScreen(0x008080);
 
-	mouseX = 50;
-	mouseY = 50;
-
 	// DON'T PUT SHIT ON THE STACK
 	//
 	// When the mouse handler gets called it will crash because 
@@ -70,14 +67,14 @@ void NiMain(void* s)
 	desktopWindow->addChild(win);
 	desktopWindow->addChild(awin);
 
-	mouseInit(screen);
-
 	installSystemHooks();
 
 	Region dummyRgn = createRectangleRegion(screen->getWidth() + 1, 1, 1, 1);
 
 	desktopWindow->tryInvalidate();
 	desktopWindow->repaint(screen, dummyRgn);
+	
+	mouseInit(screen);
 
 	(new Process("C:/Banana/System/CLIPDEMO.EXE"))->createUserThread();
 

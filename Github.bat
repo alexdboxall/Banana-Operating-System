@@ -19,8 +19,7 @@ git add installer/*.bat -f
 git add installer/*.s -f
 git add installer/*.py -f
 git add installer/*.vbs -f
-git add libraries/newlib-3.3.0 -f
-git add libraries/userdraw -f
+git add libraries/userclip -f
 
 set /p commitmsg="Enter message: "
 git commit -a --allow-empty-message -m "%commitmsg%"

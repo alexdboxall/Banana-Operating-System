@@ -8,6 +8,7 @@ class RootDriver : public Driver
 private:
 	bool hasACPI();
 	bool hasPCI();
+	bool hasISAPnP();
 
 public:
 	void initialise();
@@ -15,6 +16,8 @@ public:
 	void deinitialise();
 	void setPowerState(DevicePowerState state);
 	const char* getHumanReadableName();
+
+	void detectLegacyISA();
 };
 
 class RootHardware : public Hardware
