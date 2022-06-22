@@ -7,6 +7,13 @@
 #include <krnl/hal.hpp>
 #include <drv/unknown.hpp>
 
+#pragma GCC optimize ("Os")
+#pragma GCC optimize ("-fno-strict-aliasing")
+#pragma GCC optimize ("-fno-align-labels")
+#pragma GCC optimize ("-fno-align-jumps")
+#pragma GCC optimize ("-fno-align-loops")
+#pragma GCC optimize ("-fno-align-functions")
+
 #define READ_DATA_LOWEST_PORT	0x0203
 #define READ_DATA_HIGHEST_PORT	0x03F3
 
@@ -21,7 +28,9 @@
 
 void ISAPnPDriver::changeReadPortBase()
 {
+	kprintf("Changing PnP base.\n");
 	for (int i = READ_DATA_PORT + 4; i < READ_DATA_HIGHEST_PORT; i += 4) {
+		kprintf("checking port 0x%X (PnP)\n", i);
 		if (!KeIsPortInUse(i, 1)) {
 			READ_DATA_PORT = i;
 			kprintf("Setting ISA PnP read port to 0x%X\n", READ_DATA_PORT);
@@ -31,7 +40,9 @@ void ISAPnPDriver::changeReadPortBase()
 
 			return;
 		}
+		kprintf(".\n");
 	}
+	kprintf("port base changed.\n");
 }
 
 void ISAPnPDriver::resetAllCards()
@@ -185,7 +196,7 @@ void ISAPnPDriver::initialise()
 		}
 	}
 	
-	// we can only registesr READ_DATA_PORT after we have
+	// we can only register READ_DATA_PORT after we have
 	// found its final position (there is no hw->deregisterPortRange()... yet)
 	hw->registerPortRange(WRITE_DATA_PORT, 1, 1);
 	hw->registerPortRange(ADDRESS_PORT, 1, 1);

@@ -39,7 +39,5 @@ public:
 	RootHardware()
 	{
 		driver = new RootDriver();
-		driver->hw = this;
-		driver->initialise();
 	}
 };

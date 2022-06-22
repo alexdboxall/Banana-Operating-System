@@ -32,7 +32,7 @@ public:
 		driver = nullptr;
 	}
 
-	BusHardware(BusDriver* _driver) : Hardware()
+	void setDriver(BusDriver* _driver)
 	{
 		driver = _driver;
 		driver->hw = this;

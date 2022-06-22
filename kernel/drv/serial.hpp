@@ -138,7 +138,7 @@ protected:
 
 	HardwareType getType()
 	{
-		return HardwareType::Bus;
+		return HardwareType::SerialPort;
 	}
 	
 public:
@@ -149,7 +149,7 @@ public:
 		driver = nullptr;
 	}
 
-	SerialHardware(SerialDriver* _driver) : Hardware()
+	void setDriver(SerialDriver* _driver)
 	{
 		driver = _driver;
 		driver->hw = this;

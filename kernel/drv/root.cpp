@@ -23,19 +23,22 @@ bool RootDriver::hasPCI()
 }
 
 void RootDriver::initialise()
-{
+{	
 	if (hasACPI()) {
-		auto acpi = new BusHardware(reinterpret_cast<BusDriver*>(new ACPIDriver()));
+		auto acpi = new BusHardware();
+		acpi->setDriver(reinterpret_cast<BusDriver*>(new ACPIDriver()));
 		hw->addChild(acpi);
 	}
 
 	if (hasPCI()) {
-		auto pci = new BusHardware(reinterpret_cast<BusDriver*>(new PCIDriver()));
+		auto pci = new BusHardware();
+		pci->setDriver(reinterpret_cast<BusDriver*>(new PCIDriver()));
 		hw->addChild(pci);
 	}
 
 	if (hasISAPnP()) {
-		auto isapnp = new BusHardware(reinterpret_cast<BusDriver*>(new ISAPnPDriver()));
+		auto isapnp = new BusHardware();
+		isapnp->setDriver(reinterpret_cast<BusDriver*>(new ISAPnPDriver()));
 		hw->addChild(isapnp);
 	}
 
@@ -49,7 +52,8 @@ void RootDriver::initialise()
 
 void RootDriver::detectLegacyISA()
 {
-	auto isa = new BusHardware(reinterpret_cast<BusDriver*>(new ISADriver()));
+	auto isa = new BusHardware();
+	isa->setDriver(reinterpret_cast<BusDriver*>(new ISADriver()));
 	hw->addChild(isa);
 }
 

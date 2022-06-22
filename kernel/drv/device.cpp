@@ -15,7 +15,7 @@ extern "C" {
 #include <libk/string.h>
 }
 
-#pragma GCC optimize ("Os")
+#pragma GCC optimize ("O2")			// I swear there's a compiler bug (unless I've got UB somewhere), it's not putting RETs after CALLs that end the function with Os enabled
 #pragma GCC optimize ("-fno-strict-aliasing")
 #pragma GCC optimize ("-fno-align-labels")
 #pragma GCC optimize ("-fno-align-jumps")
@@ -27,7 +27,14 @@ RootHardware* keDeviceTreeRoot;
 
 void KeSetupDeviceTree()
 {
+	// we need RootDriver::RootDriver() to return quickly without calling initialise() so we can do
+	// keDeviceTreeRoot = new RootDriver(), otherwise keDeviceTreeRoot is undefined during the call
+	// to initialise()
 	keDeviceTreeRoot = new RootHardware();
+
+	keDeviceTreeRoot->driver->hw = keDeviceTreeRoot;
+	keDeviceTreeRoot->driver->initialise();
+
 	keDeviceTreeRoot->detectRecursively();				// load disk drivers
 	// TODO: load filesystem
 	keDeviceTreeRoot->detectRecursively();				// load USB, PCI devices, ACPI devices, legacy PnP etc.
@@ -36,8 +43,12 @@ void KeSetupDeviceTree()
 
 bool KeIsPortInUse(uint16_t port, int length)
 {
-	kprintf("TODO: KeIsPortInUse NOT IMPLEMENTED\n");
-	return false;
+	return keDeviceTreeRoot->portInUseRecursive(port, length) != nullptr;
+}
+
+Hardware* KeGetOwnerOfPort(uint16_t port, int length)
+{
+	return keDeviceTreeRoot->portInUseRecursive(port, length);
 }
 
 RootHardware* KeGetRootDevice()
@@ -83,6 +94,42 @@ void KePrintDeviceTree()
 	kprintf("\n\n----------------------------------------\n\n");
 }
 
+void KePrintIOPortUsage()
+{
+	kprintf("\n\n----------------------------------------\n\nIO PORTS:\n\n");
+	for (int port = 0; port < 0x10000; ++port) {
+		auto portOwner = KeGetOwnerOfPort(port, 1);
+		if (portOwner) {
+			kprintf("%X: %s\n", port, portOwner->_getDriver()->getHumanReadableName());
+		}
+	}
+	kprintf("\n\n----------------------------------------\n\n");
+}
+
+Hardware* Hardware::portInUseRecursive(int port, int range)
+{	
+	// check ourselves first
+	for (auto const& portRange : portRanges) {
+		if (portRange.start < port + range && port < portRange.start + portRange.length) {
+			return this;
+		}
+	}
+
+	// now check any children
+	for (auto const& child : children) {
+		if (child == this) {
+			KePanic("WTF?!");
+		}
+		auto owner = child->portInUseRecursive(port, range);
+		if (owner) {
+			return owner;
+		}
+	}
+
+	// nope! not in use
+	return nullptr;
+}
+
 void Hardware::printRecursively(int level)
 {
 	for (int i = 0; i < level; ++i) {
@@ -96,7 +143,8 @@ void Hardware::printRecursively(int level)
 		"<MOUSE>   ",
 		"<ROOT>    ",
 		"<DISK>    ",
-		"<SERIAL>  "
+		"<SERIAL>  ",
+		"<DMA>     "
 	};
 
 	kprintf("%s %s\n", types[(int) getType()], getHumanReadableName());
@@ -141,6 +189,8 @@ void Hardware::registerPortRange(uint16_t start, uint8_t length, int width)
 	range.length = length;
 	range.alignment = 0;
 	range.width = bitWidth;
+
+	kprintf("registering port range starting at %d for device %s\n", start, getHumanReadableName());
 
 	portRanges.push_back(range);
 }

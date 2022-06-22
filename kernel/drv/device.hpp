@@ -62,6 +62,7 @@ enum class HardwareType
 	Root,
 	PhysicalDisk,
 	SerialPort,
+	LegacyDMA,
 };
 
 struct DeviceMemoryRange
@@ -87,10 +88,11 @@ private:
 
 	void printRecursively(int level);
 	void getHardwareOfTypeAux(HardwareType type, std::vector<Hardware*>& vec);
-
+	
 	friend std::vector<Hardware*> KeGetHardwareOfType(HardwareType type);
 	friend void KePrintDeviceTree();
-
+	friend void KePrintIOPortUsage();
+	
 protected:
 	std::vector<DeviceMemoryRange> memoryRanges;
 	std::vector<DevicePortRange> portRanges;
@@ -99,6 +101,8 @@ protected:
 	uint8_t irqUsageBitflags;
 
 public:
+	Hardware* portInUseRecursive(int port, int range);
+	
 	union
 	{
 		struct
@@ -158,9 +162,11 @@ class BusHardware;
 std::vector<Hardware*> KeGetHardwareOfType(HardwareType type);
 void KeSetupDeviceTree();
 void KePrintDeviceTree();
+void KePrintIOPortUsage();
 RootHardware* KeGetRootDevice();
 BusHardware* KeGetPCIDevice();
 BusHardware* KeGetACPIDevice();
 BusHardware* KeGetISAPnPDevice();
 BusHardware* KeGetISADevice();
 bool KeIsPortInUse(uint16_t port, int length);
+Hardware* KeGetOwnerOfPort(uint16_t port, int length);

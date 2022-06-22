@@ -54,6 +54,7 @@ int Computer::open(int a, int b, void* vas)
 	KeSetBootMessage("Creating device tree...");
 	KeSetupDeviceTree();
 	KePrintDeviceTree();
+	KePrintIOPortUsage();
 
 	root = new ACPI();
 	addChild(root);

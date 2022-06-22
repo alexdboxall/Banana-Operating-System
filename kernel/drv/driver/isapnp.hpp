@@ -4,7 +4,7 @@
 #include <drv/driver.hpp>
 #include <drv/bus.hpp>
 
-#define ISA_PNP_DRIVER_NAME		"ISA Plug and Play Bus"
+#define ISA_PNP_DRIVER_NAME	"ISA Plug and Play Bus"
 
 class ISAPnPDriver : public BusDriver
 {
