@@ -7,7 +7,7 @@
 #pragma GCC optimize ("-fno-align-loops")
 #pragma GCC optimize ("-fno-align-functions")
 
-uint32_t KiPolyLookupCRC32[256] =
+uint32_t kePolyLookupCRC32[256] =
 {
  0, 0x77073096, 0xEE0E612C, 0x990951BA,
  0x076DC419, 0x706AF48F, 0xE963A535, 0x9E6495A3,
@@ -79,7 +79,7 @@ uint32_t KeCalculateCRC32(uint8_t* data, int length)
 {
 	uint32_t crc = 0xFFFFFFFFU;
 	while (length-- != 0) {
-		crc = KiPolyLookupCRC32[((uint8_t) crc ^ *(data++))] ^ (crc >> 8);
+		crc = kePolyLookupCRC32[((uint8_t) crc ^ *(data++))] ^ (crc >> 8);
 	}
 	return ~crc;
 }

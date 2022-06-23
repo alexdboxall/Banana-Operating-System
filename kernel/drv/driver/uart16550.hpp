@@ -15,11 +15,22 @@ private:
 	int numStopBits;
 	int baud;
 	bool irqsOn;
-
+	bool breakConditionOn = false;
+	
+	uint8_t modemControlRegData;
+	
 	int getBaudDivisor(int baud);
-
+	void recomputeLineControlRegister();
+	void recomputeModemControlRegister();
+	
 	static int nextCOMNumber;
 	int comNumber;
+	
+	uint8_t irqBuffer[256];
+	uint8_t irqBufferPosition = 0;
+	int irqBufferBytesUsed = 0;
+
+	void fillIRQBuffer();
 	
 public:
 	UART16550()
@@ -39,7 +50,7 @@ public:
 	void setBaud(int baud);
 	int getClosestSupportedBaud(int baud);
 	int getBaud();
-	void write(uint8_t data);
+	bool write(uint8_t data);
 	uint8_t read();
 	int getHardwareBufferSize();
 	int getNumberBytesInIRQBuffer();
@@ -63,4 +74,13 @@ public:
 	void clearAllErrors();
 	void clearFirstError();
 	SerialErrorType getFirstError();
+
+	void enableBreak(bool on = true);
+	bool isBreakOn();
+	void enableLookback(bool on = true);
+	bool isLoopbackOn();
+	void setDataTerminalRead(bool state);
+	void setRequestToSend(bool state);
+	void setAux1(bool state);
+	void setAux2(bool state);
 };

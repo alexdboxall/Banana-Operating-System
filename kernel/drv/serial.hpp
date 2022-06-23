@@ -33,8 +33,6 @@ enum class SerialErrorType
 	DataLost,
 	ParityError,
 	StopBitError,
-	TransmitterEmpty,
-	BufferEmpty,
 	HardwareFailure,
 };
 
@@ -45,59 +43,13 @@ public:
 
 	}
 
-	SerialConfiguration getConfiguration()
-	{
-		SerialConfiguration config;
-		config.baud = getBaud();
-		config.parity = getPartityMode();
-		config.stopBits = getNumberOfStopBits();
-		config.transmissionSize = getTransmissionSize();
-		config.interruptsEnabled = areInterruptsEnabled();
-		config.expectsInterruptSupport = areInterruptsSupported();
-		return config;
-	}
-
-	bool setConfiguration(SerialConfiguration config)
-	{
-		// check for invalid baud (configuration data should be precise)
-		if (config.baud != getClosestSupportedBaud(config.baud)) {
-			return false;
-		}
-
-		if (config.expectsInterruptSupport && !areInterruptsSupported()) {
-			return false;
-		}
-
-		if (!isParityModeSupported(config.parity)) {
-			return false;
-		}
-
-		if (!isTransmissionSizeValid(config.transmissionSize)) {
-			return false;
-		}
-
-		if (!isNumberOfStopBitsValid(config.stopBits)) {
-			return false;
-		}
-
-		setBaud(config.baud);
-		setNumberOfStopBits(config.stopBits);
-		setParityMode(config.parity);
-		setTransmissionSize(config.transmissionSize);
-		if (config.expectsInterruptSupport) {
-			enableInterrupts(config.interruptsEnabled);
-		}
-
-		return true;
-	}
-
 	virtual bool areInterruptsSupported() = 0;
 	virtual bool areInterruptsEnabled() = 0;
 	virtual void enableInterrupts(bool state = true) = 0;
 	virtual void setBaud(int baud) = 0;
 	virtual int getClosestSupportedBaud(int baud) = 0;
 	virtual int getBaud() = 0;
-	virtual void write(uint8_t data) = 0;
+	virtual bool write(uint8_t data) = 0;
 	virtual uint8_t read() = 0;
 	virtual int getHardwareBufferSize() = 0;
 	virtual int getNumberBytesInIRQBuffer() = 0;
@@ -122,6 +74,26 @@ public:
 	virtual void clearFirstError() = 0;
 	virtual SerialErrorType getFirstError() = 0;
 
+
+	virtual void enableBreak(bool on = true) = 0;
+	virtual bool isBreakOn() = 0;
+	virtual void enableLookback(bool on = true) = 0;
+	virtual bool isLoopbackOn() = 0;
+	virtual void setDataTerminalRead(bool state) = 0;
+	virtual void setRequestToSend(bool state) = 0;
+	virtual void setAux1(bool state) = 0;
+	virtual void setAux2(bool state) = 0;
+
+	void disableLoopback()
+	{
+		enableLookback(false);
+	}
+
+	void disableBreak()
+	{
+		enableBreak(false);
+	}
+	
 	void disableInterrupts()
 	{
 		enableInterrupts(false);
